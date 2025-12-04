@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
@@ -95,6 +94,46 @@ fun StatusBarIconSettingsUI(
                         checked = isWiFiVisible,
                         onCheckedChange = { isChecked ->
                             viewModel.setWiFiVisible(isChecked, context)
+                        },
+                        enabled = isPermissionGranted
+                    )
+                }
+            }
+        }
+
+        // Smart Visibility Settings Card
+        SettingsCard(title = "Smart Visibility") {
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+
+                // Smart WiFi Row
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_cell_wifi_24),
+                        contentDescription = "Smart WiFi",
+                        modifier = Modifier.size(24.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Smart WiFi",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Text(
+                            text = "Hide mobile data when WiFi is connected",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    Switch(
+                        checked = viewModel.isSmartWiFiEnabled.value,
+                        onCheckedChange = { isChecked ->
+                            viewModel.setSmartWiFiEnabled(isChecked, context)
                         },
                         enabled = isPermissionGranted
                     )
