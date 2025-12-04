@@ -1,7 +1,5 @@
 package com.sameerasw.essentials
 
-// Simple registry that maps permission keys to features that depend on them.
-// This is intentionally simple; you can later move this to a data source or preferences.
 object PermissionRegistry {
     private val registry = mutableMapOf<String, MutableList<String>>()
 
@@ -13,7 +11,7 @@ object PermissionRegistry {
     fun getFeatures(permissionKey: String): List<String> = registry[permissionKey]?.toList() ?: emptyList()
 }
 
-// Register existing dependencies (called at startup or file load)
+// Register existing dependencies
 fun initPermissionRegistry() {
     // Key for accessibility (use unique string)
     PermissionRegistry.register("ACCESSIBILITY", "Screen off widget")

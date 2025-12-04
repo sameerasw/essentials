@@ -1,11 +1,7 @@
 package com.sameerasw.essentials.ui.composables
 
-import android.app.PendingIntent
-import android.appwidget.AppWidgetManager
-import android.content.ComponentName
 import android.content.Intent
 import android.provider.Settings
-import android.widget.RemoteViews
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,12 +12,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -30,27 +27,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.gestures.animateScrollBy
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.MainViewModel
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.PermissionRegistry
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
-// Preview helper view model instance (avoid constructing a ViewModel inside a composable)
 private val previewMainViewModel = MainViewModel()
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun ScreenOffWidgetSetup(
     viewModel: MainViewModel,
@@ -64,7 +61,6 @@ fun ScreenOffWidgetSetup(
 
     var showSheet by remember { mutableStateOf(false) }
 
-    // If the sheet is open and the required permission(s) are now granted, close the sheet automatically.
     LaunchedEffect(showSheet, isAccessibilityEnabled) {
         if (showSheet) {
             val missing = mutableListOf<PermissionItem>()
@@ -85,10 +81,8 @@ fun ScreenOffWidgetSetup(
             }
 
             if (missing.isEmpty()) {
-                // All required permissions are now granted -> close the sheet
                 showSheet = false
             }
-            // else: keep sheet open and it will display the missing items (handled below)
         }
     }
 
@@ -114,19 +108,28 @@ fun ScreenOffWidgetSetup(
         )
     }
 
-    // UI: add a full-width search bar at the top, then push the FeatureCard below it
     val scrollState = rememberScrollState()
     var query by remember { mutableStateOf("") }
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
     var isFocused by remember { mutableStateOf(false) }
 
-    // When searchRequested becomes true, scroll to top and focus the search field
+    val allFeatures = remember {
+        mutableStateListOf(
+            FeatureItem("Screen off widget", R.drawable.rounded_power_settings_new_24),
+//            FeatureItem("Feature A", R.drawable.rounded_power_settings_new_24),
+//            FeatureItem("Feature B", R.drawable.rounded_power_settings_new_24),
+//            FeatureItem("Feature C", R.drawable.rounded_power_settings_new_24)
+        )
+    }
+
+    var filtered by remember { mutableStateOf(allFeatures.toList()) }
+    var isLoading by remember { mutableStateOf(false) }
+    var debounceJob: Job? by remember { mutableStateOf(null) }
+
     LaunchedEffect(searchRequested) {
         if (searchRequested) {
-            // Scroll to top and focus the field
             scrollState.animateScrollTo(0)
-            // wait a bit for the scroll to happen and layout to settle
             delay(100)
             focusRequester.requestFocus()
             onSearchHandled()
@@ -145,57 +148,65 @@ fun ScreenOffWidgetSetup(
     ) {
         OutlinedTextField(
             value = query,
-            onValueChange = { query = it },
+            onValueChange = { new ->
+                query = new
+                debounceJob?.cancel()
+                isLoading = true
+                debounceJob = kotlinx.coroutines.GlobalScope.launch {
+                    delay(250)
+                    val q = new.trim().lowercase()
+                    filtered = if (q.isEmpty()) allFeatures.toList() else allFeatures.filter { it.title.lowercase().contains(q) }
+                    isLoading = false
+                }
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
                 .focusRequester(focusRequester)
                 .onFocusChanged { isFocused = it.isFocused },
-            // show placeholder only when not focused and empty
-            placeholder = { if (!isFocused && query.isEmpty()) Text("Search for tools, mods and tweaks") },
+            leadingIcon = { Icon(painter = painterResource(id = R.drawable.rounded_search_24), contentDescription = "Search", modifier = Modifier.size(24.dp)) },
+            placeholder = { if (!isFocused && query.isEmpty()) Text("Search for Tools, Mods and Tweaks") },
             shape = RoundedCornerShape(64.dp),
             singleLine = true
         )
 
-        FeatureCard(
-            title = "Screen off widget",
-            isEnabled = isWidgetEnabled,
-            onToggle = {
-                viewModel.setWidgetEnabled(it, context)
-                // Update all existing widgets
-                val appWidgetManager = AppWidgetManager.getInstance(context)
-                val componentName = ComponentName(context, com.sameerasw.essentials.ScreenOffWidgetProvider::class.java)
-                val appWidgetIds = appWidgetManager.getAppWidgetIds(componentName)
-                for (appWidgetId in appWidgetIds) {
-                    val views = RemoteViews(context.packageName, R.layout.screen_off_widget)
-                    if (it) {
-                        val intent = Intent(context, com.sameerasw.essentials.ScreenOffAccessibilityService::class.java).apply {
-                            action = "LOCK_SCREEN"
-                        }
-                        val pendingIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-                        views.setOnClickPendingIntent(R.id.widget_container, pendingIntent)
-                    }
-                    appWidgetManager.updateAppWidget(appWidgetId, views)
-                }
-            },
-            onClick = { context.startActivity(Intent(context, FeatureSettingsActivity::class.java).apply { putExtra("feature", "Screen off widget") }) },
-            modifier = Modifier.padding(16.dp),
-            isToggleEnabled = isAccessibilityEnabled,
-            onDisabledToggleClick = {
-                // Show bottom sheet
-                showSheet = true
+        // Loading indicator while filtering
+        if (isLoading) {
+            Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                LoadingIndicator()
             }
-        )
+        }
+
+        // Render filtered features
+        for (feature in filtered) {
+            FeatureCard(
+                title = feature.title,
+                isEnabled = feature.title == "Screen off widget" && isWidgetEnabled,
+                onToggle = { enabled -> if (feature.title == "Screen off widget") {
+                    viewModel.setWidgetEnabled(enabled, context)
+                } },
+                onClick = {
+                    if (feature.title == "Screen off widget") {
+                        context.startActivity(Intent(context, FeatureSettingsActivity::class.java).apply { putExtra("feature", "Screen off widget") })
+                    } else {
+                        context.startActivity(Intent(context, FeatureSettingsActivity::class.java).apply { putExtra("feature", feature.title) })
+                    }
+                },
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 2.dp),
+                isToggleEnabled = isAccessibilityEnabled,
+                onDisabledToggleClick = { showSheet = true }
+            )
+        }
     }
 }
+
+private data class FeatureItem(val title: String, val iconRes: Int)
 
 @Preview(showBackground = true)
 @Composable
 fun ScreenOffWidgetSetupPreview() {
     EssentialsTheme {
-        // Provide a mock ViewModel for preview
         val mockViewModel = previewMainViewModel.apply {
-            // Set up any necessary state for the preview
             isAccessibilityEnabled.value = false
         }
         ScreenOffWidgetSetup(viewModel = mockViewModel)

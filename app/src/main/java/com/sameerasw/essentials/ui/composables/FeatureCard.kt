@@ -40,13 +40,11 @@ fun FeatureCard(
             .fillMaxWidth()
             .padding(16.dp)) {
 
-            // Title on the left
             Text(
                 text = title,
                 modifier = Modifier.align(Alignment.CenterStart)
             )
 
-            // Trailing actions: optional icon and switch aligned to the end
             Row(
                 modifier = Modifier.align(Alignment.CenterEnd),
                 verticalAlignment = Alignment.CenterVertically,
@@ -60,7 +58,6 @@ fun FeatureCard(
                     )
                 }
 
-                // Put Switch inside a Box and, when disabled, overlay an invisible clickable
                 Box {
                     Switch(
                         checked = if (isToggleEnabled) isEnabled else false,

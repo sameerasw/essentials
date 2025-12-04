@@ -9,7 +9,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -24,11 +23,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sameerasw.essentials.ui.composables.ReusableTopAppBar
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column as ColumnLayout
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.ui.composables.PermissionCard
@@ -46,7 +43,6 @@ class SettingsActivity : ComponentActivity() {
                 val context = LocalContext.current
                 val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
-                // Use the activity-scoped ViewModel (declared above)
                 LaunchedEffect(Unit) {
                     viewModel.check(context)
                 }
@@ -72,7 +68,6 @@ class SettingsActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
-        // Re-check permission state whenever the activity resumes so the UI reflects changes
         viewModel.check(this)
     }
 }
@@ -89,7 +84,6 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
-        // Use the new PermissionCard composable
         PermissionCard(
             iconRes = R.drawable.rounded_settings_accessibility_24,
             title = "Accessibility",
@@ -103,6 +97,5 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
             modifier = Modifier.padding(16.dp)
         )
 
-        // You can add other settings cards here if needed
     }
 }

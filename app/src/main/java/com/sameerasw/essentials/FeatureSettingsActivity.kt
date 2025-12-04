@@ -50,13 +50,11 @@ class FeatureSettingsActivity : ComponentActivity() {
                     context.getSystemService(VIBRATOR_SERVICE) as? Vibrator
                 }
 
-                // Get ViewModel and load persisted preferences into it
                 val viewModel: MainViewModel = viewModel()
                 LaunchedEffect(Unit) {
                     viewModel.check(context)
                 }
 
-                // Local UI state backed by SharedPreferences so the picker reflects persisted value immediately
                 var selectedHaptic by remember {
                     val name = prefs.getString("haptic_feedback_type", HapticFeedbackType.SUBTLE.name)
                     mutableStateOf(
@@ -93,12 +91,9 @@ class FeatureSettingsActivity : ComponentActivity() {
                             HapticFeedbackPicker(
                                 selectedFeedback = selectedHaptic,
                                 onFeedbackSelected = { type ->
-                                    // persist selection to SharedPreferences synchronously to avoid races
                                     prefs.edit().putString("haptic_feedback_type", type.name).commit()
-                                    // update local UI state and ViewModel
                                     selectedHaptic = type
                                     viewModel.setHapticFeedback(type, context)
-                                    // preview haptic
                                     if (vibrator != null) {
                                         performHapticFeedback(vibrator, type)
                                     }

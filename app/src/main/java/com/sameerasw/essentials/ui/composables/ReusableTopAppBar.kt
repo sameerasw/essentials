@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 fun ReusableTopAppBar(
     title: String,
     hasBack: Boolean = false,
-    hasSearch: Boolean = true, // kept for compatibility but intentionally ignored
+    hasSearch: Boolean = true,
     hasSettings: Boolean = false,
     onBackClick: (() -> Unit)? = null,
     onSearchClick: (() -> Unit)? = null,
@@ -47,7 +47,6 @@ fun ReusableTopAppBar(
         },
         navigationIcon = {
             if (hasBack) {
-                // Increase the hit target and icon size for the back button
                 IconButton(onClick = { onBackClick?.invoke() }, modifier = Modifier.size(64.dp)) {
                     Icon(
                         painter = painterResource(id = R.drawable.rounded_arrow_back_24),
@@ -58,9 +57,7 @@ fun ReusableTopAppBar(
             }
         },
         actions = {
-            // Intentionally hide the search action permanently (search handled in-screen)
 
-            // Add Settings button to the right
             if (hasSettings) {
                 IconButton(onClick = { onSettingsClick?.invoke() }, modifier = Modifier.size(64.dp)) {
                     Icon(

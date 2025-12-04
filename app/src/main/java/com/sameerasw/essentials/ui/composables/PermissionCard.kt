@@ -35,7 +35,6 @@ fun PermissionCard(
     onActionClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // green color for granted state
     val grantedGreen = Color(0xFF4CAF50)
 
     Card(modifier = modifier.fillMaxWidth(), shape = MaterialTheme.shapes.medium) {
@@ -80,7 +79,6 @@ fun PermissionCard(
                 }
             }
 
-            // Action button full width with trailing arrow icon
             if (isGranted) {
                 OutlinedButton(onClick = onActionClick, modifier = Modifier.fillMaxWidth()) {
                     Text(actionLabel)
