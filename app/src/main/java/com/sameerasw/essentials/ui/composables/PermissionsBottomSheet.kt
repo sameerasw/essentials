@@ -18,6 +18,8 @@ data class PermissionItem(
     val dependentFeatures: List<String> = emptyList(),
     val actionLabel: String? = null,
     val action: (() -> Unit)? = null,
+    val secondaryActionLabel: String? = null,
+    val secondaryAction: (() -> Unit)? = null,
     val isGranted: Boolean = false
 )
 
@@ -39,7 +41,9 @@ fun PermissionsBottomSheet(
                     dependentFeatures = perm.dependentFeatures,
                     actionLabel = perm.actionLabel ?: "Open Settings",
                     isGranted = perm.isGranted,
-                    onActionClick = { perm.action?.invoke() }
+                    onActionClick = { perm.action?.invoke() },
+                    secondaryActionLabel = perm.secondaryActionLabel,
+                    onSecondaryActionClick = { perm.secondaryAction?.invoke() }
                 )
             }
         }

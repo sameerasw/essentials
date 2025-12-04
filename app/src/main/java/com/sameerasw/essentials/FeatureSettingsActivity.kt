@@ -23,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.ui.composables.HapticFeedbackPicker
 import com.sameerasw.essentials.ui.composables.ReusableTopAppBar
 import com.sameerasw.essentials.ui.composables.SettingsCard
@@ -30,6 +31,7 @@ import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.HapticFeedbackType
 import com.sameerasw.essentials.utils.performHapticFeedback
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.sameerasw.essentials.ui.composables.StatusBarIconSettingsUI
 
 @OptIn(ExperimentalMaterial3Api::class)
 class FeatureSettingsActivity : ComponentActivity() {
@@ -60,7 +62,7 @@ class FeatureSettingsActivity : ComponentActivity() {
                     mutableStateOf(
                         try {
                             HapticFeedbackType.valueOf(name ?: HapticFeedbackType.SUBTLE.name)
-                        } catch (e: Exception) {
+                        } catch (@Suppress("UNUSED_PARAMETER") e: Exception) {
                             HapticFeedbackType.SUBTLE
                         }
                     )
@@ -86,19 +88,47 @@ class FeatureSettingsActivity : ComponentActivity() {
                             .fillMaxSize()
                             .verticalScroll(rememberScrollState())
                     ) {
-
-                        SettingsCard(title = "Haptic Feedback") {
-                            HapticFeedbackPicker(
-                                selectedFeedback = selectedHaptic,
-                                onFeedbackSelected = { type ->
-                                    prefs.edit().putString("haptic_feedback_type", type.name).commit()
-                                    selectedHaptic = type
-                                    viewModel.setHapticFeedback(type, context)
-                                    if (vibrator != null) {
-                                        performHapticFeedback(vibrator, type)
-                                    }
+                        when (feature) {
+                            "Screen off widget" -> {
+                                SettingsCard(title = "Haptic Feedback") {
+                                    HapticFeedbackPicker(
+                                        selectedFeedback = selectedHaptic,
+                                        onFeedbackSelected = { type ->
+                                            prefs.edit().putString("haptic_feedback_type", type.name).commit()
+                                            selectedHaptic = type
+                                            viewModel.setHapticFeedback(type, context)
+                                            if (vibrator != null) {
+                                                performHapticFeedback(vibrator, type)
+                                            }
+                                        }
+                                    )
                                 }
-                            )
+                            }
+                            "Status Bar Icon Control" -> {
+                                val statusBarViewModel: StatusBarIconViewModel = viewModel()
+                                LaunchedEffect(Unit) {
+                                    statusBarViewModel.check(context)
+                                }
+                                StatusBarIconSettingsUI(
+                                    viewModel = statusBarViewModel,
+                                    modifier = Modifier.padding(top = 16.dp)
+                                )
+                            }
+                            else -> {
+                                SettingsCard(title = "Haptic Feedback") {
+                                    HapticFeedbackPicker(
+                                        selectedFeedback = selectedHaptic,
+                                        onFeedbackSelected = { type ->
+                                            prefs.edit().putString("haptic_feedback_type", type.name).commit()
+                                            selectedHaptic = type
+                                            viewModel.setHapticFeedback(type, context)
+                                            if (vibrator != null) {
+                                                performHapticFeedback(vibrator, type)
+                                            }
+                                        }
+                                    )
+                                }
+                            }
                         }
                     }
                 }

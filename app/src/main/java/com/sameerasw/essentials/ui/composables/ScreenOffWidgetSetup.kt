@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.ui.composables
 
+import android.content.ClipboardManager
 import android.content.Intent
 import android.provider.Settings
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -40,6 +41,7 @@ import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.MainViewModel
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.PermissionRegistry
+import com.sameerasw.essentials.StatusBarIconViewModel
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.Job
@@ -56,28 +58,50 @@ fun ScreenOffWidgetSetup(
     onSearchHandled: () -> Unit = {}
 ) {
     val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
+    val isWriteSecureSettingsEnabled by viewModel.isWriteSecureSettingsEnabled
     val isWidgetEnabled by viewModel.isWidgetEnabled
+    val isStatusBarIconControlEnabled by viewModel.isStatusBarIconControlEnabled
     val context = LocalContext.current
 
     var showSheet by remember { mutableStateOf(false) }
+    var currentFeature by remember { mutableStateOf<String?>(null) }
 
-    LaunchedEffect(showSheet, isAccessibilityEnabled) {
-        if (showSheet) {
+    LaunchedEffect(showSheet, isAccessibilityEnabled, isWriteSecureSettingsEnabled, currentFeature) {
+        if (showSheet && currentFeature != null) {
             val missing = mutableListOf<PermissionItem>()
-            if (!isAccessibilityEnabled) {
-                missing.add(
-                    PermissionItem(
-                        iconRes = R.drawable.rounded_settings_accessibility_24,
-                        title = "Accessibility",
-                        description = "Required to perform screen off actions via widget",
-                        dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
-                        actionLabel = "Open Accessibility Settings",
-                        action = {
-                            context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-                        },
-                        isGranted = isAccessibilityEnabled
-                    )
-                )
+            when (currentFeature) {
+                "Screen off widget" -> {
+                    if (!isAccessibilityEnabled) {
+                        missing.add(
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_settings_accessibility_24,
+                                title = "Accessibility",
+                                description = "Required to perform screen off actions via widget",
+                                dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
+                                actionLabel = "Open Accessibility Settings",
+                                action = {
+                                    context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                                },
+                                isGranted = isAccessibilityEnabled
+                            )
+                        )
+                    }
+                }
+                "Status Bar Icon Control" -> {
+                    if (!isWriteSecureSettingsEnabled) {
+                        missing.add(
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_chevron_right_24,
+                                title = "Write Secure Settings",
+                                description = "Required to change status bar icon visibility",
+                                dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
+                                actionLabel = "Settings",
+                                action = {},
+                                isGranted = isWriteSecureSettingsEnabled
+                            )
+                        )
+                    }
+                }
             }
 
             if (missing.isEmpty()) {
@@ -86,24 +110,47 @@ fun ScreenOffWidgetSetup(
         }
     }
 
-    if (showSheet) {
-        val permissionItems = listOf(
-            PermissionItem(
-                iconRes = R.drawable.rounded_settings_accessibility_24,
-                title = "Accessibility",
-                description = "Required to perform screen off actions via widget",
-                dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
-                actionLabel = "Open Accessibility Settings",
-                action = {
-                    context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-                },
-                isGranted = isAccessibilityEnabled
+    if (showSheet && currentFeature != null) {
+        val permissionItems = when (currentFeature) {
+            "Screen off widget" -> listOf(
+                PermissionItem(
+                    iconRes = R.drawable.rounded_settings_accessibility_24,
+                    title = "Accessibility",
+                    description = "Required to perform screen off actions via widget",
+                    dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
+                    actionLabel = "Open Accessibility Settings",
+                    action = {
+                        context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                    },
+                    isGranted = isAccessibilityEnabled
+                )
             )
-        )
+            "Status Bar Icon Control" -> listOf(
+                PermissionItem(
+                    iconRes = R.drawable.rounded_chevron_right_24,
+                    title = "Write Secure Settings",
+                    description = "Required to change status bar icon visibility",
+                    dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
+                    actionLabel = "Copy ADB",
+                    action = {
+                        val adbCommand = "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
+                        val clipboard = context.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as ClipboardManager
+                        val clip = android.content.ClipData.newPlainText("adb_command", adbCommand)
+                        clipboard.setPrimaryClip(clip)
+                    },
+                    secondaryActionLabel = "Check",
+                    secondaryAction = {
+                        viewModel.isWriteSecureSettingsEnabled.value = viewModel.canWriteSecureSettings(context)
+                    },
+                    isGranted = isWriteSecureSettingsEnabled
+                )
+            )
+            else -> emptyList()
+        }
 
         PermissionsBottomSheet(
             onDismissRequest = { showSheet = false },
-            featureTitle = "Screen off widget",
+            featureTitle = currentFeature ?: "",
             permissions = permissionItems
         )
     }
@@ -117,9 +164,7 @@ fun ScreenOffWidgetSetup(
     val allFeatures = remember {
         mutableStateListOf(
             FeatureItem("Screen off widget", R.drawable.rounded_power_settings_new_24),
-//            FeatureItem("Feature A", R.drawable.rounded_power_settings_new_24),
-//            FeatureItem("Feature B", R.drawable.rounded_power_settings_new_24),
-//            FeatureItem("Feature C", R.drawable.rounded_power_settings_new_24)
+            FeatureItem("Status Bar Icon Control", R.drawable.rounded_chevron_right_24)
         )
     }
 
@@ -179,22 +224,40 @@ fun ScreenOffWidgetSetup(
 
         // Render filtered features
         for (feature in filtered) {
+            val isEnabled = when (feature.title) {
+                "Screen off widget" -> isWidgetEnabled
+                "Status Bar Icon Control" -> isStatusBarIconControlEnabled
+                else -> false
+            }
+
+            val isToggleEnabled = when (feature.title) {
+                "Screen off widget" -> isAccessibilityEnabled
+                "Status Bar Icon Control" -> isWriteSecureSettingsEnabled
+                else -> false
+            }
+
             FeatureCard(
                 title = feature.title,
-                isEnabled = feature.title == "Screen off widget" && isWidgetEnabled,
-                onToggle = { enabled -> if (feature.title == "Screen off widget") {
-                    viewModel.setWidgetEnabled(enabled, context)
-                } },
-                onClick = {
-                    if (feature.title == "Screen off widget") {
-                        context.startActivity(Intent(context, FeatureSettingsActivity::class.java).apply { putExtra("feature", "Screen off widget") })
-                    } else {
-                        context.startActivity(Intent(context, FeatureSettingsActivity::class.java).apply { putExtra("feature", feature.title) })
+                isEnabled = isEnabled,
+                onToggle = { enabled ->
+                    when (feature.title) {
+                        "Screen off widget" -> viewModel.setWidgetEnabled(enabled, context)
+                        "Status Bar Icon Control" -> viewModel.setStatusBarIconControlEnabled(enabled, context)
                     }
                 },
+                onClick = {
+                    context.startActivity(
+                        Intent(context, FeatureSettingsActivity::class.java).apply {
+                            putExtra("feature", feature.title)
+                        }
+                    )
+                },
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 2.dp),
-                isToggleEnabled = isAccessibilityEnabled,
-                onDisabledToggleClick = { showSheet = true }
+                isToggleEnabled = isToggleEnabled,
+                onDisabledToggleClick = {
+                    currentFeature = feature.title
+                    showSheet = true
+                }
             )
         }
     }

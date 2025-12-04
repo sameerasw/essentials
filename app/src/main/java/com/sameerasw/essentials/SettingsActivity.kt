@@ -77,6 +77,7 @@ class SettingsActivity : ComponentActivity() {
 @Composable
 fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
     val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
+    val isWriteSecureSettingsEnabled by viewModel.isWriteSecureSettingsEnabled
     val context = LocalContext.current
 
     Column(
@@ -95,6 +96,25 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
             onActionClick = {
                 val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
                 context.startActivity(intent)
+            },
+            modifier = Modifier.padding(16.dp)
+        )
+
+        PermissionCard(
+            iconRes = R.drawable.rounded_chevron_right_24,
+            title = "Write Secure Settings",
+            dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
+            actionLabel = "Copy ADB",
+            isGranted = isWriteSecureSettingsEnabled,
+            onActionClick = {
+                val adbCommand = "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
+                val clipboard = context.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+                val clip = android.content.ClipData.newPlainText("adb_command", adbCommand)
+                clipboard.setPrimaryClip(clip)
+            },
+            secondaryActionLabel = "Check",
+            onSecondaryActionClick = {
+                viewModel.check(context)
             },
             modifier = Modifier.padding(16.dp)
         )
