@@ -41,20 +41,6 @@ fun ScreenOffWidgetSetup(viewModel: MainViewModel, modifier: Modifier = Modifier
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
-        if (!isAccessibilityEnabled) {
-            Card(modifier = Modifier.padding(16.dp)) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text("To use the Screen Off widget, enable accessibility permission for this app.")
-                    Button(onClick = {
-                        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                        context.startActivity(intent)
-                    }) {
-                        Text("Go to Accessibility Settings")
-                    }
-                }
-            }
-        }
-
         FeatureCard(
             title = "Screen off widget",
             isEnabled = isWidgetEnabled,

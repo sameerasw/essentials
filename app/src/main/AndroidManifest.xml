@@ -33,6 +33,13 @@
             android:theme="@style/Theme.Essentials">
         </activity>
 
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false"
+            android:label="Settings"
+            android:theme="@style/Theme.Essentials">
+        </activity>
+
         <service
             android:name=".ScreenOffAccessibilityService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"

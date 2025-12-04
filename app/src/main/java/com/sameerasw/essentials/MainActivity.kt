@@ -1,5 +1,6 @@
 package com.sameerasw.essentials
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -37,6 +38,8 @@ class MainActivity : ComponentActivity() {
                             title = "Essentials",
                             hasBack = false,
                             hasSearch = true,
+                            hasSettings = true,
+                            onSettingsClick = { startActivity(Intent(this, SettingsActivity::class.java)) },
                             scrollBehavior = scrollBehavior
                         )
                     }
