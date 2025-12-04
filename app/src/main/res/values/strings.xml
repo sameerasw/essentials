@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Essentials</string>
+    <string name="accessibility_service_description">Allows the app to turn off the screen via widget.</string>
 </resources>
