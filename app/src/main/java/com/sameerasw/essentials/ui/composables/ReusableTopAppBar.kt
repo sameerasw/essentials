@@ -2,8 +2,11 @@ package com.sameerasw.essentials.ui.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LargeFlexibleTopAppBar
+import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Text
@@ -15,7 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import com.sameerasw.essentials.R
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun ReusableTopAppBar(
     title: String,
@@ -25,8 +28,8 @@ fun ReusableTopAppBar(
     onSearchClick: (() -> Unit)? = null,
     scrollBehavior: TopAppBarScrollBehavior? = null
 ) {
-    MediumTopAppBar(
-        colors = TopAppBarDefaults.mediumTopAppBarColors(
+    LargeFlexibleTopAppBar(
+        colors = TopAppBarDefaults.largeTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainer
         ),
 
