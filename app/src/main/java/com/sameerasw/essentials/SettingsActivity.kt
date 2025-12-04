@@ -26,9 +26,11 @@ import androidx.compose.ui.platform.LocalContext
 import com.sameerasw.essentials.ui.composables.ReusableTopAppBar
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.ui.composables.PermissionCard
+import com.sameerasw.essentials.ui.components.dialogs.AboutSection
 
 @OptIn(ExperimentalMaterial3Api::class)
 class SettingsActivity : ComponentActivity() {
@@ -96,6 +98,8 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
             },
             modifier = Modifier.padding(16.dp)
         )
+
+        AboutSection()
 
     }
 }
