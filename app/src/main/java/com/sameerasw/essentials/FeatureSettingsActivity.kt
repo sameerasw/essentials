@@ -4,27 +4,27 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.sameerasw.essentials.ui.composables.ReusableTopAppBar
-import com.sameerasw.essentials.ui.composables.ScreenOffWidgetSetup
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
-class MainActivity : ComponentActivity() {
-    val viewModel: MainViewModel by viewModels()
+class FeatureSettingsActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        viewModel.check(this)
+        val feature = intent.getStringExtra("feature") ?: "Feature"
         setContent {
             EssentialsTheme {
                 val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
@@ -32,24 +32,20 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     topBar = {
                         ReusableTopAppBar(
-                            title = "Essentials",
-                            hasBack = false,
-                            hasSearch = true,
+                            title = feature,
+                            hasBack = true,
+                            hasSearch = false,
+                            onBackClick = { finish() },
                             scrollBehavior = scrollBehavior
                         )
                     }
                 ) { innerPadding ->
-                    ScreenOffWidgetSetup(
-                        viewModel = viewModel,
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    // Placeholder content
+                    Column(modifier = Modifier.padding(innerPadding)) {
+                        Text("Advanced settings for $feature")
+                    }
                 }
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.check(this)
     }
 }
