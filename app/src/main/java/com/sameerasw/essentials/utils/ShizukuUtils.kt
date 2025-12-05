@@ -55,27 +55,26 @@ object ShizukuUtils {
         }
     }
 
+    fun runCommand(command: String) {
+        if (!hasPermission() || !isBinderAlive) return
+
+        val service = IShizukuService.Stub.asInterface(binder)
+        try {
+            val process = service.newProcess(arrayOf("sh", "-c", command), null, "/")
+            process?.waitFor()
+        } catch (e: RemoteException) {
+            // Command execution failed
+        }
+    }
+
     fun grantWriteSecureSettingsPermission(): Boolean {
         if (!hasPermission() || !isBinderAlive) return false
 
         return try {
-            executeCommand()
+            runCommand("pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS")
             true
         } catch (@Suppress("UNUSED_PARAMETER") e: Exception) {
             false
         }
     }
-
-    private fun executeCommand() {
-        if (!hasPermission() || !isBinderAlive) return
-
-        val service = IShizukuService.Stub.asInterface(binder)
-        try {
-            val process = service.newProcess(arrayOf("sh", "-c", "pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"), null, "/")
-            process?.waitFor()
-        } catch (@Suppress("UNUSED_PARAMETER") e: RemoteException) {
-            // Command execution failed
-        }
-    }
 }
-

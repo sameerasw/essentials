@@ -8,8 +8,22 @@ import android.os.VibratorManager
 import android.view.accessibility.AccessibilityEvent
 import com.sameerasw.essentials.utils.HapticFeedbackType
 import com.sameerasw.essentials.utils.performHapticFeedback
+import android.os.Handler
+import android.os.Looper
+import android.view.WindowManager
+import android.view.View
+import androidx.core.content.ContextCompat
+import android.provider.Settings
+import com.sameerasw.essentials.utils.OverlayHelper
 
 class ScreenOffAccessibilityService : AccessibilityService() {
+
+    private var windowManager: WindowManager? = null
+    private val overlayViews = mutableListOf<View>()
+    private val handler = Handler(Looper.getMainLooper())
+    private var cornerRadiusDp: Int = OverlayHelper.CORNER_RADIUS_DP
+    private var strokeThicknessDp: Int = OverlayHelper.STROKE_DP
+    private var isPreview: Boolean = false
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         // Not used for this feature
@@ -25,6 +39,23 @@ class ScreenOffAccessibilityService : AccessibilityService() {
             triggerHapticFeedback()
             // Lock the screen
             performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN)
+        } else if (intent?.action == "SHOW_EDGE_LIGHTING") {
+            // Extract corner radius and preview flag from intent
+            cornerRadiusDp = intent.getIntExtra("corner_radius_dp", OverlayHelper.CORNER_RADIUS_DP)
+            strokeThicknessDp = intent.getIntExtra("stroke_thickness_dp", OverlayHelper.STROKE_DP)
+            isPreview = intent.getBooleanExtra("is_preview", false)
+            val removePreview = intent.getBooleanExtra("remove_preview", false)
+            if (removePreview) {
+                // Remove preview overlay
+                removeOverlay()
+                return super.onStartCommand(intent, flags, startId)
+            }
+            // Accessibility elevation: show overlay from accessibility service so it can appear above more surfaces
+            try {
+                showEdgeLighting()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
         return super.onStartCommand(intent, flags, startId)
     }
@@ -53,4 +84,55 @@ class ScreenOffAccessibilityService : AccessibilityService() {
             // Silently fail if vibrator is not available
         }
     }
+
+    private fun showEdgeLighting() {
+        // For preview mode, remove existing overlays first to update with new corner radius
+        if (isPreview && overlayViews.isNotEmpty()) {
+            removeOverlay()
+        }
+
+        // Avoid duplicates
+        if (overlayViews.isNotEmpty()) return
+        windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
+
+        // Helper to get accessibility overlay type if present
+        val overlayType = try {
+            WindowManager.LayoutParams::class.java.getField("TYPE_ACCESSIBILITY_OVERLAY").getInt(null)
+        } catch (e: Exception) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY else WindowManager.LayoutParams.TYPE_PHONE
+        }
+
+        try {
+            val overlay = OverlayHelper.createOverlayView(this, android.R.color.system_accent1_100, strokeDp = strokeThicknessDp, cornerRadiusDp = cornerRadiusDp)
+            val params = OverlayHelper.createOverlayLayoutParams(overlayType)
+
+            if (OverlayHelper.addOverlayView(windowManager, overlay, params)) {
+                overlayViews.add(overlay)
+                if (isPreview) {
+                    // For preview mode, just fade in and keep visible
+                    OverlayHelper.fadeInOverlay(overlay)
+                } else {
+                    // Normal mode: pulse the overlay
+                    OverlayHelper.pulseOverlay(overlay) {
+                        // When pulsing completes, remove the overlay
+                        OverlayHelper.fadeOutAndRemoveOverlay(windowManager, overlay, overlayViews)
+                    }
+                }
+            }
+        } catch (e: Exception) { e.printStackTrace() }
+
+    }
+
+    private fun removeOverlay() {
+        // Remove all overlays and clear the list
+        for (overlay in overlayViews) {
+            try {
+                OverlayHelper.fadeOutAndRemoveOverlay(windowManager, overlay, overlayViews)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        overlayViews.clear()
+    }
+
 }

@@ -4,8 +4,8 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.provider.Settings
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,10 +15,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LoadingIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -40,22 +42,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import com.sameerasw.essentials.FeatureSettingsActivity
-import com.sameerasw.essentials.viewmodels.MainViewModel
-import com.sameerasw.essentials.R
 import com.sameerasw.essentials.PermissionRegistry
+import com.sameerasw.essentials.R
+import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.ui.components.cards.FeatureCard
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.sheets.PermissionItem
 import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 private val previewMainViewModel = MainViewModel()
+private const val FEATURE_MAPS_POWER_SAVING = "Maps power saving mode"
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -70,7 +71,63 @@ fun SetupFeatures(
     val isWidgetEnabled by viewModel.isWidgetEnabled
     val isStatusBarIconControlEnabled by viewModel.isStatusBarIconControlEnabled
     val isCaffeinateActive by viewModel.isCaffeinateActive
+    val isShizukuAvailable by viewModel.isShizukuAvailable
+    val isShizukuPermissionGranted by viewModel.isShizukuPermissionGranted
+    val isNotificationListenerEnabled by viewModel.isNotificationListenerEnabled
+    val isMapsPowerSavingEnabled by viewModel.isMapsPowerSavingEnabled
+    val isEdgeLightingEnabled by viewModel.isEdgeLightingEnabled
+    val isOverlayPermissionGranted by viewModel.isOverlayPermissionGranted
+    val isEdgeLightingAccessibilityEnabled by viewModel.isEdgeLightingAccessibilityEnabled
     val context = LocalContext.current
+
+    fun buildMapsPowerSavingPermissionItems(): List<PermissionItem> {
+        val items = mutableListOf<PermissionItem>()
+        if (!isShizukuAvailable) {
+            items.add(
+                PermissionItem(
+                    iconRes = R.drawable.rounded_adb_24,
+                    title = "Shizuku",
+                    description = "Required for advanced commands. Install Shizuku from the Play Store.",
+                    dependentFeatures = PermissionRegistry.getFeatures("SHIZUKU"),
+                    actionLabel = "Install Shizuku",
+                    action = {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=moe.shizuku.privileged.api"))
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        context.startActivity(intent)
+                    },
+                    isGranted = isShizukuAvailable
+                )
+            )
+        } else if (!isShizukuPermissionGranted) {
+            items.add(
+                PermissionItem(
+                    iconRes = R.drawable.rounded_adb_24,
+                    title = "Shizuku permission",
+                    description = "Required to run power-saving commands while maps is navigating.",
+                    dependentFeatures = PermissionRegistry.getFeatures("SHIZUKU"),
+                    actionLabel = "Grant permission",
+                    action = { viewModel.requestShizukuPermission() },
+                    isGranted = isShizukuPermissionGranted
+                )
+            )
+        }
+
+        if (!isNotificationListenerEnabled) {
+            items.add(
+                PermissionItem(
+                    iconRes = R.drawable.rounded_notifications_unread_24,
+                    title = "Notification listener",
+                    description = "Required to detect when Maps is navigating.",
+                    dependentFeatures = PermissionRegistry.getFeatures("NOTIFICATION_LISTENER"),
+                    actionLabel = if (isNotificationListenerEnabled) "Permission granted" else "Grant listener",
+                    action = { viewModel.requestNotificationListenerPermission(context) },
+                    isGranted = isNotificationListenerEnabled
+                )
+            )
+        }
+
+        return items
+    }
 
     var showSheet by remember { mutableStateOf(false) }
     var currentFeature by remember { mutableStateOf<String?>(null) }
@@ -79,11 +136,21 @@ fun SetupFeatures(
     LaunchedEffect(Unit) {
         while (true) {
             viewModel.checkCaffeinateActive(context)
-            kotlinx.coroutines.delay(2000) // Check every second
+            delay(2000)
         }
     }
 
-    LaunchedEffect(showSheet, isAccessibilityEnabled, isWriteSecureSettingsEnabled, currentFeature) {
+    LaunchedEffect(
+        showSheet,
+        isAccessibilityEnabled,
+        isWriteSecureSettingsEnabled,
+        isShizukuAvailable,
+        isShizukuPermissionGranted,
+        isNotificationListenerEnabled,
+        isOverlayPermissionGranted,
+        isEdgeLightingAccessibilityEnabled,
+        currentFeature
+    ) {
         if (showSheet && currentFeature != null) {
             val missing = mutableListOf<PermissionItem>()
             when (currentFeature) {
@@ -113,19 +180,68 @@ fun SetupFeatures(
                                 dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
                                 actionLabel = "Copy ADB",
                                 action = {
-                                    val adbCommand =
-                                        "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
-                                    val clipboard =
-                                        context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                    val adbCommand = "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
+                                    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                                     val clip = ClipData.newPlainText("adb_command", adbCommand)
                                     clipboard.setPrimaryClip(clip)
                                 },
                                 secondaryActionLabel = "Check",
                                 secondaryAction = {
-                                    viewModel.isWriteSecureSettingsEnabled.value =
-                                        viewModel.canWriteSecureSettings(context)
+                                    viewModel.isWriteSecureSettingsEnabled.value = viewModel.canWriteSecureSettings(context)
                                 },
                                 isGranted = isWriteSecureSettingsEnabled
+                            )
+                        )
+                    }
+                }
+                FEATURE_MAPS_POWER_SAVING -> {
+                    missing.addAll(buildMapsPowerSavingPermissionItems())
+                }
+                "Edge lighting" -> {
+                    if (!isOverlayPermissionGranted) {
+                        missing.add(
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_magnify_fullscreen_24,
+                                title = "Overlay Permission",
+                                description = "Required to display the edge lighting overlay on the screen",
+                                dependentFeatures = PermissionRegistry.getFeatures("DRAW_OVERLAYS"),
+                                actionLabel = "Grant Permission",
+                                action = {
+                                    val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:${context.packageName}"))
+                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                    context.startActivity(intent)
+                                },
+                                isGranted = isOverlayPermissionGranted
+                            )
+                        )
+                    }
+                    if (!isEdgeLightingAccessibilityEnabled) {
+                        missing.add(
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_settings_accessibility_24,
+                                title = "Accessibility Service",
+                                description = "Required to trigger edge lighting on new notifications",
+                                dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
+                                actionLabel = "Enable in Settings",
+                                action = {
+                                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                    context.startActivity(intent)
+                                },
+                                isGranted = isEdgeLightingAccessibilityEnabled
+                            )
+                        )
+                    }
+                    if (!isNotificationListenerEnabled) {
+                        missing.add(
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_notifications_unread_24,
+                                title = "Notification Listener",
+                                description = "Required to detect new notifications",
+                                dependentFeatures = PermissionRegistry.getFeatures("NOTIFICATION_LISTENER"),
+                                actionLabel = if (isNotificationListenerEnabled) "Permission granted" else "Grant listener",
+                                action = { viewModel.requestNotificationListenerPermission(context) },
+                                isGranted = isNotificationListenerEnabled
                             )
                         )
                     }
@@ -161,29 +277,66 @@ fun SetupFeatures(
                     dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
                     actionLabel = "Copy ADB",
                     action = {
-                        val adbCommand =
-                            "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
-                        val clipboard =
-                            context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                        val adbCommand = "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
+                        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                         val clip = ClipData.newPlainText("adb_command", adbCommand)
                         clipboard.setPrimaryClip(clip)
                     },
                     secondaryActionLabel = "Check",
                     secondaryAction = {
-                        viewModel.isWriteSecureSettingsEnabled.value =
-                            viewModel.canWriteSecureSettings(context)
+                        viewModel.isWriteSecureSettingsEnabled.value = viewModel.canWriteSecureSettings(context)
                     },
                     isGranted = isWriteSecureSettingsEnabled
+                )
+            )
+            FEATURE_MAPS_POWER_SAVING -> buildMapsPowerSavingPermissionItems()
+            "Edge lighting" -> listOf(
+                PermissionItem(
+                    iconRes = R.drawable.rounded_magnify_fullscreen_24,
+                    title = "Overlay Permission",
+                    description = "Required to display the edge lighting overlay on the screen",
+                    dependentFeatures = PermissionRegistry.getFeatures("DRAW_OVERLAYS"),
+                    actionLabel = "Grant Permission",
+                    action = {
+                        val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:${context.packageName}"))
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        context.startActivity(intent)
+                    },
+                    isGranted = isOverlayPermissionGranted
+                ),
+                PermissionItem(
+                    iconRes = R.drawable.rounded_settings_accessibility_24,
+                    title = "Accessibility Service",
+                    description = "Required to trigger edge lighting on new notifications",
+                    dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
+                    actionLabel = "Enable in Settings",
+                    action = {
+                        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        context.startActivity(intent)
+                    },
+                    isGranted = isEdgeLightingAccessibilityEnabled
+                ),
+                PermissionItem(
+                    iconRes = R.drawable.rounded_notifications_unread_24,
+                    title = "Notification Listener",
+                    description = "Required to detect new notifications",
+                    dependentFeatures = PermissionRegistry.getFeatures("NOTIFICATION_LISTENER"),
+                    actionLabel = if (isNotificationListenerEnabled) "Permission granted" else "Grant listener",
+                    action = { viewModel.requestNotificationListenerPermission(context) },
+                    isGranted = isNotificationListenerEnabled
                 )
             )
             else -> emptyList()
         }
 
-        PermissionsBottomSheet(
-            onDismissRequest = { showSheet = false },
-            featureTitle = currentFeature ?: "",
-            permissions = permissionItems
-        )
+        if (permissionItems.isNotEmpty()) {
+            PermissionsBottomSheet(
+                onDismissRequest = { showSheet = false },
+                featureTitle = currentFeature ?: "",
+                permissions = permissionItems
+            )
+        }
     }
 
     val scrollState = rememberScrollState()
@@ -196,7 +349,19 @@ fun SetupFeatures(
         mutableStateListOf(
             FeatureItem("Screen off widget", R.drawable.rounded_settings_power_24, "Tools", "Invisible widget to turn the screen off"),
             FeatureItem("Statusbar icons", R.drawable.rounded_interests_24, "Visuals", "Control the visibility of statusbar icons"),
-            FeatureItem("Caffeinate", R.drawable.rounded_coffee_24, "Tools", "Keep the screen awake")
+            FeatureItem("Caffeinate", R.drawable.rounded_coffee_24, "Tools", "Keep the screen awake"),
+            FeatureItem(
+                FEATURE_MAPS_POWER_SAVING,
+                R.drawable.rounded_navigation_24,
+                "Tools",
+                "For any Android device"
+            ),
+            FeatureItem(
+                "Edge lighting",
+                R.drawable.rounded_magnify_fullscreen_24,
+                "Visuals",
+                "Flash screen for notifications"
+            )
         )
     }
 
@@ -246,9 +411,9 @@ fun SetupFeatures(
             shape = RoundedCornerShape(64.dp),
             singleLine = true,
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = androidx.compose.material3.MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
-                focusedContainerColor = androidx.compose.material3.MaterialTheme.colorScheme.surfaceBright
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceBright
             )
         )
 
@@ -270,8 +435,8 @@ fun SetupFeatures(
             ) {
                 Text(
                     text = "¯\\_(ツ)_/¯",
-                    style = androidx.compose.material3.MaterialTheme.typography.bodyLarge,
-                    color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
@@ -285,9 +450,9 @@ fun SetupFeatures(
             if (categoryFeatures.isNotEmpty()) {
                 Text(
                     text = category,
-                    style = androidx.compose.material3.MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
-                    color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
@@ -299,6 +464,8 @@ fun SetupFeatures(
                         "Screen off widget" -> isWidgetEnabled
                         "Statusbar icons" -> isStatusBarIconControlEnabled
                         "Caffeinate" -> isCaffeinateActive
+                        FEATURE_MAPS_POWER_SAVING -> isMapsPowerSavingEnabled
+                        "Edge lighting" -> isEdgeLightingEnabled
                         else -> false
                     }
 
@@ -306,7 +473,21 @@ fun SetupFeatures(
                         "Screen off widget" -> isAccessibilityEnabled
                         "Statusbar icons" -> isWriteSecureSettingsEnabled
                         "Caffeinate" -> true
+                        FEATURE_MAPS_POWER_SAVING -> isShizukuAvailable && isShizukuPermissionGranted && isNotificationListenerEnabled
+                        "Edge lighting" -> isOverlayPermissionGranted && isEdgeLightingAccessibilityEnabled && isNotificationListenerEnabled
                         else -> false
+                    }
+
+                    val featureOnClick = if (feature.title == FEATURE_MAPS_POWER_SAVING) {
+                        {}
+                    } else {
+                        {
+                            context.startActivity(
+                                Intent(context, FeatureSettingsActivity::class.java).apply {
+                                    putExtra("feature", feature.title)
+                                }
+                            )
+                        }
                     }
 
                     FeatureCard(
@@ -315,26 +496,17 @@ fun SetupFeatures(
                         onToggle = { enabled ->
                             when (feature.title) {
                                 "Screen off widget" -> viewModel.setWidgetEnabled(enabled, context)
-                                "Statusbar icons" -> viewModel.setStatusBarIconControlEnabled(
-                                    enabled,
-                                    context
-                                )
-
-                                "Caffeinate" -> if (enabled) viewModel.startCaffeinate(context) else viewModel.stopCaffeinate(
-                                    context
-                                )
+                                "Statusbar icons" -> viewModel.setStatusBarIconControlEnabled(enabled, context)
+                                "Caffeinate" -> if (enabled) viewModel.startCaffeinate(context) else viewModel.stopCaffeinate(context)
+                                FEATURE_MAPS_POWER_SAVING -> viewModel.setMapsPowerSavingEnabled(enabled, context)
+                                "Edge lighting" -> viewModel.setEdgeLightingEnabled(enabled, context)
                             }
                         },
-                        onClick = {
-                            context.startActivity(
-                                Intent(context, FeatureSettingsActivity::class.java).apply {
-                                    putExtra("feature", feature.title)
-                                }
-                            )
-                        },
+                        onClick = featureOnClick,
                         iconRes = feature.iconRes,
                         modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
                         isToggleEnabled = isToggleEnabled,
+                        hasMoreSettings = feature.title != FEATURE_MAPS_POWER_SAVING,
                         onDisabledToggleClick = {
                             currentFeature = feature.title
                             showSheet = true

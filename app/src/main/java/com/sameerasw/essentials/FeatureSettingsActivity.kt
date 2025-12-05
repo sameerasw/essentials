@@ -1,7 +1,13 @@
 package com.sameerasw.essentials
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Vibrator
+import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -31,9 +37,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sameerasw.essentials.ui.composables.configs.StatusBarIconSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.CaffeinateSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ScreenOffWidgetSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.EdgeLightingSettingsUI
 import com.sameerasw.essentials.viewmodels.CaffeinateViewModel
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.viewmodels.StatusBarIconViewModel
+import com.sameerasw.essentials.ui.components.sheets.PermissionItem
+import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
 
 @OptIn(ExperimentalMaterial3Api::class)
 class FeatureSettingsActivity : ComponentActivity() {
@@ -45,7 +54,8 @@ class FeatureSettingsActivity : ComponentActivity() {
         val featureDescriptions = mapOf(
             "Screen off widget" to "Invisible widget to turn the screen off",
             "Statusbar icons" to "Control the visibility of statusbar icons",
-            "Caffeinate" to "Keep the screen awake"
+            "Caffeinate" to "Keep the screen awake",
+            "Edge lighting" to "Preview edge lighting effects on new notifications"
         )
         val description = featureDescriptions[feature] ?: ""
         setContent {
@@ -74,6 +84,109 @@ class FeatureSettingsActivity : ComponentActivity() {
                             HapticFeedbackType.SUBTLE
                         }
                     )
+                }
+
+                // Permission sheet state
+                var showPermissionSheet by remember { mutableStateOf(false) }
+                val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
+                val isWriteSecureSettingsEnabled by viewModel.isWriteSecureSettingsEnabled
+                val isOverlayPermissionGranted by viewModel.isOverlayPermissionGranted
+                val isEdgeLightingAccessibilityEnabled by viewModel.isEdgeLightingAccessibilityEnabled
+                val isNotificationListenerEnabled by viewModel.isNotificationListenerEnabled
+
+                // Show permission sheet if feature has missing permissions
+                LaunchedEffect(feature, isAccessibilityEnabled, isWriteSecureSettingsEnabled, isOverlayPermissionGranted, isEdgeLightingAccessibilityEnabled, isNotificationListenerEnabled) {
+                    val hasMissingPermissions = when (feature) {
+                        "Screen off widget" -> !isAccessibilityEnabled
+                        "Statusbar icons" -> !isWriteSecureSettingsEnabled
+                        "Edge lighting" -> !isOverlayPermissionGranted || !isEdgeLightingAccessibilityEnabled || !isNotificationListenerEnabled
+                        else -> false
+                    }
+                    showPermissionSheet = hasMissingPermissions
+                }
+
+                if (showPermissionSheet) {
+                    val permissionItems = when (feature) {
+                        "Screen off widget" -> listOf(
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_settings_accessibility_24,
+                                title = "Accessibility",
+                                description = "Required to perform screen off actions via widget",
+                                dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
+                                actionLabel = "Grant Permission",
+                                action = {
+                                    context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                                },
+                                isGranted = isAccessibilityEnabled
+                            )
+                        )
+                        "Statusbar icons" -> listOf(
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_security_24,
+                                title = "Write Secure Settings",
+                                description = "Required to change status bar icon visibility",
+                                dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
+                                actionLabel = "Copy ADB",
+                                action = {
+                                    val adbCommand = "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
+                                    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                    val clip = ClipData.newPlainText("adb_command", adbCommand)
+                                    clipboard.setPrimaryClip(clip)
+                                },
+                                secondaryActionLabel = "Check",
+                                secondaryAction = {
+                                    viewModel.isWriteSecureSettingsEnabled.value = viewModel.canWriteSecureSettings(context)
+                                },
+                                isGranted = isWriteSecureSettingsEnabled
+                            )
+                        )
+                        "Edge lighting" -> listOf(
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_magnify_fullscreen_24,
+                                title = "Overlay Permission",
+                                description = "Required to display the edge lighting overlay on the screen",
+                                dependentFeatures = PermissionRegistry.getFeatures("DRAW_OVERLAYS"),
+                                actionLabel = "Grant Permission",
+                                action = {
+                                    val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:${context.packageName}"))
+                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                    context.startActivity(intent)
+                                },
+                                isGranted = isOverlayPermissionGranted
+                            ),
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_settings_accessibility_24,
+                                title = "Accessibility Service",
+                                description = "Required to trigger edge lighting on new notifications",
+                                dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
+                                actionLabel = "Enable in Settings",
+                                action = {
+                                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                    context.startActivity(intent)
+                                },
+                                isGranted = isEdgeLightingAccessibilityEnabled
+                            ),
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_notifications_unread_24,
+                                title = "Notification Listener",
+                                description = "Required to detect new notifications",
+                                dependentFeatures = PermissionRegistry.getFeatures("NOTIFICATION_LISTENER"),
+                                actionLabel = if (isNotificationListenerEnabled) "Permission granted" else "Grant listener",
+                                action = { viewModel.requestNotificationListenerPermission(context) },
+                                isGranted = isNotificationListenerEnabled
+                            )
+                        )
+                        else -> emptyList()
+                    }
+
+                    if (permissionItems.isNotEmpty()) {
+                        PermissionsBottomSheet(
+                            onDismissRequest = { showPermissionSheet = false },
+                            featureTitle = feature,
+                            permissions = permissionItems
+                        )
+                    }
                 }
 
                 val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
@@ -127,6 +240,9 @@ class FeatureSettingsActivity : ComponentActivity() {
                                     viewModel = caffeinateViewModel,
                                     modifier = Modifier.padding(top = 16.dp)
                                 )
+                            }
+                            "Edge lighting" -> {
+                                EdgeLightingSettingsUI(viewModel = viewModel, modifier = Modifier.padding(top = 16.dp))
                             }
                             else -> {
                                 ScreenOffWidgetSettingsUI(

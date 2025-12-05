@@ -112,6 +112,8 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
     val isReadPhoneStateEnabled by viewModel.isReadPhoneStateEnabled
     val isShizukuPermissionGranted by viewModel.isShizukuPermissionGranted
     val isShizukuAvailable by viewModel.isShizukuAvailable
+    val isOverlayPermissionGranted by viewModel.isOverlayPermissionGranted
+    val isNotificationListenerEnabled by viewModel.isNotificationListenerEnabled
     val context = LocalContext.current
 
     Column(
@@ -136,7 +138,7 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
             )
 
             PermissionCard(
-                iconRes = R.drawable.rounded_chevron_right_24,
+                iconRes = R.drawable.rounded_security_24,
                 title = "Write Secure Settings",
                 dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
                 actionLabel = if (isWriteSecureSettingsEnabled) "Granted" else "Copy ADB Command",
@@ -155,7 +157,7 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
 
             if (isShizukuAvailable) {
                 PermissionCard(
-                    iconRes = R.drawable.rounded_chevron_right_24,
+                    iconRes = R.drawable.rounded_adb_24,
                     title = "Shizuku",
                     dependentFeatures = listOf("Automatic Write Secure Settings Permission"),
                     actionLabel = if (isShizukuPermissionGranted) "Granted" else "Request Permission",
@@ -196,6 +198,33 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
                         arrayOf(Manifest.permission.POST_NOTIFICATIONS),
                         1002
                     )
+                },
+            )
+
+            PermissionCard(
+                iconRes = R.drawable.rounded_magnify_fullscreen_24,
+                title = "Draw Overlays",
+                dependentFeatures = listOf("Edge Lighting"),
+                actionLabel = if (isOverlayPermissionGranted) "Granted" else "Grant Permission",
+                isGranted = isOverlayPermissionGranted,
+                onActionClick = {
+                    val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, android.net.Uri.parse("package:${context.packageName}"))
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    context.startActivity(intent)
+                },
+            )
+
+            PermissionCard(
+                iconRes = R.drawable.rounded_notification_settings_24,
+                title = "Notification Listener",
+                dependentFeatures = listOf("Edge Lighting"),
+                actionLabel = if (isNotificationListenerEnabled) "Granted" else "Enable listener",
+                isGranted = isNotificationListenerEnabled,
+                onActionClick = {
+                    val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS).apply {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    }
+                    context.startActivity(intent)
                 },
             )
         }
