@@ -252,6 +252,23 @@ fun ScreenOffWidgetSetup(
             }
         }
 
+        // No results view
+        if (!isLoading && filtered.isEmpty()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 64.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "¯\\_(ツ)_/¯",
+                    style = androidx.compose.material3.MaterialTheme.typography.bodyLarge,
+                    color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+
         // Render filtered features grouped by category
         val categories = filtered.map { it.category }.distinct()
         for (category in categories) {

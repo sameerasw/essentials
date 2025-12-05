@@ -177,7 +177,9 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(16.dp))
 
 
-        AboutSection()
+        RoundedCardContainer {
+            AboutSection()
+        }
 
     }
 }
