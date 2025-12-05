@@ -17,9 +17,13 @@ import android.provider.Settings
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
-import android.widget.FrameLayout
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import com.sameerasw.essentials.utils.OverlayHelper
+import kotlin.or
+import kotlin.text.compareTo
+import kotlin.text.toInt
+import kotlin.times
 
 /**
  * Overlay service that shows a thin inward stroke on each edge of the screen
@@ -154,89 +158,16 @@ class EdgeLightingService : Service() {
         if (overlayViews.isNotEmpty()) return
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
 
-        val color = ContextCompat.getColor(this, com.sameerasw.essentials.R.color.material_color_primary_expressive)
-        val strokeDp = 6
-        val strokePx = (resources.displayMetrics.density * strokeDp).toInt()
-
-        // Create and add top edge window (extends into status bar)
         try {
-            val top = View(this)
-            top.setBackgroundColor(color)
-            val topParams = WindowManager.LayoutParams(
-                WindowManager.LayoutParams.MATCH_PARENT,
-                strokePx,
-                getOverlayType(),
-                overlayFlags(),
-                android.graphics.PixelFormat.TRANSLUCENT
-            )
-            topParams.gravity = Gravity.TOP or Gravity.START
-            topParams.y = 0
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                try { topParams.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES } catch (_: Exception) {}
+            val overlay = OverlayHelper.createOverlayView(this, com.sameerasw.essentials.R.color.material_color_primary_expressive)
+            val params = OverlayHelper.createOverlayLayoutParams(getOverlayType())
+
+            if (OverlayHelper.addOverlayView(windowManager, overlay, params)) {
+                overlayViews.add(overlay)
             }
-            windowManager?.addView(top, topParams)
-            overlayViews.add(top)
-        } catch (e: Exception) { e.printStackTrace() }
-
-        // Bottom edge (extends into nav bar)
-        try {
-            val bottom = View(this)
-            bottom.setBackgroundColor(color)
-            val bottomParams = WindowManager.LayoutParams(
-                WindowManager.LayoutParams.MATCH_PARENT,
-                strokePx,
-                getOverlayType(),
-                overlayFlags(),
-                android.graphics.PixelFormat.TRANSLUCENT
-            )
-            bottomParams.gravity = Gravity.BOTTOM or Gravity.START
-            windowManager?.addView(bottom, bottomParams)
-            overlayViews.add(bottom)
-        } catch (e: Exception) { e.printStackTrace() }
-
-        // Left edge
-        try {
-            val left = View(this)
-            left.setBackgroundColor(color)
-            val leftParams = WindowManager.LayoutParams(
-                strokePx,
-                WindowManager.LayoutParams.MATCH_PARENT,
-                getOverlayType(),
-                overlayFlags(),
-                android.graphics.PixelFormat.TRANSLUCENT
-            )
-            leftParams.gravity = Gravity.START or Gravity.TOP
-            windowManager?.addView(left, leftParams)
-            overlayViews.add(left)
-        } catch (e: Exception) { e.printStackTrace() }
-
-        // Right edge
-        try {
-            val right = View(this)
-            right.setBackgroundColor(color)
-            val rightParams = WindowManager.LayoutParams(
-                strokePx,
-                WindowManager.LayoutParams.MATCH_PARENT,
-                getOverlayType(),
-                overlayFlags(),
-                android.graphics.PixelFormat.TRANSLUCENT
-            )
-            rightParams.gravity = Gravity.END or Gravity.TOP
-            windowManager?.addView(right, rightParams)
-            overlayViews.add(right)
         } catch (e: Exception) { e.printStackTrace() }
     }
 
-    private fun overlayFlags(): Int {
-        var flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
-                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-
-        // Try to allow over lock screen
-        flags = flags or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
-        return flags
-    }
 
     private fun getOverlayType(): Int {
         // If the accessibility service is enabled, prefer the accessibility overlay type which
@@ -271,12 +202,7 @@ class EdgeLightingService : Service() {
     }
 
     private fun removeOverlay() {
-        try {
-            overlayViews.forEach { try { windowManager?.removeView(it) } catch (_: Exception) {} }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        overlayViews.clear()
+        OverlayHelper.removeAllOverlays(windowManager, overlayViews)
 
         // stop foreground if we had started one
         try {

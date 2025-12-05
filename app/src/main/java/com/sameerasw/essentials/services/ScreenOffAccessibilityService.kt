@@ -12,10 +12,9 @@ import android.os.Handler
 import android.os.Looper
 import android.view.WindowManager
 import android.view.View
-import android.widget.FrameLayout
-import android.graphics.Color
 import androidx.core.content.ContextCompat
 import android.provider.Settings
+import com.sameerasw.essentials.utils.OverlayHelper
 
 class ScreenOffAccessibilityService : AccessibilityService() {
 
@@ -78,10 +77,6 @@ class ScreenOffAccessibilityService : AccessibilityService() {
         if (overlayViews.isNotEmpty()) return
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
 
-        val color = ContextCompat.getColor(this, com.sameerasw.essentials.R.color.material_color_primary_expressive)
-        val strokeDp = 6
-        val strokePx = (resources.displayMetrics.density * strokeDp).toInt()
-
         // Helper to get accessibility overlay type if present
         val overlayType = try {
             WindowManager.LayoutParams::class.java.getField("TYPE_ACCESSIBILITY_OVERLAY").getInt(null)
@@ -89,78 +84,13 @@ class ScreenOffAccessibilityService : AccessibilityService() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY else WindowManager.LayoutParams.TYPE_PHONE
         }
 
-        val flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
-                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
-                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
-                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
-
-        // Top
         try {
-            val top = View(this)
-            top.setBackgroundColor(color)
-            val topParams = WindowManager.LayoutParams(
-                WindowManager.LayoutParams.MATCH_PARENT,
-                strokePx,
-                overlayType,
-                flags,
-                android.graphics.PixelFormat.TRANSLUCENT
-            )
-            topParams.gravity = android.view.Gravity.TOP or android.view.Gravity.START
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                try { topParams.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES } catch (_: Exception) {}
+            val overlay = OverlayHelper.createOverlayView(this, com.sameerasw.essentials.R.color.material_color_primary_expressive)
+            val params = OverlayHelper.createOverlayLayoutParams(overlayType)
+
+            if (OverlayHelper.addOverlayView(windowManager, overlay, params)) {
+                overlayViews.add(overlay)
             }
-            windowManager?.addView(top, topParams)
-            overlayViews.add(top)
-        } catch (e: Exception) { e.printStackTrace() }
-
-        // Bottom
-        try {
-            val bottom = View(this)
-            bottom.setBackgroundColor(color)
-            val bottomParams = WindowManager.LayoutParams(
-                WindowManager.LayoutParams.MATCH_PARENT,
-                strokePx,
-                overlayType,
-                flags,
-                android.graphics.PixelFormat.TRANSLUCENT
-            )
-            bottomParams.gravity = android.view.Gravity.BOTTOM or android.view.Gravity.START
-            windowManager?.addView(bottom, bottomParams)
-            overlayViews.add(bottom)
-        } catch (e: Exception) { e.printStackTrace() }
-
-        // Left
-        try {
-            val left = View(this)
-            left.setBackgroundColor(color)
-            val leftParams = WindowManager.LayoutParams(
-                strokePx,
-                WindowManager.LayoutParams.MATCH_PARENT,
-                overlayType,
-                flags,
-                android.graphics.PixelFormat.TRANSLUCENT
-            )
-            leftParams.gravity = android.view.Gravity.START or android.view.Gravity.TOP
-            windowManager?.addView(left, leftParams)
-            overlayViews.add(left)
-        } catch (e: Exception) { e.printStackTrace() }
-
-        // Right
-        try {
-            val right = View(this)
-            right.setBackgroundColor(color)
-            val rightParams = WindowManager.LayoutParams(
-                strokePx,
-                WindowManager.LayoutParams.MATCH_PARENT,
-                overlayType,
-                flags,
-                android.graphics.PixelFormat.TRANSLUCENT
-            )
-            rightParams.gravity = android.view.Gravity.END or android.view.Gravity.TOP
-            windowManager?.addView(right, rightParams)
-            overlayViews.add(right)
         } catch (e: Exception) { e.printStackTrace() }
 
         // Remove after 5s
@@ -168,15 +98,7 @@ class ScreenOffAccessibilityService : AccessibilityService() {
     }
 
     private fun removeOverlay() {
-        try {
-            overlayViews.forEach { try { windowManager?.removeView(it) } catch (_: Exception) {} }
-        } catch (e: Exception) { e.printStackTrace() }
-        overlayViews.clear()
-    }
-
-    private fun getSystemBarHeight(name: String): Int {
-        val resId = resources.getIdentifier(name, "dimen", "android")
-        return if (resId > 0) resources.getDimensionPixelSize(resId) else 0
+        OverlayHelper.removeAllOverlays(windowManager, overlayViews)
     }
 
 }
