@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="moe.shizuku.manager.permission.API_V23" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:name=".EssentialsApp"
@@ -93,6 +94,10 @@
         </service>
         <service
             android:name=".services.CaffeinateWakeLockService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse" />
+        <service
+            android:name=".services.EdgeLightingService"
             android:exported="false"
             android:foregroundServiceType="specialUse" />
 

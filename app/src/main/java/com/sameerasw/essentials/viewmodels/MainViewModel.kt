@@ -30,6 +30,7 @@ class MainViewModel : ViewModel() {
     val isShizukuAvailable = mutableStateOf(false)
     val isNotificationListenerEnabled = mutableStateOf(false)
     val isMapsPowerSavingEnabled = mutableStateOf(false)
+    val isEdgeLightingEnabled = mutableStateOf(false)
     val hapticFeedbackType = mutableStateOf(HapticFeedbackType.SUBTLE)
 
     fun check(context: Context) {
@@ -50,6 +51,7 @@ class MainViewModel : ViewModel() {
         isWidgetEnabled.value = prefs.getBoolean("widget_enabled", false)
         isStatusBarIconControlEnabled.value = prefs.getBoolean("status_bar_icon_control_enabled", false)
         isMapsPowerSavingEnabled.value = prefs.getBoolean("maps_power_saving_enabled", false)
+        isEdgeLightingEnabled.value = prefs.getBoolean("edge_lighting_enabled", false)
         MapsState.isEnabled = isMapsPowerSavingEnabled.value
         loadHapticFeedback(context)
         checkCaffeinateActive(context)
@@ -74,6 +76,22 @@ class MainViewModel : ViewModel() {
         MapsState.isEnabled = enabled
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
             putBoolean("maps_power_saving_enabled", enabled)
+        }
+    }
+
+    fun setEdgeLightingEnabled(enabled: Boolean, context: Context) {
+        isEdgeLightingEnabled.value = enabled
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
+            putBoolean("edge_lighting_enabled", enabled)
+        }
+    }
+
+    // Helper to show the overlay service for testing/triggering
+    fun triggerEdgeLighting(context: Context) {
+        try {
+            context.startService(Intent(context, com.sameerasw.essentials.services.EdgeLightingService::class.java))
+        } catch (e: Exception) {
+            // ignore
         }
     }
 

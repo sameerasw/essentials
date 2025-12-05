@@ -75,6 +75,7 @@ fun SetupFeatures(
     val isShizukuPermissionGranted by viewModel.isShizukuPermissionGranted
     val isNotificationListenerEnabled by viewModel.isNotificationListenerEnabled
     val isMapsPowerSavingEnabled by viewModel.isMapsPowerSavingEnabled
+    val isEdgeLightingEnabled by viewModel.isEdgeLightingEnabled
     val context = LocalContext.current
 
     fun buildMapsPowerSavingPermissionItems(): List<PermissionItem> {
@@ -264,6 +265,12 @@ fun SetupFeatures(
                 R.drawable.rounded_navigation_24,
                 "Tools",
                 "For any Android device"
+            ),
+            FeatureItem(
+                "Edge lighting",
+                R.drawable.rounded_magnify_fullscreen_24,
+                "Visuals",
+                "Show an edge highlight overlay for new notifications"
             )
         )
     }
@@ -368,6 +375,7 @@ fun SetupFeatures(
                         "Statusbar icons" -> isStatusBarIconControlEnabled
                         "Caffeinate" -> isCaffeinateActive
                         FEATURE_MAPS_POWER_SAVING -> isMapsPowerSavingEnabled
+                        "Edge lighting" -> isEdgeLightingEnabled
                         else -> false
                     }
 
@@ -376,6 +384,7 @@ fun SetupFeatures(
                         "Statusbar icons" -> isWriteSecureSettingsEnabled
                         "Caffeinate" -> true
                         FEATURE_MAPS_POWER_SAVING -> isShizukuAvailable && isShizukuPermissionGranted && isNotificationListenerEnabled
+                        "Edge lighting" -> true
                         else -> false
                     }
 
@@ -400,6 +409,7 @@ fun SetupFeatures(
                                 "Statusbar icons" -> viewModel.setStatusBarIconControlEnabled(enabled, context)
                                 "Caffeinate" -> if (enabled) viewModel.startCaffeinate(context) else viewModel.stopCaffeinate(context)
                                 FEATURE_MAPS_POWER_SAVING -> viewModel.setMapsPowerSavingEnabled(enabled, context)
+                                "Edge lighting" -> viewModel.setEdgeLightingEnabled(enabled, context)
                             }
                         },
                         onClick = featureOnClick,

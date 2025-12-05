@@ -31,6 +31,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sameerasw.essentials.ui.composables.configs.StatusBarIconSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.CaffeinateSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ScreenOffWidgetSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.EdgeLightingSettingsUI
 import com.sameerasw.essentials.viewmodels.CaffeinateViewModel
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.viewmodels.StatusBarIconViewModel
@@ -127,6 +128,9 @@ class FeatureSettingsActivity : ComponentActivity() {
                                     viewModel = caffeinateViewModel,
                                     modifier = Modifier.padding(top = 16.dp)
                                 )
+                            }
+                            "Edge lighting" -> {
+                                EdgeLightingSettingsUI(viewModel = viewModel, modifier = Modifier.padding(top = 16.dp))
                             }
                             else -> {
                                 ScreenOffWidgetSettingsUI(

@@ -1,6 +1,9 @@
 package com.sameerasw.essentials.services
 
 import android.app.Notification
+import android.content.Context
+import android.content.Intent
+import android.os.Build
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import com.sameerasw.essentials.MapsState
@@ -8,6 +11,23 @@ import com.sameerasw.essentials.MapsState
 class NotificationListener : NotificationListenerService() {
 
     override fun onNotificationPosted(sbn: StatusBarNotification) {
+        // trigger edge lighting for any newly posted notification if feature enabled
+        try {
+            val prefs = applicationContext.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+            val enabled = prefs.getBoolean("edge_lighting_enabled", false)
+            if (enabled) {
+                // Start the overlay service to show the lighting
+                val intent = Intent(applicationContext, EdgeLightingService::class.java)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    applicationContext.startForegroundService(intent)
+                } else {
+                    applicationContext.startService(intent)
+                }
+            }
+        } catch (e: Exception) {
+            // ignore failures
+        }
+
         if (sbn.packageName == "com.google.android.apps.maps") {
             MapsState.hasNavigationNotification = isNavigationNotification(sbn)
         }
