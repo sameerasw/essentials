@@ -100,7 +100,7 @@ fun ScreenOffWidgetSetup(
                         )
                     }
                 }
-                "Status Bar Icon Control" -> {
+                "Statusbar icons" -> {
                     if (!isWriteSecureSettingsEnabled) {
                         missing.add(
                             PermissionItem(
@@ -150,7 +150,7 @@ fun ScreenOffWidgetSetup(
                     isGranted = isAccessibilityEnabled
                 )
             )
-            "Status Bar Icon Control" -> listOf(
+            "Statusbar icons" -> listOf(
                 PermissionItem(
                     iconRes = R.drawable.rounded_chevron_right_24,
                     title = "Write Secure Settings",
@@ -191,9 +191,9 @@ fun ScreenOffWidgetSetup(
 
     val allFeatures = remember {
         mutableStateListOf(
-            FeatureItem("Screen off widget", R.drawable.rounded_settings_power_24, "Tools"),
-            FeatureItem("Status Bar Icon Control", R.drawable.rounded_interests_24, "Visuals"),
-            FeatureItem("Caffeinate", R.drawable.rounded_coffee_24, "Tools")
+            FeatureItem("Screen off widget", R.drawable.rounded_settings_power_24, "Tools", "Invisible widget to turn the screen off"),
+            FeatureItem("Statusbar icons", R.drawable.rounded_interests_24, "Visuals", "Control the visibility of statusbar icons"),
+            FeatureItem("Caffeinate", R.drawable.rounded_coffee_24, "Tools", "Keep the screen awake")
         )
     }
 
@@ -269,14 +269,14 @@ fun ScreenOffWidgetSetup(
             for (feature in categoryFeatures) {
                 val isEnabled = when (feature.title) {
                     "Screen off widget" -> isWidgetEnabled
-                    "Status Bar Icon Control" -> isStatusBarIconControlEnabled
+                    "Statusbar icons" -> isStatusBarIconControlEnabled
                     "Caffeinate" -> isCaffeinateActive
                     else -> false
                 }
 
                 val isToggleEnabled = when (feature.title) {
                     "Screen off widget" -> isAccessibilityEnabled
-                    "Status Bar Icon Control" -> isWriteSecureSettingsEnabled
+                    "Statusbar icons" -> isWriteSecureSettingsEnabled
                     "Caffeinate" -> true
                     else -> false
                 }
@@ -287,7 +287,7 @@ fun ScreenOffWidgetSetup(
                     onToggle = { enabled ->
                         when (feature.title) {
                             "Screen off widget" -> viewModel.setWidgetEnabled(enabled, context)
-                            "Status Bar Icon Control" -> viewModel.setStatusBarIconControlEnabled(
+                            "Statusbar icons" -> viewModel.setStatusBarIconControlEnabled(
                                 enabled,
                                 context
                             )
@@ -310,14 +310,15 @@ fun ScreenOffWidgetSetup(
                     onDisabledToggleClick = {
                         currentFeature = feature.title
                         showSheet = true
-                    }
+                    },
+                    description = feature.description
                 )
             }
         }
     }
 }
 
-private data class FeatureItem(val title: String, val iconRes: Int, val category: String)
+private data class FeatureItem(val title: String, val iconRes: Int, val category: String, val description: String)
 
 @Preview(showBackground = true)
 @Composable

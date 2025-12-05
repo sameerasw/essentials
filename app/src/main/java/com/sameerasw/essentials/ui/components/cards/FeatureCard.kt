@@ -3,6 +3,7 @@ package com.sameerasw.essentials.ui.components.cards
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -30,7 +31,8 @@ fun FeatureCard(
     iconRes: Int? = null,
     hasMoreSettings: Boolean = true,
     isToggleEnabled: Boolean = true,
-    onDisabledToggleClick: (() -> Unit)? = null
+    onDisabledToggleClick: (() -> Unit)? = null,
+    description: String? = null
 ) {
     Card(
         colors = CardDefaults.cardColors(
@@ -54,7 +56,19 @@ fun FeatureCard(
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
-                Text(text = title)
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                ) {
+                    Text(text = title)
+                    if (description != null) {
+                        Text(
+                            text = description,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
             }
 
             Row(

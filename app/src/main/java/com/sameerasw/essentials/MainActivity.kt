@@ -45,7 +45,8 @@ class MainActivity : ComponentActivity() {
                             hasSettings = true,
                             onSearchClick = { searchRequested = true },
                             onSettingsClick = { startActivity(Intent(this, SettingsActivity::class.java)) },
-                            scrollBehavior = scrollBehavior
+                            scrollBehavior = scrollBehavior,
+                            subtitle = "V1.0"
                         )
                     }
                 ) { innerPadding ->

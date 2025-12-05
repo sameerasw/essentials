@@ -42,6 +42,12 @@ class FeatureSettingsActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         val feature = intent.getStringExtra("feature") ?: "Feature"
+        val featureDescriptions = mapOf(
+            "Screen off widget" to "Invisible widget to turn the screen off",
+            "Statusbar icons" to "Control the visibility of statusbar icons",
+            "Caffeinate" to "Keep the screen awake"
+        )
+        val description = featureDescriptions[feature] ?: ""
         setContent {
             EssentialsTheme {
                 val context = LocalContext.current
@@ -80,7 +86,8 @@ class FeatureSettingsActivity : ComponentActivity() {
                             hasBack = true,
                             hasSearch = false,
                             onBackClick = { finish() },
-                            scrollBehavior = scrollBehavior
+                            scrollBehavior = scrollBehavior,
+                            subtitle = description
                         )
                     }
                 ) { innerPadding ->
@@ -101,7 +108,7 @@ class FeatureSettingsActivity : ComponentActivity() {
                                     modifier = Modifier.padding(top = 16.dp)
                                 )
                             }
-                            "Status Bar Icon Control" -> {
+                            "Statusbar icons" -> {
                                 val statusBarViewModel: StatusBarIconViewModel = viewModel()
                                 LaunchedEffect(Unit) {
                                     statusBarViewModel.check(context)

@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.ui.components
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -27,9 +28,9 @@ fun ReusableTopAppBar(
     onBackClick: (() -> Unit)? = null,
     onSearchClick: (() -> Unit)? = null,
     onSettingsClick: (() -> Unit)? = null,
-    scrollBehavior: TopAppBarScrollBehavior? = null
+    scrollBehavior: TopAppBarScrollBehavior? = null,
+    subtitle: String? = null
 ) {
-    // Determine collapsed state from scrollBehavior (0 = expanded, 1 = collapsed)
     val collapsedFraction = scrollBehavior?.state?.collapsedFraction ?: 0f
     val isCollapsed = collapsedFraction > 0.5f
 
@@ -37,13 +38,34 @@ fun ReusableTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainer
         ),
+        expandedHeight = if (subtitle != null) 200.dp else 160.dp,
+        collapsedHeight = 64.dp,
 
         title = {
-            Text(
-                title,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+            if (subtitle != null) {
+                // Show title and subtitle
+                androidx.compose.foundation.layout.Column {
+                    Text(
+                        title,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        subtitle,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            } else {
+                // Show only title
+                Text(
+                    title,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         },
         navigationIcon = {
             if (hasBack) {
