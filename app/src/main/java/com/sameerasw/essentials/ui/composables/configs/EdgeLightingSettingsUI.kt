@@ -35,6 +35,8 @@ import com.sameerasw.essentials.ui.components.pickers.AppType
 import com.sameerasw.essentials.ui.components.pickers.AppTypePicker
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -46,7 +48,6 @@ fun EdgeLightingSettingsUI(
     val isEnabled by viewModel.isEdgeLightingEnabled
 
     // App selection state
-    var installedApps by remember { mutableStateOf<List<NotificationApp>>(emptyList()) }
     var selectedApps by remember { mutableStateOf<List<NotificationApp>>(emptyList()) }
     var isLoadingApps by remember { mutableStateOf(false) }
 
@@ -57,21 +58,29 @@ fun EdgeLightingSettingsUI(
     LaunchedEffect(Unit) {
         isLoadingApps = true
         try {
+            // Load saved selections first (fast operation)
+            val savedSelections = viewModel.loadEdgeLightingSelectedApps(context)
+
+            // Load all installed apps (heavy operation on background thread)
             val allApps = AppUtil.getInstalledApps(context)
-            var savedSelections = viewModel.loadEdgeLightingSelectedApps(context)
 
             // If no apps are saved yet, initialize with all apps enabled
-            if (savedSelections.isEmpty()) {
+            val finalSelections = if (savedSelections.isEmpty()) {
                 val initialSelections = allApps.map { AppSelection(it.packageName, true) }
-                viewModel.saveEdgeLightingSelectedApps(context, allApps) // This will convert to AppSelection internally
-                savedSelections = initialSelections
+                // Save in background to avoid blocking UI
+                withContext(Dispatchers.IO) {
+                    viewModel.saveEdgeLightingSelectedApps(context, allApps)
+                }
+                initialSelections
+            } else {
+                savedSelections
             }
 
             // Merge saved preferences with installed apps
-            selectedApps = AppUtil.mergeWithSavedApps(allApps, savedSelections)
-            installedApps = allApps
+            selectedApps = AppUtil.mergeWithSavedApps(allApps, finalSelections)
         } catch (e: Exception) {
-            // Handle error
+            android.util.Log.e("EdgeLightingSettingsUI", "Error loading apps: ${e.message}")
+            // Handle error - maybe show empty state or error message
         } finally {
             isLoadingApps = false
         }
