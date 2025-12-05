@@ -8,9 +8,17 @@ import androidx.lifecycle.ViewModel
 
 class CaffeinateViewModel : ViewModel() {
     val isActive = mutableStateOf(false)
+    val showNotification = mutableStateOf(false)
+    val postNotificationsGranted = mutableStateOf(false)
 
     fun check(context: Context) {
         isActive.value = isWakeLockServiceRunning(context)
+        val prefs = context.getSharedPreferences("caffeinate_prefs", Context.MODE_PRIVATE)
+        showNotification.value = prefs.getBoolean("show_notification", false)
+        postNotificationsGranted.value = androidx.core.content.ContextCompat.checkSelfPermission(
+            context,
+            android.Manifest.permission.POST_NOTIFICATIONS
+        ) == android.content.pm.PackageManager.PERMISSION_GRANTED
     }
 
     fun toggle(context: Context) {
@@ -23,6 +31,12 @@ class CaffeinateViewModel : ViewModel() {
             context.startService(Intent(context, CaffeinateWakeLockService::class.java))
             isActive.value = true
         }
+    }
+
+    fun setShowNotification(value: Boolean, context: Context) {
+        val prefs = context.getSharedPreferences("caffeinate_prefs", Context.MODE_PRIVATE)
+        prefs.edit().putBoolean("show_notification", value).apply()
+        showNotification.value = value
     }
 
     private fun isWakeLockServiceRunning(context: Context): Boolean {

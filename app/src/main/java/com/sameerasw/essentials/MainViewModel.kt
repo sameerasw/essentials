@@ -13,6 +13,7 @@ class MainViewModel : ViewModel() {
     val isStatusBarIconControlEnabled = mutableStateOf(false)
     val isWriteSecureSettingsEnabled = mutableStateOf(false)
     val isReadPhoneStateEnabled = mutableStateOf(false)
+    val isPostNotificationsEnabled = mutableStateOf(false)
     val isCaffeinateActive = mutableStateOf(false)
     val hapticFeedbackType = mutableStateOf(HapticFeedbackType.SUBTLE)
 
@@ -22,6 +23,10 @@ class MainViewModel : ViewModel() {
         isReadPhoneStateEnabled.value = androidx.core.content.ContextCompat.checkSelfPermission(
             context,
             android.Manifest.permission.READ_PHONE_STATE
+        ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+        isPostNotificationsEnabled.value = androidx.core.content.ContextCompat.checkSelfPermission(
+            context,
+            android.Manifest.permission.POST_NOTIFICATIONS
         ) == android.content.pm.PackageManager.PERMISSION_GRANTED
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
         isWidgetEnabled.value = prefs.getBoolean("widget_enabled", false)

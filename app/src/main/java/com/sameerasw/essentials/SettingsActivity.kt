@@ -72,12 +72,21 @@ class SettingsActivity : ComponentActivity() {
         super.onResume()
         viewModel.check(this)
     }
+
+    @Suppress("DEPRECATION")
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 1001 || requestCode == 1002) {
+            viewModel.check(this)
+        }
+    }
 }
 
 @Composable
 fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
     val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
     val isWriteSecureSettingsEnabled by viewModel.isWriteSecureSettingsEnabled
+    val isPostNotificationsEnabled by viewModel.isPostNotificationsEnabled
     val context = LocalContext.current
 
     Column(
@@ -134,6 +143,23 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
                     context as androidx.activity.ComponentActivity,
                     arrayOf(android.Manifest.permission.READ_PHONE_STATE),
                     1001
+                )
+            },
+            modifier = Modifier.padding(16.dp)
+        )
+
+        PermissionCard(
+            iconRes = R.drawable.rounded_notifications_unread_24,
+            title = "Post Notifications",
+            dependentFeatures = listOf("Caffeinate Show Notification"),
+            actionLabel = "Grant Permission",
+            isGranted = isPostNotificationsEnabled,
+            onActionClick = {
+                // Request permission
+                androidx.core.app.ActivityCompat.requestPermissions(
+                    context as androidx.activity.ComponentActivity,
+                    arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+                    1002
                 )
             },
             modifier = Modifier.padding(16.dp)
