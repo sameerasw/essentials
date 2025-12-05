@@ -13,6 +13,7 @@ class MainViewModel : ViewModel() {
     val isStatusBarIconControlEnabled = mutableStateOf(false)
     val isWriteSecureSettingsEnabled = mutableStateOf(false)
     val isReadPhoneStateEnabled = mutableStateOf(false)
+    val isCaffeinateActive = mutableStateOf(false)
     val hapticFeedbackType = mutableStateOf(HapticFeedbackType.SUBTLE)
 
     fun check(context: Context) {
@@ -26,6 +27,7 @@ class MainViewModel : ViewModel() {
         isWidgetEnabled.value = prefs.getBoolean("widget_enabled", false)
         isStatusBarIconControlEnabled.value = prefs.getBoolean("status_bar_icon_control_enabled", false)
         loadHapticFeedback(context)
+        checkCaffeinateActive(context)
     }
 
     fun setWidgetEnabled(enabled: Boolean, context: Context) {
@@ -85,5 +87,29 @@ class MainViewModel : ViewModel() {
         } catch (e: Exception) {
             false
         }
+    }
+
+    fun checkCaffeinateActive(context: Context) {
+        isCaffeinateActive.value = isCaffeinateServiceRunning(context)
+    }
+
+    fun startCaffeinate(context: Context) {
+        context.startService(android.content.Intent(context, CaffeinateWakeLockService::class.java))
+        isCaffeinateActive.value = true
+    }
+
+    fun stopCaffeinate(context: Context) {
+        context.stopService(android.content.Intent(context, CaffeinateWakeLockService::class.java))
+        isCaffeinateActive.value = false
+    }
+
+    private fun isCaffeinateServiceRunning(context: Context): Boolean {
+        val manager = context.getSystemService(android.content.Context.ACTIVITY_SERVICE) as android.app.ActivityManager
+        for (service in manager.getRunningServices(Int.MAX_VALUE)) {
+            if (CaffeinateWakeLockService::class.java.name == service.service.className) {
+                return true
+            }
+        }
+        return false
     }
 }

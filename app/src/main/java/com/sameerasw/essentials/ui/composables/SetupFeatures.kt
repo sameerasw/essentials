@@ -60,10 +60,19 @@ fun ScreenOffWidgetSetup(
     val isWriteSecureSettingsEnabled by viewModel.isWriteSecureSettingsEnabled
     val isWidgetEnabled by viewModel.isWidgetEnabled
     val isStatusBarIconControlEnabled by viewModel.isStatusBarIconControlEnabled
+    val isCaffeinateActive by viewModel.isCaffeinateActive
     val context = LocalContext.current
 
     var showSheet by remember { mutableStateOf(false) }
     var currentFeature by remember { mutableStateOf<String?>(null) }
+
+    // Periodic check for Caffeinate status
+    LaunchedEffect(Unit) {
+        while (true) {
+            viewModel.checkCaffeinateActive(context)
+            kotlinx.coroutines.delay(2000) // Check every second
+        }
+    }
 
     LaunchedEffect(showSheet, isAccessibilityEnabled, isWriteSecureSettingsEnabled, currentFeature) {
         if (showSheet && currentFeature != null) {
@@ -172,7 +181,8 @@ fun ScreenOffWidgetSetup(
     val allFeatures = remember {
         mutableStateListOf(
             FeatureItem("Screen off widget", R.drawable.rounded_power_settings_new_24),
-            FeatureItem("Status Bar Icon Control", R.drawable.rounded_chevron_right_24)
+            FeatureItem("Status Bar Icon Control", R.drawable.rounded_chevron_right_24),
+            FeatureItem("Caffeinate", R.drawable.rounded_coffee_24)
         )
     }
 
@@ -235,12 +245,14 @@ fun ScreenOffWidgetSetup(
             val isEnabled = when (feature.title) {
                 "Screen off widget" -> isWidgetEnabled
                 "Status Bar Icon Control" -> isStatusBarIconControlEnabled
+                "Caffeinate" -> isCaffeinateActive
                 else -> false
             }
 
             val isToggleEnabled = when (feature.title) {
                 "Screen off widget" -> isAccessibilityEnabled
                 "Status Bar Icon Control" -> isWriteSecureSettingsEnabled
+                "Caffeinate" -> true
                 else -> false
             }
 
@@ -251,6 +263,7 @@ fun ScreenOffWidgetSetup(
                     when (feature.title) {
                         "Screen off widget" -> viewModel.setWidgetEnabled(enabled, context)
                         "Status Bar Icon Control" -> viewModel.setStatusBarIconControlEnabled(enabled, context)
+                        "Caffeinate" -> if (enabled) viewModel.startCaffeinate(context) else viewModel.stopCaffeinate(context)
                     }
                 },
                 onClick = {

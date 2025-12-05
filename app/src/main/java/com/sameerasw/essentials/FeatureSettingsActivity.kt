@@ -32,6 +32,7 @@ import com.sameerasw.essentials.utils.HapticFeedbackType
 import com.sameerasw.essentials.utils.performHapticFeedback
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sameerasw.essentials.ui.composables.StatusBarIconSettingsUI
+import com.sameerasw.essentials.ui.composables.CaffeinateSettingsUI
 
 @OptIn(ExperimentalMaterial3Api::class)
 class FeatureSettingsActivity : ComponentActivity() {
@@ -111,6 +112,16 @@ class FeatureSettingsActivity : ComponentActivity() {
                                 }
                                 StatusBarIconSettingsUI(
                                     viewModel = statusBarViewModel,
+                                    modifier = Modifier.padding(top = 16.dp)
+                                )
+                            }
+                            "Caffeinate" -> {
+                                val caffeinateViewModel: CaffeinateViewModel = viewModel()
+                                LaunchedEffect(Unit) {
+                                    caffeinateViewModel.check(context)
+                                }
+                                CaffeinateSettingsUI(
+                                    viewModel = caffeinateViewModel,
                                     modifier = Modifier.padding(top = 16.dp)
                                 )
                             }
