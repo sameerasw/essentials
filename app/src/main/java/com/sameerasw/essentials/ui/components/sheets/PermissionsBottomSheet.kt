@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.ui.components.cards.PermissionCard
+import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 
 data class PermissionItem(
     val iconRes: Int,
@@ -35,17 +36,19 @@ fun PermissionsBottomSheet(
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Text(text = "$featureTitle requires following permissions", style = MaterialTheme.typography.titleLarge)
 
-            permissions.forEach { perm ->
-                PermissionCard(
-                    iconRes = perm.iconRes,
-                    title = perm.title,
-                    dependentFeatures = perm.dependentFeatures,
-                    actionLabel = perm.actionLabel ?: "Open Settings",
-                    isGranted = perm.isGranted,
-                    onActionClick = { perm.action?.invoke() },
-                    secondaryActionLabel = perm.secondaryActionLabel,
-                    onSecondaryActionClick = { perm.secondaryAction?.invoke() }
-                )
+            RoundedCardContainer() {
+                permissions.forEach { perm ->
+                    PermissionCard(
+                        iconRes = perm.iconRes,
+                        title = perm.title,
+                        dependentFeatures = perm.dependentFeatures,
+                        actionLabel = perm.actionLabel ?: "Open Settings",
+                        isGranted = perm.isGranted,
+                        onActionClick = { perm.action?.invoke() },
+                        secondaryActionLabel = perm.secondaryActionLabel,
+                        onSecondaryActionClick = { perm.secondaryAction?.invoke() }
+                    )
+                }
             }
         }
     }

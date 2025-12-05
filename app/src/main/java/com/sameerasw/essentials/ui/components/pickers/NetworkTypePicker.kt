@@ -1,10 +1,13 @@
 package com.sameerasw.essentials.ui.components.pickers
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.runtime.Composable
@@ -44,7 +47,12 @@ fun NetworkTypePicker(
     )
 
     Row(
-        modifier = modifier.padding(horizontal = 8.dp),
+        modifier = modifier
+            .background(
+                color = MaterialTheme.colorScheme.surfaceBright,
+                shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd)
+            )
+            .padding(8.dp),
         horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
     ) {
         val modifiers = List(labels.size) { Modifier.weight(1f) }

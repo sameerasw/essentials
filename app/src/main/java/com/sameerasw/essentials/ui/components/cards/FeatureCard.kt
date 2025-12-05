@@ -38,6 +38,7 @@ fun FeatureCard(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceBright
         ),
+        shape = MaterialTheme.shapes.extraSmall,
         modifier = modifier.clickable { onClick() }) {
         Box(modifier = Modifier
             .fillMaxWidth()

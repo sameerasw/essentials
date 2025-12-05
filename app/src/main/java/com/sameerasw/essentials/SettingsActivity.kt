@@ -107,10 +107,7 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.spacedBy(4.dp),
         horizontalAlignment = Alignment.Start
     ) {
-        RoundedCardContainer(
-            spacing = 2.dp,
-            cornerRadius = 24.dp
-        ) {
+        RoundedCardContainer {
             PermissionCard(
                 iconRes = R.drawable.rounded_settings_accessibility_24,
                 title = "Accessibility",
