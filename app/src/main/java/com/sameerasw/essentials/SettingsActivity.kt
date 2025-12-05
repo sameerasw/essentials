@@ -5,7 +5,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.ComponentActivity
@@ -37,7 +36,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.sameerasw.essentials.ui.components.cards.PermissionCard
 import com.sameerasw.essentials.ui.components.dialogs.AboutSection
 import com.sameerasw.essentials.viewmodels.MainViewModel
@@ -97,6 +95,7 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
     val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
     val isWriteSecureSettingsEnabled by viewModel.isWriteSecureSettingsEnabled
     val isPostNotificationsEnabled by viewModel.isPostNotificationsEnabled
+    val isReadPhoneStateEnabled by viewModel.isReadPhoneStateEnabled
     val context = LocalContext.current
 
     Column(
@@ -112,7 +111,7 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
                 iconRes = R.drawable.rounded_settings_accessibility_24,
                 title = "Accessibility",
                 dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
-                actionLabel = if (isAccessibilityEnabled) "Open Accessibility Settings" else "Enable Accessibility",
+                actionLabel = if (isAccessibilityEnabled) "Granted" else "Grant Permission",
                 isGranted = isAccessibilityEnabled,
                 onActionClick = {
                     val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
@@ -124,7 +123,7 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
                 iconRes = R.drawable.rounded_chevron_right_24,
                 title = "Write Secure Settings",
                 dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
-                actionLabel = "Copy ADB",
+                actionLabel = if (isWriteSecureSettingsEnabled) "Granted" else "Copy ADB Command",
                 isGranted = isWriteSecureSettingsEnabled,
                 onActionClick = {
                     val adbCommand = "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
@@ -142,18 +141,10 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
                 iconRes = R.drawable.rounded_android_cell_dual_4_bar_24,
                 title = "Read Phone State",
                 dependentFeatures = listOf("Smart Data"),
-                actionLabel = "Grant Permission",
-                isGranted = ContextCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.READ_PHONE_STATE
-                ) == PackageManager.PERMISSION_GRANTED,
+                actionLabel = if (isReadPhoneStateEnabled) "Granted" else "Grant Permission",
+                isGranted = isReadPhoneStateEnabled,
                 onActionClick = {
-                    // Request permission
-                    ActivityCompat.requestPermissions(
-                        context as ComponentActivity,
-                        arrayOf(Manifest.permission.READ_PHONE_STATE),
-                        1001
-                    )
+                    viewModel.requestReadPhoneStatePermission(context as ComponentActivity)
                 },
             )
 
@@ -161,7 +152,7 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
                 iconRes = R.drawable.rounded_notifications_unread_24,
                 title = "Post Notifications",
                 dependentFeatures = listOf("Caffeinate Show Notification"),
-                actionLabel = "Grant Permission",
+                actionLabel = if (isPostNotificationsEnabled) "Granted" else "Grant Permission",
                 isGranted = isPostNotificationsEnabled,
                 onActionClick = {
                     // Request permission

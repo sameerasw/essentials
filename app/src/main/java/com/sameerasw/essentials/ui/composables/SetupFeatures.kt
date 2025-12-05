@@ -92,7 +92,6 @@ fun ScreenOffWidgetSetup(
                                 title = "Accessibility",
                                 description = "Required to perform screen off actions via widget",
                                 dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
-                                actionLabel = "Open Accessibility Settings",
                                 action = {
                                     context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
                                 },
@@ -144,7 +143,7 @@ fun ScreenOffWidgetSetup(
                     title = "Accessibility",
                     description = "Required to perform screen off actions via widget",
                     dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
-                    actionLabel = "Open Accessibility Settings",
+                    actionLabel = "Grant Permission",
                     action = {
                         context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
                     },

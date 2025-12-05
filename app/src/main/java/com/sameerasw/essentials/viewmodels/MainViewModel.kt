@@ -101,6 +101,14 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    fun requestReadPhoneStatePermission(activity: androidx.activity.ComponentActivity) {
+        androidx.core.app.ActivityCompat.requestPermissions(
+            activity,
+            arrayOf(Manifest.permission.READ_PHONE_STATE),
+            1001
+        )
+    }
+
     fun checkCaffeinateActive(context: Context) {
         isCaffeinateActive.value = isCaffeinateServiceRunning(context)
     }

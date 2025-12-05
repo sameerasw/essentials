@@ -31,7 +31,7 @@ fun PermissionCard(
     iconRes: Int,
     title: String,
     dependentFeatures: List<String>,
-    actionLabel: String,
+    actionLabel: String = "Grant Permission",
     isGranted: Boolean,
     onActionClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -58,18 +58,6 @@ fun PermissionCard(
                 Column(modifier = Modifier.weight(1f)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(text = title, style = MaterialTheme.typography.titleMedium)
-
-                        if (isGranted) {
-                            Spacer(modifier = Modifier.size(8.dp))
-                            // Granted chip
-                            Box(
-                                modifier = Modifier
-                                    .background(color = grantedGreen, shape = MaterialTheme.shapes.small)
-                                    .padding(horizontal = 8.dp, vertical = 4.dp)
-                            ) {
-                                Text(text = "Granted", color = MaterialTheme.colorScheme.onPrimary, style = MaterialTheme.typography.labelSmall)
-                            }
-                        }
                     }
 
                     Spacer(modifier = Modifier.height(4.dp))
