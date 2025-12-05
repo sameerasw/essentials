@@ -3,8 +3,9 @@ Essential tools, mods and workarounds for Pixels
 
 # Features
 - [x] Empty widget on Home Screen to lock screen
+- [x] Dynamic statusbar icons hiding
+- [x] Keep display awake
 - [ ] Long press volume key while screen off to toggle flashlight
-- [ ] Dynamic statusbar icons hiding
 - [ ] Automatically turn off night light for certain apps
 - [ ] QS tile to toggle privacy mode (hide notification content on lock screen, ...)
 - [ ] Make the previous track button on bluetooth devices like the current music track
@@ -14,7 +15,9 @@ Essential tools, mods and workarounds for Pixels
 
 # Screenshots
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/66de9bef-0c8c-42bb-9c71-8cd961753e3d" width="30%" />
-  <img src="https://github.com/user-attachments/assets/1ab3e8ba-3262-4c07-85b4-05a8c78247fc" width="30%" />
-  <img src="https://github.com/user-attachments/assets/0a4afea3-c1f4-4070-931c-6f046f9c5195" width="30%" />
+  <img src="https://github.com/user-attachments/assets/36dfaed1-89b5-4998-987b-40d5203598a7" width="19%" />
+  <img src="https://github.com/user-attachments/assets/22e9deea-6fb8-43bc-9923-f711f5447c70" width="19%" />
+  <img src="https://github.com/user-attachments/assets/d0eb5302-9432-4618-896b-7d9e5b7cf9cd" width="19%" />
+  <img src="https://github.com/user-attachments/assets/50d762a5-5bc6-46e7-a9ce-9ccfc207957f" width="19%" />
+  <img src="https://github.com/user-attachments/assets/d77c91c0-a1b3-45e4-9123-eee0f09a558f" width="19%" />
 </p>
