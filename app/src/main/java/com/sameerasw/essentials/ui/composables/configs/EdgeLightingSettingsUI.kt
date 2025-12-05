@@ -1,46 +1,185 @@
 package com.sameerasw.essentials.ui.composables.configs
 
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
-import android.os.Build
-import android.provider.Settings
-import com.sameerasw.essentials.services.ScreenOffAccessibilityService
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.LoadingIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.drawable.toBitmap
+import com.sameerasw.essentials.domain.model.NotificationApp
+import com.sameerasw.essentials.domain.model.AppSelection
+import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.components.pickers.AppType
+import com.sameerasw.essentials.ui.components.pickers.AppTypePicker
+import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
-import androidx.compose.material3.TextButton
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun EdgeLightingSettingsUI(
     viewModel: MainViewModel,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val isEnabled by viewModel.isEdgeLightingEnabled
+
+    // App selection state
+    var installedApps by remember { mutableStateOf<List<NotificationApp>>(emptyList()) }
+    var selectedApps by remember { mutableStateOf<List<NotificationApp>>(emptyList()) }
+    var isLoadingApps by remember { mutableStateOf(false) }
+
+    // App filter state
+    var selectedAppType by remember { mutableStateOf(AppType.DOWNLOADED) } // Default to Downloaded apps
+
+    // Load apps when composable is first shown
+    LaunchedEffect(Unit) {
+        isLoadingApps = true
+        try {
+            val allApps = AppUtil.getInstalledApps(context)
+            var savedSelections = viewModel.loadEdgeLightingSelectedApps(context)
+
+            // If no apps are saved yet, initialize with all apps enabled
+            if (savedSelections.isEmpty()) {
+                val initialSelections = allApps.map { AppSelection(it.packageName, true) }
+                viewModel.saveEdgeLightingSelectedApps(context, allApps) // This will convert to AppSelection internally
+                savedSelections = initialSelections
+            }
+
+            // Merge saved preferences with installed apps
+            selectedApps = AppUtil.mergeWithSavedApps(allApps, savedSelections)
+            installedApps = allApps
+        } catch (e: Exception) {
+            // Handle error
+        } finally {
+            isLoadingApps = false
+        }
+    }
+
+    // Filter apps based on selected tab
+    val filteredApps = when (selectedAppType) {
+        AppType.DOWNLOADED -> selectedApps.filter { !it.isSystemApp } // Downloaded apps only
+        AppType.SYSTEM -> selectedApps.filter { it.isSystemApp } // System apps only
+    }
 
     Column(modifier = modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Button(onClick = { viewModel.triggerEdgeLighting(context) }) {
             Text(text = "Show test overlay")
         }
+
+        // App Selection Section
+        Text(
+            text = "App Selection",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(start = 0.dp, top = 16.dp, bottom = 8.dp),
+        )
+
+
+
+        RoundedCardContainer(
+            modifier = Modifier,
+            spacing = 2.dp,
+            cornerRadius = 24.dp
+        ) {
+            // App Type Picker
+            AppTypePicker(
+                selectedType = selectedAppType,
+                onTypeSelected = { selectedAppType = it },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            if (isLoadingApps) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    LoadingIndicator()
+                }
+            } else {
+                    filteredApps.sortedBy { it.appName.lowercase() }.forEach { app ->
+                        AppToggleItem(
+                            app = app,
+                            isChecked = app.isEnabled,
+                            onCheckedChange = { isChecked ->
+                                viewModel.updateEdgeLightingAppEnabled(context, app.packageName, isChecked)
+                                // Update local state
+                                selectedApps = selectedApps.map {
+                                    if (it.packageName == app.packageName) it.copy(isEnabled = isChecked) else it
+                                }
+                            }
+                        )
+                    }
+            }
+        }
+    }
+}
+
+@Composable
+fun AppToggleItem(
+    app: NotificationApp,
+    isChecked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(
+                color = MaterialTheme.colorScheme.surfaceBright,
+                shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd)
+            )
+            .padding(12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Spacer(modifier = Modifier.size(2.dp))
+        Image(
+            bitmap = app.icon.toBitmap().asImageBitmap(),
+            contentDescription = app.appName,
+            modifier = Modifier.size(24.dp)
+        )
+        Spacer(modifier = Modifier.size(2.dp))
+
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = app.appName,
+                style = MaterialTheme.typography.bodyMedium
+            )
+            if (app.isSystemApp) {
+                Text(
+                    text = "System app",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+
+        Switch(
+            checked = isChecked,
+            onCheckedChange = onCheckedChange
+        )
     }
 }

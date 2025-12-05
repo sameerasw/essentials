@@ -20,12 +20,17 @@ class NotificationListener : NotificationListenerService() {
             if (enabled) {
                 // Check all required permissions before triggering edge lighting
                 if (hasAllRequiredPermissions()) {
-                    // Start the overlay service to show the lighting
-                    val intent = Intent(applicationContext, EdgeLightingService::class.java)
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        applicationContext.startForegroundService(intent)
-                    } else {
-                        applicationContext.startService(intent)
+                    // Check if the app is selected for edge lighting
+                    val appSelected = isAppSelectedForEdgeLighting(sbn.packageName)
+                    android.util.Log.d("NotificationListener", "Edge lighting enabled, app ${sbn.packageName} selected: $appSelected")
+                    if (appSelected) {
+                        // Start the overlay service to show the lighting
+                        val intent = Intent(applicationContext, EdgeLightingService::class.java)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            applicationContext.startForegroundService(intent)
+                        } else {
+                            applicationContext.startService(intent)
+                        }
                     }
                 }
             }
@@ -93,5 +98,29 @@ class NotificationListener : NotificationListenerService() {
         val category = notification.category ?: return false
         val navigationRegex = Regex("(?i).*navigation.*")
         return navigationRegex.containsMatchIn(category)
+    }
+
+    private fun isAppSelectedForEdgeLighting(packageName: String): Boolean {
+        try {
+            val prefs = applicationContext.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+            val json = prefs.getString("edge_lighting_selected_apps", null)
+
+            // If no saved preferences, allow all apps by default
+            if (json == null) {
+                return true
+            }
+
+            val gson = com.google.gson.Gson()
+            val type = object : com.google.gson.reflect.TypeToken<List<com.sameerasw.essentials.domain.model.NotificationApp>>() {}.type
+            val selectedApps: List<com.sameerasw.essentials.domain.model.NotificationApp> = gson.fromJson(json, type)
+
+            // Find the app in the saved list
+            val app = selectedApps.find { it.packageName == packageName }
+            return app?.isEnabled ?: true // Default to true if app not found
+
+        } catch (e: Exception) {
+            // If there's an error, default to allowing all apps (backward compatibility)
+            return true
+        }
     }
 }

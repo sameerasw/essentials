@@ -17,6 +17,11 @@ import com.sameerasw.essentials.services.CaffeinateWakeLockService
 import com.sameerasw.essentials.services.ScreenOffAccessibilityService
 import com.sameerasw.essentials.utils.HapticFeedbackType
 import com.sameerasw.essentials.utils.ShizukuUtils
+import com.sameerasw.essentials.domain.model.NotificationApp
+import com.sameerasw.essentials.domain.model.AppSelection
+import com.sameerasw.essentials.utils.AppUtil
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class MainViewModel : ViewModel() {
     val isAccessibilityEnabled = mutableStateOf(false)
@@ -228,5 +233,48 @@ class MainViewModel : ViewModel() {
         } catch (e: Exception) {
             false
         }
+    }
+
+    // Edge Lighting App Selection Methods
+    fun saveEdgeLightingSelectedApps(context: Context, apps: List<NotificationApp>) {
+        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+        val selections = apps.map { AppSelection(it.packageName, it.isEnabled) }
+        val gson = Gson()
+        val json = gson.toJson(selections)
+        prefs.edit().putString("edge_lighting_selected_apps", json).apply()
+    }
+
+    fun loadEdgeLightingSelectedApps(context: Context): List<AppSelection> {
+        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+        val json = prefs.getString("edge_lighting_selected_apps", null)
+        return if (json != null) {
+            val gson = Gson()
+            val type = object : TypeToken<List<AppSelection>>() {}.type
+            try {
+                val selections: List<AppSelection> = gson.fromJson(json, type)
+                selections
+            } catch (e: Exception) {
+                emptyList()
+            }
+        } else {
+            emptyList()
+        }
+    }
+
+    fun updateEdgeLightingAppEnabled(context: Context, packageName: String, enabled: Boolean) {
+        val currentSelections = loadEdgeLightingSelectedApps(context).toMutableList()
+        val selectionIndex = currentSelections.indexOfFirst { it.packageName == packageName }
+        if (selectionIndex != -1) {
+            currentSelections[selectionIndex] = currentSelections[selectionIndex].copy(isEnabled = enabled)
+        } else {
+            // Add new selection if not found
+            currentSelections.add(AppSelection(packageName, enabled))
+        }
+        val gson = Gson()
+        val json = gson.toJson(currentSelections)
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+            .edit()
+            .putString("edge_lighting_selected_apps", json)
+            .apply()
     }
 }
