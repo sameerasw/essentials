@@ -48,7 +48,6 @@ fun AboutSection(
 
     Surface(
         modifier = modifier
-            .padding(16.dp)
             .fillMaxWidth(),
         shape = MaterialTheme.shapes.medium
     ) {

@@ -29,8 +29,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import com.sameerasw.essentials.ui.components.ReusableTopAppBar
+import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
@@ -99,78 +102,83 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.Top,
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
         horizontalAlignment = Alignment.Start
     ) {
-        PermissionCard(
-            iconRes = R.drawable.rounded_settings_accessibility_24,
-            title = "Accessibility",
-            dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
-            actionLabel = if (isAccessibilityEnabled) "Open Accessibility Settings" else "Enable Accessibility",
-            isGranted = isAccessibilityEnabled,
-            onActionClick = {
-                val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                context.startActivity(intent)
-            },
-            modifier = Modifier.padding(16.dp)
-        )
+        RoundedCardContainer(
+            spacing = 2.dp,
+            cornerRadius = 24.dp
+        ) {
+            PermissionCard(
+                iconRes = R.drawable.rounded_settings_accessibility_24,
+                title = "Accessibility",
+                dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
+                actionLabel = if (isAccessibilityEnabled) "Open Accessibility Settings" else "Enable Accessibility",
+                isGranted = isAccessibilityEnabled,
+                onActionClick = {
+                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                    context.startActivity(intent)
+                },
+            )
 
-        PermissionCard(
-            iconRes = R.drawable.rounded_chevron_right_24,
-            title = "Write Secure Settings",
-            dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
-            actionLabel = "Copy ADB",
-            isGranted = isWriteSecureSettingsEnabled,
-            onActionClick = {
-                val adbCommand = "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
-                val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip = ClipData.newPlainText("adb_command", adbCommand)
-                clipboard.setPrimaryClip(clip)
-            },
-            secondaryActionLabel = "Check",
-            onSecondaryActionClick = {
-                viewModel.check(context)
-            },
-            modifier = Modifier.padding(16.dp)
-        )
+            PermissionCard(
+                iconRes = R.drawable.rounded_chevron_right_24,
+                title = "Write Secure Settings",
+                dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
+                actionLabel = "Copy ADB",
+                isGranted = isWriteSecureSettingsEnabled,
+                onActionClick = {
+                    val adbCommand = "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
+                    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                    val clip = ClipData.newPlainText("adb_command", adbCommand)
+                    clipboard.setPrimaryClip(clip)
+                },
+                secondaryActionLabel = "Check",
+                onSecondaryActionClick = {
+                    viewModel.check(context)
+                },
+            )
 
-        PermissionCard(
-            iconRes = R.drawable.rounded_android_cell_dual_4_bar_24,
-            title = "Read Phone State",
-            dependentFeatures = listOf("Smart Data"),
-            actionLabel = "Grant Permission",
-            isGranted = ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.READ_PHONE_STATE
-            ) == PackageManager.PERMISSION_GRANTED,
-            onActionClick = {
-                // Request permission
-                ActivityCompat.requestPermissions(
-                    context as ComponentActivity,
-                    arrayOf(Manifest.permission.READ_PHONE_STATE),
-                    1001
-                )
-            },
-            modifier = Modifier.padding(16.dp)
-        )
+            PermissionCard(
+                iconRes = R.drawable.rounded_android_cell_dual_4_bar_24,
+                title = "Read Phone State",
+                dependentFeatures = listOf("Smart Data"),
+                actionLabel = "Grant Permission",
+                isGranted = ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.READ_PHONE_STATE
+                ) == PackageManager.PERMISSION_GRANTED,
+                onActionClick = {
+                    // Request permission
+                    ActivityCompat.requestPermissions(
+                        context as ComponentActivity,
+                        arrayOf(Manifest.permission.READ_PHONE_STATE),
+                        1001
+                    )
+                },
+            )
 
-        PermissionCard(
-            iconRes = R.drawable.rounded_notifications_unread_24,
-            title = "Post Notifications",
-            dependentFeatures = listOf("Caffeinate Show Notification"),
-            actionLabel = "Grant Permission",
-            isGranted = isPostNotificationsEnabled,
-            onActionClick = {
-                // Request permission
-                ActivityCompat.requestPermissions(
-                    context as ComponentActivity,
-                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
-                    1002
-                )
-            },
-            modifier = Modifier.padding(16.dp)
-        )
+            PermissionCard(
+                iconRes = R.drawable.rounded_notifications_unread_24,
+                title = "Post Notifications",
+                dependentFeatures = listOf("Caffeinate Show Notification"),
+                actionLabel = "Grant Permission",
+                isGranted = isPostNotificationsEnabled,
+                onActionClick = {
+                    // Request permission
+                    ActivityCompat.requestPermissions(
+                        context as ComponentActivity,
+                        arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                        1002
+                    )
+                },
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
 
         AboutSection()
 

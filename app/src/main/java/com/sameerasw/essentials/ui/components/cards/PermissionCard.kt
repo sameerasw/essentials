@@ -40,7 +40,7 @@ fun PermissionCard(
 ) {
     val grantedGreen = Color(0xFF4CAF50)
 
-    Card(modifier = modifier.fillMaxWidth(), shape = MaterialTheme.shapes.medium) {
+    Card(modifier = modifier.fillMaxWidth(), shape = MaterialTheme.shapes.extraSmall) {
         Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
 
