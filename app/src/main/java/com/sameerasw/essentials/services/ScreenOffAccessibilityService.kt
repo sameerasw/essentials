@@ -90,15 +90,13 @@ class ScreenOffAccessibilityService : AccessibilityService() {
 
             if (OverlayHelper.addOverlayView(windowManager, overlay, params)) {
                 overlayViews.add(overlay)
+                OverlayHelper.pulseOverlay(overlay) {
+                    // When pulsing completes, remove the overlay
+                    OverlayHelper.fadeOutAndRemoveOverlay(windowManager, overlay, overlayViews)
+                }
             }
         } catch (e: Exception) { e.printStackTrace() }
 
-        // Remove after 5s
-        handler.postDelayed({ removeOverlay() }, 5000)
-    }
-
-    private fun removeOverlay() {
-        OverlayHelper.removeAllOverlays(windowManager, overlayViews)
     }
 
 }

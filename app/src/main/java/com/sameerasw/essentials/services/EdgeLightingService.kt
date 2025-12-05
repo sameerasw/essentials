@@ -8,22 +8,15 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.Color
 import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.provider.Settings
-import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat
 import com.sameerasw.essentials.utils.OverlayHelper
-import kotlin.or
-import kotlin.text.compareTo
-import kotlin.text.toInt
-import kotlin.times
 
 /**
  * Overlay service that shows a thin inward stroke on each edge of the screen
@@ -162,6 +155,19 @@ class EdgeLightingService : Service() {
 
             if (OverlayHelper.addOverlayView(windowManager, overlay, params)) {
                 overlayViews.add(overlay)
+                OverlayHelper.pulseOverlay(overlay) {
+                    // When pulsing completes, remove the overlay
+                    OverlayHelper.fadeOutAndRemoveOverlay(windowManager, overlay, overlayViews) {
+                        // When all overlays are removed, stop foreground
+                        if (overlayViews.isEmpty()) {
+                            try {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    stopForeground(true)
+                                }
+                            } catch (_: Exception) { }
+                        }
+                    }
+                }
             }
         } catch (e: Exception) { e.printStackTrace() }
     }
@@ -200,14 +206,19 @@ class EdgeLightingService : Service() {
     }
 
     private fun removeOverlay() {
-        OverlayHelper.removeAllOverlays(windowManager, overlayViews)
-
-        // stop foreground if we had started one
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                stopForeground(true)
+        // Use fade-out animation for each overlay view
+        overlayViews.forEach { view ->
+            OverlayHelper.fadeOutAndRemoveOverlay(windowManager, view, overlayViews) {
+                // When all overlays are removed, stop foreground
+                if (overlayViews.isEmpty()) {
+                    try {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            stopForeground(true)
+                        }
+                    } catch (_: Exception) { }
+                }
             }
-        } catch (_: Exception) { }
+        }
     }
 
     private fun getSystemBarHeight(name: String): Int {
