@@ -99,9 +99,11 @@ class MainViewModel : ViewModel() {
     // Helper to show the overlay service for testing/triggering
     fun triggerEdgeLighting(context: Context) {
         val radius = loadEdgeLightingCornerRadius(context)
+        val thickness = loadEdgeLightingStrokeThickness(context)
         try {
             val intent = Intent(context, com.sameerasw.essentials.services.EdgeLightingService::class.java).apply {
                 putExtra("corner_radius_dp", radius)
+                putExtra("stroke_thickness_dp", thickness)
             }
             context.startService(intent)
         } catch (e: Exception) {
@@ -114,6 +116,20 @@ class MainViewModel : ViewModel() {
         try {
             val intent = Intent(context, com.sameerasw.essentials.services.EdgeLightingService::class.java).apply {
                 putExtra("corner_radius_dp", cornerRadiusDp)
+                putExtra("is_preview", true)
+            }
+            context.startService(intent)
+        } catch (e: Exception) {
+            // ignore
+        }
+    }
+
+    // Helper to show the overlay service with custom corner radius and stroke thickness
+    fun triggerEdgeLightingWithRadiusAndThickness(context: Context, cornerRadiusDp: Int, strokeThicknessDp: Int) {
+        try {
+            val intent = Intent(context, com.sameerasw.essentials.services.EdgeLightingService::class.java).apply {
+                putExtra("corner_radius_dp", cornerRadiusDp)
+                putExtra("stroke_thickness_dp", strokeThicknessDp)
                 putExtra("is_preview", true)
             }
             context.startService(intent)
@@ -326,5 +342,17 @@ class MainViewModel : ViewModel() {
     fun loadEdgeLightingCornerRadius(context: Context): Int {
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
         return prefs.getInt("edge_lighting_corner_radius", 20) // Default to 20 dp
+    }
+
+    // Edge Lighting Stroke Thickness Methods
+    fun saveEdgeLightingStrokeThickness(context: Context, thicknessDp: Int) {
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
+            putInt("edge_lighting_stroke_thickness", thicknessDp)
+        }
+    }
+
+    fun loadEdgeLightingStrokeThickness(context: Context): Int {
+        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+        return prefs.getInt("edge_lighting_stroke_thickness", 8) // Default to 8 dp
     }
 }

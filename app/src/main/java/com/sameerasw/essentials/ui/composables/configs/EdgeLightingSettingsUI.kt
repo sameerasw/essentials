@@ -98,6 +98,7 @@ fun EdgeLightingSettingsUI(
 
     // Corner radius state (default: 20 DP to match OverlayHelper.CORNER_RADIUS_DP)
     var cornerRadiusDp by remember { mutableStateOf(viewModel.loadEdgeLightingCornerRadius(context).toFloat()) }
+    var strokeThicknessDp by remember { mutableStateOf(viewModel.loadEdgeLightingStrokeThickness(context).toFloat()) }
     var isSliderActive by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
 
@@ -125,7 +126,7 @@ fun EdgeLightingSettingsUI(
                     cornerRadiusDp = newValue
                     isSliderActive = true
                     // Show preview overlay while dragging
-                    viewModel.triggerEdgeLightingWithRadius(context, newValue.toInt())
+                    viewModel.triggerEdgeLightingWithRadiusAndThickness(context, newValue.toInt(), strokeThicknessDp.toInt())
                 },
                 onValueChangeFinished = {
                     isSliderActive = false
@@ -138,6 +139,41 @@ fun EdgeLightingSettingsUI(
                     }
                 },
                 valueRange = 0f..50f,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
+        // Stroke Thickness Slider Section
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+        ) {
+            Text(
+                text = "Stroke thickness",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(start = 0.dp, top = 16.dp, bottom = 8.dp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Slider(
+                value = strokeThicknessDp,
+                onValueChange = { newValue ->
+                    strokeThicknessDp = newValue
+                    isSliderActive = true
+                    // Show preview overlay while dragging
+                    viewModel.triggerEdgeLightingWithRadiusAndThickness(context, cornerRadiusDp.toInt(), newValue.toInt())
+                },
+                onValueChangeFinished = {
+                    isSliderActive = false
+                    // Save the stroke thickness
+                    viewModel.saveEdgeLightingStrokeThickness(context, strokeThicknessDp.toInt())
+                    // Wait 5 seconds then remove preview overlay
+                    coroutineScope.launch {
+                        delay(5000)
+                        viewModel.removePreviewOverlay(context)
+                    }
+                },
+                valueRange = 1f..20f,
                 modifier = Modifier.fillMaxWidth()
             )
         }

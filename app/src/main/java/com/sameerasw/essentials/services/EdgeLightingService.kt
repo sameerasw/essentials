@@ -33,6 +33,7 @@ class EdgeLightingService : Service() {
     private val overlayViews = mutableListOf<View>()
     private val handler = Handler(Looper.getMainLooper())
     private var cornerRadiusDp: Int = OverlayHelper.CORNER_RADIUS_DP
+    private var strokeThicknessDp: Int = OverlayHelper.STROKE_DP
     private var isPreview: Boolean = false
 
     private var screenReceiver: BroadcastReceiver? = null
@@ -88,6 +89,8 @@ class EdgeLightingService : Service() {
         // Get corner radius from intent, default to OverlayHelper.CORNER_RADIUS_DP
         cornerRadiusDp = intent?.getIntExtra("corner_radius_dp", OverlayHelper.CORNER_RADIUS_DP)
             ?: OverlayHelper.CORNER_RADIUS_DP
+        strokeThicknessDp = intent?.getIntExtra("stroke_thickness_dp", OverlayHelper.STROKE_DP)
+            ?: OverlayHelper.STROKE_DP
         isPreview = intent?.getBooleanExtra("is_preview", false) ?: false
         val removePreview = intent?.getBooleanExtra("remove_preview", false) ?: false
 
@@ -114,6 +117,7 @@ class EdgeLightingService : Service() {
                 val ai = Intent(applicationContext, ScreenOffAccessibilityService::class.java).apply {
                     action = "SHOW_EDGE_LIGHTING"
                     putExtra("corner_radius_dp", cornerRadiusDp)
+                    putExtra("stroke_thickness_dp", strokeThicknessDp)
                     putExtra("is_preview", isPreview)
                 }
                 // Use startService to request the accessibility service perform the elevated overlay.
@@ -174,7 +178,7 @@ class EdgeLightingService : Service() {
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
 
         try {
-            val overlay = OverlayHelper.createOverlayView(this, android.R.color.system_accent1_100, cornerRadiusDp = cornerRadiusDp)
+            val overlay = OverlayHelper.createOverlayView(this, android.R.color.system_accent1_100, strokeDp = strokeThicknessDp, cornerRadiusDp = cornerRadiusDp)
             val params = OverlayHelper.createOverlayLayoutParams(getOverlayType())
 
             if (OverlayHelper.addOverlayView(windowManager, overlay, params)) {

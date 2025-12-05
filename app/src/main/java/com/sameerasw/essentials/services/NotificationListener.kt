@@ -27,8 +27,10 @@ class NotificationListener : NotificationListenerService() {
                         // Start the overlay service to show the lighting
                         val prefs = applicationContext.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
                         val cornerRadius = prefs.getInt("edge_lighting_corner_radius", 20)
+                        val strokeThickness = prefs.getInt("edge_lighting_stroke_thickness", 8)
                         val intent = Intent(applicationContext, EdgeLightingService::class.java).apply {
                             putExtra("corner_radius_dp", cornerRadius)
+                            putExtra("stroke_thickness_dp", strokeThickness)
                         }
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             applicationContext.startForegroundService(intent)

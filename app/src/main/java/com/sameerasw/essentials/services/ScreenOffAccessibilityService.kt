@@ -22,6 +22,7 @@ class ScreenOffAccessibilityService : AccessibilityService() {
     private val overlayViews = mutableListOf<View>()
     private val handler = Handler(Looper.getMainLooper())
     private var cornerRadiusDp: Int = OverlayHelper.CORNER_RADIUS_DP
+    private var strokeThicknessDp: Int = OverlayHelper.STROKE_DP
     private var isPreview: Boolean = false
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
@@ -41,6 +42,7 @@ class ScreenOffAccessibilityService : AccessibilityService() {
         } else if (intent?.action == "SHOW_EDGE_LIGHTING") {
             // Extract corner radius and preview flag from intent
             cornerRadiusDp = intent.getIntExtra("corner_radius_dp", OverlayHelper.CORNER_RADIUS_DP)
+            strokeThicknessDp = intent.getIntExtra("stroke_thickness_dp", OverlayHelper.STROKE_DP)
             isPreview = intent.getBooleanExtra("is_preview", false)
             val removePreview = intent.getBooleanExtra("remove_preview", false)
             if (removePreview) {
@@ -101,7 +103,7 @@ class ScreenOffAccessibilityService : AccessibilityService() {
         }
 
         try {
-            val overlay = OverlayHelper.createOverlayView(this, android.R.color.system_accent1_100, cornerRadiusDp = cornerRadiusDp)
+            val overlay = OverlayHelper.createOverlayView(this, android.R.color.system_accent1_100, strokeDp = strokeThicknessDp, cornerRadiusDp = cornerRadiusDp)
             val params = OverlayHelper.createOverlayLayoutParams(overlayType)
 
             if (OverlayHelper.addOverlayView(windowManager, overlay, params)) {
