@@ -32,7 +32,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import com.sameerasw.essentials.R
@@ -55,6 +57,7 @@ fun EdgeLightingSettingsUI(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val view = LocalView.current
     val isEnabled by viewModel.isEdgeLightingEnabled
 
     // App selection state
@@ -118,12 +121,15 @@ fun EdgeLightingSettingsUI(
 
     Column(modifier = modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
 
-        Button(onClick = { viewModel.triggerEdgeLighting(context) }, modifier = Modifier.fillMaxWidth()) {
+        Button(onClick = {
+            view.performHapticFeedback(android.view.HapticFeedbackConstants.VIRTUAL_KEY)
+            viewModel.triggerEdgeLighting(context)
+        }, modifier = Modifier.fillMaxWidth()) {
             Icon(painter = painterResource(id = R.drawable.rounded_play_arrow_24), contentDescription = null)
             Text("Preview")
         }
 
-        // Corner Roundness Slider Section
+        // ...existing code...
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -141,6 +147,8 @@ fun EdgeLightingSettingsUI(
                 onValueChange = { newValue ->
                     cornerRadiusDp = newValue
                     isSliderActive = true
+                    // Use softer haptic feedback for sliders
+                    view.performHapticFeedback(android.view.HapticFeedbackConstants.SEGMENT_FREQUENT_TICK)
                     // Show preview overlay while dragging
                     viewModel.triggerEdgeLightingWithRadiusAndThickness(context, newValue.toInt(), strokeThicknessDp.toInt())
                 },
@@ -176,6 +184,8 @@ fun EdgeLightingSettingsUI(
                 onValueChange = { newValue ->
                     strokeThicknessDp = newValue
                     isSliderActive = true
+                    // Use softer haptic feedback for sliders
+                    view.performHapticFeedback(android.view.HapticFeedbackConstants.SEGMENT_FREQUENT_TICK)
                     // Show preview overlay while dragging
                     viewModel.triggerEdgeLightingWithRadiusAndThickness(context, cornerRadiusDp.toInt(), newValue.toInt())
                 },
@@ -251,6 +261,8 @@ fun AppToggleItem(
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val view = LocalView.current
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -286,7 +298,10 @@ fun AppToggleItem(
 
         Switch(
             checked = isChecked,
-            onCheckedChange = onCheckedChange
+            onCheckedChange = { checked ->
+                view.performHapticFeedback(android.view.HapticFeedbackConstants.VIRTUAL_KEY)
+                onCheckedChange(checked)
+            }
         )
     }
 }

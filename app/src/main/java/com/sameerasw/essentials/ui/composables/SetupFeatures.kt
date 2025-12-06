@@ -348,7 +348,7 @@ fun SetupFeatures(
     val allFeatures = remember {
         mutableStateListOf(
             FeatureItem("Screen off widget", R.drawable.rounded_settings_power_24, "Tools", "Invisible widget to turn the screen off"),
-            FeatureItem("Statusbar icons", R.drawable.rounded_interests_24, "Visuals", "Control the visibility of statusbar icons"),
+            FeatureItem("Statusbar icons", R.drawable.rounded_interests_24, "Visuals", "Control statusbar icons visibility"),
             FeatureItem("Caffeinate", R.drawable.rounded_coffee_24, "Tools", "Keep the screen awake"),
             FeatureItem(
                 FEATURE_MAPS_POWER_SAVING,

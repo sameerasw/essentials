@@ -53,7 +53,7 @@ class FeatureSettingsActivity : ComponentActivity() {
         val feature = intent.getStringExtra("feature") ?: "Feature"
         val featureDescriptions = mapOf(
             "Screen off widget" to "Invisible widget to turn the screen off",
-            "Statusbar icons" to "Control the visibility of statusbar icons",
+            "Statusbar icons" to "Control statusbar icons visibility",
             "Caffeinate" to "Keep the screen awake",
             "Edge lighting" to "Preview edge lighting effects on new notifications"
         )

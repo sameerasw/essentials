@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
@@ -32,6 +33,8 @@ fun IconToggleItem(
     enabled: Boolean = true,
     onDisabledClick: (() -> Unit)? = null
 ) {
+    val view = LocalView.current
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -75,12 +78,20 @@ fun IconToggleItem(
         Box {
             Switch(
                 checked = if (enabled) isChecked else false,
-                onCheckedChange = { checked -> if (enabled) onCheckedChange(checked) },
+                onCheckedChange = { checked ->
+                    if (enabled) {
+                        view.performHapticFeedback(android.view.HapticFeedbackConstants.VIRTUAL_KEY)
+                        onCheckedChange(checked)
+                    }
+                },
                 enabled = enabled
             )
 
             if (!enabled && onDisabledClick != null) {
-                Box(modifier = Modifier.matchParentSize().clickable { onDisabledClick() })
+                Box(modifier = Modifier.matchParentSize().clickable {
+                    view.performHapticFeedback(android.view.HapticFeedbackConstants.VIRTUAL_KEY)
+                    onDisabledClick()
+                })
             }
         }
     }

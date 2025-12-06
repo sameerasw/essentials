@@ -16,6 +16,7 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -74,8 +75,12 @@ fun ReusableTopAppBar(
         },
         navigationIcon = {
             if (hasBack) {
+                val view = LocalView.current
                 IconButton(
-                    onClick = { onBackClick?.invoke() },
+                    onClick = {
+                        view.performHapticFeedback(android.view.HapticFeedbackConstants.VIRTUAL_KEY)
+                        onBackClick?.invoke()
+                    },
                     colors = IconButtonDefaults.iconButtonColors(
                         containerColor = MaterialTheme.colorScheme.surfaceBright
                     ),
@@ -91,9 +96,14 @@ fun ReusableTopAppBar(
         },
         actions = {
 
+
             if (hasSettings) {
+                val view = LocalView.current
                 IconButton(
-                    onClick = { onSettingsClick?.invoke() },
+                    onClick = {
+                        view.performHapticFeedback(android.view.HapticFeedbackConstants.VIRTUAL_KEY)
+                        onSettingsClick?.invoke()
+                    },
                     colors = IconButtonDefaults.iconButtonColors(
                         containerColor = MaterialTheme.colorScheme.surfaceBright
                     ),
