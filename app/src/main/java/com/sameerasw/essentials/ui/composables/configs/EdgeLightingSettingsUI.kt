@@ -124,7 +124,7 @@ fun EdgeLightingSettingsUI(
             Text(
                 text = "Corner radius",
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(start = 0.dp, top = 16.dp, bottom = 8.dp),
+                modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Slider(
@@ -159,7 +159,7 @@ fun EdgeLightingSettingsUI(
             Text(
                 text = "Stroke thickness",
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(start = 0.dp, top = 16.dp, bottom = 8.dp),
+                modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Slider(
@@ -189,7 +189,7 @@ fun EdgeLightingSettingsUI(
         Text(
             text = "App Selection",
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(start = 0.dp, top = 16.dp, bottom = 8.dp),
+            modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 

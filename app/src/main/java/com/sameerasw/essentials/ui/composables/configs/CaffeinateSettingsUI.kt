@@ -77,7 +77,7 @@ fun CaffeinateSettingsUI(
         Text(
             text = "Notification",
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(start = 0.dp, top = 16.dp, bottom = 8.dp),
+            modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 

@@ -1,11 +1,14 @@
 package com.sameerasw.essentials.ui.components
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -38,6 +41,7 @@ fun ReusableTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainer
         ),
+        modifier = Modifier.padding(horizontal = 8.dp),
         expandedHeight = if (subtitle != null) 200.dp else 160.dp,
         collapsedHeight = 64.dp,
 
@@ -69,7 +73,13 @@ fun ReusableTopAppBar(
         },
         navigationIcon = {
             if (hasBack) {
-                IconButton(onClick = { onBackClick?.invoke() }, modifier = Modifier.size(64.dp)) {
+                IconButton(
+                    onClick = { onBackClick?.invoke() },
+                    colors = IconButtonDefaults.iconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceDim
+                    ),
+                    modifier = Modifier.size(48.dp)
+                ) {
                     Icon(
                         painter = painterResource(id = R.drawable.rounded_arrow_back_24),
                         contentDescription = "Back",
@@ -81,9 +91,15 @@ fun ReusableTopAppBar(
         actions = {
 
             if (hasSettings) {
-                IconButton(onClick = { onSettingsClick?.invoke() }, modifier = Modifier.size(64.dp)) {
+                IconButton(
+                    onClick = { onSettingsClick?.invoke() },
+                    colors = IconButtonDefaults.iconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceDim
+                    ),
+                    modifier = Modifier.size(48.dp)
+                ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.rounded_settings_heart_24),
+                        painter = painterResource(id = R.drawable.ic_stat_name),
                         contentDescription = "Settings",
                         modifier = Modifier.size(32.dp)
                     )
