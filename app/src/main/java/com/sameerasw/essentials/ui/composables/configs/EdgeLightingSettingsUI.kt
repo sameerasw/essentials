@@ -21,6 +21,7 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -106,6 +107,14 @@ fun EdgeLightingSettingsUI(
     var strokeThicknessDp by remember { mutableStateOf(viewModel.loadEdgeLightingStrokeThickness(context).toFloat()) }
     var isSliderActive by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
+
+    // Cleanup overlay when composable is destroyed (activity paused/closed/destroyed)
+    DisposableEffect(Unit) {
+        onDispose {
+            // Remove any ongoing preview overlay when the composable is disposed
+            viewModel.removePreviewOverlay(context)
+        }
+    }
 
     Column(modifier = modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
 
