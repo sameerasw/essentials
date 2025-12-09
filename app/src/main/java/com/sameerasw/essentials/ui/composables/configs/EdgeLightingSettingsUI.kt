@@ -41,8 +41,6 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.NotificationApp
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
-import com.sameerasw.essentials.ui.components.pickers.AppType
-import com.sameerasw.essentials.ui.components.pickers.AppTypePicker
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.utils.HapticUtil
@@ -65,8 +63,6 @@ fun EdgeLightingSettingsUI(
     var selectedApps by remember { mutableStateOf<List<NotificationApp>>(emptyList()) }
     var isLoadingApps by remember { mutableStateOf(false) }
 
-    // App filter state
-    var selectedAppType by remember { mutableStateOf(AppType.DOWNLOADED) } // Default to Downloaded apps
 
     // Load apps when composable is first shown
     LaunchedEffect(Unit) {
@@ -100,11 +96,8 @@ fun EdgeLightingSettingsUI(
         }
     }
 
-    // Filter apps based on selected tab
-    val filteredApps = when (selectedAppType) {
-        AppType.DOWNLOADED -> selectedApps.filter { !it.isSystemApp } // Downloaded apps only
-        AppType.SYSTEM -> selectedApps.filter { it.isSystemApp } // System apps only
-    }
+    // Filter to only show downloaded apps
+    val filteredApps = selectedApps.filter { !it.isSystemApp }
 
     // Corner radius state (default: 20 DP to match OverlayHelper.CORNER_RADIUS_DP)
     var cornerRadiusDp by remember { mutableStateOf(viewModel.loadEdgeLightingCornerRadius(context).toFloat()) }
@@ -202,27 +195,19 @@ fun EdgeLightingSettingsUI(
             )
         }
 
-        // App Selection Section
+        // Downloaded Apps Section
         Text(
-            text = "App Selection",
+            text = "Downloaded Apps",
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-
-
 
         RoundedCardContainer(
             modifier = Modifier,
             spacing = 2.dp,
             cornerRadius = 24.dp
         ) {
-            // App Type Picker
-            AppTypePicker(
-                selectedType = selectedAppType,
-                onTypeSelected = { selectedAppType = it },
-                modifier = Modifier.fillMaxWidth()
-            )
 
             if (isLoadingApps) {
                 Row(
@@ -285,13 +270,6 @@ fun AppToggleItem(
                 text = app.appName,
                 style = MaterialTheme.typography.bodyMedium
             )
-            if (app.isSystemApp) {
-                Text(
-                    text = "System app",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
         }
 
         Switch(
