@@ -5,7 +5,9 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
+import android.provider.Settings
 import android.widget.RemoteViews
+import android.widget.Toast
 import com.sameerasw.essentials.services.ScreenOffAccessibilityService
 
 class ScreenOffWidgetProvider : AppWidgetProvider() {
@@ -16,20 +18,33 @@ class ScreenOffWidgetProvider : AppWidgetProvider() {
         }
     }
 
+    override fun onReceive(context: Context, intent: Intent) {
+        super.onReceive(context, intent)
+        if (intent.action == "WIDGET_CLICK") {
+            if (isAccessibilityEnabled(context)) {
+                val serviceIntent = Intent(context, ScreenOffAccessibilityService::class.java).apply {
+                    action = "LOCK_SCREEN"
+                }
+                context.startService(serviceIntent)
+            } else {
+                Toast.makeText(context, "Missing permissions, Check the app", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun isAccessibilityEnabled(context: Context): Boolean {
+        val enabledServices = Settings.Secure.getString(context.contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES)
+        return enabledServices?.contains("com.sameerasw.essentials.services.ScreenOffAccessibilityService") == true
+    }
+
     private fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
         val views = RemoteViews(context.packageName, R.layout.screen_off_widget)
 
-        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-        val enabled = prefs.getBoolean("widget_enabled", false)
-
-        if (enabled) {
-            val intent = Intent(context, ScreenOffAccessibilityService::class.java).apply {
-                action = "LOCK_SCREEN"
-            }
-            val pendingIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-            views.setOnClickPendingIntent(R.id.widget_container, pendingIntent)
+        val intent = Intent(context, ScreenOffWidgetProvider::class.java).apply {
+            action = "WIDGET_CLICK"
         }
-        // If not enabled, do not set the pending intent, so tapping does nothing
+        val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        views.setOnClickPendingIntent(R.id.widget_container, pendingIntent)
 
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }
