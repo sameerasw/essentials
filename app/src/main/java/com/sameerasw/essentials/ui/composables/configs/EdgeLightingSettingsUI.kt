@@ -13,7 +13,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -34,7 +33,6 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import com.sameerasw.essentials.R
@@ -57,7 +55,6 @@ fun EdgeLightingSettingsUI(
 ) {
     val context = LocalContext.current
     val view = LocalView.current
-    val isEnabled by viewModel.isEdgeLightingEnabled
 
     // App selection state
     var selectedApps by remember { mutableStateOf<List<NotificationApp>>(emptyList()) }
@@ -102,7 +99,6 @@ fun EdgeLightingSettingsUI(
     // Corner radius state (default: 20 DP to match OverlayHelper.CORNER_RADIUS_DP)
     var cornerRadiusDp by remember { mutableStateOf(viewModel.loadEdgeLightingCornerRadius(context).toFloat()) }
     var strokeThicknessDp by remember { mutableStateOf(viewModel.loadEdgeLightingStrokeThickness(context).toFloat()) }
-    var isSliderActive by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
 
     // Cleanup overlay when composable is destroyed (activity paused/closed/destroyed)
@@ -139,13 +135,11 @@ fun EdgeLightingSettingsUI(
                 value = cornerRadiusDp,
                 onValueChange = { newValue ->
                     cornerRadiusDp = newValue
-                    isSliderActive = true
                     HapticUtil.performSliderHaptic(view)
                     // Show preview overlay while dragging
                     viewModel.triggerEdgeLightingWithRadiusAndThickness(context, newValue.toInt(), strokeThicknessDp.toInt())
                 },
                 onValueChangeFinished = {
-                    isSliderActive = false
                     // Save the corner radius
                     viewModel.saveEdgeLightingCornerRadius(context, cornerRadiusDp.toInt())
                     // Wait 5 seconds then remove preview overlay
@@ -175,13 +169,11 @@ fun EdgeLightingSettingsUI(
                 value = strokeThicknessDp,
                 onValueChange = { newValue ->
                     strokeThicknessDp = newValue
-                    isSliderActive = true
                     HapticUtil.performSliderHaptic(view)
                     // Show preview overlay while dragging
                     viewModel.triggerEdgeLightingWithRadiusAndThickness(context, cornerRadiusDp.toInt(), newValue.toInt())
                 },
                 onValueChangeFinished = {
-                    isSliderActive = false
                     // Save the stroke thickness
                     viewModel.saveEdgeLightingStrokeThickness(context, strokeThicknessDp.toInt())
                     // Wait 5 seconds then remove preview overlay
@@ -233,6 +225,25 @@ fun EdgeLightingSettingsUI(
                         )
                     }
             }
+        }
+
+        // Invert Selection Button
+        OutlinedButton(
+            onClick = {
+                HapticUtil.performVirtualKeyHaptic(view)
+                // Invert selection for all downloaded apps
+                filteredApps.forEach { app ->
+                    val newEnabled = !app.isEnabled
+                    viewModel.updateEdgeLightingAppEnabled(context, app.packageName, newEnabled)
+                }
+                // Update local state
+                selectedApps = selectedApps.map { app ->
+                    if (!app.isSystemApp) app.copy(isEnabled = !app.isEnabled) else app
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Invert Selection")
         }
     }
 }
