@@ -361,6 +361,12 @@ fun SetupFeatures(
                 R.drawable.rounded_magnify_fullscreen_24,
                 "Visuals",
                 "Flash screen for notifications"
+            ),
+            FeatureItem(
+                "Sound mode tile",
+                R.drawable.rounded_volume_up_24,
+                "Tools",
+                "QS tile to toggle sound mode"
             )
         )
     }
@@ -466,6 +472,7 @@ fun SetupFeatures(
                         "Caffeinate" -> isCaffeinateActive
                         FEATURE_MAPS_POWER_SAVING -> isMapsPowerSavingEnabled
                         "Edge lighting" -> isEdgeLightingEnabled
+                        "Sound mode tile" -> true // Always enabled since it's a tile
                         else -> false
                     }
 
@@ -475,6 +482,7 @@ fun SetupFeatures(
                         "Caffeinate" -> true
                         FEATURE_MAPS_POWER_SAVING -> isShizukuAvailable && isShizukuPermissionGranted && isNotificationListenerEnabled
                         "Edge lighting" -> isOverlayPermissionGranted && isEdgeLightingAccessibilityEnabled && isNotificationListenerEnabled
+                        "Sound mode tile" -> false // No toggle for QS tile
                         else -> false
                     }
 
@@ -500,12 +508,14 @@ fun SetupFeatures(
                                 "Caffeinate" -> if (enabled) viewModel.startCaffeinate(context) else viewModel.stopCaffeinate(context)
                                 FEATURE_MAPS_POWER_SAVING -> viewModel.setMapsPowerSavingEnabled(enabled, context)
                                 "Edge lighting" -> viewModel.setEdgeLightingEnabled(enabled, context)
+                                "Sound mode tile" -> {} // No toggle action needed for tile
                             }
                         },
                         onClick = featureOnClick,
                         iconRes = feature.iconRes,
                         modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
                         isToggleEnabled = isToggleEnabled,
+                        showToggle = feature.title != "Sound mode tile", // Hide toggle for Sound mode tile
                         hasMoreSettings = feature.title != FEATURE_MAPS_POWER_SAVING,
                         onDisabledToggleClick = {
                             currentFeature = feature.title

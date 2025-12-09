@@ -34,6 +34,7 @@ fun FeatureCard(
     iconRes: Int? = null,
     hasMoreSettings: Boolean = true,
     isToggleEnabled: Boolean = true,
+    showToggle: Boolean = true,
     onDisabledToggleClick: (() -> Unit)? = null,
     description: String? = null
 ) {
@@ -96,24 +97,26 @@ fun FeatureCard(
                     )
                 }
 
-                Box {
-                    Switch(
-                        checked = if (isToggleEnabled) isEnabled else false,
-                        onCheckedChange = { checked ->
-                            if (isToggleEnabled) {
-                                HapticUtil.performVirtualKeyHaptic(view)
-                                onToggle(checked)
-                            }
-                        },
-                        enabled = isToggleEnabled
-                    )
+                if (showToggle) {
+                    Box {
+                        Switch(
+                            checked = if (isToggleEnabled) isEnabled else false,
+                            onCheckedChange = { checked ->
+                                if (isToggleEnabled) {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    onToggle(checked)
+                                }
+                            },
+                            enabled = isToggleEnabled
+                        )
 
-                    if (!isToggleEnabled && onDisabledToggleClick != null) {
-                        // Invisible overlay catches taps even if the child consumes them
-                        Box(modifier = Modifier.matchParentSize().clickable {
-                            HapticUtil.performVirtualKeyHaptic(view)
-                            onDisabledToggleClick()
-                        })
+                        if (!isToggleEnabled && onDisabledToggleClick != null) {
+                            // Invisible overlay catches taps even if the child consumes them
+                            Box(modifier = Modifier.matchParentSize().clickable {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                onDisabledToggleClick()
+                            })
+                        }
                     }
                 }
             }

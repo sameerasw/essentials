@@ -38,6 +38,7 @@ import com.sameerasw.essentials.ui.composables.configs.StatusBarIconSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.CaffeinateSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ScreenOffWidgetSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.EdgeLightingSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.SoundModeTileSettingsUI
 import com.sameerasw.essentials.viewmodels.CaffeinateViewModel
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.viewmodels.StatusBarIconViewModel
@@ -55,7 +56,8 @@ class FeatureSettingsActivity : ComponentActivity() {
             "Screen off widget" to "Invisible widget to turn the screen off",
             "Statusbar icons" to "Control statusbar icons visibility",
             "Caffeinate" to "Keep the screen awake",
-            "Edge lighting" to "Preview edge lighting effects on new notifications"
+            "Edge lighting" to "Preview edge lighting effects on new notifications",
+            "Sound mode tile" to "QS tile to toggle sound mode"
         )
         val description = featureDescriptions[feature] ?: ""
         setContent {
@@ -243,6 +245,9 @@ class FeatureSettingsActivity : ComponentActivity() {
                             }
                             "Edge lighting" -> {
                                 EdgeLightingSettingsUI(viewModel = viewModel, modifier = Modifier.padding(top = 16.dp))
+                            }
+                            "Sound mode tile" -> {
+                                SoundModeTileSettingsUI(modifier = Modifier.padding(top = 16.dp))
                             }
                             else -> {
                                 ScreenOffWidgetSettingsUI(
