@@ -78,12 +78,12 @@ class FeatureSettingsActivity : ComponentActivity() {
                 }
 
                 var selectedHaptic by remember {
-                    val name = prefs.getString("haptic_feedback_type", HapticFeedbackType.SUBTLE.name)
+                    val name = prefs.getString("haptic_feedback_type", HapticFeedbackType.NONE.name)
                     mutableStateOf(
                         try {
-                            HapticFeedbackType.valueOf(name ?: HapticFeedbackType.SUBTLE.name)
+                            HapticFeedbackType.valueOf(name ?: HapticFeedbackType.NONE.name)
                         } catch (@Suppress("UNUSED_PARAMETER") e: Exception) {
-                            HapticFeedbackType.SUBTLE
+                            HapticFeedbackType.NONE
                         }
                     )
                 }

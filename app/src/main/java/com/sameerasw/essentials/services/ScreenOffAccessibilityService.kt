@@ -12,8 +12,6 @@ import android.os.Handler
 import android.os.Looper
 import android.view.WindowManager
 import android.view.View
-import androidx.core.content.ContextCompat
-import android.provider.Settings
 import com.sameerasw.essentials.utils.OverlayHelper
 
 class ScreenOffAccessibilityService : AccessibilityService() {
@@ -71,11 +69,11 @@ class ScreenOffAccessibilityService : AccessibilityService() {
 
             if (vibrator != null) {
                 val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
-                val typeName = prefs.getString("haptic_feedback_type", HapticFeedbackType.SUBTLE.name)
+                val typeName = prefs.getString("haptic_feedback_type", HapticFeedbackType.NONE.name)
                 val feedbackType = try {
-                    HapticFeedbackType.valueOf(typeName ?: HapticFeedbackType.SUBTLE.name)
+                    HapticFeedbackType.valueOf(typeName ?: HapticFeedbackType.NONE.name)
                 } catch (e: Exception) {
-                    HapticFeedbackType.SUBTLE
+                    HapticFeedbackType.NONE
                 }
 
                 performHapticFeedback(vibrator, feedbackType)
