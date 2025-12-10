@@ -160,6 +160,66 @@ fun StatusBarIconSettingsUI(
                 },
                 enabled = isPermissionGranted
             )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_data_saver_on_24,
+                title = "Data saver",
+                isChecked = viewModel.isDataSaverVisible.value,
+                onCheckedChange = { isChecked ->
+                    viewModel.setDataSaverVisible(isChecked, context)
+                },
+                enabled = isPermissionGranted
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_headset_mic_24,
+                title = "Headset",
+                isChecked = viewModel.isHeadsetVisible.value,
+                onCheckedChange = { isChecked ->
+                    viewModel.setHeadsetVisible(isChecked, context)
+                },
+                enabled = isPermissionGranted
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_mobile_rotate_24,
+                title = "Rotate",
+                isChecked = viewModel.isRotateVisible.value,
+                onCheckedChange = { isChecked ->
+                    viewModel.setRotateVisible(isChecked, context)
+                },
+                enabled = isPermissionGranted
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_wifi_calling_bar_3_24,
+                title = "voLTE/ voNR/ voWiFi",
+                isChecked = viewModel.isVolteVisible.value,
+                onCheckedChange = { isChecked ->
+                    viewModel.setVolteVisible(isChecked, context)
+                },
+                enabled = isPermissionGranted
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_cast_24,
+                title = "Cast",
+                isChecked = viewModel.isCastVisible.value,
+                onCheckedChange = { isChecked ->
+                    viewModel.setCastVisible(isChecked, context)
+                },
+                enabled = isPermissionGranted
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_nest_clock_farsight_analog_24,
+                title = "Clock",
+                isChecked = viewModel.isClockVisible.value,
+                onCheckedChange = { isChecked ->
+                    viewModel.setClockVisible(isChecked, context)
+                },
+                enabled = isPermissionGranted
+            )
         }
 
         // Smart Visibility Category

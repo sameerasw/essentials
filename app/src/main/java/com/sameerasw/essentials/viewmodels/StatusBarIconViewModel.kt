@@ -31,6 +31,12 @@ class StatusBarIconViewModel : ViewModel() {
     val isAlarmClockVisible = mutableStateOf(true)
     val isHotspotVisible = mutableStateOf(true)
     val isBluetoothVisible = mutableStateOf(true)
+    val isDataSaverVisible = mutableStateOf(true)
+    val isHeadsetVisible = mutableStateOf(true)
+    val isRotateVisible = mutableStateOf(true)
+    val isVolteVisible = mutableStateOf(true)
+    val isCastVisible = mutableStateOf(true)
+    val isClockVisible = mutableStateOf(true)
 
     private var updateJob: Job? = null
     private var smartWifiJob: Job? = null
@@ -178,6 +184,52 @@ class StatusBarIconViewModel : ViewModel() {
             blacklistItems.remove("bluetooth")
         }
 
+        // Add or remove data_saver from blacklist based on visibility
+        if (!isDataSaverVisible.value && !blacklistItems.contains("data_saver")) {
+            blacklistItems.add("data_saver")
+        } else if (isDataSaverVisible.value) {
+            blacklistItems.remove("data_saver")
+        }
+
+        // Add or remove headset from blacklist based on visibility
+        if (!isHeadsetVisible.value && !blacklistItems.contains("headset")) {
+            blacklistItems.add("headset")
+        } else if (isHeadsetVisible.value) {
+            blacklistItems.remove("headset")
+        }
+
+        // Add or remove rotate from blacklist based on visibility
+        if (!isRotateVisible.value && !blacklistItems.contains("rotate")) {
+            blacklistItems.add("rotate")
+        } else if (isRotateVisible.value) {
+            blacklistItems.remove("rotate")
+        }
+
+        // Add or remove volte from blacklist based on visibility
+        if (!isVolteVisible.value) {
+            if (!blacklistItems.contains("volte")) blacklistItems.add("volte")
+            if (!blacklistItems.contains("vowifi")) blacklistItems.add("vowifi")
+            if (!blacklistItems.contains("ims_volte")) blacklistItems.add("ims_volte")
+        } else {
+            blacklistItems.remove("volte")
+            blacklistItems.remove("vowifi")
+            blacklistItems.remove("ims_volte")
+        }
+
+        // Add or remove cast from blacklist based on visibility
+        if (!isCastVisible.value && !blacklistItems.contains("cast")) {
+            blacklistItems.add("cast")
+        } else if (isCastVisible.value) {
+            blacklistItems.remove("cast")
+        }
+
+        // Add or remove clock from blacklist based on visibility
+        if (!isClockVisible.value && !blacklistItems.contains("clock")) {
+            blacklistItems.add("clock")
+        } else if (isClockVisible.value) {
+            blacklistItems.remove("clock")
+        }
+
         val newBlacklist = blacklistItems.joinToString(",")
 
         try {
@@ -248,6 +300,52 @@ class StatusBarIconViewModel : ViewModel() {
             blacklistItems.add("bluetooth")
         } else if (isBluetoothVisible.value) {
             blacklistItems.remove("bluetooth")
+        }
+
+        // Handle Data Saver visibility
+        if (!isDataSaverVisible.value && !blacklistItems.contains("data_saver")) {
+            blacklistItems.add("data_saver")
+        } else if (isDataSaverVisible.value) {
+            blacklistItems.remove("data_saver")
+        }
+
+        // Handle Headset visibility
+        if (!isHeadsetVisible.value && !blacklistItems.contains("headset")) {
+            blacklistItems.add("headset")
+        } else if (isHeadsetVisible.value) {
+            blacklistItems.remove("headset")
+        }
+
+        // Handle Rotate visibility
+        if (!isRotateVisible.value && !blacklistItems.contains("rotate")) {
+            blacklistItems.add("rotate")
+        } else if (isRotateVisible.value) {
+            blacklistItems.remove("rotate")
+        }
+
+        // Handle VoLTE visibility
+        if (!isVolteVisible.value) {
+            if (!blacklistItems.contains("volte")) blacklistItems.add("volte")
+            if (!blacklistItems.contains("vowifi")) blacklistItems.add("vowifi")
+            if (!blacklistItems.contains("ims_volte")) blacklistItems.add("ims_volte")
+        } else {
+            blacklistItems.remove("volte")
+            blacklistItems.remove("vowifi")
+            blacklistItems.remove("ims_volte")
+        }
+
+        // Handle Cast visibility
+        if (!isCastVisible.value && !blacklistItems.contains("cast")) {
+            blacklistItems.add("cast")
+        } else if (isCastVisible.value) {
+            blacklistItems.remove("cast")
+        }
+
+        // Handle Clock visibility
+        if (!isClockVisible.value && !blacklistItems.contains("clock")) {
+            blacklistItems.add("clock")
+        } else if (isClockVisible.value) {
+            blacklistItems.remove("clock")
         }
 
         val newBlacklist = blacklistItems.joinToString(",")
@@ -331,6 +429,52 @@ class StatusBarIconViewModel : ViewModel() {
             blacklistItems.remove("bluetooth")
         }
 
+        // Handle Data Saver visibility
+        if (!isDataSaverVisible.value && !blacklistItems.contains("data_saver")) {
+            blacklistItems.add("data_saver")
+        } else if (isDataSaverVisible.value) {
+            blacklistItems.remove("data_saver")
+        }
+
+        // Handle Headset visibility
+        if (!isHeadsetVisible.value && !blacklistItems.contains("headset")) {
+            blacklistItems.add("headset")
+        } else if (isHeadsetVisible.value) {
+            blacklistItems.remove("headset")
+        }
+
+        // Handle Rotate visibility
+        if (!isRotateVisible.value && !blacklistItems.contains("rotate")) {
+            blacklistItems.add("rotate")
+        } else if (isRotateVisible.value) {
+            blacklistItems.remove("rotate")
+        }
+
+        // Handle VoLTE visibility
+        if (!isVolteVisible.value) {
+            if (!blacklistItems.contains("volte")) blacklistItems.add("volte")
+            if (!blacklistItems.contains("vowifi")) blacklistItems.add("vowifi")
+            if (!blacklistItems.contains("ims_volte")) blacklistItems.add("ims_volte")
+        } else {
+            blacklistItems.remove("volte")
+            blacklistItems.remove("vowifi")
+            blacklistItems.remove("ims_volte")
+        }
+
+        // Handle Cast visibility
+        if (!isCastVisible.value && !blacklistItems.contains("cast")) {
+            blacklistItems.add("cast")
+        } else if (isCastVisible.value) {
+            blacklistItems.remove("cast")
+        }
+
+        // Handle Clock visibility
+        if (!isClockVisible.value && !blacklistItems.contains("clock")) {
+            blacklistItems.add("clock")
+        } else if (isClockVisible.value) {
+            blacklistItems.remove("clock")
+        }
+
         val newBlacklist = blacklistItems.joinToString(",")
 
         try {
@@ -407,6 +551,12 @@ class StatusBarIconViewModel : ViewModel() {
         isAlarmClockVisible.value = prefs.getBoolean("icon_alarm_clock_visible", false)
         isHotspotVisible.value = prefs.getBoolean("icon_hotspot_visible", false)
         isBluetoothVisible.value = prefs.getBoolean("icon_bluetooth_visible", false)
+        isDataSaverVisible.value = prefs.getBoolean("icon_data_saver_visible", false)
+        isHeadsetVisible.value = prefs.getBoolean("icon_headset_visible", false)
+        isRotateVisible.value = prefs.getBoolean("icon_rotate_visible", false)
+        isVolteVisible.value = prefs.getBoolean("icon_volte_visible", false)
+        isCastVisible.value = prefs.getBoolean("icon_cast_visible", false)
+        isClockVisible.value = prefs.getBoolean("icon_clock_visible", false)
     }
 
     private fun loadSmartWiFiPref(context: Context) {
@@ -483,6 +633,54 @@ class StatusBarIconViewModel : ViewModel() {
         isBluetoothVisible.value = visible
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
             putBoolean("icon_bluetooth_visible", visible)
+        }
+        updateIconBlacklist(context)
+    }
+
+    fun setDataSaverVisible(visible: Boolean, context: Context) {
+        isDataSaverVisible.value = visible
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
+            putBoolean("icon_data_saver_visible", visible)
+        }
+        updateIconBlacklist(context)
+    }
+
+    fun setHeadsetVisible(visible: Boolean, context: Context) {
+        isHeadsetVisible.value = visible
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
+            putBoolean("icon_headset_visible", visible)
+        }
+        updateIconBlacklist(context)
+    }
+
+    fun setRotateVisible(visible: Boolean, context: Context) {
+        isRotateVisible.value = visible
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
+            putBoolean("icon_rotate_visible", visible)
+        }
+        updateIconBlacklist(context)
+    }
+
+    fun setVolteVisible(visible: Boolean, context: Context) {
+        isVolteVisible.value = visible
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
+            putBoolean("icon_volte_visible", visible)
+        }
+        updateIconBlacklist(context)
+    }
+
+    fun setCastVisible(visible: Boolean, context: Context) {
+        isCastVisible.value = visible
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
+            putBoolean("icon_cast_visible", visible)
+        }
+        updateIconBlacklist(context)
+    }
+
+    fun setClockVisible(visible: Boolean, context: Context) {
+        isClockVisible.value = visible
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
+            putBoolean("icon_clock_visible", visible)
         }
         updateIconBlacklist(context)
     }
