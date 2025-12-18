@@ -55,6 +55,8 @@ import com.sameerasw.essentials.ui.components.ReusableTopAppBar
 import com.sameerasw.essentials.R
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import android.content.SharedPreferences
+import androidx.compose.runtime.mutableStateOf
 
 private const val TAG = "LinkPickerScreen"
 
@@ -67,7 +69,7 @@ fun LinkPickerScreen(uri: Uri, onFinish: () -> Unit, modifier: Modifier = Modifi
     Log.d(TAG, "LinkPickerScreen created with URI: $uri")
 
     // Query apps once when composable is created
-    val openWithApps = remember {
+    val baseOpenWithApps = remember {
         queryOpenWithApps(context, uri).also {
             Log.d(TAG, "Open with apps: ${it.size}")
             it.forEach { app ->
@@ -76,13 +78,38 @@ fun LinkPickerScreen(uri: Uri, onFinish: () -> Unit, modifier: Modifier = Modifi
         }
     }
 
-    val shareWithApps = remember {
+    val baseShareWithApps = remember {
         queryShareWithApps(context, uri).also {
             Log.d(TAG, "Share with apps: ${it.size}")
             it.forEach { app ->
                 Log.d(TAG, "  - ${app.activityInfo.loadLabel(context.packageManager)} (${app.activityInfo.packageName})")
             }
         }
+    }
+
+    // Pinned packages state
+    val pinnedPackages = remember { mutableStateOf(getPinnedPackages(context)) }
+
+    // Sorted apps: pinned first, then unpinned, both alphabetical
+    val openWithApps = remember(baseOpenWithApps, pinnedPackages.value) {
+        baseOpenWithApps.sortedWith(compareBy<ResolveInfo> { !pinnedPackages.value.contains(it.activityInfo.packageName) }.thenBy { it.loadLabel(context.packageManager).toString().lowercase() })
+    }
+
+    val shareWithApps = remember(baseShareWithApps, pinnedPackages.value) {
+        baseShareWithApps.sortedWith(compareBy<ResolveInfo> { !pinnedPackages.value.contains(it.activityInfo.packageName) }.thenBy { it.loadLabel(context.packageManager).toString().lowercase() })
+    }
+
+    // toggle pin
+    val togglePin: (String) -> Unit = { packageName ->
+        val current = pinnedPackages.value.toMutableSet()
+        if (current.contains(packageName)) {
+            current.remove(packageName)
+        } else {
+            current.add(packageName)
+        }
+        setPinnedPackages(context, current)
+        pinnedPackages.value = current
+        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
     }
 
     // Pager state for swiping between tabs
@@ -196,10 +223,10 @@ fun LinkPickerScreen(uri: Uri, onFinish: () -> Unit, modifier: Modifier = Modifi
             ) { page ->
                 when (page) {
                     0 -> {
-                        OpenWithContent(openWithApps, uri, onFinish, Modifier)
+                        OpenWithContent(openWithApps, uri, onFinish, Modifier, togglePin, pinnedPackages.value)
                     }
                     1 -> {
-                        ShareWithContent(shareWithApps, uri, onFinish, Modifier)
+                        ShareWithContent(shareWithApps, uri, onFinish, Modifier, togglePin, pinnedPackages.value)
                     }
                 }
             }
@@ -309,4 +336,14 @@ private fun queryShareWithApps(context: android.content.Context, uri: Uri): List
         Log.e(TAG, "Error querying share with apps", e)
         emptyList()
     }
+}
+
+private fun getPinnedPackages(context: Context): Set<String> {
+    val prefs: SharedPreferences = context.getSharedPreferences("link_prefs", Context.MODE_PRIVATE)
+    return prefs.getStringSet("pinned_packages", emptySet()) ?: emptySet()
+}
+
+private fun setPinnedPackages(context: Context, packages: Set<String>) {
+    val prefs: SharedPreferences = context.getSharedPreferences("link_prefs", Context.MODE_PRIVATE)
+    prefs.edit().putStringSet("pinned_packages", packages).apply()
 }

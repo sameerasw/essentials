@@ -57,7 +57,8 @@ class FeatureSettingsActivity : ComponentActivity() {
             "Statusbar icons" to "Control statusbar icons visibility",
             "Caffeinate" to "Keep the screen awake",
             "Edge lighting" to "Preview edge lighting effects on new notifications",
-            "Sound mode tile" to "QS tile to toggle sound mode"
+            "Sound mode tile" to "QS tile to toggle sound mode",
+            "Link actions" to "Handle links with multiple apps"
         )
         val description = featureDescriptions[feature] ?: ""
         setContent {
@@ -249,6 +250,14 @@ class FeatureSettingsActivity : ComponentActivity() {
                             }
                             "Sound mode tile" -> {
                                 SoundModeTileSettingsUI(modifier = Modifier.padding(top = 16.dp))
+                            }
+                            "Link actions" -> {
+                                // Empty for now
+                                androidx.compose.material3.Text(
+                                    text = "Settings for Link actions will be added here.",
+                                    modifier = Modifier.padding(16.dp),
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
                             }
                             else -> {
                                 ScreenOffWidgetSettingsUI(

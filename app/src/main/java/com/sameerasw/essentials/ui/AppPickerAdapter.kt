@@ -2,10 +2,12 @@ package com.sameerasw.essentials.ui
 
 import android.content.pm.ResolveInfo
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -26,14 +28,24 @@ import coil.compose.AsyncImage
 fun AppPickerItem(
     resolveInfo: ResolveInfo,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    togglePin: (String) -> Unit,
+    pinnedPackages: Set<String>
 ) {
     val context = LocalContext.current
     val interactionSource = remember { MutableInteractionSource() }
+    val packageName = resolveInfo.activityInfo.packageName
+    val isPinned = pinnedPackages.contains(packageName)
 
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .combinedClickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = onClick,
+                onLongClick = { togglePin(packageName) }
+            )
             .background(
                 color = MaterialTheme.colorScheme.surfaceBright,
                 shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd)
@@ -63,6 +75,15 @@ fun AppPickerItem(
                 overflow = TextOverflow.Ellipsis
             )
         }
+
+        if (isPinned) {
+            androidx.compose.material3.Icon(
+                painter = androidx.compose.ui.res.painterResource(id = com.sameerasw.essentials.R.drawable.rounded_bookmark_24),
+                contentDescription = "Pinned",
+                modifier = Modifier.size(20.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
+            Spacer(Modifier.padding())
+        }
     }
 }
-

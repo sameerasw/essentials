@@ -367,6 +367,12 @@ fun SetupFeatures(
                 R.drawable.rounded_volume_up_24,
                 "Tools",
                 "QS tile to toggle sound mode"
+            ),
+            FeatureItem(
+                "Link actions",
+                R.drawable.rounded_link_24,
+                "Tools",
+                "Handle links with multiple apps"
             )
         )
     }
@@ -515,7 +521,7 @@ fun SetupFeatures(
                         iconRes = feature.iconRes,
                         modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
                         isToggleEnabled = isToggleEnabled,
-                        showToggle = feature.title != "Sound mode tile" && feature.title != "Screen off widget", // Hide toggle for Sound mode tile and Screen off widget
+                        showToggle = feature.title != "Sound mode tile" && feature.title != "Screen off widget" && feature.title != "Link actions", // Hide toggle for Sound mode tile, Screen off widget, and Link actions
                         hasMoreSettings = feature.title != FEATURE_MAPS_POWER_SAVING,
                         onDisabledToggleClick = {
                             currentFeature = feature.title
