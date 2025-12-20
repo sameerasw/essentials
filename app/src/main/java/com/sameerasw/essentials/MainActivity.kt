@@ -46,24 +46,7 @@ class MainActivity : ComponentActivity() {
             val splashScreenView = splashScreenViewProvider.view
             val splashIcon = splashScreenViewProvider.iconView
 
-            // Scale down animation
-            val scaleUp = ObjectAnimator.ofFloat(splashIcon, "scaleX", 1f, 0.5f).apply {
-                interpolator = AnticipateInterpolator()
-                duration = 750
-            }
-
-            val scaleUpY = ObjectAnimator.ofFloat(splashIcon, "scaleY", 1f, 0.5f).apply {
-                interpolator = AnticipateInterpolator()
-                duration = 750
-            }
-
-            // rotate
-            val rotate360 = ObjectAnimator.ofFloat(splashIcon, "rotation", 0f,-90f).apply {
-                interpolator = AnticipateInterpolator()
-                duration = 750
-            }
-
-            // Fade out animation
+            // Fade out animation for the splash screen view
             val fadeOut = ObjectAnimator.ofFloat(splashScreenView, "alpha", 1f, 0f).apply {
                 interpolator = AnticipateInterpolator()
                 duration = 750
@@ -72,10 +55,31 @@ class MainActivity : ComponentActivity() {
                 splashScreenViewProvider.remove()
             }
 
+            // Only animate the icon if it exists (some OEM devices may not have it)
+            if (splashIcon != null) {
+                // Scale down animation
+                val scaleUp = ObjectAnimator.ofFloat(splashIcon, "scaleX", 1f, 0.5f).apply {
+                    interpolator = AnticipateInterpolator()
+                    duration = 750
+                }
+
+                val scaleUpY = ObjectAnimator.ofFloat(splashIcon, "scaleY", 1f, 0.5f).apply {
+                    interpolator = AnticipateInterpolator()
+                    duration = 750
+                }
+
+                // rotate
+                val rotate360 = ObjectAnimator.ofFloat(splashIcon, "rotation", 0f,-90f).apply {
+                    interpolator = AnticipateInterpolator()
+                    duration = 750
+                }
+
+                scaleUp.start()
+                scaleUpY.start()
+                rotate360.start()
+            }
+
             fadeOut.start()
-            scaleUp.start()
-            scaleUpY.start()
-            rotate360.start()
         }
 
         enableEdgeToEdge()
