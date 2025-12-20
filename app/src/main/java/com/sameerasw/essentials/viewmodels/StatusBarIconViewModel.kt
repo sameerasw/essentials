@@ -11,7 +11,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
+import com.sameerasw.essentials.domain.StatusBarIconRegistry
 import com.sameerasw.essentials.ui.components.pickers.NetworkType
+import com.sameerasw.essentials.utils.resetAllIconVisibilities
+import com.sameerasw.essentials.utils.updateIconBlacklistSetting
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -20,24 +23,12 @@ import kotlinx.coroutines.launch
 
 class StatusBarIconViewModel : ViewModel() {
     val isWriteSecureSettingsEnabled = mutableStateOf(false)
-    val isMobileDataVisible = mutableStateOf(true)
-    val isWiFiVisible = mutableStateOf(true)
     val isSmartWiFiEnabled = mutableStateOf(false)
     val isSmartDataEnabled = mutableStateOf(false)
     val selectedNetworkTypes = mutableStateOf(setOf(NetworkType.NETWORK_4G, NetworkType.NETWORK_5G))
 
-    // New icon visibility states
-    val isVpnVisible = mutableStateOf(true)
-    val isAlarmClockVisible = mutableStateOf(true)
-    val isHotspotVisible = mutableStateOf(true)
-    val isBluetoothVisible = mutableStateOf(true)
-    val isDataSaverVisible = mutableStateOf(true)
-    val isHeadsetVisible = mutableStateOf(true)
-    val isRotateVisible = mutableStateOf(true)
-    val isVolteVisible = mutableStateOf(true)
-    val isCastVisible = mutableStateOf(true)
-    val isClockVisible = mutableStateOf(true)
-    val isAirplaneVisible = mutableStateOf(true)
+    // Dynamic icon visibility states based on registry
+    private val iconVisibilities = mutableMapOf<String, androidx.compose.runtime.MutableState<Boolean>>()
 
     private var updateJob: Job? = null
     private var smartWifiJob: Job? = null
@@ -46,11 +37,46 @@ class StatusBarIconViewModel : ViewModel() {
 
     companion object {
         const val ICON_BLACKLIST_SETTING = "icon_blacklist"
-        const val BASE_BLACKLIST = "rotate,vowifi,ims,nfc,volte,headset,ims_volte"
         const val PREF_SMART_WIFI_ENABLED = "smart_wifi_enabled"
         const val PREF_SMART_DATA_ENABLED = "smart_data_enabled"
         const val PREF_SELECTED_NETWORK_TYPES = "selected_network_types"
     }
+
+    init {
+        // Initialize visibility states for all icons
+        for (icon in StatusBarIconRegistry.ALL_ICONS) {
+            iconVisibilities[icon.id] = mutableStateOf(icon.defaultVisible)
+        }
+    }
+
+    /**
+     * Get visibility state for a specific icon by ID
+     */
+    fun getIconVisibility(iconId: String): androidx.compose.runtime.MutableState<Boolean>? {
+        return iconVisibilities[iconId]
+    }
+
+    /**
+     * Get all visibility states as a map
+     */
+    fun getIconVisibilities(): Map<String, Boolean> {
+        return iconVisibilities.mapValues { it.value.value }
+    }
+
+    // Backward compatibility properties for UI
+    val isMobileDataVisible get() = iconVisibilities["mobile_data"] ?: mutableStateOf(true)
+    val isWiFiVisible get() = iconVisibilities["wifi"] ?: mutableStateOf(true)
+    val isVpnVisible get() = iconVisibilities["vpn"] ?: mutableStateOf(true)
+    val isAlarmClockVisible get() = iconVisibilities["alarm"] ?: mutableStateOf(false)
+    val isHotspotVisible get() = iconVisibilities["hotspot"] ?: mutableStateOf(true)
+    val isBluetoothVisible get() = iconVisibilities["bluetooth"] ?: mutableStateOf(true)
+    val isDataSaverVisible get() = iconVisibilities["data_saver"] ?: mutableStateOf(true)
+    val isHeadsetVisible get() = iconVisibilities["headset"] ?: mutableStateOf(false)
+    val isRotateVisible get() = iconVisibilities["rotate"] ?: mutableStateOf(false)
+    val isVolteVisible get() = iconVisibilities["volte"] ?: mutableStateOf(true)
+    val isCastVisible get() = iconVisibilities["cast"] ?: mutableStateOf(true)
+    val isClockVisible get() = iconVisibilities["clock"] ?: mutableStateOf(true)
+    val isAirplaneVisible get() = iconVisibilities["airplane_mode"] ?: mutableStateOf(true)
 
     fun check(context: Context) {
         isWriteSecureSettingsEnabled.value = canWriteSecureSettings(context)
@@ -68,21 +94,73 @@ class StatusBarIconViewModel : ViewModel() {
         }
     }
 
-    fun setMobileDataVisible(visible: Boolean, context: Context) {
-        isMobileDataVisible.value = visible
+    /**
+     * Generic method to set icon visibility
+     * Reduces code duplication by handling all icon types
+     */
+    fun setIconVisibility(iconId: String, visible: Boolean, context: Context) {
+        val iconState = iconVisibilities[iconId] ?: return
+        iconState.value = visible
+
+        // Save to preferences
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("icon_mobile_visible", visible)
+            putBoolean(StatusBarIconRegistry.getIconById(iconId)?.preferencesKey ?: "icon_${iconId}_visible", visible)
         }
 
         updateIconBlacklist(context)
     }
 
+    // Backward compatibility methods
+    fun setMobileDataVisible(visible: Boolean, context: Context) {
+        setIconVisibility("mobile_data", visible, context)
+    }
+
     fun setWiFiVisible(visible: Boolean, context: Context) {
-        isWiFiVisible.value = visible
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("icon_wifi_visible", visible)
-        }
-        updateIconBlacklist(context)
+        setIconVisibility("wifi", visible, context)
+    }
+
+    fun setVpnVisible(visible: Boolean, context: Context) {
+        setIconVisibility("vpn", visible, context)
+    }
+
+    fun setAlarmClockVisible(visible: Boolean, context: Context) {
+        setIconVisibility("alarm", visible, context)
+    }
+
+    fun setHotspotVisible(visible: Boolean, context: Context) {
+        setIconVisibility("hotspot", visible, context)
+    }
+
+    fun setBluetoothVisible(visible: Boolean, context: Context) {
+        setIconVisibility("bluetooth", visible, context)
+    }
+
+    fun setDataSaverVisible(visible: Boolean, context: Context) {
+        setIconVisibility("data_saver", visible, context)
+    }
+
+    fun setHeadsetVisible(visible: Boolean, context: Context) {
+        setIconVisibility("headset", visible, context)
+    }
+
+    fun setRotateVisible(visible: Boolean, context: Context) {
+        setIconVisibility("rotate", visible, context)
+    }
+
+    fun setVolteVisible(visible: Boolean, context: Context) {
+        setIconVisibility("volte", visible, context)
+    }
+
+    fun setCastVisible(visible: Boolean, context: Context) {
+        setIconVisibility("cast", visible, context)
+    }
+
+    fun setClockVisible(visible: Boolean, context: Context) {
+        setIconVisibility("clock", visible, context)
+    }
+
+    fun setAirplaneVisible(visible: Boolean, context: Context) {
+        setIconVisibility("airplane_mode", visible, context)
     }
 
     fun setSmartWiFiEnabled(enabled: Boolean, context: Context) {
@@ -95,7 +173,6 @@ class StatusBarIconViewModel : ViewModel() {
             startSmartWiFiUpdates(context)
         } else {
             smartWifiJob?.cancel()
-            // When disabling smart WiFi, restore manual settings
             updateIconBlacklist(context)
         }
     }
@@ -113,7 +190,6 @@ class StatusBarIconViewModel : ViewModel() {
             updateIconBlacklist(context)
         }
 
-        // Update the network types based on Smart Data setting
         updateSelectedNetworkTypes(context, enabled)
     }
 
@@ -122,11 +198,9 @@ class StatusBarIconViewModel : ViewModel() {
         val currentTypes = prefs.getStringSet(PREF_SELECTED_NETWORK_TYPES, setOf(NetworkType.NETWORK_4G.name, NetworkType.NETWORK_5G.name))?.toMutableSet() ?: mutableSetOf()
 
         if (enabled) {
-            // Add 5G and 4G to selected types if not already present
             currentTypes.add(NetworkType.NETWORK_5G.name)
             currentTypes.add(NetworkType.NETWORK_4G.name)
         } else {
-            // Remove 5G and 4G from selected types
             currentTypes.remove(NetworkType.NETWORK_5G.name)
             currentTypes.remove(NetworkType.NETWORK_4G.name)
         }
@@ -138,113 +212,15 @@ class StatusBarIconViewModel : ViewModel() {
         }
     }
 
+    /**
+     * Update the icon blacklist setting based on current visibility states
+     * Uses efficient Set-based operations through StatusBarIconRegistry
+     */
     private fun updateIconBlacklist(context: Context) {
         if (!isWriteSecureSettingsEnabled.value) return
 
-        val blacklistItems = BASE_BLACKLIST.split(",").toMutableList()
-
-        // Add or remove mobile from blacklist based on visibility
-        if (!isMobileDataVisible.value && !blacklistItems.contains("mobile")) {
-            blacklistItems.add("mobile")
-        } else if (isMobileDataVisible.value) {
-            blacklistItems.remove("mobile")
-        }
-
-        // Add or remove wifi from blacklist based on visibility
-        if (!isWiFiVisible.value && !blacklistItems.contains("wifi")) {
-            blacklistItems.add("wifi")
-        } else if (isWiFiVisible.value) {
-            blacklistItems.remove("wifi")
-        }
-
-        // Add or remove vpn from blacklist based on visibility
-        if (!isVpnVisible.value && !blacklistItems.contains("vpn")) {
-            blacklistItems.add("vpn")
-        } else if (isVpnVisible.value) {
-            blacklistItems.remove("vpn")
-        }
-
-        // Add or remove alarm_clock from blacklist based on visibility
-        if (!isAlarmClockVisible.value && !blacklistItems.contains("alarm_clock")) {
-            blacklistItems.add("alarm_clock")
-        } else if (isAlarmClockVisible.value) {
-            blacklistItems.remove("alarm_clock")
-        }
-
-        // Add or remove hotspot from blacklist based on visibility
-        if (!isHotspotVisible.value && !blacklistItems.contains("hotspot")) {
-            blacklistItems.add("hotspot")
-        } else if (isHotspotVisible.value) {
-            blacklistItems.remove("hotspot")
-        }
-
-        // Add or remove bluetooth from blacklist based on visibility
-        if (!isBluetoothVisible.value && !blacklistItems.contains("bluetooth")) {
-            blacklistItems.add("bluetooth")
-        } else if (isBluetoothVisible.value) {
-            blacklistItems.remove("bluetooth")
-        }
-
-        // Add or remove data_saver from blacklist based on visibility
-        if (!isDataSaverVisible.value && !blacklistItems.contains("data_saver")) {
-            blacklistItems.add("data_saver")
-        } else if (isDataSaverVisible.value) {
-            blacklistItems.remove("data_saver")
-        }
-
-        // Add or remove headset from blacklist based on visibility
-        if (!isHeadsetVisible.value && !blacklistItems.contains("headset")) {
-            blacklistItems.add("headset")
-        } else if (isHeadsetVisible.value) {
-            blacklistItems.remove("headset")
-        }
-
-        // Add or remove rotate from blacklist based on visibility
-        if (!isRotateVisible.value && !blacklistItems.contains("rotate")) {
-            blacklistItems.add("rotate")
-        } else if (isRotateVisible.value) {
-            blacklistItems.remove("rotate")
-        }
-
-        // Add or remove volte from blacklist based on visibility
-        if (!isVolteVisible.value) {
-            if (!blacklistItems.contains("volte")) blacklistItems.add("volte")
-            if (!blacklistItems.contains("vowifi")) blacklistItems.add("vowifi")
-            if (!blacklistItems.contains("ims_volte")) blacklistItems.add("ims_volte")
-        } else {
-            blacklistItems.remove("volte")
-            blacklistItems.remove("vowifi")
-            blacklistItems.remove("ims_volte")
-        }
-
-        // Add or remove cast from blacklist based on visibility
-        if (!isCastVisible.value && !blacklistItems.contains("cast")) {
-            blacklistItems.add("cast")
-        } else if (isCastVisible.value) {
-            blacklistItems.remove("cast")
-        }
-
-        // Add or remove clock from blacklist based on visibility
-        if (!isClockVisible.value && !blacklistItems.contains("clock")) {
-            blacklistItems.add("clock")
-        } else if (isClockVisible.value) {
-            blacklistItems.remove("clock")
-        }
-
-        // Add or remove airplane_mode from blacklist based on visibility
-        if (!isAirplaneVisible.value && !blacklistItems.contains("airplane_mode")) {
-            blacklistItems.add("airplane_mode")
-        } else if (isAirplaneVisible.value) {
-            blacklistItems.remove("airplane_mode")
-        }
-
-        val newBlacklist = blacklistItems.joinToString(",")
-
-        try {
-            Settings.Secure.putString(context.contentResolver, ICON_BLACKLIST_SETTING, newBlacklist)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        val blacklistNames = StatusBarIconRegistry.getBlacklistNames(getIconVisibilities())
+        updateIconBlacklistSetting(context, blacklistNames)
     }
 
     private fun startSmartWiFiUpdates(context: Context) {
@@ -253,123 +229,26 @@ class StatusBarIconViewModel : ViewModel() {
             while (true) {
                 val isWifiConnected = isWifiConnected(context)
                 updateSmartWiFiBlacklist(context, isWifiConnected)
-                delay(1000) // Check every second
+                delay(1000)
             }
         }
     }
 
+    /**
+     * Update blacklist for Smart WiFi feature
+     * Uses registry-based approach for clean code
+     */
     private fun updateSmartWiFiBlacklist(context: Context, wifiConnected: Boolean) {
         if (!isSmartWiFiEnabled.value || !isWriteSecureSettingsEnabled.value) return
 
-        val blacklistItems = BASE_BLACKLIST.split(",").toMutableList()
+        val visibilities = getIconVisibilities().toMutableMap()
 
-        // Handle WiFi visibility
-        if (!isWiFiVisible.value && !blacklistItems.contains("wifi")) {
-            blacklistItems.add("wifi")
-        } else if (isWiFiVisible.value) {
-            blacklistItems.remove("wifi")
-        }
+        // Smart WiFi logic: hide mobile data when WiFi is connected
+        val mobileDataVisible = visibilities["mobile_data"] ?: true
+        visibilities["mobile_data"] = mobileDataVisible && !wifiConnected
 
-        // Handle Mobile Data visibility with Smart WiFi logic
-        if (wifiConnected) {
-            // WiFi is connected - hide mobile data if Smart WiFi is enabled
-            if (!blacklistItems.contains("mobile")) {
-                blacklistItems.add("mobile")
-            }
-        } else {
-            // WiFi is not connected - show mobile data only if it's enabled manually
-            if (isMobileDataVisible.value) {
-                blacklistItems.remove("mobile")
-            } else if (!blacklistItems.contains("mobile")) {
-                blacklistItems.add("mobile")
-            }
-        }
-
-        // Handle other icon visibility (VPN, Alarm Clock, Hotspot, Bluetooth)
-        if (!isVpnVisible.value && !blacklistItems.contains("vpn")) {
-            blacklistItems.add("vpn")
-        } else if (isVpnVisible.value) {
-            blacklistItems.remove("vpn")
-        }
-
-        if (!isAlarmClockVisible.value && !blacklistItems.contains("alarm_clock")) {
-            blacklistItems.add("alarm_clock")
-        } else if (isAlarmClockVisible.value) {
-            blacklistItems.remove("alarm_clock")
-        }
-
-        if (!isHotspotVisible.value && !blacklistItems.contains("hotspot")) {
-            blacklistItems.add("hotspot")
-        } else if (isHotspotVisible.value) {
-            blacklistItems.remove("hotspot")
-        }
-
-        if (!isBluetoothVisible.value && !blacklistItems.contains("bluetooth")) {
-            blacklistItems.add("bluetooth")
-        } else if (isBluetoothVisible.value) {
-            blacklistItems.remove("bluetooth")
-        }
-
-        // Handle Data Saver visibility
-        if (!isDataSaverVisible.value && !blacklistItems.contains("data_saver")) {
-            blacklistItems.add("data_saver")
-        } else if (isDataSaverVisible.value) {
-            blacklistItems.remove("data_saver")
-        }
-
-        // Handle Headset visibility
-        if (!isHeadsetVisible.value && !blacklistItems.contains("headset")) {
-            blacklistItems.add("headset")
-        } else if (isHeadsetVisible.value) {
-            blacklistItems.remove("headset")
-        }
-
-        // Handle Rotate visibility
-        if (!isRotateVisible.value && !blacklistItems.contains("rotate")) {
-            blacklistItems.add("rotate")
-        } else if (isRotateVisible.value) {
-            blacklistItems.remove("rotate")
-        }
-
-        // Handle VoLTE visibility
-        if (!isVolteVisible.value) {
-            if (!blacklistItems.contains("volte")) blacklistItems.add("volte")
-            if (!blacklistItems.contains("vowifi")) blacklistItems.add("vowifi")
-            if (!blacklistItems.contains("ims_volte")) blacklistItems.add("ims_volte")
-        } else {
-            blacklistItems.remove("volte")
-            blacklistItems.remove("vowifi")
-            blacklistItems.remove("ims_volte")
-        }
-
-        // Handle Cast visibility
-        if (!isCastVisible.value && !blacklistItems.contains("cast")) {
-            blacklistItems.add("cast")
-        } else if (isCastVisible.value) {
-            blacklistItems.remove("cast")
-        }
-
-        // Handle Clock visibility
-        if (!isClockVisible.value && !blacklistItems.contains("clock")) {
-            blacklistItems.add("clock")
-        } else if (isClockVisible.value) {
-            blacklistItems.remove("clock")
-        }
-
-        // Handle Airplane Mode visibility
-        if (!isAirplaneVisible.value && !blacklistItems.contains("airplane_mode")) {
-            blacklistItems.add("airplane_mode")
-        } else if (isAirplaneVisible.value) {
-            blacklistItems.remove("airplane_mode")
-        }
-
-        val newBlacklist = blacklistItems.joinToString(",")
-
-        try {
-            Settings.Secure.putString(context.contentResolver, ICON_BLACKLIST_SETTING, newBlacklist)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        val blacklistNames = StatusBarIconRegistry.getBlacklistNames(visibilities)
+        updateIconBlacklistSetting(context, blacklistNames)
     }
 
     private fun startSmartDataUpdates(context: Context) {
@@ -378,137 +257,37 @@ class StatusBarIconViewModel : ViewModel() {
             while (true) {
                 val currentNetworkType = getCurrentNetworkType(context)
                 updateSmartDataBlacklist(context, currentNetworkType)
-                delay(10000) // Check every 10 seconds for network changes
+                delay(10000)
             }
         }
     }
 
+    /**
+     * Update blacklist for Smart Data feature
+     */
     private fun updateSmartDataBlacklist(context: Context, networkType: NetworkType) {
-        if (!isSmartDataEnabled.value || !isWriteSecureSettingsEnabled.value || !isMobileDataVisible.value) {
+        if (!isSmartDataEnabled.value || !isWriteSecureSettingsEnabled.value) {
             return
         }
 
-        // If Smart WiFi is enabled and WiFi is connected, let Smart WiFi handle mobile data visibility
         if (isSmartWiFiEnabled.value && isWifiConnected(context)) {
             return
         }
 
-        val blacklistItems = BASE_BLACKLIST.split(",").toMutableList()
+        val visibilities = getIconVisibilities().toMutableMap()
 
-        // Handle WiFi visibility
-        if (!isWiFiVisible.value && !blacklistItems.contains("wifi")) {
-            blacklistItems.add("wifi")
-        } else if (isWiFiVisible.value) {
-            blacklistItems.remove("wifi")
-        }
-
-        // Handle Mobile Data visibility with Smart Data logic
         val shouldHideMobileData = selectedNetworkTypes.value.contains(networkType) ||
             (selectedNetworkTypes.value.contains(NetworkType.NETWORK_OTHER) &&
              !setOf(NetworkType.NETWORK_5G, NetworkType.NETWORK_4G, NetworkType.NETWORK_3G).contains(networkType))
 
-        if (shouldHideMobileData) {
-            // Hide mobile data
-            if (!blacklistItems.contains("mobile")) {
-                blacklistItems.add("mobile")
-            }
-        } else {
-            // Show mobile data (only if manually enabled)
-            if (isMobileDataVisible.value) {
-                blacklistItems.remove("mobile")
-            }
-        }
+        visibilities["mobile_data"] = !shouldHideMobileData
 
-        // Handle other icon visibility (VPN, Alarm Clock, Hotspot, Bluetooth)
-        if (!isVpnVisible.value && !blacklistItems.contains("vpn")) {
-            blacklistItems.add("vpn")
-        } else if (isVpnVisible.value) {
-            blacklistItems.remove("vpn")
-        }
-
-        if (!isAlarmClockVisible.value && !blacklistItems.contains("alarm_clock")) {
-            blacklistItems.add("alarm_clock")
-        } else if (isAlarmClockVisible.value) {
-            blacklistItems.remove("alarm_clock")
-        }
-
-        if (!isHotspotVisible.value && !blacklistItems.contains("hotspot")) {
-            blacklistItems.add("hotspot")
-        } else if (isHotspotVisible.value) {
-            blacklistItems.remove("hotspot")
-        }
-
-        if (!isBluetoothVisible.value && !blacklistItems.contains("bluetooth")) {
-            blacklistItems.add("bluetooth")
-        } else if (isBluetoothVisible.value) {
-            blacklistItems.remove("bluetooth")
-        }
-
-        // Handle Data Saver visibility
-        if (!isDataSaverVisible.value && !blacklistItems.contains("data_saver")) {
-            blacklistItems.add("data_saver")
-        } else if (isDataSaverVisible.value) {
-            blacklistItems.remove("data_saver")
-        }
-
-        // Handle Headset visibility
-        if (!isHeadsetVisible.value && !blacklistItems.contains("headset")) {
-            blacklistItems.add("headset")
-        } else if (isHeadsetVisible.value) {
-            blacklistItems.remove("headset")
-        }
-
-        // Handle Rotate visibility
-        if (!isRotateVisible.value && !blacklistItems.contains("rotate")) {
-            blacklistItems.add("rotate")
-        } else if (isRotateVisible.value) {
-            blacklistItems.remove("rotate")
-        }
-
-        // Handle VoLTE visibility
-        if (!isVolteVisible.value) {
-            if (!blacklistItems.contains("volte")) blacklistItems.add("volte")
-            if (!blacklistItems.contains("vowifi")) blacklistItems.add("vowifi")
-            if (!blacklistItems.contains("ims_volte")) blacklistItems.add("ims_volte")
-        } else {
-            blacklistItems.remove("volte")
-            blacklistItems.remove("vowifi")
-            blacklistItems.remove("ims_volte")
-        }
-
-        // Handle Cast visibility
-        if (!isCastVisible.value && !blacklistItems.contains("cast")) {
-            blacklistItems.add("cast")
-        } else if (isCastVisible.value) {
-            blacklistItems.remove("cast")
-        }
-
-        // Handle Clock visibility
-        if (!isClockVisible.value && !blacklistItems.contains("clock")) {
-            blacklistItems.add("clock")
-        } else if (isClockVisible.value) {
-            blacklistItems.remove("clock")
-        }
-
-        // Handle Airplane Mode visibility
-        if (!isAirplaneVisible.value && !blacklistItems.contains("airplane_mode")) {
-            blacklistItems.add("airplane_mode")
-        } else if (isAirplaneVisible.value) {
-            blacklistItems.remove("airplane_mode")
-        }
-
-        val newBlacklist = blacklistItems.joinToString(",")
-
-        try {
-            Settings.Secure.putString(context.contentResolver, ICON_BLACKLIST_SETTING, newBlacklist)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        val blacklistNames = StatusBarIconRegistry.getBlacklistNames(visibilities)
+        updateIconBlacklistSetting(context, blacklistNames)
     }
 
     private fun getCurrentNetworkType(context: Context): NetworkType {
         return try {
-            // Check if we have READ_PHONE_STATE permission
             if (ContextCompat.checkSelfPermission(
                     context,
                     Manifest.permission.READ_PHONE_STATE
@@ -521,35 +300,26 @@ class StatusBarIconViewModel : ViewModel() {
             val network = connectivityManager.activeNetwork ?: return NetworkType.NETWORK_OTHER
             val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return NetworkType.NETWORK_OTHER
 
-            // If it's WiFi, return OTHER
             if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
                 return NetworkType.NETWORK_OTHER
             }
 
-            // For cellular networks, use TelephonyManager to get detailed network type
             val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
             @Suppress("DEPRECATION")
             val networkType = telephonyManager.networkType
 
             when (networkType) {
-                // 5G networks
                 TelephonyManager.NETWORK_TYPE_NR -> NetworkType.NETWORK_5G
-
-                // 4G networks
                 TelephonyManager.NETWORK_TYPE_LTE,
                 TelephonyManager.NETWORK_TYPE_HSPAP -> NetworkType.NETWORK_4G
-
-                // 3G networks
                 TelephonyManager.NETWORK_TYPE_HSDPA,
                 TelephonyManager.NETWORK_TYPE_HSUPA,
                 TelephonyManager.NETWORK_TYPE_HSPA,
                 TelephonyManager.NETWORK_TYPE_UMTS,
                 TelephonyManager.NETWORK_TYPE_TD_SCDMA -> NetworkType.NETWORK_3G
-
-                // Everything else is OTHER
                 else -> NetworkType.NETWORK_OTHER
             }
-        } catch (e: Exception) {
+        } catch (@Suppress("UNUSED_PARAMETER") e: Exception) {
             NetworkType.NETWORK_OTHER
         }
     }
@@ -560,26 +330,17 @@ class StatusBarIconViewModel : ViewModel() {
             val network = connectivityManager.activeNetwork ?: return false
             val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
             capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
-        } catch (e: Exception) {
+        } catch (@Suppress("UNUSED_PARAMETER") e: Exception) {
             false
         }
     }
 
     private fun loadIconVisibilityState(context: Context) {
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-        isMobileDataVisible.value = prefs.getBoolean("icon_mobile_visible", true)
-        isWiFiVisible.value = prefs.getBoolean("icon_wifi_visible", false)
-        isVpnVisible.value = prefs.getBoolean("icon_vpn_visible", false)
-        isAlarmClockVisible.value = prefs.getBoolean("icon_alarm_clock_visible", false)
-        isHotspotVisible.value = prefs.getBoolean("icon_hotspot_visible", false)
-        isBluetoothVisible.value = prefs.getBoolean("icon_bluetooth_visible", false)
-        isDataSaverVisible.value = prefs.getBoolean("icon_data_saver_visible", false)
-        isHeadsetVisible.value = prefs.getBoolean("icon_headset_visible", false)
-        isRotateVisible.value = prefs.getBoolean("icon_rotate_visible", false)
-        isVolteVisible.value = prefs.getBoolean("icon_volte_visible", false)
-        isCastVisible.value = prefs.getBoolean("icon_cast_visible", false)
-        isClockVisible.value = prefs.getBoolean("icon_clock_visible", false)
-        isAirplaneVisible.value = prefs.getBoolean("icon_airplane_mode_visible", false)
+        for (icon in StatusBarIconRegistry.ALL_ICONS) {
+            val visibility = prefs.getBoolean(icon.preferencesKey, icon.defaultVisible)
+            iconVisibilities[icon.id]?.value = visibility
+        }
     }
 
     private fun loadSmartWiFiPref(context: Context) {
@@ -595,24 +356,15 @@ class StatusBarIconViewModel : ViewModel() {
     private fun loadSelectedNetworkTypes(context: Context) {
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
         val currentTypes = prefs.getStringSet(PREF_SELECTED_NETWORK_TYPES, setOf(NetworkType.NETWORK_4G.name, NetworkType.NETWORK_5G.name)) ?: setOf()
-
         selectedNetworkTypes.value = currentTypes.map { NetworkType.valueOf(it) }.toSet()
     }
 
     private fun canWriteSecureSettings(context: Context): Boolean {
         return try {
-            val currentValue = Settings.Secure.getString(
-                context.contentResolver,
-                ICON_BLACKLIST_SETTING
-            )
-            // Try to write the same value back (no-op) to verify permission
-            Settings.Secure.putString(
-                context.contentResolver,
-                ICON_BLACKLIST_SETTING,
-                currentValue ?: "$BASE_BLACKLIST,mobile,wifi"
-            )
+            val currentValue = Settings.Secure.getString(context.contentResolver, ICON_BLACKLIST_SETTING)
+            Settings.Secure.putString(context.contentResolver, ICON_BLACKLIST_SETTING, currentValue ?: "")
             true
-        } catch (e: Exception) {
+        } catch (@Suppress("UNUSED_PARAMETER") e: Exception) {
             false
         }
     }
@@ -628,115 +380,31 @@ class StatusBarIconViewModel : ViewModel() {
         smartDataJob?.cancel()
     }
 
-    fun setVpnVisible(visible: Boolean, context: Context) {
-        isVpnVisible.value = visible
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("icon_vpn_visible", visible)
-        }
-        updateIconBlacklist(context)
-    }
-
-    fun setAlarmClockVisible(visible: Boolean, context: Context) {
-        isAlarmClockVisible.value = visible
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("icon_alarm_clock_visible", visible)
-        }
-        updateIconBlacklist(context)
-    }
-
-    fun setHotspotVisible(visible: Boolean, context: Context) {
-        isHotspotVisible.value = visible
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("icon_hotspot_visible", visible)
-        }
-        updateIconBlacklist(context)
-    }
-
-    fun setBluetoothVisible(visible: Boolean, context: Context) {
-        isBluetoothVisible.value = visible
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("icon_bluetooth_visible", visible)
-        }
-        updateIconBlacklist(context)
-    }
-
-    fun setDataSaverVisible(visible: Boolean, context: Context) {
-        isDataSaverVisible.value = visible
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("icon_data_saver_visible", visible)
-        }
-        updateIconBlacklist(context)
-    }
-
-    fun setHeadsetVisible(visible: Boolean, context: Context) {
-        isHeadsetVisible.value = visible
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("icon_headset_visible", visible)
-        }
-        updateIconBlacklist(context)
-    }
-
-    fun setRotateVisible(visible: Boolean, context: Context) {
-        isRotateVisible.value = visible
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("icon_rotate_visible", visible)
-        }
-        updateIconBlacklist(context)
-    }
-
-    fun setVolteVisible(visible: Boolean, context: Context) {
-        isVolteVisible.value = visible
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("icon_volte_visible", visible)
-        }
-        updateIconBlacklist(context)
-    }
-
-    fun setCastVisible(visible: Boolean, context: Context) {
-        isCastVisible.value = visible
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("icon_cast_visible", visible)
-        }
-        updateIconBlacklist(context)
-    }
-
-    fun setClockVisible(visible: Boolean, context: Context) {
-        isClockVisible.value = visible
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("icon_clock_visible", visible)
-        }
-        updateIconBlacklist(context)
-    }
-
-    fun setAirplaneVisible(visible: Boolean, context: Context) {
-        isAirplaneVisible.value = visible
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("icon_airplane_mode_visible", visible)
-        }
-        updateIconBlacklist(context)
-    }
-
+    /**
+     * Reset all icons to their default visibility states
+     */
     fun resetAllIcons(context: Context) {
-        // Set default visibility states
-        setMobileDataVisible(true, context)
-        setWiFiVisible(true, context)
-        setVpnVisible(true, context)
-        setAlarmClockVisible(false, context)
-        setHotspotVisible(true, context)
-        setBluetoothVisible(true, context)
-        setDataSaverVisible(true, context)
-        setHeadsetVisible(false, context)
-        setRotateVisible(false, context)
-        setVolteVisible(true, context)
-        setCastVisible(true, context)
-        setClockVisible(true, context)
-        setAirplaneVisible(true, context)
+        // Reset blacklist setting
+        try {
+            Settings.Secure.putString(context.contentResolver, ICON_BLACKLIST_SETTING, null)
+        } catch (@Suppress("UNUSED_PARAMETER") e: Exception) {
+            e.printStackTrace()
+        }
 
-        // Turn off both smart toggles
-        setSmartWiFiEnabled(false, context)
-        setSmartDataEnabled(false, context)
+        // Reset UI state to defaults
+        for (icon in StatusBarIconRegistry.ALL_ICONS) {
+            iconVisibilities[icon.id]?.value = icon.defaultVisible
+        }
 
-        // Update the icon blacklist to reflect all changes
-        updateIconBlacklist(context)
+        // Turn off smart features
+        isSmartWiFiEnabled.value = false
+        isSmartDataEnabled.value = false
+
+        // Build default visibility map
+        val defaultVisibilities = StatusBarIconRegistry.ALL_ICONS.associate { it.id to it.defaultVisible }
+
+        // Clear preferences
+        resetAllIconVisibilities(context, defaultVisibilities)
     }
 }
+
