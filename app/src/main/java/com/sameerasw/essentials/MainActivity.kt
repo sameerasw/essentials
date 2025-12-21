@@ -42,44 +42,65 @@ class MainActivity : ComponentActivity() {
         splashScreen.setKeepOnScreenCondition { !isAppReady }
 
         // Customize the exit animation - scale up and fade out
+        // Safe implementation for OEM devices that may not provide iconView
         splashScreen.setOnExitAnimationListener { splashScreenViewProvider ->
-            val splashScreenView = splashScreenViewProvider.view
-            val splashIcon = splashScreenViewProvider.iconView
+            try {
+                val splashScreenView = splashScreenViewProvider.view
+                val splashIcon = splashScreenViewProvider.iconView
 
-            // Fade out animation for the splash screen view
-            val fadeOut = ObjectAnimator.ofFloat(splashScreenView, "alpha", 1f, 0f).apply {
-                interpolator = AnticipateInterpolator()
-                duration = 750
-            }
-            fadeOut.doOnEnd {
-                splashScreenViewProvider.remove()
-            }
-
-            // Only animate the icon if it exists (some OEM devices may not have it)
-            if (splashIcon != null) {
-                // Scale down animation
-                val scaleUp = ObjectAnimator.ofFloat(splashIcon, "scaleX", 1f, 0.5f).apply {
+                // Animate the splash screen view fade out
+                val fadeOut = ObjectAnimator.ofFloat(splashScreenView, "alpha", 1f, 0f).apply {
                     interpolator = AnticipateInterpolator()
                     duration = 750
                 }
-
-                val scaleUpY = ObjectAnimator.ofFloat(splashIcon, "scaleY", 1f, 0.5f).apply {
-                    interpolator = AnticipateInterpolator()
-                    duration = 750
+                fadeOut.doOnEnd {
+                    splashScreenViewProvider.remove()
                 }
 
-                // rotate
-                val rotate360 = ObjectAnimator.ofFloat(splashIcon, "rotation", 0f,-90f).apply {
-                    interpolator = AnticipateInterpolator()
-                    duration = 750
+                // Safely animate the icon if it exists
+                // Known issue: Some OEM devices (Samsung One UI 8, Xiaomi on Android 16)
+                // may not provide iconView, causing NullPointerException
+                try {
+                    @Suppress("SENSELESS_COMPARISON")
+                    if (splashIcon != null) {
+                        // Scale down animation
+                        val scaleUp = ObjectAnimator.ofFloat(splashIcon, "scaleX", 1f, 0.5f).apply {
+                            interpolator = AnticipateInterpolator()
+                            duration = 750
+                        }
+
+                        val scaleUpY = ObjectAnimator.ofFloat(splashIcon, "scaleY", 1f, 0.5f).apply {
+                            interpolator = AnticipateInterpolator()
+                            duration = 750
+                        }
+
+                        // rotate
+                        val rotate360 = ObjectAnimator.ofFloat(splashIcon, "rotation", 0f, -90f).apply {
+                            interpolator = AnticipateInterpolator()
+                            duration = 750
+                        }
+
+                        scaleUp.start()
+                        scaleUpY.start()
+                        rotate360.start()
+                    } else {
+                        Log.w("SplashScreen", "iconView is null - OEM device detected")
+                    }
+                } catch (e: NullPointerException) {
+                    // Handle the edge case where iconView becomes null between check and animation
+                    Log.w("SplashScreen", "NullPointerException on iconView animation - likely OEM device", e)
                 }
 
-                scaleUp.start()
-                scaleUpY.start()
-                rotate360.start()
+                fadeOut.start()
+            } catch (e: Exception) {
+                // Fallback for any unexpected exceptions during animation
+                Log.e("SplashScreen", "Exception during splash screen animation", e)
+                try {
+                    splashScreenViewProvider.remove()
+                } catch (e2: Exception) {
+                    Log.e("SplashScreen", "Exception during splash screen removal", e2)
+                }
             }
-
-            fadeOut.start()
         }
 
         enableEdgeToEdge()
