@@ -57,44 +57,54 @@ fun EdgeLightingSettingsUI(
     val view = LocalView.current
 
     // App selection state
+    // App selection state
     var selectedApps by remember { mutableStateOf<List<NotificationApp>>(emptyList()) }
     var isLoadingApps by remember { mutableStateOf(false) }
 
+    // Search state
+    var searchQuery by remember { mutableStateOf("") }
 
     // Load apps when composable is first shown
     LaunchedEffect(Unit) {
         isLoadingApps = true
-        try {
-            // Load saved selections first (fast operation)
-            val savedSelections = viewModel.loadEdgeLightingSelectedApps(context)
+        withContext(Dispatchers.IO) {
+            try {
+                // Load saved selections first (fast operation)
+                val savedSelections = viewModel.loadEdgeLightingSelectedApps(context)
 
-            // Load all installed apps (heavy operation on background thread)
-            val allApps = AppUtil.getInstalledApps(context)
+                // Load all installed apps (heavy operation on background thread)
+                val allApps = AppUtil.getInstalledApps(context)
 
-            // If no apps are saved yet, initialize with all apps enabled
-            val finalSelections = if (savedSelections.isEmpty()) {
-                val initialSelections = allApps.map { AppSelection(it.packageName, true) }
-                // Save in background to avoid blocking UI
-                withContext(Dispatchers.IO) {
+                // If no apps are saved yet, initialize with all apps enabled
+                val finalSelections = if (savedSelections.isEmpty()) {
+                    val initialSelections = allApps.map { AppSelection(it.packageName, true) }
+                    // Save in background to avoid blocking UI (already on IO)
                     viewModel.saveEdgeLightingSelectedApps(context, allApps)
+                    initialSelections
+                } else {
+                    savedSelections
                 }
-                initialSelections
-            } else {
-                savedSelections
-            }
 
-            // Merge saved preferences with installed apps
-            selectedApps = AppUtil.mergeWithSavedApps(allApps, finalSelections)
-        } catch (e: Exception) {
-            android.util.Log.e("EdgeLightingSettingsUI", "Error loading apps: ${e.message}")
-            // Handle error - maybe show empty state or error message
-        } finally {
-            isLoadingApps = false
+                // Merge saved preferences with installed apps
+                val merged = AppUtil.mergeWithSavedApps(allApps, finalSelections)
+                withContext(Dispatchers.Main) {
+                   selectedApps = merged
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("EdgeLightingSettingsUI", "Error loading apps: ${e.message}")
+                // Handle error - maybe show empty state or error message
+            } finally {
+                withContext(Dispatchers.Main) {
+                    isLoadingApps = false
+                }
+            }
         }
     }
 
     // Filter to only show downloaded apps
-    val filteredApps = selectedApps.filter { !it.isSystemApp }
+    val filteredApps = selectedApps.filter { 
+        !it.isSystemApp && (searchQuery.isEmpty() || it.appName.contains(searchQuery, ignoreCase = true))
+    }
 
     // Corner radius state (default: 20 DP to match OverlayHelper.CORNER_RADIUS_DP)
     var cornerRadiusDp by remember { mutableStateOf(viewModel.loadEdgeLightingCornerRadius(context).toFloat()) }
@@ -231,6 +241,24 @@ fun EdgeLightingSettingsUI(
             modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+        
+        // Search Bar
+        androidx.compose.material3.OutlinedTextField(
+            value = searchQuery,
+            onValueChange = { searchQuery = it },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp),
+            placeholder = { Text("Search apps") },
+            leadingIcon = { 
+                Icon(
+                    painter = painterResource(id = R.drawable.rounded_search_24),
+                    contentDescription = "Search"
+                ) 
+            },
+            singleLine = true,
+            shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
+        )
 
         RoundedCardContainer(
             modifier = Modifier,
@@ -248,6 +276,20 @@ fun EdgeLightingSettingsUI(
                     LoadingIndicator()
                 }
             } else {
+                if (filteredApps.isEmpty()) {
+                     Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = if (searchQuery.isNotEmpty()) "No apps found" else "No apps available",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                } else {
                     filteredApps.sortedBy { it.appName.lowercase() }.forEach { app ->
                         AppToggleItem(
                             app = app,
@@ -261,6 +303,7 @@ fun EdgeLightingSettingsUI(
                             }
                         )
                     }
+                }
             }
         }
 
@@ -268,14 +311,18 @@ fun EdgeLightingSettingsUI(
         OutlinedButton(
             onClick = {
                 HapticUtil.performVirtualKeyHaptic(view)
-                // Invert selection for all downloaded apps
+                // Invert selection for currently filtered apps
                 filteredApps.forEach { app ->
                     val newEnabled = !app.isEnabled
                     viewModel.updateEdgeLightingAppEnabled(context, app.packageName, newEnabled)
                 }
                 // Update local state
                 selectedApps = selectedApps.map { app ->
-                    if (!app.isSystemApp) app.copy(isEnabled = !app.isEnabled) else app
+                    if (filteredApps.any { it.packageName == app.packageName }) {
+                        app.copy(isEnabled = !app.isEnabled)
+                    } else {
+                        app
+                    }
                 }
             },
             modifier = Modifier.fillMaxWidth()

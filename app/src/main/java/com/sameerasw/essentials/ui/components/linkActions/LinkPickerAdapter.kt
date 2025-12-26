@@ -68,10 +68,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 
 private const val TAG = "LinkPickerScreen"
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LinkPickerScreen(uri: Uri, onFinish: () -> Unit, modifier: Modifier = Modifier, demo: Boolean = false) {
@@ -82,33 +83,46 @@ fun LinkPickerScreen(uri: Uri, onFinish: () -> Unit, modifier: Modifier = Modifi
     var currentUri by remember { mutableStateOf(uri) }
     var showEditSheet by remember { mutableStateOf(false) }
     var editingText by remember { mutableStateOf(currentUri.toString()) }
+    
+    // Search state
+    var searchQuery by remember { mutableStateOf("") }
+    
+    // App lists
+    var baseOpenWithApps by remember { mutableStateOf<List<ResolvedAppInfo>>(emptyList()) }
+    var baseShareWithApps by remember { mutableStateOf<List<ResolvedAppInfo>>(emptyList()) }
+    var isLoadingApps by remember { mutableStateOf(true) }
 
     Log.d(TAG, "LinkPickerScreen called with demo = $demo")
     Log.d(TAG, "LinkPickerScreen created with URI: $currentUri")
 
     // Query apps whenever currentUri changes
-    val baseOpenWithApps = remember(currentUri) {
-        queryOpenWithApps(context, currentUri).also {
-            Log.d(TAG, "Open with apps: ${it.size}")
-        }
-    }
-
-    val baseShareWithApps = remember(currentUri) {
-        queryShareWithApps(context, currentUri).also {
-            Log.d(TAG, "Share with apps: ${it.size}")
+    LaunchedEffect(currentUri) {
+        isLoadingApps = true
+        withContext(Dispatchers.IO) {
+            val open = queryOpenWithApps(context, currentUri)
+            val share = queryShareWithApps(context, currentUri)
+            withContext(Dispatchers.Main) {
+                baseOpenWithApps = open
+                baseShareWithApps = share
+                isLoadingApps = false
+            }
         }
     }
 
     // Pinned packages state
     val pinnedPackages = remember { mutableStateOf(getPinnedPackages(context)) }
 
-    // Sorted apps: pinned first, then unpinned, both alphabetical
-    val openWithApps = remember(baseOpenWithApps, pinnedPackages.value) {
-        baseOpenWithApps.sortedWith(compareBy<ResolveInfo> { !pinnedPackages.value.contains(it.activityInfo.packageName) }.thenBy { it.loadLabel(context.packageManager).toString().lowercase() })
+    // Sorted and filtered apps
+    val openWithApps = remember(baseOpenWithApps, pinnedPackages.value, searchQuery) {
+        baseOpenWithApps
+            .filter { searchQuery.isEmpty() || it.label.contains(searchQuery, ignoreCase = true) }
+            .sortedWith(compareBy<ResolvedAppInfo> { !pinnedPackages.value.contains(it.resolveInfo.activityInfo.packageName) })
     }
 
-    val shareWithApps = remember(baseShareWithApps, pinnedPackages.value) {
-        baseShareWithApps.sortedWith(compareBy<ResolveInfo> { !pinnedPackages.value.contains(it.activityInfo.packageName) }.thenBy { it.loadLabel(context.packageManager).toString().lowercase() })
+    val shareWithApps = remember(baseShareWithApps, pinnedPackages.value, searchQuery) {
+        baseShareWithApps
+            .filter { searchQuery.isEmpty() || it.label.contains(searchQuery, ignoreCase = true) }
+            .sortedWith(compareBy<ResolvedAppInfo> { !pinnedPackages.value.contains(it.resolveInfo.activityInfo.packageName) })
     }
 
     // toggle pin
@@ -274,18 +288,42 @@ fun LinkPickerScreen(uri: Uri, onFinish: () -> Unit, modifier: Modifier = Modifi
                 }
             }
 
-            // HorizontalPager fills remaining space
-            HorizontalPager(
-                modifier = Modifier.weight(1f),
-                state = pagerState,
-                verticalAlignment = Alignment.Top
-            ) { page ->
-                when (page) {
-                    0 -> {
-                        OpenWithContent(openWithApps, currentUri, onFinish, Modifier, togglePin, pinnedPackages.value, demo)
-                    }
-                    1 -> {
-                        ShareWithContent(shareWithApps, currentUri, onFinish, Modifier, togglePin, pinnedPackages.value, demo)
+            // Search Bar
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = { searchQuery = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                placeholder = { Text("Search apps") },
+                leadingIcon = { 
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_search_24),
+                        contentDescription = "Search"
+                    ) 
+                },
+                singleLine = true,
+                shape = RoundedCornerShape(12.dp)
+            )
+
+            if (isLoadingApps) {
+                Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                    androidx.compose.material3.CircularProgressIndicator()
+                }
+            } else {
+                // HorizontalPager fills remaining space
+                HorizontalPager(
+                    modifier = Modifier.weight(1f),
+                    state = pagerState,
+                    verticalAlignment = Alignment.Top
+                ) { page ->
+                    when (page) {
+                        0 -> {
+                            OpenWithContent(openWithApps, currentUri, onFinish, Modifier, togglePin, pinnedPackages.value, demo)
+                        }
+                        1 -> {
+                            ShareWithContent(shareWithApps, currentUri, onFinish, Modifier, togglePin, pinnedPackages.value, demo)
+                        }
                     }
                 }
             }
@@ -356,7 +394,7 @@ fun LinkPickerScreen(uri: Uri, onFinish: () -> Unit, modifier: Modifier = Modifi
     }
 }
 
-private fun queryOpenWithApps(context: Context, uri: Uri): List<ResolveInfo> {
+private fun queryOpenWithApps(context: Context, uri: Uri): List<ResolvedAppInfo> {
     return try {
         val pm = context.packageManager
         val ourPackageName = context.packageName
@@ -390,24 +428,26 @@ private fun queryOpenWithApps(context: Context, uri: Uri): List<ResolveInfo> {
 
         Log.d(TAG, "Apps after filtering: ${filtered.size}")
 
-        // Sort by label
+        // Map to ResolvedAppInfo and sort
         val collator = Collator.getInstance(Locale.getDefault())
-        val sorted = filtered.sortedWith { o1, o2 ->
+        val resolvedList = filtered.map { 
+            ResolvedAppInfo(it, it.loadLabel(pm).toString()) 
+        }.sortedWith { o1, o2 ->
             collator.compare(
-                o1.activityInfo.loadLabel(pm).toString().lowercase(Locale.getDefault()),
-                o2.activityInfo.loadLabel(pm).toString().lowercase(Locale.getDefault())
+                o1.label.lowercase(Locale.getDefault()),
+                o2.label.lowercase(Locale.getDefault())
             )
         }
 
-        Log.d(TAG, "Final open with apps: ${sorted.size}")
-        sorted
+        Log.d(TAG, "Final open with apps: ${resolvedList.size}")
+        resolvedList
     } catch (e: Exception) {
         Log.e(TAG, "Error querying open with apps", e)
         emptyList()
     }
 }
 
-private fun queryShareWithApps(context: Context, uri: Uri): List<ResolveInfo> {
+private fun queryShareWithApps(context: Context, uri: Uri): List<ResolvedAppInfo> {
     return try {
         val pm = context.packageManager
         val ourPackageName = context.packageName
@@ -443,17 +483,19 @@ private fun queryShareWithApps(context: Context, uri: Uri): List<ResolveInfo> {
 
         Log.d(TAG, "Share apps after filtering: ${filtered.size}")
 
-        // Sort by label
+        // Map to ResolvedAppInfo and sort
         val collator = Collator.getInstance(Locale.getDefault())
-        val sorted = filtered.sortedWith { o1, o2 ->
+        val resolvedList = filtered.map { 
+            ResolvedAppInfo(it, it.loadLabel(pm).toString()) 
+        }.sortedWith { o1, o2 ->
             collator.compare(
-                o1.activityInfo.loadLabel(pm).toString().lowercase(Locale.getDefault()),
-                o2.activityInfo.loadLabel(pm).toString().lowercase(Locale.getDefault())
+                o1.label.lowercase(Locale.getDefault()),
+                o2.label.lowercase(Locale.getDefault())
             )
         }
 
-        Log.d(TAG, "Final share with apps: ${sorted.size}")
-        sorted
+        Log.d(TAG, "Final share with apps: ${resolvedList.size}")
+        resolvedList
     } catch (e: Exception) {
         Log.e(TAG, "Error querying share with apps", e)
         emptyList()

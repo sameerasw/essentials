@@ -16,9 +16,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.ui.components.containers.RoundedCardLazyContainer
 
+import com.sameerasw.essentials.ui.components.linkActions.ResolvedAppInfo
+
 @Composable
 fun OpenWithContent(
-    resolveInfos: List<ResolveInfo>,
+    resolveInfos: List<ResolvedAppInfo>,
     uri: Uri,
     onFinish: () -> Unit,
     modifier: Modifier,

@@ -30,9 +30,22 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.res.painterResource
 import com.sameerasw.essentials.R
 
+import android.graphics.drawable.Drawable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
+data class ResolvedAppInfo(
+    val resolveInfo: ResolveInfo,
+    val label: String
+)
+
 @Composable
 fun AppPickerItem(
-    resolveInfo: ResolveInfo,
+    info: ResolvedAppInfo,
     modifier: Modifier = Modifier,
     togglePin: (String) -> Unit,
     pinnedPackages: Set<String>,
@@ -41,11 +54,19 @@ fun AppPickerItem(
 ) {
     val context = LocalContext.current
     val interactionSource = remember { MutableInteractionSource() }
-    val packageName = resolveInfo.activityInfo.packageName
+    val packageName = info.resolveInfo.activityInfo.packageName
     val isPinned = pinnedPackages.contains(packageName)
     val haptic = LocalHapticFeedback.current
 
     Log.d("LinkPicker", "AppPickerItem, demo = $demo")
+
+    // Load icon asynchronously
+    var icon by remember { mutableStateOf<Drawable?>(null) }
+    LaunchedEffect(info.resolveInfo) {
+        withContext(Dispatchers.IO) {
+            icon = info.resolveInfo.loadIcon(context.packageManager)
+        }
+    }
 
     Row(
         modifier = modifier
@@ -75,7 +96,7 @@ fun AppPickerItem(
     ) {
 
         AsyncImage(
-            model = resolveInfo.loadIcon(context.packageManager),
+            model = icon,
             contentDescription = "App icon",
             modifier = Modifier
                 .size(48.dp)
@@ -85,7 +106,7 @@ fun AppPickerItem(
 
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = resolveInfo.loadLabel(context.packageManager).toString(),
+                text = info.label,
                 modifier = Modifier
                     .padding(start = 16.dp),
                 style = MaterialTheme.typography.bodyLarge,

@@ -16,10 +16,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import com.sameerasw.essentials.ui.components.linkActions.AppPickerItem
 
+import com.sameerasw.essentials.ui.components.linkActions.ResolvedAppInfo
+
 @Composable
 fun RoundedCardLazyContainer(
     modifier: Modifier = Modifier,
-    resolveInfos: List<ResolveInfo>,
+    resolveInfos: List<ResolvedAppInfo>,
     spacing: Dp = 2.dp,
     cornerRadius: Dp = 24.dp,
     uri: Uri,
@@ -37,10 +39,10 @@ fun RoundedCardLazyContainer(
             .clip(RoundedCornerShape(cornerRadius)),
         verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
-        items(resolveInfos) { resolveInfo ->
+        items(resolveInfos) { info ->
 
             AppPickerItem(
-                resolveInfo = resolveInfo,
+                info = info,
                 togglePin = togglePin,
                 pinnedPackages = pinnedPackages,
                 demo = demo,
@@ -53,7 +55,7 @@ fun RoundedCardLazyContainer(
                             putExtra(Intent.EXTRA_TEXT, uri.toString())
                         }
                     }
-                    intent.setClassName(resolveInfo.activityInfo.packageName, resolveInfo.activityInfo.name)
+                    intent.setClassName(info.resolveInfo.activityInfo.packageName, info.resolveInfo.activityInfo.name)
                     context.startActivity(intent)
                     onFinish()
                 }
