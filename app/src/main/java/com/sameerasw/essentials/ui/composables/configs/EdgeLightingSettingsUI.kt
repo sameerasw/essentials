@@ -290,7 +290,10 @@ fun EdgeLightingSettingsUI(
                         )
                     }
                 } else {
-                    filteredApps.sortedBy { it.appName.lowercase() }.forEach { app ->
+                    val (selected, unselected) = filteredApps.partition { it.isEnabled }
+                    val sortedApps = selected.sortedBy { it.appName.lowercase() } + unselected.sortedBy { it.appName.lowercase() }
+
+                    sortedApps.forEach { app ->
                         AppToggleItem(
                             app = app,
                             isChecked = app.isEnabled,
