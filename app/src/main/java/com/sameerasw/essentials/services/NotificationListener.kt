@@ -109,6 +109,23 @@ class NotificationListener : NotificationListenerService() {
     private fun isAppSelectedForEdgeLighting(packageName: String): Boolean {
         try {
             val prefs = applicationContext.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+
+            // Check if only show when screen off is enabled
+            val onlyShowWhenScreenOff = prefs.getBoolean("edge_lighting_only_screen_off", true)
+            if (onlyShowWhenScreenOff) {
+                val powerManager = getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
+                val isScreenOn = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT_WATCH) {
+                    powerManager.isInteractive
+                } else {
+                    @Suppress("DEPRECATION")
+                    powerManager.isScreenOn
+                }
+                if (isScreenOn) {
+                    android.util.Log.d("NotificationListener", "Screen is ON and 'Only show when screen off' is enabled. Skipping edge lighting.")
+                    return false
+                }
+            }
+
             val json = prefs.getString("edge_lighting_selected_apps", null)
 
             // If no saved preferences, allow all apps by default

@@ -119,6 +119,43 @@ fun EdgeLightingSettingsUI(
             Text("Preview")
         }
 
+        RoundedCardContainer(
+            modifier = Modifier.padding(top = 8.dp),
+            spacing = 2.dp,
+            cornerRadius = 24.dp
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        color = MaterialTheme.colorScheme.surfaceBright
+                    )
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.rounded_power_settings_new_24),
+                    contentDescription = null,
+                    modifier = Modifier.size(24.dp),
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "Only show when screen off",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+                Switch(
+                    checked = viewModel.onlyShowWhenScreenOff.value,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setOnlyShowWhenScreenOff(checked, context)
+                    }
+                )
+            }
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()

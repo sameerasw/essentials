@@ -8,6 +8,9 @@ import android.os.VibratorManager
 import android.view.accessibility.AccessibilityEvent
 import com.sameerasw.essentials.utils.HapticFeedbackType
 import com.sameerasw.essentials.utils.performHapticFeedback
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.IntentFilter
 import android.os.Handler
 import android.os.Looper
 import android.view.WindowManager
@@ -22,6 +25,29 @@ class ScreenOffAccessibilityService : AccessibilityService() {
     private var cornerRadiusDp: Int = OverlayHelper.CORNER_RADIUS_DP
     private var strokeThicknessDp: Int = OverlayHelper.STROKE_DP
     private var isPreview: Boolean = false
+    private var screenReceiver: BroadcastReceiver? = null
+    override fun onCreate() {
+        super.onCreate()
+        screenReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                if (intent?.action == Intent.ACTION_SCREEN_ON) {
+                    val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+                    val onlyShowWhenScreenOff = prefs.getBoolean("edge_lighting_only_screen_off", true)
+                    if (onlyShowWhenScreenOff && !isPreview) {
+                        removeOverlay()
+                    }
+                }
+            }
+        }
+        val filter = IntentFilter(Intent.ACTION_SCREEN_ON)
+        registerReceiver(screenReceiver, filter)
+    }
+
+    override fun onDestroy() {
+        try { unregisterReceiver(screenReceiver) } catch (_: Exception) {}
+        removeOverlay()
+        super.onDestroy()
+    }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         // Not used for this feature
@@ -110,6 +136,23 @@ class ScreenOffAccessibilityService : AccessibilityService() {
                     // For preview mode, just fade in and keep visible
                     OverlayHelper.fadeInOverlay(overlay)
                 } else {
+                    // If only show when screen off is enabled, check before pulsing
+                    val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+                    val onlyShowWhenScreenOff = prefs.getBoolean("edge_lighting_only_screen_off", true)
+                    if (onlyShowWhenScreenOff) {
+                        val powerManager = getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
+                        val isScreenOn = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+                            powerManager.isInteractive
+                        } else {
+                            @Suppress("DEPRECATION")
+                            powerManager.isScreenOn
+                        }
+                        if (isScreenOn) {
+                            removeOverlay()
+                            return
+                        }
+                    }
+
                     // Normal mode: pulse the overlay
                     OverlayHelper.pulseOverlay(overlay) {
                         // When pulsing completes, remove the overlay

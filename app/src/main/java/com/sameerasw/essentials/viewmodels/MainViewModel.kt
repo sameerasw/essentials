@@ -41,6 +41,7 @@ class MainViewModel : ViewModel() {
     val isEdgeLightingAccessibilityEnabled = mutableStateOf(false)
     val hapticFeedbackType = mutableStateOf(HapticFeedbackType.SUBTLE)
     val isDefaultBrowserSet = mutableStateOf(false)
+    val onlyShowWhenScreenOff = mutableStateOf(true)
 
     fun check(context: Context) {
         isAccessibilityEnabled.value = isAccessibilityServiceEnabled(context)
@@ -64,6 +65,7 @@ class MainViewModel : ViewModel() {
         isStatusBarIconControlEnabled.value = prefs.getBoolean("status_bar_icon_control_enabled", false)
         isMapsPowerSavingEnabled.value = prefs.getBoolean("maps_power_saving_enabled", false)
         isEdgeLightingEnabled.value = prefs.getBoolean("edge_lighting_enabled", false)
+        onlyShowWhenScreenOff.value = prefs.getBoolean("edge_lighting_only_screen_off", true)
         MapsState.isEnabled = isMapsPowerSavingEnabled.value
         loadHapticFeedback(context)
         checkCaffeinateActive(context)
@@ -95,6 +97,13 @@ class MainViewModel : ViewModel() {
         isEdgeLightingEnabled.value = enabled
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
             putBoolean("edge_lighting_enabled", enabled)
+        }
+    }
+
+    fun setOnlyShowWhenScreenOff(enabled: Boolean, context: Context) {
+        onlyShowWhenScreenOff.value = enabled
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
+            putBoolean("edge_lighting_only_screen_off", enabled)
         }
     }
 
