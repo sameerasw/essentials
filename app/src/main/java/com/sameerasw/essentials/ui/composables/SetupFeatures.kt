@@ -472,7 +472,7 @@ fun SetupFeatures(
                 "Flashlight toggle",
                 R.drawable.rounded_flashlight_on_24,
                 "Tools",
-                "Toggle flashlight when screen off"
+                "Toggle flashlight while screen off"
             ),
             FeatureItem(
                 "Dynamic night light",
