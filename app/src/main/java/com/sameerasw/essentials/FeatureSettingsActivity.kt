@@ -110,6 +110,7 @@ class FeatureSettingsActivity : ComponentActivity() {
                         "Statusbar icons" -> !isWriteSecureSettingsEnabled
                         "Edge lighting" -> !isOverlayPermissionGranted || !isEdgeLightingAccessibilityEnabled || !isNotificationListenerEnabled
                         "Flashlight toggle" -> !isAccessibilityEnabled
+                        "Dynamic night light" -> !isAccessibilityEnabled || !isWriteSecureSettingsEnabled
                         else -> false
                     }
                     showPermissionSheet = hasMissingPermissions
@@ -200,6 +201,39 @@ class FeatureSettingsActivity : ComponentActivity() {
                                     context.startActivity(intent)
                                 },
                                 isGranted = isAccessibilityEnabled
+                            )
+                        )
+                        "Dynamic night light" -> listOf(
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_settings_accessibility_24,
+                                title = "Accessibility Service",
+                                description = "Needed to monitor foreground applications.",
+                                dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
+                                actionLabel = "Enable Service",
+                                action = {
+                                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                    context.startActivity(intent)
+                                },
+                                isGranted = isAccessibilityEnabled
+                            ),
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_security_24,
+                                title = "Write Secure Settings",
+                                description = "Needed to toggle Night Light. Grant via ADB or root.",
+                                dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
+                                actionLabel = "Copy ADB",
+                                action = {
+                                    val adbCommand = "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
+                                    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                    val clip = ClipData.newPlainText("adb_command", adbCommand)
+                                    clipboard.setPrimaryClip(clip)
+                                },
+                                secondaryActionLabel = "Check",
+                                secondaryAction = {
+                                    viewModel.isWriteSecureSettingsEnabled.value = viewModel.canWriteSecureSettings(context)
+                                },
+                                isGranted = isWriteSecureSettingsEnabled
                             )
                         )
                         else -> emptyList()

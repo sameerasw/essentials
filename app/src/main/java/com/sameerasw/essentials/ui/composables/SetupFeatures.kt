@@ -478,7 +478,7 @@ fun SetupFeatures(
                 "Dynamic night light",
                 R.drawable.rounded_nightlight_24,
                 "Visuals",
-                "Toggle night light based on foreground app"
+                "Toggle night light based on app"
             )
         )
     }
