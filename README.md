@@ -9,9 +9,9 @@ Essential tools, mods and workarounds for Pixels and other Androids
 - [x] Google maps power saving mode
 - [x] Quick access to media out put switcher
 - [x] Link actions to intersect link opening
-- [ ] Long press volume key while screen off to toggle flashlight
-- [ ] Automatically turn off night light for certain apps
-- [ ] QS tile to toggle privacy mode (hide notification content on lock screen, ...)
+- [x] Long press volume key while screen off to toggle flashlight
+- [x] Automatically turn off night light for certain apps
+- [x] QS tile to toggle privacy mode (hide notification content on lock screen, ...)
 - [ ] Make the previous track button on bluetooth devices like the current music track
 - [ ] Show notification icons on AOD but hide them when display turned on
 - [ ] Live actitivites for many things
