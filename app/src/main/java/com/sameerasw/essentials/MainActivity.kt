@@ -8,6 +8,7 @@ import android.view.animation.AnticipateInterpolator
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.core.view.WindowCompat
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,10 +34,10 @@ class MainActivity : ComponentActivity() {
     private var isAppReady = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
         // Install and configure the splash screen
         val splashScreen = installSplashScreen()
+
+        super.onCreate(savedInstanceState)
 
         // Keep splash screen visible while app is loading
         splashScreen.setKeepOnScreenCondition { !isAppReady }
@@ -103,7 +104,7 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        enableEdgeToEdge()
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         Log.d("MainActivity", "onCreate with action: ${intent?.action}")
 

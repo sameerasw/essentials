@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.Essentials.Splash" parent="Theme.SplashScreen">
+
+    <style name="Theme.Essentials" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/app_window_background</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
-        <item name="windowSplashScreenBackground">@color/app_window_background</item>
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
-        <item name="windowSplashScreenAnimationDuration">2000</item>
-        <item name="postSplashScreenTheme">@style/Theme.Essentials</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowLightNavigationBar">false</item>
     </style>

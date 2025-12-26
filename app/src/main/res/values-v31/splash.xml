@@ -7,6 +7,9 @@
         <item name="windowActionBar">false</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground_light</item>
         <item name="windowSplashScreenAnimationDuration">3000</item>
+        <item name="postSplashScreenTheme">@style/Theme.Essentials</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
     </style>
 </resources>
 
