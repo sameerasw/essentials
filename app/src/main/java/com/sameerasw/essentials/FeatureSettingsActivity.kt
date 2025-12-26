@@ -41,6 +41,7 @@ import com.sameerasw.essentials.ui.composables.configs.CaffeinateSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ScreenOffWidgetSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.EdgeLightingSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.SoundModeTileSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.QuickSettingsTilesSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.FlashlightSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.DynamicNightLightSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.SnoozeNotificationsSettingsUI
@@ -66,7 +67,8 @@ class FeatureSettingsActivity : ComponentActivity() {
             "Link actions" to "Handle links with multiple apps",
             "Flashlight toggle" to "Toggle flashlight while screen off",
             "Dynamic night light" to "Toggle based on current app",
-            "Snooze system notifications" to "Automatically snooze persistent notifications"
+            "Snooze system notifications" to "Automatically snooze persistent notifications",
+            "Quick Settings Tiles" to "All available QS tiles"
         )
         val description = featureDescriptions[feature] ?: ""
         setContent {
@@ -336,6 +338,11 @@ class FeatureSettingsActivity : ComponentActivity() {
                             "Snooze system notifications" -> {
                                 SnoozeNotificationsSettingsUI(
                                     viewModel = viewModel,
+                                    modifier = Modifier.padding(top = 16.dp)
+                                )
+                            }
+                            "Quick Settings Tiles" -> {
+                                QuickSettingsTilesSettingsUI(
                                     modifier = Modifier.padding(top = 16.dp)
                                 )
                             }

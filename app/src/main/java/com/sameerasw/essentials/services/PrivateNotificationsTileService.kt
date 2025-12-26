@@ -13,7 +13,7 @@ class PrivateNotificationsTileService : BaseTileService() {
     override fun getTileLabel(): String = "Sensitive Content"
 
     override fun getTileSubtitle(): String {
-        return if (arePrivateNotificationsAllowed()) "Shown" else "Hidden"
+        return if (arePrivateNotificationsAllowed()) "Shown on lock screen" else "Hidden on lock screen"
     }
 
     override fun hasFeaturePermission(): Boolean {

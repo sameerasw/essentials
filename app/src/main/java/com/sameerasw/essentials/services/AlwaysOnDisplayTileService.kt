@@ -21,7 +21,11 @@ class AlwaysOnDisplayTileService : BaseTileService() {
     }
 
     override fun getTileIcon(): Icon? {
-        return Icon.createWithResource(this, R.drawable.rounded_mobile_text_2_24)
+        return if (isAodEnabled()) {
+            Icon.createWithResource(this, R.drawable.rounded_mobile_text_2_24)
+        } else {
+            Icon.createWithResource(this, R.drawable.rounded_mobile_off_24)
+        }
     }
 
     override fun getTileState(): Int {

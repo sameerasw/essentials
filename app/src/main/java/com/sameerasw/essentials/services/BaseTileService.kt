@@ -21,7 +21,26 @@ abstract class BaseTileService : TileService() {
 
     override fun onStartListening() {
         super.onStartListening()
+        setTileAddedState(true)
         updateTile()
+    }
+
+    override fun onTileAdded() {
+        super.onTileAdded()
+        setTileAddedState(true)
+        updateTile()
+    }
+
+    override fun onTileRemoved() {
+        super.onTileRemoved()
+        setTileAddedState(false)
+    }
+
+    private fun setTileAddedState(isAdded: Boolean) {
+        getSharedPreferences("essentials_prefs", android.content.Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean("${this::class.java.name}_is_added", isAdded)
+            .apply()
     }
 
     override fun onClick() {

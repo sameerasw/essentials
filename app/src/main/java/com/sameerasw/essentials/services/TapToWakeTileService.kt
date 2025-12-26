@@ -21,7 +21,11 @@ class TapToWakeTileService : BaseTileService() {
     }
 
     override fun getTileIcon(): Icon? {
-        return Icon.createWithResource(this, R.drawable.rounded_touch_app_24)
+        return if (isTapToWakeEnabled()) {
+            Icon.createWithResource(this, R.drawable.rounded_touch_app_24)
+        } else {
+            Icon.createWithResource(this, R.drawable.rounded_do_not_touch_24)
+        }
     }
 
     override fun getTileState(): Int {

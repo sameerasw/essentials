@@ -1,0 +1,147 @@
+package com.sameerasw.essentials.ui.composables.configs
+
+import android.app.StatusBarManager
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.graphics.drawable.Icon
+import android.os.Build
+import android.widget.Toast
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.getSystemService
+import com.sameerasw.essentials.R
+import com.sameerasw.essentials.services.*
+import java.util.concurrent.Executor
+
+data class QSTileInfo(
+    val title: String,
+    val iconRes: Int,
+    val serviceClass: Class<*>
+)
+
+@Composable
+fun QuickSettingsTilesSettingsUI(
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+
+    val tiles = listOf(
+        QSTileInfo("UI Blur", R.drawable.rounded_blur_on_24, UiBlurTileService::class.java),
+        QSTileInfo("Bubbles", R.drawable.rounded_bubble_24, BubblesTileService::class.java),
+        QSTileInfo("Sensitive Content", R.drawable.rounded_notifications_off_24, PrivateNotificationsTileService::class.java),
+        QSTileInfo("Tap to Wake", R.drawable.rounded_touch_app_24, TapToWakeTileService::class.java),
+        QSTileInfo("AOD", R.drawable.rounded_mobile_text_2_24, AlwaysOnDisplayTileService::class.java),
+        QSTileInfo("Caffeinate", R.drawable.rounded_coffee_24, CaffeinateTileService::class.java),
+        QSTileInfo("Sound Mode", R.drawable.rounded_volume_up_24, SoundModeTileService::class.java)
+    )
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        tiles.chunked(2).forEach { rowTiles ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                rowTiles.forEach { tile ->
+                    QSTileCard(
+                        tile = tile,
+                        modifier = Modifier.weight(1f),
+                        onClick = {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                val statusBarManager = context.getSystemService(StatusBarManager::class.java)
+                                val componentName = ComponentName(context, tile.serviceClass)
+                                
+                                statusBarManager.requestAddTileService(
+                                    componentName,
+                                    tile.title,
+                                    Icon.createWithResource(context, tile.iconRes),
+                                    context.mainExecutor
+                                ) { result ->
+                                     if(result == StatusBarManager.TILE_ADD_REQUEST_RESULT_TILE_ALREADY_ADDED){
+                                         Toast.makeText(context, "Already added", Toast.LENGTH_SHORT).show()
+                                     }
+                                }
+                            } else {
+                                Toast.makeText(context, "Requires Android 13+", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    )
+                }
+                // Determine if we need a spacer for the last odd item
+                if (rowTiles.size < 2) {
+                    androidx.compose.foundation.layout.Spacer(modifier = Modifier.weight(1f))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun QSTileCard(
+    tile: QSTileInfo,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(24.dp))
+            .background(MaterialTheme.colorScheme.primary)
+            .clickable(onClick = onClick)
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Icon(
+            painter = painterResource(id = tile.iconRes),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onPrimary,
+            modifier = Modifier.padding(8.dp)
+        )
+        
+        Column {
+            Text(
+                text = tile.title,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onPrimary,
+                maxLines = 1,
+                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+            )
+            Text(
+                text = "Add",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
+                maxLines = 1,
+                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+            )
+        }
+    }
+}

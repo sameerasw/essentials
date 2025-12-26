@@ -486,6 +486,12 @@ fun SetupFeatures(
                 "Snooze persistent notifications"
             ),
             FeatureItem(
+                "Quick Settings Tiles",
+                R.drawable.rounded_tile_small_24,
+                "System",
+                "View all"
+            ),
+            FeatureItem(
                 "Flashlight toggle",
                 R.drawable.rounded_flashlight_on_24,
                 "Tools",
@@ -652,7 +658,7 @@ fun SetupFeatures(
                         iconRes = feature.iconRes,
                         modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
                         isToggleEnabled = isToggleEnabled,
-                        showToggle = feature.title != "Sound mode tile" && feature.title != "Screen off widget" && feature.title != "Link actions" && feature.title != "Snooze system notifications", // Hide toggle for Sound mode tile, Screen off widget, Link actions, and Snooze notifications
+                        showToggle = feature.title != "Sound mode tile" && feature.title != "Screen off widget" && feature.title != "Link actions" && feature.title != "Snooze system notifications" && feature.title != "Quick Settings Tiles", // Hide toggle for Sound mode tile, Screen off widget, Link actions, Snooze notifications, and QS Tiles
                         hasMoreSettings = feature.title != FEATURE_MAPS_POWER_SAVING,
                         onDisabledToggleClick = {
                             currentFeature = feature.title
