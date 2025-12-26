@@ -42,6 +42,9 @@ class MainViewModel : ViewModel() {
     val hapticFeedbackType = mutableStateOf(HapticFeedbackType.SUBTLE)
     val isDefaultBrowserSet = mutableStateOf(false)
     val onlyShowWhenScreenOff = mutableStateOf(true)
+    val isFlashlightVolumeToggleEnabled = mutableStateOf(false)
+    val flashlightTriggerButton = mutableStateOf("Volume Up")
+    val flashlightHapticType = mutableStateOf(HapticFeedbackType.LONG)
 
     fun check(context: Context) {
         isAccessibilityEnabled.value = isAccessibilityServiceEnabled(context)
@@ -69,6 +72,14 @@ class MainViewModel : ViewModel() {
         MapsState.isEnabled = isMapsPowerSavingEnabled.value
         loadHapticFeedback(context)
         checkCaffeinateActive(context)
+        isFlashlightVolumeToggleEnabled.value = prefs.getBoolean("flashlight_volume_toggle_enabled", false)
+        flashlightTriggerButton.value = prefs.getString("flashlight_trigger_button", "Volume Up") ?: "Volume Up"
+        val hapticName = prefs.getString("flashlight_haptic_type", HapticFeedbackType.LONG.name)
+        flashlightHapticType.value = try {
+            HapticFeedbackType.valueOf(hapticName ?: HapticFeedbackType.LONG.name)
+        } catch (e: Exception) {
+            HapticFeedbackType.LONG
+        }
     }
 
     fun setWidgetEnabled(enabled: Boolean, context: Context) {
@@ -104,6 +115,27 @@ class MainViewModel : ViewModel() {
         onlyShowWhenScreenOff.value = enabled
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
             putBoolean("edge_lighting_only_screen_off", enabled)
+        }
+    }
+
+    fun setFlashlightVolumeToggleEnabled(enabled: Boolean, context: Context) {
+        isFlashlightVolumeToggleEnabled.value = enabled
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
+            putBoolean("flashlight_volume_toggle_enabled", enabled)
+        }
+    }
+
+    fun setFlashlightTriggerButton(button: String, context: Context) {
+        flashlightTriggerButton.value = button
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
+            putString("flashlight_trigger_button", button)
+        }
+    }
+
+    fun setFlashlightHapticType(type: HapticFeedbackType, context: Context) {
+        flashlightHapticType.value = type
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
+            putString("flashlight_haptic_type", type.name)
         }
     }
 

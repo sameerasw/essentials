@@ -11,35 +11,21 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import com.sameerasw.essentials.utils.HapticFeedbackType
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun HapticFeedbackPicker(
-    selectedFeedback: HapticFeedbackType,
-    onFeedbackSelected: (HapticFeedbackType) -> Unit,
-    modifier: Modifier = Modifier,
-    options: List<Pair<String, HapticFeedbackType>> = listOf(
-        "None" to HapticFeedbackType.NONE,
-        "Subtle" to HapticFeedbackType.SUBTLE,
-        "Double" to HapticFeedbackType.DOUBLE,
-        "Click" to HapticFeedbackType.CLICK
-    )
+fun <T> SegmentedPicker(
+    items: List<T>,
+    selectedItem: T,
+    onItemSelected: (T) -> Unit,
+    labelProvider: (T) -> String,
+    modifier: Modifier = Modifier
 ) {
-    val labels = options.map { it.first }
-    val types = options.map { it.second }
-
-    val selectedIndex = types.indexOf(selectedFeedback).coerceAtLeast(0)
-
     Row(
         modifier = modifier
             .background(
@@ -49,25 +35,23 @@ fun HapticFeedbackPicker(
             .padding(10.dp),
         horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
     ) {
-        val modifiers = List(labels.size) { Modifier.weight(1f) }
+        val modifiers = List(items.size) { Modifier.weight(1f) }
 
-        labels.forEachIndexed { index, label ->
+        items.forEachIndexed { index, item ->
             ToggleButton(
-                checked = selectedIndex == index,
+                checked = selectedItem == item,
                 onCheckedChange = {
-                    onFeedbackSelected(types[index])
+                    onItemSelected(item)
                 },
                 modifier = modifiers[index].semantics { role = Role.RadioButton },
                 shapes = when (index) {
                     0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
-                    labels.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                    items.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
                     else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
                 },
             ) {
-                Text(label)
+                Text(labelProvider(item))
             }
         }
     }
 }
-
-

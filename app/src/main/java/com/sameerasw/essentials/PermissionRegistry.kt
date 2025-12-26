@@ -16,6 +16,7 @@ fun initPermissionRegistry() {
     // Accessibility permission
     PermissionRegistry.register("ACCESSIBILITY", "Screen off widget")
     PermissionRegistry.register("ACCESSIBILITY", "Edge lighting")
+    PermissionRegistry.register("ACCESSIBILITY", "Flashlight toggle")
 
     // Write secure settings permission
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", "Statusbar icons")
