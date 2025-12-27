@@ -79,11 +79,11 @@ fun ButtonRemapSettingsUI(
                     HapticFeedbackPicker(
                         selectedFeedback = viewModel.remapHapticType.value,
                         onFeedbackSelected = { viewModel.setRemapHapticType(it, context) },
-                        options = listOf(
-                            "None" to HapticFeedbackType.NONE,
-                            "Tick" to HapticFeedbackType.TICK,
-                            "Long" to HapticFeedbackType.LONG
-                        )
+                    options = listOf(
+                        "None" to HapticFeedbackType.NONE,
+                        "Tick" to HapticFeedbackType.TICK,
+                        "Double" to HapticFeedbackType.DOUBLE
+                    )
                     )
                 }
 
@@ -123,6 +123,48 @@ fun ButtonRemapSettingsUI(
                             hasSettings = true,
                             onSettingsClick = { showFlashlightOptions = true },
                             iconRes = R.drawable.rounded_flashlight_on_24,
+                            modifier = Modifier
+                        )
+                        RemapActionItem(
+                            title = "Media play/pause",
+                            isSelected = currentAction == "Media play/pause",
+                            onClick = { onActionSelected("Media play/pause") },
+                            iconRes = R.drawable.rounded_play_pause_24,
+                            modifier = Modifier
+                        )
+                        RemapActionItem(
+                            title = "Media next",
+                            isSelected = currentAction == "Media next",
+                            onClick = { onActionSelected("Media next") },
+                            iconRes = R.drawable.rounded_skip_next_24,
+                            modifier = Modifier
+                        )
+                        RemapActionItem(
+                            title = "Media previous",
+                            isSelected = currentAction == "Media previous",
+                            onClick = { onActionSelected("Media previous") },
+                            iconRes = R.drawable.rounded_skip_previous_24,
+                            modifier = Modifier
+                        )
+                        RemapActionItem(
+                            title = "Toggle vibrate",
+                            isSelected = currentAction == "Toggle vibrate",
+                            onClick = { onActionSelected("Toggle vibrate") },
+                            iconRes = R.drawable.rounded_mobile_vibrate_24,
+                            modifier = Modifier
+                        )
+                        RemapActionItem(
+                            title = "Toggle mute",
+                            isSelected = currentAction == "Toggle mute",
+                            onClick = { onActionSelected("Toggle mute") },
+                            iconRes = R.drawable.rounded_volume_off_24,
+                            modifier = Modifier
+                        )
+                        RemapActionItem(
+                            title = "AI assistant",
+                            isSelected = currentAction == "AI assistant",
+                            onClick = { onActionSelected("AI assistant") },
+                            iconRes = R.drawable.rounded_bubble_chart_24,
                             modifier = Modifier
                         )
                 }

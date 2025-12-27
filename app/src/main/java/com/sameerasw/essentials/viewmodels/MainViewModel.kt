@@ -45,7 +45,7 @@ class MainViewModel : ViewModel() {
     val isButtonRemapEnabled = mutableStateOf(false)
     val volumeUpAction = mutableStateOf("None")
     val volumeDownAction = mutableStateOf("None")
-    val remapHapticType = mutableStateOf(HapticFeedbackType.LONG)
+    val remapHapticType = mutableStateOf(HapticFeedbackType.DOUBLE)
     val isDynamicNightLightEnabled = mutableStateOf(false)
     val isSnoozeDebuggingEnabled = mutableStateOf(false)
     val isSnoozeFileTransferEnabled = mutableStateOf(false)
@@ -91,11 +91,12 @@ class MainViewModel : ViewModel() {
             if (oldTrigger == "Volume Down" && prefs.contains("flashlight_volume_toggle_enabled")) "Toggle flashlight" else "None") ?: "None"
             
         val hapticName = prefs.getString("button_remap_haptic_type", 
-            prefs.getString("flashlight_haptic_type", HapticFeedbackType.LONG.name))
+            prefs.getString("flashlight_haptic_type", HapticFeedbackType.DOUBLE.name))
         remapHapticType.value = try {
-            HapticFeedbackType.valueOf(hapticName ?: HapticFeedbackType.LONG.name)
+            val type = HapticFeedbackType.valueOf(hapticName ?: HapticFeedbackType.DOUBLE.name)
+            if (type.name == "LONG") HapticFeedbackType.DOUBLE else type
         } catch (e: Exception) {
-            HapticFeedbackType.LONG
+            HapticFeedbackType.DOUBLE
         }
         
         isDynamicNightLightEnabled.value = prefs.getBoolean("dynamic_night_light_enabled", false)

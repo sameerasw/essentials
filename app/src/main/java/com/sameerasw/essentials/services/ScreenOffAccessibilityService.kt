@@ -25,6 +25,7 @@ import android.provider.Settings
 import com.google.gson.Gson
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.google.gson.reflect.TypeToken
+import android.media.AudioManager
 
 class ScreenOffAccessibilityService : AccessibilityService() {
 
@@ -201,11 +202,12 @@ class ScreenOffAccessibilityService : AccessibilityService() {
 
             if (vibrator != null) {
                 val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
-                val typeName = specificType?.name ?: prefs.getString("haptic_feedback_type", HapticFeedbackType.NONE.name)
+                val typeName = specificType?.name ?: prefs.getString("button_remap_haptic_type", HapticFeedbackType.DOUBLE.name)
                 val feedbackType = try {
-                    HapticFeedbackType.valueOf(typeName ?: HapticFeedbackType.NONE.name)
+                    val type = HapticFeedbackType.valueOf(typeName ?: HapticFeedbackType.DOUBLE.name)
+                    if (type.name == "LONG") HapticFeedbackType.DOUBLE else type
                 } catch (e: Exception) {
-                    HapticFeedbackType.NONE
+                    HapticFeedbackType.DOUBLE
                 }
 
                 performHapticFeedback(vibrator, feedbackType)
@@ -339,19 +341,47 @@ class ScreenOffAccessibilityService : AccessibilityService() {
 
         when (action) {
             "Toggle flashlight" -> toggleFlashlight()
+            "Media play/pause" -> sendMediaKey(KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE)
+            "Media next" -> sendMediaKey(KeyEvent.KEYCODE_MEDIA_NEXT)
+            "Media previous" -> sendMediaKey(KeyEvent.KEYCODE_MEDIA_PREVIOUS)
+            "Toggle vibrate" -> toggleRingerMode(AudioManager.RINGER_MODE_VIBRATE)
+            "Toggle mute" -> toggleRingerMode(AudioManager.RINGER_MODE_SILENT)
+            "AI assistant" -> launchAssistant()
+        }
+    }
+
+    private fun sendMediaKey(keyCode: Int) {
+        val am = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        am.dispatchMediaKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, keyCode))
+        am.dispatchMediaKeyEvent(KeyEvent(KeyEvent.ACTION_UP, keyCode))
+        triggerHapticFeedback()
+    }
+
+    private fun toggleRingerMode(targetMode: Int) {
+        val am = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        val currentMode = am.ringerMode
+        if (currentMode == targetMode) {
+            am.ringerMode = AudioManager.RINGER_MODE_NORMAL
+        } else {
+            am.ringerMode = targetMode
+        }
+        triggerHapticFeedback()
+    }
+
+    private fun launchAssistant() {
+        try {
+            val intent = Intent(Intent.ACTION_VOICE_COMMAND).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            startActivity(intent)
+            triggerHapticFeedback()
+        } catch (e: Exception) {
+            Log.e("ButtonRemap", "Failed to launch assistant", e)
         }
     }
 
     private fun toggleFlashlight() {
-        val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
-        val hapticName = prefs.getString("button_remap_haptic_type", HapticFeedbackType.LONG.name)
-        val hapticType = try {
-            HapticFeedbackType.valueOf(hapticName ?: HapticFeedbackType.LONG.name)
-        } catch (e: Exception) {
-            HapticFeedbackType.LONG
-        }
-
-        Log.d("Flashlight", "Toggling flashlight, current state: $isTorchOn, haptic: $hapticType")
+        Log.d("Flashlight", "Toggling flashlight, current state: $isTorchOn")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             try {
                 val cameraManager = getSystemService(Context.CAMERA_SERVICE) as CameraManager
@@ -364,7 +394,7 @@ class ScreenOffAccessibilityService : AccessibilityService() {
                     if (flashAvailable && lensFacing == CameraCharacteristics.LENS_FACING_BACK) {
                         Log.d("Flashlight", "Setting torch mode for camera $id to ${!isTorchOn}")
                         cameraManager.setTorchMode(id, !isTorchOn)
-                        triggerHapticFeedback(hapticType)
+                        triggerHapticFeedback()
                         return
                     }
                 }
@@ -375,7 +405,7 @@ class ScreenOffAccessibilityService : AccessibilityService() {
                     if (chars.get(CameraCharacteristics.FLASH_INFO_AVAILABLE) == true) {
                         Log.d("Flashlight", "Fallback: Setting torch mode for camera $id to ${!isTorchOn}")
                         cameraManager.setTorchMode(id, !isTorchOn)
-                        triggerHapticFeedback(hapticType)
+                        triggerHapticFeedback()
                         return
                     }
                 }

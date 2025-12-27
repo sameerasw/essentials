@@ -26,8 +26,10 @@ fun performHapticFeedback(
         }
 
         HapticFeedbackType.DOUBLE -> {
-            val pattern = longArrayOf(0, 30, 100, 30)
-            vibrator.vibrate(VibrationEffect.createWaveform(pattern, -1))
+            // A quick double tap that feels like a physical switch
+            val pattern = longArrayOf(0, 40, 60, 40)
+            val amplitudes = intArrayOf(0, 180, 0, 220)
+            vibrator.vibrate(VibrationEffect.createWaveform(pattern, amplitudes, -1))
         }
 
         HapticFeedbackType.CLICK -> {
@@ -44,32 +46,6 @@ fun performHapticFeedback(
             }
         }
 
-        HapticFeedbackType.LONG -> {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val stepMs = 5L
-                val timings = mutableListOf<Long>()
-                val amplitudes = mutableListOf<Int>()
-                
-                // Ramp up: 0.25s (250ms)
-                val upSteps = (50 / stepMs).toInt()
-                for (i in 0 until upSteps) {
-                    timings.add(stepMs)
-                    amplitudes.add((i.toFloat() / upSteps * 255).toInt().coerceIn(0, 155))
-                }
-                
-                // Ramp down: 0.75s (750ms)
-                val downSteps = (500 / stepMs).toInt()
-                for (i in 0 until downSteps) {
-                    timings.add(stepMs)
-                    amplitudes.add(((1f - i.toFloat() / downSteps) * 255).toInt().coerceIn(0, 155))
-                }
-                
-                vibrator.vibrate(VibrationEffect.createWaveform(timings.toLongArray(), amplitudes.toIntArray(), -1))
-            } else {
-                @Suppress("DEPRECATION")
-                vibrator.vibrate(600)
-            }
-        }
     }
 }
 
