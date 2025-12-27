@@ -311,8 +311,8 @@ class ScreenOffAccessibilityService : AccessibilityService() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent?.action == "LOCK_SCREEN") {
-            // Trigger haptic feedback based on user preference
-            triggerHapticFeedback()
+            // Trigger haptic feedback based on widget preference
+            triggerHapticFeedback(useWidgetPreference = true)            
             // Lock the screen
             performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN)
         } else if (intent?.action == "SHOW_EDGE_LIGHTING") {
@@ -336,7 +336,7 @@ class ScreenOffAccessibilityService : AccessibilityService() {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    private fun triggerHapticFeedback(specificType: HapticFeedbackType? = null) {
+    private fun triggerHapticFeedback(specificType: HapticFeedbackType? = null, useWidgetPreference: Boolean = false) {
         try {
             val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 getSystemService(VibratorManager::class.java)?.defaultVibrator
@@ -347,12 +347,15 @@ class ScreenOffAccessibilityService : AccessibilityService() {
 
             if (vibrator != null) {
                 val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
-                val typeName = specificType?.name ?: prefs.getString("button_remap_haptic_type", HapticFeedbackType.DOUBLE.name)
+                val prefKey = if (useWidgetPreference) "haptic_feedback_type" else "button_remap_haptic_type"
+                val defaultType = if (useWidgetPreference) HapticFeedbackType.SUBTLE.name else HapticFeedbackType.DOUBLE.name
+                
+                val typeName = specificType?.name ?: prefs.getString(prefKey, defaultType)
                 val feedbackType = try {
-                    val type = HapticFeedbackType.valueOf(typeName ?: HapticFeedbackType.DOUBLE.name)
+                    val type = HapticFeedbackType.valueOf(typeName ?: defaultType)
                     if (type.name == "LONG") HapticFeedbackType.DOUBLE else type
                 } catch (e: Exception) {
-                    HapticFeedbackType.DOUBLE
+                    HapticFeedbackType.valueOf(defaultType)
                 }
 
                 performHapticFeedback(vibrator, feedbackType)
