@@ -91,7 +91,7 @@ fun ButtonRemapSettingsUI(
                 }
 
                 Text(
-                    text = "Remaps",
+                    text = "Remap Long Press",
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(start = 16.dp),
                     color = MaterialTheme.colorScheme.onSurfaceVariant

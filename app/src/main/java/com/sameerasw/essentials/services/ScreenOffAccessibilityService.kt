@@ -59,6 +59,12 @@ class ScreenOffAccessibilityService : AccessibilityService() {
     private var wasNightLightOnBeforeAutoToggle = false
     private var isNightLightAutoToggledOff = false
     private var lastForegroundPackage: String? = null
+    private var pendingNLRunnable: Runnable? = null
+    private val NL_DEBOUNCE_DELAY = 500L
+
+    private val IGNORED_SYSTEM_PACKAGES = listOf(
+        "android",
+    )
 
     override fun onCreate() {
         super.onCreate()
@@ -111,6 +117,23 @@ class ScreenOffAccessibilityService : AccessibilityService() {
     }
 
     private fun checkHighlightNightLight(packageName: String) {
+        // Cancel any pending NL toggle
+        pendingNLRunnable?.let { handler.removeCallbacks(it) }
+
+        // Skip processing for system packages to avoid transient NL restoration
+        if (IGNORED_SYSTEM_PACKAGES.contains(packageName)) {
+            Log.d("NightLight", "Ignoring system package $packageName")
+            return
+        }
+
+        val runnable = Runnable {
+            processNightLightChange(packageName)
+        }
+        pendingNLRunnable = runnable
+        handler.postDelayed(runnable, NL_DEBOUNCE_DELAY)
+    }
+
+    private fun processNightLightChange(packageName: String) {
         val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
         val isEnabled = prefs.getBoolean("dynamic_night_light_enabled", false)
         if (!isEnabled) return
@@ -127,22 +150,26 @@ class ScreenOffAccessibilityService : AccessibilityService() {
         }
 
         val isAppSelected = selectedApps.find { it.packageName == packageName }?.isEnabled ?: false
-        
+        val isNLCurrentlyOn = isNightLightEnabled()
+
         if (isAppSelected) {
-            // App is selected, turn off night light if it's currently on
-            if (isNightLightEnabled()) {
+            // App is selected. If NL is on, turn it off and record that we did so.
+            if (isNLCurrentlyOn) {
                 Log.d("NightLight", "Turning off night light for $packageName")
                 wasNightLightOnBeforeAutoToggle = true
                 isNightLightAutoToggledOff = true
                 setNightLightEnabled(false)
             }
         } else {
-            // App is NOT selected, restore night light if we previously turned it off
-            if (isNightLightAutoToggledOff) {
+            // App is NOT selected. 
+            // Only restore NL if it was auto-toggled off AND it was ON before that.
+            if (isNightLightAutoToggledOff && wasNightLightOnBeforeAutoToggle) {
                 Log.d("NightLight", "Restoring night light (was turned off for previous app)")
                 setNightLightEnabled(true)
                 isNightLightAutoToggledOff = false
                 wasNightLightOnBeforeAutoToggle = false
+            } else if (isNightLightAutoToggledOff) {
+                isNightLightAutoToggledOff = false
             }
         }
     }
