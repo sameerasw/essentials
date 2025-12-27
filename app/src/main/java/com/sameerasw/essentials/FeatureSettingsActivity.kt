@@ -21,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,6 +32,9 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.sameerasw.essentials.ui.components.ReusableTopAppBar
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.HapticFeedbackType
@@ -87,6 +91,29 @@ class FeatureSettingsActivity : ComponentActivity() {
                 }
 
                 val viewModel: MainViewModel = viewModel()
+                val statusBarViewModel: StatusBarIconViewModel = viewModel()
+                val caffeinateViewModel: CaffeinateViewModel = viewModel()
+
+                // Automatic refresh on resume
+                val lifecycleOwner = LocalLifecycleOwner.current
+                DisposableEffect(lifecycleOwner) {
+                    val observer = LifecycleEventObserver { _, event ->
+                        if (event == Lifecycle.Event.ON_RESUME) {
+                            viewModel.check(context)
+                            if (feature == "Statusbar icons") {
+                                statusBarViewModel.check(context)
+                            }
+                            if (feature == "Caffeinate") {
+                                caffeinateViewModel.check(context)
+                            }
+                        }
+                    }
+                    lifecycleOwner.lifecycle.addObserver(observer)
+                    onDispose {
+                        lifecycleOwner.lifecycle.removeObserver(observer)
+                    }
+                }
+
                 LaunchedEffect(Unit) {
                     viewModel.check(context)
                 }
@@ -338,20 +365,12 @@ class FeatureSettingsActivity : ComponentActivity() {
                                 )
                             }
                             "Statusbar icons" -> {
-                                val statusBarViewModel: StatusBarIconViewModel = viewModel()
-                                LaunchedEffect(Unit) {
-                                    statusBarViewModel.check(context)
-                                }
                                 StatusBarIconSettingsUI(
                                     viewModel = statusBarViewModel,
                                     modifier = Modifier.padding(top = 16.dp)
                                 )
                             }
                             "Caffeinate" -> {
-                                val caffeinateViewModel: CaffeinateViewModel = viewModel()
-                                LaunchedEffect(Unit) {
-                                    caffeinateViewModel.check(context)
-                                }
                                 CaffeinateSettingsUI(
                                     viewModel = caffeinateViewModel,
                                     modifier = Modifier.padding(top = 16.dp)
