@@ -5,6 +5,7 @@ import android.os.Build
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import androidx.annotation.RequiresApi
+import com.sameerasw.essentials.utils.HapticUtil
 
 @RequiresApi(Build.VERSION_CODES.N)
 abstract class BaseTileService : TileService() {
@@ -45,6 +46,7 @@ abstract class BaseTileService : TileService() {
 
     override fun onClick() {
         super.onClick()
+        HapticUtil.performHapticForService(this)
         if (!hasFeaturePermission()) {
             return
         }

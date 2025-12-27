@@ -2,8 +2,6 @@ package com.sameerasw.essentials.ui.composables.configs
 
 import android.app.StatusBarManager
 import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
 import android.graphics.drawable.Icon
 import android.os.Build
 import android.widget.Toast
@@ -14,28 +12,20 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat.getSystemService
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.services.*
-import java.util.concurrent.Executor
 
 data class QSTileInfo(
     val title: String,
@@ -48,6 +38,7 @@ fun QuickSettingsTilesSettingsUI(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val view = LocalView.current
 
     val tiles = listOf(
         QSTileInfo("UI Blur", R.drawable.rounded_blur_on_24, UiBlurTileService::class.java),
@@ -110,12 +101,16 @@ fun QSTileCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
+    val view = LocalView.current
     Row(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(24.dp))
             .background(MaterialTheme.colorScheme.primary)
-            .clickable(onClick = onClick)
+            .clickable {
+                com.sameerasw.essentials.utils.HapticUtil.performVirtualKeyHaptic(view)
+                onClick()
+            }
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)

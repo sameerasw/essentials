@@ -26,6 +26,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.pickers.HapticFeedbackPicker
@@ -33,6 +34,7 @@ import com.sameerasw.essentials.ui.components.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.utils.HapticFeedbackType
+import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,6 +44,7 @@ fun ButtonRemapSettingsUI(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val view = LocalView.current
     var selectedScreenTab by remember { mutableStateOf(0) } // 0: Off, 1: On
     var selectedButtonTab by remember { mutableStateOf(0) } // 0: Up, 1: Down
     var showFlashlightOptions by remember { mutableStateOf(false) }
@@ -99,13 +102,19 @@ fun ButtonRemapSettingsUI(
                     SegmentedPicker(
                         items = listOf("Screen Off", "Screen On"),
                         selectedItem = if (selectedScreenTab == 0) "Screen Off" else "Screen On",
-                        onItemSelected = { selectedScreenTab = if (it == "Screen Off") 0 else 1 },
+                        onItemSelected = { 
+                            HapticUtil.performUIHaptic(view)
+                            selectedScreenTab = if (it == "Screen Off") 0 else 1 
+                        },
                         labelProvider = { it }
                     )
                     SegmentedPicker(
                         items = listOf("Volume Up", "Volume Down"),
                         selectedItem = if (selectedButtonTab == 0) "Volume Up" else "Volume Down",
-                        onItemSelected = { selectedButtonTab = if (it == "Volume Up") 0 else 1 },
+                        onItemSelected = { 
+                            HapticUtil.performUIHaptic(view)
+                            selectedButtonTab = if (it == "Volume Up") 0 else 1 
+                        },
                         labelProvider = { it }
                     )
 
@@ -230,7 +239,10 @@ fun ButtonRemapSettingsUI(
                 }
                 
                 Button(
-                    onClick = { showFlashlightOptions = false },
+                    onClick = { 
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        showFlashlightOptions = false 
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     shape = MaterialTheme.shapes.extraLarge
                 ) {
@@ -251,9 +263,14 @@ fun RemapActionItem(
     hasSettings: Boolean = false,
     onSettingsClick: () -> Unit = {}
 ) {
+    val view = LocalView.current
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .clickable { 
+                HapticUtil.performUIHaptic(view)
+                onClick() 
+            }
             .background(
                 color = MaterialTheme.colorScheme.surfaceBright,
                 shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd)

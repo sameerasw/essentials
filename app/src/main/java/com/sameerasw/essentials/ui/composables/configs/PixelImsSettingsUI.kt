@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
@@ -30,15 +29,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import androidx.core.net.toUri
+import com.sameerasw.essentials.utils.HapticUtil
 
 @Composable
 fun PixelImsSettingsUI(
@@ -46,6 +46,7 @@ fun PixelImsSettingsUI(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val view = LocalView.current
     var isConfirmed by remember { mutableStateOf(false) }
 
     Column(
@@ -88,6 +89,7 @@ fun PixelImsSettingsUI(
                     checked = viewModel.isPixelImsEnabled.value,
                     enabled = isConfirmed || viewModel.isPixelImsEnabled.value,
                     onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
                         if (checked && !viewModel.isShizukuPermissionGranted.value) {
                             viewModel.requestShizukuPermission()
                         } else {
@@ -136,13 +138,19 @@ fun PixelImsSettingsUI(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { isConfirmed = !isConfirmed },
+                        .clickable { 
+                            HapticUtil.performUIHaptic(view)
+                            isConfirmed = !isConfirmed 
+                        },
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Checkbox(
                         checked = isConfirmed,
-                        onCheckedChange = { isConfirmed = it },
+                        onCheckedChange = { 
+                            HapticUtil.performUIHaptic(view)
+                            isConfirmed = it 
+                        },
                         colors = CheckboxDefaults.colors(
                             checkedColor = MaterialTheme.colorScheme.error,
                             uncheckedColor = MaterialTheme.colorScheme.error.copy(alpha = 0.6f)
@@ -200,6 +208,7 @@ fun PixelImsSettingsUI(
             // Hidden Menu Button
             Button(
                 onClick = {
+                    HapticUtil.performVirtualKeyHaptic(view)
                     try {
                         val intent = Intent("android.intent.action.MAIN")
                         intent.component = ComponentName(
@@ -240,6 +249,7 @@ fun PixelImsSettingsUI(
                         fontWeight = FontWeight.Bold
                     ),
                     modifier = Modifier.clickable {
+                        HapticUtil.performUIHaptic(view)
                         val intent =
                             Intent(Intent.ACTION_VIEW, "https://github.com/vvb2060/Ims".toUri())
                         context.startActivity(intent)

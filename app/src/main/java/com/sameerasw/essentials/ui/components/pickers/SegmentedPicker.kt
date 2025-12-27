@@ -26,6 +26,7 @@ fun <T> SegmentedPicker(
     labelProvider: (T) -> String,
     modifier: Modifier = Modifier
 ) {
+    val view = androidx.compose.ui.platform.LocalView.current
     Row(
         modifier = modifier
             .background(
@@ -41,6 +42,7 @@ fun <T> SegmentedPicker(
             ToggleButton(
                 checked = selectedItem == item,
                 onCheckedChange = {
+                    com.sameerasw.essentials.utils.HapticUtil.performUIHaptic(view)
                     onItemSelected(item)
                 },
                 modifier = modifiers[index].semantics { role = Role.RadioButton },

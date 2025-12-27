@@ -1,6 +1,7 @@
 package com.sameerasw.essentials.utils
 
 import android.content.Context
+import android.os.Vibrator
 import android.view.View
 import androidx.compose.runtime.mutableStateOf
 
@@ -21,6 +22,29 @@ object HapticUtil {
         view.performHapticFeedback(android.view.HapticFeedbackConstants.KEYBOARD_TAP)
     }
 
+    /**
+     * Perform a light tick haptic feedback
+     */
+    fun performLightHaptic(view: View) {
+        if (!isAppHapticsEnabled.value) return
+        view.performHapticFeedback(android.view.HapticFeedbackConstants.CLOCK_TICK)
+    }
+
+    /**
+     * Perform a medium impact haptic feedback
+     */
+    fun performMediumHaptic(view: View) {
+        if (!isAppHapticsEnabled.value) return
+        view.performHapticFeedback(android.view.HapticFeedbackConstants.CONTEXT_CLICK)
+    }
+
+    /**
+     * Perform a heavy/virtual key haptic feedback
+     */
+    fun performHeavyHaptic(view: View) {
+        if (!isAppHapticsEnabled.value) return
+        view.performHapticFeedback(android.view.HapticFeedbackConstants.VIRTUAL_KEY)
+    }
 
     fun performSliderHaptic(view: View) {
         if (!isAppHapticsEnabled.value) return
@@ -34,6 +58,15 @@ object HapticUtil {
     fun performVirtualKeyHaptic(view: View) {
         if (!isAppHapticsEnabled.value) return
         view.performHapticFeedback(android.view.HapticFeedbackConstants.VIRTUAL_KEY)
+    }
+
+    /**
+     * Perform haptic feedback for background services (Context-based)
+     */
+    fun performHapticForService(context: android.content.Context, type: HapticFeedbackType = HapticFeedbackType.SUBTLE) {
+        if (!isAppHapticsEnabled.value) return
+        val vibrator = context.getSystemService(android.content.Context.VIBRATOR_SERVICE) as android.os.Vibrator
+        performHapticFeedback(vibrator, type)
     }
 
     /**

@@ -8,13 +8,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
@@ -23,10 +19,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -38,6 +33,7 @@ import com.sameerasw.essentials.ui.components.sheets.PermissionItem
 import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
+import com.sameerasw.essentials.utils.HapticUtil
 
 @Composable
 fun StatusBarIconSettingsUI(
@@ -45,6 +41,7 @@ fun StatusBarIconSettingsUI(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val view = LocalView.current
     val isPermissionGranted = viewModel.isWriteSecureSettingsEnabled.value
 
     var showPermissionSheet by remember { mutableStateOf(false) }
@@ -155,6 +152,7 @@ fun StatusBarIconSettingsUI(
 
             Box(
                 modifier = Modifier.clickable {
+                    HapticUtil.performUIHaptic(view)
                     val hasPermission = ContextCompat.checkSelfPermission(
                         context,
                         Manifest.permission.READ_PHONE_STATE
@@ -206,6 +204,7 @@ fun StatusBarIconSettingsUI(
 
                 if (isSwitchDisabled) {
                     Box(modifier = Modifier.matchParentSize().clickable {
+                        HapticUtil.performUIHaptic(view)
                         val hasPermission = ContextCompat.checkSelfPermission(
                             context,
                             Manifest.permission.READ_PHONE_STATE
@@ -243,6 +242,7 @@ fun StatusBarIconSettingsUI(
         // Reset All Icons Button
         Button(
             onClick = {
+                HapticUtil.performVirtualKeyHaptic(view)
                 viewModel.resetAllIcons(context)
             },
             modifier = Modifier
