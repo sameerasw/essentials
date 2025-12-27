@@ -78,7 +78,7 @@ fun SetupFeatures(
     val isEdgeLightingEnabled by viewModel.isEdgeLightingEnabled
     val isOverlayPermissionGranted by viewModel.isOverlayPermissionGranted
     val isEdgeLightingAccessibilityEnabled by viewModel.isEdgeLightingAccessibilityEnabled
-    val isFlashlightVolumeToggleEnabled = viewModel.isFlashlightVolumeToggleEnabled.value
+    val isButtonRemapEnabled = viewModel.isButtonRemapEnabled.value
     val isDynamicNightLightEnabled = viewModel.isDynamicNightLightEnabled.value
     val isPixelImsEnabled = viewModel.isPixelImsEnabled.value
     val context = LocalContext.current
@@ -249,13 +249,13 @@ fun SetupFeatures(
                         )
                     }
                 }
-                "Flashlight toggle" -> {
+                "Button remap" -> {
                     if (!isAccessibilityEnabled) {
                         missing.add(
                             PermissionItem(
                                 iconRes = R.drawable.rounded_settings_accessibility_24,
                                 title = "Accessibility Service",
-                                description = "Required to intercept volume button presses when the screen is off",
+                                description = "Required to intercept hardware button events",
                                 dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
                                 actionLabel = "Enable in Settings",
                                 action = {
@@ -414,11 +414,11 @@ fun SetupFeatures(
                         isGranted = isNotificationListenerEnabled
                     )
                 )
-                "Flashlight toggle" -> listOf(
+                "Button remap" -> listOf(
                     PermissionItem(
                         iconRes = R.drawable.rounded_settings_accessibility_24,
                         title = "Accessibility Service",
-                        description = "Required to intercept volume button presses when the screen is off",
+                        description = "Required to intercept hardware button events",
                         dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
                         actionLabel = "Enable in Settings",
                         action = {
@@ -525,10 +525,10 @@ fun SetupFeatures(
                 "View all"
             ),
             FeatureItem(
-                "Flashlight toggle",
-                R.drawable.rounded_flashlight_on_24,
-                "Tools",
-                "Toggle flashlight while screen off"
+                "Button remap",
+                R.drawable.rounded_switch_access_3_24,
+                "System",
+                "Remap hardware button actions"
             ),
             FeatureItem(
                 "Dynamic night light",
@@ -647,7 +647,7 @@ fun SetupFeatures(
                         FEATURE_MAPS_POWER_SAVING -> isMapsPowerSavingEnabled
                         "Edge lighting" -> isEdgeLightingEnabled
                         "Sound mode tile" -> true // Always enabled since it's a tile
-                        "Flashlight toggle" -> isFlashlightVolumeToggleEnabled
+                        "Button remap" -> true
                         "Dynamic night light" -> isDynamicNightLightEnabled
                         "Pixel IMS" -> isPixelImsEnabled
                         else -> false
@@ -660,7 +660,7 @@ fun SetupFeatures(
                         FEATURE_MAPS_POWER_SAVING -> isShizukuAvailable && isShizukuPermissionGranted && isNotificationListenerEnabled
                         "Edge lighting" -> isOverlayPermissionGranted && isEdgeLightingAccessibilityEnabled && isNotificationListenerEnabled
                         "Sound mode tile" -> false // No toggle for QS tile
-                        "Flashlight toggle" -> isAccessibilityEnabled
+                        "Button remap" -> isAccessibilityEnabled
                         "Snooze system notifications" -> isNotificationListenerEnabled
                         "Dynamic night light" -> isAccessibilityEnabled && isWriteSecureSettingsEnabled
                         "Pixel IMS" -> isShizukuAvailable && isShizukuPermissionGranted
@@ -690,7 +690,7 @@ fun SetupFeatures(
                                 FEATURE_MAPS_POWER_SAVING -> viewModel.setMapsPowerSavingEnabled(enabled, context)
                                 "Edge lighting" -> viewModel.setEdgeLightingEnabled(enabled, context)
                                 "Sound mode tile" -> {} // No toggle action needed for tile
-                                "Flashlight toggle" -> viewModel.setFlashlightVolumeToggleEnabled(enabled, context)
+                                "Button remap" -> viewModel.setButtonRemapEnabled(enabled, context)
                                 "Dynamic night light" -> viewModel.setDynamicNightLightEnabled(enabled, context)
                                 "Pixel IMS" -> viewModel.setPixelImsEnabled(enabled, context)
                                 else -> {}
@@ -700,7 +700,7 @@ fun SetupFeatures(
                         iconRes = feature.iconRes,
                         modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
                         isToggleEnabled = isToggleEnabled,
-                        showToggle = feature.title != "Sound mode tile" && feature.title != "Screen off widget" && feature.title != "Link actions" && feature.title != "Snooze system notifications" && feature.title != "Quick Settings Tiles" && feature.title != "Pixel IMS", // Hide toggle for Sound mode tile, Screen off widget, Link actions, Snooze notifications, QS Tiles, and Pixel IMS
+                        showToggle = feature.title != "Sound mode tile" && feature.title != "Screen off widget" && feature.title != "Link actions" && feature.title != "Snooze system notifications" && feature.title != "Quick Settings Tiles" && feature.title != "Pixel IMS" && feature.title != "Button remap", // Hide toggle for Sound mode tile, Screen off widget, Link actions, Snooze notifications, QS Tiles, Pixel IMS, and Button remap
                         hasMoreSettings = feature.title != FEATURE_MAPS_POWER_SAVING,
                         onDisabledToggleClick = {
                             currentFeature = feature.title

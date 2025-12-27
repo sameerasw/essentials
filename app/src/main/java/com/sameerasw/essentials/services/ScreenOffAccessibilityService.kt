@@ -46,8 +46,9 @@ class ScreenOffAccessibilityService : AccessibilityService() {
         }
     } else null
 
+    private var lastPressedKeyCode: Int = -1
     private val longPressRunnable = Runnable {
-        toggleFlashlight()
+        handleLongPress(lastPressedKeyCode)
     }
     private val LONG_PRESS_TIMEOUT = 500L
     
@@ -282,51 +283,68 @@ class ScreenOffAccessibilityService : AccessibilityService() {
     }
 
     override fun onKeyEvent(event: KeyEvent): Boolean {
+        if (event.keyCode != KeyEvent.KEYCODE_VOLUME_UP && event.keyCode != KeyEvent.KEYCODE_VOLUME_DOWN) {
+            return super.onKeyEvent(event)
+        }
+
         val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
-        val triggerButton = prefs.getString("flashlight_trigger_button", "Volume Up")
-        val targetKeyCode = if (triggerButton == "Volume Down") KeyEvent.KEYCODE_VOLUME_DOWN else KeyEvent.KEYCODE_VOLUME_UP
+        val isEnabled = prefs.getBoolean("button_remap_enabled", false)
+        if (!isEnabled) return super.onKeyEvent(event)
 
-        if (event.keyCode == targetKeyCode) {
-            val isEnabled = prefs.getBoolean("flashlight_volume_toggle_enabled", false)
-            if (!isEnabled) return super.onKeyEvent(event)
+        val action = if (event.keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            prefs.getString("button_remap_vol_up_action", "None")
+        } else {
+            prefs.getString("button_remap_vol_down_action", "None")
+        }
 
-            val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
-            val isScreenOn = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
-                powerManager.isInteractive
-            } else {
-                @Suppress("DEPRECATION")
-                powerManager.isScreenOn
-            }
+        if (action == null || action == "None") return super.onKeyEvent(event)
 
-            // Log event for debugging
-            Log.d("Flashlight", "KeyEvent: action=${event.action}, screenOn=$isScreenOn")
+        val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+        val isScreenOn = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+            powerManager.isInteractive
+        } else {
+            @Suppress("DEPRECATION")
+            powerManager.isScreenOn
+        }
 
-            val isAlwaysTurnOffEnabled = prefs.getBoolean("flashlight_always_turn_off_enabled", false)
+        val isAlwaysTurnOffEnabled = prefs.getBoolean("flashlight_always_turn_off_enabled", false)
+        
+        // Special case for flashlight: allow turning OFF while screen is on if enabled
+        val isFlashlightAction = action == "Toggle flashlight"
+        val shouldIntercept = !isScreenOn || (isFlashlightAction && isAlwaysTurnOffEnabled && isTorchOn)
 
-            // Only intercept if screen is off OR (always turn off is enabled AND torch is currently on)
-            // This allows turning it OFF while screen is on, but prevents turning it ON while screen is on (unless screen is off of course)
-            val shouldIntercept = !isScreenOn || (isAlwaysTurnOffEnabled && isTorchOn)
-
-            if (shouldIntercept) {
-                if (event.action == KeyEvent.ACTION_DOWN) {
-                    if (event.repeatCount == 0) {
-                        Log.d("Flashlight", "Long press timer started")
-                        handler.postDelayed(longPressRunnable, LONG_PRESS_TIMEOUT)
-                    }
-                    return true // Consume event
-                } else if (event.action == KeyEvent.ACTION_UP) {
-                    Log.d("Flashlight", "Long press timer removed")
-                    handler.removeCallbacks(longPressRunnable)
-                    return true // Consume event
+        if (shouldIntercept) {
+            if (event.action == KeyEvent.ACTION_DOWN) {
+                if (event.repeatCount == 0) {
+                    lastPressedKeyCode = event.keyCode
+                    handler.postDelayed(longPressRunnable, LONG_PRESS_TIMEOUT)
                 }
+                return true // Consume event
+            } else if (event.action == KeyEvent.ACTION_UP) {
+                handler.removeCallbacks(longPressRunnable)
+                return true // Consume event
             }
         }
+        
         return super.onKeyEvent(event)
+    }
+
+    private fun handleLongPress(keyCode: Int) {
+        val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+        val action = if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            prefs.getString("button_remap_vol_up_action", "None")
+        } else {
+            prefs.getString("button_remap_vol_down_action", "None")
+        }
+
+        when (action) {
+            "Toggle flashlight" -> toggleFlashlight()
+        }
     }
 
     private fun toggleFlashlight() {
         val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
-        val hapticName = prefs.getString("flashlight_haptic_type", HapticFeedbackType.LONG.name)
+        val hapticName = prefs.getString("button_remap_haptic_type", HapticFeedbackType.LONG.name)
         val hapticType = try {
             HapticFeedbackType.valueOf(hapticName ?: HapticFeedbackType.LONG.name)
         } catch (e: Exception) {

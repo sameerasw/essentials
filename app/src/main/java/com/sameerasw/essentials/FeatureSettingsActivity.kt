@@ -42,7 +42,7 @@ import com.sameerasw.essentials.ui.composables.configs.ScreenOffWidgetSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.EdgeLightingSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.SoundModeTileSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.QuickSettingsTilesSettingsUI
-import com.sameerasw.essentials.ui.composables.configs.FlashlightSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.ButtonRemapSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.DynamicNightLightSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.SnoozeNotificationsSettingsUI
 import com.sameerasw.essentials.viewmodels.CaffeinateViewModel
@@ -69,7 +69,8 @@ class FeatureSettingsActivity : ComponentActivity() {
             "Dynamic night light" to "Toggle based on current app",
             "Snooze system notifications" to "Automatically snooze persistent notifications",
             "Quick Settings Tiles" to "All available QS tiles",
-            "Pixel IMS" to "Force enable IMS for Pixels"
+            "Pixel IMS" to "Force enable IMS for Pixels",
+            "Button remap" to "Remap hardware buttons"
         )
         val description = featureDescriptions[feature] ?: ""
         setContent {
@@ -114,7 +115,7 @@ class FeatureSettingsActivity : ComponentActivity() {
                         "Screen off widget" -> !isAccessibilityEnabled
                         "Statusbar icons" -> !isWriteSecureSettingsEnabled
                         "Edge lighting" -> !isOverlayPermissionGranted || !isEdgeLightingAccessibilityEnabled || !isNotificationListenerEnabled
-                        "Flashlight toggle" -> !isAccessibilityEnabled
+                        "Button remap" -> !isAccessibilityEnabled
                         "Dynamic night light" -> !isAccessibilityEnabled || !isWriteSecureSettingsEnabled
                         "Snooze system notifications" -> !isNotificationListenerEnabled
                         else -> false
@@ -194,17 +195,15 @@ class FeatureSettingsActivity : ComponentActivity() {
                                 isGranted = isNotificationListenerEnabled
                             )
                         )
-                        "Flashlight toggle" -> listOf(
+                        "Button remap" -> listOf(
                             PermissionItem(
                                 iconRes = R.drawable.rounded_settings_accessibility_24,
                                 title = "Accessibility Service",
-                                description = "Required to intercept volume button presses when the screen is off",
+                                description = "Required to intercept hardware button events",
                                 dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
                                 actionLabel = "Enable in Settings",
                                 action = {
-                                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                    context.startActivity(intent)
+                                    context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
                                 },
                                 isGranted = isAccessibilityEnabled
                             )
@@ -324,8 +323,8 @@ class FeatureSettingsActivity : ComponentActivity() {
                             "Sound mode tile" -> {
                                 SoundModeTileSettingsUI(modifier = Modifier.padding(top = 16.dp))
                             }
-                            "Flashlight toggle" -> {
-                                FlashlightSettingsUI(
+                            "Button remap" -> {
+                                ButtonRemapSettingsUI(
                                     viewModel = viewModel,
                                     modifier = Modifier.padding(top = 16.dp)
                                 )
