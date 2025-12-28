@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
     android:description="@string/accessibility_service_description"
-    android:accessibilityEventTypes="typeWindowStateChanged"
+    android:accessibilityEventTypes="typeWindowStateChanged|typeViewClicked"
     android:accessibilityFlags="flagRequestFilterKeyEvents"
     android:accessibilityFeedbackType=""
     android:notificationTimeout="100"
-    android:canRetrieveWindowContent="false"
+    android:canRetrieveWindowContent="true"
     android:canRequestFilterKeyEvents="true"
     android:settingsActivity="" />
 

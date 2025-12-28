@@ -81,6 +81,7 @@ fun SetupFeatures(
     val isButtonRemapEnabled = viewModel.isButtonRemapEnabled.value
     val isDynamicNightLightEnabled = viewModel.isDynamicNightLightEnabled.value
     val isPixelImsEnabled = viewModel.isPixelImsEnabled.value
+    val isScreenLockedSecurityEnabled = viewModel.isScreenLockedSecurityEnabled.value
     val context = LocalContext.current
 
     fun buildMapsPowerSavingPermissionItems(): List<PermissionItem> {
@@ -333,6 +334,58 @@ fun SetupFeatures(
                         )
                     }
                 }
+                "Screen locked security" -> {
+                    if (!isAccessibilityEnabled) {
+                        missing.add(
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_settings_accessibility_24,
+                                title = "Accessibility Service",
+                                description = "Required to detect lock screen interactions and dismiss panel",
+                                dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
+                                actionLabel = "Enable Service",
+                                action = {
+                                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                    context.startActivity(intent)
+                                },
+                                isGranted = isAccessibilityEnabled
+                            )
+                        )
+                    }
+                    if (!isWriteSecureSettingsEnabled) {
+                        missing.add(
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_security_24,
+                                title = "Write Secure Settings",
+                                description = "Required to temporarily adjust animation scale for spam prevention",
+                                dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
+                                actionLabel = "Copy ADB",
+                                action = {
+                                    val adbCommand = "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
+                                    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                    val clip = ClipData.newPlainText("adb_command", adbCommand)
+                                    clipboard.setPrimaryClip(clip)
+                                },
+                                isGranted = isWriteSecureSettingsEnabled
+                            )
+                        )
+                    }
+                    if (!viewModel.isDeviceAdminEnabled.value) {
+                        missing.add(
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_security_24,
+                                title = "Device Administrator",
+                                description = "Required to hard-lock the device (disabling biometrics) on unauthorized access attempts",
+                                dependentFeatures = PermissionRegistry.getFeatures("DEVICE_ADMIN"),
+                                actionLabel = "Enable Admin",
+                                action = {
+                                    viewModel.requestDeviceAdmin(context)
+                                },
+                                isGranted = viewModel.isDeviceAdminEnabled.value
+                            )
+                        )
+                    }
+                }
             }
 
             if (missing.isEmpty()) {
@@ -464,6 +517,21 @@ fun SetupFeatures(
                         isGranted = isWriteSecureSettingsEnabled
                     )
                 )
+                "Screen locked security" -> listOf(
+                    PermissionItem(
+                        iconRes = R.drawable.rounded_settings_accessibility_24,
+                        title = "Accessibility Service",
+                        description = "Required to detect lock screen interactions and dismiss panel",
+                        dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
+                        actionLabel = "Enable Service",
+                        action = {
+                            val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            context.startActivity(intent)
+                        },
+                        isGranted = isAccessibilityEnabled
+                    )
+                )
                 "Pixel IMS" -> buildMapsPowerSavingPermissionItems() // Reusing the same Shizuku logic
             else -> emptyList()
         }
@@ -541,6 +609,12 @@ fun SetupFeatures(
                 R.drawable.rounded_wifi_calling_bar_3_24,
                 "System",
                 "Force enable IMS services on Pixels"
+            ),
+            FeatureItem(
+                "Screen locked security",
+                R.drawable.rounded_security_24,
+                "System",
+                "Prevent network controls"
             )
         )
     }
@@ -650,6 +724,7 @@ fun SetupFeatures(
                         "Button remap" -> true
                         "Dynamic night light" -> isDynamicNightLightEnabled
                         "Pixel IMS" -> isPixelImsEnabled
+                        "Screen locked security" -> isScreenLockedSecurityEnabled
                         else -> false
                     }
 
@@ -664,6 +739,7 @@ fun SetupFeatures(
                         "Snooze system notifications" -> isNotificationListenerEnabled
                         "Dynamic night light" -> isAccessibilityEnabled && isWriteSecureSettingsEnabled
                         "Pixel IMS" -> isShizukuAvailable && isShizukuPermissionGranted
+                        "Screen locked security" -> isAccessibilityEnabled && isWriteSecureSettingsEnabled && viewModel.isDeviceAdminEnabled.value
                         else -> false
                     }
 
@@ -693,6 +769,7 @@ fun SetupFeatures(
                                 "Button remap" -> viewModel.setButtonRemapEnabled(enabled, context)
                                 "Dynamic night light" -> viewModel.setDynamicNightLightEnabled(enabled, context)
                                 "Pixel IMS" -> viewModel.setPixelImsEnabled(enabled, context)
+                                "Screen locked security" -> viewModel.setScreenLockedSecurityEnabled(enabled, context)
                                 else -> {}
                             }
                         },

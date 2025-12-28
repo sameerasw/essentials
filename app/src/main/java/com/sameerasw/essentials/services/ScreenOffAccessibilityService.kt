@@ -21,11 +21,17 @@ import android.view.KeyEvent
 import android.hardware.camera2.CameraManager
 import android.hardware.camera2.CameraCharacteristics
 import android.os.PowerManager
-import android.provider.Settings
 import com.google.gson.Gson
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.google.gson.reflect.TypeToken
 import android.media.AudioManager
+import android.provider.Settings
+import android.app.admin.DevicePolicyManager
+import com.sameerasw.essentials.services.receivers.SecurityDeviceAdminReceiver
+import android.content.ComponentName
+import android.app.KeyguardManager
+import android.view.accessibility.AccessibilityNodeInfo
+import android.widget.Toast
 
 class ScreenOffAccessibilityService : AccessibilityService() {
 
@@ -36,6 +42,9 @@ class ScreenOffAccessibilityService : AccessibilityService() {
     private var strokeThicknessDp: Int = OverlayHelper.STROKE_DP
     private var isPreview: Boolean = false
     private var screenReceiver: BroadcastReceiver? = null
+    
+    private var originalAnimationScale: Float = 1.0f
+    private var isScaleModified: Boolean = false
     
     private var isTorchOn = false
     private val torchCallback = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -76,10 +85,15 @@ class ScreenOffAccessibilityService : AccessibilityService() {
                     if (onlyShowWhenScreenOff && !isPreview) {
                         removeOverlay()
                     }
+                } else if (intent?.action == Intent.ACTION_USER_PRESENT) {
+                    restoreAnimationScale()
                 }
             }
         }
-        val filter = IntentFilter(Intent.ACTION_SCREEN_ON)
+        val filter = IntentFilter().apply {
+            addAction(Intent.ACTION_SCREEN_ON)
+            addAction(Intent.ACTION_USER_PRESENT)
+        }
         registerReceiver(screenReceiver, filter)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -102,17 +116,118 @@ class ScreenOffAccessibilityService : AccessibilityService() {
             val cameraManager = getSystemService(Context.CAMERA_SERVICE) as CameraManager
             torchCallback?.let { cameraManager.unregisterTorchCallback(it) }
         }
+        restoreAnimationScale()
         removeOverlay()
         super.onDestroy()
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-        if (event?.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+        if (event == null) return
+
+        val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+        val isScreenLockedSecurityEnabled = prefs.getBoolean("screen_locked_security_enabled", false)
+
+        if (isScreenLockedSecurityEnabled) {
+            val keyguardManager = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
+            if (keyguardManager.isKeyguardLocked) {
+                if (event.eventType == AccessibilityEvent.TYPE_VIEW_CLICKED || event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+                    val source = event.source
+                    if (source != null) {
+                        val keywords = listOf(
+                            "Internet", "Mobile Data", "Wi-Fi", // English
+                            "Daten", "WLAN", // German
+                            "Datos", // Spanish
+                            "Donn", // French (Données)
+                            "Cellular" // Some variants
+                        )
+                        
+                        var isNetworkTile = false
+                        for (text in keywords) {
+                            if (findNodeByText(source, text)) {
+                                isNetworkTile = true
+                                break
+                            }
+                        }
+
+                        if (isNetworkTile) {
+                            setReducedAnimationScale()
+                            performGlobalAction(GLOBAL_ACTION_BACK)
+                            lockDeviceHard()
+                            Toast.makeText(this, "Unlock phone to change network settings", Toast.LENGTH_SHORT).show()
+                            return
+                        }
+                    }
+                }
+            }
+        }
+
+        if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
             val packageName = event.packageName?.toString() ?: return
+            
             if (packageName == lastForegroundPackage) return
             lastForegroundPackage = packageName
             
             checkHighlightNightLight(packageName)
+        }
+    }
+
+    private fun findNodeByText(node: AccessibilityNodeInfo, text: String): Boolean {
+        val nodes = node.findAccessibilityNodeInfosByText(text)
+        if (nodes.isNotEmpty()) return true
+        
+        val desc = node.contentDescription
+        if (desc != null && desc.toString().contains(text, ignoreCase = true)) return true
+        
+        return false
+    }
+
+    private fun setReducedAnimationScale() {
+        if (isScaleModified) return
+        try {
+            originalAnimationScale = Settings.Global.getFloat(
+                contentResolver,
+                Settings.Global.ANIMATOR_DURATION_SCALE,
+                1.0f
+            )
+            Settings.Global.putFloat(
+                contentResolver,
+                Settings.Global.ANIMATOR_DURATION_SCALE,
+                0.1f
+            )
+            isScaleModified = true
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun restoreAnimationScale() {
+        if (!isScaleModified) return
+        try {
+            Settings.Global.putFloat(
+                contentResolver,
+                Settings.Global.ANIMATOR_DURATION_SCALE,
+                originalAnimationScale
+            )
+            isScaleModified = false
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun lockDeviceHard() {
+        try {
+            val dpm = getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
+            val adminComponent = ComponentName(this, SecurityDeviceAdminReceiver::class.java)
+            if (dpm.isAdminActive(adminComponent)) {
+                dpm.lockNow()
+            } else {
+                // Fallback to accessibility power button if admin not active
+                performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            // Last resort fallback
+            performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN)
         }
     }
 
@@ -196,8 +311,8 @@ class ScreenOffAccessibilityService : AccessibilityService() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent?.action == "LOCK_SCREEN") {
-            // Trigger haptic feedback based on user preference
-            triggerHapticFeedback()
+            // Trigger haptic feedback based on widget preference
+            triggerHapticFeedback(useWidgetPreference = true)            
             // Lock the screen
             performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN)
         } else if (intent?.action == "SHOW_EDGE_LIGHTING") {
@@ -221,7 +336,7 @@ class ScreenOffAccessibilityService : AccessibilityService() {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    private fun triggerHapticFeedback(specificType: HapticFeedbackType? = null) {
+    private fun triggerHapticFeedback(specificType: HapticFeedbackType? = null, useWidgetPreference: Boolean = false) {
         try {
             val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 getSystemService(VibratorManager::class.java)?.defaultVibrator
@@ -232,12 +347,15 @@ class ScreenOffAccessibilityService : AccessibilityService() {
 
             if (vibrator != null) {
                 val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
-                val typeName = specificType?.name ?: prefs.getString("button_remap_haptic_type", HapticFeedbackType.DOUBLE.name)
+                val prefKey = if (useWidgetPreference) "haptic_feedback_type" else "button_remap_haptic_type"
+                val defaultType = if (useWidgetPreference) HapticFeedbackType.SUBTLE.name else HapticFeedbackType.DOUBLE.name
+                
+                val typeName = specificType?.name ?: prefs.getString(prefKey, defaultType)
                 val feedbackType = try {
-                    val type = HapticFeedbackType.valueOf(typeName ?: HapticFeedbackType.DOUBLE.name)
+                    val type = HapticFeedbackType.valueOf(typeName ?: defaultType)
                     if (type.name == "LONG") HapticFeedbackType.DOUBLE else type
                 } catch (e: Exception) {
-                    HapticFeedbackType.DOUBLE
+                    HapticFeedbackType.valueOf(defaultType)
                 }
 
                 performHapticFeedback(vibrator, feedbackType)

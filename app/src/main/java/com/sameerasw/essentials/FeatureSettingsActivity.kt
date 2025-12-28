@@ -21,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,6 +32,9 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.sameerasw.essentials.ui.components.ReusableTopAppBar
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.HapticFeedbackType
@@ -70,7 +74,8 @@ class FeatureSettingsActivity : ComponentActivity() {
             "Snooze system notifications" to "Automatically snooze persistent notifications",
             "Quick Settings Tiles" to "All available QS tiles",
             "Pixel IMS" to "Force enable IMS for Pixels",
-            "Button remap" to "Remap hardware buttons"
+            "Button remap" to "Remap hardware buttons",
+            "Screen locked security" to "Protect network settings from lock screen"
         )
         val description = featureDescriptions[feature] ?: ""
         setContent {
@@ -86,6 +91,29 @@ class FeatureSettingsActivity : ComponentActivity() {
                 }
 
                 val viewModel: MainViewModel = viewModel()
+                val statusBarViewModel: StatusBarIconViewModel = viewModel()
+                val caffeinateViewModel: CaffeinateViewModel = viewModel()
+
+                // Automatic refresh on resume
+                val lifecycleOwner = LocalLifecycleOwner.current
+                DisposableEffect(lifecycleOwner) {
+                    val observer = LifecycleEventObserver { _, event ->
+                        if (event == Lifecycle.Event.ON_RESUME) {
+                            viewModel.check(context)
+                            if (feature == "Statusbar icons") {
+                                statusBarViewModel.check(context)
+                            }
+                            if (feature == "Caffeinate") {
+                                caffeinateViewModel.check(context)
+                            }
+                        }
+                    }
+                    lifecycleOwner.lifecycle.addObserver(observer)
+                    onDispose {
+                        lifecycleOwner.lifecycle.removeObserver(observer)
+                    }
+                }
+
                 LaunchedEffect(Unit) {
                     viewModel.check(context)
                 }
@@ -118,6 +146,7 @@ class FeatureSettingsActivity : ComponentActivity() {
                         "Button remap" -> !isAccessibilityEnabled
                         "Dynamic night light" -> !isAccessibilityEnabled || !isWriteSecureSettingsEnabled
                         "Snooze system notifications" -> !isNotificationListenerEnabled
+                        "Screen locked security" -> !isAccessibilityEnabled || !isWriteSecureSettingsEnabled || !viewModel.isDeviceAdminEnabled.value
                         else -> false
                     }
                     showPermissionSheet = hasMissingPermissions
@@ -252,6 +281,44 @@ class FeatureSettingsActivity : ComponentActivity() {
                                 isGranted = isNotificationListenerEnabled
                             )
                         )
+                        "Screen locked security" -> listOf(
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_settings_accessibility_24,
+                                title = "Accessibility Service",
+                                description = "Required to detect lock screen interactions and dismiss panel",
+                                dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
+                                actionLabel = "Enable in Settings",
+                                action = {
+                                    context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                                },
+                                isGranted = isAccessibilityEnabled
+                            ),
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_security_24,
+                                title = "Write Secure Settings",
+                                description = "Required to temporarily adjust animation scale for spam prevention",
+                                dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
+                                actionLabel = "Copy ADB",
+                                action = {
+                                    val adbCommand = "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
+                                    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                    val clip = ClipData.newPlainText("adb_command", adbCommand)
+                                    clipboard.setPrimaryClip(clip)
+                                },
+                                isGranted = isWriteSecureSettingsEnabled
+                            ),
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_security_24,
+                                title = "Device Administrator",
+                                description = "Required to hard-lock the device (disabling biometrics) on unauthorized access attempts",
+                                dependentFeatures = PermissionRegistry.getFeatures("DEVICE_ADMIN"),
+                                actionLabel = "Enable Admin",
+                                action = {
+                                    viewModel.requestDeviceAdmin(context)
+                                },
+                                isGranted = viewModel.isDeviceAdminEnabled.value
+                            )
+                        )
                         else -> emptyList()
                     }
 
@@ -298,20 +365,12 @@ class FeatureSettingsActivity : ComponentActivity() {
                                 )
                             }
                             "Statusbar icons" -> {
-                                val statusBarViewModel: StatusBarIconViewModel = viewModel()
-                                LaunchedEffect(Unit) {
-                                    statusBarViewModel.check(context)
-                                }
                                 StatusBarIconSettingsUI(
                                     viewModel = statusBarViewModel,
                                     modifier = Modifier.padding(top = 16.dp)
                                 )
                             }
                             "Caffeinate" -> {
-                                val caffeinateViewModel: CaffeinateViewModel = viewModel()
-                                LaunchedEffect(Unit) {
-                                    caffeinateViewModel.check(context)
-                                }
                                 CaffeinateSettingsUI(
                                     viewModel = caffeinateViewModel,
                                     modifier = Modifier.padding(top = 16.dp)
@@ -337,6 +396,12 @@ class FeatureSettingsActivity : ComponentActivity() {
                 }
                             "Snooze system notifications" -> {
                                 SnoozeNotificationsSettingsUI(
+                                    viewModel = viewModel,
+                                    modifier = Modifier.padding(top = 16.dp)
+                                )
+                            }
+                            "Screen locked security" -> {
+                                com.sameerasw.essentials.ui.composables.configs.ScreenLockedSecuritySettingsUI(
                                     viewModel = viewModel,
                                     modifier = Modifier.padding(top = 16.dp)
                                 )

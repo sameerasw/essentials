@@ -18,11 +18,13 @@ fun initPermissionRegistry() {
     PermissionRegistry.register("ACCESSIBILITY", "Edge lighting")
     PermissionRegistry.register("ACCESSIBILITY", "Flashlight toggle")
     PermissionRegistry.register("ACCESSIBILITY", "Dynamic night light")
+    PermissionRegistry.register("ACCESSIBILITY", "Screen locked security")
 
     // Write secure settings permission
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", "Statusbar icons")
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", "Sound Mode")
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", "Dynamic night light")
+    PermissionRegistry.register("WRITE_SECURE_SETTINGS", "Screen locked security")
 
     // Shizuku permission
     PermissionRegistry.register("SHIZUKU", "Maps power saving mode")
@@ -43,4 +45,7 @@ fun initPermissionRegistry() {
 
     // Default browser permission
     PermissionRegistry.register("DEFAULT_BROWSER", "Link picker - open with")
+
+    // Device Admin permission
+    PermissionRegistry.register("DEVICE_ADMIN", "Screen locked security")
 }

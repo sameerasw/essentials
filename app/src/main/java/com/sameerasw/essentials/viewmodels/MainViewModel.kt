@@ -1,7 +1,9 @@
 package com.sameerasw.essentials.viewmodels
 
 import android.Manifest
+import android.app.Activity
 import android.app.ActivityManager
+import android.app.admin.DevicePolicyManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -11,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
+import com.sameerasw.essentials.services.receivers.SecurityDeviceAdminReceiver
 import com.sameerasw.essentials.MapsState
 import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.services.CaffeinateWakeLockService
@@ -54,6 +57,8 @@ class MainViewModel : ViewModel() {
     val isSnoozeChargingEnabled = mutableStateOf(false)
     val isFlashlightAlwaysTurnOffEnabled = mutableStateOf(false)
     val isPixelImsEnabled = mutableStateOf(false)
+    val isScreenLockedSecurityEnabled = mutableStateOf(false)
+    val isDeviceAdminEnabled = mutableStateOf(false)
 
     fun check(context: Context) {
         isAccessibilityEnabled.value = isAccessibilityServiceEnabled(context)
@@ -113,6 +118,28 @@ class MainViewModel : ViewModel() {
         isSnoozeChargingEnabled.value = prefs.getBoolean("snooze_charging_enabled", false)
         isFlashlightAlwaysTurnOffEnabled.value = prefs.getBoolean("flashlight_always_turn_off_enabled", false)
         isPixelImsEnabled.value = prefs.getBoolean("pixel_ims_enabled", false)
+        isScreenLockedSecurityEnabled.value = prefs.getBoolean("screen_locked_security_enabled", false)
+        isDeviceAdminEnabled.value = isDeviceAdminActive(context)
+    }
+
+    private fun isDeviceAdminActive(context: Context): Boolean {
+        val dpm = context.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
+        val adminComponent = ComponentName(context, SecurityDeviceAdminReceiver::class.java)
+        return dpm.isAdminActive(adminComponent)
+    }
+
+    fun requestDeviceAdmin(context: Context) {
+        val adminComponent = ComponentName(context, SecurityDeviceAdminReceiver::class.java)
+        val intent = Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN).apply {
+            putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, adminComponent)
+            putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, "Required to hard-lock the device when unauthorized network changes are attempted on lock screen.")
+        }
+        if (context is Activity) {
+            context.startActivity(intent)
+        } else {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(intent)
+        }
     }
 
     fun setWidgetEnabled(enabled: Boolean, context: Context) {
@@ -550,6 +577,13 @@ class MainViewModel : ViewModel() {
         isPixelImsEnabled.value = enabled
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
             putBoolean("pixel_ims_enabled", enabled)
+        }
+    }
+
+    fun setScreenLockedSecurityEnabled(enabled: Boolean, context: Context) {
+        isScreenLockedSecurityEnabled.value = enabled
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
+            putBoolean("screen_locked_security_enabled", enabled)
         }
     }
 }
