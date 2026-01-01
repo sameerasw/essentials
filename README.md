@@ -2,6 +2,10 @@
 
 Essential tools, mods and workarounds for Pixels and other Androids
 
+> Essentials got featured by HowToMen! 🎉 <br>
+> [![Essentials got featured by HowToMen!](https://img.youtube.com/vi/7favc9MDedQ/0.jpg)](https://youtu.be/7favc9MDedQ?si=dduc7452R5Yxj7Aa&t=79)
+
+
 # Features
 
 ### Tools
@@ -15,8 +19,8 @@ A Quick Settings tile to keep the display awake indefinitely or for a set durati
 **Sound Mode Tile**
 A Quick Settings tile to toggle between Ring, Vibrate, and Silent sound modes.
 
-**Flashlight Toggle**
-Long-press the volume button while the screen is off to toggle the flashlight.
+**Button Remap**
+Long-press the volume button to trigger various actions.
 
 **Maps Power Saving Mode**
 Optimize battery usage during Google Maps navigation by managing screen state (requires Shizuku).
