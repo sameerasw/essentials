@@ -22,8 +22,6 @@
         android:targetPackage="${applicationId}" />
 
     <overlay
-        android:requiredSystemPropertyName="ro.boot.vbmeta.device_state"
-        android:requiredSystemPropertyValue="locked"
         android:targetPackage="${applicationId}" />
 
     <application
