@@ -2,6 +2,7 @@ name: Bug Report
 description: Report a bug in the Essentials Android app
 title: "[Bug]: "
 labels: ["bug"]
+assignees: ["sameerasw"]
 body:
   - type: markdown
     attributes:
