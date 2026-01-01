@@ -2,8 +2,27 @@
 
 Essential tools, mods and workarounds for Pixels and other Androids
 
-> Essentials got featured by HowToMen! 🎉 <br>
-> [![Essentials got featured by HowToMen!](https://github.com/user-attachments/assets/9dffa436-034e-4d59-811e-f5979b000414)](https://youtu.be/7favc9MDedQ?si=dduc7452R5Yxj7Aa&t=79)
+<p align="center">
+  <a href="https://github.com/sameerasw/essentials/releases/latest"><img alt="GitHub Downloads (specific asset, all releases)" src="https://img.shields.io/github/downloads/sameerasw/essentials/app-release.apk?displayAssetName=false&style=for-the-badge&logo=android&logoColor=%23fff&labelColor=%2348C&color=%2348C">
+</a>
+  <a href="https://github.com/sameerasw/essentials/issues/new?template=bug_report.md"><img alt="GitHub Issues or Pull Requests by label" src="https://img.shields.io/github/issues/sameerasw/essentials/bug?style=for-the-badge&logo=openbugbounty&logoColor=%23fff&label=bug%3F&labelColor=%232a6&color=%232a6">
+</a>
+  <a href="https://github.com/sameerasw/essentials/issues/new?template=feature_request.md"><img alt="GitHub Issues or Pull Requests by label" src="https://img.shields.io/github/issues/sameerasw/essentials/enhancement?style=for-the-badge&logo=apachespark&logoColor=%23fff&label=Feature%20request&labelColor=%23a26&color=%23a26">
+</a>
+  <a href="https://sameerasw.com"><img src="https://img.shields.io/badge/My%20website-orange?style=for-the-badge&logo=googlechrome&logoColor=%23000&labelColor=%233AFFB8&color=%233AFFB8" alt="My website" /></a>
+  <a href="https://t.me/tidwib"><img src="https://img.shields.io/badge/Community-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white" alt="Community" /></a>
+</p>
+
+> ### Essentials got featured by HowToMen! 🎉 <br><br> [![Essentials got featured by HowToMen!](https://github.com/user-attachments/assets/9dffa436-034e-4d59-811e-f5979b000414)](https://youtu.be/7favc9MDedQ?si=dduc7452R5Yxj7Aa&t=79)
+
+
+## Navigation
+
+- [Features](#features)
+- [Requirements](#requirements)
+- [Screenshots](#screenshots)
+- [Shizuku](#shizuku)
+- [Accessibility Permissions](#how-to-grant-accessibility-permissions)
 
 
 
@@ -11,44 +30,21 @@ Essential tools, mods and workarounds for Pixels and other Androids
 
 ### Tools
 
-**Screen Off Widget**
-An invisible widget that can be placed on the home screen to quickly lock the device without using the power button. Now with configurable haptic feedback.
-
-**Caffeinate**
-A Quick Settings tile to keep the display awake indefinitely or for a set duration.
-
-**Sound Mode Tile**
-A Quick Settings tile to toggle between Ring, Vibrate, and Silent sound modes.
-
-**Button Remap**
-Long-press or double-tap hardware buttons to trigger various actions like flashlight, camera, or custom shortcuts.
-
-**Maps Power Saving Mode**
-Optimize battery usage during Google Maps navigation by managing screen state (requires Shizuku).
-
-**Link Actions**
-Intercept and manage how links are opened, allowing you to choose specific apps for different link types.
-
-**Snooze System Notifications**
-Automatically snooze persistent system notifications that cannot be dismissed normally.
-
-**Pixel IMS**
-Force enable VoLTE, VoWiFi and other IMS features on Pixel devices without root.
-
-**Screen Locked Security**
-Protect your device by disabling sensitive Quick Settings tiles and power menu when the device is locked.
-
+- **Screen Off Widget**: An invisible widget that can be placed on the home screen to quickly lock the device without using the power button. Now with configurable haptic feedback.
+- **Caffeinate**: A Quick Settings tile to keep the display awake indefinitely or for a set duration.
+- **Sound Mode Tile**: A Quick Settings tile to toggle between Ring, Vibrate, and Silent sound modes.
+- **Button Remap**: Long-press or double-tap hardware buttons to trigger various actions like flashlight, camera, or custom shortcuts.
+- **Maps Power Saving Mode**: Optimize battery usage during Google Maps navigation by managing screen state (requires Shizuku).
+- **Link Actions**: Intercept and manage how links are opened, allowing you to choose specific apps for different link types.
+- **Snooze System Notifications**: Automatically snooze persistent system notifications that cannot be dismissed normally.
+- **Pixel IMS**: Force enable VoLTE, VoWiFi and other IMS features on Pixel devices without root.
+- **Screen Locked Security**: Protect your device by disabling sensitive Quick Settings tiles and power menu when the device is locked.
 
 ### Visuals
 
-**Status Bar Icons**
-Detailed control over which system icons (WiFi, Data, Battery, etc.) are visible in the status bar.
-
-**Edge Lighting**
-Display a customizable lighting effect around the screen edges when a new notification is received.
-
-**Dynamic Night Light**
-Automatically toggle Night Light mode based on the currently active application.
+- **Status Bar Icons**: Detailed control over which system icons (WiFi, Data, Battery, etc.) are visible in the status bar.
+- **Edge Lighting**: Display a customizable lighting effect around the screen edges when a new notification is received.
+- **Dynamic Night Light**: Automatically toggle Night Light mode based on the currently active application.
 
 ### Quick Settings Tiles
 
@@ -61,6 +57,13 @@ A collection of useful tiles to toggle system settings:
 - **AOD**: Toggle Always on Display.
 - **Caffeinate**: Keep screen awake.
 - **Sound Mode**: Toggle Ring/Vibrate/Silent.
+
+# Requirements
+
+- Android 6.0 or higher (Feature support may vary)
+- App permissions are optional, Grant necessary permissions for each feature
+- Targetted for Google Pixel devices
+- Tested on Google Pixel 7 (Android 16 beta program)
 
 # Screenshots
 
@@ -97,3 +100,9 @@ A collection of useful tiles to toggle system settings:
    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=sameerasw/essentials&type=Date" />
  </picture>
 </a>
+
+---
+
+<p align="center">
+  Last updated: 2026-01-02
+</p>
