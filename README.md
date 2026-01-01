@@ -11,7 +11,7 @@ Essential tools, mods and workarounds for Pixels and other Androids
 ### Tools
 
 **Screen Off Widget**
-An invisible widget that can be placed on the home screen to quickly lock the device without using the power button.
+An invisible widget that can be placed on the home screen to quickly lock the device without using the power button. Now with configurable haptic feedback.
 
 **Caffeinate**
 A Quick Settings tile to keep the display awake indefinitely or for a set duration.
@@ -20,7 +20,7 @@ A Quick Settings tile to keep the display awake indefinitely or for a set durati
 A Quick Settings tile to toggle between Ring, Vibrate, and Silent sound modes.
 
 **Button Remap**
-Long-press the volume button to trigger various actions.
+Long-press or double-tap hardware buttons to trigger various actions like flashlight, camera, or custom shortcuts.
 
 **Maps Power Saving Mode**
 Optimize battery usage during Google Maps navigation by managing screen state (requires Shizuku).
@@ -30,6 +30,13 @@ Intercept and manage how links are opened, allowing you to choose specific apps 
 
 **Snooze System Notifications**
 Automatically snooze persistent system notifications that cannot be dismissed normally.
+
+**Pixel IMS**
+Force enable VoLTE, VoWiFi and other IMS features on Pixel devices without root.
+
+**Screen Locked Security**
+Protect your device by disabling sensitive Quick Settings tiles and power menu when the device is locked.
+
 
 ### Visuals
 
@@ -51,6 +58,8 @@ A collection of useful tiles to toggle system settings:
 - **Sensitive Content**: Toggle the visibility of sensitive notification content on the lock screen.
 - **Tap to Wake**: Toggle tap-to-wake functionality.
 - **AOD**: Toggle Always on Display.
+- **Caffeinate**: Keep screen awake.
+- **Sound Mode**: Toggle Ring/Vibrate/Silent.
 
 # Screenshots
 
@@ -70,4 +79,5 @@ A collection of useful tiles to toggle system settings:
 </p>
 
 # How to grant accessibility permissions
+
 <img width="1280" height="696" alt="image" src="https://github.com/user-attachments/assets/685115e7-4caa-4add-9196-d2e1e2c126a6" />
