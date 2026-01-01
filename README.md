@@ -79,6 +79,21 @@ A collection of useful tiles to toggle system settings:
   <img src="https://github.com/user-attachments/assets/d77c91c0-a1b3-45e4-9123-eee0f09a558f" width="19%" />
 </p>
 
+# Shizuku
+
+- Make sure to get the latest version of Shizuku preferably from a fork such as [yangFenTuoZi/Shizuku](https://github.com/yangFenTuoZi/Shizuku) or other not from the Google Play as it is no longer well supported especially with Android 16 QPR1 up.
+- Also It seems like Shizuku might not work with root mode for the app but it will work with ADB/ Wireless ADB method so please use that impleemntation to start Shizuku services for now.
+
 # How to grant accessibility permissions
 
 <img width="1280" height="696" alt="image" src="https://github.com/user-attachments/assets/685115e7-4caa-4add-9196-d2e1e2c126a6" />
+
+# Stars <3
+
+<a href="https://star-history.com/#sameerasw/essentials&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=sameerasw/essentials&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=sameerasw/essentials&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=sameerasw/essentials&type=Date" />
+ </picture>
+</a>
