@@ -30,6 +30,7 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.NotificationApp
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.utils.HapticUtil
@@ -96,36 +97,14 @@ fun DynamicNightLightSettingsUI(
             spacing = 2.dp,
             cornerRadius = 24.dp
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        color = MaterialTheme.colorScheme.surfaceBright
-                    )
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.rounded_nightlight_24),
-                    contentDescription = null,
-                    modifier = Modifier.size(24.dp),
-                    tint = MaterialTheme.colorScheme.primary
-                )
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = "Enable Dynamic Night Light",
-                        style = MaterialTheme.typography.bodyLarge
-                    )
+            IconToggleItem(
+                iconRes = R.drawable.rounded_nightlight_24,
+                title = "Enable Dynamic Night Light",
+                isChecked = viewModel.isDynamicNightLightEnabled.value,
+                onCheckedChange = { checked ->
+                    viewModel.setDynamicNightLightEnabled(checked, context)
                 }
-                Switch(
-                    checked = viewModel.isDynamicNightLightEnabled.value,
-                    onCheckedChange = { checked ->
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        viewModel.setDynamicNightLightEnabled(checked, context)
-                    }
-                )
-            }
+            )
         }
 
         Text(

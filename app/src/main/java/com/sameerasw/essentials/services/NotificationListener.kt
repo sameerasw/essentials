@@ -70,6 +70,33 @@ class NotificationListener : NotificationListenerService() {
             }
 
             val prefs = applicationContext.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+            
+            // Skip silent notifications if enabled
+            val skipSilent = prefs.getBoolean("edge_lighting_skip_silent", true)
+            if (skipSilent) {
+                val ranking = Ranking()
+                if (currentRanking.getRanking(sbn.key, ranking)) {
+                    val importance = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        ranking.importance
+                    } else {
+                        @Suppress("DEPRECATION")
+                        notification.priority
+                    }
+                    
+                    val isSilent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        importance <= android.app.NotificationManager.IMPORTANCE_LOW
+                    } else {
+                        @Suppress("DEPRECATION")
+                        importance <= Notification.PRIORITY_LOW
+                    }
+                    
+                    if (isSilent) {
+                        android.util.Log.d("NotificationListener", "Skipping edge lighting for silent notification from $packageName")
+                        return
+                    }
+                }
+            }
+
             val enabled = prefs.getBoolean("edge_lighting_enabled", false)
             if (enabled) {
                 // Check all required permissions before triggering edge lighting

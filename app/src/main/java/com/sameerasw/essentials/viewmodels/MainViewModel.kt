@@ -65,6 +65,7 @@ class MainViewModel : ViewModel() {
     val isPixelImsEnabled = mutableStateOf(false)
     val isScreenLockedSecurityEnabled = mutableStateOf(false)
     val isDeviceAdminEnabled = mutableStateOf(false)
+    val skipSilentNotifications = mutableStateOf(true)
 
     // Update state
     val updateInfo = mutableStateOf<UpdateInfo?>(null)
@@ -96,6 +97,7 @@ class MainViewModel : ViewModel() {
         isMapsPowerSavingEnabled.value = prefs.getBoolean("maps_power_saving_enabled", false)
         isEdgeLightingEnabled.value = prefs.getBoolean("edge_lighting_enabled", false)
         onlyShowWhenScreenOff.value = prefs.getBoolean("edge_lighting_only_screen_off", true)
+        skipSilentNotifications.value = prefs.getBoolean("edge_lighting_skip_silent", true)
         MapsState.isEnabled = isMapsPowerSavingEnabled.value
         loadHapticFeedback(context)
         checkCaffeinateActive(context)
@@ -274,6 +276,13 @@ class MainViewModel : ViewModel() {
         onlyShowWhenScreenOff.value = enabled
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
             putBoolean("edge_lighting_only_screen_off", enabled)
+        }
+    }
+    
+    fun setSkipSilentNotifications(enabled: Boolean, context: Context) {
+        skipSilentNotifications.value = enabled
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
+            putBoolean("edge_lighting_skip_silent", enabled)
         }
     }
 
