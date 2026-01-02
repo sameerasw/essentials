@@ -84,7 +84,7 @@ class FeatureSettingsActivity : ComponentActivity() {
             "Flashlight toggle" to "Toggle flashlight while screen off",
             "Dynamic night light" to "Toggle based on current app",
             "Snooze system notifications" to "Automatically snooze persistent notifications",
-            "Quick Settings Tiles" to "All available QS tiles",
+            "Quick settings tiles" to "All available QS tiles",
             "Pixel IMS" to "Force enable IMS for Pixels",
             "Button remap" to "Remap hardware buttons",
             "Screen locked security" to "Protect network settings from lock screen"
@@ -443,7 +443,7 @@ class FeatureSettingsActivity : ComponentActivity() {
                                     modifier = Modifier.padding(top = 16.dp)
                                 )
                             }
-                            "Quick Settings Tiles" -> {
+                            "Quick settings tiles" -> {
                                 QuickSettingsTilesSettingsUI(
                                     modifier = Modifier.padding(top = 16.dp)
                                 )

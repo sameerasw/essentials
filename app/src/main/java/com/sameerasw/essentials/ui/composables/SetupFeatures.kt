@@ -777,7 +777,7 @@ fun SetupFeatures(
                         iconRes = feature.iconRes,
                         modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
                         isToggleEnabled = isToggleEnabled,
-                        showToggle = feature.title != "Sound mode tile" && feature.title != "Screen off widget" && feature.title != "Link actions" && feature.title != "Snooze system notifications" && feature.title != "Quick Settings Tiles" && feature.title != "Pixel IMS" && feature.title != "Button remap", // Hide toggle for Sound mode tile, Screen off widget, Link actions, Snooze notifications, QS Tiles, Pixel IMS, and Button remap
+                        showToggle = feature.title != "Sound mode tile" && feature.title != "Screen off widget" && feature.title != "Link actions" && feature.title != "Snooze system notifications" && feature.title != "Quick settings tiles" && feature.title != "Pixel IMS" && feature.title != "Button remap", // Hide toggle for Sound mode tile, Screen off widget, Link actions, Snooze notifications, QS Tiles, Pixel IMS, and Button remap
                         hasMoreSettings = feature.title != FEATURE_MAPS_POWER_SAVING,
                         onDisabledToggleClick = {
                             currentFeature = feature.title
