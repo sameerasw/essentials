@@ -78,7 +78,7 @@ class FeatureSettingsActivity : ComponentActivity() {
             "Screen off widget" to "Invisible widget to turn the screen off",
             "Statusbar icons" to "Control statusbar icons visibility",
             "Caffeinate" to "Keep the screen awake",
-            "Edge lighting" to "Preview edge lighting effects on new notifications",
+            "Edge lighting" to "Lighting effects for new notifications",
             "Sound mode tile" to "QS tile to toggle sound mode",
             "Link actions" to "Handle links with multiple apps",
             "Flashlight toggle" to "Toggle flashlight while screen off",

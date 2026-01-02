@@ -113,6 +113,7 @@ class NotificationListener : NotificationListenerService() {
                         val colorMode = EdgeLightingColorMode.valueOf(colorModeName ?: EdgeLightingColorMode.SYSTEM.name)
                         val pulseCount = prefs.getInt("edge_lighting_pulse_count", 1)
                         val pulseDuration = prefs.getFloat("edge_lighting_pulse_duration", 3000f).toLong()
+                        val styleName = prefs.getString("edge_lighting_style", com.sameerasw.essentials.domain.model.EdgeLightingStyle.STROKE.name)
                         
                         fun startEdgeLighting(resolvedColor: Int? = null) {
                             val intent = Intent(applicationContext, EdgeLightingService::class.java).apply {
@@ -121,6 +122,7 @@ class NotificationListener : NotificationListenerService() {
                                 putExtra("color_mode", colorMode.name)
                                 putExtra("pulse_count", pulseCount)
                                 putExtra("pulse_duration", pulseDuration)
+                                putExtra("style", styleName)
                                 if (resolvedColor != null) {
                                     putExtra("resolved_color", resolvedColor)
                                 } else if (colorMode == EdgeLightingColorMode.CUSTOM) {

@@ -21,6 +21,7 @@ import com.google.gson.reflect.TypeToken
 import com.sameerasw.essentials.MapsState
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.EdgeLightingColorMode
+import com.sameerasw.essentials.domain.model.EdgeLightingStyle
 import com.sameerasw.essentials.domain.model.NotificationApp
 import com.sameerasw.essentials.domain.model.UpdateInfo
 import com.sameerasw.essentials.services.CaffeinateWakeLockService
@@ -69,6 +70,7 @@ class MainViewModel : ViewModel() {
     val isScreenLockedSecurityEnabled = mutableStateOf(false)
     val isDeviceAdminEnabled = mutableStateOf(false)
     val skipSilentNotifications = mutableStateOf(true)
+    val edgeLightingStyle = mutableStateOf(EdgeLightingStyle.STROKE)
     val edgeLightingColorMode = mutableStateOf(EdgeLightingColorMode.SYSTEM)
     val edgeLightingCustomColor = mutableIntStateOf(0xFF6200EE.toInt()) // Default purple
     val edgeLightingPulseCount = mutableIntStateOf(1)
@@ -105,6 +107,8 @@ class MainViewModel : ViewModel() {
         isEdgeLightingEnabled.value = prefs.getBoolean("edge_lighting_enabled", false)
         onlyShowWhenScreenOff.value = prefs.getBoolean("edge_lighting_only_screen_off", true)
         skipSilentNotifications.value = prefs.getBoolean("edge_lighting_skip_silent", true)
+        val styleName = prefs.getString("edge_lighting_style", EdgeLightingStyle.STROKE.name)
+        edgeLightingStyle.value = EdgeLightingStyle.valueOf(styleName ?: EdgeLightingStyle.STROKE.name)
         val colorModeName = prefs.getString("edge_lighting_color_mode", EdgeLightingColorMode.SYSTEM.name)
         edgeLightingColorMode.value = EdgeLightingColorMode.valueOf(colorModeName ?: EdgeLightingColorMode.SYSTEM.name)
         edgeLightingCustomColor.intValue = prefs.getInt("edge_lighting_custom_color", 0xFF6200EE.toInt())
@@ -298,6 +302,13 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    fun setEdgeLightingStyle(style: EdgeLightingStyle, context: Context) {
+        edgeLightingStyle.value = style
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
+            putString("edge_lighting_style", style.name)
+        }
+    }
+
     fun setEdgeLightingColorMode(mode: EdgeLightingColorMode, context: Context) {
         edgeLightingColorMode.value = mode
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
@@ -384,6 +395,7 @@ class MainViewModel : ViewModel() {
                 putExtra("corner_radius_dp", radius)
                 putExtra("stroke_thickness_dp", thickness)
                 putExtra("ignore_screen_state", true)
+                putExtra("style", edgeLightingStyle.value.name)
                 putExtra("color_mode", edgeLightingColorMode.value.name)
                 putExtra("custom_color", edgeLightingCustomColor.intValue)
                 putExtra("pulse_count", edgeLightingPulseCount.intValue)
@@ -402,6 +414,7 @@ class MainViewModel : ViewModel() {
                 putExtra("corner_radius_dp", cornerRadiusDp)
                 putExtra("is_preview", true)
                 putExtra("ignore_screen_state", true)
+                putExtra("style", edgeLightingStyle.value.name)
                 putExtra("color_mode", edgeLightingColorMode.value.name)
                 putExtra("custom_color", edgeLightingCustomColor.intValue)
             }
@@ -419,6 +432,7 @@ class MainViewModel : ViewModel() {
                 putExtra("stroke_thickness_dp", strokeThicknessDp)
                 putExtra("is_preview", true)
                 putExtra("ignore_screen_state", true)
+                putExtra("style", edgeLightingStyle.value.name)
                 putExtra("color_mode", edgeLightingColorMode.value.name)
                 putExtra("custom_color", edgeLightingCustomColor.intValue)
             }

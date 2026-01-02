@@ -17,6 +17,7 @@ import android.view.View
 import android.view.WindowManager
 import androidx.core.app.NotificationCompat
 import com.sameerasw.essentials.domain.model.EdgeLightingColorMode
+import com.sameerasw.essentials.domain.model.EdgeLightingStyle
 import com.sameerasw.essentials.utils.OverlayHelper
 
 /**
@@ -41,6 +42,7 @@ class EdgeLightingService : Service() {
     private var resolvedColor: Int? = null
     private var pulseCount: Int = 1
     private var pulseDuration: Long = 3000
+    private var edgeLightingStyle: EdgeLightingStyle = EdgeLightingStyle.STROKE
 
     private var screenReceiver: BroadcastReceiver? = null
 
@@ -104,6 +106,8 @@ class EdgeLightingService : Service() {
         resolvedColor = if (intent?.hasExtra("resolved_color") == true) intent.getIntExtra("resolved_color", 0) else null
         pulseCount = intent?.getIntExtra("pulse_count", 1) ?: 1
         pulseDuration = intent?.getLongExtra("pulse_duration", 3000L) ?: 3000L
+        val styleName = intent?.getStringExtra("style")
+        edgeLightingStyle = if (styleName != null) EdgeLightingStyle.valueOf(styleName) else EdgeLightingStyle.STROKE
         val ignoreScreenState = intent?.getBooleanExtra("ignore_screen_state", false) ?: false
         val removePreview = intent?.getBooleanExtra("remove_preview", false) ?: false
 
@@ -137,6 +141,7 @@ class EdgeLightingService : Service() {
                     putExtra("custom_color", intent?.getIntExtra("custom_color", 0) ?: 0)
                     putExtra("pulse_count", pulseCount)
                     putExtra("pulse_duration", pulseDuration)
+                    putExtra("style", edgeLightingStyle.name)
                     if (intent?.hasExtra("resolved_color") == true) {
                         putExtra("resolved_color", intent.getIntExtra("resolved_color", 0))
                     }
@@ -205,17 +210,29 @@ class EdgeLightingService : Service() {
                 else -> getColor(android.R.color.system_accent1_100)
             }
             
-            val overlay = OverlayHelper.createOverlayView(this, color, strokeDp = strokeThicknessDp, cornerRadiusDp = cornerRadiusDp)
+            val overlay = OverlayHelper.createOverlayView(
+                this, 
+                color, 
+                strokeDp = strokeThicknessDp, 
+                cornerRadiusDp = cornerRadiusDp,
+                style = edgeLightingStyle
+            )
             val params = OverlayHelper.createOverlayLayoutParams(getOverlayType())
 
             if (OverlayHelper.addOverlayView(windowManager, overlay, params)) {
                 overlayViews.add(overlay)
                 if (isPreview) {
-                    // For preview mode, just fade in and keep visible
-                    OverlayHelper.fadeInOverlay(overlay)
+                    // For preview mode, show static preview
+                    OverlayHelper.showPreview(overlay, edgeLightingStyle, strokeThicknessDp)
                 } else {
                     // Normal mode: pulse the overlay
-                    OverlayHelper.pulseOverlay(overlay, maxPulses = pulseCount, pulseDurationMillis = pulseDuration) {
+                    OverlayHelper.pulseOverlay(
+                        overlay, 
+                        maxPulses = pulseCount, 
+                        pulseDurationMillis = pulseDuration,
+                        style = edgeLightingStyle,
+                        strokeWidthDp = strokeThicknessDp
+                    ) {
                         // When pulsing completes, remove the overlay
                         OverlayHelper.fadeOutAndRemoveOverlay(windowManager, overlay, overlayViews) {
                             // When all overlays are removed, stop foreground
