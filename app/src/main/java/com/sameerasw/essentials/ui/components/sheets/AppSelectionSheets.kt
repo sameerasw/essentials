@@ -100,7 +100,7 @@ fun AppSelectionSheet(
 
     val filteredApps = selectedApps.filter {
         !it.isSystemApp && (searchQuery.isEmpty() || it.appName.contains(searchQuery, ignoreCase = true))
-    }
+    }.sortedWith(compareByDescending<NotificationApp> { it.isEnabled }.thenBy { it.appName.lowercase() })
 
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
