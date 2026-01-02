@@ -46,6 +46,8 @@ class ScreenOffAccessibilityService : AccessibilityService() {
     private var colorMode: EdgeLightingColorMode = EdgeLightingColorMode.SYSTEM
     private var customColor: Int = 0
     private var resolvedColor: Int? = null
+    private var pulseCount: Int = 1
+    private var pulseDuration: Long = 3000
     private var screenReceiver: BroadcastReceiver? = null
     
     private var originalAnimationScale: Float = 1.0f
@@ -330,6 +332,8 @@ class ScreenOffAccessibilityService : AccessibilityService() {
             colorMode = EdgeLightingColorMode.valueOf(colorModeName ?: EdgeLightingColorMode.SYSTEM.name)
             customColor = intent?.getIntExtra("custom_color", 0) ?: 0
             resolvedColor = if (intent?.hasExtra("resolved_color") == true) intent.getIntExtra("resolved_color", 0) else null
+            pulseCount = intent?.getIntExtra("pulse_count", 1) ?: 1
+            pulseDuration = intent?.getLongExtra("pulse_duration", 3000L) ?: 3000L
             val removePreview = intent?.getBooleanExtra("remove_preview", false) ?: false
             if (removePreview) {
                 // Remove preview overlay
@@ -426,7 +430,7 @@ class ScreenOffAccessibilityService : AccessibilityService() {
                     }
 
                     // Normal mode: pulse the overlay
-                    OverlayHelper.pulseOverlay(overlay) {
+                    OverlayHelper.pulseOverlay(overlay, maxPulses = pulseCount, pulseDurationMillis = pulseDuration) {
                         // When pulsing completes, remove the overlay
                         OverlayHelper.fadeOutAndRemoveOverlay(windowManager, overlay, overlayViews)
                     }

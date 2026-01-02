@@ -71,6 +71,8 @@ class MainViewModel : ViewModel() {
     val skipSilentNotifications = mutableStateOf(true)
     val edgeLightingColorMode = mutableStateOf(EdgeLightingColorMode.SYSTEM)
     val edgeLightingCustomColor = mutableIntStateOf(0xFF6200EE.toInt()) // Default purple
+    val edgeLightingPulseCount = mutableIntStateOf(1)
+    val edgeLightingPulseDuration = mutableStateOf(3000f)
 
     // Update state
     val updateInfo = mutableStateOf<UpdateInfo?>(null)
@@ -106,6 +108,8 @@ class MainViewModel : ViewModel() {
         val colorModeName = prefs.getString("edge_lighting_color_mode", EdgeLightingColorMode.SYSTEM.name)
         edgeLightingColorMode.value = EdgeLightingColorMode.valueOf(colorModeName ?: EdgeLightingColorMode.SYSTEM.name)
         edgeLightingCustomColor.intValue = prefs.getInt("edge_lighting_custom_color", 0xFF6200EE.toInt())
+        edgeLightingPulseCount.intValue = prefs.getInt("edge_lighting_pulse_count", 1)
+        edgeLightingPulseDuration.value = prefs.getFloat("edge_lighting_pulse_duration", 3000f)
         MapsState.isEnabled = isMapsPowerSavingEnabled.value
         loadHapticFeedback(context)
         checkCaffeinateActive(context)
@@ -357,6 +361,20 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    fun saveEdgeLightingPulseCount(context: Context, count: Int) {
+        edgeLightingPulseCount.intValue = count
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
+            putInt("edge_lighting_pulse_count", count)
+        }
+    }
+
+    fun saveEdgeLightingPulseDuration(context: Context, duration: Float) {
+        edgeLightingPulseDuration.value = duration
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
+            putFloat("edge_lighting_pulse_duration", duration)
+        }
+    }
+
     // Helper to show the overlay service for testing/triggering
     fun triggerEdgeLighting(context: Context) {
         val radius = loadEdgeLightingCornerRadius(context)
@@ -368,6 +386,8 @@ class MainViewModel : ViewModel() {
                 putExtra("ignore_screen_state", true)
                 putExtra("color_mode", edgeLightingColorMode.value.name)
                 putExtra("custom_color", edgeLightingCustomColor.intValue)
+                putExtra("pulse_count", edgeLightingPulseCount.intValue)
+                putExtra("pulse_duration", edgeLightingPulseDuration.value.toLong())
             }
             context.startService(intent)
         } catch (e: Exception) {

@@ -51,6 +51,7 @@ import com.sameerasw.essentials.domain.model.EdgeLightingColorMode
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.ui.components.pickers.EdgeLightingColorModePicker
+import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.utils.HapticUtil
@@ -161,19 +162,17 @@ fun EdgeLightingSettingsUI(
             )
         }
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-        ) {
-
-            Text(
-                text = "Corner radius",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Slider(
+        // Stroke Adjustment Section
+        Text(
+            text = "Stroke adjustment",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        
+        RoundedCardContainer(modifier = Modifier) {
+            ConfigSliderItem(
+                title = "Corner radius",
                 value = cornerRadiusDp,
                 onValueChange = { newValue ->
                     cornerRadiusDp = newValue
@@ -181,6 +180,7 @@ fun EdgeLightingSettingsUI(
                     // Show preview overlay while dragging
                     viewModel.triggerEdgeLightingWithRadiusAndThickness(context, newValue.toInt(), strokeThicknessDp.toInt())
                 },
+                valueRange = 0f..50f,
                 onValueChangeFinished = {
                     // Save the corner radius
                     viewModel.saveEdgeLightingCornerRadius(context, cornerRadiusDp.toInt())
@@ -189,25 +189,11 @@ fun EdgeLightingSettingsUI(
                         delay(5000)
                         viewModel.removePreviewOverlay(context)
                     }
-                },
-                valueRange = 0f..50f,
-                modifier = Modifier.fillMaxWidth()
+                }
             )
-        }
-
-        // Stroke Thickness Slider Section
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-        ) {
-            Text(
-                text = "Stroke thickness",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Slider(
+            
+            ConfigSliderItem(
+                title = "Stroke thickness",
                 value = strokeThicknessDp,
                 onValueChange = { newValue ->
                     strokeThicknessDp = newValue
@@ -215,6 +201,7 @@ fun EdgeLightingSettingsUI(
                     // Show preview overlay while dragging
                     viewModel.triggerEdgeLightingWithRadiusAndThickness(context, cornerRadiusDp.toInt(), newValue.toInt())
                 },
+                valueRange = 1f..20f,
                 onValueChangeFinished = {
                     // Save the stroke thickness
                     viewModel.saveEdgeLightingStrokeThickness(context, strokeThicknessDp.toInt())
@@ -223,9 +210,7 @@ fun EdgeLightingSettingsUI(
                         delay(5000)
                         viewModel.removePreviewOverlay(context)
                     }
-                },
-                valueRange = 1f..20f,
-                modifier = Modifier.fillMaxWidth()
+                }
             )
         }
 
@@ -347,6 +332,42 @@ fun EdgeLightingSettingsUI(
                     }
                 }
             }
+        }
+
+        // Animation Settings
+        Text(
+            text = "Animation",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        
+        
+        RoundedCardContainer(modifier = Modifier) {
+            ConfigSliderItem(
+                title = "Pulse count",
+                value = viewModel.edgeLightingPulseCount.intValue.toFloat(),
+                onValueChange = { 
+                    viewModel.saveEdgeLightingPulseCount(context, it.toInt())
+                    HapticUtil.performSliderHaptic(view)
+                },
+                valueRange = 1f..5f,
+                steps = 3,
+                valueFormatter = { "%.0f".format(it) },
+                onValueChangeFinished = { viewModel.triggerEdgeLighting(context) }
+            )
+                
+            ConfigSliderItem(
+                title = "Pulse duration",
+                value = viewModel.edgeLightingPulseDuration.value,
+                onValueChange = { 
+                    viewModel.saveEdgeLightingPulseDuration(context, it)
+                    HapticUtil.performSliderHaptic(view)
+                },
+                valueRange = 100f..10000f,
+                valueFormatter = { "%.1fs".format(it / 1000f) },
+                onValueChangeFinished = { viewModel.triggerEdgeLighting(context) }
+            )
         }
 
         // Downloaded Apps Section

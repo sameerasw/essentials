@@ -39,6 +39,8 @@ class EdgeLightingService : Service() {
     private var colorMode: EdgeLightingColorMode = EdgeLightingColorMode.SYSTEM
     private var customColor: Int = 0
     private var resolvedColor: Int? = null
+    private var pulseCount: Int = 1
+    private var pulseDuration: Long = 3000
 
     private var screenReceiver: BroadcastReceiver? = null
 
@@ -100,6 +102,8 @@ class EdgeLightingService : Service() {
         colorMode = EdgeLightingColorMode.valueOf(colorModeName ?: EdgeLightingColorMode.SYSTEM.name)
         customColor = intent?.getIntExtra("custom_color", 0) ?: 0
         resolvedColor = if (intent?.hasExtra("resolved_color") == true) intent.getIntExtra("resolved_color", 0) else null
+        pulseCount = intent?.getIntExtra("pulse_count", 1) ?: 1
+        pulseDuration = intent?.getLongExtra("pulse_duration", 3000L) ?: 3000L
         val ignoreScreenState = intent?.getBooleanExtra("ignore_screen_state", false) ?: false
         val removePreview = intent?.getBooleanExtra("remove_preview", false) ?: false
 
@@ -131,6 +135,8 @@ class EdgeLightingService : Service() {
                     putExtra("ignore_screen_state", ignoreScreenState)
                     putExtra("color_mode", intent?.getStringExtra("color_mode"))
                     putExtra("custom_color", intent?.getIntExtra("custom_color", 0) ?: 0)
+                    putExtra("pulse_count", pulseCount)
+                    putExtra("pulse_duration", pulseDuration)
                     if (intent?.hasExtra("resolved_color") == true) {
                         putExtra("resolved_color", intent.getIntExtra("resolved_color", 0))
                     }
@@ -209,7 +215,7 @@ class EdgeLightingService : Service() {
                     OverlayHelper.fadeInOverlay(overlay)
                 } else {
                     // Normal mode: pulse the overlay
-                    OverlayHelper.pulseOverlay(overlay) {
+                    OverlayHelper.pulseOverlay(overlay, maxPulses = pulseCount, pulseDurationMillis = pulseDuration) {
                         // When pulsing completes, remove the overlay
                         OverlayHelper.fadeOutAndRemoveOverlay(windowManager, overlay, overlayViews) {
                             // When all overlays are removed, stop foreground
