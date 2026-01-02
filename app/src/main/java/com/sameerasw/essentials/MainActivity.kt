@@ -2,12 +2,14 @@ package com.sameerasw.essentials
 
 import android.animation.ObjectAnimator
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.animation.AnticipateInterpolator
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.SystemBarStyle
 import androidx.core.view.WindowCompat
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.padding
@@ -30,7 +32,7 @@ import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.ui.components.sheets.UpdateBottomSheet
 
 @OptIn(ExperimentalMaterial3Api::class)
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
     val viewModel: MainViewModel by viewModels()
     private var isAppReady = false
 
@@ -39,6 +41,21 @@ class MainActivity : AppCompatActivity() {
         val splashScreen = installSplashScreen()
 
         super.onCreate(savedInstanceState)
+
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.auto(
+                android.graphics.Color.TRANSPARENT,
+                android.graphics.Color.TRANSPARENT
+            ),
+            navigationBarStyle = SystemBarStyle.auto(
+                android.graphics.Color.TRANSPARENT,
+                android.graphics.Color.TRANSPARENT
+            )
+        )
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.isNavigationBarContrastEnforced = false
+        }
 
         // Keep splash screen visible while app is loading
         splashScreen.setKeepOnScreenCondition { !isAppReady }
@@ -105,8 +122,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-
         Log.d("MainActivity", "onCreate with action: ${intent?.action}")
 
         // Check if this is a QS tile long-press intent for the SoundModeTileService
@@ -158,6 +173,7 @@ class MainActivity : AppCompatActivity() {
                     )
                 }
                 Scaffold(
+                    contentWindowInsets = androidx.compose.foundation.layout.WindowInsets(0, 0, 0, 0),
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     containerColor = MaterialTheme.colorScheme.surfaceContainer,
                     topBar = {
