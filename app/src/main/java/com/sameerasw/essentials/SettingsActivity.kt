@@ -60,6 +60,7 @@ import com.sameerasw.essentials.ui.components.dialogs.AboutSection
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.ui.components.sheets.UpdateBottomSheet
+import com.sameerasw.essentials.ui.components.buttons.HelpPillButton
 import rikka.shizuku.Shizuku
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -191,11 +192,14 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = "Permissions",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    text = "Permissions",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                HelpPillButton()
+            }
             Icon(
                 painter = painterResource(id = if (isPermissionsExpanded) R.drawable.rounded_keyboard_arrow_up_24 else R.drawable.rounded_keyboard_arrow_down_24),
                 contentDescription = if (isPermissionsExpanded) "Collapse" else "Expand",
