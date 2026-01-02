@@ -638,7 +638,8 @@ fun SetupFeatures(
             .verticalScroll(scrollState)
             .pointerInput(Unit) {
                 detectTapGestures(onTap = { focusManager.clearFocus() })
-            },
+            }
+            .padding(vertical = 24.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
