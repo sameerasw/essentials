@@ -70,7 +70,7 @@ fun EdgeLightingStylePicker(
                     Icon(
                         painter = painterResource(id = icons[index]),
                         contentDescription = style.name,
-                        modifier = Modifier.size(64.dp)
+                        modifier = Modifier.size(48.dp)
                     )
                 }
             }
