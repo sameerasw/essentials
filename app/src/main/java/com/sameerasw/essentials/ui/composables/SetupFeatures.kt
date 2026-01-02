@@ -587,7 +587,7 @@ fun SetupFeatures(
                 "Snooze persistent notifications"
             ),
             FeatureItem(
-                "Quick Settings Tiles",
+                "Quick settings tiles",
                 R.drawable.rounded_tile_small_24,
                 "System",
                 "View all"
