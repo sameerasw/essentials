@@ -8,7 +8,9 @@ import android.provider.Settings
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import com.sameerasw.essentials.MapsState
+import com.sameerasw.essentials.domain.model.EdgeLightingColorMode
 import com.sameerasw.essentials.services.ScreenOffAccessibilityService
+import com.sameerasw.essentials.utils.AppUtil
 
 class NotificationListener : NotificationListenerService() {
 
@@ -105,18 +107,35 @@ class NotificationListener : NotificationListenerService() {
                     val appSelected = isAppSelectedForEdgeLighting(sbn.packageName)
                     android.util.Log.d("NotificationListener", "Edge lighting enabled, app ${sbn.packageName} selected: $appSelected")
                     if (appSelected) {
-                        // Start the overlay service to show the lighting
-                        val prefs = applicationContext.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
                         val cornerRadius = prefs.getInt("edge_lighting_corner_radius", 20)
                         val strokeThickness = prefs.getInt("edge_lighting_stroke_thickness", 8)
-                        val intent = Intent(applicationContext, EdgeLightingService::class.java).apply {
-                            putExtra("corner_radius_dp", cornerRadius)
-                            putExtra("stroke_thickness_dp", strokeThickness)
+                        val colorModeName = prefs.getString("edge_lighting_color_mode", EdgeLightingColorMode.SYSTEM.name)
+                        val colorMode = EdgeLightingColorMode.valueOf(colorModeName ?: EdgeLightingColorMode.SYSTEM.name)
+                        
+                        fun startEdgeLighting(resolvedColor: Int? = null) {
+                            val intent = Intent(applicationContext, EdgeLightingService::class.java).apply {
+                                putExtra("corner_radius_dp", cornerRadius)
+                                putExtra("stroke_thickness_dp", strokeThickness)
+                                putExtra("color_mode", colorMode.name)
+                                if (resolvedColor != null) {
+                                    putExtra("resolved_color", resolvedColor)
+                                } else if (colorMode == EdgeLightingColorMode.CUSTOM) {
+                                    putExtra("custom_color", prefs.getInt("edge_lighting_custom_color", 0xFF6200EE.toInt()))
+                                }
+                            }
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                applicationContext.startForegroundService(intent)
+                            } else {
+                                applicationContext.startService(intent)
+                            }
                         }
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            applicationContext.startForegroundService(intent)
+
+                        if (colorMode == EdgeLightingColorMode.APP_SPECIFIC) {
+                            AppUtil.getAppBrandColor(applicationContext, sbn.packageName) { brandColor ->
+                                startEdgeLighting(brandColor)
+                            }
                         } else {
-                            applicationContext.startService(intent)
+                            startEdgeLighting()
                         }
                     }
                 }

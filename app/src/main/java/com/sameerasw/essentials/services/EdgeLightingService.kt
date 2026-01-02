@@ -38,6 +38,7 @@ class EdgeLightingService : Service() {
     private var isPreview: Boolean = false
     private var colorMode: EdgeLightingColorMode = EdgeLightingColorMode.SYSTEM
     private var customColor: Int = 0
+    private var resolvedColor: Int? = null
 
     private var screenReceiver: BroadcastReceiver? = null
 
@@ -98,6 +99,7 @@ class EdgeLightingService : Service() {
         val colorModeName = intent?.getStringExtra("color_mode")
         colorMode = EdgeLightingColorMode.valueOf(colorModeName ?: EdgeLightingColorMode.SYSTEM.name)
         customColor = intent?.getIntExtra("custom_color", 0) ?: 0
+        resolvedColor = if (intent?.hasExtra("resolved_color") == true) intent.getIntExtra("resolved_color", 0) else null
         val ignoreScreenState = intent?.getBooleanExtra("ignore_screen_state", false) ?: false
         val removePreview = intent?.getBooleanExtra("remove_preview", false) ?: false
 
@@ -129,6 +131,9 @@ class EdgeLightingService : Service() {
                     putExtra("ignore_screen_state", ignoreScreenState)
                     putExtra("color_mode", intent?.getStringExtra("color_mode"))
                     putExtra("custom_color", intent?.getIntExtra("custom_color", 0) ?: 0)
+                    if (intent?.hasExtra("resolved_color") == true) {
+                        putExtra("resolved_color", intent.getIntExtra("resolved_color", 0))
+                    }
                 }
                 // Use startService to request the accessibility service perform the elevated overlay.
                 // Starting an accessibility service via startForegroundService can cause MissingForegroundServiceType
@@ -188,11 +193,10 @@ class EdgeLightingService : Service() {
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
 
         try {
-            val color = if (colorMode == EdgeLightingColorMode.CUSTOM) {
-                customColor
-            } else {
-                // SYSTEM or APP_SPECIFIC (for now fallback to system)
-                getColor(android.R.color.system_accent1_100)
+            val color = when {
+                resolvedColor != null -> resolvedColor!!
+                colorMode == EdgeLightingColorMode.CUSTOM -> customColor
+                else -> getColor(android.R.color.system_accent1_100)
             }
             
             val overlay = OverlayHelper.createOverlayView(this, color, strokeDp = strokeThicknessDp, cornerRadiusDp = cornerRadiusDp)

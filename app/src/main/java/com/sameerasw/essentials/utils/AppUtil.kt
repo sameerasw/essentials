@@ -2,7 +2,12 @@ package com.sameerasw.essentials.utils
 
 import android.content.Context
 import android.content.pm.ApplicationInfo
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import android.util.Log
+import androidx.palette.graphics.Palette
 import com.sameerasw.essentials.domain.model.NotificationApp
 import com.sameerasw.essentials.domain.model.AppSelection
 import kotlinx.coroutines.Dispatchers
@@ -10,6 +15,9 @@ import kotlinx.coroutines.withContext
 
 object AppUtil {
     private const val TAG = "AppUtil"
+    
+    // Cache for extracted brand colors
+    private val colorCache = mutableMapOf<String, Int>()
 
     /**
      * Get all installed apps (not just launcher apps)
@@ -72,5 +80,50 @@ object AppUtil {
             val savedSelection = savedSelectionsMap[installedApp.packageName]
             installedApp.copy(isEnabled = savedSelection?.isEnabled ?: true)
         }.sortedBy { it.appName.lowercase() }
+    }
+
+    /**
+     * Extracts the brand color from an app's icon using the Palette API.
+     * Uses internal cache for efficiency.
+     */
+    fun getAppBrandColor(context: Context, packageName: String, callback: (Int) -> Unit) {
+        // Check cache first
+        colorCache[packageName]?.let {
+            callback(it)
+            return
+        }
+
+        try {
+            val pm = context.packageManager
+            val drawable = pm.getApplicationIcon(packageName)
+            
+            // Extract bitmap from drawable, handling AdaptiveIcons
+            val bitmap = when (drawable) {
+                is BitmapDrawable -> drawable.bitmap
+                else -> {
+                    val width = if (drawable.intrinsicWidth > 0) drawable.intrinsicWidth else 128
+                    val height = if (drawable.intrinsicHeight > 0) drawable.intrinsicHeight else 128
+                    val bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+                    val canvas = Canvas(bmp)
+                    drawable.setBounds(0, 0, canvas.width, canvas.height)
+                    drawable.draw(canvas)
+                    bmp
+                }
+            }
+
+            // Generate palette asynchronously
+            Palette.from(bitmap).generate { palette ->
+                val color = palette?.getVibrantColor(Color.TRANSPARENT)
+                    ?: palette?.getDominantColor(Color.GRAY)
+                    ?: Color.GRAY
+                
+                // Cache the result
+                colorCache[packageName] = color
+                callback(color)
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Error extracting color for $packageName: ${e.message}")
+            callback(Color.GRAY)
+        }
     }
 }

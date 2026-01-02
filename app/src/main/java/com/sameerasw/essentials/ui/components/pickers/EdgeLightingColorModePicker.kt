@@ -47,15 +47,11 @@ fun EdgeLightingColorModePicker(
         val modifiers = List(labels.size) { Modifier.weight(1f) }
 
         labels.forEachIndexed { index, label ->
-            val isEnabled = modes[index] != EdgeLightingColorMode.APP_SPECIFIC
             ToggleButton(
                 checked = selectedIndex == index,
                 onCheckedChange = {
-                    if (isEnabled) {
-                        onModeSelected(modes[index])
-                    }
+                    onModeSelected(modes[index])
                 },
-                enabled = isEnabled,
                 modifier = modifiers[index].semantics { role = Role.RadioButton },
                 shapes = when (index) {
                     0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()

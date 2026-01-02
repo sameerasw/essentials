@@ -85,6 +85,7 @@ dependencies {
 
     // Gson for JSON serialization
     implementation("com.google.code.gson:gson:2.10.1")
+    implementation("androidx.palette:palette:1.0.0")
 
     // Reorderable library
     implementation("sh.calvin.reorderable:reorderable:3.0.0")

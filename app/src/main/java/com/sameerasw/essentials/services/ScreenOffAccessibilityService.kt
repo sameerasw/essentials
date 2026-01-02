@@ -45,6 +45,7 @@ class ScreenOffAccessibilityService : AccessibilityService() {
     private var ignoreScreenState: Boolean = false
     private var colorMode: EdgeLightingColorMode = EdgeLightingColorMode.SYSTEM
     private var customColor: Int = 0
+    private var resolvedColor: Int? = null
     private var screenReceiver: BroadcastReceiver? = null
     
     private var originalAnimationScale: Float = 1.0f
@@ -328,6 +329,7 @@ class ScreenOffAccessibilityService : AccessibilityService() {
             val colorModeName = intent?.getStringExtra("color_mode")
             colorMode = EdgeLightingColorMode.valueOf(colorModeName ?: EdgeLightingColorMode.SYSTEM.name)
             customColor = intent?.getIntExtra("custom_color", 0) ?: 0
+            resolvedColor = if (intent?.hasExtra("resolved_color") == true) intent.getIntExtra("resolved_color", 0) else null
             val removePreview = intent?.getBooleanExtra("remove_preview", false) ?: false
             if (removePreview) {
                 // Remove preview overlay
@@ -391,11 +393,10 @@ class ScreenOffAccessibilityService : AccessibilityService() {
         }
 
         try {
-            val color = if (colorMode == EdgeLightingColorMode.CUSTOM) {
-                customColor
-            } else {
-                // SYSTEM or APP_SPECIFIC (for now fallback to system)
-                getColor(android.R.color.system_accent1_100)
+            val color = when {
+                resolvedColor != null -> resolvedColor!!
+                colorMode == EdgeLightingColorMode.CUSTOM -> customColor
+                else -> getColor(android.R.color.system_accent1_100)
             }
             
             val overlay = OverlayHelper.createOverlayView(this, color, strokeDp = strokeThicknessDp, cornerRadiusDp = cornerRadiusDp)
