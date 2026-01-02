@@ -124,6 +124,10 @@ class NotificationListener : NotificationListenerService() {
                         } else {
                             setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT)
                         }
+                        
+                        val indicatorX = prefs.getFloat("edge_lighting_indicator_x", 50f)
+                        val indicatorY = prefs.getFloat("edge_lighting_indicator_y", 2f)
+                        val indicatorScale = prefs.getFloat("edge_lighting_indicator_scale", 1.0f)
 
                         fun startEdgeLighting(resolvedColor: Int? = null) {
                             val intent = Intent(applicationContext, EdgeLightingService::class.java).apply {
@@ -134,6 +138,9 @@ class NotificationListener : NotificationListenerService() {
                                 putExtra("pulse_duration", pulseDuration)
                                 putExtra("style", styleName)
                                 putExtra("glow_sides", glowSides.map { it.name }.toTypedArray())
+                                putExtra("indicator_x", indicatorX)
+                                putExtra("indicator_y", indicatorY)
+                                putExtra("indicator_scale", indicatorScale)
                                 if (resolvedColor != null) {
                                     putExtra("resolved_color", resolvedColor)
                                 } else if (colorMode == EdgeLightingColorMode.CUSTOM) {

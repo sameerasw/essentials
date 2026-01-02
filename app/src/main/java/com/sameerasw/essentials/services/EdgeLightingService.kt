@@ -45,6 +45,9 @@ class EdgeLightingService : Service() {
     private var pulseDuration: Long = 3000
     private var edgeLightingStyle: EdgeLightingStyle = EdgeLightingStyle.STROKE
     private var glowSides: Set<EdgeLightingSide> = setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT)
+    private var indicatorX: Float = 50f
+    private var indicatorY: Float = 2f
+    private var indicatorScale: Float = 1.0f
 
     private var screenReceiver: BroadcastReceiver? = null
 
@@ -113,6 +116,9 @@ class EdgeLightingService : Service() {
         val glowSidesArray = intent?.getStringArrayExtra("glow_sides")
         glowSides = glowSidesArray?.mapNotNull { try { EdgeLightingSide.valueOf(it) } catch(e: Exception) { null } }?.toSet()
             ?: setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT)
+        indicatorX = intent?.getFloatExtra("indicator_x", 50f) ?: 50f
+        indicatorY = intent?.getFloatExtra("indicator_y", 2f) ?: 2f
+        indicatorScale = intent?.getFloatExtra("indicator_scale", 1.0f) ?: 1.0f
         val ignoreScreenState = intent?.getBooleanExtra("ignore_screen_state", false) ?: false
         val removePreview = intent?.getBooleanExtra("remove_preview", false) ?: false
 
@@ -148,6 +154,9 @@ class EdgeLightingService : Service() {
                     putExtra("pulse_duration", pulseDuration)
                     putExtra("style", edgeLightingStyle.name)
                     putExtra("glow_sides", glowSides.map { it.name }.toTypedArray())
+                    putExtra("indicator_x", indicatorX)
+                    putExtra("indicator_y", indicatorY)
+                    putExtra("indicator_scale", indicatorScale)
                     if (intent?.hasExtra("resolved_color") == true) {
                         putExtra("resolved_color", intent.getIntExtra("resolved_color", 0))
                     }
@@ -222,7 +231,8 @@ class EdgeLightingService : Service() {
                 strokeDp = strokeThicknessDp, 
                 cornerRadiusDp = cornerRadiusDp,
                 style = edgeLightingStyle,
-                glowSides = glowSides
+                glowSides = glowSides,
+                indicatorScale = indicatorScale
             )
             val params = OverlayHelper.createOverlayLayoutParams(getOverlayType())
 
@@ -230,7 +240,7 @@ class EdgeLightingService : Service() {
                 overlayViews.add(overlay)
                 if (isPreview) {
                     // For preview mode, show static preview
-                    OverlayHelper.showPreview(overlay, edgeLightingStyle, strokeThicknessDp)
+                    OverlayHelper.showPreview(overlay, edgeLightingStyle, strokeThicknessDp, indicatorX, indicatorY)
                 } else {
                     // Normal mode: pulse the overlay
                     OverlayHelper.pulseOverlay(
@@ -238,7 +248,9 @@ class EdgeLightingService : Service() {
                         maxPulses = pulseCount, 
                         pulseDurationMillis = pulseDuration,
                         style = edgeLightingStyle,
-                        strokeWidthDp = strokeThicknessDp
+                        strokeWidthDp = strokeThicknessDp,
+                        indicatorX = indicatorX,
+                        indicatorY = indicatorY
                     ) {
                         // When pulsing completes, remove the overlay
                         OverlayHelper.fadeOutAndRemoveOverlay(windowManager, overlay, overlayViews) {

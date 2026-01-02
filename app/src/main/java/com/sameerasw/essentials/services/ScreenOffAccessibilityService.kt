@@ -52,6 +52,9 @@ class ScreenOffAccessibilityService : AccessibilityService() {
     private var pulseDuration: Long = 3000
     private var edgeLightingStyle: EdgeLightingStyle = EdgeLightingStyle.STROKE
     private var glowSides: Set<EdgeLightingSide> = setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT)
+    private var indicatorX: Float = 50f
+    private var indicatorY: Float = 2f
+    private var indicatorScale: Float = 1.0f
     private var screenReceiver: BroadcastReceiver? = null
     
     private var originalAnimationScale: Float = 1.0f
@@ -343,6 +346,9 @@ class ScreenOffAccessibilityService : AccessibilityService() {
             val glowSidesArray = intent?.getStringArrayExtra("glow_sides")
             glowSides = glowSidesArray?.mapNotNull { try { EdgeLightingSide.valueOf(it) } catch(e: Exception) { null } }?.toSet()
                 ?: setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT)
+            indicatorX = intent?.getFloatExtra("indicator_x", 50f) ?: 50f
+            indicatorY = intent?.getFloatExtra("indicator_y", 2f) ?: 2f
+            indicatorScale = intent?.getFloatExtra("indicator_scale", 1.0f) ?: 1.0f
             val removePreview = intent?.getBooleanExtra("remove_preview", false) ?: false
             if (removePreview) {
                 // Remove preview overlay
@@ -418,7 +424,8 @@ class ScreenOffAccessibilityService : AccessibilityService() {
                 strokeDp = strokeThicknessDp, 
                 cornerRadiusDp = cornerRadiusDp,
                 style = edgeLightingStyle,
-                glowSides = glowSides
+                glowSides = glowSides,
+                indicatorScale = indicatorScale
             )
             val params = OverlayHelper.createOverlayLayoutParams(overlayType)
 
@@ -451,7 +458,9 @@ class ScreenOffAccessibilityService : AccessibilityService() {
                         maxPulses = pulseCount, 
                         pulseDurationMillis = pulseDuration,
                         style = edgeLightingStyle,
-                        strokeWidthDp = strokeThicknessDp
+                        strokeWidthDp = strokeThicknessDp,
+                        indicatorX = indicatorX,
+                        indicatorY = indicatorY
                     ) {
                         // When pulsing completes, remove the overlay
                         OverlayHelper.fadeOutAndRemoveOverlay(windowManager, overlay, overlayViews)

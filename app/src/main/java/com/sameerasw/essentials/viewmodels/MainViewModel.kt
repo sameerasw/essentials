@@ -76,6 +76,9 @@ class MainViewModel : ViewModel() {
     val edgeLightingCustomColor = mutableIntStateOf(0xFF6200EE.toInt()) // Default purple
     val edgeLightingPulseCount = mutableIntStateOf(1)
     val edgeLightingPulseDuration = mutableStateOf(3000f)
+    val edgeLightingIndicatorX = mutableStateOf(50f) // 0-100 percentage
+    val edgeLightingIndicatorY = mutableStateOf(2f)  // 0-100 percentage, default top
+    val edgeLightingIndicatorScale = mutableStateOf(1.0f)
     val edgeLightingGlowSides = mutableStateOf(setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT))
 
     // Update state
@@ -116,6 +119,9 @@ class MainViewModel : ViewModel() {
         edgeLightingCustomColor.intValue = prefs.getInt("edge_lighting_custom_color", 0xFF6200EE.toInt())
         edgeLightingPulseCount.intValue = prefs.getInt("edge_lighting_pulse_count", 1)
         edgeLightingPulseDuration.value = prefs.getFloat("edge_lighting_pulse_duration", 3000f)
+        edgeLightingIndicatorX.value = prefs.getFloat("edge_lighting_indicator_x", 50f)
+        edgeLightingIndicatorY.value = prefs.getFloat("edge_lighting_indicator_y", 2f)
+        edgeLightingIndicatorScale.value = prefs.getFloat("edge_lighting_indicator_scale", 1.0f)
         edgeLightingGlowSides.value = loadEdgeLightingGlowSides(context)
         MapsState.isEnabled = isMapsPowerSavingEnabled.value
         loadHapticFeedback(context)
@@ -404,6 +410,9 @@ class MainViewModel : ViewModel() {
                 putExtra("pulse_count", edgeLightingPulseCount.intValue)
                 putExtra("pulse_duration", edgeLightingPulseDuration.value.toLong())
                 putExtra("glow_sides", edgeLightingGlowSides.value.map { it.name }.toTypedArray())
+                putExtra("indicator_x", edgeLightingIndicatorX.value)
+                putExtra("indicator_y", edgeLightingIndicatorY.value)
+                putExtra("indicator_scale", edgeLightingIndicatorScale.value)
             }
             context.startService(intent)
         } catch (e: Exception) {
@@ -422,6 +431,9 @@ class MainViewModel : ViewModel() {
                 putExtra("color_mode", edgeLightingColorMode.value.name)
                 putExtra("custom_color", edgeLightingCustomColor.intValue)
                 putExtra("glow_sides", edgeLightingGlowSides.value.map { it.name }.toTypedArray())
+                putExtra("indicator_x", edgeLightingIndicatorX.value)
+                putExtra("indicator_y", edgeLightingIndicatorY.value)
+                putExtra("indicator_scale", edgeLightingIndicatorScale.value)
             }
             context.startService(intent)
         } catch (e: Exception) {
@@ -441,6 +453,9 @@ class MainViewModel : ViewModel() {
                 putExtra("color_mode", edgeLightingColorMode.value.name)
                 putExtra("custom_color", edgeLightingCustomColor.intValue)
                 putExtra("glow_sides", edgeLightingGlowSides.value.map { it.name }.toTypedArray())
+                putExtra("indicator_x", edgeLightingIndicatorX.value)
+                putExtra("indicator_y", edgeLightingIndicatorY.value)
+                putExtra("indicator_scale", edgeLightingIndicatorScale.value)
             }
             context.startService(intent)
         } catch (e: Exception) {
@@ -767,6 +782,27 @@ class MainViewModel : ViewModel() {
     fun setEdgeLightingGlowSides(sides: Set<EdgeLightingSide>, context: Context) {
         edgeLightingGlowSides.value = sides
         saveEdgeLightingGlowSides(context, sides)
+    }
+
+    fun saveEdgeLightingIndicatorX(context: Context, x: Float) {
+        edgeLightingIndicatorX.value = x
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
+            putFloat("edge_lighting_indicator_x", x)
+        }
+    }
+
+    fun saveEdgeLightingIndicatorY(context: Context, y: Float) {
+        edgeLightingIndicatorY.value = y
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
+            putFloat("edge_lighting_indicator_y", y)
+        }
+    }
+
+    fun saveEdgeLightingIndicatorScale(context: Context, scale: Float) {
+        edgeLightingIndicatorScale.value = scale
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
+            putFloat("edge_lighting_indicator_scale", scale)
+        }
     }
 
     private fun saveEdgeLightingGlowSides(context: Context, sides: Set<EdgeLightingSide>) {

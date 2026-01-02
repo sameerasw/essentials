@@ -210,42 +210,113 @@ fun EdgeLightingSettingsUI(
                 )
             }
         }
-
-
-        // Animation Settings
-        Text(
-            text = "Animation",
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
         
-        
-        RoundedCardContainer(modifier = Modifier) {
-            ConfigSliderItem(
-                title = "Pulse count",
-                value = viewModel.edgeLightingPulseCount.intValue.toFloat(),
-                onValueChange = { 
-                    viewModel.saveEdgeLightingPulseCount(context, it.toInt())
-                    HapticUtil.performSliderHaptic(view)
-                },
-                valueRange = 1f..5f,
-                steps = 3,
-                valueFormatter = { "%.0f".format(it) },
-                onValueChangeFinished = { viewModel.triggerEdgeLighting(context) }
+        // Indicator Adjustment Section (For INDICATOR style)
+        if (style == EdgeLightingStyle.INDICATOR) {
+            Text(
+                text = "Placement",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+            
+            RoundedCardContainer(modifier = Modifier) {
+                ConfigSliderItem(
+                    title = "Horizontal position",
+                    value = viewModel.edgeLightingIndicatorX.value,
+                    onValueChange = { newValue ->
+                        viewModel.saveEdgeLightingIndicatorX(context, newValue)
+                        HapticUtil.performSliderHaptic(view)
+                        viewModel.triggerEdgeLighting(context)
+                    },
+                    valueRange = 0f..100f,
+                    valueFormatter = { "%.0f%%".format(it) }
+                )
                 
-            ConfigSliderItem(
-                title = "Pulse duration",
-                value = viewModel.edgeLightingPulseDuration.value,
-                onValueChange = { 
-                    viewModel.saveEdgeLightingPulseDuration(context, it)
-                    HapticUtil.performSliderHaptic(view)
-                },
-                valueRange = 100f..10000f,
-                valueFormatter = { "%.1fs".format(it / 1000f) },
-                onValueChangeFinished = { viewModel.triggerEdgeLighting(context) }
+                ConfigSliderItem(
+                    title = "Vertical position",
+                    value = viewModel.edgeLightingIndicatorY.value,
+                    onValueChange = { newValue ->
+                        viewModel.saveEdgeLightingIndicatorY(context, newValue)
+                        HapticUtil.performSliderHaptic(view)
+                        viewModel.triggerEdgeLighting(context)
+                    },
+                    valueRange = 0f..100f,
+                    valueFormatter = { "%.0f%%".format(it) }
+                )
+            }
+
+            Text(
+                text = "Indicator adjustment",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+
+            RoundedCardContainer(modifier = Modifier) {
+                ConfigSliderItem(
+                    title = "Scale",
+                    value = viewModel.edgeLightingIndicatorScale.value,
+                    onValueChange = { newValue ->
+                        viewModel.saveEdgeLightingIndicatorScale(context, newValue)
+                        HapticUtil.performSliderHaptic(view)
+                        viewModel.triggerEdgeLighting(context)
+                    },
+                    valueRange = 0.5f..3f,
+                    valueFormatter = { "%.1fx".format(it) }
+                )
+
+                ConfigSliderItem(
+                    title = "Duration",
+                    value = viewModel.edgeLightingPulseDuration.value,
+                    onValueChange = { 
+                        viewModel.saveEdgeLightingPulseDuration(context, it)
+                        HapticUtil.performSliderHaptic(view)
+                    },
+                    valueRange = 1000f..10000f,
+                    valueFormatter = { "%.1fs".format(it / 1000f) },
+                    onValueChangeFinished = { viewModel.triggerEdgeLighting(context) }
+                )
+            }
+        }
+
+
+        // Animation Settings (Only for STROKE and GLOW)
+        if (style == EdgeLightingStyle.STROKE || style == EdgeLightingStyle.GLOW) {
+            Text(
+                text = "Animation",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            
+            
+            RoundedCardContainer(modifier = Modifier) {
+                ConfigSliderItem(
+                    title = "Pulse count",
+                    value = viewModel.edgeLightingPulseCount.intValue.toFloat(),
+                    onValueChange = { 
+                        viewModel.saveEdgeLightingPulseCount(context, it.toInt())
+                        HapticUtil.performSliderHaptic(view)
+                    },
+                    valueRange = 1f..5f,
+                    steps = 3,
+                    valueFormatter = { "%.0f".format(it) },
+                    onValueChangeFinished = { viewModel.triggerEdgeLighting(context) }
+                )
+                    
+                ConfigSliderItem(
+                    title = "Pulse duration",
+                    value = viewModel.edgeLightingPulseDuration.value,
+                    onValueChange = { 
+                        viewModel.saveEdgeLightingPulseDuration(context, it)
+                        HapticUtil.performSliderHaptic(view)
+                    },
+                    valueRange = 100f..10000f,
+                    valueFormatter = { "%.1fs".format(it / 1000f) },
+                    onValueChangeFinished = { viewModel.triggerEdgeLighting(context) }
+                )
+            }
         }
 
 

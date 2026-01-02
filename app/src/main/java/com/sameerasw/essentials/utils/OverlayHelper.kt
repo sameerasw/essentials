@@ -14,10 +14,26 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.FrameLayout
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.LoadingIndicator
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.content.ContextCompat
 import androidx.core.view.updateLayoutParams
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.setViewTreeLifecycleOwner
+import androidx.lifecycle.setViewTreeViewModelStoreOwner
+import androidx.savedstate.SavedStateRegistry
+import androidx.savedstate.SavedStateRegistryController
+import androidx.savedstate.SavedStateRegistryOwner
+import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.sameerasw.essentials.domain.model.EdgeLightingStyle
 import com.sameerasw.essentials.domain.model.EdgeLightingSide
+import androidx.compose.ui.graphics.Color as ComposeColor
 
 /**
  * Utility helper for creating and managing edge lighting overlays.
@@ -28,6 +44,7 @@ object OverlayHelper {
     // Configuration constants
     const val STROKE_DP = 8
     const val CORNER_RADIUS_DP = 20
+    const val INDICATOR_SIZE_DP = 48
 
     /**
      * Creates a rounded rectangle overlay view with stroke.
@@ -44,10 +61,14 @@ object OverlayHelper {
         strokeDp: Int = STROKE_DP,
         cornerRadiusDp: Int = CORNER_RADIUS_DP,
         style: EdgeLightingStyle = EdgeLightingStyle.STROKE,
-        glowSides: Set<EdgeLightingSide> = setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT)
+        glowSides: Set<EdgeLightingSide> = setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT),
+        indicatorScale: Float = 1.0f
     ): FrameLayout {
         if (style == EdgeLightingStyle.GLOW) {
             return createGlowOverlayView(context, color, glowSides)
+        }
+        if (style == EdgeLightingStyle.INDICATOR) {
+            return createIndicatorOverlayView(context, color, indicatorScale)
         }
 
         val overlay = FrameLayout(context)
@@ -128,6 +149,71 @@ object OverlayHelper {
         }
 
         return overlay
+    }
+
+    @OptIn(ExperimentalMaterial3ExpressiveApi::class)
+    private fun createIndicatorOverlayView(context: Context, color: Int, indicatorScale: Float): FrameLayout {
+        // gettign the new LoadingIndicator on an overlay was not easy.... not at all :)
+        val overlay = FrameLayout(context)
+
+        // 1. Initialize the fake owners for the ROOT view
+        val lifecycleOwner = OverlayLifecycleOwner()
+        lifecycleOwner.onCreate()
+
+        overlay.setViewTreeLifecycleOwner(lifecycleOwner)
+        overlay.setViewTreeSavedStateRegistryOwner(lifecycleOwner)
+        overlay.setViewTreeViewModelStoreOwner(lifecycleOwner)
+
+        val density = context.resources.displayMetrics.density
+        val size = (INDICATOR_SIZE_DP * density * indicatorScale).toInt()
+
+        val composeView = ComposeView(context).apply {
+            tag = "loading_indicator"
+            layoutParams = FrameLayout.LayoutParams(size, size).apply {
+                gravity = Gravity.CENTER
+            }
+
+            // Dispose when removed from window
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
+
+            setContent {
+                LoadingIndicator(color = ComposeColor(color))
+            }
+
+            this.scaleX = 0f
+            this.scaleY = 0f
+        }
+
+        overlay.addView(composeView)
+        return overlay
+    }
+
+    /**
+     * A lightweight implementation of the owners required by Jetpack Compose
+     * to run inside a WindowManager overlay.
+     */
+    private class OverlayLifecycleOwner : LifecycleOwner, SavedStateRegistryOwner, ViewModelStoreOwner {
+        private val lifecycleRegistry = LifecycleRegistry(this)
+        private val savedStateRegistryController = SavedStateRegistryController.create(this)
+        private val store = ViewModelStore()
+
+        override val lifecycle: Lifecycle = lifecycleRegistry
+        override val savedStateRegistry: SavedStateRegistry = savedStateRegistryController.savedStateRegistry
+        override val viewModelStore: ViewModelStore = store
+
+        fun onCreate() {
+            savedStateRegistryController.performRestore(null)
+            lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
+            lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START)
+            lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
+        }
+
+        fun onDestroy() {
+            lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+            lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP)
+            lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+            store.clear()
+        }
     }
 
     /**
@@ -223,7 +309,9 @@ object OverlayHelper {
     fun showPreview(
         view: View, 
         style: EdgeLightingStyle, 
-        strokeWidthDp: Int
+        strokeWidthDp: Int,
+        indicatorX: Float = 50f,
+        indicatorY: Float = 2f
     ) {
         if (style == EdgeLightingStyle.GLOW) {
             val vg = view as? ViewGroup
@@ -237,6 +325,20 @@ object OverlayHelper {
                 vg.findViewWithTag<View>("right_glow")?.updateLayoutParams { width = maxPixels }
                 vg.findViewWithTag<View>("top_glow")?.updateLayoutParams { height = maxPixels }
                 vg.findViewWithTag<View>("bottom_glow")?.updateLayoutParams { height = maxPixels }
+            }
+        } else if (style == EdgeLightingStyle.INDICATOR) {
+            view.alpha = 1f
+            val indicator = view.findViewWithTag<View>("loading_indicator")
+            indicator?.apply {
+                scaleX = 1f
+                scaleY = 1f
+                
+                // Position based on percentages
+                val parentWidth = view.resources.displayMetrics.widthPixels
+                val parentHeight = view.resources.displayMetrics.heightPixels
+                
+                translationX = (parentWidth * (indicatorX / 100f)) - (parentWidth / 2f)
+                translationY = (parentHeight * (indicatorY / 100f)) - (parentHeight / 2f)
             }
         }
         
@@ -303,10 +405,17 @@ object OverlayHelper {
         pulseDurationMillis: Long = 3000,
         style: EdgeLightingStyle = EdgeLightingStyle.STROKE,
         strokeWidthDp: Int = STROKE_DP,
+        indicatorX: Float = 50f,
+        indicatorY: Float = 2f,
         onAnimationEnd: (() -> Unit)? = null
     ) {
         if (style == EdgeLightingStyle.GLOW) {
             pulseGlowOverlay(view as ViewGroup, maxPulses, pulseDurationMillis, strokeWidthDp, onAnimationEnd)
+            return
+        }
+        
+        if (style == EdgeLightingStyle.INDICATOR) {
+            pulseIndicatorOverlay(view as ViewGroup, pulseDurationMillis, indicatorX, indicatorY, onAnimationEnd)
             return
         }
 
@@ -421,5 +530,44 @@ object OverlayHelper {
         }
 
         startPulse()
+    }
+
+    private fun pulseIndicatorOverlay(
+        view: ViewGroup,
+        durationMillis: Long,
+        indicatorX: Float,
+        indicatorY: Float,
+        onAnimationEnd: (() -> Unit)? = null
+    ) {
+        val indicator = view.findViewWithTag<View>("loading_indicator") ?: return
+
+        val parentWidth = view.resources.displayMetrics.widthPixels
+        val parentHeight = view.resources.displayMetrics.heightPixels
+
+        indicator.translationX = (parentWidth * (indicatorX / 100f)) - (parentWidth / 2f)
+        indicator.translationY = (parentHeight * (indicatorY / 100f)) - (parentHeight / 2f)
+
+        view.alpha = 1f
+
+        indicator.animate()
+            .scaleX(1.0f)
+            .scaleY(1.0f)
+            .setDuration(400) // Slightly slower for the morphing effect to catch the eye
+            .setInterpolator(AccelerateDecelerateInterpolator())
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    view.postDelayed({
+                        indicator.animate()
+                            .scaleX(0.0f)
+                            .scaleY(0.0f)
+                            .setDuration(400)
+                            .setListener(object : AnimatorListenerAdapter() {
+                                override fun onAnimationEnd(animation: Animator) {
+                                    onAnimationEnd?.invoke()
+                                }
+                            }).start()
+                    }, (durationMillis - 800).coerceAtLeast(0))
+                }
+            }).start()
     }
 }

@@ -31,10 +31,11 @@ fun EdgeLightingStylePicker(
     onStyleSelected: (EdgeLightingStyle) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val styles = listOf(EdgeLightingStyle.STROKE, EdgeLightingStyle.GLOW)
+    val styles = listOf(EdgeLightingStyle.STROKE, EdgeLightingStyle.GLOW, EdgeLightingStyle.INDICATOR)
     val icons = listOf(
         R.drawable.rounded_rounded_corner_24,
-        R.drawable.rounded_blur_linear_24
+        R.drawable.rounded_blur_linear_24,
+        R.drawable.rounded_circles_24
     )
     val view = LocalView.current
 
