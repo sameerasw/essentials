@@ -2,6 +2,7 @@ name: Feature Request
 description: Suggest a new feature for the Essentials Android app
 title: "[Feature]: "
 labels: ["enhancement"]
+assignees: ["sameerasw"]
 body:
   - type: markdown
     attributes:

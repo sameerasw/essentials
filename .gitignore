@@ -29,3 +29,5 @@ replay_pid*
 .idea/
 *.DS_Store
 *app/release/
+
+Build/
