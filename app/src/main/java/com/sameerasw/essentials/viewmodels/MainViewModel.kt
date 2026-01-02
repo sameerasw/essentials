@@ -7,6 +7,7 @@ import android.app.admin.DevicePolicyManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.provider.Settings
 import androidx.compose.runtime.mutableIntStateOf
@@ -32,6 +33,7 @@ import com.sameerasw.essentials.services.ScreenOffAccessibilityService
 import com.sameerasw.essentials.services.receivers.SecurityDeviceAdminReceiver
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.HapticFeedbackType
+import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.utils.ShizukuUtils
 import com.sameerasw.essentials.utils.UpdateNotificationHelper
 import kotlinx.coroutines.Dispatchers
@@ -89,10 +91,24 @@ class MainViewModel : ViewModel() {
     val isAutoUpdateEnabled = mutableStateOf(true)
     val isUpdateNotificationEnabled = mutableStateOf(true)
     private var lastUpdateCheckTime: Long = 0
+    
+    private val preferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
+        when (key) {
+            "edge_lighting_enabled" -> isEdgeLightingEnabled.value = sharedPreferences.getBoolean(key, false)
+            "dynamic_night_light_enabled" -> isDynamicNightLightEnabled.value = sharedPreferences.getBoolean(key, false)
+            "screen_locked_security_enabled" -> isScreenLockedSecurityEnabled.value = sharedPreferences.getBoolean(key, false)
+            "maps_power_saving_enabled" -> {
+                isMapsPowerSavingEnabled.value = sharedPreferences.getBoolean(key, false)
+                MapsState.isEnabled = isMapsPowerSavingEnabled.value
+            }
+            "status_bar_icon_control_enabled" -> isStatusBarIconControlEnabled.value = sharedPreferences.getBoolean(key, false)
+            "button_remap_enabled" -> isButtonRemapEnabled.value = sharedPreferences.getBoolean(key, false)
+        }
+    }
 
     fun check(context: Context) {
-        isAccessibilityEnabled.value = isAccessibilityServiceEnabled(context)
-        isWriteSecureSettingsEnabled.value = canWriteSecureSettings(context)
+        isAccessibilityEnabled.value = PermissionUtils.isAccessibilityServiceEnabled(context)
+        isWriteSecureSettingsEnabled.value = PermissionUtils.canWriteSecureSettings(context)
         isReadPhoneStateEnabled.value = ContextCompat.checkSelfPermission(
             context,
             Manifest.permission.READ_PHONE_STATE
@@ -103,11 +119,14 @@ class MainViewModel : ViewModel() {
         ) == PackageManager.PERMISSION_GRANTED
         isShizukuAvailable.value = ShizukuUtils.isShizukuAvailable()
         isShizukuPermissionGranted.value = ShizukuUtils.hasPermission()
-        isNotificationListenerEnabled.value = hasNotificationListenerPermission(context)
-        isOverlayPermissionGranted.value = canDrawOverlays(context)
-        isEdgeLightingAccessibilityEnabled.value = isEdgeLightingAccessibilityServiceEnabled(context)
-        isDefaultBrowserSet.value = isDefaultBrowser(context)
+        isNotificationListenerEnabled.value = PermissionUtils.hasNotificationListenerPermission(context)
+        isOverlayPermissionGranted.value = PermissionUtils.canDrawOverlays(context)
+        isEdgeLightingAccessibilityEnabled.value = PermissionUtils.isEdgeLightingAccessibilityServiceEnabled(context)
+        isDefaultBrowserSet.value = PermissionUtils.isDefaultBrowser(context)
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+        prefs.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener)
+        prefs.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
+        
         isWidgetEnabled.value = prefs.getBoolean("widget_enabled", false)
         isStatusBarIconControlEnabled.value = prefs.getBoolean("status_bar_icon_control_enabled", false)
         isMapsPowerSavingEnabled.value = prefs.getBoolean("maps_power_saving_enabled", false)
@@ -265,9 +284,7 @@ class MainViewModel : ViewModel() {
     }
 
     private fun isDeviceAdminActive(context: Context): Boolean {
-        val dpm = context.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
-        val adminComponent = ComponentName(context, SecurityDeviceAdminReceiver::class.java)
-        return dpm.isAdminActive(adminComponent)
+        return PermissionUtils.isDeviceAdminActive(context)
     }
 
     fun requestDeviceAdmin(context: Context) {
@@ -517,31 +534,11 @@ class MainViewModel : ViewModel() {
     }
 
     private fun isAccessibilityServiceEnabled(context: Context): Boolean {
-        val enabledServices = Settings.Secure.getString(
-            context.contentResolver,
-            Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
-        )
-        val serviceName = "${context.packageName}/${ScreenOffAccessibilityService::class.java.name}"
-        return enabledServices?.contains(serviceName) == true
+        return PermissionUtils.isAccessibilityServiceEnabled(context)
     }
 
     fun canWriteSecureSettings(context: Context): Boolean {
-        return try {
-            // Try to write to the setting to test if we have permission
-            val currentValue = Settings.Secure.getString(
-                context.contentResolver,
-                "icon_blacklist"
-            )
-            // Try to write the same value back (no-op) to verify permission
-            Settings.Secure.putString(
-                context.contentResolver,
-                "icon_blacklist",
-                currentValue ?: ""
-            )
-            true
-        } catch (e: Exception) {
-            false
-        }
+        return PermissionUtils.canWriteSecureSettings(context)
     }
 
     fun requestReadPhoneStatePermission(activity: androidx.activity.ComponentActivity) {
@@ -563,16 +560,7 @@ class MainViewModel : ViewModel() {
     }
 
     private fun hasNotificationListenerPermission(context: Context): Boolean {
-        return try {
-            val enabledServices = Settings.Secure.getString(
-                context.contentResolver,
-                "enabled_notification_listeners"
-            ) ?: return false
-            val componentName = ComponentName(context, NotificationListener::class.java)
-            enabledServices.contains(componentName.flattenToString())
-        } catch (_: Exception) {
-            false
-        }
+        return PermissionUtils.hasNotificationListenerPermission(context)
     }
 
     fun requestNotificationListenerPermission(context: Context) {
@@ -620,40 +608,15 @@ class MainViewModel : ViewModel() {
     }
 
     private fun canDrawOverlays(context: Context): Boolean {
-        return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            Settings.canDrawOverlays(context)
-        } else {
-            true
-        }
+        return PermissionUtils.canDrawOverlays(context)
     }
 
     private fun isEdgeLightingAccessibilityServiceEnabled(context: Context): Boolean {
-        return try {
-            val enabledServices = Settings.Secure.getString(
-                context.contentResolver,
-                Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
-            )
-            val serviceName = "${context.packageName}/${ScreenOffAccessibilityService::class.java.name}"
-            enabledServices?.contains(serviceName) == true
-        } catch (e: Exception) {
-            false
-        }
+        return PermissionUtils.isEdgeLightingAccessibilityServiceEnabled(context)
     }
 
     private fun isDefaultBrowser(context: Context): Boolean {
-        return try {
-            val pm = context.packageManager
-            val browserIntent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse("http://www.example.com"))
-            val resolveInfo = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-                pm.resolveActivity(browserIntent, android.content.pm.PackageManager.ResolveInfoFlags.of(android.content.pm.PackageManager.MATCH_DEFAULT_ONLY.toLong()))
-            } else {
-                @Suppress("DEPRECATION")
-                pm.resolveActivity(browserIntent, android.content.pm.PackageManager.MATCH_DEFAULT_ONLY)
-            }
-            resolveInfo?.activityInfo?.packageName == context.packageName
-        } catch (e: Exception) {
-            false
-        }
+        return PermissionUtils.isDefaultBrowser(context)
     }
 
     // Edge Lighting App Selection Methods

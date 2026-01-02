@@ -216,6 +216,36 @@
             </intent-filter>
         </service>
         <service
+            android:name=".services.EdgeLightingTileService"
+            android:exported="true"
+            android:icon="@drawable/rounded_blur_linear_24"
+            android:label="Edge Lighting"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".services.DynamicNightLightTileService"
+            android:exported="true"
+            android:icon="@drawable/rounded_nightlight_24"
+            android:label="Dynamic Night Light"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".services.ScreenLockedSecurityTileService"
+            android:exported="true"
+            android:icon="@drawable/rounded_security_24"
+            android:label="Locked Security"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+        <service
             android:name=".services.EdgeLightingService"
             android:exported="false"
             android:foregroundServiceType="specialUse" />

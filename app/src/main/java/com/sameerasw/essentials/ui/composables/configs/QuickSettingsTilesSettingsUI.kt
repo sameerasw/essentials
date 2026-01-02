@@ -47,7 +47,10 @@ fun QuickSettingsTilesSettingsUI(
         QSTileInfo("Tap to Wake", R.drawable.rounded_touch_app_24, TapToWakeTileService::class.java),
         QSTileInfo("AOD", R.drawable.rounded_mobile_text_2_24, AlwaysOnDisplayTileService::class.java),
         QSTileInfo("Caffeinate", R.drawable.rounded_coffee_24, CaffeinateTileService::class.java),
-        QSTileInfo("Sound Mode", R.drawable.rounded_volume_up_24, SoundModeTileService::class.java)
+        QSTileInfo("Sound Mode", R.drawable.rounded_volume_up_24, SoundModeTileService::class.java),
+        QSTileInfo("Edge Lighting", R.drawable.rounded_blur_linear_24, EdgeLightingTileService::class.java),
+        QSTileInfo("Dynamic Night Light", R.drawable.rounded_nightlight_24, DynamicNightLightTileService::class.java),
+        QSTileInfo("Locked Security", R.drawable.rounded_security_24, ScreenLockedSecurityTileService::class.java)
     )
 
     Column(
