@@ -46,6 +46,7 @@ import kotlinx.coroutines.launch
 import com.sameerasw.essentials.ui.components.sheets.AppSelectionSheet
 import com.sameerasw.essentials.ui.components.pickers.EdgeLightingStylePicker
 import com.sameerasw.essentials.domain.model.EdgeLightingStyle
+import com.sameerasw.essentials.ui.components.pickers.GlowSidesPicker
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -180,6 +181,16 @@ fun EdgeLightingSettingsUI(
             )
             
             RoundedCardContainer(modifier = Modifier) {
+                GlowSidesPicker(
+                    selectedSides = viewModel.edgeLightingGlowSides.value,
+                    onSideToggled = { side, isChecked ->
+                        val current = viewModel.edgeLightingGlowSides.value.toMutableSet()
+                        if (isChecked) current.add(side) else current.remove(side)
+                        viewModel.setEdgeLightingGlowSides(current, context)
+                        viewModel.triggerEdgeLighting(context)
+                    }
+                )
+
                 ConfigSliderItem(
                     title = "Glow spread",
                     value = strokeThicknessDp,

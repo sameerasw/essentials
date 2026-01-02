@@ -17,6 +17,7 @@ import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.updateLayoutParams
 import com.sameerasw.essentials.domain.model.EdgeLightingStyle
+import com.sameerasw.essentials.domain.model.EdgeLightingSide
 
 /**
  * Utility helper for creating and managing edge lighting overlays.
@@ -42,10 +43,11 @@ object OverlayHelper {
         color: Int,
         strokeDp: Int = STROKE_DP,
         cornerRadiusDp: Int = CORNER_RADIUS_DP,
-        style: EdgeLightingStyle = EdgeLightingStyle.STROKE
+        style: EdgeLightingStyle = EdgeLightingStyle.STROKE,
+        glowSides: Set<EdgeLightingSide> = setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT)
     ): FrameLayout {
         if (style == EdgeLightingStyle.GLOW) {
-            return createGlowOverlayView(context, color)
+            return createGlowOverlayView(context, color, glowSides)
         }
 
         val overlay = FrameLayout(context)
@@ -62,65 +64,69 @@ object OverlayHelper {
         return overlay
     }
 
-    private fun createGlowOverlayView(context: Context, color: Int): FrameLayout {
+    private fun createGlowOverlayView(context: Context, color: Int, sides: Set<EdgeLightingSide>): FrameLayout {
         val overlay = FrameLayout(context)
         
-        // Left Glow
-        val leftGlow = View(context).apply {
-            tag = "left_glow"
-            alpha = 0.5f
-            layoutParams = FrameLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT).apply {
-                gravity = Gravity.START
+        if (sides.contains(EdgeLightingSide.LEFT)) {
+            val leftGlow = View(context).apply {
+                tag = "left_glow"
+                alpha = 0.5f
+                layoutParams = FrameLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT).apply {
+                    gravity = Gravity.START
+                }
+                background = GradientDrawable(
+                    GradientDrawable.Orientation.LEFT_RIGHT,
+                    intArrayOf(color, Color.TRANSPARENT)
+                )
             }
-            background = GradientDrawable(
-                GradientDrawable.Orientation.LEFT_RIGHT,
-                intArrayOf(color, Color.TRANSPARENT)
-            )
+            overlay.addView(leftGlow)
         }
 
-        // Right Glow
-        val rightGlow = View(context).apply {
-            tag = "right_glow"
-            alpha = 0.5f
-            layoutParams = FrameLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT).apply {
-                gravity = Gravity.END
+        if (sides.contains(EdgeLightingSide.RIGHT)) {
+            val rightGlow = View(context).apply {
+                tag = "right_glow"
+                alpha = 0.5f
+                layoutParams = FrameLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT).apply {
+                    gravity = Gravity.END
+                }
+                background = GradientDrawable(
+                    GradientDrawable.Orientation.RIGHT_LEFT,
+                    intArrayOf(color, Color.TRANSPARENT)
+                )
             }
-            background = GradientDrawable(
-                GradientDrawable.Orientation.RIGHT_LEFT,
-                intArrayOf(color, Color.TRANSPARENT)
-            )
+            overlay.addView(rightGlow)
         }
 
-        // Top Glow
-        val topGlow = View(context).apply {
-            tag = "top_glow"
-            alpha = 0.5f
-            layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0).apply {
-                gravity = Gravity.TOP
+        if (sides.contains(EdgeLightingSide.TOP)) {
+            val topGlow = View(context).apply {
+                tag = "top_glow"
+                alpha = 0.5f
+                layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0).apply {
+                    gravity = Gravity.TOP
+                }
+                background = GradientDrawable(
+                    GradientDrawable.Orientation.TOP_BOTTOM,
+                    intArrayOf(color, Color.TRANSPARENT)
+                )
             }
-            background = GradientDrawable(
-                GradientDrawable.Orientation.TOP_BOTTOM,
-                intArrayOf(color, Color.TRANSPARENT)
-            )
+            overlay.addView(topGlow)
         }
 
-        // Bottom Glow
-        val bottomGlow = View(context).apply {
-            tag = "bottom_glow"
-            alpha = 0.5f
-            layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0).apply {
-                gravity = Gravity.BOTTOM
+        if (sides.contains(EdgeLightingSide.BOTTOM)) {
+            val bottomGlow = View(context).apply {
+                tag = "bottom_glow"
+                alpha = 0.5f
+                layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0).apply {
+                    gravity = Gravity.BOTTOM
+                }
+                background = GradientDrawable(
+                    GradientDrawable.Orientation.BOTTOM_TOP,
+                    intArrayOf(color, Color.TRANSPARENT)
+                )
             }
-            background = GradientDrawable(
-                GradientDrawable.Orientation.BOTTOM_TOP,
-                intArrayOf(color, Color.TRANSPARENT)
-            )
+            overlay.addView(bottomGlow)
         }
 
-        overlay.addView(leftGlow)
-        overlay.addView(rightGlow)
-        overlay.addView(topGlow)
-        overlay.addView(bottomGlow)
         return overlay
     }
 
@@ -357,11 +363,6 @@ object OverlayHelper {
         val rightGlow = view.findViewWithTag<View>("right_glow")
         val topGlow = view.findViewWithTag<View>("top_glow")
         val bottomGlow = view.findViewWithTag<View>("bottom_glow")
-        
-        if (leftGlow == null || rightGlow == null || topGlow == null || bottomGlow == null) {
-            onAnimationEnd?.invoke()
-            return
-        }
 
         val density = view.resources.displayMetrics.density
         val maxPixels = (strokeWidthDp * density * 12).toInt()
@@ -385,10 +386,10 @@ object OverlayHelper {
                 interpolator = AccelerateDecelerateInterpolator()
                 addUpdateListener { animator ->
                     val dim = animator.animatedValue as Int
-                    leftGlow.updateLayoutParams { this.width = dim }
-                    rightGlow.updateLayoutParams { this.width = dim }
-                    topGlow.updateLayoutParams { this.height = dim }
-                    bottomGlow.updateLayoutParams { this.height = dim }
+                    leftGlow?.updateLayoutParams { this.width = dim }
+                    rightGlow?.updateLayoutParams { this.width = dim }
+                    topGlow?.updateLayoutParams { this.height = dim }
+                    bottomGlow?.updateLayoutParams { this.height = dim }
                 }
                 addListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator) {
@@ -400,10 +401,10 @@ object OverlayHelper {
                                 interpolator = AccelerateDecelerateInterpolator()
                                 addUpdateListener { animator ->
                                     val dim = animator.animatedValue as Int
-                                    leftGlow.updateLayoutParams { this.width = dim }
-                                    rightGlow.updateLayoutParams { this.width = dim }
-                                    topGlow.updateLayoutParams { this.height = dim }
-                                    bottomGlow.updateLayoutParams { this.height = dim }
+                                    leftGlow?.updateLayoutParams { this.width = dim }
+                                    rightGlow?.updateLayoutParams { this.width = dim }
+                                    topGlow?.updateLayoutParams { this.height = dim }
+                                    bottomGlow?.updateLayoutParams { this.height = dim }
                                 }
                                 addListener(object : AnimatorListenerAdapter() {
                                     override fun onAnimationEnd(animation: Animator) {

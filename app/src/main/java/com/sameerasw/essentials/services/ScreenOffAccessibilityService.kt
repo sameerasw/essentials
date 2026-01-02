@@ -10,6 +10,7 @@ import com.sameerasw.essentials.utils.HapticFeedbackType
 import com.sameerasw.essentials.utils.performHapticFeedback
 import com.sameerasw.essentials.domain.model.EdgeLightingColorMode
 import com.sameerasw.essentials.domain.model.EdgeLightingStyle
+import com.sameerasw.essentials.domain.model.EdgeLightingSide
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.IntentFilter
@@ -50,6 +51,7 @@ class ScreenOffAccessibilityService : AccessibilityService() {
     private var pulseCount: Int = 1
     private var pulseDuration: Long = 3000
     private var edgeLightingStyle: EdgeLightingStyle = EdgeLightingStyle.STROKE
+    private var glowSides: Set<EdgeLightingSide> = setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT)
     private var screenReceiver: BroadcastReceiver? = null
     
     private var originalAnimationScale: Float = 1.0f
@@ -338,6 +340,9 @@ class ScreenOffAccessibilityService : AccessibilityService() {
             pulseDuration = intent?.getLongExtra("pulse_duration", 3000L) ?: 3000L
             val styleName = intent?.getStringExtra("style")
             edgeLightingStyle = if (styleName != null) EdgeLightingStyle.valueOf(styleName) else EdgeLightingStyle.STROKE
+            val glowSidesArray = intent?.getStringArrayExtra("glow_sides")
+            glowSides = glowSidesArray?.mapNotNull { try { EdgeLightingSide.valueOf(it) } catch(e: Exception) { null } }?.toSet()
+                ?: setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT)
             val removePreview = intent?.getBooleanExtra("remove_preview", false) ?: false
             if (removePreview) {
                 // Remove preview overlay
@@ -412,7 +417,8 @@ class ScreenOffAccessibilityService : AccessibilityService() {
                 color, 
                 strokeDp = strokeThicknessDp, 
                 cornerRadiusDp = cornerRadiusDp,
-                style = edgeLightingStyle
+                style = edgeLightingStyle,
+                glowSides = glowSides
             )
             val params = OverlayHelper.createOverlayLayoutParams(overlayType)
 

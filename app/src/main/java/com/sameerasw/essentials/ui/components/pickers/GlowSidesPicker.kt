@@ -4,43 +4,41 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ToggleButton
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.foundation.layout.size
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import com.sameerasw.essentials.domain.model.EdgeLightingStyle
-import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.domain.model.EdgeLightingSide
+import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import androidx.compose.ui.platform.LocalView
 import com.sameerasw.essentials.utils.HapticUtil
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun EdgeLightingStylePicker(
-    selectedStyle: EdgeLightingStyle,
-    onStyleSelected: (EdgeLightingStyle) -> Unit,
+fun GlowSidesPicker(
+    selectedSides: Set<EdgeLightingSide>,
+    onSideToggled: (EdgeLightingSide, Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val styles = listOf(EdgeLightingStyle.STROKE, EdgeLightingStyle.GLOW)
-    val icons = listOf(
-        R.drawable.rounded_rounded_corner_24,
-        R.drawable.rounded_blur_linear_24
+    val options = listOf(
+        EdgeLightingSide.LEFT to R.drawable.rounded_border_left_24,
+        EdgeLightingSide.TOP to R.drawable.rounded_border_top_24,
+        EdgeLightingSide.RIGHT to R.drawable.rounded_border_right_24,
+        EdgeLightingSide.BOTTOM to R.drawable.rounded_border_bottom_24
     )
     val view = LocalView.current
 
-    val selectedIndex = styles.indexOf(selectedStyle).coerceAtLeast(0)
-
-    RoundedCardContainer(modifier = Modifier){
         Row(
             modifier = modifier
                 .background(
@@ -50,29 +48,28 @@ fun EdgeLightingStylePicker(
                 .padding(10.dp),
             horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
         ) {
-            val modifiers = List(styles.size) { Modifier.weight(1f) }
+            val modifiers = List(options.size) { Modifier.weight(1f) }
 
-            styles.forEachIndexed { index, style ->
+            options.forEachIndexed { index, (side, iconRes) ->
                 ToggleButton(
-                    checked = selectedIndex == index,
-                    onCheckedChange = {
+                    checked = selectedSides.contains(side),
+                    onCheckedChange = { checked ->
                         HapticUtil.performVirtualKeyHaptic(view)
-                        onStyleSelected(style)
+                        onSideToggled(side, checked)
                     },
-                    modifier = modifiers[index].semantics { role = Role.RadioButton },
+                    modifier = modifiers[index].semantics { role = Role.Checkbox },
                     shapes = when (index) {
                         0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
-                        styles.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                        options.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
                         else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
                     },
                 ) {
                     Icon(
-                        painter = painterResource(id = icons[index]),
-                        contentDescription = style.name,
-                        modifier = Modifier.size(64.dp)
+                        painter = painterResource(id = iconRes),
+                        contentDescription = side.name,
+                        modifier = Modifier.size(24.dp)
                     )
                 }
             }
         }
-    }
 }

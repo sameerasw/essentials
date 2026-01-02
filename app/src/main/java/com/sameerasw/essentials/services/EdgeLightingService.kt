@@ -18,6 +18,7 @@ import android.view.WindowManager
 import androidx.core.app.NotificationCompat
 import com.sameerasw.essentials.domain.model.EdgeLightingColorMode
 import com.sameerasw.essentials.domain.model.EdgeLightingStyle
+import com.sameerasw.essentials.domain.model.EdgeLightingSide
 import com.sameerasw.essentials.utils.OverlayHelper
 
 /**
@@ -43,6 +44,7 @@ class EdgeLightingService : Service() {
     private var pulseCount: Int = 1
     private var pulseDuration: Long = 3000
     private var edgeLightingStyle: EdgeLightingStyle = EdgeLightingStyle.STROKE
+    private var glowSides: Set<EdgeLightingSide> = setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT)
 
     private var screenReceiver: BroadcastReceiver? = null
 
@@ -108,6 +110,9 @@ class EdgeLightingService : Service() {
         pulseDuration = intent?.getLongExtra("pulse_duration", 3000L) ?: 3000L
         val styleName = intent?.getStringExtra("style")
         edgeLightingStyle = if (styleName != null) EdgeLightingStyle.valueOf(styleName) else EdgeLightingStyle.STROKE
+        val glowSidesArray = intent?.getStringArrayExtra("glow_sides")
+        glowSides = glowSidesArray?.mapNotNull { try { EdgeLightingSide.valueOf(it) } catch(e: Exception) { null } }?.toSet()
+            ?: setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT)
         val ignoreScreenState = intent?.getBooleanExtra("ignore_screen_state", false) ?: false
         val removePreview = intent?.getBooleanExtra("remove_preview", false) ?: false
 
@@ -142,6 +147,7 @@ class EdgeLightingService : Service() {
                     putExtra("pulse_count", pulseCount)
                     putExtra("pulse_duration", pulseDuration)
                     putExtra("style", edgeLightingStyle.name)
+                    putExtra("glow_sides", glowSides.map { it.name }.toTypedArray())
                     if (intent?.hasExtra("resolved_color") == true) {
                         putExtra("resolved_color", intent.getIntExtra("resolved_color", 0))
                     }
@@ -215,7 +221,8 @@ class EdgeLightingService : Service() {
                 color, 
                 strokeDp = strokeThicknessDp, 
                 cornerRadiusDp = cornerRadiusDp,
-                style = edgeLightingStyle
+                style = edgeLightingStyle,
+                glowSides = glowSides
             )
             val params = OverlayHelper.createOverlayLayoutParams(getOverlayType())
 

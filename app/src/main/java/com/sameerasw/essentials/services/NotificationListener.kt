@@ -9,6 +9,7 @@ import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import com.sameerasw.essentials.MapsState
 import com.sameerasw.essentials.domain.model.EdgeLightingColorMode
+import com.sameerasw.essentials.domain.model.EdgeLightingSide
 import com.sameerasw.essentials.services.ScreenOffAccessibilityService
 import com.sameerasw.essentials.utils.AppUtil
 
@@ -115,6 +116,15 @@ class NotificationListener : NotificationListenerService() {
                         val pulseDuration = prefs.getFloat("edge_lighting_pulse_duration", 3000f).toLong()
                         val styleName = prefs.getString("edge_lighting_style", com.sameerasw.essentials.domain.model.EdgeLightingStyle.STROKE.name)
                         
+                        val gson = com.google.gson.Gson()
+                        val glowSidesJson = prefs.getString("edge_lighting_glow_sides", null)
+                        val glowSides: Set<EdgeLightingSide> = if (glowSidesJson != null) {
+                            val type = object : com.google.gson.reflect.TypeToken<Set<EdgeLightingSide>>() {}.type
+                            try { gson.fromJson(glowSidesJson, type) } catch (e: Exception) { setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT) }
+                        } else {
+                            setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT)
+                        }
+
                         fun startEdgeLighting(resolvedColor: Int? = null) {
                             val intent = Intent(applicationContext, EdgeLightingService::class.java).apply {
                                 putExtra("corner_radius_dp", cornerRadius)
@@ -123,6 +133,7 @@ class NotificationListener : NotificationListenerService() {
                                 putExtra("pulse_count", pulseCount)
                                 putExtra("pulse_duration", pulseDuration)
                                 putExtra("style", styleName)
+                                putExtra("glow_sides", glowSides.map { it.name }.toTypedArray())
                                 if (resolvedColor != null) {
                                     putExtra("resolved_color", resolvedColor)
                                 } else if (colorMode == EdgeLightingColorMode.CUSTOM) {

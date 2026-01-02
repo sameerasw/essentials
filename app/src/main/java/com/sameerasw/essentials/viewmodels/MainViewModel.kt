@@ -22,6 +22,7 @@ import com.sameerasw.essentials.MapsState
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.EdgeLightingColorMode
 import com.sameerasw.essentials.domain.model.EdgeLightingStyle
+import com.sameerasw.essentials.domain.model.EdgeLightingSide
 import com.sameerasw.essentials.domain.model.NotificationApp
 import com.sameerasw.essentials.domain.model.UpdateInfo
 import com.sameerasw.essentials.services.CaffeinateWakeLockService
@@ -75,6 +76,7 @@ class MainViewModel : ViewModel() {
     val edgeLightingCustomColor = mutableIntStateOf(0xFF6200EE.toInt()) // Default purple
     val edgeLightingPulseCount = mutableIntStateOf(1)
     val edgeLightingPulseDuration = mutableStateOf(3000f)
+    val edgeLightingGlowSides = mutableStateOf(setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT))
 
     // Update state
     val updateInfo = mutableStateOf<UpdateInfo?>(null)
@@ -114,6 +116,7 @@ class MainViewModel : ViewModel() {
         edgeLightingCustomColor.intValue = prefs.getInt("edge_lighting_custom_color", 0xFF6200EE.toInt())
         edgeLightingPulseCount.intValue = prefs.getInt("edge_lighting_pulse_count", 1)
         edgeLightingPulseDuration.value = prefs.getFloat("edge_lighting_pulse_duration", 3000f)
+        edgeLightingGlowSides.value = loadEdgeLightingGlowSides(context)
         MapsState.isEnabled = isMapsPowerSavingEnabled.value
         loadHapticFeedback(context)
         checkCaffeinateActive(context)
@@ -400,6 +403,7 @@ class MainViewModel : ViewModel() {
                 putExtra("custom_color", edgeLightingCustomColor.intValue)
                 putExtra("pulse_count", edgeLightingPulseCount.intValue)
                 putExtra("pulse_duration", edgeLightingPulseDuration.value.toLong())
+                putExtra("glow_sides", edgeLightingGlowSides.value.map { it.name }.toTypedArray())
             }
             context.startService(intent)
         } catch (e: Exception) {
@@ -417,6 +421,7 @@ class MainViewModel : ViewModel() {
                 putExtra("style", edgeLightingStyle.value.name)
                 putExtra("color_mode", edgeLightingColorMode.value.name)
                 putExtra("custom_color", edgeLightingCustomColor.intValue)
+                putExtra("glow_sides", edgeLightingGlowSides.value.map { it.name }.toTypedArray())
             }
             context.startService(intent)
         } catch (e: Exception) {
@@ -435,6 +440,7 @@ class MainViewModel : ViewModel() {
                 putExtra("style", edgeLightingStyle.value.name)
                 putExtra("color_mode", edgeLightingColorMode.value.name)
                 putExtra("custom_color", edgeLightingCustomColor.intValue)
+                putExtra("glow_sides", edgeLightingGlowSides.value.map { it.name }.toTypedArray())
             }
             context.startService(intent)
         } catch (e: Exception) {
@@ -755,6 +761,34 @@ class MainViewModel : ViewModel() {
         isScreenLockedSecurityEnabled.value = enabled
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
             putBoolean("screen_locked_security_enabled", enabled)
+        }
+    }
+
+    fun setEdgeLightingGlowSides(sides: Set<EdgeLightingSide>, context: Context) {
+        edgeLightingGlowSides.value = sides
+        saveEdgeLightingGlowSides(context, sides)
+    }
+
+    private fun saveEdgeLightingGlowSides(context: Context, sides: Set<EdgeLightingSide>) {
+        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+        val gson = Gson()
+        val json = gson.toJson(sides)
+        prefs.edit().putString("edge_lighting_glow_sides", json).apply()
+    }
+
+    private fun loadEdgeLightingGlowSides(context: Context): Set<EdgeLightingSide> {
+        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+        val json = prefs.getString("edge_lighting_glow_sides", null)
+        return if (json != null) {
+            val gson = Gson()
+            val type = object : TypeToken<Set<EdgeLightingSide>>() {}.type
+            try {
+                gson.fromJson(json, type)
+            } catch (e: Exception) {
+                setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT)
+            }
+        } else {
+            setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT)
         }
     }
 }
