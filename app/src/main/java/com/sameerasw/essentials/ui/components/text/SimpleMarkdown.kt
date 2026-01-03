@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
@@ -156,7 +155,7 @@ private fun parseMarkdown(text: String): AnnotatedString {
         var cursor = 0
         
         // Regex for Bold (**text**), Italic (*text* or _text_), and Links ([text](url))
-        val regex = Regex("(\\*\\*.*?\\*\\*)|(\\*.*?\\*)|(_.*?_)|(\\[.*?\\]\\(.*?\\))")
+        val regex = Regex("(\\*\\*.*?\\*\\*)|(\\*.*?\\*)|(_.*?_)|(\\[.*?]\\(.*?\\))")
         val matches = regex.findAll(text)
         
         matches.forEach { match ->

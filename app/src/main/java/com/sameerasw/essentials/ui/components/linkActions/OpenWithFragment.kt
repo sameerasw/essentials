@@ -1,7 +1,6 @@
 package com.sameerasw.essentials.ui.components.linkActions
 
 import android.content.Intent
-import android.content.pm.ResolveInfo
 import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
@@ -15,8 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.ui.components.containers.RoundedCardLazyContainer
-
-import com.sameerasw.essentials.ui.components.linkActions.ResolvedAppInfo
 
 @Composable
 fun OpenWithContent(

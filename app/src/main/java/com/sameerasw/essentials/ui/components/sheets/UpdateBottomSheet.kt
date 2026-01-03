@@ -1,7 +1,6 @@
 package com.sameerasw.essentials.ui.components.sheets
 
 import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -28,6 +27,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.UpdateInfo
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
@@ -99,7 +99,7 @@ fun UpdateBottomSheet(
                 if (updateInfo.isUpdateAvailable && updateInfo.downloadUrl.isNotEmpty()) {
                     Button(
                         onClick = {
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(updateInfo.downloadUrl))
+                            val intent = Intent(Intent.ACTION_VIEW, updateInfo.downloadUrl.toUri())
                             context.startActivity(intent)
                         },
                         modifier = Modifier.fillMaxWidth()

@@ -1,7 +1,6 @@
 package com.sameerasw.essentials.ui.components.containers
 
 import android.content.Intent
-import android.content.pm.ResolveInfo
 import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth

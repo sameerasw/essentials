@@ -13,9 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.sameerasw.essentials.ui.components.buttons.HelpPillButton
 import com.sameerasw.essentials.ui.components.cards.PermissionCard
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
-import com.sameerasw.essentials.ui.components.buttons.HelpPillButton
 
 data class PermissionItem(
     val iconRes: Int,
@@ -51,7 +51,7 @@ fun PermissionsBottomSheet(
                 HelpPillButton()
             }
 
-            RoundedCardContainer() {
+            RoundedCardContainer {
                 permissions.forEach { perm ->
                     PermissionCard(
                         iconRes = perm.iconRes,

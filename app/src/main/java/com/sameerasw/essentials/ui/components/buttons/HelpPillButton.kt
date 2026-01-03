@@ -1,7 +1,6 @@
 package com.sameerasw.essentials.ui.components.buttons
 
 import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.utils.HapticUtil
+import androidx.core.net.toUri
 
 @Composable
 fun HelpPillButton(
@@ -42,7 +42,7 @@ fun HelpPillButton(
             .background(MaterialTheme.colorScheme.primaryContainer)
             .clickable {
                 HapticUtil.performVirtualKeyHaptic(view)
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                val intent = Intent(Intent.ACTION_VIEW, url.toUri())
                 context.startActivity(intent)
             }
             .padding(horizontal = 12.dp, vertical = 6.dp),

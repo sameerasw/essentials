@@ -20,7 +20,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.EdgeLightingSide
-import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import androidx.compose.ui.platform.LocalView
 import com.sameerasw.essentials.utils.HapticUtil
 

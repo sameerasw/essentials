@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -76,11 +75,9 @@ fun AppSelectionSheet(
                 // Load all installed apps (heavy operation on background thread)
                 val allApps = AppUtil.getInstalledApps(context)
 
-                val selectionsToMerge = if (savedSelections.isEmpty()) {
+                val selectionsToMerge = savedSelections.ifEmpty {
                     // Default to all disabled if no preferences found
                     allApps.map { AppSelection(it.packageName, false) }
-                } else {
-                    savedSelections
                 }
 
                 val merged = AppUtil.mergeWithSavedApps(allApps, selectionsToMerge)
@@ -187,14 +184,12 @@ fun AppSelectionSheet(
                                 .padding(vertical = 8.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            if (app.icon != null) {
-                                Image(
-                                    bitmap = app.icon.toBitmap().asImageBitmap(),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(40.dp),
-                                    contentScale = ContentScale.Fit
-                                )
-                            }
+                            Image(
+                                bitmap = app.icon.toBitmap().asImageBitmap(),
+                                contentDescription = null,
+                                modifier = Modifier.size(40.dp),
+                                contentScale = ContentScale.Fit
+                            )
                             
                             Text(
                                 text = app.appName,

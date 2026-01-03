@@ -11,7 +11,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.semantics.Role
@@ -26,12 +25,6 @@ enum class NetworkType {
     NETWORK_3G,
     NETWORK_OTHER;
 
-    fun getDisplayName(): String = when (this) {
-        NETWORK_5G -> "5G"
-        NETWORK_4G -> "4G"
-        NETWORK_3G -> "3G"
-        NETWORK_OTHER -> "Other"
-    }
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)

@@ -2,7 +2,6 @@ package com.sameerasw.essentials.ui.components.linkActions
 
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.pm.ResolveInfo
 import android.net.Uri
 import android.content.ClipboardManager
 import android.content.ClipData
@@ -54,11 +53,9 @@ import com.sameerasw.essentials.ui.components.ReusableTopAppBar
 import com.sameerasw.essentials.R
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Button
 import androidx.compose.material3.rememberModalBottomSheetState
 import android.content.SharedPreferences
 import androidx.compose.foundation.layout.Box
@@ -71,6 +68,8 @@ import androidx.compose.ui.focus.focusRequester
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
+import androidx.core.net.toUri
+import androidx.core.content.edit
 
 private const val TAG = "LinkPickerScreen"
 @OptIn(ExperimentalMaterial3Api::class)
@@ -116,13 +115,13 @@ fun LinkPickerScreen(uri: Uri, onFinish: () -> Unit, modifier: Modifier = Modifi
     val openWithApps = remember(baseOpenWithApps, pinnedPackages.value, searchQuery) {
         baseOpenWithApps
             .filter { searchQuery.isEmpty() || it.label.contains(searchQuery, ignoreCase = true) }
-            .sortedWith(compareBy<ResolvedAppInfo> { !pinnedPackages.value.contains(it.resolveInfo.activityInfo.packageName) })
+            .sortedWith(compareBy { !pinnedPackages.value.contains(it.resolveInfo.activityInfo.packageName) })
     }
 
     val shareWithApps = remember(baseShareWithApps, pinnedPackages.value, searchQuery) {
         baseShareWithApps
             .filter { searchQuery.isEmpty() || it.label.contains(searchQuery, ignoreCase = true) }
-            .sortedWith(compareBy<ResolvedAppInfo> { !pinnedPackages.value.contains(it.resolveInfo.activityInfo.packageName) })
+            .sortedWith(compareBy { !pinnedPackages.value.contains(it.resolveInfo.activityInfo.packageName) })
     }
 
     // toggle pin
@@ -340,7 +339,7 @@ fun LinkPickerScreen(uri: Uri, onFinish: () -> Unit, modifier: Modifier = Modifi
         }
 
         ModalBottomSheet(
-            onDismissRequest = { showEditSheet = false },
+            onDismissRequest = { },
             sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
             containerColor = MaterialTheme.colorScheme.surfaceContainer
         ) {
@@ -364,9 +363,8 @@ fun LinkPickerScreen(uri: Uri, onFinish: () -> Unit, modifier: Modifier = Modifi
                     FilledIconButton(
                         onClick = {
                             try {
-                                currentUri = Uri.parse(editingText)
-                                showEditSheet = false
-                            } catch (e: Exception) {
+                                currentUri = editingText.toUri()
+                            } catch (_: Exception) {
                                 Toast.makeText(context, "Invalid URI", Toast.LENGTH_SHORT).show()
                             }
                         }
@@ -410,7 +408,7 @@ private fun queryOpenWithApps(context: Context, uri: Uri): List<ResolvedAppInfo>
                 intent,
                 PackageManager.MATCH_ALL or PackageManager.MATCH_DISABLED_UNTIL_USED_COMPONENTS
             )
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             Log.d(TAG, "MATCH_ALL | MATCH_DISABLED_UNTIL_USED_COMPONENTS failed, trying MATCH_ALL")
             pm.queryIntentActivities(intent, PackageManager.MATCH_ALL)
         }
@@ -465,7 +463,7 @@ private fun queryShareWithApps(context: Context, uri: Uri): List<ResolvedAppInfo
                 intent,
                 PackageManager.MATCH_ALL or PackageManager.MATCH_DISABLED_UNTIL_USED_COMPONENTS
             )
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             Log.d(TAG, "MATCH_ALL | MATCH_DISABLED_UNTIL_USED_COMPONENTS failed, trying MATCH_ALL")
             pm.queryIntentActivities(intent, PackageManager.MATCH_ALL)
         }
@@ -510,5 +508,5 @@ private fun getPinnedPackages(context: Context): Set<String> {
 
 private fun setPinnedPackages(context: Context, packages: Set<String>) {
     val prefs: SharedPreferences = context.getSharedPreferences("link_prefs", Context.MODE_PRIVATE)
-    prefs.edit().putStringSet("pinned_packages", packages).apply()
+    prefs.edit { putStringSet("pinned_packages", packages) }
 }
