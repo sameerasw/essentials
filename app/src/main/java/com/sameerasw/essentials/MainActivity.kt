@@ -40,18 +40,9 @@ class MainActivity : ComponentActivity() {
         // Install and configure the splash screen
         val splashScreen = installSplashScreen()
 
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
-
-        enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.auto(
-                android.graphics.Color.TRANSPARENT,
-                android.graphics.Color.TRANSPARENT
-            ),
-            navigationBarStyle = SystemBarStyle.auto(
-                android.graphics.Color.TRANSPARENT,
-                android.graphics.Color.TRANSPARENT
-            )
-        )
+        enableEdgeToEdge()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             window.isNavigationBarContrastEnforced = false
@@ -74,6 +65,9 @@ class MainActivity : ComponentActivity() {
                 }
                 fadeOut.doOnEnd {
                     splashScreenViewProvider.remove()
+                    // Re-apply edge to edge AFTER the splash screen view is removed
+                    // to ensure it's not overridden by splash screen cleanup
+                    enableEdgeToEdge()
                 }
 
                 // Safely animate the icon if it exists
@@ -198,6 +192,7 @@ class MainActivity : ComponentActivity() {
                         onSearchHandled = { searchRequested = false }
                     )
                 }
+
 
                 // Mark app as ready after composing (happens very quickly)
                 LaunchedEffect(Unit) {

@@ -26,6 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.services.*
+import com.sameerasw.essentials.ui.modifiers.highlight
 
 data class QSTileInfo(
     val title: String,
@@ -35,7 +36,8 @@ data class QSTileInfo(
 
 @Composable
 fun QuickSettingsTilesSettingsUI(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    highlightSetting: String? = null
 ) {
     val context = LocalContext.current
     val view = LocalView.current
@@ -68,7 +70,9 @@ fun QuickSettingsTilesSettingsUI(
                 rowTiles.forEach { tile ->
                     QSTileCard(
                         tile = tile,
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier
+                            .weight(1f)
+                            .highlight(highlightSetting?.lowercase() == tile.title.lowercase()),
                         onClick = {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                                 val statusBarManager = context.getSystemService(StatusBarManager::class.java)

@@ -25,11 +25,13 @@ import com.sameerasw.essentials.ui.components.sheets.PermissionItem
 import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.cards.SimpleToggleItem
+import com.sameerasw.essentials.ui.modifiers.highlight
 
 @Composable
 fun CaffeinateSettingsUI(
     viewModel: CaffeinateViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    highlightSetting: String? = null
 ) {
     val context = LocalContext.current
 
@@ -97,6 +99,7 @@ fun CaffeinateSettingsUI(
                     showPermissionSheet = true
                 },
                 iconRes = R.drawable.rounded_notifications_unread_24,
+                modifier = Modifier.highlight(highlightSetting == "show_notification")
             )
         }
     }

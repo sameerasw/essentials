@@ -22,6 +22,7 @@ Essential tools, mods and workarounds for Pixels and other Androids
 - [Screenshots](#screenshots)
 - [Shizuku](#shizuku)
 - [Accessibility Permissions](#how-to-grant-accessibility-permissions)
+- [Contributing](#contributing)
 
 # Features
 
@@ -92,6 +93,12 @@ A collection of useful tiles to toggle system settings:
 # How to grant accessibility permissions
 
 <img width="1280" height="696" alt="image" src="https://github.com/user-attachments/assets/685115e7-4caa-4add-9196-d2e1e2c126a6" />
+
+# Contributing
+
+We welcome contributions from the community! Whether you're fixing a bug, adding a new feature, or improving documentation, your help is appreciated.
+
+Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 # Stars <3
 

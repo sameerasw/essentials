@@ -22,11 +22,13 @@ import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.ui.modifiers.highlight
 
 @Composable
 fun SnoozeNotificationsSettingsUI(
     viewModel: MainViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    highlightSetting: String? = null
 ) {
     val context = LocalContext.current
     val view = LocalView.current
@@ -51,7 +53,8 @@ fun SnoozeNotificationsSettingsUI(
                 onCheckedChange = { checked ->
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setSnoozeDebuggingEnabled(checked, context)
-                }
+                },
+                modifier = Modifier.highlight(highlightSetting == "snooze_debugging")
             )
 
             // File Transfer
@@ -62,7 +65,8 @@ fun SnoozeNotificationsSettingsUI(
                 onCheckedChange = { checked ->
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setSnoozeFileTransferEnabled(checked, context)
-                }
+                },
+                modifier = Modifier.highlight(highlightSetting == "snooze_file_transfer")
             )
 
             // Charging
@@ -73,7 +77,8 @@ fun SnoozeNotificationsSettingsUI(
                 onCheckedChange = { checked ->
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setSnoozeChargingEnabled(checked, context)
-                }
+                },
+                modifier = Modifier.highlight(highlightSetting == "snooze_charging")
             )
         }
     }
