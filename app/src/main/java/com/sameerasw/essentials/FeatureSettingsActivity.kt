@@ -103,6 +103,7 @@ class FeatureSettingsActivity : ComponentActivity() {
             "Screen locked security" to "Protect network settings from lock screen"
         )
         val description = featureDescriptions[feature] ?: ""
+        val highlightSetting = intent.getStringExtra("highlight_setting")
         setContent {
             EssentialsTheme {
                 val context = LocalContext.current
@@ -412,54 +413,72 @@ class FeatureSettingsActivity : ComponentActivity() {
                                     onHapticSelected = { type -> selectedHaptic = type },
                                     vibrator = vibrator,
                                     prefs = prefs,
-                                    modifier = Modifier.padding(top = 16.dp)
+                                    modifier = Modifier.padding(top = 16.dp),
+                                    highlightSetting = highlightSetting
                                 )
                             }
                             "Statusbar icons" -> {
                                 StatusBarIconSettingsUI(
                                     viewModel = statusBarViewModel,
-                                    modifier = Modifier.padding(top = 16.dp)
+                                    modifier = Modifier.padding(top = 16.dp),
+                                    highlightSetting = highlightSetting
                                 )
                             }
                             "Caffeinate" -> {
                                 CaffeinateSettingsUI(
                                     viewModel = caffeinateViewModel,
-                                    modifier = Modifier.padding(top = 16.dp)
+                                    modifier = Modifier.padding(top = 16.dp),
+                                    highlightSetting = highlightSetting
                                 )
                             }
                             "Edge lighting" -> {
-                                EdgeLightingSettingsUI(viewModel = viewModel, modifier = Modifier.padding(top = 16.dp))
+                                EdgeLightingSettingsUI(
+                                    viewModel = viewModel,
+                                    modifier = Modifier.padding(top = 16.dp),
+                                    highlightSetting = highlightSetting
+                                )
                             }
                             "Sound mode tile" -> {
-                                SoundModeTileSettingsUI(modifier = Modifier.padding(top = 16.dp))
+                                SoundModeTileSettingsUI(
+                                    modifier = Modifier.padding(top = 16.dp),
+                                    highlightSetting = highlightSetting
+                                )
                             }
                             "Button remap" -> {
                                 ButtonRemapSettingsUI(
                                     viewModel = viewModel,
-                                    modifier = Modifier.padding(top = 16.dp)
+                                    modifier = Modifier.padding(top = 16.dp),
+                                    highlightSetting = highlightSetting
                                 )
                             }
                             "Dynamic night light" -> {
-                                DynamicNightLightSettingsUI(viewModel = viewModel)
-                }
+                                DynamicNightLightSettingsUI(
+                                    viewModel = viewModel,
+                                    modifier = Modifier.padding(top = 16.dp),
+                                    highlightSetting = highlightSetting
+                                )
+                            }
                 "Pixel IMS" -> {
                     PixelImsSettingsUI(viewModel = viewModel)
                 }
                             "Snooze system notifications" -> {
                                 SnoozeNotificationsSettingsUI(
                                     viewModel = viewModel,
-                                    modifier = Modifier.padding(top = 16.dp)
+                                    modifier = Modifier.padding(top = 16.dp),
+                                    highlightSetting = highlightSetting
                                 )
                             }
                             "Screen locked security" -> {
                                 ScreenLockedSecuritySettingsUI(
                                     viewModel = viewModel,
-                                    modifier = Modifier.padding(top = 16.dp)
+                                    modifier = Modifier.padding(top = 16.dp),
+                                    highlightSetting = highlightSetting
                                 )
                             }
                             "Quick settings tiles" -> {
                                 QuickSettingsTilesSettingsUI(
-                                    modifier = Modifier.padding(top = 16.dp)
+                                    modifier = Modifier.padding(top = 16.dp),
+                                    highlightSetting = highlightSetting
                                 )
                             }
                             "Link actions" -> {

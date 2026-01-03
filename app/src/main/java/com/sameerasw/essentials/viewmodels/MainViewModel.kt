@@ -25,7 +25,9 @@ import com.sameerasw.essentials.domain.model.EdgeLightingColorMode
 import com.sameerasw.essentials.domain.model.EdgeLightingStyle
 import com.sameerasw.essentials.domain.model.EdgeLightingSide
 import com.sameerasw.essentials.domain.model.NotificationApp
+import com.sameerasw.essentials.domain.model.SearchableItem
 import com.sameerasw.essentials.domain.model.UpdateInfo
+import com.sameerasw.essentials.SearchRegistry
 import com.sameerasw.essentials.services.CaffeinateWakeLockService
 import com.sameerasw.essentials.services.EdgeLightingService
 import com.sameerasw.essentials.services.NotificationListener
@@ -84,6 +86,11 @@ class MainViewModel : ViewModel() {
     val edgeLightingIndicatorY = mutableStateOf(2f)  // 0-100 percentage, default top
     val edgeLightingIndicatorScale = mutableStateOf(1.0f)
     val edgeLightingGlowSides = mutableStateOf(setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT))
+
+    // Search state
+    val searchQuery = mutableStateOf("")
+    val searchResults = mutableStateOf<List<SearchableItem>>(emptyList())
+    val isSearching = mutableStateOf(false)
 
     // Update state
     val updateInfo = mutableStateOf<UpdateInfo?>(null)
@@ -187,6 +194,19 @@ class MainViewModel : ViewModel() {
         isUpdateNotificationEnabled.value = prefs.getBoolean("update_notification_enabled", true)
         lastUpdateCheckTime = prefs.getLong("last_update_check_time", 0)
         isDeveloperModeEnabled.value = prefs.getBoolean("developer_mode_enabled", false)
+    }
+
+    fun onSearchQueryChanged(query: String) {
+        searchQuery.value = query
+        if (query.isBlank()) {
+            searchResults.value = emptyList()
+            isSearching.value = false
+            return
+        }
+
+        isSearching.value = true
+        searchResults.value = SearchRegistry.search(query)
+        isSearching.value = false
     }
 
     fun setAutoUpdateEnabled(enabled: Boolean, context: Context) {

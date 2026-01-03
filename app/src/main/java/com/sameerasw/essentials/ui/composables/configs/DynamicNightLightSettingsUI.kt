@@ -34,12 +34,14 @@ import com.sameerasw.essentials.utils.HapticUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import com.sameerasw.essentials.ui.components.sheets.AppSelectionSheet
+import com.sameerasw.essentials.ui.modifiers.highlight
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun DynamicNightLightSettingsUI(
     viewModel: MainViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    highlightSetting: String? = null
 ) {
     val context = LocalContext.current
     val view = LocalView.current
@@ -62,7 +64,8 @@ fun DynamicNightLightSettingsUI(
                 isChecked = viewModel.isDynamicNightLightEnabled.value,
                 onCheckedChange = { checked ->
                     viewModel.setDynamicNightLightEnabled(checked, context)
-                }
+                },
+                modifier = Modifier.highlight(highlightSetting == "dynamic_night_light_toggle")
             )
         }
 

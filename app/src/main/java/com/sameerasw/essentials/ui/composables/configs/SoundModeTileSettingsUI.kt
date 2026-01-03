@@ -35,10 +35,12 @@ import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.text.style.TextAlign
+import com.sameerasw.essentials.ui.modifiers.highlight
 
 @Composable
 fun SoundModeTileSettingsUI(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    highlightSetting: String? = null
 ) {
     val context = LocalContext.current
     val prefs = remember { context.getSharedPreferences("essentials_prefs", android.content.Context.MODE_PRIVATE) }
@@ -192,6 +194,7 @@ fun SoundModeTileSettingsUI(
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .highlight(highlightSetting == mode)
                         .pointerInput(Unit) {
                             detectTapGestures(onLongPress = {
                                 // enable

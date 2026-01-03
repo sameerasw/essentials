@@ -34,11 +34,13 @@ import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.ui.modifiers.highlight
 
 @Composable
 fun StatusBarIconSettingsUI(
     viewModel: StatusBarIconViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    highlightSetting: String? = null
 ) {
     val context = LocalContext.current
     val view = LocalView.current
@@ -119,7 +121,8 @@ fun StatusBarIconSettingsUI(
                             onCheckedChange = { checked ->
                                 viewModel.setIconVisibility(icon.id, checked, context)
                             },
-                            enabled = isPermissionGranted
+                            enabled = isPermissionGranted,
+                            modifier = Modifier.highlight(highlightSetting == icon.displayName)
                         )
                     }
                 }
@@ -147,12 +150,15 @@ fun StatusBarIconSettingsUI(
                 onCheckedChange = { isChecked ->
                     viewModel.setSmartWiFiEnabled(isChecked, context)
                 },
-                enabled = isPermissionGranted && viewModel.isMobileDataVisible.value
+                enabled = isPermissionGranted && viewModel.isMobileDataVisible.value,
+                modifier = Modifier.highlight(highlightSetting == "smart_wifi")
             )
 
             Box(
-                modifier = Modifier.clickable {
-                    HapticUtil.performUIHaptic(view)
+                modifier = Modifier
+                    .highlight(highlightSetting == "smart_data")
+                    .clickable {
+                        HapticUtil.performUIHaptic(view)
                     val hasPermission = ContextCompat.checkSelfPermission(
                         context,
                         Manifest.permission.READ_PHONE_STATE
@@ -247,7 +253,8 @@ fun StatusBarIconSettingsUI(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 16.dp),
+                .padding(vertical = 16.dp)
+                .highlight(highlightSetting == "reset_icons"),
             enabled = isPermissionGranted
         ) {
             Text("Reset All Icons")

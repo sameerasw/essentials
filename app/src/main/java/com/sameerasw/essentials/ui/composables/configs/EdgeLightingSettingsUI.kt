@@ -47,12 +47,14 @@ import com.sameerasw.essentials.ui.components.sheets.AppSelectionSheet
 import com.sameerasw.essentials.ui.components.pickers.EdgeLightingStylePicker
 import com.sameerasw.essentials.domain.model.EdgeLightingStyle
 import com.sameerasw.essentials.ui.components.pickers.GlowSidesPicker
+import com.sameerasw.essentials.ui.modifiers.highlight
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun EdgeLightingSettingsUI(
     viewModel: MainViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    highlightSetting: String? = null
 ) {
     val context = LocalContext.current
     val view = LocalView.current
@@ -88,7 +90,8 @@ fun EdgeLightingSettingsUI(
                 isChecked = viewModel.onlyShowWhenScreenOff.value,
                 onCheckedChange = { checked ->
                     viewModel.setOnlyShowWhenScreenOff(checked, context)
-                }
+                },
+                modifier = Modifier.highlight(highlightSetting == "only_screen_off")
             )
             IconToggleItem(
                 iconRes = R.drawable.rounded_notifications_off_24,
@@ -96,7 +99,8 @@ fun EdgeLightingSettingsUI(
                 isChecked = viewModel.skipSilentNotifications.value,
                 onCheckedChange = { checked ->
                     viewModel.setSkipSilentNotifications(checked, context)
-                }
+                },
+                modifier = Modifier.highlight(highlightSetting == "skip_silent_notifications")
             )
         }
 
@@ -145,7 +149,8 @@ fun EdgeLightingSettingsUI(
                             delay(5000)
                             viewModel.removePreviewOverlay(context)
                         }
-                    }
+                    },
+                    modifier = Modifier.highlight(highlightSetting == "corner_radius")
                 )
                 
                 ConfigSliderItem(
@@ -157,6 +162,7 @@ fun EdgeLightingSettingsUI(
                         // Show preview overlay while dragging
                         viewModel.triggerEdgeLightingWithRadiusAndThickness(context, cornerRadiusDp.toInt(), newValue.toInt())
                     },
+                    modifier = Modifier.highlight(highlightSetting == "stroke_thickness"),
                     valueRange = 1f..20f,
                     onValueChangeFinished = {
                         // Save the stroke thickness

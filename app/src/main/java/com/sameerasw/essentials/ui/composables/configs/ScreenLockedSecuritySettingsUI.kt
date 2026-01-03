@@ -25,11 +25,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.ui.text.font.FontWeight
+import com.sameerasw.essentials.ui.modifiers.highlight
 
 @Composable
 fun ScreenLockedSecuritySettingsUI(
     viewModel: MainViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    highlightSetting: String? = null
 ) {
     val context = LocalContext.current
     val isAccessibilityEnabled = viewModel.isAccessibilityEnabled.value
@@ -63,6 +65,7 @@ fun ScreenLockedSecuritySettingsUI(
                     // Handled by parent
                 },
                 iconRes = R.drawable.rounded_security_24,
+                modifier = Modifier.highlight(highlightSetting == "screen_locked_security_toggle")
             )
         }
 

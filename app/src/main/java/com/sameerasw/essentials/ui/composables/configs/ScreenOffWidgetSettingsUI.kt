@@ -16,6 +16,7 @@ import androidx.core.content.edit
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.ui.components.pickers.HapticFeedbackPicker
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.HapticFeedbackType
 import com.sameerasw.essentials.utils.performHapticFeedback
 
@@ -26,7 +27,8 @@ fun ScreenOffWidgetSettingsUI(
     onHapticSelected: (HapticFeedbackType) -> Unit,
     vibrator: Vibrator?,
     prefs: SharedPreferences,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    highlightSetting: String? = null
 ) {
     val context = LocalContext.current
 
@@ -60,7 +62,8 @@ fun ScreenOffWidgetSettingsUI(
                     if (vibrator != null) {
                         performHapticFeedback(vibrator, type)
                     }
-                }
+                },
+                modifier = Modifier.highlight(highlightSetting == "haptic_picker")
             )
         }
     }

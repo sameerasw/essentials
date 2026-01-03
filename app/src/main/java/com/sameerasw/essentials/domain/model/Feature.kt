@@ -1,0 +1,45 @@
+package com.sameerasw.essentials.domain.model
+
+import android.content.Context
+import android.content.Intent
+import androidx.annotation.DrawableRes
+import com.sameerasw.essentials.FeatureSettingsActivity
+import com.sameerasw.essentials.viewmodels.MainViewModel
+
+/**
+ * Represents a sub-setting within a feature that can be individually searched and highlighted.
+ */
+data class SearchSetting(
+    val title: String,
+    val description: String,
+    val targetSettingHighlightKey: String,
+    val keywords: List<String> = emptyList(),
+    val category: String? = null
+)
+
+/**
+ * Base class for all app features, providing metadata for the main UI and automated search indexing.
+ */
+abstract class Feature(
+    val id: String,
+    val title: String,
+    @DrawableRes val iconRes: Int,
+    val category: String,
+    val description: String,
+    val permissionKeys: List<String> = emptyList(),
+    val searchableSettings: List<SearchSetting> = emptyList(),
+    val showToggle: Boolean = true,
+    val hasMoreSettings: Boolean = true
+) {
+    abstract fun isEnabled(viewModel: MainViewModel): Boolean
+    
+    open fun isToggleEnabled(viewModel: MainViewModel, context: Context): Boolean = true
+
+    abstract fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean)
+
+    open fun onClick(context: Context, viewModel: MainViewModel) {
+        context.startActivity(Intent(context, FeatureSettingsActivity::class.java).apply {
+            putExtra("feature", id)
+        })
+    }
+}

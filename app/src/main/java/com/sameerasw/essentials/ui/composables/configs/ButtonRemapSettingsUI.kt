@@ -30,6 +30,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.pickers.HapticFeedbackPicker
+import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.ui.components.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
@@ -41,7 +42,8 @@ import com.sameerasw.essentials.viewmodels.MainViewModel
 @Composable
 fun ButtonRemapSettingsUI(
     viewModel: MainViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    highlightSetting: String? = null
 ) {
     val context = LocalContext.current
     val view = LocalView.current
@@ -61,7 +63,8 @@ fun ButtonRemapSettingsUI(
                 iconRes = R.drawable.rounded_switch_access_3_24,
                 title = "Enable Button Remap",
                 isChecked = viewModel.isButtonRemapEnabled.value,
-                onCheckedChange = { viewModel.setButtonRemapEnabled(it, context) }
+                onCheckedChange = { viewModel.setButtonRemapEnabled(it, context) },
+                modifier = Modifier.highlight(highlightSetting == "enable_remap")
             )
         }
 
@@ -82,11 +85,12 @@ fun ButtonRemapSettingsUI(
                     HapticFeedbackPicker(
                         selectedFeedback = viewModel.remapHapticType.value,
                         onFeedbackSelected = { viewModel.setRemapHapticType(it, context) },
-                    options = listOf(
-                        "None" to HapticFeedbackType.NONE,
-                        "Tick" to HapticFeedbackType.TICK,
-                        "Double" to HapticFeedbackType.DOUBLE
-                    )
+                        options = listOf(
+                            "None" to HapticFeedbackType.NONE,
+                            "Tick" to HapticFeedbackType.TICK,
+                            "Double" to HapticFeedbackType.DOUBLE
+                        ),
+                        modifier = Modifier.highlight(highlightSetting == "remap_haptic")
                     )
                 }
 
@@ -147,6 +151,7 @@ fun ButtonRemapSettingsUI(
                         hasSettings = true,
                         onSettingsClick = { showFlashlightOptions = true },
                         iconRes = R.drawable.rounded_flashlight_on_24,
+                        modifier = Modifier.highlight(highlightSetting == "flashlight_toggle")
                     )
                     RemapActionItem(
                         title = "Media play/pause",

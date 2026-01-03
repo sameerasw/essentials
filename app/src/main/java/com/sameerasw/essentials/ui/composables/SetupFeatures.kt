@@ -42,15 +42,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import com.sameerasw.essentials.domain.model.Feature
+import com.sameerasw.essentials.FeatureRegistry
 import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.PermissionRegistry
 import com.sameerasw.essentials.R
-import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.ui.components.cards.FeatureCard
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.sheets.PermissionItem
 import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
+import com.sameerasw.essentials.viewmodels.MainViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -546,82 +548,13 @@ fun SetupFeatures(
     }
 
     val scrollState = rememberScrollState()
-    var query by remember { mutableStateOf("") }
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
     var isFocused by remember { mutableStateOf(false) }
 
-    val allFeatures = remember {
-        mutableStateListOf(
-            FeatureItem("Screen off widget", R.drawable.rounded_settings_power_24, "Tools", "Invisible widget to turn the screen off"),
-            FeatureItem("Statusbar icons", R.drawable.rounded_interests_24, "Visuals", "Control statusbar icons visibility"),
-            FeatureItem("Caffeinate", R.drawable.rounded_coffee_24, "Tools", "Keep the screen awake"),
-            FeatureItem(
-                FEATURE_MAPS_POWER_SAVING,
-                R.drawable.rounded_navigation_24,
-                "Tools",
-                "For any Android device"
-            ),
-            FeatureItem(
-                "Edge lighting",
-                R.drawable.rounded_magnify_fullscreen_24,
-                "Visuals",
-                "Flash screen for notifications"
-            ),
-            FeatureItem(
-                "Sound mode tile",
-                R.drawable.rounded_volume_up_24,
-                "Tools",
-                "QS tile to toggle sound mode"
-            ),
-            FeatureItem(
-                "Link actions",
-                R.drawable.rounded_link_24,
-                "Tools",
-                "Handle links with multiple apps"
-            ),
-            FeatureItem(
-                "Snooze system notifications",
-                R.drawable.rounded_snooze_24,
-                "Tools",
-                "Snooze persistent notifications"
-            ),
-            FeatureItem(
-                "Quick settings tiles",
-                R.drawable.rounded_tile_small_24,
-                "System",
-                "View all"
-            ),
-            FeatureItem(
-                "Button remap",
-                R.drawable.rounded_switch_access_3_24,
-                "System",
-                "Remap hardware button actions"
-            ),
-            FeatureItem(
-                "Dynamic night light",
-                R.drawable.rounded_nightlight_24,
-                "Visuals",
-                "Toggle night light based on app"
-            ),
-            FeatureItem(
-                "Pixel IMS",
-                R.drawable.rounded_wifi_calling_bar_3_24,
-                "System",
-                "Force enable IMS services on Pixels"
-            ),
-            FeatureItem(
-                "Screen locked security",
-                R.drawable.rounded_security_24,
-                "System",
-                "Prevent network controls"
-            )
-        )
-    }
+    val allFeatures = FeatureRegistry.ALL_FEATURES
 
     var filtered by remember { mutableStateOf(allFeatures.toList()) }
-    var isLoading by remember { mutableStateOf(false) }
-    var debounceJob: Job? by remember { mutableStateOf(null) }
 
     LaunchedEffect(searchRequested) {
         if (searchRequested) {
@@ -644,25 +577,23 @@ fun SetupFeatures(
         horizontalAlignment = Alignment.Start
     ) {
         OutlinedTextField(
-            value = query,
+            value = viewModel.searchQuery.value,
             onValueChange = { new ->
-                query = new
-                debounceJob?.cancel()
-                isLoading = true
-                debounceJob = kotlinx.coroutines.GlobalScope.launch {
-                    delay(250)
-                    val q = new.trim().lowercase()
-                    filtered = if (q.isEmpty()) allFeatures.toList() else allFeatures.filter { it.title.lowercase().contains(q) }
-                    isLoading = false
-                }
+                viewModel.onSearchQueryChanged(new)
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
                 .focusRequester(focusRequester)
                 .onFocusChanged { isFocused = it.isFocused },
-            leadingIcon = { Icon(painter = painterResource(id = R.drawable.rounded_search_24), contentDescription = "Search", modifier = Modifier.size(24.dp)) },
-            placeholder = { if (!isFocused && query.isEmpty()) Text("Search for Tools, Mods and Tweaks") },
+            leadingIcon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.rounded_search_24),
+                    contentDescription = "Search",
+                    modifier = Modifier.size(24.dp)
+                )
+            },
+            placeholder = { if (!isFocused && viewModel.searchQuery.value.isEmpty()) Text("Search for Tools, Mods and Tweaks") },
             shape = RoundedCornerShape(64.dp),
             singleLine = true,
             colors = OutlinedTextFieldDefaults.colors(
@@ -672,15 +603,22 @@ fun SetupFeatures(
             )
         )
 
+        val searchQuery = viewModel.searchQuery.value
+        val searchResults = viewModel.searchResults.value
+        val isSearchingViewModel = viewModel.isSearching.value
+
         // Loading indicator while filtering
-        if (isLoading) {
-            Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+        if (isSearchingViewModel) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 LoadingIndicator()
             }
         }
 
         // No results view
-        if (!isLoading && filtered.isEmpty()) {
+        if (!isSearchingViewModel && searchQuery.isNotEmpty() && searchResults.isEmpty()) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -693,114 +631,93 @@ fun SetupFeatures(
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+                Text(
+                    text = "No results for \"$searchQuery\"",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
             }
         }
 
-        // Render filtered features grouped by category
-        val categories = filtered.map { it.category }.distinct()
-        for (category in categories) {
-            val categoryFeatures = filtered.filter { it.category == category }
-
-            // Show category header if there are features in this category
-            if (categoryFeatures.isNotEmpty()) {
+        if (searchQuery.isNotEmpty()) {
+            // Render Search Results
+            if (searchResults.isNotEmpty()) {
                 Text(
-                    text = category,
+                    text = "Search Results",
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(start = 32.dp, top = 16.dp, bottom = 8.dp),
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+
+                RoundedCardContainer(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                ) {
+                    for (result in searchResults) {
+                        FeatureCard(
+                            title = result.title,
+                            isEnabled = true,
+                            onToggle = {},
+                            onClick = {
+                                context.startActivity(
+                                    Intent(context, FeatureSettingsActivity::class.java).apply {
+                                        putExtra("feature", result.featureKey)
+                                        result.targetSettingHighlightKey?.let {
+                                            putExtra("highlight_setting", it)
+                                        }
+                                    }
+                                )
+                            },
+                            iconRes = result.icon ?: R.drawable.rounded_settings_24,
+                            modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
+                            showToggle = false,
+                            hasMoreSettings = true,
+                            description = if (result.parentFeature != null) "${result.parentFeature} > ${result.description}" else result.description
+                        )
+                    }
+                }
             }
+        } else {
+            // Render filtered features grouped by category (Original View)
+            val categories = filtered.map { it.category }.distinct()
+            for (category in categories) {
+                val categoryFeatures = filtered.filter { it.category == category }
 
-            RoundedCardContainer(
-                modifier = Modifier.padding(horizontal = 16.dp),
-            ) {
-                for (feature in categoryFeatures) {
-                    val isEnabled = when (feature.title) {
-                        "Screen off widget" -> true // Always enabled since it's a widget
-                        "Statusbar icons" -> isStatusBarIconControlEnabled
-                        "Caffeinate" -> isCaffeinateActive
-                        FEATURE_MAPS_POWER_SAVING -> isMapsPowerSavingEnabled
-                        "Edge lighting" -> isEdgeLightingEnabled
-                        "Sound mode tile" -> true // Always enabled since it's a tile
-                        "Button remap" -> true
-                        "Dynamic night light" -> isDynamicNightLightEnabled
-                        "Pixel IMS" -> isPixelImsEnabled
-                        "Screen locked security" -> isScreenLockedSecurityEnabled
-                        else -> false
-                    }
-
-                    val isToggleEnabled = when (feature.title) {
-                        "Screen off widget" -> false // No toggle for widget
-                        "Statusbar icons" -> isWriteSecureSettingsEnabled
-                        "Caffeinate" -> true
-                        FEATURE_MAPS_POWER_SAVING -> isShizukuAvailable && isShizukuPermissionGranted && isNotificationListenerEnabled
-                        "Edge lighting" -> isOverlayPermissionGranted && isEdgeLightingAccessibilityEnabled && isNotificationListenerEnabled
-                        "Sound mode tile" -> false // No toggle for QS tile
-                        "Button remap" -> isAccessibilityEnabled
-                        "Snooze system notifications" -> isNotificationListenerEnabled
-                        "Dynamic night light" -> isAccessibilityEnabled && isWriteSecureSettingsEnabled
-                        "Pixel IMS" -> isShizukuAvailable && isShizukuPermissionGranted
-                        "Screen locked security" -> isAccessibilityEnabled && isWriteSecureSettingsEnabled && viewModel.isDeviceAdminEnabled.value
-                        else -> false
-                    }
-
-                    val featureOnClick = if (feature.title == FEATURE_MAPS_POWER_SAVING) {
-                        {}
-                    } else {
-                        {
-                            context.startActivity(
-                                Intent(context, FeatureSettingsActivity::class.java).apply {
-                                    putExtra("feature", feature.title)
-                                }
-                            )
-                        }
-                    }
-
-                    FeatureCard(
-                        title = feature.title,
-                        isEnabled = isEnabled,
-                        onToggle = { enabled ->
-                            when (feature.title) {
-                                "Screen off widget" -> {} // No toggle action needed for widget
-                                "Statusbar icons" -> viewModel.setStatusBarIconControlEnabled(enabled, context)
-                                "Caffeinate" -> if (enabled) viewModel.startCaffeinate(context) else viewModel.stopCaffeinate(context)
-                                FEATURE_MAPS_POWER_SAVING -> viewModel.setMapsPowerSavingEnabled(enabled, context)
-                                "Edge lighting" -> viewModel.setEdgeLightingEnabled(enabled, context)
-                                "Sound mode tile" -> {} // No toggle action needed for tile
-                                "Button remap" -> viewModel.setButtonRemapEnabled(enabled, context)
-                                "Dynamic night light" -> viewModel.setDynamicNightLightEnabled(enabled, context)
-                                "Pixel IMS" -> viewModel.setPixelImsEnabled(enabled, context)
-                                "Screen locked security" -> viewModel.setScreenLockedSecurityEnabled(enabled, context)
-                                else -> {}
-                            }
-                        },
-                        onClick = featureOnClick,
-                        iconRes = feature.iconRes,
-                        modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
-                        isToggleEnabled = isToggleEnabled,
-                        showToggle = feature.title != "Sound mode tile" && feature.title != "Screen off widget" && feature.title != "Link actions" && feature.title != "Snooze system notifications" && feature.title != "Quick settings tiles" && feature.title != "Pixel IMS" && feature.title != "Button remap", // Hide toggle for Sound mode tile, Screen off widget, Link actions, Snooze notifications, QS Tiles, Pixel IMS, and Button remap
-                        hasMoreSettings = feature.title != FEATURE_MAPS_POWER_SAVING,
-                        onDisabledToggleClick = {
-                            currentFeature = feature.title
-                            showSheet = true
-                        },
-                        description = feature.description
+                // Show category header if there are features in this category
+                if (categoryFeatures.isNotEmpty()) {
+                    Text(
+                        text = category,
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(start = 32.dp, top = 16.dp, bottom = 8.dp),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
+                }
+
+                RoundedCardContainer(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                ) {
+                    for (feature in categoryFeatures) {
+                        FeatureCard(
+                            title = feature.title,
+                            isEnabled = feature.isEnabled(viewModel),
+                            onToggle = { enabled ->
+                                feature.onToggle(viewModel, context, enabled)
+                            },
+                            onClick = { feature.onClick(context, viewModel) },
+                            iconRes = feature.iconRes,
+                            modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
+                            isToggleEnabled = feature.isToggleEnabled(viewModel, context),
+                            showToggle = feature.showToggle,
+                            hasMoreSettings = feature.hasMoreSettings,
+                            onDisabledToggleClick = {
+                                currentFeature = feature.title
+                                showSheet = true
+                            },
+                            description = feature.description
+                        )
+                    }
                 }
             }
         }
-    }
-}
-
-private data class FeatureItem(val title: String, val iconRes: Int, val category: String, val description: String)
-
-@Preview(showBackground = true)
-@Composable
-fun SetupFeaturesPreview() {
-    EssentialsTheme {
-        val mockViewModel = previewMainViewModel.apply {
-            isAccessibilityEnabled.value = false
-        }
-        SetupFeatures(viewModel = mockViewModel)
     }
 }
