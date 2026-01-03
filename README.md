@@ -36,11 +36,12 @@ Essential tools, mods and workarounds for Pixels and other Androids
 - **Snooze System Notifications**: Automatically snooze persistent system notifications that cannot be dismissed normally.
 - **Pixel IMS**: Force enable VoLTE, VoWiFi and other IMS features on Pixel devices without root.
 - **Screen Locked Security**: Protect your device by disabling sensitive Quick Settings tiles and power menu when the device is locked.
+- **Backups**: (Experimental) Export and import your app settings.
 
 ### Visuals
 
 - **Status Bar Icons**: Detailed control over which system icons (WiFi, Data, Battery, etc.) are visible in the status bar.
-- **Edge Lighting**: Display a customizable lighting effect around the screen edges when a new notification is received.
+- **Edge Lighting**: Display a customizable lighting effect with new styles (Glow, Spinner, Stroke), per-app colors, and extensive customization options.
 - **Dynamic Night Light**: Automatically toggle Night Light mode based on the currently active application.
 
 ### Quick Settings Tiles
@@ -55,6 +56,9 @@ A collection of useful tiles to toggle system settings:
 - **Caffeinate**: Keep screen awake.
 - **Sound Mode**: Toggle Ring/Vibrate/Silent.
 - **Mono Audio**: Toggle mono audio output.
+- **Edge Lighting**: Toggle Edge Lighting service.
+- **Locked Security**: Toggle Screen Locked Security.
+- **Dynamic Night Light**: Toggle Dynamic Night Light.
 
 # Requirements
 
@@ -102,5 +106,5 @@ A collection of useful tiles to toggle system settings:
 ---
 
 <p align="center">
-  Last updated: 2026-01-02
+  Last updated: 2026-01-03
 </p>
