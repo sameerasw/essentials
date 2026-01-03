@@ -1,0 +1,42 @@
+package com.sameerasw.essentials.services
+
+import android.graphics.drawable.Icon
+import android.os.Build
+import android.provider.Settings
+import android.service.quicksettings.Tile
+import androidx.annotation.RequiresApi
+import com.sameerasw.essentials.R
+import com.sameerasw.essentials.utils.ShizukuUtils
+
+@RequiresApi(Build.VERSION_CODES.N)
+class MonoAudioTileService : BaseTileService() {
+
+    override fun getTileLabel(): String = "Mono Audio"
+
+    override fun getTileSubtitle(): String {
+        return if (isMonoAudioEnabled()) "On" else "Off"
+    }
+
+    override fun hasFeaturePermission(): Boolean {
+        // Private secure settings can only be modified by ADB, system apps, or
+        // apps with a target sdk of Android 5.1 and lower.
+        return ShizukuUtils.hasPermission() && ShizukuUtils.isShizukuAvailable()
+    }
+
+    override fun getTileIcon(): Icon {
+        return Icon.createWithResource(this, R.drawable.rounded_headphones_24)
+    }
+
+    override fun getTileState(): Int {
+        return if (isMonoAudioEnabled()) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
+    }
+
+    override fun onTileClick() {
+        val newState = if (isMonoAudioEnabled()) 0 else 1
+        ShizukuUtils.runCommand("settings put system master_mono $newState")
+    }
+
+    private fun isMonoAudioEnabled(): Boolean {
+        return Settings.System.getInt(contentResolver, "master_mono", 0) == 1
+    }
+}

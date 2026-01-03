@@ -55,6 +55,7 @@ A collection of useful tiles to toggle system settings:
 - **AOD**: Toggle Always on Display.
 - **Caffeinate**: Keep screen awake.
 - **Sound Mode**: Toggle Ring/Vibrate/Silent.
+- **Mono Audio**: Toggle mono audio output.
 - **Edge Lighting**: Toggle Edge Lighting service.
 - **Locked Security**: Toggle Screen Locked Security.
 - **Dynamic Night Light**: Toggle Dynamic Night Light.

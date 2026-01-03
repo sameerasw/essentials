@@ -184,6 +184,17 @@
         </service>
 
         <service
+            android:name=".services.MonoAudioTileService"
+            android:exported="true"
+            android:icon="@drawable/rounded_headphones_24"
+            android:label="Mono Audio"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <service
             android:name=".services.PrivateNotificationsTileService"
             android:exported="true"
             android:icon="@drawable/rounded_notifications_off_24"
