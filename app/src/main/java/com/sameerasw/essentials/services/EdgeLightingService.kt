@@ -9,9 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
-import android.os.Handler
 import android.os.IBinder
-import android.os.Looper
 import android.provider.Settings
 import android.view.View
 import android.view.WindowManager
@@ -34,7 +32,6 @@ class EdgeLightingService : Service() {
 
     private var windowManager: WindowManager? = null
     private val overlayViews = mutableListOf<View>()
-    private val handler = Handler(Looper.getMainLooper())
     private var cornerRadiusDp: Int = OverlayHelper.CORNER_RADIUS_DP
     private var strokeThicknessDp: Int = OverlayHelper.STROKE_DP
     private var isPreview: Boolean = false
@@ -114,7 +111,7 @@ class EdgeLightingService : Service() {
         val styleName = intent?.getStringExtra("style")
         edgeLightingStyle = if (styleName != null) EdgeLightingStyle.valueOf(styleName) else EdgeLightingStyle.STROKE
         val glowSidesArray = intent?.getStringArrayExtra("glow_sides")
-        glowSides = glowSidesArray?.mapNotNull { try { EdgeLightingSide.valueOf(it) } catch(e: Exception) { null } }?.toSet()
+        glowSides = glowSidesArray?.mapNotNull { try { EdgeLightingSide.valueOf(it) } catch(_: Exception) { null } }?.toSet()
             ?: setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT)
         indicatorX = intent?.getFloatExtra("indicator_x", 50f) ?: 50f
         indicatorY = intent?.getFloatExtra("indicator_y", 2f) ?: 2f
@@ -166,7 +163,7 @@ class EdgeLightingService : Service() {
                 // exceptions because the accessibility service may not declare a foregroundServiceType. startService is
                 // sufficient to deliver the intent to the AccessibilityService.
                 applicationContext.startService(ai)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 // If delegation fails, stop - don't fall back
                 stopSelf()
                 return START_NOT_STICKY
@@ -279,7 +276,7 @@ class EdgeLightingService : Service() {
                 // more privilege to display above other UI in some cases.
                 try {
                     WindowManager.LayoutParams::class.java.getField("TYPE_ACCESSIBILITY_OVERLAY").getInt(null)
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                     // Fallback if reflection fails
                     WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
                 }
@@ -297,7 +294,7 @@ class EdgeLightingService : Service() {
             )
             val serviceName = "${packageName}/${ScreenOffAccessibilityService::class.java.name}"
             enabledServices?.contains(serviceName) == true
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             false
         }
     }
@@ -318,17 +315,8 @@ class EdgeLightingService : Service() {
         }
     }
 
-    private fun getSystemBarHeight(name: String): Int {
-        val resId = resources.getIdentifier(name, "dimen", "android")
-        return if (resId > 0) resources.getDimensionPixelSize(resId) else 0
-    }
-
     private fun canDrawOverlays(): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Settings.canDrawOverlays(this)
-        } else {
-            true
-        }
+        return Settings.canDrawOverlays(this)
     }
 
 }

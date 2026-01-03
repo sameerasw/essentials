@@ -5,17 +5,20 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Binder
+import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.os.Parcel
 import android.os.Process
 import android.system.Os
 import android.util.Log
+import androidx.annotation.RequiresApi
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import rikka.shizuku.Shizuku
 import rikka.shizuku.ShizukuBinderWrapper
 
 class PixelImsProvider : rikka.shizuku.ShizukuProvider() {
+    @RequiresApi(Build.VERSION_CODES.R)
     companion object {
         const val TAG = "PixelIms"
         init {

@@ -1,13 +1,10 @@
 package com.sameerasw.essentials.services
 
 import android.graphics.drawable.Icon
-import android.os.Build
 import android.provider.Settings
 import android.service.quicksettings.Tile
-import androidx.annotation.RequiresApi
 import com.sameerasw.essentials.R
 
-@RequiresApi(Build.VERSION_CODES.N)
 class TapToWakeTileService : BaseTileService() {
 
     override fun getTileLabel(): String = "Tap to Wake"

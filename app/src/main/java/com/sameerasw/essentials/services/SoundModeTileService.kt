@@ -10,12 +10,9 @@ import android.media.AudioManager
 import android.os.Build
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
-import androidx.annotation.RequiresApi
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.utils.HapticUtil
-import com.sameerasw.essentials.utils.ShizukuUtils
 
-@RequiresApi(Build.VERSION_CODES.N)
 class SoundModeTileService : TileService() {
 
     private var latestAudioStateUpdate: Int? = null

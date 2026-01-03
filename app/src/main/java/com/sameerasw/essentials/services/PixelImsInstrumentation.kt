@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Instrumentation
 import android.content.Context
 import android.os.Binder
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,6 +13,7 @@ import android.os.PersistableBundle
 import android.telephony.CarrierConfigManager
 import android.telephony.SubscriptionManager
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.sameerasw.essentials.BuildConfig
 import rikka.shizuku.ShizukuProvider.METHOD_GET_BINDER
 
@@ -20,6 +22,7 @@ class PixelImsInstrumentation : Instrumentation() {
         const val TAG = "PixelIms"
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(arguments: Bundle?) {
         val binder = object : Binder() {
             override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
@@ -52,16 +55,17 @@ class PixelImsInstrumentation : Instrumentation() {
             val clazz = phoneContext.classLoader.loadClass("com.android.phone.CarrierConfigLoader")
             try {
                 clazz.getDeclaredMethod("isSystemApp")
-            } catch (e: NoSuchMethodException) {
+            } catch (_: NoSuchMethodException) {
                 return true
             }
             clazz.getDeclaredMethod("secureOverrideConfig", PersistableBundle::class.java, Boolean::class.java)
             true
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             false
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
     @SuppressLint("MissingPermission")
     private fun overrideConfig(context: Context, persistent: Boolean) {
         try {
@@ -88,6 +92,7 @@ class PixelImsInstrumentation : Instrumentation() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
     private fun getConfig(): PersistableBundle {
         val bundle = PersistableBundle()
         

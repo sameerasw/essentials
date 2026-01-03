@@ -8,7 +8,6 @@ import androidx.annotation.RequiresApi
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.utils.ShizukuUtils
 
-@RequiresApi(Build.VERSION_CODES.N)
 class MonoAudioTileService : BaseTileService() {
 
     override fun getTileLabel(): String = "Mono Audio"

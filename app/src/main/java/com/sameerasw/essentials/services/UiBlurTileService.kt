@@ -1,14 +1,10 @@
 package com.sameerasw.essentials.services
 
-import android.content.Context
 import android.graphics.drawable.Icon
-import android.os.Build
 import android.provider.Settings
 import android.service.quicksettings.Tile
-import androidx.annotation.RequiresApi
 import com.sameerasw.essentials.R
 
-@RequiresApi(Build.VERSION_CODES.N)
 class UiBlurTileService : BaseTileService() {
 
     override fun getTileLabel(): String = "UI Blur"
@@ -21,7 +17,7 @@ class UiBlurTileService : BaseTileService() {
         return checkCallingOrSelfPermission(android.Manifest.permission.WRITE_SECURE_SETTINGS) == android.content.pm.PackageManager.PERMISSION_GRANTED
     }
 
-    override fun getTileIcon(): Icon? {
+    override fun getTileIcon(): Icon {
         val iconRes = if (isBlurEnabled()) R.drawable.rounded_blur_on_24 else R.drawable.rounded_blur_off_24
         return Icon.createWithResource(this, iconRes)
     }
