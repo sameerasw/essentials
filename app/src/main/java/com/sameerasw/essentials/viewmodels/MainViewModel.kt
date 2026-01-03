@@ -885,7 +885,7 @@ class MainViewModel : ViewModel() {
         try {
             // Map<FileName, Map<PrefKey, WrappedValue>>
             val allConfigs = mutableMapOf<String, Map<String, Map<String, Any>>>()
-            val prefFiles = listOf("essentials_prefs", "caffeinate_prefs")
+            val prefFiles = listOf("essentials_prefs", "caffeinate_prefs", "link_prefs")
 
             prefFiles.forEach { fileName ->
                 val prefs = context.getSharedPreferences(fileName, Context.MODE_PRIVATE)
