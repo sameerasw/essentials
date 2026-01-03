@@ -19,6 +19,7 @@ fun initPermissionRegistry() {
     PermissionRegistry.register("ACCESSIBILITY", "Flashlight toggle")
     PermissionRegistry.register("ACCESSIBILITY", "Dynamic night light")
     PermissionRegistry.register("ACCESSIBILITY", "Screen locked security")
+    PermissionRegistry.register("ACCESSIBILITY", "App lock")
 
     // Write secure settings permission
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", "Statusbar icons")

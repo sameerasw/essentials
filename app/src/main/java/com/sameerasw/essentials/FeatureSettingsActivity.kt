@@ -10,7 +10,7 @@ import android.os.Bundle
 import android.os.Vibrator
 import android.os.VibratorManager
 import android.provider.Settings
-import androidx.activity.ComponentActivity
+import androidx.fragment.app.FragmentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.SystemBarStyle
@@ -65,11 +65,12 @@ import com.sameerasw.essentials.viewmodels.StatusBarIconViewModel
 import com.sameerasw.essentials.ui.components.sheets.PermissionItem
 import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.composables.configs.PixelImsSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.AppLockSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ScreenLockedSecuritySettingsUI
 import com.sameerasw.essentials.utils.HapticUtil
 
 @OptIn(ExperimentalMaterial3Api::class)
-class FeatureSettingsActivity : ComponentActivity() {
+class FeatureSettingsActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,7 +101,8 @@ class FeatureSettingsActivity : ComponentActivity() {
             "Quick settings tiles" to "All available QS tiles",
             "Pixel IMS" to "Force enable IMS for Pixels",
             "Button remap" to "Remap hardware buttons",
-            "Screen locked security" to "Protect network settings from lock screen"
+            "Screen locked security" to "Protect network settings from lock screen",
+            "App lock" to "Secure individual apps with biometrics"
         )
         val description = featureDescriptions[feature] ?: ""
         val highlightSetting = intent.getStringExtra("highlight_setting")
@@ -184,6 +186,7 @@ class FeatureSettingsActivity : ComponentActivity() {
                         "Dynamic night light" -> !isAccessibilityEnabled || !isWriteSecureSettingsEnabled
                         "Snooze system notifications" -> !isNotificationListenerEnabled
                         "Screen locked security" -> !isAccessibilityEnabled || !isWriteSecureSettingsEnabled || !viewModel.isDeviceAdminEnabled.value
+                        "App lock" -> !isAccessibilityEnabled
                         else -> false
                     }
                     showPermissionSheet = hasMissingPermissions
@@ -195,7 +198,7 @@ class FeatureSettingsActivity : ComponentActivity() {
                             PermissionItem(
                                 iconRes = R.drawable.rounded_settings_accessibility_24,
                                 title = "Accessibility",
-                                description = "Required to perform screen off actions via widget",
+                                description = "Required for App Lock, Screen off widget and other features to detect interactions",
                                 dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
                                 actionLabel = "Grant Permission",
                                 action = {
@@ -208,7 +211,7 @@ class FeatureSettingsActivity : ComponentActivity() {
                             PermissionItem(
                                 iconRes = R.drawable.rounded_security_24,
                                 title = "Write Secure Settings",
-                                description = "Required to change status bar icon visibility",
+                                description = "Required for Statusbar icons and Screen Locked Security",
                                 dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
                                 actionLabel = "Copy ADB",
                                 action = {
@@ -322,7 +325,7 @@ class FeatureSettingsActivity : ComponentActivity() {
                             PermissionItem(
                                 iconRes = R.drawable.rounded_settings_accessibility_24,
                                 title = "Accessibility Service",
-                                description = "Required to detect lock screen interactions and dismiss panel",
+                                description = "Required for App Lock, Screen Locked Security and other features to detect interactions",
                                 dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
                                 actionLabel = "Enable in Settings",
                                 action = {
@@ -333,7 +336,7 @@ class FeatureSettingsActivity : ComponentActivity() {
                             PermissionItem(
                                 iconRes = R.drawable.rounded_security_24,
                                 title = "Write Secure Settings",
-                                description = "Required to temporarily adjust animation scale for spam prevention",
+                                description = "Required for Statusbar icons and Screen Locked Security",
                                 dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
                                 actionLabel = "Copy ADB",
                                 action = {
@@ -347,13 +350,26 @@ class FeatureSettingsActivity : ComponentActivity() {
                             PermissionItem(
                                 iconRes = R.drawable.rounded_security_24,
                                 title = "Device Administrator",
-                                description = "Required to hard-lock the device (disabling biometrics) on unauthorized access attempts",
+                                description = "Required to lock the device on unauthorized access attempts for Screen Locked Security",
                                 dependentFeatures = PermissionRegistry.getFeatures("DEVICE_ADMIN"),
                                 actionLabel = "Enable Admin",
                                 action = {
                                     viewModel.requestDeviceAdmin(context)
                                 },
                                 isGranted = viewModel.isDeviceAdminEnabled.value
+                            )
+                        )
+                        "App lock" -> listOf(
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_settings_accessibility_24,
+                                title = "Accessibility Service",
+                                description = "Required for App Lock and other features to detect app launches",
+                                dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
+                                actionLabel = "Enable in Settings",
+                                action = {
+                                    context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                                },
+                                isGranted = isAccessibilityEnabled
                             )
                         )
                         else -> emptyList()
@@ -473,6 +489,12 @@ class FeatureSettingsActivity : ComponentActivity() {
                                     viewModel = viewModel,
                                     modifier = Modifier.padding(top = 16.dp),
                                     highlightSetting = highlightSetting
+                                )
+                            }
+                            "App lock" -> {
+                                AppLockSettingsUI(
+                                    viewModel = viewModel,
+                                    highlightKey = highlightSetting
                                 )
                             }
                             "Quick settings tiles" -> {

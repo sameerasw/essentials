@@ -86,6 +86,7 @@ class MainViewModel : ViewModel() {
     val edgeLightingIndicatorY = mutableStateOf(2f)  // 0-100 percentage, default top
     val edgeLightingIndicatorScale = mutableStateOf(1.0f)
     val edgeLightingGlowSides = mutableStateOf(setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT))
+    val isAppLockEnabled = mutableStateOf(false)
 
     // Search state
     val searchQuery = mutableStateOf("")
@@ -111,6 +112,7 @@ class MainViewModel : ViewModel() {
             }
             "status_bar_icon_control_enabled" -> isStatusBarIconControlEnabled.value = sharedPreferences.getBoolean(key, false)
             "button_remap_enabled" -> isButtonRemapEnabled.value = sharedPreferences.getBoolean(key, false)
+            "app_lock_enabled" -> isAppLockEnabled.value = sharedPreferences.getBoolean(key, false)
         }
     }
 
@@ -193,6 +195,7 @@ class MainViewModel : ViewModel() {
         isAutoUpdateEnabled.value = prefs.getBoolean("auto_update_enabled", true)
         isUpdateNotificationEnabled.value = prefs.getBoolean("update_notification_enabled", true)
         lastUpdateCheckTime = prefs.getLong("last_update_check_time", 0)
+        isAppLockEnabled.value = prefs.getBoolean("app_lock_enabled", false)
         isDeveloperModeEnabled.value = prefs.getBoolean("developer_mode_enabled", false)
     }
 
@@ -440,6 +443,13 @@ class MainViewModel : ViewModel() {
         isDynamicNightLightEnabled.value = enabled
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
             putBoolean("dynamic_night_light_enabled", enabled)
+        }
+    }
+
+    fun setAppLockEnabled(enabled: Boolean, context: Context) {
+        isAppLockEnabled.value = enabled
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
+            putBoolean("app_lock_enabled", enabled)
         }
     }
 
@@ -752,6 +762,47 @@ class MainViewModel : ViewModel() {
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
             .edit()
             .putString("dynamic_night_light_selected_apps", json)
+            .apply()
+    }
+
+    // App Lock App Selection Methods
+    fun saveAppLockSelectedApps(context: Context, apps: List<AppSelection>) {
+        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+        val gson = Gson()
+        val json = gson.toJson(apps)
+        prefs.edit().putString("app_lock_selected_apps", json).apply()
+    }
+
+    fun loadAppLockSelectedApps(context: Context): List<AppSelection> {
+        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+        val json = prefs.getString("app_lock_selected_apps", null)
+        return if (json != null) {
+            val gson = Gson()
+            val type = object : TypeToken<List<AppSelection>>() {}.type
+            try {
+                val selections: List<AppSelection> = gson.fromJson(json, type)
+                selections
+            } catch (e: Exception) {
+                emptyList()
+            }
+        } else {
+            emptyList()
+        }
+    }
+
+    fun updateAppLockAppEnabled(context: Context, packageName: String, enabled: Boolean) {
+        val currentSelections = loadAppLockSelectedApps(context).toMutableList()
+        val selectionIndex = currentSelections.indexOfFirst { it.packageName == packageName }
+        if (selectionIndex != -1) {
+            currentSelections[selectionIndex] = currentSelections[selectionIndex].copy(isEnabled = enabled)
+        } else {
+            currentSelections.add(AppSelection(packageName, enabled))
+        }
+        val gson = Gson()
+        val json = gson.toJson(currentSelections)
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+            .edit()
+            .putString("app_lock_selected_apps", json)
             .apply()
     }
 

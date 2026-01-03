@@ -216,7 +216,7 @@ object FeatureRegistry {
             id = "Screen locked security",
             title = "Screen locked security",
             iconRes = R.drawable.rounded_security_24,
-            category = "System",
+            category = "Security and Privacy",
             description = "Prevent network controls",
             permissionKeys = listOf("ACCESSIBILITY", "WRITE_SECURE_SETTINGS", "DEVICE_ADMIN")
         ) {
@@ -224,6 +224,23 @@ object FeatureRegistry {
             override fun isToggleEnabled(viewModel: MainViewModel, context: Context) = 
                 viewModel.isAccessibilityEnabled.value && viewModel.isWriteSecureSettingsEnabled.value && viewModel.isDeviceAdminEnabled.value
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) = viewModel.setScreenLockedSecurityEnabled(enabled, context)
+        },
+        
+        object : Feature(
+            id = "App lock",
+            title = "App lock",
+            iconRes = R.drawable.rounded_shield_lock_24,
+            category = "Security and Privacy",
+            description = "Secure apps with biometrics",
+            permissionKeys = listOf("ACCESSIBILITY"),
+            searchableSettings = listOf(
+                SearchSetting("Enable app lock", "Master toggle for app locking", "app_lock_enabled", listOf("secure", "privacy", "biometric", "face", "fingerprint")),
+                SearchSetting("Select locked apps", "Choose which apps require authentication", "app_lock_selected_apps", listOf("list", "picker", "selection"))
+            )
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = viewModel.isAppLockEnabled.value
+            override fun isToggleEnabled(viewModel: MainViewModel, context: Context) = viewModel.isAccessibilityEnabled.value
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) = viewModel.setAppLockEnabled(enabled, context)
         }
     )
 }

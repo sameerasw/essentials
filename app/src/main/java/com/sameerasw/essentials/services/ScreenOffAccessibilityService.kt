@@ -89,6 +89,8 @@ class ScreenOffAccessibilityService : AccessibilityService() {
         "android",
     )
 
+    private val authenticatedPackages = mutableSetOf<String>()
+
     override fun onCreate() {
         super.onCreate()
         screenReceiver = object : BroadcastReceiver() {
@@ -99,6 +101,8 @@ class ScreenOffAccessibilityService : AccessibilityService() {
                     if (onlyShowWhenScreenOff && !isPreview) {
                         removeOverlay()
                     }
+                } else if (intent?.action == Intent.ACTION_SCREEN_OFF) {
+                    authenticatedPackages.clear()
                 } else if (intent?.action == Intent.ACTION_USER_PRESENT) {
                     restoreAnimationScale()
                 }
@@ -106,6 +110,7 @@ class ScreenOffAccessibilityService : AccessibilityService() {
         }
         val filter = IntentFilter().apply {
             addAction(Intent.ACTION_SCREEN_ON)
+            addAction(Intent.ACTION_SCREEN_OFF)
             addAction(Intent.ACTION_USER_PRESENT)
         }
         registerReceiver(screenReceiver, filter)
@@ -179,8 +184,43 @@ class ScreenOffAccessibilityService : AccessibilityService() {
             lastForegroundPackage = packageName
             
             checkHighlightNightLight(packageName)
+            checkAppLock(packageName)
         }
     }
+
+    private fun checkAppLock(packageName: String) {
+        val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+        val isEnabled = prefs.getBoolean("app_lock_enabled", false)
+        if (!isEnabled) return
+
+        if (packageName == this.packageName) {
+            return
+        }
+
+        val json = prefs.getString("app_lock_selected_apps", null)
+        val selectedApps: List<AppSelection> = if (json != null) {
+            try {
+                Gson().fromJson(json, object : TypeToken<List<AppSelection>>() {}.type)
+            } catch (_: Exception) {
+                emptyList()
+            }
+        } else {
+            emptyList()
+        }
+
+        val isLocked = selectedApps.find { it.packageName == packageName }?.isEnabled ?: false
+        
+        if (isLocked && !authenticatedPackages.contains(packageName)) {
+            Log.d("AppLock", "App $packageName is locked and not authenticated. Showing lock screen.")
+            val intent = Intent().apply {
+                component = ComponentName(this@ScreenOffAccessibilityService, "com.sameerasw.essentials.AppLockActivity")
+                putExtra("package_to_lock", packageName)
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_ANIMATION
+            }
+            startActivity(intent)
+        }
+    }
+
 
     private fun findNodeByText(node: AccessibilityNodeInfo, text: String): Boolean {
         val nodes = node.findAccessibilityNodeInfosByText(text)
@@ -358,6 +398,13 @@ class ScreenOffAccessibilityService : AccessibilityService() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+        } else if (intent?.action == "APP_AUTHENTICATED") {
+            val packageName = intent.getStringExtra("package_name")
+            if (packageName != null) {
+                authenticatedPackages.add(packageName)
+            }
+        } else if (intent?.action == "APP_AUTHENTICATION_FAILED") {
+            performGlobalAction(GLOBAL_ACTION_HOME)
         }
         return super.onStartCommand(intent, flags, startId)
     }

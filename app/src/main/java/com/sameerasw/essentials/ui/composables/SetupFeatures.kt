@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.fragment.app.FragmentActivity
+import com.sameerasw.essentials.utils.BiometricHelper
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -155,7 +157,7 @@ fun SetupFeatures(
                             PermissionItem(
                                 iconRes = R.drawable.rounded_settings_accessibility_24,
                                 title = "Accessibility",
-                                description = "Required to perform screen off actions via widget",
+                                description = "Required for App Lock, Screen off widget and other features to detect interactions",
                                 dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
                                 action = {
                                     context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
@@ -171,7 +173,7 @@ fun SetupFeatures(
                             PermissionItem(
                                 iconRes = R.drawable.rounded_security_24,
                                 title = "Write Secure Settings",
-                                description = "Required to change status bar icon visibility",
+                                description = "Required for Statusbar icons and Screen Locked Security",
                                 dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
                                 actionLabel = "Copy ADB",
                                 action = {
@@ -333,7 +335,7 @@ fun SetupFeatures(
                             PermissionItem(
                                 iconRes = R.drawable.rounded_settings_accessibility_24,
                                 title = "Accessibility Service",
-                                description = "Required to detect lock screen interactions and dismiss panel",
+                                description = "Required for App Lock, Screen Locked Security and other features to detect interactions",
                                 dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
                                 actionLabel = "Enable Service",
                                 action = {
@@ -350,7 +352,7 @@ fun SetupFeatures(
                             PermissionItem(
                                 iconRes = R.drawable.rounded_security_24,
                                 title = "Write Secure Settings",
-                                description = "Required to temporarily adjust animation scale for spam prevention",
+                                description = "Required for Statusbar icons and Screen Locked Security",
                                 dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
                                 actionLabel = "Copy ADB",
                                 action = {
@@ -379,6 +381,25 @@ fun SetupFeatures(
                         )
                     }
                 }
+                "App lock" -> {
+                    if (!isAccessibilityEnabled) {
+                        missing.add(
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_settings_accessibility_24,
+                                title = "Accessibility Service",
+                                description = "Required for App Lock and other features to detect app launches",
+                                dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
+                                actionLabel = "Enable Service",
+                                action = {
+                                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                    context.startActivity(intent)
+                                },
+                                isGranted = isAccessibilityEnabled
+                            )
+                        )
+                    }
+                }
             }
 
             if (missing.isEmpty()) {
@@ -393,7 +414,7 @@ fun SetupFeatures(
                 PermissionItem(
                     iconRes = R.drawable.rounded_settings_accessibility_24,
                     title = "Accessibility",
-                    description = "Required to perform screen off actions via widget",
+                    description = "Required for App Lock, Screen off widget and other features to detect interactions",
                     dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
                     actionLabel = "Grant Permission",
                     action = {
@@ -406,7 +427,7 @@ fun SetupFeatures(
                 PermissionItem(
                     iconRes = R.drawable.rounded_chevron_right_24,
                     title = "Write Secure Settings",
-                    description = "Required to change status bar icon visibility",
+                    description = "Required for Statusbar icons and Screen Locked Security",
                     dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
                     actionLabel = "Copy ADB",
                     action = {
@@ -515,7 +536,7 @@ fun SetupFeatures(
                     PermissionItem(
                         iconRes = R.drawable.rounded_settings_accessibility_24,
                         title = "Accessibility Service",
-                        description = "Required to detect lock screen interactions and dismiss panel",
+                        description = "Required for App Lock, Screen Locked Security and other features to detect interactions",
                         dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
                         actionLabel = "Enable Service",
                         action = {
@@ -527,6 +548,21 @@ fun SetupFeatures(
                     )
                 )
                 "Pixel IMS" -> buildMapsPowerSavingPermissionItems() // Reusing the same Shizuku logic
+                "App lock" -> listOf(
+                    PermissionItem(
+                        iconRes = R.drawable.rounded_settings_accessibility_24,
+                        title = "Accessibility Service",
+                        description = "Required for App Lock and other features to detect app launches",
+                        dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
+                        actionLabel = "Enable Service",
+                        action = {
+                            val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            context.startActivity(intent)
+                        },
+                        isGranted = isAccessibilityEnabled
+                    )
+                )
             else -> emptyList()
         }
 
@@ -693,9 +729,29 @@ fun SetupFeatures(
                             title = feature.title,
                             isEnabled = feature.isEnabled(viewModel),
                             onToggle = { enabled ->
-                                feature.onToggle(viewModel, context, enabled)
+                                if (feature.title == "App lock" && context is FragmentActivity) {
+                                    BiometricHelper.showBiometricPrompt(
+                                        activity = context,
+                                        title = "App Lock Security",
+                                        subtitle = if (enabled) "Authenticate to enable app lock" else "Authenticate to disable app lock",
+                                        onSuccess = { feature.onToggle(viewModel, context, enabled) }
+                                    )
+                                } else {
+                                    feature.onToggle(viewModel, context, enabled)
+                                }
                             },
-                            onClick = { feature.onClick(context, viewModel) },
+                            onClick = {
+                                if (feature.title == "App lock" && context is FragmentActivity) {
+                                    BiometricHelper.showBiometricPrompt(
+                                        activity = context,
+                                        title = "App Lock Settings",
+                                        subtitle = "Authenticate to access settings",
+                                        onSuccess = { feature.onClick(context, viewModel) }
+                                    )
+                                } else {
+                                    feature.onClick(context, viewModel)
+                                }
+                            },
                             iconRes = feature.iconRes,
                             modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
                             isToggleEnabled = feature.isToggleEnabled(viewModel, context),

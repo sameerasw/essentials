@@ -7,17 +7,15 @@ plugins {
 
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
-        kotlin {
-            compilerOptions {
-                jvmTarget.set(JvmTarget.JVM_11)
-            }
-        }
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_11)
+    }
+}
 
 android {
     namespace = "com.sameerasw.essentials"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.sameerasw.essentials"
@@ -65,6 +63,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.appcompat)
+    implementation("androidx.biometric:biometric:1.2.0-alpha05")
 
     implementation("io.coil-kt:coil-compose:2.5.0")
     implementation(libs.androidx.compose.foundation.layout)
