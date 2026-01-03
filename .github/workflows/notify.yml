@@ -1,4 +1,4 @@
-name: Telegram Dev Bot Pro
+name: Telegram Notify
 
 on:
   release:
@@ -13,7 +13,7 @@ jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-      - name: Gather Data
+      - name: Gather and Clean Data
         id: info
         run: |
           # Fallback values
@@ -25,44 +25,46 @@ jobs:
           EVENT="${{ github.event_name }}"
           ACTION="${{ github.event.action }}"
 
-          # Prepare variables
-          TITLE=""
-          MSG=""
-
           if [[ "$EVENT" == "release" || "$EVENT" == "workflow_dispatch" ]]; then
             if [[ "$EVENT" == "workflow_dispatch" ]]; then
               DATA=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest)
-              BODY=$(echo "$DATA" | jq -r .body)
+              RAW_BODY=$(echo "$DATA" | jq -r .body)
               TAG=$(echo "$DATA" | jq -r .tag_name)
               URL=$(echo "$DATA" | jq -r .html_url)
               USER=$(echo "$DATA" | jq -r .author.login)
             else
-              BODY="${{ github.event.release.body }}"
+              RAW_BODY="${{ github.event.release.body }}"
               TAG="${{ github.event.release.tag_name }}"
               URL="${{ github.event.release.html_url }}"
               USER="${{ github.event.release.author.login }}"
             fi
-            TITLE="📦 <b>RELEASE: $TAG</b>"
-            MSG="<b>By:</b> $USER%0A%0A$BODY%0A%0A<a href='$URL'>View on GitHub</a>"
+            
+            # CLEANUP LOGIC
+            # 1. Escape HTML special chars
+            # 2. Convert * bullets to -
+            # 3. Remove Markdown images ![alt](url)
+            # 4. Remove Header hashes ###
+            CLEAN_BODY=$(echo "$RAW_BODY" | \
+              sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g' | \
+              sed 's/^\* /  - /g' | \
+              sed 's/!\[.*\](.*)//g' | \
+              sed 's/^#* //g')
+
+            TITLE="📦 <a href='$URL'><b>RELEASE: $TAG</b></a>"
+            MSG="<b>By:</b> $USER%0A%0A$CLEAN_BODY"
 
           elif [[ "$EVENT" == "issues" ]]; then
             STATUS=$([[ "$ACTION" == "opened" ]] && echo "🟢 NEW ISSUE" || echo "🔴 CLOSED ISSUE")
+            CLEAN_ISSUE=$(echo "${{ github.event.issue.body }}" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g' | head -c 500)
             TITLE="<b>$STATUS: ${{ github.event.issue.title }}</b>"
-            MSG="<b>User:</b> ${{ github.event.issue.user.login }}%0A%0A${{ github.event.issue.body }}%0A%0A<a href='${{ github.event.issue.html_url }}'>View Issue</a>"
+            MSG="<b>User:</b> ${{ github.event.issue.user.login }}%0A%0A$CLEAN_ISSUE%0A%0A<a href='${{ github.event.issue.html_url }}'>View Issue</a>"
 
           elif [[ "$EVENT" == "pull_request" ]]; then
-            if [[ "$ACTION" == "closed" && "${{ github.event.pull_request.merged }}" == "true" ]]; then
-              STATUS="💜 MERGED PR"
-            elif [[ "$ACTION" == "closed" ]]; then
-              STATUS="🚫 CLOSED PR"
-            else
-              STATUS="🔵 NEW PR"
-            fi
+            [[ "$ACTION" == "closed" && "${{ github.event.pull_request.merged }}" == "true" ]] && STATUS="💜 MERGED PR" || STATUS="🔵 PR $ACTION"
             TITLE="<b>$STATUS: ${{ github.event.pull_request.title }}</b>"
-            MSG="<b>Author:</b> ${{ github.event.pull_request.user.login }}%0A<b>Changes:</b> ${{ github.event.pull_request.commits }} commits%0A%0A<a href='${{ github.event.pull_request.html_url }}'>View PR</a>"
+            MSG="<b>Author:</b> ${{ github.event.pull_request.user.login }}%0A<a href='${{ github.event.pull_request.html_url }}'>View PR Changes</a>"
           fi
 
-          # The Fix: Using a delimiter for multi-line output
           {
             echo "title<<EOF"
             echo "$TITLE"
@@ -80,10 +82,9 @@ jobs:
           TITLE: ${{ steps.info.outputs.title }}
           MESSAGE: ${{ steps.info.outputs.msg }}
         run: |
-          # Combine Title and Message
-          # We use printf to handle newlines correctly
           FULL_TEXT=$(printf "$TITLE\n\n$MESSAGE")
           
+          # We use jq to handle the final JSON construction to prevent payload breakage
           jq -n \
             --arg chat_id "$CHAT_ID" \
             --arg thread_id "$TOPIC_ID" \
@@ -93,10 +94,7 @@ jobs:
               message_thread_id: $thread_id, 
               text: $text, 
               parse_mode: "HTML",
-              disable_web_page_preview: false
+              disable_web_page_preview: true
             }' > payload.json
 
-          curl -X POST \
-               -H "Content-Type: application/json" \
-               -d @payload.json \
-               https://api.telegram.org/bot$BOT_TOKEN/sendMessage
+          curl -X POST -H "Content-Type: application/json" -d @payload.json https://api.telegram.org/bot$BOT_TOKEN/sendMessage
