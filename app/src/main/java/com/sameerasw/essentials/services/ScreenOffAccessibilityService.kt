@@ -640,6 +640,14 @@ class ScreenOffAccessibilityService : AccessibilityService() {
             
             val step = maxOf(1, maxLevel / 5)
             
+            val isAtLimit = if (increase) currentSystemLevel >= maxLevel else currentSystemLevel <= 1
+            
+            if (isAtLimit) {
+                Log.d("Flashlight", "At limit, giving stronger feedback")
+                triggerHapticFeedback(specificType = com.sameerasw.essentials.utils.HapticFeedbackType.DOUBLE)
+                return
+            }
+
             if (increase) {
                 currentIntensityLevel = (currentSystemLevel + step).coerceAtMost(maxLevel)
             } else {
@@ -649,8 +657,12 @@ class ScreenOffAccessibilityService : AccessibilityService() {
             Log.d("Flashlight", "Adjusting intensity to $currentIntensityLevel (system was $currentSystemLevel, max $maxLevel, step $step)")
             cameraManager.turnOnTorchWithStrengthLevel(cameraId, currentIntensityLevel)
             
-            // Subtle haptic feedback for adjustment
-            triggerHapticFeedback(specificType = com.sameerasw.essentials.utils.HapticFeedbackType.SUBTLE)
+            // Give stronger feedback if we just reached the limit
+            if (currentIntensityLevel == maxLevel || currentIntensityLevel == 1) {
+                triggerHapticFeedback(specificType = com.sameerasw.essentials.utils.HapticFeedbackType.DOUBLE)
+            } else {
+                triggerHapticFeedback(specificType = com.sameerasw.essentials.utils.HapticFeedbackType.SUBTLE)
+            }
         } catch (e: Exception) {
             Log.e("Flashlight", "Error adjusting intensity", e)
         }
