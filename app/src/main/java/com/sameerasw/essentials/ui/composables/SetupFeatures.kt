@@ -514,6 +514,31 @@ fun SetupFeatures(
                             context.startActivity(intent)
                         },
                         isGranted = isAccessibilityEnabled
+                    ),
+                    PermissionItem(
+                        iconRes = R.drawable.rounded_security_24,
+                        title = "Write Secure Settings",
+                        description = "Required for Statusbar icons and Screen Locked Security",
+                        dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
+                        actionLabel = "Copy ADB",
+                        action = {
+                            val adbCommand = "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
+                            val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                            val clip = ClipData.newPlainText("adb_command", adbCommand)
+                            clipboard.setPrimaryClip(clip)
+                        },
+                        isGranted = isWriteSecureSettingsEnabled
+                    ),
+                    PermissionItem(
+                        iconRes = R.drawable.rounded_security_24,
+                        title = "Device Administrator",
+                        description = "Required to hard-lock the device (disabling biometrics) on unauthorized access attempts",
+                        dependentFeatures = PermissionRegistry.getFeatures("DEVICE_ADMIN"),
+                        actionLabel = "Enable Admin",
+                        action = {
+                            viewModel.requestDeviceAdmin(context)
+                        },
+                        isGranted = viewModel.isDeviceAdminEnabled.value
                     )
                 )
 
