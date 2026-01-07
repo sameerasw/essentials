@@ -111,6 +111,13 @@
             android:noHistory="true"
             android:theme="@style/Theme.Essentials.Translucent" />
 
+        <activity
+            android:name=".ui.activities.TileAuthActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:theme="@style/Theme.Essentials.Translucent" />
+
         <service
             android:name=".services.ScreenOffAccessibilityService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
