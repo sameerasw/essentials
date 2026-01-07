@@ -64,7 +64,7 @@ import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.viewmodels.StatusBarIconViewModel
 import com.sameerasw.essentials.ui.components.sheets.PermissionItem
 import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
-import com.sameerasw.essentials.ui.composables.configs.PixelImsSettingsUI
+
 import com.sameerasw.essentials.ui.composables.configs.AppLockSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ScreenLockedSecuritySettingsUI
 import com.sameerasw.essentials.utils.HapticUtil
@@ -99,7 +99,6 @@ class FeatureSettingsActivity : FragmentActivity() {
             "Dynamic night light" to "Toggle based on current app",
             "Snooze system notifications" to "Automatically snooze persistent notifications",
             "Quick settings tiles" to "All available QS tiles",
-            "Pixel IMS" to "Force enable IMS for Pixels",
             "Button remap" to "Remap hardware buttons",
             "Screen locked security" to "Protect network settings from lock screen",
             "App lock" to "Secure individual apps with biometrics"
@@ -474,9 +473,7 @@ class FeatureSettingsActivity : FragmentActivity() {
                                     highlightSetting = highlightSetting
                                 )
                             }
-                "Pixel IMS" -> {
-                    PixelImsSettingsUI(viewModel = viewModel)
-                }
+
                             "Snooze system notifications" -> {
                                 SnoozeNotificationsSettingsUI(
                                     viewModel = viewModel,

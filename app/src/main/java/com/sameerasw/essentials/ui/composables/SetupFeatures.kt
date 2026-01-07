@@ -72,7 +72,7 @@ fun SetupFeatures(
     val isEdgeLightingAccessibilityEnabled by viewModel.isEdgeLightingAccessibilityEnabled
     viewModel.isButtonRemapEnabled.value
     viewModel.isDynamicNightLightEnabled.value
-    viewModel.isPixelImsEnabled.value
+
     viewModel.isScreenLockedSecurityEnabled.value
     val context = LocalContext.current
 
@@ -297,38 +297,7 @@ fun SetupFeatures(
                         )
                     }
                 }
-                "Pixel IMS" -> {
-                    if (!isShizukuAvailable) {
-                        missing.add(
-                            PermissionItem(
-                                iconRes = R.drawable.rounded_adb_24,
-                                title = "Shizuku",
-                                description = "Required for Pixel IMS. Install Shizuku from the Play Store.",
-                                dependentFeatures = PermissionRegistry.getFeatures("SHIZUKU"),
-                                actionLabel = "Install Shizuku",
-                                action = {
-                                    val intent = Intent(Intent.ACTION_VIEW,
-                                        "https://play.google.com/store/apps/details?id=moe.shizuku.privileged.api".toUri())
-                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                    context.startActivity(intent)
-                                },
-                                isGranted = isShizukuAvailable
-                            )
-                        )
-                    } else if (!isShizukuPermissionGranted) {
-                        missing.add(
-                            PermissionItem(
-                                iconRes = R.drawable.rounded_adb_24,
-                                title = "Shizuku permission",
-                                description = "Required to override carrier configurations.",
-                                dependentFeatures = PermissionRegistry.getFeatures("SHIZUKU"),
-                                actionLabel = "Grant permission",
-                                action = { viewModel.requestShizukuPermission() },
-                                isGranted = isShizukuPermissionGranted
-                            )
-                        )
-                    }
-                }
+
                 "Screen locked security" -> {
                     if (!isAccessibilityEnabled) {
                         missing.add(
@@ -547,7 +516,7 @@ fun SetupFeatures(
                         isGranted = isAccessibilityEnabled
                     )
                 )
-                "Pixel IMS" -> buildMapsPowerSavingPermissionItems() // Reusing the same Shizuku logic
+
                 "App lock" -> listOf(
                     PermissionItem(
                         iconRes = R.drawable.rounded_settings_accessibility_24,

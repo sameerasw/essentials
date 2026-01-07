@@ -198,19 +198,7 @@ object FeatureRegistry {
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) = viewModel.setDynamicNightLightEnabled(enabled, context)
         },
 
-        object : Feature(
-            id = "Pixel IMS",
-            title = "Pixel IMS",
-            iconRes = R.drawable.rounded_wifi_calling_bar_3_24,
-            category = "System",
-            description = "Force enable IMS services on Pixels",
-            permissionKeys = listOf("SHIZUKU"),
-            showToggle = false
-        ) {
-            override fun isEnabled(viewModel: MainViewModel) = viewModel.isPixelImsEnabled.value
-            override fun isToggleEnabled(viewModel: MainViewModel, context: Context) = viewModel.isShizukuAvailable.value && viewModel.isShizukuPermissionGranted.value
-            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) = viewModel.setPixelImsEnabled(enabled, context)
-        },
+
 
         object : Feature(
             id = "Screen locked security",

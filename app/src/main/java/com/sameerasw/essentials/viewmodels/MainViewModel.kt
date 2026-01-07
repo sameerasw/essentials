@@ -72,7 +72,7 @@ class MainViewModel : ViewModel() {
     val isSnoozeFileTransferEnabled = mutableStateOf(false)
     val isSnoozeChargingEnabled = mutableStateOf(false)
     val isFlashlightAlwaysTurnOffEnabled = mutableStateOf(false)
-    val isPixelImsEnabled = mutableStateOf(false)
+
     val isScreenLockedSecurityEnabled = mutableStateOf(false)
     val isDeviceAdminEnabled = mutableStateOf(false)
     val isDeveloperModeEnabled = mutableStateOf(false)
@@ -188,7 +188,7 @@ class MainViewModel : ViewModel() {
         isSnoozeFileTransferEnabled.value = prefs.getBoolean("snooze_file_transfer_enabled", false)
         isSnoozeChargingEnabled.value = prefs.getBoolean("snooze_charging_enabled", false)
         isFlashlightAlwaysTurnOffEnabled.value = prefs.getBoolean("flashlight_always_turn_off_enabled", false)
-        isPixelImsEnabled.value = prefs.getBoolean("pixel_ims_enabled", false)
+
         isScreenLockedSecurityEnabled.value = prefs.getBoolean("screen_locked_security_enabled", false)
         isDeviceAdminEnabled.value = isDeviceAdminActive(context)
         
@@ -834,12 +834,7 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun setPixelImsEnabled(enabled: Boolean, context: Context) {
-        isPixelImsEnabled.value = enabled
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("pixel_ims_enabled", enabled)
-        }
-    }
+
 
     fun setScreenLockedSecurityEnabled(enabled: Boolean, context: Context) {
         isScreenLockedSecurityEnabled.value = enabled
