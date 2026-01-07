@@ -244,6 +244,13 @@ fun ButtonRemapSettingsUI(
                 RoundedCardContainer(spacing = 0.dp) {
                     IconToggleItem(
                         iconRes = R.drawable.rounded_flashlight_on_24,
+                        title = "Fade in and out",
+                        description = "Smoothly toggle flashlight",
+                        isChecked = viewModel.isFlashlightFadeEnabled.value,
+                        onCheckedChange = { viewModel.setFlashlightFadeEnabled(it, context) }
+                    )
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_flashlight_on_24,
                         title = "Always turn off flashlight",
                         description = "Even while display is on",
                         isChecked = viewModel.isFlashlightAlwaysTurnOffEnabled.value,

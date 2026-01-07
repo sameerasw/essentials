@@ -72,6 +72,8 @@ class MainViewModel : ViewModel() {
     val isSnoozeFileTransferEnabled = mutableStateOf(false)
     val isSnoozeChargingEnabled = mutableStateOf(false)
     val isFlashlightAlwaysTurnOffEnabled = mutableStateOf(false)
+    val isFlashlightFadeEnabled = mutableStateOf(false)
+
 
     val isScreenLockedSecurityEnabled = mutableStateOf(false)
     val isDeviceAdminEnabled = mutableStateOf(false)
@@ -188,6 +190,8 @@ class MainViewModel : ViewModel() {
         isSnoozeFileTransferEnabled.value = prefs.getBoolean("snooze_file_transfer_enabled", false)
         isSnoozeChargingEnabled.value = prefs.getBoolean("snooze_charging_enabled", false)
         isFlashlightAlwaysTurnOffEnabled.value = prefs.getBoolean("flashlight_always_turn_off_enabled", false)
+        isFlashlightFadeEnabled.value = prefs.getBoolean("flashlight_fade_enabled", false)
+
 
         isScreenLockedSecurityEnabled.value = prefs.getBoolean("screen_locked_security_enabled", false)
         isDeviceAdminEnabled.value = isDeviceAdminActive(context)
@@ -833,6 +837,14 @@ class MainViewModel : ViewModel() {
             putBoolean("flashlight_always_turn_off_enabled", enabled)
         }
     }
+
+    fun setFlashlightFadeEnabled(enabled: Boolean, context: Context) {
+        isFlashlightFadeEnabled.value = enabled
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
+            putBoolean("flashlight_fade_enabled", enabled)
+        }
+    }
+
 
 
 

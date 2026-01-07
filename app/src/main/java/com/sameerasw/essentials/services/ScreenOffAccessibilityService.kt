@@ -36,8 +36,16 @@ import android.app.KeyguardManager
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.cancel
+
 
 class ScreenOffAccessibilityService : AccessibilityService() {
+
+    private val serviceScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     private var windowManager: WindowManager? = null
     private val overlayViews = mutableListOf<View>()
@@ -133,8 +141,12 @@ class ScreenOffAccessibilityService : AccessibilityService() {
         torchCallback.let { cameraManager.unregisterTorchCallback(it) }
         restoreAnimationScale()
         removeOverlay()
+        serviceScope.cancel()
         super.onDestroy()
+
+
     }
+
 
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
@@ -647,37 +659,56 @@ class ScreenOffAccessibilityService : AccessibilityService() {
 
     private fun toggleFlashlight() {
         Log.d("Flashlight", "Toggling flashlight, current state: $isTorchOn")
+        val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+        val isFadeEnabled = prefs.getBoolean("flashlight_fade_enabled", false)
+
         try {
             val cameraManager = getSystemService(Context.CAMERA_SERVICE) as CameraManager
+            var targetCameraId: String? = null
+
             for (id in cameraManager.cameraIdList) {
                 val chars = cameraManager.getCameraCharacteristics(id)
                 val flashAvailable = chars.get(CameraCharacteristics.FLASH_INFO_AVAILABLE) ?: false
                 val lensFacing = chars.get(CameraCharacteristics.LENS_FACING)
 
-                // Prefer back camera with flash
                 if (flashAvailable && lensFacing == CameraCharacteristics.LENS_FACING_BACK) {
-                    Log.d("Flashlight", "Setting torch mode for camera $id to ${!isTorchOn}")
-                    cameraManager.setTorchMode(id, !isTorchOn)
-                    triggerHapticFeedback()
-                    return
+                    targetCameraId = id
+                    break
                 }
             }
 
-            // Fallback: use first camera with flash if no back camera found with flash
-            for (id in cameraManager.cameraIdList) {
-                val chars = cameraManager.getCameraCharacteristics(id)
-                if (chars.get(CameraCharacteristics.FLASH_INFO_AVAILABLE) == true) {
-                    Log.d("Flashlight", "Fallback: Setting torch mode for camera $id to ${!isTorchOn}")
-                    cameraManager.setTorchMode(id, !isTorchOn)
-                    triggerHapticFeedback()
-                    return
+            if (targetCameraId == null) {
+                for (id in cameraManager.cameraIdList) {
+                    val chars = cameraManager.getCameraCharacteristics(id)
+                    if (chars.get(CameraCharacteristics.FLASH_INFO_AVAILABLE) == true) {
+                        targetCameraId = id
+                        break
+                    }
                 }
             }
 
-            Log.w("Flashlight", "No camera with flash found")
+            if (targetCameraId != null) {
+                val finalCameraId = targetCameraId
+                if (isFadeEnabled && com.sameerasw.essentials.utils.FlashlightUtil.isIntensitySupported(this, finalCameraId)) {
+                    val targetState = !isTorchOn
+                    serviceScope.launch {
+                        com.sameerasw.essentials.utils.FlashlightUtil.fadeFlashlight(
+                            this@ScreenOffAccessibilityService,
+                            finalCameraId,
+                            targetState
+                        )
+                    }
+                } else {
+                    cameraManager.setTorchMode(finalCameraId, !isTorchOn)
+                }
+                triggerHapticFeedback()
+            } else {
+                Log.w("Flashlight", "No camera with flash found")
+            }
         } catch (e: Exception) {
             Log.e("Flashlight", "Error toggling flashlight", e)
         }
     }
+
 
 }
