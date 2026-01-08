@@ -6,6 +6,7 @@ import android.hardware.camera2.CameraManager
 import android.os.Build
 import android.util.Log
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.CancellationException
 
 object FlashlightUtil {
     private const val TAG = "FlashlightUtil"
@@ -93,6 +94,8 @@ object FlashlightUtil {
             } else {
                 cameraManager.setTorchMode(cameraId, false)
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             Log.e(TAG, "Error during flashlight fade", e)
             cameraManager.setTorchMode(cameraId, toLevel > 0)
