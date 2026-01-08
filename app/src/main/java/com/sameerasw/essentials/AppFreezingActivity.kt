@@ -12,6 +12,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -28,7 +30,6 @@ import androidx.compose.material3.ToggleFloatingActionButtonDefaults.animateIcon
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -39,13 +40,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.core.graphics.drawable.toBitmap
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.sameerasw.essentials.utils.ShortcutUtil
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sameerasw.essentials.domain.model.NotificationApp
@@ -80,6 +81,8 @@ class AppFreezingActivity : ComponentActivity() {
                 val viewModel: MainViewModel = viewModel()
                 val pickedApps by viewModel.freezePickedApps
                 val isPickedAppsLoading by viewModel.isFreezePickedAppsLoading
+                val isPostNotificationsEnabled by viewModel.isPostNotificationsEnabled
+    
                 val gridState = rememberLazyGridState()
                 val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
                 val frozenStates = remember { mutableStateMapOf<String, Boolean>() }
@@ -199,6 +202,9 @@ class AppFreezingActivity : ComponentActivity() {
                                                 )
                                                 // Finish after launch
                                                 finish()
+                                            },
+                                            onLongClick = {
+                                                ShortcutUtil.pinAppShortcut(context, app)
                                             }
                                         )
                                     }
@@ -212,24 +218,33 @@ class AppFreezingActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AppGridItem(
     app: NotificationApp,
     isFrozen: Boolean,
     isAutoFreezeEnabled: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onLongClick: () -> Unit
 ) {
     val view = LocalView.current
     val grayscaleMatrix = remember { ColorMatrix().apply { setToSaturation(0.4f) } }
 
     Surface(
-        onClick = { 
-            HapticUtil.performVirtualKeyHaptic(view)
-            onClick() 
-        },
         shape = RoundedCornerShape(4.dp),
         color = MaterialTheme.colorScheme.surfaceContainerHigh,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .combinedClickable(
+                onClick = { 
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    onClick() 
+                },
+                onLongClick = {
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    onLongClick()
+                }
+            )
     ) {
         Column(
             modifier = Modifier.padding(12.dp),

@@ -129,6 +129,18 @@
             android:theme="@style/Theme.Essentials.Translucent" />
 
         <activity
+            android:name=".ShortcutHandlerActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:theme="@style/Theme.Essentials.Translucent">
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".ui.activities.FlashlightIntensityActivity"
             android:exported="true"
             android:excludeFromRecents="true"
