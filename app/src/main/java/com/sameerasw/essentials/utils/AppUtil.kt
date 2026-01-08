@@ -43,7 +43,7 @@ object AppUtil {
                     val app = NotificationApp(
                         packageName = appInfo.packageName,
                         appName = pm.getApplicationLabel(appInfo).toString(),
-                        isEnabled = true,
+                        isEnabled = false,
                         icon = pm.getApplicationIcon(appInfo),
                         isSystemApp = isSystemApp,
                         lastUpdated = System.currentTimeMillis()
@@ -72,13 +72,14 @@ object AppUtil {
      */
     fun mergeWithSavedApps(
         installedApps: List<NotificationApp>,
-        savedSelections: List<AppSelection>
+        savedSelections: List<AppSelection>,
+        defaultEnabled: Boolean = false
     ): List<NotificationApp> {
         val savedSelectionsMap = savedSelections.associateBy { it.packageName }
 
         return installedApps.map { installedApp ->
             val savedSelection = savedSelectionsMap[installedApp.packageName]
-            installedApp.copy(isEnabled = savedSelection?.isEnabled ?: true)
+            installedApp.copy(isEnabled = savedSelection?.isEnabled ?: defaultEnabled)
         }.sortedBy { it.appName.lowercase() }
     }
 

@@ -1010,9 +1010,27 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    fun freezeAllAuto(context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            com.sameerasw.essentials.utils.FreezeManager.freezeAll(context)
+        }
+    }
+
+    fun unfreezeAllAuto(context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            com.sameerasw.essentials.utils.FreezeManager.unfreezeAll(context)
+        }
+    }
+
     fun freezeAllManual(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
             com.sameerasw.essentials.utils.FreezeManager.freezeAllManual(context)
+        }
+    }
+
+    fun unfreezeAllManual(context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            com.sameerasw.essentials.utils.FreezeManager.unfreezeAllManual(context)
         }
     }
 

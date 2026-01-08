@@ -29,6 +29,9 @@ import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.HapticUtil
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.material3.ButtonGroupDefaults
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -44,6 +47,12 @@ fun FreezeSettingsUI(
     val isShizukuAvailable by viewModel.isShizukuAvailable
     val isShizukuPermissionGranted by viewModel.isShizukuPermissionGranted
     val pickedApps by viewModel.freezePickedApps
+    
+    var isMenuExpanded by remember { mutableStateOf(false) }
+
+    val freezeInteractionSource = remember { MutableInteractionSource() }
+    val unfreezeInteractionSource = remember { MutableInteractionSource() }
+    val moreInteractionSource = remember { MutableInteractionSource() }
 
     LaunchedEffect(Unit) {
         viewModel.refreshFreezePickedApps(context)
@@ -67,22 +76,111 @@ fun FreezeSettingsUI(
             spacing = 2.dp,
             cornerRadius = 24.dp
         ) {
-            IconToggleItem(
-                iconRes = R.drawable.rounded_mode_cool_24,
-                title = "Freeze all apps",
-                description = "Immediately freeze all picked apps",
-                isChecked = false,
-                onCheckedChange = { 
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    viewModel.freezeAllManual(context)
-                },
-                enabled = isShizukuAvailable && isShizukuPermissionGranted,
-                onDisabledClick = {
-                    viewModel.requestShizukuPermission()
-                },
-                showToggle = false,
-                modifier = Modifier.highlight(highlightKey == "freeze_all_manual")
-            )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .highlight(highlightKey == "freeze_all_manual")
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        color = MaterialTheme.colorScheme.surfaceBright,
+                        shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd)
+                    )
+                    .padding(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Freeze Button
+                Button(
+                    onClick = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.freezeAllAuto(context)
+                    },
+                    modifier = Modifier.weight(1f),
+                    enabled = isShizukuAvailable && isShizukuPermissionGranted,
+                    shape = ButtonDefaults.shape // Keep default look
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_mode_cool_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(Modifier.size(8.dp))
+                    Text("Freeze")
+                }
+
+                // Unfreeze Button
+                Button(
+                    onClick = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.unfreezeAllAuto(context)
+                    },
+                    modifier = Modifier.weight(1f),
+                    enabled = isShizukuAvailable && isShizukuPermissionGranted,
+                    shape = ButtonDefaults.shape
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_play_arrow_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(Modifier.size(8.dp))
+                    Text("Unfreeze")
+                }
+
+                // More Menu Button
+                IconButton(
+                    onClick = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        isMenuExpanded = true
+                    },
+                    enabled = isShizukuAvailable && isShizukuPermissionGranted
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_more_vert_24),
+                        contentDescription = "More options"
+                    )
+
+                    DropdownMenu(
+                        expanded = isMenuExpanded,
+                        onDismissRequest = { isMenuExpanded = false }
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("Freeze all apps") },
+                            onClick = {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                viewModel.freezeAllManual(context)
+                                isMenuExpanded = false
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.rounded_stop_circle_24),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Unfreeze all apps") },
+                            onClick = {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                viewModel.unfreezeAllManual(context)
+                                isMenuExpanded = false
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.rounded_play_arrow_24),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                            }
+                        )
+                    }
+                }
+            }
+        }
 
             FeatureCard(
                 title = "Pick apps to freeze",
