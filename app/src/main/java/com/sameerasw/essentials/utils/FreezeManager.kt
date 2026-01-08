@@ -37,6 +37,57 @@ object FreezeManager {
     }
 
     /**
+     * Freeze all selected apps from settings that have auto-freeze ENABLED.
+     */
+    fun freezeAll(context: Context) {
+        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+        val json = prefs.getString("freeze_selected_apps", null)
+        val excludedJson = prefs.getString("freeze_auto_excluded_apps", null)
+        
+        if (json != null) {
+            val gson = com.google.gson.Gson()
+            val type = object : com.google.gson.reflect.TypeToken<List<com.sameerasw.essentials.domain.model.AppSelection>>() {}.type
+            val excludedType = object : com.google.gson.reflect.TypeToken<Set<String>>() {}.type
+            
+            try {
+                val apps: List<com.sameerasw.essentials.domain.model.AppSelection> = gson.fromJson(json, type)
+                val excludedSet: Set<String> = if (excludedJson != null) {
+                    gson.fromJson(excludedJson, excludedType) ?: emptySet()
+                } else emptySet()
+                
+                apps.forEach { app ->
+                    // Freezing happens if it's in the list AND not excluded
+                    if (!excludedSet.contains(app.packageName)) {
+                        freezeApp(app.packageName)
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    /**
+     * Freeze EVERY app in the selection list immediately.
+     */
+    fun freezeAllManual(context: Context) {
+        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+        val json = prefs.getString("freeze_selected_apps", null)
+        if (json != null) {
+            val gson = com.google.gson.Gson()
+            val type = object : com.google.gson.reflect.TypeToken<List<com.sameerasw.essentials.domain.model.AppSelection>>() {}.type
+            try {
+                val apps: List<com.sameerasw.essentials.domain.model.AppSelection> = gson.fromJson(json, type)
+                apps.forEach { app ->
+                    freezeApp(app.packageName)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    /**
      * Check if an application is currently frozen/disabled.
      */
     fun isAppFrozen(context: Context, packageName: String): Boolean {

@@ -100,7 +100,11 @@ class MainViewModel : ViewModel() {
     val notificationLightingIndicatorScale = mutableStateOf(1.0f)
     val notificationLightingGlowSides = mutableStateOf(setOf(NotificationLightingSide.LEFT, NotificationLightingSide.RIGHT))
     val isAppLockEnabled = mutableStateOf(false)
-    val isFreezeEnabled = mutableStateOf(false)
+    val isFreezeWhenLockedEnabled = mutableStateOf(false)
+    val freezeLockDelayIndex = mutableIntStateOf(1) // Default: 1 minute
+    val freezePickedApps = mutableStateOf<List<NotificationApp>>(emptyList())
+    val isFreezePickedAppsLoading = mutableStateOf(false)
+    val freezeAutoExcludedApps = mutableStateOf<Set<String>>(emptySet())
 
     // Search state
     val searchQuery = mutableStateOf("")
@@ -127,7 +131,16 @@ class MainViewModel : ViewModel() {
             "status_bar_icon_control_enabled" -> isStatusBarIconControlEnabled.value = sharedPreferences.getBoolean(key, false)
             "button_remap_enabled" -> isButtonRemapEnabled.value = sharedPreferences.getBoolean(key, false)
             "app_lock_enabled" -> isAppLockEnabled.value = sharedPreferences.getBoolean(key, false)
-            "freeze_enabled" -> isFreezeEnabled.value = sharedPreferences.getBoolean(key, false)
+            "freeze_when_locked_enabled" -> isFreezeWhenLockedEnabled.value = sharedPreferences.getBoolean(key, false)
+            "freeze_lock_delay_index" -> freezeLockDelayIndex.intValue = sharedPreferences.getInt(key, 1)
+            "freeze_auto_excluded_apps" -> {
+                val json = sharedPreferences.getString(key, null)
+                freezeAutoExcludedApps.value = if (json != null) {
+                    try {
+                        Gson().fromJson(json, object : TypeToken<Set<String>>() {}.type) ?: emptySet()
+                    } catch (e: Exception) { emptySet() }
+                } else emptySet()
+            }
         }
     }
 
@@ -224,7 +237,14 @@ class MainViewModel : ViewModel() {
         isUpdateNotificationEnabled.value = prefs.getBoolean("update_notification_enabled", true)
         lastUpdateCheckTime = prefs.getLong("last_update_check_time", 0)
         isAppLockEnabled.value = prefs.getBoolean("app_lock_enabled", false)
-        isFreezeEnabled.value = prefs.getBoolean("freeze_enabled", false)
+        isFreezeWhenLockedEnabled.value = prefs.getBoolean("freeze_when_locked_enabled", false)
+        freezeLockDelayIndex.intValue = prefs.getInt("freeze_lock_delay_index", 1)
+        val excludedJson = prefs.getString("freeze_auto_excluded_apps", null)
+        freezeAutoExcludedApps.value = if (excludedJson != null) {
+            try {
+                Gson().fromJson(excludedJson, object : TypeToken<Set<String>>() {}.type) ?: emptySet()
+            } catch (e: Exception) { emptySet() }
+        } else emptySet()
         isDeveloperModeEnabled.value = prefs.getBoolean("developer_mode_enabled", false)
     }
 
@@ -503,32 +523,17 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun setFreezeEnabled(enabled: Boolean, context: Context) {
-        isFreezeEnabled.value = enabled
+    fun setFreezeWhenLockedEnabled(enabled: Boolean, context: Context) {
+        isFreezeWhenLockedEnabled.value = enabled
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("freeze_enabled", enabled)
+            putBoolean("freeze_when_locked_enabled", enabled)
         }
-        
-        // If disabled, unfreeze all apps that were frozen by this feature
-        if (!enabled) {
-            viewModelScope.launch {
-                val frozenApps = loadFreezeSelectedApps(context)
-                frozenApps.forEach { app ->
-                    if (app.isEnabled) {
-                        com.sameerasw.essentials.utils.FreezeManager.unfreezeApp(app.packageName)
-                    }
-                }
-            }
-        } else {
-            // If enabled, freeze all apps in the list
-            viewModelScope.launch {
-                val appsToFreeze = loadFreezeSelectedApps(context)
-                appsToFreeze.forEach { app ->
-                    if (app.isEnabled) {
-                        com.sameerasw.essentials.utils.FreezeManager.freezeApp(app.packageName)
-                    }
-                }
-            }
+    }
+
+    fun setFreezeLockDelayIndex(index: Int, context: Context) {
+        freezeLockDelayIndex.intValue = index
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
+            putInt("freeze_lock_delay_index", index)
         }
     }
 
@@ -901,9 +906,13 @@ class MainViewModel : ViewModel() {
     // Freeze App Selection Methods
     fun saveFreezeSelectedApps(context: Context, apps: List<AppSelection>) {
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+        val filteredApps = apps.filter { it.isEnabled } // Only save picked apps
         val gson = Gson()
-        val json = gson.toJson(apps)
+        val json = gson.toJson(filteredApps)
         prefs.edit().putString("freeze_selected_apps", json).apply()
+        
+        // Refresh full app list for UI
+        refreshFreezePickedApps(context)
     }
 
     fun loadFreezeSelectedApps(context: Context): List<AppSelection> {
@@ -932,21 +941,79 @@ class MainViewModel : ViewModel() {
             currentSelections.add(AppSelection(packageName, enabled))
         }
         
-        // Execute the freeze/unfreeze action if master toggle is on
-        if (isFreezeEnabled.value) {
-            if (enabled) {
-                com.sameerasw.essentials.utils.FreezeManager.freezeApp(packageName)
-            } else {
-                com.sameerasw.essentials.utils.FreezeManager.unfreezeApp(packageName)
-            }
-        }
-
+        // Filter: Only keep apps that are picked (enabled)
+        val filteredSelections = currentSelections.filter { it.isEnabled }
+        
         val gson = Gson()
-        val json = gson.toJson(currentSelections)
+        val json = gson.toJson(filteredSelections)
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
             .edit()
             .putString("freeze_selected_apps", json)
             .apply()
+        
+        // Refresh full app list for UI
+        refreshFreezePickedApps(context)
+    }
+
+    fun updateFreezeAppAutoFreeze(context: Context, packageName: String, autoFreezeEnabled: Boolean) {
+        val currentSet = freezeAutoExcludedApps.value.toMutableSet()
+        if (autoFreezeEnabled) {
+            currentSet.remove(packageName)
+        } else {
+            currentSet.add(packageName)
+        }
+        freezeAutoExcludedApps.value = currentSet
+        
+        val json = Gson().toJson(currentSet)
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+            .edit()
+            .putString("freeze_auto_excluded_apps", json)
+            .apply()
+        
+        refreshFreezePickedApps(context)
+    }
+
+    fun refreshFreezePickedApps(context: Context) {
+        viewModelScope.launch {
+            isFreezePickedAppsLoading.value = true
+            try {
+                // Only load apps that are actually marked as secondary selected (picked)
+                val selections = loadFreezeSelectedApps(context).filter { it.isEnabled }
+                if (selections.isEmpty()) {
+                    freezePickedApps.value = emptyList()
+                    return@launch
+                }
+                
+                val allApps = AppUtil.getInstalledApps(context)
+                val merged = AppUtil.mergeWithSavedApps(allApps, selections)
+                // Only keep apps that are in the selection list
+                val pickedPkgNames = selections.map { it.packageName }.toSet()
+                val currentExcluded = freezeAutoExcludedApps.value
+                
+                // Cleanup: remove package names that are no longer picked
+                val filteredExcluded = currentExcluded.filter { pickedPkgNames.contains(it) }.toSet()
+                if (filteredExcluded.size != currentExcluded.size) {
+                    freezeAutoExcludedApps.value = filteredExcluded
+                    val json = Gson().toJson(filteredExcluded)
+                    context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+                        .edit()
+                        .putString("freeze_auto_excluded_apps", json)
+                        .apply()
+                }
+                
+                freezePickedApps.value = merged.filter { pickedPkgNames.contains(it.packageName) }
+                    .map { it.copy(isEnabled = !filteredExcluded.contains(it.packageName)) }
+                    .sortedBy { it.appName.lowercase() }
+            } finally {
+                isFreezePickedAppsLoading.value = false
+            }
+        }
+    }
+
+    fun freezeAllManual(context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            com.sameerasw.essentials.utils.FreezeManager.freezeAllManual(context)
+        }
     }
 
     fun setSnoozeDebuggingEnabled(enabled: Boolean, context: Context) {

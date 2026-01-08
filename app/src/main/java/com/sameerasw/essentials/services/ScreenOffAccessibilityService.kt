@@ -148,6 +148,11 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
             }
         }
 
+    private val freezeHandler = Handler(Looper.getMainLooper())
+    private val freezeRunnable = Runnable {
+        com.sameerasw.essentials.utils.FreezeManager.freezeAll(this)
+    }
+
     private var lastPressedKeyCode: Int = -1
     private var lastPendingAction: String? = null
     private var isLongPressTriggered: Boolean = false
@@ -179,8 +184,28 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
                     if (onlyShowWhenScreenOff && !isPreview) {
                         removeOverlay()
                     }
+                    freezeHandler.removeCallbacks(freezeRunnable)
                 } else if (intent?.action == Intent.ACTION_SCREEN_OFF) {
                     authenticatedPackages.clear()
+                    
+                    val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+                    val isFreezeWhenLockedEnabled = prefs.getBoolean("freeze_when_locked_enabled", false)
+                    
+                    if (isFreezeWhenLockedEnabled) {
+                        val delayIndex = prefs.getInt("freeze_lock_delay_index", 1)
+                        val delayMs = when (delayIndex) {
+                            0 -> 0L // Immediately
+                            1 -> 60_000L // 1 minute
+                            2 -> 300_000L // 5 minutes
+                            3 -> 900_000L // 15 minutes
+                            else -> -1L // Never
+                        }
+                        
+                        if (delayMs >= 0) {
+                            freezeHandler.removeCallbacks(freezeRunnable)
+                            freezeHandler.postDelayed(freezeRunnable, delayMs)
+                        }
+                    }
                 } else if (intent?.action == Intent.ACTION_USER_PRESENT) {
                     restoreAnimationScale()
                 } else if (intent?.action == InputEventListenerService.ACTION_VOLUME_LONG_PRESSED) {

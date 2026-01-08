@@ -242,14 +242,17 @@ object FeatureRegistry {
             description = "Disable apps to save battery",
             permissionKeys = listOf("SHIZUKU"),
             searchableSettings = listOf(
-                SearchSetting("Enable Freeze", "Master toggle for app freezing", "freeze_enabled", listOf("disable", "deactivate", "hibernate", "shizuku")),
-                SearchSetting("Select frozen apps", "Choose which apps to freeze", "freeze_selected_apps", listOf("list", "picker", "selection"))
-            )
+                SearchSetting("Pick apps to freeze", "Choose which apps can be frozen", "freeze_selected_apps", listOf("list", "picker", "selection")),
+                SearchSetting("Freeze all apps", "Immediately freeze all picked apps", "freeze_all_manual", listOf("manual", "now", "shizuku")),
+                SearchSetting("Freeze when locked", "Freeze selected apps when device locks", "freeze_when_locked_enabled", listOf("automation", "auto", "lock")),
+                SearchSetting("Freeze delay", "Delay before freezing after locking", "freeze_lock_delay_index", listOf("timer", "wait", "timeout"))
+            ),
+            showToggle = false
         ) {
-            override fun isEnabled(viewModel: MainViewModel) = viewModel.isFreezeEnabled.value
+            override fun isEnabled(viewModel: MainViewModel) = true
             override fun isToggleEnabled(viewModel: MainViewModel, context: Context) = 
                 viewModel.isShizukuAvailable.value && viewModel.isShizukuPermissionGranted.value
-            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) = viewModel.setFreezeEnabled(enabled, context)
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
         }
     )
 }
