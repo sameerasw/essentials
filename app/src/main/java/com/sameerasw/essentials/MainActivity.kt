@@ -118,27 +118,6 @@ class MainActivity : FragmentActivity() {
 
         Log.d("MainActivity", "onCreate with action: ${intent?.action}")
 
-        // Check if this is a QS tile long-press intent for the SoundModeTileService
-        if (intent?.action == "android.service.quicksettings.action.QS_TILE_PREFERENCES") {
-            val componentName = intent?.getParcelableExtra<android.content.ComponentName>("android.intent.extra.COMPONENT_NAME")
-            Log.d("MainActivity", "QS_TILE_PREFERENCES received, component: ${componentName?.className}")
-            if (componentName?.className == "com.sameerasw.essentials.services.SoundModeTileService") {
-                Log.d("MainActivity", "Launching volume panel")
-                val volumeIntent = Intent("android.settings.panel.action.VOLUME")
-                startActivity(volumeIntent)
-                finish()
-                return
-            }
-            if (componentName?.className == "com.sameerasw.essentials.services.FlashlightTileService") {
-                val intensityIntent = Intent(this, com.sameerasw.essentials.ui.activities.FlashlightIntensityActivity::class.java).apply {
-                    putExtra("android.intent.extra.COMPONENT_NAME", componentName)
-                }
-                startActivity(intensityIntent)
-                finish()
-                return
-            }
-        }
-
         // Initialize HapticUtil with saved preferences
         HapticUtil.initialize(this)
         // initialize permission registry
@@ -217,26 +196,5 @@ class MainActivity : FragmentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         Log.d("MainActivity", "onNewIntent with action: ${intent.action}")
-
-        // Check if this is a QS tile long-press intent for the SoundModeTileService
-        if (intent.action == "android.service.quicksettings.action.QS_TILE_PREFERENCES") {
-            val componentName = intent.getParcelableExtra<android.content.ComponentName>("android.intent.extra.COMPONENT_NAME")
-            Log.d("MainActivity", "QS_TILE_PREFERENCES received in onNewIntent, component: ${componentName?.className}")
-            if (componentName?.className == "com.sameerasw.essentials.services.SoundModeTileService") {
-                Log.d("MainActivity", "Launching volume panel from onNewIntent")
-                val volumeIntent = Intent("android.settings.panel.action.VOLUME")
-                startActivity(volumeIntent)
-                finish()
-                return
-            }
-            if (componentName?.className == "com.sameerasw.essentials.services.FlashlightTileService") {
-                val intensityIntent = Intent(this, com.sameerasw.essentials.ui.activities.FlashlightIntensityActivity::class.java).apply {
-                    putExtra("android.intent.extra.COMPONENT_NAME", componentName)
-                }
-                startActivity(intensityIntent)
-                finish()
-                return
-            }
-        }
     }
 }

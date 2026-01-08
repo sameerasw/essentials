@@ -56,21 +56,22 @@ abstract class BaseTileService : TileService() {
     }
 
     protected fun updateTile() {
+        val tile = qsTile ?: return
         val hasPerm = hasFeaturePermission()
-        qsTile.state = if (hasPerm) {
+        tile.state = if (hasPerm) {
             getTileState()
         } else {
             Tile.STATE_UNAVAILABLE
         }
-        qsTile.label = getTileLabel()
+        tile.label = getTileLabel()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            qsTile.subtitle = if (!hasPerm) "Missing permissions" else getTileSubtitle()
+            tile.subtitle = if (!hasPerm) "Missing permissions" else getTileSubtitle()
         }
         val icon = getTileIcon()
         if (icon != null) {
-            qsTile.icon = icon
+            tile.icon = icon
         }
-        qsTile.updateTile()
+        tile.updateTile()
     }
 
     protected abstract fun getTileState(): Int
