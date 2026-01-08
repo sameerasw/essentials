@@ -97,6 +97,9 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
     private var originalAnimationScale: Float = 1.0f
     private var isScaleModified: Boolean = false
     
+    private var isAmbientDisplayRequested: Boolean = false
+    private var isInterrupted: Boolean = false
+    
     private var isTorchOn = false
     private val torchCallback =
         object : CameraManager.TorchCallback() {
@@ -501,6 +504,8 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
                 indicatorX = intent.getFloatExtra("indicator_x", 50f)
                 indicatorY = intent.getFloatExtra("indicator_y", 2f)
                 indicatorScale = intent.getFloatExtra("indicator_scale", 1.0f)
+                isAmbientDisplayRequested = intent.getBooleanExtra("is_ambient_display", false)
+                isInterrupted = false
                 
                 val removePreview = intent.getBooleanExtra("remove_preview", false)
                 if (removePreview) {
@@ -597,6 +602,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         // Avoid duplicates
         if (overlayViews.isNotEmpty()) return
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
+        val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
 
         // Helper to get accessibility overlay type if present
         val overlayType = try {
@@ -623,42 +629,97 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
             )
             val params = OverlayHelper.createOverlayLayoutParams(overlayType)
 
-            if (OverlayHelper.addOverlayView(windowManager, overlay, params)) {
-                overlayViews.add(overlay)
-                if (isPreview) {
-                    // For preview mode, show static preview
-                    OverlayHelper.showPreview(overlay, edgeLightingStyle, strokeThicknessDp)
-                } else {
-                    // If only show when screen off is enabled, check before pulsing
-                    val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
-                    val onlyShowWhenScreenOff = prefs.getBoolean("edge_lighting_only_screen_off", true)
-                    if (onlyShowWhenScreenOff && !ignoreScreenState) {
-                        val powerManager = getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
-                        val isScreenOn =
-                            powerManager.isInteractive
-                        if (isScreenOn) {
-                            removeOverlay()
-                            return
-                        }
-                    }
+            // Ambient Display Logic: Pre-create black overlay before waking screen
+            val isScreenOn = powerManager.isInteractive
+            val showBackground = isAmbientDisplayRequested && !isScreenOn && !isPreview
+            
+            if (showBackground) {
+                // Re-create overlay with background and touch support
+                val ambientOverlay = OverlayHelper.createOverlayView(
+                    this,
+                    color,
+                    strokeDp = strokeThicknessDp,
+                    cornerRadiusDp = cornerRadiusDp,
+                    style = edgeLightingStyle,
+                    glowSides = glowSides,
+                    indicatorScale = indicatorScale,
+                    showBackground = true
+                )
+                val ambientParams = OverlayHelper.createOverlayLayoutParams(overlayType, isTouchable = true)
+                
+                ambientOverlay.setOnTouchListener { _, _ ->
+                    isInterrupted = true
+                    removeOverlay()
+                    true
+                }
 
-                    // Normal mode: pulse the overlay
-                    OverlayHelper.pulseOverlay(
-                        overlay, 
-                        maxPulses = pulseCount, 
-                        pulseDurationMillis = pulseDuration,
-                        style = edgeLightingStyle,
-                        strokeWidthDp = strokeThicknessDp,
-                        indicatorX = indicatorX,
-                        indicatorY = indicatorY
-                    ) {
-                        // When pulsing completes, remove the overlay
-                        OverlayHelper.fadeOutAndRemoveOverlay(windowManager, overlay, overlayViews)
+                if (OverlayHelper.addOverlayView(windowManager, ambientOverlay, ambientParams)) {
+                    overlayViews.add(ambientOverlay)
+                    
+                    // Wake screen AFTER adding black overlay
+                    try {
+                        val wakeLock = powerManager.newWakeLock(
+                            PowerManager.SCREEN_BRIGHT_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP,
+                            "essentials:NotificationLighting"
+                        )
+                        wakeLock.acquire(10000L) // 10s max
+                    } catch (e: Exception) {
+                        Log.e("ScreenOffAccessibility", "Failed to wake screen", e)
+                    }
+                    
+                    // Delay actual lighting animation until screen is fully on (~500ms)
+                    handler.postDelayed({
+                        if (!isInterrupted) {
+                            startPulsing(ambientOverlay)
+                        }
+                    }, 500)
+                }
+            } else {
+                // Normal mode
+                val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+                val onlyShowWhenScreenOff = prefs.getBoolean("edge_lighting_only_screen_off", true)
+                if (onlyShowWhenScreenOff && !ignoreScreenState && !isPreview) {
+                    if (isScreenOn) {
+                        removeOverlay()
+                        return
+                    }
+                }
+
+                if (OverlayHelper.addOverlayView(windowManager, overlay, params)) {
+                    overlayViews.add(overlay)
+                    if (isPreview) {
+                        OverlayHelper.showPreview(overlay, edgeLightingStyle, strokeThicknessDp)
+                    } else {
+                        startPulsing(overlay)
                     }
                 }
             }
         } catch (e: Exception) { e.printStackTrace() }
+    }
 
+    private fun startPulsing(overlay: View) {
+        OverlayHelper.pulseOverlay(
+            overlay,
+            maxPulses = pulseCount,
+            pulseDurationMillis = pulseDuration,
+            style = edgeLightingStyle,
+            strokeWidthDp = strokeThicknessDp,
+            indicatorX = indicatorX,
+            indicatorY = indicatorY
+        ) {
+            // When pulsing completes
+            if (isAmbientDisplayRequested && !isInterrupted && !isPreview) {
+                // Auto-lock FIRST
+                performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN)
+                
+                // Then remove the overlay after a short delay to ensure screen is off
+                handler.postDelayed({
+                    OverlayHelper.fadeOutAndRemoveOverlay(windowManager, overlay, overlayViews)
+                }, 500)
+            } else {
+                OverlayHelper.fadeOutAndRemoveOverlay(windowManager, overlay, overlayViews)
+            }
+        }
     }
 
     private fun removeOverlay() {

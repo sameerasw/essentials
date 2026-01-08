@@ -141,6 +141,7 @@ class NotificationListener : NotificationListenerService() {
                                 } else if (colorMode == NotificationLightingColorMode.CUSTOM) {
                                     putExtra("custom_color", prefs.getInt("edge_lighting_custom_color", 0xFF6200EE.toInt()))
                                 }
+                                putExtra("is_ambient_display", prefs.getBoolean("edge_lighting_ambient_display", false))
                             }
                             applicationContext.startForegroundService(intent)
                         }

@@ -61,6 +61,7 @@ class MainViewModel : ViewModel() {
     val hapticFeedbackType = mutableStateOf(HapticFeedbackType.SUBTLE)
     val isDefaultBrowserSet = mutableStateOf(false)
     val onlyShowWhenScreenOff = mutableStateOf(true)
+    val isAmbientDisplayEnabled = mutableStateOf(false)
     val isButtonRemapEnabled = mutableStateOf(false)
     val isButtonRemapUseShizuku = mutableStateOf(false)
     val shizukuDetectedDevicePath = mutableStateOf<String?>(null)
@@ -153,6 +154,7 @@ class MainViewModel : ViewModel() {
         isMapsPowerSavingEnabled.value = prefs.getBoolean("maps_power_saving_enabled", false)
         isNotificationLightingEnabled.value = prefs.getBoolean("edge_lighting_enabled", false)
         onlyShowWhenScreenOff.value = prefs.getBoolean("edge_lighting_only_screen_off", true)
+        isAmbientDisplayEnabled.value = prefs.getBoolean("edge_lighting_ambient_display", false)
         skipSilentNotifications.value = prefs.getBoolean("edge_lighting_skip_silent", true)
         val styleName = prefs.getString("edge_lighting_style", NotificationLightingStyle.STROKE.name)
         notificationLightingStyle.value = NotificationLightingStyle.valueOf(styleName ?: NotificationLightingStyle.STROKE.name)
@@ -388,6 +390,13 @@ class MainViewModel : ViewModel() {
         onlyShowWhenScreenOff.value = enabled
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
             putBoolean("edge_lighting_only_screen_off", enabled)
+        }
+    }
+
+    fun setAmbientDisplayEnabled(enabled: Boolean, context: Context) {
+        isAmbientDisplayEnabled.value = enabled
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
+            putBoolean("edge_lighting_ambient_display", enabled)
         }
     }
     

@@ -62,16 +62,20 @@ object OverlayHelper {
         cornerRadiusDp: Int = CORNER_RADIUS_DP,
         style: NotificationLightingStyle = NotificationLightingStyle.STROKE,
         glowSides: Set<NotificationLightingSide> = setOf(NotificationLightingSide.LEFT, NotificationLightingSide.RIGHT),
-        indicatorScale: Float = 1.0f
+        indicatorScale: Float = 1.0f,
+        showBackground: Boolean = false
     ): FrameLayout {
         if (style == NotificationLightingStyle.GLOW) {
-            return createGlowOverlayView(context, color, glowSides)
+            return createGlowOverlayView(context, color, glowSides, showBackground)
         }
         if (style == NotificationLightingStyle.INDICATOR) {
-            return createIndicatorOverlayView(context, color, indicatorScale)
+            return createIndicatorOverlayView(context, color, indicatorScale, showBackground)
         }
 
         val overlay = FrameLayout(context)
+        if (showBackground) {
+            overlay.setBackgroundColor(Color.BLACK)
+        }
         val strokePx = (context.resources.displayMetrics.density * strokeDp).toInt()
         val cornerRadiusPx = (context.resources.displayMetrics.density * cornerRadiusDp).toInt()
 
@@ -81,12 +85,24 @@ object OverlayHelper {
             cornerRadius = cornerRadiusPx.toFloat()
         }
 
-        overlay.background = drawable
+        if (showBackground) {
+            val strokeView = View(context).apply {
+                background = drawable
+                layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            }
+            overlay.addView(strokeView)
+        } else {
+            overlay.background = drawable
+        }
+        
         return overlay
     }
 
-    private fun createGlowOverlayView(context: Context, color: Int, sides: Set<NotificationLightingSide>): FrameLayout {
+    private fun createGlowOverlayView(context: Context, color: Int, sides: Set<NotificationLightingSide>, showBackground: Boolean): FrameLayout {
         val overlay = FrameLayout(context)
+        if (showBackground) {
+            overlay.setBackgroundColor(Color.BLACK)
+        }
         
         if (sides.contains(NotificationLightingSide.LEFT)) {
             val leftGlow = View(context).apply {
@@ -152,9 +168,12 @@ object OverlayHelper {
     }
 
     @OptIn(ExperimentalMaterial3ExpressiveApi::class)
-    private fun createIndicatorOverlayView(context: Context, color: Int, indicatorScale: Float): FrameLayout {
+    private fun createIndicatorOverlayView(context: Context, color: Int, indicatorScale: Float, showBackground: Boolean): FrameLayout {
         // gettign the new LoadingIndicator on an overlay was not easy.... not at all :)
         val overlay = FrameLayout(context)
+        if (showBackground) {
+            overlay.setBackgroundColor(Color.BLACK)
+        }
 
         // 1. Initialize the fake owners for the ROOT view
         val lifecycleOwner = OverlayLifecycleOwner()
@@ -225,15 +244,19 @@ object OverlayHelper {
      */
     fun createOverlayLayoutParams(
         overlayType: Int,
-        flags: Int = 0
+        flags: Int = 0,
+        isTouchable: Boolean = false
     ): WindowManager.LayoutParams {
-        val baseFlags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
+        var baseFlags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                 WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
                 WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
                 WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
 
+        if (!isTouchable) {
+            baseFlags = baseFlags or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+        }
+        
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.MATCH_PARENT,

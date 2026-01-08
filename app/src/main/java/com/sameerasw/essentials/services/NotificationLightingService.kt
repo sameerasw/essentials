@@ -40,6 +40,7 @@ class NotificationLightingService : Service() {
     private var indicatorX: Float = 50f
     private var indicatorY: Float = 2f
     private var indicatorScale: Float = 1.0f
+    private var isAmbientDisplay: Boolean = false
 
     private var screenReceiver: BroadcastReceiver? = null
 
@@ -111,6 +112,7 @@ class NotificationLightingService : Service() {
         indicatorX = intent?.getFloatExtra("indicator_x", 50f) ?: 50f
         indicatorY = intent?.getFloatExtra("indicator_y", 2f) ?: 2f
         indicatorScale = intent?.getFloatExtra("indicator_scale", 1.0f) ?: 1.0f
+        isAmbientDisplay = intent?.getBooleanExtra("is_ambient_display", false) ?: false
         val ignoreScreenState = intent?.getBooleanExtra("ignore_screen_state", false) ?: false
         val removePreview = intent?.getBooleanExtra("remove_preview", false) ?: false
 
@@ -152,6 +154,7 @@ class NotificationLightingService : Service() {
                     if (intent?.hasExtra("resolved_color") == true) {
                         putExtra("resolved_color", intent.getIntExtra("resolved_color", 0))
                     }
+                    putExtra("is_ambient_display", intent?.getBooleanExtra("is_ambient_display", false) ?: false)
                 }
                 // Use startService to request the accessibility service perform the elevated overlay.
                 // Starting an accessibility service via startForegroundService can cause MissingForegroundServiceType
@@ -224,7 +227,8 @@ class NotificationLightingService : Service() {
                 cornerRadiusDp = cornerRadiusDp,
                 style = edgeLightingStyle,
                 glowSides = glowSides,
-                indicatorScale = indicatorScale
+                indicatorScale = indicatorScale,
+                showBackground = isAmbientDisplay
             )
             val params = OverlayHelper.createOverlayLayoutParams(getOverlayType())
 

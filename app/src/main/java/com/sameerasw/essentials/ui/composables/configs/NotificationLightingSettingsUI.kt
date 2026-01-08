@@ -103,6 +103,16 @@ fun NotificationLightingSettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "skip_silent_notifications")
             )
+            IconToggleItem(
+                iconRes = R.drawable.rounded_nightlight_24,
+                title = "Ambient display",
+                description = "Wake screen and show lighting",
+                isChecked = viewModel.isAmbientDisplayEnabled.value,
+                onCheckedChange = { checked ->
+                    viewModel.setAmbientDisplayEnabled(checked, context)
+                },
+                modifier = Modifier.highlight(highlightSetting == "ambient_display")
+            )
         }
 
         // Style Picker
