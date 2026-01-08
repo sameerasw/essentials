@@ -159,6 +159,7 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
     val updateInfo by viewModel.updateInfo
     val isAutoUpdateEnabled by viewModel.isAutoUpdateEnabled
     val isUpdateNotificationEnabled by viewModel.isUpdateNotificationEnabled
+    val isPreReleaseCheckEnabled by viewModel.isPreReleaseCheckEnabled
     val isDeveloperModeEnabled by viewModel.isDeveloperModeEnabled
 
     val exportLauncher = rememberLauncherForActivityResult(
@@ -401,6 +402,13 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
                 description = "Check for updates at app launch",
                 isChecked = isAutoUpdateEnabled,
                 onCheckedChange = { viewModel.setAutoUpdateEnabled(it, context) }
+            )
+            IconToggleItem(
+                iconRes = R.drawable.rounded_experiment_24,
+                title = context.getString(R.string.check_pre_releases_label),
+                description = context.getString(R.string.check_pre_releases_desc),
+                isChecked = isPreReleaseCheckEnabled,
+                onCheckedChange = { viewModel.setPreReleaseCheckEnabled(it, context) }
             )
             IconToggleItem(
                 iconRes = R.drawable.rounded_notifications_unread_24,

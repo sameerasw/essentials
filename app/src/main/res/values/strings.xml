@@ -10,4 +10,6 @@
     <string name="screen_off_widget_label">Empty screen off widget</string>
     <string name="app_freezing_tile_label">App Freezing</string>
     <string name="flashlight_pulse_tile_label">Flashlight Pulse</string>
+    <string name="check_pre_releases_label">Check for pre-releases</string>
+    <string name="check_pre_releases_desc">Might be unstable</string>
 </resources>

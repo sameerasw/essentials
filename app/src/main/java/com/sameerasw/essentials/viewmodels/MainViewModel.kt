@@ -119,6 +119,7 @@ class MainViewModel : ViewModel() {
     val isCheckingUpdate = mutableStateOf(false)
     val isAutoUpdateEnabled = mutableStateOf(true)
     val isUpdateNotificationEnabled = mutableStateOf(true)
+    val isPreReleaseCheckEnabled = mutableStateOf(false)
     private var lastUpdateCheckTime: Long = 0
     
     private val preferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
@@ -143,6 +144,7 @@ class MainViewModel : ViewModel() {
                     } catch (e: Exception) { emptySet() }
                 } else emptySet()
             }
+            "check_pre_releases_enabled" -> isPreReleaseCheckEnabled.value = sharedPreferences.getBoolean(key, false)
         }
     }
 
@@ -249,6 +251,7 @@ class MainViewModel : ViewModel() {
             } catch (e: Exception) { emptySet() }
         } else emptySet()
         isDeveloperModeEnabled.value = prefs.getBoolean("developer_mode_enabled", false)
+        isPreReleaseCheckEnabled.value = prefs.getBoolean("check_pre_releases_enabled", false)
     }
 
     fun onSearchQueryChanged(query: String) {
@@ -278,6 +281,13 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    fun setPreReleaseCheckEnabled(enabled: Boolean, context: Context) {
+        isPreReleaseCheckEnabled.value = enabled
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
+            putBoolean("check_pre_releases_enabled", enabled)
+        }
+    }
+
     fun setDeveloperModeEnabled(enabled: Boolean, context: Context) {
         isDeveloperModeEnabled.value = enabled
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
@@ -304,17 +314,34 @@ class MainViewModel : ViewModel() {
                 } ?: "0.0"
                 
                 val releaseData = withContext(Dispatchers.IO) {
-                    val url = URL("https://api.github.com/repos/sameerasw/essentials/releases/latest")
+                    // If pre-releases are enabled, fetch all releases and pick top one.
+                    // If not, fetch only the latest stable release.
+                    val url = if (isPreReleaseCheckEnabled.value) {
+                        URL("https://api.github.com/repos/sameerasw/essentials/releases")
+                    } else {
+                        URL("https://api.github.com/repos/sameerasw/essentials/releases/latest")
+                    }
                     url.readText()
                 }
 
-                val mapType = object : TypeToken<Map<String, Any>>() {}.type
-                val release: Map<String, Any> = Gson().fromJson(releaseData, mapType)
+                val release: Map<String, Any>? = if (isPreReleaseCheckEnabled.value) {
+                    val listType = object : TypeToken<List<Map<String, Any>>>() {}.type
+                    val releases: List<Map<String, Any>> = Gson().fromJson(releaseData, listType)
+                    releases.firstOrNull()
+                } else {
+                    val mapType = object : TypeToken<Map<String, Any>>() {}.type
+                    Gson().fromJson(releaseData, mapType)
+                }
+
+                if (release == null) return@launch
 
                 val latestVersion = (release["tag_name"] as? String)?.removePrefix("v") ?: "0.0"
                 val body = release["body"] as? String ?: ""
+                val releaseUrl = release["html_url"] as? String ?: ""
                 val assets = release["assets"] as? List<Map<String, Any>>
-                val downloadUrl = assets?.firstOrNull { it["name"].toString().endsWith(".apk") }?.get("browser_download_url") as? String ?: ""
+                val downloadUrl = assets?.firstOrNull { it["name"].toString() == "app-release.apk" }?.get("browser_download_url") as? String 
+                    ?: assets?.firstOrNull { it["name"].toString().endsWith(".apk") }?.get("browser_download_url") as? String 
+                    ?: ""
 
                 val hasUpdate = isNewerVersion(currentVersion, latestVersion)
                 
@@ -322,6 +349,7 @@ class MainViewModel : ViewModel() {
                     versionName = latestVersion,
                     releaseNotes = body,
                     downloadUrl = downloadUrl,
+                    releaseUrl = releaseUrl,
                     isUpdateAvailable = hasUpdate
                 )
                 isUpdateAvailable.value = hasUpdate
