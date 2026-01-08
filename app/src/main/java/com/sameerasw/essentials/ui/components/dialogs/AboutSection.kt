@@ -35,6 +35,8 @@ import com.sameerasw.essentials.R
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
@@ -59,13 +61,12 @@ fun AboutSection(
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 32.dp)
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 32.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(text = "$appName v$versionName", style = MaterialTheme.typography.headlineLarge)
-            Spacer(modifier = Modifier.height(8.dp))
             Text(text = description, style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center)
 
-            Spacer(modifier = Modifier.height(16.dp))
             Image(
                 painter = painterResource(id = R.drawable.avatar),
                 contentDescription = "Developer Avatar",
@@ -81,13 +82,13 @@ fun AboutSection(
                         }
                     )
             )
-            Spacer(modifier = Modifier.height(24.dp))
+
             Text(text = "Developed by $developerName\nwith ❤\uFE0F from \uD83C\uDDF1\uD83C\uDDF0", style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center)
-            Spacer(modifier = Modifier.height(12.dp))
+
             FlowRow(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp),
                 maxItemsInEachRow = 3
             ) {
                 Button(
@@ -181,6 +182,101 @@ fun AboutSection(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Support")
+                }
+            }
+
+            Text(text = "Other Apps", style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center)
+
+            FlowRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalArrangement = Arrangement.spacedBy(6.dp),
+                maxItemsInEachRow = 3
+            ) {
+
+                OutlinedButton(
+                    onClick = {
+                        val websiteUrl = "https://play.google.com/store/apps/details?id=com.sameerasw.airsync&hl=en"
+                        val intent = Intent(Intent.ACTION_VIEW, websiteUrl.toUri())
+                        context.startActivity(intent)
+                    },
+                    modifier = Modifier.padding(horizontal = 4.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_devices_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("AirSync")
+                }
+
+                OutlinedButton(
+                    onClick = {
+                        val websiteUrl = "https://sameerasw.com/zen"
+                        val intent = Intent(Intent.ACTION_VIEW, websiteUrl.toUri())
+                        context.startActivity(intent)
+                    },
+                    modifier = Modifier.padding(horizontal = 4.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_web_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("ZenZero")
+                }
+
+                OutlinedButton(
+                    onClick = {
+                        val websiteUrl = "https://github.com/sameerasw/canvas"
+                        val intent = Intent(Intent.ACTION_VIEW, websiteUrl.toUri())
+                        context.startActivity(intent)
+                    },
+                    modifier = Modifier.padding(horizontal = 4.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_draw_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Canvas")
+                }
+
+                OutlinedButton(
+                    onClick = {
+                        val websiteUrl = "https://github.com/sameerasw/tasks"
+                        val intent = Intent(Intent.ACTION_VIEW, websiteUrl.toUri())
+                        context.startActivity(intent)
+                    },
+                    modifier = Modifier.padding(horizontal = 4.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_task_alt_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Tasks")
+                }
+
+                OutlinedButton(
+                    onClick = {
+                        val websiteUrl = "https://github.com/sameerasw/Browser"
+                        val intent = Intent(Intent.ACTION_VIEW, websiteUrl.toUri())
+                        context.startActivity(intent)
+                    },
+                    modifier = Modifier.padding(horizontal = 4.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.outline_highlight_mouse_cursor_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Zero")
                 }
             }
         }
