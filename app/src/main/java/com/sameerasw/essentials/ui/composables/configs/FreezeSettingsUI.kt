@@ -29,9 +29,14 @@ import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.HapticUtil
+import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.material3.ButtonGroupDefaults
+import android.provider.Settings
+import android.content.Intent
+import com.sameerasw.essentials.ui.components.sheets.PermissionItem
+import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
+import com.sameerasw.essentials.PermissionRegistry
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -53,6 +58,9 @@ fun FreezeSettingsUI(
     val freezeInteractionSource = remember { MutableInteractionSource() }
     val unfreezeInteractionSource = remember { MutableInteractionSource() }
     val moreInteractionSource = remember { MutableInteractionSource() }
+
+    var showPermissionSheet by remember { mutableStateOf(false) }
+    val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
 
     LaunchedEffect(Unit) {
         viewModel.refreshFreezePickedApps(context)
@@ -212,7 +220,11 @@ fun FreezeSettingsUI(
                 title = "Freeze when locked",
                 isChecked = viewModel.isFreezeWhenLockedEnabled.value,
                 onCheckedChange = { enabled ->
-                    viewModel.setFreezeWhenLockedEnabled(enabled, context)
+                    if (enabled && !isAccessibilityEnabled) {
+                        showPermissionSheet = true
+                    } else {
+                        viewModel.setFreezeWhenLockedEnabled(enabled, context)
+                    }
                 },
                 enabled = true,
                 modifier = Modifier.highlight(highlightKey == "freeze_when_locked_enabled")
@@ -340,6 +352,26 @@ fun FreezeSettingsUI(
                 onLoadApps = { viewModel.loadFreezeSelectedApps(it) },
                 onSaveApps = { ctx, apps -> viewModel.saveFreezeSelectedApps(ctx, apps) },
                 onAppToggle = { ctx, pkg, enabled -> viewModel.updateFreezeAppEnabled(ctx, pkg, enabled) }
+            )
+        }
+
+        if (showPermissionSheet) {
+            PermissionsBottomSheet(
+                onDismissRequest = { showPermissionSheet = false },
+                featureTitle = "Freeze when locked",
+                permissions = listOf(
+                    PermissionItem(
+                        iconRes = R.drawable.rounded_settings_accessibility_24,
+                        title = "Accessibility Service",
+                        description = "Required to detect screen state for automatic freezing.",
+                        dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
+                        actionLabel = "Enable in Settings",
+                        action = {
+                            context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                        },
+                        isGranted = isAccessibilityEnabled
+                    )
+                )
             )
         }
     }

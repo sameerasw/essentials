@@ -236,10 +236,10 @@ object FeatureRegistry {
 
         object : Feature(
             id = "Freeze",
-            title = "Freeze β",
+            title = "Freeze",
             iconRes = R.drawable.rounded_mode_cool_24,
             category = "Tools",
-            description = "Disable apps to save battery",
+            description = "Disable rarely used apps",
             permissionKeys = listOf("SHIZUKU"),
             searchableSettings = listOf(
                 SearchSetting("Pick apps to freeze", "Choose which apps can be frozen", "freeze_selected_apps", listOf("list", "picker", "selection")),

@@ -102,7 +102,7 @@ class FeatureSettingsActivity : FragmentActivity() {
             "Button remap" to "Remap hardware buttons",
             "Screen locked security" to "Protect network settings from lock screen",
             "App lock" to "Secure individual apps with biometrics",
-            "Freeze" to "Disable apps to save battery"
+            "Freeze" to "Disable rarely used apps"
         )
         val description = featureDescriptions[feature] ?: ""
         val highlightSetting = intent.getStringExtra("highlight_setting")
