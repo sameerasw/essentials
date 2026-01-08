@@ -131,6 +131,7 @@
         <activity
             android:name=".ShortcutHandlerActivity"
             android:exported="true"
+            android:label="@string/frozen_app_shortcut_label"
             android:excludeFromRecents="true"
             android:noHistory="true"
             android:theme="@style/Theme.Essentials.Translucent">
@@ -186,7 +187,8 @@
 
         <receiver
             android:name=".ScreenOffWidgetProvider"
-            android:exported="false">
+            android:exported="false"
+            android:label="@string/screen_off_widget_label">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

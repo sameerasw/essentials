@@ -6,4 +6,6 @@
     <string name="freeze_activity_subtitle">Disable apps that are rarely used</string>
     <string name="freeze_shortcut_short_label">App Freezing</string>
     <string name="freeze_shortcut_long_label">Open App Freezing</string>
+    <string name="frozen_app_shortcut_label">Frozen App</string>
+    <string name="screen_off_widget_label">Empty screen off widget</string>
 </resources>

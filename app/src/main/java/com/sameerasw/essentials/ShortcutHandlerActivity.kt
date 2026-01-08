@@ -14,6 +14,14 @@ class ShortcutHandlerActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
+        // Handle shortcut creation from the picker (fallback)
+        if (intent.action == Intent.ACTION_CREATE_SHORTCUT) {
+            Toast.makeText(this, "Long press an app in the grid to add a shortcut", Toast.LENGTH_LONG).show()
+            startActivity(Intent(this, AppFreezingActivity::class.java))
+            finish()
+            return
+        }
+
         val packageName = intent.getStringExtra("package_name")
         
         if (packageName != null) {
