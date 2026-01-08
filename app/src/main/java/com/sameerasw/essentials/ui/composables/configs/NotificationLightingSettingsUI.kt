@@ -80,11 +80,7 @@ fun NotificationLightingSettingsUI(
     Column(modifier = modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
 
 
-        RoundedCardContainer(
-            modifier = Modifier.padding(top = 8.dp),
-            spacing = 2.dp,
-            cornerRadius = 24.dp
-        ) {
+        RoundedCardContainer{
             IconToggleItem(
                 iconRes = R.drawable.rounded_power_settings_new_24,
                 title = "Only show when screen off",
@@ -103,17 +99,8 @@ fun NotificationLightingSettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "skip_silent_notifications")
             )
-            IconToggleItem(
-                iconRes = R.drawable.rounded_nightlight_24,
-                title = "Ambient display",
-                description = "Wake screen and show lighting",
-                isChecked = viewModel.isAmbientDisplayEnabled.value,
-                onCheckedChange = { checked ->
-                    viewModel.setAmbientDisplayEnabled(checked, context)
-                },
-                modifier = Modifier.highlight(highlightSetting == "ambient_display")
-            )
         }
+
 
         // Style Picker
         Text(
@@ -123,11 +110,7 @@ fun NotificationLightingSettingsUI(
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
-        RoundedCardContainer(
-            modifier = Modifier.padding(top = 8.dp),
-            spacing = 2.dp,
-            cornerRadius = 24.dp
-        ) {
+        RoundedCardContainer{
             IconToggleItem(
                 iconRes = R.drawable.rounded_flashlight_on_24,
                 title = "Flashlight pulse",
@@ -505,6 +488,45 @@ fun NotificationLightingSettingsUI(
             Text("Select apps")
         }
 
+        Text(
+            text = "Ambient display",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(start = 16.dp, top = 16.dp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        Text(
+            text = "Suitable if you are not using AOD.",
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        RoundedCardContainer{
+            IconToggleItem(
+                iconRes = R.drawable.rounded_nightlight_24,
+                title = "Ambient display",
+                description = "Wake screen and show lighting",
+                isChecked = viewModel.isAmbientDisplayEnabled.value,
+                onCheckedChange = { checked ->
+                    viewModel.setAmbientDisplayEnabled(checked, context)
+                },
+                modifier = Modifier.highlight(highlightSetting == "ambient_display")
+            )
+            if (viewModel.isAmbientDisplayEnabled.value) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_mobile_lock_portrait_24,
+                    title = "Show lock screen",
+                    description = "No black overlay",
+                    isChecked = viewModel.isAmbientShowLockScreenEnabled.value,
+                    onCheckedChange = { checked ->
+                        viewModel.setAmbientShowLockScreenEnabled(checked, context)
+                    },
+                    modifier = Modifier.highlight(highlightSetting == "ambient_show_lock_screen")
+                )
+            }
+        }
+
         Spacer(modifier = Modifier.height(80.dp))
 
         if (showAppSelectionSheet) {
@@ -516,6 +538,8 @@ fun NotificationLightingSettingsUI(
                 context = context
             )
         }
+
+
     }
 }
 

@@ -98,6 +98,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
     private var isScaleModified: Boolean = false
     
     private var isAmbientDisplayRequested: Boolean = false
+    private var isAmbientShowLockScreen: Boolean = false
     private var isInterrupted: Boolean = false
     
     private var isTorchOn = false
@@ -505,6 +506,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
                 indicatorY = intent.getFloatExtra("indicator_y", 2f)
                 indicatorScale = intent.getFloatExtra("indicator_scale", 1.0f)
                 isAmbientDisplayRequested = intent.getBooleanExtra("is_ambient_display", false)
+                isAmbientShowLockScreen = intent.getBooleanExtra("is_ambient_show_lock_screen", false)
                 isInterrupted = false
                 
                 val removePreview = intent.getBooleanExtra("remove_preview", false)
@@ -631,48 +633,70 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
 
             // Ambient Display Logic: Pre-create black overlay before waking screen
             val isScreenOn = powerManager.isInteractive
-            val showBackground = isAmbientDisplayRequested && !isScreenOn && !isPreview
+            val showBackground = isAmbientDisplayRequested && !isScreenOn && !isPreview && !isAmbientShowLockScreen
             
-            if (showBackground) {
-                // Re-create overlay with background and touch support
-                val ambientOverlay = OverlayHelper.createOverlayView(
-                    this,
-                    color,
-                    strokeDp = strokeThicknessDp,
-                    cornerRadiusDp = cornerRadiusDp,
-                    style = edgeLightingStyle,
-                    glowSides = glowSides,
-                    indicatorScale = indicatorScale,
-                    showBackground = true
-                )
-                val ambientParams = OverlayHelper.createOverlayLayoutParams(overlayType, isTouchable = true)
-                
-                ambientOverlay.setOnTouchListener { _, _ ->
-                    isInterrupted = true
-                    removeOverlay()
-                    true
-                }
-
-                if (OverlayHelper.addOverlayView(windowManager, ambientOverlay, ambientParams)) {
-                    overlayViews.add(ambientOverlay)
+            if (isAmbientDisplayRequested && !isScreenOn && !isPreview) {
+                if (showBackground) {
+                    // Re-create overlay with background and touch support
+                    val ambientOverlay = OverlayHelper.createOverlayView(
+                        this,
+                        color,
+                        strokeDp = strokeThicknessDp,
+                        cornerRadiusDp = cornerRadiusDp,
+                        style = edgeLightingStyle,
+                        glowSides = glowSides,
+                        indicatorScale = indicatorScale,
+                        showBackground = true
+                    )
+                    val ambientParams = OverlayHelper.createOverlayLayoutParams(overlayType, isTouchable = true)
                     
-                    // Wake screen AFTER adding black overlay
-                    try {
-                        val wakeLock = powerManager.newWakeLock(
-                            PowerManager.SCREEN_BRIGHT_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP,
-                            "essentials:NotificationLighting"
-                        )
-                        wakeLock.acquire(10000L) // 10s max
-                    } catch (e: Exception) {
-                        Log.e("ScreenOffAccessibility", "Failed to wake screen", e)
+                    ambientOverlay.setOnTouchListener { _, _ ->
+                        isInterrupted = true
+                        removeOverlay()
+                        true
                     }
-                    
-                    // Delay actual lighting animation until screen is fully on (~500ms)
-                    handler.postDelayed({
-                        if (!isInterrupted) {
-                            startPulsing(ambientOverlay)
+
+                    if (OverlayHelper.addOverlayView(windowManager, ambientOverlay, ambientParams)) {
+                        overlayViews.add(ambientOverlay)
+                        
+                        // Wake screen AFTER adding black overlay
+                        try {
+                            val wakeLock = powerManager.newWakeLock(
+                                PowerManager.SCREEN_BRIGHT_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP,
+                                "essentials:NotificationLighting"
+                            )
+                            wakeLock.acquire(10000L) // 10s max
+                        } catch (e: Exception) {
+                            Log.e("ScreenOffAccessibility", "Failed to wake screen", e)
                         }
-                    }, 500)
+                        
+                        // Delay actual lighting animation until screen is fully on (~500ms)
+                        handler.postDelayed({
+                            if (!isInterrupted) {
+                                startPulsing(ambientOverlay)
+                            }
+                        }, 500)
+                    }
+                } else {
+                    // Show on lock screen (no black overlay, no touch listener)
+                    if (OverlayHelper.addOverlayView(windowManager, overlay, params)) {
+                        overlayViews.add(overlay)
+                        
+                        // Wake screen
+                        try {
+                            val wakeLock = powerManager.newWakeLock(
+                                PowerManager.SCREEN_BRIGHT_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP,
+                                "essentials:NotificationLighting"
+                            )
+                            wakeLock.acquire(10000L) // 10s max
+                        } catch (e: Exception) {
+                            Log.e("ScreenOffAccessibility", "Failed to wake screen", e)
+                        }
+
+                        handler.postDelayed({
+                            startPulsing(overlay)
+                        }, 500)
+                    }
                 }
             } else {
                 // Normal mode
@@ -708,7 +732,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
             indicatorY = indicatorY
         ) {
             // When pulsing completes
-            if (isAmbientDisplayRequested && !isInterrupted && !isPreview) {
+            if (isAmbientDisplayRequested && !isInterrupted && !isPreview && !isAmbientShowLockScreen) {
                 // Auto-lock FIRST
                 performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN)
                 

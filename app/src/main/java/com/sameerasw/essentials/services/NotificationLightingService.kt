@@ -155,6 +155,7 @@ class NotificationLightingService : Service() {
                         putExtra("resolved_color", intent.getIntExtra("resolved_color", 0))
                     }
                     putExtra("is_ambient_display", intent?.getBooleanExtra("is_ambient_display", false) ?: false)
+                    putExtra("is_ambient_show_lock_screen", intent?.getBooleanExtra("is_ambient_show_lock_screen", false) ?: false)
                 }
                 // Use startService to request the accessibility service perform the elevated overlay.
                 // Starting an accessibility service via startForegroundService can cause MissingForegroundServiceType

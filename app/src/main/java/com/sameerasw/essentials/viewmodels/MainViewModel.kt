@@ -62,6 +62,7 @@ class MainViewModel : ViewModel() {
     val isDefaultBrowserSet = mutableStateOf(false)
     val onlyShowWhenScreenOff = mutableStateOf(true)
     val isAmbientDisplayEnabled = mutableStateOf(false)
+    val isAmbientShowLockScreenEnabled = mutableStateOf(false)
     val isButtonRemapEnabled = mutableStateOf(false)
     val isButtonRemapUseShizuku = mutableStateOf(false)
     val shizukuDetectedDevicePath = mutableStateOf<String?>(null)
@@ -155,6 +156,7 @@ class MainViewModel : ViewModel() {
         isNotificationLightingEnabled.value = prefs.getBoolean("edge_lighting_enabled", false)
         onlyShowWhenScreenOff.value = prefs.getBoolean("edge_lighting_only_screen_off", true)
         isAmbientDisplayEnabled.value = prefs.getBoolean("edge_lighting_ambient_display", false)
+        isAmbientShowLockScreenEnabled.value = prefs.getBoolean("edge_lighting_ambient_show_lock_screen", false)
         skipSilentNotifications.value = prefs.getBoolean("edge_lighting_skip_silent", true)
         val styleName = prefs.getString("edge_lighting_style", NotificationLightingStyle.STROKE.name)
         notificationLightingStyle.value = NotificationLightingStyle.valueOf(styleName ?: NotificationLightingStyle.STROKE.name)
@@ -397,6 +399,13 @@ class MainViewModel : ViewModel() {
         isAmbientDisplayEnabled.value = enabled
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
             putBoolean("edge_lighting_ambient_display", enabled)
+        }
+    }
+
+    fun setAmbientShowLockScreenEnabled(enabled: Boolean, context: Context) {
+        isAmbientShowLockScreenEnabled.value = enabled
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
+            putBoolean("edge_lighting_ambient_show_lock_screen", enabled)
         }
     }
     
