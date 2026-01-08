@@ -62,6 +62,8 @@ class MainViewModel : ViewModel() {
     val isDefaultBrowserSet = mutableStateOf(false)
     val onlyShowWhenScreenOff = mutableStateOf(true)
     val isButtonRemapEnabled = mutableStateOf(false)
+    val isButtonRemapUseShizuku = mutableStateOf(false)
+    val shizukuDetectedDevicePath = mutableStateOf<String?>(null)
     val volumeUpActionOff = mutableStateOf("None")
     val volumeDownActionOff = mutableStateOf("None")
     val volumeUpActionOn = mutableStateOf("None")
@@ -170,6 +172,8 @@ class MainViewModel : ViewModel() {
         // Button Remap & Migration
         isButtonRemapEnabled.value = prefs.getBoolean("button_remap_enabled", 
             prefs.getBoolean("flashlight_volume_toggle_enabled", false))
+        isButtonRemapUseShizuku.value = prefs.getBoolean("button_remap_use_shizuku", false)
+        shizukuDetectedDevicePath.value = prefs.getString("shizuku_detected_device_path", null)
             
         val oldTrigger = prefs.getString("flashlight_trigger_button", "Volume Up")
         volumeUpActionOff.value = prefs.getString("button_remap_vol_up_action_off", 
@@ -419,6 +423,13 @@ class MainViewModel : ViewModel() {
         isButtonRemapEnabled.value = enabled
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
             putBoolean("button_remap_enabled", enabled)
+        }
+    }
+
+    fun setButtonRemapUseShizuku(enabled: Boolean, context: Context) {
+        isButtonRemapUseShizuku.value = enabled
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
+            putBoolean("button_remap_use_shizuku", enabled)
         }
     }
 

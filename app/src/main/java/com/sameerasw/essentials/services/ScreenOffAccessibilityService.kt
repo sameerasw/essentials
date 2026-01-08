@@ -179,6 +179,24 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
                     authenticatedPackages.clear()
                 } else if (intent?.action == Intent.ACTION_USER_PRESENT) {
                     restoreAnimationScale()
+                } else if (intent?.action == InputEventListenerService.ACTION_VOLUME_LONG_PRESSED) {
+                    val direction = intent.getStringExtra(InputEventListenerService.EXTRA_DIRECTION)
+                    if (direction != null) {
+                         // Map direction to action
+                         val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+                         val isScreenOn = try {
+                             (getSystemService(Context.POWER_SERVICE) as PowerManager).isInteractive
+                         } catch(e: Exception) { false }
+                         
+                         val actionKeySuffix = if (isScreenOn) "_on" else "_off"
+                         val actionKey = if (direction == "UP") {
+                             "button_remap_vol_up_action$actionKeySuffix"
+                         } else {
+                             "button_remap_vol_down_action$actionKeySuffix"
+                         }
+                         val action = prefs.getString(actionKey, "None") ?: "None"
+                         handleLongPress(action)
+                    }
                 }
             }
         }
@@ -186,8 +204,9 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
             addAction(Intent.ACTION_SCREEN_ON)
             addAction(Intent.ACTION_SCREEN_OFF)
             addAction(Intent.ACTION_USER_PRESENT)
+            addAction(InputEventListenerService.ACTION_VOLUME_LONG_PRESSED)
         }
-        registerReceiver(screenReceiver, filter)
+        registerReceiver(screenReceiver, filter, Context.RECEIVER_EXPORTED)
 
         val cameraManager = getSystemService(Context.CAMERA_SERVICE) as CameraManager
         torchCallback.let { cameraManager.registerTorchCallback(it, handler) }
@@ -662,8 +681,28 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
 
         val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
         val isButtonRemapEnabled = prefs.getBoolean("button_remap_enabled", false)
+        val isButtonRemapUseShizuku = prefs.getBoolean("button_remap_use_shizuku", false)
         val isAdjustEnabled = prefs.getBoolean("flashlight_adjust_intensity_enabled", false)
         val isGlobalEnabled = prefs.getBoolean("flashlight_global_enabled", false)
+
+        // If Shizuku method is enabled, skip accessibility event handling for remapping
+        if (isButtonRemapUseShizuku && isButtonRemapEnabled) {
+             val isTorchControl = isTorchOn && (isAdjustEnabled || isGlobalEnabled) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+             
+             // Check user mapping
+             val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+             val isScreenOn = try { powerManager.isInteractive } catch(e: Exception) { false }
+             val suffix = if (isScreenOn) "_on" else "_off"
+             
+             val actionKey = if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) "button_remap_vol_up_action$suffix" else "button_remap_vol_down_action$suffix"
+             val action = prefs.getString(actionKey, "None")
+             val isMapped = action != null && action != "None"
+             
+             if (isMapped || isTorchControl) {
+                 return true
+             }
+             return super.onKeyEvent(event)
+        }
 
         if (isTorchOn && (isAdjustEnabled || isGlobalEnabled) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (event.action == KeyEvent.ACTION_DOWN) {
