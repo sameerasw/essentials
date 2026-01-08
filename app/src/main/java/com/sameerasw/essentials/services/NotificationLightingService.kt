@@ -14,34 +14,29 @@ import android.provider.Settings
 import android.view.View
 import android.view.WindowManager
 import androidx.core.app.NotificationCompat
-import com.sameerasw.essentials.domain.model.EdgeLightingColorMode
-import com.sameerasw.essentials.domain.model.EdgeLightingStyle
-import com.sameerasw.essentials.domain.model.EdgeLightingSide
+import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
+import com.sameerasw.essentials.domain.model.NotificationLightingStyle
+import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.utils.OverlayHelper
 
 /**
- * Overlay service that shows a thin inward stroke on each edge of the screen
- * for a short duration then removes it. Uses draw-over-other-apps permission.
- *
- * Notes: drawing on AOD (always-on display) is not guaranteed by Android for normal apps.
- * We implement best-effort behavior: separate edge windows with flags that allow display
- * into system bar areas and attempt to re-add the overlay on screen-off events.
- * Some OEMs/Android versions will still prevent overlays on AOD or over the nav bar.
+ * Overlay service that shows a light pulse for notifications.
+ * Uses draw-over-other-apps permission.
  */
-class EdgeLightingService : Service() {
+class NotificationLightingService : Service() {
 
     private var windowManager: WindowManager? = null
     private val overlayViews = mutableListOf<View>()
     private var cornerRadiusDp: Int = OverlayHelper.CORNER_RADIUS_DP
     private var strokeThicknessDp: Int = OverlayHelper.STROKE_DP
     private var isPreview: Boolean = false
-    private var colorMode: EdgeLightingColorMode = EdgeLightingColorMode.SYSTEM
+    private var colorMode: NotificationLightingColorMode = NotificationLightingColorMode.SYSTEM
     private var customColor: Int = 0
     private var resolvedColor: Int? = null
     private var pulseCount: Int = 1
     private var pulseDuration: Long = 3000
-    private var edgeLightingStyle: EdgeLightingStyle = EdgeLightingStyle.STROKE
-    private var glowSides: Set<EdgeLightingSide> = setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT)
+    private var edgeLightingStyle: NotificationLightingStyle = NotificationLightingStyle.STROKE
+    private var glowSides: Set<NotificationLightingSide> = setOf(NotificationLightingSide.LEFT, NotificationLightingSide.RIGHT)
     private var indicatorX: Float = 50f
     private var indicatorY: Float = 2f
     private var indicatorScale: Float = 1.0f
@@ -90,7 +85,7 @@ class EdgeLightingService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        // All three permissions are required for Edge Lighting to function
+        // All three permissions are required for Notification Lighting to function
         if (!canDrawOverlays() || !isAccessibilityServiceEnabled()) {
             stopSelf()
             return START_NOT_STICKY
@@ -103,16 +98,16 @@ class EdgeLightingService : Service() {
             ?: OverlayHelper.STROKE_DP
         isPreview = intent?.getBooleanExtra("is_preview", false) ?: false
         val colorModeName = intent?.getStringExtra("color_mode")
-        colorMode = EdgeLightingColorMode.valueOf(colorModeName ?: EdgeLightingColorMode.SYSTEM.name)
+        colorMode = NotificationLightingColorMode.valueOf(colorModeName ?: NotificationLightingColorMode.SYSTEM.name)
         customColor = intent?.getIntExtra("custom_color", 0) ?: 0
         resolvedColor = if (intent?.hasExtra("resolved_color") == true) intent.getIntExtra("resolved_color", 0) else null
         pulseCount = intent?.getIntExtra("pulse_count", 1) ?: 1
         pulseDuration = intent?.getLongExtra("pulse_duration", 3000L) ?: 3000L
         val styleName = intent?.getStringExtra("style")
-        edgeLightingStyle = if (styleName != null) EdgeLightingStyle.valueOf(styleName) else EdgeLightingStyle.STROKE
+        edgeLightingStyle = if (styleName != null) NotificationLightingStyle.valueOf(styleName) else NotificationLightingStyle.STROKE
         val glowSidesArray = intent?.getStringArrayExtra("glow_sides")
-        glowSides = glowSidesArray?.mapNotNull { try { EdgeLightingSide.valueOf(it) } catch(_: Exception) { null } }?.toSet()
-            ?: setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT)
+        glowSides = glowSidesArray?.mapNotNull { try { NotificationLightingSide.valueOf(it) } catch(_: Exception) { null } }?.toSet()
+            ?: setOf(NotificationLightingSide.LEFT, NotificationLightingSide.RIGHT)
         indicatorX = intent?.getFloatExtra("indicator_x", 50f) ?: 50f
         indicatorY = intent?.getFloatExtra("indicator_y", 2f) ?: 2f
         indicatorScale = intent?.getFloatExtra("indicator_scale", 1.0f) ?: 1.0f
@@ -140,7 +135,7 @@ class EdgeLightingService : Service() {
         if (isAccessibilityServiceEnabled()) {
             try {
                 val ai = Intent(applicationContext, ScreenOffAccessibilityService::class.java).apply {
-                    action = "SHOW_EDGE_LIGHTING"
+                    action = "SHOW_NOTIFICATION_LIGHTING"
                     putExtra("corner_radius_dp", cornerRadiusDp)
                     putExtra("stroke_thickness_dp", strokeThicknessDp)
                     putExtra("is_preview", isPreview)
@@ -198,7 +193,7 @@ class EdgeLightingService : Service() {
             if (nm != null) {
                 val existing = nm.getNotificationChannel(CHANNEL_ID)
                 if (existing == null) {
-                    val chan = NotificationChannel(CHANNEL_ID, "Edge Lighting", NotificationManager.IMPORTANCE_LOW)
+                    val chan = NotificationChannel(CHANNEL_ID, "Notification Lighting", NotificationManager.IMPORTANCE_LOW)
                     chan.setSound(null, null)
                     nm.createNotificationChannel(chan)
                 }
@@ -218,7 +213,7 @@ class EdgeLightingService : Service() {
         try {
             val color = when {
                 resolvedColor != null -> resolvedColor!!
-                colorMode == EdgeLightingColorMode.CUSTOM -> customColor
+                colorMode == NotificationLightingColorMode.CUSTOM -> customColor
                 else -> getColor(android.R.color.system_accent1_100)
             }
             

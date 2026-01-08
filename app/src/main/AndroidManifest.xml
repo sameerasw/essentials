@@ -257,10 +257,10 @@
             </intent-filter>
         </service>
         <service
-            android:name=".services.EdgeLightingTileService"
+            android:name=".services.NotificationLightingTileService"
             android:exported="true"
             android:icon="@drawable/rounded_blur_linear_24"
-            android:label="Edge Lighting"
+            android:label="Notification Lighting"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
@@ -297,7 +297,7 @@
             </intent-filter>
         </service>
         <service
-            android:name=".services.EdgeLightingService"
+            android:name=".services.NotificationLightingService"
             android:exported="false"
             android:foregroundServiceType="specialUse" />
 

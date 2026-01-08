@@ -29,7 +29,7 @@ import com.sameerasw.essentials.services.AlwaysOnDisplayTileService
 import com.sameerasw.essentials.services.BubblesTileService
 import com.sameerasw.essentials.services.CaffeinateTileService
 import com.sameerasw.essentials.services.DynamicNightLightTileService
-import com.sameerasw.essentials.services.EdgeLightingTileService
+import com.sameerasw.essentials.services.NotificationLightingTileService
 import com.sameerasw.essentials.services.MonoAudioTileService
 import com.sameerasw.essentials.services.PrivateNotificationsTileService
 import com.sameerasw.essentials.services.ScreenLockedSecurityTileService
@@ -61,7 +61,7 @@ fun QuickSettingsTilesSettingsUI(
         QSTileInfo("AOD", R.drawable.rounded_mobile_text_2_24, AlwaysOnDisplayTileService::class.java),
         QSTileInfo("Caffeinate", R.drawable.rounded_coffee_24, CaffeinateTileService::class.java),
         QSTileInfo("Sound Mode", R.drawable.rounded_volume_up_24, SoundModeTileService::class.java),
-        QSTileInfo("Edge Lighting", R.drawable.rounded_blur_linear_24, EdgeLightingTileService::class.java),
+        QSTileInfo("Notification Lighting", R.drawable.rounded_blur_linear_24, NotificationLightingTileService::class.java),
         QSTileInfo("Dynamic Night Light", R.drawable.rounded_nightlight_24, DynamicNightLightTileService::class.java),
         QSTileInfo("Locked Security", R.drawable.rounded_security_24, ScreenLockedSecurityTileService::class.java),
         QSTileInfo("App Lock", R.drawable.rounded_shield_lock_24, com.sameerasw.essentials.services.AppLockTileService::class.java),

@@ -66,7 +66,7 @@ object PermissionUtils {
         return dpm.isAdminActive(adminComponent)
     }
 
-    fun isEdgeLightingAccessibilityServiceEnabled(context: Context): Boolean {
+    fun isNotificationLightingAccessibilityServiceEnabled(context: Context): Boolean {
         return try {
             val enabledServices = Settings.Secure.getString(
                 context.contentResolver,

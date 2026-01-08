@@ -15,7 +15,7 @@ object PermissionRegistry {
 fun initPermissionRegistry() {
     // Accessibility permission
     PermissionRegistry.register("ACCESSIBILITY", "Screen off widget")
-    PermissionRegistry.register("ACCESSIBILITY", "Edge lighting")
+    PermissionRegistry.register("ACCESSIBILITY", "Notification lighting")
     PermissionRegistry.register("ACCESSIBILITY", "Flashlight toggle")
     PermissionRegistry.register("ACCESSIBILITY", "Dynamic night light")
     PermissionRegistry.register("ACCESSIBILITY", "Screen locked security")
@@ -33,10 +33,10 @@ fun initPermissionRegistry() {
 
     // Notification listener permission
     PermissionRegistry.register("NOTIFICATION_LISTENER", "Maps power saving mode")
-    PermissionRegistry.register("NOTIFICATION_LISTENER", "Edge lighting")
+    PermissionRegistry.register("NOTIFICATION_LISTENER", "Notification lighting")
 
     // Draw over other apps permission
-    PermissionRegistry.register("DRAW_OVER_OTHER_APPS", "Edge lighting")
+    PermissionRegistry.register("DRAW_OVER_OTHER_APPS", "Notification lighting")
 
     // Post notifications permission
     PermissionRegistry.register("POST_NOTIFICATIONS", "Caffeinate show notification")

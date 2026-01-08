@@ -75,24 +75,24 @@ object FeatureRegistry {
         },
 
         object : Feature(
-            id = "Edge lighting",
-            title = "Edge lighting",
+            id = "Notification lighting",
+            title = "Notification lighting",
             iconRes = R.drawable.rounded_magnify_fullscreen_24,
             category = "Visuals",
-            description = "Flash screen for notifications",
+            description = "Light up for notifications",
             permissionKeys = listOf("DRAW_OVERLAYS", "ACCESSIBILITY", "NOTIFICATION_LISTENER"),
             searchableSettings = listOf(
-                SearchSetting("Edge lighting Style", "Choose between Stroke, Glow, Spinner, and more", "style", listOf("animation", "visual", "look")),
-                SearchSetting("Corner radius", "Adjust the corner radius of the edge lighting", "corner_radius", listOf("round", "shape", "edge")),
-                SearchSetting("Skip silent notifications", "Do not show edge lighting for silent notifications", "skip_silent_notifications", listOf("quiet", "ignore", "filter")),
+                SearchSetting("Lighting Style", "Choose between Stroke, Glow, Spinner, and more", "style", listOf("animation", "visual", "look")),
+                SearchSetting("Corner radius", "Adjust the corner radius of the notification lighting", "corner_radius", listOf("round", "shape", "edge")),
+                SearchSetting("Skip silent notifications", "Do not show lighting for silent notifications", "skip_silent_notifications", listOf("quiet", "ignore", "filter")),
                 SearchSetting("Flashlight pulse", "Slowly pulse flashlight for new notifications", "flashlight_pulse", listOf("light", "torch", "pulse", "notification")),
                 SearchSetting("Only while facing down", "Pulse flashlight only when device is face down", "flashlight_pulse_facedown", listOf("proximity", "sensor", "face", "down"))
             )
         ) {
-            override fun isEnabled(viewModel: MainViewModel) = viewModel.isEdgeLightingEnabled.value
+            override fun isEnabled(viewModel: MainViewModel) = viewModel.isNotificationLightingEnabled.value
             override fun isToggleEnabled(viewModel: MainViewModel, context: Context) = 
-                viewModel.isOverlayPermissionGranted.value && viewModel.isEdgeLightingAccessibilityEnabled.value && viewModel.isNotificationListenerEnabled.value
-            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) = viewModel.setEdgeLightingEnabled(enabled, context)
+                viewModel.isOverlayPermissionGranted.value && viewModel.isNotificationLightingAccessibilityEnabled.value && viewModel.isNotificationListenerEnabled.value
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) = viewModel.setNotificationLightingEnabled(enabled, context)
         },
 
         object : Feature(
@@ -154,7 +154,7 @@ object FeatureRegistry {
                 SearchSetting("AOD", "Always On Display toggle", "AOD", listOf("always", "display", "clock", "tile", "qs"), "Quick Settings"),
                 SearchSetting("Caffeinate", "Keep screen awake toggle", "Caffeinate", listOf("stay", "on", "timeout", "tile", "qs"), "Quick Settings"),
                 SearchSetting("Sound Mode", "Cycle sound modes (Ring/Vibrate/Silent)", "Sound Mode", listOf("audio", "mute", "volume", "tile", "qs"), "Quick Settings"),
-                SearchSetting("Edge Lighting", "Toggle edge lighting service", "Edge Lighting", listOf("glow", "notification", "led", "tile", "qs"), "Quick Settings"),
+                SearchSetting("Notification Lighting", "Toggle notification lighting service", "Notification Lighting", listOf("glow", "notification", "led", "tile", "qs"), "Quick Settings"),
                 SearchSetting("Dynamic Night Light", "Night light automation toggle", "Dynamic Night Light", listOf("blue", "filter", "auto", "tile", "qs"), "Quick Settings"),
                 SearchSetting("Locked Security", "Network security on lockscreen toggle", "Locked Security", listOf("wifi", "data", "lock", "tile", "qs"), "Quick Settings"),
                 SearchSetting("Mono Audio", "Force mono audio output toggle", "Mono Audio", listOf("sound", "accessibility", "hear", "tile", "qs"), "Quick Settings"),

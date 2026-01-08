@@ -7,7 +7,7 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.utils.PermissionUtils
 import androidx.core.content.edit
 
-class EdgeLightingTileService : BaseTileService() {
+class NotificationLightingTileService : BaseTileService() {
 
     override fun onTileClick() {
         val prefs = getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
@@ -15,16 +15,16 @@ class EdgeLightingTileService : BaseTileService() {
         prefs.edit { putBoolean("edge_lighting_enabled", !isEnabled) }
     }
 
-    override fun getTileLabel(): String = "Edge Lighting"
+    override fun getTileLabel(): String = "Notification Lighting"
 
     override fun getTileSubtitle(): String {
         return if (qsTile.state == Tile.STATE_ACTIVE) "Enabled" else "Disabled"
     }
 
     override fun hasFeaturePermission(): Boolean {
-        // Notification listener is required for edge lighting
+        // Notification listener is required for notification lighting
         return PermissionUtils.hasNotificationListenerPermission(this) &&
-               PermissionUtils.isEdgeLightingAccessibilityServiceEnabled(this) &&
+               PermissionUtils.isNotificationLightingAccessibilityServiceEnabled(this) &&
                PermissionUtils.canDrawOverlays(this)
     }
 

@@ -21,15 +21,15 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.sameerasw.essentials.MapsState
 import com.sameerasw.essentials.domain.model.AppSelection
-import com.sameerasw.essentials.domain.model.EdgeLightingColorMode
-import com.sameerasw.essentials.domain.model.EdgeLightingStyle
-import com.sameerasw.essentials.domain.model.EdgeLightingSide
+import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
+import com.sameerasw.essentials.domain.model.NotificationLightingStyle
+import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.NotificationApp
 import com.sameerasw.essentials.domain.model.SearchableItem
 import com.sameerasw.essentials.domain.model.UpdateInfo
 import com.sameerasw.essentials.SearchRegistry
 import com.sameerasw.essentials.services.CaffeinateWakeLockService
-import com.sameerasw.essentials.services.EdgeLightingService
+import com.sameerasw.essentials.services.NotificationLightingService
 import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.services.ScreenOffAccessibilityService
 import com.sameerasw.essentials.services.receivers.SecurityDeviceAdminReceiver
@@ -55,9 +55,9 @@ class MainViewModel : ViewModel() {
     val isShizukuAvailable = mutableStateOf(false)
     val isNotificationListenerEnabled = mutableStateOf(false)
     val isMapsPowerSavingEnabled = mutableStateOf(false)
-    val isEdgeLightingEnabled = mutableStateOf(false)
+    val isNotificationLightingEnabled = mutableStateOf(false)
     val isOverlayPermissionGranted = mutableStateOf(false)
-    val isEdgeLightingAccessibilityEnabled = mutableStateOf(false)
+    val isNotificationLightingAccessibilityEnabled = mutableStateOf(false)
     val hapticFeedbackType = mutableStateOf(HapticFeedbackType.SUBTLE)
     val isDefaultBrowserSet = mutableStateOf(false)
     val onlyShowWhenScreenOff = mutableStateOf(true)
@@ -86,15 +86,15 @@ class MainViewModel : ViewModel() {
     val isDeviceAdminEnabled = mutableStateOf(false)
     val isDeveloperModeEnabled = mutableStateOf(false)
     val skipSilentNotifications = mutableStateOf(true)
-    val edgeLightingStyle = mutableStateOf(EdgeLightingStyle.STROKE)
-    val edgeLightingColorMode = mutableStateOf(EdgeLightingColorMode.SYSTEM)
-    val edgeLightingCustomColor = mutableIntStateOf(0xFF6200EE.toInt()) // Default purple
-    val edgeLightingPulseCount = mutableIntStateOf(1)
-    val edgeLightingPulseDuration = mutableStateOf(3000f)
-    val edgeLightingIndicatorX = mutableStateOf(50f) // 0-100 percentage
-    val edgeLightingIndicatorY = mutableStateOf(2f)  // 0-100 percentage, default top
-    val edgeLightingIndicatorScale = mutableStateOf(1.0f)
-    val edgeLightingGlowSides = mutableStateOf(setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT))
+    val notificationLightingStyle = mutableStateOf(NotificationLightingStyle.STROKE)
+    val notificationLightingColorMode = mutableStateOf(NotificationLightingColorMode.SYSTEM)
+    val notificationLightingCustomColor = mutableIntStateOf(0xFF6200EE.toInt()) // Default purple
+    val notificationLightingPulseCount = mutableIntStateOf(1)
+    val notificationLightingPulseDuration = mutableStateOf(3000f)
+    val notificationLightingIndicatorX = mutableStateOf(50f) // 0-100 percentage
+    val notificationLightingIndicatorY = mutableStateOf(2f)  // 0-100 percentage, default top
+    val notificationLightingIndicatorScale = mutableStateOf(1.0f)
+    val notificationLightingGlowSides = mutableStateOf(setOf(NotificationLightingSide.LEFT, NotificationLightingSide.RIGHT))
     val isAppLockEnabled = mutableStateOf(false)
 
     // Search state
@@ -112,7 +112,7 @@ class MainViewModel : ViewModel() {
     
     private val preferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
         when (key) {
-            "edge_lighting_enabled" -> isEdgeLightingEnabled.value = sharedPreferences.getBoolean(key, false)
+            "edge_lighting_enabled" -> isNotificationLightingEnabled.value = sharedPreferences.getBoolean(key, false)
             "dynamic_night_light_enabled" -> isDynamicNightLightEnabled.value = sharedPreferences.getBoolean(key, false)
             "screen_locked_security_enabled" -> isScreenLockedSecurityEnabled.value = sharedPreferences.getBoolean(key, false)
             "maps_power_saving_enabled" -> {
@@ -140,7 +140,7 @@ class MainViewModel : ViewModel() {
         isShizukuPermissionGranted.value = ShizukuUtils.hasPermission()
         isNotificationListenerEnabled.value = PermissionUtils.hasNotificationListenerPermission(context)
         isOverlayPermissionGranted.value = PermissionUtils.canDrawOverlays(context)
-        isEdgeLightingAccessibilityEnabled.value = PermissionUtils.isEdgeLightingAccessibilityServiceEnabled(context)
+        isNotificationLightingAccessibilityEnabled.value = PermissionUtils.isNotificationLightingAccessibilityServiceEnabled(context)
         isDefaultBrowserSet.value = PermissionUtils.isDefaultBrowser(context)
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
         prefs.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener)
@@ -149,20 +149,20 @@ class MainViewModel : ViewModel() {
         isWidgetEnabled.value = prefs.getBoolean("widget_enabled", false)
         isStatusBarIconControlEnabled.value = prefs.getBoolean("status_bar_icon_control_enabled", false)
         isMapsPowerSavingEnabled.value = prefs.getBoolean("maps_power_saving_enabled", false)
-        isEdgeLightingEnabled.value = prefs.getBoolean("edge_lighting_enabled", false)
+        isNotificationLightingEnabled.value = prefs.getBoolean("edge_lighting_enabled", false)
         onlyShowWhenScreenOff.value = prefs.getBoolean("edge_lighting_only_screen_off", true)
         skipSilentNotifications.value = prefs.getBoolean("edge_lighting_skip_silent", true)
-        val styleName = prefs.getString("edge_lighting_style", EdgeLightingStyle.STROKE.name)
-        edgeLightingStyle.value = EdgeLightingStyle.valueOf(styleName ?: EdgeLightingStyle.STROKE.name)
-        val colorModeName = prefs.getString("edge_lighting_color_mode", EdgeLightingColorMode.SYSTEM.name)
-        edgeLightingColorMode.value = EdgeLightingColorMode.valueOf(colorModeName ?: EdgeLightingColorMode.SYSTEM.name)
-        edgeLightingCustomColor.intValue = prefs.getInt("edge_lighting_custom_color", 0xFF6200EE.toInt())
-        edgeLightingPulseCount.intValue = prefs.getInt("edge_lighting_pulse_count", 1)
-        edgeLightingPulseDuration.value = prefs.getFloat("edge_lighting_pulse_duration", 3000f)
-        edgeLightingIndicatorX.value = prefs.getFloat("edge_lighting_indicator_x", 50f)
-        edgeLightingIndicatorY.value = prefs.getFloat("edge_lighting_indicator_y", 2f)
-        edgeLightingIndicatorScale.value = prefs.getFloat("edge_lighting_indicator_scale", 1.0f)
-        edgeLightingGlowSides.value = loadEdgeLightingGlowSides(context)
+        val styleName = prefs.getString("edge_lighting_style", NotificationLightingStyle.STROKE.name)
+        notificationLightingStyle.value = NotificationLightingStyle.valueOf(styleName ?: NotificationLightingStyle.STROKE.name)
+        val colorModeName = prefs.getString("edge_lighting_color_mode", NotificationLightingColorMode.SYSTEM.name)
+        notificationLightingColorMode.value = NotificationLightingColorMode.valueOf(colorModeName ?: NotificationLightingColorMode.SYSTEM.name)
+        notificationLightingCustomColor.intValue = prefs.getInt("edge_lighting_custom_color", 0xFF6200EE.toInt())
+        notificationLightingPulseCount.intValue = prefs.getInt("edge_lighting_pulse_count", 1)
+        notificationLightingPulseDuration.value = prefs.getFloat("edge_lighting_pulse_duration", 3000f)
+        notificationLightingIndicatorX.value = prefs.getFloat("edge_lighting_indicator_x", 50f)
+        notificationLightingIndicatorY.value = prefs.getFloat("edge_lighting_indicator_y", 2f)
+        notificationLightingIndicatorScale.value = prefs.getFloat("edge_lighting_indicator_scale", 1.0f)
+        notificationLightingGlowSides.value = loadNotificationLightingGlowSides(context)
         MapsState.isEnabled = isMapsPowerSavingEnabled.value
         loadHapticFeedback(context)
         checkCaffeinateActive(context)
@@ -373,8 +373,8 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun setEdgeLightingEnabled(enabled: Boolean, context: Context) {
-        isEdgeLightingEnabled.value = enabled
+    fun setNotificationLightingEnabled(enabled: Boolean, context: Context) {
+        isNotificationLightingEnabled.value = enabled
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
             putBoolean("edge_lighting_enabled", enabled)
         }
@@ -394,22 +394,22 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun setEdgeLightingStyle(style: EdgeLightingStyle, context: Context) {
-        edgeLightingStyle.value = style
+    fun setNotificationLightingStyle(style: NotificationLightingStyle, context: Context) {
+        notificationLightingStyle.value = style
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
             putString("edge_lighting_style", style.name)
         }
     }
 
-    fun setEdgeLightingColorMode(mode: EdgeLightingColorMode, context: Context) {
-        edgeLightingColorMode.value = mode
+    fun setNotificationLightingColorMode(mode: NotificationLightingColorMode, context: Context) {
+        notificationLightingColorMode.value = mode
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
             putString("edge_lighting_color_mode", mode.name)
         }
     }
 
-    fun setEdgeLightingCustomColor(color: Int, context: Context) {
-        edgeLightingCustomColor.intValue = color
+    fun setNotificationLightingCustomColor(color: Int, context: Context) {
+        notificationLightingCustomColor.intValue = color
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
             putInt("edge_lighting_custom_color", color)
         }
@@ -471,15 +471,15 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun saveEdgeLightingPulseCount(context: Context, count: Int) {
-        edgeLightingPulseCount.intValue = count
+    fun saveNotificationLightingPulseCount(context: Context, count: Int) {
+        notificationLightingPulseCount.intValue = count
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
             putInt("edge_lighting_pulse_count", count)
         }
     }
 
-    fun saveEdgeLightingPulseDuration(context: Context, duration: Float) {
-        edgeLightingPulseDuration.value = duration
+    fun saveNotificationLightingPulseDuration(context: Context, duration: Float) {
+        notificationLightingPulseDuration.value = duration
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
             putFloat("edge_lighting_pulse_duration", duration)
         }
@@ -500,23 +500,23 @@ class MainViewModel : ViewModel() {
     }
 
     // Helper to show the overlay service for testing/triggering
-    fun triggerEdgeLighting(context: Context) {
-        val radius = loadEdgeLightingCornerRadius(context)
-        val thickness = loadEdgeLightingStrokeThickness(context)
+    fun triggerNotificationLighting(context: Context) {
+        val radius = loadNotificationLightingCornerRadius(context)
+        val thickness = loadNotificationLightingStrokeThickness(context)
         try {
-            val intent = Intent(context, com.sameerasw.essentials.services.EdgeLightingService::class.java).apply {
+            val intent = Intent(context, com.sameerasw.essentials.services.NotificationLightingService::class.java).apply {
                 putExtra("corner_radius_dp", radius)
                 putExtra("stroke_thickness_dp", thickness)
                 putExtra("ignore_screen_state", true)
-                putExtra("style", edgeLightingStyle.value.name)
-                putExtra("color_mode", edgeLightingColorMode.value.name)
-                putExtra("custom_color", edgeLightingCustomColor.intValue)
-                putExtra("pulse_count", edgeLightingPulseCount.intValue)
-                putExtra("pulse_duration", edgeLightingPulseDuration.value.toLong())
-                putExtra("glow_sides", edgeLightingGlowSides.value.map { it.name }.toTypedArray())
-                putExtra("indicator_x", edgeLightingIndicatorX.value)
-                putExtra("indicator_y", edgeLightingIndicatorY.value)
-                putExtra("indicator_scale", edgeLightingIndicatorScale.value)
+                putExtra("style", notificationLightingStyle.value.name)
+                putExtra("color_mode", notificationLightingColorMode.value.name)
+                putExtra("custom_color", notificationLightingCustomColor.intValue)
+                putExtra("pulse_count", notificationLightingPulseCount.intValue)
+                putExtra("pulse_duration", notificationLightingPulseDuration.value.toLong())
+                putExtra("glow_sides", notificationLightingGlowSides.value.map { it.name }.toTypedArray())
+                putExtra("indicator_x", notificationLightingIndicatorX.value)
+                putExtra("indicator_y", notificationLightingIndicatorY.value)
+                putExtra("indicator_scale", notificationLightingIndicatorScale.value)
             }
             context.startService(intent)
         } catch (e: Exception) {
@@ -525,19 +525,19 @@ class MainViewModel : ViewModel() {
     }
 
     // Helper to show the overlay service with custom corner radius
-    fun triggerEdgeLightingWithRadius(context: Context, cornerRadiusDp: Int) {
+    fun triggerNotificationLightingWithRadius(context: Context, cornerRadiusDp: Int) {
         try {
-            val intent = Intent(context, com.sameerasw.essentials.services.EdgeLightingService::class.java).apply {
+            val intent = Intent(context, com.sameerasw.essentials.services.NotificationLightingService::class.java).apply {
                 putExtra("corner_radius_dp", cornerRadiusDp)
                 putExtra("is_preview", true)
                 putExtra("ignore_screen_state", true)
-                putExtra("style", edgeLightingStyle.value.name)
-                putExtra("color_mode", edgeLightingColorMode.value.name)
-                putExtra("custom_color", edgeLightingCustomColor.intValue)
-                putExtra("glow_sides", edgeLightingGlowSides.value.map { it.name }.toTypedArray())
-                putExtra("indicator_x", edgeLightingIndicatorX.value)
-                putExtra("indicator_y", edgeLightingIndicatorY.value)
-                putExtra("indicator_scale", edgeLightingIndicatorScale.value)
+                putExtra("style", notificationLightingStyle.value.name)
+                putExtra("color_mode", notificationLightingColorMode.value.name)
+                putExtra("custom_color", notificationLightingCustomColor.intValue)
+                putExtra("glow_sides", notificationLightingGlowSides.value.map { it.name }.toTypedArray())
+                putExtra("indicator_x", notificationLightingIndicatorX.value)
+                putExtra("indicator_y", notificationLightingIndicatorY.value)
+                putExtra("indicator_scale", notificationLightingIndicatorScale.value)
             }
             context.startService(intent)
         } catch (e: Exception) {
@@ -546,20 +546,20 @@ class MainViewModel : ViewModel() {
     }
 
     // Helper to show the overlay service with custom corner radius and stroke thickness
-    fun triggerEdgeLightingWithRadiusAndThickness(context: Context, cornerRadiusDp: Int, strokeThicknessDp: Int) {
+    fun triggerNotificationLightingWithRadiusAndThickness(context: Context, cornerRadiusDp: Int, strokeThicknessDp: Int) {
         try {
-            val intent = Intent(context, com.sameerasw.essentials.services.EdgeLightingService::class.java).apply {
+            val intent = Intent(context, com.sameerasw.essentials.services.NotificationLightingService::class.java).apply {
                 putExtra("corner_radius_dp", cornerRadiusDp)
                 putExtra("stroke_thickness_dp", strokeThicknessDp)
                 putExtra("is_preview", true)
                 putExtra("ignore_screen_state", true)
-                putExtra("style", edgeLightingStyle.value.name)
-                putExtra("color_mode", edgeLightingColorMode.value.name)
-                putExtra("custom_color", edgeLightingCustomColor.intValue)
-                putExtra("glow_sides", edgeLightingGlowSides.value.map { it.name }.toTypedArray())
-                putExtra("indicator_x", edgeLightingIndicatorX.value)
-                putExtra("indicator_y", edgeLightingIndicatorY.value)
-                putExtra("indicator_scale", edgeLightingIndicatorScale.value)
+                putExtra("style", notificationLightingStyle.value.name)
+                putExtra("color_mode", notificationLightingColorMode.value.name)
+                putExtra("custom_color", notificationLightingCustomColor.intValue)
+                putExtra("glow_sides", notificationLightingGlowSides.value.map { it.name }.toTypedArray())
+                putExtra("indicator_x", notificationLightingIndicatorX.value)
+                putExtra("indicator_y", notificationLightingIndicatorY.value)
+                putExtra("indicator_scale", notificationLightingIndicatorScale.value)
             }
             context.startService(intent)
         } catch (e: Exception) {
@@ -570,8 +570,7 @@ class MainViewModel : ViewModel() {
     // Helper to remove preview overlay
     fun removePreviewOverlay(context: Context) {
         try {
-            // Remove from EdgeLightingService
-            val intent1 = Intent(context, EdgeLightingService::class.java).apply {
+            val intent1 = Intent(context, NotificationLightingService::class.java).apply {
                 putExtra("remove_preview", true)
             }
             context.startService(intent1)
@@ -682,23 +681,23 @@ class MainViewModel : ViewModel() {
         return PermissionUtils.canDrawOverlays(context)
     }
 
-    private fun isEdgeLightingAccessibilityServiceEnabled(context: Context): Boolean {
-        return PermissionUtils.isEdgeLightingAccessibilityServiceEnabled(context)
+    private fun isNotificationLightingAccessibilityServiceEnabled(context: Context): Boolean {
+        return PermissionUtils.isNotificationLightingAccessibilityServiceEnabled(context)
     }
 
     private fun isDefaultBrowser(context: Context): Boolean {
         return PermissionUtils.isDefaultBrowser(context)
     }
 
-    // Edge Lighting App Selection Methods
-    fun saveEdgeLightingSelectedApps(context: Context, apps: List<AppSelection>) {
+    // Notification Lighting App Selection Methods
+    fun saveNotificationLightingSelectedApps(context: Context, apps: List<AppSelection>) {
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
         val gson = Gson()
         val json = gson.toJson(apps)
         prefs.edit().putString("edge_lighting_selected_apps", json).apply()
     }
 
-    fun loadEdgeLightingSelectedApps(context: Context): List<AppSelection> {
+    fun loadNotificationLightingSelectedApps(context: Context): List<AppSelection> {
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
         val json = prefs.getString("edge_lighting_selected_apps", null)
         return if (json != null) {
@@ -715,8 +714,8 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun updateEdgeLightingAppEnabled(context: Context, packageName: String, enabled: Boolean) {
-        val currentSelections = loadEdgeLightingSelectedApps(context).toMutableList()
+    fun updateNotificationLightingAppEnabled(context: Context, packageName: String, enabled: Boolean) {
+        val currentSelections = loadNotificationLightingSelectedApps(context).toMutableList()
         val selectionIndex = currentSelections.indexOfFirst { it.packageName == packageName }
         if (selectionIndex != -1) {
             currentSelections[selectionIndex] = currentSelections[selectionIndex].copy(isEnabled = enabled)
@@ -732,26 +731,26 @@ class MainViewModel : ViewModel() {
             .apply()
     }
 
-    // Edge Lighting Corner Radius Methods
-    fun saveEdgeLightingCornerRadius(context: Context, radiusDp: Int) {
+    // Notification Lighting Corner Radius Methods
+    fun saveNotificationLightingCornerRadius(context: Context, radiusDp: Int) {
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
             putInt("edge_lighting_corner_radius", radiusDp)
         }
     }
 
-    fun loadEdgeLightingCornerRadius(context: Context): Int {
+    fun loadNotificationLightingCornerRadius(context: Context): Int {
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
         return prefs.getInt("edge_lighting_corner_radius", 20) // Default to 20 dp
     }
 
-    // Edge Lighting Stroke Thickness Methods
-    fun saveEdgeLightingStrokeThickness(context: Context, thicknessDp: Int) {
+    // Notification Lighting Stroke Thickness Methods
+    fun saveNotificationLightingStrokeThickness(context: Context, thicknessDp: Int) {
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
             putInt("edge_lighting_stroke_thickness", thicknessDp)
         }
     }
 
-    fun loadEdgeLightingStrokeThickness(context: Context): Int {
+    fun loadNotificationLightingStrokeThickness(context: Context): Int {
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
         return prefs.getInt("edge_lighting_stroke_thickness", 8) // Default to 8 dp
     }
@@ -913,33 +912,33 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun setEdgeLightingGlowSides(sides: Set<EdgeLightingSide>, context: Context) {
-        edgeLightingGlowSides.value = sides
-        saveEdgeLightingGlowSides(context, sides)
+    fun setNotificationLightingGlowSides(sides: Set<NotificationLightingSide>, context: Context) {
+        notificationLightingGlowSides.value = sides
+        saveNotificationLightingGlowSides(context, sides)
     }
 
-    fun saveEdgeLightingIndicatorX(context: Context, x: Float) {
-        edgeLightingIndicatorX.value = x
+    fun saveNotificationLightingIndicatorX(context: Context, x: Float) {
+        notificationLightingIndicatorX.value = x
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
             putFloat("edge_lighting_indicator_x", x)
         }
     }
 
-    fun saveEdgeLightingIndicatorY(context: Context, y: Float) {
-        edgeLightingIndicatorY.value = y
+    fun saveNotificationLightingIndicatorY(context: Context, y: Float) {
+        notificationLightingIndicatorY.value = y
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
             putFloat("edge_lighting_indicator_y", y)
         }
     }
 
-    fun saveEdgeLightingIndicatorScale(context: Context, scale: Float) {
-        edgeLightingIndicatorScale.value = scale
+    fun saveNotificationLightingIndicatorScale(context: Context, scale: Float) {
+        notificationLightingIndicatorScale.value = scale
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
             putFloat("edge_lighting_indicator_scale", scale)
         }
     }
 
-    private fun saveEdgeLightingGlowSides(context: Context, sides: Set<EdgeLightingSide>) {
+    private fun saveNotificationLightingGlowSides(context: Context, sides: Set<NotificationLightingSide>) {
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
         val gson = Gson()
         val json = gson.toJson(sides)
@@ -1028,19 +1027,19 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    private fun loadEdgeLightingGlowSides(context: Context): Set<EdgeLightingSide> {
+    private fun loadNotificationLightingGlowSides(context: Context): Set<NotificationLightingSide> {
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
         val json = prefs.getString("edge_lighting_glow_sides", null)
         return if (json != null) {
             val gson = Gson()
-            val type = object : TypeToken<Set<EdgeLightingSide>>() {}.type
+            val type = object : TypeToken<Set<NotificationLightingSide>>() {}.type
             try {
                 gson.fromJson(json, type)
             } catch (e: Exception) {
-                setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT)
+                setOf(NotificationLightingSide.LEFT, NotificationLightingSide.RIGHT)
             }
         } else {
-            setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT)
+            setOf(NotificationLightingSide.LEFT, NotificationLightingSide.RIGHT)
         }
     }
 }

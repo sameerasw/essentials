@@ -31,12 +31,12 @@ import androidx.savedstate.SavedStateRegistry
 import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
-import com.sameerasw.essentials.domain.model.EdgeLightingStyle
-import com.sameerasw.essentials.domain.model.EdgeLightingSide
+import com.sameerasw.essentials.domain.model.NotificationLightingStyle
+import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import androidx.compose.ui.graphics.Color as ComposeColor
 
 /**
- * Utility helper for creating and managing edge lighting overlays.
+ * Utility helper for creating and managing notification lighting overlays.
  * Provides a single unified implementation for both normal and accessibility service overlays.
  */
 object OverlayHelper {
@@ -60,14 +60,14 @@ object OverlayHelper {
         color: Int,
         strokeDp: Int = STROKE_DP,
         cornerRadiusDp: Int = CORNER_RADIUS_DP,
-        style: EdgeLightingStyle = EdgeLightingStyle.STROKE,
-        glowSides: Set<EdgeLightingSide> = setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT),
+        style: NotificationLightingStyle = NotificationLightingStyle.STROKE,
+        glowSides: Set<NotificationLightingSide> = setOf(NotificationLightingSide.LEFT, NotificationLightingSide.RIGHT),
         indicatorScale: Float = 1.0f
     ): FrameLayout {
-        if (style == EdgeLightingStyle.GLOW) {
+        if (style == NotificationLightingStyle.GLOW) {
             return createGlowOverlayView(context, color, glowSides)
         }
-        if (style == EdgeLightingStyle.INDICATOR) {
+        if (style == NotificationLightingStyle.INDICATOR) {
             return createIndicatorOverlayView(context, color, indicatorScale)
         }
 
@@ -85,10 +85,10 @@ object OverlayHelper {
         return overlay
     }
 
-    private fun createGlowOverlayView(context: Context, color: Int, sides: Set<EdgeLightingSide>): FrameLayout {
+    private fun createGlowOverlayView(context: Context, color: Int, sides: Set<NotificationLightingSide>): FrameLayout {
         val overlay = FrameLayout(context)
         
-        if (sides.contains(EdgeLightingSide.LEFT)) {
+        if (sides.contains(NotificationLightingSide.LEFT)) {
             val leftGlow = View(context).apply {
                 tag = "left_glow"
                 alpha = 0.5f
@@ -103,7 +103,7 @@ object OverlayHelper {
             overlay.addView(leftGlow)
         }
 
-        if (sides.contains(EdgeLightingSide.RIGHT)) {
+        if (sides.contains(NotificationLightingSide.RIGHT)) {
             val rightGlow = View(context).apply {
                 tag = "right_glow"
                 alpha = 0.5f
@@ -118,7 +118,7 @@ object OverlayHelper {
             overlay.addView(rightGlow)
         }
 
-        if (sides.contains(EdgeLightingSide.TOP)) {
+        if (sides.contains(NotificationLightingSide.TOP)) {
             val topGlow = View(context).apply {
                 tag = "top_glow"
                 alpha = 0.5f
@@ -133,7 +133,7 @@ object OverlayHelper {
             overlay.addView(topGlow)
         }
 
-        if (sides.contains(EdgeLightingSide.BOTTOM)) {
+        if (sides.contains(NotificationLightingSide.BOTTOM)) {
             val bottomGlow = View(context).apply {
                 tag = "bottom_glow"
                 alpha = 0.5f
@@ -217,7 +217,7 @@ object OverlayHelper {
     }
 
     /**
-     * Creates WindowManager.LayoutParams configured for an edge lighting overlay.
+     * Creates WindowManager.LayoutParams configured for an notification lighting overlay.
      *
      * @param overlayType The window type (e.g., TYPE_APPLICATION_OVERLAY, TYPE_ACCESSIBILITY_OVERLAY)
      * @param flags Optional additional flags to combine with default overlay flags
@@ -308,12 +308,12 @@ object OverlayHelper {
      */
     fun showPreview(
         view: View, 
-        style: EdgeLightingStyle, 
+        style: NotificationLightingStyle, 
         strokeWidthDp: Int,
         indicatorX: Float = 50f,
         indicatorY: Float = 2f
     ) {
-        if (style == EdgeLightingStyle.GLOW) {
+        if (style == NotificationLightingStyle.GLOW) {
             val vg = view as? ViewGroup
             if (vg != null) {
                 // Calculate max pixels using same logic as pulseGlowOverlay
@@ -326,7 +326,7 @@ object OverlayHelper {
                 vg.findViewWithTag<View>("top_glow")?.updateLayoutParams { height = maxPixels }
                 vg.findViewWithTag<View>("bottom_glow")?.updateLayoutParams { height = maxPixels }
             }
-        } else if (style == EdgeLightingStyle.INDICATOR) {
+        } else if (style == NotificationLightingStyle.INDICATOR) {
             view.alpha = 1f
             val indicator = view.findViewWithTag<View>("loading_indicator")
             indicator?.apply {
@@ -403,18 +403,18 @@ object OverlayHelper {
         view: View,
         maxPulses: Int = 3,
         pulseDurationMillis: Long = 3000,
-        style: EdgeLightingStyle = EdgeLightingStyle.STROKE,
+        style: NotificationLightingStyle = NotificationLightingStyle.STROKE,
         strokeWidthDp: Int = STROKE_DP,
         indicatorX: Float = 50f,
         indicatorY: Float = 2f,
         onAnimationEnd: (() -> Unit)? = null
     ) {
-        if (style == EdgeLightingStyle.GLOW) {
+        if (style == NotificationLightingStyle.GLOW) {
             pulseGlowOverlay(view as ViewGroup, maxPulses, pulseDurationMillis, strokeWidthDp, onAnimationEnd)
             return
         }
         
-        if (style == EdgeLightingStyle.INDICATOR) {
+        if (style == NotificationLightingStyle.INDICATOR) {
             pulseIndicatorOverlay(view as ViewGroup, pulseDurationMillis, indicatorX, indicatorY, onAnimationEnd)
             return
         }

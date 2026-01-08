@@ -1,6 +1,6 @@
 package com.sameerasw.essentials.domain.model
 
-enum class EdgeLightingSide {
+enum class NotificationLightingSide {
     LEFT,
     TOP,
     RIGHT,

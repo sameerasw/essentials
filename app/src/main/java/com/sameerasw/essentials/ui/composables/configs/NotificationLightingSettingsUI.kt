@@ -35,12 +35,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
-import com.sameerasw.essentials.domain.model.EdgeLightingColorMode
-import com.sameerasw.essentials.domain.model.EdgeLightingStyle
+import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
+import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
-import com.sameerasw.essentials.ui.components.pickers.EdgeLightingColorModePicker
-import com.sameerasw.essentials.ui.components.pickers.EdgeLightingStylePicker
+import com.sameerasw.essentials.ui.components.pickers.NotificationLightingColorModePicker
+import com.sameerasw.essentials.ui.components.pickers.NotificationLightingStylePicker
 import com.sameerasw.essentials.ui.components.pickers.GlowSidesPicker
 import com.sameerasw.essentials.ui.components.sheets.AppSelectionSheet
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
@@ -52,7 +52,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun EdgeLightingSettingsUI(
+fun NotificationLightingSettingsUI(
     viewModel: MainViewModel,
     modifier: Modifier = Modifier,
     highlightSetting: String? = null
@@ -66,8 +66,8 @@ fun EdgeLightingSettingsUI(
     // Corner radius state
 
     // Corner radius state
-    var cornerRadiusDp by remember { mutableFloatStateOf(viewModel.loadEdgeLightingCornerRadius(context).toFloat()) }
-    var strokeThicknessDp by remember { mutableFloatStateOf(viewModel.loadEdgeLightingStrokeThickness(context).toFloat()) }
+    var cornerRadiusDp by remember { mutableFloatStateOf(viewModel.loadNotificationLightingCornerRadius(context).toFloat()) }
+    var strokeThicknessDp by remember { mutableFloatStateOf(viewModel.loadNotificationLightingStrokeThickness(context).toFloat()) }
     val coroutineScope = rememberCoroutineScope()
 
     // Cleanup overlay when composable is destroyed
@@ -148,17 +148,17 @@ fun EdgeLightingSettingsUI(
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         
-        EdgeLightingStylePicker(
-            selectedStyle = viewModel.edgeLightingStyle.value,
+        NotificationLightingStylePicker(
+            selectedStyle = viewModel.notificationLightingStyle.value,
             onStyleSelected = { style ->
-                viewModel.setEdgeLightingStyle(style, context)
-                viewModel.triggerEdgeLighting(context)
+                viewModel.setNotificationLightingStyle(style, context)
+                viewModel.triggerNotificationLighting(context)
             },
         )
 
         // Stroke Adjustment Section (For STROKE style)
-        val style = viewModel.edgeLightingStyle.value
-        if (style == EdgeLightingStyle.STROKE) {
+        val style = viewModel.notificationLightingStyle.value
+        if (style == NotificationLightingStyle.STROKE) {
             Text(
                 text = "Stroke adjustment",
                 style = MaterialTheme.typography.titleMedium,
@@ -174,12 +174,12 @@ fun EdgeLightingSettingsUI(
                         cornerRadiusDp = newValue
                         HapticUtil.performSliderHaptic(view)
                         // Show preview overlay while dragging
-                        viewModel.triggerEdgeLightingWithRadiusAndThickness(context, newValue.toInt(), strokeThicknessDp.toInt())
+                        viewModel.triggerNotificationLightingWithRadiusAndThickness(context, newValue.toInt(), strokeThicknessDp.toInt())
                     },
                     valueRange = 0f..50f,
                     onValueChangeFinished = {
                         // Save the corner radius
-                        viewModel.saveEdgeLightingCornerRadius(context, cornerRadiusDp.toInt())
+                        viewModel.saveNotificationLightingCornerRadius(context, cornerRadiusDp.toInt())
                         // Wait 5 seconds then remove preview overlay
                         coroutineScope.launch {
                             delay(5000)
@@ -196,13 +196,13 @@ fun EdgeLightingSettingsUI(
                         strokeThicknessDp = newValue
                         HapticUtil.performSliderHaptic(view)
                         // Show preview overlay while dragging
-                        viewModel.triggerEdgeLightingWithRadiusAndThickness(context, cornerRadiusDp.toInt(), newValue.toInt())
+                        viewModel.triggerNotificationLightingWithRadiusAndThickness(context, cornerRadiusDp.toInt(), newValue.toInt())
                     },
                     modifier = Modifier.highlight(highlightSetting == "stroke_thickness"),
                     valueRange = 1f..20f,
                     onValueChangeFinished = {
                         // Save the stroke thickness
-                        viewModel.saveEdgeLightingStrokeThickness(context, strokeThicknessDp.toInt())
+                        viewModel.saveNotificationLightingStrokeThickness(context, strokeThicknessDp.toInt())
                         // Wait 5 seconds then remove preview overlay
                         coroutineScope.launch {
                             delay(5000)
@@ -214,7 +214,7 @@ fun EdgeLightingSettingsUI(
         }
 
         // Glow Adjustment Section (For GLOW style)
-        if (style == EdgeLightingStyle.GLOW) {
+        if (style == NotificationLightingStyle.GLOW) {
             Text(
                 text = "Glow adjustment",
                 style = MaterialTheme.typography.titleMedium,
@@ -224,12 +224,12 @@ fun EdgeLightingSettingsUI(
             
             RoundedCardContainer(modifier = Modifier) {
                 GlowSidesPicker(
-                    selectedSides = viewModel.edgeLightingGlowSides.value,
+                    selectedSides = viewModel.notificationLightingGlowSides.value,
                     onSideToggled = { side, isChecked ->
-                        val current = viewModel.edgeLightingGlowSides.value.toMutableSet()
+                        val current = viewModel.notificationLightingGlowSides.value.toMutableSet()
                         if (isChecked) current.add(side) else current.remove(side)
-                        viewModel.setEdgeLightingGlowSides(current, context)
-                        viewModel.triggerEdgeLighting(context)
+                        viewModel.setNotificationLightingGlowSides(current, context)
+                        viewModel.triggerNotificationLighting(context)
                     }
                 )
 
@@ -239,11 +239,11 @@ fun EdgeLightingSettingsUI(
                     onValueChange = { newValue ->
                         strokeThicknessDp = newValue
                         HapticUtil.performSliderHaptic(view)
-                        viewModel.triggerEdgeLightingWithRadiusAndThickness(context, cornerRadiusDp.toInt(), newValue.toInt())
+                        viewModel.triggerNotificationLightingWithRadiusAndThickness(context, cornerRadiusDp.toInt(), newValue.toInt())
                     },
                     valueRange = 1f..10f,
                     onValueChangeFinished = {
-                        viewModel.saveEdgeLightingStrokeThickness(context, strokeThicknessDp.toInt())
+                        viewModel.saveNotificationLightingStrokeThickness(context, strokeThicknessDp.toInt())
                         coroutineScope.launch {
                             delay(2000)
                             viewModel.removePreviewOverlay(context)
@@ -254,7 +254,7 @@ fun EdgeLightingSettingsUI(
         }
         
         // Indicator Adjustment Section (For INDICATOR style)
-        if (style == EdgeLightingStyle.INDICATOR) {
+        if (style == NotificationLightingStyle.INDICATOR) {
             Text(
                 text = "Placement",
                 style = MaterialTheme.typography.titleMedium,
@@ -265,11 +265,11 @@ fun EdgeLightingSettingsUI(
             RoundedCardContainer(modifier = Modifier) {
                 ConfigSliderItem(
                     title = "Horizontal position",
-                    value = viewModel.edgeLightingIndicatorX.value,
+                    value = viewModel.notificationLightingIndicatorX.value,
                     onValueChange = { newValue ->
-                        viewModel.saveEdgeLightingIndicatorX(context, newValue)
+                        viewModel.saveNotificationLightingIndicatorX(context, newValue)
                         HapticUtil.performSliderHaptic(view)
-                        viewModel.triggerEdgeLighting(context)
+                        viewModel.triggerNotificationLighting(context)
                     },
                     valueRange = 0f..100f,
                     valueFormatter = { "%.0f%%".format(it) }
@@ -277,11 +277,11 @@ fun EdgeLightingSettingsUI(
                 
                 ConfigSliderItem(
                     title = "Vertical position",
-                    value = viewModel.edgeLightingIndicatorY.value,
+                    value = viewModel.notificationLightingIndicatorY.value,
                     onValueChange = { newValue ->
-                        viewModel.saveEdgeLightingIndicatorY(context, newValue)
+                        viewModel.saveNotificationLightingIndicatorY(context, newValue)
                         HapticUtil.performSliderHaptic(view)
-                        viewModel.triggerEdgeLighting(context)
+                        viewModel.triggerNotificationLighting(context)
                     },
                     valueRange = 0f..100f,
                     valueFormatter = { "%.0f%%".format(it) }
@@ -298,11 +298,11 @@ fun EdgeLightingSettingsUI(
             RoundedCardContainer(modifier = Modifier) {
                 ConfigSliderItem(
                     title = "Scale",
-                    value = viewModel.edgeLightingIndicatorScale.value,
+                    value = viewModel.notificationLightingIndicatorScale.value,
                     onValueChange = { newValue ->
-                        viewModel.saveEdgeLightingIndicatorScale(context, newValue)
+                        viewModel.saveNotificationLightingIndicatorScale(context, newValue)
                         HapticUtil.performSliderHaptic(view)
-                        viewModel.triggerEdgeLighting(context)
+                        viewModel.triggerNotificationLighting(context)
                     },
                     valueRange = 0.5f..3f,
                     valueFormatter = { "%.1fx".format(it) }
@@ -310,21 +310,21 @@ fun EdgeLightingSettingsUI(
 
                 ConfigSliderItem(
                     title = "Duration",
-                    value = viewModel.edgeLightingPulseDuration.value,
+                    value = viewModel.notificationLightingPulseDuration.value,
                     onValueChange = { 
-                        viewModel.saveEdgeLightingPulseDuration(context, it)
+                        viewModel.saveNotificationLightingPulseDuration(context, it)
                         HapticUtil.performSliderHaptic(view)
                     },
                     valueRange = 1000f..10000f,
                     valueFormatter = { "%.1fs".format(it / 1000f) },
-                    onValueChangeFinished = { viewModel.triggerEdgeLighting(context) }
+                    onValueChangeFinished = { viewModel.triggerNotificationLighting(context) }
                 )
             }
         }
 
 
         // Animation Settings (Only for STROKE and GLOW)
-        if (style == EdgeLightingStyle.STROKE || style == EdgeLightingStyle.GLOW) {
+        if (style == NotificationLightingStyle.STROKE || style == NotificationLightingStyle.GLOW) {
             Text(
                 text = "Animation",
                 style = MaterialTheme.typography.titleMedium,
@@ -336,27 +336,27 @@ fun EdgeLightingSettingsUI(
             RoundedCardContainer(modifier = Modifier) {
                 ConfigSliderItem(
                     title = "Pulse count",
-                    value = viewModel.edgeLightingPulseCount.intValue.toFloat(),
+                    value = viewModel.notificationLightingPulseCount.intValue.toFloat(),
                     onValueChange = { 
-                        viewModel.saveEdgeLightingPulseCount(context, it.toInt())
+                        viewModel.saveNotificationLightingPulseCount(context, it.toInt())
                         HapticUtil.performSliderHaptic(view)
                     },
                     valueRange = 1f..5f,
                     steps = 3,
                     valueFormatter = { "%.0f".format(it) },
-                    onValueChangeFinished = { viewModel.triggerEdgeLighting(context) }
+                    onValueChangeFinished = { viewModel.triggerNotificationLighting(context) }
                 )
                     
                 ConfigSliderItem(
                     title = "Pulse duration",
-                    value = viewModel.edgeLightingPulseDuration.value,
+                    value = viewModel.notificationLightingPulseDuration.value,
                     onValueChange = { 
-                        viewModel.saveEdgeLightingPulseDuration(context, it)
+                        viewModel.saveNotificationLightingPulseDuration(context, it)
                         HapticUtil.performSliderHaptic(view)
                     },
                     valueRange = 100f..10000f,
                     valueFormatter = { "%.1fs".format(it / 1000f) },
-                    onValueChangeFinished = { viewModel.triggerEdgeLighting(context) }
+                    onValueChangeFinished = { viewModel.triggerNotificationLighting(context) }
                 )
             }
         }
@@ -373,15 +373,15 @@ fun EdgeLightingSettingsUI(
         RoundedCardContainer(
             modifier = Modifier
         ) {
-            EdgeLightingColorModePicker(
-                selectedMode = viewModel.edgeLightingColorMode.value,
+            NotificationLightingColorModePicker(
+                selectedMode = viewModel.notificationLightingColorMode.value,
                 onModeSelected = { mode ->
                     HapticUtil.performVirtualKeyHaptic(view)
-                    viewModel.setEdgeLightingColorMode(mode, context)
+                    viewModel.setNotificationLightingColorMode(mode, context)
                 }
             )
 
-            if (viewModel.edgeLightingColorMode.value == EdgeLightingColorMode.CUSTOM) {
+            if (viewModel.notificationLightingColorMode.value == NotificationLightingColorMode.CUSTOM) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -423,7 +423,7 @@ fun EdgeLightingSettingsUI(
 
                     val pages = allColors.chunked(21)
                     val pagerState = rememberPagerState(pageCount = { pages.size })
-                    val currentCustomColor = viewModel.edgeLightingCustomColor.intValue
+                    val currentCustomColor = viewModel.notificationLightingCustomColor.intValue
 
                     HorizontalPager(
                         state = pagerState,
@@ -451,7 +451,7 @@ fun EdgeLightingSettingsUI(
                                             size = 36.dp,
                                             onClick = {
                                                 HapticUtil.performVirtualKeyHaptic(view)
-                                                viewModel.setEdgeLightingCustomColor(colorInt, context)
+                                                viewModel.setNotificationLightingCustomColor(colorInt, context)
                                             }
                                         )
                                     }
@@ -500,9 +500,9 @@ fun EdgeLightingSettingsUI(
         if (showAppSelectionSheet) {
             AppSelectionSheet(
                 onDismissRequest = { showAppSelectionSheet = false },
-                onLoadApps = { viewModel.loadEdgeLightingSelectedApps(it) },
-                onSaveApps = { ctx, apps -> viewModel.saveEdgeLightingSelectedApps(ctx, apps) },
-                onAppToggle = { ctx, pkg, enabled -> viewModel.updateEdgeLightingAppEnabled(ctx, pkg, enabled) },
+                onLoadApps = { viewModel.loadNotificationLightingSelectedApps(it) },
+                onSaveApps = { ctx, apps -> viewModel.saveNotificationLightingSelectedApps(ctx, apps) },
+                onAppToggle = { ctx, pkg, enabled -> viewModel.updateNotificationLightingAppEnabled(ctx, pkg, enabled) },
                 context = context
             )
         }

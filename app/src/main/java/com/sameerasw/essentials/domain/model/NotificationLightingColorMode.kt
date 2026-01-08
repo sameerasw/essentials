@@ -1,6 +1,6 @@
 package com.sameerasw.essentials.domain.model
 
-enum class EdgeLightingColorMode {
+enum class NotificationLightingColorMode {
     SYSTEM,
     CUSTOM,
     APP_SPECIFIC

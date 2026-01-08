@@ -53,7 +53,7 @@ import com.sameerasw.essentials.ui.components.linkActions.LinkPickerScreen
 import com.sameerasw.essentials.ui.composables.configs.StatusBarIconSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.CaffeinateSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ScreenOffWidgetSettingsUI
-import com.sameerasw.essentials.ui.composables.configs.EdgeLightingSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.NotificationLightingSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.SoundModeTileSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.QuickSettingsTilesSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ButtonRemapSettingsUI
@@ -92,7 +92,7 @@ class FeatureSettingsActivity : FragmentActivity() {
             "Screen off widget" to "Invisible widget to turn the screen off",
             "Statusbar icons" to "Control statusbar icons visibility",
             "Caffeinate" to "Keep the screen awake",
-            "Edge lighting" to "Lighting effects for new notifications",
+            "Notification lighting" to "Lighting effects for new notifications",
             "Sound mode tile" to "QS tile to toggle sound mode",
             "Link actions" to "Handle links with multiple apps",
             "Flashlight toggle" to "Toggle flashlight while screen off",
@@ -162,13 +162,13 @@ class FeatureSettingsActivity : FragmentActivity() {
                 val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
                 val isWriteSecureSettingsEnabled by viewModel.isWriteSecureSettingsEnabled
                 val isOverlayPermissionGranted by viewModel.isOverlayPermissionGranted
-                val isEdgeLightingAccessibilityEnabled by viewModel.isEdgeLightingAccessibilityEnabled
+                val isNotificationLightingAccessibilityEnabled by viewModel.isNotificationLightingAccessibilityEnabled
                 val isNotificationListenerEnabled by viewModel.isNotificationListenerEnabled
 
-                // FAB State for Edge Lighting
+                // FAB State for Notification Lighting
                 var fabExpanded by remember { mutableStateOf(true) }
                 LaunchedEffect(feature) {
-                    if (feature == "Edge lighting") {
+                    if (feature == "Notification lighting") {
                         fabExpanded = true
                         delay(3000)
                         fabExpanded = false
@@ -176,11 +176,11 @@ class FeatureSettingsActivity : FragmentActivity() {
                 }
 
                 // Show permission sheet if feature has missing permissions
-                LaunchedEffect(feature, isAccessibilityEnabled, isWriteSecureSettingsEnabled, isOverlayPermissionGranted, isEdgeLightingAccessibilityEnabled, isNotificationListenerEnabled) {
+                LaunchedEffect(feature, isAccessibilityEnabled, isWriteSecureSettingsEnabled, isOverlayPermissionGranted, isNotificationLightingAccessibilityEnabled, isNotificationListenerEnabled) {
                     val hasMissingPermissions = when (feature) {
                         "Screen off widget" -> !isAccessibilityEnabled
                         "Statusbar icons" -> !isWriteSecureSettingsEnabled
-                        "Edge lighting" -> !isOverlayPermissionGranted || !isEdgeLightingAccessibilityEnabled || !isNotificationListenerEnabled
+                        "Notification lighting" -> !isOverlayPermissionGranted || !isNotificationLightingAccessibilityEnabled || !isNotificationListenerEnabled
                         "Button remap" -> !isAccessibilityEnabled
                         "Dynamic night light" -> !isAccessibilityEnabled || !isWriteSecureSettingsEnabled
                         "Snooze system notifications" -> !isNotificationListenerEnabled
@@ -226,11 +226,11 @@ class FeatureSettingsActivity : FragmentActivity() {
                                 isGranted = isWriteSecureSettingsEnabled
                             )
                         )
-                        "Edge lighting" -> listOf(
+                        "Notification lighting" -> listOf(
                             PermissionItem(
                                 iconRes = R.drawable.rounded_magnify_fullscreen_24,
                                 title = "Overlay Permission",
-                                description = "Required to display the edge lighting overlay on the screen",
+                                description = "Required to display the notification lighting overlay on the screen",
                                 dependentFeatures = PermissionRegistry.getFeatures("DRAW_OVERLAYS"),
                                 actionLabel = "Grant Permission",
                                 action = {
@@ -243,7 +243,7 @@ class FeatureSettingsActivity : FragmentActivity() {
                             PermissionItem(
                                 iconRes = R.drawable.rounded_settings_accessibility_24,
                                 title = "Accessibility Service",
-                                description = "Required to trigger edge lighting on new notifications",
+                                description = "Required to trigger notification lighting on new notifications",
                                 dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
                                 actionLabel = "Enable in Settings",
                                 action = {
@@ -251,7 +251,7 @@ class FeatureSettingsActivity : FragmentActivity() {
                                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                                     context.startActivity(intent)
                                 },
-                                isGranted = isEdgeLightingAccessibilityEnabled
+                                isGranted = isNotificationLightingAccessibilityEnabled
                             ),
                             PermissionItem(
                                 iconRes = R.drawable.rounded_notifications_unread_24,
@@ -399,11 +399,11 @@ class FeatureSettingsActivity : FragmentActivity() {
                         )
                     },
                     floatingActionButton = {
-                        if (feature == "Edge lighting") {
+                        if (feature == "Notification lighting") {
                             ExtendedFloatingActionButton(
                                 onClick = {
                                     HapticUtil.performVirtualKeyHaptic(view)
-                                    viewModel.triggerEdgeLighting(context)
+                                    viewModel.triggerNotificationLighting(context)
                                 },
                                 expanded = fabExpanded,
                                 icon = { Icon(painter = painterResource(id = R.drawable.rounded_play_arrow_24), contentDescription = null) },
@@ -446,8 +446,8 @@ class FeatureSettingsActivity : FragmentActivity() {
                                     highlightSetting = highlightSetting
                                 )
                             }
-                            "Edge lighting" -> {
-                                EdgeLightingSettingsUI(
+                            "Notification lighting" -> {
+                                NotificationLightingSettingsUI(
                                     viewModel = viewModel,
                                     modifier = Modifier.padding(top = 16.dp),
                                     highlightSetting = highlightSetting

@@ -1,6 +1,6 @@
 package com.sameerasw.essentials.domain.model
 
-enum class EdgeLightingStyle {
+enum class NotificationLightingStyle {
     STROKE,
     GLOW,
     INDICATOR

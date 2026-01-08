@@ -8,9 +8,9 @@ import android.os.VibratorManager
 import android.view.accessibility.AccessibilityEvent
 import com.sameerasw.essentials.utils.HapticFeedbackType
 import com.sameerasw.essentials.utils.performHapticFeedback
-import com.sameerasw.essentials.domain.model.EdgeLightingColorMode
-import com.sameerasw.essentials.domain.model.EdgeLightingStyle
-import com.sameerasw.essentials.domain.model.EdgeLightingSide
+import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
+import com.sameerasw.essentials.domain.model.NotificationLightingStyle
+import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.IntentFilter
@@ -82,13 +82,13 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
     private var strokeThicknessDp: Int = OverlayHelper.STROKE_DP
     private var isPreview: Boolean = false
     private var ignoreScreenState: Boolean = false
-    private var colorMode: EdgeLightingColorMode = EdgeLightingColorMode.SYSTEM
+    private var colorMode: NotificationLightingColorMode = NotificationLightingColorMode.SYSTEM
     private var customColor: Int = 0
     private var resolvedColor: Int? = null
     private var pulseCount: Int = 1
     private var pulseDuration: Long = 3000
-    private var edgeLightingStyle: EdgeLightingStyle = EdgeLightingStyle.STROKE
-    private var glowSides: Set<EdgeLightingSide> = setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT)
+    private var edgeLightingStyle: NotificationLightingStyle = NotificationLightingStyle.STROKE
+    private var glowSides: Set<NotificationLightingSide> = setOf(NotificationLightingSide.LEFT, NotificationLightingSide.RIGHT)
     private var indicatorX: Float = 50f
     private var indicatorY: Float = 2f
     private var indicatorScale: Float = 1.0f
@@ -464,21 +464,21 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
                 triggerHapticFeedback(useWidgetPreference = true)            
                 performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN)
             }
-            "SHOW_EDGE_LIGHTING" -> {
+            "SHOW_NOTIFICATION_LIGHTING" -> {
                 cornerRadiusDp = intent.getIntExtra("corner_radius_dp", OverlayHelper.CORNER_RADIUS_DP)
                 strokeThicknessDp = intent.getIntExtra("stroke_thickness_dp", OverlayHelper.STROKE_DP)
                 isPreview = intent.getBooleanExtra("is_preview", false)
                 ignoreScreenState = intent.getBooleanExtra("ignore_screen_state", false)
-                colorMode = EdgeLightingColorMode.valueOf(intent.getStringExtra("color_mode") ?: "SYSTEM")
+                colorMode = NotificationLightingColorMode.valueOf(intent.getStringExtra("color_mode") ?: "SYSTEM")
                 customColor = intent.getIntExtra("custom_color", 0)
                 resolvedColor = if (intent.hasExtra("resolved_color")) intent.getIntExtra("resolved_color", 0) else null
                 pulseCount = intent.getIntExtra("pulse_count", 1)
                 pulseDuration = intent.getLongExtra("pulse_duration", 3000)
                 val styleName = intent.getStringExtra("style")
-                edgeLightingStyle = if (styleName != null) EdgeLightingStyle.valueOf(styleName) else EdgeLightingStyle.STROKE
+                edgeLightingStyle = if (styleName != null) NotificationLightingStyle.valueOf(styleName) else NotificationLightingStyle.STROKE
                 val glowSidesArray = intent.getStringArrayExtra("glow_sides")
-                glowSides = glowSidesArray?.mapNotNull { try { EdgeLightingSide.valueOf(it) } catch(_: Exception) { null } }?.toSet() 
-                    ?: setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT)
+                glowSides = glowSidesArray?.mapNotNull { try { NotificationLightingSide.valueOf(it) } catch(_: Exception) { null } }?.toSet() 
+                    ?: setOf(NotificationLightingSide.LEFT, NotificationLightingSide.RIGHT)
                 indicatorX = intent.getFloatExtra("indicator_x", 50f)
                 indicatorY = intent.getFloatExtra("indicator_y", 2f)
                 indicatorScale = intent.getFloatExtra("indicator_scale", 1.0f)
@@ -490,9 +490,9 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
                 }
                 
                 try {
-                    showEdgeLighting()
+                    showNotificationLighting()
                 } catch (e: Exception) {
-                    Log.e("ButtonRemap", "Failed to show edge lighting", e)
+                    Log.e("ButtonRemap", "Failed to show notification lighting", e)
                 }
             }
             "APP_AUTHENTICATED" -> {
@@ -569,7 +569,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
     }
 
     @RequiresApi(Build.VERSION_CODES.S)
-    private fun showEdgeLighting() {
+    private fun showNotificationLighting() {
         // For preview mode, remove existing overlays first to update with new corner radius
         if (isPreview && overlayViews.isNotEmpty()) {
             removeOverlay()
@@ -589,7 +589,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         try {
             val color = when {
                 resolvedColor != null -> resolvedColor!!
-                colorMode == EdgeLightingColorMode.CUSTOM -> customColor
+                colorMode == NotificationLightingColorMode.CUSTOM -> customColor
                 else -> getColor(android.R.color.system_accent1_100)
             }
             
