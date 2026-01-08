@@ -75,6 +75,7 @@ class MainViewModel : ViewModel() {
     val isFlashlightFadeEnabled = mutableStateOf(false)
     val isFlashlightAdjustEnabled = mutableStateOf(false)
     val isFlashlightGlobalEnabled = mutableStateOf(false)
+    val isFlashlightLiveUpdateEnabled = mutableStateOf(true)
     val flashlightLastIntensity = mutableStateOf(1)
 
 
@@ -197,6 +198,7 @@ class MainViewModel : ViewModel() {
         isFlashlightFadeEnabled.value = prefs.getBoolean("flashlight_fade_enabled", false)
         isFlashlightAdjustEnabled.value = prefs.getBoolean("flashlight_adjust_intensity_enabled", false)
         isFlashlightGlobalEnabled.value = prefs.getBoolean("flashlight_global_enabled", false)
+        isFlashlightLiveUpdateEnabled.value = prefs.getBoolean("flashlight_live_update_enabled", true)
         flashlightLastIntensity.value = prefs.getInt("flashlight_last_intensity", 1)
 
 
@@ -864,6 +866,13 @@ class MainViewModel : ViewModel() {
         isFlashlightGlobalEnabled.value = enabled
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
             putBoolean("flashlight_global_enabled", enabled)
+        }
+    }
+
+    fun setFlashlightLiveUpdateEnabled(enabled: Boolean, context: Context) {
+        isFlashlightLiveUpdateEnabled.value = enabled
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
+            putBoolean("flashlight_live_update_enabled", enabled)
         }
     }
 

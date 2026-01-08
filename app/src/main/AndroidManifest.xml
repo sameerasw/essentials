@@ -16,8 +16,8 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="moe.shizuku.manager.permission.API_V23" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+    <uses-permission android:name="android.permission.POST_PROMOTED_NOTIFICATIONS" tools:ignore="UnusedAttribute" />
 
 
 
@@ -291,6 +291,16 @@
             android:name=".services.EdgeLightingService"
             android:exported="false"
             android:foregroundServiceType="specialUse" />
+
+        <receiver
+            android:name=".services.receivers.FlashlightActionReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.sameerasw.essentials.ACTION_FLASHLIGHT_INCREASE" />
+                <action android:name="com.sameerasw.essentials.ACTION_FLASHLIGHT_DECREASE" />
+                <action android:name="com.sameerasw.essentials.ACTION_FLASHLIGHT_OFF" />
+            </intent-filter>
+        </receiver>
 
         <receiver
             android:name=".services.receivers.SecurityDeviceAdminReceiver"

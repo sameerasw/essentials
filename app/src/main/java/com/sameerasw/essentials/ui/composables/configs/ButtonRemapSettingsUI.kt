@@ -267,6 +267,13 @@ fun ButtonRemapSettingsUI(
                         isChecked = viewModel.isFlashlightAdjustEnabled.value,
                         onCheckedChange = { viewModel.setFlashlightAdjustEnabled(it, context) }
                     )
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_flashlight_on_24,
+                        title = "Live update",
+                        description = "Show brightness in status bar",
+                        isChecked = viewModel.isFlashlightLiveUpdateEnabled.value,
+                        onCheckedChange = { viewModel.setFlashlightLiveUpdateEnabled(it, context) }
+                    )
                 }
 
 

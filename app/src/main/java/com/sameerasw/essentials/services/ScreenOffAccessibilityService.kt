@@ -42,6 +42,15 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.Job
+import android.app.NotificationManager
+import android.app.NotificationChannel
+import androidx.core.app.NotificationCompat
+import android.app.PendingIntent
+import com.sameerasw.essentials.R
+import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
+import android.app.Notification
+import android.graphics.Color
+import android.graphics.drawable.Icon
 
 
 class ScreenOffAccessibilityService : AccessibilityService() {
@@ -51,6 +60,9 @@ class ScreenOffAccessibilityService : AccessibilityService() {
     private var currentIntensityLevel: Int = 1
     private var flashlightJob: Job? = null
     private var isInternalToggle = false
+    
+    private val NOTIFICATION_ID_FLASHLIGHT = 1001
+    private val CHANNEL_ID_FLASHLIGHT = "flashlight_live_update"
 
 
 
@@ -103,6 +115,7 @@ class ScreenOffAccessibilityService : AccessibilityService() {
                                 durationMs = 400L,
                                 steps = 20
                             )
+                            updateFlashlightNotification(lastIntensity)
                         }
                     } else if (isInternalToggle) {
                         // Internal trigger - we already handled the job
@@ -110,11 +123,13 @@ class ScreenOffAccessibilityService : AccessibilityService() {
                     } else {
                         // Normal mode or no global - sync level
                         currentIntensityLevel = com.sameerasw.essentials.utils.FlashlightUtil.getDefaultLevel(this@ScreenOffAccessibilityService, cameraId)
+                        updateFlashlightNotification(currentIntensityLevel)
                     }
                 } else {
                     // Flashlight turned OFF
                     flashlightJob?.cancel() // Stop any ongoing fade-in or fade-out
                     isInternalToggle = false // Reset
+                    cancelFlashlightNotification()
                 }
             }
         }
@@ -416,23 +431,20 @@ class ScreenOffAccessibilityService : AccessibilityService() {
 
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if (intent?.action == "LOCK_SCREEN") {
-            // Trigger haptic feedback based on widget preference
+        val action = intent?.action
+        if (action == "LOCK_SCREEN") {
             triggerHapticFeedback(useWidgetPreference = true)            
-            // Lock the screen
             performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN)
-        } else if (intent?.action == "SHOW_EDGE_LIGHTING") {
-            // Extract corner radius and preview flag from intent
-            cornerRadiusDp = intent.getIntExtra("corner_radius_dp", OverlayHelper.CORNER_RADIUS_DP)
+        } else if (action == "SHOW_EDGE_LIGHTING") {
+            cornerRadiusDp = intent!!.getIntExtra("corner_radius_dp", OverlayHelper.CORNER_RADIUS_DP)
             strokeThicknessDp = intent.getIntExtra("stroke_thickness_dp", OverlayHelper.STROKE_DP)
             isPreview = intent.getBooleanExtra("is_preview", false)
             ignoreScreenState = intent.getBooleanExtra("ignore_screen_state", false)
-            val colorModeName = intent.getStringExtra("color_mode")
-            colorMode = EdgeLightingColorMode.valueOf(colorModeName ?: EdgeLightingColorMode.SYSTEM.name)
+            colorMode = EdgeLightingColorMode.valueOf(intent.getStringExtra("color_mode") ?: "SYSTEM")
             customColor = intent.getIntExtra("custom_color", 0)
             resolvedColor = if (intent.hasExtra("resolved_color")) intent.getIntExtra("resolved_color", 0) else null
             pulseCount = intent.getIntExtra("pulse_count", 1)
-            pulseDuration = intent.getLongExtra("pulse_duration", 3000L)
+            pulseDuration = intent.getLongExtra("pulse_duration", 3000)
             val styleName = intent.getStringExtra("style")
             edgeLightingStyle = if (styleName != null) EdgeLightingStyle.valueOf(styleName) else EdgeLightingStyle.STROKE
             val glowSidesArray = intent.getStringArrayExtra("glow_sides")
@@ -441,25 +453,20 @@ class ScreenOffAccessibilityService : AccessibilityService() {
             indicatorX = intent.getFloatExtra("indicator_x", 50f)
             indicatorY = intent.getFloatExtra("indicator_y", 2f)
             indicatorScale = intent.getFloatExtra("indicator_scale", 1.0f)
-            val removePreview = intent.getBooleanExtra("remove_preview", false)
-            if (removePreview) {
-                // Remove preview overlay
-                removeOverlay()
-                return super.onStartCommand(intent, flags, startId)
-            }
-            // Accessibility elevation: show overlay from accessibility service so it can appear above more surfaces
-            try {
-                showEdgeLighting()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        } else if (intent?.action == "APP_AUTHENTICATED") {
-            val packageName = intent.getStringExtra("package_name")
+            showEdgeLighting()
+        } else if (action == "APP_AUTHENTICATED") {
+            val packageName = intent!!.getStringExtra("package_name")
             if (packageName != null) {
                 authenticatedPackages.add(packageName)
             }
-        } else if (intent?.action == "APP_AUTHENTICATION_FAILED") {
+        } else if (action == "APP_AUTHENTICATION_FAILED") {
             performGlobalAction(GLOBAL_ACTION_HOME)
+        } else if (action == FlashlightActionReceiver.ACTION_INCREASE) {
+            adjustFlashlightIntensity(true)
+        } else if (action == FlashlightActionReceiver.ACTION_DECREASE) {
+            adjustFlashlightIntensity(false)
+        } else if (action == FlashlightActionReceiver.ACTION_OFF) {
+            toggleFlashlight()
         }
         return super.onStartCommand(intent, flags, startId)
     }
@@ -662,6 +669,132 @@ class ScreenOffAccessibilityService : AccessibilityService() {
         return super.onKeyEvent(event)
     }
 
+    private fun updateFlashlightNotification(intensity: Int) {
+        val prefs = getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+        if (!prefs.getBoolean("flashlight_live_update_enabled", true)) {
+            cancelFlashlightNotification()
+            return
+        }
+        
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                CHANNEL_ID_FLASHLIGHT,
+                "Flashlight Controls",
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                description = "Controls for active flashlight"
+                setShowBadge(false)
+                setSound(null, null)
+                enableVibration(false)
+            }
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        val cameraId = currentTorchId ?: return
+        val maxLevel = com.sameerasw.essentials.utils.FlashlightUtil.getMaxLevel(this, cameraId)
+        val percentage = (intensity * 100) / maxOf(1, maxLevel)
+        
+        val decreaseIntent = PendingIntent.getBroadcast(this, 1, 
+            Intent(this, FlashlightActionReceiver::class.java).apply { action = FlashlightActionReceiver.ACTION_DECREASE },
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+            
+        val increaseIntent = PendingIntent.getBroadcast(this, 2, 
+            Intent(this, FlashlightActionReceiver::class.java).apply { action = FlashlightActionReceiver.ACTION_INCREASE },
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+            
+        val offIntent = PendingIntent.getBroadcast(this, 3, 
+            Intent(this, FlashlightActionReceiver::class.java).apply { action = FlashlightActionReceiver.ACTION_OFF },
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+
+        if (Build.VERSION.SDK_INT >= 35) {
+            // Native API 35+ implementation for Live Updates
+            try {
+                val builder = Notification.Builder(this, CHANNEL_ID_FLASHLIGHT)
+                    .setSmallIcon(R.drawable.rounded_flashlight_on_24)
+                    .setContentTitle("Flashlight active")
+                    .setContentText("Brightness: $percentage%")
+                    .setOngoing(true)
+                    .setOnlyAlertOnce(true)
+                    .setCategory(Notification.CATEGORY_SERVICE)
+                    .setColorized(false)
+                    .setShowWhen(false)
+                    .addAction(Notification.Action.Builder(
+                        Icon.createWithResource(this, R.drawable.rounded_keyboard_arrow_down_24),
+                        "Decrease", decreaseIntent).build())
+                    .addAction(Notification.Action.Builder(
+                        Icon.createWithResource(this, R.drawable.rounded_power_settings_new_24),
+                        "Off", offIntent).build())
+                    .addAction(Notification.Action.Builder(
+                        Icon.createWithResource(this, R.drawable.rounded_keyboard_arrow_up_24),
+                        "Increase", increaseIntent).build())
+
+                if (Build.VERSION.SDK_INT >= 36) {
+                    try {
+                        val progressStyle = Notification.ProgressStyle()
+                            .setStyledByProgress(true)
+                            .setProgress(intensity)
+                            .setProgressTrackerIcon(Icon.createWithResource(this, R.drawable.rounded_flashlight_on_24))
+                        
+                        progressStyle.addProgressSegment(
+                            Notification.ProgressStyle.Segment(maxLevel)
+                                .setColor(Color.YELLOW)
+                        )
+                        builder.setStyle(progressStyle)
+                    } catch (e: Throwable) {
+                        Log.e("FlashlightNotification", "ProgressStyle error", e)
+                    }
+                }
+
+                // Promotion and Status Chip text (API 35+)
+                try {
+                    builder.javaClass.getMethod("setRequestPromotedOngoing", Boolean::class.javaPrimitiveType)
+                        .invoke(builder, true)
+                    builder.javaClass.getMethod("setShortCriticalText", CharSequence::class.java)
+                        .invoke(builder, "$percentage%")
+                } catch (_: Throwable) {
+                    // Methods not found, will rely on extras below
+                }
+                
+                // Add mandatory extras for promotion as fallback or if methods are missing
+                val extras = android.os.Bundle()
+                extras.putBoolean("android.requestPromotedOngoing", true)
+                extras.putString("android.shortCriticalText", "$percentage%")
+                builder.addExtras(extras)
+
+                notificationManager.notify(NOTIFICATION_ID_FLASHLIGHT, builder.build())
+                return
+            } catch (e: Exception) {
+                Log.e("FlashlightNotification", "Native builder failed, falling back to compat", e)
+            }
+        }
+
+        // Fallback for API < 35
+        val builder = NotificationCompat.Builder(this, CHANNEL_ID_FLASHLIGHT)
+            .setSmallIcon(R.drawable.rounded_flashlight_on_24)
+            .setContentTitle("Flashlight active")
+            .setContentText("Brightness: $percentage%")
+            .setOngoing(true)
+            .setOnlyAlertOnce(true)
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setCategory(NotificationCompat.CATEGORY_SERVICE)
+            .addAction(R.drawable.rounded_keyboard_arrow_down_24, "Decrease", decreaseIntent)
+            .addAction(R.drawable.rounded_power_settings_new_24, "Off", offIntent)
+            .addAction(R.drawable.rounded_keyboard_arrow_up_24, "Increase", increaseIntent)
+            .addExtras(android.os.Bundle().apply {
+                putBoolean("android.requestPromotedOngoing", true)
+                putString("android.shortCriticalText", "$percentage%")
+            })
+
+        notificationManager.notify(NOTIFICATION_ID_FLASHLIGHT, builder.build())
+    }
+
+    private fun cancelFlashlightNotification() {
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancel(NOTIFICATION_ID_FLASHLIGHT)
+    }
+
     private fun adjustFlashlightIntensity(increase: Boolean) {
         val cameraId = currentTorchId ?: return
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
@@ -693,6 +826,7 @@ class ScreenOffAccessibilityService : AccessibilityService() {
             
             // Sync local state
             currentIntensityLevel = targetLevel
+            updateFlashlightNotification(targetLevel)
             
             val prefs = getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
             // Persist the level if global is enabled
@@ -833,6 +967,11 @@ class ScreenOffAccessibilityService : AccessibilityService() {
                             maxLevel = currentIntensityLevel
                         )
                     }
+                    if (targetState) {
+                        updateFlashlightNotification(currentIntensityLevel)
+                    } else {
+                        cancelFlashlightNotification()
+                    }
                 } else {
                     isInternalToggle = true
                     flashlightJob?.cancel()
@@ -842,7 +981,13 @@ class ScreenOffAccessibilityService : AccessibilityService() {
                     } else {
                         defaultLevel
                     }
+                    if (!isTorchOn) {
+                        updateFlashlightNotification(currentIntensityLevel)
+                    } else {
+                        cancelFlashlightNotification()
+                    }
                 }
+
 
 
 
