@@ -39,6 +39,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.ui.components.cards.FeatureCard
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.pickers.HapticFeedbackPicker
@@ -191,6 +192,30 @@ fun ButtonRemapSettingsUI(
             exit = shrinkVertically() + fadeOut()
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                // Flashlight Options
+                Text(
+                    text = "Flashlight",
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(start = 16.dp),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                RoundedCardContainer(spacing = 0.dp) {
+                    FeatureCard(
+                        title = "Flashlight options",
+                        description = "Adjust fading and other settings",
+                        iconRes = R.drawable.rounded_flashlight_on_24,
+                        isEnabled = true,
+                        showToggle = false,
+                        hasMoreSettings = true,
+                        onToggle = {},
+                        onClick = { 
+                            HapticUtil.performUIHaptic(view)
+                            showFlashlightOptions = true 
+                        },
+                        modifier = Modifier.highlight(highlightSetting == "flashlight_options")
+                    )
+                }
+
                 // Haptic Feedback (Common)
                 Text(
                     text = "Haptic Feedback",
