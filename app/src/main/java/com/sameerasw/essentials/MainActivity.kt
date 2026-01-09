@@ -16,19 +16,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FloatingToolbarColors
-import androidx.compose.material3.HorizontalFloatingToolbar
 import androidx.compose.material3.FloatingToolbarDefaults
 import androidx.compose.material3.FloatingToolbarDefaults.ScreenOffset
 import androidx.compose.material3.FloatingToolbarExitDirection.Companion.Bottom
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
@@ -39,12 +33,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.zIndex
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.animation.doOnEnd
 import com.sameerasw.essentials.domain.DIYTabs
 import com.sameerasw.essentials.ui.components.ReusableTopAppBar
+import com.sameerasw.essentials.ui.components.DIYFloatingToolbar
 import com.sameerasw.essentials.ui.composables.SetupFeatures
 import com.sameerasw.essentials.ui.composables.ComingSoonDIYScreen
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
@@ -201,33 +194,18 @@ class MainActivity : FragmentActivity() {
                 ) { innerPadding ->
                     Box(modifier = Modifier.fillMaxSize()) {
                         if (isDeveloperModeEnabled) {
-                            HorizontalFloatingToolbar(
+                            DIYFloatingToolbar(
                                 modifier = Modifier
                                     .align(Alignment.BottomCenter)
                                     .offset(y = -ScreenOffset)
                                     .zIndex(1f),
-                                colors = FloatingToolbarDefaults.vibrantFloatingToolbarColors(),
-                                expanded = true,
-                                scrollBehavior = exitAlwaysScrollBehavior,
-                                content = {
-                                    tabs.forEachIndexed { index, tab ->
-                                        IconButton(
-                                            onClick = {
-                                                scope.launch {
-                                                    pagerState.animateScrollToPage(index)
-                                                }
-                                            },
-                                            colors = if (pagerState.currentPage == index) IconButtonDefaults.filledTonalIconButtonColors() else  IconButtonDefaults.iconButtonColors(),
-                                            modifier = Modifier.width(64.dp)
-                                        ) {
-                                            Icon(
-                                                painter = painterResource(id = tab.iconRes),
-                                                contentDescription = tab.title,
-                                                tint = if (pagerState.currentPage == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background
-                                            )
-                                        }
+                                currentPage = pagerState.currentPage,
+                                onTabSelected = { index ->
+                                    scope.launch {
+                                        pagerState.animateScrollToPage(index)
                                     }
-                                }
+                                },
+                                scrollBehavior = exitAlwaysScrollBehavior
                             )
 
                             HorizontalPager(
