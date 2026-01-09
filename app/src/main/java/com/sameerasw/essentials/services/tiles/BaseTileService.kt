@@ -1,4 +1,4 @@
-package com.sameerasw.essentials.services
+package com.sameerasw.essentials.services.tiles
 
 import android.graphics.drawable.Icon
 import android.os.Build
@@ -39,7 +39,7 @@ abstract class BaseTileService : TileService() {
     }
 
     private fun setTileAddedState(isAdded: Boolean) {
-        getSharedPreferences("essentials_prefs", android.content.Context.MODE_PRIVATE)
+        getSharedPreferences("essentials_prefs", MODE_PRIVATE)
             .edit {
                 putBoolean("${this::class.java.name}_is_added", isAdded)
             }

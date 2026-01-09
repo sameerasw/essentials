@@ -1,9 +1,10 @@
-package com.sameerasw.essentials.services
+package com.sameerasw.essentials.services.tiles
 
 import android.app.ActivityManager
 import android.content.Intent
 import android.provider.Settings
 import android.service.quicksettings.Tile
+import com.sameerasw.essentials.services.CaffeinateWakeLockService
 
 class CaffeinateTileService : BaseTileService() {
 

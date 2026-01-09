@@ -8,7 +8,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import com.sameerasw.essentials.services.NotificationListener
-import com.sameerasw.essentials.services.ScreenOffAccessibilityService
+import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.services.receivers.SecurityDeviceAdminReceiver
 
 object PermissionUtils {

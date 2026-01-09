@@ -1,6 +1,7 @@
-package com.sameerasw.essentials.services
+package com.sameerasw.essentials.services.tiles
 
 import android.accessibilityservice.AccessibilityService
+import android.accessibilityservice.AccessibilityServiceInfo
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -36,7 +37,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
     private var screenReceiver: BroadcastReceiver? = null
     
     // Proximity
-    private val sensorManager by lazy { getSystemService(Context.SENSOR_SERVICE) as SensorManager }
+    private val sensorManager by lazy { getSystemService(SENSOR_SERVICE) as SensorManager }
     private var proximitySensor: Sensor? = null
     
     // Freeze Logic
@@ -84,7 +85,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
             addAction(Intent.ACTION_USER_PRESENT)
             addAction(InputEventListenerService.ACTION_VOLUME_LONG_PRESSED)
         }
-        registerReceiver(screenReceiver, filter, Context.RECEIVER_EXPORTED)
+        registerReceiver(screenReceiver, filter, RECEIVER_EXPORTED)
 
         // Proximity
         proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)
@@ -117,7 +118,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
     override fun onServiceConnected() {
         super.onServiceConnected()
         serviceInfo = serviceInfo.apply {
-            flags = flags or android.accessibilityservice.AccessibilityServiceInfo.FLAG_REQUEST_FILTER_KEY_EVENTS
+            flags = flags or AccessibilityServiceInfo.FLAG_REQUEST_FILTER_KEY_EVENTS
         }
     }
 

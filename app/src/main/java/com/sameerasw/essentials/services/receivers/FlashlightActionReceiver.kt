@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 
 class FlashlightActionReceiver : BroadcastReceiver() {
     companion object {
@@ -20,7 +21,7 @@ class FlashlightActionReceiver : BroadcastReceiver() {
         val action = intent.action ?: return
         Log.d("FlashlightAction", "Action received: $action")
         
-        val serviceIntent = Intent(context, com.sameerasw.essentials.services.ScreenOffAccessibilityService::class.java).apply {
+        val serviceIntent = Intent(context, ScreenOffAccessibilityService::class.java).apply {
             this.action = action
             if (intent.hasExtra(EXTRA_INTENSITY)) {
                 putExtra(EXTRA_INTENSITY, intent.getIntExtra(EXTRA_INTENSITY, 1))

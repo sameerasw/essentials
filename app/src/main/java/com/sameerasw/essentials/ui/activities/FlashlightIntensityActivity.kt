@@ -32,7 +32,7 @@ class FlashlightIntensityActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         
         val componentName = intent?.getParcelableExtra<android.content.ComponentName>("android.intent.extra.COMPONENT_NAME")
-        if (componentName != null && componentName.className != "com.sameerasw.essentials.services.FlashlightTileService") {
+        if (componentName != null && componentName.className != "com.sameerasw.essentials.services.tiles.FlashlightTileService") {
             // Redirect to MainActivity for other tiles
             val mainIntent = Intent(this, com.sameerasw.essentials.MainActivity::class.java).apply {
                 action = intent.action

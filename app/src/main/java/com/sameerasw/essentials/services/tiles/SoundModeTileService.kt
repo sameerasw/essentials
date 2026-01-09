@@ -1,4 +1,4 @@
-package com.sameerasw.essentials.services
+package com.sameerasw.essentials.services.tiles
 
 import android.app.NotificationManager
 import android.content.BroadcastReceiver

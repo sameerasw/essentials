@@ -1,6 +1,5 @@
-package com.sameerasw.essentials.services
+package com.sameerasw.essentials.services.tiles
 
-import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Icon
 import android.hardware.camera2.CameraManager
@@ -14,7 +13,7 @@ import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
 class FlashlightTileService : BaseTileService() {
 
     private var isTorchOn = false
-    private val cameraManager by lazy { getSystemService(Context.CAMERA_SERVICE) as CameraManager }
+    private val cameraManager by lazy { getSystemService(CAMERA_SERVICE) as CameraManager }
     private val torchCallback = object : CameraManager.TorchCallback() {
         override fun onTorchModeChanged(cameraId: String, enabled: Boolean) {
             super.onTorchModeChanged(cameraId, enabled)

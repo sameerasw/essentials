@@ -23,7 +23,7 @@ class QSPreferencesActivity : ComponentActivity() {
         
         if (componentName != null) {
             // Special case for Sound Mode to open the system volume panel
-            if (componentName.className == "com.sameerasw.essentials.services.SoundModeTileService") {
+            if (componentName.className == "com.sameerasw.essentials.services.tiles.SoundModeTileService") {
                 val volumeIntent = Intent("android.settings.panel.action.VOLUME").apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                 }
@@ -33,14 +33,14 @@ class QSPreferencesActivity : ComponentActivity() {
             }
 
             val feature = when (componentName.className) {
-                "com.sameerasw.essentials.services.CaffeinateTileService" -> "Caffeinate"
-                "com.sameerasw.essentials.services.NotificationLightingTileService" -> "Notification lighting"
-                "com.sameerasw.essentials.services.DynamicNightLightTileService" -> "Dynamic night light"
-                "com.sameerasw.essentials.services.FlashlightTileService" -> "Button remap"
-                "com.sameerasw.essentials.services.AppLockTileService" -> "App lock"
-                "com.sameerasw.essentials.services.ScreenLockedSecurityTileService" -> "Screen locked security"
-                "com.sameerasw.essentials.services.AppFreezingTileService" -> "Freeze"
-                "com.sameerasw.essentials.services.FlashlightPulseTileService" -> "Notification lighting"
+                "com.sameerasw.essentials.services.tiles.CaffeinateTileService" -> "Caffeinate"
+                "com.sameerasw.essentials.services.tiles.NotificationLightingTileService" -> "Notification lighting"
+                "com.sameerasw.essentials.services.tiles.DynamicNightLightTileService" -> "Dynamic night light"
+                "com.sameerasw.essentials.services.tiles.FlashlightTileService" -> "Button remap"
+                "com.sameerasw.essentials.services.tiles.AppLockTileService" -> "App lock"
+                "com.sameerasw.essentials.services.tiles.ScreenLockedSecurityTileService" -> "Screen locked security"
+                "com.sameerasw.essentials.services.tiles.AppFreezingTileService" -> "Freeze"
+                "com.sameerasw.essentials.services.tiles.FlashlightPulseTileService" -> "Notification lighting"
                 else -> null
             }
 

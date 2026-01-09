@@ -156,7 +156,7 @@
             android:theme="@style/Theme.Essentials.Translucent" />
 
         <service
-            android:name=".services.ScreenOffAccessibilityService"
+            android:name=".services.tiles.ScreenOffAccessibilityService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
             android:exported="true">
             <intent-filter>
@@ -204,7 +204,7 @@
         </receiver>
 
         <service
-            android:name=".services.CaffeinateTileService"
+            android:name=".services.tiles.CaffeinateTileService"
             android:exported="true"
             android:icon="@drawable/rounded_coffee_24"
             android:label="Caffeinate"
@@ -218,7 +218,7 @@
             android:exported="false"
             android:foregroundServiceType="specialUse" />
         <service
-            android:name=".services.SoundModeTileService"
+            android:name=".services.tiles.SoundModeTileService"
             android:exported="true"
             android:icon="@drawable/rounded_volume_up_24"
             android:label="Sound Mode"
@@ -229,7 +229,7 @@
         </service>
 
         <service
-            android:name=".services.UiBlurTileService"
+            android:name=".services.tiles.UiBlurTileService"
             android:exported="true"
             android:icon="@drawable/rounded_blur_on_24"
             android:label="UI Blur"
@@ -240,7 +240,7 @@
         </service>
 
         <service
-            android:name=".services.BubblesTileService"
+            android:name=".services.tiles.BubblesTileService"
             android:exported="true"
             android:icon="@drawable/rounded_bubble_24"
             android:label="Bubbles"
@@ -251,7 +251,7 @@
         </service>
 
         <service
-            android:name=".services.MonoAudioTileService"
+            android:name=".services.tiles.MonoAudioTileService"
             android:exported="true"
             android:icon="@drawable/rounded_headphones_24"
             android:label="Mono Audio"
@@ -262,7 +262,7 @@
         </service>
 
         <service
-            android:name=".services.PrivateNotificationsTileService"
+            android:name=".services.tiles.PrivateNotificationsTileService"
             android:exported="true"
             android:icon="@drawable/rounded_notifications_off_24"
             android:label="Sensitive Content"
@@ -273,7 +273,7 @@
         </service>
 
         <service
-            android:name=".services.TapToWakeTileService"
+            android:name=".services.tiles.TapToWakeTileService"
             android:exported="true"
             android:icon="@drawable/rounded_touch_app_24"
             android:label="Tap to Wake"
@@ -284,7 +284,7 @@
         </service>
 
         <service
-            android:name=".services.AlwaysOnDisplayTileService"
+            android:name=".services.tiles.AlwaysOnDisplayTileService"
             android:exported="true"
             android:icon="@drawable/rounded_mobile_text_2_24"
             android:label="AOD"
@@ -294,7 +294,7 @@
             </intent-filter>
         </service>
         <service
-            android:name=".services.NotificationLightingTileService"
+            android:name=".services.tiles.NotificationLightingTileService"
             android:exported="true"
             android:icon="@drawable/rounded_blur_linear_24"
             android:label="Notification Lighting"
@@ -304,7 +304,7 @@
             </intent-filter>
         </service>
         <service
-            android:name=".services.DynamicNightLightTileService"
+            android:name=".services.tiles.DynamicNightLightTileService"
             android:exported="true"
             android:icon="@drawable/rounded_nightlight_24"
             android:label="Dynamic Night Light"
@@ -314,7 +314,7 @@
             </intent-filter>
         </service>
         <service
-            android:name=".services.ScreenLockedSecurityTileService"
+            android:name=".services.tiles.ScreenLockedSecurityTileService"
             android:exported="true"
             android:icon="@drawable/rounded_security_24"
             android:label="Locked Security"
@@ -324,7 +324,7 @@
             </intent-filter>
         </service>
         <service
-            android:name=".services.AppLockTileService"
+            android:name=".services.tiles.AppLockTileService"
             android:exported="true"
             android:icon="@drawable/rounded_shield_lock_24"
             android:label="App Lock"
@@ -339,7 +339,7 @@
             android:foregroundServiceType="specialUse" />
 
         <service
-            android:name=".services.AppFreezingTileService"
+            android:name=".services.tiles.AppFreezingTileService"
             android:icon="@drawable/rounded_mode_cool_24"
             android:label="@string/app_freezing_tile_label"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
@@ -350,7 +350,7 @@
         </service>
 
         <service
-            android:name=".services.FlashlightPulseTileService"
+            android:name=".services.tiles.FlashlightPulseTileService"
             android:icon="@drawable/outline_backlight_high_24"
             android:label="@string/flashlight_pulse_tile_label"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
@@ -361,7 +361,7 @@
         </service>
 
         <service
-            android:name=".services.FlashlightTileService"
+            android:name=".services.tiles.FlashlightTileService"
             android:exported="true"
             android:icon="@drawable/rounded_flashlight_on_24"
             android:label="Flashlight"

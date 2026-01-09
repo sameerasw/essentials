@@ -1,6 +1,5 @@
-package com.sameerasw.essentials.services
+package com.sameerasw.essentials.services.tiles
 
-import android.content.Context
 import android.graphics.drawable.Icon
 import android.service.quicksettings.Tile
 import com.sameerasw.essentials.R
@@ -10,7 +9,7 @@ import androidx.core.content.edit
 class DynamicNightLightTileService : BaseTileService() {
 
     override fun onTileClick() {
-        val prefs = getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+        val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
         val isEnabled = prefs.getBoolean("dynamic_night_light_enabled", false)
         prefs.edit { putBoolean("dynamic_night_light_enabled", !isEnabled) }
     }
@@ -30,7 +29,7 @@ class DynamicNightLightTileService : BaseTileService() {
     override fun getTileIcon(): Icon = Icon.createWithResource(this, R.drawable.rounded_nightlight_24)
 
     override fun getTileState(): Int {
-        val enabled = getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+        val enabled = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
             .getBoolean("dynamic_night_light_enabled", false)
         return if (enabled) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
     }

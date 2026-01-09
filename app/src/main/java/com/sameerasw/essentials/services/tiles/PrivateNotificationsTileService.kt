@@ -1,5 +1,7 @@
-package com.sameerasw.essentials.services
+package com.sameerasw.essentials.services.tiles
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.graphics.drawable.Icon
 import android.provider.Settings
 import android.service.quicksettings.Tile
@@ -14,7 +16,7 @@ class PrivateNotificationsTileService : BaseTileService() {
     }
 
     override fun hasFeaturePermission(): Boolean {
-        return checkCallingOrSelfPermission(android.Manifest.permission.WRITE_SECURE_SETTINGS) == android.content.pm.PackageManager.PERMISSION_GRANTED
+        return checkCallingOrSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED
     }
 
     override fun getTileIcon(): Icon {

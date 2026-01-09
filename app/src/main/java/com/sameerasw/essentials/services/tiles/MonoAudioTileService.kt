@@ -1,10 +1,8 @@
-package com.sameerasw.essentials.services
+package com.sameerasw.essentials.services.tiles
 
 import android.graphics.drawable.Icon
-import android.os.Build
 import android.provider.Settings
 import android.service.quicksettings.Tile
-import androidx.annotation.RequiresApi
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.utils.ShizukuUtils
 

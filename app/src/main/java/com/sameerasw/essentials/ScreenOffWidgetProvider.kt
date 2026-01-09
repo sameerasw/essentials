@@ -8,7 +8,7 @@ import android.content.Intent
 import android.provider.Settings
 import android.widget.RemoteViews
 import android.widget.Toast
-import com.sameerasw.essentials.services.ScreenOffAccessibilityService
+import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 
 class ScreenOffWidgetProvider : AppWidgetProvider() {
 
@@ -34,7 +34,7 @@ class ScreenOffWidgetProvider : AppWidgetProvider() {
 
     private fun isAccessibilityEnabled(context: Context): Boolean {
         val enabledServices = Settings.Secure.getString(context.contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES)
-        return enabledServices?.contains("com.sameerasw.essentials.services.ScreenOffAccessibilityService") == true
+        return enabledServices?.contains("com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService") == true
     }
 
     private fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {

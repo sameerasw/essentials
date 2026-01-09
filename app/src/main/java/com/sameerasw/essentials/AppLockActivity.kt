@@ -3,7 +3,6 @@ package com.sameerasw.essentials
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -13,6 +12,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.fragment.app.FragmentActivity
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
+import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import java.util.concurrent.Executor
 
 class AppLockActivity : FragmentActivity() {
@@ -153,7 +153,7 @@ class AppLockActivity : FragmentActivity() {
         }
         sendBroadcast(intent)
         // Also notify via service to be more reliable
-        val serviceIntent = Intent(this, com.sameerasw.essentials.services.ScreenOffAccessibilityService::class.java).apply {
+        val serviceIntent = Intent(this, ScreenOffAccessibilityService::class.java).apply {
             action = "APP_AUTHENTICATED"
             putExtra("package_name", packageToLock)
         }
@@ -163,7 +163,7 @@ class AppLockActivity : FragmentActivity() {
     }
 
     private fun notifyFailureAndFinish() {
-        val serviceIntent = Intent(this, com.sameerasw.essentials.services.ScreenOffAccessibilityService::class.java).apply {
+        val serviceIntent = Intent(this, ScreenOffAccessibilityService::class.java).apply {
             action = "APP_AUTHENTICATION_FAILED"
         }
         startService(serviceIntent)
