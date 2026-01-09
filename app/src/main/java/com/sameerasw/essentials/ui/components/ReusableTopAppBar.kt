@@ -179,7 +179,7 @@ fun ReusableTopAppBar(
                     modifier = Modifier.size(48.dp)
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_stat_name),
+                        painter = painterResource(id = R.drawable.rounded_settings_heart_24),
                         contentDescription = "Settings",
                         modifier = Modifier.size(32.dp)
                     )
