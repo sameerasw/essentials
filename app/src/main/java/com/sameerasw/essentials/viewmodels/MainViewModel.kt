@@ -949,4 +949,9 @@ class MainViewModel : ViewModel() {
     }
 
 
+    fun generateBugReport(context: Context): String {
+        val settingsJson = settingsRepository.getAllConfigsAsJsonString()
+        return com.sameerasw.essentials.utils.LogManager.generateReport(context, settingsJson)
+    }
+
 }

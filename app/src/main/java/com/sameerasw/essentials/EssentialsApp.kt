@@ -14,6 +14,7 @@ class EssentialsApp : Application() {
     override fun onCreate() {
         super.onCreate()
         ShizukuUtils.initialize()
+        com.sameerasw.essentials.utils.LogManager.init(this)
         val intentFilter = IntentFilter(Intent.ACTION_SCREEN_OFF)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(screenOffReceiver, intentFilter, Context.RECEIVER_EXPORTED)

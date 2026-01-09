@@ -261,8 +261,8 @@ class SettingsRepository(private val context: Context) {
     }
     
     // Config Export/Import
-    fun exportConfigs(outputStream: java.io.OutputStream) {
-        try {
+    fun getAllConfigsAsJsonString(): String {
+        return try {
             val allConfigs = mutableMapOf<String, Map<String, Map<String, Any>>>()
             val prefFiles = listOf("essentials_prefs", "caffeinate_prefs", "link_prefs")
 
@@ -271,6 +271,11 @@ class SettingsRepository(private val context: Context) {
                 val wrapperMap = mutableMapOf<String, Map<String, Any>>()
                 
                 p.all.forEach { (key, value) ->
+                    // Skip app lists as requested
+                    if (key.endsWith("_selected_apps") || key == "freeze_auto_excluded_apps") {
+                        return@forEach
+                    }
+
                     val type = when (value) {
                         is Boolean -> "Boolean"
                         is Int -> "Int"
@@ -287,7 +292,15 @@ class SettingsRepository(private val context: Context) {
                 allConfigs[fileName] = wrapperMap
             }
 
-            val json = gson.toJson(allConfigs)
+            gson.toJson(allConfigs)
+        } catch (e: Exception) {
+            "{}"
+        }
+    }
+
+    fun exportConfigs(outputStream: java.io.OutputStream) {
+        try {
+            val json = getAllConfigsAsJsonString()
             outputStream.write(json.toByteArray())
             outputStream.flush()
             outputStream.close()

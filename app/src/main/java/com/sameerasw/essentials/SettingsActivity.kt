@@ -68,7 +68,9 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
 import com.sameerasw.essentials.domain.registry.PermissionRegistry
 import com.sameerasw.essentials.ui.components.sheets.InstructionsBottomSheet
 import java.text.SimpleDateFormat
@@ -517,6 +519,28 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
                         ) {
                             Text("Import Config")
                         }
+                    }
+
+                    // Report Bug Button
+                    Button(
+                        onClick = {
+                             val report = viewModel.generateBugReport(context)
+                             val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                             val clip = ClipData.newPlainText("Bug Report", report)
+                             clipboard.setPrimaryClip(clip)
+                             Toast.makeText(context, context.getString(R.string.toast_bug_report_copied), Toast.LENGTH_LONG).show()
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp, vertical = 8.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.rounded_adb_24),
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(context.getString(R.string.action_report_bug))
                     }
             }
         }
