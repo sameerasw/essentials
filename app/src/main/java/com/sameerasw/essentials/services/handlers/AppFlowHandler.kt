@@ -19,6 +19,10 @@ class AppFlowHandler(
     
     private val authenticatedPackages = mutableSetOf<String>()
     
+    // App Lock State
+    private var lockingPackage: String? = null
+    private var lastLockRequestTime: Long = 0
+    
     // Night Light State
     private var wasNightLightOnBeforeAutoToggle = false
     private var isNightLightAutoToggledOff = false
@@ -30,12 +34,19 @@ class AppFlowHandler(
     )
 
     fun onPackageChanged(packageName: String) {
+        if (packageName != service.packageName && packageName != lockingPackage) {
+            lockingPackage = null
+        }
+        
         checkAppLock(packageName)
         checkHighlightNightLight(packageName)
     }
 
     fun onAuthenticated(packageName: String) {
         authenticatedPackages.add(packageName)
+        if (packageName == lockingPackage) {
+            lockingPackage = null
+        }
     }
 
     fun clearAuthenticated() {
@@ -65,11 +76,20 @@ class AppFlowHandler(
         val isLocked = selectedApps.find { it.packageName == packageName }?.isEnabled ?: false
         
         if (isLocked && !authenticatedPackages.contains(packageName)) {
+            // Skip if we already requested a lock for this package very recently
+            val now = System.currentTimeMillis()
+            if (packageName == lockingPackage && now - lastLockRequestTime < 1500) {
+                return
+            }
+
+            lockingPackage = packageName
+            lastLockRequestTime = now
+
             Log.d("AppLock", "App $packageName is locked and not authenticated. Showing lock screen.")
             val intent = Intent().apply {
                 component = ComponentName(service, "com.sameerasw.essentials.AppLockActivity")
                 putExtra("package_to_lock", packageName)
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK or Intent.FLAG_ACTIVITY_NO_ANIMATION
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_ANIMATION
             }
             service.startActivity(intent)
         }
