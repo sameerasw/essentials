@@ -235,7 +235,8 @@ class MainActivity : FragmentActivity() {
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(innerPadding),
                                             searchRequested = searchRequested,
-                                            onSearchHandled = { searchRequested = false }
+                                            onSearchHandled = { searchRequested = false },
+                                            onHelpClick = { showInstructionsSheet = true }
                                         )
                                     }
                                     DIYTabs.DIY -> {
@@ -250,7 +251,8 @@ class MainActivity : FragmentActivity() {
                                 viewModel = viewModel,
                                 modifier = Modifier.padding(innerPadding),
                                 searchRequested = searchRequested,
-                                onSearchHandled = { searchRequested = false }
+                                onSearchHandled = { searchRequested = false },
+                                onHelpClick = { showInstructionsSheet = true }
                             )
                         }
                     }

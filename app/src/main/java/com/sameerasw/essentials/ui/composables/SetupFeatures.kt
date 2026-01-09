@@ -61,7 +61,8 @@ fun SetupFeatures(
     viewModel: MainViewModel,
     modifier: Modifier = Modifier,
     searchRequested: Boolean = false,
-    onSearchHandled: () -> Unit = {}
+    onSearchHandled: () -> Unit = {},
+    onHelpClick: () -> Unit = {}
 ) {
     val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
     val isWriteSecureSettingsEnabled by viewModel.isWriteSecureSettingsEnabled
@@ -564,7 +565,11 @@ fun SetupFeatures(
             PermissionsBottomSheet(
                 onDismissRequest = { showSheet = false },
                 featureTitle = currentFeature ?: "",
-                permissions = permissionItems
+                permissions = permissionItems,
+                onHelpClick = {
+                    showSheet = false
+                    onHelpClick()
+                }
             )
         }
     }

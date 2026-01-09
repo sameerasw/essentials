@@ -15,7 +15,7 @@ class InputDeviceScanner {
             while (reader.readLine().also { line = it } != null) {
                 if (line!!.matches(Regex("event\\d+"))) {
                      val path = "/dev/input/$line"
-                     devices.add(InputDevice(path = path, name = line!!, bus = 0, vendor = 0, product = 0))
+                     devices.add(InputDevice(path = path, name = line, bus = 0, vendor = 0, product = 0))
                 }
             }
             process.waitFor()

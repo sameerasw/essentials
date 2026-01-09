@@ -62,12 +62,12 @@ import com.sameerasw.essentials.ui.components.dialogs.AboutSection
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.ui.components.sheets.UpdateBottomSheet
-import com.sameerasw.essentials.ui.components.buttons.HelpPillButton
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.RoundedCornerShape
+import com.sameerasw.essentials.ui.components.sheets.InstructionsBottomSheet
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -161,6 +161,7 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
     val isUpdateNotificationEnabled by viewModel.isUpdateNotificationEnabled
     val isPreReleaseCheckEnabled by viewModel.isPreReleaseCheckEnabled
     val isDeveloperModeEnabled by viewModel.isDeveloperModeEnabled
+    var showInstructionsSheet by remember { mutableStateOf(false) }
 
     val exportLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.CreateDocument("application/json")
@@ -201,6 +202,12 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
         UpdateBottomSheet(
             updateInfo = updateInfo,
             onDismissRequest = { showUpdateSheet = false }
+        )
+    }
+
+    if (showInstructionsSheet) {
+        InstructionsBottomSheet(
+            onDismissRequest = { showInstructionsSheet = false }
         )
     }
 
@@ -249,7 +256,6 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                HelpPillButton()
             }
             Icon(
                 painter = painterResource(id = if (isPermissionsExpanded) R.drawable.rounded_keyboard_arrow_up_24 else R.drawable.rounded_keyboard_arrow_down_24),
