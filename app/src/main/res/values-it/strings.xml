@@ -12,33 +12,34 @@
     <string name="app_freezing_tile_label">App Freezing</string>
     <string name="flashlight_pulse_tile_label">Flashlight Pulse</string>
     <string name="check_pre_releases_label">Check for pre-releases</string>
-    <string name="check_pre_releases_desc">Might be unstable</string>
+    <string name="check_pre_releases_desc">Potrebbe essere instabile</string>
     <!-- App Lock -->
-    <string name="settings_section_security">Security</string>
+    <string name="settings_section_security">Sicurezza</string>
     <string name="app_lock_enable_title">Enable app lock</string>
     <string name="app_lock_auth_title">App Lock Security</string>
     <string name="app_lock_enable_auth_subtitle">Authenticate to enable app lock</string>
     <string name="app_lock_disable_auth_subtitle">Authenticate to disable app lock</string>
     <string name="app_lock_select_apps_title">Select locked apps</string>
     <string name="app_lock_select_apps_desc">Choose which apps require authentication</string>
-    <string name="app_lock_description">Secure your apps with biometric authentication. Locked apps will require authentication when launching, Stays unlocked until the screen turns off.</string>
+    <string name="app_lock_description">Blocca le tue app con l\'autenticazione biometrica.
+Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà sbloccata fino allo spegnimento dello schermo.</string>
     <string name="app_lock_warning">Beware that this is not a robust solution as this is only a 3rd party application. If you need strong security, consider using Private Space or other such features.</string>
     <string name="app_lock_biometric_note">Another note, the biometric authentication prompt only lets you use STRONG secure class methods. Face unlock security methods in WEAK class in devices such as Pixel 7 will only be able to utilize the available other STRONG auth methods such as fingerprint or pin.</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Enable Button Remap</string>
-    <string name="button_remap_use_shizuku_title">Use Shizuku</string>
+    <string name="button_remap_use_shizuku_title">Usa Shizuku</string>
     <string name="button_remap_use_shizuku_desc">Works with screen off (Recommended)</string>
-    <string name="shizuku_not_running_toast">Shizuku is not running</string>
+    <string name="shizuku_not_running_toast">Shizuku non è in esecuzione</string>
     <string name="shizuku_detected_prefix">Detected %1$s</string>
     <string name="shizuku_status_prefix">Status: %1$s</string>
-    <string name="shizuku_open_button">Open Shizuku</string>
+    <string name="shizuku_open_button">Apri Shizuku</string>
     <string name="settings_section_flashlight">Flashlight</string>
     <string name="flashlight_options_title">Flashlight options</string>
     <string name="flashlight_options_desc">Adjust fading and other settings</string>
-    <string name="settings_section_haptic">Haptic Feedback</string>
+    <string name="settings_section_haptic">Feedback Aptico</string>
     <string name="button_remap_section_long_press">Remap Long Press</string>
-    <string name="screen_off">Screen Off</string>
-    <string name="screen_on">Screen On</string>
+    <string name="screen_off">Schermo Spento</string>
+    <string name="screen_on">Schermo Acceso</string>
     <string name="volume_up">Volume Up</string>
     <string name="volume_down">Volume Down</string>
     <string name="action_none">None</string>
