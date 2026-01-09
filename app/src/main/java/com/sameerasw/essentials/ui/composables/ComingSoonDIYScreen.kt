@@ -33,14 +33,14 @@ fun ComingSoonDIYScreen(
         Icon(
             painter = painterResource(id = R.drawable.rounded_experiment_24),
             contentDescription = null,
-            modifier = Modifier.size(120.dp),
+            modifier = Modifier.size(80.dp),
             tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
         )
         
         Spacer(modifier = Modifier.height(24.dp))
         
         Text(
-            text = "DIY Mode",
+            text = "Do It Yourself",
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSurface
@@ -49,7 +49,7 @@ fun ComingSoonDIYScreen(
         Spacer(modifier = Modifier.height(8.dp))
         
         Text(
-            text = "Something experimental is brewing here. Stay tuned for custom tweaks and advanced modifications.",
+            text = "Something experimental is brewing here. Stay tuned for automations and advanced mods.",
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onSurfaceVariant

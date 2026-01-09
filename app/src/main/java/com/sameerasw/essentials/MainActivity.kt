@@ -175,7 +175,13 @@ class MainActivity : FragmentActivity() {
                 }
                 Scaffold(
                     contentWindowInsets = androidx.compose.foundation.layout.WindowInsets(0, 0, 0, 0),
-                    modifier = Modifier.nestedScroll(if (isDeveloperModeEnabled) exitAlwaysScrollBehavior else scrollBehavior.nestedScrollConnection),
+                    modifier = Modifier
+                        .nestedScroll(scrollBehavior.nestedScrollConnection)
+                        .then(
+                            if (isDeveloperModeEnabled) {
+                                Modifier.nestedScroll(exitAlwaysScrollBehavior)
+                            } else Modifier
+                        ),
                     containerColor = MaterialTheme.colorScheme.surfaceContainer,
                     topBar = {
                         ReusableTopAppBar(
