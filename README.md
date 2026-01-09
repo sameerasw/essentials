@@ -9,8 +9,10 @@ Essential tools, mods and workarounds for Pixels and other Androids
 </a>
   <a href="https://github.com/sameerasw/essentials/issues/new?template=feature_request.md"><img alt="GitHub Issues or Pull Requests by label" src="https://img.shields.io/github/issues/sameerasw/essentials/enhancement?style=for-the-badge&logo=apachespark&logoColor=%23fff&label=Feature%20request&labelColor=%23a26&color=%23a26">
 </a>
+</a>
   <a href="https://sameerasw.com"><img src="https://img.shields.io/badge/My%20website-orange?style=for-the-badge&logo=googlechrome&logoColor=%23000&labelColor=%233AFFB8&color=%233AFFB8" alt="My website" /></a>
   <a href="https://t.me/tidwib"><img src="https://img.shields.io/badge/Community-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white" alt="Community" /></a>
+  <a href="https://crowdin.com/project/essentials-android"><img alt="Crowdin" src="https://badges.crowdin.net/essentials-android/localized.svg?style=for-the-badge">
 </p>
 
 > ### Essentials got featured by HowToMen! 🎉 <br><br> [![Essentials got featured by HowToMen!](https://github.com/user-attachments/assets/9dffa436-034e-4d59-811e-f5979b000414)](https://youtu.be/7favc9MDedQ?si=dduc7452R5Yxj7Aa&t=79)
@@ -22,6 +24,7 @@ Essential tools, mods and workarounds for Pixels and other Androids
 - [Screenshots](#screenshots)
 - [Shizuku](#shizuku)
 - [Accessibility Permissions](#how-to-grant-accessibility-permissions)
+- [Localization](#localization)
 - [Contributing](#contributing)
 
 # Features
@@ -99,6 +102,14 @@ A collection of useful tiles to toggle system settings:
 # How to grant accessibility permissions
 
 <img width="1280" height="696" alt="image" src="https://github.com/user-attachments/assets/685115e7-4caa-4add-9196-d2e1e2c126a6" />
+
+# Localization
+
+Help us bring Essentials to more people around the world! If you're fluent in another language, you can contribute by translating the app on Crowdin.
+
+[![Crowdin](https://badges.crowdin.net/essentials-android/localized.svg)](https://crowdin.com/project/essentials-android)
+
+[Support translation on Crowdin](https://crowdin.com/project/essentials-android)
 
 # Contributing
 
