@@ -569,7 +569,7 @@ class MainViewModel : ViewModel() {
 
             // Also remove from ScreenOffAccessibilityService if it's running
             val intent2 = Intent(context, ScreenOffAccessibilityService::class.java).apply {
-                action = "SHOW_EDGE_LIGHTING"
+                action = "SHOW_NOTIFICATION_LIGHTING"
                 putExtra("remove_preview", true)
             }
             context.startService(intent2)

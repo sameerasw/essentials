@@ -118,7 +118,18 @@ class NotificationLightingService : Service() {
         val removePreview = intent?.getBooleanExtra("remove_preview", false) ?: false
 
         if (removePreview) {
-            // Remove preview overlay and stop
+            // If accessibility service is enabled, delegate to it
+            if (isAccessibilityServiceEnabled()) {
+                try {
+                    val ai = Intent(applicationContext, ScreenOffAccessibilityService::class.java).apply {
+                        action = "SHOW_NOTIFICATION_LIGHTING"
+                        putExtra("remove_preview", true)
+                    }
+                    applicationContext.startService(ai)
+                } catch (_: Exception) {}
+            }
+            
+            // Remove local preview as well
             removeOverlay()
             stopSelf()
             return START_NOT_STICKY
