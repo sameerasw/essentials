@@ -16,8 +16,8 @@ object UpdateNotificationHelper {
 
     fun createNotificationChannel(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "App Updates"
-            val descriptionText = "Notifications for new app updates"
+            val name = context.getString(R.string.update_channel_name)
+            val descriptionText = context.getString(R.string.update_channel_desc)
             val importance = NotificationManager.IMPORTANCE_HIGH
             val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
                 description = descriptionText
@@ -46,13 +46,13 @@ object UpdateNotificationHelper {
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_stat_name)
-            .setContentTitle("Update available")
-            .setContentText("Essentials $version released.")
+            .setContentTitle(context.getString(R.string.notification_update_available))
+            .setContentText(context.getString(R.string.release_notes_format, version))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
-            .addAction(R.drawable.rounded_mobile_arrow_down_24, "Download", downloadPendingIntent)
+            .addAction(R.drawable.rounded_mobile_arrow_down_24, context.getString(R.string.action_download), downloadPendingIntent)
 
         val notificationManager: NotificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

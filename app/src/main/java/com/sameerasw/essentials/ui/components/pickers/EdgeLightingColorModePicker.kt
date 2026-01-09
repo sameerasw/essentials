@@ -16,6 +16,8 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -24,13 +26,13 @@ fun NotificationLightingColorModePicker(
     selectedMode: NotificationLightingColorMode,
     onModeSelected: (NotificationLightingColorMode) -> Unit,
     modifier: Modifier = Modifier,
-    options: List<Pair<String, NotificationLightingColorMode>> = listOf(
-        "System" to NotificationLightingColorMode.SYSTEM,
-        "Custom" to NotificationLightingColorMode.CUSTOM,
-        "App specific" to NotificationLightingColorMode.APP_SPECIFIC
+    options: List<Pair<Int, NotificationLightingColorMode>> = listOf(
+        R.string.color_mode_system to NotificationLightingColorMode.SYSTEM,
+        R.string.color_mode_custom to NotificationLightingColorMode.CUSTOM,
+        R.string.color_mode_app_specific to NotificationLightingColorMode.APP_SPECIFIC
     )
 ) {
-    val labels = options.map { it.first }
+    val labels = options.map { stringResource(it.first) }
     val modes = options.map { it.second }
 
     val selectedIndex = modes.indexOf(selectedMode).coerceAtLeast(0)

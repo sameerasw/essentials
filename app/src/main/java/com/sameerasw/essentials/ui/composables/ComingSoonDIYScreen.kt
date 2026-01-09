@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -40,7 +41,7 @@ fun ComingSoonDIYScreen(
         Spacer(modifier = Modifier.height(24.dp))
         
         Text(
-            text = "Do It Yourself",
+            text = stringResource(R.string.coming_soon_title),
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSurface
@@ -49,7 +50,7 @@ fun ComingSoonDIYScreen(
         Spacer(modifier = Modifier.height(8.dp))
         
         Text(
-            text = "Something experimental is brewing here. Stay tuned for automations and advanced mods.",
+            text = stringResource(R.string.coming_soon_desc),
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -58,7 +59,7 @@ fun ComingSoonDIYScreen(
         Spacer(modifier = Modifier.height(32.dp))
         
         Text(
-            text = "Coming Soon",
+            text = stringResource(R.string.coming_soon_label),
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary,
             fontWeight = FontWeight.Bold

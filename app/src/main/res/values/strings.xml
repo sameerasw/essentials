@@ -399,6 +399,33 @@
     <string name="action_preview">Preview</string>
     <string name="action_help_guide">Help Guide</string>
     <string name="update_available_title">Update Available</string>
+    <string name="action_download">Download</string>
+
+    <!-- DIY Section -->
+    <string name="coming_soon_title">Do It Yourself</string>
+    <string name="coming_soon_desc">Something experimental is brewing here. Stay tuned for automations and advanced mods.</string>
+    <string name="coming_soon_label">Coming Soon</string>
+
+    <!-- About Section -->
+    <string name="app_developer_name">Sameera Wijerathna</string>
+    <string name="app_description">The all-in-one toolbox for your Pixel and Androids</string>
+    <string name="email_subject_hello">Hello from Essentials</string>
+
+    <!-- Edge Lighting -->
+    <string name="color_mode_system">System</string>
+    <string name="color_mode_custom">Custom</string>
+    <string name="color_mode_app_specific">App specific</string>
+
+    <!-- Biometric & Security -->
+    <string name="error_auth_failed">Authentication failed</string>
+    <string name="beta_warning_toast">This is a beta version. Please report any bugs.</string>
+    <string name="shortcut_creation_hint_toast">Long press an app in the grid to add a shortcut</string>
+    <string name="error_app_uninstalled">App not found or uninstalled</string>
+
+    <!-- Notifications -->
+    <string name="update_channel_name">App Updates</string>
+    <string name="update_channel_desc">Notifications for new app updates</string>
+    <string name="notification_update_available">Update available</string>
 
     <!-- App Selection Extra -->
     <string name="action_invert_selection">Invert selection</string>

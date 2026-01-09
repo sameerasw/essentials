@@ -57,7 +57,7 @@ class SecurityHandler(
             setReducedAnimationScale()
             service.performGlobalAction(GLOBAL_ACTION_BACK)
             lockDeviceHard()
-            Toast.makeText(service, "Unlock phone to change network settings", Toast.LENGTH_SHORT).show()
+            Toast.makeText(service, com.sameerasw.essentials.R.string.error_unlock_network_settings, Toast.LENGTH_SHORT).show()
         }
     }
 

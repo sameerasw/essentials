@@ -37,14 +37,15 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.ui.res.stringResource
 
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
 fun AboutSection(
     modifier: Modifier = Modifier,
-    appName: String = "Essentials",
-    developerName: String = "Sameera Wijerathna",
-    description: String = "The all-in-one toolbox for your Pixel and Androids",
+    appName: String = stringResource(R.string.app_name),
+    developerName: String = stringResource(R.string.app_developer_name),
+    description: String = stringResource(R.string.app_description),
     onAvatarLongClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
@@ -83,7 +84,7 @@ fun AboutSection(
                     )
             )
 
-            Text(text = "Developed by $developerName\nwith ❤\uFE0F from \uD83C\uDDF1\uD83C\uDDF0", style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center)
+            Text(text = stringResource(R.string.developed_by_format, developerName), style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center)
 
             FlowRow(
                 modifier = Modifier.fillMaxWidth(),
@@ -105,7 +106,7 @@ fun AboutSection(
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Website")
+                    Text(stringResource(R.string.action_website))
                 }
 
                 Button(
@@ -122,7 +123,7 @@ fun AboutSection(
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("GitHub")
+                    Text(stringResource(R.string.action_view_on_github))
                 }
 
                 OutlinedButton(
@@ -133,10 +134,10 @@ fun AboutSection(
                             putExtra(Intent.EXTRA_SUBJECT, "Hello from Essentials")
                         }
                         try {
-                            context.startActivity(Intent.createChooser(emailIntent, "Send email"))
+                            context.startActivity(Intent.createChooser(emailIntent, context.getString(R.string.send_email_chooser_title)))
                         } catch (e: ActivityNotFoundException) {
                             Log.w("AboutSection", "No email app available", e)
-                            Toast.makeText(context, "No email app available", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, R.string.error_no_email_app, Toast.LENGTH_SHORT).show()
                         }
                     },
                     modifier = Modifier.padding(horizontal = 4.dp)
@@ -147,7 +148,7 @@ fun AboutSection(
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Contact")
+                    Text(stringResource(R.string.action_contact))
                 }
 
                 OutlinedButton(
@@ -164,7 +165,7 @@ fun AboutSection(
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Telegram")
+                    Text(stringResource(R.string.action_telegram))
                 }
 
                 OutlinedButton(
@@ -181,11 +182,11 @@ fun AboutSection(
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Support")
+                    Text(stringResource(R.string.action_support))
                 }
             }
 
-            Text(text = "Other Apps", style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center)
+            Text(text = stringResource(R.string.label_other_apps), style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center)
 
             FlowRow(
                 modifier = Modifier.fillMaxWidth(),
@@ -208,7 +209,7 @@ fun AboutSection(
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("AirSync")
+                    Text(stringResource(R.string.app_airsync))
                 }
 
                 OutlinedButton(
@@ -225,7 +226,7 @@ fun AboutSection(
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("ZenZero")
+                    Text(stringResource(R.string.app_zenzero))
                 }
 
                 OutlinedButton(
@@ -242,7 +243,7 @@ fun AboutSection(
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Canvas")
+                    Text(stringResource(R.string.app_canvas))
                 }
 
                 OutlinedButton(
@@ -259,7 +260,7 @@ fun AboutSection(
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Tasks")
+                    Text(stringResource(R.string.app_tasks))
                 }
 
                 OutlinedButton(
@@ -276,7 +277,7 @@ fun AboutSection(
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Zero")
+                    Text(stringResource(R.string.app_zero))
                 }
             }
         }

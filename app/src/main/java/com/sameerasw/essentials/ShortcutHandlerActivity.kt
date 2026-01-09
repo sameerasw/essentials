@@ -29,7 +29,7 @@ class ShortcutHandlerActivity : ComponentActivity() {
 
         // Handle shortcut creation from the picker (fallback)
         if (intent.action == Intent.ACTION_CREATE_SHORTCUT) {
-            Toast.makeText(this, "Long press an app in the grid to add a shortcut", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.shortcut_creation_hint_toast, Toast.LENGTH_LONG).show()
             startActivity(Intent(this, AppFreezingActivity::class.java))
             finish()
             return
@@ -63,7 +63,7 @@ class ShortcutHandlerActivity : ComponentActivity() {
                     startActivity(launchIntent)
                 } else {
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(this@ShortcutHandlerActivity, "App not found", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@ShortcutHandlerActivity, R.string.error_app_uninstalled, Toast.LENGTH_SHORT).show()
                     }
                 }
                 finish()

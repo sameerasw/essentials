@@ -29,7 +29,7 @@ object BiometricHelper {
 
                 override fun onAuthenticationFailed() {
                     super.onAuthenticationFailed()
-                    onError("Authentication failed")
+                    onError(activity.getString(com.sameerasw.essentials.R.string.error_auth_failed))
                 }
             })
 
