@@ -13,7 +13,10 @@ import android.hardware.SensorManager
 import android.os.Handler
 import android.os.Looper
 import android.view.KeyEvent
+import android.os.Vibrator
 import android.view.accessibility.AccessibilityEvent
+import com.sameerasw.essentials.domain.HapticFeedbackType
+import com.sameerasw.essentials.utils.performHapticFeedback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -165,7 +168,21 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         val action = intent?.action ?: return super.onStartCommand(intent, flags, startId)
         
         when (action) {
-            "LOCK_SCREEN" -> securityHandler.lockDevice()
+            "LOCK_SCREEN" -> {
+                val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+                val hapticTypeStr = prefs.getString("haptic_feedback_type", HapticFeedbackType.NONE.name)
+                val hapticType = try {
+                    HapticFeedbackType.valueOf(hapticTypeStr ?: HapticFeedbackType.NONE.name)
+                } catch (e: Exception) {
+                    HapticFeedbackType.NONE
+                }
+
+                if (hapticType != HapticFeedbackType.NONE) {
+                    val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
+                    vibrator?.let { performHapticFeedback(it, hapticType) }
+                }
+                securityHandler.lockDevice()
+            }
             
             "SHOW_NOTIFICATION_LIGHTING" -> notificationLightingHandler.handleIntent(intent)
             

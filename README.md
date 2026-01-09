@@ -31,19 +31,21 @@ Essential tools, mods and workarounds for Pixels and other Androids
 - **Screen Off Widget**: An invisible widget that can be placed on the home screen to quickly lock the device without using the power button. Now with configurable haptic feedback.
 - **Caffeinate**: A Quick Settings tile to keep the display awake indefinitely or for a set duration.
 - **Sound Mode Tile**: A Quick Settings tile to toggle between Ring, Vibrate, and Silent sound modes.
-- **Button Remap**: Long-press or double-tap hardware buttons to trigger various actions like flashlight, camera, or custom shortcuts.
+- **Button Remap**: Long-press or double-tap hardware buttons to trigger various actions like flashlight, camera, or custom shortcuts. Now supports screen-off remapping with Shizuku.
 - **Maps Power Saving Mode**: Optimize battery usage during Google Maps navigation by managing screen state (requires Shizuku).
 - **Link Actions**: Intercept and manage how links are opened, allowing you to choose specific apps for different link types.
 - **Snooze System Notifications**: Automatically snooze persistent system notifications that cannot be dismissed normally.
-- **Pixel IMS**: Force enable VoLTE, VoWiFi and other IMS features on Pixel devices without root.
+- **App Freezing**: Easily freeze/unfreeze apps to save battery and system resources. Includes auto-freezing, frozen app shortcuts, and a dedicated management UI.
+- **App Lock**: Secure your applications with a dedicated app lock feature. Integrated with Quick Settings for easy toggling.
+- **Flashlight Enhancements**: Advanced flashlight control with smooth fade-in/out, volume key intensity adjustment, global brightness controls, and live activity support.
 - **Screen Locked Security**: Protect your device by disabling sensitive Quick Settings tiles and power menu when the device is locked.
 - **Backups**: (Experimental) Export and import your app settings.
-- **App Lock**: To protect apps with biometrics
+- **Help and Guides**: Built-in instructions and guides to help you set up and use features effectively.
 
 ### Visuals
 
 - **Status Bar Icons**: Detailed control over which system icons (WiFi, Data, Battery, etc.) are visible in the status bar.
-- **Edge Lighting**: Display a customizable lighting effect with new styles (Glow, Spinner, Stroke), per-app colors, and extensive customization options.
+- **Notification Lighting**: Display a customizable lighting effect with styles (Glow, Spinner, Stroke), per-app colors, flashlight pulse support, and ambient display improvements.
 - **Dynamic Night Light**: Automatically toggle Night Light mode based on the currently active application.
 
 ### Quick Settings Tiles
@@ -58,9 +60,12 @@ A collection of useful tiles to toggle system settings:
 - **Caffeinate**: Keep screen awake.
 - **Sound Mode**: Toggle Ring/Vibrate/Silent.
 - **Mono Audio**: Toggle mono audio output.
-- **Edge Lighting**: Toggle Edge Lighting service.
+- **Notification Lighting**: Toggle Notification Lighting service.
 - **Locked Security**: Toggle Screen Locked Security.
 - **Dynamic Night Light**: Toggle Dynamic Night Light.
+- **App Freezing**: Toggle app freezing functionality.
+- **App Lock**: Toggle application lock.
+- **Flashlight**: Toggle flashlight with brightness adjustment support.
 
 # Requirements
 
@@ -114,5 +119,5 @@ Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of co
 ---
 
 <p align="center">
-  Last updated: 2026-01-03
+  Last updated: 2026-01-09
 </p>
