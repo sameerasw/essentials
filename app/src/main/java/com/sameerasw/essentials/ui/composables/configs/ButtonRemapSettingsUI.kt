@@ -45,7 +45,7 @@ import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.pickers.HapticFeedbackPicker
 import com.sameerasw.essentials.ui.components.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.modifiers.highlight
-import com.sameerasw.essentials.utils.HapticFeedbackType
+import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.shizuku.ShizukuPermissionHelper

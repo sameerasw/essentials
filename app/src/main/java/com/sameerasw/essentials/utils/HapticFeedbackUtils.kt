@@ -5,6 +5,7 @@ import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import androidx.annotation.RequiresPermission
+import com.sameerasw.essentials.domain.HapticFeedbackType
 
 /**
  * Provides haptic feedback based on the given type.

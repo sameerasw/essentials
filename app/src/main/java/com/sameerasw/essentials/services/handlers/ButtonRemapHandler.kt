@@ -12,7 +12,7 @@ import android.util.Log
 import android.view.KeyEvent
 import android.os.VibratorManager
 import android.os.Vibrator
-import com.sameerasw.essentials.utils.HapticFeedbackType
+import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.utils.performHapticFeedback
 import com.sameerasw.essentials.utils.ShizukuUtils
 import com.sameerasw.essentials.services.InputEventListenerService

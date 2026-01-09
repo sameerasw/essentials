@@ -16,7 +16,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import com.sameerasw.essentials.utils.HapticFeedbackType
+import com.sameerasw.essentials.domain.HapticFeedbackType
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
