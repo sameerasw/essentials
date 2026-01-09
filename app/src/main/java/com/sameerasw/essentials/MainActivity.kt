@@ -45,6 +45,10 @@ import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.ui.components.sheets.UpdateBottomSheet
 import com.sameerasw.essentials.ui.components.sheets.InstructionsBottomSheet
+import com.sameerasw.essentials.ui.composables.configs.FreezeSettingsUI
+import com.sameerasw.essentials.ui.composables.FreezeGridUI
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -164,7 +168,16 @@ class MainActivity : FragmentActivity() {
                 }
 
                 val isDeveloperModeEnabled by viewModel.isDeveloperModeEnabled
-                val tabs = DIYTabs.entries
+                
+                // Dynamic tabs configuration
+                val tabs = remember(isDeveloperModeEnabled) {
+                    if (isDeveloperModeEnabled) {
+                        DIYTabs.entries
+                    } else {
+                        listOf(DIYTabs.ESSENTIALS, DIYTabs.FREEZE)
+                    }
+                }
+                
                 val pagerState = rememberPagerState(pageCount = { tabs.size })
                 val scope = rememberCoroutineScope()
                 val exitAlwaysScrollBehavior = FloatingToolbarDefaults.exitAlwaysScrollBehavior(exitDirection = Bottom)
@@ -185,15 +198,12 @@ class MainActivity : FragmentActivity() {
                     contentWindowInsets = androidx.compose.foundation.layout.WindowInsets(0, 0, 0, 0),
                     modifier = Modifier
                         .nestedScroll(scrollBehavior.nestedScrollConnection)
-                        .then(
-                            if (isDeveloperModeEnabled) {
-                                Modifier.nestedScroll(exitAlwaysScrollBehavior)
-                            } else Modifier
-                        ),
+                        .nestedScroll(exitAlwaysScrollBehavior),
                     containerColor = MaterialTheme.colorScheme.surfaceContainer,
                     topBar = {
                         ReusableTopAppBar(
-                            title = if (isDeveloperModeEnabled) tabs[pagerState.currentPage].title else "Essentials",
+                            title = tabs[pagerState.currentPage].title,
+                            subtitle = tabs[pagerState.currentPage].subtitle,
                             hasBack = false,
                             hasSearch = true,
                             hasSettings = true,
@@ -203,57 +213,54 @@ class MainActivity : FragmentActivity() {
                             onUpdateClick = { showUpdateSheet = true },
                             onHelpClick = { showInstructionsSheet = true },
                             hasUpdateAvailable = isUpdateAvailable,
-                            scrollBehavior = scrollBehavior,
-                            subtitle = "v$versionName"
+                            scrollBehavior = scrollBehavior
                         )
                     }
                 ) { innerPadding ->
                     Box(modifier = Modifier.fillMaxSize()) {
-                        if (isDeveloperModeEnabled) {
-                            DIYFloatingToolbar(
-                                modifier = Modifier
-                                    .align(Alignment.BottomCenter)
-                                    .offset(y = -ScreenOffset)
-                                    .zIndex(1f),
-                                currentPage = pagerState.currentPage,
-                                onTabSelected = { index ->
-                                    scope.launch {
-                                        pagerState.animateScrollToPage(index)
-                                    }
-                                },
-                                scrollBehavior = exitAlwaysScrollBehavior
-                            )
+                        DIYFloatingToolbar(
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .offset(y = -ScreenOffset)
+                                .zIndex(1f),
+                            currentPage = pagerState.currentPage,
+                            tabs = tabs,
+                            onTabSelected = { index ->
+                                scope.launch {
+                                    pagerState.animateScrollToPage(index)
+                                }
+                            },
+                            scrollBehavior = exitAlwaysScrollBehavior
+                        )
 
-                            HorizontalPager(
-                                state = pagerState,
-                                modifier = Modifier.fillMaxSize(),
-                                verticalAlignment = Alignment.Top
-                            ) { page ->
-                                when (tabs[page]) {
-                                    DIYTabs.ESSENTIALS -> {
-                                        SetupFeatures(
-                                            viewModel = viewModel,
-                                            modifier = Modifier.padding(innerPadding),
-                                            searchRequested = searchRequested,
-                                            onSearchHandled = { searchRequested = false },
-                                            onHelpClick = { showInstructionsSheet = true }
-                                        )
-                                    }
-                                    DIYTabs.DIY -> {
-                                        ComingSoonDIYScreen(
-                                            modifier = Modifier.padding(innerPadding)
-                                        )
-                                    }
+                        HorizontalPager(
+                            state = pagerState,
+                            modifier = Modifier.fillMaxSize(),
+                            verticalAlignment = Alignment.Top
+                        ) { page ->
+                            when (tabs[page]) {
+                                DIYTabs.ESSENTIALS -> {
+                                    SetupFeatures(
+                                        viewModel = viewModel,
+                                        modifier = Modifier.padding(innerPadding),
+                                        searchRequested = searchRequested,
+                                        onSearchHandled = { searchRequested = false },
+                                        onHelpClick = { showInstructionsSheet = true }
+                                    )
+                                }
+                                DIYTabs.FREEZE -> {
+                                    FreezeGridUI(
+                                        viewModel = viewModel,
+                                        modifier = Modifier.padding(innerPadding),
+                                        contentPadding = innerPadding
+                                    )
+                                }
+                                DIYTabs.DIY -> {
+                                    ComingSoonDIYScreen(
+                                        modifier = Modifier.padding(innerPadding)
+                                    )
                                 }
                             }
-                        } else {
-                            SetupFeatures(
-                                viewModel = viewModel,
-                                modifier = Modifier.padding(innerPadding),
-                                searchRequested = searchRequested,
-                                onSearchHandled = { searchRequested = false },
-                                onHelpClick = { showInstructionsSheet = true }
-                            )
                         }
                     }
                 }

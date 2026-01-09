@@ -37,12 +37,12 @@ import kotlinx.coroutines.delay
 fun DIYFloatingToolbar(
     modifier: Modifier = Modifier,
     currentPage: Int,
+    tabs: List<DIYTabs>,
     onTabSelected: (Int) -> Unit,
     scrollBehavior: FloatingToolbarScrollBehavior
 ) {
     var expanded by remember { mutableStateOf(true) }
     var interactionCount by remember { mutableStateOf(0) }
-    val tabs = DIYTabs.entries
 
     // Auto-collapse after 5 seconds
     LaunchedEffect(expanded, interactionCount, currentPage) {
