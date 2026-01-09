@@ -306,6 +306,7 @@ class MainViewModel : ViewModel() {
         }
 
         isCheckingUpdate.value = true
+        updateInfo.value = null // Clear stale data before checking
         viewModelScope.launch {
             try {
                 val currentVersion = try {

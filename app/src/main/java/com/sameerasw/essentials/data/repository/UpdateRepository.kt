@@ -22,7 +22,11 @@ class UpdateRepository {
             val release: Map<String, Any>? = if (isPreReleaseCheckEnabled) {
                 val listType = object : TypeToken<List<Map<String, Any>>>() {}.type
                 val releases: List<Map<String, Any>> = Gson().fromJson(releaseData, listType)
-                releases.firstOrNull()
+                
+                // Find the release with the highest version name
+                releases.maxByOrNull { rel ->
+                    (rel["tag_name"] as? String)?.removePrefix("v") ?: "0.0"
+                }
             } else {
                 val mapType = object : TypeToken<Map<String, Any>>() {}.type
                 Gson().fromJson(releaseData, mapType)
@@ -55,8 +59,18 @@ class UpdateRepository {
 
     private fun isNewerVersion(current: String, latest: String): Boolean {
         return try {
-            val currentParts = current.split(".").map { it.toIntOrNull() ?: 0 }
-            val latestParts = latest.split(".").map { it.toIntOrNull() ?: 0 }
+            // extract numbers from version segments (e.g., "1-beta" -> 1)
+            fun parseVersion(v: String): List<Int> {
+                return v.split(".")
+                    .map { segment ->
+                        // Extract the first sequence of digits in the segment
+                        val match = Regex("\\d+").find(segment)
+                        match?.value?.toIntOrNull() ?: 0
+                    }
+            }
+
+            val currentParts = parseVersion(current)
+            val latestParts = parseVersion(latest)
             
             val maxLength = maxOf(currentParts.size, latestParts.size)
             for (i in 0 until maxLength) {

@@ -204,6 +204,7 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
     if (showUpdateSheet) {
         UpdateBottomSheet(
             updateInfo = updateInfo,
+            isChecking = viewModel.isCheckingUpdate.value,
             onDismissRequest = { showUpdateSheet = false }
         )
     }

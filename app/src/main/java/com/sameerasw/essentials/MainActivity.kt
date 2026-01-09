@@ -200,6 +200,7 @@ class MainActivity : FragmentActivity() {
                 if (showUpdateSheet) {
                     UpdateBottomSheet(
                         updateInfo = updateInfo,
+                        isChecking = viewModel.isCheckingUpdate.value,
                         onDismissRequest = { showUpdateSheet = false }
                     )
                 }
