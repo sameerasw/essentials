@@ -10,7 +10,6 @@ import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.SystemBarStyle
 import androidx.activity.viewModels
 import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
@@ -34,6 +33,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import com.sameerasw.essentials.ui.components.pickers.HapticFeedbackPicker
+import com.sameerasw.essentials.ui.components.pickers.DefaultTabPicker
+import com.sameerasw.essentials.ui.components.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.components.ReusableTopAppBar
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
@@ -62,12 +64,13 @@ import com.sameerasw.essentials.ui.components.dialogs.AboutSection
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.ui.components.sheets.UpdateBottomSheet
-import com.sameerasw.essentials.ui.components.buttons.HelpPillButton
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.RoundedCornerShape
+import com.sameerasw.essentials.domain.registry.PermissionRegistry
+import com.sameerasw.essentials.ui.components.sheets.InstructionsBottomSheet
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -159,7 +162,9 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
     val updateInfo by viewModel.updateInfo
     val isAutoUpdateEnabled by viewModel.isAutoUpdateEnabled
     val isUpdateNotificationEnabled by viewModel.isUpdateNotificationEnabled
+    val isPreReleaseCheckEnabled by viewModel.isPreReleaseCheckEnabled
     val isDeveloperModeEnabled by viewModel.isDeveloperModeEnabled
+    var showInstructionsSheet by remember { mutableStateOf(false) }
 
     val exportLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.CreateDocument("application/json")
@@ -203,6 +208,12 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
         )
     }
 
+    if (showInstructionsSheet) {
+        InstructionsBottomSheet(
+            onDismissRequest = { showInstructionsSheet = false }
+        )
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -231,6 +242,22 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
             )
         }
 
+        Text(
+            text = "Default tab",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        val defaultTab by viewModel.defaultTab
+        RoundedCardContainer {
+            DefaultTabPicker(
+                selectedTab = defaultTab,
+                onTabSelected = { viewModel.setDefaultTab(it, context) },
+                isDeveloperMode = isDeveloperModeEnabled
+            )
+        }
+
         Spacer(modifier = Modifier.height(16.dp))
 
         // Permissions Section
@@ -248,7 +275,6 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                HelpPillButton()
             }
             Icon(
                 painter = painterResource(id = if (isPermissionsExpanded) R.drawable.rounded_keyboard_arrow_up_24 else R.drawable.rounded_keyboard_arrow_down_24),
@@ -401,6 +427,13 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
                 description = "Check for updates at app launch",
                 isChecked = isAutoUpdateEnabled,
                 onCheckedChange = { viewModel.setAutoUpdateEnabled(it, context) }
+            )
+            IconToggleItem(
+                iconRes = R.drawable.rounded_experiment_24,
+                title = context.getString(R.string.check_pre_releases_label),
+                description = context.getString(R.string.check_pre_releases_desc),
+                isChecked = isPreReleaseCheckEnabled,
+                onCheckedChange = { viewModel.setPreReleaseCheckEnabled(it, context) }
             )
             IconToggleItem(
                 iconRes = R.drawable.rounded_notifications_unread_24,

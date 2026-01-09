@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Vibrator
 import android.view.View
 import androidx.compose.runtime.mutableStateOf
+import com.sameerasw.essentials.domain.HapticFeedbackType
 
 /**
  * Centralized haptic feedback utility that can be toggled on/off app-wide.

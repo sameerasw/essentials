@@ -2,25 +2,24 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera.flashlight" android:required="false" />
 
     <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="moe.shizuku.manager.permission.API_V23" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+    <uses-permission android:name="moe.shizuku.privileged.api.permission.BIND_SHIZUKU_SERVICE" />
 
-    <instrumentation
-        android:name=".services.PixelImsInstrumentation"
-        android:targetPackage="${applicationId}" />
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+    <uses-permission android:name="android.permission.POST_PROMOTED_NOTIFICATIONS" tools:ignore="UnusedAttribute" />
 
 
 
@@ -44,10 +43,8 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter>
-                <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
+            <meta-data android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
         </activity>
 
         <activity
@@ -61,6 +58,13 @@
             android:name=".SettingsActivity"
             android:exported="false"
             android:label="Settings"
+            android:theme="@style/Theme.Essentials">
+        </activity>
+
+        <activity
+            android:name=".AppFreezingActivity"
+            android:exported="true"
+            android:label="@string/freeze_activity_title"
             android:theme="@style/Theme.Essentials">
         </activity>
 
@@ -109,10 +113,50 @@
             android:exported="false"
             android:excludeFromRecents="true"
             android:noHistory="true"
+            android:taskAffinity=""
+            android:theme="@style/Theme.Essentials.Translucent" />
+
+        <activity
+            android:name=".ui.activities.TileAuthActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:theme="@style/Theme.Essentials.Translucent" />
+
+        <activity
+            android:name=".ui.activities.QSPreferencesActivity"
+            android:exported="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ShortcutHandlerActivity"
+            android:exported="true"
+            android:label="@string/frozen_app_shortcut_label"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:theme="@style/Theme.Essentials.Translucent">
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.activities.FlashlightIntensityActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:taskAffinity=""
             android:theme="@style/Theme.Essentials.Translucent" />
 
         <service
-            android:name=".services.ScreenOffAccessibilityService"
+            android:name=".services.tiles.ScreenOffAccessibilityService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
             android:exported="true">
             <intent-filter>
@@ -132,9 +176,25 @@
             </intent-filter>
         </service>
 
+        <provider
+            android:name="rikka.shizuku.ShizukuProvider"
+            android:authorities="${applicationId}.shizuku"
+            android:enabled="true"
+            android:exported="true"
+            android:multiprocess="false"
+            android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
+
+        <receiver android:name="moe.shizuku.api.SystemServiceHelper$Receiver"
+            android:exported="true" />
+
+        <service android:name=".services.InputEventListenerService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse" />
+
         <receiver
-            android:name=".ScreenOffWidgetProvider"
-            android:exported="false">
+            android:name=".services.ScreenOffWidgetProvider"
+            android:exported="false"
+            android:label="@string/screen_off_widget_label">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -144,7 +204,7 @@
         </receiver>
 
         <service
-            android:name=".services.CaffeinateTileService"
+            android:name=".services.tiles.CaffeinateTileService"
             android:exported="true"
             android:icon="@drawable/rounded_coffee_24"
             android:label="Caffeinate"
@@ -158,7 +218,7 @@
             android:exported="false"
             android:foregroundServiceType="specialUse" />
         <service
-            android:name=".services.SoundModeTileService"
+            android:name=".services.tiles.SoundModeTileService"
             android:exported="true"
             android:icon="@drawable/rounded_volume_up_24"
             android:label="Sound Mode"
@@ -169,7 +229,7 @@
         </service>
 
         <service
-            android:name=".services.UiBlurTileService"
+            android:name=".services.tiles.UiBlurTileService"
             android:exported="true"
             android:icon="@drawable/rounded_blur_on_24"
             android:label="UI Blur"
@@ -180,7 +240,7 @@
         </service>
 
         <service
-            android:name=".services.BubblesTileService"
+            android:name=".services.tiles.BubblesTileService"
             android:exported="true"
             android:icon="@drawable/rounded_bubble_24"
             android:label="Bubbles"
@@ -191,7 +251,7 @@
         </service>
 
         <service
-            android:name=".services.MonoAudioTileService"
+            android:name=".services.tiles.MonoAudioTileService"
             android:exported="true"
             android:icon="@drawable/rounded_headphones_24"
             android:label="Mono Audio"
@@ -202,7 +262,7 @@
         </service>
 
         <service
-            android:name=".services.PrivateNotificationsTileService"
+            android:name=".services.tiles.PrivateNotificationsTileService"
             android:exported="true"
             android:icon="@drawable/rounded_notifications_off_24"
             android:label="Sensitive Content"
@@ -213,7 +273,7 @@
         </service>
 
         <service
-            android:name=".services.TapToWakeTileService"
+            android:name=".services.tiles.TapToWakeTileService"
             android:exported="true"
             android:icon="@drawable/rounded_touch_app_24"
             android:label="Tap to Wake"
@@ -224,7 +284,7 @@
         </service>
 
         <service
-            android:name=".services.AlwaysOnDisplayTileService"
+            android:name=".services.tiles.AlwaysOnDisplayTileService"
             android:exported="true"
             android:icon="@drawable/rounded_mobile_text_2_24"
             android:label="AOD"
@@ -234,17 +294,17 @@
             </intent-filter>
         </service>
         <service
-            android:name=".services.EdgeLightingTileService"
+            android:name=".services.tiles.NotificationLightingTileService"
             android:exported="true"
             android:icon="@drawable/rounded_blur_linear_24"
-            android:label="Edge Lighting"
+            android:label="Notification Lighting"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
         </service>
         <service
-            android:name=".services.DynamicNightLightTileService"
+            android:name=".services.tiles.DynamicNightLightTileService"
             android:exported="true"
             android:icon="@drawable/rounded_nightlight_24"
             android:label="Dynamic Night Light"
@@ -254,7 +314,7 @@
             </intent-filter>
         </service>
         <service
-            android:name=".services.ScreenLockedSecurityTileService"
+            android:name=".services.tiles.ScreenLockedSecurityTileService"
             android:exported="true"
             android:icon="@drawable/rounded_security_24"
             android:label="Locked Security"
@@ -264,17 +324,62 @@
             </intent-filter>
         </service>
         <service
-            android:name=".services.EdgeLightingService"
+            android:name=".services.tiles.AppLockTileService"
+            android:exported="true"
+            android:icon="@drawable/rounded_shield_lock_24"
+            android:label="App Lock"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".services.NotificationLightingService"
             android:exported="false"
             android:foregroundServiceType="specialUse" />
 
-        <provider
-            android:name=".services.PixelImsProvider"
-            android:authorities="${applicationId}.shizuku"
-            android:multiprocess="false"
-            android:enabled="true"
+        <service
+            android:name=".services.tiles.AppFreezingTileService"
+            android:icon="@drawable/rounded_mode_cool_24"
+            android:label="@string/app_freezing_tile_label"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".services.tiles.FlashlightPulseTileService"
+            android:icon="@drawable/outline_backlight_high_24"
+            android:label="@string/flashlight_pulse_tile_label"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".services.tiles.FlashlightTileService"
             android:exported="true"
-            android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
+            android:icon="@drawable/rounded_flashlight_on_24"
+            android:label="Flashlight"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <receiver
+            android:name=".services.receivers.FlashlightActionReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.sameerasw.essentials.ACTION_FLASHLIGHT_INCREASE" />
+                <action android:name="com.sameerasw.essentials.ACTION_FLASHLIGHT_DECREASE" />
+                <action android:name="com.sameerasw.essentials.ACTION_FLASHLIGHT_OFF" />
+            </intent-filter>
+        </receiver>
 
         <receiver
             android:name=".services.receivers.SecurityDeviceAdminReceiver"

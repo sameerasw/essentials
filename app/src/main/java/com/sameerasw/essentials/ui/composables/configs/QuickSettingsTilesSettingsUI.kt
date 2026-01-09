@@ -25,17 +25,21 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
-import com.sameerasw.essentials.services.AlwaysOnDisplayTileService
-import com.sameerasw.essentials.services.BubblesTileService
-import com.sameerasw.essentials.services.CaffeinateTileService
-import com.sameerasw.essentials.services.DynamicNightLightTileService
-import com.sameerasw.essentials.services.EdgeLightingTileService
-import com.sameerasw.essentials.services.MonoAudioTileService
-import com.sameerasw.essentials.services.PrivateNotificationsTileService
-import com.sameerasw.essentials.services.ScreenLockedSecurityTileService
-import com.sameerasw.essentials.services.SoundModeTileService
-import com.sameerasw.essentials.services.TapToWakeTileService
-import com.sameerasw.essentials.services.UiBlurTileService
+import com.sameerasw.essentials.services.tiles.AlwaysOnDisplayTileService
+import com.sameerasw.essentials.services.tiles.BubblesTileService
+import com.sameerasw.essentials.services.tiles.CaffeinateTileService
+import com.sameerasw.essentials.services.tiles.DynamicNightLightTileService
+import com.sameerasw.essentials.services.tiles.NotificationLightingTileService
+import com.sameerasw.essentials.services.tiles.MonoAudioTileService
+import com.sameerasw.essentials.services.tiles.PrivateNotificationsTileService
+import com.sameerasw.essentials.services.tiles.ScreenLockedSecurityTileService
+import com.sameerasw.essentials.services.tiles.SoundModeTileService
+import com.sameerasw.essentials.services.tiles.TapToWakeTileService
+import com.sameerasw.essentials.services.tiles.UiBlurTileService
+import com.sameerasw.essentials.services.tiles.FlashlightTileService
+import com.sameerasw.essentials.services.tiles.AppFreezingTileService
+import com.sameerasw.essentials.services.tiles.AppLockTileService
+import com.sameerasw.essentials.services.tiles.FlashlightPulseTileService
 import com.sameerasw.essentials.ui.modifiers.highlight
 
 data class QSTileInfo(
@@ -60,10 +64,14 @@ fun QuickSettingsTilesSettingsUI(
         QSTileInfo("AOD", R.drawable.rounded_mobile_text_2_24, AlwaysOnDisplayTileService::class.java),
         QSTileInfo("Caffeinate", R.drawable.rounded_coffee_24, CaffeinateTileService::class.java),
         QSTileInfo("Sound Mode", R.drawable.rounded_volume_up_24, SoundModeTileService::class.java),
-        QSTileInfo("Edge Lighting", R.drawable.rounded_blur_linear_24, EdgeLightingTileService::class.java),
+        QSTileInfo("Notification Lighting", R.drawable.rounded_blur_linear_24, NotificationLightingTileService::class.java),
         QSTileInfo("Dynamic Night Light", R.drawable.rounded_nightlight_24, DynamicNightLightTileService::class.java),
         QSTileInfo("Locked Security", R.drawable.rounded_security_24, ScreenLockedSecurityTileService::class.java),
-        QSTileInfo("Mono Audio", R.drawable.rounded_headphones_24, MonoAudioTileService::class.java)
+        QSTileInfo("App Lock", R.drawable.rounded_shield_lock_24, AppLockTileService::class.java),
+        QSTileInfo("Mono Audio", R.drawable.rounded_headphones_24, MonoAudioTileService::class.java),
+        QSTileInfo("Flashlight", R.drawable.rounded_flashlight_on_24, FlashlightTileService::class.java),
+        QSTileInfo("App Freezing", R.drawable.rounded_mode_cool_24, AppFreezingTileService::class.java),
+        QSTileInfo("Flashlight Pulse", R.drawable.outline_backlight_high_24, FlashlightPulseTileService::class.java)
     )
 
     Column(

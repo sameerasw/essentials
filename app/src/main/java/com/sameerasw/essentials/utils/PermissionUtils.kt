@@ -8,7 +8,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import com.sameerasw.essentials.services.NotificationListener
-import com.sameerasw.essentials.services.ScreenOffAccessibilityService
+import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.services.receivers.SecurityDeviceAdminReceiver
 
 object PermissionUtils {
@@ -66,7 +66,7 @@ object PermissionUtils {
         return dpm.isAdminActive(adminComponent)
     }
 
-    fun isEdgeLightingAccessibilityServiceEnabled(context: Context): Boolean {
+    fun isNotificationLightingAccessibilityServiceEnabled(context: Context): Boolean {
         return try {
             val enabledServices = Settings.Secure.getString(
                 context.contentResolver,

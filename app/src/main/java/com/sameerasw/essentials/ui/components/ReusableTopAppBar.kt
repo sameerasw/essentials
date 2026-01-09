@@ -3,6 +3,7 @@ package com.sameerasw.essentials.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -40,9 +41,12 @@ fun ReusableTopAppBar(
     onSearchClick: (() -> Unit)? = null,
     onSettingsClick: (() -> Unit)? = null,
     onUpdateClick: (() -> Unit)? = null,
+    onHelpClick: (() -> Unit)? = null,
     hasUpdateAvailable: Boolean = false,
+    hasHelp: Boolean = false,
     scrollBehavior: TopAppBarScrollBehavior? = null,
-    subtitle: String? = null
+    subtitle: String? = null,
+    actions: @Composable RowScope.() -> Unit = {}
 ) {
     val collapsedFraction = scrollBehavior?.state?.collapsedFraction ?: 0f
     collapsedFraction > 0.5f
@@ -103,6 +107,32 @@ fun ReusableTopAppBar(
             }
         },
         actions = {
+            actions()
+            
+            if (hasHelp) {
+                val view = LocalView.current
+                IconButton(
+                    onClick = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        onHelpClick?.invoke()
+                    },
+                    colors = IconButtonDefaults.iconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceBright
+                    ),
+                    modifier = Modifier.size(48.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_help_24),
+                        contentDescription = "Help Guide",
+                        modifier = Modifier.size(32.dp)
+                    )
+                }
+            }
+
+            if (hasHelp && (hasUpdateAvailable || hasSettings)) {
+                Spacer(modifier = Modifier.width(8.dp))
+            }
+
             if (hasUpdateAvailable) {
                 val view = LocalView.current
                 IconButton(
@@ -149,7 +179,7 @@ fun ReusableTopAppBar(
                     modifier = Modifier.size(48.dp)
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_stat_name),
+                        painter = painterResource(id = R.drawable.rounded_settings_heart_24),
                         contentDescription = "Settings",
                         modifier = Modifier.size(32.dp)
                     )

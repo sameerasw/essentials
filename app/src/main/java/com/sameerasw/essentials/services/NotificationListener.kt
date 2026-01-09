@@ -9,9 +9,11 @@ import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.util.Log
 import androidx.annotation.RequiresApi
-import com.sameerasw.essentials.MapsState
-import com.sameerasw.essentials.domain.model.EdgeLightingColorMode
-import com.sameerasw.essentials.domain.model.EdgeLightingSide
+import com.sameerasw.essentials.domain.MapsState
+import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
+import com.sameerasw.essentials.domain.model.NotificationLightingSide
+import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
+import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.utils.AppUtil
 
 class NotificationListener : NotificationListenerService() {
@@ -59,7 +61,7 @@ class NotificationListener : NotificationListenerService() {
             // Safe to ignore
         }
 
-        // trigger edge lighting for any newly posted notification if feature enabled
+        // trigger notification lighting for any newly posted notification if feature enabled
         try {
             val packageName = sbn.packageName
             val notification = sbn.notification
@@ -70,7 +72,7 @@ class NotificationListener : NotificationListenerService() {
                     extras.getString(Notification.EXTRA_TEMPLATE) == $$"android.app.Notification$MediaStyle"
             
             if (isMedia) {
-                Log.d("NotificationListener", "Skipping edge lighting for media notification from $packageName")
+                Log.d("NotificationListener", "Skipping notification lighting for media notification from $packageName")
                 return
             }
 
@@ -88,43 +90,50 @@ class NotificationListener : NotificationListenerService() {
                         importance <= android.app.NotificationManager.IMPORTANCE_LOW
 
                     if (isSilent) {
-                        Log.d("NotificationListener", "Skipping edge lighting for silent notification from $packageName")
+                        Log.d("NotificationListener", "Skipping notification lighting for silent notification from $packageName")
                         return
                     }
                 }
             }
+            
+            // Skip persistent notifications if enabled
+            val skipPersistent = prefs.getBoolean("edge_lighting_skip_persistent", false)
+            if (skipPersistent && isPersistentNotification(notification)) {
+                Log.d("NotificationListener", "Skipping notification lighting for persistent notification from $packageName")
+                return
+            }
 
             val enabled = prefs.getBoolean("edge_lighting_enabled", false)
             if (enabled) {
-                // Check all required permissions before triggering edge lighting
+                // Check all required permissions before triggering notification lighting
                 if (hasAllRequiredPermissions()) {
-                    // Check if the app is selected for edge lighting
-                    val appSelected = isAppSelectedForEdgeLighting(sbn.packageName)
-                    Log.d("NotificationListener", "Edge lighting enabled, app ${sbn.packageName} selected: $appSelected")
+                    // Check if the app is selected for notification lighting
+                    val appSelected = isAppSelectedForNotificationLighting(sbn.packageName)
+                    Log.d("NotificationListener", "Notification lighting enabled, app ${sbn.packageName} selected: $appSelected")
                     if (appSelected) {
                         val cornerRadius = prefs.getInt("edge_lighting_corner_radius", 20)
                         val strokeThickness = prefs.getInt("edge_lighting_stroke_thickness", 8)
-                        val colorModeName = prefs.getString("edge_lighting_color_mode", EdgeLightingColorMode.SYSTEM.name)
-                        val colorMode = EdgeLightingColorMode.valueOf(colorModeName ?: EdgeLightingColorMode.SYSTEM.name)
+                        val colorModeName = prefs.getString("edge_lighting_color_mode", NotificationLightingColorMode.SYSTEM.name)
+                        val colorMode = NotificationLightingColorMode.valueOf(colorModeName ?: NotificationLightingColorMode.SYSTEM.name)
                         val pulseCount = prefs.getInt("edge_lighting_pulse_count", 1)
                         val pulseDuration = prefs.getFloat("edge_lighting_pulse_duration", 3000f).toLong()
-                        val styleName = prefs.getString("edge_lighting_style", com.sameerasw.essentials.domain.model.EdgeLightingStyle.STROKE.name)
+                        val styleName = prefs.getString("edge_lighting_style", com.sameerasw.essentials.domain.model.NotificationLightingStyle.STROKE.name)
                         
                         val gson = com.google.gson.Gson()
                         val glowSidesJson = prefs.getString("edge_lighting_glow_sides", null)
-                        val glowSides: Set<EdgeLightingSide> = if (glowSidesJson != null) {
-                            val type = object : com.google.gson.reflect.TypeToken<Set<EdgeLightingSide>>() {}.type
-                            try { gson.fromJson(glowSidesJson, type) } catch (_: Exception) { setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT) }
+                        val glowSides: Set<NotificationLightingSide> = if (glowSidesJson != null) {
+                            val type = object : com.google.gson.reflect.TypeToken<Set<NotificationLightingSide>>() {}.type
+                            try { gson.fromJson(glowSidesJson, type) } catch (_: Exception) { setOf(NotificationLightingSide.LEFT, NotificationLightingSide.RIGHT) }
                         } else {
-                            setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT)
+                            setOf(NotificationLightingSide.LEFT, NotificationLightingSide.RIGHT)
                         }
                         
                         val indicatorX = prefs.getFloat("edge_lighting_indicator_x", 50f)
                         val indicatorY = prefs.getFloat("edge_lighting_indicator_y", 2f)
                         val indicatorScale = prefs.getFloat("edge_lighting_indicator_scale", 1.0f)
 
-                        fun startEdgeLighting(resolvedColor: Int? = null) {
-                            val intent = Intent(applicationContext, EdgeLightingService::class.java).apply {
+                        fun startNotificationLighting(resolvedColor: Int? = null) {
+                            val intent = Intent(applicationContext, NotificationLightingService::class.java).apply {
                                 putExtra("corner_radius_dp", cornerRadius)
                                 putExtra("stroke_thickness_dp", strokeThickness)
                                 putExtra("color_mode", colorMode.name)
@@ -137,19 +146,29 @@ class NotificationListener : NotificationListenerService() {
                                 putExtra("indicator_scale", indicatorScale)
                                 if (resolvedColor != null) {
                                     putExtra("resolved_color", resolvedColor)
-                                } else if (colorMode == EdgeLightingColorMode.CUSTOM) {
+                                } else if (colorMode == NotificationLightingColorMode.CUSTOM) {
                                     putExtra("custom_color", prefs.getInt("edge_lighting_custom_color", 0xFF6200EE.toInt()))
                                 }
+                                putExtra("is_ambient_display", prefs.getBoolean("edge_lighting_ambient_display", false))
+                                putExtra("is_ambient_show_lock_screen", prefs.getBoolean("edge_lighting_ambient_show_lock_screen", false))
                             }
                             applicationContext.startForegroundService(intent)
                         }
 
-                        if (colorMode == EdgeLightingColorMode.APP_SPECIFIC) {
+                        if (colorMode == NotificationLightingColorMode.APP_SPECIFIC) {
                             AppUtil.getAppBrandColor(applicationContext, sbn.packageName) { brandColor ->
-                                startEdgeLighting(brandColor)
+                                startNotificationLighting(brandColor)
                             }
                         } else {
-                            startEdgeLighting()
+                            startNotificationLighting()
+                        }
+
+                        // Also trigger flashlight pulse if enabled
+                        if (prefs.getBoolean("flashlight_pulse_enabled", false)) {
+                            val pulseIntent = Intent(applicationContext, FlashlightActionReceiver::class.java).apply {
+                                action = FlashlightActionReceiver.ACTION_PULSE_NOTIFICATION
+                            }
+                            applicationContext.sendBroadcast(pulseIntent)
                         }
                     }
                 }
@@ -216,7 +235,7 @@ class NotificationListener : NotificationListenerService() {
         return navigationRegex.containsMatchIn(category)
     }
 
-    private fun isAppSelectedForEdgeLighting(packageName: String): Boolean {
+    private fun isAppSelectedForNotificationLighting(packageName: String): Boolean {
         try {
             val prefs = applicationContext.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
 
@@ -227,7 +246,7 @@ class NotificationListener : NotificationListenerService() {
                 val isScreenOn =
                     powerManager.isInteractive
                 if (isScreenOn) {
-                    Log.d("NotificationListener", "Screen is ON and 'Only show when screen off' is enabled. Skipping edge lighting.")
+                    Log.d("NotificationListener", "Screen is ON and 'Only show when screen off' is enabled. Skipping notification lighting.")
                     return false
                 }
             }
@@ -237,8 +256,8 @@ class NotificationListener : NotificationListenerService() {
             // If no saved preferences, allow all apps by default
 
             val gson = com.google.gson.Gson()
-            val type = object : com.google.gson.reflect.TypeToken<List<com.sameerasw.essentials.domain.model.NotificationApp>>() {}.type
-            val selectedApps: List<com.sameerasw.essentials.domain.model.NotificationApp> = gson.fromJson(json, type)
+            val type = object : com.google.gson.reflect.TypeToken<List<com.sameerasw.essentials.domain.model.AppSelection>>() {}.type
+            val selectedApps: List<com.sameerasw.essentials.domain.model.AppSelection> = gson.fromJson(json, type)
 
             // Find the app in the saved list
             val app = selectedApps.find { it.packageName == packageName }

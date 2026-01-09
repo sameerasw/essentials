@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -32,6 +33,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -62,6 +64,8 @@ fun AppSelectionSheet(
     var searchQuery by remember { mutableStateOf("") }
     var selectedApps by remember { mutableStateOf<List<NotificationApp>>(emptyList()) }
     var isLoadingApps by remember { mutableStateOf(true) }
+    var showSystemApps by remember { mutableStateOf(false) }
+    var initialEnabledPackageNames by remember { mutableStateOf<Set<String>>(emptySet()) }
     val scope = rememberCoroutineScope()
 
     // Load apps when sheet opens
@@ -84,6 +88,7 @@ fun AppSelectionSheet(
 
                 withContext(Dispatchers.Main) {
                     selectedApps = merged
+                    initialEnabledPackageNames = merged.filter { it.isEnabled }.map { it.packageName }.toSet()
                 }
             } catch (e: Exception) {
                 android.util.Log.e("AppSelectionSheet", "Error loading apps: ${e.message}")
@@ -96,8 +101,10 @@ fun AppSelectionSheet(
     }
 
     val filteredApps = selectedApps.filter {
-        !it.isSystemApp && (searchQuery.isEmpty() || it.appName.contains(searchQuery, ignoreCase = true))
-    }.sortedWith(compareByDescending<NotificationApp> { it.isEnabled }.thenBy { it.appName.lowercase() })
+        val matchesSearch = searchQuery.isEmpty() || it.appName.contains(searchQuery, ignoreCase = true)
+        val isVisible = !it.isSystemApp || showSystemApps || it.isEnabled // Always show if enabled, or if system toggle checks out
+        matchesSearch && isVisible
+    }.sortedWith(compareByDescending<NotificationApp> { initialEnabledPackageNames.contains(it.packageName) }.thenBy { it.appName.lowercase() })
 
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
@@ -110,10 +117,36 @@ fun AppSelectionSheet(
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Text(
-                text = "Select Apps",
-                style = MaterialTheme.typography.headlineSmall
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Select Apps",
+                    style = MaterialTheme.typography.headlineSmall
+                )
+                
+                androidx.compose.material3.IconButton(
+                    onClick = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        val updatedList = selectedApps.map { app ->
+                            val isVisible = !app.isSystemApp || showSystemApps || app.isEnabled
+                            if (isVisible) app.copy(isEnabled = !app.isEnabled) else app
+                        }
+                        selectedApps = updatedList
+                        scope.launch(Dispatchers.IO) {
+                            onSaveApps(context, updatedList.map { AppSelection(it.packageName, it.isEnabled) })
+                        }
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_invert_colors_24),
+                        contentDescription = "Invert selection",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
 
             // Search Bar
             OutlinedTextField(
@@ -128,29 +161,41 @@ fun AppSelectionSheet(
                     )
                 },
                 singleLine = true,
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp)
             )
 
-            // Invert Button
-            OutlinedButton(
-                onClick = {
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    val updatedList = selectedApps.map { app ->
-                        if (!app.isSystemApp) app.copy(isEnabled = !app.isEnabled) else app
+            // System Apps Toggle
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(16.dp))
+                    .clickable { 
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        showSystemApps = !showSystemApps 
                     }
-                    selectedApps = updatedList
-                    scope.launch(Dispatchers.IO) {
-                        onSaveApps(context, updatedList.map { AppSelection(it.packageName, it.isEnabled) })
-                    }
-                },
-                modifier = Modifier.fillMaxWidth()
+                    .padding(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.rounded_invert_colors_24),
+                    painter = painterResource(id = R.drawable.rounded_settings_24),
                     contentDescription = null,
-                    modifier = Modifier.padding(end = 8.dp)
+                    modifier = Modifier.size(24.dp),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                Text("Invert selection")
+                Text(
+                    text = "Show system apps",
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.weight(1f),
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Switch(
+                    checked = showSystemApps,
+                    onCheckedChange = { 
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        showSystemApps = it 
+                    }
+                )
             }
 
             if (isLoadingApps) {
@@ -185,7 +230,7 @@ fun AppSelectionSheet(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Image(
-                                bitmap = app.icon.toBitmap().asImageBitmap(),
+                                bitmap = app.icon,
                                 contentDescription = null,
                                 modifier = Modifier.size(40.dp),
                                 contentScale = ContentScale.Fit

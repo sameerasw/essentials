@@ -9,29 +9,50 @@ import android.view.animation.AnticipateInterpolator
 import androidx.fragment.app.FragmentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.SystemBarStyle
 import androidx.core.view.WindowCompat
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FloatingToolbarDefaults
+import androidx.compose.material3.FloatingToolbarDefaults.ScreenOffset
+import androidx.compose.material3.FloatingToolbarExitDirection.Companion.Bottom
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.*
-import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.zIndex
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.animation.doOnEnd
+import com.sameerasw.essentials.domain.DIYTabs
+import com.sameerasw.essentials.domain.registry.initPermissionRegistry
 import com.sameerasw.essentials.ui.components.ReusableTopAppBar
+import com.sameerasw.essentials.ui.components.DIYFloatingToolbar
 import com.sameerasw.essentials.ui.composables.SetupFeatures
+import com.sameerasw.essentials.ui.composables.ComingSoonDIYScreen
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.ui.components.sheets.UpdateBottomSheet
+import com.sameerasw.essentials.ui.components.sheets.InstructionsBottomSheet
+import com.sameerasw.essentials.ui.composables.configs.FreezeSettingsUI
+import com.sameerasw.essentials.ui.composables.FreezeGridUI
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 class MainActivity : FragmentActivity() {
     val viewModel: MainViewModel by viewModels()
     private var isAppReady = false
@@ -118,24 +139,12 @@ class MainActivity : FragmentActivity() {
 
         Log.d("MainActivity", "onCreate with action: ${intent?.action}")
 
-        // Check if this is a QS tile long-press intent for the SoundModeTileService
-        if (intent?.action == "android.service.quicksettings.action.QS_TILE_PREFERENCES") {
-            val componentName = intent?.getParcelableExtra<android.content.ComponentName>("android.intent.extra.COMPONENT_NAME")
-            Log.d("MainActivity", "QS_TILE_PREFERENCES received, component: ${componentName?.className}")
-            if (componentName?.className == "com.sameerasw.essentials.services.SoundModeTileService") {
-                Log.d("MainActivity", "Launching volume panel")
-                // Launch the volume settings panel
-                val volumeIntent = Intent("android.settings.panel.action.VOLUME")
-                startActivity(volumeIntent)
-                finish()
-                return
-            }
-        }
-
         // Initialize HapticUtil with saved preferences
         HapticUtil.initialize(this)
         // initialize permission registry
         initPermissionRegistry()
+        // Initialize viewModel state early for correct initial composition
+        viewModel.check(this)
         setContent {
             EssentialsTheme {
                 val context = LocalContext.current
@@ -148,6 +157,7 @@ class MainActivity : FragmentActivity() {
                 var searchRequested by remember { mutableStateOf(false) }
                 val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
                 var showUpdateSheet by remember { mutableStateOf(false) }
+                var showInstructionsSheet by remember { mutableStateOf(false) }
                 val isUpdateAvailable by viewModel.isUpdateAvailable
                 val updateInfo by viewModel.updateInfo
 
@@ -160,37 +170,117 @@ class MainActivity : FragmentActivity() {
                     viewModel.checkForUpdates(context)
                 }
 
+                val isDeveloperModeEnabled by viewModel.isDeveloperModeEnabled
+                
+                // Dynamic tabs configuration
+                val tabs = remember(isDeveloperModeEnabled) {
+                    if (isDeveloperModeEnabled) {
+                        DIYTabs.entries
+                    } else {
+                        listOf(DIYTabs.ESSENTIALS, DIYTabs.FREEZE)
+                    }
+                }
+                
+                val defaultTab by viewModel.defaultTab
+                val initialPage = remember(tabs) {
+                    val index = tabs.indexOf(defaultTab)
+                    if (index != -1) index else 0
+                }
+                val pagerState = rememberPagerState(initialPage = initialPage, pageCount = { tabs.size })
+                val scope = rememberCoroutineScope()
+
+                // Gracefully handle tab removal (e.g. disabling Developer Mode)
+                LaunchedEffect(tabs) {
+                    if (pagerState.currentPage >= tabs.size) {
+                        pagerState.scrollToPage(0)
+                    }
+                }
+                val exitAlwaysScrollBehavior = FloatingToolbarDefaults.exitAlwaysScrollBehavior(exitDirection = Bottom)
+
                 if (showUpdateSheet) {
                     UpdateBottomSheet(
                         updateInfo = updateInfo,
                         onDismissRequest = { showUpdateSheet = false }
                     )
                 }
+
+                if (showInstructionsSheet) {
+                    InstructionsBottomSheet(
+                        onDismissRequest = { showInstructionsSheet = false }
+                    )
+                }
                 Scaffold(
                     contentWindowInsets = androidx.compose.foundation.layout.WindowInsets(0, 0, 0, 0),
-                    modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+                    modifier = Modifier
+                        .nestedScroll(scrollBehavior.nestedScrollConnection)
+                        .nestedScroll(exitAlwaysScrollBehavior),
                     containerColor = MaterialTheme.colorScheme.surfaceContainer,
                     topBar = {
+                        val currentTab = remember(tabs, pagerState.currentPage) {
+                            tabs.getOrNull(pagerState.currentPage) ?: tabs.firstOrNull() ?: DIYTabs.ESSENTIALS
+                        }
                         ReusableTopAppBar(
-                            title = "Essentials",
+                            title = currentTab.title,
+                            subtitle = currentTab.subtitle,
                             hasBack = false,
                             hasSearch = true,
                             hasSettings = true,
+                            hasHelp = true,
                             onSearchClick = { searchRequested = true },
                             onSettingsClick = { startActivity(Intent(this, SettingsActivity::class.java)) },
                             onUpdateClick = { showUpdateSheet = true },
+                            onHelpClick = { showInstructionsSheet = true },
                             hasUpdateAvailable = isUpdateAvailable,
-                            scrollBehavior = scrollBehavior,
-                            subtitle = "v$versionName"
+                            scrollBehavior = scrollBehavior
                         )
                     }
                 ) { innerPadding ->
-                    SetupFeatures(
-                        viewModel = viewModel,
-                        modifier = Modifier.padding(innerPadding),
-                        searchRequested = searchRequested,
-                        onSearchHandled = { searchRequested = false }
-                    )
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        DIYFloatingToolbar(
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .offset(y = -ScreenOffset - 12.dp)
+                                .zIndex(1f),
+                            currentPage = pagerState.currentPage,
+                            tabs = tabs,
+                            onTabSelected = { index ->
+                                scope.launch {
+                                    pagerState.animateScrollToPage(index)
+                                }
+                            },
+                            scrollBehavior = exitAlwaysScrollBehavior
+                        )
+
+                        HorizontalPager(
+                            state = pagerState,
+                            modifier = Modifier.fillMaxSize(),
+                            verticalAlignment = Alignment.Top
+                        ) { page ->
+                            when (tabs[page]) {
+                                DIYTabs.ESSENTIALS -> {
+                                    SetupFeatures(
+                                        viewModel = viewModel,
+                                        modifier = Modifier.padding(innerPadding),
+                                        searchRequested = searchRequested,
+                                        onSearchHandled = { searchRequested = false },
+                                        onHelpClick = { showInstructionsSheet = true }
+                                    )
+                                }
+                                DIYTabs.FREEZE -> {
+                                    FreezeGridUI(
+                                        viewModel = viewModel,
+                                        modifier = Modifier.padding(innerPadding),
+                                        contentPadding = innerPadding
+                                    )
+                                }
+                                DIYTabs.DIY -> {
+                                    ComingSoonDIYScreen(
+                                        modifier = Modifier.padding(innerPadding)
+                                    )
+                                }
+                            }
+                        }
+                    }
                 }
 
 
@@ -210,19 +300,5 @@ class MainActivity : FragmentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         Log.d("MainActivity", "onNewIntent with action: ${intent.action}")
-
-        // Check if this is a QS tile long-press intent for the SoundModeTileService
-        if (intent.action == "android.service.quicksettings.action.QS_TILE_PREFERENCES") {
-            val componentName = intent.getParcelableExtra<android.content.ComponentName>("android.intent.extra.COMPONENT_NAME")
-            Log.d("MainActivity", "QS_TILE_PREFERENCES received in onNewIntent, component: ${componentName?.className}")
-            if (componentName?.className == "com.sameerasw.essentials.services.SoundModeTileService") {
-                Log.d("MainActivity", "Launching volume panel from onNewIntent")
-                // Launch the volume settings panel
-                val volumeIntent = Intent("android.settings.panel.action.VOLUME")
-                startActivity(volumeIntent)
-                finish()
-                return
-            }
-        }
     }
 }

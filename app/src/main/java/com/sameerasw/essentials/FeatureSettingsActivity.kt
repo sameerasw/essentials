@@ -2,7 +2,6 @@ package com.sameerasw.essentials
 
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -47,13 +46,14 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.sameerasw.essentials.ui.components.ReusableTopAppBar
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
-import com.sameerasw.essentials.utils.HapticFeedbackType
+import com.sameerasw.essentials.domain.HapticFeedbackType
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.sameerasw.essentials.domain.registry.PermissionRegistry
 import com.sameerasw.essentials.ui.components.linkActions.LinkPickerScreen
 import com.sameerasw.essentials.ui.composables.configs.StatusBarIconSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.CaffeinateSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ScreenOffWidgetSettingsUI
-import com.sameerasw.essentials.ui.composables.configs.EdgeLightingSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.NotificationLightingSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.SoundModeTileSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.QuickSettingsTilesSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ButtonRemapSettingsUI
@@ -64,7 +64,7 @@ import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.viewmodels.StatusBarIconViewModel
 import com.sameerasw.essentials.ui.components.sheets.PermissionItem
 import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
-import com.sameerasw.essentials.ui.composables.configs.PixelImsSettingsUI
+
 import com.sameerasw.essentials.ui.composables.configs.AppLockSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ScreenLockedSecuritySettingsUI
 import com.sameerasw.essentials.utils.HapticUtil
@@ -92,17 +92,17 @@ class FeatureSettingsActivity : FragmentActivity() {
             "Screen off widget" to "Invisible widget to turn the screen off",
             "Statusbar icons" to "Control statusbar icons visibility",
             "Caffeinate" to "Keep the screen awake",
-            "Edge lighting" to "Lighting effects for new notifications",
+            "Notification lighting" to "Lighting effects for new notifications",
             "Sound mode tile" to "QS tile to toggle sound mode",
             "Link actions" to "Handle links with multiple apps",
             "Flashlight toggle" to "Toggle flashlight while screen off",
             "Dynamic night light" to "Toggle based on current app",
             "Snooze system notifications" to "Automatically snooze persistent notifications",
             "Quick settings tiles" to "All available QS tiles",
-            "Pixel IMS" to "Force enable IMS for Pixels",
             "Button remap" to "Remap hardware buttons",
             "Screen locked security" to "Protect network settings from lock screen",
-            "App lock" to "Secure individual apps with biometrics"
+            "App lock" to "Secure individual apps with biometrics",
+            "Freeze" to "Disable rarely used apps"
         )
         val description = featureDescriptions[feature] ?: ""
         val highlightSetting = intent.getStringExtra("highlight_setting")
@@ -163,13 +163,13 @@ class FeatureSettingsActivity : FragmentActivity() {
                 val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
                 val isWriteSecureSettingsEnabled by viewModel.isWriteSecureSettingsEnabled
                 val isOverlayPermissionGranted by viewModel.isOverlayPermissionGranted
-                val isEdgeLightingAccessibilityEnabled by viewModel.isEdgeLightingAccessibilityEnabled
+                val isNotificationLightingAccessibilityEnabled by viewModel.isNotificationLightingAccessibilityEnabled
                 val isNotificationListenerEnabled by viewModel.isNotificationListenerEnabled
 
-                // FAB State for Edge Lighting
+                // FAB State for Notification Lighting
                 var fabExpanded by remember { mutableStateOf(true) }
                 LaunchedEffect(feature) {
-                    if (feature == "Edge lighting") {
+                    if (feature == "Notification lighting") {
                         fabExpanded = true
                         delay(3000)
                         fabExpanded = false
@@ -177,16 +177,17 @@ class FeatureSettingsActivity : FragmentActivity() {
                 }
 
                 // Show permission sheet if feature has missing permissions
-                LaunchedEffect(feature, isAccessibilityEnabled, isWriteSecureSettingsEnabled, isOverlayPermissionGranted, isEdgeLightingAccessibilityEnabled, isNotificationListenerEnabled) {
+                LaunchedEffect(feature, isAccessibilityEnabled, isWriteSecureSettingsEnabled, isOverlayPermissionGranted, isNotificationLightingAccessibilityEnabled, isNotificationListenerEnabled) {
                     val hasMissingPermissions = when (feature) {
                         "Screen off widget" -> !isAccessibilityEnabled
                         "Statusbar icons" -> !isWriteSecureSettingsEnabled
-                        "Edge lighting" -> !isOverlayPermissionGranted || !isEdgeLightingAccessibilityEnabled || !isNotificationListenerEnabled
+                        "Notification lighting" -> !isOverlayPermissionGranted || !isNotificationLightingAccessibilityEnabled || !isNotificationListenerEnabled
                         "Button remap" -> !isAccessibilityEnabled
                         "Dynamic night light" -> !isAccessibilityEnabled || !isWriteSecureSettingsEnabled
                         "Snooze system notifications" -> !isNotificationListenerEnabled
                         "Screen locked security" -> !isAccessibilityEnabled || !isWriteSecureSettingsEnabled || !viewModel.isDeviceAdminEnabled.value
                         "App lock" -> !isAccessibilityEnabled
+                        "Freeze" -> !viewModel.isShizukuAvailable.value || !viewModel.isShizukuPermissionGranted.value
                         else -> false
                     }
                     showPermissionSheet = hasMissingPermissions
@@ -227,11 +228,11 @@ class FeatureSettingsActivity : FragmentActivity() {
                                 isGranted = isWriteSecureSettingsEnabled
                             )
                         )
-                        "Edge lighting" -> listOf(
+                        "Notification lighting" -> listOf(
                             PermissionItem(
                                 iconRes = R.drawable.rounded_magnify_fullscreen_24,
                                 title = "Overlay Permission",
-                                description = "Required to display the edge lighting overlay on the screen",
+                                description = "Required to display the notification lighting overlay on the screen",
                                 dependentFeatures = PermissionRegistry.getFeatures("DRAW_OVERLAYS"),
                                 actionLabel = "Grant Permission",
                                 action = {
@@ -244,7 +245,7 @@ class FeatureSettingsActivity : FragmentActivity() {
                             PermissionItem(
                                 iconRes = R.drawable.rounded_settings_accessibility_24,
                                 title = "Accessibility Service",
-                                description = "Required to trigger edge lighting on new notifications",
+                                description = "Required to trigger notification lighting on new notifications",
                                 dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
                                 actionLabel = "Enable in Settings",
                                 action = {
@@ -252,7 +253,7 @@ class FeatureSettingsActivity : FragmentActivity() {
                                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                                     context.startActivity(intent)
                                 },
-                                isGranted = isEdgeLightingAccessibilityEnabled
+                                isGranted = isNotificationLightingAccessibilityEnabled
                             ),
                             PermissionItem(
                                 iconRes = R.drawable.rounded_notifications_unread_24,
@@ -372,6 +373,17 @@ class FeatureSettingsActivity : FragmentActivity() {
                                 isGranted = isAccessibilityEnabled
                             )
                         )
+                        "Freeze" -> listOf(
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_mode_cool_24,
+                                title = "Shizuku Service",
+                                description = "Required to disable/freeze applications",
+                                dependentFeatures = PermissionRegistry.getFeatures("SHIZUKU"),
+                                actionLabel = if (viewModel.isShizukuPermissionGranted.value) "Permission granted" else "Grant Shizuku",
+                                action = { viewModel.requestShizukuPermission() },
+                                isGranted = viewModel.isShizukuPermissionGranted.value
+                            )
+                        )
                         else -> emptyList()
                     }
 
@@ -400,11 +412,11 @@ class FeatureSettingsActivity : FragmentActivity() {
                         )
                     },
                     floatingActionButton = {
-                        if (feature == "Edge lighting") {
+                        if (feature == "Notification lighting") {
                             ExtendedFloatingActionButton(
                                 onClick = {
                                     HapticUtil.performVirtualKeyHaptic(view)
-                                    viewModel.triggerEdgeLighting(context)
+                                    viewModel.triggerNotificationLighting(context)
                                 },
                                 expanded = fabExpanded,
                                 icon = { Icon(painter = painterResource(id = R.drawable.rounded_play_arrow_24), contentDescription = null) },
@@ -447,8 +459,8 @@ class FeatureSettingsActivity : FragmentActivity() {
                                     highlightSetting = highlightSetting
                                 )
                             }
-                            "Edge lighting" -> {
-                                EdgeLightingSettingsUI(
+                            "Notification lighting" -> {
+                                NotificationLightingSettingsUI(
                                     viewModel = viewModel,
                                     modifier = Modifier.padding(top = 16.dp),
                                     highlightSetting = highlightSetting
@@ -474,9 +486,7 @@ class FeatureSettingsActivity : FragmentActivity() {
                                     highlightSetting = highlightSetting
                                 )
                             }
-                "Pixel IMS" -> {
-                    PixelImsSettingsUI(viewModel = viewModel)
-                }
+
                             "Snooze system notifications" -> {
                                 SnoozeNotificationsSettingsUI(
                                     viewModel = viewModel,
@@ -494,6 +504,13 @@ class FeatureSettingsActivity : FragmentActivity() {
                             "App lock" -> {
                                 AppLockSettingsUI(
                                     viewModel = viewModel,
+                                    highlightKey = highlightSetting
+                                )
+                            }
+                            "Freeze" -> {
+                                com.sameerasw.essentials.ui.composables.configs.FreezeSettingsUI(
+                                    viewModel = viewModel,
+                                    modifier = Modifier.padding(top = 16.dp),
                                     highlightKey = highlightSetting
                                 )
                             }

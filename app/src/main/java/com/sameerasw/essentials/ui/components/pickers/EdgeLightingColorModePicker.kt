@@ -16,18 +16,18 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import com.sameerasw.essentials.domain.model.EdgeLightingColorMode
+import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun EdgeLightingColorModePicker(
-    selectedMode: EdgeLightingColorMode,
-    onModeSelected: (EdgeLightingColorMode) -> Unit,
+fun NotificationLightingColorModePicker(
+    selectedMode: NotificationLightingColorMode,
+    onModeSelected: (NotificationLightingColorMode) -> Unit,
     modifier: Modifier = Modifier,
-    options: List<Pair<String, EdgeLightingColorMode>> = listOf(
-        "System" to EdgeLightingColorMode.SYSTEM,
-        "Custom" to EdgeLightingColorMode.CUSTOM,
-        "App specific" to EdgeLightingColorMode.APP_SPECIFIC
+    options: List<Pair<String, NotificationLightingColorMode>> = listOf(
+        "System" to NotificationLightingColorMode.SYSTEM,
+        "Custom" to NotificationLightingColorMode.CUSTOM,
+        "App specific" to NotificationLightingColorMode.APP_SPECIFIC
     )
 ) {
     val labels = options.map { it.first }

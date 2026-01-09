@@ -7,41 +7,36 @@ import android.app.admin.DevicePolicyManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.provider.Settings
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.graphics.toArgb
 import androidx.core.content.ContextCompat
-import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.sameerasw.essentials.MapsState
+import com.sameerasw.essentials.domain.MapsState
+import com.sameerasw.essentials.domain.registry.SearchRegistry
+import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.data.repository.UpdateRepository
 import com.sameerasw.essentials.domain.model.AppSelection
-import com.sameerasw.essentials.domain.model.EdgeLightingColorMode
-import com.sameerasw.essentials.domain.model.EdgeLightingStyle
-import com.sameerasw.essentials.domain.model.EdgeLightingSide
 import com.sameerasw.essentials.domain.model.NotificationApp
+import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
+import com.sameerasw.essentials.domain.model.NotificationLightingSide
+import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import com.sameerasw.essentials.domain.model.SearchableItem
 import com.sameerasw.essentials.domain.model.UpdateInfo
-import com.sameerasw.essentials.SearchRegistry
 import com.sameerasw.essentials.services.CaffeinateWakeLockService
-import com.sameerasw.essentials.services.EdgeLightingService
-import com.sameerasw.essentials.services.NotificationListener
-import com.sameerasw.essentials.services.ScreenOffAccessibilityService
+import com.sameerasw.essentials.services.NotificationLightingService
+import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.services.receivers.SecurityDeviceAdminReceiver
 import com.sameerasw.essentials.utils.AppUtil
-import com.sameerasw.essentials.utils.HapticFeedbackType
+import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.utils.ShizukuUtils
 import com.sameerasw.essentials.utils.UpdateNotificationHelper
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.net.URL
 
 class MainViewModel : ViewModel() {
     val isAccessibilityEnabled = mutableStateOf(false)
@@ -55,13 +50,18 @@ class MainViewModel : ViewModel() {
     val isShizukuAvailable = mutableStateOf(false)
     val isNotificationListenerEnabled = mutableStateOf(false)
     val isMapsPowerSavingEnabled = mutableStateOf(false)
-    val isEdgeLightingEnabled = mutableStateOf(false)
+    val isNotificationLightingEnabled = mutableStateOf(false)
     val isOverlayPermissionGranted = mutableStateOf(false)
-    val isEdgeLightingAccessibilityEnabled = mutableStateOf(false)
+    val isNotificationLightingAccessibilityEnabled = mutableStateOf(false)
     val hapticFeedbackType = mutableStateOf(HapticFeedbackType.SUBTLE)
+    val defaultTab = mutableStateOf(com.sameerasw.essentials.domain.DIYTabs.ESSENTIALS)
     val isDefaultBrowserSet = mutableStateOf(false)
     val onlyShowWhenScreenOff = mutableStateOf(true)
+    val isAmbientDisplayEnabled = mutableStateOf(false)
+    val isAmbientShowLockScreenEnabled = mutableStateOf(false)
     val isButtonRemapEnabled = mutableStateOf(false)
+    val isButtonRemapUseShizuku = mutableStateOf(false)
+    val shizukuDetectedDevicePath = mutableStateOf<String?>(null)
     val volumeUpActionOff = mutableStateOf("None")
     val volumeDownActionOff = mutableStateOf("None")
     val volumeUpActionOn = mutableStateOf("None")
@@ -72,21 +72,36 @@ class MainViewModel : ViewModel() {
     val isSnoozeFileTransferEnabled = mutableStateOf(false)
     val isSnoozeChargingEnabled = mutableStateOf(false)
     val isFlashlightAlwaysTurnOffEnabled = mutableStateOf(false)
-    val isPixelImsEnabled = mutableStateOf(false)
+    val isFlashlightFadeEnabled = mutableStateOf(false)
+    val isFlashlightAdjustEnabled = mutableStateOf(false)
+    val isFlashlightGlobalEnabled = mutableStateOf(false)
+    val isFlashlightLiveUpdateEnabled = mutableStateOf(true)
+    val flashlightLastIntensity = mutableStateOf(1)
+    val isFlashlightPulseEnabled = mutableStateOf(false)
+    val isFlashlightPulseFacedownOnly = mutableStateOf(true)
+
+
+
     val isScreenLockedSecurityEnabled = mutableStateOf(false)
     val isDeviceAdminEnabled = mutableStateOf(false)
     val isDeveloperModeEnabled = mutableStateOf(false)
     val skipSilentNotifications = mutableStateOf(true)
-    val edgeLightingStyle = mutableStateOf(EdgeLightingStyle.STROKE)
-    val edgeLightingColorMode = mutableStateOf(EdgeLightingColorMode.SYSTEM)
-    val edgeLightingCustomColor = mutableIntStateOf(0xFF6200EE.toInt()) // Default purple
-    val edgeLightingPulseCount = mutableIntStateOf(1)
-    val edgeLightingPulseDuration = mutableStateOf(3000f)
-    val edgeLightingIndicatorX = mutableStateOf(50f) // 0-100 percentage
-    val edgeLightingIndicatorY = mutableStateOf(2f)  // 0-100 percentage, default top
-    val edgeLightingIndicatorScale = mutableStateOf(1.0f)
-    val edgeLightingGlowSides = mutableStateOf(setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT))
+    val notificationLightingStyle = mutableStateOf(NotificationLightingStyle.STROKE)
+    val notificationLightingColorMode = mutableStateOf(NotificationLightingColorMode.SYSTEM)
+    val notificationLightingCustomColor = mutableIntStateOf(0xFF6200EE.toInt()) // Default purple
+    val notificationLightingPulseCount = mutableIntStateOf(1)
+    val notificationLightingPulseDuration = mutableStateOf(3000f)
+    val notificationLightingIndicatorX = mutableStateOf(50f) // 0-100 percentage
+    val notificationLightingIndicatorY = mutableStateOf(2f)  // 0-100 percentage, default top
+    val notificationLightingIndicatorScale = mutableStateOf(1.0f)
+    val notificationLightingGlowSides = mutableStateOf(setOf(NotificationLightingSide.LEFT, NotificationLightingSide.RIGHT))
+    val skipPersistentNotifications = mutableStateOf(false)
     val isAppLockEnabled = mutableStateOf(false)
+    val isFreezeWhenLockedEnabled = mutableStateOf(false)
+    val freezeLockDelayIndex = mutableIntStateOf(1) // Default: 1 minute
+    val freezePickedApps = mutableStateOf<List<NotificationApp>>(emptyList())
+    val isFreezePickedAppsLoading = mutableStateOf(false)
+    val freezeAutoExcludedApps = mutableStateOf<Set<String>>(emptySet())
 
     // Search state
     val searchQuery = mutableStateOf("")
@@ -99,24 +114,46 @@ class MainViewModel : ViewModel() {
     val isCheckingUpdate = mutableStateOf(false)
     val isAutoUpdateEnabled = mutableStateOf(true)
     val isUpdateNotificationEnabled = mutableStateOf(true)
+    val isPreReleaseCheckEnabled = mutableStateOf(false)
     private var lastUpdateCheckTime: Long = 0
-    
-    private val preferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
+    private lateinit var settingsRepository: SettingsRepository
+    private lateinit var updateRepository: UpdateRepository
+
+    private val preferenceChangeListener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+        // We still use this listener for now, attached via Repository
+        if (key == null) return@OnSharedPreferenceChangeListener
+        
         when (key) {
-            "edge_lighting_enabled" -> isEdgeLightingEnabled.value = sharedPreferences.getBoolean(key, false)
-            "dynamic_night_light_enabled" -> isDynamicNightLightEnabled.value = sharedPreferences.getBoolean(key, false)
-            "screen_locked_security_enabled" -> isScreenLockedSecurityEnabled.value = sharedPreferences.getBoolean(key, false)
-            "maps_power_saving_enabled" -> {
-                isMapsPowerSavingEnabled.value = sharedPreferences.getBoolean(key, false)
+            SettingsRepository.KEY_EDGE_LIGHTING_ENABLED -> isNotificationLightingEnabled.value = settingsRepository.getBoolean(key)
+            SettingsRepository.KEY_DYNAMIC_NIGHT_LIGHT_ENABLED -> isDynamicNightLightEnabled.value = settingsRepository.getBoolean(key)
+            SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED -> isScreenLockedSecurityEnabled.value = settingsRepository.getBoolean(key)
+            SettingsRepository.KEY_MAPS_POWER_SAVING_ENABLED -> {
+                isMapsPowerSavingEnabled.value = settingsRepository.getBoolean(key)
                 MapsState.isEnabled = isMapsPowerSavingEnabled.value
             }
-            "status_bar_icon_control_enabled" -> isStatusBarIconControlEnabled.value = sharedPreferences.getBoolean(key, false)
-            "button_remap_enabled" -> isButtonRemapEnabled.value = sharedPreferences.getBoolean(key, false)
-            "app_lock_enabled" -> isAppLockEnabled.value = sharedPreferences.getBoolean(key, false)
+            SettingsRepository.KEY_STATUS_BAR_ICON_CONTROL_ENABLED -> isStatusBarIconControlEnabled.value = settingsRepository.getBoolean(key)
+            SettingsRepository.KEY_BUTTON_REMAP_ENABLED -> isButtonRemapEnabled.value = settingsRepository.getBoolean(key)
+            SettingsRepository.KEY_APP_LOCK_ENABLED -> isAppLockEnabled.value = settingsRepository.getBoolean(key)
+            SettingsRepository.KEY_FREEZE_WHEN_LOCKED_ENABLED -> isFreezeWhenLockedEnabled.value = settingsRepository.getBoolean(key)
+            SettingsRepository.KEY_FREEZE_LOCK_DELAY_INDEX -> freezeLockDelayIndex.intValue = settingsRepository.getInt(key, 1)
+            SettingsRepository.KEY_FREEZE_AUTO_EXCLUDED_APPS -> {
+                freezeAutoExcludedApps.value = settingsRepository.getFreezeAutoExcludedApps()
+            }
+            SettingsRepository.KEY_CHECK_PRE_RELEASES_ENABLED -> isPreReleaseCheckEnabled.value = settingsRepository.getBoolean(key)
+            SettingsRepository.KEY_DEVELOPER_MODE_ENABLED -> {
+                isDeveloperModeEnabled.value = settingsRepository.getBoolean(key)
+                if (!isDeveloperModeEnabled.value && defaultTab.value == com.sameerasw.essentials.domain.DIYTabs.DIY) {
+                    defaultTab.value = com.sameerasw.essentials.domain.DIYTabs.ESSENTIALS
+                    settingsRepository.saveDIYTab(defaultTab.value)
+                }
+            }
         }
     }
 
     fun check(context: Context) {
+        settingsRepository = SettingsRepository(context)
+        updateRepository = UpdateRepository()
+        
         isAccessibilityEnabled.value = PermissionUtils.isAccessibilityServiceEnabled(context)
         isWriteSecureSettingsEnabled.value = PermissionUtils.canWriteSecureSettings(context)
         isReadPhoneStateEnabled.value = ContextCompat.checkSelfPermission(
@@ -131,51 +168,61 @@ class MainViewModel : ViewModel() {
         isShizukuPermissionGranted.value = ShizukuUtils.hasPermission()
         isNotificationListenerEnabled.value = PermissionUtils.hasNotificationListenerPermission(context)
         isOverlayPermissionGranted.value = PermissionUtils.canDrawOverlays(context)
-        isEdgeLightingAccessibilityEnabled.value = PermissionUtils.isEdgeLightingAccessibilityServiceEnabled(context)
+        isNotificationLightingAccessibilityEnabled.value = PermissionUtils.isNotificationLightingAccessibilityServiceEnabled(context)
         isDefaultBrowserSet.value = PermissionUtils.isDefaultBrowser(context)
-        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-        prefs.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener)
-        prefs.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
         
-        isWidgetEnabled.value = prefs.getBoolean("widget_enabled", false)
-        isStatusBarIconControlEnabled.value = prefs.getBoolean("status_bar_icon_control_enabled", false)
-        isMapsPowerSavingEnabled.value = prefs.getBoolean("maps_power_saving_enabled", false)
-        isEdgeLightingEnabled.value = prefs.getBoolean("edge_lighting_enabled", false)
-        onlyShowWhenScreenOff.value = prefs.getBoolean("edge_lighting_only_screen_off", true)
-        skipSilentNotifications.value = prefs.getBoolean("edge_lighting_skip_silent", true)
-        val styleName = prefs.getString("edge_lighting_style", EdgeLightingStyle.STROKE.name)
-        edgeLightingStyle.value = EdgeLightingStyle.valueOf(styleName ?: EdgeLightingStyle.STROKE.name)
-        val colorModeName = prefs.getString("edge_lighting_color_mode", EdgeLightingColorMode.SYSTEM.name)
-        edgeLightingColorMode.value = EdgeLightingColorMode.valueOf(colorModeName ?: EdgeLightingColorMode.SYSTEM.name)
-        edgeLightingCustomColor.intValue = prefs.getInt("edge_lighting_custom_color", 0xFF6200EE.toInt())
-        edgeLightingPulseCount.intValue = prefs.getInt("edge_lighting_pulse_count", 1)
-        edgeLightingPulseDuration.value = prefs.getFloat("edge_lighting_pulse_duration", 3000f)
-        edgeLightingIndicatorX.value = prefs.getFloat("edge_lighting_indicator_x", 50f)
-        edgeLightingIndicatorY.value = prefs.getFloat("edge_lighting_indicator_y", 2f)
-        edgeLightingIndicatorScale.value = prefs.getFloat("edge_lighting_indicator_scale", 1.0f)
-        edgeLightingGlowSides.value = loadEdgeLightingGlowSides(context)
+        settingsRepository.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener)
+        settingsRepository.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
+        
+        isWidgetEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_WIDGET_ENABLED)
+        isStatusBarIconControlEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_STATUS_BAR_ICON_CONTROL_ENABLED)
+        isMapsPowerSavingEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_MAPS_POWER_SAVING_ENABLED)
+        isNotificationLightingEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_EDGE_LIGHTING_ENABLED)
+        onlyShowWhenScreenOff.value = settingsRepository.getBoolean(SettingsRepository.KEY_EDGE_LIGHTING_ONLY_SCREEN_OFF, true)
+        isAmbientDisplayEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_EDGE_LIGHTING_AMBIENT_DISPLAY)
+        isAmbientShowLockScreenEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_EDGE_LIGHTING_AMBIENT_SHOW_LOCK_SCREEN)
+        skipSilentNotifications.value = settingsRepository.getBoolean(SettingsRepository.KEY_EDGE_LIGHTING_SKIP_SILENT, true)
+        skipPersistentNotifications.value = settingsRepository.getBoolean(SettingsRepository.KEY_EDGE_LIGHTING_SKIP_PERSISTENT)
+        
+        notificationLightingStyle.value = settingsRepository.getNotificationLightingStyle()
+        notificationLightingColorMode.value = settingsRepository.getNotificationLightingColorMode()
+        notificationLightingCustomColor.intValue = settingsRepository.getInt(SettingsRepository.KEY_EDGE_LIGHTING_CUSTOM_COLOR, 0xFF6200EE.toInt())
+        notificationLightingPulseCount.intValue = settingsRepository.getInt(SettingsRepository.KEY_EDGE_LIGHTING_PULSE_COUNT, 1)
+        notificationLightingPulseDuration.value = settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_PULSE_DURATION, 3000f)
+        notificationLightingIndicatorX.value = settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_INDICATOR_X, 50f)
+        notificationLightingIndicatorY.value = settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_INDICATOR_Y, 2f)
+        notificationLightingIndicatorScale.value = settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_INDICATOR_SCALE, 1.0f)
+        notificationLightingGlowSides.value = settingsRepository.getNotificationLightingGlowSides()
+        
         MapsState.isEnabled = isMapsPowerSavingEnabled.value
-        loadHapticFeedback(context)
+        hapticFeedbackType.value = settingsRepository.getHapticFeedbackType()
+        defaultTab.value = settingsRepository.getDIYTab()
         checkCaffeinateActive(context)
         
         // Button Remap & Migration
-        isButtonRemapEnabled.value = prefs.getBoolean("button_remap_enabled", 
-            prefs.getBoolean("flashlight_volume_toggle_enabled", false))
+        isButtonRemapEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_BUTTON_REMAP_ENABLED, 
+            settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_VOLUME_TOGGLE_ENABLED))
+        isButtonRemapUseShizuku.value = settingsRepository.getBoolean(SettingsRepository.KEY_BUTTON_REMAP_USE_SHIZUKU)
+        shizukuDetectedDevicePath.value = settingsRepository.getString(SettingsRepository.KEY_SHIZUKU_DETECTED_DEVICE_PATH)
             
-        val oldTrigger = prefs.getString("flashlight_trigger_button", "Volume Up")
-        volumeUpActionOff.value = prefs.getString("button_remap_vol_up_action_off", 
-            prefs.getString("button_remap_vol_up_action", // Migration from previous version
-            if (oldTrigger == "Volume Up" && prefs.contains("flashlight_volume_toggle_enabled")) "Toggle flashlight" else "None")) ?: "None"
+        val oldTrigger = settingsRepository.getString(SettingsRepository.KEY_FLASHLIGHT_TRIGGER_BUTTON, "Volume Up")
         
-        volumeDownActionOff.value = prefs.getString("button_remap_vol_down_action_off", 
-            prefs.getString("button_remap_vol_down_action", // Migration from previous version
-            if (oldTrigger == "Volume Down" && prefs.contains("flashlight_volume_toggle_enabled")) "Toggle flashlight" else "None")) ?: "None"
+        val hasLegacyToggle = settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_VOLUME_TOGGLE_ENABLED, false) // Default false here as key check logic
+        
+        volumeUpActionOff.value = settingsRepository.getString(SettingsRepository.KEY_BUTTON_REMAP_VOL_UP_ACTION_OFF, 
+            settingsRepository.getString(SettingsRepository.KEY_BUTTON_REMAP_VOL_UP_ACTION, 
+            if (oldTrigger == "Volume Up" && hasLegacyToggle) "Toggle flashlight" else "None")) ?: "None"
+        
+        volumeDownActionOff.value = settingsRepository.getString(SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION_OFF, 
+            settingsRepository.getString(SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION, 
+            if (oldTrigger == "Volume Down" && hasLegacyToggle) "Toggle flashlight" else "None")) ?: "None"
             
-        volumeUpActionOn.value = prefs.getString("button_remap_vol_up_action_on", "None") ?: "None"
-        volumeDownActionOn.value = prefs.getString("button_remap_vol_down_action_on", "None") ?: "None"
+        volumeUpActionOn.value = settingsRepository.getString(SettingsRepository.KEY_BUTTON_REMAP_VOL_UP_ACTION_ON, "None") ?: "None"
+        volumeDownActionOn.value = settingsRepository.getString(SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION_ON, "None") ?: "None"
             
-        val hapticName = prefs.getString("button_remap_haptic_type", 
-            prefs.getString("flashlight_haptic_type", HapticFeedbackType.DOUBLE.name))
+        val hapticName = settingsRepository.getString(SettingsRepository.KEY_BUTTON_REMAP_HAPTIC_TYPE, 
+            settingsRepository.getString(SettingsRepository.KEY_FLASHLIGHT_HAPTIC_TYPE, HapticFeedbackType.DOUBLE.name))
+        
         remapHapticType.value = try {
             val type = HapticFeedbackType.valueOf(hapticName ?: HapticFeedbackType.DOUBLE.name)
             if (type.name == "LONG") HapticFeedbackType.DOUBLE else type
@@ -183,20 +230,37 @@ class MainViewModel : ViewModel() {
             HapticFeedbackType.DOUBLE
         }
         
-        isDynamicNightLightEnabled.value = prefs.getBoolean("dynamic_night_light_enabled", false)
-        isSnoozeDebuggingEnabled.value = prefs.getBoolean("snooze_debugging_enabled", false)
-        isSnoozeFileTransferEnabled.value = prefs.getBoolean("snooze_file_transfer_enabled", false)
-        isSnoozeChargingEnabled.value = prefs.getBoolean("snooze_charging_enabled", false)
-        isFlashlightAlwaysTurnOffEnabled.value = prefs.getBoolean("flashlight_always_turn_off_enabled", false)
-        isPixelImsEnabled.value = prefs.getBoolean("pixel_ims_enabled", false)
-        isScreenLockedSecurityEnabled.value = prefs.getBoolean("screen_locked_security_enabled", false)
+        isDynamicNightLightEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_DYNAMIC_NIGHT_LIGHT_ENABLED)
+        isSnoozeDebuggingEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_SNOOZE_DEBUGGING_ENABLED)
+        isSnoozeFileTransferEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_SNOOZE_FILE_TRANSFER_ENABLED)
+        isSnoozeChargingEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_SNOOZE_CHARGING_ENABLED)
+        isFlashlightAlwaysTurnOffEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_ALWAYS_TURN_OFF_ENABLED)
+        isFlashlightFadeEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_FADE_ENABLED)
+        isFlashlightAdjustEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_ADJUST_INTENSITY_ENABLED)
+        isFlashlightGlobalEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_GLOBAL_ENABLED)
+        isFlashlightLiveUpdateEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_LIVE_UPDATE_ENABLED, true)
+        flashlightLastIntensity.value = settingsRepository.getInt(SettingsRepository.KEY_FLASHLIGHT_LAST_INTENSITY, 1)
+        isFlashlightPulseEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_PULSE_ENABLED)
+        isFlashlightPulseFacedownOnly.value = settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_PULSE_FACEDOWN_ONLY, true)
+
+        isScreenLockedSecurityEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED)
         isDeviceAdminEnabled.value = isDeviceAdminActive(context)
         
-        isAutoUpdateEnabled.value = prefs.getBoolean("auto_update_enabled", true)
-        isUpdateNotificationEnabled.value = prefs.getBoolean("update_notification_enabled", true)
-        lastUpdateCheckTime = prefs.getLong("last_update_check_time", 0)
-        isAppLockEnabled.value = prefs.getBoolean("app_lock_enabled", false)
-        isDeveloperModeEnabled.value = prefs.getBoolean("developer_mode_enabled", false)
+        isAutoUpdateEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_AUTO_UPDATE_ENABLED, true)
+        isUpdateNotificationEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_UPDATE_NOTIFICATION_ENABLED, true)
+        lastUpdateCheckTime = settingsRepository.getLong(SettingsRepository.KEY_LAST_UPDATE_CHECK_TIME)
+        isAppLockEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_APP_LOCK_ENABLED)
+        isFreezeWhenLockedEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_FREEZE_WHEN_LOCKED_ENABLED)
+        freezeLockDelayIndex.intValue = settingsRepository.getInt(SettingsRepository.KEY_FREEZE_LOCK_DELAY_INDEX, 1)
+        freezeAutoExcludedApps.value = settingsRepository.getFreezeAutoExcludedApps()
+        isDeveloperModeEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_DEVELOPER_MODE_ENABLED)
+        isPreReleaseCheckEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_CHECK_PRE_RELEASES_ENABLED)
+        
+        // Gracefully handle DIY tab if developer mode is off
+        if (!isDeveloperModeEnabled.value && defaultTab.value == com.sameerasw.essentials.domain.DIYTabs.DIY) {
+            defaultTab.value = com.sameerasw.essentials.domain.DIYTabs.ESSENTIALS
+            settingsRepository.saveDIYTab(defaultTab.value)
+        }
     }
 
     fun onSearchQueryChanged(query: String) {
@@ -214,23 +278,22 @@ class MainViewModel : ViewModel() {
 
     fun setAutoUpdateEnabled(enabled: Boolean, context: Context) {
         isAutoUpdateEnabled.value = enabled
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("auto_update_enabled", enabled)
-        }
+        settingsRepository.putBoolean(SettingsRepository.KEY_AUTO_UPDATE_ENABLED, enabled)
     }
 
     fun setUpdateNotificationEnabled(enabled: Boolean, context: Context) {
         isUpdateNotificationEnabled.value = enabled
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("update_notification_enabled", enabled)
-        }
+        settingsRepository.putBoolean(SettingsRepository.KEY_UPDATE_NOTIFICATION_ENABLED, enabled)
+    }
+
+    fun setPreReleaseCheckEnabled(enabled: Boolean, context: Context) {
+        isPreReleaseCheckEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_CHECK_PRE_RELEASES_ENABLED, enabled)
     }
 
     fun setDeveloperModeEnabled(enabled: Boolean, context: Context) {
         isDeveloperModeEnabled.value = enabled
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("developer_mode_enabled", enabled)
-        }
+        settingsRepository.putBoolean(SettingsRepository.KEY_DEVELOPER_MODE_ENABLED, enabled)
     }
 
     fun checkForUpdates(context: Context, manual: Boolean = false) {
@@ -251,67 +314,26 @@ class MainViewModel : ViewModel() {
                     "0.0"
                 } ?: "0.0"
                 
-                val releaseData = withContext(Dispatchers.IO) {
-                    val url = URL("https://api.github.com/repos/sameerasw/essentials/releases/latest")
-                    url.readText()
-                }
+                val updateInfoResult = updateRepository.checkForUpdates(isPreReleaseCheckEnabled.value, currentVersion)
 
-                val mapType = object : TypeToken<Map<String, Any>>() {}.type
-                val release: Map<String, Any> = Gson().fromJson(releaseData, mapType)
-
-                val latestVersion = (release["tag_name"] as? String)?.removePrefix("v") ?: "0.0"
-                val body = release["body"] as? String ?: ""
-                val assets = release["assets"] as? List<Map<String, Any>>
-                val downloadUrl = assets?.firstOrNull { it["name"].toString().endsWith(".apk") }?.get("browser_download_url") as? String ?: ""
-
-                val hasUpdate = isNewerVersion(currentVersion, latestVersion)
-                
-                updateInfo.value = UpdateInfo(
-                    versionName = latestVersion,
-                    releaseNotes = body,
-                    downloadUrl = downloadUrl,
-                    isUpdateAvailable = hasUpdate
-                )
-                isUpdateAvailable.value = hasUpdate
-                
-                if (hasUpdate && downloadUrl.isNotEmpty()) {
-                    if (isUpdateNotificationEnabled.value) {
-                        UpdateNotificationHelper.showUpdateNotification(context, latestVersion, downloadUrl)
+                if (updateInfoResult != null) {
+                    updateInfo.value = updateInfoResult
+                    isUpdateAvailable.value = updateInfoResult.isUpdateAvailable
+                    
+                    if (updateInfoResult.isUpdateAvailable && updateInfoResult.downloadUrl.isNotEmpty()) {
+                        if (isUpdateNotificationEnabled.value) {
+                            UpdateNotificationHelper.showUpdateNotification(context, updateInfoResult.versionName, updateInfoResult.downloadUrl)
+                        }
                     }
+                    
+                    lastUpdateCheckTime = System.currentTimeMillis()
+                    settingsRepository.putLong(SettingsRepository.KEY_LAST_UPDATE_CHECK_TIME, lastUpdateCheckTime)
                 }
-                
-                // Update last check time on success
-                lastUpdateCheckTime = System.currentTimeMillis()
-                context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-                    putLong("last_update_check_time", lastUpdateCheckTime)
-                }
-                
             } catch (e: Exception) {
                 e.printStackTrace()
-                if (manual) {
-                    // Fail silently or handle error
-                }
             } finally {
                 isCheckingUpdate.value = false
             }
-        }
-    }
-
-    private fun isNewerVersion(current: String, latest: String): Boolean {
-        return try {
-            val currentParts = current.split(".").map { it.toIntOrNull() ?: 0 }
-            val latestParts = latest.split(".").map { it.toIntOrNull() ?: 0 }
-            
-            val maxLength = maxOf(currentParts.size, latestParts.size)
-            for (i in 0 until maxLength) {
-                val v1 = if (i < currentParts.size) currentParts[i] else 0
-                val v2 = if (i < latestParts.size) latestParts[i] else 0
-                if (v2 > v1) return true
-                if (v1 > v2) return false
-            }
-            false
-        } catch (e: Exception) {
-            latest != current
         }
     }
 
@@ -335,156 +357,158 @@ class MainViewModel : ViewModel() {
 
     fun setWidgetEnabled(enabled: Boolean, context: Context) {
         isWidgetEnabled.value = enabled
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("widget_enabled", enabled)
-        }
+        settingsRepository.putBoolean(SettingsRepository.KEY_WIDGET_ENABLED, enabled)
     }
 
     fun setStatusBarIconControlEnabled(enabled: Boolean, context: Context) {
         isStatusBarIconControlEnabled.value = enabled
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("status_bar_icon_control_enabled", enabled)
-        }
+        settingsRepository.putBoolean(SettingsRepository.KEY_STATUS_BAR_ICON_CONTROL_ENABLED, enabled)
     }
 
     fun setMapsPowerSavingEnabled(enabled: Boolean, context: Context) {
         isMapsPowerSavingEnabled.value = enabled
         MapsState.isEnabled = enabled
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("maps_power_saving_enabled", enabled)
-        }
+        settingsRepository.putBoolean(SettingsRepository.KEY_MAPS_POWER_SAVING_ENABLED, enabled)
     }
 
-    fun setEdgeLightingEnabled(enabled: Boolean, context: Context) {
-        isEdgeLightingEnabled.value = enabled
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("edge_lighting_enabled", enabled)
-        }
+    fun setNotificationLightingEnabled(enabled: Boolean, context: Context) {
+        isNotificationLightingEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_EDGE_LIGHTING_ENABLED, enabled)
     }
 
     fun setOnlyShowWhenScreenOff(enabled: Boolean, context: Context) {
         onlyShowWhenScreenOff.value = enabled
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("edge_lighting_only_screen_off", enabled)
-        }
+        settingsRepository.putBoolean(SettingsRepository.KEY_EDGE_LIGHTING_ONLY_SCREEN_OFF, enabled)
+    }
+
+    fun setAmbientDisplayEnabled(enabled: Boolean, context: Context) {
+        isAmbientDisplayEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_EDGE_LIGHTING_AMBIENT_DISPLAY, enabled)
+    }
+
+    fun setAmbientShowLockScreenEnabled(enabled: Boolean, context: Context) {
+        isAmbientShowLockScreenEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_EDGE_LIGHTING_AMBIENT_SHOW_LOCK_SCREEN, enabled)
     }
     
     fun setSkipSilentNotifications(enabled: Boolean, context: Context) {
         skipSilentNotifications.value = enabled
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("edge_lighting_skip_silent", enabled)
-        }
+        settingsRepository.putBoolean(SettingsRepository.KEY_EDGE_LIGHTING_SKIP_SILENT, enabled)
     }
 
-    fun setEdgeLightingStyle(style: EdgeLightingStyle, context: Context) {
-        edgeLightingStyle.value = style
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putString("edge_lighting_style", style.name)
-        }
+    fun setSkipPersistentNotifications(enabled: Boolean, context: Context) {
+        skipPersistentNotifications.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_EDGE_LIGHTING_SKIP_PERSISTENT, enabled)
     }
 
-    fun setEdgeLightingColorMode(mode: EdgeLightingColorMode, context: Context) {
-        edgeLightingColorMode.value = mode
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putString("edge_lighting_color_mode", mode.name)
-        }
+    fun setNotificationLightingStyle(style: NotificationLightingStyle, context: Context) {
+        notificationLightingStyle.value = style
+        settingsRepository.putString(SettingsRepository.KEY_EDGE_LIGHTING_STYLE, style.name)
     }
 
-    fun setEdgeLightingCustomColor(color: Int, context: Context) {
-        edgeLightingCustomColor.intValue = color
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putInt("edge_lighting_custom_color", color)
-        }
+    fun setNotificationLightingColorMode(mode: NotificationLightingColorMode, context: Context) {
+        notificationLightingColorMode.value = mode
+        settingsRepository.putString(SettingsRepository.KEY_EDGE_LIGHTING_COLOR_MODE, mode.name)
+    }
+
+    fun setNotificationLightingCustomColor(color: Int, context: Context) {
+        notificationLightingCustomColor.intValue = color
+        settingsRepository.putInt(SettingsRepository.KEY_EDGE_LIGHTING_CUSTOM_COLOR, color)
     }
 
     fun setButtonRemapEnabled(enabled: Boolean, context: Context) {
         isButtonRemapEnabled.value = enabled
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("button_remap_enabled", enabled)
-        }
+        settingsRepository.putBoolean(SettingsRepository.KEY_BUTTON_REMAP_ENABLED, enabled)
+    }
+
+    fun setButtonRemapUseShizuku(enabled: Boolean, context: Context) {
+        isButtonRemapUseShizuku.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_BUTTON_REMAP_USE_SHIZUKU, enabled)
     }
 
     fun setVolumeUpActionOff(action: String, context: Context) {
         volumeUpActionOff.value = action
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putString("button_remap_vol_up_action_off", action)
-        }
+        settingsRepository.putString(SettingsRepository.KEY_BUTTON_REMAP_VOL_UP_ACTION_OFF, action)
     }
 
     fun setVolumeDownActionOff(action: String, context: Context) {
         volumeDownActionOff.value = action
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putString("button_remap_vol_down_action_off", action)
-        }
+        settingsRepository.putString(SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION_OFF, action)
     }
 
     fun setVolumeUpActionOn(action: String, context: Context) {
         volumeUpActionOn.value = action
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putString("button_remap_vol_up_action_on", action)
-        }
+        settingsRepository.putString(SettingsRepository.KEY_BUTTON_REMAP_VOL_UP_ACTION_ON, action)
     }
 
     fun setVolumeDownActionOn(action: String, context: Context) {
         volumeDownActionOn.value = action
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putString("button_remap_vol_down_action_on", action)
-        }
+        settingsRepository.putString(SettingsRepository.KEY_BUTTON_REMAP_VOL_DOWN_ACTION_ON, action)
     }
 
     fun setRemapHapticType(type: HapticFeedbackType, context: Context) {
         remapHapticType.value = type
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putString("button_remap_haptic_type", type.name)
-        }
+        settingsRepository.putString(SettingsRepository.KEY_BUTTON_REMAP_HAPTIC_TYPE, type.name)
     }
 
     fun setDynamicNightLightEnabled(enabled: Boolean, context: Context) {
         isDynamicNightLightEnabled.value = enabled
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("dynamic_night_light_enabled", enabled)
-        }
+        settingsRepository.putBoolean(SettingsRepository.KEY_DYNAMIC_NIGHT_LIGHT_ENABLED, enabled)
     }
 
     fun setAppLockEnabled(enabled: Boolean, context: Context) {
         isAppLockEnabled.value = enabled
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("app_lock_enabled", enabled)
-        }
+        settingsRepository.putBoolean(SettingsRepository.KEY_APP_LOCK_ENABLED, enabled)
     }
 
-    fun saveEdgeLightingPulseCount(context: Context, count: Int) {
-        edgeLightingPulseCount.intValue = count
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putInt("edge_lighting_pulse_count", count)
-        }
+    fun setFreezeWhenLockedEnabled(enabled: Boolean, context: Context) {
+        isFreezeWhenLockedEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_FREEZE_WHEN_LOCKED_ENABLED, enabled)
     }
 
-    fun saveEdgeLightingPulseDuration(context: Context, duration: Float) {
-        edgeLightingPulseDuration.value = duration
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putFloat("edge_lighting_pulse_duration", duration)
-        }
+    fun setFreezeLockDelayIndex(index: Int, context: Context) {
+        freezeLockDelayIndex.intValue = index
+        settingsRepository.putInt(SettingsRepository.KEY_FREEZE_LOCK_DELAY_INDEX, index)
+    }
+
+    fun saveNotificationLightingPulseCount(context: Context, count: Int) {
+        notificationLightingPulseCount.intValue = count
+        settingsRepository.putInt(SettingsRepository.KEY_EDGE_LIGHTING_PULSE_COUNT, count)
+    }
+
+    fun saveNotificationLightingPulseDuration(context: Context, duration: Float) {
+        notificationLightingPulseDuration.value = duration
+        settingsRepository.putFloat(SettingsRepository.KEY_EDGE_LIGHTING_PULSE_DURATION, duration)
+    }
+
+    fun setFlashlightPulseEnabled(enabled: Boolean, context: Context) {
+        isFlashlightPulseEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_FLASHLIGHT_PULSE_ENABLED, enabled)
+    }
+
+    fun setFlashlightPulseFacedownOnly(enabled: Boolean, context: Context) {
+        isFlashlightPulseFacedownOnly.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_FLASHLIGHT_PULSE_FACEDOWN_ONLY, enabled)
     }
 
     // Helper to show the overlay service for testing/triggering
-    fun triggerEdgeLighting(context: Context) {
-        val radius = loadEdgeLightingCornerRadius(context)
-        val thickness = loadEdgeLightingStrokeThickness(context)
+    fun triggerNotificationLighting(context: Context) {
+        val radius = settingsRepository.getInt(SettingsRepository.KEY_EDGE_LIGHTING_CORNER_RADIUS, 20)
+        val thickness = settingsRepository.getInt(SettingsRepository.KEY_EDGE_LIGHTING_STROKE_THICKNESS, 8)
         try {
-            val intent = Intent(context, com.sameerasw.essentials.services.EdgeLightingService::class.java).apply {
+            val intent = Intent(context, com.sameerasw.essentials.services.NotificationLightingService::class.java).apply {
                 putExtra("corner_radius_dp", radius)
                 putExtra("stroke_thickness_dp", thickness)
                 putExtra("ignore_screen_state", true)
-                putExtra("style", edgeLightingStyle.value.name)
-                putExtra("color_mode", edgeLightingColorMode.value.name)
-                putExtra("custom_color", edgeLightingCustomColor.intValue)
-                putExtra("pulse_count", edgeLightingPulseCount.intValue)
-                putExtra("pulse_duration", edgeLightingPulseDuration.value.toLong())
-                putExtra("glow_sides", edgeLightingGlowSides.value.map { it.name }.toTypedArray())
-                putExtra("indicator_x", edgeLightingIndicatorX.value)
-                putExtra("indicator_y", edgeLightingIndicatorY.value)
-                putExtra("indicator_scale", edgeLightingIndicatorScale.value)
+                putExtra("style", notificationLightingStyle.value.name)
+                putExtra("color_mode", notificationLightingColorMode.value.name)
+                putExtra("custom_color", notificationLightingCustomColor.intValue)
+                putExtra("pulse_count", notificationLightingPulseCount.intValue)
+                putExtra("pulse_duration", notificationLightingPulseDuration.value.toLong())
+                putExtra("glow_sides", notificationLightingGlowSides.value.map { it.name }.toTypedArray())
+                putExtra("indicator_x", notificationLightingIndicatorX.value)
+                putExtra("indicator_y", notificationLightingIndicatorY.value)
+                putExtra("indicator_scale", notificationLightingIndicatorScale.value)
             }
             context.startService(intent)
         } catch (e: Exception) {
@@ -493,19 +517,19 @@ class MainViewModel : ViewModel() {
     }
 
     // Helper to show the overlay service with custom corner radius
-    fun triggerEdgeLightingWithRadius(context: Context, cornerRadiusDp: Int) {
+    fun triggerNotificationLightingWithRadius(context: Context, cornerRadiusDp: Int) {
         try {
-            val intent = Intent(context, com.sameerasw.essentials.services.EdgeLightingService::class.java).apply {
+            val intent = Intent(context, com.sameerasw.essentials.services.NotificationLightingService::class.java).apply {
                 putExtra("corner_radius_dp", cornerRadiusDp)
                 putExtra("is_preview", true)
                 putExtra("ignore_screen_state", true)
-                putExtra("style", edgeLightingStyle.value.name)
-                putExtra("color_mode", edgeLightingColorMode.value.name)
-                putExtra("custom_color", edgeLightingCustomColor.intValue)
-                putExtra("glow_sides", edgeLightingGlowSides.value.map { it.name }.toTypedArray())
-                putExtra("indicator_x", edgeLightingIndicatorX.value)
-                putExtra("indicator_y", edgeLightingIndicatorY.value)
-                putExtra("indicator_scale", edgeLightingIndicatorScale.value)
+                putExtra("style", notificationLightingStyle.value.name)
+                putExtra("color_mode", notificationLightingColorMode.value.name)
+                putExtra("custom_color", notificationLightingCustomColor.intValue)
+                putExtra("glow_sides", notificationLightingGlowSides.value.map { it.name }.toTypedArray())
+                putExtra("indicator_x", notificationLightingIndicatorX.value)
+                putExtra("indicator_y", notificationLightingIndicatorY.value)
+                putExtra("indicator_scale", notificationLightingIndicatorScale.value)
             }
             context.startService(intent)
         } catch (e: Exception) {
@@ -514,20 +538,20 @@ class MainViewModel : ViewModel() {
     }
 
     // Helper to show the overlay service with custom corner radius and stroke thickness
-    fun triggerEdgeLightingWithRadiusAndThickness(context: Context, cornerRadiusDp: Int, strokeThicknessDp: Int) {
+    fun triggerNotificationLightingWithRadiusAndThickness(context: Context, cornerRadiusDp: Int, strokeThicknessDp: Int) {
         try {
-            val intent = Intent(context, com.sameerasw.essentials.services.EdgeLightingService::class.java).apply {
+            val intent = Intent(context, com.sameerasw.essentials.services.NotificationLightingService::class.java).apply {
                 putExtra("corner_radius_dp", cornerRadiusDp)
                 putExtra("stroke_thickness_dp", strokeThicknessDp)
                 putExtra("is_preview", true)
                 putExtra("ignore_screen_state", true)
-                putExtra("style", edgeLightingStyle.value.name)
-                putExtra("color_mode", edgeLightingColorMode.value.name)
-                putExtra("custom_color", edgeLightingCustomColor.intValue)
-                putExtra("glow_sides", edgeLightingGlowSides.value.map { it.name }.toTypedArray())
-                putExtra("indicator_x", edgeLightingIndicatorX.value)
-                putExtra("indicator_y", edgeLightingIndicatorY.value)
-                putExtra("indicator_scale", edgeLightingIndicatorScale.value)
+                putExtra("style", notificationLightingStyle.value.name)
+                putExtra("color_mode", notificationLightingColorMode.value.name)
+                putExtra("custom_color", notificationLightingCustomColor.intValue)
+                putExtra("glow_sides", notificationLightingGlowSides.value.map { it.name }.toTypedArray())
+                putExtra("indicator_x", notificationLightingIndicatorX.value)
+                putExtra("indicator_y", notificationLightingIndicatorY.value)
+                putExtra("indicator_scale", notificationLightingIndicatorScale.value)
             }
             context.startService(intent)
         } catch (e: Exception) {
@@ -538,8 +562,7 @@ class MainViewModel : ViewModel() {
     // Helper to remove preview overlay
     fun removePreviewOverlay(context: Context) {
         try {
-            // Remove from EdgeLightingService
-            val intent1 = Intent(context, EdgeLightingService::class.java).apply {
+            val intent1 = Intent(context, NotificationLightingService::class.java).apply {
                 putExtra("remove_preview", true)
             }
             context.startService(intent1)
@@ -557,20 +580,15 @@ class MainViewModel : ViewModel() {
 
     fun setHapticFeedback(type: HapticFeedbackType, context: Context) {
         hapticFeedbackType.value = type
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putString("haptic_feedback_type", type.name)
-        }
+        settingsRepository.putString(SettingsRepository.KEY_HAPTIC_FEEDBACK_TYPE, type.name)
     }
 
-    private fun loadHapticFeedback(context: Context) {
-        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-        val typeName = prefs.getString("haptic_feedback_type", HapticFeedbackType.SUBTLE.name)
-        hapticFeedbackType.value = try {
-            HapticFeedbackType.valueOf(typeName ?: HapticFeedbackType.SUBTLE.name)
-        } catch (e: Exception) {
-            HapticFeedbackType.SUBTLE
-        }
+    fun setDefaultTab(tab: com.sameerasw.essentials.domain.DIYTabs, context: Context) {
+        defaultTab.value = tab
+        settingsRepository.saveDIYTab(tab)
     }
+
+
 
     private fun isAccessibilityServiceEnabled(context: Context): Boolean {
         return PermissionUtils.isAccessibilityServiceEnabled(context)
@@ -650,332 +668,283 @@ class MainViewModel : ViewModel() {
         return PermissionUtils.canDrawOverlays(context)
     }
 
-    private fun isEdgeLightingAccessibilityServiceEnabled(context: Context): Boolean {
-        return PermissionUtils.isEdgeLightingAccessibilityServiceEnabled(context)
+    private fun isNotificationLightingAccessibilityServiceEnabled(context: Context): Boolean {
+        return PermissionUtils.isNotificationLightingAccessibilityServiceEnabled(context)
     }
 
     private fun isDefaultBrowser(context: Context): Boolean {
         return PermissionUtils.isDefaultBrowser(context)
     }
 
-    // Edge Lighting App Selection Methods
-    fun saveEdgeLightingSelectedApps(context: Context, apps: List<AppSelection>) {
-        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-        val gson = Gson()
-        val json = gson.toJson(apps)
-        prefs.edit().putString("edge_lighting_selected_apps", json).apply()
+    // Notification Lighting App Selection Methods
+    fun saveNotificationLightingSelectedApps(context: Context, apps: List<AppSelection>) {
+        settingsRepository.saveNotificationLightingSelectedApps(apps)
     }
 
-    fun loadEdgeLightingSelectedApps(context: Context): List<AppSelection> {
-        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-        val json = prefs.getString("edge_lighting_selected_apps", null)
-        return if (json != null) {
-            val gson = Gson()
-            val type = object : TypeToken<List<AppSelection>>() {}.type
-            try {
-                val selections: List<AppSelection> = gson.fromJson(json, type)
-                selections
-            } catch (e: Exception) {
-                emptyList()
-            }
-        } else {
-            emptyList()
-        }
+    fun loadNotificationLightingSelectedApps(context: Context): List<AppSelection> {
+        return settingsRepository.loadNotificationLightingSelectedApps()
     }
 
-    fun updateEdgeLightingAppEnabled(context: Context, packageName: String, enabled: Boolean) {
-        val currentSelections = loadEdgeLightingSelectedApps(context).toMutableList()
-        val selectionIndex = currentSelections.indexOfFirst { it.packageName == packageName }
-        if (selectionIndex != -1) {
-            currentSelections[selectionIndex] = currentSelections[selectionIndex].copy(isEnabled = enabled)
-        } else {
-            // Add new selection if not found
-            currentSelections.add(AppSelection(packageName, enabled))
-        }
-        val gson = Gson()
-        val json = gson.toJson(currentSelections)
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-            .edit()
-            .putString("edge_lighting_selected_apps", json)
-            .apply()
+    fun updateNotificationLightingAppEnabled(context: Context, packageName: String, enabled: Boolean) {
+        settingsRepository.updateNotificationLightingAppSelection(packageName, enabled)
     }
 
-    // Edge Lighting Corner Radius Methods
-    fun saveEdgeLightingCornerRadius(context: Context, radiusDp: Int) {
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putInt("edge_lighting_corner_radius", radiusDp)
-        }
+    // Notification Lighting Corner Radius Methods
+    fun saveNotificationLightingCornerRadius(context: Context, radiusDp: Int) {
+        settingsRepository.putInt(SettingsRepository.KEY_EDGE_LIGHTING_CORNER_RADIUS, radiusDp)
     }
 
-    fun loadEdgeLightingCornerRadius(context: Context): Int {
-        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-        return prefs.getInt("edge_lighting_corner_radius", 20) // Default to 20 dp
+    fun loadNotificationLightingCornerRadius(context: Context): Int {
+        return settingsRepository.getInt(SettingsRepository.KEY_EDGE_LIGHTING_CORNER_RADIUS, 20)
     }
 
-    // Edge Lighting Stroke Thickness Methods
-    fun saveEdgeLightingStrokeThickness(context: Context, thicknessDp: Int) {
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putInt("edge_lighting_stroke_thickness", thicknessDp)
-        }
+    // Notification Lighting Stroke Thickness Methods
+    fun saveNotificationLightingStrokeThickness(context: Context, thicknessDp: Int) {
+        settingsRepository.putInt(SettingsRepository.KEY_EDGE_LIGHTING_STROKE_THICKNESS, thicknessDp)
     }
 
-    fun loadEdgeLightingStrokeThickness(context: Context): Int {
-        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-        return prefs.getInt("edge_lighting_stroke_thickness", 8) // Default to 8 dp
+    fun loadNotificationLightingStrokeThickness(context: Context): Int {
+        return settingsRepository.getInt(SettingsRepository.KEY_EDGE_LIGHTING_STROKE_THICKNESS, 8)
     }
 
     // Dynamic Night Light App Selection Methods
     fun saveDynamicNightLightSelectedApps(context: Context, apps: List<AppSelection>) {
-        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-        val gson = Gson()
-        val json = gson.toJson(apps)
-        prefs.edit().putString("dynamic_night_light_selected_apps", json).apply()
+        settingsRepository.saveDynamicNightLightSelectedApps(apps)
     }
 
     fun loadDynamicNightLightSelectedApps(context: Context): List<AppSelection> {
-        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-        val json = prefs.getString("dynamic_night_light_selected_apps", null)
-        return if (json != null) {
-            val gson = Gson()
-            val type = object : TypeToken<List<AppSelection>>() {}.type
-            try {
-                val selections: List<AppSelection> = gson.fromJson(json, type)
-                selections
-            } catch (e: Exception) {
-                emptyList()
-            }
-        } else {
-            emptyList()
-        }
+        return settingsRepository.loadDynamicNightLightSelectedApps()
     }
 
     fun updateDynamicNightLightAppEnabled(context: Context, packageName: String, enabled: Boolean) {
-        val currentSelections = loadDynamicNightLightSelectedApps(context).toMutableList()
-        val selectionIndex = currentSelections.indexOfFirst { it.packageName == packageName }
-        if (selectionIndex != -1) {
-            currentSelections[selectionIndex] = currentSelections[selectionIndex].copy(isEnabled = enabled)
-        } else {
-            currentSelections.add(AppSelection(packageName, enabled))
-        }
-        val gson = Gson()
-        val json = gson.toJson(currentSelections)
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-            .edit()
-            .putString("dynamic_night_light_selected_apps", json)
-            .apply()
+        settingsRepository.updateDynamicNightLightAppSelection(packageName, enabled)
     }
 
     // App Lock App Selection Methods
     fun saveAppLockSelectedApps(context: Context, apps: List<AppSelection>) {
-        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-        val gson = Gson()
-        val json = gson.toJson(apps)
-        prefs.edit().putString("app_lock_selected_apps", json).apply()
+        settingsRepository.saveAppLockSelectedApps(apps)
     }
 
     fun loadAppLockSelectedApps(context: Context): List<AppSelection> {
-        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-        val json = prefs.getString("app_lock_selected_apps", null)
-        return if (json != null) {
-            val gson = Gson()
-            val type = object : TypeToken<List<AppSelection>>() {}.type
-            try {
-                val selections: List<AppSelection> = gson.fromJson(json, type)
-                selections
-            } catch (e: Exception) {
-                emptyList()
-            }
-        } else {
-            emptyList()
-        }
+        return settingsRepository.loadAppLockSelectedApps()
     }
 
     fun updateAppLockAppEnabled(context: Context, packageName: String, enabled: Boolean) {
-        val currentSelections = loadAppLockSelectedApps(context).toMutableList()
-        val selectionIndex = currentSelections.indexOfFirst { it.packageName == packageName }
-        if (selectionIndex != -1) {
-            currentSelections[selectionIndex] = currentSelections[selectionIndex].copy(isEnabled = enabled)
+        settingsRepository.updateAppLockAppSelection(packageName, enabled)
+    }
+
+    // Freeze App Selection Methods
+    fun saveFreezeSelectedApps(context: Context, apps: List<AppSelection>) {
+        settingsRepository.saveFreezeSelectedApps(apps)
+        refreshFreezePickedApps(context, silent = false) // Full refresh if list structure changes significantly
+    }
+
+    fun loadFreezeSelectedApps(context: Context): List<AppSelection> {
+        return settingsRepository.loadFreezeSelectedApps()
+    }
+
+    fun updateFreezeAppEnabled(context: Context, packageName: String, enabled: Boolean) {
+        settingsRepository.updateFreezeAppSelection(packageName, enabled)
+        refreshFreezePickedApps(context, silent = true)
+    }
+
+    fun updateFreezeAppAutoFreeze(context: Context, packageName: String, autoFreezeEnabled: Boolean) {
+        val currentSet = freezeAutoExcludedApps.value.toMutableSet()
+        if (autoFreezeEnabled) {
+            currentSet.remove(packageName)
         } else {
-            currentSelections.add(AppSelection(packageName, enabled))
+            currentSet.add(packageName)
         }
-        val gson = Gson()
-        val json = gson.toJson(currentSelections)
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-            .edit()
-            .putString("app_lock_selected_apps", json)
-            .apply()
+        freezeAutoExcludedApps.value = currentSet
+        
+        settingsRepository.saveFreezeAutoExcludedApps(currentSet)
+        
+        refreshFreezePickedApps(context, silent = true)
+    }
+
+    fun refreshFreezePickedApps(context: Context, silent: Boolean = false) {
+        viewModelScope.launch {
+            if (!silent) isFreezePickedAppsLoading.value = true
+            try {
+                // Only load apps that are actually marked as secondary selected (picked)
+                val selections = loadFreezeSelectedApps(context).filter { it.isEnabled }
+                if (selections.isEmpty()) {
+                    freezePickedApps.value = emptyList()
+                    return@launch
+                }
+                
+                // Efficiently load only the apps that are actually marked as secondary selected (picked)
+                val pickedPkgNames = selections.map { it.packageName }
+                val relevantApps = AppUtil.getAppsByPackageNames(context, pickedPkgNames)
+                
+                val merged = AppUtil.mergeWithSavedApps(relevantApps, selections)
+                val currentExcluded = freezeAutoExcludedApps.value
+                
+                // Cleanup: remove package names that are no longer picked
+                val filteredExcluded = currentExcluded.filter { pickedPkgNames.contains(it) }.toSet()
+                if (filteredExcluded.size != currentExcluded.size) {
+                    freezeAutoExcludedApps.value = filteredExcluded
+                    settingsRepository.saveFreezeAutoExcludedApps(filteredExcluded)
+                }
+                
+                freezePickedApps.value = merged.map { it.copy(isEnabled = !filteredExcluded.contains(it.packageName)) }
+                    .sortedBy { it.appName.lowercase() }
+            } finally {
+                if (!silent) isFreezePickedAppsLoading.value = false
+            }
+        }
+    }
+
+    fun freezeAllAuto(context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            com.sameerasw.essentials.utils.FreezeManager.freezeAll(context)
+        }
+    }
+
+    fun unfreezeAllAuto(context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            com.sameerasw.essentials.utils.FreezeManager.unfreezeAll(context)
+        }
+    }
+
+    fun freezeAllManual(context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            com.sameerasw.essentials.utils.FreezeManager.freezeAllManual(context)
+        }
+    }
+
+    fun unfreezeAllManual(context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            com.sameerasw.essentials.utils.FreezeManager.unfreezeAllManual(context)
+        }
+    }
+
+    fun launchAndUnfreezeApp(context: Context, packageName: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val isFrozen = com.sameerasw.essentials.utils.FreezeManager.isAppFrozen(context, packageName)
+            if (isFrozen) {
+                com.sameerasw.essentials.utils.FreezeManager.unfreezeApp(packageName)
+                // Small delay to ensure system registers the change before launch
+                delay(100)
+            }
+            
+            val launchIntent = context.packageManager.getLaunchIntentForPackage(packageName)
+            if (launchIntent != null) {
+                launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(launchIntent)
+            }
+        }
+    }
+
+    fun freezeAllApps(context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            com.sameerasw.essentials.utils.FreezeManager.freezeAllManual(context)
+            refreshFreezePickedApps(context)
+        }
+    }
+
+    fun unfreezeAllApps(context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            com.sameerasw.essentials.utils.FreezeManager.unfreezeAllManual(context)
+            refreshFreezePickedApps(context)
+        }
+    }
+
+    fun freezeAutomaticApps(context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            com.sameerasw.essentials.utils.FreezeManager.freezeAll(context)
+            refreshFreezePickedApps(context)
+        }
     }
 
     fun setSnoozeDebuggingEnabled(enabled: Boolean, context: Context) {
         isSnoozeDebuggingEnabled.value = enabled
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("snooze_debugging_enabled", enabled)
-        }
+        settingsRepository.putBoolean(SettingsRepository.KEY_SNOOZE_DEBUGGING_ENABLED, enabled)
     }
 
     fun setSnoozeFileTransferEnabled(enabled: Boolean, context: Context) {
         isSnoozeFileTransferEnabled.value = enabled
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("snooze_file_transfer_enabled", enabled)
-        }
+        settingsRepository.putBoolean(SettingsRepository.KEY_SNOOZE_FILE_TRANSFER_ENABLED, enabled)
     }
 
     fun setSnoozeChargingEnabled(enabled: Boolean, context: Context) {
         isSnoozeChargingEnabled.value = enabled
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("snooze_charging_enabled", enabled)
-        }
+        settingsRepository.putBoolean(SettingsRepository.KEY_SNOOZE_CHARGING_ENABLED, enabled)
     }
 
     fun setFlashlightAlwaysTurnOffEnabled(enabled: Boolean, context: Context) {
         isFlashlightAlwaysTurnOffEnabled.value = enabled
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("flashlight_always_turn_off_enabled", enabled)
-        }
+        settingsRepository.putBoolean(SettingsRepository.KEY_FLASHLIGHT_ALWAYS_TURN_OFF_ENABLED, enabled)
     }
 
-    fun setPixelImsEnabled(enabled: Boolean, context: Context) {
-        isPixelImsEnabled.value = enabled
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("pixel_ims_enabled", enabled)
-        }
+    fun setFlashlightFadeEnabled(enabled: Boolean, context: Context) {
+        isFlashlightFadeEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_FLASHLIGHT_FADE_ENABLED, enabled)
     }
+
+    fun setFlashlightAdjustEnabled(enabled: Boolean, context: Context) {
+        isFlashlightAdjustEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_FLASHLIGHT_ADJUST_INTENSITY_ENABLED, enabled)
+    }
+
+    fun setFlashlightGlobalEnabled(enabled: Boolean, context: Context) {
+        isFlashlightGlobalEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_FLASHLIGHT_GLOBAL_ENABLED, enabled)
+    }
+
+    fun setFlashlightLiveUpdateEnabled(enabled: Boolean, context: Context) {
+        isFlashlightLiveUpdateEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_FLASHLIGHT_LIVE_UPDATE_ENABLED, enabled)
+    }
+
+    fun setFlashlightLastIntensity(intensity: Int, context: Context) {
+        flashlightLastIntensity.value = intensity
+        settingsRepository.putInt(SettingsRepository.KEY_FLASHLIGHT_LAST_INTENSITY, intensity)
+    }
+
+
+
+
+
 
     fun setScreenLockedSecurityEnabled(enabled: Boolean, context: Context) {
         isScreenLockedSecurityEnabled.value = enabled
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean("screen_locked_security_enabled", enabled)
-        }
+        settingsRepository.putBoolean(SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED, enabled)
     }
 
-    fun setEdgeLightingGlowSides(sides: Set<EdgeLightingSide>, context: Context) {
-        edgeLightingGlowSides.value = sides
-        saveEdgeLightingGlowSides(context, sides)
+    fun setNotificationLightingGlowSides(sides: Set<NotificationLightingSide>, context: Context) {
+        notificationLightingGlowSides.value = sides
+        settingsRepository.saveNotificationLightingGlowSides(sides)
     }
 
-    fun saveEdgeLightingIndicatorX(context: Context, x: Float) {
-        edgeLightingIndicatorX.value = x
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putFloat("edge_lighting_indicator_x", x)
-        }
+    fun saveNotificationLightingIndicatorX(context: Context, x: Float) {
+        notificationLightingIndicatorX.value = x
+        settingsRepository.putFloat(SettingsRepository.KEY_EDGE_LIGHTING_INDICATOR_X, x)
     }
 
-    fun saveEdgeLightingIndicatorY(context: Context, y: Float) {
-        edgeLightingIndicatorY.value = y
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putFloat("edge_lighting_indicator_y", y)
-        }
+    fun saveNotificationLightingIndicatorY(context: Context, y: Float) {
+        notificationLightingIndicatorY.value = y
+        settingsRepository.putFloat(SettingsRepository.KEY_EDGE_LIGHTING_INDICATOR_Y, y)
     }
 
-    fun saveEdgeLightingIndicatorScale(context: Context, scale: Float) {
-        edgeLightingIndicatorScale.value = scale
-        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putFloat("edge_lighting_indicator_scale", scale)
-        }
+    fun saveNotificationLightingIndicatorScale(context: Context, scale: Float) {
+        notificationLightingIndicatorScale.value = scale
+        settingsRepository.putFloat(SettingsRepository.KEY_EDGE_LIGHTING_INDICATOR_SCALE, scale)
     }
 
-    private fun saveEdgeLightingGlowSides(context: Context, sides: Set<EdgeLightingSide>) {
-        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-        val gson = Gson()
-        val json = gson.toJson(sides)
-        prefs.edit().putString("edge_lighting_glow_sides", json).apply()
-    }
+
 
     fun exportConfigs(context: Context, outputStream: java.io.OutputStream) {
-        try {
-            // Map<FileName, Map<PrefKey, WrappedValue>>
-            val allConfigs = mutableMapOf<String, Map<String, Map<String, Any>>>()
-            val prefFiles = listOf("essentials_prefs", "caffeinate_prefs", "link_prefs")
-
-            prefFiles.forEach { fileName ->
-                val prefs = context.getSharedPreferences(fileName, Context.MODE_PRIVATE)
-                val wrapperMap = mutableMapOf<String, Map<String, Any>>()
-                
-                prefs.all.forEach { (key, value) ->
-                    val type = when (value) {
-                        is Boolean -> "Boolean"
-                        is Int -> "Int"
-                        is Long -> "Long"
-                        is Float -> "Float"
-                        is String -> "String"
-                        is Set<*> -> "StringSet"
-                        else -> "Unknown"
-                    }
-                    if (value != null && type != "Unknown") {
-                        wrapperMap[key] = mapOf("type" to type, "value" to value)
-                    }
-                }
-                allConfigs[fileName] = wrapperMap
-            }
-
-            val json = Gson().toJson(allConfigs)
-            outputStream.write(json.toByteArray())
-            outputStream.flush()
-            outputStream.close()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        settingsRepository.exportConfigs(outputStream)
     }
 
     fun importConfigs(context: Context, inputStream: java.io.InputStream): Boolean {
-        return try {
-            val json = inputStream.bufferedReader().use { it.readText() }
-            // Map<FileName, Map<PrefKey, Map<Type_Value, Value>>>
-            val type = object : TypeToken<Map<String, Map<String, Map<String, Any>>>>() {}.type
-            val allConfigs: Map<String, Map<String, Map<String, Any>>> = Gson().fromJson(json, type)
-            
-            allConfigs.forEach { (fileName, prefWrapper) ->
-                val prefs = context.getSharedPreferences(fileName, Context.MODE_PRIVATE)
-                prefs.edit {
-                    clear()
-                    prefWrapper.forEach { (key, item) ->
-                        val itemType = item["type"] as? String
-                        val itemValue = item["value"]
-                        
-                        if (itemType != null && itemValue != null) {
-                            try {
-                                when (itemType) {
-                                    "Boolean" -> putBoolean(key, itemValue as Boolean)
-                                    "Int" -> putInt(key, (itemValue as Double).toInt())
-                                    "Long" -> putLong(key, (itemValue as Double).toLong())
-                                    "Float" -> putFloat(key, (itemValue as Double).toFloat())
-                                    "String" -> putString(key, itemValue as String)
-                                    "StringSet" -> {
-                                        @Suppress("UNCHECKED_CAST")
-                                        putStringSet(key, (itemValue as List<String>).toSet())
-                                    }
-                                }
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                            }
-                        }
-                    }
-                }
-            }
-            // Trigger a refresh of states
+        val success = settingsRepository.importConfigs(inputStream)
+        if (success) {
             check(context)
-            true
-        } catch (e: Exception) {
-            e.printStackTrace()
-            false
-        } finally {
-            inputStream.close()
         }
+        return success
     }
 
-    private fun loadEdgeLightingGlowSides(context: Context): Set<EdgeLightingSide> {
-        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-        val json = prefs.getString("edge_lighting_glow_sides", null)
-        return if (json != null) {
-            val gson = Gson()
-            val type = object : TypeToken<Set<EdgeLightingSide>>() {}.type
-            try {
-                gson.fromJson(json, type)
-            } catch (e: Exception) {
-                setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT)
-            }
-        } else {
-            setOf(EdgeLightingSide.LEFT, EdgeLightingSide.RIGHT)
-        }
-    }
+
 }

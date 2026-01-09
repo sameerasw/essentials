@@ -42,9 +42,9 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import com.sameerasw.essentials.FeatureRegistry
+import com.sameerasw.essentials.domain.registry.FeatureRegistry
 import com.sameerasw.essentials.FeatureSettingsActivity
-import com.sameerasw.essentials.PermissionRegistry
+import com.sameerasw.essentials.domain.registry.PermissionRegistry
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.cards.FeatureCard
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
@@ -61,7 +61,8 @@ fun SetupFeatures(
     viewModel: MainViewModel,
     modifier: Modifier = Modifier,
     searchRequested: Boolean = false,
-    onSearchHandled: () -> Unit = {}
+    onSearchHandled: () -> Unit = {},
+    onHelpClick: () -> Unit = {}
 ) {
     val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
     val isWriteSecureSettingsEnabled by viewModel.isWriteSecureSettingsEnabled
@@ -69,10 +70,10 @@ fun SetupFeatures(
     val isShizukuPermissionGranted by viewModel.isShizukuPermissionGranted
     val isNotificationListenerEnabled by viewModel.isNotificationListenerEnabled
     val isOverlayPermissionGranted by viewModel.isOverlayPermissionGranted
-    val isEdgeLightingAccessibilityEnabled by viewModel.isEdgeLightingAccessibilityEnabled
+    val isNotificationLightingAccessibilityEnabled by viewModel.isNotificationLightingAccessibilityEnabled
     viewModel.isButtonRemapEnabled.value
     viewModel.isDynamicNightLightEnabled.value
-    viewModel.isPixelImsEnabled.value
+
     viewModel.isScreenLockedSecurityEnabled.value
     val context = LocalContext.current
 
@@ -145,7 +146,7 @@ fun SetupFeatures(
         isShizukuPermissionGranted,
         isNotificationListenerEnabled,
         isOverlayPermissionGranted,
-        isEdgeLightingAccessibilityEnabled,
+        isNotificationLightingAccessibilityEnabled,
         currentFeature
     ) {
         if (showSheet && currentFeature != null) {
@@ -194,13 +195,13 @@ fun SetupFeatures(
                 FEATURE_MAPS_POWER_SAVING -> {
                     missing.addAll(buildMapsPowerSavingPermissionItems())
                 }
-                "Edge lighting" -> {
+                "Notification lighting" -> {
                     if (!isOverlayPermissionGranted) {
                         missing.add(
                             PermissionItem(
                                 iconRes = R.drawable.rounded_magnify_fullscreen_24,
                                 title = "Overlay Permission",
-                                description = "Required to display the edge lighting overlay on the screen",
+                                description = "Required to display the notification lighting overlay on the screen",
                                 dependentFeatures = PermissionRegistry.getFeatures("DRAW_OVERLAYS"),
                                 actionLabel = "Grant Permission",
                                 action = {
@@ -213,12 +214,12 @@ fun SetupFeatures(
                             )
                         )
                     }
-                    if (!isEdgeLightingAccessibilityEnabled) {
+                    if (!isNotificationLightingAccessibilityEnabled) {
                         missing.add(
                             PermissionItem(
                                 iconRes = R.drawable.rounded_settings_accessibility_24,
                                 title = "Accessibility Service",
-                                description = "Required to trigger edge lighting on new notifications",
+                                description = "Required to trigger notification lighting on new notifications",
                                 dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
                                 actionLabel = "Enable in Settings",
                                 action = {
@@ -226,7 +227,7 @@ fun SetupFeatures(
                                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                                     context.startActivity(intent)
                                 },
-                                isGranted = isEdgeLightingAccessibilityEnabled
+                                isGranted = isNotificationLightingAccessibilityEnabled
                             )
                         )
                     }
@@ -297,38 +298,7 @@ fun SetupFeatures(
                         )
                     }
                 }
-                "Pixel IMS" -> {
-                    if (!isShizukuAvailable) {
-                        missing.add(
-                            PermissionItem(
-                                iconRes = R.drawable.rounded_adb_24,
-                                title = "Shizuku",
-                                description = "Required for Pixel IMS. Install Shizuku from the Play Store.",
-                                dependentFeatures = PermissionRegistry.getFeatures("SHIZUKU"),
-                                actionLabel = "Install Shizuku",
-                                action = {
-                                    val intent = Intent(Intent.ACTION_VIEW,
-                                        "https://play.google.com/store/apps/details?id=moe.shizuku.privileged.api".toUri())
-                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                    context.startActivity(intent)
-                                },
-                                isGranted = isShizukuAvailable
-                            )
-                        )
-                    } else if (!isShizukuPermissionGranted) {
-                        missing.add(
-                            PermissionItem(
-                                iconRes = R.drawable.rounded_adb_24,
-                                title = "Shizuku permission",
-                                description = "Required to override carrier configurations.",
-                                dependentFeatures = PermissionRegistry.getFeatures("SHIZUKU"),
-                                actionLabel = "Grant permission",
-                                action = { viewModel.requestShizukuPermission() },
-                                isGranted = isShizukuPermissionGranted
-                            )
-                        )
-                    }
-                }
+
                 "Screen locked security" -> {
                     if (!isAccessibilityEnabled) {
                         missing.add(
@@ -444,11 +414,11 @@ fun SetupFeatures(
                 )
             )
             FEATURE_MAPS_POWER_SAVING -> buildMapsPowerSavingPermissionItems()
-                "Edge lighting" -> listOf(
+                "Notification lighting" -> listOf(
                     PermissionItem(
                         iconRes = R.drawable.rounded_magnify_fullscreen_24,
                         title = "Overlay Permission",
-                        description = "Required to display the edge lighting overlay on the screen",
+                        description = "Required to display the notification lighting overlay on the screen",
                         dependentFeatures = PermissionRegistry.getFeatures("DRAW_OVERLAYS"),
                         actionLabel = "Grant Permission",
                         action = {
@@ -462,7 +432,7 @@ fun SetupFeatures(
                     PermissionItem(
                         iconRes = R.drawable.rounded_settings_accessibility_24,
                         title = "Accessibility Service",
-                        description = "Required to trigger edge lighting on new notifications",
+                        description = "Required to trigger notification lighting on new notifications",
                         dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
                         actionLabel = "Enable in Settings",
                         action = {
@@ -470,7 +440,7 @@ fun SetupFeatures(
                             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                             context.startActivity(intent)
                         },
-                        isGranted = isEdgeLightingAccessibilityEnabled
+                        isGranted = isNotificationLightingAccessibilityEnabled
                     ),
                     PermissionItem(
                         iconRes = R.drawable.rounded_notifications_unread_24,
@@ -545,9 +515,34 @@ fun SetupFeatures(
                             context.startActivity(intent)
                         },
                         isGranted = isAccessibilityEnabled
+                    ),
+                    PermissionItem(
+                        iconRes = R.drawable.rounded_security_24,
+                        title = "Write Secure Settings",
+                        description = "Required for Statusbar icons and Screen Locked Security",
+                        dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
+                        actionLabel = "Copy ADB",
+                        action = {
+                            val adbCommand = "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
+                            val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                            val clip = ClipData.newPlainText("adb_command", adbCommand)
+                            clipboard.setPrimaryClip(clip)
+                        },
+                        isGranted = isWriteSecureSettingsEnabled
+                    ),
+                    PermissionItem(
+                        iconRes = R.drawable.rounded_security_24,
+                        title = "Device Administrator",
+                        description = "Required to hard-lock the device (disabling biometrics) on unauthorized access attempts",
+                        dependentFeatures = PermissionRegistry.getFeatures("DEVICE_ADMIN"),
+                        actionLabel = "Enable Admin",
+                        action = {
+                            viewModel.requestDeviceAdmin(context)
+                        },
+                        isGranted = viewModel.isDeviceAdminEnabled.value
                     )
                 )
-                "Pixel IMS" -> buildMapsPowerSavingPermissionItems() // Reusing the same Shizuku logic
+
                 "App lock" -> listOf(
                     PermissionItem(
                         iconRes = R.drawable.rounded_settings_accessibility_24,
@@ -570,7 +565,11 @@ fun SetupFeatures(
             PermissionsBottomSheet(
                 onDismissRequest = { showSheet = false },
                 featureTitle = currentFeature ?: "",
-                permissions = permissionItems
+                permissions = permissionItems,
+                onHelpClick = {
+                    showSheet = false
+                    onHelpClick()
+                }
             )
         }
     }

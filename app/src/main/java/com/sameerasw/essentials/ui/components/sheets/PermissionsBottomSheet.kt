@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.sameerasw.essentials.ui.components.buttons.HelpPillButton
 import com.sameerasw.essentials.ui.components.cards.PermissionCard
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 
@@ -34,7 +33,8 @@ data class PermissionItem(
 fun PermissionsBottomSheet(
     onDismissRequest: () -> Unit,
     featureTitle: String,
-    permissions: List<PermissionItem>
+    permissions: List<PermissionItem>,
+    onHelpClick: () -> Unit = {}
 ) {
     ModalBottomSheet(onDismissRequest = onDismissRequest) {
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -48,7 +48,6 @@ fun PermissionsBottomSheet(
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.weight(1f)
                 )
-                HelpPillButton()
             }
 
             RoundedCardContainer {

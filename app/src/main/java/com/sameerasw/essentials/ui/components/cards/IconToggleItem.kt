@@ -32,7 +32,8 @@ fun IconToggleItem(
     isChecked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     enabled: Boolean = true,
-    onDisabledClick: (() -> Unit)? = null
+    onDisabledClick: (() -> Unit)? = null,
+    showToggle: Boolean = true
 ) {
     val view = LocalView.current
 
@@ -43,6 +44,15 @@ fun IconToggleItem(
                 color = MaterialTheme.colorScheme.surfaceBright,
                 shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd)
             )
+            .clickable(enabled = !showToggle && enabled) {
+                if (enabled) {
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    onCheckedChange(!isChecked)
+                } else if (onDisabledClick != null) {
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    onDisabledClick()
+                }
+            }
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -76,23 +86,25 @@ fun IconToggleItem(
             )
         }
 
-        Box {
-            Switch(
-                checked = if (enabled) isChecked else false,
-                onCheckedChange = { checked ->
-                    if (enabled) {
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        onCheckedChange(checked)
-                    }
-                },
-                enabled = enabled
-            )
+        if (showToggle) {
+            Box {
+                Switch(
+                    checked = if (enabled) isChecked else false,
+                    onCheckedChange = { checked ->
+                        if (enabled) {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            onCheckedChange(checked)
+                        }
+                    },
+                    enabled = enabled
+                )
 
-            if (!enabled && onDisabledClick != null) {
-                Box(modifier = Modifier.matchParentSize().clickable {
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    onDisabledClick()
-                })
+                if (!enabled && onDisabledClick != null) {
+                    Box(modifier = Modifier.matchParentSize().clickable {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        onDisabledClick()
+                    })
+                }
             }
         }
     }

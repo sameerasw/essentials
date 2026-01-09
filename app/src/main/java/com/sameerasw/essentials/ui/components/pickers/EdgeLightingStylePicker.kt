@@ -18,7 +18,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import com.sameerasw.essentials.domain.model.EdgeLightingStyle
+import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.R
 import androidx.compose.ui.platform.LocalView
@@ -26,12 +26,12 @@ import com.sameerasw.essentials.utils.HapticUtil
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun EdgeLightingStylePicker(
-    selectedStyle: EdgeLightingStyle,
-    onStyleSelected: (EdgeLightingStyle) -> Unit,
+fun NotificationLightingStylePicker(
+    selectedStyle: NotificationLightingStyle,
+    onStyleSelected: (NotificationLightingStyle) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val styles = listOf(EdgeLightingStyle.STROKE, EdgeLightingStyle.GLOW, EdgeLightingStyle.INDICATOR)
+    val styles = listOf(NotificationLightingStyle.STROKE, NotificationLightingStyle.GLOW, NotificationLightingStyle.INDICATOR)
     val icons = listOf(
         R.drawable.rounded_rounded_corner_24,
         R.drawable.rounded_blur_linear_24,

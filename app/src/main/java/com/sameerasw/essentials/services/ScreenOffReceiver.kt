@@ -3,7 +3,7 @@ package com.sameerasw.essentials.services
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.sameerasw.essentials.MapsState
+import com.sameerasw.essentials.domain.MapsState
 import com.sameerasw.essentials.utils.ShizukuUtils
 
 class ScreenOffReceiver : BroadcastReceiver() {

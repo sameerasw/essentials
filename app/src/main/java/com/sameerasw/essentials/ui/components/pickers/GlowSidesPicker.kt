@@ -19,22 +19,22 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
-import com.sameerasw.essentials.domain.model.EdgeLightingSide
+import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import androidx.compose.ui.platform.LocalView
 import com.sameerasw.essentials.utils.HapticUtil
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun GlowSidesPicker(
-    selectedSides: Set<EdgeLightingSide>,
-    onSideToggled: (EdgeLightingSide, Boolean) -> Unit,
+    selectedSides: Set<NotificationLightingSide>,
+    onSideToggled: (NotificationLightingSide, Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val options = listOf(
-        EdgeLightingSide.LEFT to R.drawable.rounded_border_left_24,
-        EdgeLightingSide.TOP to R.drawable.rounded_border_top_24,
-        EdgeLightingSide.RIGHT to R.drawable.rounded_border_right_24,
-        EdgeLightingSide.BOTTOM to R.drawable.rounded_border_bottom_24
+        NotificationLightingSide.LEFT to R.drawable.rounded_border_left_24,
+        NotificationLightingSide.TOP to R.drawable.rounded_border_top_24,
+        NotificationLightingSide.RIGHT to R.drawable.rounded_border_right_24,
+        NotificationLightingSide.BOTTOM to R.drawable.rounded_border_bottom_24
     )
     val view = LocalView.current
 

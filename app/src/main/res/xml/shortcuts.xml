@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="app_freezing"
+        android:enabled="true"
+        android:icon="@drawable/rounded_mode_cool_24"
+        android:shortcutShortLabel="@string/freeze_shortcut_short_label"
+        android:shortcutLongLabel="@string/freeze_shortcut_long_label">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.sameerasw.essentials"
+            android:targetClass="com.sameerasw.essentials.AppFreezingActivity" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+</shortcuts>

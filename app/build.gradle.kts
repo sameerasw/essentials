@@ -21,8 +21,8 @@ android {
         applicationId = "com.sameerasw.essentials"
         minSdk = 24
         targetSdk = 36
-        versionCode = 13
-        versionName = "7.4"
+        versionCode = 14
+        versionName = "8.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -67,6 +67,8 @@ dependencies {
 
     implementation("io.coil-kt:coil-compose:2.5.0")
     implementation(libs.androidx.compose.foundation.layout)
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.compose.foundation)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -88,4 +90,8 @@ dependencies {
 
     // Reorderable library
     implementation("sh.calvin.reorderable:reorderable:3.0.0")
+
+    // Volume Long Press
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
+    implementation("dev.rikka.shizuku:api:13.1.5")
 }
