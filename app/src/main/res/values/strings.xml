@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Essentials</string>
-    <string name="accessibility_service_description">Allows the app to turn off the screen via widget.</string>
+    <string name="accessibility_service_description"><b>Essentials Accessibility Service</b>\n\nThis service is required for the following advanced features:\n\n<b>• Physical Button Remapping:</b>\nDetects volume button presses even when the screen is off to trigger actions like the Flashlight.\n\n<b>• Per-App Settings:</b>\nMonitors the currently active app to apply specific profiles for Dynamic Night Light, Notification Lighting Colors, and App Lock.\n\n<b>• Screen Control:</b>\nAllows the app to lock the screen (e.g. via Double Tap or Widgets) and detect screen state changes.\n\n<b>• Security:</b>\nPrevents unauthorized changes by detecting window content when the device is locked.\n\n<small>No input text or sensitive user data is collected or transmitted.</small></string>
     <string name="app_icon">App icon</string>
     <string name="freeze_activity_title">App Freezing</string>
     <string name="freeze_activity_subtitle">Disable apps that are rarely used</string>
