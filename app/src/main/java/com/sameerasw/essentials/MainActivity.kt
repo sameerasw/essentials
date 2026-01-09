@@ -12,26 +12,48 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.SystemBarStyle
 import androidx.core.view.WindowCompat
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FloatingToolbarColors
+import androidx.compose.material3.HorizontalFloatingToolbar
+import androidx.compose.material3.FloatingToolbarDefaults
+import androidx.compose.material3.FloatingToolbarDefaults.ScreenOffset
+import androidx.compose.material3.FloatingToolbarExitDirection.Companion.Bottom
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.*
-import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.zIndex
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.animation.doOnEnd
+import com.sameerasw.essentials.domain.DIYTabs
 import com.sameerasw.essentials.ui.components.ReusableTopAppBar
 import com.sameerasw.essentials.ui.composables.SetupFeatures
+import com.sameerasw.essentials.ui.composables.ComingSoonDIYScreen
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.ui.components.sheets.UpdateBottomSheet
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 class MainActivity : FragmentActivity() {
     val viewModel: MainViewModel by viewModels()
     private var isAppReady = false
@@ -146,6 +168,12 @@ class MainActivity : FragmentActivity() {
                     viewModel.checkForUpdates(context)
                 }
 
+                val isDeveloperModeEnabled by viewModel.isDeveloperModeEnabled
+                val tabs = DIYTabs.entries
+                val pagerState = rememberPagerState(pageCount = { tabs.size })
+                val scope = rememberCoroutineScope()
+                val exitAlwaysScrollBehavior = FloatingToolbarDefaults.exitAlwaysScrollBehavior(exitDirection = Bottom)
+
                 if (showUpdateSheet) {
                     UpdateBottomSheet(
                         updateInfo = updateInfo,
@@ -154,11 +182,11 @@ class MainActivity : FragmentActivity() {
                 }
                 Scaffold(
                     contentWindowInsets = androidx.compose.foundation.layout.WindowInsets(0, 0, 0, 0),
-                    modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+                    modifier = Modifier.nestedScroll(if (isDeveloperModeEnabled) exitAlwaysScrollBehavior else scrollBehavior.nestedScrollConnection),
                     containerColor = MaterialTheme.colorScheme.surfaceContainer,
                     topBar = {
                         ReusableTopAppBar(
-                            title = "Essentials",
+                            title = if (isDeveloperModeEnabled) tabs[pagerState.currentPage].title else "Essentials",
                             hasBack = false,
                             hasSearch = true,
                             hasSettings = true,
@@ -171,12 +199,67 @@ class MainActivity : FragmentActivity() {
                         )
                     }
                 ) { innerPadding ->
-                    SetupFeatures(
-                        viewModel = viewModel,
-                        modifier = Modifier.padding(innerPadding),
-                        searchRequested = searchRequested,
-                        onSearchHandled = { searchRequested = false }
-                    )
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        if (isDeveloperModeEnabled) {
+                            HorizontalFloatingToolbar(
+                                modifier = Modifier
+                                    .align(Alignment.BottomCenter)
+                                    .offset(y = -ScreenOffset)
+                                    .zIndex(1f),
+                                colors = FloatingToolbarDefaults.vibrantFloatingToolbarColors(),
+                                expanded = true,
+                                scrollBehavior = exitAlwaysScrollBehavior,
+                                content = {
+                                    tabs.forEachIndexed { index, tab ->
+                                        IconButton(
+                                            onClick = {
+                                                scope.launch {
+                                                    pagerState.animateScrollToPage(index)
+                                                }
+                                            },
+                                            colors = if (pagerState.currentPage == index) IconButtonDefaults.filledTonalIconButtonColors() else  IconButtonDefaults.iconButtonColors(),
+                                            modifier = Modifier.width(64.dp)
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(id = tab.iconRes),
+                                                contentDescription = tab.title,
+                                                tint = if (pagerState.currentPage == index) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.background
+                                            )
+                                        }
+                                    }
+                                }
+                            )
+
+                            HorizontalPager(
+                                state = pagerState,
+                                modifier = Modifier.fillMaxSize(),
+                                verticalAlignment = Alignment.Top
+                            ) { page ->
+                                when (tabs[page]) {
+                                    DIYTabs.ESSENTIALS -> {
+                                        SetupFeatures(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(innerPadding),
+                                            searchRequested = searchRequested,
+                                            onSearchHandled = { searchRequested = false }
+                                        )
+                                    }
+                                    DIYTabs.DIY -> {
+                                        ComingSoonDIYScreen(
+                                            modifier = Modifier.padding(innerPadding)
+                                        )
+                                    }
+                                }
+                            }
+                        } else {
+                            SetupFeatures(
+                                viewModel = viewModel,
+                                modifier = Modifier.padding(innerPadding),
+                                searchRequested = searchRequested,
+                                onSearchHandled = { searchRequested = false }
+                            )
+                        }
+                    }
                 }
 
 
