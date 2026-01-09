@@ -645,4 +645,17 @@
     <string name="instruction_section_flashlight_desc">Only a limited number of devices got hardware and software support adjusting the flashlight intensity. \n\n\'The minimum version of Android is 13 (SDK33).\nFlashlight brightness control only supports HAL version 3.8 and higher, so among the supported devices, the latest ones (For example, Pixel 6/7, Samsung S23, etc.)\'\npolodarb/Flashlight-Tiramisu</string>
     <string name="instruction_section_about_title">What the hell is this app?</string>
     <string name="instruction_section_about_desc">Good question,\n\nI always wanted to extract the most out of my devices as I\'ve been a rooted user for ever since I got my first Project Treble device. And I\'ve been loving the Tasker app which is like the god when comes automation and utilizing every possible API and internal features of Android.\n\nSo I am not unrooted and back on stock Android beta experience and wanted to get the most out from what is possible with given privileges. Might as well share them. So with my beginner knowledge in Kotlin Jetpack and with the support of many research and assist tools and also the great community, I built an all-in-one app containing everything I wanted to be in my Android with given permissions. And here it is.\n\nFeature requests are welcome, I will consider and see if they are achievable with available permissions and my skills. Nowadays what is not possible. :)\n\nWhy not on Play Store?\nI don\'t wanna risk getting my Developer account banned due to the highly sensitive and internal permissions and APIs being used in the app. But with the way Android sideloading is headed, let\'s see what we have to do. I do understand the concerns of sideloaded apps being malicious.\nWhile we are at the topic, Checkout my other app AirSync if you are a mac + Android user. *shameless plug*\n\nEnjoy, Keep building! (っ◕‿◕)っ</string>
+    <!-- Bug Reporting -->
+    <string name="action_report_bug">Report Bug</string>
+    <string name="toast_bug_report_copied">Bug report copied to clipboard</string>
+    <string name="bug_report_title">Bug report</string>
+    <string name="bug_report_option_share_logs">Share logs</string>
+    <string name="bug_report_option_share_logs_desc">Include logs and details</string>
+    <string name="bug_report_device_info">Device Info</string>
+    <string name="bug_report_raw_json">Raw Report</string>
+    <string name="action_report_github">Open GitHub Issue</string>
+    <string name="action_report_email">Email Report</string>
+    <string name="action_copy_clipboard">Copy to Clipboard</string>
+    <string name="bug_report_email_subject">Essentials Bug Report</string>
+    <string name="bug_report_send_via">Send via</string>
 </resources>
