@@ -1,0 +1,96 @@
+name: Telegram Notify
+
+on:
+  release:
+    types: [published]
+  issues:
+    types: [opened, closed]
+  pull_request:
+    types: [opened, closed]
+  workflow_dispatch:
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Gather and Clean Data
+        id: info
+        run: |
+          CHAT_ID="${{ secrets.TELEGRAM_CHAT_ID }}"
+          TOPIC_ID="${{ secrets.TELEGRAM_TOPIC_ID }}"
+          echo "final_chat_id=${CHAT_ID:- -1001653455300}" >> $GITHUB_OUTPUT
+          echo "final_topic_id=${TOPIC_ID:-71370}" >> $GITHUB_OUTPUT
+
+          REPO="${{ github.repository }}"
+          EVENT="${{ github.event_name }}"
+          
+          if [[ "$EVENT" == "release" || "$EVENT" == "workflow_dispatch" ]]; then
+            if [[ "$EVENT" == "workflow_dispatch" ]]; then
+              DATA=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest)
+              RAW_BODY=$(echo "$DATA" | jq -r .body)
+              TAG=$(echo "$DATA" | jq -r .tag_name)
+              URL=$(echo "$DATA" | jq -r .html_url)
+            else
+              RAW_BODY="${{ github.event.release.body }}"
+              TAG="${{ github.event.release.tag_name }}"
+              URL="${{ github.event.release.html_url }}"
+            fi
+            
+            CLEAN_BODY=$(echo "$RAW_BODY" | \
+              sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g' | \
+              sed 's/^\* / - /g' | \
+              sed 's/!\[.*\](.*)//g' | \
+              sed 's/^#* //g' | \
+              head -c 3000)
+
+            {
+              echo "full_message<<EOF"
+              echo "🚀 <b>New Release: $REPO $TAG</b>"
+              echo "<a href='$URL'>View Release Details</a>"
+              echo ""
+              echo "<b>Release notes:</b>"
+              echo "$CLEAN_BODY"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+
+          elif [[ "$EVENT" == "issues" ]]; then
+            ACTION="${{ github.event.action }}"
+            STATUS=$([[ "$ACTION" == "opened" ]] && echo "🟢 NEW ISSUE" || echo "🔴 CLOSED ISSUE")
+            {
+              echo "full_message<<EOF"
+              echo "<b>$STATUS: $REPO</b>"
+              echo "<a href='${{ github.event.issue.html_url }}'>Issue: ${{ github.event.issue.title }}</a>"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+
+          elif [[ "$EVENT" == "pull_request" ]]; then
+            ACTION="${{ github.event.action }}"
+            [[ "$ACTION" == "closed" && "${{ github.event.pull_request.merged }}" == "true" ]] && STATUS="💜 MERGED PR" || STATUS="🔵 PR $ACTION"
+            {
+              echo "full_message<<EOF"
+              echo "<b>$STATUS: $REPO</b>"
+              echo "<a href='${{ github.event.pull_request.html_url }}'>PR: ${{ github.event.pull_request.title }}</a>"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Send to Telegram
+        env:
+          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHAT_ID: ${{ steps.info.outputs.final_chat_id }}
+          TOPIC_ID: ${{ steps.info.outputs.final_topic_id }}
+          TEXT: ${{ steps.info.outputs.full_message }}
+        run: |
+          jq -n \
+            --arg chat_id "$CHAT_ID" \
+            --arg thread_id "$TOPIC_ID" \
+            --arg text "$TEXT" \
+            '{
+              chat_id: $chat_id, 
+              message_thread_id: $thread_id, 
+              text: $text, 
+              parse_mode: "HTML",
+              disable_web_page_preview: false
+            }' > payload.json
+
+          curl -X POST -H "Content-Type: application/json" -d @payload.json https://api.telegram.org/bot$BOT_TOKEN/sendMessage

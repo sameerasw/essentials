@@ -69,7 +69,7 @@ A collection of useful tiles to toggle system settings:
 
 # Requirements
 
-- Android 6.0 or higher (Feature support may vary)
+- Android 7.0 or higher (Feature support may vary)
 - App permissions are optional, Grant necessary permissions for each feature
 - Targetted for Google Pixel devices
 - Tested on Google Pixel 7 (Android 16 beta program)
