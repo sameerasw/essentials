@@ -266,7 +266,7 @@
     <string name="search_smart_wifi_desc">Hide mobile data when WiFi is connected</string>
     <string name="search_smart_data_title">Données intelligentes</string>
     <string name="search_smart_data_desc">Hide mobile data in certain modes</string>
-    <string name="search_reset_icons_title">Reset All Icons</string>
+    <string name="search_reset_icons_title">Réinitialiser les icônes</string>
     <string name="search_reset_icons_desc">Reset status bar icon visibility to default</string>
     <string name="search_caffeinate_notif_title">Show notification</string>
     <string name="search_caffeinate_notif_desc">Show a persistent notification when Caffeinate is active</string>
@@ -318,119 +318,119 @@
     <string name="search_remap_enable_desc">Master toggle for volume button remapping</string>
     <string name="search_remap_haptic_title">Remap Haptic Feedback</string>
     <string name="search_remap_haptic_desc">Vibration feedback when remapped button is pressed</string>
-    <string name="search_remap_flashlight_title">Flashlight toggle</string>
-    <string name="search_remap_flashlight_desc">Toggle flashlight with volume buttons</string>
-    <string name="search_night_light_enable_title">Enable Dynamic Night Light</string>
+    <string name="search_remap_flashlight_title">Basculer la lampe-torche</string>
+    <string name="search_remap_flashlight_desc">Basculer la lampe-torche avec les boutons volume</string>
+    <string name="search_night_light_enable_title">Éclairage nocturne dynamique</string>
     <string name="search_night_light_enable_desc">Master switch for dynamic night light</string>
-    <string name="search_app_lock_enable_title">Enable app lock</string>
+    <string name="search_app_lock_enable_title">Activer le verrouillage d\'applis</string>
     <string name="search_app_lock_enable_desc">Master toggle for app locking</string>
-    <string name="search_app_lock_pick_title">Select locked apps</string>
-    <string name="search_app_lock_pick_desc">Choose which apps require authentication</string>
-    <string name="search_freeze_pick_title">Pick apps to freeze</string>
-    <string name="search_freeze_pick_desc">Choose which apps can be frozen</string>
-    <string name="search_freeze_all_title">Freeze all apps</string>
-    <string name="search_freeze_all_desc">Immediately freeze all picked apps</string>
-    <string name="search_freeze_locked_title">Freeze when locked</string>
+    <string name="search_app_lock_pick_title">Sélectionner les applis verrouillées </string>
+    <string name="search_app_lock_pick_desc">Choisir quelles applis nécessitent l\'authentification</string>
+    <string name="search_freeze_pick_title">Choisir les applis à geler</string>
+    <string name="search_freeze_pick_desc">Choisir quelles applis peuvent être gelées</string>
+    <string name="search_freeze_all_title">Geler toutes les applis</string>
+    <string name="search_freeze_all_desc">Geler immédiatement toutes les applis choisies</string>
+    <string name="search_freeze_locked_title">Geler au verrouillage</string>
     <string name="search_freeze_locked_desc">Freeze selected apps when device locks</string>
-    <string name="search_freeze_delay_title">Freeze delay</string>
-    <string name="search_freeze_delay_desc">Delay before freezing after locking</string>
+    <string name="search_freeze_delay_title">Délai avant de geler</string>
+    <string name="search_freeze_delay_desc">Délai avant le gel après le verrouilage de l\'appareil</string>
     <!-- Permissions metadata -->
     <string name="perm_shizuku_title">Shizuku</string>
-    <string name="perm_shizuku_desc">Required for advanced commands. Install Shizuku from the Play Store.</string>
-    <string name="perm_shizuku_install_action">Install Shizuku</string>
-    <string name="perm_shizuku_grant_title">Shizuku permission</string>
+    <string name="perm_shizuku_desc">Requis pour les commandes avancées. Installez Shizuku depuis le Play Store.</string>
+    <string name="perm_shizuku_install_action">Installer Shizuku</string>
+    <string name="perm_shizuku_grant_title">Permission Shizuku</string>
     <string name="perm_shizuku_grant_desc">Required to run power-saving commands while maps is navigating.</string>
     <string name="perm_notif_listener_title">Notification Listener</string>
     <string name="perm_notif_listener_desc_maps">Required to detect when Maps is navigating.</string>
     <string name="perm_notif_listener_desc_lighting">Required to detect new notifications</string>
     <string name="perm_notif_listener_desc_snooze">Required to detect and snooze notifications</string>
-    <string name="perm_accessibility_title">Accessibility Service</string>
+    <string name="perm_accessibility_title">Service d\'accessibilité</string>
     <string name="perm_accessibility_desc_common">Required for App Lock, Screen off widget and other features to detect interactions</string>
     <string name="perm_accessibility_desc_lighting">Required to trigger notification lighting on new notifications</string>
     <string name="perm_accessibility_desc_remap">Required to intercept hardware button events</string>
     <string name="perm_accessibility_desc_night_light">Needed to monitor foreground applications.</string>
-    <string name="perm_write_secure_title">Write Secure Settings</string>
+    <string name="perm_write_secure_title">Modifier les paramètres de sécurité</string>
     <string name="perm_write_secure_desc_common">Required for Statusbar icons and Screen Locked Security</string>
     <string name="perm_write_secure_desc_night_light">Needed to toggle Night Light. Grant via ADB or root.</string>
     <string name="perm_overlay_title">Overlay Permission</string>
     <string name="perm_overlay_desc">Required to display the notification lighting overlay on the screen</string>
-    <string name="perm_device_admin_title">Device Administrator</string>
+    <string name="perm_device_admin_title">Administrateur de l\'appareil</string>
     <string name="perm_device_admin_desc">Required to hard-lock the device (disabling biometrics) on unauthorized access attempts</string>
-    <string name="perm_action_grant">Grant Permission</string>
-    <string name="perm_action_copy_adb">Copy ADB</string>
-    <string name="perm_action_check">Check</string>
-    <string name="perm_action_enable">Enable in Settings</string>
-    <string name="perm_action_how_to">How to grant</string>
+    <string name="perm_action_grant">Accorder la permission</string>
+    <string name="perm_action_copy_adb">Copier la commande ADB</string>
+    <string name="perm_action_check">Vérifier</string>
+    <string name="perm_action_enable">Activer dans les paramètres</string>
+    <string name="perm_action_how_to">Comment accorder</string>
     <!-- Tabs -->
     <string name="tab_essentials">Essentials</string>
     <string name="tab_essentials_subtitle">└(=^‥^=)┐</string>
-    <string name="tab_freeze">Freeze</string>
-    <string name="tab_freeze_title">Frozen</string>
+    <string name="tab_freeze">Geler</string>
+    <string name="tab_freeze_title">Gelée</string>
     <string name="tab_diy">DIY</string>
-    <string name="tab_freeze_subtitle">Disabled apps</string>
+    <string name="tab_freeze_subtitle">Applications désactivées</string>
     <string name="tab_diy_subtitle">Do It Yourself</string>
     <string name="search_placeholder_short">Search for Tools, Mods and Tweaks</string>
-    <string name="action_search">Search</string>
-    <string name="label_search">Search</string>
+    <string name="action_search">Rechercher</string>
+    <string name="label_search">Rechercher</string>
     <!-- UI Components General -->
-    <string name="action_back">Back</string>
-    <string name="action_done">Done</string>
-    <string name="action_preview">Preview</string>
-    <string name="action_help_guide">Help Guide</string>
-    <string name="update_available_title">Update Available</string>
-    <string name="action_download">Download</string>
+    <string name="action_back">Retour</string>
+    <string name="action_done">OK</string>
+    <string name="action_preview">Prévisualiser</string>
+    <string name="action_help_guide">Guide d\'aide</string>
+    <string name="update_available_title">Mise à jour disponible</string>
+    <string name="action_download">Télécharger</string>
     <!-- DIY Section -->
     <string name="coming_soon_title">Do It Yourself</string>
-    <string name="coming_soon_desc">Something experimental is brewing here. Stay tuned for automations and advanced mods.</string>
-    <string name="coming_soon_label">Coming Soon</string>
+    <string name="coming_soon_desc">Quelque chose d\'expérimental se trame ici. Restez connecté pour les automatisations et les modifications avancées.</string>
+    <string name="coming_soon_label">Bientôt disponible...</string>
     <!-- About Section -->
     <string name="app_developer_name">Sameera Wijerathna</string>
-    <string name="app_description">The all-in-one toolbox for your Pixel and Androids</string>
-    <string name="email_subject_hello">Hello from Essentials</string>
+    <string name="app_description">L\'outil tout-en-un pour votre Pixel ou vos appareils Android</string>
+    <string name="email_subject_hello">Bonjour d\'Essentials</string>
     <!-- Edge Lighting -->
-    <string name="color_mode_system">System</string>
-    <string name="color_mode_custom">Custom</string>
-    <string name="color_mode_app_specific">App specific</string>
+    <string name="color_mode_system">Système</string>
+    <string name="color_mode_custom">Personnalisé</string>
+    <string name="color_mode_app_specific">Spécifique à l\'appli</string>
     <!-- Biometric & Security -->
-    <string name="error_auth_failed">Authentication failed</string>
-    <string name="beta_warning_toast">This is a beta version. Please report any bugs.</string>
-    <string name="shortcut_creation_hint_toast">Long press an app in the grid to add a shortcut</string>
-    <string name="error_app_uninstalled">App not found or uninstalled</string>
+    <string name="error_auth_failed">Authentification échouée</string>
+    <string name="beta_warning_toast">Ceci est une version bêta. Merci de signaler quelconque bogue.</string>
+    <string name="shortcut_creation_hint_toast">Appuyez longuement sur une appli dans la grille pour ajouter un raccourci</string>
+    <string name="error_app_uninstalled">Application non trouvée ou désinstallée</string>
     <!-- Notifications -->
-    <string name="update_channel_name">App Updates</string>
-    <string name="update_channel_desc">Notifications for new app updates</string>
-    <string name="notification_update_available">Update available</string>
-    <string name="label_unknown">Unknown</string>
+    <string name="update_channel_name">Mises à jour</string>
+    <string name="update_channel_desc">Notifications pour une mise à jour de l\'appli</string>
+    <string name="notification_update_available">Mise à jour disponible</string>
+    <string name="label_unknown">Inconnu</string>
     <string name="network_type_5g">5G</string>
     <string name="network_type_4g">4G</string>
     <string name="network_type_3g">3G</string>
     <string name="label_shizuku_ritaka">Shizuku (Rikka)</string>
     <string name="label_shizuku_tuozi">Shizuku (TuoZi)</string>
-    <string name="label_search_content_description">Search</string>
-    <string name="perm_device_admin_explanation">Required to hard-lock the device when unauthorized network changes are attempted on lock screen.</string>
-    <string name="biometric_subtitle_access_settings">Authenticate to access settings</string>
-    <string name="biometric_subtitle_enable_feature">Authenticate to enable this feature</string>
-    <string name="biometric_subtitle_disable_feature">Authenticate to disable this feature</string>
-    <string name="biometric_title_settings_format">%1$s Settings</string>
-    <string name="keyword_feature">feature</string>
-    <string name="keyword_settings">settings</string>
-    <string name="keyword_hide">hide</string>
-    <string name="keyword_show">show</string>
-    <string name="keyword_visibility">visibility</string>
-    <string name="error_loading_apps">Error loading apps: %1$s</string>
+    <string name="label_search_content_description">Rechercher</string>
+    <string name="perm_device_admin_explanation">Requis pour forcer le verrouillage de l\'appareil quand un changement des paramètres réseaux non autorisé est tenté sur l\'écran de verrouillage.</string>
+    <string name="biometric_subtitle_access_settings">Authentifiez-vous pour accéder aux paramètres</string>
+    <string name="biometric_subtitle_enable_feature">Authentifiez-vous pour activer cette fonctionnalité</string>
+    <string name="biometric_subtitle_disable_feature">Authentifiez-vous pour désactiver cette fonctionnalité</string>
+    <string name="biometric_title_settings_format">%1$s Paramètres</string>
+    <string name="keyword_feature">fonctionnalité</string>
+    <string name="keyword_settings">paramètres</string>
+    <string name="keyword_hide">cacher</string>
+    <string name="keyword_show">afficher</string>
+    <string name="keyword_visibility">visibilité</string>
+    <string name="error_loading_apps">Erreur lors du chargement des applis : %1$s</string>
     <string-array name="keywords_haptic">
         <item>vibration</item>
-        <item>touch</item>
-        <item>feel</item>
+        <item>touché</item>
+        <item>ressenti</item>
     </string-array>
     <string-array name="keywords_network_visibility">
-        <item>network</item>
-        <item>visibility</item>
+        <item>réseau</item>
+        <item>visibilité</item>
         <item>auto</item>
-        <item>hide</item>
+        <item>cacher</item>
     </string-array>
     <string-array name="keywords_restore_default">
-        <item>restore</item>
+        <item>restaurer</item>
         <item>default</item>
         <item>icon</item>
     </string-array>
@@ -567,71 +567,71 @@
     </string-array>
     <string-array name="keywords_switch_master">
         <item>switch</item>
-        <item>master</item>
+        <item>maître</item>
     </string-array>
     <string-array name="keywords_vibration">
         <item>vibration</item>
-        <item>feel</item>
+        <item>ressenti</item>
     </string-array>
     <!-- App Selection Extra -->
-    <string name="action_invert_selection">Invert selection</string>
-    <string name="toggle_show_system_apps">Show system apps</string>
+    <string name="action_invert_selection">Inverser la sélection</string>
+    <string name="toggle_show_system_apps">Afficher les applis système</string>
     <!-- Updates -->
-    <string name="status_up_to_date">You are up to date</string>
-    <string name="warning_pre_release">This is a pre-release version and might be unstable.</string>
-    <string name="release_notes_format">Release Notes v%1$s</string>
-    <string name="action_view_on_github">View on GitHub</string>
-    <string name="action_download_apk">Download APK</string>
+    <string name="status_up_to_date">Vous êtes à jour</string>
+    <string name="warning_pre_release">Ceci est une version bêta qui peut être instable.</string>
+    <string name="release_notes_format">Notes de mise à jour v%1$s</string>
+    <string name="action_view_on_github">Voir sur GitHub</string>
+    <string name="action_download_apk">Télécharger l\'APK</string>
     <!-- Haptic Types -->
-    <string name="haptic_none">None</string>
+    <string name="haptic_none">Aucun</string>
     <string name="haptic_subtle">Subtle</string>
     <string name="haptic_double">Double</string>
     <string name="haptic_click">Click</string>
     <string name="haptic_tick">Tick</string>
     <!-- Flashlight Intensity Overlay -->
-    <string name="action_turn_off">Turn Off</string>
-    <string name="feature_flashlight_brightness_title">Flashlight Brightness</string>
+    <string name="action_turn_off">Éteindre</string>
+    <string name="feature_flashlight_brightness_title">Luminosité de la lampe-torche</string>
     <!-- QS / Activities -->
     <string name="feature_settings_format">%1$s Settings</string>
-    <string name="auth_confirm_identity_settings">Confirm identity to open settings</string>
-    <string name="auth_required_title">Authentication Required</string>
-    <string name="auth_confirm_identity_subtitle">Confirm your identity</string>
-    <string name="error_unlock_network_settings">Unlock phone to change network settings</string>
+    <string name="auth_confirm_identity_settings">Confirmez votre identité pour ouvrir les paramètres</string>
+    <string name="auth_required_title">Authentification requise</string>
+    <string name="auth_confirm_identity_subtitle">Confirmez votre identité</string>
+    <string name="error_unlock_network_settings">Déverouillez le téléphone pour changer les paramètres réseaux</string>
     <!-- About Section -->
-    <string name="developed_by_format">Developed by %1$s\nwith ❤\uFE0F from \uD83C\uDDF1\uD83C\uDDF0</string>
-    <string name="action_website">Website</string>
+    <string name="developed_by_format">Développé par %1$s\n avec ❤\uFE0F de \uD83C\uDDF1\uD83C\uDDF0D</string>
+    <string name="action_website">Site web</string>
     <string name="action_contact">Contact</string>
     <string name="action_telegram">Telegram</string>
     <string name="action_support">Support</string>
-    <string name="label_other_apps">Other Apps</string>
+    <string name="label_other_apps">Autres Applis</string>
     <string name="app_airsync">AirSync</string>
     <string name="app_zenzero">ZenZero</string>
     <string name="app_canvas">Canvas</string>
     <string name="app_tasks">Tasks</string>
     <string name="app_zero">Zero</string>
-    <string name="content_description_developer_avatar">Developer Avatar</string>
+    <string name="content_description_developer_avatar">Avatar du développeur</string>
     <!-- Help & Guides -->
     <string name="help_guides_title">Help &amp; Guides</string>
-    <string name="need_more_support_reach_out">Need more support? Reach out,</string>
-    <string name="action_collapse">Collapse</string>
-    <string name="action_expand">Expand</string>
-    <string name="support_group_label">Support Group</string>
-    <string name="email_label">Email</string>
-    <string name="send_email_chooser_title">Send email</string>
-    <string name="error_no_email_app">No email app available</string>
+    <string name="need_more_support_reach_out">Besoin de plus d\'aide? Contactez-nous,</string>
+    <string name="action_collapse">Réduire</string>
+    <string name="action_expand">Étendre</string>
+    <string name="support_group_label">Groupe de support</string>
+    <string name="email_label">E-mail</string>
+    <string name="send_email_chooser_title">Envoyer un e-mail</string>
+    <string name="error_no_email_app">Aucune application d\'e-mail disponible</string>
     <string name="instruction_step_image_description">Step %1$d Image</string>
     <!-- Instructions Content -->
     <string name="instruction_section_perms_title">Accessibility, Notification and Overlay permissions</string>
     <string name="instruction_step_perms_1">You may get this access denied message if you try to grant sensitive permissions such as accessibility, notification listener or overlay permissions. To grant it, check the steps below.</string>
-    <string name="instruction_step_perms_2">1. Go to app info page of Essentials.</string>
-    <string name="instruction_step_perms_3">2. Open the 3-dot menu and select \'Allow restricted settings\'. You may have to authenticate with biometrics. Once done, Try to grant the permission again.</string>
+    <string name="instruction_step_perms_2">1. Allez dans la page d\'informations de l\'application Essentials</string>
+    <string name="instruction_step_perms_3">2. Ouvrez le menu à trois points en haut à droite et sélectionnez \"Autoriser les paramètres restreints\". Vous devrez peut-être vous authentifier avec la biométrie. Une fois fait, réessayez d\'accorder la permission.</string>
     <string name="instruction_section_shizuku_title">Shizuku</string>
     <string name="instruction_section_shizuku_desc">Shizuku is a powerful tool that allows apps to use system APIs directly with ADB or root permissions. It is required for features like Maps min mode, App Freezer. And willa ssist granting some permissions such as WRITE_SECURE_SETTINGS. \n\nBut the Play Store version of Shizuku might be outdated and will probably be unusable on recent Android versions so in that case, please get the latest version from the github or an up-to-date fork of it.</string>
     <string name="instruction_section_maps_title">Maps power saving mode</string>
     <string name="instruction_section_maps_desc">This feature automatically triggers Google Maps power saving mode which is currently exclusive to the Pixel 10 series. A community member discovered that it is still usable on any Android device by launching the maps minMode activity with root privileges. \n\nAnd then, I had it automated with Tasker to automatically trigger when the screen turns off during a navigation session and then was able to achieve the same with just runtime Shizuku permissions. \n\nIt is intended to be shown over the AOD of Pixel 10 series so because of that, you may see an occasional message popping up on the display that it does not support landscape mode. That is not avoidable by the app and you can ignore.</string>
-    <string name="instruction_section_silent_title">Silent sound mode</string>
+    <string name="instruction_section_silent_title">Mode silencieux</string>
     <string name="instruction_section_silent_desc">You may have noticed that the silent mode also triggers DND. \n\nThis is due to how the Android implemented it as even if we use the same API to switch to vibrate mode, it for some reason turns on DND along with the silent mode and this is not avoidable at this moment. :(</string>
-    <string name="instruction_section_freeze_title">What is freeze?</string>
+    <string name="instruction_section_freeze_title">Qu\'est-ce que le gel d\'applications ?</string>
     <string name="instruction_section_freeze_desc">Pause and stay away from app distractions while saving a little bit of power preventing apps running in the background. Suitable for rarely used apps. \n\nNot recommended for any communication services as they will not notify you in an emergency unless you unfreeze them. \n\nHighly advised to not freeze system apps as they can lead to system instability. Proceed with caution, You were warned. \n\nInspired by Hail &lt;3</string>
     <string name="instruction_section_security_title">Are app lock and screen locked security actually secure?</string>
     <string name="instruction_section_security_desc">Absolutely not. \n\nAny 3rd party application can not 100% interfere with regular device interactions and even the app lock is only an overlay above selected apps to prevent interacting with them. There are workarounds and it is not foolproof. \n\nSame goes with the screen locked security feature which detects someone trying to interact with the network tiles which for some reason are still accessible for anyone on Pixels. So if they try hard enough they might still be able to change them and especially if you have a flight mode QS tile added, this app can not prevent interactions with it. \n\nThese features are made just as experiments for light usage and would never recommend as strong security and privacy solutions. \n\nSecure alternatives:\n - App lock: Private Space and Secure folder on Pixels and Samsung\n - Preventing mobile networks access: Make sure your theft protection and offline/ power off find my device settings are on. You may look into Graphene OS as well.</string>
@@ -641,21 +641,21 @@
     <string name="instruction_section_lighting_desc">It depends on the OEM. Some like OneUI does not seem to allow overlays above the AOD preventing the lighting effects being shown. In this case, try the ambient display as a workaround. </string>
     <string name="instruction_section_button_title">Button remap does not work while display is off</string>
     <string name="instruction_section_button_desc">Some OEMs limit the accessibility service reporting once the display is actually off but they may still work while the AOD is on. \nIn this case, you may able to use button remaps with AOD on but not with off. \n\nAs a workaround, you will need to use Shizuku permissions and turn on the \'Use Shizuku\' toggle in button remap settings which identifies and listen to hardware input events.\nThis is not guaranteed to work on all devices and needs testing.\n\nAnd even if it\'s on, Shizuku method only will be used when it\'s needed. Otherwise it will always fallback to Accessibility which also handles the blocking of the actual input during long press.</string>
-    <string name="instruction_section_flashlight_title">Flashlight brightness does not work</string>
+    <string name="instruction_section_flashlight_title">Le contrôle de la luminosité de la lampe-torche ne marche pas</string>
     <string name="instruction_section_flashlight_desc">Only a limited number of devices got hardware and software support adjusting the flashlight intensity. \n\n\'The minimum version of Android is 13 (SDK33).\nFlashlight brightness control only supports HAL version 3.8 and higher, so among the supported devices, the latest ones (For example, Pixel 6/7, Samsung S23, etc.)\'\npolodarb/Flashlight-Tiramisu</string>
-    <string name="instruction_section_about_title">What the hell is this app?</string>
+    <string name="instruction_section_about_title">Qu\'est-ce que c\'est que cette application ?</string>
     <string name="instruction_section_about_desc">Good question,\n\nI always wanted to extract the most out of my devices as I\'ve been a rooted user for ever since I got my first Project Treble device. And I\'ve been loving the Tasker app which is like the god when comes automation and utilizing every possible API and internal features of Android.\n\nSo I am not unrooted and back on stock Android beta experience and wanted to get the most out from what is possible with given privileges. Might as well share them. So with my beginner knowledge in Kotlin Jetpack and with the support of many research and assist tools and also the great community, I built an all-in-one app containing everything I wanted to be in my Android with given permissions. And here it is.\n\nFeature requests are welcome, I will consider and see if they are achievable with available permissions and my skills. Nowadays what is not possible. :)\n\nWhy not on Play Store?\nI don\'t wanna risk getting my Developer account banned due to the highly sensitive and internal permissions and APIs being used in the app. But with the way Android sideloading is headed, let\'s see what we have to do. I do understand the concerns of sideloaded apps being malicious.\nWhile we are at the topic, Checkout my other app AirSync if you are a mac + Android user. *shameless plug*\n\nEnjoy, Keep building! (っ◕‿◕)っ</string>
     <!-- Bug Reporting -->
-    <string name="action_report_bug">Report Bug</string>
-    <string name="toast_bug_report_copied">Bug report copied to clipboard</string>
-    <string name="bug_report_title">Bug report</string>
-    <string name="bug_report_option_share_logs">Share logs</string>
-    <string name="bug_report_option_share_logs_desc">Include logs and details</string>
-    <string name="bug_report_device_info">Device Info</string>
-    <string name="bug_report_raw_json">Raw Report</string>
-    <string name="action_report_github">Open GitHub Issue</string>
-    <string name="action_report_email">Email Report</string>
-    <string name="action_copy_clipboard">Copy to Clipboard</string>
-    <string name="bug_report_email_subject">Essentials Bug Report</string>
-    <string name="bug_report_send_via">Send via</string>
+    <string name="action_report_bug">Signaler un bogue</string>
+    <string name="toast_bug_report_copied">Signalement copié dans le presse-papiers</string>
+    <string name="bug_report_title">Signalement de bogue</string>
+    <string name="bug_report_option_share_logs">Partager les journaux</string>
+    <string name="bug_report_option_share_logs_desc">Inclure les journaux et détails</string>
+    <string name="bug_report_device_info">Informations de l\'appareil</string>
+    <string name="bug_report_raw_json">Signalement brut</string>
+    <string name="action_report_github">Ouvrir une Issue sur GitHub</string>
+    <string name="action_report_email">Signalement par e-mail</string>
+    <string name="action_copy_clipboard">Copier dans le presse-papiers</string>
+    <string name="bug_report_email_subject">Signalement de bug Essentials</string>
+    <string name="bug_report_send_via">Envoyer via</string>
 </resources>
