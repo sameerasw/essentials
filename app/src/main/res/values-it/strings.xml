@@ -65,10 +65,10 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string name="settings_section_other">Other</string>
     <string name="flashlight_always_off_title">Always turn off flashlight</string>
     <string name="flashlight_always_off_desc">Even while display is on</string>
-    <string name="content_desc_settings">Settings</string>
+    <string name="content_desc_settings">Impostazioni</string>
     <!-- Caffeinate / Permissions -->
-    <string name="settings_section_notification">Notification</string>
-    <string name="permission_show_notification_title">Show Notification</string>
+    <string name="settings_section_notification">Notifiche</string>
+    <string name="permission_show_notification_title">Mostra Notifiche</string>
     <string name="permission_post_notifications_title">Post Notifications</string>
     <string name="permission_post_notifications_desc">Permetti all\'app di mostrare notifiche</string>
     <string name="permission_grant_action">Dai il permesso</string>
@@ -81,9 +81,9 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string name="settings_section_app_control">App Control</string>
     <string name="action_freeze">Freeze</string>
     <string name="action_unfreeze">Unfreeze</string>
-    <string name="content_desc_more_options">More options</string>
-    <string name="action_freeze_all">Freeze all apps</string>
-    <string name="action_unfreeze_all">Unfreeze all apps</string>
+    <string name="content_desc_more_options">Altre opzioni</string>
+    <string name="action_freeze_all">Blocca tutte le app</string>
+    <string name="action_unfreeze_all">Sblocca tutte le app</string>
     <string name="freeze_pick_apps_title">Pick apps to freeze</string>
     <string name="freeze_pick_apps_desc">Choose which apps can be frozen</string>
     <string name="settings_section_automation">Automation</string>
