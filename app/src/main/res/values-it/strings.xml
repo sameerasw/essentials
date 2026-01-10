@@ -2,20 +2,20 @@
 <resources>
     <string name="app_name">Essentials</string>
     <string name="accessibility_service_description"><b>Essentials Accessibility Service</b>\n\nThis service is required for the following advanced features:\n\n<b>• Physical Button Remapping:</b>\nDetects volume button presses even when the screen is off to trigger actions like the Flashlight.\n\n<b>• Per-App Settings:</b>\nMonitors the currently active app to apply specific profiles for Dynamic Night Light, Notification Lighting Colors, and App Lock.\n\n<b>• Screen Control:</b>\nAllows the app to lock the screen (e.g. via Double Tap or Widgets) and detect screen state changes.\n\n<b>• Security:</b>\nPrevents unauthorized changes by detecting window content when the device is locked.\n\n<small>No input text or sensitive user data is collected or transmitted.</small></string>
-    <string name="app_icon">App icon</string>
-    <string name="freeze_activity_title">App Freezing</string>
+    <string name="app_icon">Icona applicazione</string>
+    <string name="freeze_activity_title">Blocco All</string>
     <string name="freeze_activity_subtitle">Disable apps that are rarely used</string>
-    <string name="freeze_shortcut_short_label">App Freezing</string>
-    <string name="freeze_shortcut_long_label">Open App Freezing</string>
-    <string name="frozen_app_shortcut_label">Frozen App</string>
+    <string name="freeze_shortcut_short_label">Blocco App</string>
+    <string name="freeze_shortcut_long_label">Apri Blocco App</string>
+    <string name="frozen_app_shortcut_label">Blocco App</string>
     <string name="screen_off_widget_label">Empty screen off widget</string>
-    <string name="app_freezing_tile_label">App Freezing</string>
+    <string name="app_freezing_tile_label">Blocco App</string>
     <string name="flashlight_pulse_tile_label">Flashlight Pulse</string>
-    <string name="check_pre_releases_label">Check for pre-releases</string>
+    <string name="check_pre_releases_label">Controlla disponibilità pre-release</string>
     <string name="check_pre_releases_desc">Potrebbe essere instabile</string>
     <!-- App Lock -->
     <string name="settings_section_security">Sicurezza</string>
-    <string name="app_lock_enable_title">Enable app lock</string>
+    <string name="app_lock_enable_title">Abilita blocco app</string>
     <string name="app_lock_auth_title">App Lock Security</string>
     <string name="app_lock_enable_auth_subtitle">Authenticate to enable app lock</string>
     <string name="app_lock_disable_auth_subtitle">Authenticate to disable app lock</string>
@@ -53,12 +53,12 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string name="action_take_screenshot">Fai uno screenshot</string>
     <string name="button_remap_screen_off_hint">When the screen is off, long-press the selected button to trigger its assigned action. On Pixel devices, this action only gets triggered if the AOD is on due to system limitations.</string>
     <string name="button_remap_screen_on_hint">Quando lo schermo è acceso, tieni premuto il tasto selezionato per avviare l\'azione selezionata.</string>
-    <string name="flashlight_intensity_title">Flashlight Intensity</string>
+    <string name="flashlight_intensity_title">Intensità Torcia</string>
     <string name="flashlight_fade_title">Fade in and out</string>
     <string name="flashlight_fade_desc">Smoothly toggle flashlight</string>
     <string name="flashlight_global_title">Global controls</string>
     <string name="flashlight_global_desc">Fade-in flashlight globally</string>
-    <string name="flashlight_adjust_intensity_title">Adjust intensity</string>
+    <string name="flashlight_adjust_intensity_title">Regola intensità</string>
     <string name="flashlight_adjust_intensity_desc">Volume + - adjusts flashlight intensity</string>
     <string name="flashlight_live_update_title">Live update</string>
     <string name="flashlight_live_update_desc">Show brightness in status bar</string>
