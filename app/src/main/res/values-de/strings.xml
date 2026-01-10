@@ -8,7 +8,7 @@
     <string name="freeze_shortcut_short_label">Apps einfrieren</string>
     <string name="freeze_shortcut_long_label">Öffne \"Apps einfrieren\"</string>
     <string name="frozen_app_shortcut_label">Eingefrorene App</string>
-    <string name="screen_off_widget_label">Leeres Display-aus-Widget</string>
+    <string name="screen_off_widget_label">Leeres Bildschirm-aus-Widget</string>
     <string name="app_freezing_tile_label">Apps einfrieren</string>
     <string name="flashlight_pulse_tile_label">Taschenlampenimpuls</string>
     <string name="check_pre_releases_label">Prüfe nach Vorabversionen</string>
@@ -21,8 +21,8 @@
     <string name="app_lock_disable_auth_subtitle">Authentifiziere dich, um App-Sperre zu deaktivieren</string>
     <string name="app_lock_select_apps_title">Wähle gesperrte Apps</string>
     <string name="app_lock_select_apps_desc">Wähle, welche Apps eine Authentifizierung benötigen</string>
-    <string name="app_lock_description">Schütze deine Apps mit biometrischer Authentifizierung. Gesperrte Apps erfordern beim Öffnen eine Authentifizierung und bleiben entsperrt, bis das Display ausgeschaltet wird.</string>
-    <string name="app_lock_warning">Beachte bitte, dass dies keine zuverlässige Lösung darstellt, da es sich lediglich um eine Drittanbieteranwendung handelt. Für erhöhte Sicherheitsanforderungen solltest du das vertrauliche Profil oder ähnliche Funktionen in Betracht ziehen.</string>
+    <string name="app_lock_description">Schütze deine Apps mit biometrischer Authentifizierung. Gesperrte Apps erfordern beim Öffnen eine Authentifizierung und bleiben entsperrt, bis der Bildschirm ausgeschaltet wird.</string>
+    <string name="app_lock_warning">Beachte bitte, dass dies keine zuverlässige Lösung darstellt, da es sich lediglich um eine Drittanbieteranwendung handelt. Für erhöhte Sicherheitsanforderungen sollten Sie das vertrauliche Profil oder ähnliche Funktionen in Betracht ziehen.</string>
     <string name="app_lock_biometric_note">Noch ein Hinweis: Die biometrische Authentifizierungsaufforderung unterstützt ausschließlich sichere Methoden der Klasse STARK. Gesichtserkennungsmethoden der Klasse SCHWACH auf Geräten wie dem Pixel 7 können nur die sonstig verfügbaren STARK-Authentifizierungsmethoden wie Fingerabdruck oder PIN nutzen.</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Aktiviere Tastenneubelegung</string>
@@ -108,11 +108,11 @@
     <string name="flashlight_pulse_title">Taschenlampenimpuls</string>
     <string name="flashlight_pulse_facedown_title">Nur, wenn das Handy umgedreht ist</string>
     <string name="settings_section_style">Stil</string>
-    <string name="notification_lighting_stroke_adjustment_section">Streifeneffekt anpassen</string>
+    <string name="notification_lighting_stroke_adjustment_section">Aufleuchten anpassen</string>
     <string name="notification_lighting_corner_radius_title">Eckradius</string>
-    <string name="notification_lighting_stroke_thickness_title">Streifeneffekt Dicke</string>
-    <string name="notification_lighting_glow_adjustment_section">Leuchteffekt anpassen</string>
-    <string name="notification_lighting_glow_spread_title">Leuchteffekt Weite</string>
+    <string name="notification_lighting_stroke_thickness_title">Dicke</string>
+    <string name="notification_lighting_glow_adjustment_section">Leuchten anpassen</string>
+    <string name="notification_lighting_glow_spread_title">Weite</string>
     <string name="notification_lighting_placement_section">Platzierung</string>
     <string name="notification_lighting_h_pos_title">Horizontale Position</string>
     <string name="notification_lighting_v_pos_title">Vertikale Position</string>
@@ -154,7 +154,7 @@
     <string name="screen_locked_security_auth_enable">Authentifiziere dich, um Sicherheit bei Bildschirmsperre zu aktivieren</string>
     <string name="screen_locked_security_auth_disable">Authentifiziere dich, um Sicherheit bei Bildschirmsperre zu deaktivieren</string>
     <string name="warning_title">⚠️ WARNUNG</string>
-    <string name="screen_locked_security_warning_text">Diese Funktion ist nicht absolut sicher. Es kann Ausnahmefälle geben, in denen jemand dennoch mit der Kachel interagieren kann. \nBeachte auch, dass Android immer einen erzwungenen Neustart zulässt und Pixel-Handys immer das Ausschalten des Geräts über den Sperrbildschirm zulassen.</string>
+    <string name="screen_locked_security_warning_text">Diese Funktion ist nicht absolut sicher. Es kann Ausnahmefälle geben, in denen jemand dennoch mit der Kachel interagieren kann. \nBeachten Sie auch, dass Android immer einen erzwungenen Neustart zulässt und Pixel-Handys immer das Ausschalten des Geräts über den Sperrbildschirm zulassen.</string>
     <string name="screen_locked_security_airplane_warning">Stelle sicher, dass du die Kachel für den Flugmodus aus den Schnelleinstellungen entfernst, da dies nicht verhindert werden kann, da kein Dialogfenster geöffnet wird.</string>
     <string name="screen_locked_security_description">Wenn diese Option aktiviert ist, werden die Schnelleinstellungen sofort geschlossen und das Gerät komplett gesperrt, sobald jemand versucht, mit Internetkacheln zu interagieren, während das Gerät gesperrt ist. \n\nDadurch wird auch die biometrische Entsperrung deaktiviert, um weiteren unbefugten Zugriff zu verhindern. Die Animationsskala wird während der Sperrung auf 0,1x reduziert, um die Interaktion noch weiter zu erschweren.</string>
     <!-- Sound Mode -->
@@ -271,7 +271,7 @@
     <string name="search_caffeinate_notif_title">Benachrichtigung anzeigen</string>
     <string name="search_caffeinate_notif_desc">Zeige eine dauerhafte Benachrichtigung an, wenn Koffein aktiv ist</string>
     <string name="search_lighting_style_title">Lichtstil</string>
-    <string name="search_lighting_style_desc">Wähle zwischen Streifeneffekt, Leuchteffekt, Dreheffekt und mehr</string>
+    <string name="search_lighting_style_desc">Wählen Sie zwischen Streifeneffekt, Leuchteffekt, Dreheffekt und mehr</string>
     <string name="search_corner_radius_title">Eckradius</string>
     <string name="search_corner_radius_desc">Passe den Eckradius des Benachrichtigungslicht an</string>
     <string name="search_skip_silent_title">Stille Benachrichtigungen überspringen</string>
@@ -282,7 +282,7 @@
     <string name="search_only_facing_down_desc">Die Taschenlampe blinkt nur, wenn das Gerät mit der Vorderseite nach unten liegt</string>
     <string name="search_snooze_debug_title">Debugging-Benachrichtigungen deaktivieren</string>
     <string name="search_snooze_debug_desc">Persistente ADB/USB-Debugging-Benachrichtigungen ausblenden</string>
-    <string name="search_snooze_file_title">Dateiübertrage-Benachrichtigung deaktivieren</string>
+    <string name="search_snooze_file_title">Benachrichtigung zur Dateiübertragung deaktivieren</string>
     <string name="search_snooze_file_desc">Persistente Benachrichtigungen zur USB-Dateiübertragung ausblenden</string>
     <string name="search_snooze_charge_title">Lade-Benachrichtigung deaktivieren</string>
     <string name="search_snooze_charge_desc">Persistente Benachrichtigungen zum Aufladen ausblenden</string>
