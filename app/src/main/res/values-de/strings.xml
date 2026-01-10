@@ -22,7 +22,7 @@
     <string name="app_lock_select_apps_title">Wähle gesperrte Apps</string>
     <string name="app_lock_select_apps_desc">Wähle, welche Apps eine Authentifizierung benötigen</string>
     <string name="app_lock_description">Schütze deine Apps mit biometrischer Authentifizierung. Gesperrte Apps erfordern beim Öffnen eine Authentifizierung und bleiben entsperrt, bis das Display ausgeschaltet wird.</string>
-    <string name="app_lock_warning">Beachte bitte, dass dies keine zuverlässige Lösung darstellt, da es sich lediglich um eine Drittanbieteranwendung handelt. Für erhöhte Sicherheitsanforderungen sollten Sie das vertrauliche Profil oder ähnliche Funktionen in Betracht ziehen.</string>
+    <string name="app_lock_warning">Beachte bitte, dass dies keine zuverlässige Lösung darstellt, da es sich lediglich um eine Drittanbieteranwendung handelt. Für erhöhte Sicherheitsanforderungen solltest du das vertrauliche Profil oder ähnliche Funktionen in Betracht ziehen.</string>
     <string name="app_lock_biometric_note">Noch ein Hinweis: Die biometrische Authentifizierungsaufforderung unterstützt ausschließlich sichere Methoden der Klasse STARK. Gesichtserkennungsmethoden der Klasse SCHWACH auf Geräten wie dem Pixel 7 können nur die sonstig verfügbaren STARK-Authentifizierungsmethoden wie Fingerabdruck oder PIN nutzen.</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Aktiviere Tastenneubelegung</string>
@@ -154,7 +154,7 @@
     <string name="screen_locked_security_auth_enable">Authentifiziere dich, um Sicherheit bei Bildschirmsperre zu aktivieren</string>
     <string name="screen_locked_security_auth_disable">Authentifiziere dich, um Sicherheit bei Bildschirmsperre zu deaktivieren</string>
     <string name="warning_title">⚠️ WARNUNG</string>
-    <string name="screen_locked_security_warning_text">Diese Funktion ist nicht absolut sicher. Es kann Ausnahmefälle geben, in denen jemand dennoch mit der Kachel interagieren kann. \nBeachten Sie auch, dass Android immer einen erzwungenen Neustart zulässt und Pixel-Handys immer das Ausschalten des Geräts über den Sperrbildschirm zulassen.</string>
+    <string name="screen_locked_security_warning_text">Diese Funktion ist nicht absolut sicher. Es kann Ausnahmefälle geben, in denen jemand dennoch mit der Kachel interagieren kann. \nBeachte auch, dass Android immer einen erzwungenen Neustart zulässt und Pixel-Handys immer das Ausschalten des Geräts über den Sperrbildschirm zulassen.</string>
     <string name="screen_locked_security_airplane_warning">Stelle sicher, dass du die Kachel für den Flugmodus aus den Schnelleinstellungen entfernst, da dies nicht verhindert werden kann, da kein Dialogfenster geöffnet wird.</string>
     <string name="screen_locked_security_description">Wenn diese Option aktiviert ist, werden die Schnelleinstellungen sofort geschlossen und das Gerät komplett gesperrt, sobald jemand versucht, mit Internetkacheln zu interagieren, während das Gerät gesperrt ist. \n\nDadurch wird auch die biometrische Entsperrung deaktiviert, um weiteren unbefugten Zugriff zu verhindern. Die Animationsskala wird während der Sperrung auf 0,1x reduziert, um die Interaktion noch weiter zu erschweren.</string>
     <!-- Sound Mode -->
@@ -271,7 +271,7 @@
     <string name="search_caffeinate_notif_title">Benachrichtigung anzeigen</string>
     <string name="search_caffeinate_notif_desc">Zeige eine dauerhafte Benachrichtigung an, wenn Koffein aktiv ist</string>
     <string name="search_lighting_style_title">Lichtstil</string>
-    <string name="search_lighting_style_desc">Wählen Sie zwischen Streifeneffekt, Leuchteffekt, Dreheffekt und mehr</string>
+    <string name="search_lighting_style_desc">Wähle zwischen Streifeneffekt, Leuchteffekt, Dreheffekt und mehr</string>
     <string name="search_corner_radius_title">Eckradius</string>
     <string name="search_corner_radius_desc">Passe den Eckradius des Benachrichtigungslicht an</string>
     <string name="search_skip_silent_title">Stille Benachrichtigungen überspringen</string>
@@ -282,238 +282,238 @@
     <string name="search_only_facing_down_desc">Die Taschenlampe blinkt nur, wenn das Gerät mit der Vorderseite nach unten liegt</string>
     <string name="search_snooze_debug_title">Debugging-Benachrichtigungen deaktivieren</string>
     <string name="search_snooze_debug_desc">Persistente ADB/USB-Debugging-Benachrichtigungen ausblenden</string>
-    <string name="search_snooze_file_title">Benachrichtigung zur Dateiübertragung deaktivieren</string>
+    <string name="search_snooze_file_title">Dateiübertrage-Benachrichtigung deaktivieren</string>
     <string name="search_snooze_file_desc">Persistente Benachrichtigungen zur USB-Dateiübertragung ausblenden</string>
     <string name="search_snooze_charge_title">Lade-Benachrichtigung deaktivieren</string>
-    <string name="search_snooze_charge_desc">Hide system charging notifications</string>
-    <string name="search_qs_blur_title">UI Blur</string>
-    <string name="search_qs_blur_desc">Toggle system-wide UI blur</string>
+    <string name="search_snooze_charge_desc">Persistente Benachrichtigungen zum Aufladen ausblenden</string>
+    <string name="search_qs_blur_title">UI-Unschärfe</string>
+    <string name="search_qs_blur_desc">Systemweite UI-Unschärfe umschalten</string>
     <string name="search_qs_bubbles_title">Bubbles</string>
-    <string name="search_qs_bubbles_desc">Enable floating window bubbles</string>
-    <string name="search_qs_sensitive_title">Sensitive Content</string>
-    <string name="search_qs_sensitive_desc">Hide notification details on lockscreen</string>
-    <string name="search_qs_wake_title">Tap to Wake</string>
-    <string name="search_qs_wake_desc">Double tap to wake control</string>
-    <string name="search_qs_aod_title">AOD</string>
-    <string name="search_qs_aod_desc">Always On Display toggle</string>
-    <string name="search_qs_caffeinate_title">Caffeinate</string>
-    <string name="search_qs_caffeinate_desc">Keep screen awake toggle</string>
-    <string name="search_qs_sound_title">Sound Mode</string>
-    <string name="search_qs_sound_desc">Cycle sound modes (Ring/Vibrate/Silent)</string>
-    <string name="search_qs_lighting_title">Notification Lighting</string>
-    <string name="search_qs_lighting_desc">Toggle notification lighting service</string>
-    <string name="search_qs_night_light_title">Dynamic Night Light</string>
-    <string name="search_qs_night_light_desc">Night light automation toggle</string>
-    <string name="search_qs_locked_sec_title">Locked Security</string>
-    <string name="search_qs_locked_sec_desc">Network security on lockscreen toggle</string>
-    <string name="search_qs_mono_title">Mono Audio</string>
-    <string name="search_qs_mono_desc">Force mono audio output toggle</string>
+    <string name="search_qs_bubbles_desc">Schwebende Fenster-Bubbles aktivieren</string>
+    <string name="search_qs_sensitive_title">Sensible Inhalte</string>
+    <string name="search_qs_sensitive_desc">Benachrichtigungsdetails auf dem Sperrbildschirm ausblenden</string>
+    <string name="search_qs_wake_title">Tippen zum Aufwecken</string>
+    <string name="search_qs_wake_desc">Doppeltippen zum Aufwecken des Displays</string>
+    <string name="search_qs_aod_title">Always-on-Display</string>
+    <string name="search_qs_aod_desc">Always-On-Display ein-/ausschalten</string>
+    <string name="search_qs_caffeinate_title">Koffein</string>
+    <string name="search_qs_caffeinate_desc">Bildschirm aktiv halten ein-/ausschalten</string>
+    <string name="search_qs_sound_title">Tonmodus</string>
+    <string name="search_qs_sound_desc">Tonmodi wechseln (Klingeln/Vibrieren/Lautlos)</string>
+    <string name="search_qs_lighting_title">Benachrichtigungslicht</string>
+    <string name="search_qs_lighting_desc">Benachrichtigungslicht ein-/ausschalten</string>
+    <string name="search_qs_night_light_title">Dynamisches Nachtlicht</string>
+    <string name="search_qs_night_light_desc">Dynamisches Nachtlicht ein-/ausschalten</string>
+    <string name="search_qs_locked_sec_title">Sicherheit bei Bildschirmsperre</string>
+    <string name="search_qs_locked_sec_desc">Netzwerkschutz auf Sperrbildschirm ein-/ausschalten</string>
+    <string name="search_qs_mono_title">Mono-Audio</string>
+    <string name="search_qs_mono_desc">Mono-Audioausgabe erzwingen ein-/ausschalten</string>
     <string name="search_qs_flashlight_title">Taschenlampe</string>
-    <string name="search_qs_flashlight_desc">Dedicated flashlight toggle</string>
-    <string name="search_qs_freeze_title">App Freezing</string>
-    <string name="search_qs_freeze_desc">Launch app freezing grid</string>
-    <string name="search_qs_pulse_title">Flashlight Pulse</string>
-    <string name="search_qs_pulse_desc">Toggle notification flashlight pulse</string>
-    <string name="search_remap_enable_title">Enable Button Remap</string>
-    <string name="search_remap_enable_desc">Master toggle for volume button remapping</string>
-    <string name="search_remap_haptic_title">Remap Haptic Feedback</string>
-    <string name="search_remap_haptic_desc">Vibration feedback when remapped button is pressed</string>
-    <string name="search_remap_flashlight_title">Flashlight toggle</string>
-    <string name="search_remap_flashlight_desc">Toggle flashlight with volume buttons</string>
-    <string name="search_night_light_enable_title">Enable Dynamic Night Light</string>
-    <string name="search_night_light_enable_desc">Master switch for dynamic night light</string>
-    <string name="search_app_lock_enable_title">Enable app lock</string>
-    <string name="search_app_lock_enable_desc">Master toggle for app locking</string>
-    <string name="search_app_lock_pick_title">Select locked apps</string>
-    <string name="search_app_lock_pick_desc">Choose which apps require authentication</string>
-    <string name="search_freeze_pick_title">Pick apps to freeze</string>
-    <string name="search_freeze_pick_desc">Choose which apps can be frozen</string>
-    <string name="search_freeze_all_title">Freeze all apps</string>
-    <string name="search_freeze_all_desc">Immediately freeze all picked apps</string>
-    <string name="search_freeze_locked_title">Freeze when locked</string>
-    <string name="search_freeze_locked_desc">Freeze selected apps when device locks</string>
-    <string name="search_freeze_delay_title">Freeze delay</string>
-    <string name="search_freeze_delay_desc">Delay before freezing after locking</string>
+    <string name="search_qs_flashlight_desc">Spezielle Taschenlampentaste</string>
+    <string name="search_qs_freeze_title">Apps einfrieren</string>
+    <string name="search_qs_freeze_desc">Zeigt \"Apps einfrieren\"</string>
+    <string name="search_qs_pulse_title">Taschenlampenimpuls</string>
+    <string name="search_qs_pulse_desc">Taschenlampenimpuls bei Benachrichtigungen ein-/ausschalten</string>
+    <string name="search_remap_enable_title">Aktiviere Tastenneubelegung</string>
+    <string name="search_remap_enable_desc">Hauptschalter für die Neuzuweisung der Lautstärketasten</string>
+    <string name="search_remap_haptic_title">Haptisches Feedback neu zuordnen</string>
+    <string name="search_remap_haptic_desc">Vibrationsrückmeldung beim Drücken der neu zugewiesenen Taste</string>
+    <string name="search_remap_flashlight_title">Taschenlampe ein-/ausschalten</string>
+    <string name="search_remap_flashlight_desc">Taschenlampe mit Lautstärketasten umschalten</string>
+    <string name="search_night_light_enable_title">Aktiviere dynamisches Nachtlicht</string>
+    <string name="search_night_light_enable_desc">Hauptschalter für dynamisches Nachtlicht</string>
+    <string name="search_app_lock_enable_title">Aktiviere App-Sperre</string>
+    <string name="search_app_lock_enable_desc">Hauptschalter für App-Sperre</string>
+    <string name="search_app_lock_pick_title">Wähle gesperrte Apps</string>
+    <string name="search_app_lock_pick_desc">Wähle, welche Apps eine Authentifizierung benötigen</string>
+    <string name="search_freeze_pick_title">Wähle Apps zum Einfrieren</string>
+    <string name="search_freeze_pick_desc">Wähle, welche Apps eingefroren werden können</string>
+    <string name="search_freeze_all_title">Friere alle Apps ein</string>
+    <string name="search_freeze_all_desc">Alle ausgewählten Apps sofort einfrieren</string>
+    <string name="search_freeze_locked_title">Einfrieren, beim Sperren</string>
+    <string name="search_freeze_locked_desc">Ausgewählte Apps beim Sperren des Geräts einfrieren</string>
+    <string name="search_freeze_delay_title">Verzögerung beim Einfrieren</string>
+    <string name="search_freeze_delay_desc">Verzögerung vor dem Einfrieren nach dem Sperren</string>
     <!-- Permissions metadata -->
     <string name="perm_shizuku_title">Shizuku</string>
-    <string name="perm_shizuku_desc">Required for advanced commands. Install Shizuku from the Play Store.</string>
-    <string name="perm_shizuku_install_action">Install Shizuku</string>
-    <string name="perm_shizuku_grant_title">Shizuku permission</string>
-    <string name="perm_shizuku_grant_desc">Required to run power-saving commands while maps is navigating.</string>
-    <string name="perm_notif_listener_title">Notification Listener</string>
-    <string name="perm_notif_listener_desc_maps">Required to detect when Maps is navigating.</string>
-    <string name="perm_notif_listener_desc_lighting">Required to detect new notifications</string>
-    <string name="perm_notif_listener_desc_snooze">Required to detect and snooze notifications</string>
-    <string name="perm_accessibility_title">Accessibility Service</string>
-    <string name="perm_accessibility_desc_common">Required for App Lock, Screen off widget and other features to detect interactions</string>
-    <string name="perm_accessibility_desc_lighting">Required to trigger notification lighting on new notifications</string>
-    <string name="perm_accessibility_desc_remap">Required to intercept hardware button events</string>
-    <string name="perm_accessibility_desc_night_light">Needed to monitor foreground applications.</string>
-    <string name="perm_write_secure_title">Write Secure Settings</string>
-    <string name="perm_write_secure_desc_common">Required for Statusbar icons and Screen Locked Security</string>
-    <string name="perm_write_secure_desc_night_light">Needed to toggle Night Light. Grant via ADB or root.</string>
-    <string name="perm_overlay_title">Overlay Permission</string>
-    <string name="perm_overlay_desc">Required to display the notification lighting overlay on the screen</string>
-    <string name="perm_device_admin_title">Device Administrator</string>
-    <string name="perm_device_admin_desc">Required to hard-lock the device (disabling biometrics) on unauthorized access attempts</string>
-    <string name="perm_action_grant">Grant Permission</string>
-    <string name="perm_action_copy_adb">Copy ADB</string>
-    <string name="perm_action_check">Check</string>
-    <string name="perm_action_enable">Enable in Settings</string>
-    <string name="perm_action_how_to">How to grant</string>
+    <string name="perm_shizuku_desc">Benötigt für erweiterte Befehle. Installiere Shizuku aus dem Play Store.</string>
+    <string name="perm_shizuku_install_action">Installiere Shizuku</string>
+    <string name="perm_shizuku_grant_title">Shizuku-Berechtigung</string>
+    <string name="perm_shizuku_grant_desc">Benötigt, um Energiesparbefehle auszuführen, während Maps navigiert.</string>
+    <string name="perm_notif_listener_title">Benachrichtigungs-Beobachter</string>
+    <string name="perm_notif_listener_desc_maps">Benötigt, um zu erkennen, wann Maps navigiert.</string>
+    <string name="perm_notif_listener_desc_lighting">Benötigt, um neue Benachrichtigungen zu erkennen</string>
+    <string name="perm_notif_listener_desc_snooze">Benötigt, um Benachrichtigungen zu erkennen und stumm zuschalten</string>
+    <string name="perm_accessibility_title">Barrierefreiheitsdienst</string>
+    <string name="perm_accessibility_desc_common">Benötigt für App-Sperre, Display-aus-Widget und andere Funktionen zur Erkennung von Interaktionen</string>
+    <string name="perm_accessibility_desc_lighting">Benötigt, um das Benachrichtigungslicht bei neuen Benachrichtigungen auszulösen</string>
+    <string name="perm_accessibility_desc_remap">Benötigt zum Abfangen von Hardware-Tastenereignissen</string>
+    <string name="perm_accessibility_desc_night_light">Benötigt zur Überwachung von Vordergrundanwendungen.</string>
+    <string name="perm_write_secure_title">Geschützte Einstellungen umschreiben</string>
+    <string name="perm_write_secure_desc_common">Benötigt für Statusleisten-Symbole und Sicherheit bei Bildschirmsperre</string>
+    <string name="perm_write_secure_desc_night_light">Benötigt, um das Nachtlicht zu aktivieren. Über ADB oder Root gewähren.</string>
+    <string name="perm_overlay_title">Overlay-Berechtigung</string>
+    <string name="perm_overlay_desc">Benötigt, um das Benachrichtigungslicht auf dem Bildschirm anzuzeigen</string>
+    <string name="perm_device_admin_title">Geräteadministrator</string>
+    <string name="perm_device_admin_desc">Benötigt, um das Gerät bei unbefugten Zugriffsversuchen komplett zu sperren (Deaktivierung der Biometriefunktionen)</string>
+    <string name="perm_action_grant">Berechtigung gewähren</string>
+    <string name="perm_action_copy_adb">Kopiere ADB-Befehl</string>
+    <string name="perm_action_check">Prüfen</string>
+    <string name="perm_action_enable">In den Einstellungen aktivieren</string>
+    <string name="perm_action_how_to">Wie man gewährt</string>
     <!-- Tabs -->
     <string name="tab_essentials">Essentials</string>
     <string name="tab_essentials_subtitle">└(=^‥^=)┐</string>
-    <string name="tab_freeze">Freeze</string>
-    <string name="tab_freeze_title">Frozen</string>
+    <string name="tab_freeze">Einfrieren</string>
+    <string name="tab_freeze_title">Eingefroren</string>
     <string name="tab_diy">DIY</string>
-    <string name="tab_freeze_subtitle">Disabled apps</string>
-    <string name="tab_diy_subtitle">Do It Yourself</string>
-    <string name="search_placeholder_short">Search for Tools, Mods and Tweaks</string>
-    <string name="action_search">Search</string>
-    <string name="label_search">Search</string>
+    <string name="tab_freeze_subtitle">Deaktivierte Apps</string>
+    <string name="tab_diy_subtitle">Do-It-Yourself</string>
+    <string name="search_placeholder_short">Suche nach Werkzeugen, Modifikationen und Anpassungen</string>
+    <string name="action_search">Suche</string>
+    <string name="label_search">Suche</string>
     <!-- UI Components General -->
-    <string name="action_back">Back</string>
-    <string name="action_done">Done</string>
-    <string name="action_preview">Preview</string>
-    <string name="action_help_guide">Help Guide</string>
-    <string name="update_available_title">Update Available</string>
-    <string name="action_download">Download</string>
+    <string name="action_back">Zurück</string>
+    <string name="action_done">Fertig</string>
+    <string name="action_preview">Vorschau</string>
+    <string name="action_help_guide">Hilfe-Leitfaden</string>
+    <string name="update_available_title">Aktualisierung verfügbar</string>
+    <string name="action_download">Herunterladen</string>
     <!-- DIY Section -->
-    <string name="coming_soon_title">Do It Yourself</string>
-    <string name="coming_soon_desc">Something experimental is brewing here. Stay tuned for automations and advanced mods.</string>
-    <string name="coming_soon_label">Coming Soon</string>
+    <string name="coming_soon_title">Do-It-Yourself</string>
+    <string name="coming_soon_desc">Hier bahnt sich etwas Experimentelles an. Bleibe dran für Automatisierungen und erweiterte Modifikationen.</string>
+    <string name="coming_soon_label">Demnächst verfügbar</string>
     <!-- About Section -->
     <string name="app_developer_name">Sameera Wijerathna</string>
-    <string name="app_description">The all-in-one toolbox for your Pixel and Androids</string>
-    <string name="email_subject_hello">Hello from Essentials</string>
+    <string name="app_description">Die alles umfassende Werkzeugkiste für Ihr Pixel und Android-Geräte</string>
+    <string name="email_subject_hello">Hallo von Essentials</string>
     <!-- Edge Lighting -->
     <string name="color_mode_system">System</string>
-    <string name="color_mode_custom">Custom</string>
-    <string name="color_mode_app_specific">App specific</string>
+    <string name="color_mode_custom">Individuell</string>
+    <string name="color_mode_app_specific">App-spezifisch</string>
     <!-- Biometric & Security -->
-    <string name="error_auth_failed">Authentication failed</string>
-    <string name="beta_warning_toast">This is a beta version. Please report any bugs.</string>
-    <string name="shortcut_creation_hint_toast">Long press an app in the grid to add a shortcut</string>
-    <string name="error_app_uninstalled">App not found or uninstalled</string>
+    <string name="error_auth_failed">Authentifizierung fehlgeschlagen</string>
+    <string name="beta_warning_toast">Dies ist eine Beta-Version. Bitte melde jeglichen Fehler.</string>
+    <string name="shortcut_creation_hint_toast">Drücke lange auf eine App im Raster, um eine Verknüpfung hinzuzufügen</string>
+    <string name="error_app_uninstalled">App nicht gefunden oder deinstalliert</string>
     <!-- Notifications -->
-    <string name="update_channel_name">App Updates</string>
-    <string name="update_channel_desc">Notifications for new app updates</string>
-    <string name="notification_update_available">Update available</string>
-    <string name="label_unknown">Unknown</string>
+    <string name="update_channel_name">App-Aktualisierungen</string>
+    <string name="update_channel_desc">Benachrichtigungen über neue App-Aktualisierungen</string>
+    <string name="notification_update_available">Aktualisierung verfügbar</string>
+    <string name="label_unknown">Unbekannt</string>
     <string name="network_type_5g">5G</string>
     <string name="network_type_4g">4G</string>
     <string name="network_type_3g">3G</string>
     <string name="label_shizuku_ritaka">Shizuku (Rikka)</string>
     <string name="label_shizuku_tuozi">Shizuku (TuoZi)</string>
-    <string name="label_search_content_description">Search</string>
-    <string name="perm_device_admin_explanation">Required to hard-lock the device when unauthorized network changes are attempted on lock screen.</string>
-    <string name="biometric_subtitle_access_settings">Authenticate to access settings</string>
-    <string name="biometric_subtitle_enable_feature">Authenticate to enable this feature</string>
-    <string name="biometric_subtitle_disable_feature">Authenticate to disable this feature</string>
-    <string name="biometric_title_settings_format">%1$s Settings</string>
-    <string name="keyword_feature">feature</string>
-    <string name="keyword_settings">settings</string>
-    <string name="keyword_hide">hide</string>
-    <string name="keyword_show">show</string>
-    <string name="keyword_visibility">visibility</string>
-    <string name="error_loading_apps">Error loading apps: %1$s</string>
+    <string name="label_search_content_description">Suche</string>
+    <string name="perm_device_admin_explanation">Benötigt, um das Gerät bei unbefugten Netzwerkänderungen auf dem Sperrbildschirm zu sperren.</string>
+    <string name="biometric_subtitle_access_settings">Authentifiziere dich, um auf die Einstellungen zuzugreifen</string>
+    <string name="biometric_subtitle_enable_feature">Authentifiziere dich, um diese Funktion zu aktivieren</string>
+    <string name="biometric_subtitle_disable_feature">Authentifizieren dich, um diese Funktion zu deaktivieren</string>
+    <string name="biometric_title_settings_format">%1$s Einstellungen</string>
+    <string name="keyword_feature">funktion</string>
+    <string name="keyword_settings">einstellungen</string>
+    <string name="keyword_hide">ausblenden</string>
+    <string name="keyword_show">zeigen</string>
+    <string name="keyword_visibility">sichtbarkeit</string>
+    <string name="error_loading_apps">Fehler beim Laden von Apps: %1$s</string>
     <string-array name="keywords_haptic">
         <item>vibration</item>
         <item>touch</item>
-        <item>feel</item>
+        <item>gefühl</item>
     </string-array>
     <string-array name="keywords_network_visibility">
-        <item>network</item>
-        <item>visibility</item>
+        <item>netzwerk</item>
+        <item>sichtbarkeit</item>
         <item>auto</item>
-        <item>hide</item>
+        <item>ausblenden</item>
     </string-array>
     <string-array name="keywords_restore_default">
-        <item>restore</item>
-        <item>default</item>
+        <item>wiederherstellen</item>
+        <item>standard</item>
         <item>icon</item>
     </string-array>
     <string-array name="keywords_alert">
-        <item>visible</item>
-        <item>alert</item>
+        <item>sichtbar</item>
+        <item>alarm</item>
     </string-array>
     <string-array name="keywords_flashlight">
-        <item>light</item>
-        <item>torch</item>
+        <item>licht</item>
+        <item>lampe</item>
     </string-array>
     <string-array name="keywords_flashlight_pulse">
-        <item>light</item>
-        <item>torch</item>
-        <item>pulse</item>
-        <item>notification</item>
+        <item>licht</item>
+        <item>lampe</item>
+        <item>impuls</item>
+        <item>benachrichtigung</item>
     </string-array>
     <string-array name="keywords_qs_tile">
-        <item>tile</item>
+        <item>kachel</item>
         <item>qs</item>
     </string-array>
     <string-array name="keywords_notification_lighting">
         <item>Leuchteffekt</item>
-        <item>notification</item>
+        <item>benachrichtigung</item>
         <item>led</item>
     </string-array>
     <string-array name="keywords_round_shape">
-        <item>round</item>
-        <item>shape</item>
-        <item>edge</item>
+        <item>rund</item>
+        <item>form</item>
+        <item>kante</item>
     </string-array>
     <string-array name="keywords_privacy">
-        <item>secure</item>
-        <item>privacy</item>
-        <item>biometric</item>
-        <item>face</item>
-        <item>fingerprint</item>
+        <item>sicher</item>
+        <item>privatsphäre</item>
+        <item>biometrie</item>
+        <item>gesicht</item>
+        <item>fingerabdruck</item>
     </string-array>
     <string-array name="keywords_sound_accessibility">
-        <item>sound</item>
-        <item>accessibility</item>
-        <item>hear</item>
+        <item>ton</item>
+        <item>barrierefreiheit</item>
+        <item>hören</item>
     </string-array>
     <string-array name="keywords_timeout">
-        <item>stay</item>
-        <item>on</item>
-        <item>timeout</item>
+        <item>bleiben</item>
+        <item>an</item>
+        <item>zeitüberschreitung</item>
     </string-array>
     <string-array name="keywords_wake_display">
         <item>touch</item>
-        <item>wake</item>
+        <item>wecken</item>
         <item>display</item>
     </string-array>
     <string-array name="keywords_mtp">
         <item>usb</item>
-        <item>file</item>
-        <item>transfer</item>
+        <item>datei</item>
+        <item>übertragen</item>
         <item>mtp</item>
     </string-array>
     <string-array name="keywords_timer">
         <item>timer</item>
-        <item>wait</item>
-        <item>timeout</item>
+        <item>warten</item>
+        <item>zeitüberschreitung</item>
     </string-array>
     <string-array name="keywords_selection">
-        <item>list</item>
-        <item>picker</item>
-        <item>selection</item>
+        <item>liste</item>
+        <item>wähler</item>
+        <item>auswahl</item>
     </string-array>
     <string-array name="keywords_visual_style">
         <item>animation</item>
-        <item>visual</item>
-        <item>look</item>
+        <item>visuell</item>
+        <item>aussehen</item>
     </string-array>
     <string-array name="keywords_quiet_filter">
-        <item>quiet</item>
-        <item>ignore</item>
+        <item>leise</item>
+        <item>ignorieren</item>
         <item>filter</item>
     </string-array>
     <string-array name="keywords_automation_lock">
-        <item>automation</item>
+        <item>automatisierung</item>
         <item>auto</item>
-        <item>lock</item>
+        <item>sperren</item>
     </string-array>
     <string-array name="keywords_adb_debug">
         <item>adb</item>
@@ -521,141 +521,141 @@
         <item>debug</item>
     </string-array>
     <string-array name="keywords_battery_charge">
-        <item>battery</item>
-        <item>charge</item>
-        <item>power</item>
+        <item>batterie</item>
+        <item>laden</item>
+        <item>energie</item>
     </string-array>
     <string-array name="keywords_blur_glass">
-        <item>blur</item>
-        <item>glass</item>
+        <item>unschärfe</item>
+        <item>glas</item>
         <item>vignette</item>
     </string-array>
     <string-array name="keywords_float_window">
-        <item>float</item>
-        <item>window</item>
+        <item>schweben</item>
+        <item>fenster</item>
         <item>overlay</item>
     </string-array>
     <string-array name="keywords_always_display">
         <item>always</item>
         <item>display</item>
-        <item>clock</item>
+        <item>uhr</item>
     </string-array>
     <string-array name="keywords_audio_mute">
         <item>audio</item>
-        <item>mute</item>
-        <item>volume</item>
+        <item>stumm</item>
+        <item>lautstärke</item>
     </string-array>
     <string-array name="keywords_blue_filter">
-        <item>blue</item>
+        <item>blau</item>
         <item>filter</item>
         <item>auto</item>
     </string-array>
     <string-array name="keywords_app_freezing">
-        <item>freeze</item>
+        <item>einfrieren</item>
         <item>shizuku</item>
     </string-array>
     <string-array name="keywords_manual_now">
-        <item>manual</item>
-        <item>now</item>
+        <item>manuell</item>
+        <item>jetzt</item>
         <item>shizuku</item>
     </string-array>
     <string-array name="keywords_proximity_sensor">
-        <item>proximity</item>
+        <item>nähe</item>
         <item>sensor</item>
-        <item>face</item>
-        <item>down</item>
+        <item>gesicht</item>
+        <item>unten</item>
     </string-array>
     <string-array name="keywords_switch_master">
-        <item>switch</item>
-        <item>master</item>
+        <item>schalter</item>
+        <item>haupt</item>
     </string-array>
     <string-array name="keywords_vibration">
         <item>vibration</item>
-        <item>feel</item>
+        <item>gefühl</item>
     </string-array>
     <!-- App Selection Extra -->
-    <string name="action_invert_selection">Invert selection</string>
-    <string name="toggle_show_system_apps">Show system apps</string>
+    <string name="action_invert_selection">Auswahl invertieren</string>
+    <string name="toggle_show_system_apps">Zeige System-Apps</string>
     <!-- Updates -->
-    <string name="status_up_to_date">You are up to date</string>
-    <string name="warning_pre_release">This is a pre-release version and might be unstable.</string>
-    <string name="release_notes_format">Release Notes v%1$s</string>
-    <string name="action_view_on_github">View on GitHub</string>
-    <string name="action_download_apk">Download APK</string>
+    <string name="status_up_to_date">Du bist aktuell</string>
+    <string name="warning_pre_release">Dies ist eine Vorabversion, die möglicherweise instabil ist.</string>
+    <string name="release_notes_format">Versionshinweise v%1$s</string>
+    <string name="action_view_on_github">Schau auf GitHub</string>
+    <string name="action_download_apk">APK herunterladen</string>
     <!-- Haptic Types -->
-    <string name="haptic_none">None</string>
-    <string name="haptic_subtle">Subtle</string>
-    <string name="haptic_double">Double</string>
-    <string name="haptic_click">Click</string>
+    <string name="haptic_none">Nichts</string>
+    <string name="haptic_subtle">Subtil</string>
+    <string name="haptic_double">Doppelt</string>
+    <string name="haptic_click">Klick</string>
     <string name="haptic_tick">Tick</string>
     <!-- Flashlight Intensity Overlay -->
-    <string name="action_turn_off">Turn Off</string>
-    <string name="feature_flashlight_brightness_title">Flashlight Brightness</string>
+    <string name="action_turn_off">Ausschalten</string>
+    <string name="feature_flashlight_brightness_title">Helligkeit der Taschenlampe</string>
     <!-- QS / Activities -->
-    <string name="feature_settings_format">%1$s Settings</string>
-    <string name="auth_confirm_identity_settings">Confirm identity to open settings</string>
-    <string name="auth_required_title">Authentication Required</string>
-    <string name="auth_confirm_identity_subtitle">Confirm your identity</string>
-    <string name="error_unlock_network_settings">Unlock phone to change network settings</string>
+    <string name="feature_settings_format">%1$s Einstellungen</string>
+    <string name="auth_confirm_identity_settings">Identität bestätigen, um Einstellungen zu öffnen</string>
+    <string name="auth_required_title">Authentifizierung benötigt</string>
+    <string name="auth_confirm_identity_subtitle">Bestätige deine Identität</string>
+    <string name="error_unlock_network_settings">Entsperre das Handy, um die Netzwerkeinstellungen zu ändern</string>
     <!-- About Section -->
-    <string name="developed_by_format">Developed by %1$s\nwith ❤\uFE0F from \uD83C\uDDF1\uD83C\uDDF0</string>
-    <string name="action_website">Website</string>
-    <string name="action_contact">Contact</string>
+    <string name="developed_by_format">Entwickelt von %1$s\nmit ❤\uFE0F in \uD83C\uDDF1\uD83C\uDDF0</string>
+    <string name="action_website">Webseite</string>
+    <string name="action_contact">Kontakt</string>
     <string name="action_telegram">Telegram</string>
     <string name="action_support">Support</string>
-    <string name="label_other_apps">Other Apps</string>
+    <string name="label_other_apps">Andere Apps</string>
     <string name="app_airsync">AirSync</string>
     <string name="app_zenzero">ZenZero</string>
     <string name="app_canvas">Canvas</string>
     <string name="app_tasks">Tasks</string>
     <string name="app_zero">Zero</string>
-    <string name="content_description_developer_avatar">Developer Avatar</string>
+    <string name="content_description_developer_avatar">Entwickler-Avatar</string>
     <!-- Help & Guides -->
-    <string name="help_guides_title">Help &amp; Guides</string>
-    <string name="need_more_support_reach_out">Need more support? Reach out,</string>
-    <string name="action_collapse">Collapse</string>
-    <string name="action_expand">Expand</string>
-    <string name="support_group_label">Support Group</string>
-    <string name="email_label">Email</string>
-    <string name="send_email_chooser_title">Send email</string>
-    <string name="error_no_email_app">No email app available</string>
-    <string name="instruction_step_image_description">Step %1$d Image</string>
+    <string name="help_guides_title">Hilfe &amp; Anleitungen</string>
+    <string name="need_more_support_reach_out">Du benötigst weitere Unterstützung? Kontaktiere uns,</string>
+    <string name="action_collapse">Reduzieren</string>
+    <string name="action_expand">Erweitern</string>
+    <string name="support_group_label">Supportgruppe</string>
+    <string name="email_label">E-Mail</string>
+    <string name="send_email_chooser_title">E-Mail senden</string>
+    <string name="error_no_email_app">Keine E-Mail-App verfügbar</string>
+    <string name="instruction_step_image_description">Schritt %1$d Bild</string>
     <!-- Instructions Content -->
-    <string name="instruction_section_perms_title">Accessibility, Notification and Overlay permissions</string>
-    <string name="instruction_step_perms_1">You may get this access denied message if you try to grant sensitive permissions such as accessibility, notification listener or overlay permissions. To grant it, check the steps below.</string>
-    <string name="instruction_step_perms_2">1. Go to app info page of Essentials.</string>
-    <string name="instruction_step_perms_3">2. Open the 3-dot menu and select \'Allow restricted settings\'. You may have to authenticate with biometrics. Once done, Try to grant the permission again.</string>
+    <string name="instruction_section_perms_title">Berechtigungen für Barrierefreiheit, Benachrichtigungen und Overlays</string>
+    <string name="instruction_step_perms_1">Diese Zugriffsverweigerungsmeldung wird möglicherweise angezeigt, wenn du versuchst, sensible Berechtigungen wie den Barrierefreiheitsdienst, Benachrichtigungs-Beobachter oder Overlay-Berechtigungen zu erteilen. Um diese zu gewähren, führe die folgenden Schritte aus.</string>
+    <string name="instruction_step_perms_2">1. Gehe auf die App-Info-Seite von Essentials.</string>
+    <string name="instruction_step_perms_3">2. Öffne das 3-Punkte-Menü und wähle \"Eingeschränkte Einstellungen zulassen\". Möglicherweise musst dich mit biometrischen Daten authentifizieren. Versuche anschließend erneut, die Berechtigung zu erteilen.</string>
     <string name="instruction_section_shizuku_title">Shizuku</string>
-    <string name="instruction_section_shizuku_desc">Shizuku is a powerful tool that allows apps to use system APIs directly with ADB or root permissions. It is required for features like Maps min mode, App Freezer. And willa ssist granting some permissions such as WRITE_SECURE_SETTINGS. \n\nBut the Play Store version of Shizuku might be outdated and will probably be unusable on recent Android versions so in that case, please get the latest version from the github or an up-to-date fork of it.</string>
-    <string name="instruction_section_maps_title">Maps power saving mode</string>
-    <string name="instruction_section_maps_desc">This feature automatically triggers Google Maps power saving mode which is currently exclusive to the Pixel 10 series. A community member discovered that it is still usable on any Android device by launching the maps minMode activity with root privileges. \n\nAnd then, I had it automated with Tasker to automatically trigger when the screen turns off during a navigation session and then was able to achieve the same with just runtime Shizuku permissions. \n\nIt is intended to be shown over the AOD of Pixel 10 series so because of that, you may see an occasional message popping up on the display that it does not support landscape mode. That is not avoidable by the app and you can ignore.</string>
-    <string name="instruction_section_silent_title">Silent sound mode</string>
-    <string name="instruction_section_silent_desc">You may have noticed that the silent mode also triggers DND. \n\nThis is due to how the Android implemented it as even if we use the same API to switch to vibrate mode, it for some reason turns on DND along with the silent mode and this is not avoidable at this moment. :(</string>
-    <string name="instruction_section_freeze_title">What is freeze?</string>
-    <string name="instruction_section_freeze_desc">Pause and stay away from app distractions while saving a little bit of power preventing apps running in the background. Suitable for rarely used apps. \n\nNot recommended for any communication services as they will not notify you in an emergency unless you unfreeze them. \n\nHighly advised to not freeze system apps as they can lead to system instability. Proceed with caution, You were warned. \n\nInspired by Hail &lt;3</string>
-    <string name="instruction_section_security_title">Are app lock and screen locked security actually secure?</string>
-    <string name="instruction_section_security_desc">Absolutely not. \n\nAny 3rd party application can not 100% interfere with regular device interactions and even the app lock is only an overlay above selected apps to prevent interacting with them. There are workarounds and it is not foolproof. \n\nSame goes with the screen locked security feature which detects someone trying to interact with the network tiles which for some reason are still accessible for anyone on Pixels. So if they try hard enough they might still be able to change them and especially if you have a flight mode QS tile added, this app can not prevent interactions with it. \n\nThese features are made just as experiments for light usage and would never recommend as strong security and privacy solutions. \n\nSecure alternatives:\n - App lock: Private Space and Secure folder on Pixels and Samsung\n - Preventing mobile networks access: Make sure your theft protection and offline/ power off find my device settings are on. You may look into Graphene OS as well.</string>
-    <string name="instruction_section_statusbar_title">Statusbar icons</string>
-    <string name="instruction_section_statusbar_desc">You may notice that even after resetting the statusbar icons, Some icons such as device rotation, wired headphone icons may stay visible. This is due to how the statubar blacklist is implemented in Android and how your OEM may have customized them. \nYou may need further adjustments. \n\nAlso not all icon visibility options may work as they depend on the OEM implementations and availability.</string>
-    <string name="instruction_section_lighting_title">Notification lighting does not work</string>
-    <string name="instruction_section_lighting_desc">It depends on the OEM. Some like OneUI does not seem to allow overlays above the AOD preventing the lighting effects being shown. In this case, try the ambient display as a workaround. </string>
-    <string name="instruction_section_button_title">Button remap does not work while display is off</string>
-    <string name="instruction_section_button_desc">Some OEMs limit the accessibility service reporting once the display is actually off but they may still work while the AOD is on. \nIn this case, you may able to use button remaps with AOD on but not with off. \n\nAs a workaround, you will need to use Shizuku permissions and turn on the \'Use Shizuku\' toggle in button remap settings which identifies and listen to hardware input events.\nThis is not guaranteed to work on all devices and needs testing.\n\nAnd even if it\'s on, Shizuku method only will be used when it\'s needed. Otherwise it will always fallback to Accessibility which also handles the blocking of the actual input during long press.</string>
-    <string name="instruction_section_flashlight_title">Flashlight brightness does not work</string>
+    <string name="instruction_section_shizuku_desc">Shizuku ist eine leistungsstarkes App, mit der andere Apps System-APIs direkt mit ADB- oder Root-Berechtigungen nutzen können. Es wird für Funktionen wie den Energiesparmodus von Maps und für die Einfrieren-Funktion benötigt. Es hilft auch dabei, bestimmte Berechtigungen wie WRITE_SECURE_SETTINGS zu erteilen. \n\nDie Play Store-Version von Shizuku ist jedoch möglicherweise veraltet und auf neueren Android-Versionen wahrscheinlich nicht mehr verwendbar. In diesem Fall lade bitte die neueste Version von GitHub oder einen aktuellen Fork davon herunter.</string>
+    <string name="instruction_section_maps_title">Maps-Energiesparmodus</string>
+    <string name="instruction_section_maps_desc">Diese Funktion aktiviert automatisch den Energiesparmodus von Google Maps, der derzeit exklusiv für die Pixel 10-Serie verfügbar ist. Ein Community-Mitglied hat herausgefunden, wie man ihn auf jedem Android-Gerät nutzen kann, indem man die Maps-MinMode-Aktivität mit Root-Rechten startet. \n\nAnschließend habe ich ihn mit Tasker so automatisiert, dass er sich automatisch aktiviert, wenn sich der Bildschirm während einer Navigationssitzung ausschaltet, und konnte dann dasselbe mit nur mit Shizuku-Laufzeitberechtigungen erreichen. \n\nDie Funktion ist für die Anzeige mit dem Always-on-Display der Pixel 10-Serie vorgesehen. Aus diesem Grund kann es vorkommen, dass gelegentlich eine Meldung auf dem Display erscheint, dass der Querformatmodus nicht unterstützt wird. Dies lässt sich durch die App nicht vermeiden und kann ignoriert werden.</string>
+    <string name="instruction_section_silent_title">Stiller Tonmodus</string>
+    <string name="instruction_section_silent_desc">Möglicherweise hast du bemerkt, dass der Lautlos-Modus auch den Nicht-stören-Modus auslöst. \n\nDies liegt daran, wie Android dies implementiert hat, denn selbst wenn wir dieselbe API verwenden, um in den Vibrationsmodus zu wechseln, wird aus irgendeinem Grund neben dem Lautlos-Modus auch der Nicht-stören-Modus aktiviert, was derzeit nicht vermeidbar ist. :(</string>
+    <string name="instruction_section_freeze_title">Was ist Einfrieren?</string>
+    <string name="instruction_section_freeze_desc">Pausiere und vermeide Ablenkungen durch Apps, während du ein wenig Strom sparst, indem du verhinderst, dass Apps im Hintergrund ausgeführt werden. Geeignet für selten verwendete Apps. \n\nNicht empfohlen für Kommunikationsdienste, da diese in Notfällen nicht benachrichtigen, es sei denn, du hebst die Sperre auf. \n\nEs wird dringend empfohlen, System-Apps nicht zu sperren, da dies zur Systeminstabilität führen kann. Gehe mit Vorsicht vor, du wurdest gewarnt. \n\nInspiriert von Hail &lt;3</string>
+    <string name="instruction_section_security_title">Sind App-Sperre und Sicherheit bei Bildschirmsperre tatsächlich sicher?</string>
+    <string name="instruction_section_security_desc">Definitiv nicht. \n\nKeine Drittanbieteranwendung kann die regulären Geräteinteraktionen zu 100 % beeinträchtigen, und selbst die App-Sperre ist nur eine Überlagerung ausgewählter Apps, um Interaktionen mit ihnen zu verhindern. Es gibt Umgehungsmöglichkeiten, und das ganze ist nicht hundertprozentig sicher. \n\nDas Gleiche gilt für die Sicherheitsfunktion zur Bildschirmsperre, die erkennt, wenn jemand versucht, mit den Netzwerk-Kacheln zu interagieren, die aus irgendeinem Grund für jeden auf Pixels weiterhin zugänglich sind. Wenn du dir also genug Mühe gibst, kannst du diese möglicherweise dennoch ändern, insbesondere wenn du die Schenlleinstellungs-Kachel für den Flugmodus hinzugefügt hast. Diese App kann Interaktionen damit nicht verhindern. \n\nDiese Funktionen sind nur als Experimente für den gelegentlichen Gebrauch gedacht und würden niemals als starke Sicherheits- und Datenschutzlösungen empfohlen werden. \n\nSichere Alternativen:\n - App-Sperre: Vertrauliches Profil und sicherer Ordner auf Pixel- und Samsung-Geräten\n - Verhindern des Zugriffs auf mobile Netzwerke: Stellen Sie sicher, dass Ihre Diebstahlschutz- und Offline-/Ausschalt-Einstellungen für „Mein Gerät finden” aktiviert sind. Eventuell möchtest du dir auch Graphene OS ansehen.</string>
+    <string name="instruction_section_statusbar_title">Icons der Statusleiste</string>
+    <string name="instruction_section_statusbar_desc">Möglicherweise stellest du fest, dass auch nach dem Zurücksetzen der Statusleisten-Symbole einige Symbole, wie z. B. die Symbole für die Geräteausrichtung und kabelgebundene Kopfhörer, weiterhin sichtbar bleiben. Dies liegt daran, wie die Statusleisten-Blacklist in Android implementiert ist und wie Ihr OEM diese möglicherweise angepasst hat. \nEventuell sind weitere Anpassungen erforderlich. \n\nAußerdem funktionieren möglicherweise nicht alle Optionen zur Sichtbarkeit von Symbolen, da diese von den OEM-Implementierungen und der Verfügbarkeit abhängen.</string>
+    <string name="instruction_section_lighting_title">Das Benachrichtigungslicht funktioniert nicht</string>
+    <string name="instruction_section_lighting_desc">Das hängt vom OEM ab. Einige wie OneUI scheinen keine Überlagerungen über dem Always-On-Display zuzulassen, wodurch die Lichteffekte nicht angezeigt werden können. Versuche in diesem Fall, das Ambient-Display als Workaround zu verwenden. </string>
+    <string name="instruction_section_button_title">Die Neuzuweisung der Tasten funktioniert nicht, wenn das Display ausgeschaltet ist</string>
+    <string name="instruction_section_button_desc">Einige OEMs schränken die Barrierefreiheitsdienste ein, sobald das Display ausgeschaltet ist, aber sie funktionieren möglicherweise weiterhin, wenn das Always-on-Display eingeschaltet ist. \nIn diesem Fall kannst du möglicherweise die Tastenbelegung mit eingeschaltetem Always-on-Display verwenden, jedoch nicht mit ausgeschaltetem Always-on-Display. \n\nAls Workaround musst du die Shizuku-Berechtigungen verwenden und in den Einstellungen für die Tastenbelegung die Option „Shizuku verwenden” aktivieren, die Hardware-Eingabeereignisse identifiziert und abhört. \nEs kann nicht garantiert werden, dass dies auf allen Geräten funktioniert, daher muss es getestet werden. \n\nSelbst wenn diese Option aktiviert ist, wird die Shizuku-Methode nur bei Bedarf verwendet. Andernfalls wird immer auf den Barrierefreiheitsdienst zurückgegriffen, welcher auch das Blockieren der tatsächlichen Eingabe bei langem Drücken übernimmt.</string>
+    <string name="instruction_section_flashlight_title">Die Helligkeit der Taschenlampe funktioniert nicht</string>
     <string name="instruction_section_flashlight_desc">Only a limited number of devices got hardware and software support adjusting the flashlight intensity. \n\n\'The minimum version of Android is 13 (SDK33).\nFlashlight brightness control only supports HAL version 3.8 and higher, so among the supported devices, the latest ones (For example, Pixel 6/7, Samsung S23, etc.)\'\npolodarb/Flashlight-Tiramisu</string>
-    <string name="instruction_section_about_title">What the hell is this app?</string>
+    <string name="instruction_section_about_title">Was zum Teufel ist das für eine App?</string>
     <string name="instruction_section_about_desc">Good question,\n\nI always wanted to extract the most out of my devices as I\'ve been a rooted user for ever since I got my first Project Treble device. And I\'ve been loving the Tasker app which is like the god when comes automation and utilizing every possible API and internal features of Android.\n\nSo I am not unrooted and back on stock Android beta experience and wanted to get the most out from what is possible with given privileges. Might as well share them. So with my beginner knowledge in Kotlin Jetpack and with the support of many research and assist tools and also the great community, I built an all-in-one app containing everything I wanted to be in my Android with given permissions. And here it is.\n\nFeature requests are welcome, I will consider and see if they are achievable with available permissions and my skills. Nowadays what is not possible. :)\n\nWhy not on Play Store?\nI don\'t wanna risk getting my Developer account banned due to the highly sensitive and internal permissions and APIs being used in the app. But with the way Android sideloading is headed, let\'s see what we have to do. I do understand the concerns of sideloaded apps being malicious.\nWhile we are at the topic, Checkout my other app AirSync if you are a mac + Android user. *shameless plug*\n\nEnjoy, Keep building! (っ◕‿◕)っ</string>
     <!-- Bug Reporting -->
-    <string name="action_report_bug">Report Bug</string>
-    <string name="toast_bug_report_copied">Bug report copied to clipboard</string>
-    <string name="bug_report_title">Bug report</string>
-    <string name="bug_report_option_share_logs">Share logs</string>
-    <string name="bug_report_option_share_logs_desc">Include logs and details</string>
-    <string name="bug_report_device_info">Device Info</string>
-    <string name="bug_report_raw_json">Raw Report</string>
-    <string name="action_report_github">Open GitHub Issue</string>
-    <string name="action_report_email">Email Report</string>
-    <string name="action_copy_clipboard">Copy to Clipboard</string>
-    <string name="bug_report_email_subject">Essentials Bug Report</string>
-    <string name="bug_report_send_via">Send via</string>
+    <string name="action_report_bug">Fehler melden</string>
+    <string name="toast_bug_report_copied">Fehlermeldung in die Zwischenablage kopiert</string>
+    <string name="bug_report_title">Fehlermeldung</string>
+    <string name="bug_report_option_share_logs">bug_report_option_share_logs</string>
+    <string name="bug_report_option_share_logs_desc">Protokolle und Details einbeziehen</string>
+    <string name="bug_report_device_info">Geräteinfo</string>
+    <string name="bug_report_raw_json">Rohbericht</string>
+    <string name="action_report_github">GitHub-Issue öffnen</string>
+    <string name="action_report_email">Per E-Mail melden</string>
+    <string name="action_copy_clipboard">In die Zwischenablage kopieren</string>
+    <string name="bug_report_email_subject">Essentials Fehlerbericht</string>
+    <string name="bug_report_send_via">Senden über</string>
 </resources>
