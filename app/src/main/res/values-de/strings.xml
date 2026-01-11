@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Essentials</string>
+    <string name="label_beta">BETA</string>
     <string name="accessibility_service_description"><b>Essentials Barrierefreiheitsdienst</b>\n\nDieser Dienst ist für die folgenden erweiterten Funktionen erforderlich:\n\n<b>• Neuzuordnung physischer Tasten:</b>\nErkennt das Drücken der Lautstärketasten auch bei ausgeschaltetem Display, um Aktionen wie die Taschenlampe auszulösen.\n\n<b>• Einstellungen pro App:</b>\nÜberwacht die aktuell aktive App, um bestimmte Profile für dynamisches Nachtlicht, Benachrichtigungsfarben und App-Sperre anzuwenden.\n\n<b>• Displaysteuerung:</b>\nErmöglicht es der App, das Display zu sperren (z. B. durch Doppeltippen oder Widgets) und Änderungen des Bildschirmstatus zu erkennen.\n\n<b>• Sicherheit:</b>\nVerhindert unbefugte Änderungen, indem der Fensterinhalt erkennt wird, wenn das Gerät gesperrt ist.\n\n<small>Es werden keine eingegebenen Texte oder sensiblen Benutzerdaten erfasst oder übertragen.</small></string>
     <string name="app_icon">App-Icon</string>
     <string name="freeze_activity_title">Apps einfrieren</string>
@@ -659,14 +660,14 @@
     <string name="bug_report_email_subject">Essentials Fehlerbericht</string>
     <string name="bug_report_send_via">Senden über</string>
     <!-- Location Reached -->
-    <string name="feat_location_reached_title">Location reached</string>
-    <string name="feat_location_reached_desc">Get notified when you arrive at a specific destination.</string>
+    <string name="feat_location_reached_title">Are we there yet?</string>
+    <string name="feat_location_reached_desc">Destination nearby alerts</string>
     <string name="location_reached_pick_destination">Destination</string>
     <string name="location_reached_set_destination_btn">Set Destination</string>
     <string name="location_reached_status_tracking">Tracking: %1$.4f, %2$.4f</string>
     <string name="location_reached_status_none">No destination set</string>
-    <string name="location_reached_how_to">Open your map app, pick a location, and share it to Essentials.</string>
-    <string name="location_reached_radius_title">Radius: %d m</string>
+    <string name="location_reached_how_to">Open Google Maps, pick a location, and share it to Essentials.</string>
+    <string name="location_reached_radius_title">Alert Radius: %d m</string>
     <string name="location_reached_radius_desc">Distance to trigger the alarm</string>
     <string name="location_reached_enable_title">Enable notification</string>
     <string name="perm_location_title">Location</string>
@@ -677,4 +678,26 @@
     <string name="location_reached_notification_desc">You have arrived at your destination.</string>
     <string name="location_reached_current_distance">Currently %1$.1f km away</string>
     <string name="location_reached_clear_btn">Clear Destination</string>
+    <string name="location_reached_processing">Processing location…</string>
+    <string name="location_reached_dist_remaining">DISTANCE REMAINING</string>
+    <string name="location_reached_calculating">Calculating…</string>
+    <string name="location_reached_stop_tracking">Stop Tracking</string>
+    <string name="location_reached_dest_ready">Destination Ready</string>
+    <string name="location_reached_start_tracking">Start Tracking</string>
+    <string name="location_reached_view_map">View Map</string>
+    <string name="location_reached_clear">Clear</string>
+    <string name="location_reached_no_dest">No Destination</string>
+    <string name="location_reached_open_maps">Open Maps</string>
+    <string name="location_reached_fsi_title">Full-Screen Alarm Permission</string>
+    <string name="location_reached_fsi_desc">Required to wake your device upon arrival. Tap to grant.</string>
+    <string name="location_reached_dist_m">%1$d m</string>
+    <string name="location_reached_dist_km">%1$.1f km</string>
+    <string name="location_reached_service_title">Travel Alarm active</string>
+    <string name="location_reached_service_remaining">%1$s remaining (%2$d%%)</string>
+    <string name="location_reached_channel_name">Travel Progress</string>
+    <string name="location_reached_channel_desc">Shows real-time distance to destination</string>
+    <string name="location_reached_alarm_title">Destination Nearby</string>
+    <string name="location_reached_alarm_subtitle">Prepare to get off</string>
+    <string name="location_reached_dismiss">Dismiss</string>
+    <string name="location_reached_toast_set">Destination set: %1$.4f, %2$.4f</string>
 </resources>
