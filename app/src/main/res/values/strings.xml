@@ -708,24 +708,4 @@
     <string name="action_copy_clipboard">Copy to Clipboard</string>
     <string name="bug_report_email_subject">Essentials Bug Report</string>
     <string name="bug_report_send_via">Send via</string>
-
-    <!-- Location Reached -->
-    <string name="feat_location_reached_title">Location reached</string>
-    <string name="feat_location_reached_desc">Get notified when you arrive at a specific destination.</string>
-    <string name="location_reached_pick_destination">Destination</string>
-    <string name="location_reached_set_destination_btn">Set Destination</string>
-    <string name="location_reached_status_tracking">Tracking: %1$.4f, %2$.4f</string>
-    <string name="location_reached_status_none">No destination set</string>
-    <string name="location_reached_how_to">Open your map app, pick a location, and share it to Essentials.</string>
-    <string name="location_reached_radius_title">Radius: %d m</string>
-    <string name="location_reached_radius_desc">Distance to trigger the alarm</string>
-    <string name="location_reached_enable_title">Enable notification</string>
-    <string name="perm_location_title">Location</string>
-    <string name="perm_location_desc">Used to detect arrival at your destination.</string>
-    <string name="perm_bg_location_title">Background Location</string>
-    <string name="perm_bg_location_desc">Required to monitor your arrival while the app is closed or the screen is off.</string>
-    <string name="location_reached_notification_title">Destination Reached!</string>
-    <string name="location_reached_notification_desc">You have arrived at your destination.</string>
-    <string name="location_reached_current_distance">Currently %1$.1f km away</string>
-    <string name="location_reached_clear_btn">Clear Destination</string>
 </resources>
