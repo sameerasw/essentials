@@ -712,6 +712,7 @@ fun SetupFeatures(
                             modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
                             showToggle = false,
                             hasMoreSettings = true,
+                            isBeta = result.isBeta, // Added isBeta
                             descriptionOverride = if (result.parentFeature != null) "${result.parentFeature} > ${result.description}" else result.description
                         )
                     }
@@ -773,7 +774,8 @@ fun SetupFeatures(
                                 currentFeature = feature.title
                                 showSheet = true
                             },
-                            description = feature.description
+                            description = feature.description,
+                            isBeta = feature.isBeta
                         )
                     }
                 }

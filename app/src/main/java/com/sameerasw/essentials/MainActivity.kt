@@ -43,6 +43,7 @@ import com.sameerasw.essentials.ui.composables.ComingSoonDIYScreen
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
+import com.sameerasw.essentials.viewmodels.LocationReachedViewModel
 import com.sameerasw.essentials.ui.components.sheets.UpdateBottomSheet
 import com.sameerasw.essentials.ui.components.sheets.InstructionsBottomSheet
 import com.sameerasw.essentials.ui.composables.configs.FreezeSettingsUI
@@ -56,6 +57,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 class MainActivity : FragmentActivity() {
     val viewModel: MainViewModel by viewModels()
+    val locationViewModel: LocationReachedViewModel by viewModels()
     private var isAppReady = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,7 +80,7 @@ class MainActivity : FragmentActivity() {
         splashScreen.setOnExitAnimationListener { splashScreenViewProvider ->
             try {
                 val splashScreenView = splashScreenViewProvider.view
-                val splashIcon = splashScreenViewProvider.iconView
+                val splashIcon = try { splashScreenViewProvider.iconView } catch (e: Exception) { null }
 
                 // Animate the splash screen view fade out
                 val fadeOut = ObjectAnimator.ofFloat(splashScreenView, "alpha", 1f, 0f).apply {
@@ -139,6 +141,7 @@ class MainActivity : FragmentActivity() {
         }
 
         Log.d("MainActivity", "onCreate with action: ${intent?.action}")
+        handleLocationIntent(intent)
 
         // Initialize HapticUtil with saved preferences
         HapticUtil.initialize(this)
@@ -301,6 +304,19 @@ class MainActivity : FragmentActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+        setIntent(intent)
         Log.d("MainActivity", "onNewIntent with action: ${intent.action}")
+        handleLocationIntent(intent)
+    }
+
+    private fun handleLocationIntent(intent: Intent?) {
+        intent?.let {
+            if (locationViewModel.handleIntent(it)) {
+                val settingsIntent = Intent(this, FeatureSettingsActivity::class.java).apply {
+                    putExtra("feature", "Location reached")
+                }
+                startActivity(settingsIntent)
+            }
+        }
     }
 }

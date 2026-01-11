@@ -415,6 +415,20 @@ object FeatureRegistry {
         },
 
         object : Feature(
+            id = "Location reached",
+            title = R.string.feat_location_reached_title,
+            iconRes = R.drawable.rounded_navigation_24,
+            category = R.string.cat_tools,
+            description = R.string.feat_location_reached_desc,
+            permissionKeys = listOf("LOCATION", "BACKGROUND_LOCATION", "USE_FULL_SCREEN_INTENT"),
+            showToggle = false,
+            isBeta = true
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = true
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+        },
+
+        object : Feature(
             id = "Freeze",
             title = R.string.feat_freeze_title,
             iconRes = R.drawable.rounded_mode_cool_24,

@@ -60,6 +60,7 @@ import com.sameerasw.essentials.ui.composables.configs.QuickSettingsTilesSetting
 import com.sameerasw.essentials.ui.composables.configs.ButtonRemapSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.DynamicNightLightSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.SnoozeNotificationsSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.LocationReachedSettingsUI
 import com.sameerasw.essentials.viewmodels.CaffeinateViewModel
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.viewmodels.StatusBarIconViewModel
@@ -189,6 +190,7 @@ class FeatureSettingsActivity : FragmentActivity() {
                         "Screen locked security" -> !isAccessibilityEnabled || !isWriteSecureSettingsEnabled || !viewModel.isDeviceAdminEnabled.value
                         "App lock" -> !isAccessibilityEnabled
                         "Freeze" -> !viewModel.isShizukuAvailable.value || !viewModel.isShizukuPermissionGranted.value
+                        "Location reached" -> !viewModel.isLocationPermissionGranted.value || !viewModel.isBackgroundLocationPermissionGranted.value
                         else -> false
                     }
                     showPermissionSheet = hasMissingPermissions
@@ -385,6 +387,26 @@ class FeatureSettingsActivity : FragmentActivity() {
                                 isGranted = viewModel.isShizukuPermissionGranted.value
                             )
                         )
+                        "Location reached" -> listOf(
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_navigation_24,
+                                title = R.string.perm_location_title,
+                                description = R.string.perm_location_desc,
+                                dependentFeatures = PermissionRegistry.getFeatures("LOCATION"),
+                                actionLabel = R.string.perm_action_grant,
+                                action = { viewModel.requestLocationPermission(this) },
+                                isGranted = viewModel.isLocationPermissionGranted.value
+                            ),
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_navigation_24,
+                                title = R.string.perm_bg_location_title,
+                                description = R.string.perm_bg_location_desc,
+                                dependentFeatures = PermissionRegistry.getFeatures("BACKGROUND_LOCATION"),
+                                actionLabel = R.string.perm_action_grant,
+                                action = { viewModel.requestBackgroundLocationPermission(this) },
+                                isGranted = viewModel.isBackgroundLocationPermissionGranted.value
+                            )
+                        )
                         else -> emptyList()
                     }
 
@@ -409,7 +431,8 @@ class FeatureSettingsActivity : FragmentActivity() {
                             hasSearch = false,
                             onBackClick = { finish() },
                             scrollBehavior = scrollBehavior,
-                            subtitle = if (featureObj != null) stringResource(featureObj.description) else ""
+                            subtitle = if (featureObj != null) stringResource(featureObj.description) else "",
+                            isBeta = featureObj?.isBeta ?: false
                         )
                     },
                     floatingActionButton = {
@@ -516,6 +539,13 @@ class FeatureSettingsActivity : FragmentActivity() {
                             }
                             "Quick settings tiles" -> {
                                 QuickSettingsTilesSettingsUI(
+                                    modifier = Modifier.padding(top = 16.dp),
+                                    highlightSetting = highlightSetting
+                                )
+                            }
+                            "Location reached" -> {
+                                LocationReachedSettingsUI(
+                                    mainViewModel = viewModel,
                                     modifier = Modifier.padding(top = 16.dp),
                                     highlightSetting = highlightSetting
                                 )

@@ -30,7 +30,8 @@ abstract class Feature(
     val permissionKeys: List<String> = emptyList(),
     val searchableSettings: List<SearchSetting> = emptyList(),
     val showToggle: Boolean = true,
-    val hasMoreSettings: Boolean = true
+    val hasMoreSettings: Boolean = true,
+    val isBeta: Boolean = false
 ) {
     abstract fun isEnabled(viewModel: MainViewModel): Boolean
     

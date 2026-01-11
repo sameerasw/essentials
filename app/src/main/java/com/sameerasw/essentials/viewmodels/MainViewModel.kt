@@ -80,6 +80,9 @@ class MainViewModel : ViewModel() {
     val flashlightLastIntensity = mutableStateOf(1)
     val isFlashlightPulseEnabled = mutableStateOf(false)
     val isFlashlightPulseFacedownOnly = mutableStateOf(true)
+    val isLocationPermissionGranted = mutableStateOf(false)
+    val isBackgroundLocationPermissionGranted = mutableStateOf(false)
+    val isFullScreenIntentPermissionGranted = mutableStateOf(false)
 
 
 
@@ -171,6 +174,9 @@ class MainViewModel : ViewModel() {
         isOverlayPermissionGranted.value = PermissionUtils.canDrawOverlays(context)
         isNotificationLightingAccessibilityEnabled.value = PermissionUtils.isNotificationLightingAccessibilityServiceEnabled(context)
         isDefaultBrowserSet.value = PermissionUtils.isDefaultBrowser(context)
+        isLocationPermissionGranted.value = PermissionUtils.hasLocationPermission(context)
+        isBackgroundLocationPermissionGranted.value = PermissionUtils.hasBackgroundLocationPermission(context)
+        isFullScreenIntentPermissionGranted.value = PermissionUtils.canUseFullScreenIntent(context)
         
         settingsRepository.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener)
         settingsRepository.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
@@ -608,6 +614,24 @@ class MainViewModel : ViewModel() {
         )
     }
 
+    fun requestLocationPermission(activity: androidx.activity.ComponentActivity) {
+        androidx.core.app.ActivityCompat.requestPermissions(
+            activity,
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
+            1003
+        )
+    }
+
+    fun requestBackgroundLocationPermission(activity: androidx.activity.ComponentActivity) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            androidx.core.app.ActivityCompat.requestPermissions(
+                activity,
+                arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION),
+                1004
+            )
+        }
+    }
+
     fun requestNotificationPermission(activity: androidx.activity.ComponentActivity) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
             androidx.core.app.ActivityCompat.requestPermissions(
@@ -615,6 +639,23 @@ class MainViewModel : ViewModel() {
                 arrayOf(Manifest.permission.POST_NOTIFICATIONS),
                 1002
             )
+        }
+    }
+
+    fun requestFullScreenIntentPermission(context: Context) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            try {
+                val intent = Intent(Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT).apply {
+                    data = android.net.Uri.fromParts("package", context.packageName, null)
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+                context.startActivity(intent)
+            } catch (e: Exception) {
+                // Fallback to special app access
+                val intent = Intent(Settings.ACTION_CONDITION_PROVIDER_SETTINGS)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(intent)
+            }
         }
     }
 

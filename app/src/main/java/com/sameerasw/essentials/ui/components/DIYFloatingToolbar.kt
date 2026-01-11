@@ -88,7 +88,10 @@ fun DIYFloatingToolbar(
             },
         expanded = expanded,
         scrollBehavior = scrollBehavior,
-        colors = FloatingToolbarDefaults.vibrantFloatingToolbarColors(),
+        colors = FloatingToolbarDefaults.vibrantFloatingToolbarColors(
+            toolbarContentColor = MaterialTheme.colorScheme.onSurface,
+            toolbarContainerColor = MaterialTheme.colorScheme.primary,
+        ),
         content = {
             // FIXED ORDER LOOP to prevent shifting
             tabs.forEachIndexed { index, tab ->
@@ -159,9 +162,15 @@ fun DIYFloatingToolbar(
                                 alpha = itemAlpha
                             },
                         colors = if (isSelected) {
-                            IconButtonDefaults.filledTonalIconButtonColors()
+                            IconButtonDefaults.filledIconButtonColors(
+                                contentColor = MaterialTheme.colorScheme.primary,
+                                containerColor = MaterialTheme.colorScheme.background
+                            )
                         } else {
-                            IconButtonDefaults.iconButtonColors()
+                            IconButtonDefaults.iconButtonColors(
+                                contentColor = MaterialTheme.colorScheme.background,
+                                containerColor = MaterialTheme.colorScheme.primary
+                            )
                         }
                     ) {
                         Icon(
