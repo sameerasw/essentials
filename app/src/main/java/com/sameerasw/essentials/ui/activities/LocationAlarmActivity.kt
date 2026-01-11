@@ -183,7 +183,7 @@ fun LocationAlarmScreen(onFinish: () -> Unit) {
             Spacer(modifier = Modifier.height(48.dp))
             
             Text(
-                text = "Destination Nearby",
+                text = stringResource(R.string.location_reached_alarm_title),
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontWeight = FontWeight.Black,
                     letterSpacing = 2.sp
@@ -192,7 +192,7 @@ fun LocationAlarmScreen(onFinish: () -> Unit) {
             )
             
             Text(
-                text = "Prepare to get off",
+                text = stringResource(R.string.location_reached_alarm_subtitle),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface
             )
@@ -211,7 +211,7 @@ fun LocationAlarmScreen(onFinish: () -> Unit) {
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(
-                    text = "Dismiss",
+                    text = stringResource(R.string.location_reached_dismiss),
                     style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                 )
             }

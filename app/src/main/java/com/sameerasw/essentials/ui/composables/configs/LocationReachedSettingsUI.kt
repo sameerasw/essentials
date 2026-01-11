@@ -54,7 +54,7 @@ fun LocationReachedSettingsUI(
                 LoadingIndicator()
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "Processing location...",
+                    text = stringResource(R.string.location_reached_processing),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -79,11 +79,12 @@ fun LocationReachedSettingsUI(
                     if (alarm.isEnabled) {
                         // TRACKING STATE
                         val distanceText = distance?.let {
-                            if (it < 1000) "${it.toInt()}m" else String.format("%.1fkm", it / 1000f)
-                        } ?: "Calculating..."
+                            if (it < 1000) stringResource(R.string.location_reached_dist_m, it.toInt()) 
+                            else stringResource(R.string.location_reached_dist_km, it / 1000f)
+                        } ?: stringResource(R.string.location_reached_calculating)
 
                         Text(
-                            text = "DISTANCE REMAINING",
+                            text = stringResource(R.string.location_reached_dist_remaining),
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -124,7 +125,7 @@ fun LocationReachedSettingsUI(
                         ) {
                             Icon(painterResource(R.drawable.rounded_pause_24), contentDescription = null)
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("Stop Tracking")
+                            Text(stringResource(R.string.location_reached_stop_tracking))
                         }
 
                     } else {
@@ -137,7 +138,7 @@ fun LocationReachedSettingsUI(
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
-                            text = "Destination Ready",
+                            text = stringResource(R.string.location_reached_dest_ready),
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold
                         )
@@ -161,7 +162,7 @@ fun LocationReachedSettingsUI(
                         ) {
                             Icon(painterResource(R.drawable.rounded_play_arrow_24), contentDescription = null)
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("Start Tracking")
+                            Text(stringResource(R.string.location_reached_start_tracking))
                         }
                     }
 
@@ -185,7 +186,7 @@ fun LocationReachedSettingsUI(
                         ) {
                             Icon(painterResource(R.drawable.rounded_map_24), contentDescription = null, modifier = Modifier.size(18.dp))
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("View Map")
+                            Text(stringResource(R.string.location_reached_view_map))
                         }
 
                         Button(
@@ -196,7 +197,7 @@ fun LocationReachedSettingsUI(
                         ) {
                             Icon(painterResource(R.drawable.rounded_delete_24), contentDescription = null, modifier = Modifier.size(18.dp))
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("Clear")
+                            Text(stringResource(R.string.location_reached_clear))
                         }
                     }
                 }
@@ -208,7 +209,7 @@ fun LocationReachedSettingsUI(
                 cornerRadius = 24.dp
             ) {
                 Column(
-                    modifier = Modifier.padding(32.dp),
+                    modifier = Modifier.padding(32.dp).fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Icon(
@@ -219,13 +220,13 @@ fun LocationReachedSettingsUI(
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text = "No Destination",
+                        text = stringResource(R.string.location_reached_no_dest),
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Share a location from Google Maps to start.",
+                        text = stringResource(R.string.location_reached_how_to),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                         textAlign = androidx.compose.ui.text.style.TextAlign.Center
@@ -241,7 +242,7 @@ fun LocationReachedSettingsUI(
                         shape = androidx.compose.foundation.shape.CircleShape,
                         colors = ButtonDefaults.filledTonalButtonColors()
                     ) {
-                        Text("Open Maps")
+                        Text(stringResource(R.string.location_reached_open_maps))
                     }
                 }
             }
@@ -250,7 +251,7 @@ fun LocationReachedSettingsUI(
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
-            text = "Alarm Radius: ${alarm.radius}m",
+            text = stringResource(R.string.location_reached_radius_title, alarm.radius),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.fillMaxWidth().padding(start = 16.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -284,8 +285,8 @@ fun LocationReachedSettingsUI(
                 cornerRadius = 24.dp
             ) {
                 IconToggleItem(
-                    title = "Full-Screen Alarm Permission",
-                    description = "Required to wake your device upon arrival. Tap to grant.",
+                    title = stringResource(R.string.location_reached_fsi_title),
+                    description = stringResource(R.string.location_reached_fsi_desc),
                     isChecked = false,
                     onCheckedChange = { mainViewModel.requestFullScreenIntentPermission(context) },
                     iconRes = R.drawable.rounded_info_24,
