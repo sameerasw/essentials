@@ -71,8 +71,8 @@ class InputEventListenerService : Service() {
 
     private fun startListening() {
         scope?.launch {
-            if (shizukuHelper.getStatus() != ShizukuStatus.READY) {
-                Log.e("InputEventListener", "Shizuku not ready")
+            if (!com.sameerasw.essentials.utils.ShellUtils.hasPermission(this@InputEventListenerService)) {
+                Log.e("InputEventListener", "Shell permission not granted")
                 return@launch
             }
 

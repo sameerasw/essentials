@@ -4,6 +4,7 @@ import android.content.Context
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.Feature
 import com.sameerasw.essentials.domain.model.SearchSetting
+import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
 object FeatureRegistry {
@@ -90,12 +91,12 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_navigation_24,
             category = R.string.cat_tools,
             description = R.string.feat_maps_power_saving_desc,
-            permissionKeys = listOf("SHIZUKU", "NOTIFICATION_LISTENER"),
+            permissionKeys = if (ShellUtils.isRootEnabled(com.sameerasw.essentials.EssentialsApp.context)) listOf("ROOT", "NOTIFICATION_LISTENER") else listOf("SHIZUKU", "NOTIFICATION_LISTENER"),
             hasMoreSettings = false
         ) {
             override fun isEnabled(viewModel: MainViewModel) = viewModel.isMapsPowerSavingEnabled.value
             override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
-                viewModel.isShizukuAvailable.value && viewModel.isShizukuPermissionGranted.value && viewModel.isNotificationListenerEnabled.value
+                com.sameerasw.essentials.utils.ShellUtils.hasPermission(context) && viewModel.isNotificationListenerEnabled.value
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) = viewModel.setMapsPowerSavingEnabled(enabled, context)
             override fun onClick(context: Context, viewModel: MainViewModel) {}
         },
@@ -323,7 +324,7 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_switch_access_3_24,
             category = R.string.cat_system,
             description = R.string.feat_button_remap_desc,
-            permissionKeys = listOf("ACCESSIBILITY"),
+            permissionKeys = if (ShellUtils.isRootEnabled(com.sameerasw.essentials.EssentialsApp.context)) listOf("ACCESSIBILITY", "ROOT") else listOf("ACCESSIBILITY", "SHIZUKU"),
             showToggle = false,
             searchableSettings = listOf(
                 SearchSetting(
@@ -434,7 +435,7 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_mode_cool_24,
             category = R.string.cat_tools,
             description = R.string.feat_freeze_desc,
-            permissionKeys = listOf("SHIZUKU"),
+            permissionKeys = if (ShellUtils.isRootEnabled(com.sameerasw.essentials.EssentialsApp.context)) listOf("ROOT") else listOf("SHIZUKU"),
             searchableSettings = listOf(
                 SearchSetting(
                     R.string.search_freeze_pick_title,
@@ -466,7 +467,7 @@ object FeatureRegistry {
         ) {
             override fun isEnabled(viewModel: MainViewModel) = true
             override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
-                viewModel.isShizukuAvailable.value && viewModel.isShizukuPermissionGranted.value
+                com.sameerasw.essentials.utils.ShellUtils.hasPermission(context)
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
         }
     )

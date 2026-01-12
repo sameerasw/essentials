@@ -52,7 +52,7 @@ class ShortcutHandlerActivity : ComponentActivity() {
             CoroutineScope(Dispatchers.IO).launch {
                 val isFrozen = FreezeManager.isAppFrozen(this@ShortcutHandlerActivity, packageName)
                 if (isFrozen) {
-                    FreezeManager.unfreezeApp(packageName)
+                    FreezeManager.unfreezeApp(this@ShortcutHandlerActivity, packageName)
                     // Small delay to ensure system registers the change
                     delay(500) // Slightly longer delay to show the nice loader if frozen
                 }

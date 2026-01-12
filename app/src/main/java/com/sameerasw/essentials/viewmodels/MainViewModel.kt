@@ -119,6 +119,9 @@ class MainViewModel : ViewModel() {
     val isAutoUpdateEnabled = mutableStateOf(true)
     val isUpdateNotificationEnabled = mutableStateOf(true)
     val isPreReleaseCheckEnabled = mutableStateOf(false)
+    val isRootEnabled = mutableStateOf(false)
+    val isRootAvailable = mutableStateOf(false)
+    val isRootPermissionGranted = mutableStateOf(false)
     private var lastUpdateCheckTime: Long = 0
     private lateinit var settingsRepository: SettingsRepository
     private lateinit var updateRepository: UpdateRepository
@@ -143,6 +146,7 @@ class MainViewModel : ViewModel() {
             SettingsRepository.KEY_FREEZE_AUTO_EXCLUDED_APPS -> {
                 freezeAutoExcludedApps.value = settingsRepository.getFreezeAutoExcludedApps()
             }
+            SettingsRepository.KEY_USE_ROOT -> isRootEnabled.value = settingsRepository.getBoolean(key)
             SettingsRepository.KEY_CHECK_PRE_RELEASES_ENABLED -> isPreReleaseCheckEnabled.value = settingsRepository.getBoolean(key)
             SettingsRepository.KEY_DEVELOPER_MODE_ENABLED -> {
                 isDeveloperModeEnabled.value = settingsRepository.getBoolean(key)
@@ -178,6 +182,9 @@ class MainViewModel : ViewModel() {
         isBackgroundLocationPermissionGranted.value = PermissionUtils.hasBackgroundLocationPermission(context)
         isFullScreenIntentPermissionGranted.value = PermissionUtils.canUseFullScreenIntent(context)
         
+        isRootAvailable.value = com.sameerasw.essentials.utils.RootUtils.isRootAvailable()
+        isRootPermissionGranted.value = com.sameerasw.essentials.utils.RootUtils.isRootPermissionGranted()
+        
         settingsRepository.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener)
         settingsRepository.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
         
@@ -198,6 +205,7 @@ class MainViewModel : ViewModel() {
         notificationLightingPulseDuration.value = settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_PULSE_DURATION, 3000f)
         notificationLightingIndicatorX.value = settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_INDICATOR_X, 50f)
         notificationLightingIndicatorY.value = settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_INDICATOR_Y, 2f)
+        isRootEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_USE_ROOT)
         notificationLightingIndicatorScale.value = settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_INDICATOR_SCALE, 1.0f)
         notificationLightingGlowSides.value = settingsRepository.getNotificationLightingGlowSides()
         
@@ -301,6 +309,12 @@ class MainViewModel : ViewModel() {
     fun setDeveloperModeEnabled(enabled: Boolean, context: Context) {
         isDeveloperModeEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_DEVELOPER_MODE_ENABLED, enabled)
+    }
+
+    fun setRootEnabled(enabled: Boolean, context: Context) {
+        settingsRepository.putBoolean(SettingsRepository.KEY_USE_ROOT, enabled)
+        isRootEnabled.value = enabled
+        check(context)
     }
 
     fun checkForUpdates(context: Context, manual: Boolean = false) {
@@ -866,7 +880,7 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val isFrozen = com.sameerasw.essentials.utils.FreezeManager.isAppFrozen(context, packageName)
             if (isFrozen) {
-                com.sameerasw.essentials.utils.FreezeManager.unfreezeApp(packageName)
+                com.sameerasw.essentials.utils.FreezeManager.unfreezeApp(context, packageName)
                 // Small delay to ensure system registers the change before launch
                 delay(100)
             }

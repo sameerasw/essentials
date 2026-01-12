@@ -24,16 +24,16 @@ object FreezeManager {
      * Freeze an application using Shizuku.
      * Sets state to COMPONENT_ENABLED_STATE_DISABLED_USER (3).
      */
-    fun freezeApp(packageName: String): Boolean {
-        return setApplicationEnabledSetting(packageName, COMPONENT_ENABLED_STATE_DISABLED_USER)
+    fun freezeApp(context: Context, packageName: String): Boolean {
+        return setApplicationEnabledSetting(context, packageName, COMPONENT_ENABLED_STATE_DISABLED_USER)
     }
 
     /**
      * Unfreeze an application using Shizuku.
      * Sets state to COMPONENT_ENABLED_STATE_ENABLED (1).
      */
-    fun unfreezeApp(packageName: String): Boolean {
-        return setApplicationEnabledSetting(packageName, COMPONENT_ENABLED_STATE_ENABLED)
+    fun unfreezeApp(context: Context, packageName: String): Boolean {
+        return setApplicationEnabledSetting(context, packageName, COMPONENT_ENABLED_STATE_ENABLED)
     }
 
     /**
@@ -58,7 +58,7 @@ object FreezeManager {
                 apps.forEach { app ->
                     // Freezing happens if it's in the list AND not excluded
                     if (!excludedSet.contains(app.packageName)) {
-                        freezeApp(app.packageName)
+                        freezeApp(context, app.packageName)
                     }
                 }
             } catch (e: Exception) {
@@ -79,7 +79,7 @@ object FreezeManager {
             try {
                 val apps: List<com.sameerasw.essentials.domain.model.AppSelection> = gson.fromJson(json, type)
                 apps.forEach { app ->
-                    freezeApp(app.packageName)
+                    freezeApp(context, app.packageName)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -108,7 +108,7 @@ object FreezeManager {
                 
                 apps.forEach { app ->
                     if (!excludedSet.contains(app.packageName)) {
-                        unfreezeApp(app.packageName)
+                        unfreezeApp(context, app.packageName)
                     }
                 }
             } catch (e: Exception) {
@@ -129,7 +129,7 @@ object FreezeManager {
             try {
                 val apps: List<com.sameerasw.essentials.domain.model.AppSelection> = gson.fromJson(json, type)
                 apps.forEach { app ->
-                    unfreezeApp(app.packageName)
+                    unfreezeApp(context, app.packageName)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -149,33 +149,19 @@ object FreezeManager {
         }
     }
 
-    private fun setApplicationEnabledSetting(packageName: String, newState: Int): Boolean {
-        if (!ShizukuUtils.isShizukuAvailable() || !ShizukuUtils.hasPermission()) {
+    private fun setApplicationEnabledSetting(context: Context, packageName: String, newState: Int): Boolean {
+        if (!ShellUtils.hasPermission(context)) {
             return false
         }
 
-        return try {
-            // Get the Package Manager service through Shizuku
-            val service = ShizukuBinderWrapper(rikka.shizuku.SystemServiceHelper.getSystemService("package"))
-            val pmClass = Class.forName("android.content.pm.IPackageManager")
-            val stubClass = Class.forName("android.content.pm.IPackageManager\$Stub")
-            val asInterfaceMethod = stubClass.getMethod("asInterface", IBinder::class.java)
-            val ipm = asInterfaceMethod.invoke(null, service)
+        val cmd = when (newState) {
+            COMPONENT_ENABLED_STATE_DISABLED_USER -> "pm disable-user --user 0 $packageName"
+            COMPONENT_ENABLED_STATE_ENABLED -> "pm enable $packageName"
+            else -> return false
+        }
 
-            // IPackageManager.setApplicationEnabledSetting(packageName, newState, flags, userId, callingPackage)
-            // Note: Method signature varies across Android versions.
-            // Standard: setApplicationEnabledSetting(String packageName, int newState, int flags, int userId, String callingPackage)
-            
-            val method = ipm.javaClass.getMethod(
-                "setApplicationEnabledSetting",
-                String::class.java,
-                Int::class.java,
-                Int::class.java,
-                Int::class.java,
-                String::class.java
-            )
-            
-            method.invoke(ipm, packageName, newState, 0, 0, "com.android.shell")
+        return try {
+            ShellUtils.runCommand(context, cmd)
             true
         } catch (e: Exception) {
             e.printStackTrace()

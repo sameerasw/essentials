@@ -9,10 +9,16 @@ import com.sameerasw.essentials.services.ScreenOffReceiver
 import com.sameerasw.essentials.utils.ShizukuUtils
 
 class EssentialsApp : Application() {
+    companion object {
+        lateinit var context: Context
+            private set
+    }
+
     private val screenOffReceiver = ScreenOffReceiver()
 
     override fun onCreate() {
         super.onCreate()
+        context = applicationContext
         ShizukuUtils.initialize()
         com.sameerasw.essentials.utils.LogManager.init(this)
         val intentFilter = IntentFilter(Intent.ACTION_SCREEN_OFF)

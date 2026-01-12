@@ -92,6 +92,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_DEVELOPER_MODE_ENABLED = "developer_mode_enabled"
         const val KEY_HAPTIC_FEEDBACK_TYPE = "haptic_feedback_type"
         const val KEY_DEFAULT_TAB = "default_tab"
+        const val KEY_USE_ROOT = "use_root"
     }
 
     // Observe changes

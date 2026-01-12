@@ -112,101 +112,127 @@ fun ButtonRemapSettingsUI(
                 exit = shrinkVertically() + fadeOut()
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                    IconToggleItem(
-                        iconRes = R.drawable.rounded_adb_24,
-                        title = stringResource(R.string.button_remap_use_shizuku_title),
-                        description = stringResource(R.string.button_remap_use_shizuku_desc),
-                        isChecked = viewModel.isButtonRemapUseShizuku.value,
-                        onCheckedChange = { enabled ->
-                            if (enabled) {
-                                if (shizukuHelper.getStatus() == ShizukuStatus.READY) {
+            val isRootEnabled = com.sameerasw.essentials.utils.ShellUtils.isRootEnabled(context)
+            IconToggleItem(
+                iconRes = if (isRootEnabled) R.drawable.rounded_numbers_24 else R.drawable.rounded_adb_24,
+                title = stringResource(R.string.button_remap_use_shizuku_title),
+                description = stringResource(R.string.button_remap_use_shizuku_desc),
+                isChecked = viewModel.isButtonRemapUseShizuku.value,
+                onCheckedChange = { enabled ->
+                    if (enabled) {
+                        val shellHasPermission = com.sameerasw.essentials.utils.ShellUtils.hasPermission(context)
+                        val shellIsAvailable = com.sameerasw.essentials.utils.ShellUtils.isAvailable(context)
+
+                        if (shellHasPermission) {
+                            viewModel.setButtonRemapUseShizuku(true, context)
+                            ContextCompat.startForegroundService(
+                                context,
+                                Intent(context, InputEventListenerService::class.java)
+                            )
+                        } else if (shellIsAvailable && !isRootEnabled) {
+                            // Shizuku logic (still needed for specific permission request if not granted)
+                            shizukuHelper.requestPermission { _, grantResult ->
+                                if (grantResult == android.content.pm.PackageManager.PERMISSION_GRANTED) {
                                     viewModel.setButtonRemapUseShizuku(true, context)
                                     ContextCompat.startForegroundService(
                                         context,
                                         Intent(context, InputEventListenerService::class.java)
                                     )
-                                } else if (shizukuHelper.getStatus() == ShizukuStatus.PERMISSION_NEEDED) {
-                                    shizukuHelper.requestPermission { requestCode, grantResult ->
-                                        if (grantResult == android.content.pm.PackageManager.PERMISSION_GRANTED) {
-                                            viewModel.setButtonRemapUseShizuku(true, context)
-                                            ContextCompat.startForegroundService(
-                                                context,
-                                                Intent(context, InputEventListenerService::class.java)
-                                            )
-                                        }
-                                    }
-                                } else {
-                                    // Shizuku not running
-                                    viewModel.setButtonRemapUseShizuku(true, context)
-                                    android.widget.Toast.makeText(
-                                        context,
-                                        context.getString(R.string.shizuku_not_running_toast),
-                                        android.widget.Toast.LENGTH_SHORT
-                                    ).show()
                                 }
-                            } else {
-                                viewModel.setButtonRemapUseShizuku(false, context)
-                                context.stopService(Intent(context, InputEventListenerService::class.java))
                             }
-                        },
-                        modifier = Modifier.highlight(highlightSetting == "shizuku_remap")
-                    )
-
-                    if (viewModel.isButtonRemapUseShizuku.value) {
-                        // Status indicator
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(
-                                    color = MaterialTheme.colorScheme.surfaceBright,
-                                    shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd)
+                        } else if (isRootEnabled && !shellHasPermission) {
+                            // Root logic - try to run a command to trigger su prompt
+                            viewModel.setButtonRemapUseShizuku(true, context)
+                            com.sameerasw.essentials.utils.ShellUtils.runCommand(context, "id")
+                            if (com.sameerasw.essentials.utils.ShellUtils.hasPermission(context)) {
+                                ContextCompat.startForegroundService(
+                                    context,
+                                    Intent(context, InputEventListenerService::class.java)
                                 )
-                                .padding(12.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            val statusText =
-                                if (viewModel.shizukuDetectedDevicePath.value != null && shizukuStatus == ShizukuStatus.READY) {
-                                    stringResource(
-                                        R.string.shizuku_detected_prefix,
-                                        viewModel.shizukuDetectedDevicePath.value ?: ""
-                                    )
-                                } else {
-                                    stringResource(R.string.shizuku_status_prefix, shizukuStatus.name)
-                                }
-
-                            Text(
-                                text = statusText,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = if (shizukuStatus == ShizukuStatus.READY) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
-                                maxLines = 1,
-                                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
-                                modifier = Modifier.weight(1f)
-                            )
-                            if (shizukuStatus != ShizukuStatus.READY && shizukuStatus != ShizukuStatus.PERMISSION_NEEDED) {
-                                Button(
-                                    onClick = {
-                                        try {
-                                            val intent =
-                                                context.packageManager.getLaunchIntentForPackage("moe.shizuku.privileged.api")
-                                            if (intent != null) context.startActivity(intent)
-                                        } catch (_: Exception) {
-                                        }
-                                    },
-                                    modifier = Modifier.height(32.dp),
-                                    contentPadding = androidx.compose.foundation.layout.PaddingValues(
-                                        horizontal = 12.dp,
-                                        vertical = 0.dp
-                                    )
-                                ) {
-                                    Text(
-                                        stringResource(R.string.shizuku_open_button),
-                                        style = MaterialTheme.typography.labelSmall
-                                    )
-                                }
                             }
+                        } else {
+                            // Provider not running
+                            viewModel.setButtonRemapUseShizuku(true, context)
+                            val toastRes = if (isRootEnabled) R.string.root_not_available_toast else R.string.shizuku_not_running_toast
+                            android.widget.Toast.makeText(
+                                context,
+                                context.getString(toastRes),
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    } else {
+                        viewModel.setButtonRemapUseShizuku(false, context)
+                        context.stopService(Intent(context, InputEventListenerService::class.java))
+                    }
+                },
+                modifier = Modifier.highlight(highlightSetting == "shizuku_remap")
+            )
+
+            AnimatedVisibility(
+                visible = viewModel.isButtonRemapUseShizuku.value,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut()
+            ) {
+                // Status indicator
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            color = MaterialTheme.colorScheme.surfaceBright,
+                            shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd)
+                        )
+                        .padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    val shellAvailable = com.sameerasw.essentials.utils.ShellUtils.isAvailable(context)
+                    val shellPermission = com.sameerasw.essentials.utils.ShellUtils.hasPermission(context)
+                    
+                    val statusText = if (shellPermission && viewModel.shizukuDetectedDevicePath.value != null) {
+                        stringResource(
+                            R.string.shizuku_detected_prefix,
+                            viewModel.shizukuDetectedDevicePath.value ?: ""
+                        )
+                    } else if (isRootEnabled) {
+                        if (shellPermission) "Root Access: Granted" else if (shellAvailable) "Root Access: Found" else "Root Access: Not Found"
+                    } else {
+                        stringResource(R.string.shizuku_status_prefix, shizukuStatus.name)
+                    }
+
+                    Text(
+                        text = statusText,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = if (shellPermission) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
+                        maxLines = 1,
+                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f)
+                    )
+                    
+                    if (!shellPermission && !isRootEnabled && shizukuStatus != ShizukuStatus.READY && shizukuStatus != ShizukuStatus.PERMISSION_NEEDED) {
+                        Button(
+                            onClick = {
+                                try {
+                                    val intent =
+                                        context.packageManager.getLaunchIntentForPackage("moe.shizuku.privileged.api")
+                                    if (intent != null) context.startActivity(intent)
+                                } catch (_: Exception) {
+                                }
+                            },
+                            modifier = Modifier.height(32.dp),
+                            contentPadding = androidx.compose.foundation.layout.PaddingValues(
+                                horizontal = 12.dp,
+                                vertical = 0.dp
+                            )
+                        ) {
+                            Text(
+                                stringResource(R.string.shizuku_open_button),
+                                style = MaterialTheme.typography.labelSmall
+                            )
                         }
                     }
+                }
+            }
+        }
                 }
             }
         }
@@ -381,7 +407,6 @@ fun ButtonRemapSettingsUI(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-    }
 
     // Flashlight Options Bottom Sheet
     if (showFlashlightOptions) {
