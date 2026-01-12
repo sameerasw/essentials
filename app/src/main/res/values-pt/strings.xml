@@ -27,7 +27,7 @@
     <string name="app_lock_biometric_note">Another note, the biometric authentication prompt only lets you use STRONG secure class methods. Face unlock security methods in WEAK class in devices such as Pixel 7 will only be able to utilize the available other STRONG auth methods such as fingerprint or pin.</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Enable Button Remap</string>
-    <string name="button_remap_use_shizuku_title">Use Shizuku or Root or Root</string>
+    <string name="button_remap_use_shizuku_title">Use Shizuku or Root</string>
     <string name="button_remap_use_shizuku_desc">Works with screen off (Recommended)</string>
     <string name="shizuku_not_running_toast">Shizuku is not running</string>
     <string name="shizuku_detected_prefix">Detected %1$s</string>
@@ -339,7 +339,7 @@
     <string name="perm_shizuku_title">Shizuku</string>
     <string name="perm_shizuku_desc">Required for advanced commands. Install Shizuku from the Play Store.</string>
     <string name="perm_shizuku_install_action">Install Shizuku</string>
-    <string name="perm_shizuku_grant_title">Grant Permission</string>
+    <string name="perm_shizuku_grant_title">Shizuku permission</string>
     <string name="perm_shizuku_grant_desc">Required to run power-saving commands while maps is navigating.</string>
     <string name="perm_root_title">Root Access</string>
     <string name="perm_root_desc">Permissions required for system actions using Root privileges.</string>
