@@ -53,7 +53,7 @@
     <string name="action_take_screenshot">スクリーンショット</string>
     <string name="button_remap_screen_off_hint">画面がオフのときに、選択したボタンを長押しすると、割り当てられたアクションが実行されます。Pixelデバイスでは、システムの制限により、このアクションはAODがオンの場合にのみ実行されます。</string>
     <string name="button_remap_screen_on_hint">画面がオンのときに、選択したボタンを長押しすると、割り当てられたアクションがトリガーされます。</string>
-    <string name="flashlight_intensity_title">Flashlight Intensity</string>
+    <string name="flashlight_intensity_title">フラッシュライトの強さ</string>
     <string name="flashlight_fade_title">Fade in and out</string>
     <string name="flashlight_fade_desc">Smoothly toggle flashlight</string>
     <string name="flashlight_global_title">Global controls</string>
