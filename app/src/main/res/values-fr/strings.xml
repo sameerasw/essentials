@@ -149,6 +149,9 @@
     <string name="tile_flashlight">Lampe-torche</string>
     <string name="tile_app_freezing">Gel d\'applis</string>
     <string name="tile_flashlight_pulse">Flashlight Pulse</string>
+    <string name="nfc_tile_label">NFC</string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
     <!-- Screen Locked Security -->
     <string name="screen_locked_security_title">Sécurité d\'écran verrouillé</string>
     <string name="screen_locked_security_dialog_title">Screen Locked Security</string>
