@@ -150,6 +150,9 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string name="tile_flashlight">Flashlight</string>
     <string name="tile_app_freezing">App Freezing</string>
     <string name="tile_flashlight_pulse">Flashlight Pulse</string>
+    <string name="nfc_tile_label">NFC</string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
     <!-- Screen Locked Security -->
     <string name="screen_locked_security_title">Screen locked security</string>
     <string name="screen_locked_security_dialog_title">Screen Locked Security</string>
