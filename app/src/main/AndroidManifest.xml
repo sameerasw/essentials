@@ -379,6 +379,15 @@
             android:foregroundServiceType="specialUse" />
 
         <service
+            android:name=".services.automation.AutomationService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property android:name="android.app.property.FOREGROUND_SERVICE_TYPE_SPECIAL_USE_DESCRIPTION"
+                      android:value="Automation Service" /> 
+        </service>
+
+        <service
             android:name=".services.tiles.AppFreezingTileService"
             android:icon="@drawable/rounded_mode_cool_24"
             android:label="@string/app_freezing_tile_label"

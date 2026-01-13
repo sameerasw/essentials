@@ -451,6 +451,10 @@
     <string name="action_delete">Delete</string>
     <string name="action_enable">Enable</string>
     <string name="action_disable">Disable</string>
+    
+    <string name="automation_service_channel_name">Automation Service</string>
+    <string name="automation_service_running_title">Automations Active</string>
+    <string name="automation_service_running_desc">Monitoring system events for your automations</string>
 
     <!-- About Section -->
     <string name="app_developer_name">Sameera Wijerathna</string>
