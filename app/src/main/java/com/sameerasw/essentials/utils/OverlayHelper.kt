@@ -58,8 +58,8 @@ object OverlayHelper {
     fun createOverlayView(
         context: Context,
         color: Int,
-        strokeDp: Int = STROKE_DP,
-        cornerRadiusDp: Int = CORNER_RADIUS_DP,
+        strokeDp: Float = STROKE_DP.toFloat(),
+        cornerRadiusDp: Float = CORNER_RADIUS_DP.toFloat(),
         style: NotificationLightingStyle = NotificationLightingStyle.STROKE,
         glowSides: Set<NotificationLightingSide> = setOf(NotificationLightingSide.LEFT, NotificationLightingSide.RIGHT),
         indicatorScale: Float = 1.0f,
@@ -332,9 +332,10 @@ object OverlayHelper {
     fun showPreview(
         view: View, 
         style: NotificationLightingStyle, 
-        strokeWidthDp: Int,
+        strokeWidthDp: Float,
         indicatorX: Float = 50f,
-        indicatorY: Float = 2f
+        indicatorY: Float = 2f,
+        indicatorScale: Float = 1.0f
     ) {
         if (style == NotificationLightingStyle.GLOW) {
             val vg = view as? ViewGroup
@@ -362,6 +363,8 @@ object OverlayHelper {
                 
                 translationX = (parentWidth * (indicatorX / 100f)) - (parentWidth / 2f)
                 translationY = (parentHeight * (indicatorY / 100f)) - (parentHeight / 2f)
+                scaleX = indicatorScale
+                scaleY = indicatorScale
             }
         }
         
@@ -427,9 +430,10 @@ object OverlayHelper {
         maxPulses: Int = 3,
         pulseDurationMillis: Long = 3000,
         style: NotificationLightingStyle = NotificationLightingStyle.STROKE,
-        strokeWidthDp: Int = STROKE_DP,
+        strokeWidthDp: Float = STROKE_DP.toFloat(),
         indicatorX: Float = 50f,
         indicatorY: Float = 2f,
+        indicatorScale: Float = 1.0f,
         onAnimationEnd: (() -> Unit)? = null
     ) {
         if (style == NotificationLightingStyle.GLOW) {
@@ -438,7 +442,7 @@ object OverlayHelper {
         }
         
         if (style == NotificationLightingStyle.INDICATOR) {
-            pulseIndicatorOverlay(view as ViewGroup, pulseDurationMillis, indicatorX, indicatorY, onAnimationEnd)
+            pulseIndicatorOverlay(view as ViewGroup, pulseDurationMillis, indicatorX, indicatorY, indicatorScale, onAnimationEnd)
             return
         }
 
@@ -488,7 +492,7 @@ object OverlayHelper {
         view: ViewGroup,
         maxPulses: Int,
         pulseDurationMillis: Long,
-        strokeWidthDp: Int,
+        strokeWidthDp: Float,
         onAnimationEnd: (() -> Unit)?
     ) {
         val leftGlow = view.findViewWithTag<View>("left_glow")
@@ -560,6 +564,7 @@ object OverlayHelper {
         durationMillis: Long,
         indicatorX: Float,
         indicatorY: Float,
+        indicatorScale: Float,
         onAnimationEnd: (() -> Unit)? = null
     ) {
         val indicator = view.findViewWithTag<View>("loading_indicator") ?: return
@@ -573,8 +578,8 @@ object OverlayHelper {
         view.alpha = 1f
 
         indicator.animate()
-            .scaleX(1.0f)
-            .scaleY(1.0f)
+            .scaleX(indicatorScale)
+            .scaleY(indicatorScale)
             .setDuration(400) // Slightly slower for the morphing effect to catch the eye
             .setInterpolator(AccelerateDecelerateInterpolator())
             .setListener(object : AnimatorListenerAdapter() {

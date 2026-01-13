@@ -26,7 +26,8 @@ object SearchRegistry {
                     category = featureCategory,
                     icon = feature.iconRes,
                     featureKey = feature.id,
-                    keywords = listOf(context.getString(R.string.keyword_feature), context.getString(R.string.keyword_settings))
+                    keywords = listOf(context.getString(R.string.keyword_feature), context.getString(R.string.keyword_settings)),
+                    isBeta = feature.isBeta
                 )
             )
 
@@ -41,7 +42,8 @@ object SearchRegistry {
                         featureKey = feature.id,
                         parentFeature = featureTitle,
                         targetSettingHighlightKey = setting.targetSettingHighlightKey,
-                        keywords = if (setting.keywordRes != 0) context.resources.getStringArray(setting.keywordRes).toList() else emptyList()
+                        keywords = if (setting.keywordRes != 0) context.resources.getStringArray(setting.keywordRes).toList() else emptyList(),
+                        isBeta = feature.isBeta
                     )
                 )
             }

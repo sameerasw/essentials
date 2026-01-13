@@ -41,6 +41,7 @@ import com.sameerasw.essentials.services.tiles.FlashlightTileService
 import com.sameerasw.essentials.services.tiles.AppFreezingTileService
 import com.sameerasw.essentials.services.tiles.AppLockTileService
 import com.sameerasw.essentials.services.tiles.FlashlightPulseTileService
+import com.sameerasw.essentials.services.tiles.NfcTileService
 import com.sameerasw.essentials.ui.modifiers.highlight
 
 data class QSTileInfo(
@@ -72,7 +73,8 @@ fun QuickSettingsTilesSettingsUI(
         QSTileInfo(R.string.tile_mono_audio, R.drawable.rounded_headphones_24, MonoAudioTileService::class.java),
         QSTileInfo(R.string.tile_flashlight, R.drawable.rounded_flashlight_on_24, FlashlightTileService::class.java),
         QSTileInfo(R.string.tile_app_freezing, R.drawable.rounded_mode_cool_24, AppFreezingTileService::class.java),
-        QSTileInfo(R.string.tile_flashlight_pulse, R.drawable.outline_backlight_high_24, FlashlightPulseTileService::class.java)
+        QSTileInfo(R.string.tile_flashlight_pulse, R.drawable.outline_backlight_high_24, FlashlightPulseTileService::class.java),
+        QSTileInfo(R.string.nfc_tile_label, R.drawable.rounded_nfc_24, NfcTileService::class.java)
     )
 
     Column(

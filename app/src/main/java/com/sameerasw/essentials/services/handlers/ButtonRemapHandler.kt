@@ -51,7 +51,7 @@ class ButtonRemapHandler(
         // Typically AOD check is: Display.STATE_DOZE or STATE_DOZE_SUSPEND
         val isAod = isAodShowing()
 
-        val shizukuReady = ShizukuUtils.isShizukuAvailable() && ShizukuUtils.hasPermission()
+        val shellReady = com.sameerasw.essentials.utils.ShellUtils.isAvailable(service) && com.sameerasw.essentials.utils.ShellUtils.hasPermission(service)
         val devicePathDetected = !prefs.getString("shizuku_detected_device_path", null).isNullOrEmpty()
 
         // If using Shizuku and screen off, verify if we should INTERCEPT or let Shizuku handle it? 
@@ -66,7 +66,9 @@ class ButtonRemapHandler(
         // NO, the return true means "CONSUME". So if Shizuku is handling it, we consume it here to prevent default volume action?
         // Let's stick to the original logic flow.
         
-        if (isButtonRemapUseShizuku && isButtonRemapEnabled && shizukuReady && devicePathDetected && !isScreenInteractive && !isAod) {
+        val useShell = isButtonRemapUseShizuku || com.sameerasw.essentials.utils.ShellUtils.isRootEnabled(service)
+
+        if (useShell && isButtonRemapEnabled && shellReady && devicePathDetected && !isScreenInteractive && !isAod) {
              val isTorchControl = flashlightHandler.isTorchOn && (isAdjustEnabled || isGlobalEnabled) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
              
              val suffix = "_off"

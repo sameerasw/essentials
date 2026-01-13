@@ -93,7 +93,7 @@ class MainViewModel : ViewModel() {
     val notificationLightingStyle = mutableStateOf(NotificationLightingStyle.STROKE)
     val notificationLightingColorMode = mutableStateOf(NotificationLightingColorMode.SYSTEM)
     val notificationLightingCustomColor = mutableIntStateOf(0xFF6200EE.toInt()) // Default purple
-    val notificationLightingPulseCount = mutableIntStateOf(1)
+    val notificationLightingPulseCount = mutableStateOf(1f)
     val notificationLightingPulseDuration = mutableStateOf(3000f)
     val notificationLightingIndicatorX = mutableStateOf(50f) // 0-100 percentage
     val notificationLightingIndicatorY = mutableStateOf(2f)  // 0-100 percentage, default top
@@ -119,6 +119,9 @@ class MainViewModel : ViewModel() {
     val isAutoUpdateEnabled = mutableStateOf(true)
     val isUpdateNotificationEnabled = mutableStateOf(true)
     val isPreReleaseCheckEnabled = mutableStateOf(false)
+    val isRootEnabled = mutableStateOf(false)
+    val isRootAvailable = mutableStateOf(false)
+    val isRootPermissionGranted = mutableStateOf(false)
     private var lastUpdateCheckTime: Long = 0
     private lateinit var settingsRepository: SettingsRepository
     private lateinit var updateRepository: UpdateRepository
@@ -143,6 +146,7 @@ class MainViewModel : ViewModel() {
             SettingsRepository.KEY_FREEZE_AUTO_EXCLUDED_APPS -> {
                 freezeAutoExcludedApps.value = settingsRepository.getFreezeAutoExcludedApps()
             }
+            SettingsRepository.KEY_USE_ROOT -> isRootEnabled.value = settingsRepository.getBoolean(key)
             SettingsRepository.KEY_CHECK_PRE_RELEASES_ENABLED -> isPreReleaseCheckEnabled.value = settingsRepository.getBoolean(key)
             SettingsRepository.KEY_DEVELOPER_MODE_ENABLED -> {
                 isDeveloperModeEnabled.value = settingsRepository.getBoolean(key)
@@ -178,6 +182,9 @@ class MainViewModel : ViewModel() {
         isBackgroundLocationPermissionGranted.value = PermissionUtils.hasBackgroundLocationPermission(context)
         isFullScreenIntentPermissionGranted.value = PermissionUtils.canUseFullScreenIntent(context)
         
+        isRootAvailable.value = com.sameerasw.essentials.utils.RootUtils.isRootAvailable()
+        isRootPermissionGranted.value = com.sameerasw.essentials.utils.RootUtils.isRootPermissionGranted()
+        
         settingsRepository.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener)
         settingsRepository.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
         
@@ -194,10 +201,11 @@ class MainViewModel : ViewModel() {
         notificationLightingStyle.value = settingsRepository.getNotificationLightingStyle()
         notificationLightingColorMode.value = settingsRepository.getNotificationLightingColorMode()
         notificationLightingCustomColor.intValue = settingsRepository.getInt(SettingsRepository.KEY_EDGE_LIGHTING_CUSTOM_COLOR, 0xFF6200EE.toInt())
-        notificationLightingPulseCount.intValue = settingsRepository.getInt(SettingsRepository.KEY_EDGE_LIGHTING_PULSE_COUNT, 1)
+        notificationLightingPulseCount.value = settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_PULSE_COUNT, 1f)
         notificationLightingPulseDuration.value = settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_PULSE_DURATION, 3000f)
         notificationLightingIndicatorX.value = settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_INDICATOR_X, 50f)
         notificationLightingIndicatorY.value = settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_INDICATOR_Y, 2f)
+        isRootEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_USE_ROOT)
         notificationLightingIndicatorScale.value = settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_INDICATOR_SCALE, 1.0f)
         notificationLightingGlowSides.value = settingsRepository.getNotificationLightingGlowSides()
         
@@ -301,6 +309,12 @@ class MainViewModel : ViewModel() {
     fun setDeveloperModeEnabled(enabled: Boolean, context: Context) {
         isDeveloperModeEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_DEVELOPER_MODE_ENABLED, enabled)
+    }
+
+    fun setRootEnabled(enabled: Boolean, context: Context) {
+        settingsRepository.putBoolean(SettingsRepository.KEY_USE_ROOT, enabled)
+        isRootEnabled.value = enabled
+        check(context)
     }
 
     fun checkForUpdates(context: Context, manual: Boolean = false) {
@@ -479,9 +493,9 @@ class MainViewModel : ViewModel() {
         settingsRepository.putInt(SettingsRepository.KEY_FREEZE_LOCK_DELAY_INDEX, index)
     }
 
-    fun saveNotificationLightingPulseCount(context: Context, count: Int) {
-        notificationLightingPulseCount.intValue = count
-        settingsRepository.putInt(SettingsRepository.KEY_EDGE_LIGHTING_PULSE_COUNT, count)
+    fun saveNotificationLightingPulseCount(context: Context, count: Float) {
+        notificationLightingPulseCount.value = count
+        settingsRepository.putFloat(SettingsRepository.KEY_EDGE_LIGHTING_PULSE_COUNT, count)
     }
 
     fun saveNotificationLightingPulseDuration(context: Context, duration: Float) {
@@ -501,8 +515,8 @@ class MainViewModel : ViewModel() {
 
     // Helper to show the overlay service for testing/triggering
     fun triggerNotificationLighting(context: Context) {
-        val radius = settingsRepository.getInt(SettingsRepository.KEY_EDGE_LIGHTING_CORNER_RADIUS, 20)
-        val thickness = settingsRepository.getInt(SettingsRepository.KEY_EDGE_LIGHTING_STROKE_THICKNESS, 8)
+        val radius = settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_CORNER_RADIUS, 20f)
+        val thickness = settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_STROKE_THICKNESS, 8f)
         try {
             val intent = Intent(context, com.sameerasw.essentials.services.NotificationLightingService::class.java).apply {
                 putExtra("corner_radius_dp", radius)
@@ -511,7 +525,7 @@ class MainViewModel : ViewModel() {
                 putExtra("style", notificationLightingStyle.value.name)
                 putExtra("color_mode", notificationLightingColorMode.value.name)
                 putExtra("custom_color", notificationLightingCustomColor.intValue)
-                putExtra("pulse_count", notificationLightingPulseCount.intValue)
+                putExtra("pulse_count", notificationLightingPulseCount.value.toInt())
                 putExtra("pulse_duration", notificationLightingPulseDuration.value.toLong())
                 putExtra("glow_sides", notificationLightingGlowSides.value.map { it.name }.toTypedArray())
                 putExtra("indicator_x", notificationLightingIndicatorX.value)
@@ -525,7 +539,7 @@ class MainViewModel : ViewModel() {
     }
 
     // Helper to show the overlay service with custom corner radius
-    fun triggerNotificationLightingWithRadius(context: Context, cornerRadiusDp: Int) {
+    fun triggerNotificationLightingWithRadius(context: Context, cornerRadiusDp: Float) {
         try {
             val intent = Intent(context, com.sameerasw.essentials.services.NotificationLightingService::class.java).apply {
                 putExtra("corner_radius_dp", cornerRadiusDp)
@@ -546,7 +560,7 @@ class MainViewModel : ViewModel() {
     }
 
     // Helper to show the overlay service with custom corner radius and stroke thickness
-    fun triggerNotificationLightingWithRadiusAndThickness(context: Context, cornerRadiusDp: Int, strokeThicknessDp: Int) {
+    fun triggerNotificationLightingWithRadiusAndThickness(context: Context, cornerRadiusDp: Float, strokeThicknessDp: Float) {
         try {
             val intent = Intent(context, com.sameerasw.essentials.services.NotificationLightingService::class.java).apply {
                 putExtra("corner_radius_dp", cornerRadiusDp)
@@ -560,6 +574,25 @@ class MainViewModel : ViewModel() {
                 putExtra("indicator_x", notificationLightingIndicatorX.value)
                 putExtra("indicator_y", notificationLightingIndicatorY.value)
                 putExtra("indicator_scale", notificationLightingIndicatorScale.value)
+            }
+            context.startService(intent)
+        } catch (e: Exception) {
+            // ignore
+        }
+    }
+
+    
+    fun triggerNotificationLightingForIndicator(context: Context, x: Float, y: Float, scale: Float) {
+        try {
+            val intent = Intent(context, com.sameerasw.essentials.services.NotificationLightingService::class.java).apply {
+                putExtra("indicator_x", x)
+                putExtra("indicator_y", y)
+                putExtra("indicator_scale", scale)
+                putExtra("is_preview", true)
+                putExtra("ignore_screen_state", true)
+                putExtra("style", NotificationLightingStyle.INDICATOR.name)
+                putExtra("color_mode", notificationLightingColorMode.value.name)
+                putExtra("custom_color", notificationLightingCustomColor.intValue)
             }
             context.startService(intent)
         } catch (e: Exception) {
@@ -733,21 +766,21 @@ class MainViewModel : ViewModel() {
     }
 
     // Notification Lighting Corner Radius Methods
-    fun saveNotificationLightingCornerRadius(context: Context, radiusDp: Int) {
-        settingsRepository.putInt(SettingsRepository.KEY_EDGE_LIGHTING_CORNER_RADIUS, radiusDp)
+    fun saveNotificationLightingCornerRadius(context: Context, radiusDp: Float) {
+        settingsRepository.putFloat(SettingsRepository.KEY_EDGE_LIGHTING_CORNER_RADIUS, radiusDp)
     }
 
-    fun loadNotificationLightingCornerRadius(context: Context): Int {
-        return settingsRepository.getInt(SettingsRepository.KEY_EDGE_LIGHTING_CORNER_RADIUS, 20)
+    fun loadNotificationLightingCornerRadius(context: Context): Float {
+        return settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_CORNER_RADIUS, 20f)
     }
 
     // Notification Lighting Stroke Thickness Methods
-    fun saveNotificationLightingStrokeThickness(context: Context, thicknessDp: Int) {
-        settingsRepository.putInt(SettingsRepository.KEY_EDGE_LIGHTING_STROKE_THICKNESS, thicknessDp)
+    fun saveNotificationLightingStrokeThickness(context: Context, thicknessDp: Float) {
+        settingsRepository.putFloat(SettingsRepository.KEY_EDGE_LIGHTING_STROKE_THICKNESS, thicknessDp)
     }
 
-    fun loadNotificationLightingStrokeThickness(context: Context): Int {
-        return settingsRepository.getInt(SettingsRepository.KEY_EDGE_LIGHTING_STROKE_THICKNESS, 8)
+    fun loadNotificationLightingStrokeThickness(context: Context): Float {
+        return settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_STROKE_THICKNESS, 8f)
     }
 
     // Dynamic Night Light App Selection Methods
@@ -866,7 +899,7 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val isFrozen = com.sameerasw.essentials.utils.FreezeManager.isAppFrozen(context, packageName)
             if (isFrozen) {
-                com.sameerasw.essentials.utils.FreezeManager.unfreezeApp(packageName)
+                com.sameerasw.essentials.utils.FreezeManager.unfreezeApp(context, packageName)
                 // Small delay to ensure system registers the change before launch
                 delay(100)
             }

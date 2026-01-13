@@ -4,7 +4,7 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.os.Build
 import android.service.quicksettings.Tile
-import com.sameerasw.essentials.AppFreezingActivity
+import com.sameerasw.essentials.ui.activities.AppFreezingActivity
 
 class AppFreezingTileService : BaseTileService() {
 

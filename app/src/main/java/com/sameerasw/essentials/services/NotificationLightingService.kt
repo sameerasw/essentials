@@ -28,8 +28,8 @@ class NotificationLightingService : Service() {
 
     private var windowManager: WindowManager? = null
     private val overlayViews = mutableListOf<View>()
-    private var cornerRadiusDp: Int = OverlayHelper.CORNER_RADIUS_DP
-    private var strokeThicknessDp: Int = OverlayHelper.STROKE_DP
+    private var cornerRadiusDp: Float = OverlayHelper.CORNER_RADIUS_DP.toFloat()
+    private var strokeThicknessDp: Float = OverlayHelper.STROKE_DP.toFloat()
     private var isPreview: Boolean = false
     private var colorMode: NotificationLightingColorMode = NotificationLightingColorMode.SYSTEM
     private var customColor: Int = 0
@@ -94,10 +94,10 @@ class NotificationLightingService : Service() {
         }
 
         // Get corner radius from intent, default to OverlayHelper.CORNER_RADIUS_DP
-        cornerRadiusDp = intent?.getIntExtra("corner_radius_dp", OverlayHelper.CORNER_RADIUS_DP)
-            ?: OverlayHelper.CORNER_RADIUS_DP
-        strokeThicknessDp = intent?.getIntExtra("stroke_thickness_dp", OverlayHelper.STROKE_DP)
-            ?: OverlayHelper.STROKE_DP
+        cornerRadiusDp = intent?.getFloatExtra("corner_radius_dp", OverlayHelper.CORNER_RADIUS_DP.toFloat())
+            ?: OverlayHelper.CORNER_RADIUS_DP.toFloat()
+        strokeThicknessDp = intent?.getFloatExtra("stroke_thickness_dp", OverlayHelper.STROKE_DP.toFloat())
+            ?: OverlayHelper.STROKE_DP.toFloat()
         isPreview = intent?.getBooleanExtra("is_preview", false) ?: false
         val colorModeName = intent?.getStringExtra("color_mode")
         colorMode = NotificationLightingColorMode.valueOf(colorModeName ?: NotificationLightingColorMode.SYSTEM.name)
@@ -249,7 +249,7 @@ class NotificationLightingService : Service() {
                 overlayViews.add(overlay)
                 if (isPreview) {
                     // For preview mode, show static preview
-                    OverlayHelper.showPreview(overlay, edgeLightingStyle, strokeThicknessDp, indicatorX, indicatorY)
+                    OverlayHelper.showPreview(overlay, edgeLightingStyle, strokeThicknessDp, indicatorX, indicatorY, indicatorScale)
                 } else {
                     // Normal mode: pulse the overlay
                     OverlayHelper.pulseOverlay(
@@ -259,7 +259,8 @@ class NotificationLightingService : Service() {
                         style = edgeLightingStyle,
                         strokeWidthDp = strokeThicknessDp,
                         indicatorX = indicatorX,
-                        indicatorY = indicatorY
+                        indicatorY = indicatorY,
+                        indicatorScale = indicatorScale
                     ) {
                         // When pulsing completes, remove the overlay
                         OverlayHelper.fadeOutAndRemoveOverlay(windowManager, overlay, overlayViews) {

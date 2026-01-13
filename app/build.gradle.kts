@@ -21,8 +21,8 @@ android {
         applicationId = "com.sameerasw.essentials"
         minSdk = 24
         targetSdk = 36
-        versionCode = 17
-        versionName = "8.3"
+        versionCode = 18
+        versionName = "8.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -70,6 +70,7 @@ dependencies {
     implementation(libs.androidx.ui)
     implementation(libs.androidx.compose.foundation)
     implementation(libs.material)
+    implementation(libs.androidx.material3)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -97,4 +98,7 @@ dependencies {
 
     // Google Maps & Location
     implementation(libs.play.services.location)
+    
+    // Kotlin Reflect for dynamic sealed class serialization
+    implementation(kotlin("reflect"))
 }

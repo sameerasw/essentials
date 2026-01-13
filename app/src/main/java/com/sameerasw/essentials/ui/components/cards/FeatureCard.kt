@@ -39,7 +39,8 @@ fun FeatureCard(
     showToggle: Boolean = true,
     onDisabledToggleClick: (() -> Unit)? = null,
     description: Any? = null, // Can be Int or String
-    descriptionOverride: String? = null // For cases where we search and prepend parent feature name
+    descriptionOverride: String? = null, // For cases where we search and prepend parent feature name
+    isBeta: Boolean = false
 ) {
     val view = LocalView.current
 
@@ -56,6 +57,12 @@ fun FeatureCard(
             .fillMaxWidth()
             .padding(16.dp)) {
 
+            val resolvedTitle = when (title) {
+                is Int -> stringResource(id = title)
+                is String -> title
+                else -> ""
+            }
+
             Row(
                 modifier = Modifier.align(Alignment.CenterStart),
                 verticalAlignment = Alignment.CenterVertically,
@@ -64,11 +71,6 @@ fun FeatureCard(
                 if (iconRes != null) {
 
                     Spacer(modifier = Modifier.size(1.dp))
-                    val resolvedTitle = when (title) {
-                        is Int -> stringResource(id = title)
-                        is String -> title
-                        else -> ""
-                    }
                     Icon(
                         painter = painterResource(id = iconRes),
                         contentDescription = resolvedTitle,
@@ -81,12 +83,27 @@ fun FeatureCard(
                     modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
-                    val resolvedTitle = when (title) {
-                        is Int -> stringResource(id = title)
-                        is String -> title
-                        else -> ""
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(text = resolvedTitle)
+                        if (isBeta) {
+                            Card(
+                                colors = CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.background
+                                ),
+                                shape = MaterialTheme.shapes.extraSmall
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.label_beta),
+                                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        }
                     }
-                    Text(text = resolvedTitle)
                     if (descriptionOverride != null) {
                         Text(
                             text = descriptionOverride,

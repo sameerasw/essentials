@@ -1,8 +1,10 @@
 package com.sameerasw.essentials.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -19,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,20 +50,15 @@ fun ReusableTopAppBar(
     hasHelp: Boolean = false,
     scrollBehavior: TopAppBarScrollBehavior? = null,
     subtitle: Any? = null, // Can be Int or String
+    isBeta: Boolean = false,
+    backIconRes: Int = R.drawable.rounded_arrow_back_24,
+    isSmall: Boolean = false,
     actions: @Composable RowScope.() -> Unit = {}
 ) {
     val collapsedFraction = scrollBehavior?.state?.collapsedFraction ?: 0f
     collapsedFraction > 0.5f
 
-    LargeFlexibleTopAppBar(
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer
-        ),
-        modifier = Modifier.padding(horizontal = 8.dp),
-        expandedHeight = if (subtitle != null) 200.dp else 160.dp,
-        collapsedHeight = 64.dp,
-
-        title = {
+    val titleContent: @Composable () -> Unit = {
             val resolvedTitle = when (title) {
                 is Int -> stringResource(id = title)
                 is String -> title
@@ -69,11 +67,31 @@ fun ReusableTopAppBar(
             if (subtitle != null) {
                 // Show title and subtitle
                 Column {
-                    Text(
-                        resolvedTitle,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            resolvedTitle,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        if (isBeta) {
+                            androidx.compose.material3.Card(
+                                colors = androidx.compose.material3.CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.primary
+                                ),
+                                shape = MaterialTheme.shapes.extraSmall
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.label_beta),
+                                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onPrimary
+                                )
+                            }
+                        }
+                    }
                     val resolvedSubtitle = when (subtitle) {
                         is Int -> stringResource(id = subtitle)
                         is String -> subtitle
@@ -89,14 +107,35 @@ fun ReusableTopAppBar(
                 }
             } else {
                 // Show only title
-                Text(
-                    resolvedTitle,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        resolvedTitle,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    if (isBeta) {
+                        androidx.compose.material3.Card(
+                            colors = androidx.compose.material3.CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.background
+                            ),
+                            shape = MaterialTheme.shapes.extraSmall
+                        ) {
+                            Text(
+                                text = stringResource(R.string.label_beta),
+                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+                }
             }
-        },
-        navigationIcon = {
+    }
+
+    val navigationIconContent: @Composable () -> Unit = {
             if (hasBack) {
                 val view = LocalView.current
                 IconButton(
@@ -110,14 +149,15 @@ fun ReusableTopAppBar(
                     modifier = Modifier.size(48.dp)
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.rounded_arrow_back_24),
+                        painter = painterResource(id = backIconRes),
                         contentDescription = stringResource(R.string.action_back),
                         modifier = Modifier.size(32.dp)
                     )
                 }
             }
-        },
-        actions = {
+    }
+
+    val actionsContent: @Composable RowScope.() -> Unit = {
             actions()
             
             if (hasHelp) {
@@ -196,7 +236,31 @@ fun ReusableTopAppBar(
                     )
                 }
             }
-        },
-        scrollBehavior = scrollBehavior
-    )
+    }
+
+    if (isSmall) {
+        TopAppBar(
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainer
+            ),
+            modifier = Modifier.padding(horizontal = 8.dp),
+            title = titleContent,
+            navigationIcon = navigationIconContent,
+            actions = actionsContent,
+            scrollBehavior = scrollBehavior
+        )
+    } else {
+        LargeFlexibleTopAppBar(
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainer
+            ),
+            modifier = Modifier.padding(horizontal = 8.dp),
+            expandedHeight = if (subtitle != null) 200.dp else 160.dp,
+            collapsedHeight = 64.dp,
+            title = titleContent,
+            navigationIcon = navigationIconContent,
+            actions = actionsContent,
+            scrollBehavior = scrollBehavior
+        )
+    }
 }

@@ -189,7 +189,7 @@ class FeatureSettingsActivity : FragmentActivity() {
                         "Snooze system notifications" -> !isNotificationListenerEnabled
                         "Screen locked security" -> !isAccessibilityEnabled || !isWriteSecureSettingsEnabled || !viewModel.isDeviceAdminEnabled.value
                         "App lock" -> !isAccessibilityEnabled
-                        "Freeze" -> !viewModel.isShizukuAvailable.value || !viewModel.isShizukuPermissionGranted.value
+                        "Freeze" -> !com.sameerasw.essentials.utils.ShellUtils.hasPermission(context)
                         "Location reached" -> !viewModel.isLocationPermissionGranted.value || !viewModel.isBackgroundLocationPermissionGranted.value
                         else -> false
                     }
@@ -376,17 +376,32 @@ class FeatureSettingsActivity : FragmentActivity() {
                                 isGranted = isAccessibilityEnabled
                             )
                         )
-                        "Freeze" -> listOf(
-                            PermissionItem(
-                                iconRes = R.drawable.rounded_mode_cool_24,
-                                title = R.string.perm_shizuku_title,
-                                description = R.string.perm_shizuku_desc,
-                                dependentFeatures = PermissionRegistry.getFeatures("SHIZUKU"),
-                                actionLabel = R.string.perm_action_grant,
-                                action = { viewModel.requestShizukuPermission() },
-                                isGranted = viewModel.isShizukuPermissionGranted.value
+                        "Freeze" -> {
+                            val isRootEnabled = com.sameerasw.essentials.utils.ShellUtils.isRootEnabled(context)
+                            listOf(
+                                if (isRootEnabled) {
+                                    PermissionItem(
+                                        iconRes = R.drawable.rounded_numbers_24,
+                                        title = R.string.perm_root_title,
+                                        description = R.string.perm_root_desc,
+                                        dependentFeatures = PermissionRegistry.getFeatures("ROOT"),
+                                        actionLabel = R.string.perm_action_grant,
+                                        action = { viewModel.check(context) },
+                                        isGranted = viewModel.isRootPermissionGranted.value
+                                    )
+                                } else {
+                                    PermissionItem(
+                                        iconRes = R.drawable.rounded_mode_cool_24,
+                                        title = R.string.perm_shizuku_title,
+                                        description = R.string.perm_shizuku_desc,
+                                        dependentFeatures = PermissionRegistry.getFeatures("SHIZUKU"),
+                                        actionLabel = R.string.perm_action_grant,
+                                        action = { viewModel.requestShizukuPermission() },
+                                        isGranted = viewModel.isShizukuPermissionGranted.value
+                                    )
+                                }
                             )
-                        )
+                        }
                         "Location reached" -> listOf(
                             PermissionItem(
                                 iconRes = R.drawable.rounded_navigation_24,
@@ -431,7 +446,8 @@ class FeatureSettingsActivity : FragmentActivity() {
                             hasSearch = false,
                             onBackClick = { finish() },
                             scrollBehavior = scrollBehavior,
-                            subtitle = if (featureObj != null) stringResource(featureObj.description) else ""
+                            subtitle = if (featureObj != null) stringResource(featureObj.description) else "",
+                            isBeta = featureObj?.isBeta ?: false
                         )
                     },
                     floatingActionButton = {

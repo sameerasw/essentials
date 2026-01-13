@@ -72,6 +72,9 @@ fun SetupFeatures(
     val isNotificationListenerEnabled by viewModel.isNotificationListenerEnabled
     val isOverlayPermissionGranted by viewModel.isOverlayPermissionGranted
     val isNotificationLightingAccessibilityEnabled by viewModel.isNotificationLightingAccessibilityEnabled
+    val isRootEnabled by viewModel.isRootEnabled
+    val isRootPermissionGranted by viewModel.isRootPermissionGranted
+    val isRootAvailable by viewModel.isRootAvailable
     viewModel.isButtonRemapEnabled.value
     viewModel.isDynamicNightLightEnabled.value
 
@@ -80,35 +83,54 @@ fun SetupFeatures(
 
     fun buildMapsPowerSavingPermissionItems(): List<PermissionItem> {
         val items = mutableListOf<PermissionItem>()
-        if (!isShizukuAvailable) {
-            items.add(
-                PermissionItem(
-                    iconRes = R.drawable.rounded_adb_24,
-                    title = R.string.perm_shizuku_title,
-                    description = R.string.perm_shizuku_desc,
-                    dependentFeatures = PermissionRegistry.getFeatures("SHIZUKU"),
-                    actionLabel = R.string.perm_shizuku_install_action,
-                    action = {
-                        val intent = Intent(Intent.ACTION_VIEW,
-                            "https://play.google.com/store/apps/details?id=moe.shizuku.privileged.api".toUri())
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        context.startActivity(intent)
-                    },
-                    isGranted = isShizukuAvailable
+
+        if (isRootEnabled) {
+            if (!isRootPermissionGranted) {
+                items.add(
+                    PermissionItem(
+                        iconRes = R.drawable.rounded_security_24,
+                        title = R.string.perm_root_title,
+                        description = R.string.perm_root_desc,
+                        dependentFeatures = PermissionRegistry.getFeatures("ROOT"),
+                        actionLabel = R.string.perm_action_grant,
+                        action = { 
+                            viewModel.isRootPermissionGranted.value = com.sameerasw.essentials.utils.RootUtils.isRootPermissionGranted()
+                        },
+                        isGranted = isRootPermissionGranted
+                    )
                 )
-            )
-        } else if (!isShizukuPermissionGranted) {
-            items.add(
-                PermissionItem(
-                    iconRes = R.drawable.rounded_adb_24,
-                    title = R.string.perm_shizuku_grant_title,
-                    description = R.string.perm_shizuku_grant_desc,
-                    dependentFeatures = PermissionRegistry.getFeatures("SHIZUKU"),
-                    actionLabel = R.string.perm_action_grant,
-                    action = { viewModel.requestShizukuPermission() },
-                    isGranted = isShizukuPermissionGranted
+            }
+        } else {
+            if (!isShizukuAvailable) {
+                items.add(
+                    PermissionItem(
+                        iconRes = R.drawable.rounded_adb_24,
+                        title = R.string.perm_shizuku_title,
+                        description = R.string.perm_shizuku_desc,
+                        dependentFeatures = PermissionRegistry.getFeatures("SHIZUKU"),
+                        actionLabel = R.string.perm_shizuku_install_action,
+                        action = {
+                            val intent = Intent(Intent.ACTION_VIEW,
+                                "https://play.google.com/store/apps/details?id=moe.shizuku.privileged.api".toUri())
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            context.startActivity(intent)
+                        },
+                        isGranted = isShizukuAvailable
+                    )
                 )
-            )
+            } else if (!isShizukuPermissionGranted) {
+                items.add(
+                    PermissionItem(
+                        iconRes = R.drawable.rounded_adb_24,
+                        title = R.string.perm_shizuku_grant_title,
+                        description = R.string.perm_shizuku_grant_desc,
+                        dependentFeatures = PermissionRegistry.getFeatures("SHIZUKU"),
+                        actionLabel = R.string.perm_action_grant,
+                        action = { viewModel.requestShizukuPermission() },
+                        isGranted = isShizukuPermissionGranted
+                    )
+                )
+            }
         }
 
         if (!isNotificationListenerEnabled) {
@@ -712,6 +734,7 @@ fun SetupFeatures(
                             modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
                             showToggle = false,
                             hasMoreSettings = true,
+                            isBeta = result.isBeta, // Added isBeta
                             descriptionOverride = if (result.parentFeature != null) "${result.parentFeature} > ${result.description}" else result.description
                         )
                     }
@@ -773,7 +796,8 @@ fun SetupFeatures(
                                 currentFeature = feature.title
                                 showSheet = true
                             },
-                            description = feature.description
+                            description = feature.description,
+                            isBeta = feature.isBeta
                         )
                     }
                 }

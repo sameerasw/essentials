@@ -112,47 +112,85 @@ fun ButtonRemapSettingsUI(
                 exit = shrinkVertically() + fadeOut()
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    val isRootEnabled =
+                        com.sameerasw.essentials.utils.ShellUtils.isRootEnabled(context)
                     IconToggleItem(
-                        iconRes = R.drawable.rounded_adb_24,
+                        iconRes = if (isRootEnabled) R.drawable.rounded_numbers_24 else R.drawable.rounded_adb_24,
                         title = stringResource(R.string.button_remap_use_shizuku_title),
                         description = stringResource(R.string.button_remap_use_shizuku_desc),
                         isChecked = viewModel.isButtonRemapUseShizuku.value,
                         onCheckedChange = { enabled ->
                             if (enabled) {
-                                if (shizukuHelper.getStatus() == ShizukuStatus.READY) {
+                                val shellHasPermission =
+                                    com.sameerasw.essentials.utils.ShellUtils.hasPermission(context)
+                                val shellIsAvailable =
+                                    com.sameerasw.essentials.utils.ShellUtils.isAvailable(context)
+
+                                if (shellHasPermission) {
                                     viewModel.setButtonRemapUseShizuku(true, context)
                                     ContextCompat.startForegroundService(
                                         context,
                                         Intent(context, InputEventListenerService::class.java)
                                     )
-                                } else if (shizukuHelper.getStatus() == ShizukuStatus.PERMISSION_NEEDED) {
-                                    shizukuHelper.requestPermission { requestCode, grantResult ->
+                                } else if (shellIsAvailable && !isRootEnabled) {
+                                    // Shizuku logic (still needed for specific permission request if not granted)
+                                    shizukuHelper.requestPermission { _, grantResult ->
                                         if (grantResult == android.content.pm.PackageManager.PERMISSION_GRANTED) {
                                             viewModel.setButtonRemapUseShizuku(true, context)
                                             ContextCompat.startForegroundService(
                                                 context,
-                                                Intent(context, InputEventListenerService::class.java)
+                                                Intent(
+                                                    context,
+                                                    InputEventListenerService::class.java
+                                                )
                                             )
                                         }
                                     }
-                                } else {
-                                    // Shizuku not running
+                                } else if (isRootEnabled && !shellHasPermission) {
+                                    // Root logic - try to run a command to trigger su prompt
                                     viewModel.setButtonRemapUseShizuku(true, context)
+                                    com.sameerasw.essentials.utils.ShellUtils.runCommand(
+                                        context,
+                                        "id"
+                                    )
+                                    if (com.sameerasw.essentials.utils.ShellUtils.hasPermission(
+                                            context
+                                        )
+                                    ) {
+                                        ContextCompat.startForegroundService(
+                                            context,
+                                            Intent(context, InputEventListenerService::class.java)
+                                        )
+                                    }
+                                } else {
+                                    // Provider not running
+                                    viewModel.setButtonRemapUseShizuku(true, context)
+                                    val toastRes =
+                                        if (isRootEnabled) R.string.root_not_available_toast else R.string.shizuku_not_running_toast
                                     android.widget.Toast.makeText(
                                         context,
-                                        context.getString(R.string.shizuku_not_running_toast),
+                                        context.getString(toastRes),
                                         android.widget.Toast.LENGTH_SHORT
                                     ).show()
                                 }
                             } else {
                                 viewModel.setButtonRemapUseShizuku(false, context)
-                                context.stopService(Intent(context, InputEventListenerService::class.java))
+                                context.stopService(
+                                    Intent(
+                                        context,
+                                        InputEventListenerService::class.java
+                                    )
+                                )
                             }
                         },
                         modifier = Modifier.highlight(highlightSetting == "shizuku_remap")
                     )
 
-                    if (viewModel.isButtonRemapUseShizuku.value) {
+                    AnimatedVisibility(
+                        visible = viewModel.isButtonRemapUseShizuku.value,
+                        enter = expandVertically() + fadeIn(),
+                        exit = shrinkVertically() + fadeOut()
+                    ) {
                         // Status indicator
                         Row(
                             modifier = Modifier
@@ -165,25 +203,36 @@ fun ButtonRemapSettingsUI(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
+                            val shellAvailable =
+                                com.sameerasw.essentials.utils.ShellUtils.isAvailable(context)
+                            val shellPermission =
+                                com.sameerasw.essentials.utils.ShellUtils.hasPermission(context)
+
                             val statusText =
-                                if (viewModel.shizukuDetectedDevicePath.value != null && shizukuStatus == ShizukuStatus.READY) {
+                                if (shellPermission && viewModel.shizukuDetectedDevicePath.value != null) {
                                     stringResource(
                                         R.string.shizuku_detected_prefix,
                                         viewModel.shizukuDetectedDevicePath.value ?: ""
                                     )
+                                } else if (isRootEnabled) {
+                                    if (shellPermission) "Root Access: Granted" else if (shellAvailable) "Root Access: Found" else "Root Access: Not Found"
                                 } else {
-                                    stringResource(R.string.shizuku_status_prefix, shizukuStatus.name)
+                                    stringResource(
+                                        R.string.shizuku_status_prefix,
+                                        shizukuStatus.name
+                                    )
                                 }
 
                             Text(
                                 text = statusText,
                                 style = MaterialTheme.typography.bodySmall,
-                                color = if (shizukuStatus == ShizukuStatus.READY) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
+                                color = if (shellPermission) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
                                 maxLines = 1,
                                 overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
                                 modifier = Modifier.weight(1f)
                             )
-                            if (shizukuStatus != ShizukuStatus.READY && shizukuStatus != ShizukuStatus.PERMISSION_NEEDED) {
+
+                            if (!shellPermission && !isRootEnabled && shizukuStatus != ShizukuStatus.READY && shizukuStatus != ShizukuStatus.PERMISSION_NEEDED) {
                                 Button(
                                     onClick = {
                                         try {
@@ -233,9 +282,9 @@ fun ButtonRemapSettingsUI(
                         showToggle = false,
                         hasMoreSettings = true,
                         onToggle = {},
-                        onClick = { 
+                        onClick = {
                             HapticUtil.performUIHaptic(view)
-                            showFlashlightOptions = true 
+                            showFlashlightOptions = true
                         },
                         modifier = Modifier.highlight(highlightSetting == "flashlight_options")
                     )
@@ -270,21 +319,27 @@ fun ButtonRemapSettingsUI(
 
                 // Button Picker & Actions
                 RoundedCardContainer(spacing = 2.dp) {
-                    val screenOptions = listOf(stringResource(R.string.screen_off), stringResource(R.string.screen_on))
+                    val screenOptions = listOf(
+                        stringResource(R.string.screen_off),
+                        stringResource(R.string.screen_on)
+                    )
                     SegmentedPicker(
                         items = screenOptions,
                         selectedItem = if (selectedScreenTab == 0) screenOptions[0] else screenOptions[1],
-                        onItemSelected = { 
+                        onItemSelected = {
                             HapticUtil.performUIHaptic(view)
                             selectedScreenTab = screenOptions.indexOf(it)
                         },
                         labelProvider = { it }
                     )
-                    val buttonOptions = listOf(stringResource(R.string.volume_up), stringResource(R.string.volume_down))
+                    val buttonOptions = listOf(
+                        stringResource(R.string.volume_up),
+                        stringResource(R.string.volume_down)
+                    )
                     SegmentedPicker(
                         items = buttonOptions,
                         selectedItem = if (selectedButtonTab == 0) buttonOptions[0] else buttonOptions[1],
-                        onItemSelected = { 
+                        onItemSelected = {
                             HapticUtil.performUIHaptic(view)
                             selectedButtonTab = buttonOptions.indexOf(it)
                         },
@@ -300,9 +355,21 @@ fun ButtonRemapSettingsUI(
 
                     val onActionSelected: (String) -> Unit = { action ->
                         when (selectedScreenTab) {
-                            0 if selectedButtonTab == 0 -> viewModel.setVolumeUpActionOff(action, context)
-                            0 if selectedButtonTab == 1 -> viewModel.setVolumeDownActionOff(action, context)
-                            1 if selectedButtonTab == 0 -> viewModel.setVolumeUpActionOn(action, context)
+                            0 if selectedButtonTab == 0 -> viewModel.setVolumeUpActionOff(
+                                action,
+                                context
+                            )
+
+                            0 if selectedButtonTab == 1 -> viewModel.setVolumeDownActionOff(
+                                action,
+                                context
+                            )
+
+                            1 if selectedButtonTab == 0 -> viewModel.setVolumeUpActionOn(
+                                action,
+                                context
+                            )
+
                             else -> viewModel.setVolumeDownActionOn(action, context)
                         }
                     }
@@ -373,9 +440,9 @@ fun ButtonRemapSettingsUI(
         // Hint
         RoundedCardContainer {
             Text(
-                text = if (selectedScreenTab == 0) 
+                text = if (selectedScreenTab == 0)
                     stringResource(R.string.button_remap_screen_off_hint)
-                    else stringResource(R.string.button_remap_screen_on_hint),
+                else stringResource(R.string.button_remap_screen_on_hint),
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(16.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -402,7 +469,7 @@ fun ButtonRemapSettingsUI(
                     modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 RoundedCardContainer(spacing = 2.dp) {
                     IconToggleItem(
                         iconRes = R.drawable.rounded_blur_on_24,
@@ -443,7 +510,7 @@ fun ButtonRemapSettingsUI(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
-                
+
                 RoundedCardContainer(spacing = 2.dp) {
 
                     IconToggleItem(
@@ -454,9 +521,9 @@ fun ButtonRemapSettingsUI(
                         onCheckedChange = { viewModel.setFlashlightAlwaysTurnOffEnabled(it, context) }
                     )
                 }
-                
+
                 Button(
-                    onClick = { 
+                    onClick = {
                         HapticUtil.performVirtualKeyHaptic(view)
                         showFlashlightOptions = false
                     },
@@ -467,6 +534,7 @@ fun ButtonRemapSettingsUI(
                 }
             }
         }
+
     }
 }
 

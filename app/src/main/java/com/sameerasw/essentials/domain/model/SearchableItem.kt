@@ -12,5 +12,6 @@ data class SearchableItem(
     val parentFeature: String? = null,
     val targetSettingHighlightKey: String? = null,
     val titleRes: Int? = null,
-    val descriptionRes: Int? = null
+    val descriptionRes: Int? = null,
+    val isBeta: Boolean = false
 )

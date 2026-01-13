@@ -166,16 +166,16 @@ class LocationReachedService : Service() {
         val mainPendingIntent = PendingIntent.getActivity(this, 0, mainIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
         val distanceText = distanceKm?.let { 
-            if (it < 1.0) String.format("%d m", (it * 1000).toInt()) 
-            else String.format("%.1f km", it)
-        } ?: "Calculating..."
+            if (it < 1.0) getString(R.string.location_reached_dist_m, (it * 1000).toInt()) 
+            else getString(R.string.location_reached_dist_km, it)
+        } ?: getString(R.string.location_reached_calculating)
         
-        val contentText = "$distanceText remaining ($progress%)"
+        val contentText = getString(R.string.location_reached_service_remaining, distanceText, progress)
 
         if (Build.VERSION.SDK_INT >= 35) {
             val builder = Notification.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.rounded_navigation_24)
-                .setContentTitle("Travel Alarm active")
+                .setContentTitle(getString(R.string.location_reached_service_title))
                 .setContentText(contentText)
                 .setOngoing(true)
                 .setOnlyAlertOnce(true)
@@ -183,7 +183,7 @@ class LocationReachedService : Service() {
                 .setContentIntent(mainPendingIntent)
                 .addAction(Notification.Action.Builder(
                     Icon.createWithResource(this, R.drawable.rounded_power_settings_new_24),
-                    "Stop Tracking", stopPendingIntent).build())
+                    getString(R.string.location_reached_stop_tracking), stopPendingIntent).build())
 
             if (Build.VERSION.SDK_INT >= 36) {
                 try {
@@ -220,7 +220,7 @@ class LocationReachedService : Service() {
 
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.rounded_navigation_24)
-            .setContentTitle("Travel Alarm active")
+            .setContentTitle(getString(R.string.location_reached_service_title))
             .setContentText(contentText)
             .setOngoing(true)
             .setOnlyAlertOnce(true)
@@ -229,7 +229,7 @@ class LocationReachedService : Service() {
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setContentIntent(mainPendingIntent)
             .setProgress(100, progress, false)
-            .addAction(R.drawable.rounded_power_settings_new_24, "Stop Tracking", stopPendingIntent)
+            .addAction(R.drawable.rounded_power_settings_new_24, getString(R.string.location_reached_stop_tracking), stopPendingIntent)
 
         val extras = android.os.Bundle()
         extras.putBoolean("android.requestPromotedOngoing", true)
@@ -243,10 +243,10 @@ class LocationReachedService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
-                "Travel Progress",
+                getString(R.string.location_reached_channel_name),
                 NotificationManager.IMPORTANCE_HIGH // Increased importance
             ).apply {
-                description = "Shows real-time distance to destination"
+                description = getString(R.string.location_reached_channel_desc)
                 setShowBadge(false)
                 setLockscreenVisibility(Notification.VISIBILITY_PUBLIC) // Ensure it's visible on lockscreen
                 setSound(null, null)

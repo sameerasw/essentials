@@ -22,6 +22,11 @@ class NotificationListener : NotificationListenerService() {
     override fun onNotificationPosted(sbn: StatusBarNotification) {
         val prefs = applicationContext.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
 
+        // Maps navigation state update
+        if (sbn.packageName == "com.google.android.apps.maps") {
+            MapsState.hasNavigationNotification = isNavigationNotification(sbn)
+        }
+
         // Handle Snooze System Notifications
         try {
             val packageName = sbn.packageName
@@ -177,9 +182,6 @@ class NotificationListener : NotificationListenerService() {
             // ignore failures
         }
 
-        if (sbn.packageName == "com.google.android.apps.maps") {
-            MapsState.hasNavigationNotification = isNavigationNotification(sbn)
-        }
     }
 
     override fun onNotificationRemoved(sbn: StatusBarNotification) {

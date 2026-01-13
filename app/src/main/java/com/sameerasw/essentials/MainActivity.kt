@@ -39,7 +39,7 @@ import com.sameerasw.essentials.domain.registry.initPermissionRegistry
 import com.sameerasw.essentials.ui.components.ReusableTopAppBar
 import com.sameerasw.essentials.ui.components.DIYFloatingToolbar
 import com.sameerasw.essentials.ui.composables.SetupFeatures
-import com.sameerasw.essentials.ui.composables.ComingSoonDIYScreen
+import com.sameerasw.essentials.ui.composables.DIYScreen
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
@@ -279,7 +279,7 @@ class MainActivity : FragmentActivity() {
                                     )
                                 }
                                 DIYTabs.DIY -> {
-                                    ComingSoonDIYScreen(
+                                    DIYScreen(
                                         modifier = Modifier.padding(innerPadding)
                                     )
                                 }

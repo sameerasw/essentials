@@ -71,6 +71,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import com.sameerasw.essentials.domain.registry.PermissionRegistry
 import com.sameerasw.essentials.ui.components.sheets.InstructionsBottomSheet
 import java.text.SimpleDateFormat
@@ -189,6 +190,9 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
     val isAutoUpdateEnabled by viewModel.isAutoUpdateEnabled
     val isUpdateNotificationEnabled by viewModel.isUpdateNotificationEnabled
     val isPreReleaseCheckEnabled by viewModel.isPreReleaseCheckEnabled
+    val isRootEnabled by viewModel.isRootEnabled
+    val isRootAvailable by viewModel.isRootAvailable
+    val isRootPermissionGranted by viewModel.isRootPermissionGranted
     val isDeveloperModeEnabled by viewModel.isDeveloperModeEnabled
     var showInstructionsSheet by remember { mutableStateOf(false) }
 
@@ -266,6 +270,13 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
                     isAppHapticsEnabled.value = isChecked
                     HapticUtil.saveAppHapticsEnabled(context, isChecked)
                 }
+            )
+            IconToggleItem(
+                iconRes = R.drawable.rounded_numbers_24,
+                title = stringResource(R.string.setting_use_root_title),
+                description = stringResource(R.string.setting_use_root_desc),
+                isChecked = viewModel.isRootEnabled.value,
+                onCheckedChange = { viewModel.setRootEnabled(it, context) }
             )
         }
 
@@ -346,7 +357,18 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
                     },
                 )
 
-                if (isShizukuAvailable) {
+                if (isRootEnabled) {
+                    PermissionCard(
+                        iconRes = R.drawable.rounded_numbers_24,
+                        title = stringResource(R.string.perm_root_title),
+                        dependentFeatures = PermissionRegistry.getFeatures("ROOT"),
+                        actionLabel = if (isRootPermissionGranted) "Granted" else "Grant Access",
+                        isGranted = isRootPermissionGranted,
+                        onActionClick = {
+                            viewModel.check(context)
+                        }
+                    )
+                } else if (isShizukuAvailable) {
                     PermissionCard(
                         iconRes = R.drawable.rounded_adb_24,
                         title = "Shizuku",

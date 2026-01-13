@@ -23,8 +23,8 @@ class NotificationLightingHandler(
     private val handler = Handler(Looper.getMainLooper())
     
     // Config state
-    private var cornerRadiusDp: Int = OverlayHelper.CORNER_RADIUS_DP
-    private var strokeThicknessDp: Int = OverlayHelper.STROKE_DP
+    private var cornerRadiusDp: Float = OverlayHelper.CORNER_RADIUS_DP.toFloat()
+    private var strokeThicknessDp: Float = OverlayHelper.STROKE_DP.toFloat()
     var isPreview: Boolean = false
         private set
     private var ignoreScreenState: Boolean = false
@@ -45,8 +45,8 @@ class NotificationLightingHandler(
 
     fun handleIntent(intent: Intent) {
          if (intent.action == "SHOW_NOTIFICATION_LIGHTING") {
-            cornerRadiusDp = intent.getIntExtra("corner_radius_dp", OverlayHelper.CORNER_RADIUS_DP)
-            strokeThicknessDp = intent.getIntExtra("stroke_thickness_dp", OverlayHelper.STROKE_DP)
+            cornerRadiusDp = intent.getFloatExtra("corner_radius_dp", OverlayHelper.CORNER_RADIUS_DP.toFloat())
+            strokeThicknessDp = intent.getFloatExtra("stroke_thickness_dp", OverlayHelper.STROKE_DP.toFloat())
             isPreview = intent.getBooleanExtra("is_preview", false)
             ignoreScreenState = intent.getBooleanExtra("ignore_screen_state", false)
             colorMode = NotificationLightingColorMode.valueOf(intent.getStringExtra("color_mode") ?: "SYSTEM")
@@ -218,7 +218,7 @@ class NotificationLightingHandler(
                 if (OverlayHelper.addOverlayView(windowManager, overlay, params)) {
                     overlayViews.add(overlay)
                     if (isPreview) {
-                        OverlayHelper.showPreview(overlay, edgeLightingStyle, strokeThicknessDp)
+                        OverlayHelper.showPreview(overlay, edgeLightingStyle, strokeThicknessDp, indicatorX, indicatorY, indicatorScale)
                     } else {
                         startPulsing(overlay)
                     }
@@ -235,7 +235,8 @@ class NotificationLightingHandler(
             style = edgeLightingStyle,
             strokeWidthDp = strokeThicknessDp,
             indicatorX = indicatorX,
-            indicatorY = indicatorY
+            indicatorY = indicatorY,
+            indicatorScale = indicatorScale
         ) {
             if (isAmbientDisplayRequested && !isInterrupted && !isPreview && !isAmbientShowLockScreen) {
                 service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_LOCK_SCREEN)

@@ -29,8 +29,13 @@ fun initPermissionRegistry() {
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_screen_locked_security_title)
 
     // Shizuku permission
-    PermissionRegistry.register("SHIZUKU", R.string.feat_maps_power_saving_title)
     PermissionRegistry.register("SHIZUKU", R.string.feat_freeze_title)
+    PermissionRegistry.register("SHIZUKU", R.string.feat_maps_power_saving_title)
+    
+    // Root permission
+    PermissionRegistry.register("ROOT", R.string.feat_maps_power_saving_title)
+    PermissionRegistry.register("ROOT", R.string.feat_freeze_title)
+    PermissionRegistry.register("ROOT", R.string.feat_button_remap_title)
 
     // Notification listener permission
     PermissionRegistry.register("NOTIFICATION_LISTENER", R.string.feat_maps_power_saving_title)

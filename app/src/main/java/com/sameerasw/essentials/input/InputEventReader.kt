@@ -20,7 +20,10 @@ class InputEventReader(private val devicePath: String) {
     private val buffer = ByteArray(INPUT_EVENT_SIZE)
 
     fun open(): Boolean = try {
-        process = ShizukuProcessHelper.newProcess(arrayOf("cat", devicePath))
+        process = com.sameerasw.essentials.utils.ShellUtils.newProcess(
+            com.sameerasw.essentials.EssentialsApp.context,
+            arrayOf("cat", devicePath)
+        )
         inputStream = process?.inputStream
         inputStream != null
     } catch (e: Exception) { 

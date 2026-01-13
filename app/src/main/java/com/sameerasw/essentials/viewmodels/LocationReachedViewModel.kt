@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.LocationReachedRepository
 import com.sameerasw.essentials.domain.model.LocationAlarm
 import com.sameerasw.essentials.services.LocationReachedService
@@ -197,7 +198,8 @@ class LocationReachedViewModel(application: Application) : AndroidViewModel(appl
                 android.util.Log.d("LocationReachedVM", "Parsed coordinates: $lat, $lng")
                 // Staging mode: don't enable yet
                 updateAlarm(alarm.value.copy(latitude = lat, longitude = lng, isEnabled = false))
-                android.widget.Toast.makeText(getApplication(), "Destination set: $lat, $lng", android.widget.Toast.LENGTH_SHORT).show()
+                android.widget.Toast.makeText(getApplication(), getApplication<Application>().getString(
+                    R.string.location_reached_toast_set, lat, lng), android.widget.Toast.LENGTH_SHORT).show()
                 repository.setIsProcessing(false)
                 return true
             }
@@ -235,7 +237,7 @@ class LocationReachedViewModel(application: Application) : AndroidViewModel(appl
                     if (lat != 0.0 && lng != 0.0) {
                         // Staging mode: don't enable yet
                         updateAlarm(alarm.value.copy(latitude = lat, longitude = lng, isEnabled = false))
-                        android.widget.Toast.makeText(getApplication(), "Destination set: $lat, $lng", android.widget.Toast.LENGTH_SHORT).show()
+                        android.widget.Toast.makeText(getApplication(), getApplication<Application>().getString(R.string.location_reached_toast_set, lat, lng), android.widget.Toast.LENGTH_SHORT).show()
                     }
                 }
                 repository.setIsProcessing(false)
