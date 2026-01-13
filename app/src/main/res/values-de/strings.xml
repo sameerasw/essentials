@@ -739,7 +739,7 @@
     <string name="location_reached_dist_m">%1$d m</string>
     <string name="location_reached_dist_km">%1$.1f km</string>
     <string name="location_reached_service_title">Reisealarm aktiv</string>
-    <string name="location_reached_service_remaining">%1$s verbleibend (%2$d%%)</string>
+    <string name="location_reached_service_remaining">%1$s verbleibend</string>
     <string name="location_reached_channel_name">Reisefortschritt</string>
     <string name="location_reached_channel_desc">Zeigt die Entfernung zum Zielort in Echtzeit an</string>
     <string name="location_reached_alarm_title">Ziel in der Nähe</string>
