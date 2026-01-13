@@ -262,7 +262,8 @@ class MainActivity : FragmentActivity() {
                         HorizontalPager(
                             state = pagerState,
                             modifier = Modifier.fillMaxSize(),
-                            verticalAlignment = Alignment.Top
+                            verticalAlignment = Alignment.Top,
+                            beyondViewportPageCount = 1
                         ) { page ->
                             when (tabs[page]) {
                                 DIYTabs.ESSENTIALS -> {

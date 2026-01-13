@@ -38,6 +38,7 @@ import com.sameerasw.essentials.utils.UpdateNotificationHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainViewModel : ViewModel() {
     val isAccessibilityEnabled = mutableStateOf(false)
@@ -842,29 +843,39 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             if (!silent) isFreezePickedAppsLoading.value = true
             try {
-                // Only load apps that are actually marked as secondary selected (picked)
-                val selections = loadFreezeSelectedApps(context).filter { it.isEnabled }
-                if (selections.isEmpty()) {
-                    freezePickedApps.value = emptyList()
-                    return@launch
+                // Background processing for heavy list operations
+                val result = withContext(Dispatchers.Default) {
+                    // Only load apps that are actually marked as secondary selected (picked)
+                    val selections = loadFreezeSelectedApps(context).filter { it.isEnabled }
+                    if (selections.isEmpty()) return@withContext emptyList()
+                    
+                    // Efficiently load only the apps that are actually marked as secondary selected (picked)
+                    val pickedPkgNames = selections.map { it.packageName }
+                    val relevantApps = AppUtil.getAppsByPackageNames(context, pickedPkgNames)
+                    
+                    val merged = AppUtil.mergeWithSavedApps(relevantApps, selections)
+                    val currentExcluded = freezeAutoExcludedApps.value
+                    
+                    // Cleanup: remove package names that are no longer picked (still on main because it updates state)
+                    val filteredExcluded = currentExcluded.filter { pickedPkgNames.contains(it) }.toSet()
+                    
+                    // Prepare final list in background
+                    merged.map { it.copy(isEnabled = !filteredExcluded.contains(it.packageName)) }
+                        .sortedBy { it.appName.lowercase() }
                 }
+
+                // Final state update on Main
+                freezePickedApps.value = result
                 
-                // Efficiently load only the apps that are actually marked as secondary selected (picked)
-                val pickedPkgNames = selections.map { it.packageName }
-                val relevantApps = AppUtil.getAppsByPackageNames(context, pickedPkgNames)
-                
-                val merged = AppUtil.mergeWithSavedApps(relevantApps, selections)
+                // Exclude check (this part still needs to update state if cleaned up)
                 val currentExcluded = freezeAutoExcludedApps.value
-                
-                // Cleanup: remove package names that are no longer picked
+                val selections = loadFreezeSelectedApps(context).filter { it.isEnabled }
+                val pickedPkgNames = selections.map { it.packageName }
                 val filteredExcluded = currentExcluded.filter { pickedPkgNames.contains(it) }.toSet()
                 if (filteredExcluded.size != currentExcluded.size) {
                     freezeAutoExcludedApps.value = filteredExcluded
                     settingsRepository.saveFreezeAutoExcludedApps(filteredExcluded)
                 }
-                
-                freezePickedApps.value = merged.map { it.copy(isEnabled = !filteredExcluded.contains(it.packageName)) }
-                    .sortedBy { it.appName.lowercase() }
             } finally {
                 if (!silent) isFreezePickedAppsLoading.value = false
             }
