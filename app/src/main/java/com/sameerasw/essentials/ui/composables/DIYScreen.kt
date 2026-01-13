@@ -82,6 +82,9 @@ fun DIYScreen(
                             automation = automation,
                             onClick = {
                                 context.startActivity(AutomationEditorActivity.createIntent(context, automation.id))
+                            },
+                            onDelete = {
+                                viewModel.deleteAutomation(automation.id)
                             }
                         )
                     }

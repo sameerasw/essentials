@@ -36,6 +36,9 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,6 +49,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.diy.Action
@@ -122,6 +126,9 @@ class AutomationEditorActivity : ComponentActivity() {
                 // Tab for State Actions
                 var selectedActionTab by remember { mutableIntStateOf(0) } // 0: In, 1: Out
 
+                // Menu State
+                var showMenu by remember { mutableStateOf(false) }
+
                 // Validation
                 val isValid = when (automationType) {
                     Automation.Type.TRIGGER -> selectedTrigger != null && selectedAction != null
@@ -135,7 +142,38 @@ class AutomationEditorActivity : ComponentActivity() {
                             title = titleRes,
                             hasBack = true,
                             isSmall = true,
-                            onBackClick = { finish() }
+                            onBackClick = { finish() },
+                            actions = {
+                                if (isEditMode) {
+                                    IconButton(onClick = { showMenu = true }) {
+                                        Icon(
+                                            painter = painterResource(R.drawable.rounded_more_vert_24),
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.onSurface
+                                        )
+                                    }
+
+                                    DropdownMenu(
+                                        expanded = showMenu,
+                                        onDismissRequest = { showMenu = false }
+                                    ) {
+                                        DropdownMenuItem(
+                                            text = { Text(stringResource(R.string.action_delete)) },
+                                            onClick = {
+                                                showMenu = false
+                                                DIYRepository.removeAutomation(existingAutomation!!.id)
+                                                finish()
+                                            },
+                                            leadingIcon = {
+                                                Icon(
+                                                    painter = painterResource(R.drawable.rounded_delete_24),
+                                                    contentDescription = null
+                                                )
+                                            }
+                                        )
+                                    }
+                                }
+                            }
                         )
                     }
                 ) { innerPadding ->
@@ -317,7 +355,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                 )
                             ) {
                                 Icon(
-                                    painter = androidx.compose.ui.res.painterResource(id = R.drawable.rounded_close_24),
+                                    painter = painterResource(id = R.drawable.rounded_close_24),
                                     contentDescription = null,
                                     modifier = Modifier.size(20.dp)
                                 )
@@ -353,7 +391,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                 enabled = isValid
                             ) {
                                 Icon(
-                                    painter = androidx.compose.ui.res.painterResource(id = R.drawable.rounded_check_24),
+                                    painter = painterResource(id = R.drawable.rounded_check_24),
                                     contentDescription = null,
                                     modifier = Modifier.size(20.dp)
                                 )
@@ -398,7 +436,7 @@ fun EditorActionItem(
         )
 
         Icon(
-            painter = androidx.compose.ui.res.painterResource(id = iconRes),
+            painter = painterResource(id = iconRes),
             contentDescription = title,
             modifier = Modifier.size(24.dp),
             tint = MaterialTheme.colorScheme.primary

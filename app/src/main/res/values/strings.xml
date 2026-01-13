@@ -447,6 +447,8 @@
     <string name="diy_out_action_label">Out Action</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_save">Save</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_delete">Delete</string>
 
     <!-- About Section -->
     <string name="app_developer_name">Sameera Wijerathna</string>

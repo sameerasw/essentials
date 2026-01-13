@@ -22,4 +22,8 @@ class DIYViewModel(application: Application) : AndroidViewModel(application) {
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = emptyList()
         )
+
+    fun deleteAutomation(id: String) {
+        repository.removeAutomation(id)
+    }
 }

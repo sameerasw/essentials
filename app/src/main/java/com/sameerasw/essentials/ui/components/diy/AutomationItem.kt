@@ -36,28 +36,82 @@ import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.diy.Automation
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.unit.DpOffset
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.HapticUtil
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AutomationItem(
     automation: Automation,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
+    onDelete: () -> Unit = {}
 ) {
 
     val view = LocalView.current
+    var showMenu by remember { mutableStateOf(false) }
 
     Card(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceBright
         ),
         shape = MaterialTheme.shapes.extraSmall,
-        modifier = modifier.clickable {
-            HapticUtil.performVirtualKeyHaptic(view)
-            onClick()
-        }) {
-        Row(
+        modifier = modifier.combinedClickable(
+            onClick = {
+                HapticUtil.performVirtualKeyHaptic(view)
+                onClick()
+            },
+            onLongClick = {
+                HapticUtil.performVirtualKeyHaptic(view)
+                showMenu = true
+            }
+        )
+    ) {
+        Box {
+            // Dropdown Menu
+            DropdownMenu(
+                expanded = showMenu,
+                onDismissRequest = { showMenu = false },
+                offset = DpOffset(0.dp, 0.dp)
+            ) {
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.action_edit)) },
+                    onClick = {
+                        showMenu = false
+                        onClick()
+                    },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(R.drawable.rounded_edit_24),
+                            contentDescription = null
+                        )
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.action_delete)) },
+                    onClick = {
+                        showMenu = false
+                        onDelete()
+                    },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(R.drawable.rounded_delete_24),
+                            contentDescription = null
+                        )
+                    }
+                )
+            }
+
+            Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
@@ -112,9 +166,9 @@ fun AutomationItem(
                 // Separator Icon
                 Box(
                     modifier = Modifier
-                        .size(32.dp)
+                        .size(24.dp)
                         .clip(CircleShape)
-                        .padding(horizontal = 4.dp)
+                        .padding(horizontal = 3.dp)
                         .background(MaterialTheme.colorScheme.primaryContainer),
                     contentAlignment = Alignment.Center
                 ) {
@@ -133,9 +187,9 @@ fun AutomationItem(
                 ) {
                     Box(
                         modifier = Modifier
-                            .size(32.dp)
+                            .size(24.dp)
                             .clip(CircleShape)
-                            .padding(horizontal = 4.dp)
+                            .padding(horizontal = 3.dp)
                             .background(MaterialTheme.colorScheme.primaryContainer),
                         contentAlignment = Alignment.Center
                     ) {
@@ -149,9 +203,9 @@ fun AutomationItem(
 
                     Box(
                         modifier = Modifier
-                            .size(32.dp)
+                            .size(24.dp)
                             .clip(CircleShape)
-                            .padding(horizontal = 4.dp)
+                            .padding(horizontal = 3.dp)
                             .background(MaterialTheme.colorScheme.primaryContainer),
                         contentAlignment = Alignment.Center
                     ) {
@@ -170,8 +224,7 @@ fun AutomationItem(
             RoundedCardContainer(
                 cornerRadius = 18.dp,
                 modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight(),
+                    .weight(1f),
             ) {
                 if (automation.type == Automation.Type.TRIGGER) {
                     automation.actions.forEach { action ->
@@ -191,6 +244,7 @@ fun AutomationItem(
                 }
             }
         }
+    }
     }
 }
 
