@@ -83,8 +83,12 @@ fun FreezeGridUI(
 
     LaunchedEffect(pickedApps) {
         withContext(Dispatchers.IO) {
-            pickedApps.forEach { app ->
-                frozenStates[app.packageName] = FreezeManager.isAppFrozen(context, app.packageName)
+            val states = pickedApps.associate { app ->
+                app.packageName to FreezeManager.isAppFrozen(context, app.packageName)
+            }
+            // Batch update on Main thread
+            withContext(Dispatchers.Main) {
+                frozenStates.putAll(states)
             }
         }
     }

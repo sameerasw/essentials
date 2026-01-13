@@ -39,6 +39,8 @@ import androidx.compose.ui.res.stringResource
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.activities.AutomationEditorActivity
 import com.sameerasw.essentials.ui.components.sheets.NewAutomationSheet
+import androidx.compose.ui.platform.LocalView
+import com.sameerasw.essentials.utils.HapticUtil
 
 @Composable
 fun DIYScreen(
@@ -96,8 +98,12 @@ fun DIYScreen(
         }
         
         // FAB
+        val view = LocalView.current
         FloatingActionButton(
-            onClick = { showNewAutomationSheet = true },
+            onClick = { 
+                HapticUtil.performUIHaptic(view)
+                showNewAutomationSheet = true 
+            },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(bottom = 32.dp, end = 32.dp),

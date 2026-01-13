@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.AdaptiveIconDrawable
 import android.util.Log
 import androidx.core.graphics.createBitmap
 import androidx.core.graphics.drawable.toBitmap
@@ -20,6 +22,12 @@ object AppUtil {
     
     // Cache for extracted brand colors
     private val colorCache = mutableMapOf<String, Int>()
+    
+    // Cache for app icons to prevent repeated system calls
+    private val iconCache = mutableMapOf<String, Bitmap>()
+    
+    // Target size for app icons to balance quality and performance
+    private const val ICON_SIZE = 64
 
     /**
      * Get all installed apps (not just launcher apps)
@@ -46,7 +54,7 @@ object AppUtil {
                         packageName = appInfo.packageName,
                         appName = pm.getApplicationLabel(appInfo).toString(),
                         isEnabled = false,
-                        icon = pm.getApplicationIcon(appInfo).toBitmap().asImageBitmap(),
+                        icon = getLowQualityIcon(context, appInfo.packageName).asImageBitmap(),
                         isSystemApp = isSystemApp,
                         lastUpdated = System.currentTimeMillis()
                     )
@@ -86,7 +94,7 @@ suspend fun getAppsByPackageNames(context: Context, packageNames: List<String>):
                     packageName = appInfo.packageName,
                     appName = pm.getApplicationLabel(appInfo).toString(),
                     isEnabled = false,
-                    icon = pm.getApplicationIcon(appInfo).toBitmap().asImageBitmap(),
+                    icon = getLowQualityIcon(context, packageName).asImageBitmap(),
                     isSystemApp = isSystemApp,
                     lastUpdated = System.currentTimeMillis()
                 )
@@ -132,18 +140,7 @@ suspend fun getAppsByPackageNames(context: Context, packageNames: List<String>):
         try {
             val pm = context.packageManager
             // Extract bitmap from drawable, handling AdaptiveIcons
-            val bitmap = when (val drawable = pm.getApplicationIcon(packageName)) {
-                is BitmapDrawable -> drawable.bitmap
-                else -> {
-                    val width = if (drawable.intrinsicWidth > 0) drawable.intrinsicWidth else 128
-                    val height = if (drawable.intrinsicHeight > 0) drawable.intrinsicHeight else 128
-                    val bmp = createBitmap(width, height)
-                    val canvas = Canvas(bmp)
-                    drawable.setBounds(0, 0, canvas.width, canvas.height)
-                    drawable.draw(canvas)
-                    bmp
-                }
-            }
+            val bitmap = getLowQualityIcon(context, packageName)
 
             // Generate palette asynchronously
             Palette.from(bitmap).generate { palette ->
@@ -159,5 +156,41 @@ suspend fun getAppsByPackageNames(context: Context, packageNames: List<String>):
             Log.w(TAG, "Error extracting color for $packageName: ${e.message}")
             callback(Color.GRAY)
         }
+    }
+
+    /**
+     * Helper to load and scale an app icon to a lower resolution for better performance.
+     */
+    private fun getLowQualityIcon(context: Context, packageName: String): Bitmap {
+        // Check cache first
+        iconCache[packageName]?.let { return it }
+
+        val drawable = try {
+            context.packageManager.getApplicationIcon(packageName)
+        } catch (e: Exception) {
+            context.packageManager.defaultActivityIcon
+        }
+
+        val bitmap = when (drawable) {
+            is BitmapDrawable -> {
+                val b = drawable.bitmap
+                if (b.width > ICON_SIZE || b.height > ICON_SIZE) {
+                    Bitmap.createScaledBitmap(b, ICON_SIZE, ICON_SIZE, true)
+                } else {
+                    b
+                }
+            }
+            else -> {
+                val bmp = createBitmap(ICON_SIZE, ICON_SIZE)
+                val canvas = Canvas(bmp)
+                drawable.setBounds(0, 0, ICON_SIZE, ICON_SIZE)
+                drawable.draw(canvas)
+                bmp
+            }
+        }
+        
+        // Cache the result
+        iconCache[packageName] = bitmap
+        return bitmap
     }
 }

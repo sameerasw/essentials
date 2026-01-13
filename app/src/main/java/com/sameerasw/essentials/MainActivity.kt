@@ -50,6 +50,7 @@ import com.sameerasw.essentials.ui.composables.configs.FreezeSettingsUI
 import com.sameerasw.essentials.ui.composables.FreezeGridUI
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
@@ -152,6 +153,7 @@ class MainActivity : FragmentActivity() {
         setContent {
             EssentialsTheme {
                 val context = LocalContext.current
+                val view = LocalView.current
                 val versionName = try {
                     context.packageManager.getPackageInfo(context.packageName, 0).versionName
                 } catch (_: Exception) {
@@ -249,6 +251,7 @@ class MainActivity : FragmentActivity() {
                             currentPage = pagerState.currentPage,
                             tabs = tabs,
                             onTabSelected = { index ->
+                                HapticUtil.performUIHaptic(view)
                                 scope.launch {
                                     pagerState.animateScrollToPage(index)
                                 }
@@ -259,7 +262,8 @@ class MainActivity : FragmentActivity() {
                         HorizontalPager(
                             state = pagerState,
                             modifier = Modifier.fillMaxSize(),
-                            verticalAlignment = Alignment.Top
+                            verticalAlignment = Alignment.Top,
+                            beyondViewportPageCount = 1
                         ) { page ->
                             when (tabs[page]) {
                                 DIYTabs.ESSENTIALS -> {

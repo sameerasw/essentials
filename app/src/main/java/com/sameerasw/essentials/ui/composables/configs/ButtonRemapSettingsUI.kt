@@ -375,7 +375,7 @@ fun ButtonRemapSettingsUI(
                     }
 
                     RemapActionItem(
-                        title = stringResource(R.string.action_none),
+                        title = stringResource(R.string.haptic_none),
                         isSelected = currentAction == "None",
                         onClick = { onActionSelected("None") },
                         iconRes = R.drawable.rounded_do_not_disturb_on_24,

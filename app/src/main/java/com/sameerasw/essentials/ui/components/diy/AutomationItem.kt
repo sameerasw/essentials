@@ -258,15 +258,8 @@ fun AutomationItem(
                     }
                 } else {
                     // State Actions (In/Out)
-                    // In Action (Top)
-                    automation.entryAction?.let { action ->
-                        ActionItem(action = action)
-                    }
-
-                    // Out Action (Bottom)
-                    automation.exitAction?.let { action ->
-                        ActionItem(action = action)
-                    }
+                    ActionItem(action = automation.entryAction)
+                    ActionItem(action = automation.exitAction)
                 }
             }
         }
@@ -276,7 +269,7 @@ fun AutomationItem(
 
 @Composable
 fun ActionItem(
-    action: Action,
+    action: Action?,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -289,14 +282,14 @@ fun ActionItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                painter = painterResource(id = action.icon),
+                painter = painterResource(id = action?.icon ?: R.drawable.rounded_do_not_disturb_on_24),
                 contentDescription = null,
                 modifier = Modifier.size(24.dp),
                 tint = MaterialTheme.colorScheme.onSurface
             )
             Spacer(modifier = Modifier.width(12.dp))
             Text(
-                text = stringResource(id = action.title),
+                text = stringResource(id = action?.title ?: R.string.haptic_none),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.SemiBold,
