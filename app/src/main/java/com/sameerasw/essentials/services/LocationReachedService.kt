@@ -170,7 +170,7 @@ class LocationReachedService : Service() {
             else getString(R.string.location_reached_dist_km, it)
         } ?: getString(R.string.location_reached_calculating)
         
-        val contentText = getString(R.string.location_reached_service_remaining, distanceText, progress)
+        val contentText = getString(R.string.location_reached_service_remaining, distanceText)
 
         if (Build.VERSION.SDK_INT >= 35) {
             val builder = Notification.Builder(this, CHANNEL_ID)
@@ -203,7 +203,7 @@ class LocationReachedService : Service() {
                 val extras = android.os.Bundle()
                 extras.putBoolean("android.requestPromotedOngoing", true)
                 extras.putBoolean("android.substituteContextualActions", true)
-                distanceKm?.let { extras.putString("android.shortCriticalText", String.format("%.0f%%", progress.toFloat())) }
+                distanceKm?.let { extras.putString("android.shortCriticalText", distanceText) }
                 builder.addExtras(extras)
                 
                 builder.javaClass.getMethod("setRequestPromotedOngoing", Boolean::class.javaPrimitiveType)
@@ -211,7 +211,7 @@ class LocationReachedService : Service() {
                 
                 distanceKm?.let {
                     builder.javaClass.getMethod("setShortCriticalText", CharSequence::class.java)
-                        .invoke(builder, String.format("%.0f%%", progress.toFloat()))
+                        .invoke(builder, distanceText)
                 }
             } catch (_: Throwable) {}
 
@@ -233,7 +233,7 @@ class LocationReachedService : Service() {
 
         val extras = android.os.Bundle()
         extras.putBoolean("android.requestPromotedOngoing", true)
-        distanceKm?.let { extras.putString("android.shortCriticalText", String.format("%d%%", progress)) }
+        distanceKm?.let { extras.putString("android.shortCriticalText", distanceText) }
         builder.addExtras(extras)
 
         return builder.build()
