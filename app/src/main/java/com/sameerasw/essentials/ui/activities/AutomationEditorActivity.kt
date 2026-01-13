@@ -229,17 +229,21 @@ class AutomationEditorActivity : ComponentActivity() {
                                                 val triggers = listOf(
                                                     Trigger.ScreenOff,
                                                     Trigger.ScreenOn,
-                                                    Trigger.ScreenUnlock,
+                                                    Trigger.DeviceUnlock,
                                                     Trigger.ChargerConnected,
                                                     Trigger.ChargerDisconnected
                                                 )
                                                 triggers.forEach { trigger ->
-                                                     EditorActionItem(
+                                                    EditorActionItem(
                                                         title = stringResource(trigger.title),
                                                         iconRes = trigger.icon,
                                                         isSelected = selectedTrigger == trigger,
-                                                        onClick = { selectedTrigger = trigger }
-                                                     )
+                                                        isConfigurable = trigger.isConfigurable,
+                                                        onClick = { selectedTrigger = trigger },
+                                                        onSettingsClick = {
+                                                            // Handle trigger settings if needed later
+                                                        }
+                                                    )
                                                 }
                                             } else {
                                                 val states = listOf(

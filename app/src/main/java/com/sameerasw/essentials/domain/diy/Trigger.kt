@@ -6,6 +6,10 @@ import com.sameerasw.essentials.R
 sealed interface Trigger {
     val title: Int
     val icon: Int
+    val permissions: List<String>
+        get() = emptyList()
+    val isConfigurable: Boolean
+        get() = false
 
     data object ScreenOff : Trigger {
         override val title: Int = R.string.diy_trigger_screen_off
@@ -17,8 +21,8 @@ sealed interface Trigger {
         override val icon: Int = R.drawable.rounded_mobile_text_2_24
     }
 
-    data object ScreenUnlock : Trigger {
-        override val title: Int = R.string.diy_trigger_screen_unlock
+    data object DeviceUnlock : Trigger {
+        override val title: Int = R.string.diy_trigger_device_unlock
         override val icon: Int = R.drawable.rounded_mobile_unlock_24
     }
 

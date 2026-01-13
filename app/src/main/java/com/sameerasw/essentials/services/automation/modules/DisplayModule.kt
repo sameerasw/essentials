@@ -33,7 +33,7 @@ class DisplayModule : AutomationModule {
                     handleStateChange(context, false)
                 }
                 Intent.ACTION_USER_PRESENT -> {
-                    handleTrigger(context, Trigger.ScreenUnlock)
+                    handleTrigger(context, Trigger.DeviceUnlock)
                 }
             }
         }

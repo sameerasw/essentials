@@ -427,7 +427,7 @@
     <string name="diy_automation_label">Automation</string>
     <string name="diy_trigger_screen_off">Screen Off</string>
     <string name="diy_trigger_screen_on">Screen On</string>
-    <string name="diy_trigger_screen_unlock">Screen Unlocked</string>
+    <string name="diy_trigger_device_unlock">Device Unlock</string>
     <string name="diy_trigger_charger_connected">Charger Connected</string>
     <string name="diy_trigger_charger_disconnected">Charger Disconnected</string>
     

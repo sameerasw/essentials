@@ -70,7 +70,7 @@ object AutomationManager {
                             requiredModuleIds.add(PowerModule.ID)
                             powerAutomations.add(automation)
                         }
-                        is Trigger.ScreenOn, is Trigger.ScreenOff, is Trigger.ScreenUnlock -> {
+                        is Trigger.ScreenOn, is Trigger.ScreenOff, is Trigger.DeviceUnlock -> {
                             requiredModuleIds.add(DisplayModule.ID)
                             displayAutomations.add(automation)
                         }
