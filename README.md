@@ -22,7 +22,7 @@ Essential tools, mods and workarounds for Pixels and other Androids
 - [Features](#features)
 - [Requirements](#requirements)
 - [Screenshots](#screenshots)
-- [Shizuku](#shizuku)
+- [Shell Providers (Shizuku & Root)](#shell-providers-shizuku--root)
 - [Accessibility Permissions](#how-to-grant-accessibility-permissions)
 - [Localization](#localization)
 - [Contributing](#contributing)
@@ -31,19 +31,19 @@ Essential tools, mods and workarounds for Pixels and other Androids
 
 ### Tools
 
+- **Maps Power Saving Mode**: Optimize battery usage during Google Maps navigation by managing screen state (requires Shizuku or Root).
+- **Are we there yet? (Travel Alarm)**: Never miss your stop again. Set a destination and get notified when you are nearby. Features real-time distance tracking in the status bar and Live Activity support on the lock screen.
+- **DIY Automation [Testing]**: Create custom automations based on device triggers (e.g., app launches, time) or states (e.g., screen on/off, battery level).
 - **Screen Off Widget**: An invisible widget that can be placed on the home screen to quickly lock the device without using the power button. Now with configurable haptic feedback.
 - **Caffeinate**: A Quick Settings tile to keep the display awake indefinitely or for a set duration.
 - **Sound Mode Tile**: A Quick Settings tile to toggle between Ring, Vibrate, and Silent sound modes.
-- **Button Remap**: Long-press or double-tap hardware buttons to trigger various actions like flashlight, camera, or custom shortcuts. Now supports screen-off remapping with Shizuku.
-- **Maps Power Saving Mode**: Optimize battery usage during Google Maps navigation by managing screen state (requires Shizuku).
+- **Button Remap**: Long-press or double-tap hardware buttons to trigger various actions like flashlight, camera, or custom shortcuts. Supports screen-off remapping with Shizuku or Root.
 - **Link Actions**: Intercept and manage how links are opened, allowing you to choose specific apps for different link types.
 - **Snooze System Notifications**: Automatically snooze persistent system notifications that cannot be dismissed normally.
 - **App Freezing**: Easily freeze/unfreeze apps to save battery and system resources. Includes auto-freezing, frozen app shortcuts, and a dedicated management UI.
 - **App Lock**: Secure your applications with a dedicated app lock feature. Integrated with Quick Settings for easy toggling.
 - **Flashlight Enhancements**: Advanced flashlight control with smooth fade-in/out, volume key intensity adjustment, global brightness controls, and live activity support.
 - **Screen Locked Security**: Protect your device by disabling sensitive Quick Settings tiles and power menu when the device is locked.
-- **Backups**: (Experimental) Export and import your app settings.
-- **Help and Guides**: Built-in instructions and guides to help you set up and use features effectively.
 
 ### Visuals
 
@@ -69,6 +69,8 @@ A collection of useful tiles to toggle system settings:
 - **App Freezing**: Toggle app freezing functionality.
 - **App Lock**: Toggle application lock.
 - **Flashlight**: Toggle flashlight with brightness adjustment support.
+- **NFC**: Toggle NFC functionality.
+- **Flashlight pulse**: Pulse flashlight for notifications
 
 # Requirements
 
@@ -94,10 +96,11 @@ A collection of useful tiles to toggle system settings:
   <img src="https://github.com/user-attachments/assets/d77c91c0-a1b3-45e4-9123-eee0f09a558f" width="19%" />
 </p>
 
-# Shizuku
+# Shell Providers (Shizuku & Root)
 
-- Make sure to get the latest version of Shizuku preferably from a fork such as [yangFenTuoZi/Shizuku](https://github.com/yangFenTuoZi/Shizuku) or other not from the Google Play as it is no longer well supported especially with Android 16 QPR1 up.
-- Also It seems like Shizuku might not work with root mode for the app but it will work with ADB/ Wireless ADB method so please use that impleemntation to start Shizuku services for now.
+- Essentials supports both **Shizuku** and **Root** as shell providers for executing advanced system-level commands.
+- **Shizuku**: Make sure to get the latest version of Shizuku preferably from a fork such as [yangFenTuoZi/Shizuku](https://github.com/yangFenTuoZi/Shizuku) or other not from the Google Play as it is no longer well supported especially with Android 16 QPR1 up.
+- **Root**: If your device is rooted, Essentials can bypass Shizuku and use root privileges directly for features like Button Remap and App Freezing.
 
 # How to grant accessibility permissions
 
@@ -130,5 +133,5 @@ Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of co
 ---
 
 <p align="center">
-  Last updated: 2026-01-09
+  Last updated: 2026-01-13
 </p>

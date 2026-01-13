@@ -42,7 +42,6 @@
     <string name="screen_on">Écran allumé</string>
     <string name="volume_up">Volume Haut</string>
     <string name="volume_down">Volume Bas</string>
-    <string name="action_none">Aucune</string>
     <string name="action_toggle_flashlight">Basculer la lampe-torche</string>
     <string name="action_media_play_pause">Jouer/mettre en pause le média</string>
     <string name="action_media_next">Prochain média</string>

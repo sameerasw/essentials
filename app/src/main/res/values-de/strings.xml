@@ -42,7 +42,6 @@
     <string name="screen_on">Display an</string>
     <string name="volume_up">Lautstärke erhöhen</string>
     <string name="volume_down">Lautstärke verringern</string>
-    <string name="action_none">Nichts</string>
     <string name="action_toggle_flashlight">Taschenlampe ein-/ausschalten</string>
     <string name="action_media_play_pause">Medien - Play/Pause</string>
     <string name="action_media_next">Medien - Nächstes</string>
