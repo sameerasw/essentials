@@ -6,17 +6,34 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
+import androidx.compose.material3.carousel.rememberCarouselState
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.dp
+import com.sameerasw.essentials.ui.components.ReusableTopAppBar
+import com.sameerasw.essentials.ui.theme.EssentialsTheme
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
+import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.diy.Automation
 import com.sameerasw.essentials.ui.components.ReusableTopAppBar
@@ -65,13 +82,36 @@ class AutomationEditorActivity : ComponentActivity() {
                         )
                     }
                 ) { innerPadding ->
-                    Box(
+                    val configuration = LocalConfiguration.current
+                    val screenWidth = configuration.screenWidthDp.dp
+                    val carouselState = rememberCarouselState { 2 } // 0: Trigger/State, 1: Actions
+
+                    HorizontalMultiBrowseCarousel(
+                        state = carouselState,
+                        preferredItemWidth = screenWidth,
+                        itemSpacing = 4.dp,
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(innerPadding),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text("Editor Content Coming Soon")
+                        contentPadding = PaddingValues(horizontal = 24.dp)
+                    ) { index ->
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .maskClip(MaterialTheme.shapes.extraLarge)
+                        ) {
+                            if (index == 0) {
+                                // Trigger / State Editor
+                                Box(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface), contentAlignment = Alignment.Center) {
+                                    Text("Trigger/State Editor")
+                                }
+                            } else {
+                                // Actions Editor
+                                Box(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surfaceBright), contentAlignment = Alignment.Center) {
+                                    Text("Actions Editor")
+                                }
+                            }
+                        }
                     }
                 }
             }
