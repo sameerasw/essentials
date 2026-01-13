@@ -279,7 +279,7 @@ class SettingsRepository(private val context: Context) {
     fun getAllConfigsAsJsonString(): String {
         return try {
             val allConfigs = mutableMapOf<String, Map<String, Map<String, Any>>>()
-            val prefFiles = listOf("essentials_prefs", "caffeinate_prefs", "link_prefs")
+            val prefFiles = listOf("essentials_prefs", "caffeinate_prefs", "link_prefs", "diy_automations_prefs")
 
             prefFiles.forEach { fileName ->
                 val p = context.getSharedPreferences(fileName, Context.MODE_PRIVATE)
