@@ -27,7 +27,7 @@
     <string name="app_lock_biometric_note">Noch ein Hinweis: Die biometrische Authentifizierungsaufforderung unterstützt ausschließlich sichere Methoden der Klasse STARK. Gesichtserkennungsmethoden der Klasse SCHWACH auf Geräten wie dem Pixel 7 können nur die sonstig verfügbaren STARK-Authentifizierungsmethoden wie Fingerabdruck oder PIN nutzen.</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Aktiviere Tastenneubelegung</string>
-    <string name="button_remap_use_shizuku_title">Use Shizuku or Root or Root</string>
+    <string name="button_remap_use_shizuku_title">Nutze Shizuku</string>
     <string name="button_remap_use_shizuku_desc">Funktioniert mit ausgeschaltetem Display (Empfohlen)</string>
     <string name="shizuku_not_running_toast">Shizuku läuft nicht</string>
     <string name="shizuku_detected_prefix">Erkannte %1$s</string>
@@ -42,7 +42,6 @@
     <string name="screen_on">Display an</string>
     <string name="volume_up">Lautstärke erhöhen</string>
     <string name="volume_down">Lautstärke verringern</string>
-    <string name="action_none">Nichts</string>
     <string name="action_toggle_flashlight">Taschenlampe ein-/ausschalten</string>
     <string name="action_media_play_pause">Medien - Play/Pause</string>
     <string name="action_media_next">Medien - Nächstes</string>
@@ -247,6 +246,13 @@
     <string name="feat_notification_lighting_desc">Bei Benachrichtigungen aufleuchten</string>
     <string name="feat_sound_mode_tile_title">Tonmodus-Kachel</string>
     <string name="feat_sound_mode_tile_desc">Kachel in den Schnelleinstellungen zum Umschalten des Tonmodus</string>
+    <!-- DIY Automation -->
+    <string name="diy_create_trigger_title">Trigger Automation</string>
+    <string name="diy_create_trigger_desc">Schedule an action to trigger on an observation</string>
+    <string name="diy_create_state_title">State Automation</string>
+    <string name="diy_create_state_desc">Schedule an action to execute based on the state of a condition in and out</string>
+    <string name="diy_editor_new_title">New Automation</string>
+    <string name="diy_editor_edit_title">Edit Automation</string>
     <string name="feat_link_actions_title">Link-Aktionen</string>
     <string name="feat_link_actions_desc">Links mit mehreren Apps verwalten</string>
     <string name="feat_snooze_notifications_title">Systembenachrichtigungen stumm schalten</string>
@@ -342,7 +348,7 @@
     <string name="perm_shizuku_title">Shizuku</string>
     <string name="perm_shizuku_desc">Benötigt für erweiterte Befehle. Installiere Shizuku aus dem Play Store.</string>
     <string name="perm_shizuku_install_action">Installiere Shizuku</string>
-    <string name="perm_shizuku_grant_title">Grant Permission</string>
+    <string name="perm_shizuku_grant_title">Shizuku-Berechtigung</string>
     <string name="perm_shizuku_grant_desc">Benötigt, um Energiesparbefehle auszuführen, während Maps navigiert.</string>
     <string name="perm_root_title">Root Access</string>
     <string name="perm_root_desc">Permissions required for system actions using Root privileges.</string>
@@ -389,6 +395,41 @@
     <string name="coming_soon_title">Do-It-Yourself</string>
     <string name="coming_soon_desc">Hier bahnt sich etwas Experimentelles an. Bleibe dran für Automatisierungen und erweiterte Modifikationen.</string>
     <string name="coming_soon_label">Demnächst verfügbar</string>
+    <string name="diy_trigger_label">Trigger</string>
+    <string name="diy_state_label">State</string>
+    <string name="diy_action_label">Action</string>
+    <string name="diy_in_label">In</string>
+    <string name="diy_out_label">Out</string>
+    <string name="diy_automation_label">Automation</string>
+    <string name="diy_trigger_screen_off">Screen Off</string>
+    <string name="diy_trigger_screen_on">Screen On</string>
+    <string name="diy_trigger_device_unlock">Device Unlock</string>
+    <string name="diy_trigger_charger_connected">Charger Connected</string>
+    <string name="diy_trigger_charger_disconnected">Charger Disconnected</string>
+    <string name="diy_state_charging">Charging</string>
+    <string name="diy_state_screen_on">Screen On</string>
+    <string name="diy_action_haptic">Vibrate</string>
+    <string name="diy_action_notification">Show Notification</string>
+    <string name="diy_action_remove_notification">Remove Notification</string>
+    <string name="diy_action_flashlight_on">Turn On Flashlight</string>
+    <string name="diy_action_flashlight_off">Turn Off Flashlight</string>
+    <string name="diy_action_flashlight_toggle">Toggle Flashlight</string>
+    <string name="diy_action_dim_wallpaper">Dim Wallpaper</string>
+    <string name="diy_dim_wallpaper_desc">This action requires Shizuku or Root to adjust system wallpaper dimming.</string>
+    <string name="diy_select_trigger">Select Trigger</string>
+    <string name="diy_select_state">Select State</string>
+    <string name="diy_select_action">Select Action</string>
+    <string name="diy_in_action_label">In Action</string>
+    <string name="diy_out_action_label">Out Action</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_save">Save</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_enable">Enable</string>
+    <string name="action_disable">Disable</string>
+    <string name="automation_service_channel_name">Automation Service</string>
+    <string name="automation_service_running_title">Automations Active</string>
+    <string name="automation_service_running_desc">Monitoring system events for your automations</string>
     <!-- About Section -->
     <string name="app_developer_name">Sameera Wijerathna</string>
     <string name="app_description">Die alles umfassende Werkzeugkiste für Ihr Pixel und Android-Geräte</string>
@@ -646,7 +687,7 @@
     <string name="instruction_section_lighting_title">Das Benachrichtigungslicht funktioniert nicht</string>
     <string name="instruction_section_lighting_desc">Das hängt vom OEM ab. Einige wie OneUI scheinen keine Überlagerungen über dem Always-On-Display zuzulassen, wodurch die Lichteffekte nicht angezeigt werden können. Versuche in diesem Fall, das Ambient-Display als Workaround zu verwenden. </string>
     <string name="instruction_section_button_title">Die Neuzuweisung der Tasten funktioniert nicht, wenn das Display ausgeschaltet ist</string>
-    <string name="instruction_section_button_desc">Some OEMs limit the accessibility service reporting once the display is actually off but they may still work while the AOD is on. \nIn this case, you may able to use button remaps with AOD on but not with off. \n\nAs a workaround, you will need to use Shizuku permissions and turn on the \'Use Shizuku or Root\' toggle in button remap settings which identifies and listen to hardware input events.\nThis is not guaranteed to work on all devices and needs testing.\n\nAnd even if it\'s on, Shizuku method only will be used when it\'s needed. Otherwise it will always fallback to Accessibility which also handles the blocking of the actual input during long press.</string>
+    <string name="instruction_section_button_desc">Einige OEMs schränken die Barrierefreiheitsdienste ein, sobald das Display ausgeschaltet ist, aber sie funktionieren möglicherweise weiterhin, wenn das Always-on-Display eingeschaltet ist. \nIn diesem Fall kannst du möglicherweise die Tastenbelegung mit eingeschaltetem Always-on-Display verwenden, jedoch nicht mit ausgeschaltetem Always-on-Display. \n\nAls Workaround musst du die Shizuku-Berechtigungen verwenden und in den Einstellungen für die Tastenbelegung die Option „Shizuku verwenden” aktivieren, die Hardware-Eingabeereignisse identifiziert und abhört. \nEs kann nicht garantiert werden, dass dies auf allen Geräten funktioniert, daher muss es getestet werden. \n\nSelbst wenn diese Option aktiviert ist, wird die Shizuku-Methode nur bei Bedarf verwendet. Andernfalls wird immer auf den Barrierefreiheitsdienst zurückgegriffen, welcher auch das Blockieren der tatsächlichen Eingabe bei langem Drücken übernimmt.</string>
     <string name="instruction_section_flashlight_title">Die Helligkeit der Taschenlampe funktioniert nicht</string>
     <string name="instruction_section_flashlight_desc">Nur eine begrenzte Anzahl von Geräten verfügt über Hardware- und Software-Unterstützung zur Einstellung der Taschenlampenintensität. \n\nDie Mindestversion von Android ist 13 (SDK33).\nDie Helligkeitseinstellung der Taschenlampe unterstützt nur HAL Version 3.8 und höher, daher gehören zu den unterstützten Geräten die neuesten Modelle (z. B. Pixel 6/7, Samsung S23 usw.).\'\npolodarb/Flashlight-Tiramisu</string>
     <string name="instruction_section_about_title">Was zum Teufel ist das für eine App?</string>
@@ -665,14 +706,14 @@
     <string name="bug_report_email_subject">Essentials Fehlerbericht</string>
     <string name="bug_report_send_via">Senden über</string>
     <!-- Location Reached -->
-    <string name="feat_location_reached_title">Sind wir schon da?</string>
-    <string name="feat_location_reached_desc">Alarm bei Zielnähe</string>
+    <string name="feat_location_reached_title">Location reached</string>
+    <string name="feat_location_reached_desc">Get notified when you arrive at a specific destination.</string>
     <string name="location_reached_pick_destination">Ziel</string>
     <string name="location_reached_set_destination_btn">Ziel setzen</string>
     <string name="location_reached_status_tracking">Erfassung: %1$.4f, %2$.4f</string>
     <string name="location_reached_status_none">Kein Ziel gesetzt</string>
-    <string name="location_reached_how_to">Öffne Google Maps, wähle einen Ort aus und teile ihn mit Essentials.</string>
-    <string name="location_reached_radius_title">Alarmradius: %d m</string>
+    <string name="location_reached_how_to">Open your map app, pick a location, and share it to Essentials.</string>
+    <string name="location_reached_radius_title">Radius: %d m</string>
     <string name="location_reached_radius_desc">Entfernung zum Auslösen des Alarms</string>
     <string name="location_reached_enable_title">Benachrichtigung aktivieren</string>
     <string name="perm_location_title">Standort</string>
