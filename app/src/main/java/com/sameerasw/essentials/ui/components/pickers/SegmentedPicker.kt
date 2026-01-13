@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CornerBasedShape
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -24,14 +26,15 @@ fun <T> SegmentedPicker(
     selectedItem: T,
     onItemSelected: (T) -> Unit,
     labelProvider: (T) -> String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    cornerShape: CornerSize = MaterialTheme.shapes.extraSmall.bottomEnd,
 ) {
     val view = androidx.compose.ui.platform.LocalView.current
     Row(
         modifier = modifier
             .background(
                 color = MaterialTheme.colorScheme.surfaceBright,
-                shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd)
+                shape = RoundedCornerShape(cornerShape)
             )
             .padding(10.dp),
         horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
