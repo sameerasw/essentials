@@ -35,6 +35,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.DropdownMenu
@@ -62,6 +66,8 @@ import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.components.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.components.sheets.DimWallpaperSettingsSheet
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
 import com.sameerasw.essentials.utils.HapticUtil
 
 class AutomationEditorActivity : ComponentActivity() {
@@ -113,6 +119,19 @@ class AutomationEditorActivity : ComponentActivity() {
             EssentialsTheme {
                 val view = LocalView.current
                 var carouselState = rememberCarouselState { 2 } // 0: Trigger/State, 1: Actions
+
+                // Haptic on carousel page change
+                LaunchedEffect(carouselState) {
+                    var isFirst = true
+                    snapshotFlow { carouselState.currentItem }
+                        .collect { 
+                            if (isFirst) {
+                                isFirst = false
+                            } else {
+                                HapticUtil.performHeavyHaptic(view)
+                            }
+                        }
+                }
 
                 // State for selections
                 // Initialize with existing data or defaults
@@ -188,6 +207,28 @@ class AutomationEditorActivity : ComponentActivity() {
                     val configuration = LocalConfiguration.current
                     val screenWidth = configuration.screenWidthDp.dp
                     
+
+                    // Haptic Connection for Swipe Texture
+                    val nestedScrollConnection = remember {
+                        object : NestedScrollConnection {
+                            var accumulatedScroll = 0f
+                            val threshold = 40f 
+
+                            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                                // Only handle drag (user interaction)
+                                if (source == NestedScrollSource.Drag) {
+                                    accumulatedScroll += available.x
+
+                                    if (kotlin.math.abs(accumulatedScroll) >= threshold) {
+                                             HapticUtil.performSliderHaptic(view) // Subtle tick
+                                        accumulatedScroll = 0f
+                                    }
+                                }
+                                return Offset.Zero
+                            }
+                        }
+                    }
+
                     Column(modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding)
@@ -198,7 +239,8 @@ class AutomationEditorActivity : ComponentActivity() {
                             itemSpacing = 4.dp,
                             modifier = Modifier
                                 .weight(1f)
-                                .fillMaxWidth(),
+                                .fillMaxWidth()
+                                .nestedScroll(nestedScrollConnection),
                             contentPadding = PaddingValues(horizontal = 18.dp)
                         ) { index ->
                             Box(

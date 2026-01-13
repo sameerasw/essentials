@@ -117,7 +117,7 @@ fun DimWallpaperSettingsSheet(
                     value = dimAmount,
                     onValueChange = { 
                         dimAmount = it 
-                        HapticUtil.performUIHaptic(view)
+                        HapticUtil.performSliderHaptic(view)
                     },
                     valueRange = 0f..1f
                 )
@@ -164,7 +164,6 @@ fun DimWallpaperSettingsSheet(
                     Text(stringResource(R.string.action_save))
                 }
             }
-            Spacer(modifier = Modifier.size(16.dp))
         }
     }
 }

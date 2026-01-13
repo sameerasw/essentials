@@ -27,9 +27,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalView
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.diy.Automation
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
+import com.sameerasw.essentials.utils.HapticUtil
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -102,12 +104,16 @@ private fun AutomationTypeOption(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
+    val view = LocalView.current
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainerHighest,
         shape = RoundedCornerShape(4.dp),
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
+            .clickable { 
+                HapticUtil.performUIHaptic(view)
+                onClick() 
+            }
     ) {
         Row(
             modifier = Modifier.padding(12.dp),
