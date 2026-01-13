@@ -43,7 +43,6 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string name="screen_on">Schermo Acceso</string>
     <string name="volume_up">Volume Su</string>
     <string name="volume_down">Volume Giù</string>
-    <string name="action_none">None</string>
     <string name="action_toggle_flashlight">Attiva/Disattiva la torcia</string>
     <string name="action_media_play_pause">Media play/pause</string>
     <string name="action_media_next">Media next</string>
