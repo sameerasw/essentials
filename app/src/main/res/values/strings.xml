@@ -411,6 +411,17 @@
     <string name="coming_soon_title">Do It Yourself</string>
     <string name="coming_soon_desc">Something experimental is brewing here. Stay tuned for automations and advanced mods.</string>
     <string name="coming_soon_label">Coming Soon</string>
+    <string name="diy_trigger_label">Trigger</string>
+    <string name="diy_state_label">State</string>
+    <string name="diy_action_label">Action</string>
+    <string name="diy_in_label">In</string>
+    <string name="diy_out_label">Out</string>
+    <string name="diy_automation_label">Automation</string>
+    <string name="diy_trigger_screen_off">Screen Off</string>
+    <string name="diy_state_charging">Charging</string>
+    <string name="diy_action_haptic">Haptic Vibration</string>
+    <string name="diy_action_notification">Show Notification</string>
+    <string name="diy_action_remove_notification">Remove Notification</string>
 
     <!-- About Section -->
     <string name="app_developer_name">Sameera Wijerathna</string>
