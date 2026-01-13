@@ -43,7 +43,8 @@ import com.sameerasw.essentials.utils.HapticUtil
 @Composable
 fun AutomationItem(
     automation: Automation,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
 ) {
 
     val view = LocalView.current
@@ -55,7 +56,7 @@ fun AutomationItem(
         shape = MaterialTheme.shapes.extraSmall,
         modifier = modifier.clickable {
             HapticUtil.performVirtualKeyHaptic(view)
-//            onClick()
+            onClick()
         }) {
         Row(
             modifier = Modifier

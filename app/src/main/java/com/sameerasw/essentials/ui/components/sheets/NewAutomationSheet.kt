@@ -1,6 +1,7 @@
 package com.sameerasw.essentials.ui.components.sheets
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,6 +15,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -46,16 +48,29 @@ fun NewAutomationSheet(
                 .fillMaxWidth()
                 .padding(bottom = 12.dp, start = 24.dp, end = 24.dp)
         ) {
-            Row {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 18.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Text(
                     text = stringResource(R.string.diy_editor_new_title),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 18.dp)
+                    modifier = Modifier.weight(1f)
                 )
+                
+                OutlinedIconButton(
+                    onClick = { /* TODO: Implement import */ },
+                    enabled = false
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_download_24),
+                        contentDescription = "Import Automation"
+                    )
+                }
             }
 
             RoundedCardContainer {
@@ -90,7 +105,9 @@ private fun AutomationTypeOption(
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainerHighest,
         shape = RoundedCornerShape(4.dp),
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
     ) {
         Row(
             modifier = Modifier.padding(12.dp),

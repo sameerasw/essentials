@@ -80,7 +80,7 @@ fun DIYScreen(
                     items(automations) { automation ->
                         AutomationItem(
                             automation = automation,
-                            modifier = Modifier.clickable {
+                            onClick = {
                                 context.startActivity(AutomationEditorActivity.createIntent(context, automation.id))
                             }
                         )
