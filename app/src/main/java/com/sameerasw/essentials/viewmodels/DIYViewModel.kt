@@ -1,6 +1,6 @@
 package com.sameerasw.essentials.viewmodels
 
-import DIYRepository
+import com.sameerasw.essentials.domain.diy.DIYRepository
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope

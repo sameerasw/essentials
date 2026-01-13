@@ -98,4 +98,7 @@ dependencies {
 
     // Google Maps & Location
     implementation(libs.play.services.location)
+    
+    // Kotlin Reflect for dynamic sealed class serialization
+    implementation(kotlin("reflect"))
 }

@@ -1,8 +1,20 @@
+package com.sameerasw.essentials.domain.diy
+
 import android.content.Context
 import android.content.SharedPreferences
-import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonDeserializationContext
+import com.google.gson.JsonDeserializer
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
+import com.google.gson.JsonSerializationContext
+import com.google.gson.JsonSerializer
 import com.google.gson.reflect.TypeToken
+import com.sameerasw.essentials.domain.diy.Action
+import kotlin.reflect.KClass
 import com.sameerasw.essentials.domain.diy.Automation
+import com.sameerasw.essentials.domain.diy.State
+import com.sameerasw.essentials.domain.diy.Trigger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -14,7 +26,24 @@ object DIYRepository {
     val automations = _automations.asStateFlow()
     
     private var prefs: SharedPreferences? = null
-    private val gson = Gson()
+    private val gson = GsonBuilder()
+        .registerTypeAdapter(Trigger::class.java, SealedAdapter(Trigger::class))
+        .registerTypeAdapter(State::class.java, SealedAdapter(State::class))
+        .registerTypeAdapter(Action::class.java, SealedAdapter(Action::class))
+        .create()
+
+    private class SealedAdapter<T : Any>(private val kClass: KClass<T>) : JsonSerializer<T>, JsonDeserializer<T> {
+        override fun serialize(src: T, typeOfSrc: java.lang.reflect.Type, context: JsonSerializationContext): JsonElement {
+            val obj = JsonObject()
+            obj.addProperty("type", src::class.simpleName)
+            return obj
+        }
+
+        override fun deserialize(json: JsonElement, typeOfT: java.lang.reflect.Type, context: JsonDeserializationContext): T? {
+            val typeName = json.asJsonObject.get("type").asString
+            return kClass.sealedSubclasses.firstOrNull { it.simpleName == typeName }?.objectInstance
+        }
+    }
 
     fun init(context: Context) {
         if (prefs != null) return
