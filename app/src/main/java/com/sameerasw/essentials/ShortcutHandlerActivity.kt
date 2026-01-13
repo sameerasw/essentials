@@ -13,6 +13,7 @@ import androidx.compose.material3.LoadingIndicator
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import com.sameerasw.essentials.ui.activities.AppFreezingActivity
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.FreezeManager
 import kotlinx.coroutines.CoroutineScope

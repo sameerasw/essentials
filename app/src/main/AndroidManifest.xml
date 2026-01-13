@@ -87,6 +87,14 @@
             android:launchMode="singleInstance"
             android:theme="@style/Theme.Essentials.FullScreenAlarm" />
 
+
+        <activity
+            android:name=".ui.activities.AutomationEditorActivity"
+            android:exported="false"
+            android:label="@string/diy_editor_new_title"
+            android:theme="@style/Theme.Essentials" />
+
+
         <service
             android:name=".services.LocationReachedService"
             android:enabled="true"
@@ -94,7 +102,7 @@
             android:foregroundServiceType="location" />
 
         <activity
-            android:name=".AppFreezingActivity"
+            android:name=".ui.activities.AppFreezingActivity"
             android:exported="true"
             android:label="@string/freeze_activity_title"
             android:theme="@style/Theme.Essentials">
