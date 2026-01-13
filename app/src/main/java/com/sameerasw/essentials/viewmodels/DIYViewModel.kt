@@ -1,15 +1,20 @@
 package com.sameerasw.essentials.viewmodels
 
-import androidx.lifecycle.ViewModel
+import DIYRepository
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.sameerasw.essentials.domain.diy.Automation
-import com.sameerasw.essentials.domain.diy.DIYRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 
-class DIYViewModel : ViewModel() {
+class DIYViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = DIYRepository
+
+    init {
+        repository.init(application)
+    }
 
     val automations: StateFlow<List<Automation>> = repository.automations
         .stateIn(

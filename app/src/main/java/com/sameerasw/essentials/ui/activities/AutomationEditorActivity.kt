@@ -45,9 +45,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.domain.diy.Automation
+import com.sameerasw.essentials.domain.diy.Trigger
+import com.sameerasw.essentials.domain.diy.State as DIYState
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.pickers.SegmentedPicker
 import com.sameerasw.essentials.utils.HapticUtil
@@ -76,12 +80,17 @@ class AutomationEditorActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        // Init repository
+        DIYRepository.init(applicationContext)
+
         val automationId = intent.getStringExtra(EXTRA_AUTOMATION_ID)
         val automationTypeStr = intent.getStringExtra(EXTRA_AUTOMATION_TYPE)
         
-        val isEditMode = automationId != null
+        val existingAutomation = if (automationId != null) DIYRepository.getAutomation(automationId) else null
+        val isEditMode = existingAutomation != null
+
         val automationType = if (isEditMode) {
-             if (automationId == "2") Automation.Type.STATE else Automation.Type.TRIGGER
+             existingAutomation?.type ?: Automation.Type.TRIGGER
         } else {
             try {
                 Automation.Type.valueOf(automationTypeStr ?: Automation.Type.TRIGGER.name)
@@ -95,6 +104,30 @@ class AutomationEditorActivity : ComponentActivity() {
         setContent {
             EssentialsTheme {
                 val view = LocalView.current
+                var carouselState = rememberCarouselState { 2 } // 0: Trigger/State, 1: Actions
+
+                // State for selections
+                // Initialize with existing data or defaults
+                var selectedTrigger by remember { mutableStateOf<Trigger?>(existingAutomation?.trigger) }
+                var selectedState by remember { mutableStateOf<DIYState?>(existingAutomation?.state) }
+                
+                // Actions
+                // For Trigger type
+                var selectedAction by remember { mutableStateOf<Action?>(existingAutomation?.actions?.firstOrNull()) }
+                
+                // For State type
+                var selectedInAction by remember { mutableStateOf<Action?>(existingAutomation?.entryAction) }
+                var selectedOutAction by remember { mutableStateOf<Action?>(existingAutomation?.exitAction) }
+                
+                // Tab for State Actions
+                var selectedActionTab by remember { mutableIntStateOf(0) } // 0: In, 1: Out
+
+                // Validation
+                val isValid = when (automationType) {
+                    Automation.Type.TRIGGER -> selectedTrigger != null && selectedAction != null
+                    Automation.Type.STATE -> selectedState != null && (selectedInAction != null || selectedOutAction != null)
+                }
+
                 Scaffold(
                     containerColor = MaterialTheme.colorScheme.surfaceContainer,
                     topBar = {
@@ -108,20 +141,7 @@ class AutomationEditorActivity : ComponentActivity() {
                 ) { innerPadding ->
                     val configuration = LocalConfiguration.current
                     val screenWidth = configuration.screenWidthDp.dp
-                    val carouselState = rememberCarouselState { 2 } // 0: Trigger/State, 1: Actions
-
-                    // State for selections
-                    var selectedTriggerId by remember { mutableStateOf("screen_off") }
-                    var selectedStateId by remember { mutableStateOf("wifi_connected") }
                     
-                    // Actions
-                    var selectedActionId by remember { mutableStateOf<String?>("flashlight") } // For Trigger automation
-                    var selectedInActionId by remember { mutableStateOf<String?>("flashlight") }
-                    var selectedOutActionId by remember { mutableStateOf<String?>("vibrate") }
-                    
-                    // Tab for State Actions
-                    var selectedActionTab by remember { mutableIntStateOf(0) } // 0: In, 1: Out
-
                     Column(modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding)
@@ -151,7 +171,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                         verticalArrangement = Arrangement.spacedBy(16.dp)
                                     ) {
                                         Text(
-                                            text = if (automationType == Automation.Type.TRIGGER) "Select Trigger" else "Select State",
+                                            text = stringResource(if (automationType == Automation.Type.TRIGGER) R.string.diy_select_trigger else R.string.diy_select_state),
                                             style = MaterialTheme.typography.titleLarge,
                                             fontWeight = FontWeight.Bold,
                                             color = MaterialTheme.colorScheme.onSurface,
@@ -160,33 +180,32 @@ class AutomationEditorActivity : ComponentActivity() {
                                         
                                         RoundedCardContainer(spacing = 2.dp) {
                                             if (automationType == Automation.Type.TRIGGER) {
-                                                // Mock Triggers
                                                 val triggers = listOf(
-                                                    Triple("screen_off", "Screen Off", R.drawable.rounded_mobile_cancel_24),
-                                                    Triple("screen_on", "Screen On", R.drawable.rounded_mobile_text_2_24),
-                                                    Triple("power_connected", "Power Connected", R.drawable.rounded_battery_charging_60_24)
+                                                    Trigger.ScreenOff,
+                                                    Trigger.ScreenOn,
+                                                    Trigger.ScreenUnlock,
+                                                    Trigger.ChargerConnected,
+                                                    Trigger.ChargerDisconnected
                                                 )
-                                                triggers.forEach { (id, name, icon) ->
+                                                triggers.forEach { trigger ->
                                                      EditorActionItem(
-                                                        title = name,
-                                                        iconRes = icon,
-                                                        isSelected = selectedTriggerId == id,
-                                                        onClick = { selectedTriggerId = id }
+                                                        title = stringResource(trigger.title),
+                                                        iconRes = trigger.icon,
+                                                        isSelected = selectedTrigger == trigger,
+                                                        onClick = { selectedTrigger = trigger }
                                                      )
                                                 }
                                             } else {
-                                                // Mock States
                                                 val states = listOf(
-                                                    Triple("wifi_connected", "Wifi Connected", R.drawable.rounded_android_wifi_3_bar_24),
-                                                    Triple("bluetooth_connected", "Bluetooth Connected", R.drawable.rounded_bluetooth_24),
-                                                    Triple("dnd_active", "DND Active", R.drawable.rounded_do_not_disturb_on_24)
+                                                    DIYState.Charging,
+                                                    DIYState.ScreenOn
                                                 )
-                                                states.forEach { (id, name, icon) ->
+                                                states.forEach { state ->
                                                      EditorActionItem(
-                                                        title = name,
-                                                        iconRes = icon,
-                                                        isSelected = selectedStateId == id,
-                                                        onClick = { selectedStateId = id }
+                                                        title = stringResource(state.title),
+                                                        iconRes = state.icon,
+                                                        isSelected = selectedState == state,
+                                                        onClick = { selectedState = state }
                                                      )
                                                 }
                                             }
@@ -202,7 +221,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                         verticalArrangement = Arrangement.spacedBy(16.dp)
                                     ) {
                                         Text(
-                                            text = "Select Action",
+                                            text = stringResource(R.string.diy_select_action),
                                             style = MaterialTheme.typography.titleLarge,
                                             fontWeight = FontWeight.Bold,
                                             color = MaterialTheme.colorScheme.onSurface,
@@ -211,7 +230,10 @@ class AutomationEditorActivity : ComponentActivity() {
 
                                         if (automationType == Automation.Type.STATE) {
                                             // Tabs for In/Out
-                                            val options = listOf("In Action", "Out Action")
+                                            val options = listOf(
+                                                stringResource(R.string.diy_in_action_label),
+                                                stringResource(R.string.diy_out_action_label)
+                                            )
                                             SegmentedPicker(
                                                 items = options,
                                                 selectedItem = options[selectedActionTab],
@@ -226,30 +248,45 @@ class AutomationEditorActivity : ComponentActivity() {
                                         }
                                         
                                         RoundedCardContainer(spacing = 2.dp) {
-                                            // Mock Actions
                                             val actions = listOf(
-                                                Triple("flashlight", "Toggle Flashlight", R.drawable.rounded_flashlight_on_24),
-                                                Triple("vibrate", "Toggle Vibrate", R.drawable.rounded_mobile_vibrate_24),
-                                                Triple("media_play_pause", "Media Play/Pause", R.drawable.rounded_play_pause_24),
-                                                Triple("none", "None", R.drawable.rounded_do_not_disturb_on_24) // Allow none/clear
+                                                Action.TurnOnFlashlight,
+                                                Action.TurnOffFlashlight,
+                                                Action.ToggleFlashlight,
+                                                Action.HapticVibration
                                             )
                                             
                                             val currentSelection = when(automationType) {
-                                                Automation.Type.TRIGGER -> selectedActionId
-                                                Automation.Type.STATE -> if (selectedActionTab == 0) selectedInActionId else selectedOutActionId
+                                                Automation.Type.TRIGGER -> selectedAction
+                                                Automation.Type.STATE -> if (selectedActionTab == 0) selectedInAction else selectedOutAction
                                             }
 
-                                            actions.forEach { (id, name, icon) ->
+                                            // None option
+                                            EditorActionItem(
+                                                title = stringResource(R.string.action_none),
+                                                iconRes = R.drawable.rounded_do_not_disturb_on_24,
+                                                isSelected = currentSelection == null,
+                                                onClick = {
+                                                    when(automationType) {
+                                                        Automation.Type.TRIGGER -> selectedAction = null
+                                                        Automation.Type.STATE -> {
+                                                            if (selectedActionTab == 0) selectedInAction = null
+                                                            else selectedOutAction = null
+                                                        }
+                                                    }
+                                                }
+                                            )
+
+                                            actions.forEach { action ->
                                                  EditorActionItem(
-                                                    title = name,
-                                                    iconRes = icon,
-                                                    isSelected = currentSelection == id,
+                                                    title = stringResource(action.title),
+                                                    iconRes = action.icon,
+                                                    isSelected = currentSelection == action,
                                                     onClick = { 
                                                         when(automationType) {
-                                                            Automation.Type.TRIGGER -> selectedActionId = id
+                                                            Automation.Type.TRIGGER -> selectedAction = action
                                                             Automation.Type.STATE -> {
-                                                                if (selectedActionTab == 0) selectedInActionId = id
-                                                                else selectedOutActionId = id
+                                                                if (selectedActionTab == 0) selectedInAction = action
+                                                                else selectedOutAction = action
                                                             }
                                                         }
                                                     }
@@ -285,15 +322,35 @@ class AutomationEditorActivity : ComponentActivity() {
                                     modifier = Modifier.size(20.dp)
                                 )
                                 Spacer(modifier = Modifier.size(8.dp))
-                                Text("Cancel")
+                                Text(stringResource(R.string.action_cancel))
                             }
 
                             Button(
                                 onClick = {
                                     HapticUtil.performVirtualKeyHaptic(view)
+                                    // Save logic
+                                    if (automationType == Automation.Type.TRIGGER) {
+                                        val newAutomation = Automation(
+                                            id = if (isEditMode) existingAutomation!!.id else java.util.UUID.randomUUID().toString(),
+                                            type = Automation.Type.TRIGGER,
+                                            trigger = selectedTrigger,
+                                            actions = listOfNotNull(selectedAction)
+                                        )
+                                        if (isEditMode) DIYRepository.updateAutomation(newAutomation) else DIYRepository.addAutomation(newAutomation)
+                                    } else {
+                                        val newAutomation = Automation(
+                                            id = if (isEditMode) existingAutomation!!.id else java.util.UUID.randomUUID().toString(),
+                                            type = Automation.Type.STATE,
+                                            state = selectedState,
+                                            entryAction = selectedInAction,
+                                            exitAction = selectedOutAction
+                                        )
+                                        if (isEditMode) DIYRepository.updateAutomation(newAutomation) else DIYRepository.addAutomation(newAutomation)
+                                    }
                                     finish()
                                 },
-                                modifier = Modifier.weight(1f)
+                                modifier = Modifier.weight(1f),
+                                enabled = isValid
                             ) {
                                 Icon(
                                     painter = androidx.compose.ui.res.painterResource(id = R.drawable.rounded_check_24),
@@ -301,7 +358,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                     modifier = Modifier.size(20.dp)
                                 )
                                 Spacer(modifier = Modifier.size(8.dp))
-                                Text("Save")
+                                Text(stringResource(R.string.action_save))
                             }
                         }
                     }

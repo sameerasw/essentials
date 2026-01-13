@@ -24,4 +24,19 @@ sealed interface Action {
         override val title: Int = R.string.diy_action_remove_notification
         override val icon: Int = R.drawable.rounded_notifications_off_24
     }
+
+    data object TurnOnFlashlight : Action {
+        override val title: Int = R.string.diy_action_flashlight_on
+        override val icon: Int = R.drawable.round_flashlight_on_24
+    }
+
+    data object TurnOffFlashlight : Action {
+        override val title: Int = R.string.diy_action_flashlight_off
+        override val icon: Int = R.drawable.rounded_flashlight_on_24
+    }
+
+    data object ToggleFlashlight : Action {
+        override val title: Int = R.string.diy_action_flashlight_toggle
+        override val icon: Int = R.drawable.rounded_flashlight_on_24
+    }
 }

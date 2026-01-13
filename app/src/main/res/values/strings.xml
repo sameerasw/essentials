@@ -426,10 +426,27 @@
     <string name="diy_out_label">Out</string>
     <string name="diy_automation_label">Automation</string>
     <string name="diy_trigger_screen_off">Screen Off</string>
+    <string name="diy_trigger_screen_on">Screen On</string>
+    <string name="diy_trigger_screen_unlock">Screen Unlocked</string>
+    <string name="diy_trigger_charger_connected">Charger Connected</string>
+    <string name="diy_trigger_charger_disconnected">Charger Disconnected</string>
+    
     <string name="diy_state_charging">Charging</string>
-    <string name="diy_action_haptic">Haptic Vibration</string>
+    <string name="diy_state_screen_on">Screen On</string>
+
+    <string name="diy_action_haptic">Vibrate</string>
     <string name="diy_action_notification">Show Notification</string>
     <string name="diy_action_remove_notification">Remove Notification</string>
+    <string name="diy_action_flashlight_on">Turn On Flashlight</string>
+    <string name="diy_action_flashlight_off">Turn Off Flashlight</string>
+    <string name="diy_action_flashlight_toggle">Toggle Flashlight</string>
+    <string name="diy_select_trigger">Select Trigger</string>
+    <string name="diy_select_state">Select State</string>
+    <string name="diy_select_action">Select Action</string>
+    <string name="diy_in_action_label">In Action</string>
+    <string name="diy_out_action_label">Out Action</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_save">Save</string>
 
     <!-- About Section -->
     <string name="app_developer_name">Sameera Wijerathna</string>
