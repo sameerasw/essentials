@@ -449,6 +449,8 @@
     <string name="action_save">Save</string>
     <string name="action_edit">Edit</string>
     <string name="action_delete">Delete</string>
+    <string name="action_enable">Enable</string>
+    <string name="action_disable">Disable</string>
 
     <!-- About Section -->
     <string name="app_developer_name">Sameera Wijerathna</string>

@@ -7,7 +7,8 @@ data class Automation(
     val state: State? = null,
     val actions: List<Action> = emptyList(),
     val entryAction: Action? = null,
-    val exitAction: Action? = null
+    val exitAction: Action? = null,
+    val isEnabled: Boolean = true
 ) {
     enum class Type {
         TRIGGER,

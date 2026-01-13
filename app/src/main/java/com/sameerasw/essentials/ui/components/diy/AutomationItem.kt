@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
@@ -40,12 +42,16 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.Color
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.DpOffset
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.utils.HapticUtil
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -54,7 +60,8 @@ fun AutomationItem(
     automation: Automation,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
-    onDelete: () -> Unit = {}
+    onDelete: () -> Unit = {},
+    onToggle: () -> Unit = {}
 ) {
 
     val view = LocalView.current
@@ -65,25 +72,44 @@ fun AutomationItem(
             containerColor = MaterialTheme.colorScheme.surfaceBright
         ),
         shape = MaterialTheme.shapes.extraSmall,
-        modifier = modifier.combinedClickable(
-            onClick = {
-                HapticUtil.performVirtualKeyHaptic(view)
-                onClick()
-            },
-            onLongClick = {
-                HapticUtil.performVirtualKeyHaptic(view)
-                showMenu = true
-            }
-        )
+        modifier = modifier
+            .combinedClickable(
+                onClick = {
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    onClick()
+                },
+                onLongClick = {
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    showMenu = true
+                }
+            )
+            .alpha(if (automation.isEnabled) 1f else 0.5f)
     ) {
         Box {
             // Dropdown Menu
-            DropdownMenu(
+            // Dropdown Menu
+            SegmentedDropdownMenu(
                 expanded = showMenu,
                 onDismissRequest = { showMenu = false },
-                offset = DpOffset(0.dp, 0.dp)
+                offset = DpOffset(0.dp, 0.dp),
             ) {
-                DropdownMenuItem(
+                val toggleText = if (automation.isEnabled) stringResource(R.string.action_disable) else stringResource(R.string.action_enable)
+                val toggleIcon = if (automation.isEnabled) R.drawable.rounded_close_24 else R.drawable.rounded_check_24
+                
+                SegmentedDropdownMenuItem(
+                    text = { Text(toggleText) },
+                    onClick = {
+                        showMenu = false
+                        onToggle()
+                    },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(toggleIcon),
+                            contentDescription = null
+                        )
+                    }
+                )
+                SegmentedDropdownMenuItem(
                     text = { Text(stringResource(R.string.action_edit)) },
                     onClick = {
                         showMenu = false
@@ -96,7 +122,7 @@ fun AutomationItem(
                         )
                     }
                 )
-                DropdownMenuItem(
+                SegmentedDropdownMenuItem(
                     text = { Text(stringResource(R.string.action_delete)) },
                     onClick = {
                         showMenu = false

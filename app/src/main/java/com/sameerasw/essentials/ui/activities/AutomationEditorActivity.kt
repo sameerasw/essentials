@@ -58,6 +58,8 @@ import com.sameerasw.essentials.domain.diy.DIYRepository
 import com.sameerasw.essentials.domain.diy.Trigger
 import com.sameerasw.essentials.domain.diy.State as DIYState
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.components.pickers.SegmentedPicker
 import com.sameerasw.essentials.utils.HapticUtil
 
@@ -154,11 +156,11 @@ class AutomationEditorActivity : ComponentActivity() {
                                         )
                                     }
 
-                                    DropdownMenu(
+                                    SegmentedDropdownMenu(
                                         expanded = showMenu,
                                         onDismissRequest = { showMenu = false }
                                     ) {
-                                        DropdownMenuItem(
+                                        SegmentedDropdownMenuItem(
                                             text = { Text(stringResource(R.string.action_delete)) },
                                             onClick = {
                                                 showMenu = false

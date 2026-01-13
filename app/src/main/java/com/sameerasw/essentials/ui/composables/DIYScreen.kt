@@ -85,6 +85,9 @@ fun DIYScreen(
                             },
                             onDelete = {
                                 viewModel.deleteAutomation(automation.id)
+                            },
+                            onToggle = {
+                                viewModel.toggleAutomation(automation.id)
                             }
                         )
                     }

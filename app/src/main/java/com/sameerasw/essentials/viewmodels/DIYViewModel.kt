@@ -26,4 +26,10 @@ class DIYViewModel(application: Application) : AndroidViewModel(application) {
     fun deleteAutomation(id: String) {
         repository.removeAutomation(id)
     }
+
+    fun toggleAutomation(id: String) {
+        repository.getAutomation(id)?.let { automation ->
+            repository.updateAutomation(automation.copy(isEnabled = !automation.isEnabled))
+        }
+    }
 }
