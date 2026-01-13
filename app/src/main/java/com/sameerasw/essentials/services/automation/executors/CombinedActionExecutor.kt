@@ -57,6 +57,9 @@ object CombinedActionExecutor {
             is Action.RemoveNotification -> {
                 // Placeholder
             }
+            is Action.DimWallpaper -> {
+                com.sameerasw.essentials.utils.ShellUtils.runCommand(context, "cmd wallpaper set-dim-amount ${action.dimAmount}")
+            }
         }
     }
     

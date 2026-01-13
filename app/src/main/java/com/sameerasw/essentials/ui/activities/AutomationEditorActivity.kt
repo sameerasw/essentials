@@ -61,6 +61,7 @@ import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.components.pickers.SegmentedPicker
+import com.sameerasw.essentials.ui.components.sheets.DimWallpaperSettingsSheet
 import com.sameerasw.essentials.utils.HapticUtil
 
 class AutomationEditorActivity : ComponentActivity() {
@@ -131,6 +132,10 @@ class AutomationEditorActivity : ComponentActivity() {
 
                 // Menu State
                 var showMenu by remember { mutableStateOf(false) }
+                
+                // Config Sheets
+                var showDimSettings by remember { mutableStateOf(false) }
+                var configAction by remember { mutableStateOf<Action.DimWallpaper?>(null) }
 
                 // Validation
                 val isValid = when (automationType) {
@@ -293,7 +298,8 @@ class AutomationEditorActivity : ComponentActivity() {
                                                 Action.TurnOnFlashlight,
                                                 Action.TurnOffFlashlight,
                                                 Action.ToggleFlashlight,
-                                                Action.HapticVibration
+                                                Action.HapticVibration,
+                                                Action.DimWallpaper()
                                             )
                                             
                                             val currentSelection = when(automationType) {
@@ -318,17 +324,28 @@ class AutomationEditorActivity : ComponentActivity() {
                                             )
 
                                             actions.forEach { action ->
+                                                // Check if the current selection matches this action type and update 'action' with the selected values if so
+                                                // This ensures the loop variable 'action' doesn't overwrite the configured values in 'currentSelection'
+                                                val resolvedAction = if (currentSelection != null && currentSelection::class == action::class) currentSelection else action
+                                                
                                                  EditorActionItem(
-                                                    title = stringResource(action.title),
-                                                    iconRes = action.icon,
-                                                    isSelected = currentSelection == action,
+                                                    title = stringResource(resolvedAction.title),
+                                                    iconRes = resolvedAction.icon,
+                                                    isSelected = currentSelection != null && currentSelection::class == resolvedAction::class,
+                                                    isConfigurable = resolvedAction.isConfigurable,
                                                     onClick = { 
                                                         when(automationType) {
-                                                            Automation.Type.TRIGGER -> selectedAction = action
+                                                            Automation.Type.TRIGGER -> selectedAction = resolvedAction
                                                             Automation.Type.STATE -> {
-                                                                if (selectedActionTab == 0) selectedInAction = action
-                                                                else selectedOutAction = action
+                                                                if (selectedActionTab == 0) selectedInAction = resolvedAction
+                                                                else selectedOutAction = resolvedAction
                                                             }
+                                                        }
+                                                    },
+                                                    onSettingsClick = {
+                                                        if (resolvedAction is Action.DimWallpaper) {
+                                                            configAction = resolvedAction
+                                                            showDimSettings = true
                                                         }
                                                     }
                                                  )
@@ -337,6 +354,25 @@ class AutomationEditorActivity : ComponentActivity() {
                                     }
                                 }
                             }
+                        }
+                        
+                        if (showDimSettings && configAction != null) {
+                            DimWallpaperSettingsSheet(
+                                initialAction = configAction!!,
+                                onDismiss = { showDimSettings = false },
+                                onSave = { newAction ->
+                                    showDimSettings = false
+                                    // Update the selection with configured action
+                                     when(automationType) {
+                                        Automation.Type.TRIGGER -> selectedAction = newAction
+                                        Automation.Type.STATE -> {
+                                            if (selectedActionTab == 0) selectedInAction = newAction
+                                            else selectedOutAction = newAction
+                                        }
+                                    }
+                                    configAction = null
+                                }
+                            )
                         }
 
                         // Bottom Actions
@@ -414,7 +450,9 @@ fun EditorActionItem(
     title: String,
     iconRes: Int,
     isSelected: Boolean,
+    isConfigurable: Boolean = false,
     onClick: () -> Unit,
+    onSettingsClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val view = LocalView.current
@@ -451,5 +489,15 @@ fun EditorActionItem(
             modifier = Modifier.weight(1f),
             color = if (isSelected) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
         )
+        
+        if (isSelected && isConfigurable) {
+             IconButton(onClick = onSettingsClick) {
+                Icon(
+                    painter = painterResource(id = R.drawable.rounded_settings_24),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
+        }
     }
 }

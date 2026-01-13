@@ -34,14 +34,27 @@ object DIYRepository {
 
     private class SealedAdapter<T : Any>(private val kClass: KClass<T>) : JsonSerializer<T>, JsonDeserializer<T> {
         override fun serialize(src: T, typeOfSrc: java.lang.reflect.Type, context: JsonSerializationContext): JsonElement {
-            val obj = JsonObject()
-            obj.addProperty("type", src::class.simpleName)
-            return obj
+            val element = context.serialize(src)
+            if (element.isJsonObject) {
+                element.asJsonObject.addProperty("type", src::class.simpleName)
+            }
+            return element
         }
 
         override fun deserialize(json: JsonElement, typeOfT: java.lang.reflect.Type, context: JsonDeserializationContext): T? {
             val typeName = json.asJsonObject.get("type").asString
-            return kClass.sealedSubclasses.firstOrNull { it.simpleName == typeName }?.objectInstance
+            val subClass = kClass.sealedSubclasses.firstOrNull { it.simpleName == typeName }
+            
+            return if (subClass != null) {
+                 // Determine if it's an object or class
+                 if (subClass.objectInstance != null) {
+                     subClass.objectInstance
+                 } else {
+                     context.deserialize(json, subClass.java)
+                 }
+            } else {
+                null
+            }
         }
     }
 

@@ -440,6 +440,8 @@
     <string name="diy_action_flashlight_on">Turn On Flashlight</string>
     <string name="diy_action_flashlight_off">Turn Off Flashlight</string>
     <string name="diy_action_flashlight_toggle">Toggle Flashlight</string>
+    <string name="diy_action_dim_wallpaper">Dim Wallpaper</string>
+    <string name="diy_dim_wallpaper_desc">This action requires Shizuku or Root to adjust system wallpaper dimming.</string>
     <string name="diy_select_trigger">Select Trigger</string>
     <string name="diy_select_state">Select State</string>
     <string name="diy_select_action">Select Action</string>
