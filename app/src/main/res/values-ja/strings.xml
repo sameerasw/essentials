@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Essentials</string>
     <string name="label_beta">ベータ</string>
-    <string name="accessibility_service_description"><b>Essentials アクセシビリティサービス</b>\n\nこのサービスは、以下の高度な機能に必要です。\n\n<b>・物理ボタンの再マッピング：</b>\n画面がオフの場合でも音量ボタンの押下を検出し、懐中電灯などのアクションを実行します。\n\n<b>・アプリごとの設定：</b>\n現在アクティブなアプリを監視し、ダイナミックナイトライト、通知ライトの色、アプリロックの特定のプロファイルを適用します。\n\n<b>・画面制御：</b>\nアプリが画面をロック（ダブルタップやウィジェット経由など）し、画面の状態の変化を検出できるようにします。\n\n<b>・セキュリティ：</b>\nデバイスがロックされているときにウィンドウの内容を検出することで、不正な変更を防ぎます。\n\n<small>入力テキストや機密性の高いユーザーデータは収集または送信されません。</small></string>
+    <string name="accessibility_service_description"><b>Essentials アクセシビリティサービス</b>\n\nこのサービスは、以下の高度な機能に必要です。\n\n<b>・物理ボタンの再マッピング：</b>\n画面がオフの場合でも音量ボタンの押下を検出し、懐中電灯などのアクションを実行します。\n\n<b>・アプリごとの設定：</b>\n現在アクティブなアプリを監視し、ダイナミックナイトモード、通知ライトの色、アプリロックの特定のプロファイルを適用します。\n\n<b>・画面制御：</b>\nアプリが画面をロック（ダブルタップやウィジェット経由など）し、画面の状態の変化を検出できるようにします。\n\n<b>・セキュリティ：</b>\nデバイスがロックされているときにウィンドウの内容を検出することで、不正な変更を防ぎます。\n\n<small>入力テキストや機密性の高いユーザーデータは収集または送信されません。</small></string>
     <string name="app_icon">アプリアイコン</string>
     <string name="freeze_activity_title">アプリフリーズ</string>
     <string name="freeze_activity_subtitle">しばらく使用していないアプリを無効にします</string>
@@ -75,8 +75,8 @@
     <string name="permission_grant_action">権限を付与</string>
     <string name="caffeinate_show_notification_title">通知を表示</string>
     <!-- Dynamic Night Light -->
-    <string name="dynamic_night_light_enable_title">ダイナミックナイトライトを有効にする</string>
-    <string name="dynamic_night_light_apps_section">ナイトライトを無効にするアプリ</string>
+    <string name="dynamic_night_light_enable_title">ダイナミックナイトモードを有効にする</string>
+    <string name="dynamic_night_light_apps_section">ナイトモードを無効にするアプリ</string>
     <string name="action_select_apps">アプリを選択</string>
     <!-- App Freezing -->
     <string name="settings_section_app_control">アプリコントロール</string>
@@ -140,10 +140,10 @@
     <string name="tile_sensitive_content">センシティブコンテンツ</string>
     <string name="tile_tap_to_wake">タップして起動</string>
     <string name="tile_aod">常時表示ディスプレイ</string>
-    <string name="tile_caffeinate">Caffeinate</string>
+    <string name="tile_caffeinate">カフェイン</string>
     <string name="tile_sound_mode">サイレントモード</string>
     <string name="tile_notification_lighting">通知ライト</string>
-    <string name="tile_dynamic_night_light">ダイナミックナイトライト</string>
+    <string name="tile_dynamic_night_light">ダイナミックナイトモード</string>
     <string name="tile_locked_security">ロックセキュリティ</string>
     <string name="tile_app_lock">アプリロック</string>
     <string name="tile_mono_audio">モノラル音声</string>
@@ -213,44 +213,44 @@
     <string name="icon_samsung_smart">Samsung Smart Features</string>
     <string name="icon_samsung_services">Samsung サービス</string>
     <!-- Status Bar Settings -->
-    <string name="smart_data_title">スマートデータ</string>
+    <string name="smart_data_title">スマートモバイルデータ</string>
     <string name="permission_read_phone_state_title">電話</string>
     <string name="permission_read_phone_state_desc">スマートデータのネットワークタイプを検出するために必要です</string>
     <string name="settings_section_smart_visibility">スマートな可視性</string>
     <string name="smart_wifi_title">スマートWi-Fi</string>
-    <string name="smart_wifi_desc">Hide mobile data when WiFi is connected</string>
-    <string name="smart_data_desc">Hide mobile data in certain modes</string>
+    <string name="smart_wifi_desc">Wi-Fi接続時にモバイルデータを非表示にします</string>
+    <string name="smart_data_desc">特定の通信世代でモバイルデータを非表示にします</string>
     <string name="action_reset_all_icons">全てのアイコンをリセット</string>
-    <string name="status_bar_icons_disclaimer">Please note that the implementation of these options may depend on the OEM and some may not be functional at all.</string>
+    <string name="status_bar_icons_disclaimer">これらのオプションの実装は機種によって異なる場合があり、一部は全く機能しない場合がありますのでご注意ください。</string>
     <!-- Network Type Picker -->
-    <string name="network_type_other">Other</string>
+    <string name="network_type_other">その他</string>
     <!-- Search -->
-    <string name="search_desc_toggle_visibility">Toggle visibility for %1$s</string>
+    <string name="search_desc_toggle_visibility">%1$sをアイコン表示</string>
     <!-- Extraction Batch 1 -->
     <!-- Categories -->
-    <string name="cat_tools">Tools</string>
-    <string name="cat_visuals">Visuals</string>
-    <string name="cat_system">System</string>
-    <string name="cat_security">Security and Privacy</string>
+    <string name="cat_tools">ツール</string>
+    <string name="cat_visuals">ビジュアル</string>
+    <string name="cat_system">システム</string>
+    <string name="cat_security">セキュリティとプライバシー</string>
     <!-- UI Elements -->
-    <string name="search_placeholder">Search for Tools, Mods and Tweaks</string>
-    <string name="search_no_results">No results for \"%1$s\"</string>
-    <string name="search_results_title">Search Results</string>
-    <string name="required_for">Required for:</string>
-    <string name="requires_following_permissions">%1$s requires following permissions</string>
+    <string name="search_placeholder">ツール、Mod、微調整を検索</string>
+    <string name="search_no_results">「%1$s」の検索結果がありませんでした</string>
+    <string name="search_results_title">検索結果</string>
+    <string name="required_for">必要な権限：</string>
+    <string name="requires_following_permissions">%1$sを使用するには以下の権限が必要です</string>
     <!-- Features -->
-    <string name="feat_screen_off_widget_title">Screen off widget</string>
-    <string name="feat_screen_off_widget_desc">Invisible widget to turn the screen off</string>
-    <string name="feat_statusbar_icons_title">Statusbar icons</string>
-    <string name="feat_statusbar_icons_desc">Control statusbar icons visibility</string>
-    <string name="feat_caffeinate_title">Caffeinate</string>
-    <string name="feat_caffeinate_desc">Keep the screen awake</string>
-    <string name="feat_maps_power_saving_title">Maps power saving mode</string>
-    <string name="feat_maps_power_saving_desc">For any Android device</string>
-    <string name="feat_notification_lighting_title">Notification lighting</string>
-    <string name="feat_notification_lighting_desc">Light up for notifications</string>
-    <string name="feat_sound_mode_tile_title">Sound mode tile</string>
-    <string name="feat_sound_mode_tile_desc">QS tile to toggle sound mode</string>
+    <string name="feat_screen_off_widget_title">画面オフウィジェット</string>
+    <string name="feat_screen_off_widget_desc">画面をオフにする見えないウィジェット</string>
+    <string name="feat_statusbar_icons_title">ステータスバーアイコン</string>
+    <string name="feat_statusbar_icons_desc">ステータスバーのアイコンを表示するか設定</string>
+    <string name="feat_caffeinate_title">カフェイン</string>
+    <string name="feat_caffeinate_desc">画面点灯を維持します</string>
+    <string name="feat_maps_power_saving_title">マップパワーセービングモード</string>
+    <string name="feat_maps_power_saving_desc">どのAndroidデバイスでも使えるように</string>
+    <string name="feat_notification_lighting_title">通知ライト</string>
+    <string name="feat_notification_lighting_desc">通知時に点灯</string>
+    <string name="feat_sound_mode_tile_title">サイレントモードタイル</string>
+    <string name="feat_sound_mode_tile_desc">クイック設定タイルでサイレントモードを切り替える</string>
     <string name="feat_stay_awake_tile_title">Stay awake tile</string>
     <string name="feat_stay_awake_tile_desc">QS tile to toggle stay awake</string>
     <!-- DIY Automation -->
@@ -260,34 +260,34 @@
     <string name="diy_create_state_desc">Schedule an action to execute based on the state of a condition in and out</string>
     <string name="diy_editor_new_title">New Automation</string>
     <string name="diy_editor_edit_title">Edit Automation</string>
-    <string name="feat_link_actions_title">Link actions</string>
-    <string name="feat_link_actions_desc">Handle links with multiple apps</string>
-    <string name="feat_snooze_notifications_title">Snooze system notifications</string>
-    <string name="feat_snooze_notifications_desc">Snooze persistent notifications</string>
-    <string name="feat_qs_tiles_title">Quick settings tiles</string>
-    <string name="feat_qs_tiles_desc">View all</string>
-    <string name="feat_button_remap_title">Button remap</string>
-    <string name="feat_button_remap_desc">Remap hardware button actions</string>
-    <string name="feat_dynamic_night_light_title">Dynamic night light</string>
-    <string name="feat_dynamic_night_light_desc">Toggle night light based on app</string>
-    <string name="feat_screen_locked_security_title">Screen locked security</string>
-    <string name="feat_screen_locked_security_desc">Prevent network controls</string>
-    <string name="feat_app_lock_title">App lock</string>
-    <string name="feat_app_lock_desc">Secure apps with biometrics</string>
-    <string name="feat_freeze_title">Freeze</string>
-    <string name="feat_freeze_desc">Disable rarely used apps</string>
+    <string name="feat_link_actions_title">リンクアクション</string>
+    <string name="feat_link_actions_desc">リンクの処理を複数のアプリで行う</string>
+    <string name="feat_snooze_notifications_title">システム通知をスヌーズ</string>
+    <string name="feat_snooze_notifications_desc">持続的な通知をスヌーズする</string>
+    <string name="feat_qs_tiles_title">クイック設定タイル</string>
+    <string name="feat_qs_tiles_desc">全て表示</string>
+    <string name="feat_button_remap_title">ボタンリマップ</string>
+    <string name="feat_button_remap_desc">ハードウェアボタンのアクションを再設定します</string>
+    <string name="feat_dynamic_night_light_title">ダイナミックナイトモード</string>
+    <string name="feat_dynamic_night_light_desc">アプリに応じてナイトモードを切り替えます</string>
+    <string name="feat_screen_locked_security_title">ロック画面セキュリティ</string>
+    <string name="feat_screen_locked_security_desc">ネットワーク制御を防ぐ</string>
+    <string name="feat_app_lock_title">アプリロック</string>
+    <string name="feat_app_lock_desc">生体認証でアプリを保護</string>
+    <string name="feat_freeze_title">フリーズ</string>
+    <string name="feat_freeze_desc">あまり使わないアプリを無効にする</string>
     <!-- Search Settings -->
-    <string name="search_haptic_title">Widget Haptic feedback</string>
-    <string name="search_haptic_desc">Pick haptic feedback for widget taps</string>
-    <string name="search_smart_wifi_title">Smart WiFi</string>
-    <string name="search_smart_wifi_desc">Hide mobile data when WiFi is connected</string>
-    <string name="search_smart_data_title">Smart Data</string>
-    <string name="search_smart_data_desc">Hide mobile data in certain modes</string>
-    <string name="search_reset_icons_title">Reset All Icons</string>
-    <string name="search_reset_icons_desc">Reset status bar icon visibility to default</string>
-    <string name="search_caffeinate_notif_title">Show notification</string>
-    <string name="search_caffeinate_notif_desc">Show a persistent notification when Caffeinate is active</string>
-    <string name="search_lighting_style_title">Lighting Style</string>
+    <string name="search_haptic_title">ウィジェットの触覚フィードバック</string>
+    <string name="search_haptic_desc">ウィジェットをタップしたときの触覚フィードバックを選択する</string>
+    <string name="search_smart_wifi_title">スマートWi-Fi</string>
+    <string name="search_smart_wifi_desc">Wi-Fi接続時にモバイルデータを非表示にします</string>
+    <string name="search_smart_data_title">スマートモバイルデータ</string>
+    <string name="search_smart_data_desc">特定の通信世代でモバイルデータを非表示にします</string>
+    <string name="search_reset_icons_title">全てのアイコンをリセット</string>
+    <string name="search_reset_icons_desc">ステータスバーアイコンの表示をデフォルトに戻す</string>
+    <string name="search_caffeinate_notif_title">通知を表示</string>
+    <string name="search_caffeinate_notif_desc">カフェインがアクティブなときに永続的に通知を表示する</string>
+    <string name="search_lighting_style_title">ライトのスタイル</string>
     <string name="search_lighting_style_desc">Choose between Stroke, Glow, Spinner, and more</string>
     <string name="search_corner_radius_title">Corner radius</string>
     <string name="search_corner_radius_desc">Adjust the corner radius of the notification lighting</string>
