@@ -46,6 +46,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import android.util.Log
+import kotlinx.coroutines.Job
 
 class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewModelStoreOwner, SavedStateRegistryOwner, ClipboardManager.OnPrimaryClipChangedListener {
     private val lifecycleRegistry by lazy { LifecycleRegistry(this) }
@@ -63,6 +64,9 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
     
     // Undo Stack
     private val undoStack = java.util.ArrayDeque<String>()
+
+    // Suggestion Lookup Job
+    private var lookupJob: Job? = null
 
     override val lifecycle: Lifecycle get() = lifecycleRegistry
     override val viewModelStore: ViewModelStore get() = store
