@@ -138,6 +138,7 @@ class MainViewModel : ViewModel() {
     val keyboardShape = mutableIntStateOf(0) // 0=Round, 1=Flat, 2=Inverse
     val isKeyboardAlwaysDark = mutableStateOf(false)
     val isKeyboardPitchBlack = mutableStateOf(false)
+    val isKeyboardClipboardEnabled = mutableStateOf(true)
 
     private var lastUpdateCheckTime: Long = 0
     private lateinit var settingsRepository: SettingsRepository
@@ -183,6 +184,7 @@ class MainViewModel : ViewModel() {
             SettingsRepository.KEY_KEYBOARD_SHAPE -> keyboardShape.intValue = settingsRepository.getInt(key, 0)
             SettingsRepository.KEY_KEYBOARD_ALWAYS_DARK -> isKeyboardAlwaysDark.value = settingsRepository.getBoolean(key, false)
             SettingsRepository.KEY_KEYBOARD_PITCH_BLACK -> isKeyboardPitchBlack.value = settingsRepository.getBoolean(key, false)
+            SettingsRepository.KEY_KEYBOARD_CLIPBOARD_ENABLED -> isKeyboardClipboardEnabled.value = settingsRepository.getBoolean(key, true)
         }
     }
 
@@ -297,6 +299,7 @@ class MainViewModel : ViewModel() {
         keyboardShape.intValue = settingsRepository.getInt(SettingsRepository.KEY_KEYBOARD_SHAPE, 0)
         isKeyboardAlwaysDark.value = settingsRepository.getBoolean(SettingsRepository.KEY_KEYBOARD_ALWAYS_DARK, false)
         isKeyboardPitchBlack.value = settingsRepository.getBoolean(SettingsRepository.KEY_KEYBOARD_PITCH_BLACK, false)
+        isKeyboardClipboardEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_KEYBOARD_CLIPBOARD_ENABLED, true)
 
         isScreenLockedSecurityEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED)
         isDeviceAdminEnabled.value = isDeviceAdminActive(context)
@@ -723,6 +726,11 @@ class MainViewModel : ViewModel() {
     fun setKeyboardPitchBlack(enabled: Boolean, context: Context) {
         isKeyboardPitchBlack.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_KEYBOARD_PITCH_BLACK, enabled)
+    }
+
+    fun setKeyboardClipboardEnabled(enabled: Boolean, context: Context) {
+        isKeyboardClipboardEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_KEYBOARD_CLIPBOARD_ENABLED, enabled)
     }
 
 

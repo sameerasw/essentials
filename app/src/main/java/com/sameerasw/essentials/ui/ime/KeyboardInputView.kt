@@ -18,6 +18,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonGroup
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -157,14 +160,26 @@ fun KeyButton(
 fun ClipboardItem(
     text: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    shape: androidx.compose.ui.graphics.Shape = RoundedCornerShape(8.dp)
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val animatedColor by animateColorAsState(
+        targetValue = if (isPressed) MaterialTheme.colorScheme.surfaceContainerHighest else MaterialTheme.colorScheme.surfaceContainerHigh,
+        label = "ClipboardItemColor"
+    )
+
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(8.dp))
-            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-            .clickable(onClick = onClick)
-            .padding(8.dp)
+            .clip(shape)
+            .background(animatedColor)
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = onClick
+            )
+            .padding(12.dp)
     ) {
         Text(
             text = text,
@@ -187,6 +202,7 @@ fun KeyboardInputView(
     hapticStrength: Float = 0.5f,
     isFunctionsBottom: Boolean = false,
     functionsPadding: Dp = 0.dp,
+    isClipboardEnabled: Boolean = true,
     suggestions: List<String> = emptyList(),
     clipboardHistory: List<String> = emptyList(),
     onSuggestionClick: (String) -> Unit = {},
@@ -329,11 +345,13 @@ fun KeyboardInputView(
                     .padding(horizontal = functionsPadding),
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 content = {
-                        val functions = listOf(
+                        val functions = mutableListOf(
                             R.drawable.ic_emoji to "Emoji",
-                            R.drawable.ic_clipboard to "Clipboard",
                             R.drawable.ic_undo to "Undo"
                         )
+                        if (isClipboardEnabled) {
+                            functions.add(1, R.drawable.ic_clipboard to "Clipboard")
+                        }
                         
                         functions.forEach { (iconRes, desc) ->
                             val fnInteraction = remember { MutableInteractionSource() }
@@ -376,8 +394,7 @@ fun KeyboardInputView(
             FunctionRow(Modifier.weight(0.65f))
         }
 
-        if (isClipboardMode) {
-             // Clipboard View covering the main keyboard area (4 rows height approx = 5 units)
+        if (isClipboardMode && isClipboardEnabled) {
              Box(
                  modifier = Modifier
                      .weight(5f)
@@ -394,12 +411,15 @@ fun KeyboardInputView(
                          color = MaterialTheme.colorScheme.onSurfaceVariant
                      )
                  } else {
-                     LazyColumn(
+                     LazyVerticalGrid(
+                         columns = GridCells.Fixed(2),
+                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                          verticalArrangement = Arrangement.spacedBy(8.dp)
                      ) {
                          items(clipboardHistory) { clipText ->
                              ClipboardItem(
                                  text = clipText,
+                                 shape = RoundedCornerShape(keyRoundness),
                                  onClick = {
                                      onPasteClick(clipText)
                                      isClipboardMode = false

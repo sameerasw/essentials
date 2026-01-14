@@ -105,6 +105,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_KEYBOARD_HAPTIC_STRENGTH = "keyboard_haptic_strength"
         const val KEY_KEYBOARD_ALWAYS_DARK = "keyboard_always_dark"
         const val KEY_KEYBOARD_PITCH_BLACK = "keyboard_pitch_black"
+        const val KEY_KEYBOARD_CLIPBOARD_ENABLED = "keyboard_clipboard_enabled"
 
     }
 

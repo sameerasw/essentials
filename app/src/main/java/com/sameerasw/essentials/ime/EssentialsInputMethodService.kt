@@ -78,9 +78,12 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
         
         try {
             clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            clipboardManager.addPrimaryClipChangedListener(this)
-            updateClipboardHistory()
-            Log.d("EssentialsIME", "Clipboard listener registered")
+            val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+            if (prefs.getBoolean(SettingsRepository.KEY_KEYBOARD_CLIPBOARD_ENABLED, true)) {
+                clipboardManager.addPrimaryClipChangedListener(this)
+                updateClipboardHistory()
+                Log.d("EssentialsIME", "Clipboard listener registered")
+            }
         } catch (e: Exception) {
             Log.e("EssentialsIME", "Error init clipboard", e)
         }
@@ -168,6 +171,8 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                 var isAlwaysDark by remember { mutableStateOf(prefs.getBoolean(SettingsRepository.KEY_KEYBOARD_ALWAYS_DARK, false)) }
                 var isPitchBlack by remember { mutableStateOf(prefs.getBoolean(SettingsRepository.KEY_KEYBOARD_PITCH_BLACK, false)) }
 
+                var isKeyboardClipboardEnabled by remember { mutableStateOf(prefs.getBoolean(SettingsRepository.KEY_KEYBOARD_CLIPBOARD_ENABLED, true)) }
+
                 // Observe SharedPreferences changes
                 DisposableEffect(prefs) {
                     val listener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
@@ -203,6 +208,19 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                             SettingsRepository.KEY_KEYBOARD_PITCH_BLACK -> {
                                 isPitchBlack = sharedPreferences.getBoolean(SettingsRepository.KEY_KEYBOARD_PITCH_BLACK, false)
                             }
+                            SettingsRepository.KEY_KEYBOARD_CLIPBOARD_ENABLED -> {
+                                isKeyboardClipboardEnabled = sharedPreferences.getBoolean(SettingsRepository.KEY_KEYBOARD_CLIPBOARD_ENABLED, true)
+                                if (isKeyboardClipboardEnabled) {
+                                    if (::clipboardManager.isInitialized) {
+                                        clipboardManager.addPrimaryClipChangedListener(this@EssentialsInputMethodService)
+                                        updateClipboardHistory()
+                                    }
+                                } else {
+                                    if (::clipboardManager.isInitialized) {
+                                        clipboardManager.removePrimaryClipChangedListener(this@EssentialsInputMethodService)
+                                    }
+                                }
+                            }
                         }
                     }
                     prefs.registerOnSharedPreferenceChangeListener(listener)
@@ -227,6 +245,7 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                     hapticStrength = hapticStrength,
                     isFunctionsBottom = isFunctionsBottom,
                     functionsPadding = functionsPadding.dp,
+                    isClipboardEnabled = isKeyboardClipboardEnabled,
                     suggestions = suggestions,
                     clipboardHistory = _clipboardHistory.collectAsState().value,
                     onSuggestionClick = { word ->

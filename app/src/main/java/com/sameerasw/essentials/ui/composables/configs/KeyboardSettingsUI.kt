@@ -205,6 +205,14 @@ fun KeyboardSettingsUI(
                 onCheckedChange = { viewModel.setKeyboardPitchBlack(it, context) },
                 modifier = Modifier.highlight(highlightSetting == "keyboard_pitch_black")
             )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_content_paste_24,
+                title = stringResource(R.string.label_keyboard_clipboard_enabled),
+                isChecked = viewModel.isKeyboardClipboardEnabled.value,
+                onCheckedChange = { viewModel.setKeyboardClipboardEnabled(it, context) },
+                modifier = Modifier.highlight(highlightSetting == "keyboard_clipboard_enabled")
+            )
         }
     }
 }
