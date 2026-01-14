@@ -39,11 +39,23 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 
-class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewModelStoreOwner, SavedStateRegistryOwner {
+import android.view.inputmethod.InputConnection
+import android.content.ClipboardManager
+import android.content.Context
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import android.util.Log
+
+class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewModelStoreOwner, SavedStateRegistryOwner, ClipboardManager.OnPrimaryClipChangedListener {
     private val lifecycleRegistry by lazy { LifecycleRegistry(this) }
     private val store by lazy { ViewModelStore() }
     private val savedStateRegistryController by lazy { SavedStateRegistryController.create(this) }
     private val suggestionEngine by lazy { SuggestionEngine(this) }
+    
+    private lateinit var clipboardManager: ClipboardManager
+    private val _clipboardHistory = MutableStateFlow<List<String>>(emptyList())
+    val clipboardHistory: StateFlow<List<String>> = _clipboardHistory.asStateFlow()
     
     // Internal state for Insets calculation
     private var currentKeyboardShape: Int = 0
@@ -61,6 +73,47 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
         
         // Initialize suggestion engine
         suggestionEngine.initialize(lifecycleScope)
+        
+        try {
+            clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            clipboardManager.addPrimaryClipChangedListener(this)
+            updateClipboardHistory()
+            Log.d("EssentialsIME", "Clipboard listener registered")
+        } catch (e: Exception) {
+            Log.e("EssentialsIME", "Error init clipboard", e)
+        }
+    }
+    
+    override fun onPrimaryClipChanged() {
+        Log.d("EssentialsIME", "Clipboard changed")
+        updateClipboardHistory()
+    }
+
+    private fun updateClipboardHistory() {
+        if (!::clipboardManager.isInitialized) return
+        if (!clipboardManager.hasPrimaryClip()) return
+        
+        try {
+            val clip = clipboardManager.primaryClip ?: return
+            if (clip.itemCount > 0) {
+                val text = clip.getItemAt(0).text?.toString()
+                Log.d("EssentialsIME", "Clipboard item: $text")
+                if (!text.isNullOrBlank()) {
+                    val current = _clipboardHistory.value.toMutableList()
+                    // Remove if exists to move to top
+                    current.remove(text)
+                    current.add(0, text)
+                    // Keep last 5
+                    if (current.size > 5) {
+                        _clipboardHistory.value = current.take(5)
+                    } else {
+                        _clipboardHistory.value = current
+                    }
+                }
+            }
+        } catch (e: Exception) {
+             Log.e("EssentialsIME", "Error reading clipboard", e)
+        }
     }
 
     override fun onCreateInputView(): View {
@@ -85,7 +138,13 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                 val prefs = remember { context.getSharedPreferences("essentials_prefs", MODE_PRIVATE) }
                 
                 // State variables for settings
-                var keyboardHeight by remember { mutableFloatStateOf(prefs.getFloat(SettingsRepository.KEY_KEYBOARD_HEIGHT, 54f)) }
+                var rawKeyboardHeight by remember { mutableFloatStateOf(prefs.getFloat(SettingsRepository.KEY_KEYBOARD_HEIGHT, 400f)) }
+                // Migration check
+                if (rawKeyboardHeight < 100f) {
+                     rawKeyboardHeight = 400f
+                     prefs.edit().putFloat(SettingsRepository.KEY_KEYBOARD_HEIGHT, 280f).apply()
+                }
+                var keyboardHeight by remember { mutableFloatStateOf(rawKeyboardHeight) }
                 var bottomPadding by remember { mutableFloatStateOf(prefs.getFloat(SettingsRepository.KEY_KEYBOARD_BOTTOM_PADDING, 0f)) }
                 var keyboardRoundness by remember { mutableFloatStateOf(prefs.getFloat(SettingsRepository.KEY_KEYBOARD_ROUNDNESS, 24f)) }
                 var keyboardShape by remember { mutableIntStateOf(prefs.getInt(SettingsRepository.KEY_KEYBOARD_SHAPE, 0)) }
@@ -112,7 +171,8 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                     val listener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
                         when (key) {
                             SettingsRepository.KEY_KEYBOARD_HEIGHT -> {
-                                keyboardHeight = sharedPreferences.getFloat(SettingsRepository.KEY_KEYBOARD_HEIGHT, 54f)
+                                val height = sharedPreferences.getFloat(SettingsRepository.KEY_KEYBOARD_HEIGHT, 280f)
+                                keyboardHeight = if (height < 100f) 280f else height
                             }
                             SettingsRepository.KEY_KEYBOARD_BOTTOM_PADDING -> {
                                 bottomPadding = sharedPreferences.getFloat(SettingsRepository.KEY_KEYBOARD_BOTTOM_PADDING, 0f)
@@ -166,6 +226,7 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                     isFunctionsBottom = isFunctionsBottom,
                     functionsPadding = functionsPadding.dp,
                     suggestions = suggestions,
+                    clipboardHistory = _clipboardHistory.collectAsState().value,
                     onSuggestionClick = { word ->
                         val ic = currentInputConnection
                         if (ic != null) {
@@ -179,6 +240,9 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                         }
                     },
                     onType = { text ->
+                        currentInputConnection?.commitText(text, 1)
+                    },
+                    onPasteClick = { text ->
                         currentInputConnection?.commitText(text, 1)
                     },
                     onKeyPress = { keyCode ->
@@ -208,6 +272,8 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
         if (lifecycleRegistry.currentState != Lifecycle.State.RESUMED) {
             lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
         }
+        // Refresh clipboard on show
+        updateClipboardHistory()
     }
 
     override fun onFinishInputView(finishingInput: Boolean) {
@@ -219,6 +285,9 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
         super.onDestroy()
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP)
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+        if (::clipboardManager.isInitialized) {
+            clipboardManager.removePrimaryClipChangedListener(this)
+        }
     }
 
     private fun handleKeyPress(keyCode: Int) {

@@ -70,7 +70,7 @@ fun KeyboardSettingsUI(
                     viewModel.setKeyboardHeight(it, context)
                     com.sameerasw.essentials.utils.HapticUtil.performSliderHaptic(view)
                 },
-                valueRange = 40f..80f,
+                valueRange = 200f..600f,
                 steps = 0,
                 modifier = Modifier.highlight(highlightSetting == "keyboard_height")
             )

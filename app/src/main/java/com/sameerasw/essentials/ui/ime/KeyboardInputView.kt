@@ -2,6 +2,7 @@ package com.sameerasw.essentials.ui.ime
 
 import android.view.KeyEvent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -15,6 +16,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonGroup
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -150,10 +153,33 @@ fun KeyButton(
     }
 }
 
+@Composable
+fun ClipboardItem(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .clip(RoundedCornerShape(8.dp))
+            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+            .clickable(onClick = onClick)
+            .padding(8.dp)
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+            maxLines = 2,
+            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+        )
+    }
+}
+
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun KeyboardInputView(
-    keyboardHeight: Dp = 54.dp,
+    keyboardHeight: Dp = 280.dp,
     bottomPadding: Dp = 0.dp,
     keyRoundness: Dp = 24.dp,
     keyboardShape: Int = 0, // 0=Round, 1=Flat, 2=Inverse
@@ -162,11 +188,15 @@ fun KeyboardInputView(
     isFunctionsBottom: Boolean = false,
     functionsPadding: Dp = 0.dp,
     suggestions: List<String> = emptyList(),
+    clipboardHistory: List<String> = emptyList(),
     onSuggestionClick: (String) -> Unit = {},
+    onPasteClick: (String) -> Unit = {},
     onType: (String) -> Unit,
     onKeyPress: (Int) -> Unit
 ) {
     val view = LocalView.current
+    // Total Height is passed as keyboardHeight
+    val totalHeight = keyboardHeight
     fun performLightHaptic() {
         if (isHapticsEnabled) {
             HapticUtil.performCustomHaptic(view, hapticStrength)
@@ -185,10 +215,11 @@ fun KeyboardInputView(
 
     var isSymbols by remember { mutableStateOf(false) }
     var shiftState by remember { mutableStateOf(ShiftState.OFF) }
+    var isClipboardMode by remember { mutableStateOf(false) }
 
 
 
-    val keyHeight = keyboardHeight
+
     val CustomFontFamily = FontFamily(Font(R.font.google_sans_flex))
 
     // Layers
@@ -218,15 +249,17 @@ fun KeyboardInputView(
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .height(totalHeight)
             .clip(containerShape)
             .background(MaterialTheme.colorScheme.surfaceContainer)
             .padding(bottom = bottomPadding, start = 6.dp, end = 6.dp, top = 6.dp + extraTopPadding),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        val FunctionRow = @Composable {
+        val FunctionRow: @Composable (Modifier) -> Unit = { modifier ->
             val hasSuggestions = suggestions.isNotEmpty()
             
+            Box(modifier = modifier) {
             if (hasSuggestions) {
                 val carouselState = rememberCarouselState { suggestions.count() }
 
@@ -252,7 +285,7 @@ fun KeyboardInputView(
                     state = carouselState,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(keyHeight * 0.65f)
+                        .fillMaxHeight()
                         .nestedScroll(nestedScrollConnection),
                     preferredItemWidth = 150.dp,
                     itemSpacing = 4.dp,
@@ -275,7 +308,6 @@ fun KeyboardInputView(
                         shape = RoundedCornerShape(animatedRadius),
                         modifier = Modifier
                             .fillMaxHeight()
-                            // Ensure it fills the carousel slot width
                             .fillMaxWidth()
                             .maskClip(RoundedCornerShape(animatedRadius))
                     ) {
@@ -292,7 +324,7 @@ fun KeyboardInputView(
                 ButtonGroup(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(keyHeight * 0.65f)
+                    .fillMaxHeight()
                     .padding(horizontal = functionsPadding),
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 content = {
@@ -308,11 +340,17 @@ fun KeyboardInputView(
                             val animatedRadius by animateDpAsState(targetValue = if (isPressed) 4.dp else keyRoundness, label = "cornerRadius")
                             
                             KeyButton(
-                                onClick = { },
+                                onClick = { 
+                                     if (desc == "Clipboard") {
+                                         isClipboardMode = !isClipboardMode
+                                     } else {
+                                         // Other functions
+                                     }
+                                },
                                 onPress = { performLightHaptic() },
                                 interactionSource = fnInteraction,
-                                containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-                                contentColor = MaterialTheme.colorScheme.onSurface,
+                                containerColor = if (desc == "Clipboard" && isClipboardMode) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHighest,
+                                contentColor = if (desc == "Clipboard" && isClipboardMode) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface,
                                 shape = RoundedCornerShape(animatedRadius),
                                 modifier = Modifier
                                     .weight(1f)
@@ -328,18 +366,53 @@ fun KeyboardInputView(
                 }
                 )
             }
-
+            } // End Box/Modifier wrapper
         }
 
         if (!isFunctionsBottom) {
-            FunctionRow()
+            FunctionRow(Modifier.weight(0.65f))
         }
 
-        // Dedicated Number Row
-        ButtonGroup(
+        if (isClipboardMode) {
+             // Clipboard View covering the main keyboard area (4 rows height approx = 5 units)
+             Box(
+                 modifier = Modifier
+                     .weight(5f)
+                     .fillMaxWidth()
+                     .clip(RoundedCornerShape(keyRoundness))
+                     .background(MaterialTheme.colorScheme.surfaceContainerLow)
+                     .padding(8.dp)
+             ) {
+                 if (clipboardHistory.isEmpty()) {
+                     Text(
+                         text = "Clipboard is empty",
+                         modifier = Modifier.align(Alignment.Center),
+                         style = MaterialTheme.typography.bodyMedium,
+                         color = MaterialTheme.colorScheme.onSurfaceVariant
+                     )
+                 } else {
+                     LazyColumn(
+                         verticalArrangement = Arrangement.spacedBy(8.dp)
+                     ) {
+                         items(clipboardHistory) { clipText ->
+                             ClipboardItem(
+                                 text = clipText,
+                                 onClick = {
+                                     onPasteClick(clipText)
+                                     isClipboardMode = false
+                                 },
+                                 modifier = Modifier.fillMaxWidth()
+                             )
+                         }
+                     }
+                 }
+             }
+        } else {
+            // Dedicated Number Row
+            ButtonGroup(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(keyHeight), // Slightly compact
+                .weight(1f)
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             content = {
                 numberRow.forEach { char ->
@@ -371,8 +444,8 @@ fun KeyboardInputView(
         // Row 1
         ButtonGroup(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(keyHeight),
+                .weight(1f)
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             content = {
                 currentRow1.forEach { char ->
@@ -409,8 +482,8 @@ fun KeyboardInputView(
         // Row 2
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(keyHeight),
+                .weight(1f)
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             if (!isSymbols) Spacer(modifier = Modifier.weight(0.5f))
@@ -456,8 +529,8 @@ fun KeyboardInputView(
         // Row 3 (with Shift/Backspace logic)
         ButtonGroup(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(keyHeight),
+                .weight(1f)
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             content = {
                 // Shift Key - Only show if not in symbols mode
@@ -595,8 +668,8 @@ fun KeyboardInputView(
         // Row 4 (Sym, Space, Return)
         ButtonGroup(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(keyHeight),
+                .weight(1f)
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             content = {
                 // Symbols Toggle
@@ -748,9 +821,10 @@ fun KeyboardInputView(
                 }
             }
         )
+        }
 
         if (isFunctionsBottom) {
-            FunctionRow()
+            FunctionRow(Modifier.weight(0.65f))
         }
     }
 }
