@@ -44,6 +44,7 @@ import com.sameerasw.essentials.utils.HapticUtil
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.foundation.combinedClickable
@@ -79,11 +80,21 @@ fun KeyButton(
     contentColor: androidx.compose.ui.graphics.Color,
     content: @Composable () -> Unit
 ) {
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val animatedContainerColor by animateColorAsState(
+        targetValue = if (isPressed) MaterialTheme.colorScheme.primaryContainer else containerColor,
+        label = "ButtonContainerColor"
+    )
+    val animatedContentColor by animateColorAsState(
+        targetValue = if (isPressed) MaterialTheme.colorScheme.onPrimaryContainer else contentColor,
+        label = "ButtonContentColor"
+    )
+
     Box(
         modifier = modifier
             .bounceClick(interactionSource)
             .clip(shape)
-            .background(containerColor)
+            .background(animatedContainerColor)
             .pointerInput(Unit) {
                 detectTapGestures(
                     onPress = { offset ->
@@ -100,7 +111,7 @@ fun KeyButton(
         contentAlignment = Alignment.Center
     ) {
         androidx.compose.runtime.CompositionLocalProvider(
-             androidx.compose.material3.LocalContentColor provides contentColor,
+             androidx.compose.material3.LocalContentColor provides animatedContentColor,
              content = content
         )
     }
@@ -352,8 +363,8 @@ fun KeyboardInputView(
                             shiftState = ShiftState.LOCKED
                         },
                         interactionSource = shiftInteraction,
-                        containerColor = if (shiftState != ShiftState.OFF) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceContainerHighest,
-                        contentColor = if (shiftState != ShiftState.OFF) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
+                        containerColor = if (shiftState != ShiftState.OFF) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = if (shiftState != ShiftState.OFF) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimaryContainer,
                         shape = RoundedCornerShape(animatedRadius),
                         modifier = Modifier
                             .weight(1.5f)
@@ -364,7 +375,7 @@ fun KeyboardInputView(
                             contentDescription = "Shift",
                             modifier = Modifier.size(24.dp),
                             tint = if (shiftState != ShiftState.OFF) MaterialTheme.colorScheme.onPrimary
-                                else MaterialTheme.colorScheme.onSurface
+                                else MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     }
                 } else {
@@ -408,6 +419,15 @@ fun KeyboardInputView(
                 var delAccumulatedDx by remember { mutableStateOf(0f) }
                 val delSweepThreshold = 25f
 
+                val animatedColorDel by animateColorAsState(
+                    targetValue = if (isPressedDel) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.primaryContainer,
+                    label = "DelColor"
+                )
+                val animatedContentColorDel by animateColorAsState(
+                    targetValue = if (isPressedDel) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onPrimaryContainer,
+                    label = "DelContentColor"
+                )
+
                 Box(
                     modifier = Modifier
                         .weight(1.5f)
@@ -446,14 +466,14 @@ fun KeyboardInputView(
                                 }
                             )
                         }
-                        .background(MaterialTheme.colorScheme.surfaceTint),
+                        .background(animatedColorDel),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.rounded_backspace_24),
                         contentDescription = "Backspace",
                         modifier = Modifier.size(24.dp),
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                        tint = animatedContentColorDel
                     )
                 }
             }
@@ -497,8 +517,8 @@ fun KeyboardInputView(
                     onClick = { onType(",") },
                     onPress = { performLightHaptic() },
                     interactionSource = commaInteraction,
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-                    contentColor = MaterialTheme.colorScheme.onSurface,
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     shape = RoundedCornerShape(animatedRadiusComma),
                     modifier = Modifier
                         .weight(0.7f)
@@ -518,6 +538,11 @@ fun KeyboardInputView(
                 val animatedRadiusSpace by animateDpAsState(targetValue = if (isPressedSpace) 4.dp else keyRoundness, label = "cornerRadius")
                 var accumulatedDx by remember { mutableStateOf(0f) }
                 val sweepThreshold = 25f // pixels per cursor move
+
+                val animatedColorSpace by animateColorAsState(
+                    targetValue = if (isPressedSpace) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHighest,
+                    label = "SpaceColor"
+                )
 
                 Box(
                     modifier = Modifier
@@ -558,7 +583,7 @@ fun KeyboardInputView(
                                 }
                             )
                         }
-                        .background(MaterialTheme.colorScheme.surfaceContainerHighest),
+                        .background(animatedColorSpace),
                     contentAlignment = Alignment.Center
                 ) {
                     // Empty space
@@ -572,8 +597,8 @@ fun KeyboardInputView(
                     onClick = { onType(".") },
                     onPress = { performLightHaptic() },
                     interactionSource = dotInteraction,
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-                    contentColor = MaterialTheme.colorScheme.onSurface,
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     shape = RoundedCornerShape(animatedRadiusDot),
                     modifier = Modifier
                         .weight(0.7f)
