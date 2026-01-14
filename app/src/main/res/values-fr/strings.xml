@@ -402,7 +402,7 @@
     <!-- DIY Section -->
     <string name="coming_soon_title">Do It Yourself</string>
     <string name="coming_soon_desc">Quelque chose d\'expérimental se prépare ici. Restez connecté pour les automatisations et les mods avancées.</string>
-    <string name="coming_soon_label">Bientôt disponible...</string>
+    <string name="coming_soon_label">Bientôt disponible</string>
     <string name="diy_trigger_label">Déclencheur</string>
     <string name="diy_state_label">État</string>
     <string name="diy_action_label">Action</string>
@@ -702,10 +702,10 @@
     <string name="instruction_section_lighting_title">L\'éclairage de notification ne marche pas</string>
     <string name="instruction_section_lighting_desc">Cela dépend du constructeur. Certains comme OneUI n\'ont pas l\'air d\'autoriser les superpositions au-dessus de l\'Always-On Display ce qui empêche les effets de lumière d\'être affichés. Dans ce cas, essayez l\'éclairage ambiant comme solution. </string>
     <string name="instruction_section_button_title">La réatttribution de boutons ne marche pas quand l\'écran est éteint</string>
-    <string name="instruction_section_button_desc">Some OEMs limit the accessibility service reporting once the display is actually off but they may still work while the AOD is on. \nIn this case, you may able to use button remaps with AOD on but not with off. \n\nAs a workaround, you will need to use Shizuku permissions and turn on the \'Use Shizuku\' toggle in button remap settings which identifies and listen to hardware input events.\nThis is not guaranteed to work on all devices and needs testing.\n\nAnd even if it\'s on, Shizuku method only will be used when it\'s needed. Otherwise it will always fallback to Accessibility which also handles the blocking of the actual input during long press.</string>
+    <string name="instruction_section_button_desc">Certains constructeurs limitent le service d\'accessibilité quand l\'écran est éteint mais peuvent toujours marcher si le Always-On Display est actif. \nDans ce cas, vous pouvez peut-être utiliser les boutons réattribués avec l\'Always-On Display allumé, mais pas lorsqu\'il est éteint. \n\nComme solution, vous devrez utiliser la permission Shizuku et activer \"Utiliser Shizuku ou l\'accès racine (root)\" dans les paramètres de réattributions de boutons de l\'application ce qui permet d\'identifier des saisies physiques.\nCe n\'est pas garanti que cela fonctionne sur tous les appareils et a besoin d\'être testé.\n\nEt même si elle st activée, la méthode Shizuku ne sera utilisée qu\'en cas de besoin. Autrement, le service d\'accessibilité sera utilisé.</string>
     <string name="instruction_section_flashlight_title">Le contrôle de la luminosité de la lampe-torche ne marche pas</string>
     <string name="instruction_section_flashlight_desc">Only a limited number of devices got hardware and software support adjusting the flashlight intensity. \n\n\'The minimum version of Android is 13 (SDK33).\nFlashlight brightness control only supports HAL version 3.8 and higher, so among the supported devices, the latest ones (For example, Pixel 6/7, Samsung S23, etc.)\'\npolodarb/Flashlight-Tiramisu</string>
-    <string name="instruction_section_about_title">C\'est quoi cette application ?</string>
+    <string name="instruction_section_about_title">À quoi sert cette application ?</string>
     <string name="instruction_section_about_desc">Good question,\n\nI always wanted to extract the most out of my devices as I\'ve been a rooted user for ever since I got my first Project Treble device. And I\'ve been loving the Tasker app which is like the god when comes automation and utilizing every possible API and internal features of Android.\n\nSo I am not unrooted and back on stock Android beta experience and wanted to get the most out from what is possible with given privileges. Might as well share them. So with my beginner knowledge in Kotlin Jetpack and with the support of many research and assist tools and also the great community, I built an all-in-one app containing everything I wanted to be in my Android with given permissions. And here it is.\n\nFeature requests are welcome, I will consider and see if they are achievable with available permissions and my skills. Nowadays what is not possible. :)\n\nWhy not on Play Store?\nI don\'t wanna risk getting my Developer account banned due to the highly sensitive and internal permissions and APIs being used in the app. But with the way Android sideloading is headed, let\'s see what we have to do. I do understand the concerns of sideloaded apps being malicious.\nWhile we are at the topic, Checkout my other app AirSync if you are a mac + Android user. *shameless plug*\n\nEnjoy, Keep building! (っ◕‿◕)っ</string>
     <!-- Bug Reporting -->
     <string name="action_report_bug">Signaler un bogue</string>
@@ -727,8 +727,8 @@
     <string name="location_reached_set_destination_btn">Définir destination</string>
     <string name="location_reached_status_tracking">Traçage : %1$.4f%2$.4f</string>
     <string name="location_reached_status_none">Aucune destination définie</string>
-    <string name="location_reached_how_to">Open your map app, pick a location, and share it to Essentials.</string>
-    <string name="location_reached_radius_title">Radius: %d m</string>
+    <string name="location_reached_how_to">Ouvrez Google Maps, choisissez un endroit et partagez-le dans Essentials.</string>
+    <string name="location_reached_radius_title">Rayon : %d m</string>
     <string name="location_reached_radius_desc">Distance pour déclencher l\'alarme</string>
     <string name="location_reached_enable_title">Activer la notification</string>
     <string name="perm_location_title">Position</string>
@@ -741,7 +741,7 @@
     <string name="location_reached_clear_btn">Supprimer la destination</string>
     <string name="location_reached_processing">Processing location…</string>
     <string name="location_reached_dist_remaining">DISTANCE RESTANTE</string>
-    <string name="location_reached_calculating">Calcul...</string>
+    <string name="location_reached_calculating">Calcul…</string>
     <string name="location_reached_stop_tracking">Arrêter le traçage</string>
     <string name="location_reached_dest_ready">Destination prête</string>
     <string name="location_reached_start_tracking">Démarrer le traçage</string>
@@ -761,7 +761,7 @@
     <string name="location_reached_alarm_subtitle">Prepare to get off</string>
     <string name="location_reached_dismiss">Dismiss</string>
     <string name="location_reached_toast_set">Destination set: %1$.4f, %2$.4f</string>
-    <string name="setting_use_root_title">Utiliser le root</string>
-    <string name="setting_use_root_desc">Au lieu de Shizuku</string>
+    <string name="setting_use_root_title">Utiliser l\'accès root (racine)</string>
+    <string name="setting_use_root_desc">À la place de Shizuku</string>
     <string name="root_not_available_toast">L\'accès racine (root) n\'est pas disponible. Merci de vérifier votre manager de root.</string>
 </resources>
