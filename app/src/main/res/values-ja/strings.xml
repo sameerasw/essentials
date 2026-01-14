@@ -220,7 +220,7 @@
     <string name="smart_wifi_title">スマートWi-Fi</string>
     <string name="smart_wifi_desc">Hide mobile data when WiFi is connected</string>
     <string name="smart_data_desc">Hide mobile data in certain modes</string>
-    <string name="action_reset_all_icons">Reset All Icons</string>
+    <string name="action_reset_all_icons">全てのアイコンをリセット</string>
     <string name="status_bar_icons_disclaimer">Please note that the implementation of these options may depend on the OEM and some may not be functional at all.</string>
     <!-- Network Type Picker -->
     <string name="network_type_other">Other</string>
