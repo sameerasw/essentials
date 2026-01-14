@@ -112,11 +112,9 @@ class NotificationLightingHandler(
 
     private fun showNotificationLighting() {
          // For preview mode, remove existing overlays first
-        if (isPreview && overlayViews.isNotEmpty()) {
+        if (overlayViews.isNotEmpty()) {
             removeOverlay()
         }
-
-        if (overlayViews.isNotEmpty()) return
         windowManager = service.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val powerManager = service.getSystemService(Context.POWER_SERVICE) as PowerManager
 
