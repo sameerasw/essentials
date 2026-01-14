@@ -185,14 +185,26 @@ fun KeyboardSettingsUI(
                     value = viewModel.keyboardHapticStrength.floatValue,
                     onValueChange = {
                         viewModel.setKeyboardHapticStrength(it, context)
-                        // Preview the haptic strength
-                        com.sameerasw.essentials.utils.HapticUtil.performCustomHaptic(view, it)
                     },
-                    valueRange = 0.01f..1.0f,
-                    steps = 0,
                     modifier = Modifier.highlight(highlightSetting == "keyboard_haptic_strength")
                 )
             }
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_nightlight_24,
+                title = stringResource(R.string.label_keyboard_always_dark),
+                isChecked = viewModel.isKeyboardAlwaysDark.value,
+                onCheckedChange = { viewModel.setKeyboardAlwaysDark(it, context) },
+                modifier = Modifier.highlight(highlightSetting == "keyboard_always_dark")
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_invert_colors_24,
+                title = stringResource(R.string.label_keyboard_pitch_black),
+                isChecked = viewModel.isKeyboardPitchBlack.value,
+                onCheckedChange = { viewModel.setKeyboardPitchBlack(it, context) },
+                modifier = Modifier.highlight(highlightSetting == "keyboard_pitch_black")
+            )
         }
     }
 }

@@ -136,6 +136,8 @@ class MainViewModel : ViewModel() {
     val keyboardFunctionsPadding = mutableFloatStateOf(0f)
     val keyboardHapticStrength = mutableFloatStateOf(0.5f)
     val keyboardShape = mutableIntStateOf(0) // 0=Round, 1=Flat, 2=Inverse
+    val isKeyboardAlwaysDark = mutableStateOf(false)
+    val isKeyboardPitchBlack = mutableStateOf(false)
 
     private var lastUpdateCheckTime: Long = 0
     private lateinit var settingsRepository: SettingsRepository
@@ -179,6 +181,8 @@ class MainViewModel : ViewModel() {
             SettingsRepository.KEY_KEYBOARD_FUNCTIONS_PADDING -> keyboardFunctionsPadding.floatValue = settingsRepository.getFloat(key, 0f)
             SettingsRepository.KEY_KEYBOARD_HAPTIC_STRENGTH -> keyboardHapticStrength.floatValue = settingsRepository.getFloat(key, 0.5f)
             SettingsRepository.KEY_KEYBOARD_SHAPE -> keyboardShape.intValue = settingsRepository.getInt(key, 0)
+            SettingsRepository.KEY_KEYBOARD_ALWAYS_DARK -> isKeyboardAlwaysDark.value = settingsRepository.getBoolean(key, false)
+            SettingsRepository.KEY_KEYBOARD_PITCH_BLACK -> isKeyboardPitchBlack.value = settingsRepository.getBoolean(key, false)
         }
     }
 
@@ -291,6 +295,8 @@ class MainViewModel : ViewModel() {
         keyboardFunctionsPadding.floatValue = settingsRepository.getFloat(SettingsRepository.KEY_KEYBOARD_FUNCTIONS_PADDING, 0f)
         keyboardHapticStrength.floatValue = settingsRepository.getFloat(SettingsRepository.KEY_KEYBOARD_HAPTIC_STRENGTH, 0.5f)
         keyboardShape.intValue = settingsRepository.getInt(SettingsRepository.KEY_KEYBOARD_SHAPE, 0)
+        isKeyboardAlwaysDark.value = settingsRepository.getBoolean(SettingsRepository.KEY_KEYBOARD_ALWAYS_DARK, false)
+        isKeyboardPitchBlack.value = settingsRepository.getBoolean(SettingsRepository.KEY_KEYBOARD_PITCH_BLACK, false)
 
         isScreenLockedSecurityEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED)
         isDeviceAdminEnabled.value = isDeviceAdminActive(context)
@@ -707,6 +713,16 @@ class MainViewModel : ViewModel() {
     fun setKeyboardShape(shape: Int, context: Context) {
         keyboardShape.intValue = shape
         settingsRepository.putInt(SettingsRepository.KEY_KEYBOARD_SHAPE, shape)
+    }
+
+    fun setKeyboardAlwaysDark(enabled: Boolean, context: Context) {
+        isKeyboardAlwaysDark.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_KEYBOARD_ALWAYS_DARK, enabled)
+    }
+
+    fun setKeyboardPitchBlack(enabled: Boolean, context: Context) {
+        isKeyboardPitchBlack.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_KEYBOARD_PITCH_BLACK, enabled)
     }
 
 

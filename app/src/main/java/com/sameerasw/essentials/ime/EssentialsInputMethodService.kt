@@ -98,6 +98,8 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                 var functionsPadding by remember { mutableFloatStateOf(prefs.getFloat(SettingsRepository.KEY_KEYBOARD_FUNCTIONS_PADDING, 0f)) }
                 var isHapticsEnabled by remember { mutableStateOf(prefs.getBoolean(SettingsRepository.KEY_KEYBOARD_HAPTICS_ENABLED, true)) }
                 var hapticStrength by remember { mutableFloatStateOf(prefs.getFloat(SettingsRepository.KEY_KEYBOARD_HAPTIC_STRENGTH, 0.5f)) }
+                var isAlwaysDark by remember { mutableStateOf(prefs.getBoolean(SettingsRepository.KEY_KEYBOARD_ALWAYS_DARK, false)) }
+                var isPitchBlack by remember { mutableStateOf(prefs.getBoolean(SettingsRepository.KEY_KEYBOARD_PITCH_BLACK, false)) }
 
                 // Observe SharedPreferences changes
                 DisposableEffect(prefs) {
@@ -127,6 +129,12 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                             SettingsRepository.KEY_KEYBOARD_HAPTIC_STRENGTH -> {
                                 hapticStrength = sharedPreferences.getFloat(SettingsRepository.KEY_KEYBOARD_HAPTIC_STRENGTH, 0.5f)
                             }
+                            SettingsRepository.KEY_KEYBOARD_ALWAYS_DARK -> {
+                                isAlwaysDark = sharedPreferences.getBoolean(SettingsRepository.KEY_KEYBOARD_ALWAYS_DARK, false)
+                            }
+                            SettingsRepository.KEY_KEYBOARD_PITCH_BLACK -> {
+                                isPitchBlack = sharedPreferences.getBoolean(SettingsRepository.KEY_KEYBOARD_PITCH_BLACK, false)
+                            }
                         }
                     }
                     prefs.registerOnSharedPreferenceChangeListener(listener)
@@ -135,8 +143,14 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                     }
                 }
 
-                KeyboardInputView(
-                    keyboardHeight = keyboardHeight.dp,
+                val useDarkTheme = isAlwaysDark || androidx.compose.foundation.isSystemInDarkTheme()
+
+                EssentialsTheme(
+                    darkTheme = useDarkTheme,
+                    pitchBlackTheme = isPitchBlack
+                ) {
+                    KeyboardInputView(
+                        keyboardHeight = keyboardHeight.dp,
                     bottomPadding = bottomPadding.dp,
                     keyRoundness = keyboardRoundness.dp,
                     keyboardShape = keyboardShape,
@@ -151,6 +165,7 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                         handleKeyPress(keyCode)
                     }
                 )
+                    }
             }
         }
         composedInputView = view

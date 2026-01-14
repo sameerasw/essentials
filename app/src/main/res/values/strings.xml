@@ -601,6 +601,10 @@
         <item>wait</item>
         <item>timeout</item>
     </string-array>
+
+    <string name="label_keyboard_always_dark">Always dark theme</string>
+    <string name="label_keyboard_pitch_black">Pitch black theme</string>
+
     <string-array name="keywords_selection">
         <item>list</item>
         <item>picker</item>
