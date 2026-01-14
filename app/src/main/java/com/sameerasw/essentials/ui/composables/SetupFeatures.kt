@@ -633,7 +633,7 @@ fun SetupFeatures(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(24.dp)
                 .focusRequester(focusRequester)
                 .onFocusChanged { isFocused = it.isFocused },
             leadingIcon = {
@@ -644,7 +644,7 @@ fun SetupFeatures(
                 )
             },
             placeholder = { if (!isFocused && viewModel.searchQuery.value.isEmpty()) Text(stringResource(R.string.search_placeholder)) },
-            shape = RoundedCornerShape(64.dp),
+            shape = MaterialTheme.shapes.extraExtraLarge,
             singleLine = true,
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = MaterialTheme.colorScheme.primary,

@@ -1,6 +1,7 @@
 package com.sameerasw.essentials.ui.components.cards
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -66,18 +67,25 @@ fun FeatureCard(
             Row(
                 modifier = Modifier.align(Alignment.CenterStart),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 if (iconRes != null) {
-
-                    Spacer(modifier = Modifier.size(1.dp))
-                    Icon(
-                        painter = painterResource(id = iconRes),
-                        contentDescription = resolvedTitle,
-                        modifier = Modifier.size(28.dp),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(modifier = Modifier.size(1.dp))
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .background(
+                                color = com.sameerasw.essentials.utils.ColorUtil.getPastelColorFor(resolvedTitle),
+                                shape = androidx.compose.foundation.shape.CircleShape
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            painter = painterResource(id = iconRes),
+                            contentDescription = resolvedTitle,
+                            modifier = Modifier.size(24.dp), // Slightly smaller to fit nicely in the circle
+                            tint = MaterialTheme.colorScheme.background
+                        )
+                    }
                 }
                 Column(
                     modifier = Modifier.weight(1f),
