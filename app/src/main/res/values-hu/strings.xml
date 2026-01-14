@@ -36,6 +36,8 @@
     <string name="settings_section_flashlight">Flashlight</string>
     <string name="flashlight_options_title">Flashlight options</string>
     <string name="flashlight_options_desc">Adjust fading and other settings</string>
+    <string name="setting_pitch_black_theme_title">Pitch black theme</string>
+    <string name="setting_pitch_black_theme_desc">Use pure black background in dark mode</string>
     <string name="settings_section_haptic">Haptic Feedback</string>
     <string name="button_remap_section_long_press">Remap Long Press</string>
     <string name="screen_off">Screen Off</string>
@@ -148,6 +150,9 @@
     <string name="tile_flashlight">Flashlight</string>
     <string name="tile_app_freezing">App Freezing</string>
     <string name="tile_flashlight_pulse">Flashlight Pulse</string>
+    <string name="tile_stay_awake">Stay awake</string>
+    <string name="tile_active">Active</string>
+    <string name="tile_inactive">Inactive</string>
     <string name="nfc_tile_label">NFC</string>
     <string name="on">On</string>
     <string name="off">Off</string>
@@ -246,6 +251,8 @@
     <string name="feat_notification_lighting_desc">Light up for notifications</string>
     <string name="feat_sound_mode_tile_title">Sound mode tile</string>
     <string name="feat_sound_mode_tile_desc">QS tile to toggle sound mode</string>
+    <string name="feat_stay_awake_tile_title">Stay awake tile</string>
+    <string name="feat_stay_awake_tile_desc">QS tile to toggle stay awake</string>
     <!-- DIY Automation -->
     <string name="diy_create_trigger_title">Trigger Automation</string>
     <string name="diy_create_trigger_desc">Schedule an action to trigger on an observation</string>
@@ -324,6 +331,7 @@
     <string name="search_qs_freeze_desc">Launch app freezing grid</string>
     <string name="search_qs_pulse_title">Flashlight Pulse</string>
     <string name="search_qs_pulse_desc">Toggle notification flashlight pulse</string>
+    <string name="search_qs_stay_awake_desc">Toggle stay awake developer option</string>
     <string name="search_remap_enable_title">Enable Button Remap</string>
     <string name="search_remap_enable_desc">Master toggle for volume button remapping</string>
     <string name="search_remap_haptic_title">Remap Haptic Feedback</string>
@@ -498,6 +506,13 @@
     <string-array name="keywords_qs_tile">
         <item>tile</item>
         <item>qs</item>
+        <item>awake</item>
+    </string-array>
+    <string-array name="keywords_qs_stay_awake">
+        <item>awake</item>
+        <item>developer</item>
+        <item>power</item>
+        <item>charge</item>
     </string-array>
     <string-array name="keywords_notification_lighting">
         <item>glow</item>
