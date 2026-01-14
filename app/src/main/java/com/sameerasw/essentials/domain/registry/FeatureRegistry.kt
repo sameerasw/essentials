@@ -161,6 +161,19 @@ object FeatureRegistry {
         },
 
         object : Feature(
+            id = "Stay awake tile",
+            title = R.string.feat_stay_awake_tile_title,
+            iconRes = R.drawable.rounded_av_timer_24,
+            category = R.string.cat_tools,
+            description = R.string.feat_stay_awake_tile_desc,
+            permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
+            showToggle = false
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = true
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+        },
+
+        object : Feature(
             id = "Link actions",
             title = R.string.feat_link_actions_title,
             iconRes = R.drawable.rounded_link_24,
@@ -310,6 +323,13 @@ object FeatureRegistry {
                     R.string.search_qs_pulse_desc,
                     "Flashlight Pulse",
                     R.array.keywords_flashlight_pulse,
+                    R.string.feat_qs_tiles_title
+                ),
+                SearchSetting(
+                    R.string.tile_stay_awake,
+                    R.string.search_qs_stay_awake_desc,
+                    "Stay awake",
+                    R.array.keywords_qs_stay_awake,
                     R.string.feat_qs_tiles_title
                 )
             )

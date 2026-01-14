@@ -41,6 +41,7 @@ class QSPreferencesActivity : ComponentActivity() {
                 "com.sameerasw.essentials.services.tiles.ScreenLockedSecurityTileService" -> "Screen locked security"
                 "com.sameerasw.essentials.services.tiles.AppFreezingTileService" -> "Freeze"
                 "com.sameerasw.essentials.services.tiles.FlashlightPulseTileService" -> "Notification lighting"
+                "com.sameerasw.essentials.services.tiles.StayAwakeTileService" -> "Quick settings tiles"
                 "com.sameerasw.essentials.services.tiles.NfcTileService" -> "NFC"
                 else -> null
             }
