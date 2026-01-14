@@ -254,7 +254,7 @@ fun KeyboardInputView(
                         .fillMaxWidth()
                         .height(keyHeight * 0.65f)
                         .nestedScroll(nestedScrollConnection),
-                    preferredItemWidth = 80.dp,
+                    preferredItemWidth = 150.dp,
                     itemSpacing = 4.dp,
                     minSmallItemWidth = 10.dp,
                     maxSmallItemWidth = 20.dp,
