@@ -99,6 +99,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_KEYBOARD_BOTTOM_PADDING = "keyboard_bottom_padding"
         const val KEY_KEYBOARD_HAPTICS_ENABLED = "keyboard_haptics_enabled"
         const val KEY_KEYBOARD_ROUNDNESS = "keyboard_roundness"
+        const val KEY_KEYBOARD_SHAPE = "keyboard_shape" // 0=Round, 1=Flat, 2=Inverse
         const val KEY_KEYBOARD_FUNCTIONS_BOTTOM = "keyboard_functions_bottom"
         const val KEY_KEYBOARD_FUNCTIONS_PADDING = "keyboard_functions_padding"
         const val KEY_KEYBOARD_HAPTIC_STRENGTH = "keyboard_haptic_strength"

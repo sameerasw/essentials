@@ -32,6 +32,7 @@ import com.sameerasw.essentials.viewmodels.MainViewModel
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -40,6 +41,11 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
     private val lifecycleRegistry by lazy { LifecycleRegistry(this) }
     private val store by lazy { ViewModelStore() }
     private val savedStateRegistryController by lazy { SavedStateRegistryController.create(this) }
+    
+    // Internal state for Insets calculation
+    private var currentKeyboardShape: Int = 0
+    private var currentKeyboardRoundness: Float = 24f
+    private var composedInputView: View? = null
 
     override val lifecycle: Lifecycle get() = lifecycleRegistry
     override val viewModelStore: ViewModelStore get() = store
@@ -76,6 +82,18 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                 var keyboardHeight by remember { mutableFloatStateOf(prefs.getFloat(SettingsRepository.KEY_KEYBOARD_HEIGHT, 54f)) }
                 var bottomPadding by remember { mutableFloatStateOf(prefs.getFloat(SettingsRepository.KEY_KEYBOARD_BOTTOM_PADDING, 0f)) }
                 var keyboardRoundness by remember { mutableFloatStateOf(prefs.getFloat(SettingsRepository.KEY_KEYBOARD_ROUNDNESS, 24f)) }
+                var keyboardShape by remember { mutableIntStateOf(prefs.getInt(SettingsRepository.KEY_KEYBOARD_SHAPE, 0)) }
+                
+                // Sync with internal state
+                LaunchedEffect(keyboardRoundness, keyboardShape) {
+                    currentKeyboardRoundness = keyboardRoundness
+                    currentKeyboardShape = keyboardShape
+                    // Trigger insets re-computation when these change
+                    if (window?.window?.decorView?.isAttachedToWindow == true) {
+                         window?.window?.decorView?.requestLayout()
+                    }
+                }
+                
                 var isFunctionsBottom by remember { mutableStateOf(prefs.getBoolean(SettingsRepository.KEY_KEYBOARD_FUNCTIONS_BOTTOM, false)) }
                 var functionsPadding by remember { mutableFloatStateOf(prefs.getFloat(SettingsRepository.KEY_KEYBOARD_FUNCTIONS_PADDING, 0f)) }
                 var isHapticsEnabled by remember { mutableStateOf(prefs.getBoolean(SettingsRepository.KEY_KEYBOARD_HAPTICS_ENABLED, true)) }
@@ -93,6 +111,9 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                             }
                             SettingsRepository.KEY_KEYBOARD_ROUNDNESS -> {
                                 keyboardRoundness = sharedPreferences.getFloat(SettingsRepository.KEY_KEYBOARD_ROUNDNESS, 24f)
+                            }
+                            SettingsRepository.KEY_KEYBOARD_SHAPE -> {
+                                keyboardShape = sharedPreferences.getInt(SettingsRepository.KEY_KEYBOARD_SHAPE, 0)
                             }
                             SettingsRepository.KEY_KEYBOARD_FUNCTIONS_BOTTOM -> {
                                 isFunctionsBottom = sharedPreferences.getBoolean(SettingsRepository.KEY_KEYBOARD_FUNCTIONS_BOTTOM, false)
@@ -118,6 +139,7 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                     keyboardHeight = keyboardHeight.dp,
                     bottomPadding = bottomPadding.dp,
                     keyRoundness = keyboardRoundness.dp,
+                    keyboardShape = keyboardShape,
                     isHapticsEnabled = isHapticsEnabled,
                     hapticStrength = hapticStrength,
                     isFunctionsBottom = isFunctionsBottom,
@@ -131,6 +153,7 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                 )
             }
         }
+        composedInputView = view
         return view
     }
 
@@ -177,6 +200,28 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
             }
             else -> {
                 sendDownUpKeyEvents(keyCode)
+            }
+        }
+    }
+
+    override fun onComputeInsets(outInsets: InputMethodService.Insets) {
+        super.onComputeInsets(outInsets)
+        val inputView = this.composedInputView ?: return
+        
+        // Default behavior: contentTopInsets is the top of the input view (relative to window)
+        // If we are in "Inverse" shape (2), we have extra top padding equal to roundness.
+        // We want the app to ignore this padding, so we lower the contentTopInsets.
+        
+        if (currentKeyboardShape == 2) {
+            val density = resources.displayMetrics.density
+            val extraPaddingPx = (currentKeyboardRoundness * density).toInt()
+            
+            // Allow the app to draw behind the "horns" area (the top padding)
+            // By moving the content inset down by the padding amount
+            val visibleHeight = inputView.height - extraPaddingPx
+            if (visibleHeight > 0) {
+                outInsets.contentTopInsets = outInsets.contentTopInsets + extraPaddingPx
+                outInsets.visibleTopInsets = outInsets.visibleTopInsets + extraPaddingPx
             }
         }
     }

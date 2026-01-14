@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -57,6 +58,35 @@ enum class ShiftState {
     OFF,
     ON,
     LOCKED
+}
+
+class LiquidShape(private val curveHeight: Float) : androidx.compose.ui.graphics.Shape {
+    override fun createOutline(
+        size: androidx.compose.ui.geometry.Size,
+        layoutDirection: androidx.compose.ui.unit.LayoutDirection,
+        density: androidx.compose.ui.unit.Density
+    ): androidx.compose.ui.graphics.Outline {
+        val path = androidx.compose.ui.graphics.Path().apply {
+            // Left Horn
+            moveTo(0f, 0f)
+            // Curve down from (0,0) to (R, R) with control point at (0, R)
+            // This creates a vertical tangent at the wall and horizontal at the bottom
+            quadraticBezierTo(0f, curveHeight, curveHeight, curveHeight)
+            
+            // Flat bottom of the meniscus
+            lineTo(size.width - curveHeight, curveHeight)
+            
+            // Right Horn
+            // Curve up from (W-R, R) to (W, 0) with control point at (W, R)
+            quadraticBezierTo(size.width, curveHeight, size.width, 0f)
+            
+            // Rest of the box
+            lineTo(size.width, size.height)
+            lineTo(0f, size.height)
+            close()
+        }
+        return androidx.compose.ui.graphics.Outline.Generic(path)
+    }
 }
 
 private fun Modifier.bounceClick(interactionSource: MutableInteractionSource): Modifier = composed {
@@ -123,6 +153,7 @@ fun KeyboardInputView(
     keyboardHeight: Dp = 54.dp,
     bottomPadding: Dp = 0.dp,
     keyRoundness: Dp = 24.dp,
+    keyboardShape: Int = 0, // 0=Round, 1=Flat, 2=Inverse
     isHapticsEnabled: Boolean = true,
     hapticStrength: Float = 0.5f,
     isFunctionsBottom: Boolean = false,
@@ -166,12 +197,20 @@ fun KeyboardInputView(
     val currentRow2 = if (isSymbols) row2Symbols else row2Letters
     val currentRow3 = if (isSymbols) row3Symbols else row3Letters
 
+    val containerShape = when (keyboardShape) {
+        1 -> androidx.compose.ui.graphics.RectangleShape
+        2 -> LiquidShape(with(LocalDensity.current) { keyRoundness.toPx() }) // Inverse/Liquid
+        else -> RoundedCornerShape(28.dp)
+    }
+
+    val extraTopPadding = if (keyboardShape == 2) keyRoundness else 0.dp
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(28.dp))
+            .clip(containerShape)
             .background(MaterialTheme.colorScheme.surfaceContainer)
-            .padding(bottom = bottomPadding, start = 6.dp, end = 6.dp, top = 6.dp),
+            .padding(bottom = bottomPadding, start = 6.dp, end = 6.dp, top = 6.dp + extraTopPadding),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {

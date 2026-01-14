@@ -830,6 +830,7 @@
     <string name="root_not_available_toast">Root access not available. Please check your root manager.</string>
     <!-- System Keyboard -->
     <string name="feat_system_keyboard_title">Keyboard</string>
+    <string name="feat_system_keys">Keys</string>
     <string name="feat_system_keyboard_desc">Customize layout and behavior</string>
     <string name="search_keyboard_height_title">Key Height</string>
     <string name="search_keyboard_height_desc">Adjust the vertical size of keys</string>
@@ -848,4 +849,9 @@
     <string name="label_keyboard_functions_bottom">Move functions to bottom</string>
     <string name="label_keyboard_functions_padding">Functions side padding</string>
     <string name="label_keyboard_haptic_strength">Haptic feedback strength</string>
+
+    <string name="label_keyboard_shape">Keyboard shape</string>
+    <string name="shape_round">Round</string>
+    <string name="shape_flat">Flat</string>
+    <string name="shape_inverse">Inverse</string>
 </resources>

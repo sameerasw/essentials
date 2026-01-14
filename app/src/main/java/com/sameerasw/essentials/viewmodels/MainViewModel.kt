@@ -135,6 +135,7 @@ class MainViewModel : ViewModel() {
     val isKeyboardFunctionsBottom = mutableStateOf(false)
     val keyboardFunctionsPadding = mutableFloatStateOf(0f)
     val keyboardHapticStrength = mutableFloatStateOf(0.5f)
+    val keyboardShape = mutableIntStateOf(0) // 0=Round, 1=Flat, 2=Inverse
 
     private var lastUpdateCheckTime: Long = 0
     private lateinit var settingsRepository: SettingsRepository
@@ -177,6 +178,7 @@ class MainViewModel : ViewModel() {
             SettingsRepository.KEY_KEYBOARD_FUNCTIONS_BOTTOM -> isKeyboardFunctionsBottom.value = settingsRepository.getBoolean(key)
             SettingsRepository.KEY_KEYBOARD_FUNCTIONS_PADDING -> keyboardFunctionsPadding.floatValue = settingsRepository.getFloat(key, 0f)
             SettingsRepository.KEY_KEYBOARD_HAPTIC_STRENGTH -> keyboardHapticStrength.floatValue = settingsRepository.getFloat(key, 0.5f)
+            SettingsRepository.KEY_KEYBOARD_SHAPE -> keyboardShape.intValue = settingsRepository.getInt(key, 0)
         }
     }
 
@@ -288,6 +290,7 @@ class MainViewModel : ViewModel() {
         isKeyboardFunctionsBottom.value = settingsRepository.getBoolean(SettingsRepository.KEY_KEYBOARD_FUNCTIONS_BOTTOM, false)
         keyboardFunctionsPadding.floatValue = settingsRepository.getFloat(SettingsRepository.KEY_KEYBOARD_FUNCTIONS_PADDING, 0f)
         keyboardHapticStrength.floatValue = settingsRepository.getFloat(SettingsRepository.KEY_KEYBOARD_HAPTIC_STRENGTH, 0.5f)
+        keyboardShape.intValue = settingsRepository.getInt(SettingsRepository.KEY_KEYBOARD_SHAPE, 0)
 
         isScreenLockedSecurityEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED)
         isDeviceAdminEnabled.value = isDeviceAdminActive(context)
@@ -699,6 +702,11 @@ class MainViewModel : ViewModel() {
     fun setKeyboardHapticStrength(strength: Float, context: Context) {
         keyboardHapticStrength.floatValue = strength
         settingsRepository.putFloat(SettingsRepository.KEY_KEYBOARD_HAPTIC_STRENGTH, strength)
+    }
+
+    fun setKeyboardShape(shape: Int, context: Context) {
+        keyboardShape.intValue = shape
+        settingsRepository.putInt(SettingsRepository.KEY_KEYBOARD_SHAPE, shape)
     }
 
 
