@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Essentials</string>
-    <string name="label_beta">BETA</string>
+    <string name="label_beta">BÊTA</string>
     <string name="accessibility_service_description"><b>Service d\'accessibilité Essentials</b>\n\nCe service est requis pour les fonctionnalités suivantes :\n\n<b>• Réattribution d\'un bouton physique :</b>\nDétecte les appuis sur le bouton volume même si l\'écran est éteint pour déclencher des actions comme allumer la lampe-torche.\n\n<b>• Réglage par appli :</b>\nSurveille les applications actives pour appliquer des profils spécifiques pour le mode éclairage nocturne dynamique, le réglage de couleurs des notifications et le verrouillage d\'applis.\n\n<b>• Contrôler l\'écran :</b>\nAutorise l\'application à verrouiller l\'écran (par exemple en utilisant le Double Tap ou les Widgets) et détecter le changement d\'état de l\'écran.\n\n<b>• Sécurité :</b>\nPrévenir les changements non autorisé en détectant le contenu des fenêtres lorsque l\'appareil est verrouillé.\n\n<small>Aucun texte saisi ou de données utilisateur sensibles sont collectées ou transmises.</small></string>
     <string name="app_icon">Icône de l\'appli</string>
     <string name="freeze_activity_title">Gel d\'applis</string>
@@ -9,7 +9,7 @@
     <string name="freeze_shortcut_short_label">Gel d\'applis</string>
     <string name="freeze_shortcut_long_label">Ouvrir le gel d\'applis</string>
     <string name="frozen_app_shortcut_label">Application gelée</string>
-    <string name="screen_off_widget_label">Empty screen off widget</string>
+    <string name="screen_off_widget_label">Widget de verrouillage invisible </string>
     <string name="app_freezing_tile_label">Gel d\'applis</string>
     <string name="flashlight_pulse_tile_label">Flashlight Pulse</string>
     <string name="check_pre_releases_label">Vérifier pour des pré-versions</string>
@@ -79,7 +79,7 @@
     <string name="dynamic_night_light_apps_section">Applis qui désactivent le mode d\'Éclairage nocturne</string>
     <string name="action_select_apps">Sélectionner des applis</string>
     <!-- App Freezing -->
-    <string name="settings_section_app_control">App Control</string>
+    <string name="settings_section_app_control">Contrôle des applis</string>
     <string name="action_freeze">Geler</string>
     <string name="action_unfreeze">Dégeler</string>
     <string name="content_desc_more_options">Plus d\'options</string>
@@ -151,11 +151,11 @@
     <string name="tile_app_freezing">Gel d\'applis</string>
     <string name="tile_flashlight_pulse">Flashlight Pulse</string>
     <string name="tile_stay_awake">Stay awake</string>
-    <string name="tile_active">Active</string>
-    <string name="tile_inactive">Inactive</string>
+    <string name="tile_active">Actif</string>
+    <string name="tile_inactive">Inactif</string>
     <string name="nfc_tile_label">NFC</string>
-    <string name="on">On</string>
-    <string name="off">Off</string>
+    <string name="on">Activer</string>
+    <string name="off">Désactiver</string>
     <!-- Screen Locked Security -->
     <string name="screen_locked_security_title">Sécurité d\'écran verrouillé</string>
     <string name="screen_locked_security_dialog_title">Screen Locked Security</string>
@@ -190,7 +190,7 @@
     <string name="icon_phone_signal">Signal du téléphone</string>
     <string name="icon_volte">VoLTE / VoNR</string>
     <string name="icon_wifi_calling">Appel WiFi / VoWiFi</string>
-    <string name="icon_call_status">Status de l\' appel / Synchronsisation</string>
+    <string name="icon_call_status">Status d\'appel / Synchronisation</string>
     <string name="icon_tty">TTY</string>
     <string name="icon_volume">Volume</string>
     <string name="icon_headset">Casque</string>
@@ -233,14 +233,14 @@
     <string name="cat_system">Système</string>
     <string name="cat_security">Sécurité et Confidentialité</string>
     <!-- UI Elements -->
-    <string name="search_placeholder">Recherchez des outils, des Mods, ou des améliorations</string>
+    <string name="search_placeholder">Recherchez des outils, des mods, ou des améliorations</string>
     <string name="search_no_results">Aucun résultat pour \"%1$s\"</string>
     <string name="search_results_title">Résultats de recherche</string>
     <string name="required_for">Requis pour :</string>
     <string name="requires_following_permissions">%1$s a besoin des permissions suivantes</string>
     <!-- Features -->
     <string name="feat_screen_off_widget_title">Screen off widget</string>
-    <string name="feat_screen_off_widget_desc">Invisible widget to turn the screen off</string>
+    <string name="feat_screen_off_widget_desc">Widget invisible pour éteindre l\'écran</string>
     <string name="feat_statusbar_icons_title">Icônes de la barre d\'état</string>
     <string name="feat_statusbar_icons_desc">Control statusbar icons visibility</string>
     <string name="feat_caffeinate_title">Caffeinate</string>
@@ -274,7 +274,7 @@
     <string name="feat_screen_locked_security_desc">Empêcher l\'utilisation des contrôles réseaux</string>
     <string name="feat_app_lock_title">Verrouillage d\'applis</string>
     <string name="feat_app_lock_desc">Protéger les applications avec la biométrie</string>
-    <string name="feat_freeze_title">Geler</string>
+    <string name="feat_freeze_title">Gel d\'applis</string>
     <string name="feat_freeze_desc">Désactive les applications rarement utilisées</string>
     <!-- Search Settings -->
     <string name="search_haptic_title">Retour haptique du Widget</string>
@@ -384,8 +384,8 @@
     <!-- Tabs -->
     <string name="tab_essentials">Essentials</string>
     <string name="tab_essentials_subtitle">└(=^‥^=)┐</string>
-    <string name="tab_freeze">Geler</string>
-    <string name="tab_freeze_title">Gelée</string>
+    <string name="tab_freeze">Gel d\'applis</string>
+    <string name="tab_freeze_title">Gel d\'applis</string>
     <string name="tab_diy">DIY</string>
     <string name="tab_freeze_subtitle">Applications désactivées</string>
     <string name="tab_diy_subtitle">Do It Yourself</string>
@@ -401,42 +401,42 @@
     <string name="action_download">Télécharger</string>
     <!-- DIY Section -->
     <string name="coming_soon_title">Do It Yourself</string>
-    <string name="coming_soon_desc">Quelque chose d\'expérimental se trame ici. Restez connecté pour les automatisations et les modifications avancées.</string>
+    <string name="coming_soon_desc">Quelque chose d\'expérimental se prépare ici. Restez connecté pour les automatisations et les mods avancées.</string>
     <string name="coming_soon_label">Bientôt disponible...</string>
     <string name="diy_trigger_label">Trigger</string>
     <string name="diy_state_label">State</string>
     <string name="diy_action_label">Action</string>
     <string name="diy_in_label">In</string>
     <string name="diy_out_label">Out</string>
-    <string name="diy_automation_label">Automation</string>
-    <string name="diy_trigger_screen_off">Screen Off</string>
-    <string name="diy_trigger_screen_on">Screen On</string>
-    <string name="diy_trigger_device_unlock">Device Unlock</string>
-    <string name="diy_trigger_charger_connected">Charger Connected</string>
-    <string name="diy_trigger_charger_disconnected">Charger Disconnected</string>
-    <string name="diy_state_charging">Charging</string>
-    <string name="diy_state_screen_on">Screen On</string>
-    <string name="diy_action_haptic">Vibrate</string>
-    <string name="diy_action_notification">Show Notification</string>
-    <string name="diy_action_remove_notification">Remove Notification</string>
-    <string name="diy_action_flashlight_on">Turn On Flashlight</string>
-    <string name="diy_action_flashlight_off">Turn Off Flashlight</string>
-    <string name="diy_action_flashlight_toggle">Toggle Flashlight</string>
+    <string name="diy_automation_label">Automatisation</string>
+    <string name="diy_trigger_screen_off">Écran éteint</string>
+    <string name="diy_trigger_screen_on">Écran allumé</string>
+    <string name="diy_trigger_device_unlock">Déverrouillage de l\'appareil</string>
+    <string name="diy_trigger_charger_connected">Chargeur connecté</string>
+    <string name="diy_trigger_charger_disconnected">Chargeur déconnecté</string>
+    <string name="diy_state_charging"></string>
+    <string name="diy_state_screen_on">Écran allumé</string>
+    <string name="diy_action_haptic">Vibreur</string>
+    <string name="diy_action_notification">Afficher une notification</string>
+    <string name="diy_action_remove_notification">Supprimer la notification</string>
+    <string name="diy_action_flashlight_on">Allumer la lampe-torche</string>
+    <string name="diy_action_flashlight_off">Éteindre la lampe-torche</string>
+    <string name="diy_action_flashlight_toggle">Activer/désactiver la lampe-torche</string>
     <string name="diy_action_dim_wallpaper">Dim Wallpaper</string>
     <string name="diy_dim_wallpaper_desc">This action requires Shizuku or Root to adjust system wallpaper dimming.</string>
-    <string name="diy_select_trigger">Select Trigger</string>
-    <string name="diy_select_state">Select State</string>
-    <string name="diy_select_action">Select Action</string>
+    <string name="diy_select_trigger">Sélectionner un déclencheur</string>
+    <string name="diy_select_state">État de sélection</string>
+    <string name="diy_select_action">Action de sélection</string>
     <string name="diy_in_action_label">In Action</string>
     <string name="diy_out_action_label">Out Action</string>
-    <string name="action_cancel">Cancel</string>
-    <string name="action_save">Save</string>
-    <string name="action_edit">Edit</string>
-    <string name="action_delete">Delete</string>
-    <string name="action_enable">Enable</string>
-    <string name="action_disable">Disable</string>
-    <string name="automation_service_channel_name">Automation Service</string>
-    <string name="automation_service_running_title">Automations Active</string>
+    <string name="action_cancel">Annuler</string>
+    <string name="action_save">Enregistrer</string>
+    <string name="action_edit">Modifier</string>
+    <string name="action_delete">Supprimer</string>
+    <string name="action_enable">Activer</string>
+    <string name="action_disable">Désactiver</string>
+    <string name="automation_service_channel_name">Service d\'automatisation</string>
+    <string name="automation_service_running_title">Automatisations actives</string>
     <string name="automation_service_running_desc">Monitoring system events for your automations</string>
     <!-- About Section -->
     <string name="app_developer_name">Sameera Wijerathna</string>
@@ -486,32 +486,32 @@
     </string-array>
     <string-array name="keywords_restore_default">
         <item>restaurer</item>
-        <item>default</item>
-        <item>icon</item>
+        <item>défaut</item>
+        <item>icône</item>
     </string-array>
     <string-array name="keywords_alert">
         <item>visible</item>
-        <item>alert</item>
+        <item>alerte</item>
     </string-array>
     <string-array name="keywords_flashlight">
-        <item>light</item>
-        <item>torch</item>
+        <item>lumière</item>
+        <item>lampe-torche</item>
     </string-array>
     <string-array name="keywords_flashlight_pulse">
-        <item>light</item>
-        <item>torch</item>
+        <item>lumière</item>
+        <item>lampe-torche</item>
         <item>pulse</item>
         <item>notification</item>
     </string-array>
     <string-array name="keywords_qs_tile">
-        <item>tile</item>
+        <item>bloc</item>
         <item>qs</item>
         <item>awake</item>
     </string-array>
     <string-array name="keywords_qs_stay_awake">
         <item>awake</item>
-        <item>developer</item>
-        <item>power</item>
+        <item>développeur</item>
+        <item>alimentation</item>
         <item>charge</item>
     </string-array>
     <string-array name="keywords_notification_lighting">
@@ -600,32 +600,32 @@
     <string-array name="keywords_always_display">
         <item>always</item>
         <item>display</item>
-        <item>clock</item>
+        <item>horloge</item>
     </string-array>
     <string-array name="keywords_audio_mute">
         <item>audio</item>
-        <item>mute</item>
+        <item>muet</item>
         <item>volume</item>
     </string-array>
     <string-array name="keywords_blue_filter">
-        <item>blue</item>
-        <item>filter</item>
+        <item>bleu</item>
+        <item>filtre</item>
         <item>auto</item>
     </string-array>
     <string-array name="keywords_app_freezing">
-        <item>freeze</item>
+        <item>gel d\'applis</item>
         <item>shizuku</item>
     </string-array>
     <string-array name="keywords_manual_now">
-        <item>manual</item>
-        <item>now</item>
+        <item>manuel</item>
+        <item>maintenant</item>
         <item>shizuku</item>
     </string-array>
     <string-array name="keywords_proximity_sensor">
-        <item>proximity</item>
-        <item>sensor</item>
+        <item>proximité</item>
+        <item>capteur</item>
         <item>face</item>
-        <item>down</item>
+        <item>en bas</item>
     </string-array>
     <string-array name="keywords_switch_master">
         <item>switch</item>
@@ -646,15 +646,15 @@
     <string name="action_download_apk">Télécharger l\'APK</string>
     <!-- Haptic Types -->
     <string name="haptic_none">Aucun</string>
-    <string name="haptic_subtle">Subtle</string>
+    <string name="haptic_subtle">Subtile</string>
     <string name="haptic_double">Double</string>
-    <string name="haptic_click">Click</string>
+    <string name="haptic_click">Clic</string>
     <string name="haptic_tick">Tick</string>
     <!-- Flashlight Intensity Overlay -->
     <string name="action_turn_off">Éteindre</string>
     <string name="feature_flashlight_brightness_title">Luminosité de la lampe-torche</string>
     <!-- QS / Activities -->
-    <string name="feature_settings_format">%1$s Settings</string>
+    <string name="feature_settings_format">Paramètres de %1$s</string>
     <string name="auth_confirm_identity_settings">Confirmez votre identité pour ouvrir les paramètres</string>
     <string name="auth_required_title">Authentification requise</string>
     <string name="auth_confirm_identity_subtitle">Confirmez votre identité</string>
@@ -683,7 +683,7 @@
     <string name="error_no_email_app">Aucune application d\'e-mail disponible</string>
     <string name="instruction_step_image_description">Step %1$d Image</string>
     <!-- Instructions Content -->
-    <string name="instruction_section_perms_title">Accessibility, Notification and Overlay permissions</string>
+    <string name="instruction_section_perms_title">Permissions d\'accessibilité, de notification et de superposition</string>
     <string name="instruction_step_perms_1">You may get this access denied message if you try to grant sensitive permissions such as accessibility, notification listener or overlay permissions. To grant it, check the steps below.</string>
     <string name="instruction_step_perms_2">1. Allez dans la page d\'informations de l\'application Essentials</string>
     <string name="instruction_step_perms_3">2. Ouvrez le menu à 3 points en haut à droite et sélectionnez \"Autoriser les paramètres restreints\". Vous devrez peut-être vous authentifier avec la biométrie. Une fois fait, réessayez d\'accorder la permission.</string>
@@ -724,31 +724,31 @@
     <string name="feat_location_reached_title">Location reached</string>
     <string name="feat_location_reached_desc">Get notified when you arrive at a specific destination.</string>
     <string name="location_reached_pick_destination">Destination</string>
-    <string name="location_reached_set_destination_btn">Set Destination</string>
-    <string name="location_reached_status_tracking">Tracking: %1$.4f, %2$.4f</string>
-    <string name="location_reached_status_none">No destination set</string>
+    <string name="location_reached_set_destination_btn">Définir destination</string>
+    <string name="location_reached_status_tracking">Traçage : %1$.4f%2$.4f</string>
+    <string name="location_reached_status_none">Aucune destination définie</string>
     <string name="location_reached_how_to">Open your map app, pick a location, and share it to Essentials.</string>
     <string name="location_reached_radius_title">Radius: %d m</string>
-    <string name="location_reached_radius_desc">Distance to trigger the alarm</string>
-    <string name="location_reached_enable_title">Enable notification</string>
-    <string name="perm_location_title">Location</string>
-    <string name="perm_location_desc">Used to detect arrival at your destination.</string>
-    <string name="perm_bg_location_title">Background Location</string>
-    <string name="perm_bg_location_desc">Required to monitor your arrival while the app is closed or the screen is off.</string>
-    <string name="location_reached_notification_title">Destination Reached!</string>
-    <string name="location_reached_notification_desc">You have arrived at your destination.</string>
-    <string name="location_reached_current_distance">Currently %1$.1f km away</string>
-    <string name="location_reached_clear_btn">Clear Destination</string>
+    <string name="location_reached_radius_desc">Distance pour déclencher l\'alarme</string>
+    <string name="location_reached_enable_title">Activer la notification</string>
+    <string name="perm_location_title">Position</string>
+    <string name="perm_location_desc">Utilisé pour détecter l\'arrivée à la destination.</string>
+    <string name="perm_bg_location_title">Position en arrière-plan</string>
+    <string name="perm_bg_location_desc">Requise pour détecter votre arrivée lorsque l\'application est fermée ou l\'écran est éteint.</string>
+    <string name="location_reached_notification_title">Destination atteinte !</string>
+    <string name="location_reached_notification_desc">Vous êtes arrivé à destination.</string>
+    <string name="location_reached_current_distance">Actuellement à %1$.1fkm</string>
+    <string name="location_reached_clear_btn">Supprimer la destination</string>
     <string name="location_reached_processing">Processing location…</string>
     <string name="location_reached_dist_remaining">DISTANCE REMAINING</string>
-    <string name="location_reached_calculating">Calculating…</string>
-    <string name="location_reached_stop_tracking">Stop Tracking</string>
-    <string name="location_reached_dest_ready">Destination Ready</string>
-    <string name="location_reached_start_tracking">Start Tracking</string>
-    <string name="location_reached_view_map">View Map</string>
-    <string name="location_reached_clear">Clear</string>
-    <string name="location_reached_no_dest">No Destination</string>
-    <string name="location_reached_open_maps">Open Maps</string>
+    <string name="location_reached_calculating">Calcul...</string>
+    <string name="location_reached_stop_tracking">Arrêter le traçage</string>
+    <string name="location_reached_dest_ready">Destination prête</string>
+    <string name="location_reached_start_tracking">Démarrer le traçage</string>
+    <string name="location_reached_view_map">Voir la carte</string>
+    <string name="location_reached_clear">Supprimer</string>
+    <string name="location_reached_no_dest">Aucune destination</string>
+    <string name="location_reached_open_maps">Ouvrir Maps</string>
     <string name="location_reached_fsi_title">Full-Screen Alarm Permission</string>
     <string name="location_reached_fsi_desc">Required to wake your device upon arrival. Tap to grant.</string>
     <string name="location_reached_dist_m">%1$d m</string>
@@ -761,7 +761,7 @@
     <string name="location_reached_alarm_subtitle">Prepare to get off</string>
     <string name="location_reached_dismiss">Dismiss</string>
     <string name="location_reached_toast_set">Destination set: %1$.4f, %2$.4f</string>
-    <string name="setting_use_root_title">Use Root</string>
-    <string name="setting_use_root_desc">Instead of Shizuku</string>
-    <string name="root_not_available_toast">Root access not available. Please check your root manager.</string>
+    <string name="setting_use_root_title">Utiliser le root</string>
+    <string name="setting_use_root_desc">Au lieu de Shizuku</string>
+    <string name="root_not_available_toast">L\'accès racine (root) n\'est pas disponible. Merci de vérifier votre manager de root.</string>
 </resources>
