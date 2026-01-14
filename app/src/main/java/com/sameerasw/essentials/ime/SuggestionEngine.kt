@@ -61,10 +61,14 @@ class SuggestionEngine(private val context: Context) {
         }
 
         try {
-            // Using MAX_EDIT_DISTANCE 2.0
-            val results = checker.lookup(word, Verbosity.Closest, 2.0)
+            // Tuning Properties:
+            // maxEditDistance: Controls how "fuzzy" the search is. 2.0 is standard (catches 80% errors).
+            // Verbosity: Closest (most relevant), Top (just one), All (everything within distance).
+            val maxEditDistance = 2.0
+            val results = checker.lookup(word, Verbosity.Closest, maxEditDistance)
             
-            val list = results.map { it.term }.distinct().take(3)
+            // User requested up to 5 results
+            val list = results.map { it.term }.distinct().take(8)
             _suggestions.value = list
         } catch (e: Exception) {
             _suggestions.value = emptyList()

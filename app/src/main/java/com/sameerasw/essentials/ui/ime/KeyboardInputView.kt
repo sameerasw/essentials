@@ -26,6 +26,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
+import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -49,6 +51,8 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.Dp
@@ -219,39 +223,54 @@ fun KeyboardInputView(
         val FunctionRow = @Composable {
             val hasSuggestions = suggestions.isNotEmpty()
             
-            ButtonGroup(
+            if (hasSuggestions) {
+                HorizontalMultiBrowseCarousel(
+                    state = rememberCarouselState { suggestions.count() },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(keyHeight * 0.65f),
+                    preferredItemWidth = 80.dp,
+                    itemSpacing = 4.dp,
+                    minSmallItemWidth = 10.dp,
+                    maxSmallItemWidth = 20.dp,
+                    contentPadding = PaddingValues(horizontal = functionsPadding)
+                ) { i ->
+                    val suggestion = suggestions[i]
+                    val suggInteraction = remember { MutableInteractionSource() }
+                    val isPressed by suggInteraction.collectIsPressedAsState()
+                    // Use a slightly smaller radius for pressed state or keep uniform
+                    val animatedRadius by animateDpAsState(targetValue = keyRoundness, label = "cornerRadius")
+
+                    KeyButton(
+                        onClick = { onSuggestionClick(suggestion) },
+                        onPress = { performLightHaptic() },
+                        interactionSource = suggInteraction,
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        shape = RoundedCornerShape(animatedRadius),
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            // Ensure it fills the carousel slot width
+                            .fillMaxWidth()
+                            .maskClip(RoundedCornerShape(animatedRadius))
+                    ) {
+                        Text(
+                            text = suggestion,
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = CustomFontFamily,
+                            maxLines = 1
+                        )
+                    }
+                }
+            } else {
+                ButtonGroup(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(keyHeight * 0.5f)
+                    .height(keyHeight * 0.65f)
                     .padding(horizontal = functionsPadding),
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 content = {
-                    if (hasSuggestions) {
-                        suggestions.forEach { suggestion ->
-                             val suggInteraction = remember { MutableInteractionSource() }
-                             val isPressed by suggInteraction.collectIsPressedAsState()
-                             val animatedRadius by animateDpAsState(targetValue = if (isPressed) 4.dp else keyRoundness, label = "cornerRadius")
-                             
-                             KeyButton(
-                                onClick = { onSuggestionClick(suggestion) },
-                                onPress = { performLightHaptic() },
-                                interactionSource = suggInteraction,
-                                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                                contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                                shape = RoundedCornerShape(animatedRadius),
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .fillMaxHeight()
-                            ) {
-                                Text(
-                                    text = suggestion,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    fontWeight = FontWeight.Bold,
-                                    fontFamily = CustomFontFamily
-                                )
-                            }
-                        }
-                    } else {
                         val functions = listOf(
                             R.drawable.ic_emoji to "Emoji",
                             R.drawable.ic_clipboard to "Clipboard",
@@ -281,9 +300,10 @@ fun KeyboardInputView(
                                 )
                             }
                         }
-                    }
                 }
-            )
+                )
+            }
+
         }
 
         if (!isFunctionsBottom) {
