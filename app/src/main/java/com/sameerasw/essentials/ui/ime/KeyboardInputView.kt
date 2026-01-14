@@ -191,6 +191,7 @@ fun KeyboardInputView(
     clipboardHistory: List<String> = emptyList(),
     onSuggestionClick: (String) -> Unit = {},
     onPasteClick: (String) -> Unit = {},
+    onUndoClick: () -> Unit = {},
     onType: (String) -> Unit,
     onKeyPress: (Int) -> Unit
 ) {
@@ -343,6 +344,8 @@ fun KeyboardInputView(
                                 onClick = { 
                                      if (desc == "Clipboard") {
                                          isClipboardMode = !isClipboardMode
+                                     } else if (desc == "Undo") {
+                                         onUndoClick()
                                      } else {
                                          // Other functions
                                      }

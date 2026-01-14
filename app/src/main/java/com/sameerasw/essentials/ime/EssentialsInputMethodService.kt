@@ -57,10 +57,12 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
     private val _clipboardHistory = MutableStateFlow<List<String>>(emptyList())
     val clipboardHistory: StateFlow<List<String>> = _clipboardHistory.asStateFlow()
     
-    // Internal state for Insets calculation
     private var currentKeyboardShape: Int = 0
     private var currentKeyboardRoundness: Float = 24f
     private var composedInputView: View? = null
+    
+    // Undo Stack
+    private val undoStack = java.util.ArrayDeque<String>()
 
     override val lifecycle: Lifecycle get() = lifecycleRegistry
     override val viewModelStore: ViewModelStore get() = store
@@ -245,6 +247,13 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                     onPasteClick = { text ->
                         currentInputConnection?.commitText(text, 1)
                     },
+                    onUndoClick = {
+                        val ic = currentInputConnection
+                        if (ic != null && undoStack.isNotEmpty()) {
+                            val textToRestore = undoStack.pop()
+                            ic.commitText(textToRestore, 1)
+                        }
+                    },
                     onKeyPress = { keyCode ->
                         handleKeyPress(keyCode)
                     }
@@ -297,8 +306,34 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
             KeyEvent.KEYCODE_DEL -> {
                 val selectedText = inputConnection.getSelectedText(0)
                 if (selectedText != null && selectedText.isNotEmpty()) {
+                    // Selection deleted -> always push as new entry
+                    undoStack.push(selectedText.toString())
                     inputConnection.commitText("", 1)
                 } else {
+                    val before = inputConnection.getTextBeforeCursor(1, 0)
+                    if (!before.isNullOrEmpty()) {
+                        val char = before[0]
+                        val isWhitespace = char.isWhitespace()
+                        
+                        if (undoStack.isNotEmpty()) {
+                            val top = undoStack.peek()
+                            // Check if we should merge with the top of the stack
+                            // We merge if both are NOT whitespace (building a word)
+                            // If either is whitespace, we treat it as a separator and start a new chunk
+                            val topIsWhitespace = top.all { it.isWhitespace() }
+                            
+                            if (!isWhitespace && !topIsWhitespace) {
+                                // Merge: Prepend captured char to top
+                                val merged = char + undoStack.pop()
+                                undoStack.push(merged)
+                            } else {
+                                // Start new entry
+                                undoStack.push(char.toString())
+                            }
+                        } else {
+                            undoStack.push(char.toString())
+                        }
+                    }
                     inputConnection.deleteSurroundingText(1, 0)
                 }
             }
