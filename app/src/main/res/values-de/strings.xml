@@ -389,6 +389,8 @@
     <string name="perm_write_secure_title">Geschützte Einstellungen umschreiben</string>
     <string name="perm_write_secure_desc_common">Benötigt für Statusleisten-Symbole und Sicherheit bei Bildschirmsperre</string>
     <string name="perm_write_secure_desc_night_light">Benötigt, um das Nachtlicht zu aktivieren. Über ADB oder Root gewähren.</string>
+    <string name="perm_write_settings_title">Modify System Settings</string>
+    <string name="perm_write_settings_desc">Required to toggle Adaptive Brightness and other system settings</string>
     <string name="perm_overlay_title">Overlay-Berechtigung</string>
     <string name="perm_overlay_desc">Benötigt, um das Benachrichtigungslicht auf dem Bildschirm anzuzeigen</string>
     <string name="perm_device_admin_title">Geräteadministrator</string>
@@ -412,6 +414,12 @@
     <string name="btn_enable_keyboard">Enable in settings</string>
     <string name="btn_select_keyboard">Switch to Essentials</string>
     <string name="status_keyboard_ready">Keyboard is active and ready!</string>
+    <string name="label_enabled">Enabled</string>
+    <string name="label_disabled">Disabled</string>
+    <string name="tile_adaptive_brightness">Adaptive Brightness</string>
+    <string name="tile_adaptive_brightness_desc">Toggle adaptive brightness</string>
+    <string name="tile_maps_power_saving">Maps Power Saving</string>
+    <string name="tile_maps_power_saving_desc">Toggle maps power saving mode</string>
     <string name="search_placeholder_short">Suche nach Werkzeugen, Modifikationen und Anpassungen</string>
     <string name="action_search">Suche</string>
     <string name="action_stop">Stop</string>
@@ -788,7 +796,7 @@
     <string name="location_reached_dist_m">%1$d m</string>
     <string name="location_reached_dist_km">%1$.1f km</string>
     <string name="location_reached_service_title">Reisealarm aktiv</string>
-    <string name="location_reached_service_remaining">%1$s verbleibend</string>
+    <string name="location_reached_service_remaining">%1$s verbleibend (%2$d%%)</string>
     <string name="location_reached_channel_name">Reisefortschritt</string>
     <string name="location_reached_channel_desc">Zeigt die Entfernung zum Zielort in Echtzeit an</string>
     <string name="location_reached_alarm_title">Ziel in der Nähe</string>
