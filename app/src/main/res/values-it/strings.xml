@@ -37,6 +37,8 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string name="settings_section_flashlight">Torcia</string>
     <string name="flashlight_options_title">Impostazioni torcia</string>
     <string name="flashlight_options_desc">Adjust fading and other settings</string>
+    <string name="setting_pitch_black_theme_title">Pitch black theme</string>
+    <string name="setting_pitch_black_theme_desc">Use pure black background in dark mode</string>
     <string name="settings_section_haptic">Feedback Aptico</string>
     <string name="button_remap_section_long_press">Remap Long Press</string>
     <string name="screen_off">Schermo Spento</string>
@@ -72,7 +74,22 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string name="permission_post_notifications_title">Post Notifications</string>
     <string name="permission_post_notifications_desc">Permetti all\'app di mostrare notifiche</string>
     <string name="permission_grant_action">Dai il permesso</string>
-    <string name="caffeinate_show_notification_title">Show notification</string>
+    <string name="caffeinate_notification_title">Caffeinate Active</string>
+    <string name="caffeinate_active">Active</string>
+    <string name="caffeinate_notification_desc">Screen is being kept awake</string>
+    <string name="caffeinate_battery_optimization_title">Ignore battery optimization</string>
+    <string name="caffeinate_battery_optimization_desc">Recommended for reliable service on some devices</string>
+    <string name="caffeinate_abort_screen_off_title">Abort with screen off</string>
+    <string name="caffeinate_timeout_presets_title">Timeout Presets</string>
+    <string name="caffeinate_timeout_presets_desc">Select available durations for QS tile</string>
+    <string name="caffeinate_timeout_5m">5m</string>
+    <string name="caffeinate_timeout_10m">10m</string>
+    <string name="caffeinate_timeout_30m">30m</string>
+    <string name="caffeinate_timeout_1h">1h</string>
+    <string name="caffeinate_timeout_infinity">∞</string>
+    <string name="caffeinate_starting_in">Starting in %1$ds…</string>
+    <string name="caffeinate_remaining">%1$s remaining</string>
+    <string name="caffeinate_live_channel_desc">Persistent notification for Caffeinate</string>
     <!-- Dynamic Night Light -->
     <string name="dynamic_night_light_enable_title">Enable Dynamic Night Light</string>
     <string name="dynamic_night_light_apps_section">Apps that toggle off night light</string>
@@ -149,6 +166,11 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string name="tile_flashlight">Flashlight</string>
     <string name="tile_app_freezing">App Freezing</string>
     <string name="tile_flashlight_pulse">Flashlight Pulse</string>
+    <string name="tile_stay_awake">Stay awake</string>
+    <string name="input_method_label">Essentials Keyboard</string>
+    <string name="subtype_en_us">English (US)</string>
+    <string name="tile_active">Active</string>
+    <string name="tile_inactive">Inactive</string>
     <string name="nfc_tile_label">NFC</string>
     <string name="on">On</string>
     <string name="off">Off</string>
@@ -247,6 +269,15 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string name="feat_notification_lighting_desc">Light up for notifications</string>
     <string name="feat_sound_mode_tile_title">Sound mode tile</string>
     <string name="feat_sound_mode_tile_desc">QS tile to toggle sound mode</string>
+    <string name="feat_stay_awake_tile_title">Stay awake tile</string>
+    <string name="feat_stay_awake_tile_desc">QS tile to toggle stay awake</string>
+    <!-- DIY Automation -->
+    <string name="diy_create_trigger_title">Trigger Automation</string>
+    <string name="diy_create_trigger_desc">Schedule an action to trigger on an observation</string>
+    <string name="diy_create_state_title">State Automation</string>
+    <string name="diy_create_state_desc">Schedule an action to execute based on the state of a condition in and out</string>
+    <string name="diy_editor_new_title">New Automation</string>
+    <string name="diy_editor_edit_title">Edit Automation</string>
     <string name="feat_link_actions_title">Link actions</string>
     <string name="feat_link_actions_desc">Handle links with multiple apps</string>
     <string name="feat_snooze_notifications_title">Snooze system notifications</string>
@@ -272,8 +303,8 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string name="search_smart_data_desc">Hide mobile data in certain modes</string>
     <string name="search_reset_icons_title">Reset All Icons</string>
     <string name="search_reset_icons_desc">Reset status bar icon visibility to default</string>
-    <string name="search_caffeinate_notif_title">Show notification</string>
-    <string name="search_caffeinate_notif_desc">Show a persistent notification when Caffeinate is active</string>
+    <string name="search_caffeinate_abort_screen_off_title">Abort Caffeinate with screen off</string>
+    <string name="search_caffeinate_abort_screen_off_desc">Automatically turn off Caffeinate when manually locking the device</string>
     <string name="search_lighting_style_title">Lighting Style</string>
     <string name="search_lighting_style_desc">Choose between Stroke, Glow, Spinner, and more</string>
     <string name="search_corner_radius_title">Corner radius</string>
@@ -318,6 +349,7 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string name="search_qs_freeze_desc">Launch app freezing grid</string>
     <string name="search_qs_pulse_title">Flashlight Pulse</string>
     <string name="search_qs_pulse_desc">Toggle notification flashlight pulse</string>
+    <string name="search_qs_stay_awake_desc">Toggle stay awake developer option</string>
     <string name="search_remap_enable_title">Enable Button Remap</string>
     <string name="search_remap_enable_desc">Master toggle for volume button remapping</string>
     <string name="search_remap_haptic_title">Remap Haptic Feedback</string>
@@ -367,16 +399,23 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string name="perm_action_check">Check</string>
     <string name="perm_action_enable">Enable in Settings</string>
     <string name="perm_action_how_to">How to grant</string>
+    <string name="perm_battery_optimization_title">Battery Optimization</string>
+    <string name="perm_battery_optimization_desc">Ensure the service is not killed by the system to save power.</string>
     <!-- Tabs -->
     <string name="tab_essentials">Essentials</string>
-    <string name="tab_essentials_subtitle">└(=^‥^=)┐</string>
     <string name="tab_freeze">Freeze</string>
     <string name="tab_freeze_title">Frozen</string>
     <string name="tab_diy">DIY</string>
     <string name="tab_freeze_subtitle">Disabled apps</string>
     <string name="tab_diy_subtitle">Do It Yourself</string>
+    <!-- Keyboard Setup -->
+    <string name="label_keyboard_setup">Keyboard Setup</string>
+    <string name="btn_enable_keyboard">Enable in settings</string>
+    <string name="btn_select_keyboard">Switch to Essentials</string>
+    <string name="status_keyboard_ready">Keyboard is active and ready!</string>
     <string name="search_placeholder_short">Search for Tools, Mods and Tweaks</string>
     <string name="action_search">Search</string>
+    <string name="action_stop">Stop</string>
     <string name="label_search">Search</string>
     <!-- UI Components General -->
     <string name="action_back">Back</string>
@@ -389,6 +428,41 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string name="coming_soon_title">Do It Yourself</string>
     <string name="coming_soon_desc">Something experimental is brewing here. Stay tuned for automations and advanced mods.</string>
     <string name="coming_soon_label">Coming Soon</string>
+    <string name="diy_trigger_label">Trigger</string>
+    <string name="diy_state_label">State</string>
+    <string name="diy_action_label">Action</string>
+    <string name="diy_in_label">In</string>
+    <string name="diy_out_label">Out</string>
+    <string name="diy_automation_label">Automation</string>
+    <string name="diy_trigger_screen_off">Screen Off</string>
+    <string name="diy_trigger_screen_on">Screen On</string>
+    <string name="diy_trigger_device_unlock">Device Unlock</string>
+    <string name="diy_trigger_charger_connected">Charger Connected</string>
+    <string name="diy_trigger_charger_disconnected">Charger Disconnected</string>
+    <string name="diy_state_charging">Charging</string>
+    <string name="diy_state_screen_on">Screen On</string>
+    <string name="diy_action_haptic">Vibrate</string>
+    <string name="diy_action_notification">Show Notification</string>
+    <string name="diy_action_remove_notification">Remove Notification</string>
+    <string name="diy_action_flashlight_on">Turn On Flashlight</string>
+    <string name="diy_action_flashlight_off">Turn Off Flashlight</string>
+    <string name="diy_action_flashlight_toggle">Toggle Flashlight</string>
+    <string name="diy_action_dim_wallpaper">Dim Wallpaper</string>
+    <string name="diy_dim_wallpaper_desc">This action requires Shizuku or Root to adjust system wallpaper dimming.</string>
+    <string name="diy_select_trigger">Select Trigger</string>
+    <string name="diy_select_state">Select State</string>
+    <string name="diy_select_action">Select Action</string>
+    <string name="diy_in_action_label">In Action</string>
+    <string name="diy_out_action_label">Out Action</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_save">Save</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_enable">Enable</string>
+    <string name="action_disable">Disable</string>
+    <string name="automation_service_channel_name">Automation Service</string>
+    <string name="automation_service_running_title">Automations Active</string>
+    <string name="automation_service_running_desc">Monitoring system events for your automations</string>
     <!-- About Section -->
     <string name="app_developer_name">Sameera Wijerathna</string>
     <string name="app_description">The all-in-one toolbox for your Pixel and Androids</string>
@@ -440,6 +514,13 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
         <item>default</item>
         <item>icon</item>
     </string-array>
+    <string-array name="keywords_keyboard">
+        <item>keyboard</item>
+        <item>height</item>
+        <item>padding</item>
+        <item>haptic</item>
+        <item>input</item>
+    </string-array>
     <string-array name="keywords_alert">
         <item>visible</item>
         <item>alert</item>
@@ -457,6 +538,13 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string-array name="keywords_qs_tile">
         <item>tile</item>
         <item>qs</item>
+        <item>awake</item>
+    </string-array>
+    <string-array name="keywords_qs_stay_awake">
+        <item>awake</item>
+        <item>developer</item>
+        <item>power</item>
+        <item>charge</item>
     </string-array>
     <string-array name="keywords_notification_lighting">
         <item>glow</item>
@@ -501,6 +589,9 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
         <item>wait</item>
         <item>timeout</item>
     </string-array>
+    <string name="label_keyboard_always_dark">Always dark theme</string>
+    <string name="label_keyboard_pitch_black">Pitch black theme</string>
+    <string name="label_keyboard_clipboard_enabled">Clipboard History</string>
     <string-array name="keywords_selection">
         <item>list</item>
         <item>picker</item>
@@ -646,7 +737,7 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string name="instruction_section_lighting_title">Notification lighting does not work</string>
     <string name="instruction_section_lighting_desc">It depends on the OEM. Some like OneUI does not seem to allow overlays above the AOD preventing the lighting effects being shown. In this case, try the ambient display as a workaround. </string>
     <string name="instruction_section_button_title">Button remap does not work while display is off</string>
-    <string name="instruction_section_button_desc">Some OEMs limit the accessibility service reporting once the display is actually off but they may still work while the AOD is on. \nIn this case, you may able to use button remaps with AOD on but not with off. \n\nAs a workaround, you will need to use Shizuku permissions and turn on the \'Use Shizuku or Root\' toggle in button remap settings which identifies and listen to hardware input events.\nThis is not guaranteed to work on all devices and needs testing.\n\nAnd even if it\'s on, Shizuku method only will be used when it\'s needed. Otherwise it will always fallback to Accessibility which also handles the blocking of the actual input during long press.</string>
+    <string name="instruction_section_button_desc">Some OEMs limit the accessibility service reporting once the display is actually off but they may still work while the AOD is on. \nIn this case, you may able to use button remaps with AOD on but not with off. \n\nAs a workaround, you will need to use Shizuku permissions and turn on the \'Use Shizuku\' toggle in button remap settings which identifies and listen to hardware input events.\nThis is not guaranteed to work on all devices and needs testing.\n\nAnd even if it\'s on, Shizuku method only will be used when it\'s needed. Otherwise it will always fallback to Accessibility which also handles the blocking of the actual input during long press.</string>
     <string name="instruction_section_flashlight_title">Flashlight brightness does not work</string>
     <string name="instruction_section_flashlight_desc">Only a limited number of devices got hardware and software support adjusting the flashlight intensity. \n\n\'The minimum version of Android is 13 (SDK33).\nFlashlight brightness control only supports HAL version 3.8 and higher, so among the supported devices, the latest ones (For example, Pixel 6/7, Samsung S23, etc.)\'\npolodarb/Flashlight-Tiramisu</string>
     <string name="instruction_section_about_title">What the hell is this app?</string>
@@ -665,14 +756,14 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string name="bug_report_email_subject">Essentials Bug Report</string>
     <string name="bug_report_send_via">Send via</string>
     <!-- Location Reached -->
-    <string name="feat_location_reached_title">Are we there yet?</string>
-    <string name="feat_location_reached_desc">Destination nearby alerts</string>
+    <string name="feat_location_reached_title">Location reached</string>
+    <string name="feat_location_reached_desc">Get notified when you arrive at a specific destination.</string>
     <string name="location_reached_pick_destination">Destination</string>
     <string name="location_reached_set_destination_btn">Set Destination</string>
     <string name="location_reached_status_tracking">Tracking: %1$.4f, %2$.4f</string>
     <string name="location_reached_status_none">No destination set</string>
-    <string name="location_reached_how_to">Open Google Maps, pick a location, and share it to Essentials.</string>
-    <string name="location_reached_radius_title">Alert Radius: %d m</string>
+    <string name="location_reached_how_to">Open your map app, pick a location, and share it to Essentials.</string>
+    <string name="location_reached_radius_title">Radius: %d m</string>
     <string name="location_reached_radius_desc">Distance to trigger the alarm</string>
     <string name="location_reached_enable_title">Enable notification</string>
     <string name="perm_location_title">Location</string>
@@ -708,4 +799,29 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string name="setting_use_root_title">Use Root</string>
     <string name="setting_use_root_desc">Instead of Shizuku</string>
     <string name="root_not_available_toast">Root access not available. Please check your root manager.</string>
+    <!-- System Keyboard -->
+    <string name="feat_system_keyboard_title">Keyboard</string>
+    <string name="feat_system_keys">Keys</string>
+    <string name="feat_system_keyboard_desc">Customize layout and behavior</string>
+    <string name="search_keyboard_height_title">Keyboard Height</string>
+    <string name="search_keyboard_height_desc">Adjust the total vertical size of the keyboard</string>
+    <string name="search_keyboard_padding_title">Bottom Padding</string>
+    <string name="search_keyboard_padding_desc">Add space below the keyboard</string>
+    <string name="search_keyboard_haptics_title">Haptic Feedback</string>
+    <string name="search_keyboard_haptics_desc">Vibrate on key press</string>
+    <string name="label_test_keyboard">Test the keyboard</string>
+    <string name="test_keyboard_hint">Test the keyboard</string>
+    <string name="label_keyboard_height">Keyboard Height</string>
+    <string name="label_keyboard_bottom_padding">Bottom Padding</string>
+    <string name="label_keyboard_haptics">Haptic Feedback</string>
+    <string name="label_keyboard_roundness">Key Roundness</string>
+    <string name="search_keyboard_roundness_title">Key Roundness</string>
+    <string name="search_keyboard_roundness_desc">Adjust the corner radius of keys</string>
+    <string name="label_keyboard_functions_bottom">Move functions to bottom</string>
+    <string name="label_keyboard_functions_padding">Functions side padding</string>
+    <string name="label_keyboard_haptic_strength">Haptic feedback strength</string>
+    <string name="label_keyboard_shape">Keyboard shape</string>
+    <string name="shape_round">Round</string>
+    <string name="shape_flat">Flat</string>
+    <string name="shape_inverse">Inverse</string>
 </resources>

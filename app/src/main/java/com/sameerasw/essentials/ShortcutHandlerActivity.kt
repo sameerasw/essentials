@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.LoadingIndicator
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -40,7 +41,13 @@ class ShortcutHandlerActivity : ComponentActivity() {
 
         if (packageName != null) {
             setContent {
-                EssentialsTheme {
+                val viewModel: com.sameerasw.essentials.viewmodels.MainViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+                val context = androidx.compose.ui.platform.LocalContext.current
+                androidx.compose.runtime.LaunchedEffect(Unit) {
+                    viewModel.check(context)
+                }
+                val isPitchBlackThemeEnabled by viewModel.isPitchBlackThemeEnabled
+                EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
                     Box(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center

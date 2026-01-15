@@ -4,28 +4,61 @@ import android.app.ActivityManager
 import android.content.Intent
 import android.provider.Settings
 import android.service.quicksettings.Tile
+import androidx.core.content.ContextCompat
+import com.sameerasw.essentials.R
+import com.sameerasw.essentials.domain.controller.CaffeinateController
 import com.sameerasw.essentials.services.CaffeinateWakeLockService
 
 class CaffeinateTileService : BaseTileService() {
+ 
+    private val handler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val refreshRunnable = object : Runnable {
+        override fun run() {
+            updateTile()
+            if (CaffeinateController.isStarting.value) {
+                handler.postDelayed(this, 1000)
+            }
+        }
+    }
+
+    override fun onStartListening() {
+        super.onStartListening()
+        if (CaffeinateController.isStarting.value) {
+            handler.removeCallbacks(refreshRunnable)
+            handler.post(refreshRunnable)
+        }
+    }
+
+    override fun onStopListening() {
+        super.onStopListening()
+        handler.removeCallbacks(refreshRunnable)
+    }
 
     override fun onTileClick() {
-        val isActive = qsTile.state == Tile.STATE_ACTIVE
-        if (isActive) {
-            // Turn off: stop the wake lock service
-            stopService(Intent(this, CaffeinateWakeLockService::class.java))
+        if (CaffeinateController.isStarting.value) {
+            CaffeinateController.cycleTimeout(this)
         } else {
-            // Turn on: start the wake lock service
-            startService(Intent(this, CaffeinateWakeLockService::class.java))
+            CaffeinateController.toggle(this)
         }
+        
+        // Start refreshing if needed
+        handler.removeCallbacks(refreshRunnable)
+        handler.post(refreshRunnable)
     }
 
     override fun getTileLabel(): String = "Caffeinate"
 
     override fun getTileSubtitle(): String {
-        return if (qsTile.state == Tile.STATE_ACTIVE) {
-            "Kept awake"
+        return if (CaffeinateController.isStarting.value) {
+            val timeoutStr = when (CaffeinateController.selectedTimeout.value) {
+                -1 -> "∞"
+                60 -> "1h"
+                else -> "${CaffeinateController.selectedTimeout.value}m"
+            }
+            getString(R.string.caffeinate_starting_in, CaffeinateController.startingTimeLeft.value) + " ($timeoutStr)"
+        } else if (CaffeinateController.isActive.value) {
+            getString(R.string.caffeinate_active)
         } else {
-            // Show current timeout in seconds
             val timeout = getScreenOffTimeout()
             if (timeout == -1L) "Never" else "${timeout / 1000}s"
         }
@@ -37,7 +70,11 @@ class CaffeinateTileService : BaseTileService() {
     }
 
     override fun getTileState(): Int {
-        return if (isWakeLockServiceRunning()) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
+        return if (CaffeinateController.isActive.value || CaffeinateController.isStarting.value) {
+            Tile.STATE_ACTIVE
+        } else {
+            Tile.STATE_INACTIVE
+        }
     }
 
     private fun isWakeLockServiceRunning(): Boolean {

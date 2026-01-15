@@ -28,6 +28,7 @@ fun initPermissionRegistry() {
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_dynamic_night_light_title)
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_screen_locked_security_title)
 
+
     // Shizuku permission
     PermissionRegistry.register("SHIZUKU", R.string.feat_freeze_title)
     PermissionRegistry.register("SHIZUKU", R.string.feat_maps_power_saving_title)
@@ -45,7 +46,7 @@ fun initPermissionRegistry() {
     PermissionRegistry.register("DRAW_OVER_OTHER_APPS", R.string.feat_notification_lighting_title)
 
     // Post notifications permission
-    PermissionRegistry.register("POST_NOTIFICATIONS", R.string.search_caffeinate_notif_title)
+    PermissionRegistry.register("POST_NOTIFICATIONS", R.string.feat_caffeinate_title)
 
     // Read phone state permission
     PermissionRegistry.register("READ_PHONE_STATE", R.string.search_smart_data_title)
@@ -57,4 +58,10 @@ fun initPermissionRegistry() {
     PermissionRegistry.register("LOCATION", R.string.feat_location_reached_title)
     PermissionRegistry.register("BACKGROUND_LOCATION", R.string.feat_location_reached_title)
     PermissionRegistry.register("USE_FULL_SCREEN_INTENT", R.string.feat_location_reached_title)
+
+    // Battery optimization permission
+    PermissionRegistry.register("BATTERY_OPTIMIZATION", R.string.feat_caffeinate_title)
+
+    // Modify system settings permission
+    PermissionRegistry.register("WRITE_SETTINGS", R.string.feat_qs_tiles_title)
 }

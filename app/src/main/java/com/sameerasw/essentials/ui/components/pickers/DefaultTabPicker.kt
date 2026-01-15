@@ -30,7 +30,6 @@ import com.sameerasw.essentials.domain.DIYTabs
 fun DefaultTabPicker(
     selectedTab: DIYTabs,
     onTabSelected: (DIYTabs) -> Unit,
-    isDeveloperMode: Boolean,
     modifier: Modifier = Modifier
 ) {
     val options = DIYTabs.entries
@@ -46,14 +45,12 @@ fun DefaultTabPicker(
     ) {
         options.forEachIndexed { index, tab ->
             val isChecked = selectedTab == tab
-            val isEnabled = if (tab == DIYTabs.DIY) isDeveloperMode else true
             
             ToggleButton(
                 checked = isChecked,
                 onCheckedChange = {
                     onTabSelected(tab)
                 },
-                enabled = isEnabled,
                 modifier = Modifier
                     .weight(1f)
                     .semantics { role = Role.RadioButton },

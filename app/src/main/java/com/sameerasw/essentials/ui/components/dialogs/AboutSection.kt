@@ -58,7 +58,8 @@ fun AboutSection(
     Surface(
         modifier = modifier
             .fillMaxWidth(),
-        shape = MaterialTheme.shapes.medium
+        shape = MaterialTheme.shapes.medium,
+        color = MaterialTheme.colorScheme.surfaceBright
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

@@ -33,6 +33,7 @@ import android.provider.Settings
 import android.content.Intent
 import com.sameerasw.essentials.ui.components.sheets.PermissionItem
 import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
+import com.sameerasw.essentials.ui.components.cards.AppToggleItem
 import com.sameerasw.essentials.domain.registry.PermissionRegistry
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -306,44 +307,17 @@ fun FreezeSettingsUI(
             )
 
             RoundedCardContainer(
-                modifier = Modifier.fillMaxWidth(),
-                spacing = 1.dp,
-                cornerRadius = 24.dp
+                modifier = Modifier.fillMaxWidth()
             ) {
                 sortedApps.forEach { app ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                HapticUtil.performVirtualKeyHaptic(view)
-                                viewModel.updateFreezeAppAutoFreeze(context, app.packageName, !app.isEnabled)
-                            }
-                            .padding(horizontal = 16.dp, vertical = 12.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        Image(
-                            bitmap = app.icon,
-                            contentDescription = null,
-                            modifier = Modifier.size(40.dp),
-                            contentScale = ContentScale.Fit
-                        )
-                        
-                        Text(
-                            text = app.appName,
-                            style = MaterialTheme.typography.bodyLarge,
-                            modifier = Modifier.weight(1f),
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        
-                        Switch(
-                            checked = app.isEnabled,
-                            onCheckedChange = { isChecked ->
-                                HapticUtil.performVirtualKeyHaptic(view)
-                                viewModel.updateFreezeAppAutoFreeze(context, app.packageName, isChecked)
-                            }
-                        )
-                    }
+                    AppToggleItem(
+                        icon = app.icon,
+                        title = app.appName,
+                        isChecked = app.isEnabled,
+                        onCheckedChange = { isChecked ->
+                             viewModel.updateFreezeAppAutoFreeze(context, app.packageName, isChecked)
+                        }
+                    )
                 }
             }
         }

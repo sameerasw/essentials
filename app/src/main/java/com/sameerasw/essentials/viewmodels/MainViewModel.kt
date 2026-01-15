@@ -9,6 +9,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.provider.Settings
+import android.view.inputmethod.InputMethodManager
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
@@ -123,6 +125,25 @@ class MainViewModel : ViewModel() {
     val isRootEnabled = mutableStateOf(false)
     val isRootAvailable = mutableStateOf(false)
     val isRootPermissionGranted = mutableStateOf(false)
+
+    val isPitchBlackThemeEnabled = mutableStateOf(false)
+    
+    // Keyboard Customization
+    val keyboardHeight = mutableFloatStateOf(54f)
+    val keyboardBottomPadding = mutableFloatStateOf(0f)
+    val keyboardRoundness = mutableFloatStateOf(24f)
+    val isKeyboardHapticsEnabled = mutableStateOf(true)
+    val isKeyboardFunctionsBottom = mutableStateOf(false)
+    val keyboardFunctionsPadding = mutableFloatStateOf(0f)
+    val keyboardHapticStrength = mutableFloatStateOf(0.5f)
+    val keyboardShape = mutableIntStateOf(0) // 0=Round, 1=Flat, 2=Inverse
+    val isKeyboardAlwaysDark = mutableStateOf(false)
+    val isKeyboardPitchBlack = mutableStateOf(false)
+    val isKeyboardClipboardEnabled = mutableStateOf(true)
+    val isKeyboardEnabled = mutableStateOf(false)
+    val isKeyboardSelected = mutableStateOf(false)
+    val isWriteSettingsEnabled = mutableStateOf(false)
+
     private var lastUpdateCheckTime: Long = 0
     private lateinit var settingsRepository: SettingsRepository
     private lateinit var updateRepository: UpdateRepository
@@ -151,11 +172,19 @@ class MainViewModel : ViewModel() {
             SettingsRepository.KEY_CHECK_PRE_RELEASES_ENABLED -> isPreReleaseCheckEnabled.value = settingsRepository.getBoolean(key)
             SettingsRepository.KEY_DEVELOPER_MODE_ENABLED -> {
                 isDeveloperModeEnabled.value = settingsRepository.getBoolean(key)
-                if (!isDeveloperModeEnabled.value && defaultTab.value == com.sameerasw.essentials.domain.DIYTabs.DIY) {
-                    defaultTab.value = com.sameerasw.essentials.domain.DIYTabs.ESSENTIALS
-                    settingsRepository.saveDIYTab(defaultTab.value)
-                }
             }
+            SettingsRepository.KEY_PITCH_BLACK_THEME_ENABLED -> isPitchBlackThemeEnabled.value = settingsRepository.getBoolean(key)
+            SettingsRepository.KEY_KEYBOARD_HEIGHT -> keyboardHeight.floatValue = settingsRepository.getFloat(key, 54f)
+            SettingsRepository.KEY_KEYBOARD_BOTTOM_PADDING -> keyboardBottomPadding.floatValue = settingsRepository.getFloat(key, 0f)
+            SettingsRepository.KEY_KEYBOARD_ROUNDNESS -> keyboardRoundness.floatValue = settingsRepository.getFloat(key, 24f)
+            SettingsRepository.KEY_KEYBOARD_HAPTICS_ENABLED -> isKeyboardHapticsEnabled.value = settingsRepository.getBoolean(key)
+            SettingsRepository.KEY_KEYBOARD_FUNCTIONS_BOTTOM -> isKeyboardFunctionsBottom.value = settingsRepository.getBoolean(key)
+            SettingsRepository.KEY_KEYBOARD_FUNCTIONS_PADDING -> keyboardFunctionsPadding.floatValue = settingsRepository.getFloat(key, 0f)
+            SettingsRepository.KEY_KEYBOARD_HAPTIC_STRENGTH -> keyboardHapticStrength.floatValue = settingsRepository.getFloat(key, 0.5f)
+            SettingsRepository.KEY_KEYBOARD_SHAPE -> keyboardShape.intValue = settingsRepository.getInt(key, 0)
+            SettingsRepository.KEY_KEYBOARD_ALWAYS_DARK -> isKeyboardAlwaysDark.value = settingsRepository.getBoolean(key, false)
+            SettingsRepository.KEY_KEYBOARD_PITCH_BLACK -> isKeyboardPitchBlack.value = settingsRepository.getBoolean(key, false)
+            SettingsRepository.KEY_KEYBOARD_CLIPBOARD_ENABLED -> isKeyboardClipboardEnabled.value = settingsRepository.getBoolean(key, true)
         }
     }
 
@@ -182,6 +211,9 @@ class MainViewModel : ViewModel() {
         isLocationPermissionGranted.value = PermissionUtils.hasLocationPermission(context)
         isBackgroundLocationPermissionGranted.value = PermissionUtils.hasBackgroundLocationPermission(context)
         isFullScreenIntentPermissionGranted.value = PermissionUtils.canUseFullScreenIntent(context)
+        isKeyboardEnabled.value = PermissionUtils.isKeyboardEnabled(context)
+        isKeyboardSelected.value = PermissionUtils.isKeyboardSelected(context)
+        isWriteSettingsEnabled.value = PermissionUtils.canWriteSystemSettings(context)
         
         isRootAvailable.value = com.sameerasw.essentials.utils.RootUtils.isRootAvailable()
         isRootPermissionGranted.value = com.sameerasw.essentials.utils.RootUtils.isRootPermissionGranted()
@@ -258,6 +290,19 @@ class MainViewModel : ViewModel() {
         flashlightLastIntensity.value = settingsRepository.getInt(SettingsRepository.KEY_FLASHLIGHT_LAST_INTENSITY, 1)
         isFlashlightPulseEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_PULSE_ENABLED)
         isFlashlightPulseFacedownOnly.value = settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_PULSE_FACEDOWN_ONLY, true)
+        isPitchBlackThemeEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_PITCH_BLACK_THEME_ENABLED)
+
+        keyboardHeight.floatValue = settingsRepository.getFloat(SettingsRepository.KEY_KEYBOARD_HEIGHT, 54f)
+        keyboardBottomPadding.floatValue = settingsRepository.getFloat(SettingsRepository.KEY_KEYBOARD_BOTTOM_PADDING, 0f)
+        keyboardRoundness.floatValue = settingsRepository.getFloat(SettingsRepository.KEY_KEYBOARD_ROUNDNESS, 24f)
+        isKeyboardHapticsEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_KEYBOARD_HAPTICS_ENABLED, true)
+        isKeyboardFunctionsBottom.value = settingsRepository.getBoolean(SettingsRepository.KEY_KEYBOARD_FUNCTIONS_BOTTOM, false)
+        keyboardFunctionsPadding.floatValue = settingsRepository.getFloat(SettingsRepository.KEY_KEYBOARD_FUNCTIONS_PADDING, 0f)
+        keyboardHapticStrength.floatValue = settingsRepository.getFloat(SettingsRepository.KEY_KEYBOARD_HAPTIC_STRENGTH, 0.5f)
+        keyboardShape.intValue = settingsRepository.getInt(SettingsRepository.KEY_KEYBOARD_SHAPE, 0)
+        isKeyboardAlwaysDark.value = settingsRepository.getBoolean(SettingsRepository.KEY_KEYBOARD_ALWAYS_DARK, false)
+        isKeyboardPitchBlack.value = settingsRepository.getBoolean(SettingsRepository.KEY_KEYBOARD_PITCH_BLACK, false)
+        isKeyboardClipboardEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_KEYBOARD_CLIPBOARD_ENABLED, true)
 
         isScreenLockedSecurityEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED)
         isDeviceAdminEnabled.value = isDeviceAdminActive(context)
@@ -271,12 +316,6 @@ class MainViewModel : ViewModel() {
         freezeAutoExcludedApps.value = settingsRepository.getFreezeAutoExcludedApps()
         isDeveloperModeEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_DEVELOPER_MODE_ENABLED)
         isPreReleaseCheckEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_CHECK_PRE_RELEASES_ENABLED)
-        
-        // Gracefully handle DIY tab if developer mode is off
-        if (!isDeveloperModeEnabled.value && defaultTab.value == com.sameerasw.essentials.domain.DIYTabs.DIY) {
-            defaultTab.value = com.sameerasw.essentials.domain.DIYTabs.ESSENTIALS
-            settingsRepository.saveDIYTab(defaultTab.value)
-        }
     }
 
     fun onSearchQueryChanged(query: String, context: Context) {
@@ -316,6 +355,11 @@ class MainViewModel : ViewModel() {
         settingsRepository.putBoolean(SettingsRepository.KEY_USE_ROOT, enabled)
         isRootEnabled.value = enabled
         check(context)
+    }
+
+    fun setPitchBlackThemeEnabled(enabled: Boolean, context: Context) {
+        isPitchBlackThemeEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_PITCH_BLACK_THEME_ENABLED, enabled)
     }
 
     fun checkForUpdates(context: Context, manual: Boolean = false) {
@@ -561,6 +605,17 @@ class MainViewModel : ViewModel() {
     }
 
     // Helper to show the overlay service with custom corner radius and stroke thickness
+    
+    fun openImeSettings(context: Context) {
+        val intent = Intent(Settings.ACTION_INPUT_METHOD_SETTINGS)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
+    }
+
+    fun showImePicker(context: Context) {
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showInputMethodPicker()
+    }
     fun triggerNotificationLightingWithRadiusAndThickness(context: Context, cornerRadiusDp: Float, strokeThicknessDp: Float) {
         try {
             val intent = Intent(context, com.sameerasw.essentials.services.NotificationLightingService::class.java).apply {
@@ -628,6 +683,62 @@ class MainViewModel : ViewModel() {
     fun setDefaultTab(tab: com.sameerasw.essentials.domain.DIYTabs, context: Context) {
         defaultTab.value = tab
         settingsRepository.saveDIYTab(tab)
+        settingsRepository.saveDIYTab(tab)
+    }
+
+    fun setKeyboardHeight(height: Float, context: Context) {
+        keyboardHeight.floatValue = height
+        settingsRepository.putFloat(SettingsRepository.KEY_KEYBOARD_HEIGHT, height)
+    }
+
+    fun setKeyboardBottomPadding(padding: Float, context: Context) {
+        keyboardBottomPadding.floatValue = padding
+        settingsRepository.putFloat(SettingsRepository.KEY_KEYBOARD_BOTTOM_PADDING, padding)
+    }
+
+    fun setKeyboardRoundness(roundness: Float, context: Context) {
+        keyboardRoundness.floatValue = roundness
+        settingsRepository.putFloat(SettingsRepository.KEY_KEYBOARD_ROUNDNESS, roundness)
+    }
+
+    fun setKeyboardHapticsEnabled(enabled: Boolean, context: Context) {
+        isKeyboardHapticsEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_KEYBOARD_HAPTICS_ENABLED, enabled)
+    }
+
+    fun setKeyboardFunctionsBottom(isBottom: Boolean, context: Context) {
+        isKeyboardFunctionsBottom.value = isBottom
+        settingsRepository.putBoolean(SettingsRepository.KEY_KEYBOARD_FUNCTIONS_BOTTOM, isBottom)
+    }
+
+    fun setKeyboardFunctionsPadding(padding: Float, context: Context) {
+        keyboardFunctionsPadding.floatValue = padding
+        settingsRepository.putFloat(SettingsRepository.KEY_KEYBOARD_FUNCTIONS_PADDING, padding)
+    }
+
+    fun setKeyboardHapticStrength(strength: Float, context: Context) {
+        keyboardHapticStrength.floatValue = strength
+        settingsRepository.putFloat(SettingsRepository.KEY_KEYBOARD_HAPTIC_STRENGTH, strength)
+    }
+
+    fun setKeyboardShape(shape: Int, context: Context) {
+        keyboardShape.intValue = shape
+        settingsRepository.putInt(SettingsRepository.KEY_KEYBOARD_SHAPE, shape)
+    }
+
+    fun setKeyboardAlwaysDark(enabled: Boolean, context: Context) {
+        isKeyboardAlwaysDark.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_KEYBOARD_ALWAYS_DARK, enabled)
+    }
+
+    fun setKeyboardPitchBlack(enabled: Boolean, context: Context) {
+        isKeyboardPitchBlack.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_KEYBOARD_PITCH_BLACK, enabled)
+    }
+
+    fun setKeyboardClipboardEnabled(enabled: Boolean, context: Context) {
+        isKeyboardClipboardEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_KEYBOARD_CLIPBOARD_ENABLED, enabled)
     }
 
 

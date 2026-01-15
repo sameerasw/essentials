@@ -1,14 +1,19 @@
 package com.sameerasw.essentials.ui.composables.configs
 
 import android.Manifest
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import com.sameerasw.essentials.ui.components.pickers.MultiSegmentedPicker
 import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,7 +31,9 @@ import com.sameerasw.essentials.ui.components.sheets.PermissionItem
 import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.modifiers.highlight
+import androidx.core.net.toUri
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CaffeinateSettingsUI(
     viewModel: CaffeinateViewModel,
@@ -63,6 +70,20 @@ fun CaffeinateSettingsUI(
                         requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                     },
                     isGranted = viewModel.postNotificationsGranted.value
+                ),
+                PermissionItem(
+                    iconRes = R.drawable.rounded_battery_android_frame_alert_24,
+                    title = R.string.perm_battery_optimization_title,
+                    description = R.string.perm_battery_optimization_desc,
+                    dependentFeatures = listOf(R.string.feat_caffeinate_title),
+                    actionLabel = R.string.permission_grant_action,
+                    action = {
+                        val intent = Intent(android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
+                            data = android.net.Uri.parse("package:${context.packageName}")
+                        }
+                        context.startActivity(intent)
+                    },
+                    isGranted = viewModel.batteryOptimizationGranted.value
                 )
             )
         )
@@ -72,32 +93,62 @@ fun CaffeinateSettingsUI(
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Notification Category
-        Text(
-            text = stringResource(R.string.settings_section_notification),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        RoundedCardContainer(
-            modifier = Modifier,
-            spacing = 2.dp,
-            cornerRadius = 24.dp
-        ) {
+        RoundedCardContainer{
+            
             IconToggleItem(
-                title = stringResource(R.string.caffeinate_show_notification_title),
-                isChecked = viewModel.showNotification.value,
-                onCheckedChange = { isChecked ->
-                    viewModel.setShowNotification(isChecked, context)
+                title = stringResource(R.string.caffeinate_battery_optimization_title),
+                isChecked = viewModel.batteryOptimizationGranted.value,
+                onCheckedChange = { _ ->
+                    val intent = Intent(android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
+                        data = "package:${context.packageName}".toUri()
+                    }
+                    context.startActivity(intent)
                 },
-                enabled = viewModel.postNotificationsGranted.value,
-                onDisabledClick = {
+                iconRes = R.drawable.rounded_battery_android_frame_alert_24,
+            )
+        }
+
+        RoundedCardContainer {
+            IconToggleItem(
+                title = stringResource(R.string.caffeinate_abort_screen_off_title),
+                isChecked = viewModel.abortWithScreenOff.value,
+                onCheckedChange = { viewModel.setAbortWithScreenOff(it, context) },
+                iconRes = R.drawable.rounded_power_settings_new_24,
+            )
+        }
+
+        RoundedCardContainer {
+            IconToggleItem(
+                title = stringResource(R.string.caffeinate_timeout_presets_title),
+                description = stringResource(R.string.caffeinate_timeout_presets_desc),
+                isChecked = true,
+                onCheckedChange = { },
+                iconRes = R.drawable.rounded_timer_24,
+                showToggle = false
+            )
+
+            MultiSegmentedPicker(
+                items = viewModel.timeoutPresets,
+                selectedItems = viewModel.enabledPresets.value,
+                onItemsSelected = { newSelection ->
+                    // Correctly update presets via viewModel
+                    // Since MultiSegmentedPicker manages the set, we can just sync it
+                    val prefs = context.getSharedPreferences("caffeinate_prefs", Context.MODE_PRIVATE)
+                    prefs.edit().putStringSet("enabled_presets", newSelection.map { it.toString() }.toSet()).apply()
+                    viewModel.enabledPresets.value = newSelection
                 },
-                iconRes = R.drawable.rounded_notifications_unread_24,
-                modifier = Modifier.highlight(highlightSetting == "show_notification")
+                labelProvider = { preset ->
+                    when (preset) {
+                        5 -> context.getString(R.string.caffeinate_timeout_5m)
+                        10 -> context.getString(R.string.caffeinate_timeout_10m)
+                        30 -> context.getString(R.string.caffeinate_timeout_30m)
+                        60 -> context.getString(R.string.caffeinate_timeout_1h)
+                        else -> context.getString(R.string.caffeinate_timeout_infinity)
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
             )
         }
     }

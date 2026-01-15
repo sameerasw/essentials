@@ -20,6 +20,11 @@ class NotificationListener : NotificationListenerService() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onNotificationPosted(sbn: StatusBarNotification) {
+        // Skip our own app's notifications early to avoid flooding logs and redundant processing
+        if (sbn.packageName == packageName) {
+            return
+        }
+
         val prefs = applicationContext.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
 
         // Maps navigation state update
@@ -74,10 +79,9 @@ class NotificationListener : NotificationListenerService() {
 
             // Skip media sessions
             val isMedia = extras.containsKey(Notification.EXTRA_MEDIA_SESSION) ||
-                    extras.getString(Notification.EXTRA_TEMPLATE) == $$"android.app.Notification$MediaStyle"
+                    extras.getString(Notification.EXTRA_TEMPLATE) == "android.app.Notification\$MediaStyle"
             
             if (isMedia) {
-                Log.d("NotificationListener", "Skipping notification lighting for media notification from $packageName")
                 return
             }
 
@@ -95,7 +99,6 @@ class NotificationListener : NotificationListenerService() {
                         importance <= android.app.NotificationManager.IMPORTANCE_LOW
 
                     if (isSilent) {
-                        Log.d("NotificationListener", "Skipping notification lighting for silent notification from $packageName")
                         return
                     }
                 }
@@ -104,7 +107,6 @@ class NotificationListener : NotificationListenerService() {
             // Skip persistent notifications if enabled
             val skipPersistent = prefs.getBoolean("edge_lighting_skip_persistent", false)
             if (skipPersistent && isPersistentNotification(notification)) {
-                Log.d("NotificationListener", "Skipping notification lighting for persistent notification from $packageName")
                 return
             }
 
@@ -114,14 +116,29 @@ class NotificationListener : NotificationListenerService() {
                 if (hasAllRequiredPermissions()) {
                     // Check if the app is selected for notification lighting
                     val appSelected = isAppSelectedForNotificationLighting(sbn.packageName)
-                    Log.d("NotificationListener", "Notification lighting enabled, app ${sbn.packageName} selected: $appSelected")
                     if (appSelected) {
-                        val cornerRadius = prefs.getInt("edge_lighting_corner_radius", 20)
-                        val strokeThickness = prefs.getInt("edge_lighting_stroke_thickness", 8)
+                        val cornerRadius = try {
+                            prefs.getInt("edge_lighting_corner_radius", 20)
+                        } catch (e: ClassCastException) {
+                            prefs.getFloat("edge_lighting_corner_radius", 20f).toInt()
+                        }
+                        val strokeThickness = try {
+                            prefs.getInt("edge_lighting_stroke_thickness", 8)
+                        } catch (e: ClassCastException) {
+                            prefs.getFloat("edge_lighting_stroke_thickness", 8f).toInt()
+                        }
                         val colorModeName = prefs.getString("edge_lighting_color_mode", NotificationLightingColorMode.SYSTEM.name)
                         val colorMode = NotificationLightingColorMode.valueOf(colorModeName ?: NotificationLightingColorMode.SYSTEM.name)
-                        val pulseCount = prefs.getInt("edge_lighting_pulse_count", 1)
-                        val pulseDuration = prefs.getFloat("edge_lighting_pulse_duration", 3000f).toLong()
+                        val pulseCount = try {
+                            prefs.getInt("edge_lighting_pulse_count", 1)
+                        } catch (e: ClassCastException) {
+                            prefs.getFloat("edge_lighting_pulse_count", 1f).toInt()
+                        }
+                        val pulseDuration = try {
+                            prefs.getFloat("edge_lighting_pulse_duration", 3000f).toLong()
+                        } catch (e: ClassCastException) {
+                            prefs.getInt("edge_lighting_pulse_duration", 3000).toLong()
+                        }
                         val styleName = prefs.getString("edge_lighting_style", com.sameerasw.essentials.domain.model.NotificationLightingStyle.STROKE.name)
                         
                         val gson = com.google.gson.Gson()
@@ -133,9 +150,21 @@ class NotificationListener : NotificationListenerService() {
                             setOf(NotificationLightingSide.LEFT, NotificationLightingSide.RIGHT)
                         }
                         
-                        val indicatorX = prefs.getFloat("edge_lighting_indicator_x", 50f)
-                        val indicatorY = prefs.getFloat("edge_lighting_indicator_y", 2f)
-                        val indicatorScale = prefs.getFloat("edge_lighting_indicator_scale", 1.0f)
+                        val indicatorX = try {
+                            prefs.getFloat("edge_lighting_indicator_x", 50f)
+                        } catch (e: ClassCastException) {
+                            prefs.getInt("edge_lighting_indicator_x", 50).toFloat()
+                        }
+                        val indicatorY = try {
+                            prefs.getFloat("edge_lighting_indicator_y", 2f)
+                        } catch (e: ClassCastException) {
+                            prefs.getInt("edge_lighting_indicator_y", 2).toFloat()
+                        }
+                        val indicatorScale = try {
+                            prefs.getFloat("edge_lighting_indicator_scale", 1.0f)
+                        } catch (e: ClassCastException) {
+                            prefs.getInt("edge_lighting_indicator_scale", 1).toFloat()
+                        }
 
                         fun startNotificationLighting(resolvedColor: Int? = null) {
                             val intent = Intent(applicationContext, NotificationLightingService::class.java).apply {
@@ -248,7 +277,6 @@ class NotificationListener : NotificationListenerService() {
                 val isScreenOn =
                     powerManager.isInteractive
                 if (isScreenOn) {
-                    Log.d("NotificationListener", "Screen is ON and 'Only show when screen off' is enabled. Skipping notification lighting.")
                     return false
                 }
             }

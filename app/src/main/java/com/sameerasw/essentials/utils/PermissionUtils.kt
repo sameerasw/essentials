@@ -11,6 +11,9 @@ import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.services.receivers.SecurityDeviceAdminReceiver
 
+import android.view.inputmethod.InputMethodManager
+import com.sameerasw.essentials.ime.EssentialsInputMethodService
+
 object PermissionUtils {
 
     fun isAccessibilityServiceEnabled(context: Context): Boolean {
@@ -130,5 +133,22 @@ object PermissionUtils {
         } else {
             true
         }
+    }
+    fun isKeyboardEnabled(context: Context): Boolean {
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val enabledImeList = imm.enabledInputMethodList
+        return enabledImeList.any { it.packageName == context.packageName }
+    }
+
+    fun isKeyboardSelected(context: Context): Boolean {
+        val defaultIme = Settings.Secure.getString(
+            context.contentResolver,
+            Settings.Secure.DEFAULT_INPUT_METHOD
+        )
+        return defaultIme?.startsWith(context.packageName) == true
+    }
+
+    fun canWriteSystemSettings(context: Context): Boolean {
+        return Settings.System.canWrite(context)
     }
 }

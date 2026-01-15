@@ -40,6 +40,7 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.activities.AutomationEditorActivity
 import com.sameerasw.essentials.ui.components.sheets.NewAutomationSheet
 import androidx.compose.ui.platform.LocalView
+import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.HapticUtil
 
 @Composable
@@ -74,24 +75,71 @@ fun DIYScreen(
                     )
                 }
             } else {
+                val (enabledAutomations, disabledAutomations) = remember(automations) {
+                    automations.partition { it.isEnabled }
+                }
+
                 LazyColumn(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(24.dp)),
-                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    contentPadding = PaddingValues(bottom = 80.dp)
                 ) {
-                    items(automations) { automation ->
-                        AutomationItem(
-                            automation = automation,
-                            onClick = {
-                                context.startActivity(AutomationEditorActivity.createIntent(context, automation.id))
-                            },
-                            onDelete = {
-                                viewModel.deleteAutomation(automation.id)
-                            },
-                            onToggle = {
-                                viewModel.toggleAutomation(automation.id)
+                    if (enabledAutomations.isNotEmpty()) {
+                        item {
+                            Text(
+                                text = stringResource(R.string.label_enabled),
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier.padding(start = 16.dp),
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        item {
+                            RoundedCardContainer {
+                                enabledAutomations.forEach { automation ->
+                                    AutomationItem(
+                                        automation = automation,
+                                        onClick = {
+                                            context.startActivity(AutomationEditorActivity.createIntent(context, automation.id))
+                                        },
+                                        onDelete = {
+                                            viewModel.deleteAutomation(automation.id)
+                                        },
+                                        onToggle = {
+                                            viewModel.toggleAutomation(automation.id)
+                                        }
+                                    )
+                                }
                             }
-                        )
+                        }
+                    }
+
+                    if (disabledAutomations.isNotEmpty()) {
+                        item {
+                            Text(
+                                text = stringResource(R.string.label_disabled),
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier.padding(start = 16.dp, top = 8.dp),
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        item {
+                            RoundedCardContainer {
+                                disabledAutomations.forEach { automation ->
+                                    AutomationItem(
+                                        automation = automation,
+                                        onClick = {
+                                            context.startActivity(AutomationEditorActivity.createIntent(context, automation.id))
+                                        },
+                                        onDelete = {
+                                            viewModel.deleteAutomation(automation.id)
+                                        },
+                                        onToggle = {
+                                            viewModel.toggleAutomation(automation.id)
+                                        }
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }

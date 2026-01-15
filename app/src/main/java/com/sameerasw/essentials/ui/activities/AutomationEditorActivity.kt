@@ -116,7 +116,13 @@ class AutomationEditorActivity : ComponentActivity() {
         val titleRes = if (isEditMode) R.string.diy_editor_edit_title else R.string.diy_editor_new_title
 
         setContent {
-            EssentialsTheme {
+            val viewModel: com.sameerasw.essentials.viewmodels.MainViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+            val context = androidx.compose.ui.platform.LocalContext.current
+            androidx.compose.runtime.LaunchedEffect(Unit) {
+                viewModel.check(context)
+            }
+            val isPitchBlackThemeEnabled by viewModel.isPitchBlackThemeEnabled
+            EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
                 val view = LocalView.current
                 var carouselState = rememberCarouselState { 2 } // 0: Trigger/State, 1: Actions
 
@@ -247,7 +253,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .maskClip(MaterialTheme.shapes.extraLarge)
-                                    .background(MaterialTheme.colorScheme.background)
+                                    .background(MaterialTheme.colorScheme.surfaceContainerHigh)
                             ) {
                                 if (index == 0) {
                                     // PAGE 0: Trigger or State Picker

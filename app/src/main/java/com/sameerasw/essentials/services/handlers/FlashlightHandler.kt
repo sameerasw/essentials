@@ -124,7 +124,7 @@ class FlashlightHandler(
                     }
                 }
             }
-            FlashlightActionReceiver.ACTION_PULSE_NOTIFICATION -> pulseFlashlightForNotification()
+            FlashlightActionReceiver.ACTION_PULSE_NOTIFICATION -> pulseFlashlightForNotificationWithCheck()
         }
     }
 

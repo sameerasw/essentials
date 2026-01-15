@@ -70,11 +70,17 @@ class AppFreezingActivity : ComponentActivity() {
             window.isNavigationBarContrastEnforced = false
         }
         
+        
         setContent {
-            EssentialsTheme {
+            val viewModel: com.sameerasw.essentials.viewmodels.MainViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+            val context = LocalContext.current
+            LaunchedEffect(Unit) {
+                viewModel.check(context)
+            }
+            val isPitchBlackThemeEnabled by viewModel.isPitchBlackThemeEnabled
+            EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
                 val context = LocalContext.current
                 val view = LocalView.current
-                val viewModel: MainViewModel = viewModel()
                 val pickedApps by viewModel.freezePickedApps
                 val isPickedAppsLoading by viewModel.isFreezePickedAppsLoading
                 val isPostNotificationsEnabled by viewModel.isPostNotificationsEnabled

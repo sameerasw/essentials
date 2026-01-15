@@ -93,6 +93,20 @@ class SettingsRepository(private val context: Context) {
         const val KEY_HAPTIC_FEEDBACK_TYPE = "haptic_feedback_type"
         const val KEY_DEFAULT_TAB = "default_tab"
         const val KEY_USE_ROOT = "use_root"
+        const val KEY_PITCH_BLACK_THEME_ENABLED = "pitch_black_theme_enabled"
+        
+        const val KEY_KEYBOARD_HEIGHT = "keyboard_height"
+        const val KEY_KEYBOARD_BOTTOM_PADDING = "keyboard_bottom_padding"
+        const val KEY_KEYBOARD_HAPTICS_ENABLED = "keyboard_haptics_enabled"
+        const val KEY_KEYBOARD_ROUNDNESS = "keyboard_roundness"
+        const val KEY_KEYBOARD_SHAPE = "keyboard_shape" // 0=Round, 1=Flat, 2=Inverse
+        const val KEY_KEYBOARD_FUNCTIONS_BOTTOM = "keyboard_functions_bottom"
+        const val KEY_KEYBOARD_FUNCTIONS_PADDING = "keyboard_functions_padding"
+        const val KEY_KEYBOARD_HAPTIC_STRENGTH = "keyboard_haptic_strength"
+        const val KEY_KEYBOARD_ALWAYS_DARK = "keyboard_always_dark"
+        const val KEY_KEYBOARD_PITCH_BLACK = "keyboard_pitch_black"
+        const val KEY_KEYBOARD_CLIPBOARD_ENABLED = "keyboard_clipboard_enabled"
+
     }
 
     // Observe changes

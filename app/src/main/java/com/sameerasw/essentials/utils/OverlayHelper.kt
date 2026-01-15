@@ -235,6 +235,7 @@ object OverlayHelper {
         }
     }
 
+
     /**
      * Creates WindowManager.LayoutParams configured for an notification lighting overlay.
      *

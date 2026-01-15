@@ -47,7 +47,13 @@ class FlashlightIntensityActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            EssentialsTheme {
+            val viewModel: com.sameerasw.essentials.viewmodels.MainViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+            val context = LocalContext.current
+            LaunchedEffect(Unit) {
+                viewModel.check(context)
+            }
+            val isPitchBlackThemeEnabled by viewModel.isPitchBlackThemeEnabled
+            EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
                 FlashlightIntensityOverlay(onDismiss = { finish() })
             }
         }

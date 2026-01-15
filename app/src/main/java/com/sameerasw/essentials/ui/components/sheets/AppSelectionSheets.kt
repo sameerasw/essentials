@@ -43,6 +43,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.ui.components.cards.AppToggleItem
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.NotificationApp
 import com.sameerasw.essentials.utils.AppUtil
@@ -109,7 +110,8 @@ fun AppSelectionSheet(
 
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
-        sheetState = sheetState
+        sheetState = sheetState,
+        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
     ) {
         Column(
             modifier = Modifier
@@ -210,61 +212,33 @@ fun AppSelectionSheet(
                 }
             } else {
                 LazyColumn(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    modifier = Modifier
+                        .weight(1f)
+                        .clip(RoundedCornerShape(24.dp)),
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
                     items(filteredApps, key = { it.packageName }) { app ->
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    HapticUtil.performVirtualKeyHaptic(view)
-                                    val updatedList = selectedApps.map {
-                                        if (it.packageName == app.packageName) it.copy(isEnabled = !it.isEnabled) else it
-                                    }
-                                    selectedApps = updatedList
-                                    scope.launch(Dispatchers.IO) {
-                                        onSaveApps(context, updatedList.map { AppSelection(it.packageName, it.isEnabled) })
-                                    }
+                        AppToggleItem(
+                            icon = app.icon,
+                            title = app.appName,
+                            isChecked = app.isEnabled,
+                            onCheckedChange = { isChecked ->
+                                val updatedList = selectedApps.map {
+                                    if (it.packageName == app.packageName) it.copy(isEnabled = isChecked) else it
                                 }
-                                .padding(vertical = 8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Image(
-                                bitmap = app.icon,
-                                contentDescription = null,
-                                modifier = Modifier.size(40.dp),
-                                contentScale = ContentScale.Fit
-                            )
-                            
-                            Text(
-                                text = app.appName,
-                                style = MaterialTheme.typography.bodyLarge,
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .padding(horizontal = 16.dp)
-                            )
-                            
-                            Switch(
-                                checked = app.isEnabled,
-                                onCheckedChange = { isChecked ->
-                                    HapticUtil.performVirtualKeyHaptic(view)
-                                    val updatedList = selectedApps.map {
-                                        if (it.packageName == app.packageName) it.copy(isEnabled = isChecked) else it
-                                    }
-                                    
-                                    // If toggled via switch, update specific app then save all
-                                    updatedList.find { it.packageName == app.packageName }?.let {
-                                        onAppToggle?.invoke(context, it.packageName, it.isEnabled)
-                                    }
-                                    
-                                    selectedApps = updatedList
-                                    scope.launch(Dispatchers.IO) {
-                                        onSaveApps(context, updatedList.map { AppSelection(it.packageName, it.isEnabled) })
-                                    }
+                                
+                                // If toggled via switch, update specific app then save all
+                                updatedList.find { it.packageName == app.packageName }?.let {
+                                    onAppToggle?.invoke(context, it.packageName, it.isEnabled)
                                 }
-                            )
-                        }
+                                
+                                selectedApps = updatedList
+                                scope.launch(Dispatchers.IO) {
+                                    // Use updatedList here to ensure we save the new state
+                                    onSaveApps(context, updatedList.map { AppSelection(it.packageName, it.isEnabled) })
+                                }
+                            }
+                        )
                     }
                 }
             }

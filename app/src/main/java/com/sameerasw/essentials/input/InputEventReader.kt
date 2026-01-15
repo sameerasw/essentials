@@ -31,24 +31,26 @@ class InputEventReader(private val devicePath: String) {
         false 
     }
 
-    fun readEvent(): InputEvent? = try {
-        // Read loop to ensure full buffer is filled
-        var bytesRead = 0
-        while (bytesRead < INPUT_EVENT_SIZE) {
-            val result = inputStream?.read(buffer, bytesRead, INPUT_EVENT_SIZE - bytesRead) ?: -1
-            if (result == -1) return null
-            bytesRead += result
-        }
-        
-        val bb = ByteBuffer.wrap(buffer).apply { order(ByteOrder.LITTLE_ENDIAN) }
-        InputEvent(
-            timeSecond = bb.long,
-            timeMicro = bb.long,
-            type = bb.short.toInt() and 0xFFFF,
-            code = bb.short.toInt() and 0xFFFF,
-            value = bb.int
-        )
-    } catch (e: Exception) { null }
+    fun readEvent(): InputEvent? {
+        return try {
+            // Read loop to ensure full buffer is filled
+            var bytesRead = 0
+            while (bytesRead < INPUT_EVENT_SIZE) {
+                val result = inputStream?.read(buffer, bytesRead, INPUT_EVENT_SIZE - bytesRead) ?: -1
+                if (result == -1) return null
+                bytesRead += result
+            }
+
+            val bb = ByteBuffer.wrap(buffer).apply { order(ByteOrder.LITTLE_ENDIAN) }
+            InputEvent(
+                timeSecond = bb.long,
+                timeMicro = bb.long,
+                type = bb.short.toInt() and 0xFFFF,
+                code = bb.short.toInt() and 0xFFFF,
+                value = bb.int
+            )
+        } catch (e: Exception) { null }
+    }
 
     fun close() { 
         try {

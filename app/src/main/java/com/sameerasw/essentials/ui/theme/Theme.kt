@@ -25,6 +25,7 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun EssentialsTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
+    pitchBlackTheme: Boolean = false,
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
@@ -32,10 +33,33 @@ fun EssentialsTheme(
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+            val dynamicScheme = if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+            if (darkTheme && pitchBlackTheme) {
+                dynamicScheme.copy(
+                    background = androidx.compose.ui.graphics.Color.Black,
+                    surface = androidx.compose.ui.graphics.Color.Black,
+                    surfaceContainer = androidx.compose.ui.graphics.Color.Black,
+                    surfaceContainerLowest = androidx.compose.ui.graphics.Color.Black,
+                    surfaceContainerLow = androidx.compose.ui.graphics.Color.Black
+                )
+            } else {
+                dynamicScheme
+            }
         }
 
-        darkTheme -> DarkColorScheme
+        darkTheme -> {
+            if (pitchBlackTheme) {
+                 DarkColorScheme.copy(
+                    background = androidx.compose.ui.graphics.Color.Black,
+                    surface = androidx.compose.ui.graphics.Color.Black,
+                    surfaceContainer = androidx.compose.ui.graphics.Color.Black,
+                    surfaceContainerLowest = androidx.compose.ui.graphics.Color.Black,
+                    surfaceContainerLow = androidx.compose.ui.graphics.Color.Black
+                 )
+            } else {
+                DarkColorScheme
+            }
+        }
         else -> LightColorScheme
     }
 

@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import androidx.activity.ComponentActivity
 import com.sameerasw.essentials.FeatureSettingsActivity
@@ -32,16 +33,36 @@ class QSPreferencesActivity : ComponentActivity() {
                 return
             }
 
+            if (componentName.className == "com.sameerasw.essentials.services.tiles.FlashlightTileService") {
+                val intent = Intent(this, FlashlightIntensityActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                }
+                startActivity(intent)
+                finish()
+                return
+            }
+
+            if (componentName.className == "com.sameerasw.essentials.services.tiles.AdaptiveBrightnessTileService") {
+                val displayIntent = Intent(Settings.ACTION_DISPLAY_SETTINGS).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                }
+                startActivity(displayIntent)
+                finish()
+                return
+            }
+
             val feature = when (componentName.className) {
                 "com.sameerasw.essentials.services.tiles.CaffeinateTileService" -> "Caffeinate"
                 "com.sameerasw.essentials.services.tiles.NotificationLightingTileService" -> "Notification lighting"
                 "com.sameerasw.essentials.services.tiles.DynamicNightLightTileService" -> "Dynamic night light"
-                "com.sameerasw.essentials.services.tiles.FlashlightTileService" -> "Button remap"
                 "com.sameerasw.essentials.services.tiles.AppLockTileService" -> "App lock"
                 "com.sameerasw.essentials.services.tiles.ScreenLockedSecurityTileService" -> "Screen locked security"
                 "com.sameerasw.essentials.services.tiles.AppFreezingTileService" -> "Freeze"
                 "com.sameerasw.essentials.services.tiles.FlashlightPulseTileService" -> "Notification lighting"
+                "com.sameerasw.essentials.services.tiles.StayAwakeTileService" -> "Quick settings tiles"
                 "com.sameerasw.essentials.services.tiles.NfcTileService" -> "NFC"
+                "com.sameerasw.essentials.services.tiles.AdaptiveBrightnessTileService" -> "Quick settings tiles"
+                "com.sameerasw.essentials.services.tiles.MapsPowerSavingTileService" -> "Maps power saving mode"
                 else -> null
             }
 

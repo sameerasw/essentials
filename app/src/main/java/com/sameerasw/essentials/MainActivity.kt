@@ -151,7 +151,8 @@ class MainActivity : FragmentActivity() {
         // Initialize viewModel state early for correct initial composition
         viewModel.check(this)
         setContent {
-            EssentialsTheme {
+            val isPitchBlackThemeEnabled by viewModel.isPitchBlackThemeEnabled
+            EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
                 val context = LocalContext.current
                 val view = LocalView.current
                 val versionName = try {
@@ -179,13 +180,7 @@ class MainActivity : FragmentActivity() {
                 val isDeveloperModeEnabled by viewModel.isDeveloperModeEnabled
                 
                 // Dynamic tabs configuration
-                val tabs = remember(isDeveloperModeEnabled) {
-                    if (isDeveloperModeEnabled) {
-                        DIYTabs.entries
-                    } else {
-                        listOf(DIYTabs.ESSENTIALS, DIYTabs.FREEZE)
-                    }
-                }
+                val tabs = remember { DIYTabs.entries }
                 
                 val defaultTab by viewModel.defaultTab
                 val initialPage = remember(tabs) {

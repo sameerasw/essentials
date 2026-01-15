@@ -45,7 +45,13 @@ class LocationAlarmActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         
         setContent {
-            com.sameerasw.essentials.ui.theme.EssentialsTheme {
+            val viewModel: com.sameerasw.essentials.viewmodels.MainViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+            val context = androidx.compose.ui.platform.LocalContext.current
+            androidx.compose.runtime.LaunchedEffect(Unit) {
+                viewModel.check(context)
+            }
+            val isPitchBlackThemeEnabled by viewModel.isPitchBlackThemeEnabled
+            com.sameerasw.essentials.ui.theme.EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
                 LocationAlarmScreen(onFinish = {
                     stopAlarmAndFinish()
                 })

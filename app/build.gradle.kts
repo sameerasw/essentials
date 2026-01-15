@@ -19,10 +19,10 @@ android {
 
     defaultConfig {
         applicationId = "com.sameerasw.essentials"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 36
-        versionCode = 19
-        versionName = "8.5"
+        versionCode = 21
+        versionName = "10.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -101,4 +101,7 @@ dependencies {
     
     // Kotlin Reflect for dynamic sealed class serialization
     implementation(kotlin("reflect"))
+
+    // SymSpell for word suggestions
+    implementation("com.darkrockstudios:symspellkt:3.4.0")
 }

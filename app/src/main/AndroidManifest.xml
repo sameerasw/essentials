@@ -23,8 +23,10 @@
 
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
     <uses-permission android:name="android.permission.POST_PROMOTED_NOTIFICATIONS" tools:ignore="UnusedAttribute" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
 
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
@@ -167,6 +169,9 @@
         <activity
             android:name=".ui.activities.QSPreferencesActivity"
             android:exported="true"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:taskAffinity=""
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />
@@ -256,7 +261,10 @@
         <service
             android:name=".services.CaffeinateWakeLockService"
             android:exported="false"
-            android:foregroundServiceType="specialUse" />
+            android:foregroundServiceType="specialUse">
+            <property android:name="android.app.property.FOREGROUND_SERVICE_TYPE_SPECIAL_USE_DESCRIPTION"
+                android:value="Caffeinate Service" />
+        </service>
         <service
             android:name=".services.tiles.SoundModeTileService"
             android:exported="true"
@@ -379,6 +387,18 @@
             android:foregroundServiceType="specialUse" />
 
         <service
+            android:name=".ime.EssentialsInputMethodService"
+            android:label="@string/input_method_label"
+            android:permission="android.permission.BIND_INPUT_METHOD"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.view.InputMethod" />
+            </intent-filter>
+            <meta-data android:name="android.view.im"
+                       android:resource="@xml/method" />
+        </service>
+
+        <service
             android:name=".services.automation.AutomationService"
             android:enabled="true"
             android:exported="false"
@@ -425,6 +445,39 @@
             android:exported="true"
             android:icon="@drawable/rounded_nfc_24"
             android:label="@string/nfc_tile_label"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".services.tiles.StayAwakeTileService"
+            android:exported="true"
+            android:icon="@drawable/rounded_battery_charging_60_24"
+            android:label="@string/tile_stay_awake"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".services.tiles.AdaptiveBrightnessTileService"
+            android:exported="true"
+            android:icon="@drawable/rounded_brightness_auto_24"
+            android:label="@string/tile_adaptive_brightness"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".services.tiles.MapsPowerSavingTileService"
+            android:exported="true"
+            android:icon="@drawable/rounded_navigation_24"
+            android:label="@string/tile_maps_power_saving"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />

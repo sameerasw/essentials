@@ -134,8 +134,8 @@ fun FreezeGridUI(
                         bottom = contentPadding.calculateBottomPadding() + 88.dp,
                         top = 0.dp
                     ),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                    horizontalArrangement = Arrangement.spacedBy(2.dp),
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
                     items(pickedApps, key = { it.packageName }) { app ->
                         AppGridItem(
