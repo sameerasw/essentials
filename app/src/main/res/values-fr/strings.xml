@@ -44,7 +44,7 @@
     <string name="screen_on">Écran allumé</string>
     <string name="volume_up">Volume Haut</string>
     <string name="volume_down">Volume Bas</string>
-    <string name="action_toggle_flashlight">Basculer la lampe-torche</string>
+    <string name="action_toggle_flashlight">Allumer/éteindre la lampe-torche</string>
     <string name="action_media_play_pause">Jouer/mettre en pause le média</string>
     <string name="action_media_next">Prochain média</string>
     <string name="action_media_previous">Média précédent</string>
@@ -389,6 +389,8 @@
     <string name="perm_write_secure_title">Modifier les paramètres de sécurité</string>
     <string name="perm_write_secure_desc_common">Required for Statusbar icons and Screen Locked Security</string>
     <string name="perm_write_secure_desc_night_light">Needed to toggle Night Light. Grant via ADB or root.</string>
+    <string name="perm_write_settings_title">Modify System Settings</string>
+    <string name="perm_write_settings_desc">Required to toggle Adaptive Brightness and other system settings</string>
     <string name="perm_overlay_title">Permission de superposition</string>
     <string name="perm_overlay_desc">Required to display the notification lighting overlay on the screen</string>
     <string name="perm_device_admin_title">Administrateur de l\'appareil</string>
@@ -402,8 +404,8 @@
     <string name="perm_battery_optimization_desc">Ensure the service is not killed by the system to save power.</string>
     <!-- Tabs -->
     <string name="tab_essentials">Essentials</string>
-    <string name="tab_freeze">Geler</string>
-    <string name="tab_freeze_title">Gelée</string>
+    <string name="tab_freeze">Gel d\'applis</string>
+    <string name="tab_freeze_title">Gel d\'applis</string>
     <string name="tab_diy">DIY</string>
     <string name="tab_freeze_subtitle">Applications désactivées</string>
     <string name="tab_diy_subtitle">Do It Yourself</string>
@@ -412,6 +414,12 @@
     <string name="btn_enable_keyboard">Enable in settings</string>
     <string name="btn_select_keyboard">Switch to Essentials</string>
     <string name="status_keyboard_ready">Keyboard is active and ready!</string>
+    <string name="label_enabled">Enabled</string>
+    <string name="label_disabled">Disabled</string>
+    <string name="tile_adaptive_brightness">Adaptive Brightness</string>
+    <string name="tile_adaptive_brightness_desc">Toggle adaptive brightness</string>
+    <string name="tile_maps_power_saving">Maps Power Saving</string>
+    <string name="tile_maps_power_saving_desc">Toggle maps power saving mode</string>
     <string name="search_placeholder_short">Search for Tools, Mods and Tweaks</string>
     <string name="action_search">Rechercher</string>
     <string name="action_stop">Stop</string>
@@ -788,7 +796,7 @@
     <string name="location_reached_dist_m">%1$d m</string>
     <string name="location_reached_dist_km">%1$.1f km</string>
     <string name="location_reached_service_title">Travel Alarm active</string>
-    <string name="location_reached_service_remaining">%1$s remaining</string>
+    <string name="location_reached_service_remaining">%1$s remaining (%2$d%%)</string>
     <string name="location_reached_channel_name">Travel Progress</string>
     <string name="location_reached_channel_desc">Shows real-time distance to destination</string>
     <string name="location_reached_alarm_title">Destination à proximité</string>
