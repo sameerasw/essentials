@@ -248,6 +248,22 @@
                 android:resource="@xml/screen_off_widget_info" />
         </receiver>
 
+        <receiver
+            android:name=".services.widgets.BatteriesWidgetReceiver"
+            android:label="@string/batteries_widget_label"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+                <action android:name="android.intent.action.BATTERY_LOW" />
+                <action android:name="android.intent.action.BATTERY_OKAY" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/batteries_widget_info" />
+        </receiver>
+
         <service
             android:name=".services.tiles.CaffeinateTileService"
             android:exported="true"

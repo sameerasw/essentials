@@ -61,6 +61,7 @@ import com.sameerasw.essentials.ui.composables.configs.ButtonRemapSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.DynamicNightLightSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.SnoozeNotificationsSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.LocationReachedSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.BatteriesSettingsUI
 import com.sameerasw.essentials.viewmodels.CaffeinateViewModel
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.viewmodels.StatusBarIconViewModel
@@ -595,6 +596,12 @@ class FeatureSettingsActivity : FragmentActivity() {
                                     viewModel = viewModel,
                                     modifier = Modifier.padding(top = 16.dp),
                                     highlightSetting = highlightSetting
+                                )
+                            }
+                            "Batteries" -> {
+                                BatteriesSettingsUI(
+                                    viewModel = viewModel,
+                                    modifier = Modifier.padding(top = 16.dp)
                                 )
                             }
                             // else -> default UI (optional cleanup)

@@ -893,4 +893,7 @@
     <string name="shape_round">Round</string>
     <string name="shape_flat">Flat</string>
     <string name="shape_inverse">Inverse</string>
+    <string name="feat_batteries_title">Batteries</string>
+    <string name="feat_batteries_desc">Monitor your device battery levels</string>
+    <string name="batteries_widget_label">Battery Status</string>
 </resources>

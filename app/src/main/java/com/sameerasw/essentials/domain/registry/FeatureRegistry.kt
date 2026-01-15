@@ -509,6 +509,19 @@ object FeatureRegistry {
         ) {
             override fun isEnabled(viewModel: MainViewModel) = true
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+        },
+
+        object : Feature(
+            id = "Batteries",
+            title = R.string.feat_batteries_title,
+            iconRes = R.drawable.rounded_battery_charging_60_24,
+            category = R.string.cat_tools,
+            description = R.string.feat_batteries_desc,
+            showToggle = false,
+            hasMoreSettings = true
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = true
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
         }
     )
 }

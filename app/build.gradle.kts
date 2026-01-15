@@ -56,8 +56,8 @@ dependencies {
     // Android 12+ SplashScreen API with backward compatibility attributes
     implementation("androidx.core:core-splashscreen:1.0.1")
 
-    // Force latest Material3 1.5.0-alpha10 for ToggleButton & ButtonGroup support
-    implementation("androidx.compose.material3:material3:1.5.0-alpha10")
+    // Force latest Material3 1.5.0-alpha12 for ToggleButton & ButtonGroup support
+    implementation("androidx.compose.material3:material3:1.5.0-alpha12")
 
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
@@ -104,4 +104,8 @@ dependencies {
 
     // SymSpell for word suggestions
     implementation("com.darkrockstudios:symspellkt:3.4.0")
+
+    // Glance for Widgets
+    implementation("androidx.glance:glance-appwidget:1.1.0")
+    implementation("androidx.glance:glance-material3:1.1.0")
 }
