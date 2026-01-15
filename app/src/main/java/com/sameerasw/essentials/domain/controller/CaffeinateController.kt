@@ -1,11 +1,14 @@
 package com.sameerasw.essentials.domain.controller
 
 import android.app.ActivityManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.service.quicksettings.TileService
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
 import com.sameerasw.essentials.services.CaffeinateWakeLockService
+import com.sameerasw.essentials.services.tiles.CaffeinateTileService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -18,7 +21,6 @@ object CaffeinateController {
     val isStarting = mutableStateOf(false)
     val startingTimeLeft = mutableStateOf(0)
     val selectedTimeout = mutableStateOf(5)
-    val remainingTimeText = mutableStateOf<String?>(null)
 
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     private var startingJob: Job? = null
@@ -36,6 +38,11 @@ object CaffeinateController {
         } else {
             startSelection(context)
         }
+        refreshTile(context)
+    }
+
+    private fun refreshTile(context: Context) {
+        TileService.requestListeningState(context, ComponentName(context, CaffeinateTileService::class.java))
     }
 
     private fun startSelection(context: Context) {
@@ -54,22 +61,24 @@ object CaffeinateController {
 
     private fun registerScreenOffReceiver(context: Context) {
         if (screenOffReceiver != null) return
-        val prefs = context.getSharedPreferences("caffeinate_prefs", Context.MODE_PRIVATE)
+        val appContext = context.applicationContext
+        val prefs = appContext.getSharedPreferences("caffeinate_prefs", Context.MODE_PRIVATE)
         if (!prefs.getBoolean("abort_screen_off", true)) return
 
         screenOffReceiver = object : android.content.BroadcastReceiver() {
             override fun onReceive(c: Context?, intent: Intent?) {
                 if (intent?.action == Intent.ACTION_SCREEN_OFF) {
-                    cancelAll(context)
+                    cancelAll(appContext)
                 }
             }
         }
-        context.registerReceiver(screenOffReceiver, android.content.IntentFilter(Intent.ACTION_SCREEN_OFF))
+        appContext.registerReceiver(screenOffReceiver, android.content.IntentFilter(Intent.ACTION_SCREEN_OFF))
     }
 
     private fun unregisterScreenOffReceiver(context: Context) {
+        val appContext = context.applicationContext
         screenOffReceiver?.let {
-            try { context.unregisterReceiver(it) } catch (_: Exception) {}
+            try { appContext.unregisterReceiver(it) } catch (_: Exception) {}
         }
         screenOffReceiver = null
     }
@@ -84,6 +93,7 @@ object CaffeinateController {
         
         selectedTimeout.value = sortedPresets[nextIndex]
         resetSelectionTimer(context)
+        refreshTile(context)
     }
 
     private fun resetSelectionTimer(context: Context) {
@@ -93,6 +103,7 @@ object CaffeinateController {
             while (startingTimeLeft.value > 0) {
                 delay(1000)
                 startingTimeLeft.value -= 1
+                refreshTile(context)
             }
             startService(context)
         }
@@ -106,6 +117,7 @@ object CaffeinateController {
         }
         ContextCompat.startForegroundService(context, intent)
         isActive.value = true
+        refreshTile(context)
     }
 
     fun cancelAll(context: Context) {
@@ -114,6 +126,7 @@ object CaffeinateController {
         isStarting.value = false
         isActive.value = false
         context.stopService(Intent(context, CaffeinateWakeLockService::class.java))
+        refreshTile(context)
     }
 
     private fun getEnabledPresets(context: Context): Set<Int> {

@@ -15,7 +15,7 @@ class CaffeinateTileService : BaseTileService() {
     private val refreshRunnable = object : Runnable {
         override fun run() {
             updateTile()
-            if (CaffeinateController.isActive.value || CaffeinateController.isStarting.value) {
+            if (CaffeinateController.isStarting.value) {
                 handler.postDelayed(this, 1000)
             }
         }
@@ -23,7 +23,7 @@ class CaffeinateTileService : BaseTileService() {
 
     override fun onStartListening() {
         super.onStartListening()
-        if (CaffeinateController.isActive.value || CaffeinateController.isStarting.value) {
+        if (CaffeinateController.isStarting.value) {
             handler.removeCallbacks(refreshRunnable)
             handler.post(refreshRunnable)
         }
@@ -57,7 +57,7 @@ class CaffeinateTileService : BaseTileService() {
             }
             getString(R.string.caffeinate_starting_in, CaffeinateController.startingTimeLeft.value) + " ($timeoutStr)"
         } else if (CaffeinateController.isActive.value) {
-            CaffeinateController.remainingTimeText.value ?: getString(R.string.caffeinate_notification_desc)
+            getString(R.string.caffeinate_active)
         } else {
             val timeout = getScreenOffTimeout()
             if (timeout == -1L) "Never" else "${timeout / 1000}s"

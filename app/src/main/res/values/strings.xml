@@ -76,6 +76,7 @@
     <string name="permission_post_notifications_desc">Allows the app to show notifications</string>
     <string name="permission_grant_action">Grant Permission</string>
     <string name="caffeinate_notification_title">Caffeinate Active</string>
+    <string name="caffeinate_active">Active</string>
     <string name="caffeinate_notification_desc">Screen is being kept awake</string>
     <string name="caffeinate_battery_optimization_title">Ignore battery optimization</string>
     <string name="caffeinate_battery_optimization_desc">Recommended for reliable service on some devices</string>

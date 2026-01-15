@@ -72,7 +72,6 @@ class CaffeinateWakeLockService : Service() {
 
     override fun onDestroy() {
         CaffeinateController.isActive.value = false
-        CaffeinateController.remainingTimeText.value = null
         handler.removeCallbacks(countdownRunnable)
         try { unregisterReceiver(screenOffReceiver) } catch (_: Exception) {}
         super.onDestroy()
@@ -144,7 +143,6 @@ class CaffeinateWakeLockService : Service() {
             val seconds = totalSeconds % 60
             if (minutes > 0) "${minutes}m ${seconds}s" else "${seconds}s"
         }
-        CaffeinateController.remainingTimeText.value = if (timeoutMinutes == -1) null else activeText
         
         val descText = if (timeoutMinutes == -1) {
             getString(R.string.caffeinate_notification_desc)
