@@ -17,11 +17,34 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.MainActivity
+import com.sameerasw.essentials.domain.controller.CaffeinateController
 
 class CaffeinateWakeLockService : Service() {
 
     private var wakeLock: PowerManager.WakeLock? = null
     private var abortWithScreenOff = true
+    private var timeoutMinutes = -1
+    private var remainingMillis = 0L
+    private var startTime = 0L
+
+    private val handler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val countdownRunnable = object : Runnable {
+        override fun run() {
+            if (timeoutMinutes == -1) return
+            
+            val elapsed = System.currentTimeMillis() - startTime
+            remainingMillis = (timeoutMinutes * 60 * 1000L) - elapsed
+            
+            if (remainingMillis <= 0) {
+                CaffeinateController.isActive.value = false
+                stopSelf()
+                return
+            }
+            
+            updateNotification()
+            handler.postDelayed(this, 1000)
+        }
+    }
 
     private val screenOffReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -48,6 +71,9 @@ class CaffeinateWakeLockService : Service() {
     }
 
     override fun onDestroy() {
+        CaffeinateController.isActive.value = false
+        CaffeinateController.remainingTimeText.value = null
+        handler.removeCallbacks(countdownRunnable)
         try { unregisterReceiver(screenOffReceiver) } catch (_: Exception) {}
         super.onDestroy()
         wakeLock?.release()
@@ -64,6 +90,21 @@ class CaffeinateWakeLockService : Service() {
             }
             "UPDATE_PREFS" -> {
                 updatePrefs()
+            }
+            else -> {
+                // Feature start or update
+                val newTimeout = intent?.getIntExtra("timeout_minutes", -1) ?: -1
+                if (newTimeout != timeoutMinutes) {
+                    timeoutMinutes = newTimeout
+                    if (timeoutMinutes != -1) {
+                        startTime = System.currentTimeMillis()
+                        handler.removeCallbacks(countdownRunnable)
+                        handler.post(countdownRunnable)
+                    } else {
+                        handler.removeCallbacks(countdownRunnable)
+                        updateNotification()
+                    }
+                }
             }
         }
         return START_STICKY
@@ -97,13 +138,29 @@ class CaffeinateWakeLockService : Service() {
         val mainIntent = Intent(this, MainActivity::class.java).apply { putExtra("feature", "Caffeinate") }
         val mainPendingIntent = PendingIntent.getActivity(this, 1, mainIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
-        val activeText = "∞"
+        val activeText = if (timeoutMinutes == -1) "∞" else {
+            val totalSeconds = (remainingMillis / 1000).toInt()
+            val minutes = totalSeconds / 60
+            val seconds = totalSeconds % 60
+            if (minutes > 0) "${minutes}m ${seconds}s" else "${seconds}s"
+        }
+        CaffeinateController.remainingTimeText.value = if (timeoutMinutes == -1) null else activeText
+        
+        val descText = if (timeoutMinutes == -1) {
+            getString(R.string.caffeinate_notification_desc)
+        } else {
+            val totalSeconds = (remainingMillis / 1000).toInt()
+            val minutes = totalSeconds / 60
+            val seconds = totalSeconds % 60
+            val timeStr = if (minutes > 0) "${minutes}m ${seconds}s" else "${seconds}s"
+            getString(R.string.caffeinate_remaining, timeStr)
+        }
 
         if (Build.VERSION.SDK_INT >= 35) {
             val builder = Notification.Builder(this, "caffeinate_live")
                 .setSmallIcon(R.drawable.rounded_coffee_24)
                 .setContentTitle(getString(R.string.caffeinate_notification_title))
-                .setContentText(getString(R.string.caffeinate_notification_desc))
+                .setContentText(descText)
                 .setOngoing(true)
                 .setOnlyAlertOnce(true)
                 .setCategory(Notification.CATEGORY_SERVICE)
@@ -130,7 +187,7 @@ class CaffeinateWakeLockService : Service() {
         val builder = NotificationCompat.Builder(this, "caffeinate_live")
             .setSmallIcon(R.drawable.rounded_coffee_24)
             .setContentTitle(getString(R.string.caffeinate_notification_title))
-            .setContentText(getString(R.string.caffeinate_notification_desc))
+            .setContentText(descText)
             .setOngoing(true)
             .setSilent(true)
             .setOnlyAlertOnce(true)
@@ -145,5 +202,10 @@ class CaffeinateWakeLockService : Service() {
         builder.addExtras(extras)
 
         return builder.build()
+    }
+
+    private fun updateNotification() {
+        val manager = getSystemService(NotificationManager::class.java)
+        manager.notify(2, createNotification())
     }
 }

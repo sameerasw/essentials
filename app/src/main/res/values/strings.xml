@@ -80,7 +80,15 @@
     <string name="caffeinate_battery_optimization_title">Ignore battery optimization</string>
     <string name="caffeinate_battery_optimization_desc">Recommended for reliable service on some devices</string>
     <string name="caffeinate_abort_screen_off_title">Abort with screen off</string>
-    <string name="caffeinate_abort_screen_off_desc">Disable Caffeinate automatically when the screen is turned off</string>
+    <string name="caffeinate_timeout_presets_title">Timeout Presets</string>
+    <string name="caffeinate_timeout_presets_desc">Select available durations for QS tile</string>
+    <string name="caffeinate_timeout_5m">5m</string>
+    <string name="caffeinate_timeout_10m">10m</string>
+    <string name="caffeinate_timeout_30m">30m</string>
+    <string name="caffeinate_timeout_1h">1h</string>
+    <string name="caffeinate_timeout_infinity">∞</string>
+    <string name="caffeinate_starting_in">Starting in %1$ds…</string>
+    <string name="caffeinate_remaining">%1$s remaining</string>
     <string name="caffeinate_live_channel_desc">Persistent notification for Caffeinate</string>
 
     <!-- Dynamic Night Light -->
