@@ -33,7 +33,7 @@ Essential tools, mods and workarounds for Pixels and other Androids
 
 - **Maps Power Saving Mode**: Optimize battery usage during Google Maps navigation by managing screen state (requires Shizuku or Root).
 - **Are we there yet? (Travel Alarm)**: Never miss your stop again. Set a destination and get notified when you are nearby. Features real-time distance tracking in the status bar and Live Activity support on the lock screen.
-- **DIY Automation [Testing]**: Create custom automations based on device triggers (e.g., app launches, time) or states (e.g., screen on/off, battery level).
+- **DIY Automation**: Create custom automations based on device triggers (e.g., app launches, time) or states (e.g., screen on/off, battery level).
 - **Screen Off Widget**: An invisible widget that can be placed on the home screen to quickly lock the device without using the power button. Now with configurable haptic feedback.
 - **Caffeinate**: A Quick Settings tile to keep the display awake indefinitely or for a set duration.
 - **Sound Mode Tile**: A Quick Settings tile to toggle between Ring, Vibrate, and Silent sound modes.
@@ -44,6 +44,7 @@ Essential tools, mods and workarounds for Pixels and other Androids
 - **App Lock**: Secure your applications with a dedicated app lock feature. Integrated with Quick Settings for easy toggling.
 - **Flashlight Enhancements**: Advanced flashlight control with smooth fade-in/out, volume key intensity adjustment, global brightness controls, and live activity support.
 - **Screen Locked Security**: Protect your device by disabling sensitive Quick Settings tiles and power menu when the device is locked.
+- **A keyboard**: That no one asked for.
 
 ### Visuals
 
@@ -70,13 +71,16 @@ A collection of useful tiles to toggle system settings:
 - **App Lock**: Toggle application lock.
 - **Flashlight**: Toggle flashlight with brightness adjustment support.
 - **NFC**: Toggle NFC functionality.
-- **Flashlight pulse**: Pulse flashlight for notifications
+- **Flashlight Pulse**: Pulse flashlight for notifications
+- **Stay Awake**: Using the developer options
+- **Maps Power Saving Mode**: Easier access
+- **Adaptive Brightness**: Especially for Pixels
 
 # Requirements
 
-- Android 7.0 or higher (Feature support may vary)
+- Android 8.0 or higher (Feature support may vary)
 - App permissions are optional, Grant necessary permissions for each feature
-- Targetted for Google Pixel devices
+- Targetted for Google Pixel devices extending to other Androids
 - Tested on Google Pixel 7 (Android 16 beta program)
 
 # Screenshots
@@ -133,5 +137,5 @@ Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of co
 ---
 
 <p align="center">
-  Last updated: 2026-01-13
+  Last updated: 2026-01-15
 </p>
