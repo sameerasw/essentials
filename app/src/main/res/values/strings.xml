@@ -422,7 +422,6 @@
 
     <!-- Tabs -->
     <string name="tab_essentials">Essentials</string>
-    <string name="tab_essentials_subtitle">└(=^‥^=)┐</string>
     <string name="tab_freeze">Freeze</string>
     <string name="tab_freeze_title">Frozen</string>
     <string name="tab_diy">DIY</string>
