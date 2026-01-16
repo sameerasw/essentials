@@ -151,4 +151,19 @@ object PermissionUtils {
     fun canWriteSystemSettings(context: Context): Boolean {
         return Settings.System.canWrite(context)
     }
+
+    fun hasBluetoothPermission(context: Context): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            androidx.core.content.ContextCompat.checkSelfPermission(
+                context,
+                android.Manifest.permission.BLUETOOTH_CONNECT
+            ) == android.content.pm.PackageManager.PERMISSION_GRANTED &&
+            androidx.core.content.ContextCompat.checkSelfPermission(
+                context,
+                android.Manifest.permission.BLUETOOTH_SCAN
+            ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+        } else {
+            true
+        }
+    }
 }

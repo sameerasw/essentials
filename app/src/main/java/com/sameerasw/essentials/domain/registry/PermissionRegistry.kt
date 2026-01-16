@@ -42,6 +42,10 @@ fun initPermissionRegistry() {
     PermissionRegistry.register("NOTIFICATION_LISTENER", R.string.feat_maps_power_saving_title)
     PermissionRegistry.register("NOTIFICATION_LISTENER", R.string.feat_notification_lighting_title)
 
+    // Bluetooth permissions
+    PermissionRegistry.register("BLUETOOTH_CONNECT", R.string.feat_batteries_title)
+    PermissionRegistry.register("BLUETOOTH_SCAN", R.string.feat_batteries_title)
+
     // Draw over other apps permission
     PermissionRegistry.register("DRAW_OVER_OTHER_APPS", R.string.feat_notification_lighting_title)
 

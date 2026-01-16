@@ -517,6 +517,7 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_battery_charging_60_24,
             category = R.string.cat_tools,
             description = R.string.feat_batteries_desc,
+            permissionKeys = listOf("BLUETOOTH_CONNECT", "BLUETOOTH_SCAN"),
             showToggle = false,
             hasMoreSettings = true
         ) {

@@ -13,7 +13,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.viewmodels.MainViewModel
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
 
 @OptIn(androidx.compose.material3.ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -26,8 +31,8 @@ fun BatteriesSettingsUI(
         modifier = modifier.padding(16.dp),
         horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
     ) {
-        // AirSync Interaction
         RoundedCardContainer {
+            // AirSync Interaction
             val isAirSyncInstalled = try {
                 context.packageManager.getPackageInfo("com.sameerasw.airsync", 0)
                 true
@@ -37,6 +42,12 @@ fun BatteriesSettingsUI(
 
             if (isAirSyncInstalled) {
                 ListItem(
+                    leadingContent = { 
+                        androidx.compose.material3.Icon(
+                            painter = androidx.compose.ui.res.painterResource(R.drawable.rounded_laptop_mac_24),
+                            contentDescription = null 
+                        ) 
+                    },
                     headlineContent = { Text(stringResource(R.string.connect_to_airsync)) },
                     supportingContent = { Text(stringResource(R.string.connect_to_airsync_summary)) },
                     trailingContent = {
@@ -48,6 +59,12 @@ fun BatteriesSettingsUI(
                 )
             } else {
                 ListItem(
+                    leadingContent = { 
+                         androidx.compose.material3.Icon(
+                            painter = androidx.compose.ui.res.painterResource(R.drawable.rounded_laptop_mac_24),
+                            contentDescription = null 
+                        ) 
+                    },
                     headlineContent = { Text(stringResource(R.string.download_airsync)) },
                     supportingContent = { Text(stringResource(R.string.download_airsync_summary)) },
                     trailingContent = {
@@ -63,6 +80,59 @@ fun BatteriesSettingsUI(
                     }
                 )
             }
+
+            // Divider? Maybe not needed inside RoundedCardContainer if items are distinct, but useful for visual separation
+            // But usually ListItem handles it or specific design. Assuming standard list items stack fine.
+
+            // Bluetooth Devices
+            val isBluetoothEnabled = viewModel.isBluetoothDevicesEnabled.value
+            val isPermissionGranted = viewModel.isBluetoothPermissionGranted.value
+            
+            val launcher = androidx.activity.compose.rememberLauncherForActivityResult(
+                contract = androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions()
+            ) { permissions ->
+                val allGranted = permissions.values.all { it }
+                if (allGranted) {
+                    viewModel.isBluetoothPermissionGranted.value = true
+                    viewModel.setBluetoothDevicesEnabled(true, context)
+                }
+            }
+            
+            ListItem(
+                leadingContent = { 
+                     androidx.compose.material3.Icon(
+                        painter = androidx.compose.ui.res.painterResource(R.drawable.rounded_bluetooth_24),
+                        contentDescription = null 
+                    ) 
+                },
+                headlineContent = { Text(stringResource(R.string.show_bluetooth_devices)) },
+                supportingContent = { Text(stringResource(R.string.show_bluetooth_devices_summary)) },
+                trailingContent = {
+                    androidx.compose.material3.Switch(
+                        checked = isBluetoothEnabled,
+                        onCheckedChange = { enabled ->
+                            if (enabled) {
+                                if (isPermissionGranted) {
+                                    viewModel.setBluetoothDevicesEnabled(true, context)
+                                } else {
+                                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                                        launcher.launch(
+                                            arrayOf(
+                                                android.Manifest.permission.BLUETOOTH_CONNECT,
+                                                android.Manifest.permission.BLUETOOTH_SCAN
+                                            )
+                                        )
+                                    } else {
+                                        viewModel.setBluetoothDevicesEnabled(true, context)
+                                    }
+                                }
+                            } else {
+                                viewModel.setBluetoothDevicesEnabled(false, context)
+                            }
+                        }
+                    )
+                }
+            )
         }
     }
 }

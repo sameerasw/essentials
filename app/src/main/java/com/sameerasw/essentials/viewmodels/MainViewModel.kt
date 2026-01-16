@@ -86,6 +86,9 @@ class MainViewModel : ViewModel() {
     val isLocationPermissionGranted = mutableStateOf(false)
     val isBackgroundLocationPermissionGranted = mutableStateOf(false)
     val isFullScreenIntentPermissionGranted = mutableStateOf(false)
+    val isBluetoothPermissionGranted = mutableStateOf(false)
+    
+    val isBluetoothDevicesEnabled = mutableStateOf(false)
 
 
 
@@ -227,6 +230,8 @@ class MainViewModel : ViewModel() {
         isKeyboardSelected.value = PermissionUtils.isKeyboardSelected(context)
         isWriteSettingsEnabled.value = PermissionUtils.canWriteSystemSettings(context)
         
+        isBluetoothPermissionGranted.value = PermissionUtils.hasBluetoothPermission(context)
+        
         isRootAvailable.value = com.sameerasw.essentials.utils.RootUtils.isRootAvailable()
         isRootPermissionGranted.value = com.sameerasw.essentials.utils.RootUtils.isRootPermissionGranted()
         
@@ -321,6 +326,8 @@ class MainViewModel : ViewModel() {
         isMacBatteryCharging.value = settingsRepository.getBoolean(SettingsRepository.KEY_MAC_BATTERY_IS_CHARGING, false)
         macBatteryLastUpdated.value = settingsRepository.getLong(SettingsRepository.KEY_MAC_BATTERY_LAST_UPDATED, 0L)
         isMacConnected.value = settingsRepository.getBoolean(SettingsRepository.KEY_AIRSYNC_MAC_CONNECTED, false)
+
+        isBluetoothDevicesEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_SHOW_BLUETOOTH_DEVICES, false)
 
         isScreenLockedSecurityEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED)
         isDeviceAdminEnabled.value = isDeviceAdminActive(context)
@@ -768,6 +775,17 @@ class MainViewModel : ViewModel() {
         settingsRepository.putBoolean(SettingsRepository.KEY_AIRSYNC_CONNECTION_ENABLED, enabled)
     }
 
+    fun setBluetoothDevicesEnabled(enabled: Boolean, context: Context) {
+        isBluetoothDevicesEnabled.value = enabled
+        settingsRepository.setBluetoothDevicesEnabled(enabled)
+        
+        // Trigger widget update to fetch data immediately
+        val intent = Intent(context, com.sameerasw.essentials.services.widgets.BatteriesWidgetReceiver::class.java).apply {
+            action = android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE
+        }
+        context.sendBroadcast(intent)
+    }
+
 
 
     private fun isAccessibilityServiceEnabled(context: Context): Boolean {
@@ -800,6 +818,16 @@ class MainViewModel : ViewModel() {
                 activity,
                 arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION),
                 1004
+            )
+        }
+    }
+
+    fun requestBluetoothPermission(activity: androidx.activity.ComponentActivity) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            androidx.core.app.ActivityCompat.requestPermissions(
+                activity,
+                arrayOf(Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN),
+                1005
             )
         }
     }

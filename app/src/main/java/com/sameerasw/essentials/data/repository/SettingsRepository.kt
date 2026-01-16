@@ -113,6 +113,9 @@ class SettingsRepository(private val context: Context) {
         const val KEY_MAC_BATTERY_IS_CHARGING = "mac_battery_is_charging"
         const val KEY_MAC_BATTERY_LAST_UPDATED = "mac_battery_last_updated"
         const val KEY_AIRSYNC_MAC_CONNECTED = "airsync_mac_connected"
+        
+        const val KEY_BLUETOOTH_DEVICES_BATTERY = "bluetooth_devices_battery"
+        const val KEY_SHOW_BLUETOOTH_DEVICES = "show_bluetooth_devices"
     }
 
     // Observe changes
@@ -386,4 +389,22 @@ class SettingsRepository(private val context: Context) {
             try { inputStream.close() } catch(e: Exception) {}
         }
     }
+
+    fun getBluetoothDevicesBattery(): List<com.sameerasw.essentials.utils.BluetoothBatteryUtils.BluetoothDeviceBattery> {
+        val json = prefs.getString(KEY_BLUETOOTH_DEVICES_BATTERY, null) ?: return emptyList()
+        val type = object : TypeToken<List<com.sameerasw.essentials.utils.BluetoothBatteryUtils.BluetoothDeviceBattery>>() {}.type
+        return try {
+            gson.fromJson(json, type) ?: emptyList()
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    fun saveBluetoothDevicesBattery(devices: List<com.sameerasw.essentials.utils.BluetoothBatteryUtils.BluetoothDeviceBattery>) {
+        val json = gson.toJson(devices)
+        putString(KEY_BLUETOOTH_DEVICES_BATTERY, json)
+    }
+
+    fun isBluetoothDevicesEnabled(): Boolean = getBoolean(KEY_SHOW_BLUETOOTH_DEVICES, false)
+    fun setBluetoothDevicesEnabled(enabled: Boolean) = putBoolean(KEY_SHOW_BLUETOOTH_DEVICES, enabled)
 }

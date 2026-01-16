@@ -32,39 +32,85 @@ class BatteriesWidget : GlanceAppWidget() {
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent {
             GlanceTheme {
-                // System Service and Android Battery
+                // 1. Fetch Data
                 val batteryManager = context.getSystemService(Context.BATTERY_SERVICE) as BatteryManager
-                val batteryLevel = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
-                
-                // Mac Battery
+                val androidLevel = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
+
                 val prefs = androidx.glance.currentState<androidx.datastore.preferences.core.Preferences>()
+                
+                // Keys
                 val KEY_AIRSYNC_ENABLED = androidx.datastore.preferences.core.booleanPreferencesKey(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AIRSYNC_CONNECTION_ENABLED)
                 val KEY_MAC_LEVEL = androidx.datastore.preferences.core.intPreferencesKey(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_MAC_BATTERY_LEVEL)
                 val KEY_MAC_CONNECTED = androidx.datastore.preferences.core.booleanPreferencesKey(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AIRSYNC_MAC_CONNECTED)
-                
-                // Read from Glance State
+                val KEY_SHOW_BLUETOOTH = androidx.datastore.preferences.core.booleanPreferencesKey(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_SHOW_BLUETOOTH_DEVICES)
+                val KEY_BLUETOOTH_BATTERY = androidx.datastore.preferences.core.stringPreferencesKey(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_BLUETOOTH_DEVICES_BATTERY)
+
+                // State
                 val isAirSyncEnabled = prefs[KEY_AIRSYNC_ENABLED] ?: false
                 val macLevel = prefs[KEY_MAC_LEVEL] ?: -1
                 val isMacConnected = prefs[KEY_MAC_CONNECTED] ?: false
-                
+                val isShowBluetoothEnabled = prefs[KEY_SHOW_BLUETOOTH] ?: false
+                val bluetoothJson = prefs[KEY_BLUETOOTH_BATTERY]
+
                 val showMac = isAirSyncEnabled && macLevel != -1 && isMacConnected
-                
-                val isMacFresh = true
-                
-                android.util.Log.d("BatteriesWidget", "Update: enabled=$isAirSyncEnabled, level=$macLevel, connected=$isMacConnected -> showMac=$showMac")
+                val hasBluetooth = isShowBluetoothEnabled && !bluetoothJson.isNullOrEmpty() && bluetoothJson != "[]"
 
-                // Style & Colors
-                val themedContext = android.view.ContextThemeWrapper(context, R.style.Theme_Essentials)
-                val primaryColor = resolveColor(themedContext, android.R.attr.colorActivatedHighlight)
-                val errorColor = resolveColor(themedContext, android.R.attr.colorError)
-                val surfaceVariant = resolveColor(themedContext, android.R.attr.colorPressedHighlight)
-                val surfaceColor = resolveColor(themedContext, android.R.attr.colorForeground)
-                val warningColor = android.graphics.Color.parseColor("#FFC107")
-                
-                val trackColor = ColorUtils.setAlphaComponent(surfaceVariant, 76)
+                // 2. Prepare List of Items to Display
+                val batteryItems = mutableListOf<BatteryItemData>()
 
-                // Layout
+                // Android Item
+                batteryItems.add(
+                    BatteryItemData(
+                        level = androidLevel,
+                        iconRes = R.drawable.rounded_mobile_24,
+                        name = "Android"
+                    )
+                )
+
+                // Mac Item
                 if (showMac) {
+                    batteryItems.add(
+                        BatteryItemData(
+                            level = macLevel,
+                            iconRes = R.drawable.rounded_laptop_mac_24,
+                            name = "Mac"
+                        )
+                    )
+                }
+
+                // Bluetooth Items
+                if (hasBluetooth) {
+                    try {
+                        val type = object : com.google.gson.reflect.TypeToken<List<com.sameerasw.essentials.utils.BluetoothBatteryUtils.BluetoothDeviceBattery>>() {}.type
+                        val devices: List<com.sameerasw.essentials.utils.BluetoothBatteryUtils.BluetoothDeviceBattery> = com.google.gson.Gson().fromJson(bluetoothJson, type) ?: emptyList()
+                        
+                        devices.forEach { device ->
+                            val iconRes = when {
+                                device.name.contains("watch", true) -> R.drawable.rounded_watch_24
+                                device.name.contains("bud", true) || 
+                                device.name.contains("pod", true) || 
+                                device.name.contains("head", true) -> R.drawable.rounded_headphones_24
+                                else -> R.drawable.rounded_bluetooth_24
+                            }
+                            batteryItems.add(
+                                BatteryItemData(
+                                    level = device.level,
+                                    iconRes = iconRes,
+                                    name = device.name
+                                )
+                            )
+                        }
+                    } catch (e: Exception) {
+                        // ignore parsing error
+                    }
+                }
+
+                // 3. Render
+                // Resolve Theme Colors once
+                val colors = resolveThemeColors(context)
+
+                if (batteryItems.size > 1) {
+                    // Multi-item layout
                     Row(
                         modifier = GlanceModifier
                             .fillMaxSize()
@@ -73,49 +119,18 @@ class BatteriesWidget : GlanceAppWidget() {
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        // Android Section
-                        val androidRingColor = when {
-                            batteryLevel <= 10 -> errorColor
-                            batteryLevel < 20 -> warningColor
-                            else -> primaryColor
+                        batteryItems.forEachIndexed { index, item ->
+                            BatteryItemBox(context, item, colors, modifier = GlanceModifier.defaultWeight().fillMaxHeight())
+                            
+                            if (index < batteryItems.size - 1) {
+                                Spacer(modifier = GlanceModifier.width(8.dp))
+                            }
                         }
-                        
-                        val deviceIcon = ContextCompat.getDrawable(context, R.drawable.rounded_mobile_24)
-                        val androidBitmap = com.sameerasw.essentials.utils.BatteryRingDrawer.drawBatteryWidget(
-                            context, batteryLevel, androidRingColor, trackColor, primaryColor, surfaceColor, deviceIcon, 300, 300
-                        )
-                        Box(modifier = GlanceModifier.defaultWeight().fillMaxHeight(), contentAlignment = Alignment.Center) {
-                            Image(provider = ImageProvider(androidBitmap), contentDescription = "Android: $batteryLevel%", modifier = GlanceModifier.fillMaxSize())
-                        }
-                        
-                        Spacer(modifier = GlanceModifier.width(8.dp))
-
-                        // Mac Section
-                        val macRingColor = when {
-                            macLevel <= 10 -> errorColor
-                            macLevel < 20 -> warningColor
-                            else -> primaryColor
-                        }
-                        val macIcon = ContextCompat.getDrawable(context, R.drawable.rounded_laptop_mac_24)
-                        val macBitmap = com.sameerasw.essentials.utils.BatteryRingDrawer.drawBatteryWidget(
-                            context, macLevel, macRingColor, trackColor, primaryColor, surfaceColor, macIcon, 300, 300
-                        )
-                        Box(modifier = GlanceModifier.defaultWeight().fillMaxHeight(), contentAlignment = Alignment.Center) {
-                            Image(provider = ImageProvider(macBitmap), contentDescription = "Mac: $macLevel%", modifier = GlanceModifier.fillMaxSize())
-                        }
-                        
                     }
                 } else {
-                    val ringColor = when {
-                        batteryLevel <= 10 -> errorColor
-                        batteryLevel < 20 -> warningColor
-                        else -> primaryColor
-                    }
-                    val deviceIcon = ContextCompat.getDrawable(context, R.drawable.rounded_mobile_24)
-                    val bitmap = com.sameerasw.essentials.utils.BatteryRingDrawer.drawBatteryWidget(
-                        context, batteryLevel, ringColor, trackColor, primaryColor, surfaceColor, deviceIcon, 512, 512
-                    )
-
+                    // Single item layout (Big)
+                    val item = batteryItems.firstOrNull() ?: BatteryItemData(androidLevel, R.drawable.rounded_mobile_24, "Android")
+                    
                     Box(
                         modifier = GlanceModifier
                             .fillMaxSize()
@@ -123,15 +138,35 @@ class BatteriesWidget : GlanceAppWidget() {
                             .padding(16.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                       Image(
-                           provider = ImageProvider(bitmap),
-                           contentDescription = "Battery Level $batteryLevel%",
-                           modifier = GlanceModifier.fillMaxSize()
-                       )
+                        // Use a larger size for single item if needed, but the drawer handles scaling logic internally usually 
+                        // or we pass size. The previous code passed 512x512 for single.
+                        BatteryItemBox(context, item, colors, size = 512, modifier = GlanceModifier.fillMaxSize())
                     }
                 }
             }
         }
+    }
+
+    data class BatteryItemData(val level: Int, val iconRes: Int, val name: String)
+    
+    data class ThemeColors(
+        val primary: Int,
+        val error: Int,
+        val warning: Int,
+        val track: Int,
+        val surface: Int
+    )
+
+    private fun resolveThemeColors(context: Context): ThemeColors {
+        val themedContext = android.view.ContextThemeWrapper(context, R.style.Theme_Essentials)
+        val primary = resolveColor(themedContext, android.R.attr.colorActivatedHighlight)
+        val error = resolveColor(themedContext, android.R.attr.colorError)
+        val surfaceVariant = resolveColor(themedContext, android.R.attr.colorPressedHighlight)
+        val surface = resolveColor(themedContext, android.R.attr.colorForeground)
+        val warning = android.graphics.Color.parseColor("#FFC107")
+        val track = ColorUtils.setAlphaComponent(surfaceVariant, 76)
+        
+        return ThemeColors(primary, error, warning, track, surface)
     }
 
     private fun resolveColor(context: Context, @androidx.annotation.AttrRes attr: Int): Int {
@@ -139,5 +174,33 @@ class BatteriesWidget : GlanceAppWidget() {
         val theme = context.theme
         theme.resolveAttribute(attr, typedValue, true)
         return typedValue.data
+    }
+    
+    @androidx.compose.runtime.Composable
+    private fun BatteryItemBox(
+        context: Context, 
+        item: BatteryItemData, 
+        colors: ThemeColors, 
+        size: Int = 300,
+        modifier: GlanceModifier = GlanceModifier
+    ) {
+        val ringColor = when {
+            item.level <= 10 -> colors.error
+            item.level < 20 -> colors.warning
+            else -> colors.primary
+        }
+        
+        val icon = ContextCompat.getDrawable(context, item.iconRes)
+        val bitmap = com.sameerasw.essentials.utils.BatteryRingDrawer.drawBatteryWidget(
+            context, item.level, ringColor, colors.track, colors.primary, colors.surface, icon, size, size
+        )
+        
+        Box(modifier = modifier, contentAlignment = Alignment.Center) {
+            Image(
+                provider = ImageProvider(bitmap), 
+                contentDescription = "${item.name}: ${item.level}%", 
+                modifier = GlanceModifier.fillMaxSize()
+            )
+        }
     }
 }
