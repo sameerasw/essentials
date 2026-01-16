@@ -126,15 +126,9 @@ class BatteriesWidget : GlanceAppWidget() {
                         android.content.res.Configuration.UI_MODE_NIGHT_MASK) == 
                         android.content.res.Configuration.UI_MODE_NIGHT_YES
 
-                // Calculate primary color based on theme
-                val primaryCalculated = if (isNightMode) {
-                    basePrimary
-                } else {
-                    androidx.core.graphics.ColorUtils.blendARGB(basePrimary, android.graphics.Color.BLACK, 0.4f)
-                }
 
                 val colors = ThemeColors(
-                    primary = primaryCalculated,
+                    primary = basePrimary,
                     error = baseError,
                     warning = android.graphics.Color.parseColor("#FFC107"),
                     track = ColorUtils.setAlphaComponent(onSurface, 30),
