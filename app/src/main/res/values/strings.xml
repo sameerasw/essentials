@@ -288,6 +288,8 @@
     <string name="feat_stay_awake_tile_desc">QS tile to toggle stay awake</string>
     <string name="show_bluetooth_devices">Show Bluetooth devices</string>
     <string name="show_bluetooth_devices_summary">Display battery level of connected Bluetooth devices</string>
+    <string name="limit_max_devices">Limit max devices</string>
+    <string name="limit_max_devices_summary">Adjust max devices visible in widget</string>
 
     <!-- DIY Automation -->
     <string name="diy_create_trigger_title">Trigger Automation</string>

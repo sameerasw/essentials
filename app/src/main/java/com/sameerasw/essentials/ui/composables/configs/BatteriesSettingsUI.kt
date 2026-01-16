@@ -133,6 +133,42 @@ fun BatteriesSettingsUI(
                     )
                 }
             )
+
+
+            // Limit Max Devices
+            ListItem(
+                leadingContent = {
+                    androidx.compose.material3.Icon(
+                        painter = androidx.compose.ui.res.painterResource(R.drawable.rounded_devices_24),
+                        contentDescription = null
+                    )
+                },
+                headlineContent = { Text(stringResource(R.string.limit_max_devices)) },
+                supportingContent = {
+                    Column {
+                        Text(stringResource(R.string.limit_max_devices_summary))
+                        val haptic = androidx.compose.ui.platform.LocalHapticFeedback.current
+                        androidx.compose.material3.Slider(
+                            value = viewModel.batteryWidgetMaxDevices.intValue.toFloat(),
+                            onValueChange = { 
+                                val newInt = it.toInt()
+                                if (newInt != viewModel.batteryWidgetMaxDevices.intValue) {
+                                    haptic.performHapticFeedback(androidx.compose.ui.hapticfeedback.HapticFeedbackType.TextHandleMove)
+                                    viewModel.setBatteryWidgetMaxDevices(newInt, context) 
+                                }
+                            },
+                            valueRange = 1f..8f,
+                            steps = 6
+                        )
+                    }
+                },
+                trailingContent = {
+                    Text(
+                        text = viewModel.batteryWidgetMaxDevices.intValue.toString(),
+                        style = androidx.compose.material3.MaterialTheme.typography.bodyLarge
+                    )
+                }
+            )
         }
     }
 }

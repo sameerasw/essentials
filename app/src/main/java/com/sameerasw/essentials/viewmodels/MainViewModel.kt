@@ -153,6 +153,7 @@ class MainViewModel : ViewModel() {
     val isMacBatteryCharging = mutableStateOf(false)
     val macBatteryLastUpdated = mutableStateOf(0L)
     val isMacConnected = mutableStateOf(false)
+    val batteryWidgetMaxDevices = mutableIntStateOf(8)
 
     private var lastUpdateCheckTime: Long = 0
     private lateinit var settingsRepository: SettingsRepository
@@ -200,6 +201,7 @@ class MainViewModel : ViewModel() {
             SettingsRepository.KEY_MAC_BATTERY_IS_CHARGING -> isMacBatteryCharging.value = settingsRepository.getBoolean(key, false)
             SettingsRepository.KEY_MAC_BATTERY_LAST_UPDATED -> macBatteryLastUpdated.value = settingsRepository.getLong(key, 0L)
             SettingsRepository.KEY_AIRSYNC_MAC_CONNECTED -> isMacConnected.value = settingsRepository.getBoolean(key, false)
+            SettingsRepository.KEY_BATTERY_WIDGET_MAX_DEVICES -> batteryWidgetMaxDevices.intValue = settingsRepository.getInt(key, 8)
         }
     }
 
@@ -328,6 +330,7 @@ class MainViewModel : ViewModel() {
         isMacConnected.value = settingsRepository.getBoolean(SettingsRepository.KEY_AIRSYNC_MAC_CONNECTED, false)
 
         isBluetoothDevicesEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_SHOW_BLUETOOTH_DEVICES, false)
+        batteryWidgetMaxDevices.intValue = settingsRepository.getBatteryWidgetMaxDevices()
 
         isScreenLockedSecurityEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED)
         isDeviceAdminEnabled.value = isDeviceAdminActive(context)
@@ -780,6 +783,17 @@ class MainViewModel : ViewModel() {
         settingsRepository.setBluetoothDevicesEnabled(enabled)
         
         // Trigger widget update to fetch data immediately
+        val intent = Intent(context, com.sameerasw.essentials.services.widgets.BatteriesWidgetReceiver::class.java).apply {
+            action = android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE
+        }
+        context.sendBroadcast(intent)
+    }
+
+    fun setBatteryWidgetMaxDevices(count: Int, context: Context) {
+        batteryWidgetMaxDevices.intValue = count
+        settingsRepository.setBatteryWidgetMaxDevices(count)
+        
+        // Trigger widget update
         val intent = Intent(context, com.sameerasw.essentials.services.widgets.BatteriesWidgetReceiver::class.java).apply {
             action = android.appwidget.AppWidgetManager.ACTION_APPWIDGET_UPDATE
         }

@@ -60,7 +60,10 @@ class BatteriesWidgetReceiver : GlanceAppWidgetReceiver() {
                          emptyList()
                      }
                      
+                     
                      repository.saveBluetoothDevicesBattery(bluetoothDevices)
+
+                     val maxDevices = repository.getBatteryWidgetMaxDevices()
                      
                      val devicesJson = com.google.gson.Gson().toJson(bluetoothDevices)
 
@@ -69,9 +72,11 @@ class BatteriesWidgetReceiver : GlanceAppWidgetReceiver() {
                          androidx.glance.appwidget.state.updateAppWidgetState(context, glanceId) { prefs ->
                             val KEY_SHOW = androidx.datastore.preferences.core.booleanPreferencesKey(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_SHOW_BLUETOOTH_DEVICES)
                             val KEY_DATA = androidx.datastore.preferences.core.stringPreferencesKey(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_BLUETOOTH_DEVICES_BATTERY)
+                            val KEY_MAX = androidx.datastore.preferences.core.intPreferencesKey(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_BATTERY_WIDGET_MAX_DEVICES)
                             
                             prefs[KEY_SHOW] = isEnabled
                             prefs[KEY_DATA] = devicesJson
+                            prefs[KEY_MAX] = maxDevices
                          }
                          glanceAppWidget.update(context, glanceId)
                      }

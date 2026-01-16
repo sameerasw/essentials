@@ -55,6 +55,9 @@ class BatteriesWidget : GlanceAppWidget() {
                 val KEY_MAC_IS_CHARGING = androidx.datastore.preferences.core.booleanPreferencesKey(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_MAC_BATTERY_IS_CHARGING)
                 val macIsCharging = prefs[KEY_MAC_IS_CHARGING] ?: false
 
+                val KEY_MAX_DEVICES = androidx.datastore.preferences.core.intPreferencesKey(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_BATTERY_WIDGET_MAX_DEVICES)
+                val maxDevices = prefs[KEY_MAX_DEVICES] ?: 8
+
                 // Force recomposition when theme changes
                 val THEME_UPDATE_KEY = androidx.datastore.preferences.core.longPreferencesKey("theme_update_time")
                 val themeLastUpdated = prefs[THEME_UPDATE_KEY]
@@ -68,7 +71,7 @@ class BatteriesWidget : GlanceAppWidget() {
                 // Android Item
                 val isAndroidCharging = (batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_STATUS) == BatteryManager.BATTERY_STATUS_CHARGING)
 
-                val androidFinalStatusIcon = if (isAndroidCharging) R.drawable.rounded_battery_android_frame_bolt_24
+                val androidFinalStatusIcon = if (isAndroidCharging) R.drawable.rounded_flash_on_24
                                              else if (androidLevel <= 15) R.drawable.rounded_battery_android_frame_alert_24 
                                              else null
 
@@ -83,7 +86,7 @@ class BatteriesWidget : GlanceAppWidget() {
 
                 // Mac Item
                 if (showMac) {
-                    val macStatusIcon = if (macIsCharging) R.drawable.rounded_battery_android_frame_bolt_24
+                    val macStatusIcon = if (macIsCharging) R.drawable.rounded_flash_on_24
                                         else if (macLevel <= 15) R.drawable.rounded_battery_android_frame_alert_24 
                                         else null
                     batteryItems.add(
@@ -128,6 +131,8 @@ class BatteriesWidget : GlanceAppWidget() {
                     }
                 }
 
+                val displayedItems = batteryItems.take(maxDevices)
+
                 // 3. Render
                 val context = androidx.glance.LocalContext.current
                 val systemConfig = android.content.res.Resources.getSystem().configuration
@@ -156,7 +161,7 @@ class BatteriesWidget : GlanceAppWidget() {
                     iconTint = onSurface
                 )
 
-                if (batteryItems.size > 1) {
+                if (displayedItems.size > 1) {
                     // Multi-item layout
                     Row(
                         modifier = GlanceModifier
@@ -166,17 +171,17 @@ class BatteriesWidget : GlanceAppWidget() {
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        batteryItems.forEachIndexed { index, item ->
+                        displayedItems.forEachIndexed { index, item ->
                             BatteryItemBox(configContext, item, colors, modifier = GlanceModifier.defaultWeight().fillMaxHeight())
 
-                            if (index < batteryItems.size - 1) {
+                            if (index < displayedItems.size - 1) {
                                 Spacer(modifier = GlanceModifier.width(8.dp))
                             }
                         }
                     }
                 } else {
                     // Single item layout (Big)
-                    val item = batteryItems.firstOrNull() ?: BatteryItemData(androidLevel, R.drawable.rounded_mobile_24, "Android")
+                    val item = displayedItems.firstOrNull() ?: BatteryItemData(androidLevel, R.drawable.rounded_mobile_24, "Android")
 
                     Box(
                         modifier = GlanceModifier
