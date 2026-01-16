@@ -270,6 +270,12 @@
     <string name="feat_sound_mode_tile_desc">クイック設定タイルでサイレントモードを切り替える</string>
     <string name="feat_stay_awake_tile_title">スリープしないタイル</string>
     <string name="feat_stay_awake_tile_desc">クイック設定タイルで充電中にスリープするかを切り替える</string>
+    <string name="show_bluetooth_devices">Show Bluetooth devices</string>
+    <string name="show_bluetooth_devices_summary">Display battery level of connected Bluetooth devices</string>
+    <string name="limit_max_devices">Limit max devices</string>
+    <string name="limit_max_devices_summary">Adjust max devices visible in widget</string>
+    <string name="widget_background_title">Widget background</string>
+    <string name="widget_background_summary">Show widget background</string>
     <!-- DIY Automation -->
     <string name="diy_create_trigger_title">トリガーオートメーション</string>
     <string name="diy_create_trigger_desc">トリガーされるアクションをスケジュールする</string>
@@ -365,7 +371,7 @@
     <string name="search_freeze_pick_desc">フリーズできるアプリを選択</string>
     <string name="search_freeze_all_title">すべてのアプリをフリーズ</string>
     <string name="search_freeze_all_desc">選択したアプリ全てを直ちにフリーズする</string>
-    <string name="search_freeze_locked_title">Freeze when locked</string>
+    <string name="search_freeze_locked_title">画面ロック時にフリーズ</string>
     <string name="search_freeze_locked_desc">デバイスがロックされたときに選択したアプリをフリーズする</string>
     <string name="search_freeze_delay_title">タイミング</string>
     <string name="search_freeze_delay_desc">画面をロックしてから何分後にアプリをロックするか</string>
@@ -407,58 +413,58 @@
     <string name="tab_freeze">フリーズ</string>
     <string name="tab_freeze_title">フリーズ</string>
     <string name="tab_diy">DIY</string>
-    <string name="tab_freeze_subtitle">Disabled apps</string>
-    <string name="tab_diy_subtitle">Do It Yourself</string>
+    <string name="tab_freeze_subtitle">アプリを無効化</string>
+    <string name="tab_diy_subtitle">自分で作る</string>
     <!-- Keyboard Setup -->
-    <string name="label_keyboard_setup">Keyboard Setup</string>
-    <string name="btn_enable_keyboard">Enable in settings</string>
-    <string name="btn_select_keyboard">Switch to Essentials</string>
-    <string name="status_keyboard_ready">Keyboard is active and ready!</string>
-    <string name="label_enabled">Enabled</string>
-    <string name="label_disabled">Disabled</string>
-    <string name="tile_adaptive_brightness">Adaptive Brightness</string>
-    <string name="tile_adaptive_brightness_desc">Toggle adaptive brightness</string>
-    <string name="tile_maps_power_saving">Maps Power Saving</string>
-    <string name="tile_maps_power_saving_desc">Toggle maps power saving mode</string>
-    <string name="search_placeholder_short">Search for Tools, Mods and Tweaks</string>
-    <string name="action_search">Search</string>
-    <string name="action_stop">Stop</string>
-    <string name="label_search">Search</string>
+    <string name="label_keyboard_setup">キーボードセットアップ</string>
+    <string name="btn_enable_keyboard">設定で有効にする</string>
+    <string name="btn_select_keyboard">Essentialsに切り替える</string>
+    <string name="status_keyboard_ready">キーボードは準備済みです！</string>
+    <string name="label_enabled">有効</string>
+    <string name="label_disabled">無効</string>
+    <string name="tile_adaptive_brightness">明るさの自動調整</string>
+    <string name="tile_adaptive_brightness_desc">画面の明るさを自動調整するか切り替える</string>
+    <string name="tile_maps_power_saving">マップパワーセービング</string>
+    <string name="tile_maps_power_saving_desc">マップパワーセービングモードを切り替える</string>
+    <string name="search_placeholder_short">ツール、Mod、微調整を検索</string>
+    <string name="action_search">検索</string>
+    <string name="action_stop">停止</string>
+    <string name="label_search">検索</string>
     <!-- UI Components General -->
-    <string name="action_back">Back</string>
-    <string name="action_done">Done</string>
-    <string name="action_preview">Preview</string>
-    <string name="action_help_guide">Help Guide</string>
-    <string name="update_available_title">Update Available</string>
-    <string name="action_download">Download</string>
+    <string name="action_back">戻る</string>
+    <string name="action_done">完了</string>
+    <string name="action_preview">プレビュー</string>
+    <string name="action_help_guide">ヘルプガイド</string>
+    <string name="update_available_title">アップデートがあります</string>
+    <string name="action_download">ダウンロード</string>
     <!-- DIY Section -->
-    <string name="coming_soon_title">Do It Yourself</string>
-    <string name="coming_soon_desc">Something experimental is brewing here. Stay tuned for automations and advanced mods.</string>
-    <string name="coming_soon_label">Coming Soon</string>
-    <string name="diy_trigger_label">Trigger</string>
-    <string name="diy_state_label">State</string>
-    <string name="diy_action_label">Action</string>
-    <string name="diy_in_label">In</string>
-    <string name="diy_out_label">Out</string>
-    <string name="diy_automation_label">Automation</string>
-    <string name="diy_trigger_screen_off">Screen Off</string>
-    <string name="diy_trigger_screen_on">Screen On</string>
-    <string name="diy_trigger_device_unlock">Device Unlock</string>
-    <string name="diy_trigger_charger_connected">Charger Connected</string>
-    <string name="diy_trigger_charger_disconnected">Charger Disconnected</string>
-    <string name="diy_state_charging">Charging</string>
-    <string name="diy_state_screen_on">Screen On</string>
-    <string name="diy_action_haptic">Vibrate</string>
-    <string name="diy_action_notification">Show Notification</string>
-    <string name="diy_action_remove_notification">Remove Notification</string>
-    <string name="diy_action_flashlight_on">Turn On Flashlight</string>
-    <string name="diy_action_flashlight_off">Turn Off Flashlight</string>
-    <string name="diy_action_flashlight_toggle">Toggle Flashlight</string>
-    <string name="diy_action_dim_wallpaper">Dim Wallpaper</string>
-    <string name="diy_dim_wallpaper_desc">This action requires Shizuku or Root to adjust system wallpaper dimming.</string>
-    <string name="diy_select_trigger">Select Trigger</string>
-    <string name="diy_select_state">Select State</string>
-    <string name="diy_select_action">Select Action</string>
+    <string name="coming_soon_title">自分で作る</string>
+    <string name="coming_soon_desc">実験的な何かが進行中です。自動化や高度なMODについては、今後の発表をお楽しみに。</string>
+    <string name="coming_soon_label">Comingsoon</string>
+    <string name="diy_trigger_label">トリガー</string>
+    <string name="diy_state_label">ステータス</string>
+    <string name="diy_action_label">アクション</string>
+    <string name="diy_in_label">イン</string>
+    <string name="diy_out_label">アウト</string>
+    <string name="diy_automation_label">オートメーション</string>
+    <string name="diy_trigger_screen_off">画面オフ</string>
+    <string name="diy_trigger_screen_on">画面オン</string>
+    <string name="diy_trigger_device_unlock">ロック解除</string>
+    <string name="diy_trigger_charger_connected">充電器を接続</string>
+    <string name="diy_trigger_charger_disconnected">充電器を切断</string>
+    <string name="diy_state_charging">充電中</string>
+    <string name="diy_state_screen_on">画面点灯中</string>
+    <string name="diy_action_haptic">バイブレーション</string>
+    <string name="diy_action_notification">通知を表示</string>
+    <string name="diy_action_remove_notification">通知を削除</string>
+    <string name="diy_action_flashlight_on">フラッシュライトを点灯</string>
+    <string name="diy_action_flashlight_off">フラッシュライトを消灯</string>
+    <string name="diy_action_flashlight_toggle">フラッシュライトを切り替える</string>
+    <string name="diy_action_dim_wallpaper">暗い壁紙</string>
+    <string name="diy_dim_wallpaper_desc">このアクションでは、壁紙を暗くするために、ShizukuまたはRootが必要です。</string>
+    <string name="diy_select_trigger">トリガーを選択</string>
+    <string name="diy_select_state">ステータスを選択</string>
+    <string name="diy_select_action">アクションを選択</string>
     <string name="diy_in_action_label">条件と合うとき</string>
     <string name="diy_out_action_label">条件と合わないとき</string>
     <string name="action_cancel">キャンセル</string>
@@ -533,84 +539,84 @@
         <item>alert</item>
     </string-array>
     <string-array name="keywords_flashlight">
-        <item>light</item>
-        <item>torch</item>
+        <item>ライト</item>
+        <item>トーチ</item>
     </string-array>
     <string-array name="keywords_flashlight_pulse">
-        <item>light</item>
-        <item>torch</item>
-        <item>pulse</item>
-        <item>notification</item>
+        <item>ライト</item>
+        <item>トーチ</item>
+        <item>点滅</item>
+        <item>通知</item>
     </string-array>
     <string-array name="keywords_qs_tile">
-        <item>tile</item>
-        <item>qs</item>
-        <item>awake</item>
+        <item>タイル</item>
+        <item>クイック設定</item>
+        <item>起動</item>
     </string-array>
     <string-array name="keywords_qs_stay_awake">
-        <item>awake</item>
-        <item>developer</item>
-        <item>power</item>
-        <item>charge</item>
+        <item>起動</item>
+        <item>開発者</item>
+        <item>電源</item>
+        <item>充電</item>
     </string-array>
     <string-array name="keywords_notification_lighting">
-        <item>glow</item>
-        <item>notification</item>
-        <item>led</item>
+        <item>グロー</item>
+        <item>通知</item>
+        <item>LED</item>
     </string-array>
     <string-array name="keywords_round_shape">
-        <item>round</item>
-        <item>shape</item>
-        <item>edge</item>
+        <item>円</item>
+        <item>シャープ</item>
+        <item>エッジ</item>
     </string-array>
     <string-array name="keywords_privacy">
-        <item>secure</item>
-        <item>privacy</item>
-        <item>biometric</item>
-        <item>face</item>
-        <item>fingerprint</item>
+        <item>セキュア</item>
+        <item>プライバシー</item>
+        <item>生体認証</item>
+        <item>顔</item>
+        <item>指紋</item>
     </string-array>
     <string-array name="keywords_sound_accessibility">
-        <item>sound</item>
-        <item>accessibility</item>
-        <item>hear</item>
+        <item>音</item>
+        <item>アクセシビリティ</item>
+        <item>聞く</item>
     </string-array>
     <string-array name="keywords_timeout">
-        <item>stay</item>
-        <item>on</item>
-        <item>timeout</item>
+        <item>待つ</item>
+        <item>オン</item>
+        <item>タイムアウト</item>
     </string-array>
     <string-array name="keywords_wake_display">
-        <item>touch</item>
-        <item>wake</item>
-        <item>display</item>
+        <item>タッチ</item>
+        <item>起動</item>
+        <item>画面</item>
     </string-array>
     <string-array name="keywords_mtp">
-        <item>usb</item>
-        <item>file</item>
-        <item>transfer</item>
-        <item>mtp</item>
+        <item>USB</item>
+        <item>ファイル</item>
+        <item>ファイル転送</item>
+        <item>MTP</item>
     </string-array>
     <string-array name="keywords_timer">
-        <item>timer</item>
-        <item>wait</item>
-        <item>timeout</item>
+        <item>タイマー</item>
+        <item>待機</item>
+        <item>タイムアウト</item>
     </string-array>
-    <string name="label_keyboard_always_dark">Always dark theme</string>
-    <string name="label_keyboard_pitch_black">Pitch black theme</string>
-    <string name="label_keyboard_clipboard_enabled">Clipboard History</string>
+    <string name="label_keyboard_always_dark">常にダークテーマ</string>
+    <string name="label_keyboard_pitch_black">ブラックテーマにする</string>
+    <string name="label_keyboard_clipboard_enabled">クリップボード履歴</string>
     <string-array name="keywords_selection">
-        <item>list</item>
-        <item>picker</item>
-        <item>selection</item>
+        <item>リスト</item>
+        <item>ピッカー</item>
+        <item>選択</item>
     </string-array>
     <string-array name="keywords_visual_style">
-        <item>animation</item>
-        <item>visual</item>
-        <item>look</item>
+        <item>アニメーション</item>
+        <item>ビジュアル</item>
+        <item>ロック</item>
     </string-array>
     <string-array name="keywords_quiet_filter">
-        <item>quiet</item>
+        <item>静かな</item>
         <item>ignore</item>
         <item>filter</item>
     </string-array>
@@ -691,16 +697,16 @@
     <string name="haptic_subtle">Subtle</string>
     <string name="haptic_double">Double</string>
     <string name="haptic_click">Click</string>
-    <string name="haptic_tick">Tick</string>
+    <string name="haptic_tick">ティック</string>
     <!-- Flashlight Intensity Overlay -->
-    <string name="action_turn_off">Turn Off</string>
-    <string name="feature_flashlight_brightness_title">Flashlight Brightness</string>
+    <string name="action_turn_off">オフにする</string>
+    <string name="feature_flashlight_brightness_title">ライトの明るさ</string>
     <!-- QS / Activities -->
-    <string name="feature_settings_format">%1$s Settings</string>
-    <string name="auth_confirm_identity_settings">Confirm identity to open settings</string>
-    <string name="auth_required_title">Authentication Required</string>
-    <string name="auth_confirm_identity_subtitle">Confirm your identity</string>
-    <string name="error_unlock_network_settings">Unlock phone to change network settings</string>
+    <string name="feature_settings_format">%1$s設定</string>
+    <string name="auth_confirm_identity_settings">設定を開くには認証してください</string>
+    <string name="auth_required_title">認証リクエスト</string>
+    <string name="auth_confirm_identity_subtitle">本人確認</string>
+    <string name="error_unlock_network_settings">ネットワーク設定を変更するには、ロックを解除してください</string>
     <!-- About Section -->
     <string name="developed_by_format">Developed by %1$s\nwith ❤\uFE0F from \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="action_website">Website</string>
@@ -831,4 +837,11 @@
     <string name="shape_round">Round</string>
     <string name="shape_flat">Flat</string>
     <string name="shape_inverse">Inverse</string>
+    <string name="feat_batteries_title">Batteries</string>
+    <string name="feat_batteries_desc">Monitor your device battery levels</string>
+    <string name="batteries_widget_label">Battery Status</string>
+    <string name="connect_to_airsync">Connect to AirSync</string>
+    <string name="connect_to_airsync_summary">Display battery from your connected mac device in AirSync</string>
+    <string name="download_airsync">Download AirSync App</string>
+    <string name="download_airsync_summary">Required for Mac battery sync</string>
 </resources>
