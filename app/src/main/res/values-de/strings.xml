@@ -270,6 +270,12 @@
     <string name="feat_sound_mode_tile_desc">Kachel in den Schnelleinstellungen zum Umschalten des Tonmodus</string>
     <string name="feat_stay_awake_tile_title">\'Wach bleiben\'-Kachel</string>
     <string name="feat_stay_awake_tile_desc">Kachel in den Schnelleinstellungen zum Umschalten des Wachbleibens</string>
+    <string name="show_bluetooth_devices">Show Bluetooth devices</string>
+    <string name="show_bluetooth_devices_summary">Display battery level of connected Bluetooth devices</string>
+    <string name="limit_max_devices">Limit max devices</string>
+    <string name="limit_max_devices_summary">Adjust max devices visible in widget</string>
+    <string name="widget_background_title">Widget background</string>
+    <string name="widget_background_summary">Show widget background</string>
     <!-- DIY Automation -->
     <string name="diy_create_trigger_title">Auslöser-Automatisierung</string>
     <string name="diy_create_trigger_desc">Eine Aktion planen, die bei einer Beobachtung ausgelöst wird</string>
@@ -831,4 +837,11 @@
     <string name="shape_round">Round</string>
     <string name="shape_flat">Flat</string>
     <string name="shape_inverse">Inverse</string>
+    <string name="feat_batteries_title">Batteries</string>
+    <string name="feat_batteries_desc">Monitor your device battery levels</string>
+    <string name="batteries_widget_label">Battery Status</string>
+    <string name="connect_to_airsync">Connect to AirSync</string>
+    <string name="connect_to_airsync_summary">Display battery from your connected mac device in AirSync</string>
+    <string name="download_airsync">Download AirSync App</string>
+    <string name="download_airsync_summary">Required for Mac battery sync</string>
 </resources>
