@@ -1,4 +1,3 @@
-
 package com.sameerasw.essentials.services.widgets
 
 import android.content.Context
@@ -37,7 +36,7 @@ class BatteriesWidget : GlanceAppWidget() {
                 val androidLevel = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
 
                 val prefs = androidx.glance.currentState<androidx.datastore.preferences.core.Preferences>()
-                
+
                 // Keys
                 val KEY_AIRSYNC_ENABLED = androidx.datastore.preferences.core.booleanPreferencesKey(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AIRSYNC_CONNECTION_ENABLED)
                 val KEY_MAC_LEVEL = androidx.datastore.preferences.core.intPreferencesKey(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_MAC_BATTERY_LEVEL)
@@ -83,12 +82,12 @@ class BatteriesWidget : GlanceAppWidget() {
                     try {
                         val type = object : com.google.gson.reflect.TypeToken<List<com.sameerasw.essentials.utils.BluetoothBatteryUtils.BluetoothDeviceBattery>>() {}.type
                         val devices: List<com.sameerasw.essentials.utils.BluetoothBatteryUtils.BluetoothDeviceBattery> = com.google.gson.Gson().fromJson(bluetoothJson, type) ?: emptyList()
-                        
+
                         devices.forEach { device ->
                             val iconRes = when {
                                 device.name.contains("watch", true) -> R.drawable.rounded_watch_24
-                                device.name.contains("bud", true) || 
-                                device.name.contains("pod", true) || 
+                                device.name.contains("bud", true) ||
+                                device.name.contains("pod", true) ||
                                 device.name.contains("head", true) -> R.drawable.rounded_headphones_24
                                 else -> R.drawable.rounded_bluetooth_24
                             }
@@ -106,32 +105,19 @@ class BatteriesWidget : GlanceAppWidget() {
                 }
 
                 // 3. Render
-                
-                // Use Glance's dynamic colors directly - these update automatically with theme changes
+                // Get dynamic theme colors from GlanceTheme
                 val basePrimary = GlanceTheme.colors.primary.getColor(context).toArgb()
-                val onPrimary = GlanceTheme.colors.onPrimary.getColor(context).toArgb()
+                val baseError = GlanceTheme.colors.error.getColor(context).toArgb()
                 val onSurface = GlanceTheme.colors.onSurface.getColor(context).toArgb()
                 val surfaceColor = GlanceTheme.colors.surface.getColor(context).toArgb()
-                val errorColor = GlanceTheme.colors.error.getColor(context).toArgb()
 
-                // Use the primary color for ring - it adapts to theme automatically
-                val ringColor = basePrimary
-
-                // Use onPrimary for icon tint when ring is primary
-                // onPrimary is specifically designed to contrast with primary color
-                val iconTintColor = onPrimary
-
-                val trackColor = ColorUtils.setAlphaComponent(onSurface, 30)
-                
-                val warningColor = android.graphics.Color.parseColor("#FFC107")
-                
                 val colors = ThemeColors(
-                    primary = ringColor,
-                    error = errorColor,
-                    warning = warningColor,
-                    track = trackColor,
+                    primary = basePrimary,
+                    error = baseError,
+                    warning = android.graphics.Color.parseColor("#FFC107"),
+                    track = ColorUtils.setAlphaComponent(onSurface, 30),
                     surface = surfaceColor,
-                    iconTint = iconTintColor
+                    iconTint = onSurface
                 )
 
                 if (batteryItems.size > 1) {
@@ -146,7 +132,7 @@ class BatteriesWidget : GlanceAppWidget() {
                     ) {
                         batteryItems.forEachIndexed { index, item ->
                             BatteryItemBox(context, item, colors, modifier = GlanceModifier.defaultWeight().fillMaxHeight())
-                            
+
                             if (index < batteryItems.size - 1) {
                                 Spacer(modifier = GlanceModifier.width(8.dp))
                             }
@@ -155,7 +141,7 @@ class BatteriesWidget : GlanceAppWidget() {
                 } else {
                     // Single item layout (Big)
                     val item = batteryItems.firstOrNull() ?: BatteryItemData(androidLevel, R.drawable.rounded_mobile_24, "Android")
-                    
+
                     Box(
                         modifier = GlanceModifier
                             .fillMaxSize()
@@ -171,7 +157,7 @@ class BatteriesWidget : GlanceAppWidget() {
     }
 
     data class BatteryItemData(val level: Int, val iconRes: Int, val name: String)
-    
+
     data class ThemeColors(
         val primary: Int,
         val error: Int,
@@ -183,9 +169,9 @@ class BatteriesWidget : GlanceAppWidget() {
 
     @androidx.compose.runtime.Composable
     private fun BatteryItemBox(
-        context: Context, 
-        item: BatteryItemData, 
-        colors: ThemeColors, 
+        context: Context,
+        item: BatteryItemData,
+        colors: ThemeColors,
         size: Int = 300,
         modifier: GlanceModifier = GlanceModifier
     ) {
@@ -194,18 +180,19 @@ class BatteriesWidget : GlanceAppWidget() {
             item.level < 20 -> colors.warning
             else -> colors.primary
         }
-        
+
         val icon = ContextCompat.getDrawable(context, item.iconRes)
         val bitmap = com.sameerasw.essentials.utils.BatteryRingDrawer.drawBatteryWidget(
             context, item.level, ringColor, colors.track, colors.iconTint, colors.surface, icon, size, size
         )
-        
+
         Box(modifier = modifier, contentAlignment = Alignment.Center) {
             Image(
-                provider = ImageProvider(bitmap), 
-                contentDescription = "${item.name}: ${item.level}%", 
+                provider = ImageProvider(bitmap),
+                contentDescription = "${item.name}: ${item.level}%",
                 modifier = GlanceModifier.fillMaxSize()
             )
         }
     }
 }
+
