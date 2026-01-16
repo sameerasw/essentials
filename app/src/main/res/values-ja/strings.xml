@@ -744,15 +744,15 @@
     <string name="instruction_section_freeze_title">フリーズとは？</string>
     <string name="instruction_section_freeze_desc">一時停止してアプリを邪魔することなく、バックグラウンドでアプリが動作しないようにすることで、電力を少し節約できます。あまり使用しないアプリに適しています。\n\nSNSなどの通信サービスは、フリーズを解除しない限り、緊急時に通知されないため、推奨されません。\n\nシステムアプリをフリーズするとシステムが不安定になる可能性があるため、フリーズしないことを強くおすすめします。注意して操作してください。警告しましたからね！\n\nInspired by Hail &lt;3</string>
     <string name="instruction_section_security_title">アプリロックとロック画面セキュリティは本当に安全ですか？</string>
-    <string name="instruction_section_security_desc">Absolutely not. \n\nAny 3rd party application can not 100% interfere with regular device interactions and even the app lock is only an overlay above selected apps to prevent interacting with them. There are workarounds and it is not foolproof. \n\nSame goes with the screen locked security feature which detects someone trying to interact with the network tiles which for some reason are still accessible for anyone on Pixels. So if they try hard enough they might still be able to change them and especially if you have a flight mode QS tile added, this app can not prevent interactions with it. \n\nThese features are made just as experiments for light usage and would never recommend as strong security and privacy solutions. \n\nSecure alternatives:\n - App lock: Private Space and Secure folder on Pixels and Samsung\n - Preventing mobile networks access: Make sure your theft protection and offline/ power off find my device settings are on. You may look into Graphene OS as well.</string>
-    <string name="instruction_section_statusbar_title">Statusbar icons</string>
-    <string name="instruction_section_statusbar_desc">You may notice that even after resetting the statusbar icons, Some icons such as device rotation, wired headphone icons may stay visible. This is due to how the statubar blacklist is implemented in Android and how your OEM may have customized them. \nYou may need further adjustments. \n\nAlso not all icon visibility options may work as they depend on the OEM implementations and availability.</string>
-    <string name="instruction_section_lighting_title">Notification lighting does not work</string>
-    <string name="instruction_section_lighting_desc">It depends on the OEM. Some like OneUI does not seem to allow overlays above the AOD preventing the lighting effects being shown. In this case, try the ambient display as a workaround. </string>
-    <string name="instruction_section_button_title">Button remap does not work while display is off</string>
+    <string name="instruction_section_security_desc">絶対に安全とは限りません。\n\nサードパーティ製アプリは、通常のデバイス操作を100％妨害することはできません。アプリロックでさえ、特定のアプリとのやり取りを阻止するためのオーバーレイにすぎません。回避策としては有効でありますが、万全ではありません。\n\nロック画面セキュリティ機能も同様です。この機能は、ネットワークタイルへの操作を試みる人物を検出しますが、何らかの理由でPixelでは誰でもアクセスできます。そのため、十分に試行錯誤すれば、タイルを変更できる可能性があります。特に、機内モードのクイック設定タイルを追加している場合は、このアプリでタイルとのやり取りを阻止することはできません。\n\nこれらの機能は、軽い使用のための実験として作成されており、強力なセキュリティおよびプライバシーソリューションとして推奨されていません。\n\n安全な代替手段：\n・アプリロック：PixelやSamsungにあるプライベートスペースやセキュアフォルダ\n・ロック画面セキュリティ：盗難防止機能とオフラインや電源オフ時のデバイスを探す設定がオンになっていることを確認してください。Graphene OSも検討してみてください。</string>
+    <string name="instruction_section_statusbar_title">ステータスバーアイコン</string>
+    <string name="instruction_section_statusbar_desc">ステータスバーアイコンをリセットした後でも、デバイスの自動回転やヘッドセットアイコンなど、一部のアイコンが表示されたままになる場合があります。これは、Androidでのステータスバーのブラックリストの実装方法と、OEMによるカスタマイズが原因です。\n更に調整が必要になる場合があります。\n\nまた、OEMの実装と可用性に依存するため、全てのアイコン表示オプションが機能するとは限りません。</string>
+    <string name="instruction_section_lighting_title">通知ライトが機能しません</string>
+    <string name="instruction_section_lighting_desc">OEMによって動作が異なります。OneUIなど、一部のOEMでは常時表示ディスプレイの上にオーバーレイを許可していないため、通知ライトが表示されません。この場合、回避策として、アンビエントディスプレイを試してください。 </string>
+    <string name="instruction_section_button_title">画面がオフのときのボタンリマップが機能しません</string>
     <string name="instruction_section_button_desc">Some OEMs limit the accessibility service reporting once the display is actually off but they may still work while the AOD is on. \nIn this case, you may able to use button remaps with AOD on but not with off. \n\nAs a workaround, you will need to use Shizuku permissions and turn on the \'Use Shizuku\' toggle in button remap settings which identifies and listen to hardware input events.\nThis is not guaranteed to work on all devices and needs testing.\n\nAnd even if it\'s on, Shizuku method only will be used when it\'s needed. Otherwise it will always fallback to Accessibility which also handles the blocking of the actual input during long press.</string>
-    <string name="instruction_section_flashlight_title">Flashlight brightness does not work</string>
-    <string name="instruction_section_flashlight_desc">Only a limited number of devices got hardware and software support adjusting the flashlight intensity. \n\n\'The minimum version of Android is 13 (SDK33).\nFlashlight brightness control only supports HAL version 3.8 and higher, so among the supported devices, the latest ones (For example, Pixel 6/7, Samsung S23, etc.)\'\npolodarb/Flashlight-Tiramisu</string>
+    <string name="instruction_section_flashlight_title">フラッシュライトの明るさ調整が機能しません</string>
+    <string name="instruction_section_flashlight_desc">フラッシュライトの明るさ調整をハードウェアとソフトウェアでサポートしているデバイスは限られています。\n\n「Androidの最小バージョンは13 (SDK33) です。\nフラッシュライトの明るさ調整はHALバージョン3.8以降のみをサポートしているため、サポートされている中で最新のもの(例：Pixel 6/7、Samsung S23など)のみが対象です。」\npolodarb/Flashlight-Tiramisu</string>
     <string name="instruction_section_about_title">What the hell is this app?</string>
     <string name="instruction_section_about_desc">Good question,\n\nI always wanted to extract the most out of my devices as I\'ve been a rooted user for ever since I got my first Project Treble device. And I\'ve been loving the Tasker app which is like the god when comes automation and utilizing every possible API and internal features of Android.\n\nSo I am not unrooted and back on stock Android beta experience and wanted to get the most out from what is possible with given privileges. Might as well share them. So with my beginner knowledge in Kotlin Jetpack and with the support of many research and assist tools and also the great community, I built an all-in-one app containing everything I wanted to be in my Android with given permissions. And here it is.\n\nFeature requests are welcome, I will consider and see if they are achievable with available permissions and my skills. Nowadays what is not possible. :)\n\nWhy not on Play Store?\nI don\'t wanna risk getting my Developer account banned due to the highly sensitive and internal permissions and APIs being used in the app. But with the way Android sideloading is headed, let\'s see what we have to do. I do understand the concerns of sideloaded apps being malicious.\nWhile we are at the topic, Checkout my other app AirSync if you are a mac + Android user. *shameless plug*\n\nEnjoy, Keep building! (っ◕‿◕)っ</string>
     <!-- Bug Reporting -->
@@ -804,16 +804,16 @@
     <string name="location_reached_service_title">Travel Alarm active</string>
     <string name="location_reached_service_remaining">%1$s remaining (%2$d%%)</string>
     <string name="location_reached_channel_name">Travel Progress</string>
-    <string name="location_reached_channel_desc">Shows real-time distance to destination</string>
+    <string name="location_reached_channel_desc">目的地までの距離をリアルタイムで表示</string>
     <string name="location_reached_alarm_title">Destination Nearby</string>
     <string name="location_reached_alarm_subtitle">Prepare to get off</string>
     <string name="location_reached_dismiss">Dismiss</string>
     <string name="location_reached_toast_set">Destination set: %1$.4f, %2$.4f</string>
-    <string name="setting_use_root_title">Use Root</string>
-    <string name="setting_use_root_desc">Instead of Shizuku</string>
-    <string name="root_not_available_toast">Root access not available. Please check your root manager.</string>
+    <string name="setting_use_root_title">Rootを使う</string>
+    <string name="setting_use_root_desc">Shizukuの代わりに</string>
+    <string name="root_not_available_toast">Rootアクセスができません。Rootマネージャーを確認してください。</string>
     <!-- System Keyboard -->
-    <string name="feat_system_keyboard_title">Keyboard</string>
+    <string name="feat_system_keyboard_title">キーボード</string>
     <string name="feat_system_keys">Keys</string>
     <string name="feat_system_keyboard_desc">Customize layout and behavior</string>
     <string name="search_keyboard_height_title">Keyboard Height</string>
