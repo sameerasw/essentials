@@ -28,7 +28,7 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string name="app_lock_biometric_note">Another note, the biometric authentication prompt only lets you use STRONG secure class methods. Face unlock security methods in WEAK class in devices such as Pixel 7 will only be able to utilize the available other STRONG auth methods such as fingerprint or pin.</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Abilita la rimappatura dei tasti</string>
-    <string name="button_remap_use_shizuku_title">Usa Shizuku</string>
+    <string name="button_remap_use_shizuku_title">Use Shizuku</string>
     <string name="button_remap_use_shizuku_desc">Works with screen off (Recommended)</string>
     <string name="shizuku_not_running_toast">Shizuku non è in esecuzione</string>
     <string name="shizuku_detected_prefix">Rilevato %1$s</string>
