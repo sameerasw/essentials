@@ -235,10 +235,6 @@ class MainViewModel : ViewModel() {
         
         isBluetoothPermissionGranted.value = PermissionUtils.hasBluetoothPermission(context)
         
-        isRootAvailable.value = com.sameerasw.essentials.utils.RootUtils.isRootAvailable()
-        isRootPermissionGranted.value = com.sameerasw.essentials.utils.RootUtils.isRootPermissionGranted()
-        
-        settingsRepository.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener)
         settingsRepository.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
         
         isWidgetEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_WIDGET_ENABLED)
@@ -259,6 +255,15 @@ class MainViewModel : ViewModel() {
         notificationLightingIndicatorX.value = settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_INDICATOR_X, 50f)
         notificationLightingIndicatorY.value = settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_INDICATOR_Y, 2f)
         isRootEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_USE_ROOT)
+        
+        if (isRootEnabled.value) {
+            isRootAvailable.value = com.sameerasw.essentials.utils.RootUtils.isRootAvailable()
+            isRootPermissionGranted.value = com.sameerasw.essentials.utils.RootUtils.isRootPermissionGranted()
+        } else {
+             isRootAvailable.value = false
+             isRootPermissionGranted.value = false
+        }
+        
         notificationLightingIndicatorScale.value = settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_INDICATOR_SCALE, 1.0f)
         notificationLightingGlowSides.value = settingsRepository.getNotificationLightingGlowSides()
         
