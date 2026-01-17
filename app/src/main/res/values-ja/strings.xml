@@ -783,8 +783,8 @@
     <string name="perm_location_desc">目的地への到着を検出するために使用します。</string>
     <string name="perm_bg_location_title">バックグラウンド位置情報</string>
     <string name="perm_bg_location_desc">アプリが閉じているときや画面がオフのときに到着を監視するために必要です。</string>
-    <string name="location_reached_notification_title">Destination Reached!</string>
-    <string name="location_reached_notification_desc">You have arrived at your destination.</string>
+    <string name="location_reached_notification_title">目的地に到着しました！</string>
+    <string name="location_reached_notification_desc">あなたは目的地に到着しました。</string>
     <string name="location_reached_current_distance">Currently %1$.1f km away</string>
     <string name="location_reached_clear_btn">Clear Destination</string>
     <string name="location_reached_processing">Processing location…</string>
