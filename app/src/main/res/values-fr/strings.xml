@@ -27,7 +27,7 @@
     <string name="app_lock_biometric_note">Mais également, la fenêtre d\'authentification biométrique ne vous laisse utiliser que des méthodes d\'authentification FORTES. Le déverrouillage par reconnaissance faciale est considéré comme FAIBLE pour les appareils comme les Pixel 7 qui ne pourront utiliser que les autres méthodes FORTES disponibles comme l\'authentification par empreinte digitale ou code PIN.</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Activer la réattribution de boutons</string>
-    <string name="button_remap_use_shizuku_title">Utiliser Shizuku</string>
+    <string name="button_remap_use_shizuku_title">Use Shizuku</string>
     <string name="button_remap_use_shizuku_desc">Fonctionne avec l\'écran éteint (Recommandé)</string>
     <string name="shizuku_not_running_toast">Shizuku n\'est pas actif</string>
     <string name="shizuku_detected_prefix"> %1$s Détecté</string>
@@ -379,7 +379,7 @@
     <string name="perm_shizuku_title">Shizuku</string>
     <string name="perm_shizuku_desc">Requis pour les commandes avancées. Installez Shizuku depuis le Play Store.</string>
     <string name="perm_shizuku_install_action">Installer Shizuku</string>
-    <string name="perm_shizuku_grant_title">Permission Shizuku</string>
+    <string name="perm_shizuku_grant_title">Shizuku permission</string>
     <string name="perm_shizuku_grant_desc">Required to run power-saving commands while maps is navigating.</string>
     <string name="perm_root_title">Accès racine (root)</string>
     <string name="perm_root_desc">Permissions required for system actions using Root privileges.</string>
