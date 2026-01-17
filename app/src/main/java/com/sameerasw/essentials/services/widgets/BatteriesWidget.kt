@@ -155,7 +155,7 @@ class BatteriesWidget : GlanceAppWidget() {
                 val basePrimary = GlanceTheme.colors.primary.getColor(configContext).toArgb()
                 val baseError = GlanceTheme.colors.error.getColor(configContext).toArgb()
                 val onSurface = GlanceTheme.colors.onSurface.getColor(configContext).toArgb()
-                val surfaceColor = GlanceTheme.colors.surface.getColor(configContext).toArgb()
+                val widgetBackgroundColor = GlanceTheme.colors.widgetBackground.getColor(configContext).toArgb()
 
                 val isNightMode = (systemConfig.uiMode and 
                         android.content.res.Configuration.UI_MODE_NIGHT_MASK) == 
@@ -167,7 +167,7 @@ class BatteriesWidget : GlanceAppWidget() {
                     error = baseError,
                     warning = "#FFC107".toColorInt(),
                     track = ColorUtils.setAlphaComponent(onSurface, 30),
-                    surface = surfaceColor,
+                    surface = widgetBackgroundColor,
                     iconTint = onSurface
                 )
 
