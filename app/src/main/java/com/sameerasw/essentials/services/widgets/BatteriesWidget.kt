@@ -25,6 +25,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.glance.Image
 import androidx.glance.ImageProvider
+import com.google.android.material.color.MaterialColors
 import com.sameerasw.essentials.R
 
 class BatteriesWidget : GlanceAppWidget() {
@@ -155,6 +156,7 @@ class BatteriesWidget : GlanceAppWidget() {
                 val baseError = GlanceTheme.colors.error.getColor(configContext).toArgb()
                 val onSurface = GlanceTheme.colors.onSurface.getColor(configContext).toArgb()
                 val surfaceColor = GlanceTheme.colors.surface.getColor(configContext).toArgb()
+                val warning = MaterialColors.harmonizeWithPrimary(configContext, android.graphics.Color.parseColor("#FFC107"))
 
                 val isNightMode = (systemConfig.uiMode and 
                         android.content.res.Configuration.UI_MODE_NIGHT_MASK) == 
@@ -164,7 +166,7 @@ class BatteriesWidget : GlanceAppWidget() {
                 val colors = ThemeColors(
                     primary = basePrimary,
                     error = baseError,
-                    warning = android.graphics.Color.parseColor("#FFC107"),
+                    warning = warning,
                     track = ColorUtils.setAlphaComponent(onSurface, 30),
                     surface = surfaceColor,
                     iconTint = onSurface
