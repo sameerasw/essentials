@@ -212,7 +212,8 @@ class AutomationEditorActivity : ComponentActivity() {
                 
                 // Config Sheets
                 var showDimSettings by remember { mutableStateOf(false) }
-                var configAction by remember { mutableStateOf<Action.DimWallpaper?>(null) }
+                var showDeviceEffectsSettings by remember { mutableStateOf(false) }
+                var configAction by remember { mutableStateOf<Action?>(null) } // Generic config action
 
                 // Validation
                 val isValid = when (automationType) {
@@ -247,7 +248,9 @@ class AutomationEditorActivity : ComponentActivity() {
                                             text = { Text(stringResource(R.string.action_delete)) },
                                             onClick = {
                                                 showMenu = false
-                                                DIYRepository.removeAutomation(existingAutomation.id)
+                                                if (existingAutomation != null) {
+                                                    DIYRepository.removeAutomation(existingAutomation.id)
+                                                }
                                                 finish()
                                             },
                                             leadingIcon = {
@@ -305,7 +308,7 @@ class AutomationEditorActivity : ComponentActivity() {
                             Box(
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .maskClip(MaterialTheme.shapes.extraLarge)
+                                    .clip(MaterialTheme.shapes.extraLarge)
                                     .background(MaterialTheme.colorScheme.surfaceContainerHigh)
                             ) {
                                 if (index == 0) {
@@ -493,13 +496,16 @@ class AutomationEditorActivity : ComponentActivity() {
                                         }
                                         
                                         RoundedCardContainer(spacing = 2.dp) {
-                                            val actions = listOf(
+                                            val actions = mutableListOf(
                                                 Action.TurnOnFlashlight,
                                                 Action.TurnOffFlashlight,
                                                 Action.ToggleFlashlight,
                                                 Action.HapticVibration,
                                                 Action.DimWallpaper()
                                             )
+                                            // Only show Device Effects on Android 15+ 
+                                            actions.add(Action.DeviceEffects())
+
                                             
                                             val currentSelection = when(automationType) {
                                                 Automation.Type.TRIGGER -> selectedAction
@@ -525,7 +531,6 @@ class AutomationEditorActivity : ComponentActivity() {
 
                                             actions.forEach { action ->
                                                 // Check if the current selection matches this action type and update 'action' with the selected values if so
-                                                // This ensures the loop variable 'action' doesn't overwrite the configured values in 'currentSelection'
                                                 val resolvedAction = if (currentSelection != null && currentSelection::class == action::class) currentSelection else action
                                                 
                                                  EditorActionItem(
@@ -541,11 +546,22 @@ class AutomationEditorActivity : ComponentActivity() {
                                                                 else selectedOutAction = resolvedAction
                                                             }
                                                         }
+                                                        // Check permissions immediately on selection
+                                                        // For Device Effects, we need Notification Policy Access
+                                                        if (resolvedAction is Action.DeviceEffects) {
+                                                            val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
+                                                            if (!nm.isNotificationPolicyAccessGranted) {
+                                                                val intent = Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
+                                                                context.startActivity(intent)
+                                                            }
+                                                        }
                                                     },
                                                     onSettingsClick = {
+                                                        configAction = resolvedAction
                                                         if (resolvedAction is Action.DimWallpaper) {
-                                                            configAction = resolvedAction
                                                             showDimSettings = true
+                                                        } else if (resolvedAction is Action.DeviceEffects) {
+                                                            showDeviceEffectsSettings = true
                                                         }
                                                     }
                                                  )
@@ -556,13 +572,31 @@ class AutomationEditorActivity : ComponentActivity() {
                             }
                         }
                         
-                        if (showDimSettings && configAction != null) {
+                        if (showDimSettings && configAction is Action.DimWallpaper) {
                             DimWallpaperSettingsSheet(
-                                initialAction = configAction!!,
+                                initialAction = configAction as Action.DimWallpaper,
                                 onDismiss = { showDimSettings = false },
                                 onSave = { newAction ->
                                     showDimSettings = false
                                     // Update the selection with configured action
+                                     when(automationType) {
+                                        Automation.Type.TRIGGER -> selectedAction = newAction
+                                        Automation.Type.STATE, Automation.Type.APP -> {
+                                            if (selectedActionTab == 0) selectedInAction = newAction
+                                            else selectedOutAction = newAction
+                                        }
+                                    }
+                                    configAction = null
+                                }
+                            )
+                        }
+
+                        if (showDeviceEffectsSettings && configAction is Action.DeviceEffects) {
+                            com.sameerasw.essentials.ui.components.sheets.DeviceEffectsSettingsSheet(
+                                initialAction = configAction as Action.DeviceEffects,
+                                onDismiss = { showDeviceEffectsSettings = false },
+                                onSave = { newAction ->
+                                    showDeviceEffectsSettings = false
                                      when(automationType) {
                                         Automation.Type.TRIGGER -> selectedAction = newAction
                                         Automation.Type.STATE, Automation.Type.APP -> {
