@@ -474,7 +474,7 @@
     <string name="action_enable">有効</string>
     <string name="action_disable">無効</string>
     <string name="automation_service_channel_name">オートメーションサービス</string>
-    <string name="automation_service_running_title">Automations Active</string>
+    <string name="automation_service_running_title">オートメーション動作中</string>
     <string name="automation_service_running_desc">Monitoring system events for your automations</string>
     <!-- About Section -->
     <string name="app_developer_name">Sameera Wijerathna</string>
