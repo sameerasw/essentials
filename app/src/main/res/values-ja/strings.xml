@@ -270,12 +270,12 @@
     <string name="feat_sound_mode_tile_desc">クイック設定タイルでサイレントモードを切り替える</string>
     <string name="feat_stay_awake_tile_title">スリープしないタイル</string>
     <string name="feat_stay_awake_tile_desc">クイック設定タイルで充電中にスリープするかを切り替える</string>
-    <string name="show_bluetooth_devices">Show Bluetooth devices</string>
-    <string name="show_bluetooth_devices_summary">Display battery level of connected Bluetooth devices</string>
-    <string name="limit_max_devices">Limit max devices</string>
-    <string name="limit_max_devices_summary">Adjust max devices visible in widget</string>
-    <string name="widget_background_title">Widget background</string>
-    <string name="widget_background_summary">Show widget background</string>
+    <string name="show_bluetooth_devices">Bluetoothデバイスを表示</string>
+    <string name="show_bluetooth_devices_summary">接続されているBluetoothデバイスのバッテリー残量を表示する</string>
+    <string name="limit_max_devices">デバイスの上限</string>
+    <string name="limit_max_devices_summary">ウィジェットに表示するデバイスの最大数を調整する</string>
+    <string name="widget_background_title">バックグラウンドウィジェット</string>
+    <string name="widget_background_summary">バックグラウンドでウィジェットを表示する</string>
     <!-- DIY Automation -->
     <string name="diy_create_trigger_title">トリガーオートメーション</string>
     <string name="diy_create_trigger_desc">トリガーされるアクションをスケジュールする</string>
