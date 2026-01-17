@@ -27,7 +27,7 @@
     <string name="app_lock_biometric_note">Noch ein Hinweis: Die biometrische Authentifizierungsaufforderung unterstützt ausschließlich sichere Methoden der Klasse STARK. Gesichtserkennungsmethoden der Klasse SCHWACH auf Geräten wie dem Pixel 7 können nur die sonstig verfügbaren STARK-Authentifizierungsmethoden wie Fingerabdruck oder PIN nutzen.</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Aktiviere Tastenneubelegung</string>
-    <string name="button_remap_use_shizuku_title">Nutze Shizuku</string>
+    <string name="button_remap_use_shizuku_title">Use Shizuku</string>
     <string name="button_remap_use_shizuku_desc">Funktioniert mit ausgeschaltetem Display (Empfohlen)</string>
     <string name="shizuku_not_running_toast">Shizuku läuft nicht</string>
     <string name="shizuku_detected_prefix">Erkannte %1$s</string>
@@ -379,7 +379,7 @@
     <string name="perm_shizuku_title">Shizuku</string>
     <string name="perm_shizuku_desc">Benötigt für erweiterte Befehle. Installiere Shizuku aus dem Play Store.</string>
     <string name="perm_shizuku_install_action">Installiere Shizuku</string>
-    <string name="perm_shizuku_grant_title">Shizuku-Berechtigung</string>
+    <string name="perm_shizuku_grant_title">Shizuku permission</string>
     <string name="perm_shizuku_grant_desc">Benötigt, um Energiesparbefehle auszuführen, während Maps navigiert.</string>
     <string name="perm_root_title">Root-Zugang</string>
     <string name="perm_root_desc">Benötigt Berechtigungen für Systemaktionen mittels Root-Rechte.</string>
@@ -750,7 +750,7 @@
     <string name="instruction_section_lighting_title">Das Benachrichtigungslicht funktioniert nicht</string>
     <string name="instruction_section_lighting_desc">Das hängt vom OEM ab. Einige wie OneUI scheinen keine Überlagerungen über dem Always-On-Display zuzulassen, wodurch die Lichteffekte nicht angezeigt werden können. Versuche in diesem Fall, das Ambient-Display als Workaround zu verwenden. </string>
     <string name="instruction_section_button_title">Die Neuzuweisung der Tasten funktioniert nicht, wenn das Display ausgeschaltet ist</string>
-    <string name="instruction_section_button_desc">Einige OEMs schränken die Barrierefreiheitsdienste ein, sobald das Display ausgeschaltet ist, aber sie funktionieren möglicherweise weiterhin, wenn das Always-on-Display eingeschaltet ist. \nIn diesem Fall kannst du möglicherweise die Tastenbelegung mit eingeschaltetem Always-on-Display verwenden, jedoch nicht mit ausgeschaltetem Always-on-Display. \n\nAls Workaround musst du die Shizuku-Berechtigungen verwenden und in den Einstellungen für die Tastenbelegung die Option „Shizuku verwenden” aktivieren, die Hardware-Eingabeereignisse identifiziert und abhört. \nEs kann nicht garantiert werden, dass dies auf allen Geräten funktioniert, daher muss es getestet werden. \n\nSelbst wenn diese Option aktiviert ist, wird die Shizuku-Methode nur bei Bedarf verwendet. Andernfalls wird immer auf den Barrierefreiheitsdienst zurückgegriffen, welcher auch das Blockieren der tatsächlichen Eingabe bei langem Drücken übernimmt.</string>
+    <string name="instruction_section_button_desc">Some OEMs limit the accessibility service reporting once the display is actually off but they may still work while the AOD is on. \nIn this case, you may able to use button remaps with AOD on but not with off. \n\nAs a workaround, you will need to use Shizuku permissions and turn on the \'Use Shizuku\' toggle in button remap settings which identifies and listen to hardware input events.\nThis is not guaranteed to work on all devices and needs testing.\n\nAnd even if it\'s on, Shizuku method only will be used when it\'s needed. Otherwise it will always fallback to Accessibility which also handles the blocking of the actual input during long press.</string>
     <string name="instruction_section_flashlight_title">Die Helligkeit der Taschenlampe funktioniert nicht</string>
     <string name="instruction_section_flashlight_desc">Nur eine begrenzte Anzahl von Geräten verfügt über Hardware- und Software-Unterstützung zur Einstellung der Taschenlampenintensität. \n\nDie Mindestversion von Android ist 13 (SDK33).\nDie Helligkeitseinstellung der Taschenlampe unterstützt nur HAL Version 3.8 und höher, daher gehören zu den unterstützten Geräten die neuesten Modelle (z. B. Pixel 6/7, Samsung S23 usw.).\'\npolodarb/Flashlight-Tiramisu</string>
     <string name="instruction_section_about_title">Was zum Teufel ist das für eine App?</string>
