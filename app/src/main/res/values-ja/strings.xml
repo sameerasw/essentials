@@ -501,34 +501,34 @@
     <string name="label_shizuku_tuozi">Shizuku (TuoZi)</string>
     <string name="label_search_content_description">検索</string>
     <string name="perm_device_admin_explanation">ロック画面で不正なネットワーク変更が試みられた場合、デバイスをハードロックする必要があります。</string>
-    <string name="biometric_subtitle_access_settings">Authenticate to access settings</string>
-    <string name="biometric_subtitle_enable_feature">Authenticate to enable this feature</string>
-    <string name="biometric_subtitle_disable_feature">Authenticate to disable this feature</string>
-    <string name="biometric_title_settings_format">%1$s Settings</string>
-    <string name="keyword_feature">feature</string>
-    <string name="keyword_settings">settings</string>
-    <string name="keyword_hide">hide</string>
-    <string name="keyword_show">show</string>
-    <string name="keyword_visibility">visibility</string>
-    <string name="error_loading_apps">Error loading apps: %1$s</string>
+    <string name="biometric_subtitle_access_settings">設定にアクセスするための認証</string>
+    <string name="biometric_subtitle_enable_feature">この機能を有効化するための認証</string>
+    <string name="biometric_subtitle_disable_feature">この機能を無効化するための認証</string>
+    <string name="biometric_title_settings_format">%1$s設定</string>
+    <string name="keyword_feature">機能</string>
+    <string name="keyword_settings">設定</string>
+    <string name="keyword_hide">非表示</string>
+    <string name="keyword_show">表示</string>
+    <string name="keyword_visibility">可視性</string>
+    <string name="error_loading_apps">アプリ読み込みエラー：%1$s</string>
     <string-array name="keywords_haptic">
-        <item>vibration</item>
-        <item>touch</item>
-        <item>feel</item>
+        <item>バイブレーション</item>
+        <item>タッチ</item>
+        <item>感じる</item>
     </string-array>
     <string-array name="keywords_network_visibility">
-        <item>network</item>
-        <item>visibility</item>
-        <item>auto</item>
-        <item>hide</item>
+        <item>ネットワーク</item>
+        <item>可視性</item>
+        <item>自動</item>
+        <item>非表示</item>
     </string-array>
     <string-array name="keywords_restore_default">
-        <item>restore</item>
-        <item>default</item>
-        <item>icon</item>
+        <item>復元</item>
+        <item>デフォルト</item>
+        <item>アイコン</item>
     </string-array>
     <string-array name="keywords_keyboard">
-        <item>keyboard</item>
+        <item>キーボード</item>
         <item>height</item>
         <item>padding</item>
         <item>haptic</item>
@@ -690,13 +690,13 @@
     <string name="status_up_to_date">You are up to date</string>
     <string name="warning_pre_release">This is a pre-release version and might be unstable.</string>
     <string name="release_notes_format">Release Notes v%1$s</string>
-    <string name="action_view_on_github">View on GitHub</string>
-    <string name="action_download_apk">Download APK</string>
+    <string name="action_view_on_github">GitHubを見る</string>
+    <string name="action_download_apk">APKをダウンロード</string>
     <!-- Haptic Types -->
-    <string name="haptic_none">None</string>
-    <string name="haptic_subtle">Subtle</string>
-    <string name="haptic_double">Double</string>
-    <string name="haptic_click">Click</string>
+    <string name="haptic_none">なし</string>
+    <string name="haptic_subtle">微妙</string>
+    <string name="haptic_double">ダブル</string>
+    <string name="haptic_click">クリック</string>
     <string name="haptic_tick">ティック</string>
     <!-- Flashlight Intensity Overlay -->
     <string name="action_turn_off">オフにする</string>
@@ -729,7 +729,7 @@
     <string name="email_label">メール</string>
     <string name="send_email_chooser_title">メールを送る</string>
     <string name="error_no_email_app">メールアプリがありません</string>
-    <string name="instruction_step_image_description">Step %1$d Image</string>
+    <string name="instruction_step_image_description">ステップ%1$dの画像</string>
     <!-- Instructions Content -->
     <string name="instruction_section_perms_title">アクセシビリティ、通知、他のアプリの上に重ねて表示権限</string>
     <string name="instruction_step_perms_1">アクセシビリティ、通知の読み取り、オーバーレイなどの機密性の高い権限を付与しようとすると、このアクセス拒否メッセージが表示されることがあります。付与するには以下の手順を確認してください。</string>
@@ -753,10 +753,10 @@
     <string name="instruction_section_button_desc">Some OEMs limit the accessibility service reporting once the display is actually off but they may still work while the AOD is on. \nIn this case, you may able to use button remaps with AOD on but not with off. \n\nAs a workaround, you will need to use Shizuku permissions and turn on the \'Use Shizuku\' toggle in button remap settings which identifies and listen to hardware input events.\nThis is not guaranteed to work on all devices and needs testing.\n\nAnd even if it\'s on, Shizuku method only will be used when it\'s needed. Otherwise it will always fallback to Accessibility which also handles the blocking of the actual input during long press.</string>
     <string name="instruction_section_flashlight_title">フラッシュライトの明るさ調整が機能しません</string>
     <string name="instruction_section_flashlight_desc">フラッシュライトの明るさ調整をハードウェアとソフトウェアでサポートしているデバイスは限られています。\n\n「Androidの最小バージョンは13 (SDK33) です。\nフラッシュライトの明るさ調整はHALバージョン3.8以降のみをサポートしているため、サポートされている中で最新のもの(例：Pixel 6/7、Samsung S23など)のみが対象です。」\npolodarb/Flashlight-Tiramisu</string>
-    <string name="instruction_section_about_title">What the hell is this app?</string>
+    <string name="instruction_section_about_title">このアプリは一体何ですか？</string>
     <string name="instruction_section_about_desc">Good question,\n\nI always wanted to extract the most out of my devices as I\'ve been a rooted user for ever since I got my first Project Treble device. And I\'ve been loving the Tasker app which is like the god when comes automation and utilizing every possible API and internal features of Android.\n\nSo I am not unrooted and back on stock Android beta experience and wanted to get the most out from what is possible with given privileges. Might as well share them. So with my beginner knowledge in Kotlin Jetpack and with the support of many research and assist tools and also the great community, I built an all-in-one app containing everything I wanted to be in my Android with given permissions. And here it is.\n\nFeature requests are welcome, I will consider and see if they are achievable with available permissions and my skills. Nowadays what is not possible. :)\n\nWhy not on Play Store?\nI don\'t wanna risk getting my Developer account banned due to the highly sensitive and internal permissions and APIs being used in the app. But with the way Android sideloading is headed, let\'s see what we have to do. I do understand the concerns of sideloaded apps being malicious.\nWhile we are at the topic, Checkout my other app AirSync if you are a mac + Android user. *shameless plug*\n\nEnjoy, Keep building! (っ◕‿◕)っ</string>
     <!-- Bug Reporting -->
-    <string name="action_report_bug">Report Bug</string>
+    <string name="action_report_bug">バグを報告</string>
     <string name="toast_bug_report_copied">Bug report copied to clipboard</string>
     <string name="bug_report_title">Bug report</string>
     <string name="bug_report_option_share_logs">Share logs</string>
