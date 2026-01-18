@@ -12,16 +12,27 @@ import com.google.gson.Gson
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.google.gson.reflect.TypeToken
 
+import com.sameerasw.essentials.domain.diy.Automation
+import com.sameerasw.essentials.domain.diy.DIYRepository
+import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
 class AppFlowHandler(
     private val service: AccessibilityService
 ) {
     private val handler = Handler(Looper.getMainLooper())
+    private val scope = CoroutineScope(Dispatchers.Main)
     
     private val authenticatedPackages = mutableSetOf<String>()
     
     // App Lock State
     private var lockingPackage: String? = null
     private var lastLockRequestTime: Long = 0
+    
+    // App Automation State
+    private val activeAppAutomationIds = mutableSetOf<String>()
     
     // Night Light State
     private var wasNightLightOnBeforeAutoToggle = false
@@ -31,6 +42,8 @@ class AppFlowHandler(
     
     private val ignoredSystemPackages = listOf(
         "android",
+        "com.android.systemui",
+        "com.google.android.inputmethod.latin"
     )
 
     fun onPackageChanged(packageName: String) {
@@ -40,6 +53,7 @@ class AppFlowHandler(
         
         checkAppLock(packageName)
         checkHighlightNightLight(packageName)
+        checkAppAutomations(packageName)
     }
 
     fun onAuthenticated(packageName: String) {
@@ -161,6 +175,39 @@ class AppFlowHandler(
             Settings.Secure.putInt(service.contentResolver, "night_display_activated", if (enabled) 1 else 0)
         } catch (e: Exception) {
             Log.w("NightLight", "Failed to set night light: ${e.message}. Ensure WRITE_SECURE_SETTINGS is granted.")
+        }
+    }
+
+    private fun checkAppAutomations(packageName: String) {
+        scope.launch {
+            val automations = DIYRepository.automations.value
+            val appAutomations = automations.filter { it.isEnabled && it.type == Automation.Type.APP }
+            
+            // Exiting Automations
+            // An automation is exiting if it was active, but the new package is NOT in its selected apps list
+            val exiting = appAutomations.filter { 
+                activeAppAutomationIds.contains(it.id) && !it.selectedApps.contains(packageName)
+            }
+            
+            exiting.forEach { automation ->
+                activeAppAutomationIds.remove(automation.id)
+                automation.exitAction?.let { action ->
+                    CombinedActionExecutor.execute(service, action)
+                }
+            }
+            
+            // Entering Automations
+            // An automation is entering if it was NOT active, and the new package IS in its selected apps list
+            val entering = appAutomations.filter { 
+                !activeAppAutomationIds.contains(it.id) && it.selectedApps.contains(packageName)
+            }
+            
+            entering.forEach { automation ->
+                activeAppAutomationIds.add(automation.id)
+                automation.entryAction?.let { action ->
+                    CombinedActionExecutor.execute(service, action)
+                }
+            }
         }
     }
 }

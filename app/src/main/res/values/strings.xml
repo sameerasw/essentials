@@ -492,6 +492,8 @@
     <string name="diy_action_dim_wallpaper">Dim Wallpaper</string>
     <string name="diy_dim_wallpaper_desc">This action requires Shizuku or Root to adjust system wallpaper dimming.</string>
     <string name="diy_select_trigger">Select Trigger</string>
+    <string name="diy_create_app_title">App</string>
+    <string name="diy_create_app_desc">Automate based on open app</string>
     <string name="diy_select_state">Select State</string>
     <string name="diy_select_action">Select Action</string>
     <string name="diy_in_action_label">In Action</string>
@@ -506,6 +508,17 @@
     <string name="automation_service_channel_name">Automation Service</string>
     <string name="automation_service_running_title">Automations Active</string>
     <string name="automation_service_running_desc">Monitoring system events for your automations</string>
+
+    <string name="diy_action_device_effects">Device Effects</string>
+    <string name="diy_action_disable_device_effects">Disable Device Effects</string>
+    <string name="diy_device_effects_desc">Control system-level effects like grayscale, AOD suppression, wallpaper dimming, and night mode.</string>
+    <string name="diy_effect_grayscale">Grayscale</string>
+    <string name="diy_effect_suppress_ambient">Suppress Ambient Display</string>
+    <string name="diy_effect_dim_wallpaper">Dim Wallpaper</string>
+    <string name="diy_effect_night_mode">Night Mode</string>
+    <string name="diy_device_effects_android_15_warning">This feature requires Android 15 or higher.</string>
+    <string name="diy_device_effects_enabled">Enabled</string>
+    <string name="diy_device_effects_disabled">Disabled</string>
 
     <!-- About Section -->
     <string name="app_developer_name">Sameera Wijerathna</string>

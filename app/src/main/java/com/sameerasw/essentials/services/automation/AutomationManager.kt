@@ -90,6 +90,9 @@ object AutomationManager {
                         else -> {}
                     }
                 }
+                Automation.Type.APP -> {
+                    // Handled by AppFlowHandler
+                }
             }
         }
 

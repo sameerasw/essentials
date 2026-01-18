@@ -60,6 +60,67 @@ object CombinedActionExecutor {
             is Action.DimWallpaper -> {
                 com.sameerasw.essentials.utils.ShellUtils.runCommand(context, "cmd wallpaper set-dim-amount ${action.dimAmount}")
             }
+            is Action.DeviceEffects -> {
+                 if (Build.VERSION.SDK_INT >= 35) { // Android 15+
+                     val nm = context.getSystemService(android.app.NotificationManager::class.java)
+                     if (nm.isNotificationPolicyAccessGranted) {
+                         try {
+                              if (action.enabled) {
+                                  // ENABLE/UPDATE EFFECTS
+                                  val effectsBuilder = android.service.notification.ZenDeviceEffects.Builder()
+                                      .setShouldDisplayGrayscale(action.grayscale)
+                                      .setShouldSuppressAmbientDisplay(action.suppressAmbient)
+                                      .setShouldDimWallpaper(action.dimWallpaper)
+                                      .setShouldUseNightMode(action.nightMode)
+                                 
+                                  val effects = effectsBuilder.build()
+                                  
+                                  val ruleId = "essentials_focus_mode"
+                                  val existingRule = nm.automaticZenRules.values.find { it.name == "Essentials Focus" }
+                                  val ruleKey = existingRule?.let { nm.automaticZenRules.entries.find { entry -> entry.value == it }?.key }
+                                  
+                                  val componentName = android.content.ComponentName(context, com.sameerasw.essentials.services.EssentialsConditionProvider::class.java)
+                                  val conditionUri = com.sameerasw.essentials.services.EssentialsConditionProvider.CONDITION_URI
+                                  
+                                  val ruleBuilder = android.app.AutomaticZenRule.Builder("Essentials Focus", conditionUri)
+                                      .setOwner(componentName)
+                                      .setDeviceEffects(effects)
+                                      .setInterruptionFilter(android.app.NotificationManager.INTERRUPTION_FILTER_PRIORITY)
+                                      .setZenPolicy(android.service.notification.ZenPolicy.Builder().allowAlarms(true).build())
+                                      .setConditionId(conditionUri)
+                                      .setConfigurationActivity(android.content.ComponentName(context, com.sameerasw.essentials.MainActivity::class.java))
+    
+                                  if (ruleKey != null) {
+                                      nm.updateAutomaticZenRule(ruleKey, ruleBuilder.build())
+                                  } else {
+                                      nm.addAutomaticZenRule(ruleBuilder.build())
+                                  }
+                                  
+                                  // Trigger the condition to be TRUE
+                                  com.sameerasw.essentials.services.EssentialsConditionProvider.setConditionState(context, true)
+                                  
+                                  android.util.Log.d("DeviceEffects", "Updated ZenRule for Device Effects")
+                                  
+                              } else {
+                                  // DISABLE EFFECTS
+                                  val existingRuleEntry = nm.automaticZenRules.entries.find { it.value.name == "Essentials Focus" }
+                                  existingRuleEntry?.let { entry ->
+                                      val rule = entry.value
+                                      rule.isEnabled = false
+                                      nm.updateAutomaticZenRule(entry.key, rule)
+                                  }
+                                  // Also notify condition false just in case
+                                  com.sameerasw.essentials.services.EssentialsConditionProvider.setConditionState(context, false)
+                                  
+                                  android.util.Log.d("DeviceEffects", "Disabled ZenRule for Device Effects")
+                              }
+                              
+                         } catch (e: Exception) {
+                             e.printStackTrace()
+                         }
+                     }
+                 }
+            }
         }
     }
     

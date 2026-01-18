@@ -435,6 +435,16 @@
         </service>
 
         <service
+            android:name=".services.EssentialsConditionProvider"
+            android:label="Essentials Focus"
+            android:permission="android.permission.BIND_CONDITION_PROVIDER_SERVICE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.notification.ConditionProviderService" />
+            </intent-filter>
+        </service>
+
+        <service
             android:name=".services.tiles.AppFreezingTileService"
             android:icon="@drawable/rounded_mode_cool_24"
             android:label="@string/app_freezing_tile_label"

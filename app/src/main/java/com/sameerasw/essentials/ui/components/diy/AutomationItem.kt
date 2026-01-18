@@ -151,12 +151,19 @@ fun AutomationItem(
                     .weight(1f)
                     .fillMaxHeight(),
             ) {
-                val icon =
-                    if (automation.type == Automation.Type.TRIGGER) automation.trigger?.icon else automation.state?.icon
-                val title =
-                    if (automation.type == Automation.Type.TRIGGER) automation.trigger?.title else automation.state?.title
+                val icon = when (automation.type) {
+                    Automation.Type.TRIGGER -> automation.trigger?.icon
+                    Automation.Type.STATE -> automation.state?.icon
+                    Automation.Type.APP -> R.drawable.rounded_apps_24
+                }
+                
+                val titleString = when (automation.type) {
+                    Automation.Type.TRIGGER -> automation.trigger?.title?.let { stringResource(it) }
+                    Automation.Type.STATE -> automation.state?.title?.let { stringResource(it) }
+                    Automation.Type.APP -> stringResource(R.string.diy_create_app_title) + " (${automation.selectedApps.size})"
+                }
 
-                if (icon != null && title != null) {
+                if (icon != null && titleString != null) {
                     Surface(
                         color = MaterialTheme.colorScheme.secondaryContainer,
                         shape = RoundedCornerShape(16.dp),
@@ -185,7 +192,7 @@ fun AutomationItem(
                             )
                             Spacer(modifier = Modifier.width(12.dp))
                             Text(
-                                text = stringResource(id = title),
+                                text = titleString,
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.onSecondaryContainer,
                                 fontWeight = FontWeight.SemiBold,

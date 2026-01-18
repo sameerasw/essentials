@@ -7,10 +7,7 @@ object RootUtils {
 
     fun isRootAvailable(): Boolean {
         return try {
-            val process = Runtime.getRuntime().exec("su")
-            val os = DataOutputStream(process.outputStream)
-            os.writeBytes("exit\n")
-            os.flush()
+            val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", "which su"))
             val exitCode = process.waitFor()
             exitCode == 0
         } catch (e: Exception) {
