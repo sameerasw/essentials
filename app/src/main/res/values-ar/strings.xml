@@ -27,14 +27,14 @@
     <string name="app_lock_biometric_note">Another note, the biometric authentication prompt only lets you use STRONG secure class methods. Face unlock security methods in WEAK class in devices such as Pixel 7 will only be able to utilize the available other STRONG auth methods such as fingerprint or pin.</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Enable Button Remap</string>
-    <string name="button_remap_use_shizuku_title">Use Shizuku</string>
+    <string name="button_remap_use_shizuku_title"></string>
     <string name="button_remap_use_shizuku_desc">Works with screen off (Recommended)</string>
     <string name="shizuku_not_running_toast">Shizuku is not running</string>
     <string name="shizuku_detected_prefix">Detected %1$s</string>
     <string name="shizuku_status_prefix">Status: %1$s</string>
     <string name="shizuku_open_button">فتح Shizuku</string>
-    <string name="settings_section_flashlight">Flashlight</string>
-    <string name="flashlight_options_title">Flashlight options</string>
+    <string name="settings_section_flashlight">ضوء الكشاف</string>
+    <string name="flashlight_options_title">إعدادات ضوء الكشاف</string>
     <string name="flashlight_options_desc">Adjust fading and other settings</string>
     <string name="setting_pitch_black_theme_title">Pitch black theme</string>
     <string name="setting_pitch_black_theme_desc">Use pure black background in dark mode</string>
@@ -44,11 +44,11 @@
     <string name="screen_on">Screen On</string>
     <string name="volume_up">Volume Up</string>
     <string name="volume_down">Volume Down</string>
-    <string name="action_toggle_flashlight">Toggle flashlight</string>
+    <string name="action_toggle_flashlight">تشغيل ضوء الكشاف</string>
     <string name="action_media_play_pause">Media play/pause</string>
     <string name="action_media_next">Media next</string>
     <string name="action_media_previous">Media previous</string>
-    <string name="action_toggle_vibrate">Toggle vibrate</string>
+    <string name="action_toggle_vibrate">تشغيل الإهتزاز</string>
     <string name="action_toggle_mute">Toggle mute</string>
     <string name="action_ai_assistant">AI assistant</string>
     <string name="action_take_screenshot">Take screenshot</string>
@@ -66,25 +66,25 @@
     <string name="settings_section_other">Other</string>
     <string name="flashlight_always_off_title">Always turn off flashlight</string>
     <string name="flashlight_always_off_desc">Even while display is on</string>
-    <string name="content_desc_settings">Settings</string>
+    <string name="content_desc_settings">الإعدادات</string>
     <!-- Caffeinate / Permissions -->
-    <string name="settings_section_notification">Notification</string>
-    <string name="permission_show_notification_title">Show Notification</string>
-    <string name="permission_post_notifications_title">Post Notifications</string>
-    <string name="permission_post_notifications_desc">Allows the app to show notifications</string>
-    <string name="permission_grant_action">Grant Permission</string>
-    <string name="caffeinate_notification_title">Caffeinate Active</string>
-    <string name="caffeinate_active">Active</string>
-    <string name="caffeinate_notification_desc">Screen is being kept awake</string>
+    <string name="settings_section_notification">الإشعار</string>
+    <string name="permission_show_notification_title">إظهار الإشعار</string>
+    <string name="permission_post_notifications_title">إشعارات المنشورات</string>
+    <string name="permission_post_notifications_desc">يسمح للتطبيق بعرض الإشعارات</string>
+    <string name="permission_grant_action">منح الإذن</string>
+    <string name="caffeinate_notification_title">الكافيين فعال </string>
+    <string name="caffeinate_active">فعال</string>
+    <string name="caffeinate_notification_desc">يتم إبقاء الشاشة مضاءة</string>
     <string name="caffeinate_battery_optimization_title">Ignore battery optimization</string>
     <string name="caffeinate_battery_optimization_desc">Recommended for reliable service on some devices</string>
     <string name="caffeinate_abort_screen_off_title">Abort with screen off</string>
     <string name="caffeinate_timeout_presets_title">Timeout Presets</string>
     <string name="caffeinate_timeout_presets_desc">Select available durations for QS tile</string>
-    <string name="caffeinate_timeout_5m">5m</string>
-    <string name="caffeinate_timeout_10m">10m</string>
-    <string name="caffeinate_timeout_30m">30m</string>
-    <string name="caffeinate_timeout_1h">1h</string>
+    <string name="caffeinate_timeout_5m">5 دقائق</string>
+    <string name="caffeinate_timeout_10m">10 دقائق</string>
+    <string name="caffeinate_timeout_30m">30 دقيقة</string>
+    <string name="caffeinate_timeout_1h">ساعة</string>
     <string name="caffeinate_timeout_infinity">∞</string>
     <string name="caffeinate_starting_in">Starting in %1$ds…</string>
     <string name="caffeinate_remaining">%1$s remaining</string>
@@ -367,9 +367,9 @@
     <string name="search_app_lock_enable_desc">Master toggle for app locking</string>
     <string name="search_app_lock_pick_title">Select locked apps</string>
     <string name="search_app_lock_pick_desc">Choose which apps require authentication</string>
-    <string name="search_freeze_pick_title">Pick apps to freeze</string>
-    <string name="search_freeze_pick_desc">Choose which apps can be frozen</string>
-    <string name="search_freeze_all_title">Freeze all apps</string>
+    <string name="search_freeze_pick_title">اختر التطبيقات للتجميد</string>
+    <string name="search_freeze_pick_desc">اختر التطبيقات التي يمكن تجميدها</string>
+    <string name="search_freeze_all_title">تجميد جميع التطبيقات</string>
     <string name="search_freeze_all_desc">Immediately freeze all picked apps</string>
     <string name="search_freeze_locked_title">Freeze when locked</string>
     <string name="search_freeze_locked_desc">Freeze selected apps when device locks</string>
@@ -378,8 +378,8 @@
     <!-- Permissions metadata -->
     <string name="perm_shizuku_title">Shizuku</string>
     <string name="perm_shizuku_desc">Required for advanced commands. Install Shizuku from the Play Store.</string>
-    <string name="perm_shizuku_install_action">Install Shizuku</string>
-    <string name="perm_shizuku_grant_title">Shizuku permission</string>
+    <string name="perm_shizuku_install_action">تثبيت Shizuku</string>
+    <string name="perm_shizuku_grant_title">منح الإذن</string>
     <string name="perm_shizuku_grant_desc">Required to run power-saving commands while maps is navigating.</string>
     <string name="perm_root_title">Root Access</string>
     <string name="perm_root_desc">Permissions required for system actions using Root privileges.</string>
@@ -401,8 +401,8 @@
     <string name="perm_overlay_desc">Required to display the notification lighting overlay on the screen</string>
     <string name="perm_device_admin_title">Device Administrator</string>
     <string name="perm_device_admin_desc">Required to hard-lock the device (disabling biometrics) on unauthorized access attempts</string>
-    <string name="perm_action_grant">Grant Permission</string>
-    <string name="perm_action_copy_adb">Copy ADB</string>
+    <string name="perm_action_grant">منح الإذن</string>
+    <string name="perm_action_copy_adb">نسخ الـADB</string>
     <string name="perm_action_check">Check</string>
     <string name="perm_action_enable">Enable in Settings</string>
     <string name="perm_action_how_to">How to grant</string>
@@ -411,7 +411,7 @@
     <!-- Tabs -->
     <string name="tab_essentials">Essentials</string>
     <string name="tab_freeze">Freeze</string>
-    <string name="tab_freeze_title">Frozen</string>
+    <string name="tab_freeze_title">مُجمد</string>
     <string name="tab_diy">DIY</string>
     <string name="tab_freeze_subtitle">Disabled apps</string>
     <string name="tab_diy_subtitle">Do It Yourself</string>
@@ -420,19 +420,19 @@
     <string name="btn_enable_keyboard">Enable in settings</string>
     <string name="btn_select_keyboard">Switch to Essentials</string>
     <string name="status_keyboard_ready">Keyboard is active and ready!</string>
-    <string name="label_enabled">Enabled</string>
+    <string name="label_enabled">مفعل</string>
     <string name="label_disabled">Disabled</string>
     <string name="tile_adaptive_brightness">Adaptive Brightness</string>
     <string name="tile_adaptive_brightness_desc">Toggle adaptive brightness</string>
     <string name="tile_maps_power_saving">Maps Power Saving</string>
     <string name="tile_maps_power_saving_desc">Toggle maps power saving mode</string>
     <string name="search_placeholder_short">Search for Tools, Mods and Tweaks</string>
-    <string name="action_search">Search</string>
-    <string name="action_stop">Stop</string>
-    <string name="label_search">Search</string>
+    <string name="action_search">البحث</string>
+    <string name="action_stop">إيقاف </string>
+    <string name="label_search">البحث</string>
     <!-- UI Components General -->
     <string name="action_back">Back</string>
-    <string name="action_done">Done</string>
+    <string name="action_done">تم</string>
     <string name="action_preview">Preview</string>
     <string name="action_help_guide">Help Guide</string>
     <string name="update_available_title">Update Available</string>
@@ -454,8 +454,8 @@
     <string name="diy_trigger_charger_disconnected">Charger Disconnected</string>
     <string name="diy_state_charging">Charging</string>
     <string name="diy_state_screen_on">Screen On</string>
-    <string name="diy_action_haptic">Vibrate</string>
-    <string name="diy_action_notification">Show Notification</string>
+    <string name="diy_action_haptic">إهتزاز</string>
+    <string name="diy_action_notification">عرض الإشعارات</string>
     <string name="diy_action_remove_notification">Remove Notification</string>
     <string name="diy_action_flashlight_on">Turn On Flashlight</string>
     <string name="diy_action_flashlight_off">Turn Off Flashlight</string>
@@ -762,7 +762,7 @@
     <string name="instruction_section_lighting_title">Notification lighting does not work</string>
     <string name="instruction_section_lighting_desc">It depends on the OEM. Some like OneUI does not seem to allow overlays above the AOD preventing the lighting effects being shown. In this case, try the ambient display as a workaround. </string>
     <string name="instruction_section_button_title">Button remap does not work while display is off</string>
-    <string name="instruction_section_button_desc">Some OEMs limit the accessibility service reporting once the display is actually off but they may still work while the AOD is on. \nIn this case, you may able to use button remaps with AOD on but not with off. \n\nAs a workaround, you will need to use Shizuku permissions and turn on the \'Use Shizuku\' toggle in button remap settings which identifies and listen to hardware input events.\nThis is not guaranteed to work on all devices and needs testing.\n\nAnd even if it\'s on, Shizuku method only will be used when it\'s needed. Otherwise it will always fallback to Accessibility which also handles the blocking of the actual input during long press.</string>
+    <string name="instruction_section_button_desc"></string>
     <string name="instruction_section_flashlight_title">Flashlight brightness does not work</string>
     <string name="instruction_section_flashlight_desc">Only a limited number of devices got hardware and software support adjusting the flashlight intensity. \n\n\'The minimum version of Android is 13 (SDK33).\nFlashlight brightness control only supports HAL version 3.8 and higher, so among the supported devices, the latest ones (For example, Pixel 6/7, Samsung S23, etc.)\'\npolodarb/Flashlight-Tiramisu</string>
     <string name="instruction_section_about_title">What the hell is this app?</string>
@@ -781,13 +781,13 @@
     <string name="bug_report_email_subject">Essentials Bug Report</string>
     <string name="bug_report_send_via">Send via</string>
     <!-- Location Reached -->
-    <string name="feat_location_reached_title">Location reached</string>
-    <string name="feat_location_reached_desc">Get notified when you arrive at a specific destination.</string>
+    <string name="feat_location_reached_title">هل وصلنا بعد؟</string>
+    <string name="feat_location_reached_desc">تنبيهات الوجهات القريبة</string>
     <string name="location_reached_pick_destination">Destination</string>
     <string name="location_reached_set_destination_btn">Set Destination</string>
     <string name="location_reached_status_tracking">Tracking: %1$.4f, %2$.4f</string>
     <string name="location_reached_status_none">No destination set</string>
-    <string name="location_reached_how_to">Open your map app, pick a location, and share it to Essentials.</string>
+    <string name="location_reached_how_to">افتح خرائط Google، واختر موقعًا، وشاركه مع Essentials.</string>
     <string name="location_reached_radius_title">Radius: %d m</string>
     <string name="location_reached_radius_desc">Distance to trigger the alarm</string>
     <string name="location_reached_enable_title">Enable notification</string>
@@ -813,7 +813,7 @@
     <string name="location_reached_fsi_desc">Required to wake your device upon arrival. Tap to grant.</string>
     <string name="location_reached_dist_m">%1$d m</string>
     <string name="location_reached_dist_km">%1$.1f km</string>
-    <string name="location_reached_service_title">Travel Alarm active</string>
+    <string name="location_reached_service_title">منبه السفر مفعل</string>
     <string name="location_reached_service_remaining">%1$s remaining (%2$d%%)</string>
     <string name="location_reached_channel_name">Travel Progress</string>
     <string name="location_reached_channel_desc">Shows real-time distance to destination</string>
