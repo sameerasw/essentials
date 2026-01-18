@@ -463,7 +463,7 @@
     <string name="diy_action_dim_wallpaper">暗い壁紙</string>
     <string name="diy_dim_wallpaper_desc">このアクションでは、壁紙を暗くするために、ShizukuまたはRootが必要です。</string>
     <string name="diy_select_trigger">トリガーを選択</string>
-    <string name="diy_create_app_title">App</string>
+    <string name="diy_create_app_title">アプリ</string>
     <string name="diy_create_app_desc">Automate based on open app</string>
     <string name="diy_select_state">ステータスを選択</string>
     <string name="diy_select_action">アクションを選択</string>
@@ -541,14 +541,14 @@
     </string-array>
     <string-array name="keywords_keyboard">
         <item>キーボード</item>
-        <item>height</item>
-        <item>padding</item>
-        <item>haptic</item>
-        <item>input</item>
+        <item>高さ</item>
+        <item>間隔</item>
+        <item>触覚</item>
+        <item>入力</item>
     </string-array>
     <string-array name="keywords_alert">
-        <item>visible</item>
-        <item>alert</item>
+        <item>表示</item>
+        <item>アラート</item>
     </string-array>
     <string-array name="keywords_flashlight">
         <item>ライト</item>
@@ -629,31 +629,31 @@
     </string-array>
     <string-array name="keywords_quiet_filter">
         <item>静かな</item>
-        <item>ignore</item>
-        <item>filter</item>
+        <item>無視</item>
+        <item>フィルター</item>
     </string-array>
     <string-array name="keywords_automation_lock">
-        <item>automation</item>
-        <item>auto</item>
-        <item>lock</item>
+        <item>自動化</item>
+        <item>自動</item>
+        <item>ロック</item>
     </string-array>
     <string-array name="keywords_adb_debug">
-        <item>adb</item>
-        <item>usb</item>
-        <item>debug</item>
+        <item>ADB</item>
+        <item>USB</item>
+        <item>デバッグ</item>
     </string-array>
     <string-array name="keywords_battery_charge">
-        <item>battery</item>
-        <item>charge</item>
-        <item>power</item>
+        <item>バッテリー</item>
+        <item>充電</item>
+        <item>電源</item>
     </string-array>
     <string-array name="keywords_blur_glass">
-        <item>blur</item>
-        <item>glass</item>
-        <item>vignette</item>
+        <item>ブラー</item>
+        <item>ガラス</item>
+        <item>ビネット</item>
     </string-array>
     <string-array name="keywords_float_window">
-        <item>float</item>
+        <item>フロート</item>
         <item>window</item>
         <item>overlay</item>
     </string-array>
