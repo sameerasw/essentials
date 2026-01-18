@@ -181,7 +181,7 @@
     <string name="warning_title">⚠️ ATTENTION</string>
     <string name="screen_locked_security_warning_text">Cette fonctionnalité n\'est pas parfaite. Dans certaines situations il est possible que quelqu\'un puisse tout de même interagir avec les blocs de paramètres rapides. \nGardez également à l\'esprit qu\'Android va toujours autoriser les redémarrages forcés et les Pixels vont toujours permettre d\'éteindre l\'appareil depuis l\'écran de verrouillage.</string>
     <string name="screen_locked_security_airplane_warning">Veuillez retirer le bloc des \"Réglages rapides\" du Mode Avion car il ne peut être bloqués (il n\'ouvre aucune fenêtre que l\'appli peut bloquer).</string>
-    <string name="screen_locked_security_description">When enabled, the Quick Settings panel will be immediately closed and the device will be locked down if someone attempt to interact with Internet tiles while the device is locked. \n\nThis will also disable biometric unlock to prevent further unauthorized access. Animation scale will be reduced to 0.1x while locked to make it even harder to interact with.</string>
+    <string name="screen_locked_security_description">Une fois activé, le menu \"Réglages rapides\" sera immédiatement fermé et l\'appareil sera verrouillé si quelqu\'un essaye d\'interagir avec les blocs de réglages réseaux quand l\'appareil est verrouillé. \n\nCela va également désactiver l\'authentification biométrique pour prévenir tout accès non autorisé. L\'échelle des animations va également être réduite à x0,1 quand l\'appareil est verrouillé pour rendre encore plus difficile l\'intéraction avec le menu.</string>
     <!-- Sound Mode -->
     <string name="sound_mode_reorder_title">Réorganiser les modes</string>
     <string name="sound_mode_long_press_hint">Appuyez longuement pour basculer</string>
@@ -280,7 +280,7 @@
     <string name="diy_create_trigger_title">Déclencher une automatisation</string>
     <string name="diy_create_trigger_desc">Prévoir une action à déclencher lors d\'une observation</string>
     <string name="diy_create_state_title">Automatisation de l\'état</string>
-    <string name="diy_create_state_desc">Schedule an action to execute based on the state of a condition in and out</string>
+    <string name="diy_create_state_desc">Prévoir une action à exécuter basé sur l\'état d\'une condition</string>
     <string name="diy_editor_new_title">Nouvelle automatisation</string>
     <string name="diy_editor_edit_title">Modifier l\'automatisation</string>
     <string name="feat_link_actions_title">Actions de lien</string>
@@ -301,7 +301,7 @@
     <string name="feat_freeze_desc">Désactive les applications rarement utilisées</string>
     <!-- Search Settings -->
     <string name="search_haptic_title">Retour haptique du Widget</string>
-    <string name="search_haptic_desc">Pick haptic feedback for widget taps</string>
+    <string name="search_haptic_desc">Choisir un retour haptique pour les appuis de widget</string>
     <string name="search_smart_wifi_title">Wi-Fi intelligent</string>
     <string name="search_smart_wifi_desc">Cacher les données mobiles quand un réseau Wi-Fi est connecté</string>
     <string name="search_smart_data_title">Données intelligentes</string>
@@ -309,7 +309,7 @@
     <string name="search_reset_icons_title">Réinitialiser les icônes</string>
     <string name="search_reset_icons_desc">Réinitialiser la visibilité des icônes de la barre d\'état</string>
     <string name="search_caffeinate_abort_screen_off_title">Arrêter Caffeinate au verrouillage</string>
-    <string name="search_caffeinate_abort_screen_off_desc">Automatically turn off Caffeinate when manually locking the device</string>
+    <string name="search_caffeinate_abort_screen_off_desc">Automatiquement désactiver Caffeinate quand vous verrouillez manuellement l\'appareil</string>
     <string name="search_lighting_style_title">Style d\'éclairage</string>
     <string name="search_lighting_style_desc">Choose between Stroke, Glow, Spinner, and more</string>
     <string name="search_corner_radius_title">Rayon des coins</string>
@@ -341,11 +341,11 @@
     <string name="search_qs_sound_title">Mode de sonnerie</string>
     <string name="search_qs_sound_desc">Changer le mode de sonnerie (Sonnerie/Vibreur/Silencieux)</string>
     <string name="search_qs_lighting_title">Éclairage de notifications</string>
-    <string name="search_qs_lighting_desc">Toggle notification lighting service</string>
+    <string name="search_qs_lighting_desc">Activer/désactiver le service de notifications lumineuses</string>
     <string name="search_qs_night_light_title">Éclairage nocturne dynamique</string>
     <string name="search_qs_night_light_desc">Basculer l\'automatisation du mode Éclairage nocturne</string>
     <string name="search_qs_locked_sec_title">Sécurité de verrouillage</string>
-    <string name="search_qs_locked_sec_desc">Network security on lockscreen toggle</string>
+    <string name="search_qs_locked_sec_desc">Activer/désactiver la protection de l\'écran de verrouillage</string>
     <string name="search_qs_mono_title">Audio mono</string>
     <string name="search_qs_mono_desc">Basculer l\'audio mono forcé</string>
     <string name="search_qs_flashlight_title">Lampe-torche</string>
@@ -353,7 +353,7 @@
     <string name="search_qs_freeze_title">Gel d\'applis</string>
     <string name="search_qs_freeze_desc">Lancer la grille de gel d\'applis</string>
     <string name="search_qs_pulse_title">Impulsion de lampe torche</string>
-    <string name="search_qs_pulse_desc">Toggle notification flashlight pulse</string>
+    <string name="search_qs_pulse_desc">Activer/désactiver l\'impulsion de lampe-torche</string>
     <string name="search_qs_stay_awake_desc">Basculer l\'option développeur \"Rester allumé\"</string>
     <string name="search_remap_enable_title">Activer la réattribution de boutons</string>
     <string name="search_remap_enable_desc">Basculer globalement la réattribution du bouton volume</string>
