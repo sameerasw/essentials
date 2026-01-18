@@ -35,9 +35,9 @@
     <string name="shizuku_open_button">Ouvrir Shizuku</string>
     <string name="settings_section_flashlight">Lampe-torche</string>
     <string name="flashlight_options_title">Options de la lampe-torche</string>
-    <string name="flashlight_options_desc">Adjust fading and other settings</string>
+    <string name="flashlight_options_desc">Ajuster la disparition et les autres paramètres</string>
     <string name="setting_pitch_black_theme_title">Thème Noir Absolu</string>
-    <string name="setting_pitch_black_theme_desc">Use pure black background in dark mode</string>
+    <string name="setting_pitch_black_theme_desc">Utiliser un fond noir pure en mode sombre</string>
     <string name="settings_section_haptic">Retour haptique</string>
     <string name="button_remap_section_long_press">Réattribuer l\'appui long</string>
     <string name="screen_off">Écran éteint</string>
@@ -57,7 +57,7 @@
     <string name="flashlight_intensity_title">Intensité de la lampe-torche</string>
     <string name="flashlight_fade_title">Fade in and out</string>
     <string name="flashlight_fade_desc">Smoothly toggle flashlight</string>
-    <string name="flashlight_global_title">Global controls</string>
+    <string name="flashlight_global_title">Contrôles globlaux</string>
     <string name="flashlight_global_desc">Fade-in flashlight globally</string>
     <string name="flashlight_adjust_intensity_title">Ajuster l\'intensité</string>
     <string name="flashlight_adjust_intensity_desc">Les boutons Volume + et - ajustent l\'intensité de lampe-torche </string>
@@ -75,12 +75,12 @@
     <string name="permission_grant_action">Accorder la permission</string>
     <string name="caffeinate_notification_title">Caffeinate activé</string>
     <string name="caffeinate_active">Actif</string>
-    <string name="caffeinate_notification_desc">Screen is being kept awake</string>
+    <string name="caffeinate_notification_desc">L\'écran est maintenu allumé</string>
     <string name="caffeinate_battery_optimization_title">Ignorer l\'optimisation de la batterie</string>
-    <string name="caffeinate_battery_optimization_desc">Recommended for reliable service on some devices</string>
-    <string name="caffeinate_abort_screen_off_title">Abort with screen off</string>
+    <string name="caffeinate_battery_optimization_desc">Recommandé pour un service fiable sur certains appareils</string>
+    <string name="caffeinate_abort_screen_off_title">Arrêter au verrouillage de l\'écran</string>
     <string name="caffeinate_timeout_presets_title">Préréglages de délais</string>
-    <string name="caffeinate_timeout_presets_desc">Select available durations for QS tile</string>
+    <string name="caffeinate_timeout_presets_desc">Sélectionner les durées valables pour le bloc de \"Réglages rapides\"</string>
     <string name="caffeinate_timeout_5m">5m</string>
     <string name="caffeinate_timeout_10m">10m</string>
     <string name="caffeinate_timeout_30m">30m</string>
@@ -121,8 +121,8 @@
     <string name="notification_lighting_screen_off_title">Afficher seulement quand l\'écran est éteint</string>
     <string name="notification_lighting_skip_silent_title">Ignorer les notifications silencieuses</string>
     <string name="notification_lighting_skip_persistent_title">Ignorer les notifications persistantes </string>
-    <string name="settings_section_flashlight_pulse">Flashlight Pulse</string>
-    <string name="flashlight_pulse_title">Flashlight pulse</string>
+    <string name="settings_section_flashlight_pulse">Impulsion de lampe torche</string>
+    <string name="flashlight_pulse_title">Impulsion de lampe torche</string>
     <string name="flashlight_pulse_facedown_title">Seulement quand le téléphone est vers le bas</string>
     <string name="settings_section_style">Style</string>
     <string name="notification_lighting_stroke_adjustment_section">Stroke adjustment</string>
@@ -272,7 +272,7 @@
     <string name="feat_stay_awake_tile_desc">Bloc \"Réglages rapides\" pour activer/désactiver le maintien de l\'écran allumé</string>
     <string name="show_bluetooth_devices">Afficher les appareils Bluetooth</string>
     <string name="show_bluetooth_devices_summary">Afficher le niveau de batterie des appareils Bluetooth connectés</string>
-    <string name="limit_max_devices">Limit max devices</string>
+    <string name="limit_max_devices">Nombre d\'appareils max</string>
     <string name="limit_max_devices_summary">Adjust max devices visible in widget</string>
     <string name="widget_background_title">Fond du widget</string>
     <string name="widget_background_summary">Afficher le fond du widget</string>
@@ -308,7 +308,7 @@
     <string name="search_smart_data_desc">Cache les données mobiles dans certains modes</string>
     <string name="search_reset_icons_title">Réinitialiser les icônes</string>
     <string name="search_reset_icons_desc">Réinitialiser la visibilité des icônes de la barre d\'état</string>
-    <string name="search_caffeinate_abort_screen_off_title">Abort Caffeinate with screen off</string>
+    <string name="search_caffeinate_abort_screen_off_title">Arrêter Caffeinate au verrouillage</string>
     <string name="search_caffeinate_abort_screen_off_desc">Automatically turn off Caffeinate when manually locking the device</string>
     <string name="search_lighting_style_title">Style d\'éclairage</string>
     <string name="search_lighting_style_desc">Choose between Stroke, Glow, Spinner, and more</string>
@@ -372,7 +372,7 @@
     <string name="search_freeze_all_title">Geler toutes les applis</string>
     <string name="search_freeze_all_desc">Geler immédiatement toutes les applis choisies</string>
     <string name="search_freeze_locked_title">Geler au verrouillage</string>
-    <string name="search_freeze_locked_desc">Freeze selected apps when device locks</string>
+    <string name="search_freeze_locked_desc">Geler les applications sélectionnées quand l\'appareil est verrouillé</string>
     <string name="search_freeze_delay_title">Délai avant de geler</string>
     <string name="search_freeze_delay_desc">Délai avant le gel après le verrouilage de l\'appareil</string>
     <!-- Permissions metadata -->
@@ -380,9 +380,9 @@
     <string name="perm_shizuku_desc">Requis pour les commandes avancées. Installez Shizuku depuis le Play Store.</string>
     <string name="perm_shizuku_install_action">Installer Shizuku</string>
     <string name="perm_shizuku_grant_title">Shizuku permission</string>
-    <string name="perm_shizuku_grant_desc">Required to run power-saving commands while maps is navigating.</string>
+    <string name="perm_shizuku_grant_desc">Requise pour exécuter des commandes d\'économie d\'énergie pendant la navigation de Maps.</string>
     <string name="perm_root_title">Accès racine (root)</string>
-    <string name="perm_root_desc">Permissions required for system actions using Root privileges.</string>
+    <string name="perm_root_desc">Permissions requises pour les actions systèmes en utilisant les privilèges racine (root)</string>
     <string name="perm_notif_listener_title">Analyseur de notification</string>
     <string name="perm_notif_listener_desc_maps">Requise pour détecter quand Maps est en navigation</string>
     <string name="perm_notif_listener_desc_lighting">Requise pour détecter les nouvelles notifications</string>
@@ -394,20 +394,20 @@
     <string name="perm_accessibility_desc_night_light">Requis pour surveiller les applications en avant-plan</string>
     <string name="perm_write_secure_title">Modifier les paramètres de sécurité</string>
     <string name="perm_write_secure_desc_common">Requise pour les icônes de la barre d\'état et la protection de l\'écran de verrouillage</string>
-    <string name="perm_write_secure_desc_night_light">Needed to toggle Night Light. Grant via ADB or root.</string>
-    <string name="perm_write_settings_title">Modify System Settings</string>
-    <string name="perm_write_settings_desc">Required to toggle Adaptive Brightness and other system settings</string>
+    <string name="perm_write_secure_desc_night_light">Requise pour activer/désactiver l\'Éclairage nocturne. Autoriser via ADB ou root.</string>
+    <string name="perm_write_settings_title">Modifier les paramètres système</string>
+    <string name="perm_write_settings_desc">Requise pour activer/désactiver la luminosité adaptative et d\'autres paramètres système</string>
     <string name="perm_overlay_title">Permission de superposition</string>
     <string name="perm_overlay_desc">Required to display the notification lighting overlay on the screen</string>
     <string name="perm_device_admin_title">Administrateur de l\'appareil</string>
-    <string name="perm_device_admin_desc">Required to hard-lock the device (disabling biometrics) on unauthorized access attempts</string>
+    <string name="perm_device_admin_desc">Requise pour faire un verrouillage forcé de l\'appareil (désactiver la biométrie) lors d\'accès non autorisés</string>
     <string name="perm_action_grant">Accorder la permission</string>
     <string name="perm_action_copy_adb">Copier la commande ADB</string>
     <string name="perm_action_check">Vérifier</string>
     <string name="perm_action_enable">Activer dans les paramètres</string>
     <string name="perm_action_how_to">Comment accorder</string>
     <string name="perm_battery_optimization_title">Optimisation de la batterie</string>
-    <string name="perm_battery_optimization_desc">Ensure the service is not killed by the system to save power.</string>
+    <string name="perm_battery_optimization_desc">Assure que le service ne soit pas fermé par le système pour économise de l\'énergie.</string>
     <!-- Tabs -->
     <string name="tab_essentials">Essentials</string>
     <string name="tab_freeze">Gel d\'applis</string>
@@ -464,7 +464,7 @@
     <string name="diy_dim_wallpaper_desc">This action requires Shizuku or Root to adjust system wallpaper dimming.</string>
     <string name="diy_select_trigger">Sélectionner un déclencheur</string>
     <string name="diy_create_app_title">Appli</string>
-    <string name="diy_create_app_desc">Automate based on open app</string>
+    <string name="diy_create_app_desc">Automatisation basée sur l\'ouverture d\'appli</string>
     <string name="diy_select_state">État de sélection</string>
     <string name="diy_select_action">Action de sélection</string>
     <string name="diy_in_action_label">In Action</string>
@@ -477,12 +477,12 @@
     <string name="action_disable">Désactiver</string>
     <string name="automation_service_channel_name">Service d\'automatisation</string>
     <string name="automation_service_running_title">Automatisations actives</string>
-    <string name="automation_service_running_desc">Monitoring system events for your automations</string>
+    <string name="automation_service_running_desc">Analyse des événements système pour vos automatisations</string>
     <string name="diy_action_device_effects">Effets d\'appareil</string>
     <string name="diy_action_disable_device_effects">Désactiver les effets d\'appareil</string>
     <string name="diy_device_effects_desc">Control system-level effects like grayscale, AOD suppression, wallpaper dimming, and night mode.</string>
     <string name="diy_effect_grayscale">Grayscale</string>
-    <string name="diy_effect_suppress_ambient">Suppress Ambient Display</string>
+    <string name="diy_effect_suppress_ambient">Enlever l\'éclairage ambient</string>
     <string name="diy_effect_dim_wallpaper">Dim Wallpaper</string>
     <string name="diy_effect_night_mode">Mode nuit</string>
     <string name="diy_device_effects_android_15_warning">Cette fonctionnalité nécessite Android 15 ou supérieur.</string>
@@ -566,20 +566,20 @@
         <item>allumé</item>
     </string-array>
     <string-array name="keywords_qs_stay_awake">
-        <item>awake</item>
+        <item>allumé</item>
         <item>développeur</item>
         <item>alimentation</item>
         <item>charge</item>
     </string-array>
     <string-array name="keywords_notification_lighting">
-        <item>glow</item>
+        <item>brillance</item>
         <item>notification</item>
         <item>led</item>
     </string-array>
     <string-array name="keywords_round_shape">
-        <item>round</item>
-        <item>shape</item>
-        <item>edge</item>
+        <item>rond</item>
+        <item>forme</item>
+        <item>coin</item>
     </string-array>
     <string-array name="keywords_privacy">
         <item>secure</item>
@@ -594,13 +594,13 @@
         <item>hear</item>
     </string-array>
     <string-array name="keywords_timeout">
-        <item>stay</item>
+        <item>rester</item>
         <item>on</item>
         <item>timeout</item>
     </string-array>
     <string-array name="keywords_wake_display">
-        <item>touch</item>
-        <item>wake</item>
+        <item>touché</item>
+        <item>réveiller</item>
         <item>affichage</item>
     </string-array>
     <string-array name="keywords_mtp">
@@ -654,12 +654,12 @@
     </string-array>
     <string-array name="keywords_float_window">
         <item>float</item>
-        <item>window</item>
-        <item>overlay</item>
+        <item>fenêtre</item>
+        <item>superposition</item>
     </string-array>
     <string-array name="keywords_always_display">
         <item>toujours</item>
-        <item>display</item>
+        <item>affichage</item>
         <item>horloge</item>
     </string-array>
     <string-array name="keywords_audio_mute">
@@ -741,10 +741,10 @@
     <string name="email_label">E-mail</string>
     <string name="send_email_chooser_title">Envoyer un e-mail</string>
     <string name="error_no_email_app">Aucune application d\'e-mail disponible</string>
-    <string name="instruction_step_image_description">Step %1$d Image</string>
+    <string name="instruction_step_image_description">Image de l\'étape %1$d</string>
     <!-- Instructions Content -->
     <string name="instruction_section_perms_title">Permissions d\'accessibilité, de notification et de superposition</string>
-    <string name="instruction_step_perms_1">You may get this access denied message if you try to grant sensitive permissions such as accessibility, notification listener or overlay permissions. To grant it, check the steps below.</string>
+    <string name="instruction_step_perms_1">Vous pouvez obtenir ce message d\'accès refusé si vous essayer d\'accorder des permissions sensibles telles que l\'accessibilité, l\'analyse des notifications ou les permissions de superposition. Pour l\'accorder, regardez les étapes ci-dessous.</string>
     <string name="instruction_step_perms_2">1. Allez dans la page d\'informations de l\'application Essentials</string>
     <string name="instruction_step_perms_3">2. Ouvrez le menu à 3 points en haut à droite et sélectionnez \"Autoriser les paramètres restreints\". Vous devrez peut-être vous authentifier avec la biométrie. Une fois fait, réessayez d\'accorder la permission.</string>
     <string name="instruction_section_shizuku_title">Shizuku</string>
@@ -818,7 +818,7 @@
     <string name="location_reached_channel_name">Progrès du voyage :</string>
     <string name="location_reached_channel_desc">Affiche la distance de la destination en temps réel</string>
     <string name="location_reached_alarm_title">Destination à proximité</string>
-    <string name="location_reached_alarm_subtitle">Prepare to get off</string>
+    <string name="location_reached_alarm_subtitle">Préparer à partir</string>
     <string name="location_reached_dismiss">Ignorer</string>
     <string name="location_reached_toast_set">Destination définie : %1$.4f, %2$.4f</string>
     <string name="setting_use_root_title">Utiliser l\'accès root (racine)</string>
@@ -827,11 +827,11 @@
     <!-- System Keyboard -->
     <string name="feat_system_keyboard_title">Clavier</string>
     <string name="feat_system_keys">Touches</string>
-    <string name="feat_system_keyboard_desc">Customize layout and behavior</string>
+    <string name="feat_system_keyboard_desc">Personnaliser l\'apparence et le comportement</string>
     <string name="search_keyboard_height_title">Hauteur du clavier</string>
-    <string name="search_keyboard_height_desc">Adjust the total vertical size of the keyboard</string>
+    <string name="search_keyboard_height_desc">Ajuster la taille verticale totale du clavier</string>
     <string name="search_keyboard_padding_title">Bottom Padding</string>
-    <string name="search_keyboard_padding_desc">Add space below the keyboard</string>
+    <string name="search_keyboard_padding_desc">Ajouter de l\'espace en dessous du clavier</string>
     <string name="search_keyboard_haptics_title">Retour haptique</string>
     <string name="search_keyboard_haptics_desc">Vibrer à l\'appui sur une touche</string>
     <string name="label_test_keyboard">Tester le clavier</string>
@@ -839,8 +839,8 @@
     <string name="label_keyboard_height">Hauteur du clavier</string>
     <string name="label_keyboard_bottom_padding">Bottom Padding</string>
     <string name="label_keyboard_haptics">Retour haptique</string>
-    <string name="label_keyboard_roundness">Key Roundness</string>
-    <string name="search_keyboard_roundness_title">Key Roundness</string>
+    <string name="label_keyboard_roundness">Arrondi des touches</string>
+    <string name="search_keyboard_roundness_title">Arrondi des touches</string>
     <string name="search_keyboard_roundness_desc">Ajuster le rayon des coins des touches</string>
     <string name="label_keyboard_functions_bottom">Déplacer les fonctions en bas</string>
     <string name="label_keyboard_functions_padding">Functions side padding</string>
