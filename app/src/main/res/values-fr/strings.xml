@@ -37,7 +37,7 @@
     <string name="flashlight_options_title">Options de la lampe-torche</string>
     <string name="flashlight_options_desc">Ajuster la disparition et les autres paramètres</string>
     <string name="setting_pitch_black_theme_title">Thème Noir Absolu</string>
-    <string name="setting_pitch_black_theme_desc">Utiliser un fond noir pure en mode sombre</string>
+    <string name="setting_pitch_black_theme_desc">Utiliser un fond noir pure en thème sombre</string>
     <string name="settings_section_haptic">Retour haptique</string>
     <string name="button_remap_section_long_press">Réattribuer l\'appui long</string>
     <string name="screen_off">Écran éteint</string>
@@ -48,15 +48,15 @@
     <string name="action_media_play_pause">Jouer/mettre en pause le média</string>
     <string name="action_media_next">Prochain média</string>
     <string name="action_media_previous">Média précédent</string>
-    <string name="action_toggle_vibrate">Basculer le mode vibreur</string>
-    <string name="action_toggle_mute">Basculer le mode silencieux</string>
+    <string name="action_toggle_vibrate">Activer le mode vibreur</string>
+    <string name="action_toggle_mute">Activer le mode silencieux</string>
     <string name="action_ai_assistant">Assistant IA</string>
     <string name="action_take_screenshot">Prendre une capture d\'écran</string>
     <string name="button_remap_screen_off_hint">Quand l\'écran est éteint, appuyez longuement sur le bouton sélectionné pour déclencher son action assignée. Sur les appareils Pixel, cette action ne se déclenche que si le Always-On Display est activé à cause de limitations systèmes.</string>
     <string name="button_remap_screen_on_hint">Quand l\'écran est allumé, appuyez longuement sur le bouton sélectionné pour déclencher son action assignée.</string>
     <string name="flashlight_intensity_title">Intensité de la lampe-torche</string>
     <string name="flashlight_fade_title">Fade in and out</string>
-    <string name="flashlight_fade_desc">Smoothly toggle flashlight</string>
+    <string name="flashlight_fade_desc">Allumer/éteindre de manière fluide la lampe-torche</string>
     <string name="flashlight_global_title">Contrôles globlaux</string>
     <string name="flashlight_global_desc">Fade-in flashlight globally</string>
     <string name="flashlight_adjust_intensity_title">Ajuster l\'intensité</string>
@@ -175,7 +175,7 @@
     <string name="off">Désactiver</string>
     <!-- Screen Locked Security -->
     <string name="screen_locked_security_title">Sécurité d\'écran verrouillé</string>
-    <string name="screen_locked_security_dialog_title">Protection de l\'écran de verrouillage</string>
+    <string name="screen_locked_security_dialog_title">Écran de verrouillage</string>
     <string name="screen_locked_security_auth_enable">Authentifiez-vous pour activer la protection de l\'écran de verrouillage</string>
     <string name="screen_locked_security_auth_disable">Authentifiez-vous pour désactiver la protection de l\'écran de verrouillage</string>
     <string name="warning_title">⚠️ ATTENTION</string>
@@ -238,7 +238,7 @@
     <string name="smart_wifi_desc">Cacher les données mobiles quand un réseau Wi-Fi est connecté</string>
     <string name="smart_data_desc">Cache les données mobiles dans certains modes</string>
     <string name="action_reset_all_icons">Réinitialiser les icônes</string>
-    <string name="status_bar_icons_disclaimer">Please note that the implementation of these options may depend on the OEM and some may not be functional at all.</string>
+    <string name="status_bar_icons_disclaimer">Veuillez noter que l\'implémentation de ces options peut dépendre du constructeur et certaines peuvent ne pas fonctionner du tout.</string>
     <!-- Network Type Picker -->
     <string name="network_type_other">Autre</string>
     <!-- Search -->
@@ -262,7 +262,7 @@
     <string name="feat_statusbar_icons_desc">Contrôler la visibilité des icônes de la barre d\'état</string>
     <string name="feat_caffeinate_title">Caffeinate</string>
     <string name="feat_caffeinate_desc">Maintenir l\'écran allumé</string>
-    <string name="feat_maps_power_saving_title">Mode économie d\'énergie Maps</string>
+    <string name="feat_maps_power_saving_title">Économie d\'énergie Maps</string>
     <string name="feat_maps_power_saving_desc">Pour tout appareil Android</string>
     <string name="feat_notification_lighting_title">Éclairage de notifications</string>
     <string name="feat_notification_lighting_desc">Éclairer pour les notifications</string>
@@ -273,7 +273,7 @@
     <string name="show_bluetooth_devices">Afficher les appareils Bluetooth</string>
     <string name="show_bluetooth_devices_summary">Afficher le niveau de batterie des appareils Bluetooth connectés</string>
     <string name="limit_max_devices">Nombre d\'appareils max</string>
-    <string name="limit_max_devices_summary">Adjust max devices visible in widget</string>
+    <string name="limit_max_devices_summary">Ajuster le nombre d\'appareils maximium visibles sur le widget</string>
     <string name="widget_background_title">Fond du widget</string>
     <string name="widget_background_summary">Afficher le fond du widget</string>
     <!-- DIY Automation -->
@@ -291,9 +291,9 @@
     <string name="feat_qs_tiles_desc">Voir tous</string>
     <string name="feat_button_remap_title">Réattribution de boutons</string>
     <string name="feat_button_remap_desc">Réattribuer les boutons physiques de l\'appareil</string>
-    <string name="feat_dynamic_night_light_title">Mode Éclairage nocturne dynamique</string>
-    <string name="feat_dynamic_night_light_desc">Bascule le mode Éclairage nocturne en fonction de l\'appli utilisée</string>
-    <string name="feat_screen_locked_security_title">Protection de l\'écran de verrouillage</string>
+    <string name="feat_dynamic_night_light_title">Éclairage nocturne dynamique</string>
+    <string name="feat_dynamic_night_light_desc">Activer/désactiver le mode Éclairage nocturne en fonction de l\'appli utilisée</string>
+    <string name="feat_screen_locked_security_title">Écran de verrouillage</string>
     <string name="feat_screen_locked_security_desc">Empêcher l\'utilisation des contrôles réseaux</string>
     <string name="feat_app_lock_title">Verrouillage d\'applis</string>
     <string name="feat_app_lock_desc">Protéger les applications avec la biométrie</string>
@@ -460,8 +460,8 @@
     <string name="diy_action_flashlight_on">Allumer la lampe-torche</string>
     <string name="diy_action_flashlight_off">Éteindre la lampe-torche</string>
     <string name="diy_action_flashlight_toggle">Activer/désactiver la lampe-torche</string>
-    <string name="diy_action_dim_wallpaper">Dim Wallpaper</string>
-    <string name="diy_dim_wallpaper_desc">This action requires Shizuku or Root to adjust system wallpaper dimming.</string>
+    <string name="diy_action_dim_wallpaper">Fond d\'écran assombri</string>
+    <string name="diy_dim_wallpaper_desc">Cette action nécessite Shizuku ou un accès racine (root) pour ajuster le fond d\'écran du système.</string>
     <string name="diy_select_trigger">Sélectionner un déclencheur</string>
     <string name="diy_create_app_title">Appli</string>
     <string name="diy_create_app_desc">Automatisation basée sur l\'ouverture d\'appli</string>
@@ -480,10 +480,10 @@
     <string name="automation_service_running_desc">Analyse des événements système pour vos automatisations</string>
     <string name="diy_action_device_effects">Effets d\'appareil</string>
     <string name="diy_action_disable_device_effects">Désactiver les effets d\'appareil</string>
-    <string name="diy_device_effects_desc">Control system-level effects like grayscale, AOD suppression, wallpaper dimming, and night mode.</string>
-    <string name="diy_effect_grayscale">Grayscale</string>
+    <string name="diy_device_effects_desc">Contrôler les effets systèmes comme l\'échelle des gris, la suppression de l\'Always-On Display, le changement de fond d\'écran et le mode nuit.</string>
+    <string name="diy_effect_grayscale">Échelle des gris</string>
     <string name="diy_effect_suppress_ambient">Enlever l\'éclairage ambient</string>
-    <string name="diy_effect_dim_wallpaper">Dim Wallpaper</string>
+    <string name="diy_effect_dim_wallpaper">Fond d\'écran assombri</string>
     <string name="diy_effect_night_mode">Mode nuit</string>
     <string name="diy_device_effects_android_15_warning">Cette fonctionnalité nécessite Android 15 ou supérieur.</string>
     <string name="diy_device_effects_enabled">Activé</string>
@@ -749,7 +749,7 @@
     <string name="instruction_step_perms_3">2. Ouvrez le menu à 3 points en haut à droite et sélectionnez \"Autoriser les paramètres restreints\". Vous devrez peut-être vous authentifier avec la biométrie. Une fois fait, réessayez d\'accorder la permission.</string>
     <string name="instruction_section_shizuku_title">Shizuku</string>
     <string name="instruction_section_shizuku_desc">Shziuku est un outil puissant qui permet aux applications d\'utiliser directement les APIs système directement avec ADB ou l\'accès racine (root). Il est requis pour des fonctionnalités comme le mode économie d\'énergie maps ou le gel d\'applis. Il aide également à donner certaines permissions comme WRITE_SECURE_SETTINGS. \n\nMais la version de Shizuku disponible sur le Play Store peut-être obsolète et sera probablement inutilisable sur les versions récentes d\'Android. Dans ce cas, merci d\'installer la dernière version depuis le GitHub officiel ou un fork mis à jour.</string>
-    <string name="instruction_section_maps_title">Mode économie d\'énergie Maps</string>
+    <string name="instruction_section_maps_title">Économie d\'énergie Maps</string>
     <string name="instruction_section_maps_desc">This feature automatically triggers Google Maps power saving mode which is currently exclusive to the Pixel 10 series. A community member discovered that it is still usable on any Android device by launching the maps minMode activity with root privileges. \n\nAnd then, I had it automated with Tasker to automatically trigger when the screen turns off during a navigation session and then was able to achieve the same with just runtime Shizuku permissions. \n\nIt is intended to be shown over the AOD of Pixel 10 series so because of that, you may see an occasional message popping up on the display that it does not support landscape mode. That is not avoidable by the app and you can ignore.</string>
     <string name="instruction_section_silent_title">Mode silencieux</string>
     <string name="instruction_section_silent_desc">You may have noticed that the silent mode also triggers DND. \n\nThis is due to how the Android implemented it as even if we use the same API to switch to vibrate mode, it for some reason turns on DND along with the silent mode and this is not avoidable at this moment. :(</string>
