@@ -11,7 +11,7 @@
     <string name="frozen_app_shortcut_label">Application gelée</string>
     <string name="screen_off_widget_label">Widget de verrouillage invisible </string>
     <string name="app_freezing_tile_label">Gel d\'applis</string>
-    <string name="flashlight_pulse_tile_label">Flashlight Pulse</string>
+    <string name="flashlight_pulse_tile_label">Impulsion de lampe torche</string>
     <string name="check_pre_releases_label">Vérifier pour des pré-versions</string>
     <string name="check_pre_releases_desc">Peut être instable</string>
     <!-- App Lock -->
@@ -36,7 +36,7 @@
     <string name="settings_section_flashlight">Lampe-torche</string>
     <string name="flashlight_options_title">Options de la lampe-torche</string>
     <string name="flashlight_options_desc">Adjust fading and other settings</string>
-    <string name="setting_pitch_black_theme_title">Pitch black theme</string>
+    <string name="setting_pitch_black_theme_title">Thème Noir Absolu</string>
     <string name="setting_pitch_black_theme_desc">Use pure black background in dark mode</string>
     <string name="settings_section_haptic">Retour haptique</string>
     <string name="button_remap_section_long_press">Réattribuer l\'appui long</string>
@@ -73,22 +73,22 @@
     <string name="permission_post_notifications_title">Envoyer des notifications</string>
     <string name="permission_post_notifications_desc">Autorise l\'application à afficher des notifications</string>
     <string name="permission_grant_action">Accorder la permission</string>
-    <string name="caffeinate_notification_title">Caffeinate Active</string>
-    <string name="caffeinate_active">Active</string>
+    <string name="caffeinate_notification_title">Caffeinate activé</string>
+    <string name="caffeinate_active">Actif</string>
     <string name="caffeinate_notification_desc">Screen is being kept awake</string>
-    <string name="caffeinate_battery_optimization_title">Ignore battery optimization</string>
+    <string name="caffeinate_battery_optimization_title">Ignorer l\'optimisation de la batterie</string>
     <string name="caffeinate_battery_optimization_desc">Recommended for reliable service on some devices</string>
     <string name="caffeinate_abort_screen_off_title">Abort with screen off</string>
-    <string name="caffeinate_timeout_presets_title">Timeout Presets</string>
+    <string name="caffeinate_timeout_presets_title">Préréglages de délais</string>
     <string name="caffeinate_timeout_presets_desc">Select available durations for QS tile</string>
     <string name="caffeinate_timeout_5m">5m</string>
     <string name="caffeinate_timeout_10m">10m</string>
     <string name="caffeinate_timeout_30m">30m</string>
     <string name="caffeinate_timeout_1h">1h</string>
     <string name="caffeinate_timeout_infinity">∞</string>
-    <string name="caffeinate_starting_in">Starting in %1$ds…</string>
-    <string name="caffeinate_remaining">%1$s remaining</string>
-    <string name="caffeinate_live_channel_desc">Persistent notification for Caffeinate</string>
+    <string name="caffeinate_starting_in">Démarrage dans %1$ds…</string>
+    <string name="caffeinate_remaining">%1$s RESTANT</string>
+    <string name="caffeinate_live_channel_desc">Notification persistante pour Caffeinate</string>
     <!-- Dynamic Night Light -->
     <string name="dynamic_night_light_enable_title">Activer le mode d\'Éclairage nocturne dynamique</string>
     <string name="dynamic_night_light_apps_section">Applis qui désactivent le mode d\'Éclairage nocturne</string>
@@ -128,12 +128,12 @@
     <string name="notification_lighting_stroke_adjustment_section">Stroke adjustment</string>
     <string name="notification_lighting_corner_radius_title">Rayon des coins</string>
     <string name="notification_lighting_stroke_thickness_title">Stroke thickness</string>
-    <string name="notification_lighting_glow_adjustment_section">Glow adjustment</string>
-    <string name="notification_lighting_glow_spread_title">Glow spread</string>
+    <string name="notification_lighting_glow_adjustment_section">Ajustement de la brillance</string>
+    <string name="notification_lighting_glow_spread_title">Propagation de la brillance</string>
     <string name="notification_lighting_placement_section">Placement</string>
     <string name="notification_lighting_h_pos_title">Position horizontale</string>
     <string name="notification_lighting_v_pos_title">Position verticale</string>
-    <string name="notification_lighting_indicator_adjustment_section">Indicator adjustment</string>
+    <string name="notification_lighting_indicator_adjustment_section">Ajustement de l\'indicateur</string>
     <string name="notification_lighting_scale_title">Taille</string>
     <string name="notification_lighting_duration_title">Durée</string>
     <string name="settings_section_animation">Animation</string>
@@ -145,7 +145,7 @@
     <string name="ambient_display_hint">Convient si vous n\'utilisez pas le Always-On Display.</string>
     <string name="ambient_display_desc">Réveille l\'écran et affiche de la lumière</string>
     <string name="ambient_show_lock_screen_title">Affiche l\'écran de verrouillage</string>
-    <string name="ambient_show_lock_screen_desc">No black overlay</string>
+    <string name="ambient_show_lock_screen_desc">Pas de superposition noire</string>
     <!-- Tiles -->
     <string name="action_add">Ajouter</string>
     <string name="qs_tile_already_added">Déjà ajouté</string>
@@ -164,10 +164,10 @@
     <string name="tile_mono_audio">Audio mono</string>
     <string name="tile_flashlight">Lampe-torche</string>
     <string name="tile_app_freezing">Gel d\'applis</string>
-    <string name="tile_flashlight_pulse">Flashlight Pulse</string>
+    <string name="tile_flashlight_pulse">Impulsion de lampe torche</string>
     <string name="tile_stay_awake">Rester allumé</string>
-    <string name="input_method_label">Essentials Keyboard</string>
-    <string name="subtype_en_us">English (US)</string>
+    <string name="input_method_label">Clavier Essentials</string>
+    <string name="subtype_en_us">Anglais (US)</string>
     <string name="tile_active">Actif</string>
     <string name="tile_inactive">Inactif</string>
     <string name="nfc_tile_label">NFC</string>
@@ -191,8 +191,8 @@
     <string name="sound_mode_silent">Silencieux</string>
     <!-- Status Bar Categories -->
     <string name="status_bar_category_connectivity">Connectivité</string>
-    <string name="status_bar_category_phone_network">Phone &amp; Network</string>
-    <string name="status_bar_category_audio_media">Audio &amp; Media</string>
+    <string name="status_bar_category_phone_network">Téléphone &amp; Réseau</string>
+    <string name="status_bar_category_audio_media">Audio &amp; Média</string>
     <string name="status_bar_category_system_status">Status du système</string>
     <string name="status_bar_category_oem_specific">Spécifique au constructeur</string>
     <!-- Status Bar Icons -->
@@ -224,7 +224,7 @@
     <string name="icon_sync">Synchronisation</string>
     <string name="icon_managed_profile">Profil géré</string>
     <string name="icon_dnd">Ne pas déranger</string>
-    <string name="icon_privacy">Privacy &amp; Secure Folder</string>
+    <string name="icon_privacy">Confidentialité &amp; Dossier sécurisé</string>
     <string name="icon_security_status">Status de sécurité (SU)</string>
     <string name="icon_otg">Clavier / Souris OTG</string>
     <string name="icon_samsung_smart">Fonctionnalités intelligentes Samsung</string>
@@ -264,22 +264,22 @@
     <string name="feat_caffeinate_desc">Maintenir l\'écran allumé</string>
     <string name="feat_maps_power_saving_title">Mode économie d\'énergie Maps</string>
     <string name="feat_maps_power_saving_desc">Pour tout appareil Android</string>
-    <string name="feat_notification_lighting_title">Notification lighting</string>
-    <string name="feat_notification_lighting_desc">Light up for notifications</string>
+    <string name="feat_notification_lighting_title">Éclairage de notifications</string>
+    <string name="feat_notification_lighting_desc">Éclairer pour les notifications</string>
     <string name="feat_sound_mode_tile_title">Raccourci de mode de sonnerie</string>
     <string name="feat_sound_mode_tile_desc">Bloc \"Réglages rapides\" pour changer le mode de sonnerie</string>
     <string name="feat_stay_awake_tile_title">Bloc \"rester allumé\"</string>
     <string name="feat_stay_awake_tile_desc">Bloc \"Réglages rapides\" pour activer/désactiver le maintien de l\'écran allumé</string>
-    <string name="show_bluetooth_devices">Show Bluetooth devices</string>
-    <string name="show_bluetooth_devices_summary">Display battery level of connected Bluetooth devices</string>
+    <string name="show_bluetooth_devices">Afficher les appareils Bluetooth</string>
+    <string name="show_bluetooth_devices_summary">Afficher le niveau de batterie des appareils Bluetooth connectés</string>
     <string name="limit_max_devices">Limit max devices</string>
     <string name="limit_max_devices_summary">Adjust max devices visible in widget</string>
-    <string name="widget_background_title">Widget background</string>
-    <string name="widget_background_summary">Show widget background</string>
+    <string name="widget_background_title">Fond du widget</string>
+    <string name="widget_background_summary">Afficher le fond du widget</string>
     <!-- DIY Automation -->
     <string name="diy_create_trigger_title">Déclencher une automatisation</string>
     <string name="diy_create_trigger_desc">Prévoir une action à déclencher lors d\'une observation</string>
-    <string name="diy_create_state_title">State Automation</string>
+    <string name="diy_create_state_title">Automatisation de l\'état</string>
     <string name="diy_create_state_desc">Schedule an action to execute based on the state of a condition in and out</string>
     <string name="diy_editor_new_title">Nouvelle automatisation</string>
     <string name="diy_editor_edit_title">Modifier l\'automatisation</string>
@@ -307,7 +307,7 @@
     <string name="search_smart_data_title">Données intelligentes</string>
     <string name="search_smart_data_desc">Cache les données mobiles dans certains modes</string>
     <string name="search_reset_icons_title">Réinitialiser les icônes</string>
-    <string name="search_reset_icons_desc">Reset status bar icon visibility to default</string>
+    <string name="search_reset_icons_desc">Réinitialiser la visibilité des icônes de la barre d\'état</string>
     <string name="search_caffeinate_abort_screen_off_title">Abort Caffeinate with screen off</string>
     <string name="search_caffeinate_abort_screen_off_desc">Automatically turn off Caffeinate when manually locking the device</string>
     <string name="search_lighting_style_title">Style d\'éclairage</string>
@@ -316,10 +316,10 @@
     <string name="search_corner_radius_desc">Adjust the corner radius of the notification lighting</string>
     <string name="search_skip_silent_title">Ignorer les notifications silencieuses</string>
     <string name="search_skip_silent_desc">Ne pas afficher de lumière pour les notifications silencieuses</string>
-    <string name="search_flashlight_pulse_title">Flashlight pulse</string>
-    <string name="search_flashlight_pulse_desc">Slowly pulse flashlight for new notifications</string>
-    <string name="search_only_facing_down_title">Only while facing down</string>
-    <string name="search_only_facing_down_desc">Pulse flashlight only when device is face down</string>
+    <string name="search_flashlight_pulse_title">Impulsion de lampe torche</string>
+    <string name="search_flashlight_pulse_desc">Faire clignoter lentement la lampe-torche pour les nouvelles notifications</string>
+    <string name="search_only_facing_down_title">Seulement quand le téléphone est vers le bas</string>
+    <string name="search_only_facing_down_desc">Impulsion de lampe torche seulement quand l\'appareil est vers le bas</string>
     <string name="search_snooze_debug_title">Désactiver les notifications de débogage</string>
     <string name="search_snooze_debug_desc">Cacher les notifications de débogage ADB/USB persistantes.</string>
     <string name="search_snooze_file_title">Désactiver la notification de transfert de fichiers</string>
@@ -339,8 +339,8 @@
     <string name="search_qs_caffeinate_title">Caffeinate</string>
     <string name="search_qs_caffeinate_desc">Basculer le maintient de l\'écran allumé</string>
     <string name="search_qs_sound_title">Mode de sonnerie</string>
-    <string name="search_qs_sound_desc">Cycle sound modes (Ring/Vibrate/Silent)</string>
-    <string name="search_qs_lighting_title">Notification Lighting</string>
+    <string name="search_qs_sound_desc">Changer le mode de sonnerie (Sonnerie/Vibreur/Silencieux)</string>
+    <string name="search_qs_lighting_title">Éclairage de notifications</string>
     <string name="search_qs_lighting_desc">Toggle notification lighting service</string>
     <string name="search_qs_night_light_title">Éclairage nocturne dynamique</string>
     <string name="search_qs_night_light_desc">Night light automation toggle</string>
@@ -352,7 +352,7 @@
     <string name="search_qs_flashlight_desc">Dedicated flashlight toggle</string>
     <string name="search_qs_freeze_title">Gel d\'applis</string>
     <string name="search_qs_freeze_desc">Lancer la grille de gel d\'applis</string>
-    <string name="search_qs_pulse_title">Flashlight Pulse</string>
+    <string name="search_qs_pulse_title">Impulsion de lampe torche</string>
     <string name="search_qs_pulse_desc">Toggle notification flashlight pulse</string>
     <string name="search_qs_stay_awake_desc">Toggle stay awake developer option</string>
     <string name="search_remap_enable_title">Activer la réattribution de boutons</string>
@@ -383,17 +383,17 @@
     <string name="perm_shizuku_grant_desc">Required to run power-saving commands while maps is navigating.</string>
     <string name="perm_root_title">Accès racine (root)</string>
     <string name="perm_root_desc">Permissions required for system actions using Root privileges.</string>
-    <string name="perm_notif_listener_title">Notification Listener</string>
-    <string name="perm_notif_listener_desc_maps">Required to detect when Maps is navigating.</string>
-    <string name="perm_notif_listener_desc_lighting">Required to detect new notifications</string>
-    <string name="perm_notif_listener_desc_snooze">Required to detect and snooze notifications</string>
+    <string name="perm_notif_listener_title">Analyseur de notification</string>
+    <string name="perm_notif_listener_desc_maps">Requise pour détecter quand Maps est en navigation</string>
+    <string name="perm_notif_listener_desc_lighting">Requise pour détecter les nouvelles notifications</string>
+    <string name="perm_notif_listener_desc_snooze">Requise pour détecter et mettre en attente les notifications</string>
     <string name="perm_accessibility_title">Service d\'accessibilité</string>
     <string name="perm_accessibility_desc_common">Requis pour le verrouillage d\'applis, le widget de verrouillage et d\'autres fonctionnalités pour détecter les interactions.</string>
     <string name="perm_accessibility_desc_lighting">Requis pour déclencher l\'éclairage lors de la réception d\'une nouvelle notification</string>
     <string name="perm_accessibility_desc_remap">Requis pour intercepter les appuis sur les boutons physiques</string>
     <string name="perm_accessibility_desc_night_light">Requis pour surveiller les applications en avant-plan</string>
     <string name="perm_write_secure_title">Modifier les paramètres de sécurité</string>
-    <string name="perm_write_secure_desc_common">Required for Statusbar icons and Screen Locked Security</string>
+    <string name="perm_write_secure_desc_common">Requise pour les icônes de la barre d\'état et la protection de l\'écran de verrouillage</string>
     <string name="perm_write_secure_desc_night_light">Needed to toggle Night Light. Grant via ADB or root.</string>
     <string name="perm_write_settings_title">Modify System Settings</string>
     <string name="perm_write_settings_desc">Required to toggle Adaptive Brightness and other system settings</string>
@@ -406,7 +406,7 @@
     <string name="perm_action_check">Vérifier</string>
     <string name="perm_action_enable">Activer dans les paramètres</string>
     <string name="perm_action_how_to">Comment accorder</string>
-    <string name="perm_battery_optimization_title">Battery Optimization</string>
+    <string name="perm_battery_optimization_title">Optimisation de la batterie</string>
     <string name="perm_battery_optimization_desc">Ensure the service is not killed by the system to save power.</string>
     <!-- Tabs -->
     <string name="tab_essentials">Essentials</string>
@@ -416,19 +416,19 @@
     <string name="tab_freeze_subtitle">Applications désactivées</string>
     <string name="tab_diy_subtitle">Do It Yourself</string>
     <!-- Keyboard Setup -->
-    <string name="label_keyboard_setup">Keyboard Setup</string>
-    <string name="btn_enable_keyboard">Enable in settings</string>
-    <string name="btn_select_keyboard">Switch to Essentials</string>
-    <string name="status_keyboard_ready">Keyboard is active and ready!</string>
-    <string name="label_enabled">Enabled</string>
-    <string name="label_disabled">Disabled</string>
-    <string name="tile_adaptive_brightness">Adaptive Brightness</string>
-    <string name="tile_adaptive_brightness_desc">Toggle adaptive brightness</string>
-    <string name="tile_maps_power_saving">Maps Power Saving</string>
-    <string name="tile_maps_power_saving_desc">Toggle maps power saving mode</string>
-    <string name="search_placeholder_short">Search for Tools, Mods and Tweaks</string>
+    <string name="label_keyboard_setup">Configuration du clavier</string>
+    <string name="btn_enable_keyboard">Activer dans les paramètres</string>
+    <string name="btn_select_keyboard">Changer vers Essentials</string>
+    <string name="status_keyboard_ready">Le clavier est actif et prêt !</string>
+    <string name="label_enabled">Activé</string>
+    <string name="label_disabled">Désactivé</string>
+    <string name="tile_adaptive_brightness">Luminosité adaptative</string>
+    <string name="tile_adaptive_brightness_desc">Activer/désactiver la luminosité adaptative</string>
+    <string name="tile_maps_power_saving">Économie d\'énergie Maps</string>
+    <string name="tile_maps_power_saving_desc">Activer/désactiver le mode économie d\'énergie Maps</string>
+    <string name="search_placeholder_short">Recherchez des outils, des mods, ou des améliorations</string>
     <string name="action_search">Rechercher</string>
-    <string name="action_stop">Stop</string>
+    <string name="action_stop">Arrêter</string>
     <string name="label_search">Rechercher</string>
     <!-- UI Components General -->
     <string name="action_back">Retour</string>
@@ -463,7 +463,7 @@
     <string name="diy_action_dim_wallpaper">Dim Wallpaper</string>
     <string name="diy_dim_wallpaper_desc">This action requires Shizuku or Root to adjust system wallpaper dimming.</string>
     <string name="diy_select_trigger">Sélectionner un déclencheur</string>
-    <string name="diy_create_app_title">App</string>
+    <string name="diy_create_app_title">Appli</string>
     <string name="diy_create_app_desc">Automate based on open app</string>
     <string name="diy_select_state">État de sélection</string>
     <string name="diy_select_action">Action de sélection</string>
@@ -478,16 +478,16 @@
     <string name="automation_service_channel_name">Service d\'automatisation</string>
     <string name="automation_service_running_title">Automatisations actives</string>
     <string name="automation_service_running_desc">Monitoring system events for your automations</string>
-    <string name="diy_action_device_effects">Device Effects</string>
-    <string name="diy_action_disable_device_effects">Disable Device Effects</string>
+    <string name="diy_action_device_effects">Effets d\'appareil</string>
+    <string name="diy_action_disable_device_effects">Désactiver les effets d\'appareil</string>
     <string name="diy_device_effects_desc">Control system-level effects like grayscale, AOD suppression, wallpaper dimming, and night mode.</string>
     <string name="diy_effect_grayscale">Grayscale</string>
     <string name="diy_effect_suppress_ambient">Suppress Ambient Display</string>
     <string name="diy_effect_dim_wallpaper">Dim Wallpaper</string>
-    <string name="diy_effect_night_mode">Night Mode</string>
-    <string name="diy_device_effects_android_15_warning">This feature requires Android 15 or higher.</string>
-    <string name="diy_device_effects_enabled">Enabled</string>
-    <string name="diy_device_effects_disabled">Disabled</string>
+    <string name="diy_effect_night_mode">Mode nuit</string>
+    <string name="diy_device_effects_android_15_warning">Cette fonctionnalité nécessite Android 15 ou supérieur.</string>
+    <string name="diy_device_effects_enabled">Activé</string>
+    <string name="diy_device_effects_disabled">Désactivé</string>
     <!-- About Section -->
     <string name="app_developer_name">Sameera Wijerathna</string>
     <string name="app_description">L\'outil tout-en-un pour votre Pixel ou vos appareils Android</string>
@@ -540,11 +540,11 @@
         <item>icône</item>
     </string-array>
     <string-array name="keywords_keyboard">
-        <item>keyboard</item>
-        <item>height</item>
+        <item>clavier</item>
+        <item>hauteur</item>
         <item>padding</item>
-        <item>haptic</item>
-        <item>input</item>
+        <item>haptique</item>
+        <item>entrée</item>
     </string-array>
     <string-array name="keywords_alert">
         <item>visible</item>
@@ -557,7 +557,7 @@
     <string-array name="keywords_flashlight_pulse">
         <item>lumière</item>
         <item>lampe-torche</item>
-        <item>pulse</item>
+        <item>impulsion</item>
         <item>notification</item>
     </string-array>
     <string-array name="keywords_qs_tile">
@@ -614,9 +614,9 @@
         <item>attendre</item>
         <item>timeout</item>
     </string-array>
-    <string name="label_keyboard_always_dark">Always dark theme</string>
-    <string name="label_keyboard_pitch_black">Pitch black theme</string>
-    <string name="label_keyboard_clipboard_enabled">Clipboard History</string>
+    <string name="label_keyboard_always_dark">Toujours le mode sombre</string>
+    <string name="label_keyboard_pitch_black">Thème Noir Absolu</string>
+    <string name="label_keyboard_clipboard_enabled">Historique du presse-papiers</string>
     <string-array name="keywords_selection">
         <item>liste</item>
         <item>sélecteur</item>
@@ -624,7 +624,7 @@
     </string-array>
     <string-array name="keywords_visual_style">
         <item>animation</item>
-        <item>visual</item>
+        <item>visuel</item>
         <item>look</item>
     </string-array>
     <string-array name="keywords_quiet_filter">
@@ -648,7 +648,7 @@
         <item>énergie</item>
     </string-array>
     <string-array name="keywords_blur_glass">
-        <item>blur</item>
+        <item>flou</item>
         <item>glass</item>
         <item>vignette</item>
     </string-array>
@@ -733,7 +733,7 @@
     <string name="app_zero">Zero</string>
     <string name="content_description_developer_avatar">Avatar du développeur</string>
     <!-- Help & Guides -->
-    <string name="help_guides_title">Aidr &amp; Guides</string>
+    <string name="help_guides_title">Aide &amp; Guides</string>
     <string name="need_more_support_reach_out">Besoin de plus d\'aide ? Contactez-nous,</string>
     <string name="action_collapse">Réduire</string>
     <string name="action_expand">Étendre</string>
@@ -785,7 +785,7 @@
     <string name="feat_location_reached_desc">Soyez notifiés lorsque vous arrivez à une destination</string>
     <string name="location_reached_pick_destination">Destination</string>
     <string name="location_reached_set_destination_btn">Définir destination</string>
-    <string name="location_reached_status_tracking">Traçage : %1$.4f%2$.4f</string>
+    <string name="location_reached_status_tracking">Suivi : %1$.4f%2$.4f</string>
     <string name="location_reached_status_none">Aucune destination définie</string>
     <string name="location_reached_how_to">Ouvrez Google Maps, choisissez un endroit et partagez-le dans Essentials.</string>
     <string name="location_reached_radius_title">Rayon : %d m</string>
@@ -799,7 +799,7 @@
     <string name="location_reached_notification_desc">Vous êtes arrivé à destination.</string>
     <string name="location_reached_current_distance">Actuellement à %1$.1fkm</string>
     <string name="location_reached_clear_btn">Supprimer la destination</string>
-    <string name="location_reached_processing">Processing location…</string>
+    <string name="location_reached_processing">Traitement de la position...</string>
     <string name="location_reached_dist_remaining">DISTANCE RESTANTE</string>
     <string name="location_reached_calculating">Calcul…</string>
     <string name="location_reached_stop_tracking">Arrêter le traçage</string>
@@ -809,51 +809,51 @@
     <string name="location_reached_clear">Supprimer</string>
     <string name="location_reached_no_dest">Aucune destination</string>
     <string name="location_reached_open_maps">Ouvrir Maps</string>
-    <string name="location_reached_fsi_title">Full-Screen Alarm Permission</string>
-    <string name="location_reached_fsi_desc">Required to wake your device upon arrival. Tap to grant.</string>
+    <string name="location_reached_fsi_title">Permission d\'alarme en plein écran</string>
+    <string name="location_reached_fsi_desc">Requise pour réveiller votre appareil à l\'arrivée. Appuyez pour autoriser</string>
     <string name="location_reached_dist_m">%1$d m</string>
     <string name="location_reached_dist_km">%1$.1f km</string>
-    <string name="location_reached_service_title">Travel Alarm active</string>
-    <string name="location_reached_service_remaining">%1$s remaining (%2$d%%)</string>
-    <string name="location_reached_channel_name">Travel Progress</string>
-    <string name="location_reached_channel_desc">Shows real-time distance to destination</string>
+    <string name="location_reached_service_title">Alarme de trajet active</string>
+    <string name="location_reached_service_remaining">%1$s restant (%2$d%%)</string>
+    <string name="location_reached_channel_name">Progrès du voyage :</string>
+    <string name="location_reached_channel_desc">Affiche la distance de la destination en temps réel</string>
     <string name="location_reached_alarm_title">Destination à proximité</string>
     <string name="location_reached_alarm_subtitle">Prepare to get off</string>
-    <string name="location_reached_dismiss">Dismiss</string>
-    <string name="location_reached_toast_set">Destination set: %1$.4f, %2$.4f</string>
+    <string name="location_reached_dismiss">Ignorer</string>
+    <string name="location_reached_toast_set">Destination définie : %1$.4f, %2$.4f</string>
     <string name="setting_use_root_title">Utiliser l\'accès root (racine)</string>
     <string name="setting_use_root_desc">À la place de Shizuku</string>
     <string name="root_not_available_toast">L\'accès racine (root) n\'est pas disponible. Merci de vérifier votre manager de root.</string>
     <!-- System Keyboard -->
-    <string name="feat_system_keyboard_title">Keyboard</string>
-    <string name="feat_system_keys">Keys</string>
+    <string name="feat_system_keyboard_title">Clavier</string>
+    <string name="feat_system_keys">Touches</string>
     <string name="feat_system_keyboard_desc">Customize layout and behavior</string>
-    <string name="search_keyboard_height_title">Keyboard Height</string>
+    <string name="search_keyboard_height_title">Hauteur du clavier</string>
     <string name="search_keyboard_height_desc">Adjust the total vertical size of the keyboard</string>
     <string name="search_keyboard_padding_title">Bottom Padding</string>
     <string name="search_keyboard_padding_desc">Add space below the keyboard</string>
-    <string name="search_keyboard_haptics_title">Haptic Feedback</string>
-    <string name="search_keyboard_haptics_desc">Vibrate on key press</string>
-    <string name="label_test_keyboard">Test the keyboard</string>
-    <string name="test_keyboard_hint">Test the keyboard</string>
-    <string name="label_keyboard_height">Keyboard Height</string>
+    <string name="search_keyboard_haptics_title">Retour haptique</string>
+    <string name="search_keyboard_haptics_desc">Vibrer à l\'appui sur une touche</string>
+    <string name="label_test_keyboard">Tester le clavier</string>
+    <string name="test_keyboard_hint">Tester le clavier</string>
+    <string name="label_keyboard_height">Hauteur du clavier</string>
     <string name="label_keyboard_bottom_padding">Bottom Padding</string>
-    <string name="label_keyboard_haptics">Haptic Feedback</string>
+    <string name="label_keyboard_haptics">Retour haptique</string>
     <string name="label_keyboard_roundness">Key Roundness</string>
     <string name="search_keyboard_roundness_title">Key Roundness</string>
-    <string name="search_keyboard_roundness_desc">Adjust the corner radius of keys</string>
-    <string name="label_keyboard_functions_bottom">Move functions to bottom</string>
+    <string name="search_keyboard_roundness_desc">Ajuster le rayon des coins des touches</string>
+    <string name="label_keyboard_functions_bottom">Déplacer les fonctions en bas</string>
     <string name="label_keyboard_functions_padding">Functions side padding</string>
-    <string name="label_keyboard_haptic_strength">Haptic feedback strength</string>
-    <string name="label_keyboard_shape">Keyboard shape</string>
-    <string name="shape_round">Round</string>
-    <string name="shape_flat">Flat</string>
+    <string name="label_keyboard_haptic_strength">Force du retour haptique</string>
+    <string name="label_keyboard_shape">Forme du clavier</string>
+    <string name="shape_round">Rond</string>
+    <string name="shape_flat">Plat</string>
     <string name="shape_inverse">Inverse</string>
     <string name="feat_batteries_title">Batteries</string>
-    <string name="feat_batteries_desc">Monitor your device battery levels</string>
-    <string name="batteries_widget_label">Battery Status</string>
-    <string name="connect_to_airsync">Connect to AirSync</string>
-    <string name="connect_to_airsync_summary">Display battery from your connected mac device in AirSync</string>
-    <string name="download_airsync">Download AirSync App</string>
-    <string name="download_airsync_summary">Required for Mac battery sync</string>
+    <string name="feat_batteries_desc">Surveillez le niveau de batterie de vos appareils</string>
+    <string name="batteries_widget_label">Status de la batterie</string>
+    <string name="connect_to_airsync">Connecter à AirSync</string>
+    <string name="connect_to_airsync_summary">Afficher la batterie de votre appareil Mac connecté dans AirSync</string>
+    <string name="download_airsync">Télécharger l\'appli AirSync</string>
+    <string name="download_airsync_summary">Requis pour synchroniser la batterie d\'un Mac</string>
 </resources>
