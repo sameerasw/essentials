@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Essentials</string>
-    <string name="label_beta">BETA</string>
+    <string name="app_name">أساسيات</string>
+    <string name="label_beta">تجريبي</string>
     <string name="accessibility_service_description"><b>Essentials Accessibility Service</b>\n\nThis service is required for the following advanced features:\n\n<b>• Physical Button Remapping:</b>\nDetects volume button presses even when the screen is off to trigger actions like the Flashlight.\n\n<b>• Per-App Settings:</b>\nMonitors the currently active app to apply specific profiles for Dynamic Night Light, Notification Lighting Colors, and App Lock.\n\n<b>• Screen Control:</b>\nAllows the app to lock the screen (e.g. via Double Tap or Widgets) and detect screen state changes.\n\n<b>• Security:</b>\nPrevents unauthorized changes by detecting window content when the device is locked.\n\n<small>No input text or sensitive user data is collected or transmitted.</small></string>
-    <string name="app_icon">App icon</string>
-    <string name="freeze_activity_title">App Freezing</string>
-    <string name="freeze_activity_subtitle">Disable apps that are rarely used</string>
-    <string name="freeze_shortcut_short_label">App Freezing</string>
-    <string name="freeze_shortcut_long_label">Open App Freezing</string>
-    <string name="frozen_app_shortcut_label">Frozen App</string>
+    <string name="app_icon">أيقونة التطبيق</string>
+    <string name="freeze_activity_title">تجميد التطبيق</string>
+    <string name="freeze_activity_subtitle">تعطيل التطبيقات التي نادراً إستخدامها</string>
+    <string name="freeze_shortcut_short_label">تجميد التطبيق</string>
+    <string name="freeze_shortcut_long_label">تجميد التطبيق المفتوح</string>
+    <string name="frozen_app_shortcut_label">تطبيق مجمد</string>
     <string name="screen_off_widget_label">Empty screen off widget</string>
-    <string name="app_freezing_tile_label">App Freezing</string>
-    <string name="flashlight_pulse_tile_label">Flashlight Pulse</string>
+    <string name="app_freezing_tile_label">تجميد التطبيق</string>
+    <string name="flashlight_pulse_tile_label">نبض المصباح</string>
     <string name="check_pre_releases_label">Check for pre-releases</string>
     <string name="check_pre_releases_desc">Might be unstable</string>
     <!-- App Lock -->
-    <string name="settings_section_security">Security</string>
+    <string name="settings_section_security">الأمن</string>
     <string name="app_lock_enable_title">Enable app lock</string>
     <string name="app_lock_auth_title">App Lock Security</string>
     <string name="app_lock_enable_auth_subtitle">Authenticate to enable app lock</string>
@@ -32,7 +32,7 @@
     <string name="shizuku_not_running_toast">Shizuku is not running</string>
     <string name="shizuku_detected_prefix">Detected %1$s</string>
     <string name="shizuku_status_prefix">Status: %1$s</string>
-    <string name="shizuku_open_button">Open Shizuku</string>
+    <string name="shizuku_open_button">فتح Shizuku</string>
     <string name="settings_section_flashlight">Flashlight</string>
     <string name="flashlight_options_title">Flashlight options</string>
     <string name="flashlight_options_desc">Adjust fading and other settings</string>
