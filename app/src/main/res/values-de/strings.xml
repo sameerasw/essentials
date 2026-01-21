@@ -74,7 +74,7 @@
     <string name="permission_post_notifications_desc">Erlaubt es der App Benachrichtigungen zu zeigen</string>
     <string name="permission_grant_action">Berechtigung gewähren</string>
     <string name="caffeinate_notification_title">Caffeinate Active</string>
-    <string name="caffeinate_active">Active</string>
+    <string name="caffeinate_active">Aktiv</string>
     <string name="caffeinate_notification_desc">Screen is being kept awake</string>
     <string name="caffeinate_battery_optimization_title">Ignore battery optimization</string>
     <string name="caffeinate_battery_optimization_desc">Recommended for reliable service on some devices</string>
@@ -167,7 +167,7 @@
     <string name="tile_flashlight_pulse">Taschenlampenimpuls</string>
     <string name="tile_stay_awake">Wach bleiben</string>
     <string name="input_method_label">Essentials Keyboard</string>
-    <string name="subtype_en_us">English (US)</string>
+    <string name="subtype_en_us">Englisch (US)</string>
     <string name="tile_active">Aktiv</string>
     <string name="tile_inactive">Inaktiv</string>
     <string name="nfc_tile_label">NFC</string>
@@ -270,7 +270,7 @@
     <string name="feat_sound_mode_tile_desc">Kachel in den Schnelleinstellungen zum Umschalten des Tonmodus</string>
     <string name="feat_stay_awake_tile_title">\'Wach bleiben\'-Kachel</string>
     <string name="feat_stay_awake_tile_desc">Kachel in den Schnelleinstellungen zum Umschalten des Wachbleibens</string>
-    <string name="show_bluetooth_devices">Show Bluetooth devices</string>
+    <string name="show_bluetooth_devices">Bluetooth-Geräte anzeigen</string>
     <string name="show_bluetooth_devices_summary">Display battery level of connected Bluetooth devices</string>
     <string name="limit_max_devices">Limit max devices</string>
     <string name="limit_max_devices_summary">Adjust max devices visible in widget</string>
