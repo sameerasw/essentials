@@ -271,7 +271,7 @@
     <string name="feat_stay_awake_tile_title">\'Wach bleiben\'-Kachel</string>
     <string name="feat_stay_awake_tile_desc">Kachel in den Schnelleinstellungen zum Umschalten des Wachbleibens</string>
     <string name="show_bluetooth_devices">Bluetooth-Geräte anzeigen</string>
-    <string name="show_bluetooth_devices_summary">Display battery level of connected Bluetooth devices</string>
+    <string name="show_bluetooth_devices_summary">Zeige den Akkustand von verbundenen Bluetooth-Geräten</string>
     <string name="limit_max_devices">Limit max devices</string>
     <string name="limit_max_devices_summary">Adjust max devices visible in widget</string>
     <string name="widget_background_title">Widget background</string>
@@ -395,7 +395,7 @@
     <string name="perm_write_secure_title">Geschützte Einstellungen umschreiben</string>
     <string name="perm_write_secure_desc_common">Benötigt für Statusleisten-Symbole und Sicherheit bei Bildschirmsperre</string>
     <string name="perm_write_secure_desc_night_light">Benötigt, um das Nachtlicht zu aktivieren. Über ADB oder Root gewähren.</string>
-    <string name="perm_write_settings_title">Modify System Settings</string>
+    <string name="perm_write_settings_title">Systemeinstellungen ändern</string>
     <string name="perm_write_settings_desc">Required to toggle Adaptive Brightness and other system settings</string>
     <string name="perm_overlay_title">Overlay-Berechtigung</string>
     <string name="perm_overlay_desc">Benötigt, um das Benachrichtigungslicht auf dem Bildschirm anzuzeigen</string>
@@ -406,8 +406,8 @@
     <string name="perm_action_check">Prüfen</string>
     <string name="perm_action_enable">In den Einstellungen aktivieren</string>
     <string name="perm_action_how_to">Wie man gewährt</string>
-    <string name="perm_battery_optimization_title">Battery Optimization</string>
-    <string name="perm_battery_optimization_desc">Ensure the service is not killed by the system to save power.</string>
+    <string name="perm_battery_optimization_title">Akkuoptimierung</string>
+    <string name="perm_battery_optimization_desc">Stelle sicher, dass der Service nicht von dem System gestoppt wird, um Strom zu sparen.</string>
     <!-- Tabs -->
     <string name="tab_essentials">Essentials</string>
     <string name="tab_freeze">Einfrieren</string>
@@ -420,12 +420,12 @@
     <string name="btn_enable_keyboard">Enable in settings</string>
     <string name="btn_select_keyboard">Switch to Essentials</string>
     <string name="status_keyboard_ready">Keyboard is active and ready!</string>
-    <string name="label_enabled">Enabled</string>
-    <string name="label_disabled">Disabled</string>
-    <string name="tile_adaptive_brightness">Adaptive Brightness</string>
-    <string name="tile_adaptive_brightness_desc">Toggle adaptive brightness</string>
-    <string name="tile_maps_power_saving">Maps Power Saving</string>
-    <string name="tile_maps_power_saving_desc">Toggle maps power saving mode</string>
+    <string name="label_enabled">Aktiviert</string>
+    <string name="label_disabled">Deaktiviert</string>
+    <string name="tile_adaptive_brightness">Adaptive Helligkeit</string>
+    <string name="tile_adaptive_brightness_desc">Adaptive Helligkeit umschalten</string>
+    <string name="tile_maps_power_saving">Maps-Energiesparmodus</string>
+    <string name="tile_maps_power_saving_desc">Maps-Energiesparmodus umschalten</string>
     <string name="search_placeholder_short">Suche nach Werkzeugen, Modifikationen und Anpassungen</string>
     <string name="action_search">Suche</string>
     <string name="action_stop">Stop</string>
@@ -486,8 +486,8 @@
     <string name="diy_effect_dim_wallpaper">Dim Wallpaper</string>
     <string name="diy_effect_night_mode">Night Mode</string>
     <string name="diy_device_effects_android_15_warning">This feature requires Android 15 or higher.</string>
-    <string name="diy_device_effects_enabled">Enabled</string>
-    <string name="diy_device_effects_disabled">Disabled</string>
+    <string name="diy_device_effects_enabled">Aktiviert</string>
+    <string name="diy_device_effects_disabled">Deaktiviert</string>
     <!-- About Section -->
     <string name="app_developer_name">Sameera Wijerathna</string>
     <string name="app_description">Die alles umfassende Werkzeugkiste für Ihr Pixel und Android-Geräte</string>
@@ -849,7 +849,7 @@
     <string name="shape_round">Round</string>
     <string name="shape_flat">Flat</string>
     <string name="shape_inverse">Inverse</string>
-    <string name="feat_batteries_title">Batteries</string>
+    <string name="feat_batteries_title">Akkus</string>
     <string name="feat_batteries_desc">Monitor your device battery levels</string>
     <string name="batteries_widget_label">Battery Status</string>
     <string name="connect_to_airsync">Connect to AirSync</string>
