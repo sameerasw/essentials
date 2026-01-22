@@ -54,6 +54,14 @@ class NotificationLightingService : Service() {
         super.onCreate()
         createNotificationChannel()
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            try {
+                startForeground(NOTIF_ID, buildNotification())
+            } catch (_: Exception) {
+                // ignore foreground start failures on certain OEMs
+            }
+        }
+
         // Register screen on/off receiver to attempt to re-show overlay when screen state changes
         screenReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
@@ -135,15 +143,6 @@ class NotificationLightingService : Service() {
             return START_NOT_STICKY
         }
 
-        // Ensure the process calls startForeground quickly when started via startForegroundService
-        // to avoid RemoteServiceException (ForegroundServiceDidNotStartInTimeException).
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            try {
-                startForeground(NOTIF_ID, buildNotification())
-            } catch (_: Exception) {
-                // ignore foreground start failures; we'll continue
-            }
-        }
 
         // If accessibility service is enabled, delegate showing to it for higher elevation
         if (isAccessibilityServiceEnabled()) {
