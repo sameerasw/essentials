@@ -68,10 +68,12 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
                     Intent.ACTION_SCREEN_ON -> {
                         notificationLightingHandler.onScreenOn()
                         freezeHandler.removeCallbacks(freezeRunnable)
+                        stopInputEventListener()
                     }
                     Intent.ACTION_SCREEN_OFF -> {
                         appFlowHandler.clearAuthenticated()
                         scheduleFreeze()
+                        startInputEventListenerIfEnabled()
                     }
                     Intent.ACTION_USER_PRESENT -> {
                         securityHandler.restoreAnimationScale()
@@ -131,6 +133,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         sensorManager.unregisterListener(this)
         securityHandler.restoreAnimationScale()
         notificationLightingHandler.removeOverlay()
+        stopInputEventListener()
         serviceScope.cancel()
         super.onDestroy()
     }
@@ -197,5 +200,32 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
             FlashlightActionReceiver.ACTION_PULSE_NOTIFICATION -> flashlightHandler.handleIntent(intent)
         }
         return super.onStartCommand(intent, flags, startId)
+    }
+
+    private fun startInputEventListenerIfEnabled() {
+        val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+        val isEnabled = prefs.getBoolean("button_remap_enabled", false)
+        val useShizuku = prefs.getBoolean("button_remap_use_shizuku", false)
+        
+        if (isEnabled && useShizuku) {
+            try {
+                val intent = Intent(this, InputEventListenerService::class.java)
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    startForegroundService(intent)
+                } else {
+                    startService(intent)
+                }
+            } catch (e: Exception) {
+                // Ignore
+            }
+        }
+    }
+
+    private fun stopInputEventListener() {
+        try {
+            stopService(Intent(this, InputEventListenerService::class.java))
+        } catch (e: Exception) {
+            // Ignore
+        }
     }
 }
