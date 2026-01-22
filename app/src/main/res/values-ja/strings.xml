@@ -52,6 +52,8 @@
     <string name="action_toggle_mute">ミュート</string>
     <string name="action_ai_assistant">アシスタント</string>
     <string name="action_take_screenshot">スクリーンショット</string>
+    <string name="action_cycle_sound_modes">Cycle sound modes</string>
+    <string name="action_toggle_media_volume">Toggle media volume</string>
     <string name="button_remap_screen_off_hint">画面がオフのときに、選択したボタンを長押しすると、割り当てられたアクションが実行されます。Pixelデバイスでは、システムの制限により、このアクションはAODがオンの場合にのみ実行されます。</string>
     <string name="button_remap_screen_on_hint">画面がオンのときに、選択したボタンを長押しすると、割り当てられたアクションがトリガーされます。</string>
     <string name="flashlight_intensity_title">フラッシュライトの明るさ</string>
