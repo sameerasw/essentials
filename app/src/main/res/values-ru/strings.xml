@@ -52,6 +52,8 @@
     <string name="action_toggle_mute">Без звука</string>
     <string name="action_ai_assistant">AI ассистент</string>
     <string name="action_take_screenshot">Сделать снимок экрана</string>
+    <string name="action_cycle_sound_modes">Cycle sound modes</string>
+    <string name="action_toggle_media_volume">Toggle media volume</string>
     <string name="button_remap_screen_off_hint">Когда экран выключен, нажмите и удерживайте выбранную кнопку, чтобы активировать назначенное действие. На устройствах Pixel это действие запускается только при включенном AOD из-за системных ограничений.</string>
     <string name="button_remap_screen_on_hint">Когда экран включен, нажмите и удерживайте выбранную кнопку, чтобы активировать назначенное ей действие.</string>
     <string name="flashlight_intensity_title">Яркость фонарика</string>
@@ -79,7 +81,7 @@
     <string name="caffeinate_battery_optimization_title">Игнорировать оптимизацию батареи</string>
     <string name="caffeinate_battery_optimization_desc">Рекомендуется для надежной работы на некоторых устройствах</string>
     <string name="caffeinate_abort_screen_off_title">Прервать если экран выключен</string>
-    <string name="caffeinate_timeout_presets_title">Интервалы работы</string>
+    <string name="caffeinate_timeout_presets_title">Предустановки времени</string>
     <string name="caffeinate_timeout_presets_desc">Выберите доступные интервалы для плитки быстрого доступа</string>
     <string name="caffeinate_timeout_5m">5м</string>
     <string name="caffeinate_timeout_10m">10м</string>
@@ -181,7 +183,7 @@
     <string name="warning_title">⚠️ ВНИМАНИЕ</string>
     <string name="screen_locked_security_warning_text">Эта функция не является надежной. В некоторых случаях пользователь все еще может взаимодействовать с плиткой. \nТакже имейте в виду, что Android всегда разрешает принудительную перезагрузку, а Пиксели всегда позволяют отключить устройство с экрана блокировки.</string>
     <string name="screen_locked_security_airplane_warning">Обязательно удалите плитку \"Режим полета\" из \"быстрых настроек\", так как это невозможно предотвратить, поскольку она не открывает диалоговое окно.</string>
-    <string name="screen_locked_security_description">Если эта функция включена, панель быстрых настроек будет немедленно закрыта, а устройство заблокировано, если кто-либо попытается взаимодействовать с интернет-плитками, пока устройство заблокировано. \n\nЭто также отключит биометрическую разблокировку, чтобы предотвратить дальнейший несанкционированный доступ. Во время блокировки анимации будут замедлены до 0.1x, что еще больше усложнит взаимодействие с устройством.</string>
+    <string name="screen_locked_security_description">Если эта функция включена, панель быстрых настроек будет немедленно закрыта, а устройство заблокировано, если кто-либо попытается взаимодействовать с интернет-плитками, пока устройство заблокировано. \n\nЭто также отключит биометрическую разблокировку, чтобы предотвратить дальнейший несанкционированный доступ. Во время блокировки масштаб анимации будет уменьшен до 0.1x, что еще больше усложнит взаимодействие с устройством.</string>
     <!-- Sound Mode -->
     <string name="sound_mode_reorder_title">Изменить порядок режимов</string>
     <string name="sound_mode_long_press_hint">Долгое нажатие для переключения</string>
