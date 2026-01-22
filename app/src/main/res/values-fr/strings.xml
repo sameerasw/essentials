@@ -322,12 +322,7 @@
     <string name="search_flashlight_pulse_desc">Faire clignoter lentement la lampe-torche pour les nouvelles notifications</string>
     <string name="search_only_facing_down_title">Seulement quand le téléphone est vers le bas</string>
     <string name="search_only_facing_down_desc">Impulsion de lampe torche seulement quand l\'appareil est vers le bas</string>
-    <string name="search_snooze_debug_title">Désactiver les notifications de débogage</string>
-    <string name="search_snooze_debug_desc">Cacher les notifications de débogage ADB/USB persistantes</string>
-    <string name="search_snooze_file_title">Désactiver la notification de transfert de fichiers</string>
-    <string name="search_snooze_file_desc">Cache les notifications de transfert de fichiers USB persistantes</string>
-    <string name="search_snooze_charge_title">Désactiver la notification de recharge</string>
-    <string name="search_snooze_charge_desc">Cacher les notifications persistantes de recharge</string>
+    <string name="snooze_no_channels_discovered">No system channels discovered yet. They will appear here once detected.</string>
     <string name="search_qs_blur_title">Flou d\'interface</string>
     <string name="search_qs_blur_desc">Basculer le flou d\'interface à l\'échelle du système</string>
     <string name="search_qs_bubbles_title">Bulles</string>
