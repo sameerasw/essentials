@@ -391,6 +391,12 @@ fun ButtonRemapSettingsUI(
                         onClick = { onActionSelected("AI assistant") },
                         iconRes = R.drawable.rounded_bubble_chart_24,
                     )
+                    RemapActionItem(
+                        title = stringResource(R.string.action_cycle_sound_modes),
+                        isSelected = currentAction == "Cycle sound modes",
+                        onClick = { onActionSelected("Cycle sound modes") },
+                        iconRes = R.drawable.rounded_volume_up_24,
+                    )
                     if (selectedScreenTab == 1) {
                         RemapActionItem(
                             title = stringResource(R.string.action_take_screenshot),

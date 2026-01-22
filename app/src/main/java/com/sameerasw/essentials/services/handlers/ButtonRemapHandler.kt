@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.KeyEvent
 import android.os.VibratorManager
 import android.os.Vibrator
+import android.app.NotificationManager
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.utils.performHapticFeedback
 import com.sameerasw.essentials.utils.ShizukuUtils
@@ -21,6 +22,7 @@ class ButtonRemapHandler(
     private val service: AccessibilityService,
     private val flashlightHandler: FlashlightHandler
 ) {
+    private val soundModeHandler = SoundModeHandler(service)
     private val handler = Handler(Looper.getMainLooper())
     private var isLongPressTriggered: Boolean = false
     private var lastPressedKeyCode: Int = -1
@@ -182,7 +184,14 @@ class ButtonRemapHandler(
             "Toggle mute" -> toggleRingerMode(AudioManager.RINGER_MODE_SILENT)
             "AI assistant" -> launchAssistant()
             "Take screenshot" -> takeScreenshot()
+            "Cycle sound modes" -> cycleSoundModes()
         }
+
+    }
+
+    private fun cycleSoundModes() {
+        soundModeHandler.cycleNextMode()
+        triggerHapticFeedback()
     }
 
     private fun takeScreenshot() {
