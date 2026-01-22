@@ -10,12 +10,12 @@
     <string name="freeze_shortcut_long_label">Deschide Înghețarea aplicațiilor</string>
     <string name="frozen_app_shortcut_label">Aplicații înghețate</string>
     <string name="screen_off_widget_label">Empty screen off widget</string>
-    <string name="app_freezing_tile_label">App Freezing</string>
+    <string name="app_freezing_tile_label">Înghețarea aplicațiilor</string>
     <string name="flashlight_pulse_tile_label">Flashlight Pulse</string>
     <string name="check_pre_releases_label">Check for pre-releases</string>
     <string name="check_pre_releases_desc">Might be unstable</string>
     <!-- App Lock -->
-    <string name="settings_section_security">Security</string>
+    <string name="settings_section_security">Securitate</string>
     <string name="app_lock_enable_title">Enable app lock</string>
     <string name="app_lock_auth_title">App Lock Security</string>
     <string name="app_lock_enable_auth_subtitle">Authenticate to enable app lock</string>
@@ -29,11 +29,11 @@
     <string name="button_remap_enable_title">Enable Button Remap</string>
     <string name="button_remap_use_shizuku_title">Use Shizuku</string>
     <string name="button_remap_use_shizuku_desc">Works with screen off (Recommended)</string>
-    <string name="shizuku_not_running_toast">Shizuku is not running</string>
-    <string name="shizuku_detected_prefix">Detected %1$s</string>
-    <string name="shizuku_status_prefix">Status: %1$s</string>
-    <string name="shizuku_open_button">Open Shizuku</string>
-    <string name="settings_section_flashlight">Flashlight</string>
+    <string name="shizuku_not_running_toast">Shizuku nu rulează</string>
+    <string name="shizuku_detected_prefix">Detectat %1$s</string>
+    <string name="shizuku_status_prefix">Stare: %1$s</string>
+    <string name="shizuku_open_button">Deschide Shizuku</string>
+    <string name="settings_section_flashlight">Lanternă</string>
     <string name="flashlight_options_title">Flashlight options</string>
     <string name="flashlight_options_desc">Adjust fading and other settings</string>
     <string name="setting_pitch_black_theme_title">Pitch black theme</string>
@@ -66,9 +66,9 @@
     <string name="settings_section_other">Other</string>
     <string name="flashlight_always_off_title">Always turn off flashlight</string>
     <string name="flashlight_always_off_desc">Even while display is on</string>
-    <string name="content_desc_settings">Settings</string>
+    <string name="content_desc_settings">Setări</string>
     <!-- Caffeinate / Permissions -->
-    <string name="settings_section_notification">Notification</string>
+    <string name="settings_section_notification">Notificări</string>
     <string name="permission_show_notification_title">Show Notification</string>
     <string name="permission_post_notifications_title">Post Notifications</string>
     <string name="permission_post_notifications_desc">Allows the app to show notifications</string>
@@ -124,7 +124,7 @@
     <string name="settings_section_flashlight_pulse">Flashlight Pulse</string>
     <string name="flashlight_pulse_title">Flashlight pulse</string>
     <string name="flashlight_pulse_facedown_title">Only while facing down</string>
-    <string name="settings_section_style">Style</string>
+    <string name="settings_section_style">Stil</string>
     <string name="notification_lighting_stroke_adjustment_section">Stroke adjustment</string>
     <string name="notification_lighting_corner_radius_title">Corner radius</string>
     <string name="notification_lighting_stroke_thickness_title">Stroke thickness</string>
@@ -171,8 +171,8 @@
     <string name="tile_active">Active</string>
     <string name="tile_inactive">Inactive</string>
     <string name="nfc_tile_label">NFC</string>
-    <string name="on">On</string>
-    <string name="off">Off</string>
+    <string name="on">Pornit</string>
+    <string name="off">Oprit</string>
     <!-- Screen Locked Security -->
     <string name="screen_locked_security_title">Screen locked security</string>
     <string name="screen_locked_security_dialog_title">Screen Locked Security</string>
@@ -463,6 +463,8 @@
     <string name="diy_action_dim_wallpaper">Dim Wallpaper</string>
     <string name="diy_dim_wallpaper_desc">This action requires Shizuku or Root to adjust system wallpaper dimming.</string>
     <string name="diy_select_trigger">Select Trigger</string>
+    <string name="diy_create_app_title">App</string>
+    <string name="diy_create_app_desc">Automate based on open app</string>
     <string name="diy_select_state">Select State</string>
     <string name="diy_select_action">Select Action</string>
     <string name="diy_in_action_label">In Action</string>
@@ -476,6 +478,16 @@
     <string name="automation_service_channel_name">Automation Service</string>
     <string name="automation_service_running_title">Automations Active</string>
     <string name="automation_service_running_desc">Monitoring system events for your automations</string>
+    <string name="diy_action_device_effects">Device Effects</string>
+    <string name="diy_action_disable_device_effects">Disable Device Effects</string>
+    <string name="diy_device_effects_desc">Control system-level effects like grayscale, AOD suppression, wallpaper dimming, and night mode.</string>
+    <string name="diy_effect_grayscale">Grayscale</string>
+    <string name="diy_effect_suppress_ambient">Suppress Ambient Display</string>
+    <string name="diy_effect_dim_wallpaper">Dim Wallpaper</string>
+    <string name="diy_effect_night_mode">Night Mode</string>
+    <string name="diy_device_effects_android_15_warning">This feature requires Android 15 or higher.</string>
+    <string name="diy_device_effects_enabled">Enabled</string>
+    <string name="diy_device_effects_disabled">Disabled</string>
     <!-- About Section -->
     <string name="app_developer_name">Sameera Wijerathna</string>
     <string name="app_description">The all-in-one toolbox for your Pixel and Androids</string>

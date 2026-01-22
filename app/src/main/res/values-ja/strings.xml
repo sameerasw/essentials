@@ -270,12 +270,12 @@
     <string name="feat_sound_mode_tile_desc">クイック設定タイルでサイレントモードを切り替える</string>
     <string name="feat_stay_awake_tile_title">スリープしないタイル</string>
     <string name="feat_stay_awake_tile_desc">クイック設定タイルで充電中にスリープするかを切り替える</string>
-    <string name="show_bluetooth_devices">Show Bluetooth devices</string>
-    <string name="show_bluetooth_devices_summary">Display battery level of connected Bluetooth devices</string>
-    <string name="limit_max_devices">Limit max devices</string>
-    <string name="limit_max_devices_summary">Adjust max devices visible in widget</string>
-    <string name="widget_background_title">Widget background</string>
-    <string name="widget_background_summary">Show widget background</string>
+    <string name="show_bluetooth_devices">Bluetoothデバイスを表示</string>
+    <string name="show_bluetooth_devices_summary">接続されているBluetoothデバイスのバッテリー残量を表示する</string>
+    <string name="limit_max_devices">デバイスの上限</string>
+    <string name="limit_max_devices_summary">ウィジェットに表示するデバイスの最大数を調整する</string>
+    <string name="widget_background_title">バックグラウンドウィジェット</string>
+    <string name="widget_background_summary">バックグラウンドでウィジェットを表示する</string>
     <!-- DIY Automation -->
     <string name="diy_create_trigger_title">トリガーオートメーション</string>
     <string name="diy_create_trigger_desc">トリガーされるアクションをスケジュールする</string>
@@ -463,6 +463,8 @@
     <string name="diy_action_dim_wallpaper">暗い壁紙</string>
     <string name="diy_dim_wallpaper_desc">このアクションでは、壁紙を暗くするために、ShizukuまたはRootが必要です。</string>
     <string name="diy_select_trigger">トリガーを選択</string>
+    <string name="diy_create_app_title">アプリ</string>
+    <string name="diy_create_app_desc">Automate based on open app</string>
     <string name="diy_select_state">ステータスを選択</string>
     <string name="diy_select_action">アクションを選択</string>
     <string name="diy_in_action_label">条件と合うとき</string>
@@ -474,69 +476,79 @@
     <string name="action_enable">有効</string>
     <string name="action_disable">無効</string>
     <string name="automation_service_channel_name">オートメーションサービス</string>
-    <string name="automation_service_running_title">Automations Active</string>
-    <string name="automation_service_running_desc">Monitoring system events for your automations</string>
+    <string name="automation_service_running_title">オートメーション動作中</string>
+    <string name="automation_service_running_desc">自動化システムイベントを監視中です</string>
+    <string name="diy_action_device_effects">Device Effects</string>
+    <string name="diy_action_disable_device_effects">Disable Device Effects</string>
+    <string name="diy_device_effects_desc">Control system-level effects like grayscale, AOD suppression, wallpaper dimming, and night mode.</string>
+    <string name="diy_effect_grayscale">Grayscale</string>
+    <string name="diy_effect_suppress_ambient">Suppress Ambient Display</string>
+    <string name="diy_effect_dim_wallpaper">Dim Wallpaper</string>
+    <string name="diy_effect_night_mode">Night Mode</string>
+    <string name="diy_device_effects_android_15_warning">This feature requires Android 15 or higher.</string>
+    <string name="diy_device_effects_enabled">Enabled</string>
+    <string name="diy_device_effects_disabled">Disabled</string>
     <!-- About Section -->
     <string name="app_developer_name">Sameera Wijerathna</string>
-    <string name="app_description">The all-in-one toolbox for your Pixel and Androids</string>
-    <string name="email_subject_hello">Hello from Essentials</string>
+    <string name="app_description">あなたのPixelとAndroidのオールインワンツールボックス</string>
+    <string name="email_subject_hello">Essentialsからこんにちは</string>
     <!-- Edge Lighting -->
-    <string name="color_mode_system">System</string>
-    <string name="color_mode_custom">Custom</string>
-    <string name="color_mode_app_specific">App specific</string>
+    <string name="color_mode_system">システム</string>
+    <string name="color_mode_custom">カスタム</string>
+    <string name="color_mode_app_specific">アプリ固有</string>
     <!-- Biometric & Security -->
-    <string name="error_auth_failed">Authentication failed</string>
-    <string name="beta_warning_toast">This is a beta version. Please report any bugs.</string>
-    <string name="shortcut_creation_hint_toast">Long press an app in the grid to add a shortcut</string>
-    <string name="error_app_uninstalled">App not found or uninstalled</string>
+    <string name="error_auth_failed">認証失敗</string>
+    <string name="beta_warning_toast">これはベータ版です。バグがありましたらご報告ください。</string>
+    <string name="shortcut_creation_hint_toast">グリッド内のアプリを長押ししてショートカットを作成します</string>
+    <string name="error_app_uninstalled">アプリが見つからないかアンインストールされています</string>
     <!-- Notifications -->
-    <string name="update_channel_name">App Updates</string>
-    <string name="update_channel_desc">Notifications for new app updates</string>
-    <string name="notification_update_available">Update available</string>
-    <string name="label_unknown">Unknown</string>
+    <string name="update_channel_name">アプリアップデート</string>
+    <string name="update_channel_desc">新しいアップデートの通知</string>
+    <string name="notification_update_available">アップデートがあります</string>
+    <string name="label_unknown">不明</string>
     <string name="network_type_5g">5G</string>
     <string name="network_type_4g">4G</string>
     <string name="network_type_3g">3G</string>
     <string name="label_shizuku_ritaka">Shizuku (Rikka)</string>
     <string name="label_shizuku_tuozi">Shizuku (TuoZi)</string>
-    <string name="label_search_content_description">Search</string>
-    <string name="perm_device_admin_explanation">Required to hard-lock the device when unauthorized network changes are attempted on lock screen.</string>
-    <string name="biometric_subtitle_access_settings">Authenticate to access settings</string>
-    <string name="biometric_subtitle_enable_feature">Authenticate to enable this feature</string>
-    <string name="biometric_subtitle_disable_feature">Authenticate to disable this feature</string>
-    <string name="biometric_title_settings_format">%1$s Settings</string>
-    <string name="keyword_feature">feature</string>
-    <string name="keyword_settings">settings</string>
-    <string name="keyword_hide">hide</string>
-    <string name="keyword_show">show</string>
-    <string name="keyword_visibility">visibility</string>
-    <string name="error_loading_apps">Error loading apps: %1$s</string>
+    <string name="label_search_content_description">検索</string>
+    <string name="perm_device_admin_explanation">ロック画面で不正なネットワーク変更が試みられた場合、デバイスをハードロックする必要があります。</string>
+    <string name="biometric_subtitle_access_settings">設定にアクセスするための認証</string>
+    <string name="biometric_subtitle_enable_feature">この機能を有効化するための認証</string>
+    <string name="biometric_subtitle_disable_feature">この機能を無効化するための認証</string>
+    <string name="biometric_title_settings_format">%1$s設定</string>
+    <string name="keyword_feature">機能</string>
+    <string name="keyword_settings">設定</string>
+    <string name="keyword_hide">非表示</string>
+    <string name="keyword_show">表示</string>
+    <string name="keyword_visibility">可視性</string>
+    <string name="error_loading_apps">アプリ読み込みエラー：%1$s</string>
     <string-array name="keywords_haptic">
-        <item>vibration</item>
-        <item>touch</item>
-        <item>feel</item>
+        <item>バイブレーション</item>
+        <item>タッチ</item>
+        <item>感じる</item>
     </string-array>
     <string-array name="keywords_network_visibility">
-        <item>network</item>
-        <item>visibility</item>
-        <item>auto</item>
-        <item>hide</item>
+        <item>ネットワーク</item>
+        <item>可視性</item>
+        <item>自動</item>
+        <item>非表示</item>
     </string-array>
     <string-array name="keywords_restore_default">
-        <item>restore</item>
-        <item>default</item>
-        <item>icon</item>
+        <item>復元</item>
+        <item>デフォルト</item>
+        <item>アイコン</item>
     </string-array>
     <string-array name="keywords_keyboard">
-        <item>keyboard</item>
-        <item>height</item>
-        <item>padding</item>
-        <item>haptic</item>
-        <item>input</item>
+        <item>キーボード</item>
+        <item>高さ</item>
+        <item>間隔</item>
+        <item>触覚</item>
+        <item>入力</item>
     </string-array>
     <string-array name="keywords_alert">
-        <item>visible</item>
-        <item>alert</item>
+        <item>表示</item>
+        <item>アラート</item>
     </string-array>
     <string-array name="keywords_flashlight">
         <item>ライト</item>
@@ -617,57 +629,57 @@
     </string-array>
     <string-array name="keywords_quiet_filter">
         <item>静かな</item>
-        <item>ignore</item>
-        <item>filter</item>
+        <item>無視</item>
+        <item>フィルター</item>
     </string-array>
     <string-array name="keywords_automation_lock">
-        <item>automation</item>
-        <item>auto</item>
-        <item>lock</item>
+        <item>自動化</item>
+        <item>自動</item>
+        <item>ロック</item>
     </string-array>
     <string-array name="keywords_adb_debug">
-        <item>adb</item>
-        <item>usb</item>
-        <item>debug</item>
+        <item>ADB</item>
+        <item>USB</item>
+        <item>デバッグ</item>
     </string-array>
     <string-array name="keywords_battery_charge">
-        <item>battery</item>
-        <item>charge</item>
-        <item>power</item>
+        <item>バッテリー</item>
+        <item>充電</item>
+        <item>電源</item>
     </string-array>
     <string-array name="keywords_blur_glass">
-        <item>blur</item>
-        <item>glass</item>
-        <item>vignette</item>
+        <item>ブラー</item>
+        <item>ガラス</item>
+        <item>ビネット</item>
     </string-array>
     <string-array name="keywords_float_window">
-        <item>float</item>
-        <item>window</item>
-        <item>overlay</item>
+        <item>フロート</item>
+        <item>ウインドウ</item>
+        <item>オーバーレイ</item>
     </string-array>
     <string-array name="keywords_always_display">
-        <item>always</item>
-        <item>display</item>
-        <item>clock</item>
+        <item>常に</item>
+        <item>画面</item>
+        <item>時計</item>
     </string-array>
     <string-array name="keywords_audio_mute">
-        <item>audio</item>
-        <item>mute</item>
-        <item>volume</item>
+        <item>オーディオ</item>
+        <item>ミュート</item>
+        <item>音量</item>
     </string-array>
     <string-array name="keywords_blue_filter">
-        <item>blue</item>
-        <item>filter</item>
-        <item>auto</item>
+        <item>青</item>
+        <item>フィルター</item>
+        <item>自動</item>
     </string-array>
     <string-array name="keywords_app_freezing">
-        <item>freeze</item>
-        <item>shizuku</item>
+        <item>フリーズ</item>
+        <item>Shizuku</item>
     </string-array>
     <string-array name="keywords_manual_now">
-        <item>manual</item>
-        <item>now</item>
-        <item>shizuku</item>
+        <item>マニュアル</item>
+        <item>今</item>
+        <item>Shizuku</item>
     </string-array>
     <string-array name="keywords_proximity_sensor">
         <item>proximity</item>
@@ -690,13 +702,13 @@
     <string name="status_up_to_date">You are up to date</string>
     <string name="warning_pre_release">This is a pre-release version and might be unstable.</string>
     <string name="release_notes_format">Release Notes v%1$s</string>
-    <string name="action_view_on_github">View on GitHub</string>
-    <string name="action_download_apk">Download APK</string>
+    <string name="action_view_on_github">GitHubを見る</string>
+    <string name="action_download_apk">APKをダウンロード</string>
     <!-- Haptic Types -->
-    <string name="haptic_none">None</string>
-    <string name="haptic_subtle">Subtle</string>
-    <string name="haptic_double">Double</string>
-    <string name="haptic_click">Click</string>
+    <string name="haptic_none">なし</string>
+    <string name="haptic_subtle">微妙</string>
+    <string name="haptic_double">ダブル</string>
+    <string name="haptic_click">クリック</string>
     <string name="haptic_tick">ティック</string>
     <!-- Flashlight Intensity Overlay -->
     <string name="action_turn_off">オフにする</string>
@@ -729,7 +741,7 @@
     <string name="email_label">メール</string>
     <string name="send_email_chooser_title">メールを送る</string>
     <string name="error_no_email_app">メールアプリがありません</string>
-    <string name="instruction_step_image_description">Step %1$d Image</string>
+    <string name="instruction_step_image_description">ステップ%1$dの画像</string>
     <!-- Instructions Content -->
     <string name="instruction_section_perms_title">アクセシビリティ、通知、他のアプリの上に重ねて表示権限</string>
     <string name="instruction_step_perms_1">アクセシビリティ、通知の読み取り、オーバーレイなどの機密性の高い権限を付与しようとすると、このアクセス拒否メッセージが表示されることがあります。付与するには以下の手順を確認してください。</string>
@@ -744,47 +756,47 @@
     <string name="instruction_section_freeze_title">フリーズとは？</string>
     <string name="instruction_section_freeze_desc">一時停止してアプリを邪魔することなく、バックグラウンドでアプリが動作しないようにすることで、電力を少し節約できます。あまり使用しないアプリに適しています。\n\nSNSなどの通信サービスは、フリーズを解除しない限り、緊急時に通知されないため、推奨されません。\n\nシステムアプリをフリーズするとシステムが不安定になる可能性があるため、フリーズしないことを強くおすすめします。注意して操作してください。警告しましたからね！\n\nInspired by Hail &lt;3</string>
     <string name="instruction_section_security_title">アプリロックとロック画面セキュリティは本当に安全ですか？</string>
-    <string name="instruction_section_security_desc">Absolutely not. \n\nAny 3rd party application can not 100% interfere with regular device interactions and even the app lock is only an overlay above selected apps to prevent interacting with them. There are workarounds and it is not foolproof. \n\nSame goes with the screen locked security feature which detects someone trying to interact with the network tiles which for some reason are still accessible for anyone on Pixels. So if they try hard enough they might still be able to change them and especially if you have a flight mode QS tile added, this app can not prevent interactions with it. \n\nThese features are made just as experiments for light usage and would never recommend as strong security and privacy solutions. \n\nSecure alternatives:\n - App lock: Private Space and Secure folder on Pixels and Samsung\n - Preventing mobile networks access: Make sure your theft protection and offline/ power off find my device settings are on. You may look into Graphene OS as well.</string>
-    <string name="instruction_section_statusbar_title">Statusbar icons</string>
-    <string name="instruction_section_statusbar_desc">You may notice that even after resetting the statusbar icons, Some icons such as device rotation, wired headphone icons may stay visible. This is due to how the statubar blacklist is implemented in Android and how your OEM may have customized them. \nYou may need further adjustments. \n\nAlso not all icon visibility options may work as they depend on the OEM implementations and availability.</string>
-    <string name="instruction_section_lighting_title">Notification lighting does not work</string>
-    <string name="instruction_section_lighting_desc">It depends on the OEM. Some like OneUI does not seem to allow overlays above the AOD preventing the lighting effects being shown. In this case, try the ambient display as a workaround. </string>
-    <string name="instruction_section_button_title">Button remap does not work while display is off</string>
+    <string name="instruction_section_security_desc">絶対に安全とは限りません。\n\nサードパーティ製アプリは、通常のデバイス操作を100％妨害することはできません。アプリロックでさえ、特定のアプリとのやり取りを阻止するためのオーバーレイにすぎません。回避策としては有効でありますが、万全ではありません。\n\nロック画面セキュリティ機能も同様です。この機能は、ネットワークタイルへの操作を試みる人物を検出しますが、何らかの理由でPixelでは誰でもアクセスできます。そのため、十分に試行錯誤すれば、タイルを変更できる可能性があります。特に、機内モードのクイック設定タイルを追加している場合は、このアプリでタイルとのやり取りを阻止することはできません。\n\nこれらの機能は、軽い使用のための実験として作成されており、強力なセキュリティおよびプライバシーソリューションとして推奨されていません。\n\n安全な代替手段：\n・アプリロック：PixelやSamsungにあるプライベートスペースやセキュアフォルダ\n・ロック画面セキュリティ：盗難防止機能とオフラインや電源オフ時のデバイスを探す設定がオンになっていることを確認してください。Graphene OSも検討してみてください。</string>
+    <string name="instruction_section_statusbar_title">ステータスバーアイコン</string>
+    <string name="instruction_section_statusbar_desc">ステータスバーアイコンをリセットした後でも、デバイスの自動回転やヘッドセットアイコンなど、一部のアイコンが表示されたままになる場合があります。これは、Androidでのステータスバーのブラックリストの実装方法と、OEMによるカスタマイズが原因です。\n更に調整が必要になる場合があります。\n\nまた、OEMの実装と可用性に依存するため、全てのアイコン表示オプションが機能するとは限りません。</string>
+    <string name="instruction_section_lighting_title">通知ライトが機能しません</string>
+    <string name="instruction_section_lighting_desc">OEMによって動作が異なります。OneUIなど、一部のOEMでは常時表示ディスプレイの上にオーバーレイを許可していないため、通知ライトが表示されません。この場合、回避策として、アンビエントディスプレイを試してください。 </string>
+    <string name="instruction_section_button_title">画面がオフのときのボタンリマップが機能しません</string>
     <string name="instruction_section_button_desc">Some OEMs limit the accessibility service reporting once the display is actually off but they may still work while the AOD is on. \nIn this case, you may able to use button remaps with AOD on but not with off. \n\nAs a workaround, you will need to use Shizuku permissions and turn on the \'Use Shizuku\' toggle in button remap settings which identifies and listen to hardware input events.\nThis is not guaranteed to work on all devices and needs testing.\n\nAnd even if it\'s on, Shizuku method only will be used when it\'s needed. Otherwise it will always fallback to Accessibility which also handles the blocking of the actual input during long press.</string>
-    <string name="instruction_section_flashlight_title">Flashlight brightness does not work</string>
-    <string name="instruction_section_flashlight_desc">Only a limited number of devices got hardware and software support adjusting the flashlight intensity. \n\n\'The minimum version of Android is 13 (SDK33).\nFlashlight brightness control only supports HAL version 3.8 and higher, so among the supported devices, the latest ones (For example, Pixel 6/7, Samsung S23, etc.)\'\npolodarb/Flashlight-Tiramisu</string>
-    <string name="instruction_section_about_title">What the hell is this app?</string>
-    <string name="instruction_section_about_desc">Good question,\n\nI always wanted to extract the most out of my devices as I\'ve been a rooted user for ever since I got my first Project Treble device. And I\'ve been loving the Tasker app which is like the god when comes automation and utilizing every possible API and internal features of Android.\n\nSo I am not unrooted and back on stock Android beta experience and wanted to get the most out from what is possible with given privileges. Might as well share them. So with my beginner knowledge in Kotlin Jetpack and with the support of many research and assist tools and also the great community, I built an all-in-one app containing everything I wanted to be in my Android with given permissions. And here it is.\n\nFeature requests are welcome, I will consider and see if they are achievable with available permissions and my skills. Nowadays what is not possible. :)\n\nWhy not on Play Store?\nI don\'t wanna risk getting my Developer account banned due to the highly sensitive and internal permissions and APIs being used in the app. But with the way Android sideloading is headed, let\'s see what we have to do. I do understand the concerns of sideloaded apps being malicious.\nWhile we are at the topic, Checkout my other app AirSync if you are a mac + Android user. *shameless plug*\n\nEnjoy, Keep building! (っ◕‿◕)っ</string>
+    <string name="instruction_section_flashlight_title">フラッシュライトの明るさ調整が機能しません</string>
+    <string name="instruction_section_flashlight_desc">フラッシュライトの明るさ調整をハードウェアとソフトウェアでサポートしているデバイスは限られています。\n\n「Androidの最小バージョンは13 (SDK33) です。\nフラッシュライトの明るさ調整はHALバージョン3.8以降のみをサポートしているため、サポートされている中で最新のもの(例：Pixel 6/7、Samsung S23など)のみが対象です。」\npolodarb/Flashlight-Tiramisu</string>
+    <string name="instruction_section_about_title">このアプリは一体何ですか？</string>
+    <string name="instruction_section_about_desc">いい質問ですね、\n\n最初のProject Trebleデバイスを入手して以来、ずっとRoot化ユーザーだったので、デバイスを最大限に活用したいと思っていました。そして、自動化やAndroidのあらゆるAPIと内部機能の活用に関しては神のようなTaskerアプリが大好きです。\n\nそのため、Root化を解除し、ストックAndroidベータ版に戻り、与えられた権限でできることを最大限に活用したいと考え、せっかくなので共有したいと思いました。そこで、Kotlin Jetpackの初心者レベルの知識と、多くの調査・支援ツール、そして素晴らしいコミュニティのサポートを受けて、Androidに欲しいものをすべて含んだ、与えられた権限でオールインワンのアプリを構築しました。そしてこれが完成形です。\n\n機能リクエストは歓迎します。利用可能な権限と私のスキルで実現可能かどうか検討します。最近は不可能なことばかりです。:)\n\nなぜPlayストアではだめなのですか？\nアプリで使用されている非常に機密性の高い内部権限とAPIが原因で、開発者アカウントが停止されるリスクがあるからです。しかし、Androidのサイドローディングの方向性を考えると、どうすればよいか見てみましょう。サイドローディングされたアプリが悪意のあるものであるという懸念は理解しています。\nついでに、MacとAndroidの両方をお使いの方は、私の別のアプリ「AirSync」もチェックしてみてください。(宣伝です)\n\nEnjoy, Keep building! (っ◕‿◕)っ</string>
     <!-- Bug Reporting -->
-    <string name="action_report_bug">Report Bug</string>
-    <string name="toast_bug_report_copied">Bug report copied to clipboard</string>
-    <string name="bug_report_title">Bug report</string>
-    <string name="bug_report_option_share_logs">Share logs</string>
-    <string name="bug_report_option_share_logs_desc">Include logs and details</string>
-    <string name="bug_report_device_info">Device Info</string>
-    <string name="bug_report_raw_json">Raw Report</string>
-    <string name="action_report_github">Open GitHub Issue</string>
-    <string name="action_report_email">Email Report</string>
-    <string name="action_copy_clipboard">Copy to Clipboard</string>
-    <string name="bug_report_email_subject">Essentials Bug Report</string>
-    <string name="bug_report_send_via">Send via</string>
+    <string name="action_report_bug">バグを報告</string>
+    <string name="toast_bug_report_copied">バグレポートをクリップボードにコピーしました</string>
+    <string name="bug_report_title">バグレポート</string>
+    <string name="bug_report_option_share_logs">ログを共有</string>
+    <string name="bug_report_option_share_logs_desc">ログと詳細を含める</string>
+    <string name="bug_report_device_info">デバイス情報</string>
+    <string name="bug_report_raw_json">Rawレポート</string>
+    <string name="action_report_github">GitHub Issueを開く</string>
+    <string name="action_report_email">メールで報告</string>
+    <string name="action_copy_clipboard">クリップボードにコピー</string>
+    <string name="bug_report_email_subject">Essentials Bug Report (バグレポート)</string>
+    <string name="bug_report_send_via">送信方法</string>
     <!-- Location Reached -->
     <string name="feat_location_reached_title">Location reached</string>
     <string name="feat_location_reached_desc">Get notified when you arrive at a specific destination.</string>
-    <string name="location_reached_pick_destination">Destination</string>
-    <string name="location_reached_set_destination_btn">Set Destination</string>
-    <string name="location_reached_status_tracking">Tracking: %1$.4f, %2$.4f</string>
-    <string name="location_reached_status_none">No destination set</string>
+    <string name="location_reached_pick_destination">目的地</string>
+    <string name="location_reached_set_destination_btn">目的地をセット</string>
+    <string name="location_reached_status_tracking">トラッキング中：%1$.4f, %2$.4f</string>
+    <string name="location_reached_status_none">目的地がセットされていません</string>
     <string name="location_reached_how_to">Open your map app, pick a location, and share it to Essentials.</string>
     <string name="location_reached_radius_title">Radius: %d m</string>
-    <string name="location_reached_radius_desc">Distance to trigger the alarm</string>
-    <string name="location_reached_enable_title">Enable notification</string>
-    <string name="perm_location_title">Location</string>
-    <string name="perm_location_desc">Used to detect arrival at your destination.</string>
-    <string name="perm_bg_location_title">Background Location</string>
-    <string name="perm_bg_location_desc">Required to monitor your arrival while the app is closed or the screen is off.</string>
-    <string name="location_reached_notification_title">Destination Reached!</string>
-    <string name="location_reached_notification_desc">You have arrived at your destination.</string>
+    <string name="location_reached_radius_desc">知らせる距離</string>
+    <string name="location_reached_enable_title">通知オン</string>
+    <string name="perm_location_title">位置情報</string>
+    <string name="perm_location_desc">目的地への到着を検出するために使用します。</string>
+    <string name="perm_bg_location_title">バックグラウンド位置情報</string>
+    <string name="perm_bg_location_desc">アプリが閉じているときや画面がオフのときに到着を監視するために必要です。</string>
+    <string name="location_reached_notification_title">目的地に到着しました！</string>
+    <string name="location_reached_notification_desc">あなたは目的地に到着しました。</string>
     <string name="location_reached_current_distance">Currently %1$.1f km away</string>
     <string name="location_reached_clear_btn">Clear Destination</string>
     <string name="location_reached_processing">Processing location…</string>
@@ -804,16 +816,16 @@
     <string name="location_reached_service_title">Travel Alarm active</string>
     <string name="location_reached_service_remaining">%1$s remaining (%2$d%%)</string>
     <string name="location_reached_channel_name">Travel Progress</string>
-    <string name="location_reached_channel_desc">Shows real-time distance to destination</string>
+    <string name="location_reached_channel_desc">目的地までの距離をリアルタイムで表示</string>
     <string name="location_reached_alarm_title">Destination Nearby</string>
     <string name="location_reached_alarm_subtitle">Prepare to get off</string>
     <string name="location_reached_dismiss">Dismiss</string>
-    <string name="location_reached_toast_set">Destination set: %1$.4f, %2$.4f</string>
-    <string name="setting_use_root_title">Use Root</string>
-    <string name="setting_use_root_desc">Instead of Shizuku</string>
-    <string name="root_not_available_toast">Root access not available. Please check your root manager.</string>
+    <string name="location_reached_toast_set">目的地をセット：%1$.4f, %2$.4f</string>
+    <string name="setting_use_root_title">Rootを使う</string>
+    <string name="setting_use_root_desc">Shizukuの代わりに</string>
+    <string name="root_not_available_toast">Rootアクセスができません。Rootマネージャーを確認してください。</string>
     <!-- System Keyboard -->
-    <string name="feat_system_keyboard_title">Keyboard</string>
+    <string name="feat_system_keyboard_title">キーボード</string>
     <string name="feat_system_keys">Keys</string>
     <string name="feat_system_keyboard_desc">Customize layout and behavior</string>
     <string name="search_keyboard_height_title">Keyboard Height</string>
