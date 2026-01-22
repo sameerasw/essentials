@@ -814,7 +814,7 @@
     <string name="location_reached_dist_m">%1$d m</string>
     <string name="location_reached_dist_km">%1$.1f km</string>
     <string name="location_reached_service_title">Alarme de trajet active</string>
-    <string name="location_reached_service_remaining">%1$s restant</string>
+    <string name="location_reached_service_remaining">%1$s restant (%2$d%%)</string>
     <string name="location_reached_channel_name">Progrès du trajet</string>
     <string name="location_reached_channel_desc">Affiche la distance de la destination en temps réel</string>
     <string name="location_reached_alarm_title">Destination à proximité</string>

@@ -876,7 +876,7 @@
     <string name="location_reached_dist_m">%1$d m</string>
     <string name="location_reached_dist_km">%1$.1f km</string>
     <string name="location_reached_service_title">Travel alarm active</string>
-    <string name="location_reached_service_remaining">%1$s remaining</string>
+    <string name="location_reached_service_remaining">%1$s remaining (%2$d%%)</string>
     <string name="location_reached_channel_name">Travel Progress</string>
     <string name="location_reached_channel_desc">Shows real-time distance to destination</string>
     <string name="location_reached_alarm_title">Destination Nearby</string>
