@@ -52,6 +52,8 @@
     <string name="action_toggle_mute">Activer le mode silencieux</string>
     <string name="action_ai_assistant">Assistant IA</string>
     <string name="action_take_screenshot">Prendre une capture d\'écran</string>
+    <string name="action_cycle_sound_modes">Cycle sound modes</string>
+    <string name="action_toggle_media_volume">Toggle media volume</string>
     <string name="button_remap_screen_off_hint">Quand l\'écran est éteint, appuyez longuement sur le bouton sélectionné pour déclencher son action assignée. Sur les appareils Pixel, cette action ne se déclenche que si le Always-On Display est activé à cause de limitations systèmes.</string>
     <string name="button_remap_screen_on_hint">Quand l\'écran est allumé, appuyez longuement sur le bouton sélectionné pour déclencher son action assignée.</string>
     <string name="flashlight_intensity_title">Intensité de la lampe-torche</string>
@@ -814,7 +816,7 @@
     <string name="location_reached_dist_m">%1$d m</string>
     <string name="location_reached_dist_km">%1$.1f km</string>
     <string name="location_reached_service_title">Alarme de trajet active</string>
-    <string name="location_reached_service_remaining">%1$s restant (%2$d%%)</string>
+    <string name="location_reached_service_remaining">%1$s restant</string>
     <string name="location_reached_channel_name">Progrès du trajet</string>
     <string name="location_reached_channel_desc">Affiche la distance de la destination en temps réel</string>
     <string name="location_reached_alarm_title">Destination à proximité</string>
