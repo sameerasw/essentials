@@ -61,9 +61,8 @@ class SettingsRepository(private val context: Context) {
         const val KEY_DYNAMIC_NIGHT_LIGHT_ENABLED = "dynamic_night_light_enabled"
         const val KEY_DYNAMIC_NIGHT_LIGHT_SELECTED_APPS = "dynamic_night_light_selected_apps"
         
-        const val KEY_SNOOZE_DEBUGGING_ENABLED = "snooze_debugging_enabled"
-        const val KEY_SNOOZE_FILE_TRANSFER_ENABLED = "snooze_file_transfer_enabled"
-        const val KEY_SNOOZE_CHARGING_ENABLED = "snooze_charging_enabled"
+        const val KEY_SNOOZE_DISCOVERED_CHANNELS = "snooze_discovered_channels"
+        const val KEY_SNOOZE_BLOCKED_CHANNELS = "snooze_blocked_channels"
         
         const val KEY_FLASHLIGHT_ALWAYS_TURN_OFF_ENABLED = "flashlight_always_turn_off_enabled"
         const val KEY_FLASHLIGHT_FADE_ENABLED = "flashlight_fade_enabled"
@@ -299,6 +298,45 @@ class SettingsRepository(private val context: Context) {
              saveAppSelection(key, current)
         }
     }
+
+    // Snooze Notifications Helper
+    fun loadSnoozeDiscoveredChannels(): List<com.sameerasw.essentials.domain.model.SnoozeChannel> {
+        val json = prefs.getString(KEY_SNOOZE_DISCOVERED_CHANNELS, null)
+        return if (json != null) {
+            val type = object : TypeToken<List<com.sameerasw.essentials.domain.model.SnoozeChannel>>() {}.type
+            try {
+                gson.fromJson(json, type) ?: emptyList()
+            } catch (e: Exception) {
+                emptyList()
+            }
+        } else {
+            emptyList()
+        }
+    }
+
+    fun saveSnoozeDiscoveredChannels(channels: List<com.sameerasw.essentials.domain.model.SnoozeChannel>) {
+        val json = gson.toJson(channels)
+        putString(KEY_SNOOZE_DISCOVERED_CHANNELS, json)
+    }
+
+    fun loadSnoozeBlockedChannels(): Set<String> {
+        val json = prefs.getString(KEY_SNOOZE_BLOCKED_CHANNELS, null)
+        return if (json != null) {
+            val type = object : TypeToken<Set<String>>() {}.type
+            try {
+                gson.fromJson(json, type) ?: emptySet()
+            } catch (e: Exception) {
+                emptySet()
+            }
+        } else {
+            emptySet()
+        }
+    }
+
+    fun saveSnoozeBlockedChannels(blockedChannels: Set<String>) {
+        val json = gson.toJson(blockedChannels)
+        putString(KEY_SNOOZE_BLOCKED_CHANNELS, json)
+    }
     
     // Config Export/Import
     fun getAllConfigsAsJsonString(): String {
@@ -312,7 +350,9 @@ class SettingsRepository(private val context: Context) {
                 
                 p.all.forEach { (key, value) ->
                     // Skip app lists as requested, and stale data
-                    if (key.endsWith("_selected_apps") || key == "freeze_auto_excluded_apps" || key.startsWith("mac_battery_") || key == "airsync_mac_connected") {
+                    if (key.endsWith("_selected_apps") || key == "freeze_auto_excluded_apps" || 
+                        key.startsWith("mac_battery_") || key == "airsync_mac_connected" ||
+                        key == KEY_SNOOZE_DISCOVERED_CHANNELS) {
                         return@forEach
                     }
 

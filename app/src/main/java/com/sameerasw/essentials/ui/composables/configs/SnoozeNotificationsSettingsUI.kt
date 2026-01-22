@@ -38,41 +38,32 @@ fun SnoozeNotificationsSettingsUI(
             spacing = 2.dp,
             cornerRadius = 24.dp
         ) {
-            // Debugging
-            IconToggleItem(
-                iconRes = R.drawable.rounded_adb_24,
-                title = stringResource(R.string.search_snooze_debug_title),
-                isChecked = viewModel.isSnoozeDebuggingEnabled.value,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    viewModel.setSnoozeDebuggingEnabled(checked, context)
-                },
-                modifier = Modifier.highlight(highlightSetting == "snooze_debugging")
-            )
+            viewModel.snoozeChannels.value.forEach { channel ->
+                IconToggleItem(
+                    iconRes = when (channel.id) {
+                        "DEVELOPER_OPTIONS" -> R.drawable.rounded_adb_24
+                        "USB_CONNECTION" -> R.drawable.rounded_usb_24
+                        "BATTERY" -> R.drawable.rounded_charger_24
+                        else -> R.drawable.rounded_notification_settings_24
+                    },
+                    title = channel.name,
+                    isChecked = channel.isBlocked,
+                    onCheckedChange = { checked ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setSnoozeChannelBlocked(channel.id, checked, context)
+                    },
+                    modifier = Modifier.highlight(highlightSetting == channel.id)
+                )
+            }
 
-            // File Transfer
-            IconToggleItem(
-                iconRes = R.drawable.rounded_usb_24,
-                title = stringResource(R.string.search_snooze_file_title),
-                isChecked = viewModel.isSnoozeFileTransferEnabled.value,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    viewModel.setSnoozeFileTransferEnabled(checked, context)
-                },
-                modifier = Modifier.highlight(highlightSetting == "snooze_file_transfer")
-            )
-
-            // Charging
-            IconToggleItem(
-                iconRes = R.drawable.rounded_charger_24,
-                title = stringResource(R.string.search_snooze_charge_title),
-                isChecked = viewModel.isSnoozeChargingEnabled.value,
-                onCheckedChange = { checked ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    viewModel.setSnoozeChargingEnabled(checked, context)
-                },
-                modifier = Modifier.highlight(highlightSetting == "snooze_charging")
-            )
+            if (viewModel.snoozeChannels.value.isEmpty()) {
+                androidx.compose.material3.Text(
+                    text = stringResource(R.string.snooze_no_channels_discovered),
+                    modifier = Modifier.padding(16.dp),
+                    style = androidx.compose.material3.MaterialTheme.typography.bodyMedium,
+                    color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
     }
 }

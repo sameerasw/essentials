@@ -17,6 +17,52 @@ import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.utils.AppUtil
 
 class NotificationListener : NotificationListenerService() {
+    
+    override fun onListenerConnected() {
+        super.onListenerConnected()
+        try {
+            // Initial discovery from active notifications
+            activeNotifications?.forEach { sbn ->
+                val isSystem = sbn.packageName == "android" || sbn.packageName == "com.android.systemui"
+                if (isSystem) {
+                    discoverSystemChannel(sbn.packageName, sbn.notification.channelId, sbn.user)
+                }
+            }
+        } catch (_: Exception) {}
+    }
+
+    private fun discoverSystemChannel(packageName: String, channelId: String?, userHandle: android.os.UserHandle) {
+        if (channelId.isNullOrBlank()) return
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            try {
+                val prefs = applicationContext.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+                val discoveredJson = prefs.getString("snooze_discovered_channels", null)
+                val gson = com.google.gson.Gson()
+                val type = object : com.google.gson.reflect.TypeToken<List<com.sameerasw.essentials.domain.model.SnoozeChannel>>() {}.type
+                val discoveredChannels: MutableList<com.sameerasw.essentials.domain.model.SnoozeChannel> = if (discoveredJson != null) {
+                    try { gson.fromJson(discoveredJson, type) ?: mutableListOf() } catch (_: Exception) { mutableListOf() }
+                } else mutableListOf()
+
+                if (discoveredChannels.none { it.id == channelId }) {
+                    var foundName: String? = null
+                    try {
+                        val channels = getNotificationChannels(packageName, userHandle)
+                        val channel = channels.find { it.id == channelId }
+                        foundName = channel?.name?.toString()
+                    } catch (_: Exception) {}
+
+                    val name = if (!foundName.isNullOrBlank()) foundName 
+                               else channelId.replace("_", " ").lowercase().replaceFirstChar { it.uppercase() }
+                    
+                    val finalName = if (packageName == "android") name else "[$packageName] $name"
+                    
+                    discoveredChannels.add(com.sameerasw.essentials.domain.model.SnoozeChannel(channelId, finalName))
+                    prefs.edit().putString("snooze_discovered_channels", gson.toJson(discoveredChannels)).apply()
+                }
+            } catch (_: Exception) {}
+        }
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onNotificationPosted(sbn: StatusBarNotification) {
@@ -34,36 +80,27 @@ class NotificationListener : NotificationListenerService() {
 
         // Handle Snooze System Notifications
         try {
-            val packageName = sbn.packageName
-            val isSystem = packageName == "android" || packageName == "com.android.systemui"
-
+            val pkg = sbn.packageName
+            val isSystem = pkg == "android" || pkg.startsWith("com.android.") || pkg == "com.google.android.gms"
+            
             if (isSystem) {
-                val extras = sbn.notification.extras
-                val title = extras.getString(Notification.EXTRA_TITLE) ?: ""
-                val text = extras.getString(Notification.EXTRA_TEXT) ?: ""
-                val content = "$title $text"
+                val channelId = sbn.notification.channelId
+                
+                // 1. Discovery
+                discoverSystemChannel(pkg, channelId, sbn.user)
 
-                // 1. Debugging
-                if (prefs.getBoolean("snooze_debugging_enabled", false)) {
-                    val debugRegex = Regex("(?i).*(usb|wireless)\\s*debugging\\s*connected.*")
-                    if (debugRegex.containsMatchIn(content)) {
+                // 2. Snoozing
+                if (channelId != null) {
+                    val blockedChannelsJson = prefs.getString("snooze_blocked_channels", null)
+                    val blockedChannels: Set<String> = if (blockedChannelsJson != null) {
+                        try {
+                            val type = object : com.google.gson.reflect.TypeToken<Set<String>>() {}.type
+                            com.google.gson.Gson().fromJson(blockedChannelsJson, type) ?: emptySet()
+                        } catch (_: Exception) { emptySet() }
+                    } else emptySet()
+
+                    if (blockedChannels.contains(channelId)) {
                         snoozeNotification(sbn.key, 24 * 60 * 60 * 1000L) // Snooze for 24 hours
-                    }
-                }
-
-                // 2. File Transfer
-                if (prefs.getBoolean("snooze_file_transfer_enabled", false)) {
-                    val fileTransferRegex = Regex("(?i).*usb\\s*file\\s*transfer.*")
-                    if (fileTransferRegex.containsMatchIn(content)) {
-                         snoozeNotification(sbn.key, 24 * 60 * 60 * 1000L)
-                    }
-                }
-
-                // 3. Charging
-                if (prefs.getBoolean("snooze_charging_enabled", false)) {
-                    val chargingRegex = Regex("(?i).*charging\\s*this\\s*device.*")
-                    if (chargingRegex.containsMatchIn(content)) {
-                         snoozeNotification(sbn.key, 24 * 60 * 60 * 1000L)
                     }
                 }
             }

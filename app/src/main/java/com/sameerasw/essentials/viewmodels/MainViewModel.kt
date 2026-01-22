@@ -72,9 +72,7 @@ class MainViewModel : ViewModel() {
     val volumeDownActionOn = mutableStateOf("None")
     val remapHapticType = mutableStateOf(HapticFeedbackType.DOUBLE)
     val isDynamicNightLightEnabled = mutableStateOf(false)
-    val isSnoozeDebuggingEnabled = mutableStateOf(false)
-    val isSnoozeFileTransferEnabled = mutableStateOf(false)
-    val isSnoozeChargingEnabled = mutableStateOf(false)
+    val snoozeChannels = mutableStateOf<List<com.sameerasw.essentials.domain.model.SnoozeChannel>>(emptyList())
     val isFlashlightAlwaysTurnOffEnabled = mutableStateOf(false)
     val isFlashlightFadeEnabled = mutableStateOf(false)
     val isFlashlightAdjustEnabled = mutableStateOf(false)
@@ -159,6 +157,7 @@ class MainViewModel : ViewModel() {
     private var lastUpdateCheckTime: Long = 0
     private lateinit var settingsRepository: SettingsRepository
     private lateinit var updateRepository: UpdateRepository
+    private var appContext: Context? = null
 
     private val preferenceChangeListener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
         // We still use this listener for now, attached via Repository
@@ -203,10 +202,14 @@ class MainViewModel : ViewModel() {
             SettingsRepository.KEY_MAC_BATTERY_LAST_UPDATED -> macBatteryLastUpdated.value = settingsRepository.getLong(key, 0L)
             SettingsRepository.KEY_AIRSYNC_MAC_CONNECTED -> isMacConnected.value = settingsRepository.getBoolean(key, false)
             SettingsRepository.KEY_BATTERY_WIDGET_MAX_DEVICES -> batteryWidgetMaxDevices.intValue = settingsRepository.getInt(key, 8)
+            SettingsRepository.KEY_SNOOZE_DISCOVERED_CHANNELS, SettingsRepository.KEY_SNOOZE_BLOCKED_CHANNELS -> {
+                appContext?.let { loadSnoozeChannels(it) }
+            }
         }
     }
 
     fun check(context: Context) {
+        appContext = context.applicationContext
         settingsRepository = SettingsRepository(context)
         updateRepository = UpdateRepository()
         
@@ -304,9 +307,7 @@ class MainViewModel : ViewModel() {
         }
         
         isDynamicNightLightEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_DYNAMIC_NIGHT_LIGHT_ENABLED)
-        isSnoozeDebuggingEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_SNOOZE_DEBUGGING_ENABLED)
-        isSnoozeFileTransferEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_SNOOZE_FILE_TRANSFER_ENABLED)
-        isSnoozeChargingEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_SNOOZE_CHARGING_ENABLED)
+        loadSnoozeChannels(context)
         isFlashlightAlwaysTurnOffEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_ALWAYS_TURN_OFF_ENABLED)
         isFlashlightFadeEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_FADE_ENABLED)
         isFlashlightAdjustEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_ADJUST_INTENSITY_ENABLED)
@@ -1143,19 +1144,26 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun setSnoozeDebuggingEnabled(enabled: Boolean, context: Context) {
-        isSnoozeDebuggingEnabled.value = enabled
-        settingsRepository.putBoolean(SettingsRepository.KEY_SNOOZE_DEBUGGING_ENABLED, enabled)
+    fun loadSnoozeChannels(context: Context) {
+        val discovered = settingsRepository.loadSnoozeDiscoveredChannels()
+        val blocked = settingsRepository.loadSnoozeBlockedChannels()
+        
+        val channels = discovered.map { channel ->
+            channel.copy(isBlocked = blocked.contains(channel.id))
+        }
+        
+        snoozeChannels.value = channels.distinctBy { it.id }.sortedBy { it.name }
     }
 
-    fun setSnoozeFileTransferEnabled(enabled: Boolean, context: Context) {
-        isSnoozeFileTransferEnabled.value = enabled
-        settingsRepository.putBoolean(SettingsRepository.KEY_SNOOZE_FILE_TRANSFER_ENABLED, enabled)
-    }
-
-    fun setSnoozeChargingEnabled(enabled: Boolean, context: Context) {
-        isSnoozeChargingEnabled.value = enabled
-        settingsRepository.putBoolean(SettingsRepository.KEY_SNOOZE_CHARGING_ENABLED, enabled)
+    fun setSnoozeChannelBlocked(channelId: String, blocked: Boolean, context: Context) {
+        val currentBlocked = settingsRepository.loadSnoozeBlockedChannels().toMutableSet()
+        if (blocked) {
+            currentBlocked.add(channelId)
+        } else {
+            currentBlocked.remove(channelId)
+        }
+        settingsRepository.saveSnoozeBlockedChannels(currentBlocked)
+        loadSnoozeChannels(context)
     }
 
     fun setFlashlightAlwaysTurnOffEnabled(enabled: Boolean, context: Context) {
