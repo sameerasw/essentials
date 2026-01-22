@@ -392,6 +392,12 @@ fun ButtonRemapSettingsUI(
                         iconRes = R.drawable.rounded_bubble_chart_24,
                     )
                     RemapActionItem(
+                        title = stringResource(R.string.action_toggle_media_volume),
+                        isSelected = currentAction == "Toggle media volume",
+                        onClick = { onActionSelected("Toggle media volume") },
+                        iconRes = R.drawable.rounded_volume_off_24,
+                    )
+                    RemapActionItem(
                         title = stringResource(R.string.action_cycle_sound_modes),
                         isSelected = currentAction == "Cycle sound modes",
                         onClick = { onActionSelected("Cycle sound modes") },
