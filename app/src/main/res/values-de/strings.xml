@@ -322,12 +322,7 @@
     <string name="search_flashlight_pulse_desc">Langsames Blinken der Taschenlampe bei neuen Benachrichtigungen</string>
     <string name="search_only_facing_down_title">Nur, wenn das Handy umgedreht ist</string>
     <string name="search_only_facing_down_desc">Die Taschenlampe blinkt nur, wenn das Gerät mit der Vorderseite nach unten liegt</string>
-    <string name="search_snooze_debug_title">Debugging-Benachrichtigungen deaktivieren</string>
-    <string name="search_snooze_debug_desc">Persistente ADB/USB-Debugging-Benachrichtigungen ausblenden</string>
-    <string name="search_snooze_file_title">Benachrichtigung zur Dateiübertragung deaktivieren</string>
-    <string name="search_snooze_file_desc">Persistente Benachrichtigungen zur USB-Dateiübertragung ausblenden</string>
-    <string name="search_snooze_charge_title">Lade-Benachrichtigung deaktivieren</string>
-    <string name="search_snooze_charge_desc">Persistente Benachrichtigungen zum Aufladen ausblenden</string>
+    <string name="snooze_no_channels_discovered">No system channels discovered yet. They will appear here once detected.</string>
     <string name="search_qs_blur_title">UI-Unschärfe</string>
     <string name="search_qs_blur_desc">Systemweite UI-Unschärfe umschalten</string>
     <string name="search_qs_bubbles_title">Bubbles</string>
