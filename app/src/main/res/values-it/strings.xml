@@ -53,6 +53,8 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string name="action_toggle_mute">Attiva/Disattiva il silenzioso</string>
     <string name="action_ai_assistant">Assistente AI</string>
     <string name="action_take_screenshot">Fai uno screenshot</string>
+    <string name="action_cycle_sound_modes">Cycle sound modes</string>
+    <string name="action_toggle_media_volume">Toggle media volume</string>
     <string name="button_remap_screen_off_hint">When the screen is off, long-press the selected button to trigger its assigned action. On Pixel devices, this action only gets triggered if the AOD is on due to system limitations.</string>
     <string name="button_remap_screen_on_hint">Quando lo schermo è acceso, tieni premuto il tasto selezionato per avviare l\'azione selezionata.</string>
     <string name="flashlight_intensity_title">Intensità Torcia</string>
