@@ -322,12 +322,7 @@
     <string name="search_flashlight_pulse_desc">Slowly pulse flashlight for new notifications</string>
     <string name="search_only_facing_down_title">Only while facing down</string>
     <string name="search_only_facing_down_desc">Pulse flashlight only when device is face down</string>
-    <string name="search_snooze_debug_title">Disable debugging notifications</string>
-    <string name="search_snooze_debug_desc">Hide persistent ADB/USB debugging notifications</string>
-    <string name="search_snooze_file_title">Disable file transfer notification</string>
-    <string name="search_snooze_file_desc">Hide persistent USB file transfer notifications</string>
-    <string name="search_snooze_charge_title">Disable charging notification</string>
-    <string name="search_snooze_charge_desc">Hide system charging notifications</string>
+    <string name="snooze_no_channels_discovered">No system channels discovered yet. They will appear here once detected.</string>
     <string name="search_qs_blur_title">UI Blur</string>
     <string name="search_qs_blur_desc">Toggle system-wide UI blur</string>
     <string name="search_qs_bubbles_title">Bubbles</string>
