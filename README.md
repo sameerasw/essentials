@@ -45,6 +45,7 @@ Essential tools, mods and workarounds for Pixels and other Androids
 - **Flashlight Enhancements**: Advanced flashlight control with smooth fade-in/out, volume key intensity adjustment, global brightness controls, and live activity support.
 - **Screen Locked Security**: Protect your device by disabling sensitive Quick Settings tiles and power menu when the device is locked.
 - **A keyboard**: That no one asked for.
+- **Watermark**: Watermark your captures and EXIF data
 
 ### Visuals
 
