@@ -52,6 +52,8 @@
     <string name="action_toggle_mute">Stummschaltung umschalten</string>
     <string name="action_ai_assistant">KI-Assistent</string>
     <string name="action_take_screenshot">Bildschirmfoto machen</string>
+    <string name="action_cycle_sound_modes">Cycle sound modes</string>
+    <string name="action_toggle_media_volume">Toggle media volume</string>
     <string name="button_remap_screen_off_hint">Wenn der Bildschirm ausgeschaltet ist, kann durch langes Drücken der ausgewählten Taste die zugehörige Aktion ausgelöst werden. Auf Pixel-Geräten wird diese Aktion aufgrund von Systembeschränkungen nur ausgelöst, wenn das Always-On-Display aktiviert ist.</string>
     <string name="button_remap_screen_on_hint">Wenn der Bildschirm angeschaltet ist, kann durch langes Drücken der ausgewählten Taste die zugehörige Aktion ausgelöst werden.</string>
     <string name="flashlight_intensity_title">Taschenlampenintensität</string>
@@ -73,22 +75,22 @@
     <string name="permission_post_notifications_title">Benachrichtigungen senden</string>
     <string name="permission_post_notifications_desc">Erlaubt es der App Benachrichtigungen zu zeigen</string>
     <string name="permission_grant_action">Berechtigung gewähren</string>
-    <string name="caffeinate_notification_title">Caffeinate Active</string>
+    <string name="caffeinate_notification_title">Koffein aktiv</string>
     <string name="caffeinate_active">Aktiv</string>
-    <string name="caffeinate_notification_desc">Screen is being kept awake</string>
-    <string name="caffeinate_battery_optimization_title">Ignore battery optimization</string>
-    <string name="caffeinate_battery_optimization_desc">Recommended for reliable service on some devices</string>
-    <string name="caffeinate_abort_screen_off_title">Abort with screen off</string>
-    <string name="caffeinate_timeout_presets_title">Timeout Presets</string>
-    <string name="caffeinate_timeout_presets_desc">Select available durations for QS tile</string>
+    <string name="caffeinate_notification_desc">Bildschirm wird wach gehalten</string>
+    <string name="caffeinate_battery_optimization_title">Ignoriere Batterie-Optimierungen</string>
+    <string name="caffeinate_battery_optimization_desc">Empfohlen für zuverlässigen Betrieb auf einigen Geräten</string>
+    <string name="caffeinate_abort_screen_off_title">Abbruch bei ausgeschaltetem Bildschirm</string>
+    <string name="caffeinate_timeout_presets_title">Zeitvorlagen</string>
+    <string name="caffeinate_timeout_presets_desc">Wähle eine Dauer für die Schnelleinstellungskachel</string>
     <string name="caffeinate_timeout_5m">5min</string>
     <string name="caffeinate_timeout_10m">10min</string>
     <string name="caffeinate_timeout_30m">30min</string>
     <string name="caffeinate_timeout_1h">1std</string>
     <string name="caffeinate_timeout_infinity">∞</string>
-    <string name="caffeinate_starting_in">Starting in %1$ds…</string>
-    <string name="caffeinate_remaining">%1$s remaining</string>
-    <string name="caffeinate_live_channel_desc">Persistent notification for Caffeinate</string>
+    <string name="caffeinate_starting_in">Startet in %1$ds…</string>
+    <string name="caffeinate_remaining">%1$s verbleibend</string>
+    <string name="caffeinate_live_channel_desc">Dauerhafte Benachrichtigung für Koffein</string>
     <!-- Dynamic Night Light -->
     <string name="dynamic_night_light_enable_title">Aktiviere dynamisches Nachtlicht</string>
     <string name="dynamic_night_light_apps_section">Apps, mit deaktiviertem Nachtlicht</string>
@@ -166,7 +168,7 @@
     <string name="tile_app_freezing">Apps einfrieren</string>
     <string name="tile_flashlight_pulse">Taschenlampenimpuls</string>
     <string name="tile_stay_awake">Wach bleiben</string>
-    <string name="input_method_label">Essentials Keyboard</string>
+    <string name="input_method_label">Essentials-Tastatur</string>
     <string name="subtype_en_us">Englisch (US)</string>
     <string name="tile_active">Aktiv</string>
     <string name="tile_inactive">Inaktiv</string>
@@ -272,10 +274,10 @@
     <string name="feat_stay_awake_tile_desc">Kachel in den Schnelleinstellungen zum Umschalten des Wachbleibens</string>
     <string name="show_bluetooth_devices">Bluetooth-Geräte anzeigen</string>
     <string name="show_bluetooth_devices_summary">Zeige den Akkustand von verbundenen Bluetooth-Geräten</string>
-    <string name="limit_max_devices">Limit max devices</string>
-    <string name="limit_max_devices_summary">Adjust max devices visible in widget</string>
-    <string name="widget_background_title">Widget background</string>
-    <string name="widget_background_summary">Show widget background</string>
+    <string name="limit_max_devices">Max. Geräteanzahl begrenzen</string>
+    <string name="limit_max_devices_summary">Anzahl der im Widget angezeigten Geräte anpassen</string>
+    <string name="widget_background_title">Widget-Hintergrund</string>
+    <string name="widget_background_summary">Widget-Hintergrund anzeigen</string>
     <!-- DIY Automation -->
     <string name="diy_create_trigger_title">Auslöser-Automatisierung</string>
     <string name="diy_create_trigger_desc">Eine Aktion planen, die bei einer Beobachtung ausgelöst wird</string>
@@ -308,8 +310,8 @@
     <string name="search_smart_data_desc">Verstecke mobile Daten in bestimmten Modi</string>
     <string name="search_reset_icons_title">Alle Icons zurücksetzen</string>
     <string name="search_reset_icons_desc">Sichtbarkeit der Statusleisten-Icons auf Standard zurücksetzen</string>
-    <string name="search_caffeinate_abort_screen_off_title">Abort Caffeinate with screen off</string>
-    <string name="search_caffeinate_abort_screen_off_desc">Automatically turn off Caffeinate when manually locking the device</string>
+    <string name="search_caffeinate_abort_screen_off_title">Koffein bei ausgeschaltetem Bildschirm abbrechen</string>
+    <string name="search_caffeinate_abort_screen_off_desc">Koffein automatisch deaktivieren, wenn das Gerät manuell gesperrt wird</string>
     <string name="search_lighting_style_title">Lichtstil</string>
     <string name="search_lighting_style_desc">Wählen Sie zwischen Streifeneffekt, Leuchteffekt, Dreheffekt und mehr</string>
     <string name="search_corner_radius_title">Eckradius</string>
@@ -320,12 +322,7 @@
     <string name="search_flashlight_pulse_desc">Langsames Blinken der Taschenlampe bei neuen Benachrichtigungen</string>
     <string name="search_only_facing_down_title">Nur, wenn das Handy umgedreht ist</string>
     <string name="search_only_facing_down_desc">Die Taschenlampe blinkt nur, wenn das Gerät mit der Vorderseite nach unten liegt</string>
-    <string name="search_snooze_debug_title">Debugging-Benachrichtigungen deaktivieren</string>
-    <string name="search_snooze_debug_desc">Persistente ADB/USB-Debugging-Benachrichtigungen ausblenden</string>
-    <string name="search_snooze_file_title">Benachrichtigung zur Dateiübertragung deaktivieren</string>
-    <string name="search_snooze_file_desc">Persistente Benachrichtigungen zur USB-Dateiübertragung ausblenden</string>
-    <string name="search_snooze_charge_title">Lade-Benachrichtigung deaktivieren</string>
-    <string name="search_snooze_charge_desc">Persistente Benachrichtigungen zum Aufladen ausblenden</string>
+    <string name="snooze_no_channels_discovered">No system channels discovered yet. They will appear here once detected.</string>
     <string name="search_qs_blur_title">UI-Unschärfe</string>
     <string name="search_qs_blur_desc">Systemweite UI-Unschärfe umschalten</string>
     <string name="search_qs_bubbles_title">Bubbles</string>
@@ -396,7 +393,7 @@
     <string name="perm_write_secure_desc_common">Benötigt für Statusleisten-Symbole und Sicherheit bei Bildschirmsperre</string>
     <string name="perm_write_secure_desc_night_light">Benötigt, um das Nachtlicht zu aktivieren. Über ADB oder Root gewähren.</string>
     <string name="perm_write_settings_title">Systemeinstellungen ändern</string>
-    <string name="perm_write_settings_desc">Required to toggle Adaptive Brightness and other system settings</string>
+    <string name="perm_write_settings_desc">Benötigt, zum Umschalten der adaptiven Helligkeit und anderer Systemeinstellungen</string>
     <string name="perm_overlay_title">Overlay-Berechtigung</string>
     <string name="perm_overlay_desc">Benötigt, um das Benachrichtigungslicht auf dem Bildschirm anzuzeigen</string>
     <string name="perm_device_admin_title">Geräteadministrator</string>
@@ -416,10 +413,10 @@
     <string name="tab_freeze_subtitle">Deaktivierte Apps</string>
     <string name="tab_diy_subtitle">Do-It-Yourself</string>
     <!-- Keyboard Setup -->
-    <string name="label_keyboard_setup">Keyboard Setup</string>
-    <string name="btn_enable_keyboard">Enable in settings</string>
-    <string name="btn_select_keyboard">Switch to Essentials</string>
-    <string name="status_keyboard_ready">Keyboard is active and ready!</string>
+    <string name="label_keyboard_setup">Tastatur-Einrichtung</string>
+    <string name="btn_enable_keyboard">In den Einstellungen aktivieren</string>
+    <string name="btn_select_keyboard">Wechsel zu Essentials</string>
+    <string name="status_keyboard_ready">Tastatur ist aktiv und bereit!</string>
     <string name="label_enabled">Aktiviert</string>
     <string name="label_disabled">Deaktiviert</string>
     <string name="tile_adaptive_brightness">Adaptive Helligkeit</string>
@@ -464,7 +461,7 @@
     <string name="diy_dim_wallpaper_desc">Diese Aktion erfordert Shizuku oder einen Root-Zugang um den Hintergrund zu dimmen.</string>
     <string name="diy_select_trigger">Auslöser auswählen</string>
     <string name="diy_create_app_title">App</string>
-    <string name="diy_create_app_desc">Automate based on open app</string>
+    <string name="diy_create_app_desc">Automatisierung basierend auf geöffneter App</string>
     <string name="diy_select_state">Zustand auswählen</string>
     <string name="diy_select_action">Aktion auswählen</string>
     <string name="diy_in_action_label">Eintrittsaktion</string>
@@ -478,14 +475,14 @@
     <string name="automation_service_channel_name">Automatisierungsdienst</string>
     <string name="automation_service_running_title">Automatisierungen aktiv</string>
     <string name="automation_service_running_desc">Überwachung von Systemereignissen für deine Automatisierungen</string>
-    <string name="diy_action_device_effects">Device Effects</string>
-    <string name="diy_action_disable_device_effects">Disable Device Effects</string>
-    <string name="diy_device_effects_desc">Control system-level effects like grayscale, AOD suppression, wallpaper dimming, and night mode.</string>
-    <string name="diy_effect_grayscale">Grayscale</string>
-    <string name="diy_effect_suppress_ambient">Suppress Ambient Display</string>
-    <string name="diy_effect_dim_wallpaper">Dim Wallpaper</string>
-    <string name="diy_effect_night_mode">Night Mode</string>
-    <string name="diy_device_effects_android_15_warning">This feature requires Android 15 or higher.</string>
+    <string name="diy_action_device_effects">Geräteeffekte</string>
+    <string name="diy_action_disable_device_effects">Deaktiviere Geräteeffekte</string>
+    <string name="diy_device_effects_desc">Steuer Effekte auf Systemebene wie Graustufen, AOD-Unterdrückung, Hintergrundbild-Dimmung und Nachtmodus.</string>
+    <string name="diy_effect_grayscale">Graustufen</string>
+    <string name="diy_effect_suppress_ambient">Ambient Display unterdrücken</string>
+    <string name="diy_effect_dim_wallpaper">Hintergrund dimmen</string>
+    <string name="diy_effect_night_mode">Nachtmodus</string>
+    <string name="diy_device_effects_android_15_warning">Für diese Funktion ist Android 15 oder höher erforderlich.</string>
     <string name="diy_device_effects_enabled">Aktiviert</string>
     <string name="diy_device_effects_disabled">Deaktiviert</string>
     <!-- About Section -->
@@ -540,11 +537,11 @@
         <item>icon</item>
     </string-array>
     <string-array name="keywords_keyboard">
-        <item>keyboard</item>
-        <item>height</item>
-        <item>padding</item>
-        <item>haptic</item>
-        <item>input</item>
+        <item>tastatur</item>
+        <item>höhe</item>
+        <item>abstand</item>
+        <item>haptik</item>
+        <item>eingabe</item>
     </string-array>
     <string-array name="keywords_alert">
         <item>sichtbar</item>
@@ -614,9 +611,9 @@
         <item>warten</item>
         <item>zeitüberschreitung</item>
     </string-array>
-    <string name="label_keyboard_always_dark">Always dark theme</string>
-    <string name="label_keyboard_pitch_black">Pitch black theme</string>
-    <string name="label_keyboard_clipboard_enabled">Clipboard History</string>
+    <string name="label_keyboard_always_dark">Immer dunkles Design</string>
+    <string name="label_keyboard_pitch_black">Tiefschwarzes Design</string>
+    <string name="label_keyboard_clipboard_enabled">Zwischenablage-Verlauf</string>
     <string-array name="keywords_selection">
         <item>liste</item>
         <item>wähler</item>
@@ -825,35 +822,35 @@
     <string name="setting_use_root_desc">Anstelle von Shizuku</string>
     <string name="root_not_available_toast">Root-Zugang nicht verfügbar. Bitte überprüfe deinen Root-Manager.</string>
     <!-- System Keyboard -->
-    <string name="feat_system_keyboard_title">Keyboard</string>
-    <string name="feat_system_keys">Keys</string>
-    <string name="feat_system_keyboard_desc">Customize layout and behavior</string>
-    <string name="search_keyboard_height_title">Keyboard Height</string>
-    <string name="search_keyboard_height_desc">Adjust the total vertical size of the keyboard</string>
-    <string name="search_keyboard_padding_title">Bottom Padding</string>
-    <string name="search_keyboard_padding_desc">Add space below the keyboard</string>
-    <string name="search_keyboard_haptics_title">Haptic Feedback</string>
-    <string name="search_keyboard_haptics_desc">Vibrate on key press</string>
-    <string name="label_test_keyboard">Test the keyboard</string>
-    <string name="test_keyboard_hint">Test the keyboard</string>
-    <string name="label_keyboard_height">Keyboard Height</string>
-    <string name="label_keyboard_bottom_padding">Bottom Padding</string>
-    <string name="label_keyboard_haptics">Haptic Feedback</string>
-    <string name="label_keyboard_roundness">Key Roundness</string>
-    <string name="search_keyboard_roundness_title">Key Roundness</string>
-    <string name="search_keyboard_roundness_desc">Adjust the corner radius of keys</string>
-    <string name="label_keyboard_functions_bottom">Move functions to bottom</string>
-    <string name="label_keyboard_functions_padding">Functions side padding</string>
-    <string name="label_keyboard_haptic_strength">Haptic feedback strength</string>
-    <string name="label_keyboard_shape">Keyboard shape</string>
-    <string name="shape_round">Round</string>
-    <string name="shape_flat">Flat</string>
-    <string name="shape_inverse">Inverse</string>
+    <string name="feat_system_keyboard_title">Tastatur</string>
+    <string name="feat_system_keys">Tasten</string>
+    <string name="feat_system_keyboard_desc">Layout und Funktionalität anpassen</string>
+    <string name="search_keyboard_height_title">Tastaturhöhe</string>
+    <string name="search_keyboard_height_desc">Passe die vertikale Gesamtgröße der Tastatur an</string>
+    <string name="search_keyboard_padding_title">Unterer Abstand</string>
+    <string name="search_keyboard_padding_desc">Platz unterhalb der Tastatur hinzufügen</string>
+    <string name="search_keyboard_haptics_title">Haptisches Feedback</string>
+    <string name="search_keyboard_haptics_desc">Bei Tastendruck vibrieren</string>
+    <string name="label_test_keyboard">Teste die Tastatur</string>
+    <string name="test_keyboard_hint">Teste die Tastatur</string>
+    <string name="label_keyboard_height">Tastaturhöhe</string>
+    <string name="label_keyboard_bottom_padding">Unterer Abstand</string>
+    <string name="label_keyboard_haptics">Haptisches Feedback</string>
+    <string name="label_keyboard_roundness">Tastenrundheit</string>
+    <string name="search_keyboard_roundness_title">Tastenrundheit</string>
+    <string name="search_keyboard_roundness_desc">Eckradius der Tasten anpassen</string>
+    <string name="label_keyboard_functions_bottom">Funktionen nach unten verschieben</string>
+    <string name="label_keyboard_functions_padding">Seitenabstand Funktionen</string>
+    <string name="label_keyboard_haptic_strength">Stärke des haptischen Feedbacks</string>
+    <string name="label_keyboard_shape">Tastaturform</string>
+    <string name="shape_round">Rund</string>
+    <string name="shape_flat">Flach</string>
+    <string name="shape_inverse">Invers</string>
     <string name="feat_batteries_title">Akkus</string>
-    <string name="feat_batteries_desc">Monitor your device battery levels</string>
-    <string name="batteries_widget_label">Battery Status</string>
-    <string name="connect_to_airsync">Connect to AirSync</string>
-    <string name="connect_to_airsync_summary">Display battery from your connected mac device in AirSync</string>
-    <string name="download_airsync">Download AirSync App</string>
-    <string name="download_airsync_summary">Required for Mac battery sync</string>
+    <string name="feat_batteries_desc">Überwache den Akkustand deines Geräts</string>
+    <string name="batteries_widget_label">Batteriestatus</string>
+    <string name="connect_to_airsync">Mit AirSync verbinden</string>
+    <string name="connect_to_airsync_summary">Zeige den Akku deines verbundenen Mac-Geräts in AirSync an</string>
+    <string name="download_airsync">AirSync-App herunterladen</string>
+    <string name="download_airsync_summary">Benötigt für die Mac-Akkusynchronisierung</string>
 </resources>

@@ -52,6 +52,8 @@
     <string name="action_toggle_mute">ミュート</string>
     <string name="action_ai_assistant">アシスタント</string>
     <string name="action_take_screenshot">スクリーンショット</string>
+    <string name="action_cycle_sound_modes">Cycle sound modes</string>
+    <string name="action_toggle_media_volume">Toggle media volume</string>
     <string name="button_remap_screen_off_hint">画面がオフのときに、選択したボタンを長押しすると、割り当てられたアクションが実行されます。Pixelデバイスでは、システムの制限により、このアクションはAODがオンの場合にのみ実行されます。</string>
     <string name="button_remap_screen_on_hint">画面がオンのときに、選択したボタンを長押しすると、割り当てられたアクションがトリガーされます。</string>
     <string name="flashlight_intensity_title">フラッシュライトの明るさ</string>
@@ -320,12 +322,7 @@
     <string name="search_flashlight_pulse_desc">新しい通知が届いたらフラッシュライトをゆっくり点滅させる</string>
     <string name="search_only_facing_down_title">下を向いているときのみ</string>
     <string name="search_only_facing_down_desc">デバイスが下を向いているときのみフラッシュライトを点滅</string>
-    <string name="search_snooze_debug_title">デバッグ通知を無効にする</string>
-    <string name="search_snooze_debug_desc">永続的なADB/USBデバッグの通知を無効にする</string>
-    <string name="search_snooze_file_title">ファイル転送通知を無効にする</string>
-    <string name="search_snooze_file_desc">永続的なUSBファイル転送通知を無効にする</string>
-    <string name="search_snooze_charge_title">充電通知を無効にする</string>
-    <string name="search_snooze_charge_desc">システムからの充電通知を無効にする</string>
+    <string name="snooze_no_channels_discovered">No system channels discovered yet. They will appear here once detected.</string>
     <string name="search_qs_blur_title">UIブラー</string>
     <string name="search_qs_blur_desc">システム全体のUIぼかしを切り替える</string>
     <string name="search_qs_bubbles_title">バブル</string>

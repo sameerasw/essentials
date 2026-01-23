@@ -52,6 +52,8 @@
     <string name="action_toggle_mute">Toggle mute</string>
     <string name="action_ai_assistant">AI assistant</string>
     <string name="action_take_screenshot">Take screenshot</string>
+    <string name="action_cycle_sound_modes">Cycle sound modes</string>
+    <string name="action_toggle_media_volume">Toggle media volume</string>
     <string name="button_remap_screen_off_hint">When the screen is off, long-press the selected button to trigger its assigned action. On Pixel devices, this action only gets triggered if the AOD is on due to system limitations.</string>
     <string name="button_remap_screen_on_hint">When the screen is on, long-press the selected button to trigger its assigned action.</string>
     <string name="flashlight_intensity_title">Flashlight Intensity</string>
@@ -320,12 +322,7 @@
     <string name="search_flashlight_pulse_desc">Slowly pulse flashlight for new notifications</string>
     <string name="search_only_facing_down_title">Only while facing down</string>
     <string name="search_only_facing_down_desc">Pulse flashlight only when device is face down</string>
-    <string name="search_snooze_debug_title">Disable debugging notifications</string>
-    <string name="search_snooze_debug_desc">Hide persistent ADB/USB debugging notifications</string>
-    <string name="search_snooze_file_title">Disable file transfer notification</string>
-    <string name="search_snooze_file_desc">Hide persistent USB file transfer notifications</string>
-    <string name="search_snooze_charge_title">Disable charging notification</string>
-    <string name="search_snooze_charge_desc">Hide system charging notifications</string>
+    <string name="snooze_no_channels_discovered">No system channels discovered yet. They will appear here once detected.</string>
     <string name="search_qs_blur_title">UI Blur</string>
     <string name="search_qs_blur_desc">Toggle system-wide UI blur</string>
     <string name="search_qs_bubbles_title">Bubbles</string>
@@ -814,7 +811,7 @@
     <string name="location_reached_dist_m">%1$d m</string>
     <string name="location_reached_dist_km">%1$.1f km</string>
     <string name="location_reached_service_title">Travel Alarm active</string>
-    <string name="location_reached_service_remaining">%1$s remaining (%2$d%%)</string>
+    <string name="location_reached_service_remaining">%1$s remaining</string>
     <string name="location_reached_channel_name">Travel Progress</string>
     <string name="location_reached_channel_desc">Shows real-time distance to destination</string>
     <string name="location_reached_alarm_title">Destination Nearby</string>

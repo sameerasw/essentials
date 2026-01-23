@@ -52,6 +52,8 @@
     <string name="action_toggle_mute">Activer le mode silencieux</string>
     <string name="action_ai_assistant">Assistant IA</string>
     <string name="action_take_screenshot">Prendre une capture d\'écran</string>
+    <string name="action_cycle_sound_modes">Cycle sound modes</string>
+    <string name="action_toggle_media_volume">Toggle media volume</string>
     <string name="button_remap_screen_off_hint">Quand l\'écran est éteint, appuyez longuement sur le bouton sélectionné pour déclencher son action assignée. Sur les appareils Pixel, cette action ne se déclenche que si le Always-On Display est activé à cause de limitations systèmes.</string>
     <string name="button_remap_screen_on_hint">Quand l\'écran est allumé, appuyez longuement sur le bouton sélectionné pour déclencher son action assignée.</string>
     <string name="flashlight_intensity_title">Intensité de la lampe-torche</string>
@@ -320,12 +322,7 @@
     <string name="search_flashlight_pulse_desc">Faire clignoter lentement la lampe-torche pour les nouvelles notifications</string>
     <string name="search_only_facing_down_title">Seulement quand le téléphone est vers le bas</string>
     <string name="search_only_facing_down_desc">Impulsion de lampe torche seulement quand l\'appareil est vers le bas</string>
-    <string name="search_snooze_debug_title">Désactiver les notifications de débogage</string>
-    <string name="search_snooze_debug_desc">Cacher les notifications de débogage ADB/USB persistantes</string>
-    <string name="search_snooze_file_title">Désactiver la notification de transfert de fichiers</string>
-    <string name="search_snooze_file_desc">Cache les notifications de transfert de fichiers USB persistantes</string>
-    <string name="search_snooze_charge_title">Désactiver la notification de recharge</string>
-    <string name="search_snooze_charge_desc">Cacher les notifications persistantes de recharge</string>
+    <string name="snooze_no_channels_discovered">No system channels discovered yet. They will appear here once detected.</string>
     <string name="search_qs_blur_title">Flou d\'interface</string>
     <string name="search_qs_blur_desc">Basculer le flou d\'interface à l\'échelle du système</string>
     <string name="search_qs_bubbles_title">Bulles</string>
@@ -814,7 +811,7 @@
     <string name="location_reached_dist_m">%1$d m</string>
     <string name="location_reached_dist_km">%1$.1f km</string>
     <string name="location_reached_service_title">Alarme de trajet active</string>
-    <string name="location_reached_service_remaining">%1$s restant (%2$d%%)</string>
+    <string name="location_reached_service_remaining">%1$s restant</string>
     <string name="location_reached_channel_name">Progrès du trajet</string>
     <string name="location_reached_channel_desc">Affiche la distance de la destination en temps réel</string>
     <string name="location_reached_alarm_title">Destination à proximité</string>
