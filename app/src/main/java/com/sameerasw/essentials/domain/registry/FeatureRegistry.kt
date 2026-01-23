@@ -518,6 +518,21 @@ object FeatureRegistry {
         ) {
             override fun isEnabled(viewModel: MainViewModel) = true
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+        },
+
+        object : Feature(
+            id = "Watermarks",
+            title = R.string.feat_watermark_title,
+            iconRes = R.drawable.rounded_draw_24,
+            category = R.string.cat_tools,
+            description = R.string.feat_watermark_desc,
+            showToggle = false
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = true
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+            override fun onClick(context: Context, viewModel: MainViewModel) {
+                context.startActivity(android.content.Intent(context, com.sameerasw.essentials.ui.composables.watermark.WatermarkActivity::class.java))
+            }
         }
     )
 }
