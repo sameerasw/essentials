@@ -73,15 +73,8 @@ class NotificationLightingHandler(
             }
             
             try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                     showNotificationLighting()
-                } else {
-                     // Fallback or ignore for older versions if needed, but logic seems to require S
-                     // Trying to run anyway if compatible, but original code annotated with RequiresApi(S)
-                     // I will wrap calls or assume caller handles version check
-                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                         showNotificationLighting()
-                     }
                 }
             } catch (e: Exception) {
                 Log.e("NotificationLighting", "Failed to show notification lighting", e)
@@ -118,17 +111,30 @@ class NotificationLightingHandler(
         windowManager = service.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val powerManager = service.getSystemService(Context.POWER_SERVICE) as PowerManager
 
-        val overlayType = try {
-            WindowManager.LayoutParams::class.java.getField("TYPE_ACCESSIBILITY_OVERLAY").getInt(null)
-        } catch (_: Exception) {
+        val overlayType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            try {
+                WindowManager.LayoutParams::class.java.getField("TYPE_ACCESSIBILITY_OVERLAY").getInt(null)
+            } catch (_: Exception) {
+                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+            }
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+        } else {
+            @Suppress("DEPRECATION")
+            WindowManager.LayoutParams.TYPE_PHONE
         }
 
         try {
             val color = when {
                 resolvedColor != null -> resolvedColor!!
                 colorMode == NotificationLightingColorMode.CUSTOM -> customColor
-                else -> service.getColor(android.R.color.system_accent1_100)
+                else -> {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        service.getColor(android.R.color.system_accent1_100)
+                    } else {
+                        service.getColor(com.sameerasw.essentials.R.color.purple_500)
+                    }
+                }
             }
             
             val overlay = OverlayHelper.createOverlayView(
