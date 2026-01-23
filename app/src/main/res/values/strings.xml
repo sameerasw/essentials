@@ -347,6 +347,7 @@
     <string name="watermark_text_size_brand">Brand Size</string>
     <string name="watermark_text_size_data">Data Size</string>
     <string name="watermark_text_size_custom">Text Size</string>
+    <string name="watermark_font_options">Font Size</string>
     <string name="watermark_custom_text">Custom Text</string>
     <string name="watermark_custom_text_hint">Enter your text...</string>
     <string name="watermark_custom_text_settings">Custom Text Settings</string>

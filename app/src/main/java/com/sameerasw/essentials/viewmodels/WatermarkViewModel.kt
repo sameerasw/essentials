@@ -214,6 +214,13 @@ class WatermarkViewModel(
         }
     }
 
+    fun setCustomTextSize(size: Int) {
+        viewModelScope.launch {
+            watermarkRepository.updateCustomTextSize(size)
+            previewSourceBitmap?.let { updatePreview() }
+        }
+    }
+
     fun setPadding(padding: Int) {
         viewModelScope.launch {
             watermarkRepository.updatePadding(padding)

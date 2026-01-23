@@ -515,40 +515,7 @@ fun WatermarkScreen(
                             )
                         }
 
-                        // Text Size Sliders
-                        if (options.showDeviceBrand) {
-                            var brandSize by androidx.compose.runtime.remember(options.brandTextSize) { androidx.compose.runtime.mutableFloatStateOf(options.brandTextSize.toFloat()) }
-                            
-                            ConfigSliderItem(
-                                title = stringResource(R.string.watermark_text_size_brand),
-                                value = brandSize,
-                                onValueChange = { 
-                                    brandSize = it 
-                                    performSliderHaptic(view)
-                                },
-                                onValueChangeFinished = { viewModel.setBrandTextSize(brandSize.toInt()) },
-                                valueRange = 0f..100f,
-                                increment = 5f,
-                                valueFormatter = { "${it.toInt()}%" }
-                            )
-                        }
 
-                        if (options.showExif) {
-                            var dataSize by androidx.compose.runtime.remember(options.dataTextSize) { androidx.compose.runtime.mutableFloatStateOf(options.dataTextSize.toFloat()) }
-                            
-                            ConfigSliderItem(
-                                title = stringResource(R.string.watermark_text_size_data),
-                                value = dataSize,
-                                onValueChange = { 
-                                    dataSize = it 
-                                    performSliderHaptic(view)
-                                },
-                                onValueChangeFinished = { viewModel.setDataTextSize(dataSize.toInt()) },
-                                valueRange = 0f..100f,
-                                increment = 5f,
-                                valueFormatter = { "${it.toInt()}%" }
-                            )
-                        }
 
                         // Spacing Slider
                         var paddingValue by androidx.compose.runtime.remember(options.padding) { androidx.compose.runtime.mutableFloatStateOf(options.padding.toFloat()) }
@@ -565,6 +532,74 @@ fun WatermarkScreen(
                             increment = 5f,
                             valueFormatter = { "${it.toInt()}%" }
                         )
+                    }
+                    
+
+                    // Font Size Section
+                    val showFontSection = options.showDeviceBrand || options.showExif || options.showCustomText
+                    
+                    if (showFontSection) {
+                        Text(
+                            text = stringResource(R.string.watermark_font_options),
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        
+                        RoundedCardContainer(
+                             modifier = Modifier.fillMaxWidth()
+                        ) {
+                            if (options.showDeviceBrand) {
+                                var brandSize by androidx.compose.runtime.remember(options.brandTextSize) { androidx.compose.runtime.mutableFloatStateOf(options.brandTextSize.toFloat()) }
+                                
+                                ConfigSliderItem(
+                                    title = stringResource(R.string.watermark_text_size_brand),
+                                    value = brandSize,
+                                    onValueChange = { 
+                                        brandSize = it 
+                                        performSliderHaptic(view)
+                                    },
+                                    onValueChangeFinished = { viewModel.setBrandTextSize(brandSize.toInt()) },
+                                    valueRange = 0f..100f,
+                                    increment = 5f,
+                                    valueFormatter = { "${it.toInt()}%" }
+                                )
+                            }
+    
+                            if (options.showExif) {
+                                var dataSize by androidx.compose.runtime.remember(options.dataTextSize) { androidx.compose.runtime.mutableFloatStateOf(options.dataTextSize.toFloat()) }
+                                
+                                ConfigSliderItem(
+                                    title = stringResource(R.string.watermark_text_size_data),
+                                    value = dataSize,
+                                    onValueChange = { 
+                                        dataSize = it 
+                                        performSliderHaptic(view)
+                                    },
+                                    onValueChangeFinished = { viewModel.setDataTextSize(dataSize.toInt()) },
+                                    valueRange = 0f..100f,
+                                    increment = 5f,
+                                    valueFormatter = { "${it.toInt()}%" }
+                                )
+                            }
+                            
+                            if (options.showCustomText) {
+                                var customSize by androidx.compose.runtime.remember(options.customTextSize) { androidx.compose.runtime.mutableFloatStateOf(options.customTextSize.toFloat()) }
+                                
+                                ConfigSliderItem(
+                                    title = stringResource(R.string.watermark_text_size_custom),
+                                    value = customSize,
+                                    onValueChange = { 
+                                        customSize = it 
+                                        performSliderHaptic(view)
+                                    },
+                                    onValueChangeFinished = { viewModel.setCustomTextSize(customSize.toInt()) },
+                                    valueRange = 0f..100f,
+                                    increment = 5f,
+                                    valueFormatter = { "${it.toInt()}%" }
+                                )
+                            }
+                        }
                     }
                     
                     // Border Section
@@ -698,7 +733,6 @@ fun WatermarkScreen(
             // Local state for draft editing
             var isEnabled by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(options.showCustomText) }
             var draftText by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(options.customText) }
-            var draftSize by androidx.compose.runtime.remember { androidx.compose.runtime.mutableFloatStateOf(options.customTextSize.toFloat()) }
             
             androidx.compose.material3.ModalBottomSheet(
                 onDismissRequest = { showCustomTextSheet = false },
@@ -739,30 +773,8 @@ fun WatermarkScreen(
                                      modifier = Modifier.fillMaxWidth(),
                                      singleLine = true
                                  )
-                                 
+
                                  Spacer(modifier = Modifier.height(16.dp))
-                                 
-                                 // Size Slider
-                                 val density = androidx.compose.ui.platform.LocalDensity.current
-                                 Text(
-                                     text = stringResource(R.string.watermark_text_size_custom),
-                                     style = MaterialTheme.typography.labelLarge,
-                                     color = MaterialTheme.colorScheme.onSurface
-                                 )
-                                 androidx.compose.material3.Slider(
-                                      value = draftSize,
-                                      onValueChange = { 
-                                          draftSize = it 
-                                          performSliderHaptic(view)
-                                      },
-                                      valueRange = 0f..100f
-                                 )
-                                 Text(
-                                     text = "${draftSize.toInt()}%",
-                                     style = MaterialTheme.typography.bodySmall,
-                                     modifier = Modifier.align(Alignment.End),
-                                     color = MaterialTheme.colorScheme.onSurfaceVariant
-                                 )
                              }
                          }
                     }
@@ -785,7 +797,7 @@ fun WatermarkScreen(
                         Button(
                             onClick = {
                                 performUIHaptic(view)
-                                viewModel.setCustomTextSettings(isEnabled, draftText, draftSize.toInt())
+                                viewModel.setCustomTextSettings(isEnabled, draftText, options.customTextSize) // preserve size
                                 showCustomTextSheet = false
                             },
                             modifier = Modifier.weight(1f)

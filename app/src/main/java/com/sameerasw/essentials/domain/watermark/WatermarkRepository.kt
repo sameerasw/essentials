@@ -126,6 +126,10 @@ class WatermarkRepository(
         context.dataStore.edit { it[PREF_PADDING] = padding }
     }
 
+    suspend fun updateCustomTextSize(size: Int) {
+        context.dataStore.edit { it[PREF_CUSTOM_TEXT_SIZE] = size }
+    }
+
     suspend fun updateBorderStroke(stroke: Int) {
         context.dataStore.edit { it[PREF_BORDER_STROKE] = stroke }
     }
