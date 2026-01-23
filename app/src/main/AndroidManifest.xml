@@ -205,6 +205,18 @@
             android:taskAffinity=""
             android:theme="@style/Theme.Essentials.Translucent" />
 
+        <activity
+            android:name=".ui.composables.watermark.WatermarkActivity"
+            android:exported="true"
+            android:label="@string/feat_watermark_title"
+            android:theme="@style/Theme.Essentials">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
+        </activity>
+
         <service
             android:name=".services.tiles.ScreenOffAccessibilityService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
