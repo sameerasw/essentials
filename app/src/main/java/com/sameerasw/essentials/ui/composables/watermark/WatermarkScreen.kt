@@ -4,6 +4,7 @@ import android.graphics.drawable.Icon
 import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -45,6 +46,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.domain.watermark.ColorMode
 import com.sameerasw.essentials.domain.watermark.WatermarkStyle
 import com.sameerasw.essentials.ui.components.ReusableTopAppBar
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
@@ -277,8 +279,6 @@ fun WatermarkScreen(
                         performUIHaptic(view)
                         if (initialUri == null) {
                             onPickImage()
-                        } else {
-                            viewModel.toggleContrast()
                         }
                     }
                     .padding(if (initialUri == null) 32.dp else 0.dp),
@@ -602,6 +602,8 @@ fun WatermarkScreen(
                         }
                     }
                     
+
+                    
                     // Border Section
                     Text(
                         text = "Border",
@@ -644,6 +646,49 @@ fun WatermarkScreen(
                         )
                     }
                     
+                    // Color Section
+                    Text(
+                        text = stringResource(R.string.watermark_color_section),
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    
+                    RoundedCardContainer(
+                         modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(MaterialTheme.colorScheme.surfaceBright)
+                                .padding(16.dp),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            ColorModeOption(
+                                mode = ColorMode.LIGHT,
+                                isSelected = options.colorMode == ColorMode.LIGHT,
+                                onClick = { viewModel.setColorMode(ColorMode.LIGHT) }
+                            )
+                            ColorModeOption(
+                                mode = ColorMode.DARK,
+                                isSelected = options.colorMode == ColorMode.DARK,
+                                onClick = { viewModel.setColorMode(ColorMode.DARK) }
+                            )
+                            ColorModeOption(
+                                mode = ColorMode.ACCENT_LIGHT,
+                                accentColor = options.accentColor,
+                                isSelected = options.colorMode == ColorMode.ACCENT_LIGHT,
+                                onClick = { viewModel.setColorMode(ColorMode.ACCENT_LIGHT) }
+                            )
+                            ColorModeOption(
+                                mode = ColorMode.ACCENT_DARK,
+                                accentColor = options.accentColor,
+                                isSelected = options.colorMode == ColorMode.ACCENT_DARK,
+                                onClick = { viewModel.setColorMode(ColorMode.ACCENT_DARK) }
+                            )
+                        }
+                    }
+
                     // Bottom spacing for scrolling
                     Spacer(Modifier.height(24.dp))
                 }
@@ -807,6 +852,61 @@ fun WatermarkScreen(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun ColorModeOption(
+    mode: ColorMode,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    accentColor: Int? = null
+) {
+    val view = androidx.compose.ui.platform.LocalView.current
+    val color = when (mode) {
+        ColorMode.LIGHT -> androidx.compose.ui.graphics.Color.White
+        ColorMode.DARK -> androidx.compose.ui.graphics.Color.Black
+        ColorMode.ACCENT_LIGHT, ColorMode.ACCENT_DARK -> {
+            // Derive a preview color for the circle
+            val base = accentColor ?: android.graphics.Color.GRAY
+            val hsl = FloatArray(3)
+            androidx.core.graphics.ColorUtils.colorToHSL(base, hsl)
+            if (mode == ColorMode.ACCENT_LIGHT) {
+                hsl[2] = 0.8f // Light shade
+            } else {
+                hsl[2] = 0.2f // Dark shade
+            }
+            androidx.compose.ui.graphics.Color(androidx.core.graphics.ColorUtils.HSLToColor(hsl))
+        }
+    }
+    
+    val borderColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
+    val borderWidth = if (isSelected) 3.dp else 1.dp
+
+    Box(
+        modifier = Modifier
+            .size(48.dp)
+            .clip(androidx.compose.foundation.shape.CircleShape)
+            .background(color)
+            .border(
+                width = borderWidth,
+                color = borderColor,
+                shape = androidx.compose.foundation.shape.CircleShape
+            )
+            .clickable { 
+                performUIHaptic(view)
+                onClick() 
+            },
+        contentAlignment = Alignment.Center
+    ) {
+        if (mode == ColorMode.ACCENT_LIGHT || mode == ColorMode.ACCENT_DARK) {
+            Icon(
+                painter = androidx.compose.ui.res.painterResource(id = R.drawable.rounded_image_24),
+                contentDescription = null,
+                modifier = Modifier.size(20.dp),
+                tint = if (mode == ColorMode.ACCENT_LIGHT) androidx.compose.ui.graphics.Color.Black else androidx.compose.ui.graphics.Color.White
+            )
         }
     }
 }

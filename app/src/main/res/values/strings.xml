@@ -354,6 +354,11 @@
     <string name="watermark_spacing">Spacing</string>
     <string name="watermark_border_width">Border Width</string>
     <string name="watermark_border_corners">Round Corners</string>
+    <string name="watermark_color_section">Color</string>
+    <string name="watermark_color_light">Light</string>
+    <string name="watermark_color_dark">Dark</string>
+    <string name="watermark_color_accent_light">Accent Light</string>
+    <string name="watermark_color_accent_dark">Accent Dark</string>
     <string name="action_save_changes">Save Changes</string>
 
     <!-- Search Settings -->

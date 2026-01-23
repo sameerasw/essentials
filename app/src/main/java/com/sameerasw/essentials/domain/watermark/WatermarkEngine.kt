@@ -25,6 +25,13 @@ enum class WatermarkStyle {
     FRAME
 }
 
+enum class ColorMode {
+    LIGHT,
+    DARK,
+    ACCENT_LIGHT,
+    ACCENT_DARK
+}
+
 data class WatermarkOptions(
     val style: WatermarkStyle = WatermarkStyle.FRAME,
     val showDeviceBrand: Boolean = true,
@@ -36,7 +43,8 @@ data class WatermarkOptions(
     val showShutterSpeed: Boolean = true,
     val showDate: Boolean = false,
     val outputQuality: Int = 100,
-    val useDarkTheme: Boolean = false,
+    val colorMode: ColorMode = ColorMode.LIGHT,
+    val accentColor: Int = android.graphics.Color.GRAY,
     val moveToTop: Boolean = false,
     val leftAlignOverlay: Boolean = false,
     val brandTextSize: Int = 50,
@@ -141,12 +149,14 @@ class WatermarkEngine(
 
     private fun drawOverlay(bitmap: Bitmap, exifData: ExifData, options: WatermarkOptions): Bitmap {
         val canvas = Canvas(bitmap)
-        val useDark = options.useDarkTheme
-        val textColor = if (useDark) Color.BLACK else Color.WHITE
-        val shadowColor = if (useDark) Color.WHITE else Color.BLACK
-
+        
+        // Derive Colors
+        val colors = deriveColors(options)
+        val shadowColor = colors.shadowColor
+        val overlayTextColor = colors.overlayTextColor
+        
         val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = textColor
+            color = overlayTextColor
             textSize = bitmap.width * 0.03f // 3% of width
             setShadowLayer(4f, 2f, 2f, shadowColor)
         }
@@ -227,10 +237,11 @@ class WatermarkEngine(
     private fun drawFrame(bitmap: Bitmap, exifData: ExifData, options: WatermarkOptions): Bitmap {
         var baseFrameHeight = (bitmap.height * 0.10f).roundToInt()
         
-        val useDark = options.useDarkTheme
-        val bgColor = if (useDark) Color.BLACK else Color.WHITE
-        val textColor = if (useDark) Color.WHITE else Color.BLACK
-        val secondaryTextColor = if (useDark) Color.LTGRAY else Color.GRAY
+        // Derive Colors
+        val colors = deriveColors(options)
+        val bgColor = colors.bgColor
+        val textColor = colors.textColor
+        val secondaryTextColor = colors.secondaryTextColor
         
         // Setup paints early to measure
         // Setup paints early to measure
@@ -655,8 +666,8 @@ class WatermarkEngine(
              val output = Bitmap.createBitmap(newWidth, newHeight, Bitmap.Config.ARGB_8888)
              val canvas = Canvas(output)
              
-             val useDark = options.useDarkTheme
-             val bgColor = if (useDark) Color.BLACK else Color.WHITE
+             val colors = deriveColors(options)
+             val bgColor = colors.bgColor
              
              canvas.drawColor(bgColor)
              
@@ -669,5 +680,49 @@ class WatermarkEngine(
         }
         
         return finalBitmap
+    }
+
+    private data class DerivedColors(
+        val bgColor: Int, 
+        val textColor: Int, 
+        val secondaryTextColor: Int,
+        val shadowColor: Int,
+        val overlayTextColor: Int
+    )
+
+    private fun deriveColors(options: WatermarkOptions): DerivedColors {
+        return when (options.colorMode) {
+            ColorMode.LIGHT -> DerivedColors(Color.WHITE, Color.BLACK, Color.GRAY, Color.BLACK, Color.WHITE)
+            ColorMode.DARK -> DerivedColors(Color.BLACK, Color.WHITE, Color.LTGRAY, Color.WHITE, Color.BLACK)
+            ColorMode.ACCENT_LIGHT -> getAccentColors(options.accentColor, false)
+            ColorMode.ACCENT_DARK -> getAccentColors(options.accentColor, true)
+        }
+    }
+
+    private fun getAccentColors(baseColor: Int, dark: Boolean): DerivedColors {
+        val hsl = FloatArray(3)
+        androidx.core.graphics.ColorUtils.colorToHSL(baseColor, hsl)
+        
+        return if (dark) {
+            // Accent Dark: Dark BG, Light Text
+            hsl[2] = 0.15f // Dark BG
+            val bgColor = androidx.core.graphics.ColorUtils.HSLToColor(hsl)
+            hsl[2] = 0.9f // Light Text
+            val textColor = androidx.core.graphics.ColorUtils.HSLToColor(hsl)
+            hsl[2] = 0.7f // Secondary Text
+            val secondaryTextColor = androidx.core.graphics.ColorUtils.HSLToColor(hsl)
+            
+            DerivedColors(bgColor, textColor, secondaryTextColor, Color.WHITE, bgColor)
+        } else {
+            // Accent Light: Light BG, Dark Text
+            hsl[2] = 0.95f // Light BG
+            val bgColor = androidx.core.graphics.ColorUtils.HSLToColor(hsl)
+            hsl[2] = 0.15f // Dark Text
+            val textColor = androidx.core.graphics.ColorUtils.HSLToColor(hsl)
+            hsl[2] = 0.4f // Secondary Text
+            val secondaryTextColor = androidx.core.graphics.ColorUtils.HSLToColor(hsl)
+            
+            DerivedColors(bgColor, textColor, secondaryTextColor, Color.BLACK, bgColor)
+        }
     }
 }

@@ -22,7 +22,8 @@ class WatermarkRepository(
     private val PREF_SHOW_ISO = booleanPreferencesKey("show_iso")
     private val PREF_SHOW_SHUTTER = booleanPreferencesKey("show_shutter")
     private val PREF_SHOW_DATE = booleanPreferencesKey("show_date")
-    private val PREF_USE_DARK_THEME = booleanPreferencesKey("use_dark_theme")
+    private val PREF_COLOR_MODE = stringPreferencesKey("color_mode")
+    private val PREF_ACCENT_COLOR = androidx.datastore.preferences.core.intPreferencesKey("accent_color")
     private val PREF_MOVE_TO_TOP = booleanPreferencesKey("move_to_top")
     private val PREF_LEFT_ALIGN = booleanPreferencesKey("left_align")
     private val PREF_BRAND_TEXT_SIZE = androidx.datastore.preferences.core.intPreferencesKey("brand_text_size")
@@ -52,7 +53,12 @@ class WatermarkRepository(
                 showIso = preferences[PREF_SHOW_ISO] ?: true,
                 showShutterSpeed = preferences[PREF_SHOW_SHUTTER] ?: true,
                 showDate = preferences[PREF_SHOW_DATE] ?: false,
-                useDarkTheme = preferences[PREF_USE_DARK_THEME] ?: false,
+                colorMode = try {
+                    ColorMode.valueOf(preferences[PREF_COLOR_MODE] ?: ColorMode.LIGHT.name)
+                } catch (e: Exception) {
+                    ColorMode.LIGHT
+                },
+                accentColor = preferences[PREF_ACCENT_COLOR] ?: android.graphics.Color.GRAY,
                 moveToTop = preferences[PREF_MOVE_TO_TOP] ?: false,
                 leftAlignOverlay = preferences[PREF_LEFT_ALIGN] ?: false,
                 brandTextSize = preferences[PREF_BRAND_TEXT_SIZE] ?: 50,
@@ -94,8 +100,12 @@ class WatermarkRepository(
         }
     }
 
-    suspend fun updateUseDarkTheme(useDark: Boolean) {
-        context.dataStore.edit { it[PREF_USE_DARK_THEME] = useDark }
+    suspend fun updateColorMode(mode: ColorMode) {
+        context.dataStore.edit { it[PREF_COLOR_MODE] = mode.name }
+    }
+    
+    suspend fun updateAccentColor(color: Int) {
+        context.dataStore.edit { it[PREF_ACCENT_COLOR] = color }
     }
     
     suspend fun updateMoveToTop(move: Boolean) {

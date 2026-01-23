@@ -8,11 +8,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.domain.watermark.ColorMode
 import com.sameerasw.essentials.domain.watermark.MetadataProvider
 import com.sameerasw.essentials.domain.watermark.WatermarkEngine
 import com.sameerasw.essentials.domain.watermark.WatermarkOptions
 import com.sameerasw.essentials.domain.watermark.WatermarkRepository
 import com.sameerasw.essentials.domain.watermark.WatermarkStyle
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -102,7 +104,41 @@ class WatermarkViewModel(
                 
                 if (bitmap != null) {
                     previewSourceBitmap = bitmap
+                    extractColorFromUri(uri)
                     updatePreview()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun extractColorFromUri(uri: Uri) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val inputStream = context.contentResolver.openInputStream(uri)
+                val options = android.graphics.BitmapFactory.Options().apply {
+                    inSampleSize = 2 
+                }
+                val bitmap = android.graphics.BitmapFactory.decodeStream(inputStream, null, options)
+                inputStream?.close()
+                
+                if (bitmap != null) {
+                    androidx.palette.graphics.Palette.from(bitmap)
+                        .maximumColorCount(32)
+                        .clearFilters()
+                        .generate { palette ->
+                            val color = palette?.vibrantSwatch?.rgb
+                                ?: palette?.mutedSwatch?.rgb
+                                ?: palette?.lightVibrantSwatch?.rgb
+                                ?: palette?.darkVibrantSwatch?.rgb
+                                ?: palette?.dominantSwatch?.rgb
+                                ?: android.graphics.Color.GRAY
+                            
+                            viewModelScope.launch {
+                                watermarkRepository.updateAccentColor(color)
+                            }
+                        }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -173,9 +209,9 @@ class WatermarkViewModel(
         }
     }
 
-    fun toggleContrast() {
+    fun setColorMode(mode: ColorMode) {
         viewModelScope.launch {
-            watermarkRepository.updateUseDarkTheme(!_options.value.useDarkTheme)
+            watermarkRepository.updateColorMode(mode)
         }
     }
 
