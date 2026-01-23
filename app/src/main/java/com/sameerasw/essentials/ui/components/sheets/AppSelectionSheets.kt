@@ -221,6 +221,8 @@ fun AppSelectionSheet(
                         AppToggleItem(
                             icon = app.icon,
                             title = app.appName,
+                            packageName = app.packageName,
+                            isSystemApp = app.isSystemApp,
                             isChecked = app.isEnabled,
                             onCheckedChange = { isChecked ->
                                 val updatedList = selectedApps.map {
