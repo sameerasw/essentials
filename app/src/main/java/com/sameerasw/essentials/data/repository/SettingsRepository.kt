@@ -130,6 +130,17 @@ class SettingsRepository(private val context: Context) {
         awaitClose { prefs.unregisterOnSharedPreferenceChangeListener(listener) }
     }
 
+    val isPitchBlackThemeEnabled: Flow<Boolean> = callbackFlow {
+        val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+            if (key == KEY_PITCH_BLACK_THEME_ENABLED) {
+                trySend(getBoolean(KEY_PITCH_BLACK_THEME_ENABLED))
+            }
+        }
+        trySend(getBoolean(KEY_PITCH_BLACK_THEME_ENABLED))
+        prefs.registerOnSharedPreferenceChangeListener(listener)
+        awaitClose { prefs.unregisterOnSharedPreferenceChangeListener(listener) }
+    }
+
     fun registerOnSharedPreferenceChangeListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
         prefs.registerOnSharedPreferenceChangeListener(listener)
     }

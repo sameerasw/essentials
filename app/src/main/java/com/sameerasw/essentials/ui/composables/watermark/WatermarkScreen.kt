@@ -110,7 +110,7 @@ fun WatermarkScreen(
                     onBack()
                 },
                 isSmall = true,
-                containerColor = MaterialTheme.colorScheme.background,
+                containerColor = MaterialTheme.colorScheme.surfaceContainer,
                 actions = {
                     val pickImageButton = @Composable {
                          // Pick Image Button
@@ -217,7 +217,7 @@ fun WatermarkScreen(
                 }
             )
         },
-        containerColor = MaterialTheme.colorScheme.background
+        containerColor = MaterialTheme.colorScheme.surfaceContainer
     ) { padding ->
         val density = androidx.compose.ui.platform.LocalDensity.current
         val configuration = androidx.compose.ui.platform.LocalConfiguration.current

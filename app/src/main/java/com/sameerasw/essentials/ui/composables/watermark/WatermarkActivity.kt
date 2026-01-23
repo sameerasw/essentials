@@ -12,12 +12,15 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.WindowCompat
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.viewmodels.WatermarkViewModel
 
@@ -52,9 +55,13 @@ class WatermarkActivity : ComponentActivity() {
             }
         }
 
+        val settingsRepository = SettingsRepository(this)
+
         setContent {
-            EssentialsTheme {
-                Surface(color = MaterialTheme.colorScheme.background) {
+            val isPitchBlackThemeEnabled by settingsRepository.isPitchBlackThemeEnabled.collectAsState(initial = false)
+            
+            EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
+                Surface(color = MaterialTheme.colorScheme.surfaceContainer) {
                     val context = LocalContext.current
                     val viewModel: WatermarkViewModel = viewModel(
                         factory = WatermarkViewModel.provideFactory(context)
