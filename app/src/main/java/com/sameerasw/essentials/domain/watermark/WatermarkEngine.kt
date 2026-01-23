@@ -32,13 +32,16 @@ data class WatermarkOptions(
     val showIso: Boolean = true,
     val showShutterSpeed: Boolean = true,
     val showDate: Boolean = false,
-    val customText: String = "",
     val outputQuality: Int = 100,
     val useDarkTheme: Boolean = false,
     val moveToTop: Boolean = false,
     val leftAlignOverlay: Boolean = false,
     val brandTextSize: Int = 50,
-    val dataTextSize: Int = 50
+    val dataTextSize: Int = 50,
+    val showCustomText: Boolean = false,
+    val customText: String = "",
+    val customTextSize: Int = 50,
+    val padding: Int = 50
 )
 
 class WatermarkEngine(
@@ -141,7 +144,7 @@ class WatermarkEngine(
             setShadowLayer(4f, 2f, 2f, shadowColor)
         }
 
-        val margin = bitmap.width * 0.05f
+        val margin = bitmap.width * (options.padding / 1000f)
         var yPos = bitmap.height - margin
 
         // Apply scaling
@@ -169,9 +172,32 @@ class WatermarkEngine(
                     
                     drawExifRow(canvas, row, xPos, yPos, paint, shadowColor)
                     
-                    yPos -= rowHeight * 1.5f
+                    yPos -= rowHeight * 1.2f
                 }
             }
+        }
+
+
+        if (options.showCustomText && options.customText.isNotEmpty()) {
+            val customScale = 0.5f + (options.customTextSize / 100f)
+            val customPaint = Paint(paint).apply {
+                textSize = baseSize * customScale
+                typeface = Typeface.DEFAULT 
+            }
+            
+            val textBounds = Rect()
+            customPaint.getTextBounds(options.customText, 0, options.customText.length, textBounds)
+            
+            if (options.showExif) {
+                 yPos -= (customPaint.textSize * 0.5f)
+            }
+            
+            val xPos = if (options.leftAlignOverlay) margin else (bitmap.width - margin - textBounds.width())
+            
+            // Draw Custom Text
+            canvas.drawText(options.customText, xPos, yPos, customPaint)
+            
+            yPos -= customPaint.textSize * 1.2f
         }
 
         if (options.showDeviceBrand) {
@@ -209,12 +235,13 @@ class WatermarkEngine(
              textSize = (baseFrameHeight * 0.3f) * brandScale
              typeface = Typeface.DEFAULT_BOLD
         }
+
         val exifPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
              color = secondaryTextColor
              textSize = (baseFrameHeight * 0.2f) * dataScale
         }
         
-        val margin = bitmap.width * 0.05f
+        val margin = bitmap.width * (options.padding / 1000f) // 0 to 10%
         
         val maxAvailableWidth = if (options.showDeviceBrand) {
             (bitmap.width - margin * 2) * 0.6f
@@ -233,14 +260,32 @@ class WatermarkEngine(
              }
         }
         
-        // Dynamic Height Calculation
-        val requiredHeight = max(
-            brandPaint.textSize * 2.5f,
-            totalExifHeight + (exifPaint.textSize * 2f)
-        ).roundToInt()
-        
-        val finalFrameHeight = max(baseFrameHeight, requiredHeight)
+        // Dynamic Height Calculation 
+        var leftSideHeight = 0f
+        if (options.showDeviceBrand) {
+            leftSideHeight += brandPaint.textSize
+        }
+        if (options.showCustomText && options.customText.isNotEmpty()) {
+            val customTextPaint = Paint(brandPaint).apply {
+                val customScale = 0.5f + (options.customTextSize / 100f)
+                textSize = (baseFrameHeight * 0.3f) * customScale
+                typeface = Typeface.DEFAULT
+            }
+            if (options.showDeviceBrand) {
+                leftSideHeight += (baseFrameHeight * 0.1f)
+            }
+            leftSideHeight += customTextPaint.textSize
+        }
 
+        val contentHeightLeft = leftSideHeight
+        val contentHeightRight = totalExifHeight
+        
+        val minHeight = max(brandPaint.textSize, exifPaint.textSize) * 2f
+        
+        val calculatedHeight = max(contentHeightLeft, contentHeightRight) + (margin * 2)
+        
+        val finalFrameHeight = max(minHeight.roundToInt(), calculatedHeight.roundToInt())
+        
         val newHeight = bitmap.height + finalFrameHeight
         
         val finalBitmap = Bitmap.createBitmap(bitmap.width, newHeight, Bitmap.Config.ARGB_8888)
@@ -284,12 +329,39 @@ class WatermarkEngine(
 
     ) {
         
-        // Brand on Left
+        // Brand & Custom Text on Left
+        var currentLeftY = centerY
+        
+        var totalLeftHeight = 0f
+        val customScale = 0.5f + (options.customTextSize / 100f)
+        val customPaint = Paint(brandPaint).apply {
+            textSize = (brandPaint.textSize / (0.5f + (options.brandTextSize / 100f))) * customScale
+
+            textSize = brandPaint.textSize * (customScale / (0.5f + (options.brandTextSize / 100f)))
+            typeface = Typeface.DEFAULT
+        }
+
+        if (options.showDeviceBrand) totalLeftHeight += brandPaint.textSize
+        if (options.showCustomText && options.customText.isNotEmpty()) {
+             if (options.showDeviceBrand) totalLeftHeight += (brandPaint.textSize * 0.2f)
+             totalLeftHeight += customPaint.textSize
+        }
+
+        currentLeftY = centerY - (totalLeftHeight / 2f) + (brandPaint.textSize / 1.5f)
+        
+        currentLeftY = centerY - (totalLeftHeight / 2f) + brandPaint.textSize 
+
         if (options.showDeviceBrand) {
             val brandString = buildBrandString(exifData)
-            // Vertical center: centerY + half text height (as baseline)
-            val brandY = centerY + (brandPaint.textSize / 3f)
-            canvas.drawText(brandString, margin, brandY, brandPaint)
+            canvas.drawText(brandString, margin, currentLeftY, brandPaint)
+            currentLeftY += (brandPaint.textSize * 0.2f) + customPaint.textSize
+        } else if (options.showCustomText && options.customText.isNotEmpty()) {
+             currentLeftY = centerY - (totalLeftHeight / 2f) + customPaint.textSize
+        }
+
+        if (options.showCustomText && options.customText.isNotEmpty()) {
+
+             canvas.drawText(options.customText, margin, currentLeftY, customPaint)
         }
         
         // Exif on Right

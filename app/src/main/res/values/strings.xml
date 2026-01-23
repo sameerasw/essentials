@@ -346,6 +346,12 @@
     <string name="watermark_left_align">Align Left</string>
     <string name="watermark_text_size_brand">Brand Size</string>
     <string name="watermark_text_size_data">Data Size</string>
+    <string name="watermark_text_size_custom">Text Size</string>
+    <string name="watermark_custom_text">Custom Text</string>
+    <string name="watermark_custom_text_hint">Enter your text...</string>
+    <string name="watermark_custom_text_settings">Custom Text Settings</string>
+    <string name="watermark_spacing">Spacing</string>
+    <string name="action_save_changes">Save Changes</string>
 
     <!-- Search Settings -->
     <string name="search_haptic_title">Widget Haptic feedback</string>

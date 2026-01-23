@@ -27,6 +27,10 @@ class WatermarkRepository(
     private val PREF_LEFT_ALIGN = booleanPreferencesKey("left_align")
     private val PREF_BRAND_TEXT_SIZE = androidx.datastore.preferences.core.intPreferencesKey("brand_text_size")
     private val PREF_DATA_TEXT_SIZE = androidx.datastore.preferences.core.intPreferencesKey("data_text_size")
+    private val PREF_SHOW_CUSTOM_TEXT = booleanPreferencesKey("show_custom_text")
+    private val PREF_CUSTOM_TEXT = stringPreferencesKey("custom_text")
+    private val PREF_CUSTOM_TEXT_SIZE = androidx.datastore.preferences.core.intPreferencesKey("custom_text_size")
+    private val PREF_PADDING = androidx.datastore.preferences.core.intPreferencesKey("padding")
 
     val watermarkOptions: Flow<WatermarkOptions> = context.dataStore.data
         .map { preferences ->
@@ -50,7 +54,11 @@ class WatermarkRepository(
                 moveToTop = preferences[PREF_MOVE_TO_TOP] ?: false,
                 leftAlignOverlay = preferences[PREF_LEFT_ALIGN] ?: false,
                 brandTextSize = preferences[PREF_BRAND_TEXT_SIZE] ?: 50,
-                dataTextSize = preferences[PREF_DATA_TEXT_SIZE] ?: 50
+                dataTextSize = preferences[PREF_DATA_TEXT_SIZE] ?: 50,
+                showCustomText = preferences[PREF_SHOW_CUSTOM_TEXT] ?: false,
+                customText = preferences[PREF_CUSTOM_TEXT] ?: "",
+                customTextSize = preferences[PREF_CUSTOM_TEXT_SIZE] ?: 50,
+                padding = preferences[PREF_PADDING] ?: 50
             )
         }
 
@@ -100,5 +108,17 @@ class WatermarkRepository(
 
     suspend fun updateDataTextSize(size: Int) {
         context.dataStore.edit { it[PREF_DATA_TEXT_SIZE] = size }
+    }
+
+    suspend fun updateCustomTextSettings(show: Boolean, text: String, size: Int) {
+        context.dataStore.edit { 
+            it[PREF_SHOW_CUSTOM_TEXT] = show
+            it[PREF_CUSTOM_TEXT] = text
+            it[PREF_CUSTOM_TEXT_SIZE] = size
+        }
+    }
+
+    suspend fun updatePadding(padding: Int) {
+        context.dataStore.edit { it[PREF_PADDING] = padding }
     }
 }

@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -66,6 +67,7 @@ fun WatermarkScreen(
     val context = LocalContext.current
     val view = androidx.compose.ui.platform.LocalView.current // For haptics
     var showExifSheet by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
+    var showCustomTextSheet by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
     
     val options by viewModel.options.collectAsState()
     val previewState by viewModel.previewUiState.collectAsState()
@@ -421,6 +423,57 @@ fun WatermarkScreen(
                             isChecked = options.showDeviceBrand,
                             onCheckedChange = { viewModel.setShowBrand(it) }
                         )
+
+                        // Custom Text Entry
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    color = MaterialTheme.colorScheme.surfaceBright,
+                                    shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd)
+                                )
+                                .heightIn(min = 56.dp)
+                                .clickable { 
+                                    com.sameerasw.essentials.utils.HapticUtil.performUIHaptic(view)
+                                    showCustomTextSheet = true 
+                                }
+                                .padding(12.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            Spacer(modifier = Modifier.size(2.dp))
+                            Icon(
+                                painter = androidx.compose.ui.res.painterResource(id = R.drawable.rounded_edit_note_24),
+                                contentDescription = stringResource(R.string.watermark_custom_text),
+                                modifier = Modifier.size(24.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                            Spacer(modifier = Modifier.size(2.dp))
+                            
+                            Text(
+                                text = stringResource(R.string.watermark_custom_text),
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.weight(1f)
+                            )
+
+                            if (options.showCustomText && options.customText.isNotEmpty()) {
+                                Text(
+                                    text = options.customText,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    maxLines = 1,
+                                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                                    modifier = Modifier.widthIn(max = 100.dp)
+                                )
+                            }
+                            
+                            Icon(
+                                painter = androidx.compose.ui.res.painterResource(id = R.drawable.rounded_chevron_right_24),
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
         
         // Show EXIF Settings (Custom Row with Chevron)
                         Row(
@@ -496,6 +549,22 @@ fun WatermarkScreen(
                                 valueFormatter = { "${it.toInt()}%" }
                             )
                         }
+
+                        // Spacing Slider
+                        var paddingValue by androidx.compose.runtime.remember(options.padding) { androidx.compose.runtime.mutableFloatStateOf(options.padding.toFloat()) }
+                        
+                        ConfigSliderItem(
+                            title = stringResource(R.string.watermark_spacing),
+                            value = paddingValue,
+                            onValueChange = { 
+                                paddingValue = it 
+                                com.sameerasw.essentials.utils.HapticUtil.performSliderHaptic(view)
+                            },
+                            onValueChangeFinished = { viewModel.setPadding(paddingValue.toInt()) },
+                            valueRange = 0f..100f,
+                            increment = 5f,
+                            valueFormatter = { "${it.toInt()}%" }
+                        )
                     }
                     
                     // Bottom spacing for scrolling
@@ -575,6 +644,111 @@ fun WatermarkScreen(
                                 isChecked = options.showDate,
                                 onCheckedChange = { updateExif(options.showFocalLength, options.showAperture, options.showIso, options.showShutterSpeed, it) }
                             )
+                        }
+                    }
+                }
+            }
+        }
+        
+        if (showCustomTextSheet) {
+            val view = androidx.compose.ui.platform.LocalView.current
+            
+            // Local state for draft editing
+            var isEnabled by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(options.showCustomText) }
+            var draftText by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(options.customText) }
+            var draftSize by androidx.compose.runtime.remember { androidx.compose.runtime.mutableFloatStateOf(options.customTextSize.toFloat()) }
+            
+            androidx.compose.material3.ModalBottomSheet(
+                onDismissRequest = { showCustomTextSheet = false },
+                containerColor = MaterialTheme.colorScheme.surfaceContainer
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .padding(bottom = 32.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.watermark_custom_text_settings),
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    
+                    RoundedCardContainer {
+                        // Master Toggle
+                        com.sameerasw.essentials.ui.components.cards.IconToggleItem(
+                            iconRes = R.drawable.rounded_edit_note_24,
+                            title = stringResource(R.string.watermark_custom_text),
+                            isChecked = isEnabled,
+                            onCheckedChange = { isEnabled = it }
+                        )
+                    }
+                    
+                    if (isEnabled) {
+                         RoundedCardContainer {
+                             Column(modifier = Modifier.padding(16.dp)) {
+                                 // Text Input
+                                 androidx.compose.material3.OutlinedTextField(
+                                     value = draftText,
+                                     onValueChange = { draftText = it },
+                                     label = { Text(stringResource(R.string.watermark_custom_text)) },
+                                     placeholder = { Text(stringResource(R.string.watermark_custom_text_hint)) },
+                                     modifier = Modifier.fillMaxWidth(),
+                                     singleLine = true
+                                 )
+                                 
+                                 Spacer(modifier = Modifier.height(16.dp))
+                                 
+                                 // Size Slider
+                                 val density = androidx.compose.ui.platform.LocalDensity.current
+                                 Text(
+                                     text = stringResource(R.string.watermark_text_size_custom),
+                                     style = MaterialTheme.typography.labelLarge,
+                                     color = MaterialTheme.colorScheme.onSurface
+                                 )
+                                 androidx.compose.material3.Slider(
+                                      value = draftSize,
+                                      onValueChange = { 
+                                          draftSize = it 
+                                          performSliderHaptic(view)
+                                      },
+                                      valueRange = 0f..100f
+                                 )
+                                 Text(
+                                     text = "${draftSize.toInt()}%",
+                                     style = MaterialTheme.typography.bodySmall,
+                                     modifier = Modifier.align(Alignment.End),
+                                     color = MaterialTheme.colorScheme.onSurfaceVariant
+                                 )
+                             }
+                         }
+                    }
+                    
+                    // Buttons
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        OutlinedButton(
+                            onClick = { 
+                                performUIHaptic(view)
+                                showCustomTextSheet = false 
+                            },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(stringResource(R.string.action_cancel))
+                        }
+                        
+                        Button(
+                            onClick = {
+                                performUIHaptic(view)
+                                viewModel.setCustomTextSettings(isEnabled, draftText, draftSize.toInt())
+                                showCustomTextSheet = false
+                            },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(stringResource(R.string.action_save_changes))
                         }
                     }
                 }

@@ -207,6 +207,20 @@ class WatermarkViewModel(
         }
     }
 
+    fun setCustomTextSettings(show: Boolean, text: String, size: Int) {
+        viewModelScope.launch {
+            watermarkRepository.updateCustomTextSettings(show, text, size)
+            previewSourceBitmap?.let { updatePreview() }
+        }
+    }
+
+    fun setPadding(padding: Int) {
+        viewModelScope.launch {
+            watermarkRepository.updatePadding(padding)
+            previewSourceBitmap?.let { updatePreview() }
+        }
+    }
+
     fun saveImage(uri: Uri) {
         viewModelScope.launch {
             _uiState.value = WatermarkUiState.Processing
