@@ -49,6 +49,9 @@ import com.sameerasw.essentials.ui.components.ReusableTopAppBar
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.pickers.SegmentedPicker
+import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
+import com.sameerasw.essentials.utils.HapticUtil.performSliderHaptic
+import com.sameerasw.essentials.utils.HapticUtil.performUIHaptic
 import com.sameerasw.essentials.viewmodels.WatermarkUiState
 import com.sameerasw.essentials.viewmodels.WatermarkViewModel
 
@@ -61,6 +64,9 @@ fun WatermarkScreen(
     viewModel: WatermarkViewModel
 ) {
     val context = LocalContext.current
+    val view = androidx.compose.ui.platform.LocalView.current // For haptics
+    var showExifSheet by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
+    
     val options by viewModel.options.collectAsState()
     val previewState by viewModel.previewUiState.collectAsState()
     val saveState by viewModel.uiState.collectAsState()
@@ -90,14 +96,21 @@ fun WatermarkScreen(
             ReusableTopAppBar(
                 title = R.string.feat_watermark_title,
                 hasBack = true,
-                onBackClick = onBack,
+                onBackClick = {
+                    performUIHaptic(view)
+                    onBack()
+                },
                 isSmall = true,
+                containerColor = MaterialTheme.colorScheme.background,
                 actions = {
                     val pickImageButton = @Composable {
                          // Pick Image Button
                         if (initialUri == null) {
                             // Primary when no image
-                            androidx.compose.material3.Button(onClick = onPickImage) {
+                            androidx.compose.material3.Button(onClick = {
+                                performUIHaptic(view)
+                                onPickImage()
+                            }) {
                                  Icon(
                                      painter = androidx.compose.ui.res.painterResource(R.drawable.rounded_add_photo_alternate_24),
                                      contentDescription = stringResource(R.string.watermark_pick_image),
@@ -108,7 +121,10 @@ fun WatermarkScreen(
                             }
                         } else {
                             // Secondary when image is there
-                            androidx.compose.material3.OutlinedButton(onClick = onPickImage) {
+                            androidx.compose.material3.OutlinedButton(onClick = {
+                                performUIHaptic(view)
+                                onPickImage()
+                            }) {
                                  Icon(
                                      painter = androidx.compose.ui.res.painterResource(R.drawable.rounded_add_photo_alternate_24),
                                      contentDescription = stringResource(R.string.watermark_pick_image),
@@ -127,7 +143,10 @@ fun WatermarkScreen(
                         
                         Box {
                              // Save Button (Primary)
-                             androidx.compose.material3.Button(onClick = { showMenu = true }) {
+                             androidx.compose.material3.Button(onClick = { 
+                                 performUIHaptic(view)
+                                 showMenu = true 
+                             }) {
                                  Icon(
                                      painter = androidx.compose.ui.res.painterResource(R.drawable.rounded_save_24),
                                      contentDescription = stringResource(R.string.action_save),
@@ -189,7 +208,7 @@ fun WatermarkScreen(
                 }
             )
         },
-        containerColor = MaterialTheme.colorScheme.surfaceContainer
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         val density = androidx.compose.ui.platform.LocalDensity.current
         val configuration = androidx.compose.ui.platform.LocalConfiguration.current
@@ -211,6 +230,9 @@ fun WatermarkScreen(
                     if (delta < 0) {
                         val newHeight = (previewHeightPx + delta).coerceIn(minPx, maxPx)
                         val consumed = newHeight - previewHeightPx
+                        if (kotlin.math.abs(consumed) > 0.5f) {
+                            performSliderHaptic(view)
+                        }
                         previewHeightPx = newHeight
                         return androidx.compose.ui.geometry.Offset(0f, consumed)
                     }
@@ -223,6 +245,9 @@ fun WatermarkScreen(
                     if (delta > 0) {
                         val newHeight = (previewHeightPx + delta).coerceIn(minPx, maxPx)
                         val consumedY = newHeight - previewHeightPx
+                        if (kotlin.math.abs(consumedY) > 0.5f) {
+                            performSliderHaptic(view)
+                        }
                         previewHeightPx = newHeight
                         return androidx.compose.ui.geometry.Offset(0f, consumedY)
                     }
@@ -246,6 +271,7 @@ fun WatermarkScreen(
                     .clip(RoundedCornerShape(24.dp))
                     .background(MaterialTheme.colorScheme.surfaceContainerHigh)
                     .clickable { 
+                        performUIHaptic(view)
                         if (initialUri == null) {
                             onPickImage()
                         } else {
@@ -345,7 +371,10 @@ fun WatermarkScreen(
                         SegmentedPicker(
                             items = WatermarkStyle.entries,
                             selectedItem = options.style,
-                            onItemSelected = { viewModel.setStyle(it) },
+                            onItemSelected = { 
+                                performUIHaptic(view)
+                                viewModel.setStyle(it) 
+                            },
                             labelProvider = { style ->
                                 when (style) {
                                     WatermarkStyle.OVERLAY -> context.getString(R.string.watermark_style_overlay)
@@ -366,26 +395,187 @@ fun WatermarkScreen(
                             },
                             modifier = Modifier.fillMaxWidth()
                         )
+                        
+                        // Style-specific options
+                        if (options.style == WatermarkStyle.FRAME) {
+                             com.sameerasw.essentials.ui.components.cards.IconToggleItem(
+                                iconRes = R.drawable.rounded_top_panel_close_24,
+                                title = stringResource(R.string.watermark_move_to_top),
+                                isChecked = options.moveToTop,
+                                onCheckedChange = { viewModel.setMoveToTop(it) }
+                            )
+                        } else {
+                            com.sameerasw.essentials.ui.components.cards.IconToggleItem(
+                                iconRes = R.drawable.rounded_position_bottom_left_24,
+                                title = stringResource(R.string.watermark_left_align),
+                                isChecked = options.leftAlignOverlay,
+                                onCheckedChange = { viewModel.setLeftAlign(it) }
+                            )
+                        }
         
                         // Show Brand Toggle
                         IconToggleItem(
-                            iconRes = R.drawable.rounded_info_24, 
+                            iconRes = R.drawable.rounded_mobile_text_2_24,
                             title = stringResource(R.string.watermark_show_brand),
                             isChecked = options.showDeviceBrand,
                             onCheckedChange = { viewModel.setShowBrand(it) }
                         )
         
-                        // Show EXIF Toggle
-                        IconToggleItem(
-                            iconRes = R.drawable.rounded_info_24, 
+        // Show EXIF Settings (Custom Row with Chevron)
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    color = MaterialTheme.colorScheme.surfaceBright,
+                                    shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd)
+                                )
+                                .heightIn(min = 56.dp) // Match standard item height
+                                .clickable { 
+                                    com.sameerasw.essentials.utils.HapticUtil.performUIHaptic(view)
+                                    showExifSheet = true 
+                                }
+                                .padding(12.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            Spacer(modifier = Modifier.size(2.dp))
+                            Icon(
+                                painter = androidx.compose.ui.res.painterResource(id = R.drawable.rounded_image_search_24),
+                                contentDescription = stringResource(R.string.watermark_show_exif),
+                                modifier = Modifier.size(24.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                            Spacer(modifier = Modifier.size(2.dp))
+                            
+                            Text(
+                                text = stringResource(R.string.watermark_show_exif),
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.weight(1f)
+                            )
+                            
+                            Icon(
+                                painter = androidx.compose.ui.res.painterResource(id = R.drawable.rounded_chevron_right_24),
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+
+                        // Text Size Sliders
+                        if (options.showDeviceBrand) {
+                            var brandSize by androidx.compose.runtime.remember(options.brandTextSize) { androidx.compose.runtime.mutableFloatStateOf(options.brandTextSize.toFloat()) }
+                            
+                            ConfigSliderItem(
+                                title = stringResource(R.string.watermark_text_size_brand),
+                                value = brandSize,
+                                onValueChange = { 
+                                    brandSize = it 
+                                    com.sameerasw.essentials.utils.HapticUtil.performSliderHaptic(view)
+                                },
+                                onValueChangeFinished = { viewModel.setBrandTextSize(brandSize.toInt()) },
+                                valueRange = 0f..100f,
+                                increment = 5f,
+                                valueFormatter = { "${it.toInt()}%" }
+                            )
+                        }
+
+                        if (options.showExif) {
+                            var dataSize by androidx.compose.runtime.remember(options.dataTextSize) { androidx.compose.runtime.mutableFloatStateOf(options.dataTextSize.toFloat()) }
+                            
+                            ConfigSliderItem(
+                                title = stringResource(R.string.watermark_text_size_data),
+                                value = dataSize,
+                                onValueChange = { 
+                                    dataSize = it 
+                                    com.sameerasw.essentials.utils.HapticUtil.performSliderHaptic(view)
+                                },
+                                onValueChangeFinished = { viewModel.setDataTextSize(dataSize.toInt()) },
+                                valueRange = 0f..100f,
+                                increment = 5f,
+                                valueFormatter = { "${it.toInt()}%" }
+                            )
+                        }
+                    }
+                    
+                    // Bottom spacing for scrolling
+                    Spacer(Modifier.height(24.dp))
+                }
+            }
+        }
+        
+        if (showExifSheet) {
+            val view = androidx.compose.ui.platform.LocalView.current
+            androidx.compose.material3.ModalBottomSheet(
+                onDismissRequest = { showExifSheet = false },
+                containerColor = MaterialTheme.colorScheme.surfaceContainer
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .padding(bottom = 32.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.watermark_exif_settings),
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    
+                    RoundedCardContainer {
+                        // Master Toggle
+                        com.sameerasw.essentials.ui.components.cards.IconToggleItem(
+                            iconRes = R.drawable.rounded_image_search_24,
                             title = stringResource(R.string.watermark_show_exif),
                             isChecked = options.showExif,
                             onCheckedChange = { viewModel.setShowExif(it) }
                         )
                     }
                     
-                    // Bottom spacing for scrolling
-                    Spacer(Modifier.height(24.dp))
+                    if (options.showExif) {
+                        RoundedCardContainer {
+                            // Granular toggles
+                            // Helper for granular
+                             val updateExif = { focal: Boolean, aperture: Boolean, iso: Boolean, shutter: Boolean, date: Boolean ->
+                                viewModel.setExifSettings(focal, aperture, iso, shutter, date)
+                             }
+                            
+                            IconToggleItem(
+                                iconRes = R.drawable.rounded_control_camera_24,
+                                title = stringResource(R.string.watermark_exif_focal_length),
+                                isChecked = options.showFocalLength,
+                                onCheckedChange = { updateExif(it, options.showAperture, options.showIso, options.showShutterSpeed, options.showDate) }
+                            )
+                            
+                            IconToggleItem(
+                                iconRes = R.drawable.rounded_camera_24,
+                                title = stringResource(R.string.watermark_exif_aperture),
+                                isChecked = options.showAperture,
+                                onCheckedChange = { updateExif(options.showFocalLength, it, options.showIso, options.showShutterSpeed, options.showDate) }
+                            )
+                             
+                            IconToggleItem(
+                                iconRes = R.drawable.rounded_grain_24,
+                                title = stringResource(R.string.watermark_exif_iso),
+                                isChecked = options.showIso,
+                                onCheckedChange = { updateExif(options.showFocalLength, options.showAperture, it, options.showShutterSpeed, options.showDate) }
+                            )
+                            
+                            IconToggleItem(
+                                iconRes = R.drawable.rounded_shutter_speed_24,
+                                title = stringResource(R.string.watermark_exif_shutter_speed),
+                                isChecked = options.showShutterSpeed,
+                                onCheckedChange = { updateExif(options.showFocalLength, options.showAperture, options.showIso, it, options.showDate) }
+                            )
+                            
+                            IconToggleItem(
+                                iconRes = R.drawable.rounded_date_range_24,
+                                title = stringResource(R.string.watermark_exif_date),
+                                isChecked = options.showDate,
+                                onCheckedChange = { updateExif(options.showFocalLength, options.showAperture, options.showIso, options.showShutterSpeed, it) }
+                            )
+                        }
+                    }
                 }
             }
         }

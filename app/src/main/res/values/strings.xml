@@ -329,13 +329,23 @@
     <string name="watermark_style_title">Style</string>
     <string name="watermark_style_overlay">Overlay</string>
     <string name="watermark_style_frame">Frame</string>
-    <string name="watermark_show_brand">Show Device Brand</string>
-    <string name="watermark_show_exif">Show EXIF Data</string>
+    <string name="watermark_show_brand">Device Brand</string>
+    <string name="watermark_show_exif">EXIF Data</string>
     <string name="watermark_pick_image">Pick Image</string>
     <string name="watermark_save_success">Image saved to gallery</string>
     <string name="watermark_save_error">Failed to save image</string>
     <string name="watermark_processing">Processing...</string>
     <string name="action_share">Share</string>
+    <string name="watermark_exif_settings">EXIF Settings</string>
+    <string name="watermark_exif_focal_length">Focal Length</string>
+    <string name="watermark_exif_aperture">Aperture</string>
+    <string name="watermark_exif_iso">ISO</string>
+    <string name="watermark_exif_shutter_speed">Shutter Speed</string>
+    <string name="watermark_exif_date">Date &amp; Time</string>
+    <string name="watermark_move_to_top">Move to Top</string>
+    <string name="watermark_left_align">Align Left</string>
+    <string name="watermark_text_size_brand">Brand Size</string>
+    <string name="watermark_text_size_data">Data Size</string>
 
     <!-- Search Settings -->
     <string name="search_haptic_title">Widget Haptic feedback</string>

@@ -26,9 +26,19 @@ data class WatermarkOptions(
     val style: WatermarkStyle = WatermarkStyle.FRAME,
     val showDeviceBrand: Boolean = true,
     val showExif: Boolean = true,
+    // Granular EXIF options
+    val showFocalLength: Boolean = true,
+    val showAperture: Boolean = true,
+    val showIso: Boolean = true,
+    val showShutterSpeed: Boolean = true,
+    val showDate: Boolean = false,
     val customText: String = "",
     val outputQuality: Int = 100,
-    val useDarkTheme: Boolean = false
+    val useDarkTheme: Boolean = false,
+    val moveToTop: Boolean = false,
+    val leftAlignOverlay: Boolean = false,
+    val brandTextSize: Int = 50,
+    val dataTextSize: Int = 50
 )
 
 class WatermarkEngine(
@@ -134,13 +144,33 @@ class WatermarkEngine(
         val margin = bitmap.width * 0.05f
         var yPos = bitmap.height - margin
 
+        // Apply scaling
+        val brandScale = 0.5f + (options.brandTextSize / 100f)
+        val dataScale = 0.5f + (options.dataTextSize / 100f)
+        
+        // Base text size was 3% of width
+        val baseSize = bitmap.width * 0.03f
+        paint.textSize = baseSize * dataScale 
+        
         if (options.showExif) {
-            val exifString = buildExifString(exifData)
-            if (exifString.isNotEmpty()) {
-                val textBounds = Rect()
-                paint.getTextBounds(exifString, 0, exifString.length, textBounds)
-                canvas.drawText(exifString, bitmap.width - margin - textBounds.width(), yPos, paint)
-                yPos -= textBounds.height() * 1.5f
+            val exifItems = buildExifList(exifData, options)
+            if (exifItems.isNotEmpty()) {
+                val maxWidth = bitmap.width - (margin * 2) 
+                
+                // Wrap items with icons
+                val rows = wrapExifItems(exifItems, paint, maxWidth)
+                val reversedRows = rows.reversed()
+                
+                for (row in reversedRows) {
+                    val rowWidth = measureRowWidth(row, paint)
+                    val rowHeight = measureRowHeight(row, paint)
+                    
+                    var xPos = if (options.leftAlignOverlay) margin else (bitmap.width - margin - rowWidth)
+                    
+                    drawExifRow(canvas, row, xPos, yPos, paint, shadowColor)
+                    
+                    yPos -= rowHeight * 1.5f
+                }
             }
         }
 
@@ -148,65 +178,251 @@ class WatermarkEngine(
             val brandString = buildBrandString(exifData)
             val brandPaint = Paint(paint).apply {
                 typeface = Typeface.DEFAULT_BOLD
+                textSize = baseSize * brandScale // Use brand scale
             }
             val textBounds = Rect()
             brandPaint.getTextBounds(brandString, 0, brandString.length, textBounds)
-            canvas.drawText(brandString, bitmap.width - margin - textBounds.width(), yPos, brandPaint)
+            
+            val xPos = if (options.leftAlignOverlay) margin else (bitmap.width - margin - textBounds.width())
+            
+            canvas.drawText(brandString, xPos, yPos, brandPaint)
         }
 
         return bitmap
     }
 
     private fun drawFrame(bitmap: Bitmap, exifData: ExifData, options: WatermarkOptions): Bitmap {
-        val frameHeight = (bitmap.height * 0.10f).roundToInt() // 10% chin
-        val newHeight = bitmap.height + frameHeight
-        
-        val finalBitmap = Bitmap.createBitmap(bitmap.width, newHeight, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(finalBitmap)
+        var baseFrameHeight = (bitmap.height * 0.10f).roundToInt()
         
         val useDark = options.useDarkTheme
         val bgColor = if (useDark) Color.BLACK else Color.WHITE
         val textColor = if (useDark) Color.WHITE else Color.BLACK
         val secondaryTextColor = if (useDark) Color.LTGRAY else Color.GRAY
+        
+        // Setup paints early to measure
+        // Setup paints early to measure
+        val brandScale = 0.5f + (options.brandTextSize / 100f)
+        val dataScale = 0.5f + (options.dataTextSize / 100f)
 
+        val brandPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+             color = textColor
+             textSize = (baseFrameHeight * 0.3f) * brandScale
+             typeface = Typeface.DEFAULT_BOLD
+        }
+        val exifPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+             color = secondaryTextColor
+             textSize = (baseFrameHeight * 0.2f) * dataScale
+        }
+        
+        val margin = bitmap.width * 0.05f
+        
+        val maxAvailableWidth = if (options.showDeviceBrand) {
+            (bitmap.width - margin * 2) * 0.6f
+        } else {
+            (bitmap.width - margin * 2).toFloat()
+        }
+        
+        var exifRows: List<List<ExifItem>> = emptyList()
+        var totalExifHeight = 0f
+        
+        if (options.showExif) {
+             val exifItems = buildExifList(exifData, options)
+             if (exifItems.isNotEmpty()) {
+                 exifRows = wrapExifItems(exifItems, exifPaint, maxAvailableWidth)
+                 totalExifHeight = exifRows.size * (exifPaint.textSize * 1.5f)
+             }
+        }
+        
+        // Dynamic Height Calculation
+        val requiredHeight = max(
+            brandPaint.textSize * 2.5f,
+            totalExifHeight + (exifPaint.textSize * 2f)
+        ).roundToInt()
+        
+        val finalFrameHeight = max(baseFrameHeight, requiredHeight)
+
+        val newHeight = bitmap.height + finalFrameHeight
+        
+        val finalBitmap = Bitmap.createBitmap(bitmap.width, newHeight, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(finalBitmap)
+        
         // Draw background
         canvas.drawColor(bgColor)
         
-        // Draw original image
-        canvas.drawBitmap(bitmap, 0f, 0f, null)
-        
-        // Draw Text in Chin
-        val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = textColor
-            textSize = frameHeight * 0.25f
-        }
-        
-        val leftMargin = bitmap.width * 0.05f
-        val centerY = bitmap.height + (frameHeight / 2f) + (paint.textSize / 3f)
-
-        // Left side: Brand / Model
-        if (options.showDeviceBrand) {
-            val brandPaint = Paint(paint).apply {
-                typeface = Typeface.DEFAULT_BOLD
-                textSize = frameHeight * 0.3f
-            }
-            val brandString = buildBrandString(exifData)
-            canvas.drawText(brandString, leftMargin, centerY, brandPaint)
-        }
-
-        // Right side: EXIF
-        if (options.showExif) {
-            val exifString = buildExifString(exifData)
-            val exifPaint = Paint(paint).apply {
-                color = secondaryTextColor
-                textSize = frameHeight * 0.2f
-            }
-            val textBounds = Rect()
-            exifPaint.getTextBounds(exifString, 0, exifString.length, textBounds)
-            canvas.drawText(exifString, bitmap.width - leftMargin - textBounds.width(), centerY, exifPaint)
+        // Draw Image and Text
+        if (options.moveToTop) {
+            // Draw Image shifted down by frameHeight
+            canvas.drawBitmap(bitmap, 0f, finalFrameHeight.toFloat(), null)
+            
+            // Draw Text in "Forehead"
+            val centerY = finalFrameHeight / 2f
+            drawFrameContent(
+                canvas, exifData, options, margin, centerY, 
+                brandPaint, exifPaint, exifRows, bitmap.width
+            )
+            
+        } else {
+            // Draw Image at 0,0
+            canvas.drawBitmap(bitmap, 0f, 0f, null)
+            
+            // Draw Text in "Chin"
+            val centerY = bitmap.height + (finalFrameHeight / 2f)
+            drawFrameContent(
+                canvas, exifData, options, margin, centerY, 
+                brandPaint, exifPaint, exifRows, bitmap.width
+            )
         }
 
         return finalBitmap
+    }
+
+    private fun drawFrameContent(
+        canvas: Canvas, exifData: ExifData, options: WatermarkOptions,
+        margin: Float, centerY: Float,
+        brandPaint: Paint, exifPaint: Paint,
+        exifRows: List<List<ExifItem>>, canvasWidth: Int
+
+    ) {
+        
+        // Brand on Left
+        if (options.showDeviceBrand) {
+            val brandString = buildBrandString(exifData)
+            // Vertical center: centerY + half text height (as baseline)
+            val brandY = centerY + (brandPaint.textSize / 3f)
+            canvas.drawText(brandString, margin, brandY, brandPaint)
+        }
+        
+        // Exif on Right
+        if (options.showExif && exifRows.isNotEmpty()) {
+            val lineHeight = exifPaint.textSize * 1.5f
+        
+            val centeringOffset = (exifRows.size - 1) * lineHeight / 2f
+            var currentY = (centerY + exifPaint.textSize / 3f) - centeringOffset
+            
+            for (row in exifRows) {
+                val rowWidth = measureRowWidth(row, exifPaint)
+                val xPos = canvasWidth - margin - rowWidth
+                drawExifRow(canvas, row, xPos, currentY, exifPaint, null) 
+                currentY += lineHeight
+            }
+        }
+    }
+    
+    private fun wrapExifItems(items: List<ExifItem>, paint: Paint, maxWidth: Float): List<List<ExifItem>> {
+        val rows = mutableListOf<List<ExifItem>>()
+        if (items.isEmpty()) return rows
+        
+        var currentRow = mutableListOf<ExifItem>()
+        var currentWidth = 0f
+        val separatorWidth = 0f
+        val itemSpacing = paint.textSize * 0.8f
+
+        for (item in items) {
+            val itemWidth = measureItemWidth(item, paint)
+            
+            if (currentRow.isEmpty()) {
+                currentRow.add(item)
+                currentWidth += itemWidth
+            } else {
+                if (currentWidth + itemSpacing + itemWidth <= maxWidth) {
+                     currentRow.add(item)
+                     currentWidth += itemSpacing + itemWidth
+                } else {
+                    rows.add(currentRow)
+                    currentRow = mutableListOf(item)
+                    currentWidth = itemWidth
+                }
+            }
+        }
+        if (currentRow.isNotEmpty()) {
+            rows.add(currentRow)
+        }
+        return rows
+    }
+    
+    private fun measureItemWidth(item: ExifItem, paint: Paint): Float {
+        // Icon + Padding + Text
+        val iconSize = paint.textSize * 1.2f
+        val padding = paint.textSize * 0.4f
+        val textWidth = paint.measureText(item.text)
+        return iconSize + padding + textWidth
+    }
+    
+    private fun measureRowWidth(row: List<ExifItem>, paint: Paint): Float {
+        var width = 0f
+        val itemSpacing = paint.textSize * 0.8f
+        for (i in row.indices) {
+            width += measureItemWidth(row[i], paint)
+            if (i < row.size - 1) width += itemSpacing
+        }
+        return width
+    }
+    
+    private fun measureRowHeight(row: List<ExifItem>, paint: Paint): Float {
+        return paint.textSize * 1.5f // Use standard height
+    }
+
+    private fun drawExifRow(
+        canvas: Canvas, row: List<ExifItem>, 
+        xStart: Float, yPos: Float, 
+        paint: Paint, shadowColor: Int?
+    ) {
+        var currentX = xStart
+        val iconSize = paint.textSize * 1.2f
+        val padding = paint.textSize * 0.4f
+        val itemSpacing = paint.textSize * 0.8f
+        
+        val iconY = yPos - (paint.textSize / 2f) - (iconSize / 2f)
+        
+        for (item in row) {
+            // Draw Icon
+            val iconBitmap = loadVectorBitmap(context, item.iconRes, paint.color)
+            if (iconBitmap != null) {
+                val destRect = Rect(
+                    currentX.toInt(), 
+                    iconY.toInt(), 
+                    (currentX + iconSize).toInt(), 
+                    (iconY + iconSize).toInt()
+                )
+                
+                if (shadowColor != null) {
+                     val shadowPaint = Paint(paint).apply { 
+                         color = shadowColor
+                         colorFilter = android.graphics.PorterDuffColorFilter(shadowColor, android.graphics.PorterDuff.Mode.SRC_IN)
+                     }
+                     val shadowRect = Rect(destRect)
+                     shadowRect.offset(2, 2)
+                     canvas.drawBitmap(iconBitmap, null, shadowRect, shadowPaint)
+                }
+                
+                canvas.drawBitmap(iconBitmap, null, destRect, null) // Already tinted if we created it tinted
+            }
+            
+            currentX += iconSize + padding
+            
+            // Draw Text
+            canvas.drawText(item.text, currentX, yPos, paint)
+            
+            currentX += paint.measureText(item.text) + itemSpacing
+        }
+    }
+
+    // Cache for bitmaps
+    private val iconCache = mutableMapOf<Int, Bitmap>()
+    
+    private fun loadVectorBitmap(context: Context, resId: Int, color: Int): Bitmap? {
+        
+        try {
+            val drawable = androidx.core.content.ContextCompat.getDrawable(context, resId) ?: return null
+            val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bitmap)
+            drawable.setBounds(0, 0, canvas.width, canvas.height)
+            drawable.setTint(color)
+            drawable.draw(canvas)
+            return bitmap
+        } catch (e: Exception) {
+            return null
+        }
     }
 
     private fun buildBrandString(exif: ExifData): String {
@@ -221,12 +437,87 @@ class WatermarkEngine(
         }
     }
 
-    private fun buildExifString(exif: ExifData): String {
-        val parts = mutableListOf<String>()
-        exif.focalLength?.let { parts.add(it) }
-        exif.aperture?.let { parts.add(it) }
-        exif.shutterSpeed?.let { parts.add(it) }
-        exif.iso?.let { parts.add(it) }
-        return parts.joinToString(" • ")
+    private data class ExifItem(val text: String, val iconRes: Int)
+
+    private fun buildExifList(exif: ExifData, options: WatermarkOptions): List<ExifItem> {
+        val list = mutableListOf<ExifItem>()
+        
+        if (options.showFocalLength) exif.focalLength?.let { 
+            list.add(ExifItem(it, R.drawable.rounded_control_camera_24)) 
+        }
+        if (options.showAperture) exif.aperture?.let { 
+            list.add(ExifItem(it, R.drawable.rounded_camera_24)) 
+        }
+        if (options.showShutterSpeed) exif.shutterSpeed?.let { 
+            list.add(ExifItem(formatShutterSpeed(it), R.drawable.rounded_shutter_speed_24)) 
+        }
+        if (options.showIso) exif.iso?.let { 
+            list.add(ExifItem(it, R.drawable.rounded_grain_24)) 
+        }
+        if (options.showDate) exif.date?.let { 
+            list.add(ExifItem(formatDate(it), R.drawable.rounded_date_range_24)) 
+        }
+        
+        return list
+    }
+
+    private fun formatDate(dateString: String): String {
+        try {
+            // Input format: yyyy:MM:dd HH:mm:ss
+            val inputFormat = java.text.SimpleDateFormat("yyyy:MM:dd HH:mm:ss", java.util.Locale.US)
+            val date = inputFormat.parse(dateString) ?: return dateString
+            
+            // Output format components
+            val dayFormat = java.text.SimpleDateFormat("d", java.util.Locale.US)
+            val monthYearFormat = java.text.SimpleDateFormat("MMM yyyy", java.util.Locale.US)
+            
+            // Use system time format (12/24h)
+            val timeFormat = java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT)
+            
+            val day = dayFormat.format(date).toInt()
+            val suffix = getDaySuffix(day)
+            
+            return "$day$suffix ${monthYearFormat.format(date)}, ${timeFormat.format(date)}"
+        } catch (e: Exception) {
+            return dateString
+        }
+    }
+    
+    private fun getDaySuffix(n: Int): String {
+        if (n in 11..13) return "th"
+        return when (n % 10) {
+            1 -> "st"
+            2 -> "nd"
+            3 -> "rd"
+            else -> "th"
+        }
+    }
+
+    private fun formatShutterSpeed(raw: String): String {
+        // raw usually comes as "0.02s" or "1/100s" from MetadataProvider due to appended "s" in provider
+        // but if we are robust, we check.
+        val value = raw.removeSuffix("s")
+        // If it's a fraction, keep it (photographers prefer fractions)
+        if (value.contains("/")) return raw
+        
+        return try {
+            val doubleVal = value.toDouble()
+            // Round to max 2 decimals
+            // usage of %.2f might result in 0.00 for very fast speeds? 
+            // User asked "maximum of 2 decimals", implying checking if it has more.
+            // But if it is 0.0005, 0.00 is bad.
+            // Maybe they mean for long exposures e.g. 2.534s -> 0.53s.
+            // Let's assume standard formatting.
+            if (doubleVal >= 1 || doubleVal == 0.0) {
+                 java.lang.String.format(java.util.Locale.US, "%.2fs", doubleVal).removeSuffix(".00s").removeSuffix("0s") + "s"
+            } else {
+                // Formatting small decimals
+                // user request: "round to maximum of 2 decimals"
+                // If 0.016 -> 0.02s
+                java.lang.String.format(java.util.Locale.US, "%.2fs", doubleVal)
+            }
+        } catch (e: Exception) {
+            raw
+        }
     }
 }

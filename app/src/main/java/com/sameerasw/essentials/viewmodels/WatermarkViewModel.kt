@@ -159,9 +159,51 @@ class WatermarkViewModel(
         }
     }
 
+    fun setExifSettings(
+        focalLength: Boolean,
+        aperture: Boolean,
+        iso: Boolean,
+        shutterSpeed: Boolean,
+        date: Boolean
+    ) {
+        viewModelScope.launch {
+            watermarkRepository.updateExifSettings(focalLength, aperture, iso, shutterSpeed, date)
+            // Trigger preview update
+            previewSourceBitmap?.let { updatePreview() }
+        }
+    }
+
     fun toggleContrast() {
         viewModelScope.launch {
             watermarkRepository.updateUseDarkTheme(!_options.value.useDarkTheme)
+        }
+    }
+
+    fun setMoveToTop(move: Boolean) {
+        viewModelScope.launch {
+            watermarkRepository.updateMoveToTop(move)
+            previewSourceBitmap?.let { updatePreview() }
+        }
+    }
+
+    fun setLeftAlign(left: Boolean) {
+        viewModelScope.launch {
+            watermarkRepository.updateLeftAlign(left)
+            previewSourceBitmap?.let { updatePreview() }
+        }
+    }
+
+    fun setBrandTextSize(size: Int) {
+        viewModelScope.launch {
+            watermarkRepository.updateBrandTextSize(size)
+            previewSourceBitmap?.let { updatePreview() }
+        }
+    }
+
+    fun setDataTextSize(size: Int) {
+        viewModelScope.launch {
+            watermarkRepository.updateDataTextSize(size)
+            previewSourceBitmap?.let { updatePreview() }
         }
     }
 

@@ -17,7 +17,16 @@ class WatermarkRepository(
     private val PREF_STYLE = stringPreferencesKey("watermark_style")
     private val PREF_SHOW_BRAND = booleanPreferencesKey("show_brand")
     private val PREF_SHOW_EXIF = booleanPreferencesKey("show_exif")
+    private val PREF_SHOW_FOCAL_LENGTH = booleanPreferencesKey("show_focal_length")
+    private val PREF_SHOW_APERTURE = booleanPreferencesKey("show_aperture")
+    private val PREF_SHOW_ISO = booleanPreferencesKey("show_iso")
+    private val PREF_SHOW_SHUTTER = booleanPreferencesKey("show_shutter")
+    private val PREF_SHOW_DATE = booleanPreferencesKey("show_date")
     private val PREF_USE_DARK_THEME = booleanPreferencesKey("use_dark_theme")
+    private val PREF_MOVE_TO_TOP = booleanPreferencesKey("move_to_top")
+    private val PREF_LEFT_ALIGN = booleanPreferencesKey("left_align")
+    private val PREF_BRAND_TEXT_SIZE = androidx.datastore.preferences.core.intPreferencesKey("brand_text_size")
+    private val PREF_DATA_TEXT_SIZE = androidx.datastore.preferences.core.intPreferencesKey("data_text_size")
 
     val watermarkOptions: Flow<WatermarkOptions> = context.dataStore.data
         .map { preferences ->
@@ -32,7 +41,16 @@ class WatermarkRepository(
                 style = style,
                 showDeviceBrand = preferences[PREF_SHOW_BRAND] ?: true,
                 showExif = preferences[PREF_SHOW_EXIF] ?: true,
-                useDarkTheme = preferences[PREF_USE_DARK_THEME] ?: false
+                showFocalLength = preferences[PREF_SHOW_FOCAL_LENGTH] ?: true,
+                showAperture = preferences[PREF_SHOW_APERTURE] ?: true,
+                showIso = preferences[PREF_SHOW_ISO] ?: true,
+                showShutterSpeed = preferences[PREF_SHOW_SHUTTER] ?: true,
+                showDate = preferences[PREF_SHOW_DATE] ?: false,
+                useDarkTheme = preferences[PREF_USE_DARK_THEME] ?: false,
+                moveToTop = preferences[PREF_MOVE_TO_TOP] ?: false,
+                leftAlignOverlay = preferences[PREF_LEFT_ALIGN] ?: false,
+                brandTextSize = preferences[PREF_BRAND_TEXT_SIZE] ?: 50,
+                dataTextSize = preferences[PREF_DATA_TEXT_SIZE] ?: 50
             )
         }
 
@@ -47,8 +65,40 @@ class WatermarkRepository(
     suspend fun updateShowExif(show: Boolean) {
         context.dataStore.edit { it[PREF_SHOW_EXIF] = show }
     }
+    
+    suspend fun updateExifSettings(
+        focalLength: Boolean,
+        aperture: Boolean,
+        iso: Boolean,
+        shutterSpeed: Boolean,
+        date: Boolean
+    ) {
+        context.dataStore.edit { 
+            it[PREF_SHOW_FOCAL_LENGTH] = focalLength
+            it[PREF_SHOW_APERTURE] = aperture
+            it[PREF_SHOW_ISO] = iso
+            it[PREF_SHOW_SHUTTER] = shutterSpeed
+            it[PREF_SHOW_DATE] = date
+        }
+    }
 
     suspend fun updateUseDarkTheme(useDark: Boolean) {
         context.dataStore.edit { it[PREF_USE_DARK_THEME] = useDark }
+    }
+    
+    suspend fun updateMoveToTop(move: Boolean) {
+        context.dataStore.edit { it[PREF_MOVE_TO_TOP] = move }
+    }
+
+    suspend fun updateLeftAlign(left: Boolean) {
+        context.dataStore.edit { it[PREF_LEFT_ALIGN] = left }
+    }
+
+    suspend fun updateBrandTextSize(size: Int) {
+        context.dataStore.edit { it[PREF_BRAND_TEXT_SIZE] = size }
+    }
+
+    suspend fun updateDataTextSize(size: Int) {
+        context.dataStore.edit { it[PREF_DATA_TEXT_SIZE] = size }
     }
 }
