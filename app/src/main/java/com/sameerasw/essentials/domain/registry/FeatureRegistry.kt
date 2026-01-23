@@ -181,26 +181,7 @@ object FeatureRegistry {
             description = R.string.feat_snooze_notifications_desc,
             permissionKeys = listOf("NOTIFICATION_LISTENER"),
             showToggle = false,
-            searchableSettings = listOf(
-                SearchSetting(
-                    R.string.search_snooze_debug_title,
-                    R.string.search_snooze_debug_desc,
-                    "snooze_debugging",
-                    R.array.keywords_adb_debug
-                ),
-                SearchSetting(
-                    R.string.search_snooze_file_title,
-                    R.string.search_snooze_file_desc,
-                    "snooze_file_transfer",
-                    R.array.keywords_mtp
-                ),
-                SearchSetting(
-                    R.string.search_snooze_charge_title,
-                    R.string.search_snooze_charge_desc,
-                    "snooze_charging",
-                    R.array.keywords_battery_charge
-                )
-            )
+            searchableSettings = emptyList()
         ) {
             override fun isEnabled(viewModel: MainViewModel) = false
             override fun isToggleEnabled(viewModel: MainViewModel, context: Context) = viewModel.isNotificationListenerEnabled.value
@@ -318,6 +299,20 @@ object FeatureRegistry {
                     R.string.search_qs_stay_awake_desc,
                     "Stay awake",
                     R.array.keywords_qs_stay_awake,
+                    R.string.feat_qs_tiles_title
+                ),
+                SearchSetting(
+                    R.string.search_qs_private_dns_title,
+                    R.string.search_qs_private_dns_desc,
+                    "Private DNS",
+                    R.array.keywords_network_visibility,
+                    R.string.feat_qs_tiles_title
+                ),
+                SearchSetting(
+                    R.string.search_qs_usb_debugging_title,
+                    R.string.search_qs_usb_debugging_desc,
+                    "USB Debugging",
+                    R.array.keywords_adb_debug,
                     R.string.feat_qs_tiles_title
                 )
             )
@@ -523,6 +518,21 @@ object FeatureRegistry {
         ) {
             override fun isEnabled(viewModel: MainViewModel) = true
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+        },
+
+        object : Feature(
+            id = "Watermarks",
+            title = R.string.feat_watermark_title,
+            iconRes = R.drawable.rounded_draw_24,
+            category = R.string.cat_tools,
+            description = R.string.feat_watermark_desc,
+            showToggle = false
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = true
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+            override fun onClick(context: Context, viewModel: MainViewModel) {
+                context.startActivity(android.content.Intent(context, com.sameerasw.essentials.ui.composables.watermark.WatermarkActivity::class.java))
+            }
         }
     )
 }

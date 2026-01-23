@@ -11,6 +11,7 @@ import android.content.IntentFilter
 import android.os.Build
 import android.os.IBinder
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.core.app.NotificationCompat
@@ -95,10 +96,18 @@ class NotificationLightingService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        // All three permissions are required for Notification Lighting to function
-        if (!canDrawOverlays() || !isAccessibilityServiceEnabled()) {
-            stopSelf()
-            return START_NOT_STICKY
+        Log.d("NotificationLightingSvc", "onStartCommand: action=${intent?.action}")
+        // Accessibility service Android 12+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (!canDrawOverlays() || !isAccessibilityServiceEnabled()) {
+                stopSelf()
+                return START_NOT_STICKY
+            }
+        } else {
+            if (!canDrawOverlays()) {
+                stopSelf()
+                return START_NOT_STICKY
+            }
         }
 
         // Get corner radius from intent, default to OverlayHelper.CORNER_RADIUS_DP
@@ -186,8 +195,7 @@ class NotificationLightingService : Service() {
             stopSelf()
             return START_NOT_STICKY
         }
-
-        stopSelf()
+        showOverlay()
         return START_NOT_STICKY
     }
 
@@ -229,7 +237,13 @@ class NotificationLightingService : Service() {
             val color = when {
                 resolvedColor != null -> resolvedColor!!
                 colorMode == NotificationLightingColorMode.CUSTOM -> customColor
-                else -> getColor(android.R.color.system_accent1_100)
+                else -> {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        getColor(android.R.color.system_accent1_100)
+                    } else {
+                        getColor(com.sameerasw.essentials.R.color.purple_500)
+                    }
+                }
             }
             
             val overlay = OverlayHelper.createOverlayView(
@@ -280,21 +294,23 @@ class NotificationLightingService : Service() {
 
 
     private fun getOverlayType(): Int {
-        // If the accessibility service is enabled, prefer the accessibility overlay type which
-        // can appear above more system surfaces on some devices (Tasker-style elevation).
-        return when {
-            isAccessibilityServiceEnabled() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
-                // TYPE_ACCESSIBILITY_OVERLAY exists on recent APIs and gives AccessibilityServices
-                // more privilege to display above other UI in some cases.
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            // Android 12+ supports TYPE_ACCESSIBILITY_OVERLAY for AOD visibility
+            if (isAccessibilityServiceEnabled()) {
                 try {
                     WindowManager.LayoutParams::class.java.getField("TYPE_ACCESSIBILITY_OVERLAY").getInt(null)
                 } catch (_: Exception) {
-                    // Fallback if reflection fails
                     WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
                 }
+            } else {
+                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
             }
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-            else -> WindowManager.LayoutParams.TYPE_PHONE
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Android 8.0-11: Always use TYPE_APPLICATION_OVERLAY for stability
+            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+        } else {
+            @Suppress("DEPRECATION")
+            WindowManager.LayoutParams.TYPE_PHONE
         }
     }
 

@@ -26,6 +26,7 @@ fun <T> SegmentedPicker(
     selectedItem: T,
     onItemSelected: (T) -> Unit,
     labelProvider: (T) -> String,
+    iconProvider: (@Composable (T) -> Unit)? = null,
     modifier: Modifier = Modifier,
     cornerShape: CornerSize = MaterialTheme.shapes.extraSmall.bottomEnd,
 ) {
@@ -55,7 +56,16 @@ fun <T> SegmentedPicker(
                     else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
                 },
             ) {
-                Text(labelProvider(item))
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+                ) {
+                    if (iconProvider != null) {
+                        iconProvider(item)
+                        androidx.compose.foundation.layout.Spacer(Modifier.padding(end = 8.dp))
+                    }
+                    Text(labelProvider(item))
+                }
             }
         }
     }

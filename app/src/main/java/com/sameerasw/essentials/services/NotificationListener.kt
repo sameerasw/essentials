@@ -66,6 +66,16 @@ class NotificationListener : NotificationListenerService() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onNotificationPosted(sbn: StatusBarNotification) {
+        onNotificationPostedInternal(sbn)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onNotificationPosted(sbn: StatusBarNotification, rankingMap: RankingMap) {
+        onNotificationPostedInternal(sbn)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun onNotificationPostedInternal(sbn: StatusBarNotification) {
         // Skip our own app's notifications early to avoid flooding logs and redundant processing
         if (sbn.packageName == packageName) {
             return
@@ -119,7 +129,7 @@ class NotificationListener : NotificationListenerService() {
                     extras.getString(Notification.EXTRA_TEMPLATE) == "android.app.Notification\$MediaStyle"
             
             if (isMedia) {
-                return
+                    return
             }
 
             val prefs = applicationContext.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
@@ -129,12 +139,8 @@ class NotificationListener : NotificationListenerService() {
             if (skipSilent) {
                 val ranking = Ranking()
                 if (currentRanking.getRanking(sbn.key, ranking)) {
-                    val importance =
-                        ranking.importance
-
-                    val isSilent =
-                        importance <= android.app.NotificationManager.IMPORTANCE_LOW
-
+                    val importance = ranking.importance
+                    val isSilent = importance <= android.app.NotificationManager.IMPORTANCE_LOW
                     if (isSilent) {
                         return
                     }
@@ -150,7 +156,8 @@ class NotificationListener : NotificationListenerService() {
             val enabled = prefs.getBoolean("edge_lighting_enabled", false)
             if (enabled) {
                 // Check all required permissions before triggering notification lighting
-                if (hasAllRequiredPermissions()) {
+                val hasPermissions = hasAllRequiredPermissions()
+                if (hasPermissions) {
                     // Check if the app is selected for notification lighting
                     val appSelected = isAppSelectedForNotificationLighting(sbn.packageName)
                     if (appSelected) {
@@ -262,9 +269,11 @@ class NotificationListener : NotificationListenerService() {
             return false
         }
 
-        // Check accessibility service is enabled
-        if (!isAccessibilityServiceEnabled()) {
-            return false
+        // Check accessibility service is enabled - only required for Android 12+ AOD support
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (!isAccessibilityServiceEnabled()) {
+                return false
+            }
         }
 
         return true
@@ -311,14 +320,16 @@ class NotificationListener : NotificationListenerService() {
             val onlyShowWhenScreenOff = prefs.getBoolean("edge_lighting_only_screen_off", true)
             if (onlyShowWhenScreenOff) {
                 val powerManager = getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
-                val isScreenOn =
-                    powerManager.isInteractive
+                val isScreenOn = powerManager.isInteractive
                 if (isScreenOn) {
                     return false
                 }
             }
 
-            val json = prefs.getString("edge_lighting_selected_apps", null) ?: return true
+            val json = prefs.getString("edge_lighting_selected_apps", null)
+            if (json == null) {
+                return true
+            }
 
             // If no saved preferences, allow all apps by default
 
@@ -328,7 +339,8 @@ class NotificationListener : NotificationListenerService() {
 
             // Find the app in the saved list
             val app = selectedApps.find { it.packageName == packageName }
-            return app?.isEnabled ?: true // Default to true if app not found
+            val result = app?.isEnabled ?: true
+            return result
 
         } catch (_: Exception) {
             // If there's an error, default to allowing all apps (backward compatibility)
