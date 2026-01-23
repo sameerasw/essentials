@@ -9,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -45,6 +46,9 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.watermark.ColorMode
 import com.sameerasw.essentials.domain.watermark.WatermarkStyle
@@ -602,7 +606,51 @@ fun WatermarkScreen(
                         }
                     }
                     
+                    
+                    // Logo Section
+                    Text(
+                        text = stringResource(R.string.watermark_logo_section),
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    
+                    val logoResId by viewModel.logoResId.collectAsState()
+                    val showLogo by viewModel.showLogo.collectAsState()
 
+                    RoundedCardContainer(
+                         modifier = Modifier.fillMaxWidth()
+                    ) {
+                        IconToggleItem(
+                            iconRes = R.drawable.rounded_image_24,
+                            title = stringResource(R.string.watermark_logo_show),
+                            isChecked = showLogo,
+                            onCheckedChange = { checked -> viewModel.setShowLogo(checked) }
+                        )
+                        
+                        if (showLogo) {
+                            LogoCarouselPicker(
+                                selectedResId = logoResId,
+                                onLogoSelected = { resId -> viewModel.setLogoResId(resId) },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                            )
+                            
+                            var logoSizeValue by androidx.compose.runtime.remember(options.logoSize) { androidx.compose.runtime.mutableFloatStateOf(options.logoSize.toFloat()) }
+                            ConfigSliderItem(
+                                title = stringResource(R.string.watermark_logo_size),
+                                value = logoSizeValue,
+                                onValueChange = { 
+                                    logoSizeValue = it 
+                                    performSliderHaptic(view)
+                                },
+                                onValueChangeFinished = { viewModel.setLogoSize(logoSizeValue.toInt()) },
+                                valueRange = 1f..100f,
+                                increment = 1f,
+                                valueFormatter = { "${it.toInt()}%" }
+                            )
+                        }
+                    }
                     
                     // Border Section
                     Text(
@@ -906,6 +954,68 @@ private fun ColorModeOption(
                 contentDescription = null,
                 modifier = Modifier.size(20.dp),
                 tint = if (mode == ColorMode.ACCENT_LIGHT) androidx.compose.ui.graphics.Color.Black else androidx.compose.ui.graphics.Color.White
+            )
+        }
+    }
+}
+
+@OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
+@Composable
+private fun LogoCarouselPicker(
+    selectedResId: Int?,
+    onLogoSelected: (Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val logos = listOf(
+        R.drawable.apple,
+        R.drawable.cmf,
+        R.drawable.google,
+        R.drawable.moto,
+        R.drawable.nothing,
+        R.drawable.oppo,
+        R.drawable.samsung,
+        R.drawable.sony,
+        R.drawable.vivo,
+        R.drawable.xiaomi
+    )
+    
+    val carouselState = androidx.compose.material3.carousel.rememberCarouselState { logos.size }
+    val view = androidx.compose.ui.platform.LocalView.current
+    
+    HorizontalMultiBrowseCarousel(
+        state = carouselState,
+        preferredItemWidth = 80.dp,
+        minSmallItemWidth = 5.dp,
+        maxSmallItemWidth = 200.dp,
+        itemSpacing = 2.dp,
+        modifier = modifier
+            .clip(RoundedCornerShape(4.dp))
+            .background(MaterialTheme.colorScheme.surfaceBright)
+            .height(84.dp),
+        contentPadding = PaddingValues(4.dp)
+    ) { index ->
+        val resId = logos[index]
+        val isSelected = selectedResId == resId
+        val containerColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceContainerHigh
+        val contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+        
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 1.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .background(containerColor)
+                .clickable {
+                    performUIHaptic(view)
+                    onLogoSelected(resId)
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                painter = androidx.compose.ui.res.painterResource(id = resId),
+                contentDescription = null,
+                modifier = Modifier.size(36.dp),
+                tint = contentColor
             )
         }
     }

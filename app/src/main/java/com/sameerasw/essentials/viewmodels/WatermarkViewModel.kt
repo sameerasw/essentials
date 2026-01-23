@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.watermark.ColorMode
+import com.sameerasw.essentials.domain.watermark.ExifData
 import com.sameerasw.essentials.domain.watermark.MetadataProvider
 import com.sameerasw.essentials.domain.watermark.WatermarkEngine
 import com.sameerasw.essentials.domain.watermark.WatermarkOptions
@@ -33,6 +34,7 @@ sealed class WatermarkUiState {
 class WatermarkViewModel(
     private val watermarkEngine: WatermarkEngine,
     private val watermarkRepository: WatermarkRepository,
+    private val metadataProvider: MetadataProvider,
     private val context: Context
 ) : ViewModel() {
 
@@ -44,7 +46,7 @@ class WatermarkViewModel(
                 val metadataProvider = MetadataProvider(appContext)
                 val engine = WatermarkEngine(appContext, metadataProvider)
                 val repository = WatermarkRepository(appContext)
-                return WatermarkViewModel(engine, repository, appContext) as T
+                return WatermarkViewModel(engine, repository, metadataProvider, appContext) as T
             }
         }
     }
@@ -58,6 +60,13 @@ class WatermarkViewModel(
     private val _options = MutableStateFlow(WatermarkOptions())
     val options: StateFlow<WatermarkOptions> = _options.asStateFlow()
     
+    // Transient logo state (not persisted, depends on image EXIF)
+    private val _logoResId = MutableStateFlow<Int?>(null)
+    val logoResId: StateFlow<Int?> = _logoResId.asStateFlow()
+    
+    private val _showLogo = MutableStateFlow(false)
+    val showLogo: StateFlow<Boolean> = _showLogo.asStateFlow()
+
     private var previewSourceBitmap: android.graphics.Bitmap? = null
     private var currentUri: Uri? = null
 
@@ -67,6 +76,25 @@ class WatermarkViewModel(
                 _options.value = savedOptions
                 updatePreview()
             }
+        }
+    }
+
+    private fun detectOemLogo(exif: ExifData): Int? {
+        val make = exif.make?.lowercase() ?: ""
+        val model = exif.model?.lowercase() ?: ""
+        
+        return when {
+            make.contains("apple") || model.contains("iphone") -> R.drawable.apple
+            make.contains("google") || model.contains("pixel") -> R.drawable.google
+            make.contains("samsung") -> R.drawable.samsung
+            make.contains("xiaomi") || make.contains("redmi") || make.contains("poco") -> R.drawable.xiaomi
+            make.contains("oppo") -> R.drawable.oppo
+            make.contains("vivo") -> R.drawable.vivo
+            make.contains("sony") -> R.drawable.sony
+            make.contains("nothing") -> R.drawable.nothing
+            make.contains("cmf") -> R.drawable.cmf
+            make.contains("motorola") || make.contains("moto") -> R.drawable.moto
+            else -> null
         }
     }
 
@@ -104,6 +132,13 @@ class WatermarkViewModel(
                 
                 if (bitmap != null) {
                     previewSourceBitmap = bitmap
+                    
+                    // Always derive logo from EXIF on load
+                    val exif = metadataProvider.extractExif(uri)
+                    val detected = detectOemLogo(exif)
+                    _logoResId.value = detected
+                    _showLogo.value = detected != null
+                    
                     extractColorFromUri(uri)
                     updatePreview()
                 }
@@ -155,7 +190,13 @@ class WatermarkViewModel(
                 kotlinx.coroutines.delay(600)
                 val workingBitmap = bitmap.copy(bitmap.config ?: android.graphics.Bitmap.Config.ARGB_8888, true)
                 
-                val result = watermarkEngine.processBitmap(workingBitmap, uri, _options.value)
+                // Merge transient logo settings with base options
+                val currentOptions = _options.value.copy(
+                    logoResId = _logoResId.value,
+                    showLogo = _showLogo.value
+                )
+                
+                val result = watermarkEngine.processBitmap(workingBitmap, uri, currentOptions)
 
                 val timestamp = System.currentTimeMillis()
                 val file = File(context.cacheDir, "preview_watermark_$timestamp.jpg")
@@ -278,12 +319,47 @@ class WatermarkViewModel(
         }
     }
 
+    fun setLogoSettings(show: Boolean, resId: Int?, size: Int) {
+        _showLogo.value = show
+        _logoResId.value = resId
+        viewModelScope.launch {
+            watermarkRepository.updateLogoSize(size)
+            watermarkRepository.updateLogoShow(show)
+            updatePreview()
+        }
+    }
+
+    fun setShowLogo(show: Boolean) {
+        _showLogo.value = show
+        viewModelScope.launch {
+            watermarkRepository.updateLogoShow(show)
+            updatePreview()
+        }
+    }
+
+    fun setLogoResId(resId: Int?) {
+        _logoResId.value = resId
+        updatePreview()
+    }
+
+    fun setLogoSize(size: Int) {
+        viewModelScope.launch {
+            watermarkRepository.updateLogoSize(size)
+            previewSourceBitmap?.let { updatePreview() }
+        }
+    }
+
     fun saveImage(uri: Uri) {
         viewModelScope.launch {
             _uiState.value = WatermarkUiState.Processing
             try {
+                // Merge transient logo options 
+                val finalOptions = _options.value.copy(
+                    logoResId = _logoResId.value,
+                    showLogo = _showLogo.value
+                )
                 // Process image to a temporary file first
-                val tempFile = watermarkEngine.processImage(uri, _options.value)
+                val tempFile = watermarkEngine.processImage(uri, finalOptions)
 
                 // Save to MediaStore (Gallery)
                 val values = android.content.ContentValues().apply {
@@ -333,8 +409,13 @@ class WatermarkViewModel(
         viewModelScope.launch {
             _uiState.value = WatermarkUiState.Processing
             try {
+                // Merge transient logo options 
+                val finalOptions = _options.value.copy(
+                    logoResId = _logoResId.value,
+                    showLogo = _showLogo.value
+                )
                 // Process image to a temporary file
-                val tempFile = watermarkEngine.processImage(uri, _options.value)
+                val tempFile = watermarkEngine.processImage(uri, finalOptions)
                 val savedUri = saveToMediaStore(tempFile)
                 if (savedUri != null) {
                     _uiState.value = WatermarkUiState.Idle

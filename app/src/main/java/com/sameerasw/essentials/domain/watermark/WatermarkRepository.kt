@@ -34,6 +34,8 @@ class WatermarkRepository(
     private val PREF_PADDING = androidx.datastore.preferences.core.intPreferencesKey("padding")
     private val PREF_BORDER_STROKE = androidx.datastore.preferences.core.intPreferencesKey("border_stroke")
     private val PREF_BORDER_CORNER = androidx.datastore.preferences.core.intPreferencesKey("border_corner")
+    private val PREF_SHOW_LOGO = booleanPreferencesKey("show_logo")
+    private val PREF_LOGO_SIZE = androidx.datastore.preferences.core.intPreferencesKey("logo_size")
 
     val watermarkOptions: Flow<WatermarkOptions> = context.dataStore.data
         .map { preferences ->
@@ -68,7 +70,10 @@ class WatermarkRepository(
                 customTextSize = preferences[PREF_CUSTOM_TEXT_SIZE] ?: 50,
                 padding = preferences[PREF_PADDING] ?: 50,
                 borderStroke = preferences[PREF_BORDER_STROKE] ?: 0,
-                borderCorner = preferences[PREF_BORDER_CORNER] ?: 0
+                borderCorner = preferences[PREF_BORDER_CORNER] ?: 0,
+                showLogo = preferences[PREF_SHOW_LOGO] ?: false,
+                logoResId = null, 
+                logoSize = preferences[PREF_LOGO_SIZE] ?: 50
             )
         }
 
@@ -146,5 +151,21 @@ class WatermarkRepository(
 
     suspend fun updateBorderCorner(corner: Int) {
         context.dataStore.edit { it[PREF_BORDER_CORNER] = corner }
+    }
+
+    suspend fun updateLogoSettings(show: Boolean, size: Int) {
+        context.dataStore.edit { 
+            it[PREF_SHOW_LOGO] = show
+            it[PREF_LOGO_SIZE] = size
+        }
+    }
+    
+    suspend fun updateLogoShow(show: Boolean) {
+        context.dataStore.edit { it[PREF_SHOW_LOGO] = show }
+    }
+    
+
+    suspend fun updateLogoSize(size: Int) {
+        context.dataStore.edit { it[PREF_LOGO_SIZE] = size }
     }
 }
