@@ -342,6 +342,9 @@
     <string name="watermark_color_dark">Dark</string>
     <string name="watermark_color_accent_light">Accent Light</string>
     <string name="watermark_color_accent_dark">Accent Dark</string>
+    <string name="watermark_logo_section">Logo</string>
+    <string name="watermark_logo_show">Show Logo</string>
+    <string name="watermark_logo_size">Logo Size</string>
     <string name="action_save_changes">Save Changes</string>
     <!-- Search Settings -->
     <string name="search_haptic_title">Widget Haptic feedback</string>
