@@ -117,6 +117,8 @@ class SettingsRepository(private val context: Context) {
         const val KEY_SHOW_BLUETOOTH_DEVICES = "show_bluetooth_devices"
         const val KEY_BATTERY_WIDGET_MAX_DEVICES = "battery_widget_max_devices"
         const val KEY_BATTERY_WIDGET_BACKGROUND_ENABLED = "battery_widget_background_enabled"
+        
+        const val KEY_PINNED_FEATURES = "pinned_features"
     }
 
     // Observe changes
@@ -455,4 +457,18 @@ class SettingsRepository(private val context: Context) {
 
     fun isBatteryWidgetBackgroundEnabled(): Boolean = getBoolean(KEY_BATTERY_WIDGET_BACKGROUND_ENABLED, true)
     fun setBatteryWidgetBackgroundEnabled(enabled: Boolean) = putBoolean(KEY_BATTERY_WIDGET_BACKGROUND_ENABLED, enabled)
+
+    fun getPinnedFeatures(): List<String> {
+        val json = prefs.getString(KEY_PINNED_FEATURES, null)
+        return if (json != null) {
+            try {
+                gson.fromJson(json, object : TypeToken<List<String>>() {}.type) ?: emptyList()
+            } catch (e: Exception) { emptyList() }
+        } else emptyList()
+    }
+
+    fun savePinnedFeatures(features: List<String>) {
+        val json = gson.toJson(features)
+        putString(KEY_PINNED_FEATURES, json)
+    }
 }

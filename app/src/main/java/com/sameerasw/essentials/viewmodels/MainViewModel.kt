@@ -52,6 +52,7 @@ class MainViewModel : ViewModel() {
     val isCaffeinateActive = mutableStateOf(false)
     val isShizukuPermissionGranted = mutableStateOf(false)
     val isShizukuAvailable = mutableStateOf(false)
+    val pinnedFeatureKeys = mutableStateOf<List<String>>(emptyList())
     val isNotificationListenerEnabled = mutableStateOf(false)
     val isMapsPowerSavingEnabled = mutableStateOf(false)
     val isNotificationLightingEnabled = mutableStateOf(false)
@@ -205,6 +206,9 @@ class MainViewModel : ViewModel() {
             SettingsRepository.KEY_SNOOZE_DISCOVERED_CHANNELS, SettingsRepository.KEY_SNOOZE_BLOCKED_CHANNELS -> {
                 appContext?.let { loadSnoozeChannels(it) }
             }
+            SettingsRepository.KEY_PINNED_FEATURES -> {
+                pinnedFeatureKeys.value = settingsRepository.getPinnedFeatures()
+            }
         }
     }
 
@@ -353,6 +357,7 @@ class MainViewModel : ViewModel() {
         freezeAutoExcludedApps.value = settingsRepository.getFreezeAutoExcludedApps()
         isDeveloperModeEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_DEVELOPER_MODE_ENABLED)
         isPreReleaseCheckEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_CHECK_PRE_RELEASES_ENABLED)
+        pinnedFeatureKeys.value = settingsRepository.getPinnedFeatures()
     }
 
     fun onSearchQueryChanged(query: String, context: Context) {
@@ -366,6 +371,17 @@ class MainViewModel : ViewModel() {
         isSearching.value = true
         searchResults.value = SearchRegistry.search(context, query)
         isSearching.value = false
+    }
+
+    fun togglePinFeature(featureId: String) {
+        val current = pinnedFeatureKeys.value.toMutableList()
+        if (current.contains(featureId)) {
+            current.remove(featureId)
+        } else {
+            current.add(featureId) // Append at the end to keep order
+        }
+        pinnedFeatureKeys.value = current
+        settingsRepository.savePinnedFeatures(current)
     }
 
     fun setAutoUpdateEnabled(enabled: Boolean, context: Context) {

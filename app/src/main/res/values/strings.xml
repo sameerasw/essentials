@@ -264,6 +264,9 @@
 
     <!-- Search -->
     <string name="search_desc_toggle_visibility">Toggle visibility for %1$s</string>
+    <string name="title_favorites">Favorites</string>
+    <string name="action_pin">Pin to Favorites</string>
+    <string name="action_unpin">Unpin from Favorites</string>
 
     <!-- Extraction Batch 1 -->
     <!-- Categories -->

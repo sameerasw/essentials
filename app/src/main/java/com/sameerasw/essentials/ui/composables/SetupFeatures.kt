@@ -49,6 +49,7 @@ import com.sameerasw.essentials.domain.registry.PermissionRegistry
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.cards.FeatureCard
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.components.FavoriteCarousel
 import com.sameerasw.essentials.ui.components.sheets.PermissionItem
 import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.viewmodels.MainViewModel
@@ -79,6 +80,7 @@ fun SetupFeatures(
     viewModel.isDynamicNightLightEnabled.value
 
     viewModel.isScreenLockedSecurityEnabled.value
+    val pinnedFeatureKeys by viewModel.pinnedFeatureKeys
     val context = LocalContext.current
 
     fun buildMapsPowerSavingPermissionItems(): List<PermissionItem> {
@@ -653,6 +655,28 @@ fun SetupFeatures(
             )
         )
 
+        if (pinnedFeatureKeys.isNotEmpty() && viewModel.searchQuery.value.isEmpty()) {
+            FavoriteCarousel(
+                pinnedKeys = pinnedFeatureKeys,
+                onFeatureClick = { feature ->
+                    if (feature.category == R.string.cat_security && context is FragmentActivity) {
+                        BiometricHelper.showBiometricPrompt(
+                            activity = context,
+                            title = context.getString(R.string.biometric_title_settings_format, context.getString(feature.title)),
+                            subtitle = context.getString(R.string.biometric_subtitle_access_settings),
+                            onSuccess = { feature.onClick(context, viewModel) }
+                        )
+                    } else {
+                        feature.onClick(context, viewModel)
+                    }
+                },
+                onFeatureLongClick = { feature ->
+                    viewModel.togglePinFeature(feature.id)
+                },
+                modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)
+            )
+        }
+
         val searchQuery = viewModel.searchQuery.value
         val searchResults = viewModel.searchResults.value
         val isSearchingViewModel = viewModel.isSearching.value
@@ -735,7 +759,11 @@ fun SetupFeatures(
                             showToggle = false,
                             hasMoreSettings = true,
                             isBeta = result.isBeta, // Added isBeta
-                            descriptionOverride = if (result.parentFeature != null) "${result.parentFeature} > ${result.description}" else result.description
+                            descriptionOverride = if (result.parentFeature != null) "${result.parentFeature} > ${result.description}" else result.description,
+                            isPinned = pinnedFeatureKeys.contains(result.featureKey),
+                            onPinToggle = {
+                                viewModel.togglePinFeature(result.featureKey)
+                            }
                         )
                     }
                 }
@@ -797,7 +825,11 @@ fun SetupFeatures(
                                 showSheet = true
                             },
                             description = feature.description,
-                            isBeta = feature.isBeta
+                            isBeta = feature.isBeta,
+                            isPinned = pinnedFeatureKeys.contains(feature.id),
+                            onPinToggle = {
+                                viewModel.togglePinFeature(feature.id)
+                            }
                         )
                     }
                 }
