@@ -37,7 +37,7 @@ class FlashlightHandler(
     var isTorchOn = false
         private set
         
-    private var currentTorchId: String? = null
+    private var primaryCameraId: String? = null
     private var currentIntensityLevel: Int = 1
     private var flashlightJob: Job? = null
     private var isInternalToggle = false
@@ -47,16 +47,18 @@ class FlashlightHandler(
 
     private val torchCallback = object : CameraManager.TorchCallback() {
         override fun onTorchModeChanged(cameraId: String, enabled: Boolean) {
+            val primaryId = getCameraId()
+            if (cameraId != primaryId) return // Ignore updates from auxiliary camera IDs
+            
             super.onTorchModeChanged(cameraId, enabled)
             isTorchOn = enabled
-            currentTorchId = cameraId
             
             val prefs = service.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
             val isGlobalEnabled = prefs.getBoolean("flashlight_global_enabled", false)
             val lastIntensity = prefs.getInt("flashlight_last_intensity", 1)
 
             if (enabled) {
-                currentTorchId = cameraId
+                primaryCameraId = cameraId
                 
                 if (isGlobalEnabled && !isInternalToggle) {
                     // External trigger - smoothly fade in to last known intensity
@@ -96,7 +98,7 @@ class FlashlightHandler(
 
     fun unregister() {
         torchCallback.let { cameraManager.unregisterTorchCallback(it) }
-        currentTorchId = null
+        primaryCameraId = null
     }
 
     fun handleIntent(intent: Intent) {
@@ -111,7 +113,7 @@ class FlashlightHandler(
                 if (!isTorchOn) {
                     toggleFlashlight(overrideIntensity = level)
                 } else {
-                    currentTorchId?.let { id ->
+                    getCameraId()?.let { id ->
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && 
                             FlashlightUtil.isIntensitySupported(service, id)) {
                             try {
@@ -151,7 +153,7 @@ class FlashlightHandler(
             notificationManager.createNotificationChannel(channel)
         }
 
-        val cameraId = currentTorchId ?: return
+        val cameraId = getCameraId() ?: return
         val maxLevel = FlashlightUtil.getMaxLevel(service, cameraId)
         val percentage = (intensity * 100) / maxOf(1, maxLevel)
         
@@ -244,12 +246,29 @@ class FlashlightHandler(
     }
 
     private fun getCameraId(): String? {
+        primaryCameraId?.let { return it }
         try {
+            var targetCameraId: String? = null
             for (id in cameraManager.cameraIdList) {
-                val characteristics = cameraManager.getCameraCharacteristics(id)
-                val hasFlash = characteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE) ?: false
-                if (hasFlash) return id
+                val chars = cameraManager.getCameraCharacteristics(id)
+                val flashAvailable = chars.get(CameraCharacteristics.FLASH_INFO_AVAILABLE) ?: false
+                val lensFacing = chars.get(CameraCharacteristics.LENS_FACING)
+                if (flashAvailable && lensFacing == CameraCharacteristics.LENS_FACING_BACK) {
+                    targetCameraId = id
+                    break
+                }
             }
+            if (targetCameraId == null) {
+                for (id in cameraManager.cameraIdList) {
+                    val chars = cameraManager.getCameraCharacteristics(id)
+                    if (chars.get(CameraCharacteristics.FLASH_INFO_AVAILABLE) == true) {
+                        targetCameraId = id
+                        break
+                    }
+                }
+            }
+            primaryCameraId = targetCameraId
+            return targetCameraId
         } catch (e: Exception) {
             Log.e("Flashlight", "Error getting camera ID", e)
         }
@@ -285,7 +304,7 @@ class FlashlightHandler(
         val faceDownOnly = prefs.getBoolean("flashlight_pulse_facedown_only", true)
         if (faceDownOnly && !isProximityBlocked) return
 
-        val cameraId = currentTorchId ?: getCameraId() ?: return
+        val cameraId = getCameraId() ?: return
         
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && 
             FlashlightUtil.isIntensitySupported(service, cameraId)) {
@@ -319,6 +338,23 @@ class FlashlightHandler(
                     
                     isInternalToggle = false
                 }
+            } else {
+                // Fallback for older versions or devices without intensity support
+                Log.d("Flashlight", "Pulse fallback with cameraId: $cameraId")
+                flashlightJob?.cancel()
+                flashlightJob = scope.launch {
+                    isInternalToggle = true
+                    try {
+                        cameraManager.setTorchMode(cameraId, true)
+                        kotlinx.coroutines.delay(700L)
+                        cameraManager.setTorchMode(cameraId, false)
+                        kotlinx.coroutines.delay(200L)
+                    } catch (e: Exception) {
+                        Log.e("Flashlight", "Fallback pulse failed for cameraId: $cameraId", e)
+                    } finally {
+                        isInternalToggle = false
+                    }
+                }
             }
     }
 
@@ -328,7 +364,7 @@ class FlashlightHandler(
     }
 
     fun adjustFlashlightIntensity(increase: Boolean) {
-        val cameraId = currentTorchId ?: return
+        val cameraId = getCameraId() ?: return
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
 
         try {
@@ -406,7 +442,7 @@ class FlashlightHandler(
 
             if (targetCameraId != null) {
                 val finalCameraId = targetCameraId
-                currentTorchId = finalCameraId
+                primaryCameraId = finalCameraId
                 val maxLevel = FlashlightUtil.getMaxLevel(service, finalCameraId)
                 val defaultLevel = FlashlightUtil.getDefaultLevel(service, finalCameraId)
                 
