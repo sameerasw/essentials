@@ -307,6 +307,13 @@ object FeatureRegistry {
                     "Private DNS",
                     R.array.keywords_network_visibility,
                     R.string.feat_qs_tiles_title
+                ),
+                SearchSetting(
+                    R.string.search_qs_usb_debugging_title,
+                    R.string.search_qs_usb_debugging_desc,
+                    "USB Debugging",
+                    R.array.keywords_adb_debug,
+                    R.string.feat_qs_tiles_title
                 )
             )
         ) {
