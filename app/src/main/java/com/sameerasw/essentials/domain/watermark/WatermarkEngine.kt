@@ -54,7 +54,10 @@ data class WatermarkOptions(
     val customTextSize: Int = 50,
     val padding: Int = 50,
     val borderStroke: Int = 0,
-    val borderCorner: Int = 0
+    val borderCorner: Int = 0,
+    val showLogo: Boolean = false,
+    val logoResId: Int? = null,
+    val logoSize: Int = 50
 )
 
 class WatermarkEngine(
@@ -161,74 +164,95 @@ class WatermarkEngine(
             setShadowLayer(4f, 2f, 2f, shadowColor)
         }
 
-        val margin = bitmap.width * (options.padding / 1000f)
+        val strokeSpacer = (bitmap.width * (options.borderStroke / 1000f))
+        val margin = (bitmap.width * (options.padding / 1000f)) + strokeSpacer
         var yPos = bitmap.height - margin
 
         // Apply scaling
         val brandScale = 0.5f + (options.brandTextSize / 100f)
         val dataScale = 0.5f + (options.dataTextSize / 100f)
-        
-        // Base text size was 3% of width
         val baseSize = bitmap.width * 0.03f
-        paint.textSize = baseSize * dataScale 
         
+        // Logo Calculation
+        var logoBitmap: Bitmap? = null
+        var logoWidth = 0f
+        var logoHeight = 0f
+        
+        if (options.showLogo && options.logoResId != null) {
+            val logoScale = options.logoSize / 100f
+            val logoSizePx = baseSize * 4f * logoScale
+            logoBitmap = loadVectorBitmap(context, options.logoResId, overlayTextColor)
+            if (logoBitmap != null) {
+                val ratio = logoBitmap.width.toFloat() / logoBitmap.height.toFloat()
+                logoHeight = logoSizePx
+                logoWidth = logoHeight * ratio
+            }
+        }
+
+        // Draw EXIF
         if (options.showExif) {
+            val exifPaint = Paint(paint).apply { textSize = baseSize * dataScale }
             val exifItems = buildExifList(exifData, options)
             if (exifItems.isNotEmpty()) {
-                val maxWidth = bitmap.width - (margin * 2) 
-                
-                // Wrap items with icons
-                val rows = wrapExifItems(exifItems, paint, maxWidth)
+                val maxWidth = bitmap.width - (margin * 2)
+                val rows = wrapExifItems(exifItems, exifPaint, maxWidth)
                 val reversedRows = rows.reversed()
                 
                 for (row in reversedRows) {
-                    val rowWidth = measureRowWidth(row, paint)
-                    val rowHeight = measureRowHeight(row, paint)
-                    
-                    var xPos = if (options.leftAlignOverlay) margin else (bitmap.width - margin - rowWidth)
-                    
-                    drawExifRow(canvas, row, xPos, yPos, paint, shadowColor)
-                    
+                    val rowWidth = measureRowWidth(row, exifPaint)
+                    val rowHeight = measureRowHeight(row, exifPaint)
+                    val xPos = if (options.leftAlignOverlay) margin else (bitmap.width - margin - rowWidth)
+                    drawExifRow(canvas, row, xPos, yPos, exifPaint, shadowColor)
                     yPos -= rowHeight * 1.2f
                 }
             }
         }
 
-
+        // Draw Custom Text
         if (options.showCustomText && options.customText.isNotEmpty()) {
             val customScale = 0.5f + (options.customTextSize / 100f)
             val customPaint = Paint(paint).apply {
                 textSize = baseSize * customScale
                 typeface = Typeface.DEFAULT 
             }
-            
             val textBounds = Rect()
             customPaint.getTextBounds(options.customText, 0, options.customText.length, textBounds)
-            
-            if (options.showExif) {
-                 yPos -= (customPaint.textSize * 0.5f)
-            }
-            
+            if (options.showExif) yPos -= (customPaint.textSize * 0.5f)
             val xPos = if (options.leftAlignOverlay) margin else (bitmap.width - margin - textBounds.width())
-            
-            // Draw Custom Text
             canvas.drawText(options.customText, xPos, yPos, customPaint)
-            
             yPos -= customPaint.textSize * 1.2f
         }
 
+        // Draw Brand
         if (options.showDeviceBrand) {
             val brandString = buildBrandString(exifData)
             val brandPaint = Paint(paint).apply {
                 typeface = Typeface.DEFAULT_BOLD
-                textSize = baseSize * brandScale // Use brand scale
+                textSize = baseSize * brandScale
             }
             val textBounds = Rect()
             brandPaint.getTextBounds(brandString, 0, brandString.length, textBounds)
-            
             val xPos = if (options.leftAlignOverlay) margin else (bitmap.width - margin - textBounds.width())
-            
             canvas.drawText(brandString, xPos, yPos, brandPaint)
+            yPos -= brandPaint.textSize * 1.2f
+        }
+
+        // Draw the Logo at the TOP of text content
+        if (logoBitmap != null) {
+            val logoX = if (options.leftAlignOverlay) margin else (bitmap.width - margin - logoWidth)
+            val logoY = yPos - logoHeight - (baseSize * 0.2f) // Increased spacing
+            
+            val destRect = RectF(logoX, logoY, logoX + logoWidth, logoY + logoHeight)
+            
+            if (shadowColor != null) {
+                val shadowPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                    colorFilter = android.graphics.PorterDuffColorFilter(shadowColor, android.graphics.PorterDuff.Mode.SRC_IN)
+                    alpha = 128
+                }
+                val shadowRect = RectF(destRect).apply { offset(2f, 2f) }
+                canvas.drawBitmap(logoBitmap, null, shadowRect, shadowPaint)
+            }
+            canvas.drawBitmap(logoBitmap, null, destRect, null)
         }
 
         return bitmap
@@ -300,7 +324,8 @@ class WatermarkEngine(
         
         val minHeight = max(brandPaint.textSize, exifPaint.textSize) * 2f
         
-        val calculatedHeight = max(contentHeightLeft, contentHeightRight) + (margin * 2)
+        val strokeSpacer = (bitmap.width * (options.borderStroke / 1000f)).toInt()
+        val calculatedHeight = max(contentHeightLeft, contentHeightRight) + (margin * 2) + strokeSpacer
         
         val finalFrameHeight = max(minHeight.roundToInt(), calculatedHeight.roundToInt())
         
@@ -336,7 +361,7 @@ class WatermarkEngine(
             canvas.drawBitmap(sourceToDraw, 0f, finalFrameHeight.toFloat(), null)
             
             // Draw Text in "Forehead"
-            val centerY = finalFrameHeight / 2f
+            val centerY = (finalFrameHeight - strokeSpacer) / 2f
             drawFrameContent(
                 canvas, exifData, options, margin, centerY, 
                 brandPaint, exifPaint, exifRows, bitmap.width
@@ -347,7 +372,7 @@ class WatermarkEngine(
             canvas.drawBitmap(sourceToDraw, 0f, 0f, null)
             
             // Draw Text in "Chin"
-            val centerY = bitmap.height + (finalFrameHeight / 2f)
+            val centerY = bitmap.height + strokeSpacer + ((finalFrameHeight - strokeSpacer) / 2f)
             drawFrameContent(
                 canvas, exifData, options, margin, centerY, 
                 brandPaint, exifPaint, exifRows, bitmap.width
@@ -368,15 +393,33 @@ class WatermarkEngine(
         exifRows: List<List<ExifItem>>, canvasWidth: Int
 
     ) {
+        val colors = deriveColors(options)
+        val textColor = colors.textColor
         
+        // Logo Calculation
+        var logoBitmap: Bitmap? = null
+        var logoWidth = 0f
+        var logoHeight = 0f
+        val logoSpacing = brandPaint.textSize * 0.5f
+        
+        if (options.showLogo && options.logoResId != null) {
+            val logoScale = options.logoSize / 100f
+            val logoSizePx = brandPaint.textSize * 2.5f * logoScale
+            logoBitmap = loadVectorBitmap(context, options.logoResId, textColor)
+            if (logoBitmap != null) {
+                val ratio = logoBitmap.width.toFloat() / logoBitmap.height.toFloat()
+                logoHeight = logoSizePx
+                logoWidth = logoHeight * ratio
+            }
+        }
+
+        val logoAreaWidth = if (logoBitmap != null) logoWidth + logoSpacing else 0f
+
         // Brand & Custom Text on Left
         var currentLeftY = centerY
-        
         var totalLeftHeight = 0f
-        val customScale = 0.5f + (options.customTextSize / 100f)
+        val customScale =  0.5f + (options.customTextSize / 100f)
         val customPaint = Paint(brandPaint).apply {
-            textSize = (brandPaint.textSize / (0.5f + (options.brandTextSize / 100f))) * customScale
-
             textSize = brandPaint.textSize * (customScale / (0.5f + (options.brandTextSize / 100f)))
             typeface = Typeface.DEFAULT
         }
@@ -389,25 +432,30 @@ class WatermarkEngine(
 
         currentLeftY = centerY - (totalLeftHeight / 2f) + (brandPaint.textSize / 1.5f)
         
-        currentLeftY = centerY - (totalLeftHeight / 2f) + brandPaint.textSize 
+        // Draw Logo
+        if (logoBitmap != null) {
+            val logoX = margin
+            val logoY = centerY - (logoHeight / 2f)
+            canvas.drawBitmap(logoBitmap, null, RectF(logoX, logoY, logoX + logoWidth, logoY + logoHeight), null)
+        }
+
+        val textX = margin + logoAreaWidth
 
         if (options.showDeviceBrand) {
             val brandString = buildBrandString(exifData)
-            canvas.drawText(brandString, margin, currentLeftY, brandPaint)
+            canvas.drawText(brandString, textX, currentLeftY, brandPaint)
             currentLeftY += (brandPaint.textSize * 0.2f) + customPaint.textSize
         } else if (options.showCustomText && options.customText.isNotEmpty()) {
              currentLeftY = centerY - (totalLeftHeight / 2f) + customPaint.textSize
         }
 
         if (options.showCustomText && options.customText.isNotEmpty()) {
-
-             canvas.drawText(options.customText, margin, currentLeftY, customPaint)
+             canvas.drawText(options.customText, textX, currentLeftY, customPaint)
         }
         
         // Exif on Right
         if (options.showExif && exifRows.isNotEmpty()) {
             val lineHeight = exifPaint.textSize * 1.5f
-        
             val centeringOffset = (exifRows.size - 1) * lineHeight / 2f
             var currentY = (centerY + exifPaint.textSize / 3f) - centeringOffset
             
