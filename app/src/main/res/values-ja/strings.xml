@@ -251,6 +251,9 @@
     <string name="network_type_other">その他</string>
     <!-- Search -->
     <string name="search_desc_toggle_visibility">%1$sをアイコン表示</string>
+    <string name="title_favorites">Favorites</string>
+    <string name="action_pin">Pin to Favorites</string>
+    <string name="action_unpin">Unpin from Favorites</string>
     <!-- Extraction Batch 1 -->
     <!-- Categories -->
     <string name="cat_tools">ツール</string>
