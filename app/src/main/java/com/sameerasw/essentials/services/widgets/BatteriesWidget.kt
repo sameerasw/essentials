@@ -157,11 +157,6 @@ class BatteriesWidget : GlanceAppWidget() {
                 val onSurface = GlanceTheme.colors.onSurface.getColor(configContext).toArgb()
                 val widgetBackgroundColor = GlanceTheme.colors.widgetBackground.getColor(configContext).toArgb()
 
-                val isNightMode = (systemConfig.uiMode and 
-                        android.content.res.Configuration.UI_MODE_NIGHT_MASK) == 
-                        android.content.res.Configuration.UI_MODE_NIGHT_YES
-
-
                 val colors = ThemeColors(
                     primary = basePrimary,
                     error = baseError,
@@ -171,85 +166,61 @@ class BatteriesWidget : GlanceAppWidget() {
                     iconTint = onSurface
                 )
 
-                
                 val backgroundModifier = if (isBackgroundEnabled) {
                     GlanceModifier.background(GlanceTheme.colors.widgetBackground)
                 } else {
                     GlanceModifier.background(android.graphics.Color.TRANSPARENT)
                 }
 
-                if (displayedItems.size > 1) {
-                    val isGridCapable = width >= 200.dp && height >= 140.dp
-                    
-                    if (isGridCapable) {
-                         // GRID / WRAPPING LAYOUT
-                        val itemWidth = 72.dp
-                        val columns = (width / itemWidth).toInt().coerceAtLeast(1)
-                        val rows = displayedItems.chunked(columns)
+                val effectivePadding = if (width < 100.dp || height < 100.dp) 4.dp else 8.dp
+                val isSingleItem = displayedItems.size <= 1
+                val items = displayedItems.ifEmpty { listOf(BatteryItemData(androidLevel, R.drawable.rounded_mobile_24, "Android")) }
 
-                        Column(
-                            modifier = GlanceModifier
-                                .fillMaxSize()
-                                .then(backgroundModifier)
-                                .padding(8.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            rows.forEachIndexed { rowIndex, rowItems ->
-                                Row(
-                                     modifier = GlanceModifier.fillMaxWidth().defaultWeight(),
-                                     horizontalAlignment = Alignment.CenterHorizontally,
-                                     verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    rowItems.forEachIndexed { colIndex, item ->
-                                        BatteryItemBox(configContext, item, colors, modifier = GlanceModifier.defaultWeight().fillMaxHeight())
-                                        if (colIndex < rowItems.size - 1) {
-                                             Spacer(modifier = GlanceModifier.width(8.dp))
-                                        }
-                                    }
-                                    if (rowItems.size < columns) {
-                                         repeat(columns - rowItems.size) {
-                                              Spacer(modifier = GlanceModifier.defaultWeight().fillMaxHeight())
-                                              if (it < (columns - rowItems.size - 1)) Spacer(modifier = GlanceModifier.width(8.dp))
-                                         }
-                                    }
-                                }
-                                if (rowIndex < rows.size - 1) {
-                                    Spacer(modifier = GlanceModifier.height(8.dp))
-                                }
-                            }
-                        }
-                    } else {
-                        // STANDARD SINGLE ROW LAYOUT
+                // Dynamic Grid Calculation
+                val itemMinWidth = if (isSingleItem) 120.dp else 72.dp
+                val columns = (width / itemMinWidth).toInt().coerceIn(1, items.size)
+                val rows = items.chunked(columns)
+
+                Column(
+                    modifier = GlanceModifier
+                        .fillMaxSize()
+                        .then(backgroundModifier)
+                        .padding(if (isSingleItem && width > 120.dp) 16.dp else effectivePadding),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    rows.forEachIndexed { rowIndex, rowItems ->
                         Row(
-                            modifier = GlanceModifier
-                                .fillMaxSize()
-                                .then(backgroundModifier)
-                                .padding(8.dp),
+                            modifier = GlanceModifier.fillMaxWidth().defaultWeight(),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            displayedItems.forEachIndexed { index, item ->
-                                BatteryItemBox(configContext, item, colors, modifier = GlanceModifier.defaultWeight().fillMaxHeight())
-
-                                if (index < displayedItems.size - 1) {
+                            rowItems.forEachIndexed { colIndex, item ->
+                                val itemResolution = if (isSingleItem) 512 else 340
+                                BatteryItemBox(
+                                    configContext,
+                                    item,
+                                    colors,
+                                    size = itemResolution,
+                                    modifier = GlanceModifier.defaultWeight().fillMaxHeight()
+                                )
+                                if (colIndex < rowItems.size - 1 || rowItems.size < columns) {
                                     Spacer(modifier = GlanceModifier.width(8.dp))
                                 }
                             }
+                            // Filler for consistent sizing
+                            if (rowItems.size < columns) {
+                                repeat(columns - rowItems.size) { i ->
+                                    Spacer(modifier = GlanceModifier.defaultWeight().fillMaxHeight())
+                                    if (i < (columns - rowItems.size - 1)) {
+                                        Spacer(modifier = GlanceModifier.width(8.dp))
+                                    }
+                                }
+                            }
                         }
-                    }
-                } else {
-                    // Single item layout (Big)
-                    val item = displayedItems.firstOrNull() ?: BatteryItemData(androidLevel, R.drawable.rounded_mobile_24, "Android")
-
-                    Box(
-                        modifier = GlanceModifier
-                            .fillMaxSize()
-                            .then(backgroundModifier)
-                            .padding(16.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        BatteryItemBox(configContext, item, colors, size = 512, modifier = GlanceModifier.fillMaxSize())
+                        if (rowIndex < rows.size - 1) {
+                            Spacer(modifier = GlanceModifier.height(8.dp))
+                        }
                     }
                 }
             }
