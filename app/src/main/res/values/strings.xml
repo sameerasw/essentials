@@ -179,6 +179,12 @@
     <string name="tile_active">Active</string>
     <string name="tile_inactive">Inactive</string>
     <string name="nfc_tile_label">NFC</string>
+    <string name="tile_private_dns">Private DNS</string>
+    <string name="tile_private_dns_desc">Toggle Private DNS mode</string>
+    <string name="tile_private_dns_auto">Auto</string>
+    <string name="tile_private_dns_off">Off</string>
+    <string name="tile_usb_debugging">USB Debugging</string>
+    <string name="tile_usb_debugging_desc">Toggle USB Debugging</string>
     <string name="on">On</string>
     <string name="off">Off</string>
 
@@ -370,6 +376,10 @@
     <string name="search_qs_pulse_title">Flashlight Pulse</string>
     <string name="search_qs_pulse_desc">Toggle notification flashlight pulse</string>
     <string name="search_qs_stay_awake_desc">Toggle stay awake developer option</string>
+    <string name="search_qs_private_dns_title">Private DNS</string>
+    <string name="search_qs_private_dns_desc">Cycle Private DNS modes (Off/Auto/Hostname)</string>
+    <string name="search_qs_usb_debugging_title">USB Debugging</string>
+    <string name="search_qs_usb_debugging_desc">Toggle USB Debugging developer option</string>
     <string name="search_remap_enable_title">Enable Button Remap</string>
     <string name="search_remap_enable_desc">Master toggle for volume button remapping</string>
     <string name="search_remap_haptic_title">Remap Haptic Feedback</string>
