@@ -31,6 +31,8 @@ class WatermarkRepository(
     private val PREF_CUSTOM_TEXT = stringPreferencesKey("custom_text")
     private val PREF_CUSTOM_TEXT_SIZE = androidx.datastore.preferences.core.intPreferencesKey("custom_text_size")
     private val PREF_PADDING = androidx.datastore.preferences.core.intPreferencesKey("padding")
+    private val PREF_BORDER_STROKE = androidx.datastore.preferences.core.intPreferencesKey("border_stroke")
+    private val PREF_BORDER_CORNER = androidx.datastore.preferences.core.intPreferencesKey("border_corner")
 
     val watermarkOptions: Flow<WatermarkOptions> = context.dataStore.data
         .map { preferences ->
@@ -58,7 +60,9 @@ class WatermarkRepository(
                 showCustomText = preferences[PREF_SHOW_CUSTOM_TEXT] ?: false,
                 customText = preferences[PREF_CUSTOM_TEXT] ?: "",
                 customTextSize = preferences[PREF_CUSTOM_TEXT_SIZE] ?: 50,
-                padding = preferences[PREF_PADDING] ?: 50
+                padding = preferences[PREF_PADDING] ?: 50,
+                borderStroke = preferences[PREF_BORDER_STROKE] ?: 0,
+                borderCorner = preferences[PREF_BORDER_CORNER] ?: 0
             )
         }
 
@@ -120,5 +124,13 @@ class WatermarkRepository(
 
     suspend fun updatePadding(padding: Int) {
         context.dataStore.edit { it[PREF_PADDING] = padding }
+    }
+
+    suspend fun updateBorderStroke(stroke: Int) {
+        context.dataStore.edit { it[PREF_BORDER_STROKE] = stroke }
+    }
+
+    suspend fun updateBorderCorner(corner: Int) {
+        context.dataStore.edit { it[PREF_BORDER_CORNER] = corner }
     }
 }

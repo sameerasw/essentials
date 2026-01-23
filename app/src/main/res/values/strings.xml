@@ -324,7 +324,7 @@
     <string name="feat_app_lock_desc">Secure apps with biometrics</string>
     <string name="feat_freeze_title">Freeze</string>
     <string name="feat_freeze_desc">Disable rarely used apps</string>
-    <string name="feat_watermark_title">Watermarks</string>
+    <string name="feat_watermark_title">Watermark</string>
     <string name="feat_watermark_desc">Add EXIF data and logos to photos</string>
     <string name="watermark_style_title">Style</string>
     <string name="watermark_style_overlay">Overlay</string>
@@ -351,6 +351,8 @@
     <string name="watermark_custom_text_hint">Enter your text...</string>
     <string name="watermark_custom_text_settings">Custom Text Settings</string>
     <string name="watermark_spacing">Spacing</string>
+    <string name="watermark_border_width">Border Width</string>
+    <string name="watermark_border_corners">Round Corners</string>
     <string name="action_save_changes">Save Changes</string>
 
     <!-- Search Settings -->

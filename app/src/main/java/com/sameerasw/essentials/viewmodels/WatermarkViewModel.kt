@@ -221,6 +221,20 @@ class WatermarkViewModel(
         }
     }
 
+    fun setBorderStroke(stroke: Int) {
+        viewModelScope.launch {
+            watermarkRepository.updateBorderStroke(stroke)
+            previewSourceBitmap?.let { updatePreview() }
+        }
+    }
+
+    fun setBorderCorner(corner: Int) {
+        viewModelScope.launch {
+            watermarkRepository.updateBorderCorner(corner)
+            previewSourceBitmap?.let { updatePreview() }
+        }
+    }
+
     fun saveImage(uri: Uri) {
         viewModelScope.launch {
             _uiState.value = WatermarkUiState.Processing

@@ -218,7 +218,7 @@ fun WatermarkScreen(
         val screenHeightDp = configuration.screenHeightDp.dp
         
         val maxPreviewHeightDp = screenHeightDp * 0.6f
-        val minPreviewHeightDp = screenHeightDp * 0.4f
+        val minPreviewHeightDp = screenHeightDp * 0.3f
         
         val maxPx = with(density) { maxPreviewHeightDp.toPx() }
         val minPx = with(density) { minPreviewHeightDp.toPx() }
@@ -271,8 +271,8 @@ fun WatermarkScreen(
                     .fillMaxWidth()
                     .height(with(density) { previewHeightPx.toDp() })
                     .padding(16.dp)
-                    .clip(RoundedCornerShape(24.dp))
-                    .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                    .clip(if (initialUri == null) RoundedCornerShape(24.dp) else androidx.compose.ui.graphics.RectangleShape)
+                    .background(if (initialUri == null) MaterialTheme.colorScheme.surfaceContainerHigh else androidx.compose.ui.graphics.Color.Transparent)
                     .clickable { 
                         performUIHaptic(view)
                         if (initialUri == null) {
@@ -434,7 +434,7 @@ fun WatermarkScreen(
                                 )
                                 .heightIn(min = 56.dp)
                                 .clickable { 
-                                    com.sameerasw.essentials.utils.HapticUtil.performUIHaptic(view)
+                                    performUIHaptic(view)
                                     showCustomTextSheet = true 
                                 }
                                 .padding(12.dp),
@@ -485,7 +485,7 @@ fun WatermarkScreen(
                                 )
                                 .heightIn(min = 56.dp) // Match standard item height
                                 .clickable { 
-                                    com.sameerasw.essentials.utils.HapticUtil.performUIHaptic(view)
+                                    performUIHaptic(view)
                                     showExifSheet = true 
                                 }
                                 .padding(12.dp),
@@ -524,7 +524,7 @@ fun WatermarkScreen(
                                 value = brandSize,
                                 onValueChange = { 
                                     brandSize = it 
-                                    com.sameerasw.essentials.utils.HapticUtil.performSliderHaptic(view)
+                                    performSliderHaptic(view)
                                 },
                                 onValueChangeFinished = { viewModel.setBrandTextSize(brandSize.toInt()) },
                                 valueRange = 0f..100f,
@@ -541,7 +541,7 @@ fun WatermarkScreen(
                                 value = dataSize,
                                 onValueChange = { 
                                     dataSize = it 
-                                    com.sameerasw.essentials.utils.HapticUtil.performSliderHaptic(view)
+                                    performSliderHaptic(view)
                                 },
                                 onValueChangeFinished = { viewModel.setDataTextSize(dataSize.toInt()) },
                                 valueRange = 0f..100f,
@@ -558,9 +558,51 @@ fun WatermarkScreen(
                             value = paddingValue,
                             onValueChange = { 
                                 paddingValue = it 
-                                com.sameerasw.essentials.utils.HapticUtil.performSliderHaptic(view)
+                                performSliderHaptic(view)
                             },
                             onValueChangeFinished = { viewModel.setPadding(paddingValue.toInt()) },
+                            valueRange = 0f..100f,
+                            increment = 5f,
+                            valueFormatter = { "${it.toInt()}%" }
+                        )
+                    }
+                    
+                    // Border Section
+                    Text(
+                        text = "Border",
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    
+                    RoundedCardContainer(
+                         modifier = Modifier.fillMaxWidth()
+                    ) {
+                        var strokeValue by androidx.compose.runtime.remember(options.borderStroke) { androidx.compose.runtime.mutableFloatStateOf(options.borderStroke.toFloat()) }
+                        
+                        ConfigSliderItem(
+                            title = stringResource(R.string.watermark_border_width),
+                            value = strokeValue,
+                            onValueChange = { 
+                                strokeValue = it 
+                                performSliderHaptic(view)
+                            },
+                            onValueChangeFinished = { viewModel.setBorderStroke(strokeValue.toInt()) },
+                            valueRange = 0f..100f,
+                            increment = 5f,
+                            valueFormatter = { "${it.toInt()}%" }
+                        )
+                        
+                        var cornerValue by androidx.compose.runtime.remember(options.borderCorner) { androidx.compose.runtime.mutableFloatStateOf(options.borderCorner.toFloat()) }
+                        
+                        ConfigSliderItem(
+                            title = stringResource(R.string.watermark_border_corners),
+                            value = cornerValue,
+                            onValueChange = { 
+                                cornerValue = it 
+                                performSliderHaptic(view)
+                            },
+                            onValueChangeFinished = { viewModel.setBorderCorner(cornerValue.toInt()) },
                             valueRange = 0f..100f,
                             increment = 5f,
                             valueFormatter = { "${it.toInt()}%" }

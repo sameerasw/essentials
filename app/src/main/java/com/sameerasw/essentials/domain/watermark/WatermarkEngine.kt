@@ -7,6 +7,9 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
+import android.graphics.RectF
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
 import android.graphics.Typeface
 import android.net.Uri
 import com.sameerasw.essentials.R
@@ -41,7 +44,9 @@ data class WatermarkOptions(
     val showCustomText: Boolean = false,
     val customText: String = "",
     val customTextSize: Int = 50,
-    val padding: Int = 50
+    val padding: Int = 50,
+    val borderStroke: Int = 0,
+    val borderCorner: Int = 0
 )
 
 class WatermarkEngine(
@@ -126,10 +131,12 @@ class WatermarkEngine(
 
     suspend fun processBitmap(bitmap: Bitmap, uri: Uri, options: WatermarkOptions): Bitmap = withContext(Dispatchers.Default) {
         val exifData = metadataProvider.extractExif(uri)
-        when (options.style) {
+        val result = when (options.style) {
             WatermarkStyle.OVERLAY -> drawOverlay(bitmap, exifData, options)
             WatermarkStyle.FRAME -> drawFrame(bitmap, exifData, options)
         }
+        
+        applyBorder(result, options)
     }
 
     private fun drawOverlay(bitmap: Bitmap, exifData: ExifData, options: WatermarkOptions): Bitmap {
@@ -294,10 +301,28 @@ class WatermarkEngine(
         // Draw background
         canvas.drawColor(bgColor)
         
+        // Create rounded version of source bitmap if needed
+        val sourceToDraw = if (options.borderCorner > 0) {
+             val output = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
+             val srcCanvas = Canvas(output)
+             val srcPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+             val rect = RectF(0f, 0f, bitmap.width.toFloat(), bitmap.height.toFloat())
+            
+             val minDim = kotlin.math.min(bitmap.width, bitmap.height)
+             val radius = minDim * (options.borderCorner / 1000f) 
+             
+             srcCanvas.drawRoundRect(rect, radius, radius, srcPaint)
+             srcPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+             srcCanvas.drawBitmap(bitmap, 0f, 0f, srcPaint)
+             output
+        } else {
+             bitmap
+        }
+
         // Draw Image and Text
         if (options.moveToTop) {
             // Draw Image shifted down by frameHeight
-            canvas.drawBitmap(bitmap, 0f, finalFrameHeight.toFloat(), null)
+            canvas.drawBitmap(sourceToDraw, 0f, finalFrameHeight.toFloat(), null)
             
             // Draw Text in "Forehead"
             val centerY = finalFrameHeight / 2f
@@ -308,7 +333,7 @@ class WatermarkEngine(
             
         } else {
             // Draw Image at 0,0
-            canvas.drawBitmap(bitmap, 0f, 0f, null)
+            canvas.drawBitmap(sourceToDraw, 0f, 0f, null)
             
             // Draw Text in "Chin"
             val centerY = bitmap.height + (finalFrameHeight / 2f)
@@ -316,6 +341,10 @@ class WatermarkEngine(
                 canvas, exifData, options, margin, centerY, 
                 brandPaint, exifPaint, exifRows, bitmap.width
             )
+        }
+        
+        if (sourceToDraw != bitmap) {
+            sourceToDraw.recycle()
         }
 
         return finalBitmap
@@ -591,5 +620,54 @@ class WatermarkEngine(
         } catch (e: Exception) {
             raw
         }
+    }
+
+    private fun applyBorder(bitmap: Bitmap, options: WatermarkOptions): Bitmap {
+        if (options.borderStroke == 0 && options.borderCorner == 0) return bitmap
+
+        val roundedBitmap = if (options.borderCorner > 0 && options.style != WatermarkStyle.FRAME) {
+             val output = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
+             val canvas = Canvas(output)
+             val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+             val rect = RectF(0f, 0f, bitmap.width.toFloat(), bitmap.height.toFloat())
+            
+             // Mapping: 0-100slider -> 0-10% of min dimension
+             val minDim = kotlin.math.min(bitmap.width, bitmap.height)
+             val radius = minDim * (options.borderCorner / 1000f) // Max 10%
+             
+             canvas.drawRoundRect(rect, radius, radius, paint)
+             paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+             canvas.drawBitmap(bitmap, 0f, 0f, paint)
+             
+             if (bitmap != output) bitmap.recycle()
+             output
+        } else {
+             bitmap
+        }
+        
+        // Border Stroke  (Expand Canvas)
+        val finalBitmap = if (options.borderStroke > 0) {
+             val strokeWidth = (bitmap.width * (options.borderStroke / 1000f)).toInt()
+             
+             val newWidth = roundedBitmap.width + (strokeWidth * 2)
+             val newHeight = roundedBitmap.height + (strokeWidth * 2)
+             
+             val output = Bitmap.createBitmap(newWidth, newHeight, Bitmap.Config.ARGB_8888)
+             val canvas = Canvas(output)
+             
+             val useDark = options.useDarkTheme
+             val bgColor = if (useDark) Color.BLACK else Color.WHITE
+             
+             canvas.drawColor(bgColor)
+             
+             canvas.drawBitmap(roundedBitmap, strokeWidth.toFloat(), strokeWidth.toFloat(), null)
+             
+             if (roundedBitmap != output) roundedBitmap.recycle()
+             output
+        } else {
+             roundedBitmap
+        }
+        
+        return finalBitmap
     }
 }
