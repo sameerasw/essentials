@@ -11,6 +11,7 @@ import android.content.IntentFilter
 import android.os.Build
 import android.os.IBinder
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.core.app.NotificationCompat
@@ -95,10 +96,18 @@ class NotificationLightingService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        // All three permissions are required for Notification Lighting to function
-        if (!canDrawOverlays() || !isAccessibilityServiceEnabled()) {
-            stopSelf()
-            return START_NOT_STICKY
+        Log.d("NotificationLightingSvc", "onStartCommand: action=${intent?.action}")
+        // Accessibility service Android 12+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (!canDrawOverlays() || !isAccessibilityServiceEnabled()) {
+                stopSelf()
+                return START_NOT_STICKY
+            }
+        } else {
+            if (!canDrawOverlays()) {
+                stopSelf()
+                return START_NOT_STICKY
+            }
         }
 
         // Get corner radius from intent, default to OverlayHelper.CORNER_RADIUS_DP
@@ -186,8 +195,7 @@ class NotificationLightingService : Service() {
             stopSelf()
             return START_NOT_STICKY
         }
-
-        stopSelf()
+        showOverlay()
         return START_NOT_STICKY
     }
 

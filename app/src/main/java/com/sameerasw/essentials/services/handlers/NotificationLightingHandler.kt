@@ -73,7 +73,7 @@ class NotificationLightingHandler(
             }
             
             try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     showNotificationLighting()
                 }
             } catch (e: Exception) {
