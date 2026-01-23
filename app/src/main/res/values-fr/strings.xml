@@ -173,6 +173,12 @@
     <string name="tile_active">Actif</string>
     <string name="tile_inactive">Inactif</string>
     <string name="nfc_tile_label">NFC</string>
+    <string name="tile_private_dns">Private DNS</string>
+    <string name="tile_private_dns_desc">Toggle Private DNS mode</string>
+    <string name="tile_private_dns_auto">Auto</string>
+    <string name="tile_private_dns_off">Off</string>
+    <string name="tile_usb_debugging">USB Debugging</string>
+    <string name="tile_usb_debugging_desc">Toggle USB Debugging</string>
     <string name="on">Activer</string>
     <string name="off">Désactiver</string>
     <!-- Screen Locked Security -->
@@ -352,6 +358,10 @@
     <string name="search_qs_pulse_title">Impulsion de lampe torche</string>
     <string name="search_qs_pulse_desc">Activer/désactiver l\'impulsion de lampe-torche</string>
     <string name="search_qs_stay_awake_desc">Basculer l\'option développeur \"Rester allumé\"</string>
+    <string name="search_qs_private_dns_title">Private DNS</string>
+    <string name="search_qs_private_dns_desc">Cycle Private DNS modes (Off/Auto/Hostname)</string>
+    <string name="search_qs_usb_debugging_title">USB Debugging</string>
+    <string name="search_qs_usb_debugging_desc">Toggle USB Debugging developer option</string>
     <string name="search_remap_enable_title">Activer la réattribution de boutons</string>
     <string name="search_remap_enable_desc">Basculer globalement la réattribution du bouton volume</string>
     <string name="search_remap_haptic_title">Reconfigurer le retour haptique</string>
