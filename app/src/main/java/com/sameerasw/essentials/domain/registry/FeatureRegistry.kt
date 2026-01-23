@@ -300,6 +300,13 @@ object FeatureRegistry {
                     "Stay awake",
                     R.array.keywords_qs_stay_awake,
                     R.string.feat_qs_tiles_title
+                ),
+                SearchSetting(
+                    R.string.search_qs_private_dns_title,
+                    R.string.search_qs_private_dns_desc,
+                    "Private DNS",
+                    R.array.keywords_network_visibility,
+                    R.string.feat_qs_tiles_title
                 )
             )
         ) {
