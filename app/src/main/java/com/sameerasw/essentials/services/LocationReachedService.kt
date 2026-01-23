@@ -78,7 +78,7 @@ class LocationReachedService : Service() {
         }
     }
 
-    private fun stopTracking() {
+    private fun stopTracking() { 
         val alarm = repository.getAlarm()
         repository.saveAlarm(alarm.copy(isEnabled = false))
         stopSelf()
@@ -170,7 +170,7 @@ class LocationReachedService : Service() {
             else getString(R.string.location_reached_dist_km, it)
         } ?: getString(R.string.location_reached_calculating)
         
-        val contentText = getString(R.string.location_reached_service_remaining, distanceText)
+        val contentText = getString(R.string.location_reached_service_remaining, distanceText, progress)
 
         if (Build.VERSION.SDK_INT >= 35) {
             val builder = Notification.Builder(this, CHANNEL_ID)

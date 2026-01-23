@@ -26,20 +26,8 @@ object PermissionUtils {
     }
 
     fun canWriteSecureSettings(context: Context): Boolean {
-        return try {
-            val currentValue = Settings.Secure.getString(
-                context.contentResolver,
-                "icon_blacklist"
-            )
-            Settings.Secure.putString(
-                context.contentResolver,
-                "icon_blacklist",
-                currentValue ?: ""
-            )
-            true
-        } catch (e: Exception) {
-            false
-        }
+        return context.checkSelfPermission(android.Manifest.permission.WRITE_SECURE_SETTINGS) == 
+                android.content.pm.PackageManager.PERMISSION_GRANTED
     }
 
     fun hasNotificationListenerPermission(context: Context): Boolean {

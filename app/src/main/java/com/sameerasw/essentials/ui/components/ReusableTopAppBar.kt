@@ -53,6 +53,7 @@ fun ReusableTopAppBar(
     isBeta: Boolean = false,
     backIconRes: Int = R.drawable.rounded_arrow_back_24,
     isSmall: Boolean = false,
+    containerColor: Color = MaterialTheme.colorScheme.surfaceContainer,
     actions: @Composable RowScope.() -> Unit = {}
 ) {
     val collapsedFraction = scrollBehavior?.state?.collapsedFraction ?: 0f
@@ -241,7 +242,7 @@ fun ReusableTopAppBar(
     if (isSmall) {
         TopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainer
+                containerColor = containerColor
             ),
             modifier = Modifier.padding(horizontal = 8.dp),
             title = titleContent,
@@ -252,7 +253,7 @@ fun ReusableTopAppBar(
     } else {
         LargeFlexibleTopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainer
+                containerColor = containerColor
             ),
             modifier = Modifier.padding(horizontal = 8.dp),
             expandedHeight = if (subtitle != null) 200.dp else 160.dp,

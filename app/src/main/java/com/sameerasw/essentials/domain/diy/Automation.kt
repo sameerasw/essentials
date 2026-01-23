@@ -8,10 +8,12 @@ data class Automation(
     val actions: List<Action> = emptyList(),
     val entryAction: Action? = null,
     val exitAction: Action? = null,
-    val isEnabled: Boolean = true
+    val isEnabled: Boolean = true,
+    val selectedApps: List<String> = emptyList()
 ) {
     enum class Type {
         TRIGGER,
-        STATE
+        STATE,
+        APP
     }
 }

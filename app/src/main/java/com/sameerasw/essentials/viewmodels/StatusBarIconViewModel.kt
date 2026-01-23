@@ -360,13 +360,7 @@ class StatusBarIconViewModel : ViewModel() {
     }
 
     private fun canWriteSecureSettings(context: Context): Boolean {
-        return try {
-            val currentValue = Settings.Secure.getString(context.contentResolver, ICON_BLACKLIST_SETTING)
-            Settings.Secure.putString(context.contentResolver, ICON_BLACKLIST_SETTING, currentValue ?: "")
-            true
-        } catch (@Suppress("UNUSED_PARAMETER") e: Exception) {
-            false
-        }
+        return com.sameerasw.essentials.utils.PermissionUtils.canWriteSecureSettings(context)
     }
 
     fun getAdbCommand(): String {

@@ -105,7 +105,10 @@ dependencies {
     // SymSpell for word suggestions
     implementation("com.darkrockstudios:symspellkt:3.4.0")
 
-    // Glance for Widgets
     implementation("androidx.glance:glance-appwidget:1.1.0")
     implementation("androidx.glance:glance-material3:1.1.0")
+
+    // Watermark dependencies
+    implementation("androidx.exifinterface:exifinterface:1.3.7")
+    implementation("androidx.compose.material:material-icons-extended:1.7.0") // Compatible with Compose BOM
 }

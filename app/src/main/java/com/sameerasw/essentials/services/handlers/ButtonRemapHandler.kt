@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.KeyEvent
 import android.os.VibratorManager
 import android.os.Vibrator
+import android.app.NotificationManager
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.utils.performHapticFeedback
 import com.sameerasw.essentials.utils.ShizukuUtils
@@ -21,6 +22,7 @@ class ButtonRemapHandler(
     private val service: AccessibilityService,
     private val flashlightHandler: FlashlightHandler
 ) {
+    private val soundModeHandler = SoundModeHandler(service)
     private val handler = Handler(Looper.getMainLooper())
     private var isLongPressTriggered: Boolean = false
     private var lastPressedKeyCode: Int = -1
@@ -182,7 +184,14 @@ class ButtonRemapHandler(
             "Toggle mute" -> toggleRingerMode(AudioManager.RINGER_MODE_SILENT)
             "AI assistant" -> launchAssistant()
             "Take screenshot" -> takeScreenshot()
+            "Cycle sound modes" -> cycleSoundModes()
+            "Toggle media volume" -> toggleMediaVolume()
         }
+    }
+
+    private fun cycleSoundModes() {
+        soundModeHandler.cycleNextMode()
+        triggerHapticFeedback()
     }
 
     private fun takeScreenshot() {
@@ -198,6 +207,23 @@ class ButtonRemapHandler(
         val am = service.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         am.dispatchMediaKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, keyCode))
         am.dispatchMediaKeyEvent(KeyEvent(KeyEvent.ACTION_UP, keyCode))
+        triggerHapticFeedback()
+    }
+
+    private fun toggleMediaVolume() {
+        val am = service.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        val currentVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC)
+        val prefs = service.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+
+        if (currentVolume > 0) {
+            // Mute and save current volume
+            prefs.edit().putInt("last_media_volume", currentVolume).apply()
+            am.setStreamVolume(AudioManager.STREAM_MUSIC, 0, AudioManager.FLAG_SHOW_UI)
+        } else {
+            // Restore last known volume or default to mid-range
+            val lastVolume = prefs.getInt("last_media_volume", am.getStreamMaxVolume(AudioManager.STREAM_MUSIC) / 2)
+            am.setStreamVolume(AudioManager.STREAM_MUSIC, lastVolume, AudioManager.FLAG_SHOW_UI)
+        }
         triggerHapticFeedback()
     }
 

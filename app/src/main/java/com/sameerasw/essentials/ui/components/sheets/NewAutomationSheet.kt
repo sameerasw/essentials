@@ -91,6 +91,14 @@ fun NewAutomationSheet(
                     iconRes = R.drawable.rounded_toggle_on_24,
                     onClick = { onOptionSelected(Automation.Type.STATE) }
                 )
+
+                // App Option
+                AutomationTypeOption(
+                    title = stringResource(R.string.diy_create_app_title),
+                    description = stringResource(R.string.diy_create_app_desc),
+                    iconRes = R.drawable.rounded_apps_24,
+                    onClick = { onOptionSelected(Automation.Type.APP) }
+                )
             }
         }
     }

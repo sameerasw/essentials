@@ -128,59 +128,25 @@ fun ButtonRemapSettingsUI(
 
                                 if (shellHasPermission) {
                                     viewModel.setButtonRemapUseShizuku(true, context)
-                                    ContextCompat.startForegroundService(
-                                        context,
-                                        Intent(context, InputEventListenerService::class.java)
-                                    )
                                 } else if (shellIsAvailable && !isRootEnabled) {
-                                    // Shizuku logic (still needed for specific permission request if not granted)
+                                    // Shizuku logic
                                     shizukuHelper.requestPermission { _, grantResult ->
                                         if (grantResult == android.content.pm.PackageManager.PERMISSION_GRANTED) {
                                             viewModel.setButtonRemapUseShizuku(true, context)
-                                            ContextCompat.startForegroundService(
-                                                context,
-                                                Intent(
-                                                    context,
-                                                    InputEventListenerService::class.java
-                                                )
-                                            )
                                         }
                                     }
                                 } else if (isRootEnabled && !shellHasPermission) {
-                                    // Root logic - try to run a command to trigger su prompt
+                                    // Root logic
                                     viewModel.setButtonRemapUseShizuku(true, context)
-                                    com.sameerasw.essentials.utils.ShellUtils.runCommand(
-                                        context,
-                                        "id"
-                                    )
-                                    if (com.sameerasw.essentials.utils.ShellUtils.hasPermission(
-                                            context
-                                        )
-                                    ) {
-                                        ContextCompat.startForegroundService(
-                                            context,
-                                            Intent(context, InputEventListenerService::class.java)
-                                        )
-                                    }
+                                    com.sameerasw.essentials.utils.ShellUtils.runCommand(context, "id")
                                 } else {
                                     // Provider not running
                                     viewModel.setButtonRemapUseShizuku(true, context)
-                                    val toastRes =
-                                        if (isRootEnabled) R.string.root_not_available_toast else R.string.shizuku_not_running_toast
-                                    android.widget.Toast.makeText(
-                                        context,
-                                        context.getString(toastRes),
-                                        android.widget.Toast.LENGTH_SHORT
-                                    ).show()
+                                    val toastRes = if (isRootEnabled) R.string.root_not_available_toast else R.string.shizuku_not_running_toast
+                                    android.widget.Toast.makeText(context, context.getString(toastRes), android.widget.Toast.LENGTH_SHORT).show()
                                 }
                             } else {
                                 viewModel.setButtonRemapUseShizuku(false, context)
-                                context.stopService(
-                                    Intent(
-                                        context,
-                                        InputEventListenerService::class.java
-                                    )
-                                )
                             }
                         },
                         modifier = Modifier.highlight(highlightSetting == "shizuku_remap")
@@ -424,6 +390,18 @@ fun ButtonRemapSettingsUI(
                         isSelected = currentAction == "AI assistant",
                         onClick = { onActionSelected("AI assistant") },
                         iconRes = R.drawable.rounded_bubble_chart_24,
+                    )
+                    RemapActionItem(
+                        title = stringResource(R.string.action_toggle_media_volume),
+                        isSelected = currentAction == "Toggle media volume",
+                        onClick = { onActionSelected("Toggle media volume") },
+                        iconRes = R.drawable.rounded_volume_off_24,
+                    )
+                    RemapActionItem(
+                        title = stringResource(R.string.action_cycle_sound_modes),
+                        isSelected = currentAction == "Cycle sound modes",
+                        onClick = { onActionSelected("Cycle sound modes") },
+                        iconRes = R.drawable.rounded_volume_up_24,
                     )
                     if (selectedScreenTab == 1) {
                         RemapActionItem(

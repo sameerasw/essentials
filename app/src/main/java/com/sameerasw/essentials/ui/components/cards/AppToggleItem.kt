@@ -16,13 +16,56 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.graphics.Color
+import com.sameerasw.essentials.R
 import com.sameerasw.essentials.utils.HapticUtil
+
+private val GOOGLE_SYSTEM_USER_APPS = setOf(
+    "com.google.android.apps.scone",
+    "com.google.android.marvin.talkback",
+    "com.google.android.projection.gearhead",
+    "com.google.android.as",
+    "com.google.android.contactkeys",
+    "com.google.android.safetycore",
+    "com.google.android.webview",
+    "com.google.android.captiveportallogin",
+    "com.google.ambient.streaming",
+    "com.google.android.apps.pixel.dcservice",
+    "com.google.android.apps.turbo",
+    "com.google.android.apps.work.clouddpc",
+    "com.google.android.apps.diagnosticstool",
+    "com.google.android.apps.wellbeing",
+    "com.google.android.documentsui",
+    "com.google.android.odad",
+    "com.google.android.gms",
+    "com.google.ar.core",
+    "com.google.vending",
+    "com.google.android.apps.carrier.carrierwifi",
+    "com.google.android.modulemetadata",
+    "com.google.android.networkstack",
+    "com.google.android.apps.safetyhub",
+    "com.google.intelligence.sense",
+    "com.google.android.apps.camera.services",
+    "com.google.android.apps.nexuslauncher",
+    "com.google.android.apps.pixel.support",
+    "com.google.android.as.oss",
+    "com.android.settings",
+    "com.google.android.settings.intelligence",
+    "com.android.stk",
+    "com.google.android.soundpicker",
+    "com.google.mainline.telemetry",
+    "com.google.android.apps.accessibility.voiceaccess",
+    "com.google.android.cellbroadcastreceiver"
+)
 
 @Composable
 fun AppToggleItem(
@@ -30,6 +73,8 @@ fun AppToggleItem(
     title: String,
     modifier: Modifier = Modifier,
     description: String? = null,
+    packageName: String? = null,
+    isSystemApp: Boolean = false,
     isChecked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     enabled: Boolean = true,
@@ -37,6 +82,9 @@ fun AppToggleItem(
     showToggle: Boolean = true
 ) {
     val view = LocalView.current
+    val shouldShowSystemTag = remember(packageName, isSystemApp) {
+        isSystemApp || (packageName != null && GOOGLE_SYSTEM_USER_APPS.contains(packageName))
+    }
 
     Row(
         modifier = modifier
@@ -74,10 +122,33 @@ fun AppToggleItem(
 
         if (description != null) {
             Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.bodyMedium
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    if (shouldShowSystemTag) {
+                        Box(
+                            modifier = Modifier
+                                .size(18.dp)
+                                .background(
+                                    color = MaterialTheme.colorScheme.primary,
+                                    shape = CircleShape
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            androidx.compose.material3.Icon(
+                                painter = painterResource(id = R.drawable.round_android_24),
+                                contentDescription = null,
+                                modifier = Modifier.size(12.dp),
+                                tint = MaterialTheme.colorScheme.surfaceBright
+                            )
+                        }
+                    }
+                }
                 Text(
                     text = description,
                     style = MaterialTheme.typography.labelMedium,
@@ -85,11 +156,34 @@ fun AppToggleItem(
                 )
             }
         } else {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.weight(1f)
-            )
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                if (shouldShowSystemTag) {
+                    Box(
+                        modifier = Modifier
+                            .size(18.dp)
+                            .background(
+                                color = MaterialTheme.colorScheme.primary,
+                                shape = CircleShape
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        androidx.compose.material3.Icon(
+                            painter = painterResource(id = R.drawable.round_android_24),
+                            contentDescription = null,
+                            modifier = Modifier.size(12.dp),
+                            tint = MaterialTheme.colorScheme.surfaceBright
+                        )
+                    }
+                }
+            }
         }
 
         if (showToggle) {

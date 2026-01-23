@@ -52,6 +52,7 @@ class MainViewModel : ViewModel() {
     val isCaffeinateActive = mutableStateOf(false)
     val isShizukuPermissionGranted = mutableStateOf(false)
     val isShizukuAvailable = mutableStateOf(false)
+    val pinnedFeatureKeys = mutableStateOf<List<String>>(emptyList())
     val isNotificationListenerEnabled = mutableStateOf(false)
     val isMapsPowerSavingEnabled = mutableStateOf(false)
     val isNotificationLightingEnabled = mutableStateOf(false)
@@ -72,9 +73,7 @@ class MainViewModel : ViewModel() {
     val volumeDownActionOn = mutableStateOf("None")
     val remapHapticType = mutableStateOf(HapticFeedbackType.DOUBLE)
     val isDynamicNightLightEnabled = mutableStateOf(false)
-    val isSnoozeDebuggingEnabled = mutableStateOf(false)
-    val isSnoozeFileTransferEnabled = mutableStateOf(false)
-    val isSnoozeChargingEnabled = mutableStateOf(false)
+    val snoozeChannels = mutableStateOf<List<com.sameerasw.essentials.domain.model.SnoozeChannel>>(emptyList())
     val isFlashlightAlwaysTurnOffEnabled = mutableStateOf(false)
     val isFlashlightFadeEnabled = mutableStateOf(false)
     val isFlashlightAdjustEnabled = mutableStateOf(false)
@@ -159,6 +158,7 @@ class MainViewModel : ViewModel() {
     private var lastUpdateCheckTime: Long = 0
     private lateinit var settingsRepository: SettingsRepository
     private lateinit var updateRepository: UpdateRepository
+    private var appContext: Context? = null
 
     private val preferenceChangeListener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
         // We still use this listener for now, attached via Repository
@@ -203,10 +203,17 @@ class MainViewModel : ViewModel() {
             SettingsRepository.KEY_MAC_BATTERY_LAST_UPDATED -> macBatteryLastUpdated.value = settingsRepository.getLong(key, 0L)
             SettingsRepository.KEY_AIRSYNC_MAC_CONNECTED -> isMacConnected.value = settingsRepository.getBoolean(key, false)
             SettingsRepository.KEY_BATTERY_WIDGET_MAX_DEVICES -> batteryWidgetMaxDevices.intValue = settingsRepository.getInt(key, 8)
+            SettingsRepository.KEY_SNOOZE_DISCOVERED_CHANNELS, SettingsRepository.KEY_SNOOZE_BLOCKED_CHANNELS -> {
+                appContext?.let { loadSnoozeChannels(it) }
+            }
+            SettingsRepository.KEY_PINNED_FEATURES -> {
+                pinnedFeatureKeys.value = settingsRepository.getPinnedFeatures()
+            }
         }
     }
 
     fun check(context: Context) {
+        appContext = context.applicationContext
         settingsRepository = SettingsRepository(context)
         updateRepository = UpdateRepository()
         
@@ -235,10 +242,6 @@ class MainViewModel : ViewModel() {
         
         isBluetoothPermissionGranted.value = PermissionUtils.hasBluetoothPermission(context)
         
-        isRootAvailable.value = com.sameerasw.essentials.utils.RootUtils.isRootAvailable()
-        isRootPermissionGranted.value = com.sameerasw.essentials.utils.RootUtils.isRootPermissionGranted()
-        
-        settingsRepository.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener)
         settingsRepository.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
         
         isWidgetEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_WIDGET_ENABLED)
@@ -259,6 +262,15 @@ class MainViewModel : ViewModel() {
         notificationLightingIndicatorX.value = settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_INDICATOR_X, 50f)
         notificationLightingIndicatorY.value = settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_INDICATOR_Y, 2f)
         isRootEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_USE_ROOT)
+        
+        if (isRootEnabled.value) {
+            isRootAvailable.value = com.sameerasw.essentials.utils.RootUtils.isRootAvailable()
+            isRootPermissionGranted.value = com.sameerasw.essentials.utils.RootUtils.isRootPermissionGranted()
+        } else {
+             isRootAvailable.value = false
+             isRootPermissionGranted.value = false
+        }
+        
         notificationLightingIndicatorScale.value = settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_INDICATOR_SCALE, 1.0f)
         notificationLightingGlowSides.value = settingsRepository.getNotificationLightingGlowSides()
         
@@ -299,9 +311,7 @@ class MainViewModel : ViewModel() {
         }
         
         isDynamicNightLightEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_DYNAMIC_NIGHT_LIGHT_ENABLED)
-        isSnoozeDebuggingEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_SNOOZE_DEBUGGING_ENABLED)
-        isSnoozeFileTransferEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_SNOOZE_FILE_TRANSFER_ENABLED)
-        isSnoozeChargingEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_SNOOZE_CHARGING_ENABLED)
+        loadSnoozeChannels(context)
         isFlashlightAlwaysTurnOffEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_ALWAYS_TURN_OFF_ENABLED)
         isFlashlightFadeEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_FADE_ENABLED)
         isFlashlightAdjustEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_ADJUST_INTENSITY_ENABLED)
@@ -347,6 +357,7 @@ class MainViewModel : ViewModel() {
         freezeAutoExcludedApps.value = settingsRepository.getFreezeAutoExcludedApps()
         isDeveloperModeEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_DEVELOPER_MODE_ENABLED)
         isPreReleaseCheckEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_CHECK_PRE_RELEASES_ENABLED)
+        pinnedFeatureKeys.value = settingsRepository.getPinnedFeatures()
     }
 
     fun onSearchQueryChanged(query: String, context: Context) {
@@ -360,6 +371,17 @@ class MainViewModel : ViewModel() {
         isSearching.value = true
         searchResults.value = SearchRegistry.search(context, query)
         isSearching.value = false
+    }
+
+    fun togglePinFeature(featureId: String) {
+        val current = pinnedFeatureKeys.value.toMutableList()
+        if (current.contains(featureId)) {
+            current.remove(featureId)
+        } else {
+            current.add(featureId) // Append at the end to keep order
+        }
+        pinnedFeatureKeys.value = current
+        settingsRepository.savePinnedFeatures(current)
     }
 
     fun setAutoUpdateEnabled(enabled: Boolean, context: Context) {
@@ -1138,19 +1160,26 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun setSnoozeDebuggingEnabled(enabled: Boolean, context: Context) {
-        isSnoozeDebuggingEnabled.value = enabled
-        settingsRepository.putBoolean(SettingsRepository.KEY_SNOOZE_DEBUGGING_ENABLED, enabled)
+    fun loadSnoozeChannels(context: Context) {
+        val discovered = settingsRepository.loadSnoozeDiscoveredChannels()
+        val blocked = settingsRepository.loadSnoozeBlockedChannels()
+        
+        val channels = discovered.map { channel ->
+            channel.copy(isBlocked = blocked.contains(channel.id))
+        }
+        
+        snoozeChannels.value = channels.distinctBy { it.id }.sortedBy { it.name }
     }
 
-    fun setSnoozeFileTransferEnabled(enabled: Boolean, context: Context) {
-        isSnoozeFileTransferEnabled.value = enabled
-        settingsRepository.putBoolean(SettingsRepository.KEY_SNOOZE_FILE_TRANSFER_ENABLED, enabled)
-    }
-
-    fun setSnoozeChargingEnabled(enabled: Boolean, context: Context) {
-        isSnoozeChargingEnabled.value = enabled
-        settingsRepository.putBoolean(SettingsRepository.KEY_SNOOZE_CHARGING_ENABLED, enabled)
+    fun setSnoozeChannelBlocked(channelId: String, blocked: Boolean, context: Context) {
+        val currentBlocked = settingsRepository.loadSnoozeBlockedChannels().toMutableSet()
+        if (blocked) {
+            currentBlocked.add(channelId)
+        } else {
+            currentBlocked.remove(channelId)
+        }
+        settingsRepository.saveSnoozeBlockedChannels(currentBlocked)
+        loadSnoozeChannels(context)
     }
 
     fun setFlashlightAlwaysTurnOffEnabled(enabled: Boolean, context: Context) {

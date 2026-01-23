@@ -50,4 +50,19 @@ sealed interface Action {
         override val permissions: List<String> = listOf("shizuku", "root")
         override val isConfigurable: Boolean = true
     }
+
+    data class DeviceEffects(
+        val enabled: Boolean = true,
+        val grayscale: Boolean = false,
+        val suppressAmbient: Boolean = false,
+        val dimWallpaper: Boolean = false,
+        val nightMode: Boolean = false
+    ) : Action {
+        override val title: Int get() = R.string.diy_action_device_effects
+        override val icon: Int get() = R.drawable.rounded_bed_24
+        override val permissions: List<String> = listOf("notification_policy")
+        override val isConfigurable: Boolean = true
+    }
+
+
 }
