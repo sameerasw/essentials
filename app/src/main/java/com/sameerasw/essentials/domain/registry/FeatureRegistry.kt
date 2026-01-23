@@ -181,26 +181,7 @@ object FeatureRegistry {
             description = R.string.feat_snooze_notifications_desc,
             permissionKeys = listOf("NOTIFICATION_LISTENER"),
             showToggle = false,
-            searchableSettings = listOf(
-                SearchSetting(
-                    R.string.search_snooze_debug_title,
-                    R.string.search_snooze_debug_desc,
-                    "snooze_debugging",
-                    R.array.keywords_adb_debug
-                ),
-                SearchSetting(
-                    R.string.search_snooze_file_title,
-                    R.string.search_snooze_file_desc,
-                    "snooze_file_transfer",
-                    R.array.keywords_mtp
-                ),
-                SearchSetting(
-                    R.string.search_snooze_charge_title,
-                    R.string.search_snooze_charge_desc,
-                    "snooze_charging",
-                    R.array.keywords_battery_charge
-                )
-            )
+            searchableSettings = emptyList()
         ) {
             override fun isEnabled(viewModel: MainViewModel) = false
             override fun isToggleEnabled(viewModel: MainViewModel, context: Context) = viewModel.isNotificationListenerEnabled.value
