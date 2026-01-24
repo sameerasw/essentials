@@ -655,26 +655,28 @@ class WatermarkEngine(
 
     private fun formatShutterSpeed(raw: String): String {
         // raw usually comes as "0.02s" or "1/100s" from MetadataProvider due to appended "s" in provider
-        // but if we are robust, we check.
         val value = raw.removeSuffix("s")
-        // If it's a fraction, keep it (photographers prefer fractions)
+        
+        // If it's already a fraction, keep it
         if (value.contains("/")) return raw
         
         return try {
-            val doubleVal = value.toDouble()
-            // Round to max 2 decimals
-            // usage of %.2f might result in 0.00 for very fast speeds? 
-            // User asked "maximum of 2 decimals", implying checking if it has more.
-            // But if it is 0.0005, 0.00 is bad.
-            // Maybe they mean for long exposures e.g. 2.534s -> 0.53s.
-            // Let's assume standard formatting.
-            if (doubleVal >= 1 || doubleVal == 0.0) {
-                 java.lang.String.format(java.util.Locale.US, "%.2fs", doubleVal).removeSuffix(".00s").removeSuffix("0s") + "s"
+            val exposureTime = value.toDouble()
+            
+            if (exposureTime <= 0) return raw
+            
+            if (exposureTime >= 1.0) {
+                // For 1.0s or more, show as integer if possible, else 1 decimal
+                val formatted = if (exposureTime % 1.0 == 0.0) {
+                    exposureTime.toInt().toString()
+                } else {
+                    java.lang.String.format(java.util.Locale.US, "%.1f", exposureTime)
+                }
+                "${formatted}s"
             } else {
-                // Formatting small decimals
-                // user request: "round to maximum of 2 decimals"
-                // If 0.016 -> 0.02s
-                java.lang.String.format(java.util.Locale.US, "%.2fs", doubleVal)
+                // For sub-second, convert to 1/N format
+                val denominator = (1.0 / exposureTime).roundToInt()
+                "1/${denominator}s"
             }
         } catch (e: Exception) {
             raw
