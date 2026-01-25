@@ -241,6 +241,7 @@
     <string name="smart_data_title">スマートモバイルデータ</string>
     <string name="permission_read_phone_state_title">電話</string>
     <string name="permission_read_phone_state_desc">スマートデータのネットワークタイプを検出するために必要です</string>
+    <string name="permission_read_phone_state_desc_call_vibrations">Required to detect call status changes to trigger haptic feedback.</string>
     <string name="settings_section_smart_visibility">スマートな可視性</string>
     <string name="smart_wifi_title">スマートWi-Fi</string>
     <string name="smart_wifi_desc">Wi-Fi接続時にモバイルデータを非表示にします</string>
@@ -281,6 +282,8 @@
     <string name="feat_sound_mode_tile_desc">クイック設定タイルでサイレントモードを切り替える</string>
     <string name="feat_stay_awake_tile_title">スリープしないタイル</string>
     <string name="feat_stay_awake_tile_desc">クイック設定タイルで充電中にスリープするかを切り替える</string>
+    <string name="feat_call_vibrations_title">Call vibrations</string>
+    <string name="feat_call_vibrations_desc">Vibrate for call actions</string>
     <string name="show_bluetooth_devices">Bluetoothデバイスを表示</string>
     <string name="show_bluetooth_devices_summary">接続されているBluetoothデバイスのバッテリー残量を表示する</string>
     <string name="limit_max_devices">デバイスの上限</string>
@@ -441,9 +444,10 @@
     <string name="perm_root_title">Rootアクセス</string>
     <string name="perm_root_desc">Root権限を使用したシステムアクションをするのに必要です。</string>
     <string name="perm_notif_listener_title">通知アクセス</string>
-    <string name="perm_notif_listener_desc_maps">マップがナビ中であることを検知するために必要です。</string>
-    <string name="perm_notif_listener_desc_lighting">新しい通知を検知するために必要</string>
-    <string name="perm_notif_listener_desc_snooze">通知を検知してスヌーズするために必要</string>
+    <string name="perm_notif_listener_desc_maps">Requires notification listener access to monitor Google Maps navigation status and enable power saving when not navigatiing.</string>
+    <string name="perm_notif_listener_desc_call_vibrations">Requires notification listener access to detect when outgoing calls are answered.</string>
+    <string name="perm_notif_listener_desc_lighting">Requires notification listener access to detect new notifications and trigger edge lighting.</string>
+    <string name="perm_notif_listener_desc_snooze">Requires notification listener access to monitor and snooze unwanted system notifications.</string>
     <string name="perm_accessibility_title">アクセシビリティサービス</string>
     <string name="perm_accessibility_desc_common">アプリロック、画面オフウィジェット、その他の機能でインタラクションを検知するために必要</string>
     <string name="perm_accessibility_desc_lighting">新しい通知を検知して通知ライトを動作させるために必要</string>
