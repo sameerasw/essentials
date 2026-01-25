@@ -60,6 +60,7 @@ import com.sameerasw.essentials.ui.composables.configs.QuickSettingsTilesSetting
 import com.sameerasw.essentials.ui.composables.configs.ButtonRemapSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.DynamicNightLightSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.SnoozeNotificationsSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.AmbientMusicGlanceSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.LocationReachedSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.BatteriesSettingsUI
 import com.sameerasw.essentials.viewmodels.CaffeinateViewModel
@@ -633,6 +634,13 @@ class FeatureSettingsActivity : FragmentActivity() {
                                 BatteriesSettingsUI(
                                     viewModel = viewModel,
                                     modifier = Modifier.padding(top = 16.dp)
+                                )
+                            }
+                            "Ambient music glance" -> {
+                                AmbientMusicGlanceSettingsUI(
+                                    viewModel = viewModel,
+                                    modifier = Modifier.padding(top = 16.dp),
+                                    highlightSetting = highlightSetting
                                 )
                             }
                             // else -> default UI (optional cleanup)

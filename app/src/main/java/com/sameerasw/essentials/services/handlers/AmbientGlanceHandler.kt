@@ -53,9 +53,22 @@ class AmbientGlanceHandler(
                     val progress = (position.toFloat() / duration.toFloat() * 100).toInt()
                     volumeStrokeView?.updatePercentage(progress)
                 }
+            } else {
+                // No active playing session
+                if (isDockedMode) {
+                    fadeOutAndRemove() // Hide if music stops/pauses in docked mode
+                }
             }
             
             handler.postDelayed(this, 1000L)
+        }
+    }
+    
+    private val revertToMusicRunnable = Runnable {
+        if (overlayView != null && isDockedMode) {
+            eventType = EVENT_PLAY_PAUSE // Switch back to music view
+            volumeIconView?.animate()?.alpha(0f)?.setDuration(200)?.start()
+            handler.post(progressUpdateRunnable)
         }
     }
     
@@ -65,6 +78,7 @@ class AmbientGlanceHandler(
     private var trackTitle: String? = null
     private var artistName: String? = null
     private var isAlreadyLiked: Boolean = false
+    private var isDockedMode: Boolean = false
     private var volumePercentage: Int = 0
     private var volumeKey: Int = -1
 
@@ -85,6 +99,7 @@ class AmbientGlanceHandler(
             trackTitle = intent.getStringExtra("track_title")
             artistName = intent.getStringExtra("artist_name")
             isAlreadyLiked = intent.getBooleanExtra("is_already_liked", false)
+            isDockedMode = intent.getBooleanExtra("is_docked_mode", false)
             volumePercentage = intent.getIntExtra("volume_percentage", 0)
             volumeKey = intent.getIntExtra("volume_key_code", -1)
             
@@ -118,10 +133,17 @@ class AmbientGlanceHandler(
                 // If volume changed, pause progress update
                 if (eventType == EVENT_VOLUME) {
                     handler.removeCallbacks(progressUpdateRunnable)
+                    handler.removeCallbacks(revertToMusicRunnable)
                     volumeStrokeView?.updatePercentage(volumePercentage)
+                    
+                    if (isDockedMode) {
+                        handler.postDelayed(revertToMusicRunnable, DISPLAY_DURATION)
+                    }
                 }
                 
-                handler.postDelayed(hideRunnable, DISPLAY_DURATION)
+                if (!isDockedMode) {
+                    handler.postDelayed(hideRunnable, DISPLAY_DURATION)
+                }
                 return
             }
             
@@ -360,7 +382,9 @@ class AmbientGlanceHandler(
                 ?.alpha(1f)
                 ?.setDuration(500)
                 ?.withEndAction {
-                    handler.postDelayed(hideRunnable, DISPLAY_DURATION)
+                    if (!isDockedMode) {
+                        handler.postDelayed(hideRunnable, DISPLAY_DURATION)
+                    }
                 }
                 ?.start()
             
@@ -394,6 +418,29 @@ class AmbientGlanceHandler(
         path.close()
         return path
     }
+
+    fun checkAndShowOnScreenOff() {
+        val prefs = service.getSharedPreferences(com.sameerasw.essentials.data.repository.SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
+        val isEnabled = prefs.getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_ENABLED, false)
+        val isDocked = prefs.getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_DOCKED_MODE, false)
+        
+        if (isEnabled && isDocked) {
+             val mediaSessionManager = service.getSystemService(Context.MEDIA_SESSION_SERVICE) as MediaSessionManager
+             val sessions = mediaSessionManager.getActiveSessions(android.content.ComponentName(service, ScreenOffAccessibilityService::class.java))
+             val playingSession = sessions.firstOrNull { it.playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING }
+             
+             if (playingSession != null) {
+                 val metadata = playingSession.metadata
+                 val intent = Intent("SHOW_AMBIENT_GLANCE").apply {
+                     putExtra("event_type", EVENT_PLAY_PAUSE)
+                     putExtra("track_title", metadata?.getString(android.media.MediaMetadata.METADATA_KEY_TITLE))
+                     putExtra("artist_name", metadata?.getString(android.media.MediaMetadata.METADATA_KEY_ARTIST))
+                     putExtra("is_docked_mode", true)
+                 }
+                 handleIntent(intent)
+             }
+        }
+    }
     
     fun dismissImmediately() {
         val view = overlayView ?: return
@@ -422,6 +469,7 @@ class AmbientGlanceHandler(
     fun removeOverlay() {
         handler.removeCallbacks(hideRunnable)
         handler.removeCallbacks(progressUpdateRunnable)
+        handler.removeCallbacks(revertToMusicRunnable)
         if (overlayView != null && windowManager != null) {
             try {
                 service.unregisterReceiver(volumeReceiver)

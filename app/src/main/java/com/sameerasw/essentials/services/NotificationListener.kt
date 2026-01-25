@@ -258,8 +258,9 @@ class NotificationListener : NotificationListenerService() {
              val title = metadata?.getString(android.media.MediaMetadata.METADATA_KEY_TITLE)
              val artist = metadata?.getString(android.media.MediaMetadata.METADATA_KEY_ARTIST)
              val isAlreadyLiked = isAlreadyLikedOverride ?: isLikedState(activeSession)
+             val isDockedMode = prefs.getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_DOCKED_MODE, false)
              
-             // 1. Always Extract & Cache Album Art (Dictionary)
+             // 1. Always Extract & Cache Album Art (Dictionary style)
              var bitmap = metadata?.getBitmap(android.media.MediaMetadata.METADATA_KEY_ALBUM_ART)
              if (bitmap == null) {
                  bitmap = metadata?.getBitmap(android.media.MediaMetadata.METADATA_KEY_ART)
@@ -305,6 +306,8 @@ class NotificationListener : NotificationListenerService() {
                       putExtra("track_title", title)
                       putExtra("artist_name", artist)
                       putExtra("is_already_liked", isAlreadyLiked)
+                      putExtra("is_docked_mode", isDockedMode)
+                      addFlags(android.content.Intent.FLAG_RECEIVER_FOREGROUND)
                   }
                   try {
                       startService(intent)
@@ -335,6 +338,9 @@ class NotificationListener : NotificationListenerService() {
                  
                  
                  if (lastState == null) {
+                     if (isPlaying) {
+                         eventType = "play_pause"
+                     }
                  } else {
                      val titleChanged = title != lastState.title
                      val stateChanged = isPlaying != lastState.isPlaying

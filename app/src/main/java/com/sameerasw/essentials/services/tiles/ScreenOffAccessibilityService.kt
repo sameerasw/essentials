@@ -78,6 +78,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
                         appFlowHandler.clearAuthenticated()
                         scheduleFreeze()
                         startInputEventListenerIfEnabled()
+                        ambientGlanceHandler.checkAndShowOnScreenOff()
                     }
                     Intent.ACTION_USER_PRESENT -> {
                         securityHandler.restoreAnimationScale()
@@ -190,12 +191,15 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
             val maxVolume = audioManager.getStreamMaxVolume(android.media.AudioManager.STREAM_MUSIC)
             val percentage = (currentVolume.toFloat() / maxVolume.toFloat() * 100).toInt()
 
+            val isDockedMode = prefs.getBoolean(SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_DOCKED_MODE, false)
+
             val intent = Intent("SHOW_AMBIENT_GLANCE").apply {
                 putExtra("event_type", "volume")
                 putExtra("track_title", title)
                 putExtra("artist_name", artist)
                 putExtra("volume_percentage", percentage)
                 putExtra("volume_key_code", keyCode)
+                putExtra("is_docked_mode", isDockedMode)
             }
             ambientGlanceHandler.handleIntent(intent)
         }
