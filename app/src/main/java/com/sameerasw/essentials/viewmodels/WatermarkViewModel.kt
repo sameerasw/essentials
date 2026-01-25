@@ -60,6 +60,16 @@ class WatermarkViewModel(
     private val _options = MutableStateFlow(WatermarkOptions())
     val options: StateFlow<WatermarkOptions> = _options.asStateFlow()
     
+    // Transient overrides (resets on image load)
+    private val _currentBrandText = MutableStateFlow<String?>(null)
+    val currentBrandText: StateFlow<String?> = _currentBrandText.asStateFlow()
+    
+    private val _currentCustomText = MutableStateFlow("")
+    val currentCustomText: StateFlow<String> = _currentCustomText.asStateFlow()
+    
+    private val _currentDateText = MutableStateFlow<String?>(null)
+    val currentDateText: StateFlow<String?> = _currentDateText.asStateFlow()
+    
     // Transient logo state (not persisted, depends on image EXIF)
     private val _logoResId = MutableStateFlow<Int?>(null)
     val logoResId: StateFlow<Int?> = _logoResId.asStateFlow()
@@ -139,12 +149,61 @@ class WatermarkViewModel(
                     _logoResId.value = detected
                     _showLogo.value = detected != null
                     
+                    // Initialize transient text
+                    _currentBrandText.value = buildBrandString(exif)
+                    _currentCustomText.value = _options.value.customText
+                    _currentDateText.value = exif.date
+                    
                     extractColorFromUri(uri)
                     updatePreview()
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+        }
+    }
+
+    private fun buildBrandString(exif: ExifData): String {
+        return if (!exif.make.isNullOrEmpty() && !exif.model.isNullOrEmpty()) {
+            if (exif.model.contains(exif.make, ignoreCase = true)) {
+                exif.model
+            } else {
+                "${exif.make} ${exif.model}"
+            }
+        } else {
+            exif.model ?: exif.make ?: "Shot on Device"
+        }
+    }
+
+    fun formatDate(dateString: String): String {
+        try {
+            // Input format: yyyy:MM:dd HH:mm:ss
+            val inputFormat = java.text.SimpleDateFormat("yyyy:MM:dd HH:mm:ss", java.util.Locale.US)
+            val date = inputFormat.parse(dateString) ?: return dateString
+            
+            // Output format components
+            val dayFormat = java.text.SimpleDateFormat("d", java.util.Locale.US)
+            val monthYearFormat = java.text.SimpleDateFormat("MMM yyyy", java.util.Locale.US)
+            
+            // Use system time format (12/24h)
+            val timeFormat = java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT)
+            
+            val day = dayFormat.format(date).toInt()
+            val suffix = getDaySuffix(day)
+            
+            return "$day$suffix ${monthYearFormat.format(date)}, ${timeFormat.format(date)}"
+        } catch (e: Exception) {
+            return dateString
+        }
+    }
+    
+    private fun getDaySuffix(n: Int): String {
+        if (n in 11..13) return "th"
+        return when (n % 10) {
+            1 -> "st"
+            2 -> "nd"
+            3 -> "rd"
+            else -> "th"
         }
     }
 
@@ -193,7 +252,11 @@ class WatermarkViewModel(
                 // Merge transient logo settings with base options
                 val currentOptions = _options.value.copy(
                     logoResId = _logoResId.value,
-                    showLogo = _showLogo.value
+                    showLogo = _showLogo.value,
+                    overriddenBrandText = _currentBrandText.value,
+                    customText = _currentCustomText.value,
+                    showCustomText = _currentCustomText.value.isNotEmpty(),
+                    overriddenDateText = _currentDateText.value
                 )
                 
                 val result = watermarkEngine.processBitmap(workingBitmap, uri, currentOptions)
@@ -349,6 +412,13 @@ class WatermarkViewModel(
         }
     }
 
+    fun updateOverriddenTexts(brand: String, custom: String, date: String?) {
+        _currentBrandText.value = brand
+        _currentCustomText.value = custom
+        _currentDateText.value = date
+        updatePreview()
+    }
+
     fun saveImage(uri: Uri) {
         viewModelScope.launch {
             _uiState.value = WatermarkUiState.Processing
@@ -356,7 +426,11 @@ class WatermarkViewModel(
                 // Merge transient logo options 
                 val finalOptions = _options.value.copy(
                     logoResId = _logoResId.value,
-                    showLogo = _showLogo.value
+                    showLogo = _showLogo.value,
+                    overriddenBrandText = _currentBrandText.value,
+                    customText = _currentCustomText.value,
+                    showCustomText = _currentCustomText.value.isNotEmpty(),
+                    overriddenDateText = _currentDateText.value
                 )
                 // Process image to a temporary file first
                 val tempFile = watermarkEngine.processImage(uri, finalOptions)
@@ -412,7 +486,11 @@ class WatermarkViewModel(
                 // Merge transient logo options 
                 val finalOptions = _options.value.copy(
                     logoResId = _logoResId.value,
-                    showLogo = _showLogo.value
+                    showLogo = _showLogo.value,
+                    overriddenBrandText = _currentBrandText.value,
+                    customText = _currentCustomText.value,
+                    showCustomText = _currentCustomText.value.isNotEmpty(),
+                    overriddenDateText = _currentDateText.value
                 )
                 // Process image to a temporary file
                 val tempFile = watermarkEngine.processImage(uri, finalOptions)

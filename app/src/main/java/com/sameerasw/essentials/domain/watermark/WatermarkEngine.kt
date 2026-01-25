@@ -57,7 +57,9 @@ data class WatermarkOptions(
     val borderCorner: Int = 0,
     val showLogo: Boolean = false,
     val logoResId: Int? = null,
-    val logoSize: Int = 50
+    val logoSize: Int = 50,
+    val overriddenBrandText: String? = null,
+    val overriddenDateText: String? = null
 )
 
 class WatermarkEngine(
@@ -225,7 +227,7 @@ class WatermarkEngine(
 
         // Draw Brand
         if (options.showDeviceBrand) {
-            val brandString = buildBrandString(exifData)
+            val brandString = buildBrandString(exifData, options)
             val brandPaint = Paint(paint).apply {
                 typeface = Typeface.DEFAULT_BOLD
                 textSize = baseSize * brandScale
@@ -442,7 +444,7 @@ class WatermarkEngine(
         val textX = margin + logoAreaWidth
 
         if (options.showDeviceBrand) {
-            val brandString = buildBrandString(exifData)
+            val brandString = buildBrandString(exifData, options)
             canvas.drawText(brandString, textX, currentLeftY, brandPaint)
             currentLeftY += (brandPaint.textSize * 0.2f) + customPaint.textSize
         } else if (options.showCustomText && options.customText.isNotEmpty()) {
@@ -585,7 +587,8 @@ class WatermarkEngine(
         }
     }
 
-    private fun buildBrandString(exif: ExifData): String {
+    private fun buildBrandString(exif: ExifData, options: WatermarkOptions): String {
+        options.overriddenBrandText?.let { return it }
         return if (!exif.make.isNullOrEmpty() && !exif.model.isNullOrEmpty()) {
             if (exif.model.contains(exif.make, ignoreCase = true)) {
                 exif.model
@@ -614,7 +617,7 @@ class WatermarkEngine(
         if (options.showIso) exif.iso?.let { 
             list.add(ExifItem(it, R.drawable.rounded_grain_24)) 
         }
-        if (options.showDate) exif.date?.let { 
+        if (options.showDate) (options.overriddenDateText ?: exif.date)?.let { 
             list.add(ExifItem(formatDate(it), R.drawable.rounded_date_range_24)) 
         }
         

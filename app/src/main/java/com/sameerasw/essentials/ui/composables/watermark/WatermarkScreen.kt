@@ -1,8 +1,8 @@
 package com.sameerasw.essentials.ui.composables.watermark
 
-import android.graphics.drawable.Icon
 import android.net.Uri
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -12,49 +12,69 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SegmentedButtonDefaults.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TimePicker
+import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
+import androidx.compose.material3.carousel.rememberCarouselState
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.watermark.ColorMode
 import com.sameerasw.essentials.domain.watermark.WatermarkStyle
 import com.sameerasw.essentials.ui.components.ReusableTopAppBar
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.components.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.utils.HapticUtil.performSliderHaptic
@@ -62,7 +82,9 @@ import com.sameerasw.essentials.utils.HapticUtil.performUIHaptic
 import com.sameerasw.essentials.viewmodels.WatermarkUiState
 import com.sameerasw.essentials.viewmodels.WatermarkViewModel
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class,
+    ExperimentalMaterial3Api::class
+)
 @Composable
 fun WatermarkScreen(
     initialUri: Uri?,
@@ -71,9 +93,9 @@ fun WatermarkScreen(
     viewModel: WatermarkViewModel
 ) {
     val context = LocalContext.current
-    val view = androidx.compose.ui.platform.LocalView.current // For haptics
-    var showExifSheet by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
-    var showCustomTextSheet by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
+    val view = LocalView.current // For haptics
+    var showExifSheet by remember { mutableStateOf(false) }
+    var showEditSheet by remember { mutableStateOf(false) }
     
     val options by viewModel.options.collectAsState()
     val previewState by viewModel.previewUiState.collectAsState()
@@ -100,7 +122,7 @@ fun WatermarkScreen(
     }
 
     Scaffold(
-        contentWindowInsets = androidx.compose.foundation.layout.WindowInsets(0, 0, 0, 0),
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
             ReusableTopAppBar(
                 title = R.string.feat_watermark_title,
@@ -116,12 +138,12 @@ fun WatermarkScreen(
                          // Pick Image Button
                         if (initialUri == null) {
                             // Primary when no image
-                            androidx.compose.material3.Button(onClick = {
+                            Button(onClick = {
                                 performUIHaptic(view)
                                 onPickImage()
                             }) {
                                  Icon(
-                                     painter = androidx.compose.ui.res.painterResource(R.drawable.rounded_add_photo_alternate_24),
+                                     painter = painterResource(R.drawable.rounded_add_photo_alternate_24),
                                      contentDescription = stringResource(R.string.watermark_pick_image),
                                      modifier = Modifier.size(18.dp)
                                  )
@@ -130,12 +152,12 @@ fun WatermarkScreen(
                             }
                         } else {
                             // Secondary when image is there
-                            androidx.compose.material3.OutlinedButton(onClick = {
+                            OutlinedButton(onClick = {
                                 performUIHaptic(view)
                                 onPickImage()
                             }) {
                                  Icon(
-                                     painter = androidx.compose.ui.res.painterResource(R.drawable.rounded_add_photo_alternate_24),
+                                     painter = painterResource(R.drawable.rounded_add_photo_alternate_24),
                                      contentDescription = stringResource(R.string.watermark_pick_image),
                                      modifier = Modifier.size(18.dp)
                                  )
@@ -148,16 +170,16 @@ fun WatermarkScreen(
                     // Save/Share Menu Button
                     if (initialUri != null) {
                         Spacer(Modifier.size(8.dp))
-                        var showMenu by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
+                        var showMenu by remember { mutableStateOf(false) }
                         
                         Box {
                              // Save Button (Primary)
-                             androidx.compose.material3.Button(onClick = { 
+                             Button(onClick = {
                                  performUIHaptic(view)
                                  showMenu = true 
                              }) {
                                  Icon(
-                                     painter = androidx.compose.ui.res.painterResource(R.drawable.rounded_save_24),
+                                     painter = painterResource(R.drawable.rounded_save_24),
                                      contentDescription = stringResource(R.string.action_save),
                                      modifier = Modifier.size(18.dp)
                                  )
@@ -165,16 +187,16 @@ fun WatermarkScreen(
                                  Text(stringResource(R.string.action_save))
                              }
                              
-                             com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu(
+                             SegmentedDropdownMenu(
                                  expanded = showMenu,
                                  onDismissRequest = { showMenu = false },
                              ) {
                                  // Share Option
-                                 com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem(
+                                 SegmentedDropdownMenuItem(
                                      text = { Text(stringResource(R.string.action_share)) },
                                      leadingIcon = {
                                          Icon(
-                                             painter = androidx.compose.ui.res.painterResource(R.drawable.rounded_share_24),
+                                             painter = painterResource(R.drawable.rounded_share_24),
                                              contentDescription = null,
                                              modifier = Modifier.size(20.dp)
                                          )
@@ -196,11 +218,11 @@ fun WatermarkScreen(
                                  )
                                  
                                  // Save Option
-                                 com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem(
+                                 SegmentedDropdownMenuItem(
                                      text = { Text(stringResource(R.string.action_save)) },
                                      leadingIcon = {
                                          Icon(
-                                             painter = androidx.compose.ui.res.painterResource(R.drawable.rounded_save_24),
+                                             painter = painterResource(R.drawable.rounded_save_24),
                                              contentDescription = null,
                                               modifier = Modifier.size(20.dp)
                                          )
@@ -217,10 +239,27 @@ fun WatermarkScreen(
                 }
             )
         },
+        floatingActionButton = {
+            if (initialUri != null) {
+                FloatingActionButton(
+                    onClick = { 
+                        performUIHaptic(view)
+                        showEditSheet = true 
+                    },
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.rounded_edit_24),
+                        contentDescription = stringResource(R.string.action_edit)
+                    )
+                }
+            }
+        },
         containerColor = MaterialTheme.colorScheme.surfaceContainer
     ) { padding ->
-        val density = androidx.compose.ui.platform.LocalDensity.current
-        val configuration = androidx.compose.ui.platform.LocalConfiguration.current
+        val density = LocalDensity.current
+        val configuration = LocalConfiguration.current
         val screenHeightDp = configuration.screenHeightDp.dp
         
         val maxPreviewHeightDp = screenHeightDp * 0.6f
@@ -229,9 +268,10 @@ fun WatermarkScreen(
         val maxPx = with(density) { maxPreviewHeightDp.toPx() }
         val minPx = with(density) { minPreviewHeightDp.toPx() }
         
-        var previewHeightPx by androidx.compose.runtime.remember { androidx.compose.runtime.mutableFloatStateOf(maxPx) }
+        val previewHeightPxState = remember { mutableFloatStateOf(maxPx) }
+        var previewHeightPx by previewHeightPxState
         
-        val nestedScrollConnection = androidx.compose.runtime.remember {
+        val nestedScrollConnection = remember {
             object : androidx.compose.ui.input.nestedscroll.NestedScrollConnection {
                 override fun onPreScroll(available: androidx.compose.ui.geometry.Offset, source: androidx.compose.ui.input.nestedscroll.NestedScrollSource): androidx.compose.ui.geometry.Offset {
                     val delta = available.y
@@ -277,8 +317,8 @@ fun WatermarkScreen(
                     .fillMaxWidth()
                     .height(with(density) { previewHeightPx.toDp() })
                     .padding(16.dp)
-                    .clip(if (initialUri == null) RoundedCornerShape(24.dp) else androidx.compose.ui.graphics.RectangleShape)
-                    .background(if (initialUri == null) MaterialTheme.colorScheme.surfaceContainerHigh else androidx.compose.ui.graphics.Color.Transparent)
+                    .clip(if (initialUri == null) RoundedCornerShape(24.dp) else RectangleShape)
+                    .background(if (initialUri == null) MaterialTheme.colorScheme.surfaceContainerHigh else Color.Transparent)
                     .clickable { 
                         performUIHaptic(view)
                         if (initialUri == null) {
@@ -291,7 +331,7 @@ fun WatermarkScreen(
                 if (initialUri == null) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                          Icon(
-                             painter = androidx.compose.ui.res.painterResource(R.drawable.rounded_add_photo_alternate_24), 
+                             painter = painterResource(R.drawable.rounded_add_photo_alternate_24),
                              contentDescription = null, 
                              modifier = Modifier.size(64.dp),
                              tint = MaterialTheme.colorScheme.primary
@@ -393,16 +433,16 @@ fun WatermarkScreen(
                                     WatermarkStyle.OVERLAY -> R.drawable.rounded_magnify_fullscreen_24
                                     WatermarkStyle.FRAME -> R.drawable.rounded_window_open_24
                                 }
-        
+
                                 Icon(
-                                     painter = androidx.compose.ui.res.painterResource(id = iconRes),
+                                     painter = painterResource(id = iconRes),
                                      contentDescription = null,
                                      modifier = Modifier.size(18.dp)
                                 )
                             },
                             modifier = Modifier.fillMaxWidth()
                         )
-                        
+
                         // Style-specific options
                         if (options.style == WatermarkStyle.FRAME) {
                              com.sameerasw.essentials.ui.components.cards.IconToggleItem(
@@ -417,65 +457,6 @@ fun WatermarkScreen(
                                 title = stringResource(R.string.watermark_left_align),
                                 isChecked = options.leftAlignOverlay,
                                 onCheckedChange = { viewModel.setLeftAlign(it) }
-                            )
-                        }
-        
-                        // Show Brand Toggle
-                        IconToggleItem(
-                            iconRes = R.drawable.rounded_mobile_text_2_24,
-                            title = stringResource(R.string.watermark_show_brand),
-                            isChecked = options.showDeviceBrand,
-                            onCheckedChange = { viewModel.setShowBrand(it) }
-                        )
-
-                        // Custom Text Entry
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(
-                                    color = MaterialTheme.colorScheme.surfaceBright,
-                                    shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd)
-                                )
-                                .heightIn(min = 56.dp)
-                                .clickable { 
-                                    performUIHaptic(view)
-                                    showCustomTextSheet = true 
-                                }
-                                .padding(12.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            Spacer(modifier = Modifier.size(2.dp))
-                            Icon(
-                                painter = androidx.compose.ui.res.painterResource(id = R.drawable.rounded_edit_note_24),
-                                contentDescription = stringResource(R.string.watermark_custom_text),
-                                modifier = Modifier.size(24.dp),
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                            Spacer(modifier = Modifier.size(2.dp))
-                            
-                            Text(
-                                text = stringResource(R.string.watermark_custom_text),
-                                style = MaterialTheme.typography.bodyMedium,
-                                modifier = Modifier.weight(1f)
-                            )
-
-                            if (options.showCustomText && options.customText.isNotEmpty()) {
-                                Text(
-                                    text = options.customText,
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    maxLines = 1,
-                                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
-                                    modifier = Modifier.widthIn(max = 100.dp)
-                                )
-                            }
-                            
-                            Icon(
-                                painter = androidx.compose.ui.res.painterResource(id = R.drawable.rounded_chevron_right_24),
-                                contentDescription = null,
-                                modifier = Modifier.size(24.dp),
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
         
@@ -498,7 +479,7 @@ fun WatermarkScreen(
                         ) {
                             Spacer(modifier = Modifier.size(2.dp))
                             Icon(
-                                painter = androidx.compose.ui.res.painterResource(id = R.drawable.rounded_image_search_24),
+                                painter = painterResource(id = R.drawable.rounded_image_search_24),
                                 contentDescription = stringResource(R.string.watermark_show_exif),
                                 modifier = Modifier.size(24.dp),
                                 tint = MaterialTheme.colorScheme.primary
@@ -512,7 +493,7 @@ fun WatermarkScreen(
                             )
                             
                             Icon(
-                                painter = androidx.compose.ui.res.painterResource(id = R.drawable.rounded_chevron_right_24),
+                                painter = painterResource(id = R.drawable.rounded_chevron_right_24),
                                 contentDescription = null,
                                 modifier = Modifier.size(24.dp),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
@@ -522,7 +503,7 @@ fun WatermarkScreen(
 
 
                         // Spacing Slider
-                        var paddingValue by androidx.compose.runtime.remember(options.padding) { androidx.compose.runtime.mutableFloatStateOf(options.padding.toFloat()) }
+                        var paddingValue by remember(options.padding) { mutableFloatStateOf(options.padding.toFloat()) }
                         
                         ConfigSliderItem(
                             title = stringResource(R.string.watermark_spacing),
@@ -554,7 +535,7 @@ fun WatermarkScreen(
                              modifier = Modifier.fillMaxWidth()
                         ) {
                             if (options.showDeviceBrand) {
-                                var brandSize by androidx.compose.runtime.remember(options.brandTextSize) { androidx.compose.runtime.mutableFloatStateOf(options.brandTextSize.toFloat()) }
+                                var brandSize by remember(options.brandTextSize) { mutableFloatStateOf(options.brandTextSize.toFloat()) }
                                 
                                 ConfigSliderItem(
                                     title = stringResource(R.string.watermark_text_size_brand),
@@ -571,7 +552,7 @@ fun WatermarkScreen(
                             }
     
                             if (options.showExif) {
-                                var dataSize by androidx.compose.runtime.remember(options.dataTextSize) { androidx.compose.runtime.mutableFloatStateOf(options.dataTextSize.toFloat()) }
+                                var dataSize by remember(options.dataTextSize) { mutableFloatStateOf(options.dataTextSize.toFloat()) }
                                 
                                 ConfigSliderItem(
                                     title = stringResource(R.string.watermark_text_size_data),
@@ -588,7 +569,7 @@ fun WatermarkScreen(
                             }
                             
                             if (options.showCustomText) {
-                                var customSize by androidx.compose.runtime.remember(options.customTextSize) { androidx.compose.runtime.mutableFloatStateOf(options.customTextSize.toFloat()) }
+                                var customSize by remember(options.customTextSize) { mutableFloatStateOf(options.customTextSize.toFloat()) }
                                 
                                 ConfigSliderItem(
                                     title = stringResource(R.string.watermark_text_size_custom),
@@ -636,7 +617,7 @@ fun WatermarkScreen(
                                     .fillMaxWidth()
                             )
                             
-                            var logoSizeValue by androidx.compose.runtime.remember(options.logoSize) { androidx.compose.runtime.mutableFloatStateOf(options.logoSize.toFloat()) }
+                            var logoSizeValue by remember(options.logoSize) { mutableFloatStateOf(options.logoSize.toFloat()) }
                             ConfigSliderItem(
                                 title = stringResource(R.string.watermark_logo_size),
                                 value = logoSizeValue,
@@ -663,7 +644,7 @@ fun WatermarkScreen(
                     RoundedCardContainer(
                          modifier = Modifier.fillMaxWidth()
                     ) {
-                        var strokeValue by androidx.compose.runtime.remember(options.borderStroke) { androidx.compose.runtime.mutableFloatStateOf(options.borderStroke.toFloat()) }
+                        var strokeValue by remember(options.borderStroke) { mutableFloatStateOf(options.borderStroke.toFloat()) }
                         
                         ConfigSliderItem(
                             title = stringResource(R.string.watermark_border_width),
@@ -678,7 +659,7 @@ fun WatermarkScreen(
                             valueFormatter = { "${it.toInt()}%" }
                         )
                         
-                        var cornerValue by androidx.compose.runtime.remember(options.borderCorner) { androidx.compose.runtime.mutableFloatStateOf(options.borderCorner.toFloat()) }
+                        var cornerValue by remember(options.borderCorner) { mutableFloatStateOf(options.borderCorner.toFloat()) }
                         
                         ConfigSliderItem(
                             title = stringResource(R.string.watermark_border_corners),
@@ -738,14 +719,14 @@ fun WatermarkScreen(
                     }
 
                     // Bottom spacing for scrolling
-                    Spacer(Modifier.height(24.dp))
+                    Spacer(Modifier.height(80.dp))
                 }
             }
         }
         
         if (showExifSheet) {
-            val view = androidx.compose.ui.platform.LocalView.current
-            androidx.compose.material3.ModalBottomSheet(
+            val view = LocalView.current
+            ModalBottomSheet(
                 onDismissRequest = { showExifSheet = false },
                 containerColor = MaterialTheme.colorScheme.surfaceContainer
             ) {
@@ -820,58 +801,135 @@ fun WatermarkScreen(
             }
         }
         
-        if (showCustomTextSheet) {
-            val view = androidx.compose.ui.platform.LocalView.current
+        if (showEditSheet) {
+            val view = LocalView.current
+            val currentBrand by viewModel.currentBrandText.collectAsState()
+            val currentCustom by viewModel.currentCustomText.collectAsState()
+            val currentDate by viewModel.currentDateText.collectAsState()
             
-            // Local state for draft editing
-            var isEnabled by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(options.showCustomText) }
-            var draftText by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(options.customText) }
+            var draftBrand by remember { mutableStateOf(currentBrand ?: "") }
+            var draftCustom by remember { mutableStateOf(currentCustom) }
+            var draftDate by remember { mutableStateOf(currentDate) }
+            var showBrandToggle by remember { mutableStateOf(options.showDeviceBrand) }
             
-            androidx.compose.material3.ModalBottomSheet(
-                onDismissRequest = { showCustomTextSheet = false },
-                containerColor = MaterialTheme.colorScheme.surfaceContainer
+            var showDatePicker by remember { mutableStateOf(false) }
+            var showTimePicker by remember { mutableStateOf(false) }
+            
+            val displayDate = draftDate?.let { viewModel.formatDate(it) } ?: stringResource(R.string.watermark_no_date)
+
+            ModalBottomSheet(
+                onDismissRequest = { showEditSheet = false },
+                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
-                        .padding(bottom = 32.dp),
+                        .padding(bottom = 32.dp)
+                        .verticalScroll(rememberScrollState()),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     Text(
-                        text = stringResource(R.string.watermark_custom_text_settings),
+                        text = stringResource(R.string.watermark_edit_texts),
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
                     
                     RoundedCardContainer {
-                        // Master Toggle
-                        com.sameerasw.essentials.ui.components.cards.IconToggleItem(
-                            iconRes = R.drawable.rounded_edit_note_24,
-                            title = stringResource(R.string.watermark_custom_text),
-                            isChecked = isEnabled,
-                            onCheckedChange = { isEnabled = it }
-                        )
-                    }
-                    
-                    if (isEnabled) {
-                         RoundedCardContainer {
-                             Column(modifier = Modifier.padding(16.dp)) {
-                                 // Text Input
-                                 androidx.compose.material3.OutlinedTextField(
-                                     value = draftText,
-                                     onValueChange = { draftText = it },
-                                     label = { Text(stringResource(R.string.watermark_custom_text)) },
-                                     placeholder = { Text(stringResource(R.string.watermark_custom_text_hint)) },
-                                     modifier = Modifier.fillMaxWidth(),
-                                     singleLine = true
-                                 )
+                        Column(
+                            modifier = Modifier.background(
+                                color = MaterialTheme.colorScheme.surfaceBright,
+                                shape = RoundedCornerShape(4.dp)
+                            )
+                        ) {
+                            IconToggleItem(
+                                iconRes = R.drawable.rounded_mobile_text_2_24,
+                                title = stringResource(R.string.watermark_show_brand),
+                                isChecked = showBrandToggle,
+                                onCheckedChange = {
+                                    performUIHaptic(view)
+                                    showBrandToggle = it
+                                }
+                            )
 
-                                 Spacer(modifier = Modifier.height(16.dp))
-                             }
-                         }
+                            AnimatedVisibility(visible = showBrandToggle) {
+                                Column(modifier = Modifier.padding(bottom = 12.dp)) {
+                                    OutlinedTextField(
+                                        value = draftBrand,
+                                        onValueChange = { draftBrand = it },
+                                        label = { Text(stringResource(R.string.watermark_device_brand)) },
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(horizontal = 12.dp),
+                                        singleLine = true
+                                    )
+                                }
+                            }
+                        }
+
+                        Column(
+                            modifier = Modifier
+                                .background(
+                                    color = MaterialTheme.colorScheme.surfaceBright,
+                                    shape = RoundedCornerShape(4.dp)
+                                )
+                                .padding(vertical = 12.dp)
+                        ) {
+                            OutlinedTextField(
+                                value = draftCustom,
+                                onValueChange = { draftCustom = it },
+                                label = { Text(stringResource(R.string.watermark_custom_text)) },
+                                placeholder = { Text(stringResource(R.string.watermark_custom_text_hint)) },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 12.dp),
+                                singleLine = true
+                            )
+                        }
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    color = MaterialTheme.colorScheme.surfaceBright,
+                                    shape = RoundedCornerShape(4.dp)
+                                )
+                                .clickable {
+                                    performUIHaptic(view)
+                                    showDatePicker = true
+                                }
+                                .padding(12.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            Spacer(modifier = Modifier.size(2.dp))
+                            Icon(
+                                painter = painterResource(R.drawable.rounded_date_range_24),
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                            Spacer(modifier = Modifier.size(2.dp))
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = stringResource(R.string.watermark_date_time),
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                                Text(
+                                    text = displayDate,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                            Icon(
+                                painter = painterResource(R.drawable.rounded_chevron_right_24),
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
                     }
-                    
+
                     // Buttons
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -880,7 +938,7 @@ fun WatermarkScreen(
                         OutlinedButton(
                             onClick = { 
                                 performUIHaptic(view)
-                                showCustomTextSheet = false 
+                                showEditSheet = false 
                             },
                             modifier = Modifier.weight(1f)
                         ) {
@@ -890,8 +948,9 @@ fun WatermarkScreen(
                         Button(
                             onClick = {
                                 performUIHaptic(view)
-                                viewModel.setCustomTextSettings(isEnabled, draftText, options.customTextSize) // preserve size
-                                showCustomTextSheet = false
+                                viewModel.setShowBrand(showBrandToggle)
+                                viewModel.updateOverriddenTexts(draftBrand, draftCustom, draftDate)
+                                showEditSheet = false
                             },
                             modifier = Modifier.weight(1f)
                         ) {
@@ -899,6 +958,61 @@ fun WatermarkScreen(
                         }
                     }
                 }
+            }
+            
+            if (showDatePicker) {
+                val initialDateMillis = remember(draftDate) {
+                    try {
+                        val sdf = java.text.SimpleDateFormat("yyyy:MM:dd", java.util.Locale.US)
+                        sdf.parse(draftDate?.split(" ")?.getOrNull(0) ?: "")?.time
+                    } catch (e: Exception) {
+                        null
+                    }
+                }
+                val datePickerState = rememberDatePickerState(initialSelectedDateMillis = initialDateMillis)
+                DatePickerDialog(
+                    onDismissRequest = { showDatePicker = false },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            datePickerState.selectedDateMillis?.let { millis ->
+                                val calendar = java.util.Calendar.getInstance().apply { timeInMillis = millis }
+                                val sdf = java.text.SimpleDateFormat("yyyy:MM:dd", java.util.Locale.US)
+                                val datePart = sdf.format(calendar.time)
+                                val timePart = draftDate?.split(" ")?.getOrNull(1) ?: "00:00:00"
+                                draftDate = "$datePart $timePart"
+                            }
+                            showDatePicker = false
+                            showTimePicker = true
+                        }) { Text(stringResource(R.string.action_next)) }
+                    }
+                ) {
+                    DatePicker(state = datePickerState)
+                }
+            }
+            
+            if (showTimePicker) {
+                val (initialHour, initialMinute) = remember(draftDate) {
+                    try {
+                        val timePart = draftDate?.split(" ")?.getOrNull(1) ?: "00:00:00"
+                        val parts = timePart.split(":")
+                        parts.getOrNull(0)?.toInt()!! to parts.getOrNull(1)?.toInt()!!
+                    } catch (e: Exception) {
+                        0 to 0
+                    }
+                }
+                val timePickerState = rememberTimePickerState(initialHour = initialHour, initialMinute = initialMinute)
+                AlertDialog(
+                    onDismissRequest = { showTimePicker = false },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            val timePart = String.format("%02d:%02d:00", timePickerState.hour, timePickerState.minute)
+                            val datePart = draftDate?.split(" ")?.getOrNull(0) ?: "2024:01:01"
+                            draftDate = "$datePart $timePart"
+                            showTimePicker = false
+                        }) { Text(stringResource(R.string.action_ok)) }
+                    },
+                    text = { TimePicker(state = timePickerState) }
+                )
             }
         }
     }
@@ -911,10 +1025,10 @@ private fun ColorModeOption(
     onClick: () -> Unit,
     accentColor: Int? = null
 ) {
-    val view = androidx.compose.ui.platform.LocalView.current
+    val view = LocalView.current
     val color = when (mode) {
-        ColorMode.LIGHT -> androidx.compose.ui.graphics.Color.White
-        ColorMode.DARK -> androidx.compose.ui.graphics.Color.Black
+        ColorMode.LIGHT -> Color.White
+        ColorMode.DARK -> Color.Black
         ColorMode.ACCENT_LIGHT, ColorMode.ACCENT_DARK -> {
             // Derive a preview color for the circle
             val base = accentColor ?: android.graphics.Color.GRAY
@@ -925,7 +1039,7 @@ private fun ColorModeOption(
             } else {
                 hsl[2] = 0.2f // Dark shade
             }
-            androidx.compose.ui.graphics.Color(androidx.core.graphics.ColorUtils.HSLToColor(hsl))
+            Color(androidx.core.graphics.ColorUtils.HSLToColor(hsl))
         }
     }
     
@@ -935,12 +1049,12 @@ private fun ColorModeOption(
     Box(
         modifier = Modifier
             .size(48.dp)
-            .clip(androidx.compose.foundation.shape.CircleShape)
+            .clip(CircleShape)
             .background(color)
             .border(
                 width = borderWidth,
                 color = borderColor,
-                shape = androidx.compose.foundation.shape.CircleShape
+                shape = CircleShape
             )
             .clickable { 
                 performUIHaptic(view)
@@ -950,10 +1064,10 @@ private fun ColorModeOption(
     ) {
         if (mode == ColorMode.ACCENT_LIGHT || mode == ColorMode.ACCENT_DARK) {
             Icon(
-                painter = androidx.compose.ui.res.painterResource(id = R.drawable.rounded_image_24),
+                painter = painterResource(id = R.drawable.rounded_image_24),
                 contentDescription = null,
                 modifier = Modifier.size(20.dp),
-                tint = if (mode == ColorMode.ACCENT_LIGHT) androidx.compose.ui.graphics.Color.Black else androidx.compose.ui.graphics.Color.White
+                tint = if (mode == ColorMode.ACCENT_LIGHT) Color.Black else Color.White
             )
         }
     }
@@ -979,8 +1093,8 @@ private fun LogoCarouselPicker(
         R.drawable.xiaomi
     )
     
-    val carouselState = androidx.compose.material3.carousel.rememberCarouselState { logos.size }
-    val view = androidx.compose.ui.platform.LocalView.current
+    val carouselState = rememberCarouselState { logos.size }
+    val view = LocalView.current
     
     HorizontalMultiBrowseCarousel(
         state = carouselState,
@@ -1012,7 +1126,7 @@ private fun LogoCarouselPicker(
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                painter = androidx.compose.ui.res.painterResource(id = resId),
+                painter = painterResource(id = resId),
                 contentDescription = null,
                 modifier = Modifier.size(36.dp),
                 tint = contentColor
