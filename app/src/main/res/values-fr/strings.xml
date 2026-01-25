@@ -237,7 +237,14 @@
     <string name="icon_otg">Clavier / Souris OTG</string>
     <string name="icon_samsung_smart">Fonctionnalités intelligentes Samsung</string>
     <string name="icon_samsung_services">Services Samsung</string>
+    <string name="icon_ethernet">Ethernet</string>
     <!-- Status Bar Settings -->
+    <string name="stb_clock_seconds">Show Seconds in Clock</string>
+    <string name="stb_battery_percentage">Battery Percentage</string>
+    <string name="stb_battery_percentage_always">Always</string>
+    <string name="stb_battery_percentage_charging">Charging</string>
+    <string name="stb_battery_percentage_never">Never</string>
+    <string name="stb_privacy_chip">Camera and Microphone use chips</string>
     <string name="smart_data_title">Données intelligentes</string>
     <string name="permission_read_phone_state_title">Lire l\'état du téléphone</string>
     <string name="permission_read_phone_state_desc">Requise pour détecter le type de réseau pour la fonctionnalité de Données intelligentes</string>
@@ -247,10 +254,17 @@
     <string name="smart_wifi_desc">Cacher les données mobiles quand un réseau Wi-Fi est connecté</string>
     <string name="smart_data_desc">Cache les données mobiles dans certains modes</string>
     <string name="action_reset_all_icons">Réinitialiser les icônes</string>
+    <string name="status_bar_section_advanced">More Settings</string>
     <string name="status_bar_icons_disclaimer">Veuillez noter que l\'implémentation de ces options peut dépendre du constructeur et certaines peuvent ne pas fonctionner du tout.</string>
     <!-- Network Type Picker -->
     <string name="network_type_other">Autre</string>
     <!-- Search -->
+    <string name="search_clock_seconds_title">Clock Seconds</string>
+    <string name="search_clock_seconds_desc">Show seconds in status bar clock</string>
+    <string name="search_battery_percentage_title">Battery Percentage</string>
+    <string name="search_battery_percentage_desc">Configure battery percentage visibility</string>
+    <string name="search_privacy_chip_title">Privacy Chips</string>
+    <string name="search_privacy_chip_desc">Show indicator when camera or mic is in use</string>
     <string name="search_desc_toggle_visibility">Activer/désactiver la visibilité de %1$s</string>
     <string name="title_favorites">Favoris</string>
     <string name="action_pin">Épingler aux favoris</string>
@@ -441,6 +455,7 @@
     <string name="perm_shizuku_install_action">Installer Shizuku</string>
     <string name="perm_shizuku_grant_title">Accorder la permission</string>
     <string name="perm_shizuku_grant_desc">Requise pour exécuter des commandes d\'économie d\'énergie pendant la navigation de Maps.</string>
+    <string name="req_shizuku">Requires Shizuku or Root</string>
     <string name="perm_root_title">Accès racine (root)</string>
     <string name="perm_root_desc">Permissions requises pour les actions systèmes en utilisant les privilèges racine (root).</string>
     <string name="perm_notif_listener_title">Analyseur de notification</string>
