@@ -362,10 +362,31 @@ fun LinkPickerScreen(uri: Uri, onFinish: () -> Unit, modifier: Modifier = Modifi
 
                     FilledIconButton(
                         onClick = {
-                            try {
-                                currentUri = editingText.toUri()
-                            } catch (_: Exception) {
-                                Toast.makeText(context, "Invalid URI", Toast.LENGTH_SHORT).show()
+                            var text = editingText.trim()
+                            
+                            if (text.contains(" ")) {
+                                Toast.makeText(context, "Invalid Link: Contains spaces", Toast.LENGTH_SHORT).show()
+                                return@FilledIconButton
+                            }
+
+                            if (text.isNotEmpty()) {
+                                // Add https if no scheme is present
+                                if (!text.contains("://")) {
+                                    text = "https://$text"
+                                }
+                                
+                                try {
+                                    val newUri = Uri.parse(text)
+                                    // Validate scheme
+                                    if (newUri.scheme.isNullOrBlank()) {
+                                        Toast.makeText(context, "Invalid Link: Missing scheme", Toast.LENGTH_SHORT).show()
+                                    } else {
+                                        currentUri = newUri
+                                        showEditSheet = false
+                                    }
+                                } catch (_: Exception) {
+                                    Toast.makeText(context, "Invalid URI", Toast.LENGTH_SHORT).show()
+                                }
                             }
                         }
                     ) {
@@ -394,6 +415,7 @@ fun LinkPickerScreen(uri: Uri, onFinish: () -> Unit, modifier: Modifier = Modifi
 }
 
 private fun queryOpenWithApps(context: Context, uri: Uri): List<ResolvedAppInfo> {
+    if (uri.scheme.isNullOrBlank()) return emptyList()
     return try {
         val pm = context.packageManager
         val ourPackageName = context.packageName
@@ -447,6 +469,7 @@ private fun queryOpenWithApps(context: Context, uri: Uri): List<ResolvedAppInfo>
 }
 
 private fun queryShareWithApps(context: Context, uri: Uri): List<ResolvedAppInfo> {
+    if (uri.scheme.isNullOrBlank()) return emptyList()
     return try {
         val pm = context.packageManager
         val ourPackageName = context.packageName
