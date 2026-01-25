@@ -1,4 +1,4 @@
-package com.sameerasw.essentials.ui.composables.watermark
+package com.sameerasw.essentials.ui.components.watermark
 
 import android.net.Uri
 import androidx.compose.animation.*

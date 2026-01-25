@@ -1,4 +1,4 @@
-package com.sameerasw.essentials.ui.composables.watermark
+package com.sameerasw.essentials.ui.components.sheets
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -21,7 +21,7 @@ fun ExifSettingsSheet(
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
-        containerColor = MaterialTheme.colorScheme.surfaceContainer
+        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
     ) {
         Column(
             modifier = Modifier

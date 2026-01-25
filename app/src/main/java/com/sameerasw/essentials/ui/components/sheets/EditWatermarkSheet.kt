@@ -1,4 +1,4 @@
-package com.sameerasw.essentials.ui.composables.watermark
+package com.sameerasw.essentials.ui.components.sheets
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background

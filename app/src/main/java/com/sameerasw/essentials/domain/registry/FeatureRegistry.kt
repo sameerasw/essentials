@@ -4,6 +4,7 @@ import android.content.Context
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.Feature
 import com.sameerasw.essentials.domain.model.SearchSetting
+import com.sameerasw.essentials.ui.activities.WatermarkActivity
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
@@ -531,7 +532,7 @@ object FeatureRegistry {
             override fun isEnabled(viewModel: MainViewModel) = true
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
             override fun onClick(context: Context, viewModel: MainViewModel) {
-                context.startActivity(android.content.Intent(context, com.sameerasw.essentials.ui.composables.watermark.WatermarkActivity::class.java))
+                context.startActivity(android.content.Intent(context, WatermarkActivity::class.java))
             }
         }
     )

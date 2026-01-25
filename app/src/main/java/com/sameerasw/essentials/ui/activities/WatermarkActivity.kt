@@ -1,4 +1,4 @@
-package com.sameerasw.essentials.ui.composables.watermark
+package com.sameerasw.essentials.ui.activities
 
 import android.content.Intent
 import android.net.Uri
@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.ui.composables.watermark.WatermarkScreen
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.viewmodels.WatermarkViewModel
 
