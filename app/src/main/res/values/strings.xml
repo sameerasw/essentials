@@ -365,6 +365,14 @@
     <string name="watermark_logo_section">Logo</string>
     <string name="watermark_logo_show">Show Logo</string>
     <string name="watermark_logo_size">Logo Size</string>
+    <string name="watermark_edit_texts">Edit Watermark Texts</string>
+    <string name="watermark_device_brand">Device brand</string>
+    <string name="watermark_date_time">Date &amp; Time</string>
+    <string name="watermark_no_date">No date information</string>
+    <string name="watermark_rotate_left">Rotate left</string>
+    <string name="watermark_rotate_right">Rotate right</string>
+    <string name="action_next">Next</string>
+    <string name="action_ok">OK</string>
     <string name="action_save_changes">Save Changes</string>
 
     <!-- Search Settings -->
