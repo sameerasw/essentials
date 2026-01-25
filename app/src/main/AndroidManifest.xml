@@ -585,6 +585,16 @@
                 <action android:name="com.sameerasw.essentials.action.UPDATE_MAC_BATTERY" />
             </intent-filter>
         </receiver>
+
+        <receiver
+            android:name=".services.receivers.CallVibrationReceiver"
+            android:exported="true"
+            android:permission="android.permission.READ_PHONE_STATE">
+            <intent-filter>
+                <action android:name="android.intent.action.PHONE_STATE" />
+                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

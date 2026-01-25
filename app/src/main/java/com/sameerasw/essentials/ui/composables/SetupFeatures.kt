@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.ui.composables
 
+import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -76,6 +77,7 @@ fun SetupFeatures(
     val isRootEnabled by viewModel.isRootEnabled
     val isRootPermissionGranted by viewModel.isRootPermissionGranted
     val isRootAvailable by viewModel.isRootAvailable
+    val isReadPhoneStateEnabled by viewModel.isReadPhoneStateEnabled
     viewModel.isButtonRemapEnabled.value
     viewModel.isDynamicNightLightEnabled.value
 
@@ -172,6 +174,7 @@ fun SetupFeatures(
         isNotificationListenerEnabled,
         isOverlayPermissionGranted,
         isNotificationLightingAccessibilityEnabled,
+        isReadPhoneStateEnabled,
         currentFeature
     ) {
         if (showSheet && currentFeature != null) {
@@ -387,10 +390,38 @@ fun SetupFeatures(
                                 actionLabel = R.string.perm_action_enable,
                                 action = {
                                     val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                     context.startActivity(intent)
                                 },
                                 isGranted = isAccessibilityEnabled
+                            )
+                        )
+                    }
+                }
+                R.string.feat_call_vibrations_title -> {
+                    if (!viewModel.isReadPhoneStateEnabled.value) {
+                        missing.add(
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_mobile_24,
+                                title = R.string.permission_read_phone_state_title,
+                                description = R.string.permission_read_phone_state_desc_call_vibrations,
+                                dependentFeatures = PermissionRegistry.getFeatures("READ_PHONE_STATE"),
+                                actionLabel = R.string.perm_action_grant,
+                                action = { viewModel.requestReadPhoneStatePermission(context as Activity) },
+                                isGranted = isReadPhoneStateEnabled
+                            )
+                        )
+                    }
+                    if (!isNotificationListenerEnabled) {
+                        missing.add(
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_notifications_unread_24,
+                                title = R.string.perm_notif_listener_title,
+                                description = R.string.perm_notif_listener_desc_lighting,
+                                dependentFeatures = PermissionRegistry.getFeatures("NOTIFICATION_LISTENER"),
+                                actionLabel = R.string.perm_action_grant,
+                                action = { viewModel.requestNotificationListenerPermission(context) },
+                                isGranted = isNotificationListenerEnabled
                             )
                         )
                     }
@@ -581,6 +612,26 @@ fun SetupFeatures(
                         context.startActivity(intent)
                     },
                     isGranted = isAccessibilityEnabled
+                )
+            )
+            R.string.feat_call_vibrations_title -> listOf(
+                PermissionItem(
+                    iconRes = R.drawable.rounded_mobile_24,
+                    title = R.string.permission_read_phone_state_title,
+                    description = R.string.permission_read_phone_state_desc_call_vibrations,
+                    dependentFeatures = PermissionRegistry.getFeatures("READ_PHONE_STATE"),
+                    actionLabel = R.string.perm_action_grant,
+                    action = { viewModel.requestReadPhoneStatePermission(context as Activity) },
+                    isGranted = isReadPhoneStateEnabled
+                ),
+                PermissionItem(
+                    iconRes = R.drawable.rounded_notifications_unread_24,
+                    title = R.string.perm_notif_listener_title,
+                    description = R.string.perm_notif_listener_desc_lighting,
+                    dependentFeatures = PermissionRegistry.getFeatures("NOTIFICATION_LISTENER"),
+                    actionLabel = R.string.perm_action_grant,
+                    action = { viewModel.requestNotificationListenerPermission(context) },
+                    isGranted = isNotificationListenerEnabled
                 )
             )
             else -> emptyList()

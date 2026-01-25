@@ -9,12 +9,15 @@ import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.util.Log
 import androidx.annotation.RequiresApi
+import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.MapsState
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.utils.AppUtil
+import com.sameerasw.essentials.utils.HapticUtil
 
 class NotificationListener : NotificationListenerService() {
     
@@ -120,6 +123,8 @@ class NotificationListener : NotificationListenerService() {
 
         // trigger notification lighting for any newly posted notification if feature enabled
         try {
+            handleCallVibrations(sbn)
+
             val packageName = sbn.packageName
             val notification = sbn.notification
             val extras = notification.extras
@@ -254,10 +259,44 @@ class NotificationListener : NotificationListenerService() {
         } catch (_: Exception) {
             // ignore failures
         }
+    }
 
+    private val lastCallVibrateTime = mutableMapOf<String, Long>()
+
+    private fun handleCallVibrations(sbn: StatusBarNotification) {
+        try {
+            val prefs = applicationContext.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+            if (!prefs.getBoolean(SettingsRepository.KEY_CALL_VIBRATIONS_ENABLED, false)) return
+
+            val notification = sbn.notification
+            val extras = notification.extras ?: return
+            
+            val pkg = sbn.packageName
+            val isDialer = pkg.contains("dialer") || pkg.contains("telecom") || pkg.contains("phone") || pkg.contains("miui.voiceassist")
+            if (!isDialer) return
+
+            val isOngoing = (notification.flags and Notification.FLAG_ONGOING_EVENT) != 0
+            if (!isOngoing) return
+
+            val hasChronometer = extras.getBoolean(Notification.EXTRA_SHOW_CHRONOMETER, false)
+            
+            if (hasChronometer) {
+                val lastVibrate = lastCallVibrateTime[sbn.key] ?: 0L
+                val now = System.currentTimeMillis()
+                
+                if (now - lastVibrate > 5000) {
+                    HapticUtil.performHapticForService(applicationContext, HapticFeedbackType.DOUBLE)
+                    lastCallVibrateTime[sbn.key] = now
+                    Log.d("NotificationListener", "Outgoing/Incoming call answer detected for ${sbn.packageName}")
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("NotificationListener", "Error in handleCallVibrations", e)
+        }
     }
 
     override fun onNotificationRemoved(sbn: StatusBarNotification) {
+        lastCallVibrateTime.remove(sbn.key)
         if (sbn.packageName == "com.google.android.apps.maps") {
             MapsState.hasNavigationNotification = false
         }

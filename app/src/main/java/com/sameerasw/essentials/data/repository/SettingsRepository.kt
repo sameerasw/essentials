@@ -44,6 +44,9 @@ class SettingsRepository(private val context: Context) {
         const val KEY_EDGE_LIGHTING_STROKE_THICKNESS = "edge_lighting_stroke_thickness"
         const val KEY_EDGE_LIGHTING_SELECTED_APPS = "edge_lighting_selected_apps"
         
+        const val KEY_CALL_VIBRATIONS_ENABLED = "call_vibrations_enabled"
+        const val KEY_LAST_CALL_STATE = "last_call_state"
+        
         const val KEY_BUTTON_REMAP_ENABLED = "button_remap_enabled"
         const val KEY_FLASHLIGHT_VOLUME_TOGGLE_ENABLED = "flashlight_volume_toggle_enabled" // Legacy
         const val KEY_BUTTON_REMAP_USE_SHIZUKU = "button_remap_use_shizuku"

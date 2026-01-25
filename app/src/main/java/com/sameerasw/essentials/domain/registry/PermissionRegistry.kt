@@ -41,6 +41,7 @@ fun initPermissionRegistry() {
     // Notification listener permission
     PermissionRegistry.register("NOTIFICATION_LISTENER", R.string.feat_maps_power_saving_title)
     PermissionRegistry.register("NOTIFICATION_LISTENER", R.string.feat_notification_lighting_title)
+    PermissionRegistry.register("NOTIFICATION_LISTENER", R.string.feat_call_vibrations_title)
 
     // Bluetooth permissions
     PermissionRegistry.register("BLUETOOTH_CONNECT", R.string.feat_batteries_title)
@@ -54,6 +55,7 @@ fun initPermissionRegistry() {
 
     // Read phone state permission
     PermissionRegistry.register("READ_PHONE_STATE", R.string.search_smart_data_title)
+    PermissionRegistry.register("READ_PHONE_STATE", R.string.feat_call_vibrations_title)
 
     // Device Admin permission
     PermissionRegistry.register("DEVICE_ADMIN", R.string.feat_screen_locked_security_title)

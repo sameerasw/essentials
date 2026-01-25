@@ -15,6 +15,7 @@ import android.os.Looper
 import android.view.KeyEvent
 import android.os.Vibrator
 import android.view.accessibility.AccessibilityEvent
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.utils.performHapticFeedback
 import kotlinx.coroutines.CoroutineScope

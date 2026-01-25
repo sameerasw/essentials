@@ -154,4 +154,11 @@ object PermissionUtils {
             true
         }
     }
+
+    fun hasReadPhoneStatePermission(context: Context): Boolean {
+        return androidx.core.content.ContextCompat.checkSelfPermission(
+            context,
+            android.Manifest.permission.READ_PHONE_STATE
+        ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+    }
 }

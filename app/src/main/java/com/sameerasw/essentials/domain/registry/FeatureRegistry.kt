@@ -534,6 +534,22 @@ object FeatureRegistry {
             override fun onClick(context: Context, viewModel: MainViewModel) {
                 context.startActivity(android.content.Intent(context, WatermarkActivity::class.java))
             }
+        },
+        
+        object : Feature(
+            id = "Call vibrations",
+            title = R.string.feat_call_vibrations_title,
+            iconRes = R.drawable.rounded_mobile_vibrate_24,
+            category = R.string.cat_system,
+            description = R.string.feat_call_vibrations_desc,
+            permissionKeys = listOf("READ_PHONE_STATE", "NOTIFICATION_LISTENER"),
+            hasMoreSettings = false
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = viewModel.isCallVibrationsEnabled.value
+            override fun isToggleEnabled(viewModel: MainViewModel, context: Context) = 
+                viewModel.isReadPhoneStateEnabled.value && viewModel.isNotificationListenerEnabled.value
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) = viewModel.setCallVibrationsEnabled(enabled)
+            override fun onClick(context: Context, viewModel: MainViewModel) {}
         }
     )
 }

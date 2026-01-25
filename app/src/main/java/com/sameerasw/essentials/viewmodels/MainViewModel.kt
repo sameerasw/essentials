@@ -88,6 +88,7 @@ class MainViewModel : ViewModel() {
     val isBluetoothPermissionGranted = mutableStateOf(false)
     
     val isBluetoothDevicesEnabled = mutableStateOf(false)
+    val isCallVibrationsEnabled = mutableStateOf(false)
 
 
 
@@ -209,6 +210,9 @@ class MainViewModel : ViewModel() {
             SettingsRepository.KEY_PINNED_FEATURES -> {
                 pinnedFeatureKeys.value = settingsRepository.getPinnedFeatures()
             }
+            SettingsRepository.KEY_CALL_VIBRATIONS_ENABLED -> {
+                isCallVibrationsEnabled.value = settingsRepository.getBoolean(key)
+            }
         }
     }
 
@@ -219,10 +223,7 @@ class MainViewModel : ViewModel() {
         
         isAccessibilityEnabled.value = PermissionUtils.isAccessibilityServiceEnabled(context)
         isWriteSecureSettingsEnabled.value = PermissionUtils.canWriteSecureSettings(context)
-        isReadPhoneStateEnabled.value = ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.READ_PHONE_STATE
-        ) == PackageManager.PERMISSION_GRANTED
+        isReadPhoneStateEnabled.value = PermissionUtils.hasReadPhoneStatePermission(context)
         isPostNotificationsEnabled.value = ContextCompat.checkSelfPermission(
             context,
             Manifest.permission.POST_NOTIFICATIONS
@@ -344,6 +345,7 @@ class MainViewModel : ViewModel() {
         isBluetoothDevicesEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_SHOW_BLUETOOTH_DEVICES, false)
         batteryWidgetMaxDevices.intValue = settingsRepository.getBatteryWidgetMaxDevices()
         isBatteryWidgetBackgroundEnabled.value = settingsRepository.isBatteryWidgetBackgroundEnabled()
+        isCallVibrationsEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_CALL_VIBRATIONS_ENABLED)
 
         isScreenLockedSecurityEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED)
         isDeviceAdminEnabled.value = isDeviceAdminActive(context)
@@ -474,6 +476,15 @@ class MainViewModel : ViewModel() {
             context.startActivity(intent)
         }
     }
+    
+    fun requestReadPhoneStatePermission(activity: Activity) {
+        androidx.core.app.ActivityCompat.requestPermissions(
+            activity,
+            arrayOf(android.Manifest.permission.READ_PHONE_STATE),
+            1005
+        )
+    }
+
 
     fun setWidgetEnabled(enabled: Boolean, context: Context) {
         isWidgetEnabled.value = enabled
@@ -539,6 +550,11 @@ class MainViewModel : ViewModel() {
     fun setButtonRemapEnabled(enabled: Boolean, context: Context) {
         isButtonRemapEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_BUTTON_REMAP_ENABLED, enabled)
+    }
+
+    fun setCallVibrationsEnabled(enabled: Boolean) {
+        isCallVibrationsEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_CALL_VIBRATIONS_ENABLED, enabled)
     }
 
     fun setButtonRemapUseShizuku(enabled: Boolean, context: Context) {
