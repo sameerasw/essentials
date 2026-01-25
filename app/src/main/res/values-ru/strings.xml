@@ -53,6 +53,16 @@
     <string name="action_ai_assistant">AI ассистент</string>
     <string name="action_take_screenshot">Сделать снимок экрана</string>
     <string name="action_cycle_sound_modes">Cycle sound modes</string>
+    <string name="action_like_song">Like current song</string>
+    <string name="like_song_settings_title">Like song settings</string>
+    <string name="like_song_settings_desc">This feature requires notification access to detect the currently playing media and trigger the like action. Please enable it below.</string>
+    <string name="like_song_toast_enabled">Show toast message</string>
+    <string name="like_song_aod_overlay_title">Show overlay on AOD</string>
+    <string name="feat_ambient_music_glance_title">Ambient music glance</string>
+    <string name="feat_ambient_music_glance_desc">Glance at media on AOD</string>
+    <string name="ambient_glance_docked_mode_title">Docked mode</string>
+    <string name="ambient_glance_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
+    <string name="grant_notification_access">Grant notification access</string>
     <string name="action_toggle_media_volume">Toggle media volume</string>
     <string name="button_remap_screen_off_hint">Когда экран выключен, нажмите и удерживайте выбранную кнопку, чтобы активировать назначенное действие. На устройствах Pixel это действие запускается только при включенном AOD из-за системных ограничений.</string>
     <string name="button_remap_screen_on_hint">Когда экран включен, нажмите и удерживайте выбранную кнопку, чтобы активировать назначенное ей действие.</string>
@@ -467,6 +477,7 @@
     <string name="perm_accessibility_desc_common">Required for App Lock, Screen off widget and other features to detect interactions</string>
     <string name="perm_accessibility_desc_lighting">Required to trigger notification lighting on new notifications</string>
     <string name="perm_accessibility_desc_remap">Required to intercept hardware button events</string>
+    <string name="perm_accessibility_desc_ambient_music_glance">Required to intercept volume key events while the screen is off to trigger the Ambient Glance overlay.</string>
     <string name="perm_accessibility_desc_night_light">Needed to monitor foreground applications.</string>
     <string name="perm_write_secure_title">Write Secure Settings</string>
     <string name="perm_write_secure_desc_common">Required for Statusbar icons and Screen Locked Security</string>
