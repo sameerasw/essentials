@@ -33,6 +33,28 @@ class AmbientGlanceHandler(
     private var volumeReceiver: BroadcastReceiver? = null
     private val handler = Handler(Looper.getMainLooper())
 
+    private var clockView: View? = null
+    private var centerContainer: FrameLayout? = null
+    private var textContainer: LinearLayout? = null
+
+    private val burnInProtectionRunnable = object : Runnable {
+        override fun run() {
+            if (overlayView == null || !isDockedMode) return
+            
+            // Randomly shift elements by a few pixels (-15dp to +15dp)
+            val maxShiftPx = dpToPx(15f).toFloat()
+            val random = Random()
+            
+            fun getRandomShift() = (random.nextFloat() * 2 * maxShiftPx) - maxShiftPx
+
+            clockView?.animate()?.translationY(getRandomShift())?.setDuration(1000)?.start()
+            centerContainer?.animate()?.translationY(getRandomShift())?.setDuration(1000)?.start()
+            textContainer?.animate()?.translationY(getRandomShift())?.setDuration(1000)?.start()
+            
+            handler.postDelayed(this, 60000L) // Once every minute
+        }
+    }
+
     private val progressUpdateRunnable = object : Runnable {
         override fun run() {
             if (overlayView == null || eventType == EVENT_VOLUME) return
@@ -181,7 +203,7 @@ class AmbientGlanceHandler(
         }
 
         // 1. Clock at top
-        val clockView = TextClock(context).apply {
+        clockView = TextClock(context).apply {
             format12Hour = "hh:mm"
             format24Hour = "HH:mm"
             textSize = 18f
@@ -196,7 +218,7 @@ class AmbientGlanceHandler(
         rootLayout.addView(clockView)
         
         // 2. Center Content (Art + Volume Stroke)
-        val centerContainer = FrameLayout(context).apply {
+        centerContainer = FrameLayout(context).apply {
              layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER)
         }
         
@@ -241,7 +263,7 @@ class AmbientGlanceHandler(
         
         clipContainer.addView(imageView)
         clipContainer.addView(scrim)
-        centerContainer.addView(clipContainer)
+        centerContainer?.addView(clipContainer)
         
         // Volume Icon 
         val iconSize = dpToPx(56f)
@@ -259,23 +281,23 @@ class AmbientGlanceHandler(
                 }
             }
         }
-        centerContainer.addView(volumeIconView)
+        centerContainer?.addView(volumeIconView)
 
         // Volume Stroke 
         val initialPerc = if (eventType == EVENT_VOLUME) volumePercentage else 0
         volumeStrokeView = VolumeStrokeView(context, petalPath, initialPerc)
         volumeStrokeView?.layoutParams = FrameLayout.LayoutParams(size + dpToPx(20f), size + dpToPx(20f), Gravity.CENTER)
-        centerContainer.addView(volumeStrokeView)
+        centerContainer?.addView(volumeStrokeView)
         
         // Start progress polling if not a volume notification
         if (eventType != EVENT_VOLUME) {
             handler.post(progressUpdateRunnable)
         }
         
-        rootLayout.addView(centerContainer)
+        centerContainer?.let { rootLayout.addView(it) }
         
         // 3. Bottom Text Content
-        val textContainer = android.widget.LinearLayout(context).apply {
+        textContainer = android.widget.LinearLayout(context).apply {
             orientation = android.widget.LinearLayout.VERTICAL
             gravity = Gravity.CENTER_HORIZONTAL
             layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL).apply {
@@ -309,8 +331,8 @@ class AmbientGlanceHandler(
             ellipsize = android.text.TextUtils.TruncateAt.END
         }
         
-        textContainer.addView(titleView)
-        textContainer.addView(artistView)
+        textContainer?.addView(titleView)
+        textContainer?.addView(artistView)
 
         // Like Status Icon
         likeStatusView = ImageView(context).apply {
@@ -321,9 +343,9 @@ class AmbientGlanceHandler(
             setImageResource(if (isAlreadyLiked) R.drawable.round_favorite_24 else R.drawable.rounded_favorite_24)
             alpha = 0.8f
         }
-        textContainer.addView(likeStatusView)
+        textContainer?.addView(likeStatusView)
 
-        rootLayout.addView(textContainer)
+        textContainer?.let { rootLayout.addView(it) }
         
         if (volumeReceiver == null) {
             volumeReceiver = object : BroadcastReceiver() {
@@ -384,6 +406,8 @@ class AmbientGlanceHandler(
                 ?.withEndAction {
                     if (!isDockedMode) {
                         handler.postDelayed(hideRunnable, DISPLAY_DURATION)
+                    } else {
+                        handler.post(burnInProtectionRunnable)
                     }
                 }
                 ?.start()
@@ -470,6 +494,7 @@ class AmbientGlanceHandler(
         handler.removeCallbacks(hideRunnable)
         handler.removeCallbacks(progressUpdateRunnable)
         handler.removeCallbacks(revertToMusicRunnable)
+        handler.removeCallbacks(burnInProtectionRunnable)
         if (overlayView != null && windowManager != null) {
             try {
                 service.unregisterReceiver(volumeReceiver)
@@ -482,6 +507,9 @@ class AmbientGlanceHandler(
             volumeStrokeView = null
             volumeIconView = null
             likeStatusView = null
+            clockView = null
+            centerContainer = null
+            textContainer = null
         }
     }
     
