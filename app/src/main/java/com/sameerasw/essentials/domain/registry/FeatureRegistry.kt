@@ -575,7 +575,8 @@ object FeatureRegistry {
             description = R.string.feat_ambient_music_glance_desc,
             permissionKeys = listOf("ACCESSIBILITY", "NOTIFICATION_LISTENER"),
             hasMoreSettings = true,
-            showToggle = true
+            showToggle = true,
+            isBeta = true
         ) {
             override fun isEnabled(viewModel: MainViewModel) = viewModel.isAmbientMusicGlanceEnabled.value
             override fun isToggleEnabled(viewModel: MainViewModel, context: Context) = 

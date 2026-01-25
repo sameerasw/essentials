@@ -24,12 +24,15 @@ class NotificationListener : NotificationListenerService() {
     
     companion object {
         const val ACTION_LIKE_CURRENT_SONG = "com.sameerasw.essentials.ACTION_LIKE_CURRENT_SONG"
+        const val ACTION_REQUEST_AMBIENT_GLANCE = "com.sameerasw.essentials.ACTION_REQUEST_AMBIENT_GLANCE"
     }
 
     private val likeActionReceiver = object : android.content.BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == ACTION_LIKE_CURRENT_SONG) {
                 handleLikeSongAction()
+            } else if (intent?.action == ACTION_REQUEST_AMBIENT_GLANCE) {
+                handleRequestAmbientGlance()
             }
         }
     }
@@ -37,7 +40,10 @@ class NotificationListener : NotificationListenerService() {
     override fun onListenerConnected() {
         super.onListenerConnected()
         try {
-            val filter = android.content.IntentFilter(ACTION_LIKE_CURRENT_SONG)
+            val filter = android.content.IntentFilter().apply {
+                addAction(ACTION_LIKE_CURRENT_SONG)
+                addAction(ACTION_REQUEST_AMBIENT_GLANCE)
+            }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 registerReceiver(likeActionReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
             } else {
@@ -91,6 +97,20 @@ class NotificationListener : NotificationListenerService() {
         super.onDestroy()
         try {
             unregisterReceiver(likeActionReceiver)
+        } catch (_: Exception) {}
+    }
+
+    private fun handleRequestAmbientGlance() {
+        try {
+            val mediaSessionManager = getSystemService(Context.MEDIA_SESSION_SERVICE) as android.media.session.MediaSessionManager
+            val componentName = android.content.ComponentName(this, NotificationListener::class.java)
+            val sessions = mediaSessionManager.getActiveSessions(componentName)
+            
+            val activeSession = sessions.firstOrNull { 
+                it.playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING 
+            } ?: return
+            
+            triggerAmbientGlance(activeSession, "play_pause", bypassInteractiveCheck = true)
         } catch (_: Exception) {}
     }
 
@@ -249,7 +269,8 @@ class NotificationListener : NotificationListenerService() {
     private fun triggerAmbientGlance(
         activeSession: android.media.session.MediaController, 
         eventType: String, 
-        isAlreadyLikedOverride: Boolean? = null
+        isAlreadyLikedOverride: Boolean? = null,
+        bypassInteractiveCheck: Boolean = false
     ) {
         val prefs = getSharedPreferences(com.sameerasw.essentials.data.repository.SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
         val isEnabled = prefs.getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_ENABLED, false)
@@ -270,20 +291,20 @@ class NotificationListener : NotificationListenerService() {
              if (title != null) {
                  val artHash = kotlin.math.abs("${title}_${artist}".hashCode())
                  val artFile = java.io.File(cacheDir, "art_$artHash.png")
-                 
+
                  if (bitmap != null) {
                      try {
                          val out = java.io.FileOutputStream(artFile)
                          bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, out)
                          out.flush()
                          out.close()
-                         
+
                          val tempFile = java.io.File(cacheDir, "temp_album_art.png")
                          val tempOut = java.io.FileOutputStream(tempFile)
                          bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, tempOut)
                          tempOut.flush()
                          tempOut.close()
-                         
+
                          // Cleanup old art files (Keep last 3)
                          val files = cacheDir.listFiles { _, name -> name.startsWith("art_") }
                          if (files != null && files.size > 3) {
@@ -297,24 +318,19 @@ class NotificationListener : NotificationListenerService() {
                      }
                  }
              }
-
-             // 2. Trigger Glance only if screen is OFF
+            
+            // 2. Trigger Glance only if screen is OFF
              val powerManager = getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
-             if (!powerManager.isInteractive) {
-                  val intent = Intent(this, com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService::class.java).apply {
-                      action = "SHOW_AMBIENT_GLANCE"
+             if (!powerManager.isInteractive || bypassInteractiveCheck) {
+                  val intent = Intent("SHOW_AMBIENT_GLANCE").apply {
                       putExtra("event_type", eventType)
                       putExtra("track_title", title)
                       putExtra("artist_name", artist)
                       putExtra("is_already_liked", isAlreadyLiked)
                       putExtra("is_docked_mode", isDockedMode)
-                      addFlags(android.content.Intent.FLAG_RECEIVER_FOREGROUND)
+                      setPackage(packageName)
                   }
-                  try {
-                      startService(intent)
-                  } catch (e: Exception) {
-                      e.printStackTrace()
-                  }
+                  sendBroadcast(intent)
              }
         }
     }

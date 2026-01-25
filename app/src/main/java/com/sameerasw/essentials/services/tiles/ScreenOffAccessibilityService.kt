@@ -86,6 +86,9 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
                     InputEventListenerService.ACTION_VOLUME_LONG_PRESSED -> {
                         buttonRemapHandler.handleExternalVolumeLongPress(intent)
                     }
+                    "SHOW_AMBIENT_GLANCE" -> {
+                        ambientGlanceHandler.handleIntent(intent)
+                    }
                 }
             }
         }
@@ -94,6 +97,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
             addAction(Intent.ACTION_SCREEN_OFF)
             addAction(Intent.ACTION_USER_PRESENT)
             addAction(InputEventListenerService.ACTION_VOLUME_LONG_PRESSED)
+            addAction("SHOW_AMBIENT_GLANCE")
         }
         registerReceiver(screenReceiver, filter, RECEIVER_EXPORTED)
 

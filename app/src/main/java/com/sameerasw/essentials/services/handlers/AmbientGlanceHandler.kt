@@ -36,6 +36,10 @@ class AmbientGlanceHandler(
     private var clockView: View? = null
     private var centerContainer: FrameLayout? = null
     private var textContainer: LinearLayout? = null
+    
+    private var imageView: ImageView? = null
+    private var titleView: TextView? = null
+    private var artistView: TextView? = null
 
     private val burnInProtectionRunnable = object : Runnable {
         override fun run() {
@@ -90,6 +94,7 @@ class AmbientGlanceHandler(
         if (overlayView != null && isDockedMode) {
             eventType = EVENT_PLAY_PAUSE // Switch back to music view
             volumeIconView?.animate()?.alpha(0f)?.setDuration(200)?.start()
+            volumeStrokeView?.setColor(Color.GRAY)
             handler.post(progressUpdateRunnable)
         }
     }
@@ -118,19 +123,39 @@ class AmbientGlanceHandler(
     fun handleIntent(intent: Intent) {
         if (intent.action == "SHOW_AMBIENT_GLANCE") {
             eventType = intent.getStringExtra("event_type")
-            trackTitle = intent.getStringExtra("track_title")
-            artistName = intent.getStringExtra("artist_name")
-            isAlreadyLiked = intent.getBooleanExtra("is_already_liked", false)
+            val newTitle = intent.getStringExtra("track_title")
+            val newArtist = intent.getStringExtra("artist_name")
+            
+            val metadataChanged = (newTitle != trackTitle)
+            
+            trackTitle = newTitle
+            artistName = newArtist
+            
+            if (intent.hasExtra("is_already_liked")) {
+                isAlreadyLiked = intent.getBooleanExtra("is_already_liked", false)
+            }
             isDockedMode = intent.getBooleanExtra("is_docked_mode", false)
             volumePercentage = intent.getIntExtra("volume_percentage", 0)
             volumeKey = intent.getIntExtra("volume_key_code", -1)
             
             if (overlayView != null) {
                 // If song changed while visible, refresh entire overlay or just content
-                if (eventType == EVENT_TRACK_CHANGE || trackTitle != intent.getStringExtra("track_title")) {
-                     trackTitle = intent.getStringExtra("track_title")
-                     artistName = intent.getStringExtra("artist_name")
-                     showOverlay()
+                if (eventType == EVENT_TRACK_CHANGE || metadataChanged) {
+                     
+                     if (overlayView != null) {
+                         // Reset to Music Mode
+                         volumeIconView?.animate()?.alpha(0f)?.setDuration(200)?.start()
+                         volumeStrokeView?.setColor(Color.GRAY)
+                         handler.removeCallbacks(revertToMusicRunnable)
+                         
+                         updateMetadata()
+                         
+                         // Restart progress
+                         handler.removeCallbacks(progressUpdateRunnable)
+                         handler.post(progressUpdateRunnable)
+                     } else {
+                         showOverlay()
+                     }
                      return
                 }
 
@@ -141,6 +166,7 @@ class AmbientGlanceHandler(
                     if (volumeKey == 24) volumeIconView?.setImageResource(R.drawable.rounded_volume_up_24)
                     else if (volumeKey == 25) volumeIconView?.setImageResource(R.drawable.rounded_volume_down_24)
                     volumeIconView?.animate()?.alpha(1f)?.setDuration(200)?.start()
+                    volumeStrokeView?.setColor(Color.WHITE)
                 }
 
                 // Update like status
@@ -150,6 +176,8 @@ class AmbientGlanceHandler(
                     likeStatusView?.animate()?.scaleX(1.2f)?.scaleY(1.2f)?.setDuration(150)?.withEndAction {
                         likeStatusView?.animate()?.scaleX(1f)?.scaleY(1f)?.setDuration(150)?.start()
                     }?.start()
+                } else if (eventType == "like_update") {
+                     updateMetadata()
                 }
 
                 // If volume changed, pause progress update
@@ -171,6 +199,32 @@ class AmbientGlanceHandler(
             
             showOverlay()
         }
+    }
+    
+    private fun updateMetadata() {
+        titleView?.text = trackTitle ?: "Unknown Track"
+        artistView?.text = artistName ?: "Unknown Artist"
+        
+        likeStatusView?.setImageResource(if (isAlreadyLiked) R.drawable.round_favorite_24 else R.drawable.rounded_favorite_24)
+        
+        // Reload Bitmap
+        try {
+            val artHash = kotlin.math.abs("${trackTitle}_${artistName}".hashCode())
+            val artFile = File(service.cacheDir, "art_$artHash.png")
+            val bitmap = if (artFile.exists()) {
+                BitmapFactory.decodeFile(artFile.absolutePath)
+            } else {
+                val tempFile = File(service.cacheDir, "temp_album_art.png")
+                if (tempFile.exists()) BitmapFactory.decodeFile(tempFile.absolutePath) else null
+            }
+            
+            if (bitmap != null) {
+                imageView?.setImageBitmap(bitmap)
+            } else {
+                imageView?.setImageDrawable(android.graphics.drawable.ColorDrawable(getPrimaryColor(service)))
+            }
+        } catch (_: Exception) {}
+        
     }
 
     private fun showOverlay() {
@@ -206,7 +260,7 @@ class AmbientGlanceHandler(
         clockView = TextClock(context).apply {
             format12Hour = "hh:mm"
             format24Hour = "HH:mm"
-            textSize = 18f
+            textSize = 25f
             setTextColor(Color.WHITE)
             gravity = Gravity.CENTER
             layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.TOP or Gravity.CENTER_HORIZONTAL).apply {
@@ -244,7 +298,8 @@ class AmbientGlanceHandler(
             clipToOutline = true
         }
         
-        val imageView = ImageView(context).apply {
+        
+        imageView = ImageView(context).apply {
             layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
             scaleType = ImageView.ScaleType.CENTER_CROP
             if (bitmap != null) {
@@ -287,6 +342,7 @@ class AmbientGlanceHandler(
         val initialPerc = if (eventType == EVENT_VOLUME) volumePercentage else 0
         volumeStrokeView = VolumeStrokeView(context, petalPath, initialPerc)
         volumeStrokeView?.layoutParams = FrameLayout.LayoutParams(size + dpToPx(20f), size + dpToPx(20f), Gravity.CENTER)
+        volumeStrokeView?.setColor(if (eventType == EVENT_VOLUME) Color.WHITE else Color.GRAY)
         centerContainer?.addView(volumeStrokeView)
         
         // Start progress polling if not a volume notification
@@ -305,7 +361,8 @@ class AmbientGlanceHandler(
             }
         }
         
-        val titleView = TextView(context).apply {
+        
+        titleView = TextView(context).apply {
             text = trackTitle ?: "Unknown Track"
             textSize = 22f
             typeface = googleSansFlex
@@ -318,7 +375,8 @@ class AmbientGlanceHandler(
             ellipsize = android.text.TextUtils.TruncateAt.END
         }
         
-        val artistView = TextView(context).apply {
+        
+        artistView = TextView(context).apply {
             text = artistName ?: "Unknown Artist"
             textSize = 15f
             typeface = googleSansFlex
@@ -397,6 +455,7 @@ class AmbientGlanceHandler(
         }
 
         try {
+            overlayView?.alpha = 0f
             windowManager?.addView(overlayView, params)
             
             // Animation: Fade In
@@ -449,20 +508,28 @@ class AmbientGlanceHandler(
         val isDocked = prefs.getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_DOCKED_MODE, false)
         
         if (isEnabled && isDocked) {
-             val mediaSessionManager = service.getSystemService(Context.MEDIA_SESSION_SERVICE) as MediaSessionManager
-             val sessions = mediaSessionManager.getActiveSessions(android.content.ComponentName(service, ScreenOffAccessibilityService::class.java))
-             val playingSession = sessions.firstOrNull { it.playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING }
-             
-             if (playingSession != null) {
-                 val metadata = playingSession.metadata
-                 val intent = Intent("SHOW_AMBIENT_GLANCE").apply {
-                     putExtra("event_type", EVENT_PLAY_PAUSE)
-                     putExtra("track_title", metadata?.getString(android.media.MediaMetadata.METADATA_KEY_TITLE))
-                     putExtra("artist_name", metadata?.getString(android.media.MediaMetadata.METADATA_KEY_ARTIST))
-                     putExtra("is_docked_mode", true)
-                 }
-                 handleIntent(intent)
+             val intent = Intent("com.sameerasw.essentials.ACTION_REQUEST_AMBIENT_GLANCE").apply {
+                 setPackage(service.packageName)
              }
+             service.sendBroadcast(intent)
+             
+             try {
+                 val mediaSessionManager = service.getSystemService(Context.MEDIA_SESSION_SERVICE) as MediaSessionManager
+                 val componentName = android.content.ComponentName(service, com.sameerasw.essentials.services.NotificationListener::class.java)
+                 val sessions = mediaSessionManager.getActiveSessions(componentName)
+                 val playingSession = sessions.firstOrNull { it.playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING }
+                 
+                 if (playingSession != null) {
+                     val metadata = playingSession.metadata
+                     val showIntent = Intent("SHOW_AMBIENT_GLANCE").apply {
+                         putExtra("event_type", EVENT_PLAY_PAUSE)
+                         putExtra("track_title", metadata?.getString(android.media.MediaMetadata.METADATA_KEY_TITLE))
+                         putExtra("artist_name", metadata?.getString(android.media.MediaMetadata.METADATA_KEY_ARTIST))
+                         putExtra("is_docked_mode", true)
+                     }
+                     handleIntent(showIntent)
+                 }
+             } catch (_: Exception) {}
         }
     }
     
@@ -510,6 +577,9 @@ class AmbientGlanceHandler(
             clockView = null
             centerContainer = null
             textContainer = null
+            imageView = null
+            titleView = null
+            artistView = null
         }
     }
     
@@ -547,6 +617,18 @@ class AmbientGlanceHandler(
                 interpolator = android.view.animation.DecelerateInterpolator()
                 addUpdateListener {
                     currentPercentage = it.animatedValue as Float
+                    invalidate()
+                }
+                start()
+            }
+        }
+        
+        fun setColor(color: Int) {
+            val startColor = paint.color
+            android.animation.ValueAnimator.ofArgb(startColor, color).apply {
+                duration = 200
+                addUpdateListener {
+                    paint.color = it.animatedValue as Int
                     invalidate()
                 }
                 start()
