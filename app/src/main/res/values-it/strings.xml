@@ -242,6 +242,7 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string name="smart_data_title">Smart Data</string>
     <string name="permission_read_phone_state_title">Read Phone State</string>
     <string name="permission_read_phone_state_desc">Required to detect network type for Smart Data feature</string>
+    <string name="permission_read_phone_state_desc_call_vibrations">Required to detect call status changes to trigger haptic feedback.</string>
     <string name="settings_section_smart_visibility">Smart Visibility</string>
     <string name="smart_wifi_title">Smart WiFi</string>
     <string name="smart_wifi_desc">Hide mobile data when WiFi is connected</string>
@@ -282,6 +283,8 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string name="feat_sound_mode_tile_desc">QS tile to toggle sound mode</string>
     <string name="feat_stay_awake_tile_title">Stay awake tile</string>
     <string name="feat_stay_awake_tile_desc">QS tile to toggle stay awake</string>
+    <string name="feat_call_vibrations_title">Call vibrations</string>
+    <string name="feat_call_vibrations_desc">Vibrate for call actions</string>
     <string name="show_bluetooth_devices">Show Bluetooth devices</string>
     <string name="show_bluetooth_devices_summary">Display battery level of connected Bluetooth devices</string>
     <string name="limit_max_devices">Limit max devices</string>
@@ -442,9 +445,10 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string name="perm_root_title">Root Access</string>
     <string name="perm_root_desc">Permissions required for system actions using Root privileges.</string>
     <string name="perm_notif_listener_title">Notification Listener</string>
-    <string name="perm_notif_listener_desc_maps">Required to detect when Maps is navigating.</string>
-    <string name="perm_notif_listener_desc_lighting">Required to detect new notifications</string>
-    <string name="perm_notif_listener_desc_snooze">Required to detect and snooze notifications</string>
+    <string name="perm_notif_listener_desc_maps">Requires notification listener access to monitor Google Maps navigation status and enable power saving when not navigatiing.</string>
+    <string name="perm_notif_listener_desc_call_vibrations">Requires notification listener access to detect when outgoing calls are answered.</string>
+    <string name="perm_notif_listener_desc_lighting">Requires notification listener access to detect new notifications and trigger edge lighting.</string>
+    <string name="perm_notif_listener_desc_snooze">Requires notification listener access to monitor and snooze unwanted system notifications.</string>
     <string name="perm_accessibility_title">Accessibility Service</string>
     <string name="perm_accessibility_desc_common">Required for App Lock, Screen off widget and other features to detect interactions</string>
     <string name="perm_accessibility_desc_lighting">Required to trigger notification lighting on new notifications</string>
