@@ -21,9 +21,28 @@ import com.sameerasw.essentials.utils.HapticUtil
 
 class NotificationListener : NotificationListenerService() {
     
+    companion object {
+        const val ACTION_LIKE_CURRENT_SONG = "com.sameerasw.essentials.ACTION_LIKE_CURRENT_SONG"
+    }
+
+    private val likeActionReceiver = object : android.content.BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == ACTION_LIKE_CURRENT_SONG) {
+                handleLikeSongAction()
+            }
+        }
+    }
+
     override fun onListenerConnected() {
         super.onListenerConnected()
         try {
+            val filter = android.content.IntentFilter(ACTION_LIKE_CURRENT_SONG)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                registerReceiver(likeActionReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+            } else {
+                registerReceiver(likeActionReceiver, filter)
+            }
+
             // Initial discovery from active notifications
             activeNotifications?.forEach { sbn ->
                 val isSystem = sbn.packageName == "android" || sbn.packageName == "com.android.systemui"
@@ -64,6 +83,173 @@ class NotificationListener : NotificationListenerService() {
                     prefs.edit().putString("snooze_discovered_channels", gson.toJson(discoveredChannels)).apply()
                 }
             } catch (_: Exception) {}
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        try {
+            unregisterReceiver(likeActionReceiver)
+        } catch (_: Exception) {}
+    }
+
+    private fun handleLikeSongAction() {
+        try {
+            val mediaSessionManager = getSystemService(Context.MEDIA_SESSION_SERVICE) as android.media.session.MediaSessionManager
+            val componentName = android.content.ComponentName(this, NotificationListener::class.java)
+            val sessions = mediaSessionManager.getActiveSessions(componentName)
+            
+            // Check if toast is enabled
+            val prefs = getSharedPreferences(com.sameerasw.essentials.data.repository.SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
+            val showToast = prefs.getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_LIKE_SONG_TOAST_ENABLED, true)
+            
+            // STRICT: Only target playing sessions
+            val activeSession = sessions.firstOrNull { 
+                it.playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING 
+            }
+
+            if (activeSession == null) return // Ignore if nothing is playing
+
+            // Method 1: Check Metadata
+            val metadata = activeSession.metadata
+            if (metadata != null) {
+                val rating = metadata.getRating(android.media.MediaMetadata.METADATA_KEY_USER_RATING)
+                if (rating != null && rating.isRated) {
+                    val isLiked = rating.hasHeart() || rating.isThumbUp || 
+                                 (rating.ratingStyle == android.media.Rating.RATING_3_STARS && rating.starRating > 0) ||
+                                 (rating.ratingStyle == android.media.Rating.RATING_4_STARS && rating.starRating > 0) ||
+                                 (rating.ratingStyle == android.media.Rating.RATING_5_STARS && rating.starRating > 0) ||
+                                 (rating.ratingStyle == android.media.Rating.RATING_PERCENTAGE && rating.percentRating >= 50)
+                                 
+                    if (isLiked) {
+                        if (showToast) android.widget.Toast.makeText(applicationContext, "Already Liked \u2665", android.widget.Toast.LENGTH_SHORT).show()
+                        return
+                    }
+                }
+            }
+
+            // Method 2: Custom Actions
+            val playbackState = activeSession.playbackState
+            if (playbackState != null) {
+                for (action in playbackState.customActions) {
+                    val name = action.name.toString()
+                    
+                    if (name.contains("Playlist", ignoreCase = true) || 
+                        name.contains("Queue", ignoreCase = true) ||
+                        name.contains("Dislike", ignoreCase = true) || 
+                        name.contains("ThumbsDown", ignoreCase = true)) {
+                        continue
+                    }
+
+                    val isAlreadyLikedState = name.contains("Unlike", ignoreCase = true) || 
+                                              name.contains("Unheart", ignoreCase = true) ||
+                                              name.contains("Remove from collection", ignoreCase = true) ||
+                                              name.contains("Remove from library", ignoreCase = true) ||
+                                              name.contains("Remove from favorites", ignoreCase = true) ||
+                                              name.contains("Saved", ignoreCase = true) ||
+                                              name.equals("Added", ignoreCase = true)
+
+                   if (isAlreadyLikedState) {
+                       if (showToast) android.widget.Toast.makeText(applicationContext, "Already Liked \u2665", android.widget.Toast.LENGTH_SHORT).show()
+                       return
+                   }
+                }
+                
+                for (action in playbackState.customActions) {
+                    val name = action.name.toString()
+                    
+                    if (name.contains("Playlist", ignoreCase = true) || 
+                        name.contains("Queue", ignoreCase = true) ||
+                        name.contains("Dislike", ignoreCase = true) || 
+                        name.contains("ThumbsDown", ignoreCase = true)) {
+                        continue
+                    }
+
+                    val isLike = name.contains("Like", ignoreCase = true) || 
+                                 name.contains("Heart", ignoreCase = true) ||
+                                 name.contains("Favorite", ignoreCase = true) ||
+                                 name.contains("Love", ignoreCase = true) ||
+                                 name.contains("ThumbsUp", ignoreCase = true) ||
+                                 name.contains("Thumbs Up", ignoreCase = true) ||
+                                 name.contains("Add to collection", ignoreCase = true) ||
+                                 name.contains("Add to library", ignoreCase = true) ||
+                                 name.contains("Add to favorites", ignoreCase = true)
+
+                     if (isLike) {
+                        activeSession.transportControls.sendCustomAction(action, action.extras)
+                        if (showToast) android.widget.Toast.makeText(applicationContext, "Liked song \u2665", android.widget.Toast.LENGTH_SHORT).show()
+                        return
+                     }
+                }
+            }
+            
+            // Method 3: Check notification for THIS session only
+            val notifications = activeNotifications ?: return
+            val sbn = notifications.find { it.packageName == activeSession.packageName } ?: return
+            
+            // Check if it is a media notification
+            val notification = sbn.notification
+            val extras = notification.extras
+            val isMedia = extras.containsKey(Notification.EXTRA_MEDIA_SESSION) ||
+                    extras.getString(Notification.EXTRA_TEMPLATE) == "android.app.Notification\$MediaStyle"
+            
+            if (isMedia) {
+                val actions = notification.actions ?: return
+                
+                for (action in actions) {
+                    val title = action.title?.toString() ?: ""
+                   
+                    if (title.contains("Playlist", ignoreCase = true) || 
+                        title.contains("Queue", ignoreCase = true) ||
+                        title.contains("Dislike", ignoreCase = true) ||
+                        title.contains("ThumbsDown", ignoreCase = true) ||
+                        title.contains("Thumbs Down", ignoreCase = true)) {
+                        continue
+                    }
+                    
+                    val isAlreadyLiked = title.contains("Unlike", ignoreCase = true) || 
+                                         title.contains("Unheart", ignoreCase = true) ||
+                                         title.contains("Remove from", ignoreCase = true) ||
+                                         title.contains("Saved", ignoreCase = true)
+                    
+                    if (isAlreadyLiked) {
+                        if (showToast) android.widget.Toast.makeText(applicationContext, "Already Liked \u2665", android.widget.Toast.LENGTH_SHORT).show()
+                        return
+                    }
+                }
+                
+                for (action in actions) {
+                    val title = action.title?.toString() ?: ""
+                    
+                    if (title.contains("Playlist", ignoreCase = true) || 
+                        title.contains("Queue", ignoreCase = true) ||
+                        title.contains("Dislike", ignoreCase = true) ||
+                        title.contains("ThumbsDown", ignoreCase = true) ||
+                        title.contains("Thumbs Down", ignoreCase = true)) {
+                        continue
+                    }
+
+                    val isLike = title.contains("Like", ignoreCase = true) || 
+                                 title.contains("Heart", ignoreCase = true) ||
+                                 title.contains("Favorite", ignoreCase = true) ||
+                                 title.contains("Love", ignoreCase = true) ||
+                                 title.contains("ThumbsUp", ignoreCase = true) ||
+                                 title.contains("Thumbs Up", ignoreCase = true) ||
+                                 title.contains("Add to", ignoreCase = true)
+
+                    if (isLike) {
+                        try {
+                            action.actionIntent.send()
+                            if (showToast) android.widget.Toast.makeText(applicationContext, "Liked song \u2665", android.widget.Toast.LENGTH_SHORT).show()
+                            return
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

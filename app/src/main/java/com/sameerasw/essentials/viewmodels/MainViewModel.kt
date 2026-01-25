@@ -213,6 +213,9 @@ class MainViewModel : ViewModel() {
             SettingsRepository.KEY_CALL_VIBRATIONS_ENABLED -> {
                 isCallVibrationsEnabled.value = settingsRepository.getBoolean(key)
             }
+            SettingsRepository.KEY_LIKE_SONG_TOAST_ENABLED -> {
+                isLikeSongToastEnabled.value = settingsRepository.getBoolean(key)
+            }
         }
     }
 
@@ -360,6 +363,7 @@ class MainViewModel : ViewModel() {
         isDeveloperModeEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_DEVELOPER_MODE_ENABLED)
         isPreReleaseCheckEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_CHECK_PRE_RELEASES_ENABLED)
         pinnedFeatureKeys.value = settingsRepository.getPinnedFeatures()
+        isLikeSongToastEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_LIKE_SONG_TOAST_ENABLED, true)
     }
 
     fun onSearchQueryChanged(query: String, context: Context) {
@@ -595,6 +599,13 @@ class MainViewModel : ViewModel() {
     fun setAppLockEnabled(enabled: Boolean, context: Context) {
         isAppLockEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_APP_LOCK_ENABLED, enabled)
+    }
+    
+    val isLikeSongToastEnabled = mutableStateOf(false)
+
+    fun setLikeSongToastEnabled(enabled: Boolean) {
+        isLikeSongToastEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_LIKE_SONG_TOAST_ENABLED, enabled)
     }
 
     fun setFreezeWhenLockedEnabled(enabled: Boolean, context: Context) {

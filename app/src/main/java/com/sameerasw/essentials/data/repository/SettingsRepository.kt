@@ -122,6 +122,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_BATTERY_WIDGET_BACKGROUND_ENABLED = "battery_widget_background_enabled"
         
         const val KEY_PINNED_FEATURES = "pinned_features"
+        const val KEY_LIKE_SONG_TOAST_ENABLED = "like_song_toast_enabled"
     }
 
     // Observe changes

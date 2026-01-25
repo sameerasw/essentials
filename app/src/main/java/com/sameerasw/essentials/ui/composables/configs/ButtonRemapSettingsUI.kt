@@ -68,6 +68,16 @@ fun ButtonRemapSettingsUI(
     highlightSetting: String? = null
 ) {
     val context = LocalContext.current
+    val showLikeSongOptions = remember { mutableStateOf(false) }
+    
+    if (showLikeSongOptions.value) {
+        LikeSongSettingsSheet(
+            onDismiss = { showLikeSongOptions.value = false },
+            viewModel = viewModel,
+            context = context
+        )
+    }
+
     val view = LocalView.current
     var selectedScreenTab by remember { mutableIntStateOf(0) } // 0: Off, 1: On
     var selectedButtonTab by remember { mutableIntStateOf(0) } // 0: Up, 1: Down
@@ -402,6 +412,14 @@ fun ButtonRemapSettingsUI(
                         isSelected = currentAction == "Cycle sound modes",
                         onClick = { onActionSelected("Cycle sound modes") },
                         iconRes = R.drawable.rounded_volume_up_24,
+                    )
+                    RemapActionItem(
+                        title = stringResource(R.string.action_like_song),
+                        isSelected = currentAction == "Like current song",
+                        onClick = { onActionSelected("Like current song") },
+                        iconRes = R.drawable.rounded_favorite_24,
+                        hasSettings = true,
+                        onSettingsClick = { showLikeSongOptions.value = true }
                     )
                     if (selectedScreenTab == 1) {
                         RemapActionItem(
