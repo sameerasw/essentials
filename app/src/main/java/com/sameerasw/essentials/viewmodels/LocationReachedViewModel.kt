@@ -35,7 +35,10 @@ class LocationReachedViewModel(application: Application) : AndroidViewModel(appl
         private set
 
     init {
-        startDistanceTracking()
+        // Initial distance check
+        if (alarm.value.latitude != 0.0 && alarm.value.longitude != 0.0) {
+            updateCurrentDistance()
+        }
         
         // Observe shared state for real-time updates across activities
         viewModelScope.launch {
@@ -97,19 +100,32 @@ class LocationReachedViewModel(application: Application) : AndroidViewModel(appl
         // User said "keep last track in memory (only destination)".
     }
 
-    private fun startDistanceTracking() {
-        viewModelScope.launch {
+    private var distanceTrackingJob: kotlinx.coroutines.Job? = null
+
+    fun startUiTracking() {
+        if (distanceTrackingJob?.isActive == true) return
+        
+        distanceTrackingJob = viewModelScope.launch {
             while (true) {
-                // Tracking should only happen if enabled? Or just if coordinates exist?
-                // Logic: Distance displayed in UI needs coords. Service needs enabled.
+                // Tracking should only happen if coordinates exist
                 if (alarm.value.latitude != 0.0 && alarm.value.longitude != 0.0) {
                     updateCurrentDistance()
                 } else {
                     currentDistance.value = null
                 }
-                delay(10000) // Update every 10 seconds
+                delay(10000) // Update every 10 seconds while UI is active
             }
         }
+    }
+
+    fun stopUiTracking() {
+        distanceTrackingJob?.cancel()
+        distanceTrackingJob = null
+    }
+
+    override fun onCleared() {
+        stopUiTracking()
+        super.onCleared()
     }
 
     @android.annotation.SuppressLint("MissingPermission")
@@ -142,11 +158,14 @@ class LocationReachedViewModel(application: Application) : AndroidViewModel(appl
     }
 
     fun updateAlarm(newAlarm: LocationAlarm) {
+        val oldAlarm = alarm.value
         alarm.value = newAlarm
         repository.saveAlarm(newAlarm)
         
-        // If updating radius while enabled, ensure service stays up or is updated?
-        // Service just reads from repo loop, so saving is enough.
+        // If coordinates changed, refresh distance immediately
+        if (oldAlarm.latitude != newAlarm.latitude || oldAlarm.longitude != newAlarm.longitude) {
+            updateCurrentDistance()
+        }
     }
 
     fun handleIntent(intent: android.content.Intent): Boolean {
