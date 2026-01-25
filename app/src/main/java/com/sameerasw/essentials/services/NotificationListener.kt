@@ -123,6 +123,7 @@ class NotificationListener : NotificationListenerService() {
                                  
                     if (isLiked) {
                         if (showToast) android.widget.Toast.makeText(applicationContext, "Already Liked \u2665", android.widget.Toast.LENGTH_SHORT).show()
+                        triggerLikeOverlay(activeSession, true)
                         return
                     }
                 }
@@ -151,6 +152,7 @@ class NotificationListener : NotificationListenerService() {
 
                    if (isAlreadyLikedState) {
                        if (showToast) android.widget.Toast.makeText(applicationContext, "Already Liked \u2665", android.widget.Toast.LENGTH_SHORT).show()
+                       triggerLikeOverlay(activeSession, true)
                        return
                    }
                 }
@@ -178,6 +180,7 @@ class NotificationListener : NotificationListenerService() {
                      if (isLike) {
                         activeSession.transportControls.sendCustomAction(action, action.extras)
                         if (showToast) android.widget.Toast.makeText(applicationContext, "Liked song \u2665", android.widget.Toast.LENGTH_SHORT).show()
+                        triggerLikeOverlay(activeSession, false)
                         return
                      }
                 }
@@ -214,6 +217,7 @@ class NotificationListener : NotificationListenerService() {
                     
                     if (isAlreadyLiked) {
                         if (showToast) android.widget.Toast.makeText(applicationContext, "Already Liked \u2665", android.widget.Toast.LENGTH_SHORT).show()
+                        triggerLikeOverlay(activeSession, true)
                         return
                     }
                 }
@@ -241,6 +245,7 @@ class NotificationListener : NotificationListenerService() {
                         try {
                             action.actionIntent.send()
                             if (showToast) android.widget.Toast.makeText(applicationContext, "Liked song \u2665", android.widget.Toast.LENGTH_SHORT).show()
+                            triggerLikeOverlay(activeSession, false)
                             return
                         } catch (e: Exception) {
                             e.printStackTrace()
@@ -250,6 +255,48 @@ class NotificationListener : NotificationListenerService() {
             }
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    private fun triggerLikeOverlay(activeSession: android.media.session.MediaController, isAlreadyLiked: Boolean) {
+        val prefs = getSharedPreferences(com.sameerasw.essentials.data.repository.SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
+        val isOverlayEnabled = prefs.getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_LIKE_SONG_AOD_OVERLAY_ENABLED, false)
+        
+        if (isOverlayEnabled) {
+            val powerManager = getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
+            if (!powerManager.isInteractive) {
+                 // Extract Album Art
+                 var bitmap = activeSession.metadata?.getBitmap(android.media.MediaMetadata.METADATA_KEY_ALBUM_ART)
+                 if (bitmap == null) {
+                     bitmap = activeSession.metadata?.getBitmap(android.media.MediaMetadata.METADATA_KEY_ART)
+                 }
+                 
+                 
+                 if (bitmap != null) {
+                     try {
+                         val file = java.io.File(cacheDir, "temp_album_art.png")
+                         val out = java.io.FileOutputStream(file)
+                         bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, out)
+                         out.flush()
+                         out.close()
+                     } catch (e: Exception) {
+                         e.printStackTrace()
+                     }
+                 } else {
+                     // Delete old cache if exists to prevent stale art
+                     java.io.File(cacheDir, "temp_album_art.png").delete()
+                 }
+                 
+                 val intent = Intent(this, com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService::class.java).apply {
+                     action = "SHOW_LIKE_OVERLAY"
+                     putExtra("is_already_liked", isAlreadyLiked)
+                 }
+                 try {
+                     startService(intent)
+                 } catch (e: Exception) {
+                     e.printStackTrace()
+                 }
+            }
         }
     }
 

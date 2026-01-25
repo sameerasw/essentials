@@ -58,6 +58,7 @@
     <string name="like_song_settings_title">Like song settings</string>
     <string name="like_song_settings_desc">This feature requires notification access to detect the currently playing media and trigger the like action. Please enable it below.</string>
     <string name="like_song_toast_enabled">Show toast message</string>
+    <string name="like_song_aod_overlay_title">Show overlay on AOD</string>
     <string name="grant_notification_access">Grant notification access</string>
     <string name="action_toggle_media_volume">Toggle media volume</string>
     <string name="button_remap_screen_off_hint">When the screen is off, long-press the selected button to trigger its assigned action. On Pixel devices, this action only gets triggered if the AOD is on due to system limitations.</string>

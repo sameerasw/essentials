@@ -216,6 +216,9 @@ class MainViewModel : ViewModel() {
             SettingsRepository.KEY_LIKE_SONG_TOAST_ENABLED -> {
                 isLikeSongToastEnabled.value = settingsRepository.getBoolean(key)
             }
+            SettingsRepository.KEY_LIKE_SONG_AOD_OVERLAY_ENABLED -> {
+                isLikeSongAodOverlayEnabled.value = settingsRepository.getBoolean(key)
+            }
         }
     }
 
@@ -364,6 +367,7 @@ class MainViewModel : ViewModel() {
         isPreReleaseCheckEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_CHECK_PRE_RELEASES_ENABLED)
         pinnedFeatureKeys.value = settingsRepository.getPinnedFeatures()
         isLikeSongToastEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_LIKE_SONG_TOAST_ENABLED, true)
+        isLikeSongAodOverlayEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_LIKE_SONG_AOD_OVERLAY_ENABLED, false)
     }
 
     fun onSearchQueryChanged(query: String, context: Context) {
@@ -606,6 +610,13 @@ class MainViewModel : ViewModel() {
     fun setLikeSongToastEnabled(enabled: Boolean) {
         isLikeSongToastEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_LIKE_SONG_TOAST_ENABLED, enabled)
+    }
+
+    val isLikeSongAodOverlayEnabled = mutableStateOf(false)
+
+    fun setLikeSongAodOverlayEnabled(enabled: Boolean) {
+        isLikeSongAodOverlayEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_LIKE_SONG_AOD_OVERLAY_ENABLED, enabled)
     }
 
     fun setFreezeWhenLockedEnabled(enabled: Boolean, context: Context) {

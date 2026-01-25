@@ -37,6 +37,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
     private lateinit var buttonRemapHandler: ButtonRemapHandler
     private lateinit var appFlowHandler: AppFlowHandler
     private lateinit var securityHandler: SecurityHandler
+    private lateinit var likeSongOverlayHandler: LikeSongOverlayHandler
 
     private var screenReceiver: BroadcastReceiver? = null
     
@@ -59,6 +60,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         buttonRemapHandler = ButtonRemapHandler(this, flashlightHandler)
         appFlowHandler = AppFlowHandler(this)
         securityHandler = SecurityHandler(this)
+        likeSongOverlayHandler = LikeSongOverlayHandler(this)
         
         flashlightHandler.register()
         
@@ -134,6 +136,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         sensorManager.unregisterListener(this)
         securityHandler.restoreAnimationScale()
         notificationLightingHandler.removeOverlay()
+        likeSongOverlayHandler.removeOverlay()
         stopInputEventListener()
         serviceScope.cancel()
         super.onDestroy()
@@ -189,6 +192,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
             }
             
             "SHOW_NOTIFICATION_LIGHTING" -> notificationLightingHandler.handleIntent(intent)
+            "SHOW_LIKE_OVERLAY" -> likeSongOverlayHandler.handleIntent(intent)
             
             "APP_AUTHENTICATED" -> intent.getStringExtra("package_name")?.let { appFlowHandler.onAuthenticated(it) }
             "APP_AUTHENTICATION_FAILED" -> performGlobalAction(GLOBAL_ACTION_HOME)

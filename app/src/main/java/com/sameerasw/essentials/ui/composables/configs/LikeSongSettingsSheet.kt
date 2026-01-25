@@ -128,6 +128,13 @@ fun LikeSongSettingsSheet(
                     isChecked = viewModel.isLikeSongToastEnabled.value,
                     onCheckedChange = { viewModel.setLikeSongToastEnabled(it) }
                 )
+                
+                 IconToggleItem(
+                    iconRes = R.drawable.rounded_music_video_24,
+                    title = stringResource(R.string.like_song_aod_overlay_title),
+                    isChecked = viewModel.isLikeSongAodOverlayEnabled.value,
+                    onCheckedChange = { viewModel.setLikeSongAodOverlayEnabled(it) }
+                )
             }
             
             Spacer(modifier = Modifier.height(24.dp))
