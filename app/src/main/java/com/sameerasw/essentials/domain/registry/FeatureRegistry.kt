@@ -37,7 +37,7 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_interests_24,
             category = R.string.cat_visuals,
             description = R.string.feat_statusbar_icons_desc,
-            permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
+            permissionKeys = listOf("WRITE_SECURE_SETTINGS", "WRITE_SETTINGS"),
             searchableSettings = listOf(
                 SearchSetting(
                     R.string.search_smart_wifi_title,
@@ -56,6 +56,21 @@ object FeatureRegistry {
                     R.string.search_reset_icons_desc,
                     "reset_icons",
                     R.array.keywords_restore_default
+                ),
+                SearchSetting(
+                    R.string.search_clock_seconds_title,
+                    R.string.search_clock_seconds_desc,
+                    "clock_seconds"
+                ),
+                SearchSetting(
+                    R.string.search_battery_percentage_title,
+                    R.string.search_battery_percentage_desc,
+                    "battery_percentage"
+                ),
+                SearchSetting(
+                    R.string.search_privacy_chip_title,
+                    R.string.search_privacy_chip_desc,
+                    "privacy_chip"
                 )
             )
         ) {

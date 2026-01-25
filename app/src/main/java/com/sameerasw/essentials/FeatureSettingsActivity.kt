@@ -240,6 +240,37 @@ class FeatureSettingsActivity : FragmentActivity() {
                                     viewModel.isWriteSecureSettingsEnabled.value = viewModel.canWriteSecureSettings(context)
                                 },
                                 isGranted = isWriteSecureSettingsEnabled
+                            ),
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_security_24,
+                                title = R.string.perm_write_settings_title,
+                                description = R.string.perm_write_settings_desc,
+                                dependentFeatures = PermissionRegistry.getFeatures("WRITE_SETTINGS"),
+                                actionLabel = R.string.perm_action_grant,
+                                action = {
+                                    val intent = Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, Uri.parse("package:${context.packageName}"))
+                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                    context.startActivity(intent)
+                                },
+                                isGranted = viewModel.isWriteSettingsEnabled.value
+                            ),
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_adb_24,
+                                title = R.string.perm_shizuku_title,
+                                description = R.string.perm_shizuku_desc,
+                                dependentFeatures = listOf("Advanced Statusbar control"),
+                                actionLabel = if (com.sameerasw.essentials.utils.ShizukuUtils.isShizukuAvailable()) R.string.perm_shizuku_grant_title else R.string.perm_shizuku_install_action,
+                                action = {
+                                    if (com.sameerasw.essentials.utils.ShizukuUtils.isShizukuAvailable()) {
+                                        com.sameerasw.essentials.utils.ShizukuUtils.requestPermission()
+                                    } else {
+                                        try {
+                                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://shizuku.rikka.app/download/"))
+                                            context.startActivity(intent)
+                                        } catch (e: Exception) {}
+                                    }
+                                },
+                                isGranted = com.sameerasw.essentials.utils.ShizukuUtils.hasPermission()
                             )
                         )
                         "Notification lighting" -> listOf(
