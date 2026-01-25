@@ -240,7 +240,8 @@ class NotificationListener : NotificationListenerService() {
     private data class MediaState(
         val title: String?,
         val artist: String?,
-        val isPlaying: Boolean
+        val isPlaying: Boolean,
+        val isLiked: Boolean
     )
     
     private val lastMediaStates = mutableMapOf<String, MediaState>()
@@ -337,6 +338,8 @@ class NotificationListener : NotificationListenerService() {
                  var eventType: String? = null
                  
                  
+                 val isLiked = isLikedState(controller)
+
                  if (lastState == null) {
                      if (isPlaying) {
                          eventType = "play_pause"
@@ -344,18 +347,20 @@ class NotificationListener : NotificationListenerService() {
                  } else {
                      val titleChanged = title != lastState.title
                      val stateChanged = isPlaying != lastState.isPlaying
+                     val likedChanged = isLiked != lastState.isLiked
                      
                      if (titleChanged) {
                          eventType = "track_change"
                      } else if (stateChanged) {
                          if (isPlaying) {
                              eventType = "play_pause"
-                         } else {
                          }
+                     } else if (likedChanged) {
+                         eventType = "like"
                      }
                  }
-                 val isLiked = isLikedState(controller)
-                 lastMediaStates[sbn.packageName] = MediaState(title, artist, isPlaying)
+                 
+                 lastMediaStates[sbn.packageName] = MediaState(title, artist, isPlaying, isLiked)
                  
                  val prefs = applicationContext.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
                  prefs.edit()
