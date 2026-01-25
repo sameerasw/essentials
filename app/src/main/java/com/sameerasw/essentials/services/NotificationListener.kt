@@ -123,7 +123,7 @@ class NotificationListener : NotificationListenerService() {
                                  
                     if (isLiked) {
                         if (showToast) android.widget.Toast.makeText(applicationContext, "Already Liked \u2665", android.widget.Toast.LENGTH_SHORT).show()
-                        triggerLikeOverlay(activeSession, true)
+                        triggerAmbientGlance(activeSession, "like", true)
                         return
                     }
                 }
@@ -152,7 +152,7 @@ class NotificationListener : NotificationListenerService() {
 
                    if (isAlreadyLikedState) {
                        if (showToast) android.widget.Toast.makeText(applicationContext, "Already Liked \u2665", android.widget.Toast.LENGTH_SHORT).show()
-                       triggerLikeOverlay(activeSession, true)
+                       triggerAmbientGlance(activeSession, "like", true)
                        return
                    }
                 }
@@ -180,7 +180,7 @@ class NotificationListener : NotificationListenerService() {
                      if (isLike) {
                         activeSession.transportControls.sendCustomAction(action, action.extras)
                         if (showToast) android.widget.Toast.makeText(applicationContext, "Liked song \u2665", android.widget.Toast.LENGTH_SHORT).show()
-                        triggerLikeOverlay(activeSession, false)
+                        triggerAmbientGlance(activeSession, "like", false)
                         return
                      }
                 }
@@ -217,7 +217,7 @@ class NotificationListener : NotificationListenerService() {
                     
                     if (isAlreadyLiked) {
                         if (showToast) android.widget.Toast.makeText(applicationContext, "Already Liked \u2665", android.widget.Toast.LENGTH_SHORT).show()
-                        triggerLikeOverlay(activeSession, true)
+                        triggerAmbientGlance(activeSession, "like", true)
                         return
                     }
                 }
@@ -245,7 +245,7 @@ class NotificationListener : NotificationListenerService() {
                         try {
                             action.actionIntent.send()
                             if (showToast) android.widget.Toast.makeText(applicationContext, "Liked song \u2665", android.widget.Toast.LENGTH_SHORT).show()
-                            triggerLikeOverlay(activeSession, false)
+                            triggerAmbientGlance(activeSession, "like", false)
                             return
                         } catch (e: Exception) {
                             e.printStackTrace()
@@ -258,11 +258,23 @@ class NotificationListener : NotificationListenerService() {
         }
     }
 
-    private fun triggerLikeOverlay(activeSession: android.media.session.MediaController, isAlreadyLiked: Boolean) {
+    private data class MediaState(
+        val title: String?,
+        val artist: String?,
+        val isPlaying: Boolean
+    )
+    
+    private val lastMediaStates = mutableMapOf<String, MediaState>()
+
+    private fun triggerAmbientGlance(
+        activeSession: android.media.session.MediaController, 
+        eventType: String, 
+        isAlreadyLiked: Boolean = false
+    ) {
         val prefs = getSharedPreferences(com.sameerasw.essentials.data.repository.SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
-        val isOverlayEnabled = prefs.getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_LIKE_SONG_AOD_OVERLAY_ENABLED, false)
+        val isEnabled = prefs.getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_ENABLED, false)
         
-        if (isOverlayEnabled) {
+        if (isEnabled) {
             val powerManager = getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
             if (!powerManager.isInteractive) {
                  // Extract Album Art
@@ -270,7 +282,6 @@ class NotificationListener : NotificationListenerService() {
                  if (bitmap == null) {
                      bitmap = activeSession.metadata?.getBitmap(android.media.MediaMetadata.METADATA_KEY_ART)
                  }
-                 
                  
                  if (bitmap != null) {
                      try {
@@ -283,12 +294,18 @@ class NotificationListener : NotificationListenerService() {
                          e.printStackTrace()
                      }
                  } else {
-                     // Delete old cache if exists to prevent stale art
                      java.io.File(cacheDir, "temp_album_art.png").delete()
                  }
                  
+                 // Extract Text
+                 val title = activeSession.metadata?.getString(android.media.MediaMetadata.METADATA_KEY_TITLE)
+                 val artist = activeSession.metadata?.getString(android.media.MediaMetadata.METADATA_KEY_ARTIST)
+                 
                  val intent = Intent(this, com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService::class.java).apply {
-                     action = "SHOW_LIKE_OVERLAY"
+                     action = "SHOW_AMBIENT_GLANCE"
+                     putExtra("event_type", eventType)
+                     putExtra("track_title", title)
+                     putExtra("artist_name", artist)
                      putExtra("is_already_liked", isAlreadyLiked)
                  }
                  try {
@@ -298,6 +315,57 @@ class NotificationListener : NotificationListenerService() {
                  }
             }
         }
+    }
+    
+    private fun handleMediaUpdate(sbn: StatusBarNotification) {
+         try {
+             val extras = sbn.notification.extras
+             val token = extras.getParcelable<android.media.session.MediaSession.Token>(Notification.EXTRA_MEDIA_SESSION)
+             
+             if (token != null) {
+                 val controller = android.media.session.MediaController(this, token)
+                 val metadata = controller.metadata
+                 val playbackState = controller.playbackState
+                 
+                 val title = metadata?.getString(android.media.MediaMetadata.METADATA_KEY_TITLE)
+                 val artist = metadata?.getString(android.media.MediaMetadata.METADATA_KEY_ARTIST)
+                 val isPlaying = playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING
+                 
+                 val lastState = lastMediaStates[sbn.packageName]
+                 
+                 var eventType: String? = null
+                 
+                 
+                 if (lastState == null) {
+                 } else {
+                     val titleChanged = title != lastState.title
+                     val stateChanged = isPlaying != lastState.isPlaying
+                     
+                     if (titleChanged) {
+                         eventType = "track_change"
+                     } else if (stateChanged) {
+                         if (isPlaying) {
+                             eventType = "play_pause"
+                         } else {
+                         }
+                     }
+                 }
+                 
+                 lastMediaStates[sbn.packageName] = MediaState(title, artist, isPlaying)
+                 
+                 val prefs = applicationContext.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+                 prefs.edit()
+                     .putString("current_media_title", title)
+                     .putString("current_media_artist", artist)
+                     .apply()
+                 
+                 if (eventType != null) {
+                     triggerAmbientGlance(controller, eventType)
+                 }
+             }
+         } catch (e: Exception) {
+             e.printStackTrace()
+         }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -367,7 +435,8 @@ class NotificationListener : NotificationListenerService() {
                     extras.getString(Notification.EXTRA_TEMPLATE) == "android.app.Notification\$MediaStyle"
             
             if (isMedia) {
-                    return
+                handleMediaUpdate(sbn)
+                return
             }
 
             val prefs = applicationContext.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)

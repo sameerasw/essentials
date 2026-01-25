@@ -123,7 +123,8 @@ class SettingsRepository(private val context: Context) {
         
         const val KEY_PINNED_FEATURES = "pinned_features"
         const val KEY_LIKE_SONG_TOAST_ENABLED = "like_song_toast_enabled"
-        const val KEY_LIKE_SONG_AOD_OVERLAY_ENABLED = "like_song_aod_overlay_enabled"
+        const val KEY_LIKE_SONG_AOD_OVERLAY_ENABLED = "like_song_aod_overlay_enabled" 
+        const val KEY_AMBIENT_MUSIC_GLANCE_ENABLED = "ambient_music_glance_enabled"
     }
 
     // Observe changes

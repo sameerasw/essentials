@@ -59,6 +59,8 @@
     <string name="like_song_settings_desc">This feature requires notification access to detect the currently playing media and trigger the like action. Please enable it below.</string>
     <string name="like_song_toast_enabled">Show toast message</string>
     <string name="like_song_aod_overlay_title">Show overlay on AOD</string>
+    <string name="feat_ambient_music_glance_title">Ambient music glance</string>
+    <string name="feat_ambient_music_glance_desc">Glance at music status on AOD.</string>
     <string name="grant_notification_access">Grant notification access</string>
     <string name="action_toggle_media_volume">Toggle media volume</string>
     <string name="button_remap_screen_off_hint">When the screen is off, long-press the selected button to trigger its assigned action. On Pixel devices, this action only gets triggered if the AOD is on due to system limitations.</string>
@@ -492,6 +494,7 @@
     <string name="perm_accessibility_desc_common">Required for App Lock, Screen off widget and other features to detect interactions</string>
     <string name="perm_accessibility_desc_lighting">Required to trigger notification lighting on new notifications</string>
     <string name="perm_accessibility_desc_remap">Required to intercept hardware button events</string>
+    <string name="perm_accessibility_desc_ambient_music_glance">Required to intercept volume key events while the screen is off to trigger the Ambient Glance overlay.</string>
     <string name="perm_accessibility_desc_night_light">Needed to monitor foreground applications.</string>
     <string name="perm_write_secure_title">Write Secure Settings</string>
     <string name="perm_write_secure_desc_common">Required for Statusbar icons and Screen Locked Security</string>

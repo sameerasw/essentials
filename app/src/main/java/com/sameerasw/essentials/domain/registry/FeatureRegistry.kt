@@ -565,6 +565,22 @@ object FeatureRegistry {
                 viewModel.isReadPhoneStateEnabled.value && viewModel.isNotificationListenerEnabled.value
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) = viewModel.setCallVibrationsEnabled(enabled)
             override fun onClick(context: Context, viewModel: MainViewModel) {}
+        },
+
+        object : Feature(
+            id = "Ambient music glance",
+            title = R.string.feat_ambient_music_glance_title,
+            iconRes = R.drawable.rounded_music_video_24,
+            category = R.string.cat_system,
+            description = R.string.feat_ambient_music_glance_desc,
+            permissionKeys = listOf("ACCESSIBILITY", "NOTIFICATION_LISTENER"),
+            hasMoreSettings = true,
+            showToggle = true
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = viewModel.isAmbientMusicGlanceEnabled.value
+            override fun isToggleEnabled(viewModel: MainViewModel, context: Context) = 
+                viewModel.isNotificationListenerEnabled.value && viewModel.isAccessibilityEnabled.value
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) = viewModel.setAmbientMusicGlanceEnabled(enabled)
         }
     )
 }
