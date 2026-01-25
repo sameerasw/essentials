@@ -241,6 +241,7 @@
     <string name="smart_data_title">Intelligente Daten</string>
     <string name="permission_read_phone_state_title">Telefonstatus lesen</string>
     <string name="permission_read_phone_state_desc">Erforderlich, um den Netzwerktyp für die Intelligente Daten-Funktion zu erkennen</string>
+    <string name="permission_read_phone_state_desc_call_vibrations">Required to detect call status changes to trigger haptic feedback.</string>
     <string name="settings_section_smart_visibility">Intelligente Sichtbarkeit</string>
     <string name="smart_wifi_title">Intelligentes WLAN</string>
     <string name="smart_wifi_desc">Verstecke mobile Daten, wenn eine Verbindung zu einem WLAN besteht</string>
@@ -281,6 +282,8 @@
     <string name="feat_sound_mode_tile_desc">Kachel in den Schnelleinstellungen zum Umschalten des Tonmodus</string>
     <string name="feat_stay_awake_tile_title">\'Wach bleiben\'-Kachel</string>
     <string name="feat_stay_awake_tile_desc">Kachel in den Schnelleinstellungen zum Umschalten des Wachbleibens</string>
+    <string name="feat_call_vibrations_title">Call vibrations</string>
+    <string name="feat_call_vibrations_desc">Vibrate for call actions</string>
     <string name="show_bluetooth_devices">Bluetooth-Geräte anzeigen</string>
     <string name="show_bluetooth_devices_summary">Zeige den Akkustand von verbundenen Bluetooth-Geräten</string>
     <string name="limit_max_devices">Max. Geräteanzahl begrenzen</string>
@@ -441,9 +444,10 @@
     <string name="perm_root_title">Root-Zugang</string>
     <string name="perm_root_desc">Benötigt Berechtigungen für Systemaktionen mittels Root-Rechte.</string>
     <string name="perm_notif_listener_title">Benachrichtigungs-Beobachter</string>
-    <string name="perm_notif_listener_desc_maps">Benötigt, um zu erkennen, wann Maps navigiert.</string>
-    <string name="perm_notif_listener_desc_lighting">Benötigt, um neue Benachrichtigungen zu erkennen</string>
-    <string name="perm_notif_listener_desc_snooze">Benötigt, um Benachrichtigungen zu erkennen und stumm zuschalten</string>
+    <string name="perm_notif_listener_desc_maps">Requires notification listener access to monitor Google Maps navigation status and enable power saving when not navigatiing.</string>
+    <string name="perm_notif_listener_desc_call_vibrations">Requires notification listener access to detect when outgoing calls are answered.</string>
+    <string name="perm_notif_listener_desc_lighting">Requires notification listener access to detect new notifications and trigger edge lighting.</string>
+    <string name="perm_notif_listener_desc_snooze">Requires notification listener access to monitor and snooze unwanted system notifications.</string>
     <string name="perm_accessibility_title">Barrierefreiheitsdienst</string>
     <string name="perm_accessibility_desc_common">Benötigt für App-Sperre, Display-aus-Widget und andere Funktionen zur Erkennung von Interaktionen</string>
     <string name="perm_accessibility_desc_lighting">Benötigt, um das Benachrichtigungslicht bei neuen Benachrichtigungen auszulösen</string>
