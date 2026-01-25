@@ -241,6 +241,7 @@
     <string name="smart_data_title">Données intelligentes</string>
     <string name="permission_read_phone_state_title">Lire l\'état du téléphone</string>
     <string name="permission_read_phone_state_desc">Requise pour détecter le type de réseau pour la fonctionnalité de Données intelligentes</string>
+    <string name="permission_read_phone_state_desc_call_vibrations">Required to detect call status changes to trigger haptic feedback.</string>
     <string name="settings_section_smart_visibility">Visibilité intelligente</string>
     <string name="smart_wifi_title">Wi-Fi intelligent</string>
     <string name="smart_wifi_desc">Cacher les données mobiles quand un réseau Wi-Fi est connecté</string>
@@ -281,6 +282,8 @@
     <string name="feat_sound_mode_tile_desc">Bloc \"Réglages rapides\" pour changer le mode de sonnerie</string>
     <string name="feat_stay_awake_tile_title">Bloc \"rester allumé\"</string>
     <string name="feat_stay_awake_tile_desc">Bloc \"Réglages rapides\" pour activer/désactiver le maintien de l\'écran allumé</string>
+    <string name="feat_call_vibrations_title">Call vibrations</string>
+    <string name="feat_call_vibrations_desc">Vibrate for call actions</string>
     <string name="show_bluetooth_devices">Afficher les appareils Bluetooth</string>
     <string name="show_bluetooth_devices_summary">Afficher le niveau de batterie des appareils Bluetooth connectés</string>
     <string name="limit_max_devices">Nombre d\'appareils max</string>
@@ -441,9 +444,10 @@
     <string name="perm_root_title">Accès racine (root)</string>
     <string name="perm_root_desc">Permissions requises pour les actions systèmes en utilisant les privilèges racine (root).</string>
     <string name="perm_notif_listener_title">Analyseur de notification</string>
-    <string name="perm_notif_listener_desc_maps">Requise pour détecter quand Maps est en navigation.</string>
-    <string name="perm_notif_listener_desc_lighting">Requise pour détecter les nouvelles notifications</string>
-    <string name="perm_notif_listener_desc_snooze">Requise pour détecter et mettre en attente les notifications</string>
+    <string name="perm_notif_listener_desc_maps">Requires notification listener access to monitor Google Maps navigation status and enable power saving when not navigatiing.</string>
+    <string name="perm_notif_listener_desc_call_vibrations">Requires notification listener access to detect when outgoing calls are answered.</string>
+    <string name="perm_notif_listener_desc_lighting">Requires notification listener access to detect new notifications and trigger edge lighting.</string>
+    <string name="perm_notif_listener_desc_snooze">Requires notification listener access to monitor and snooze unwanted system notifications.</string>
     <string name="perm_accessibility_title">Service d\'accessibilité</string>
     <string name="perm_accessibility_desc_common">Requis pour le verrouillage d\'applis, le widget de verrouillage et d\'autres fonctionnalités pour détecter les interactions</string>
     <string name="perm_accessibility_desc_lighting">Requis pour déclencher l\'éclairage lors de la réception d\'une nouvelle notification</string>
