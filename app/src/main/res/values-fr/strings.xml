@@ -469,10 +469,10 @@
     <string name="perm_root_title">Accès racine (root)</string>
     <string name="perm_root_desc">Permissions requises pour les actions systèmes en utilisant les privilèges racine (root).</string>
     <string name="perm_notif_listener_title">Analyseur de notification</string>
-    <string name="perm_notif_listener_desc_maps">Requires notification listener access to monitor Google Maps navigation status and enable power saving when not navigatiing.</string>
+    <string name="perm_notif_listener_desc_maps">Requise pour détecter quand Maps est en navigation.</string>
     <string name="perm_notif_listener_desc_call_vibrations">Requires notification listener access to detect when outgoing calls are answered.</string>
-    <string name="perm_notif_listener_desc_lighting">Requires notification listener access to detect new notifications and trigger edge lighting.</string>
-    <string name="perm_notif_listener_desc_snooze">Requires notification listener access to monitor and snooze unwanted system notifications.</string>
+    <string name="perm_notif_listener_desc_lighting">Requise pour détecter les nouvelles notifications</string>
+    <string name="perm_notif_listener_desc_snooze">Requise pour détecter et mettre en attente les notifications</string>
     <string name="perm_accessibility_title">Service d\'accessibilité</string>
     <string name="perm_accessibility_desc_common">Requis pour le verrouillage d\'applis, le widget de verrouillage et d\'autres fonctionnalités pour détecter les interactions</string>
     <string name="perm_accessibility_desc_lighting">Requis pour déclencher l\'éclairage lors de la réception d\'une nouvelle notification</string>
