@@ -67,8 +67,14 @@ object CombinedActionExecutor {
                          try {
                               if (action.enabled) {
                                   // ENABLE/UPDATE EFFECTS
-                                  val effectsBuilder = android.service.notification.ZenDeviceEffects.Builder()
-                                      .setShouldDisplayGrayscale(action.grayscale)
+                                  val effectsBuilder = try {
+                                      android.service.notification.ZenDeviceEffects.Builder()
+                                  } catch (e: NoSuchMethodError) {
+                                    // Samsung fallback
+                                      android.service.notification.ZenDeviceEffects.Builder(null)
+                                  }
+                                  
+                                  effectsBuilder.setShouldDisplayGrayscale(action.grayscale)
                                       .setShouldSuppressAmbientDisplay(action.suppressAmbient)
                                       .setShouldDimWallpaper(action.dimWallpaper)
                                       .setShouldUseNightMode(action.nightMode)
@@ -115,7 +121,7 @@ object CombinedActionExecutor {
                                   android.util.Log.d("DeviceEffects", "Disabled ZenRule for Device Effects")
                               }
                               
-                         } catch (e: Exception) {
+                         } catch (e: Throwable) {
                              e.printStackTrace()
                          }
                      }
