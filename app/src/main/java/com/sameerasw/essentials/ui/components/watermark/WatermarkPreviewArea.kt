@@ -5,8 +5,10 @@ import androidx.compose.animation.*
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -38,6 +40,7 @@ fun WatermarkPreviewArea(
     initialUri: Uri?,
     previewState: WatermarkUiState,
     onPickImage: () -> Unit,
+    onRotate: (left: Boolean) -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable (PaddingValues) -> Unit
 ) {
@@ -54,6 +57,7 @@ fun WatermarkPreviewArea(
     
     val previewHeightPxState = remember { mutableFloatStateOf(maxPx) }
     var previewHeightPx by previewHeightPxState
+    var showRotationMenu by remember { mutableStateOf(false) }
     
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
@@ -99,12 +103,20 @@ fun WatermarkPreviewArea(
                 .padding(16.dp)
                 .clip(if (initialUri == null) RoundedCornerShape(24.dp) else RectangleShape)
                 .background(if (initialUri == null) MaterialTheme.colorScheme.surfaceContainerHigh else Color.Transparent)
-                .clickable { 
-                    performUIHaptic(view)
-                    if (initialUri == null) {
-                        onPickImage()
+                .combinedClickable(
+                    onClick = { 
+                        performUIHaptic(view)
+                        if (initialUri == null) {
+                            onPickImage()
+                        }
+                    },
+                    onLongClick = {
+                        if (initialUri != null) {
+                            performUIHaptic(view)
+                            showRotationMenu = true
+                        }
                     }
-                }
+                )
                 .padding(if (initialUri == null) 32.dp else 0.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -162,6 +174,42 @@ fun WatermarkPreviewArea(
                         exit = fadeOut()
                     ) {
                         LoadingIndicator()
+                    }
+                }
+
+                Box(Modifier.align(Alignment.Center)) {
+                    SegmentedDropdownMenu(
+                        expanded = showRotationMenu,
+                        onDismissRequest = { showRotationMenu = false }
+                    ) {
+                        SegmentedDropdownMenuItem(
+                            text = { Text(stringResource(R.string.watermark_rotate_left)) },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(R.drawable.rounded_rotate_left_24),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            },
+                            onClick = {
+                                showRotationMenu = false
+                                onRotate(true)
+                            }
+                        )
+                        SegmentedDropdownMenuItem(
+                            text = { Text(stringResource(R.string.watermark_rotate_right)) },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(R.drawable.rounded_rotate_right_24),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            },
+                            onClick = {
+                                showRotationMenu = false
+                                onRotate(false)
+                            }
+                        )
                     }
                 }
             }

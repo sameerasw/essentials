@@ -412,6 +412,16 @@ class WatermarkViewModel(
         }
     }
 
+    fun rotate(left: Boolean) {
+        viewModelScope.launch {
+            val currentRotation = _options.value.rotation
+            val delta = if (left) -90 else 90
+            var newRotation = (currentRotation + delta) % 360
+            if (newRotation < 0) newRotation += 360
+            watermarkRepository.updateRotation(newRotation)
+        }
+    }
+
     fun updateOverriddenTexts(brand: String, custom: String, date: String?) {
         _currentBrandText.value = brand
         _currentCustomText.value = custom

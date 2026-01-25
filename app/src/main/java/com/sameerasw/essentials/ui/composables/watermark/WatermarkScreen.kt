@@ -116,6 +116,7 @@ fun WatermarkScreen(
             initialUri = initialUri,
             previewState = previewState,
             onPickImage = onPickImage,
+            onRotate = { viewModel.rotate(it) },
             modifier = Modifier.padding(padding)
         ) {
             WatermarkControls(

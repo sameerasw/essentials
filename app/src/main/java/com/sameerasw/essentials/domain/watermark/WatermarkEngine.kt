@@ -59,7 +59,8 @@ data class WatermarkOptions(
     val logoResId: Int? = null,
     val logoSize: Int = 50,
     val overriddenBrandText: String? = null,
-    val overriddenDateText: String? = null
+    val overriddenDateText: String? = null,
+    val rotation: Int = 0
 )
 
 class WatermarkEngine(
@@ -70,7 +71,6 @@ class WatermarkEngine(
         val inputStream = context.contentResolver.openInputStream(uri) 
             ?: throw IllegalStateException("Cannot open input stream")
         
-        // Decode bitmap - mutable to allow drawing if Overlay
         val originalBitmap = BitmapFactory.decodeStream(inputStream, null, BitmapFactory.Options().apply {
             inMutable = true
             inPreferredConfig = Bitmap.Config.ARGB_8888
@@ -144,9 +144,20 @@ class WatermarkEngine(
 
     suspend fun processBitmap(bitmap: Bitmap, uri: Uri, options: WatermarkOptions): Bitmap = withContext(Dispatchers.Default) {
         val exifData = metadataProvider.extractExif(uri)
+        
+        // Apply Rotation
+        val rotated = if (options.rotation != 0) {
+            val matrix = android.graphics.Matrix().apply { postRotate(options.rotation.toFloat()) }
+            val rb = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+            if (rb != bitmap) bitmap.recycle()
+            rb
+        } else {
+            bitmap
+        }
+
         val result = when (options.style) {
-            WatermarkStyle.OVERLAY -> drawOverlay(bitmap, exifData, options)
-            WatermarkStyle.FRAME -> drawFrame(bitmap, exifData, options)
+            WatermarkStyle.OVERLAY -> drawOverlay(rotated, exifData, options)
+            WatermarkStyle.FRAME -> drawFrame(rotated, exifData, options)
         }
         
         applyBorder(result, options)
