@@ -173,22 +173,29 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         if (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
             val powerManager = getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
             if (!powerManager.isInteractive && event.action == KeyEvent.ACTION_DOWN) {
-                triggerAmbientGlanceVolume()
+                triggerAmbientGlanceVolume(keyCode)
             }
         }
         return buttonRemapHandler.onKeyEvent(event) || super.onKeyEvent(event)
     }
 
-    private fun triggerAmbientGlanceVolume() {
+    private fun triggerAmbientGlanceVolume(keyCode: Int) {
         val prefs = getSharedPreferences(SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
         if (prefs.getBoolean(SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_ENABLED, false)) {
             val title = prefs.getString("current_media_title", null)
             val artist = prefs.getString("current_media_artist", null)
             
+            val audioManager = getSystemService(Context.AUDIO_SERVICE) as android.media.AudioManager
+            val currentVolume = audioManager.getStreamVolume(android.media.AudioManager.STREAM_MUSIC)
+            val maxVolume = audioManager.getStreamMaxVolume(android.media.AudioManager.STREAM_MUSIC)
+            val percentage = (currentVolume.toFloat() / maxVolume.toFloat() * 100).toInt()
+
             val intent = Intent("SHOW_AMBIENT_GLANCE").apply {
                 putExtra("event_type", "volume")
                 putExtra("track_title", title)
                 putExtra("artist_name", artist)
+                putExtra("volume_percentage", percentage)
+                putExtra("volume_key_code", keyCode)
             }
             ambientGlanceHandler.handleIntent(intent)
         }

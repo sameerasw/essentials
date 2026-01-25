@@ -18,6 +18,7 @@ import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.HapticUtil
+import kotlin.math.abs
 
 class NotificationListener : NotificationListenerService() {
     
@@ -106,11 +107,71 @@ class NotificationListener : NotificationListenerService() {
             // STRICT: Only target playing sessions
             val activeSession = sessions.firstOrNull { 
                 it.playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING 
+            } ?: return
+
+            if (isLikedState(activeSession)) {
+                if (showToast) android.widget.Toast.makeText(applicationContext, "Already Liked \u2665", android.widget.Toast.LENGTH_SHORT).show()
+                triggerAmbientGlance(activeSession, "like", true)
+                return
             }
 
-            if (activeSession == null) return // Ignore if nothing is playing
+            val playbackState = activeSession.playbackState
+            if (playbackState != null) {
+                for (action in playbackState.customActions) {
+                    val name = action.name.toString()
+                    val isLike = name.contains("Like", ignoreCase = true) || 
+                                 name.contains("Heart", ignoreCase = true) ||
+                                 name.contains("Favorite", ignoreCase = true) ||
+                                 name.contains("Love", ignoreCase = true) ||
+                                 name.contains("ThumbsUp", ignoreCase = true) ||
+                                 name.contains("Thumbs Up", ignoreCase = true) ||
+                                 name.contains("Add to collection", ignoreCase = true) ||
+                                 name.contains("Add to library", ignoreCase = true) ||
+                                 name.contains("Add to favorites", ignoreCase = true) ||
+                                 name.contains("Save to", ignoreCase = true)
+                    
+                    if (isLike) {
+                        activeSession.transportControls.sendCustomAction(action, action.extras)
+                        if (showToast) android.widget.Toast.makeText(applicationContext, "Liked song \u2665", android.widget.Toast.LENGTH_SHORT).show()
+                        
+                        triggerAmbientGlance(activeSession, "like", true)
+                        return
+                    }
+                }
+            }
 
-            // Method 1: Check Metadata
+            val sbn = activeNotifications?.find { it.packageName == activeSession.packageName }
+            if (sbn != null) {
+                val actions = sbn.notification.actions
+                if (actions != null) {
+                    for (action in actions) {
+                        val title = action.title?.toString() ?: ""
+                        val isLike = title.contains("Like", ignoreCase = true) || 
+                                     title.contains("Heart", ignoreCase = true) ||
+                                     title.contains("Favorite", ignoreCase = true) ||
+                                     title.contains("Love", ignoreCase = true) ||
+                                     title.contains("ThumbsUp", ignoreCase = true) ||
+                                     title.contains("Add to", ignoreCase = true) ||
+                                     title.contains("Save", ignoreCase = true)
+
+                        if (isLike) {
+                            action.actionIntent.send()
+                            if (showToast) android.widget.Toast.makeText(applicationContext, "Liked song \u2665", android.widget.Toast.LENGTH_SHORT).show()
+                            
+                            triggerAmbientGlance(activeSession, "like", true)
+                            return
+                        }
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun isLikedState(activeSession: android.media.session.MediaController): Boolean {
+        try {
+            // 1. Check Metadata
             val metadata = activeSession.metadata
             if (metadata != null) {
                 val rating = metadata.getRating(android.media.MediaMetadata.METADATA_KEY_USER_RATING)
@@ -120,27 +181,19 @@ class NotificationListener : NotificationListenerService() {
                                  (rating.ratingStyle == android.media.Rating.RATING_4_STARS && rating.starRating > 0) ||
                                  (rating.ratingStyle == android.media.Rating.RATING_5_STARS && rating.starRating > 0) ||
                                  (rating.ratingStyle == android.media.Rating.RATING_PERCENTAGE && rating.percentRating >= 50)
-                                 
-                    if (isLiked) {
-                        if (showToast) android.widget.Toast.makeText(applicationContext, "Already Liked \u2665", android.widget.Toast.LENGTH_SHORT).show()
-                        triggerAmbientGlance(activeSession, "like", true)
-                        return
-                    }
+                    if (isLiked) return true
                 }
             }
 
-            // Method 2: Custom Actions
+            // 2. Check Custom Actions
             val playbackState = activeSession.playbackState
             if (playbackState != null) {
                 for (action in playbackState.customActions) {
                     val name = action.name.toString()
-                    
                     if (name.contains("Playlist", ignoreCase = true) || 
                         name.contains("Queue", ignoreCase = true) ||
                         name.contains("Dislike", ignoreCase = true) || 
-                        name.contains("ThumbsDown", ignoreCase = true)) {
-                        continue
-                    }
+                        name.contains("ThumbsDown", ignoreCase = true)) continue
 
                     val isAlreadyLikedState = name.contains("Unlike", ignoreCase = true) || 
                                               name.contains("Unheart", ignoreCase = true) ||
@@ -148,114 +201,40 @@ class NotificationListener : NotificationListenerService() {
                                               name.contains("Remove from library", ignoreCase = true) ||
                                               name.contains("Remove from favorites", ignoreCase = true) ||
                                               name.contains("Saved", ignoreCase = true) ||
+                                              name.contains("In your library", ignoreCase = true) ||
+                                              name.contains("In your favorites", ignoreCase = true) ||
                                               name.equals("Added", ignoreCase = true)
-
-                   if (isAlreadyLikedState) {
-                       if (showToast) android.widget.Toast.makeText(applicationContext, "Already Liked \u2665", android.widget.Toast.LENGTH_SHORT).show()
-                       triggerAmbientGlance(activeSession, "like", true)
-                       return
-                   }
-                }
-                
-                for (action in playbackState.customActions) {
-                    val name = action.name.toString()
-                    
-                    if (name.contains("Playlist", ignoreCase = true) || 
-                        name.contains("Queue", ignoreCase = true) ||
-                        name.contains("Dislike", ignoreCase = true) || 
-                        name.contains("ThumbsDown", ignoreCase = true)) {
-                        continue
-                    }
-
-                    val isLike = name.contains("Like", ignoreCase = true) || 
-                                 name.contains("Heart", ignoreCase = true) ||
-                                 name.contains("Favorite", ignoreCase = true) ||
-                                 name.contains("Love", ignoreCase = true) ||
-                                 name.contains("ThumbsUp", ignoreCase = true) ||
-                                 name.contains("Thumbs Up", ignoreCase = true) ||
-                                 name.contains("Add to collection", ignoreCase = true) ||
-                                 name.contains("Add to library", ignoreCase = true) ||
-                                 name.contains("Add to favorites", ignoreCase = true)
-
-                     if (isLike) {
-                        activeSession.transportControls.sendCustomAction(action, action.extras)
-                        if (showToast) android.widget.Toast.makeText(applicationContext, "Liked song \u2665", android.widget.Toast.LENGTH_SHORT).show()
-                        triggerAmbientGlance(activeSession, "like", false)
-                        return
-                     }
+                    if (isAlreadyLikedState) return true
                 }
             }
-            
-            // Method 3: Check notification for THIS session only
-            val notifications = activeNotifications ?: return
-            val sbn = notifications.find { it.packageName == activeSession.packageName } ?: return
-            
-            // Check if it is a media notification
-            val notification = sbn.notification
-            val extras = notification.extras
-            val isMedia = extras.containsKey(Notification.EXTRA_MEDIA_SESSION) ||
-                    extras.getString(Notification.EXTRA_TEMPLATE) == "android.app.Notification\$MediaStyle"
-            
-            if (isMedia) {
-                val actions = notification.actions ?: return
-                
-                for (action in actions) {
-                    val title = action.title?.toString() ?: ""
-                   
-                    if (title.contains("Playlist", ignoreCase = true) || 
-                        title.contains("Queue", ignoreCase = true) ||
-                        title.contains("Dislike", ignoreCase = true) ||
-                        title.contains("ThumbsDown", ignoreCase = true) ||
-                        title.contains("Thumbs Down", ignoreCase = true)) {
-                        continue
-                    }
-                    
-                    val isAlreadyLiked = title.contains("Unlike", ignoreCase = true) || 
-                                         title.contains("Unheart", ignoreCase = true) ||
-                                         title.contains("Remove from", ignoreCase = true) ||
-                                         title.contains("Saved", ignoreCase = true)
-                    
-                    if (isAlreadyLiked) {
-                        if (showToast) android.widget.Toast.makeText(applicationContext, "Already Liked \u2665", android.widget.Toast.LENGTH_SHORT).show()
-                        triggerAmbientGlance(activeSession, "like", true)
-                        return
-                    }
-                }
-                
-                for (action in actions) {
-                    val title = action.title?.toString() ?: ""
-                    
-                    if (title.contains("Playlist", ignoreCase = true) || 
-                        title.contains("Queue", ignoreCase = true) ||
-                        title.contains("Dislike", ignoreCase = true) ||
-                        title.contains("ThumbsDown", ignoreCase = true) ||
-                        title.contains("Thumbs Down", ignoreCase = true)) {
-                        continue
-                    }
 
-                    val isLike = title.contains("Like", ignoreCase = true) || 
-                                 title.contains("Heart", ignoreCase = true) ||
-                                 title.contains("Favorite", ignoreCase = true) ||
-                                 title.contains("Love", ignoreCase = true) ||
-                                 title.contains("ThumbsUp", ignoreCase = true) ||
-                                 title.contains("Thumbs Up", ignoreCase = true) ||
-                                 title.contains("Add to", ignoreCase = true)
-
-                    if (isLike) {
-                        try {
-                            action.actionIntent.send()
-                            if (showToast) android.widget.Toast.makeText(applicationContext, "Liked song \u2665", android.widget.Toast.LENGTH_SHORT).show()
-                            triggerAmbientGlance(activeSession, "like", false)
-                            return
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
+            // 3. Check Notification Actions
+            val notifications = activeNotifications
+            val sbn = notifications?.find { it.packageName == activeSession.packageName }
+            if (sbn != null) {
+                val actions = sbn.notification.actions
+                if (actions != null) {
+                    for (action in actions) {
+                        val title = action.title?.toString() ?: ""
+                        if (title.contains("Playlist", ignoreCase = true) || 
+                            title.contains("Queue", ignoreCase = true) ||
+                            title.contains("Dislike", ignoreCase = true) ||
+                            title.contains("ThumbsDown", ignoreCase = true) ||
+                            title.contains("Thumbs Down", ignoreCase = true)) continue
+                        
+                        val isAlreadyLiked = title.contains("Unlike", ignoreCase = true) || 
+                                             title.contains("Unheart", ignoreCase = true) ||
+                                             title.contains("Remove from", ignoreCase = true) ||
+                                             title.contains("Saved", ignoreCase = true) ||
+                                             title.contains("In your", ignoreCase = true)
+                        if (isAlreadyLiked) return true
                     }
                 }
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
+        return false
     }
 
     private data class MediaState(
@@ -269,51 +248,70 @@ class NotificationListener : NotificationListenerService() {
     private fun triggerAmbientGlance(
         activeSession: android.media.session.MediaController, 
         eventType: String, 
-        isAlreadyLiked: Boolean = false
+        isAlreadyLikedOverride: Boolean? = null
     ) {
         val prefs = getSharedPreferences(com.sameerasw.essentials.data.repository.SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
         val isEnabled = prefs.getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_ENABLED, false)
         
         if (isEnabled) {
-            val powerManager = getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
-            if (!powerManager.isInteractive) {
-                 // Extract Album Art
-                 var bitmap = activeSession.metadata?.getBitmap(android.media.MediaMetadata.METADATA_KEY_ALBUM_ART)
-                 if (bitmap == null) {
-                     bitmap = activeSession.metadata?.getBitmap(android.media.MediaMetadata.METADATA_KEY_ART)
-                 }
+             val metadata = activeSession.metadata
+             val title = metadata?.getString(android.media.MediaMetadata.METADATA_KEY_TITLE)
+             val artist = metadata?.getString(android.media.MediaMetadata.METADATA_KEY_ARTIST)
+             val isAlreadyLiked = isAlreadyLikedOverride ?: isLikedState(activeSession)
+             
+             // 1. Always Extract & Cache Album Art (Dictionary)
+             var bitmap = metadata?.getBitmap(android.media.MediaMetadata.METADATA_KEY_ALBUM_ART)
+             if (bitmap == null) {
+                 bitmap = metadata?.getBitmap(android.media.MediaMetadata.METADATA_KEY_ART)
+             }
+             
+             if (title != null) {
+                 val artHash = kotlin.math.abs("${title}_${artist}".hashCode())
+                 val artFile = java.io.File(cacheDir, "art_$artHash.png")
                  
                  if (bitmap != null) {
                      try {
-                         val file = java.io.File(cacheDir, "temp_album_art.png")
-                         val out = java.io.FileOutputStream(file)
+                         val out = java.io.FileOutputStream(artFile)
                          bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, out)
                          out.flush()
                          out.close()
+                         
+                         val tempFile = java.io.File(cacheDir, "temp_album_art.png")
+                         val tempOut = java.io.FileOutputStream(tempFile)
+                         bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, tempOut)
+                         tempOut.flush()
+                         tempOut.close()
+                         
+                         // Cleanup old art files (Keep last 3)
+                         val files = cacheDir.listFiles { _, name -> name.startsWith("art_") }
+                         if (files != null && files.size > 3) {
+                             files.sortByDescending { it.lastModified() }
+                             for (i in 5 until files.size) {
+                                 files[i].delete()
+                             }
+                         }
                      } catch (e: Exception) {
                          e.printStackTrace()
                      }
-                 } else {
-                     java.io.File(cacheDir, "temp_album_art.png").delete()
                  }
-                 
-                 // Extract Text
-                 val title = activeSession.metadata?.getString(android.media.MediaMetadata.METADATA_KEY_TITLE)
-                 val artist = activeSession.metadata?.getString(android.media.MediaMetadata.METADATA_KEY_ARTIST)
-                 
-                 val intent = Intent(this, com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService::class.java).apply {
-                     action = "SHOW_AMBIENT_GLANCE"
-                     putExtra("event_type", eventType)
-                     putExtra("track_title", title)
-                     putExtra("artist_name", artist)
-                     putExtra("is_already_liked", isAlreadyLiked)
-                 }
-                 try {
-                     startService(intent)
-                 } catch (e: Exception) {
-                     e.printStackTrace()
-                 }
-            }
+             }
+
+             // 2. Trigger Glance only if screen is OFF
+             val powerManager = getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
+             if (!powerManager.isInteractive) {
+                  val intent = Intent(this, com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService::class.java).apply {
+                      action = "SHOW_AMBIENT_GLANCE"
+                      putExtra("event_type", eventType)
+                      putExtra("track_title", title)
+                      putExtra("artist_name", artist)
+                      putExtra("is_already_liked", isAlreadyLiked)
+                  }
+                  try {
+                      startService(intent)
+                  } catch (e: Exception) {
+                      e.printStackTrace()
+                  }
+             }
         }
     }
     
@@ -350,17 +348,18 @@ class NotificationListener : NotificationListenerService() {
                          }
                      }
                  }
-                 
+                 val isLiked = isLikedState(controller)
                  lastMediaStates[sbn.packageName] = MediaState(title, artist, isPlaying)
                  
                  val prefs = applicationContext.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
                  prefs.edit()
                      .putString("current_media_title", title)
                      .putString("current_media_artist", artist)
+                     .putBoolean("current_media_is_liked", isLiked)
                      .apply()
                  
                  if (eventType != null) {
-                     triggerAmbientGlance(controller, eventType)
+                     triggerAmbientGlance(controller, eventType, isLiked)
                  }
              }
          } catch (e: Exception) {

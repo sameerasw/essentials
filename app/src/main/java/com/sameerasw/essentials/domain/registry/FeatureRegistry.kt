@@ -571,7 +571,7 @@ object FeatureRegistry {
             id = "Ambient music glance",
             title = R.string.feat_ambient_music_glance_title,
             iconRes = R.drawable.rounded_music_video_24,
-            category = R.string.cat_system,
+            category = R.string.cat_visuals,
             description = R.string.feat_ambient_music_glance_desc,
             permissionKeys = listOf("ACCESSIBILITY", "NOTIFICATION_LISTENER"),
             hasMoreSettings = true,
