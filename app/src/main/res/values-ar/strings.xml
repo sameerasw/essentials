@@ -237,7 +237,14 @@
     <string name="icon_otg">OTG Mouse / Keyboard</string>
     <string name="icon_samsung_smart">Samsung Smart Features</string>
     <string name="icon_samsung_services">Samsung Services</string>
+    <string name="icon_ethernet">Ethernet</string>
     <!-- Status Bar Settings -->
+    <string name="stb_clock_seconds">Show Seconds in Clock</string>
+    <string name="stb_battery_percentage">Battery Percentage</string>
+    <string name="stb_battery_percentage_always">Always</string>
+    <string name="stb_battery_percentage_charging">Charging</string>
+    <string name="stb_battery_percentage_never">Never</string>
+    <string name="stb_privacy_chip">Camera and Microphone use chips</string>
     <string name="smart_data_title">Smart Data</string>
     <string name="permission_read_phone_state_title">Read Phone State</string>
     <string name="permission_read_phone_state_desc">Required to detect network type for Smart Data feature</string>
@@ -247,10 +254,17 @@
     <string name="smart_wifi_desc">Hide mobile data when WiFi is connected</string>
     <string name="smart_data_desc">Hide mobile data in certain modes</string>
     <string name="action_reset_all_icons">Reset All Icons</string>
+    <string name="status_bar_section_advanced">More Settings</string>
     <string name="status_bar_icons_disclaimer">Please note that the implementation of these options may depend on the OEM and some may not be functional at all.</string>
     <!-- Network Type Picker -->
     <string name="network_type_other">Other</string>
     <!-- Search -->
+    <string name="search_clock_seconds_title">Clock Seconds</string>
+    <string name="search_clock_seconds_desc">Show seconds in status bar clock</string>
+    <string name="search_battery_percentage_title">Battery Percentage</string>
+    <string name="search_battery_percentage_desc">Configure battery percentage visibility</string>
+    <string name="search_privacy_chip_title">Privacy Chips</string>
+    <string name="search_privacy_chip_desc">Show indicator when camera or mic is in use</string>
     <string name="search_desc_toggle_visibility">Toggle visibility for %1$s</string>
     <string name="title_favorites">Favorites</string>
     <string name="action_pin">Pin to Favorites</string>
@@ -441,6 +455,7 @@
     <string name="perm_shizuku_install_action">تثبيت Shizuku</string>
     <string name="perm_shizuku_grant_title">منح الإذن</string>
     <string name="perm_shizuku_grant_desc">Required to run power-saving commands while maps is navigating.</string>
+    <string name="req_shizuku">Requires Shizuku or Root</string>
     <string name="perm_root_title">Root Access</string>
     <string name="perm_root_desc">Permissions required for system actions using Root privileges.</string>
     <string name="perm_notif_listener_title">Notification Listener</string>
