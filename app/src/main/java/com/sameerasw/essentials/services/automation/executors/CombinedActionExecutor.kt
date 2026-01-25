@@ -6,7 +6,6 @@ import android.hardware.camera2.CameraManager
 import android.os.Build
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.utils.HapticUtil
-import android.view.View
 
 object CombinedActionExecutor {
 
@@ -70,9 +69,15 @@ object CombinedActionExecutor {
                                   val effectsBuilder = try {
                                       android.service.notification.ZenDeviceEffects.Builder()
                                   } catch (e: NoSuchMethodError) {
-                                    // Samsung fallback
-                                      android.service.notification.ZenDeviceEffects.Builder(null)
-                                  }
+                                      try {
+                                          val constructor = android.service.notification.ZenDeviceEffects.Builder::class.java.getConstructor(
+                                              android.service.notification.ZenDeviceEffects::class.java
+                                          )
+                                          constructor.newInstance(null)
+                                      } catch (refE: Exception) {
+                                          null
+                                      }
+                                  } ?: return
                                   
                                   effectsBuilder.setShouldDisplayGrayscale(action.grayscale)
                                       .setShouldSuppressAmbientDisplay(action.suppressAmbient)
