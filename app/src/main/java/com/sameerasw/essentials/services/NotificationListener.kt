@@ -318,16 +318,18 @@ class NotificationListener : NotificationListenerService() {
                      }
                  }
              }
-            
-            // 2. Trigger Glance only if screen is OFF
+                        // 2. Trigger Glance only if screen is OFF or Screensaver is Active
              val powerManager = getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
-             if (!powerManager.isInteractive || bypassInteractiveCheck) {
+             val isDreaming = com.sameerasw.essentials.services.dreams.AmbientDreamService.isDreaming
+             
+             if (!powerManager.isInteractive || bypassInteractiveCheck || isDreaming) {
                   val intent = Intent("SHOW_AMBIENT_GLANCE").apply {
                       putExtra("event_type", eventType)
                       putExtra("track_title", title)
                       putExtra("artist_name", artist)
                       putExtra("is_already_liked", isAlreadyLiked)
                       putExtra("is_docked_mode", isDockedMode)
+                      putExtra("package_name", activeSession.packageName)
                       setPackage(packageName)
                   }
                   sendBroadcast(intent)
