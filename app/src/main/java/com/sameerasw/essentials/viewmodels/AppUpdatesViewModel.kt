@@ -12,6 +12,9 @@ import com.sameerasw.essentials.domain.model.github.GitHubRepo
 import com.sameerasw.essentials.utils.AppUtil
 import kotlinx.coroutines.launch
 
+import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.domain.model.TrackedRepo
+
 class AppUpdatesViewModel : ViewModel() {
     private val gitHubRepository = GitHubRepository()
 
@@ -35,6 +38,19 @@ class AppUpdatesViewModel : ViewModel() {
 
     private val _selectedApp = mutableStateOf<NotificationApp?>(null)
     val selectedApp: State<NotificationApp?> = _selectedApp
+    
+    private val _trackedRepos = mutableStateOf<List<TrackedRepo>>(emptyList())
+    val trackedRepos: State<List<TrackedRepo>> = _trackedRepos
+
+    private val _isLoading = mutableStateOf(false)
+    val isLoading: State<Boolean> = _isLoading
+
+    // New options state
+    private val _allowPreReleases = mutableStateOf(false)
+    val allowPreReleases: State<Boolean> = _allowPreReleases
+    
+    private val _notificationsEnabled = mutableStateOf(true)
+    val notificationsEnabled: State<Boolean> = _notificationsEnabled
 
     fun onSearchQueryChanged(query: String) {
         _searchQuery.value = query
@@ -43,6 +59,14 @@ class AppUpdatesViewModel : ViewModel() {
 
     fun onAppSelected(app: NotificationApp?) {
         _selectedApp.value = app
+    }
+    
+    fun loadTrackedRepos(context: Context) {
+        _isLoading.value = true
+        viewModelScope.launch {
+            _trackedRepos.value = SettingsRepository(context).getTrackedRepos()
+            _isLoading.value = false
+        }
     }
 
     fun searchRepo(context: Context) {
@@ -82,7 +106,82 @@ class AppUpdatesViewModel : ViewModel() {
                     }
                 }
             } catch (e: Exception) {
-                _errorMessage.value = "An error occurred during search"
+                if (e.message == "RATE_LIMIT") {
+                    _errorMessage.value = context.getString(com.sameerasw.essentials.R.string.error_rate_limited)
+                } else {
+                    _errorMessage.value = "An error occurred during search"
+                }
+            } finally {
+                _isSearching.value = false
+            }
+        }
+    }
+    
+    fun trackRepo(context: Context, selectedApk: String) {
+        val repo = _searchResult.value ?: return
+        val release = _latestRelease.value ?: return
+        val app = _selectedApp.value
+        
+        val trackedRepo = TrackedRepo(
+            owner = repo.owner.login,
+            name = repo.name,
+            fullName = repo.fullName,
+            description = repo.description,
+            stars = repo.stars,
+            avatarUrl = repo.owner.avatarUrl,
+            latestTagName = release.tagName,
+            latestReleaseName = release.name,
+            latestReleaseBody = release.body,
+            latestReleaseUrl = release.htmlUrl,
+            downloadUrl = release.assets.find { it.name == selectedApk }?.downloadUrl ?: release.assets.firstOrNull { it.name.endsWith(".apk") }?.downloadUrl,
+            publishedAt = release.publishedAt,
+            selectedApkName = selectedApk,
+            mappedPackageName = app?.packageName,
+            mappedAppName = app?.appName,
+            allowPreReleases = _allowPreReleases.value,
+            notificationsEnabled = _notificationsEnabled.value
+        )
+        
+        SettingsRepository(context).addOrUpdateTrackedRepo(trackedRepo)
+        loadTrackedRepos(context)
+        clearSearch()
+    }
+    
+    fun untrackRepo(context: Context, fullName: String) {
+        SettingsRepository(context).removeTrackedRepo(fullName)
+        loadTrackedRepos(context)
+    }
+    
+    fun prepareEdit(context: Context, repo: TrackedRepo) {
+        _searchQuery.value = repo.fullName
+        _isSearching.value = true
+        _errorMessage.value = null
+        _searchResult.value = null
+        _latestRelease.value = null
+        _readmeContent.value = null
+        _selectedApp.value = null
+        _allowPreReleases.value = repo.allowPreReleases
+        _notificationsEnabled.value = repo.notificationsEnabled
+        
+        viewModelScope.launch {
+            try {
+                val repoInfo = gitHubRepository.getRepoInfo(repo.owner, repo.name)
+                val release = gitHubRepository.getLatestRelease(repo.owner, repo.name)
+                _searchResult.value = repoInfo
+                _latestRelease.value = release
+                _readmeContent.value = gitHubRepository.getReadme(repo.owner, repo.name)
+                
+                // Set mapped app
+                if (repo.mappedPackageName != null) {
+                    val installedApps = AppUtil.getInstalledApps(context)
+                    _selectedApp.value = installedApps.find { it.packageName == repo.mappedPackageName }
+                }
+            } catch (e: Exception) {
+                if (e.message == "RATE_LIMIT") {
+                    _errorMessage.value = context.getString(com.sameerasw.essentials.R.string.error_rate_limited)
+                }
+                // Fallback to offline data? User said it should open but didn't specify offline support.
+                // For now just clear searching
             } finally {
                 _isSearching.value = false
             }
@@ -128,5 +227,54 @@ class AppUpdatesViewModel : ViewModel() {
         _latestRelease.value = null
         _errorMessage.value = null
         _readmeContent.value = null
+        _allowPreReleases.value = false
+        _notificationsEnabled.value = true
+    }
+
+    fun clearError() {
+        _errorMessage.value = null
+    }
+
+    fun setAllowPreReleases(allow: Boolean) {
+        _allowPreReleases.value = allow
+    }
+
+    fun setNotificationsEnabled(enabled: Boolean) {
+        _notificationsEnabled.value = enabled
+    }
+
+    fun fetchReleaseNotesIfNeeded(context: Context, repo: TrackedRepo) {
+        if (!repo.latestReleaseBody.isNullOrBlank()) return
+
+        viewModelScope.launch {
+            try {
+                
+                val release = if (repo.allowPreReleases) {
+                   gitHubRepository.getLatestRelease(repo.owner, repo.name)
+                } else {
+                   gitHubRepository.getLatestRelease(repo.owner, repo.name)
+                }
+
+                if (release != null) {
+                   // Update the cached repo with new details
+                   val updatedRepo = repo.copy(
+                       latestTagName = release.tagName,
+                       latestReleaseName = release.name,
+                       latestReleaseBody = release.body,
+                       latestReleaseUrl = release.htmlUrl,
+                       downloadUrl = release.assets.find { it.name == repo.selectedApkName }?.downloadUrl ?: release.assets.firstOrNull { it.name.endsWith(".apk") }?.downloadUrl,
+                       publishedAt = release.publishedAt,
+                       // Keep existing flags
+                   )
+                   SettingsRepository(context).addOrUpdateTrackedRepo(updatedRepo)
+                   loadTrackedRepos(context)
+                }
+            } catch (e: Exception) {
+               if (e.message == "RATE_LIMIT") {
+                   _errorMessage.value = context.getString(com.sameerasw.essentials.R.string.error_rate_limited)
+               }
+               // Ignore others
+            }
+        }
     }
 }

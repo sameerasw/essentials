@@ -37,7 +37,7 @@ fun AddRepoBottomSheet(
 ) {
     val context = LocalContext.current
     val view = LocalView.current
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
     val searchQuery by viewModel.searchQuery
     val isSearching by viewModel.isSearching
     val searchResult by viewModel.searchResult
@@ -45,6 +45,8 @@ fun AddRepoBottomSheet(
     val errorMessage by viewModel.errorMessage
     val readmeContent by viewModel.readmeContent
     val selectedApp by viewModel.selectedApp
+    val allowPreReleases by viewModel.allowPreReleases
+    val notificationsEnabled by viewModel.notificationsEnabled
 
     var showReleaseNotes by remember { mutableStateOf(false) }
     var showReadme by remember { mutableStateOf(false) }
@@ -126,8 +128,12 @@ fun AddRepoBottomSheet(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            val isTracked = remember(searchResult, viewModel.trackedRepos.value) {
+                viewModel.trackedRepos.value.any { it.fullName == searchResult?.fullName }
+            }
+
             Text(
-                text = stringResource(R.string.action_add_repo),
+                text = if (isTracked) stringResource(R.string.action_edit_repo) else stringResource(R.string.action_add_repo),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
@@ -474,29 +480,123 @@ fun AddRepoBottomSheet(
                             }
                         }
                     }
+                // Options section
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.label_options),
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(top = 8.dp, start = 12.dp)
+                    )
+                    
+                    RoundedCardContainer {
+                        // Pre-releases option
+                        Surface(
+                            onClick = {
+                                HapticUtil.performUIHaptic(view)
+                                viewModel.setAllowPreReleases(!allowPreReleases)
+                            },
+                            color = MaterialTheme.colorScheme.surfaceContainer
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.option_allow_prereleases),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurface 
+                                )
+                                androidx.compose.material3.Switch(
+                                    checked = allowPreReleases,
+                                    onCheckedChange = {
+                                        HapticUtil.performUIHaptic(view)
+                                        viewModel.setAllowPreReleases(it)
+                                    }
+                                )
+                            }
+                        }
+                        
+                        // Notifications option
+                        Surface(
+                            onClick = {
+                                HapticUtil.performUIHaptic(view)
+                                viewModel.setNotificationsEnabled(!notificationsEnabled)
+                            },
+                            color = MaterialTheme.colorScheme.surfaceContainer
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.option_notifications),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurface 
+                                )
+                                androidx.compose.material3.Switch(
+                                    checked = notificationsEnabled,
+                                    onCheckedChange = {
+                                        HapticUtil.performUIHaptic(view)
+                                        viewModel.setNotificationsEnabled(it)
+                                    }
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+            val isTracked = remember(searchResult, viewModel.trackedRepos.value) {
+                    viewModel.trackedRepos.value.any { it.fullName == searchResult?.fullName }
                 }
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    OutlinedButton(
-                        onClick = {
-                            HapticUtil.performUIHaptic(view)
-                            viewModel.clearSearch() 
-                        },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(stringResource(R.string.action_cancel))
+                    if (isTracked) {
+                        OutlinedButton(
+                            onClick = {
+                                HapticUtil.performMediumHaptic(view)
+                                viewModel.untrackRepo(context, searchResult!!.fullName)
+                                onDismissRequest()
+                            },
+                            modifier = Modifier.weight(1f),
+                            colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error)
+                        ) {
+                            Text(stringResource(R.string.action_untrack))
+                        }
+                    } else {
+                        OutlinedButton(
+                            onClick = {
+                                HapticUtil.performUIHaptic(view)
+                                viewModel.clearSearch() 
+                            },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(stringResource(R.string.action_cancel))
+                        }
                     }
+                    
                     Button(
                         onClick = {
                             HapticUtil.performMediumHaptic(view)
+                            viewModel.trackRepo(context, selectedApkName)
                             onTrackClick()
                         },
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text(stringResource(R.string.action_track))
+                        Text(if (isTracked) stringResource(R.string.action_save) else stringResource(R.string.action_track))
                     }
                 }
             }

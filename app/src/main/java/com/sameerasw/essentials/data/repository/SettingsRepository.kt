@@ -12,6 +12,7 @@ import com.sameerasw.essentials.domain.HapticFeedbackType
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import com.sameerasw.essentials.domain.model.TrackedRepo
 
 class SettingsRepository(private val context: Context) {
 
@@ -98,6 +99,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_PITCH_BLACK_THEME_ENABLED = "pitch_black_theme_enabled"
         
         const val KEY_KEYBOARD_HEIGHT = "keyboard_height"
+        const val KEY_TRACKED_REPOS = "tracked_repos"
         const val KEY_KEYBOARD_BOTTOM_PADDING = "keyboard_bottom_padding"
         const val KEY_KEYBOARD_HAPTICS_ENABLED = "keyboard_haptics_enabled"
         const val KEY_KEYBOARD_ROUNDNESS = "keyboard_roundness"
@@ -488,5 +490,37 @@ class SettingsRepository(private val context: Context) {
     fun savePinnedFeatures(features: List<String>) {
         val json = gson.toJson(features)
         putString(KEY_PINNED_FEATURES, json)
+    }
+
+    fun getTrackedRepos(): List<TrackedRepo> {
+        val json = prefs.getString(KEY_TRACKED_REPOS, null) ?: return emptyList()
+        val type = object : TypeToken<List<TrackedRepo>>() {}.type
+        return try {
+            gson.fromJson(json, type)
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    fun saveTrackedRepos(repos: List<TrackedRepo>) {
+        val json = gson.toJson(repos)
+        prefs.edit().putString(KEY_TRACKED_REPOS, json).apply()
+    }
+
+    fun addOrUpdateTrackedRepo(repo: TrackedRepo) {
+        val current = getTrackedRepos().toMutableList()
+        val index = current.indexOfFirst { it.fullName == repo.fullName }
+        if (index != -1) {
+            current[index] = repo
+        } else {
+            current.add(repo)
+        }
+        saveTrackedRepos(current)
+    }
+
+    fun removeTrackedRepo(fullName: String) {
+        val current = getTrackedRepos().toMutableList()
+        current.removeAll { it.fullName == fullName }
+        saveTrackedRepos(current)
     }
 }

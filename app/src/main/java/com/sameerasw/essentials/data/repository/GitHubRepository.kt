@@ -19,8 +19,11 @@ class GitHubRepository {
             if (connection.responseCode == 200) {
                 val data = connection.inputStream.bufferedReader().readText()
                 gson.fromJson(data, GitHubRepo::class.java)
+            } else if (connection.responseCode == 403 || connection.responseCode == 429) {
+                throw Exception("RATE_LIMIT")
             } else null
         } catch (e: Exception) {
+            if (e.message == "RATE_LIMIT") throw e
             e.printStackTrace()
             null
         }
@@ -33,8 +36,11 @@ class GitHubRepository {
             if (connection.responseCode == 200) {
                 val data = connection.inputStream.bufferedReader().readText()
                 gson.fromJson(data, GitHubRelease::class.java)
+            } else if (connection.responseCode == 403 || connection.responseCode == 429) {
+                throw Exception("RATE_LIMIT")
             } else null
         } catch (e: Exception) {
+            if (e.message == "RATE_LIMIT") throw e
             e.printStackTrace()
             null
         }
@@ -52,8 +58,11 @@ class GitHubRepository {
                 if (encoding == "base64") {
                     String(android.util.Base64.decode(content, android.util.Base64.DEFAULT))
                 } else content
+            } else if (connection.responseCode == 403 || connection.responseCode == 429) {
+                throw Exception("RATE_LIMIT")
             } else null
         } catch (e: Exception) {
+            if (e.message == "RATE_LIMIT") throw e
             e.printStackTrace()
             null
         }

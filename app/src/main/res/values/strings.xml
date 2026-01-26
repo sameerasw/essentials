@@ -526,6 +526,7 @@
     <string name="tab_apps_subtitle">Find and manage apps</string>
     <string name="tab_app_updates_title">App Updates</string>
     <string name="action_add_repo">Add Repository</string>
+    <string name="action_edit_repo">Edit Repository</string>
     <string name="prompt_enter_repo_url">Enter GitHub Repository URL or owner/repo</string>
     <string name="action_track">Track</string>
     <string name="error_invalid_repo_url">Invalid repository URL or format</string>
@@ -538,6 +539,13 @@
     <string name="label_not_installed">Not installed</string>
     <string name="action_pick_app">Pick app</string>
     <string name="action_select_app">Select app</string>
+    <string name="action_untrack">Untrack</string>
+    <string name="label_pending">Pending</string>
+    <string name="label_up_to_date">Up-to-date</string>
+    <string name="label_options">Options</string>
+    <string name="option_allow_prereleases">Check for pre-releases</string>
+    <string name="option_notifications">Notifications</string>
+    <string name="error_rate_limited">GitHub rate limit exceeded. Please try again later.</string>
 
     <!-- Keyboard Setup -->
     <string name="label_keyboard_setup">Keyboard Setup</string>
@@ -848,7 +856,7 @@
     <!-- Updates -->
     <string name="status_up_to_date">You are up to date</string>
     <string name="warning_pre_release">This is a pre-release version and might be unstable.</string>
-    <string name="release_notes_format">Release Notes v%1$s</string>
+    <string name="release_notes_format">Release Notes %1$s</string>
     <string name="action_view_on_github">View on GitHub</string>
     <string name="action_download_apk">Download APK</string>
 
