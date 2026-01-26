@@ -35,6 +35,8 @@ import java.util.TimeZone
 fun TrackedRepoCard(
     repo: TrackedRepo,
     isLoading: Boolean = false,
+    installStatus: String? = null,
+    downloadProgress: Float = 0f,
     onClick: () -> Unit,
     onShowReleaseNotes: () -> Unit = {}
 ) {
@@ -161,6 +163,17 @@ fun TrackedRepoCard(
             
             if (isLoading) {
                 CircularWavyProgressIndicator()
+            } else if (installStatus != null) {
+                Column(
+                    modifier = Modifier.width(64.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    CircularWavyProgressIndicator(
+                        progress = { downloadProgress },
+                        modifier = Modifier.size(32.dp)
+                    )
+                }
             } else if (repo.isUpdateAvailable || repo.mappedPackageName == null) {
                 IconButton(
                     onClick = {

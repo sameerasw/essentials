@@ -65,7 +65,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularWavyProgressIndicator
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.ProgressIndicatorDefaults
+import com.sameerasw.essentials.domain.model.TrackedRepo
 
 @OptIn(ExperimentalMaterial3Api::class)
 class AppUpdatesActivity : FragmentActivity() {
@@ -113,7 +115,6 @@ class AppUpdatesActivity : FragmentActivity() {
                     updatesViewModel.clearError()
                 }
             }
-
             var repoToShowReleaseNotesFullName by remember { mutableStateOf<String?>(null) }
 
             LaunchedEffect(Unit) {
@@ -123,6 +124,7 @@ class AppUpdatesActivity : FragmentActivity() {
             EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
                 val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
                 
+
                 if (showAddRepoSheet) {
                     AddRepoBottomSheet(
                         viewModel = updatesViewModel,
@@ -136,16 +138,14 @@ class AppUpdatesActivity : FragmentActivity() {
                         }
                     )
                 }
-
+                
                 if (repoToShowReleaseNotesFullName != null) {
                     val repo = trackedRepos.find { it.fullName == repoToShowReleaseNotesFullName }
                     if (repo != null) {
                         val isNotesLoading = repo.latestReleaseBody.isNullOrBlank()
-                        val cleanVersion = repo.latestTagName.removePrefix("v").removePrefix("V")
-                        
                         UpdateBottomSheet(
                             updateInfo = com.sameerasw.essentials.domain.model.UpdateInfo(
-                                versionName = cleanVersion,
+                                versionName = repo.latestTagName,
                                 releaseNotes = repo.latestReleaseBody ?: "",
                                 downloadUrl = repo.downloadUrl ?: "",
                                 releaseUrl = repo.latestReleaseUrl ?: "",
@@ -155,8 +155,7 @@ class AppUpdatesActivity : FragmentActivity() {
                             onDismissRequest = { repoToShowReleaseNotesFullName = null }
                         )
                     } else {
-                         showAddRepoSheet = false
-                         repoToShowReleaseNotesFullName = null
+                        repoToShowReleaseNotesFullName = null
                     }
                 }
 
@@ -177,14 +176,22 @@ class AppUpdatesActivity : FragmentActivity() {
                                         HapticUtil.performMediumHaptic(view)
                                         updatesViewModel.checkForUpdates(context)
                                     },
-                                    enabled = refreshingRepoIds.isEmpty()
+                                    enabled = refreshingRepoIds.isEmpty(),
+                                    colors = IconButtonDefaults.iconButtonColors(
+                                        containerColor = MaterialTheme.colorScheme.surfaceBright
+                                    ),
+                                    modifier = Modifier.size(48.dp)
                                 ) {
                                     if (refreshingRepoIds.isNotEmpty()) {
-                                        CircularWavyProgressIndicator(progress = { animatedProgress })
+                                        CircularWavyProgressIndicator(
+                                            progress = { animatedProgress },
+                                            modifier = Modifier.size(32.dp)
+                                        )
                                     } else {
                                         androidx.compose.material3.Icon(
                                             painter = painterResource(id = R.drawable.rounded_refresh_24),
-                                            contentDescription = stringResource(R.string.action_refresh)
+                                            contentDescription = stringResource(R.string.action_refresh),
+                                            modifier = Modifier.size(32.dp)
                                         )
                                     }
                                 }
@@ -207,20 +214,21 @@ class AppUpdatesActivity : FragmentActivity() {
                         }
                     }
                 ) { innerPadding ->
+                    LaunchedEffect(Unit) {
+                        updatesViewModel.loadTrackedRepos(context)
+                    }
+
                     val pending = trackedRepos.filter { it.isUpdateAvailable && it.mappedPackageName != null }
                         .sortedByDescending { it.publishedAt }
                     val upToDate = trackedRepos.filter { !it.isUpdateAvailable && it.mappedPackageName != null }
                         .sortedByDescending { it.publishedAt }
                     val notInstalled = trackedRepos.filter { it.mappedPackageName == null }
 
-                    LaunchedEffect(Unit) {
-                        updatesViewModel.loadTrackedRepos(context)
-                    }
-
-                    if (isLoading) {
+                    if (isLoading && trackedRepos.isEmpty()) {
                         Column(
-                            modifier = Modifier.padding(innerPadding).fillMaxWidth().padding(top = 32.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                            modifier = Modifier.padding(innerPadding).fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
                         ) {
                             LoadingIndicator()
                         }
@@ -228,10 +236,9 @@ class AppUpdatesActivity : FragmentActivity() {
                         Column(
                             modifier = Modifier
                                 .padding(innerPadding)
-                                .fillMaxSize()
-                                .padding(vertical = 64.dp),
+                                .fillMaxSize(),
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                            verticalArrangement = Arrangement.Center
                         ) {
                             androidx.compose.material3.Icon(
                                 painter = painterResource(id = R.drawable.rounded_apps_24),
@@ -247,8 +254,7 @@ class AppUpdatesActivity : FragmentActivity() {
                         }
                     } else {
                         LazyColumn(
-                            modifier = Modifier
-                                .fillMaxSize(),
+                            modifier = Modifier.fillMaxSize(),
                             contentPadding = androidx.compose.foundation.layout.PaddingValues(
                                 top = innerPadding.calculateTopPadding() + 16.dp,
                                 bottom = innerPadding.calculateBottomPadding() + 80.dp,
@@ -270,12 +276,19 @@ class AppUpdatesActivity : FragmentActivity() {
                                 item {
                                     RoundedCardContainer {
                                         pending.forEach { repo ->
+                                            val isInstalling = updatesViewModel.installingRepoId.value == repo.fullName
                                             TrackedRepoCard(
                                                 repo = repo,
                                                 isLoading = refreshingRepoIds.contains(repo.fullName),
+                                                installStatus = if (isInstalling) updatesViewModel.installStatus.value else null,
+                                                downloadProgress = if (isInstalling) updatesViewModel.updateProgress.value else 0f,
                                                 onClick = {
-                                                    updatesViewModel.prepareEdit(context, repo)
-                                                    showAddRepoSheet = true
+                                                    if (repo.isUpdateAvailable) {
+                                                        updatesViewModel.downloadAndInstall(context, repo)
+                                                    } else {
+                                                        updatesViewModel.prepareEdit(context, repo)
+                                                        showAddRepoSheet = true
+                                                    }
                                                 },
                                                 onShowReleaseNotes = {
                                                     repoToShowReleaseNotesFullName = repo.fullName
@@ -300,9 +313,12 @@ class AppUpdatesActivity : FragmentActivity() {
                                 item {
                                     RoundedCardContainer {
                                         upToDate.forEach { repo ->
+                                            val isInstalling = updatesViewModel.installingRepoId.value == repo.fullName
                                             TrackedRepoCard(
                                                 repo = repo,
                                                 isLoading = refreshingRepoIds.contains(repo.fullName),
+                                                installStatus = if (isInstalling) updatesViewModel.installStatus.value else null,
+                                                downloadProgress = if (isInstalling) updatesViewModel.updateProgress.value else 0f,
                                                 onClick = {
                                                     updatesViewModel.prepareEdit(context, repo)
                                                     showAddRepoSheet = true
@@ -330,12 +346,14 @@ class AppUpdatesActivity : FragmentActivity() {
                                 item {
                                     RoundedCardContainer {
                                         notInstalled.forEach { repo ->
+                                            val isInstalling = updatesViewModel.installingRepoId.value == repo.fullName
                                             TrackedRepoCard(
                                                 repo = repo,
                                                 isLoading = refreshingRepoIds.contains(repo.fullName),
+                                                installStatus = if (isInstalling) updatesViewModel.installStatus.value else null,
+                                                downloadProgress = if (isInstalling) updatesViewModel.updateProgress.value else 0f,
                                                 onClick = {
-                                                    updatesViewModel.prepareEdit(context, repo)
-                                                    showAddRepoSheet = true
+                                                    updatesViewModel.downloadAndInstall(context, repo)
                                                 },
                                                 onShowReleaseNotes = {
                                                     repoToShowReleaseNotesFullName = repo.fullName

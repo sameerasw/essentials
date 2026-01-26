@@ -67,6 +67,7 @@ fun ReusableTopAppBar(
     isSmall: Boolean = false,
     containerColor: Color = MaterialTheme.colorScheme.surfaceContainer,
     onSignOutClick: (() -> Unit)? = null,
+    hasHelpBadge: Boolean = false,
     actions: @Composable RowScope.() -> Unit = {}
 ) {
     val collapsedFraction = scrollBehavior?.state?.collapsedFraction ?: 0f
@@ -189,11 +190,21 @@ fun ReusableTopAppBar(
                     ),
                     modifier = Modifier.size(48.dp)
                 ) {
-                    Icon(
-                        painter = painterResource(id = helpIconRes),
-                        contentDescription = stringResource(helpContentDescription),
-                        modifier = Modifier.size(32.dp)
-                    )
+                    Box {
+                        Icon(
+                            painter = painterResource(id = helpIconRes),
+                            contentDescription = stringResource(helpContentDescription),
+                            modifier = Modifier.size(32.dp)
+                        )
+                        if (hasHelpBadge) {
+                            Box(
+                                modifier = Modifier
+                                    .size(10.dp)
+                                    .align(Alignment.TopEnd)
+                                    .background(Color.Red, CircleShape)
+                            )
+                        }
+                    }
                 }
             }
 

@@ -128,6 +128,7 @@ class MainViewModel : ViewModel() {
     val isRootEnabled = mutableStateOf(false)
     val isRootAvailable = mutableStateOf(false)
     val isRootPermissionGranted = mutableStateOf(false)
+    val hasPendingUpdates = mutableStateOf(false)
 
     val isPitchBlackThemeEnabled = mutableStateOf(false)
     
@@ -385,6 +386,8 @@ class MainViewModel : ViewModel() {
         isLikeSongAodOverlayEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_LIKE_SONG_AOD_OVERLAY_ENABLED, false)
         isAmbientMusicGlanceEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_ENABLED, false)
         isAmbientMusicGlanceDockedModeEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_DOCKED_MODE, false)
+        
+        refreshTrackedUpdates(context)
     }
 
     fun onSearchQueryChanged(query: String, context: Context) {
@@ -482,6 +485,17 @@ class MainViewModel : ViewModel() {
                 isCheckingUpdate.value = false
             }
         }
+    
+    fun refreshTrackedUpdates(context: Context) {
+        val trackedRepos = settingsRepository.getTrackedRepos()
+        if (trackedRepos.isEmpty()) {
+            hasPendingUpdates.value = false
+            return
+        }
+        
+        hasPendingUpdates.value = trackedRepos.any { it.isUpdateAvailable }
+        
+    }
     }
 
     private fun isDeviceAdminActive(context: Context): Boolean {
@@ -1329,4 +1343,10 @@ class MainViewModel : ViewModel() {
         return com.sameerasw.essentials.utils.LogManager.generateReport(context, settingsJson)
     }
 
+    fun refreshTrackedUpdates(context: Context) {
+        viewModelScope.launch {
+            val repos = SettingsRepository(context).getTrackedRepos()
+            hasPendingUpdates.value = repos.any { it.isUpdateAvailable }
+        }
+    }
 }

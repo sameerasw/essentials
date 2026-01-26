@@ -11,11 +11,14 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.WindowCompat
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -56,10 +59,13 @@ import com.sameerasw.essentials.viewmodels.GitHubAuthViewModel
 import com.sameerasw.essentials.ui.composables.configs.FreezeSettingsUI
 import com.sameerasw.essentials.ui.composables.FreezeGridUI
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -281,6 +287,7 @@ class MainActivity : FragmentActivity() {
                                 }
                             },
                             hasUpdateAvailable = isUpdateAvailable,
+                            hasHelpBadge = viewModel.hasPendingUpdates.value && currentTab == DIYTabs.APPS,
                             scrollBehavior = scrollBehavior
                         )
                     }
@@ -299,7 +306,8 @@ class MainActivity : FragmentActivity() {
                                     pagerState.animateScrollToPage(index)
                                 }
                             },
-                            scrollBehavior = exitAlwaysScrollBehavior
+                            scrollBehavior = exitAlwaysScrollBehavior,
+                            badges = mapOf(DIYTabs.APPS to viewModel.hasPendingUpdates.value)
                         )
 
                         HorizontalPager(
@@ -331,12 +339,47 @@ class MainActivity : FragmentActivity() {
                                     )
                                 }
                                 DIYTabs.APPS -> {
-                                    Box(
+                                    val hasUpdates by viewModel.hasPendingUpdates
+                                    
+                                    Column(
                                         modifier = Modifier
                                             .padding(innerPadding)
-                                            .fillMaxSize(),
-                                        contentAlignment = Alignment.Center
+                                            .fillMaxSize()
+                                            .padding(16.dp),
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.spacedBy(16.dp)
                                     ) {
+                                        if (hasUpdates) {
+                                            Card(
+                                                modifier = Modifier.fillMaxWidth(),
+                                                colors = androidx.compose.material3.CardDefaults.cardColors(
+                                                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                                                ),
+                                                onClick = {
+                                                    HapticUtil.performMediumHaptic(view)
+                                                    startActivity(Intent(this@MainActivity, AppUpdatesActivity::class.java))
+                                                }
+                                            ) {
+                                                Row(
+                                                    modifier = Modifier.padding(16.dp),
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                                                ) {
+                                                    Icon(
+                                                        painter = painterResource(id = R.drawable.rounded_info_24),
+                                                        contentDescription = null,
+                                                        modifier = Modifier.size(24.dp)
+                                                    )
+                                                    Text(
+                                                        text = "App updates available",
+                                                        style = MaterialTheme.typography.titleMedium,
+                                                        fontWeight = FontWeight.Bold
+                                                    )
+                                                }
+                                            }
+                                        }
+
                                         Text(
                                             text = "Essential Apps - Coming Soon",
                                             style = MaterialTheme.typography.titleLarge,

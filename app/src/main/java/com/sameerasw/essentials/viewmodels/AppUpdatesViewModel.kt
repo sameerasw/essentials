@@ -11,6 +11,14 @@ import com.sameerasw.essentials.domain.model.github.GitHubRelease
 import com.sameerasw.essentials.domain.model.github.GitHubRepo
 import com.sameerasw.essentials.utils.AppUtil
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.File
+import java.io.FileOutputStream
+import java.net.HttpURLConnection
+import java.net.URL
+import android.content.Intent
+import androidx.core.content.FileProvider
 import com.sameerasw.essentials.R
 
 import com.sameerasw.essentials.data.repository.SettingsRepository
@@ -58,6 +66,12 @@ class AppUpdatesViewModel : ViewModel() {
     
     private val _notificationsEnabled = mutableStateOf(true)
     val notificationsEnabled: State<Boolean> = _notificationsEnabled
+
+    private val _installingRepoId = mutableStateOf<String?>(null)
+    val installingRepoId: State<String?> = _installingRepoId
+
+    private val _installStatus = mutableStateOf<String?>(null)
+    val installStatus: State<String?> = _installStatus
 
     fun onSearchQueryChanged(query: String) {
         _searchQuery.value = query
@@ -395,7 +409,85 @@ class AppUpdatesViewModel : ViewModel() {
             if (num1 > num2) return 1
             if (num1 < num2) return -1
         }
-        
         return 0
+    }
+
+    fun downloadAndInstall(context: Context, repo: TrackedRepo) {
+        val downloadUrl = repo.downloadUrl ?: return
+        _installingRepoId.value = repo.fullName
+        _installStatus.value = "Downloading..."
+        _updateProgress.value = 0f
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                // Use external cache dir if possible for better accessibility by shell/shizuku
+                val cacheDir = context.externalCacheDir ?: context.cacheDir
+                val file = File(cacheDir, "${repo.name}.apk")
+                
+                // Ensure parent exists
+                file.parentFile?.mkdirs()
+                
+                val url = URL(downloadUrl)
+                val connection = url.openConnection() as HttpURLConnection
+                connection.connect()
+
+                if (connection.responseCode != HttpURLConnection.HTTP_OK) {
+                    throw Exception("Server returned ${connection.responseCode}")
+                }
+
+                val fileLength = connection.contentLength
+                val input = connection.inputStream
+                val output = FileOutputStream(file)
+
+                val data = ByteArray(4096)
+                var total: Long = 0
+                var count: Int
+                while (input.read(data).also { count = it } != -1) {
+                    total += count
+                    if (fileLength > 0) {
+                        _updateProgress.value = total.toFloat() / fileLength
+                    }
+                    output.write(data, 0, count)
+                }
+
+                output.flush()
+                output.close()
+                input.close()
+
+                withContext(Dispatchers.Main) {
+                    installApk(context, file, repo)
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    _errorMessage.value = "Download failed: ${e.message}"
+                    _installingRepoId.value = null
+                    _installStatus.value = null
+                }
+            }
+        }
+    }
+
+    private fun installApk(context: Context, file: File, repo: TrackedRepo) {
+        _installStatus.value = "Installing..."
+
+        // Standard install
+        try {
+            val apkUri = FileProvider.getUriForFile(
+                context,
+                "${context.packageName}.fileprovider",
+                file
+            )
+            val intent = Intent(Intent.ACTION_INSTALL_PACKAGE).apply {
+                data = apkUri
+                flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            context.startActivity(intent)
+            _installingRepoId.value = null
+            _installStatus.value = null
+        } catch (e: Exception) {
+            _errorMessage.value = "Install failed: ${e.message}"
+            _installStatus.value = null
+            _installingRepoId.value = null
+        }
     }
 }
