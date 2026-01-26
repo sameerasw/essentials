@@ -63,6 +63,7 @@ import com.sameerasw.essentials.ui.composables.configs.SnoozeNotificationsSettin
 import com.sameerasw.essentials.ui.composables.configs.AmbientMusicGlanceSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.LocationReachedSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.BatteriesSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.MapsPowerSavingSettingsUI
 import com.sameerasw.essentials.viewmodels.CaffeinateViewModel
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.viewmodels.StatusBarIconViewModel
@@ -643,11 +644,19 @@ class FeatureSettingsActivity : FragmentActivity() {
                                     highlightSetting = highlightSetting
                                 )
                             }
+<<<<<<< HEAD
                             "Calendar Sync" -> {
                                 com.sameerasw.essentials.ui.composables.configs.CalendarSyncSettingsUI(
                                     viewModel = viewModel,
                                     modifier = Modifier.padding(top = 16.dp),
                                     highlightKey = highlightSetting
+=======
+                            "Maps power saving mode" -> {
+                                MapsPowerSavingSettingsUI(
+                                    viewModel = viewModel,
+                                    modifier = Modifier.padding(top = 16.dp),
+                                    highlightSetting = highlightSetting
+>>>>>>> 37baec7 (Fix #162 Attempt at maps power saving language independent detection)
                                 )
                             }
                             // else -> default UI (optional cleanup)

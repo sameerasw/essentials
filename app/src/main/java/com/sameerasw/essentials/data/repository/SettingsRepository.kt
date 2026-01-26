@@ -27,6 +27,8 @@ class SettingsRepository(private val context: Context) {
         const val KEY_WIDGET_ENABLED = "widget_enabled"
         const val KEY_STATUS_BAR_ICON_CONTROL_ENABLED = "status_bar_icon_control_enabled"
         const val KEY_MAPS_POWER_SAVING_ENABLED = "maps_power_saving_enabled"
+        const val KEY_MAPS_DISCOVERED_CHANNELS = "maps_discovered_channels"
+        const val KEY_MAPS_DETECTION_CHANNELS = "maps_detection_channels"
         const val KEY_EDGE_LIGHTING_ENABLED = "edge_lighting_enabled"
         const val KEY_EDGE_LIGHTING_ONLY_SCREEN_OFF = "edge_lighting_only_screen_off"
         const val KEY_EDGE_LIGHTING_AMBIENT_DISPLAY = "edge_lighting_ambient_display"
@@ -385,6 +387,46 @@ class SettingsRepository(private val context: Context) {
         val json = gson.toJson(blockedChannels)
         putString(KEY_SNOOZE_BLOCKED_CHANNELS, json)
     }
+
+    // Maps Channels Helper
+    fun loadMapsDiscoveredChannels(): List<com.sameerasw.essentials.domain.model.MapsChannel> {
+        val json = prefs.getString(KEY_MAPS_DISCOVERED_CHANNELS, null)
+        return if (json != null) {
+            val type = object : TypeToken<List<com.sameerasw.essentials.domain.model.MapsChannel>>() {}.type
+            try {
+                gson.fromJson(json, type) ?: emptyList()
+            } catch (e: Exception) {
+                emptyList()
+            }
+        } else {
+            emptyList()
+        }
+    }
+
+    fun saveMapsDiscoveredChannels(channels: List<com.sameerasw.essentials.domain.model.MapsChannel>) {
+        val json = gson.toJson(channels)
+        putString(KEY_MAPS_DISCOVERED_CHANNELS, json)
+    }
+
+    fun loadMapsDetectionChannels(): Set<String> {
+        val json = prefs.getString(KEY_MAPS_DETECTION_CHANNELS, null)
+        return if (json != null) {
+            val type = object : TypeToken<Set<String>>() {}.type
+            try {
+                gson.fromJson(json, type) ?: emptySet()
+            } catch (e: Exception) {
+                emptySet()
+            }
+        } else {
+            // Default to navigation related channel IDs if none are selected yet
+            setOf("navigation_notification_channel", "primary_navigation_channel_v1", "primary_navigation_channel_v2")
+        }
+    }
+
+    fun saveMapsDetectionChannels(channels: Set<String>) {
+        val json = gson.toJson(channels)
+        putString(KEY_MAPS_DETECTION_CHANNELS, json)
+    }
     
     // Config Export/Import
     fun getAllConfigsAsJsonString(): String {
@@ -400,7 +442,7 @@ class SettingsRepository(private val context: Context) {
                     // Skip app lists as requested, and stale data
                     if (key.endsWith("_selected_apps") || key == "freeze_auto_excluded_apps" || 
                         key.startsWith("mac_battery_") || key == "airsync_mac_connected" ||
-                        key == KEY_SNOOZE_DISCOVERED_CHANNELS) {
+                        key == KEY_SNOOZE_DISCOVERED_CHANNELS || key == KEY_MAPS_DISCOVERED_CHANNELS) {
                         return@forEach
                     }
 

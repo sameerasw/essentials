@@ -52,12 +52,48 @@ class NotificationListener : NotificationListenerService() {
 
             // Initial discovery from active notifications
             activeNotifications?.forEach { sbn ->
-                val isSystem = sbn.packageName == "android" || sbn.packageName == "com.android.systemui"
+                val pkg = sbn.packageName
+                val isSystem = pkg == "android" || pkg == "com.android.systemui"
+                val isMaps = pkg == "com.google.android.apps.maps"
+                
                 if (isSystem) {
-                    discoverSystemChannel(sbn.packageName, sbn.notification.channelId, sbn.user)
+                    discoverSystemChannel(pkg, sbn.notification.channelId, sbn.user)
+                } else if (isMaps) {
+                    discoverMapsChannel(sbn.notification.channelId, sbn.user)
                 }
             }
         } catch (_: Exception) {}
+    }
+
+    private fun discoverMapsChannel(channelId: String?, userHandle: android.os.UserHandle) {
+        if (channelId.isNullOrBlank()) return
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            try {
+                val prefs = applicationContext.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+                val discoveredJson = prefs.getString("maps_discovered_channels", null)
+                val gson = com.google.gson.Gson()
+                val type = object : com.google.gson.reflect.TypeToken<List<com.sameerasw.essentials.domain.model.MapsChannel>>() {}.type
+                val discoveredChannels: MutableList<com.sameerasw.essentials.domain.model.MapsChannel> = if (discoveredJson != null) {
+                    try { gson.fromJson(discoveredJson, type) ?: mutableListOf() } catch (_: Exception) { mutableListOf() }
+                } else mutableListOf()
+
+                if (discoveredChannels.none { it.id == channelId }) {
+                    var foundName: String? = null
+                    try {
+                        val channels = getNotificationChannels("com.google.android.apps.maps", userHandle)
+                        val channel = channels.find { it.id == channelId }
+                        foundName = channel?.name?.toString()
+                    } catch (_: Exception) {}
+
+                    val name = if (!foundName.isNullOrBlank()) foundName 
+                               else channelId.replace("_", " ").lowercase().replaceFirstChar { it.uppercase() }
+                    
+                    discoveredChannels.add(com.sameerasw.essentials.domain.model.MapsChannel(channelId, name))
+                    prefs.edit().putString("maps_discovered_channels", gson.toJson(discoveredChannels)).apply()
+                }
+            } catch (_: Exception) {}
+        }
     }
 
     private fun discoverSystemChannel(packageName: String, channelId: String?, userHandle: android.os.UserHandle) {
@@ -417,6 +453,8 @@ class NotificationListener : NotificationListenerService() {
 
         // Maps navigation state update
         if (sbn.packageName == "com.google.android.apps.maps") {
+            val channelId = sbn.notification.channelId
+            discoverMapsChannel(channelId, sbn.user)
             MapsState.hasNavigationNotification = isNavigationNotification(sbn)
         }
 
@@ -667,6 +705,25 @@ class NotificationListener : NotificationListenerService() {
 
     private fun isNavigationNotification(sbn: StatusBarNotification): Boolean {
         val notification = sbn.notification
+        val channelId = notification.channelId
+        
+        val prefs = applicationContext.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+        val detectionChannelsJson = prefs.getString("maps_detection_channels", null)
+        val detectionChannels: Set<String> = if (detectionChannelsJson != null) {
+            try {
+                val type = object : com.google.gson.reflect.TypeToken<Set<String>>() {}.type
+                com.google.gson.Gson().fromJson(detectionChannelsJson, type) ?: emptySet()
+            } catch (_: Exception) { emptySet() }
+        } else {
+            // Default known navigation channels
+            setOf("navigation_notification_channel", "primary_navigation_channel_v1", "primary_navigation_channel_v2")
+        }
+
+        if (channelId != null && (detectionChannels.contains(channelId) || channelId.contains("navigation", ignoreCase = true))) {
+            return true
+        }
+
+        // 2. Fallback to category & persistence check
         if (!isPersistentNotification(notification)) return false
         return hasNavigationCategory(notification)
     }

@@ -79,6 +79,7 @@ class MainViewModel : ViewModel() {
     val remapHapticType = mutableStateOf(HapticFeedbackType.DOUBLE)
     val isDynamicNightLightEnabled = mutableStateOf(false)
     val snoozeChannels = mutableStateOf<List<com.sameerasw.essentials.domain.model.SnoozeChannel>>(emptyList())
+    val mapsChannels = mutableStateOf<List<com.sameerasw.essentials.domain.model.MapsChannel>>(emptyList())
     val isFlashlightAlwaysTurnOffEnabled = mutableStateOf(false)
     val isFlashlightFadeEnabled = mutableStateOf(false)
     val isFlashlightAdjustEnabled = mutableStateOf(false)
@@ -222,6 +223,9 @@ class MainViewModel : ViewModel() {
             SettingsRepository.KEY_SNOOZE_DISCOVERED_CHANNELS, SettingsRepository.KEY_SNOOZE_BLOCKED_CHANNELS -> {
                 appContext?.let { loadSnoozeChannels(it) }
             }
+            SettingsRepository.KEY_MAPS_DISCOVERED_CHANNELS, SettingsRepository.KEY_MAPS_DETECTION_CHANNELS -> {
+                appContext?.let { loadMapsChannels(it) }
+            }
             SettingsRepository.KEY_PINNED_FEATURES -> {
                 pinnedFeatureKeys.value = settingsRepository.getPinnedFeatures()
             }
@@ -352,6 +356,7 @@ class MainViewModel : ViewModel() {
         
         isDynamicNightLightEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_DYNAMIC_NIGHT_LIGHT_ENABLED)
         loadSnoozeChannels(context)
+        loadMapsChannels(context)
         isFlashlightAlwaysTurnOffEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_ALWAYS_TURN_OFF_ENABLED)
         isFlashlightFadeEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_FADE_ENABLED)
         isFlashlightAdjustEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_ADJUST_INTENSITY_ENABLED)
@@ -1378,6 +1383,26 @@ class MainViewModel : ViewModel() {
         }
         settingsRepository.saveSnoozeBlockedChannels(currentBlocked)
         loadSnoozeChannels(context)
+    }
+
+    private fun loadMapsChannels(context: Context) {
+        val discovered = settingsRepository.loadMapsDiscoveredChannels()
+        val detectionIds = settingsRepository.loadMapsDetectionChannels()
+        
+        mapsChannels.value = discovered.map { channel ->
+            channel.copy(isEnabled = detectionIds.contains(channel.id))
+        }.distinctBy { it.id }.sortedBy { it.name }
+    }
+
+    fun setMapsChannelDetected(channelId: String, detected: Boolean, context: Context) {
+        val currentDetected = settingsRepository.loadMapsDetectionChannels().toMutableSet()
+        if (detected) {
+            currentDetected.add(channelId)
+        } else {
+            currentDetected.remove(channelId)
+        }
+        settingsRepository.saveMapsDetectionChannels(currentDetected)
+        loadMapsChannels(context)
     }
 
     fun setFlashlightAlwaysTurnOffEnabled(enabled: Boolean, context: Context) {
