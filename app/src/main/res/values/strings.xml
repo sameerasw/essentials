@@ -525,6 +525,15 @@
     <string name="tab_diy_subtitle">Do It Yourself</string>
     <string name="tab_apps_subtitle">Find and manage apps</string>
     <string name="tab_app_updates_title">App Updates</string>
+    <string name="action_add_repo">Add Repository</string>
+    <string name="prompt_enter_repo_url">Enter GitHub Repository URL or owner/repo</string>
+    <string name="action_track">Track</string>
+    <string name="error_invalid_repo_url">Invalid repository URL or format</string>
+    <string name="error_no_apk_found">No APK found in the latest release</string>
+    <string name="error_repo_not_found">Repository not found</string>
+    <string name="label_latest_release">Latest Release</string>
+    <string name="action_view_readme">View README</string>
+    <string name="label_stars">%d Stars</string>
 
     <!-- Keyboard Setup -->
     <string name="label_keyboard_setup">Keyboard Setup</string>
