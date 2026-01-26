@@ -22,6 +22,7 @@ data class GitHubRelease(
     val body: String?,
     @SerializedName("published_at") val publishedAt: String,
     @SerializedName("html_url") val htmlUrl: String,
+    val prerelease: Boolean = false,
     val assets: List<GitHubAsset>
 )
 

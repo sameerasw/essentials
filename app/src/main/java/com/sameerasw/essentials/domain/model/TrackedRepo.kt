@@ -19,5 +19,6 @@ data class TrackedRepo(
     val isUpdateAvailable: Boolean = false,
     val allowPreReleases: Boolean = false,
     val notificationsEnabled: Boolean = true,
+    val lastETag: String? = null,
     val addedAt: Long = System.currentTimeMillis()
 )

@@ -46,6 +46,24 @@ class GitHubRepository {
         }
     }
 
+    suspend fun getReleases(owner: String, repo: String): List<GitHubRelease> = withContext(Dispatchers.IO) {
+        try {
+            val url = URL("https://api.github.com/repos/$owner/$repo/releases")
+            val connection = url.openConnection() as HttpURLConnection
+            if (connection.responseCode == 200) {
+                val data = connection.inputStream.bufferedReader().readText()
+                val listType = object : com.google.gson.reflect.TypeToken<List<GitHubRelease>>() {}.type
+                gson.fromJson(data, listType)
+            } else if (connection.responseCode == 403 || connection.responseCode == 429) {
+                throw Exception("RATE_LIMIT")
+            } else emptyList()
+        } catch (e: Exception) {
+            if (e.message == "RATE_LIMIT") throw e
+            e.printStackTrace()
+            emptyList()
+        }
+    }
+
     suspend fun getReadme(owner: String, repo: String): String? = withContext(Dispatchers.IO) {
         try {
             val url = URL("https://api.github.com/repos/$owner/$repo/readme")

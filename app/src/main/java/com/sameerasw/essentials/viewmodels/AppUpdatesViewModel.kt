@@ -93,13 +93,27 @@ class AppUpdatesViewModel : ViewModel() {
                 if (repoInfo == null) {
                     _errorMessage.value = "Repository not found"
                 } else {
-                    val release = gitHubRepository.getLatestRelease(owner, repo)
+                    var release = gitHubRepository.getLatestRelease(owner, repo)
+                    var isPreRelease = false
+                    
+                    if (release == null) {
+                        val releases = gitHubRepository.getReleases(owner, repo)
+                        release = releases.firstOrNull()
+                        if (release != null) {
+                            isPreRelease = true
+                        }
+                    }
+
                     if (release == null || !release.assets.any { it.name.endsWith(".apk") }) {
                         _errorMessage.value = "No APK found in the latest release"
                     } else {
                         _searchResult.value = repoInfo
                         _latestRelease.value = release
                         _readmeContent.value = gitHubRepository.getReadme(owner, repo)
+                        
+                        if (isPreRelease || release.prerelease) {
+                            _allowPreReleases.value = true
+                        }
                         
                         // Try to find matching installed app
                         findMatchingApp(context, repoInfo.name)
@@ -250,7 +264,8 @@ class AppUpdatesViewModel : ViewModel() {
             try {
                 
                 val release = if (repo.allowPreReleases) {
-                   gitHubRepository.getLatestRelease(repo.owner, repo.name)
+                   val releases = gitHubRepository.getReleases(repo.owner, repo.name)
+                   releases.firstOrNull()
                 } else {
                    gitHubRepository.getLatestRelease(repo.owner, repo.name)
                 }
