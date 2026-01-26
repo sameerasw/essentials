@@ -63,6 +63,9 @@ import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.ui.components.cards.TrackedRepoCard
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularWavyProgressIndicator
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.material3.ProgressIndicatorDefaults
 
 @OptIn(ExperimentalMaterial3Api::class)
 class AppUpdatesActivity : FragmentActivity() {
@@ -92,6 +95,14 @@ class AppUpdatesActivity : FragmentActivity() {
             val isPitchBlackThemeEnabled by viewModel.isPitchBlackThemeEnabled
             val trackedRepos by updatesViewModel.trackedRepos
             val isLoading by updatesViewModel.isLoading
+            val refreshingRepoIds by updatesViewModel.refreshingRepoIds
+            val updateProgress by updatesViewModel.updateProgress
+
+            val animatedProgress by animateFloatAsState(
+                targetValue = if (updateProgress > 0) updateProgress else 0f,
+                animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec,
+                label = "Progress"
+            )
 
             var showAddRepoSheet by remember { mutableStateOf(false) }
             val errorMessage by updatesViewModel.errorMessage
@@ -159,7 +170,25 @@ class AppUpdatesActivity : FragmentActivity() {
                             hasBack = true,
                             hasSearch = false,
                             onBackClick = { finish() },
-                            scrollBehavior = scrollBehavior
+                            scrollBehavior = scrollBehavior,
+                            actions = {
+                                androidx.compose.material3.IconButton(
+                                    onClick = { 
+                                        HapticUtil.performMediumHaptic(view)
+                                        updatesViewModel.checkForUpdates(context)
+                                    },
+                                    enabled = refreshingRepoIds.isEmpty()
+                                ) {
+                                    if (refreshingRepoIds.isNotEmpty()) {
+                                        CircularWavyProgressIndicator(progress = { animatedProgress })
+                                    } else {
+                                        androidx.compose.material3.Icon(
+                                            painter = painterResource(id = R.drawable.rounded_refresh_24),
+                                            contentDescription = stringResource(R.string.action_refresh)
+                                        )
+                                    }
+                                }
+                            }
                         )
                     },
                     floatingActionButton = {
@@ -243,6 +272,7 @@ class AppUpdatesActivity : FragmentActivity() {
                                         pending.forEach { repo ->
                                             TrackedRepoCard(
                                                 repo = repo,
+                                                isLoading = refreshingRepoIds.contains(repo.fullName),
                                                 onClick = {
                                                     updatesViewModel.prepareEdit(context, repo)
                                                     showAddRepoSheet = true
@@ -272,6 +302,7 @@ class AppUpdatesActivity : FragmentActivity() {
                                         upToDate.forEach { repo ->
                                             TrackedRepoCard(
                                                 repo = repo,
+                                                isLoading = refreshingRepoIds.contains(repo.fullName),
                                                 onClick = {
                                                     updatesViewModel.prepareEdit(context, repo)
                                                     showAddRepoSheet = true
@@ -301,6 +332,7 @@ class AppUpdatesActivity : FragmentActivity() {
                                         notInstalled.forEach { repo ->
                                             TrackedRepoCard(
                                                 repo = repo,
+                                                isLoading = refreshingRepoIds.contains(repo.fullName),
                                                 onClick = {
                                                     updatesViewModel.prepareEdit(context, repo)
                                                     showAddRepoSheet = true

@@ -11,6 +11,7 @@ import com.sameerasw.essentials.domain.model.github.GitHubRelease
 import com.sameerasw.essentials.domain.model.github.GitHubRepo
 import com.sameerasw.essentials.utils.AppUtil
 import kotlinx.coroutines.launch
+import com.sameerasw.essentials.R
 
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.model.TrackedRepo
@@ -45,6 +46,12 @@ class AppUpdatesViewModel : ViewModel() {
     private val _isLoading = mutableStateOf(false)
     val isLoading: State<Boolean> = _isLoading
 
+    private val _refreshingRepoIds = mutableStateOf<Set<String>>(emptySet())
+    val refreshingRepoIds: State<Set<String>> = _refreshingRepoIds
+
+    private val _updateProgress = mutableStateOf(0f)
+    val updateProgress: State<Float> = _updateProgress
+
     // New options state
     private val _allowPreReleases = mutableStateOf(false)
     val allowPreReleases: State<Boolean> = _allowPreReleases
@@ -75,7 +82,7 @@ class AppUpdatesViewModel : ViewModel() {
 
         val parts = parseRepoQuery(query)
         if (parts == null) {
-            _errorMessage.value = "Invalid format. Use owner/repo or GitHub URL"
+            _errorMessage.value = context.getString(R.string.error_invalid_repo_format)
             return
         }
 
@@ -92,7 +99,7 @@ class AppUpdatesViewModel : ViewModel() {
                 val token = SettingsRepository(context).getGitHubToken()
                 val repoInfo = gitHubRepository.getRepoInfo(owner, repo, token)
                 if (repoInfo == null) {
-                    _errorMessage.value = "Repository not found"
+                    _errorMessage.value = context.getString(R.string.error_repo_not_found)
                 } else {
                     var release = gitHubRepository.getLatestRelease(owner, repo, token)
                     var isPreRelease = false
@@ -106,7 +113,7 @@ class AppUpdatesViewModel : ViewModel() {
                     }
 
                     if (release == null || !release.assets.any { it.name.endsWith(".apk") }) {
-                        _errorMessage.value = "No APK found in the latest release"
+                        _errorMessage.value = context.getString(R.string.error_no_apk_found)
                     } else {
                         _searchResult.value = repoInfo
                         _latestRelease.value = release
@@ -124,7 +131,7 @@ class AppUpdatesViewModel : ViewModel() {
                 if (e.message == "RATE_LIMIT") {
                     _errorMessage.value = context.getString(com.sameerasw.essentials.R.string.error_rate_limited)
                 } else {
-                    _errorMessage.value = "An error occurred during search"
+                    _errorMessage.value = context.getString(R.string.error_generic_search)
                 }
             } finally {
                 _isSearching.value = false
@@ -262,37 +269,133 @@ class AppUpdatesViewModel : ViewModel() {
     fun fetchReleaseNotesIfNeeded(context: Context, repo: TrackedRepo) {
         if (!repo.latestReleaseBody.isNullOrBlank()) return
 
-       viewModelScope.launch {
+        viewModelScope.launch {
             try {
                 val token = SettingsRepository(context).getGitHubToken()
-                
+
                 val release = if (repo.allowPreReleases) {
-                   val releases = gitHubRepository.getReleases(repo.owner, repo.name, token)
-                   releases.firstOrNull()
+                    val releases = gitHubRepository.getReleases(repo.owner, repo.name, token)
+                    releases.firstOrNull()
                 } else {
-                   gitHubRepository.getLatestRelease(repo.owner, repo.name, token)
+                    gitHubRepository.getLatestRelease(repo.owner, repo.name, token)
                 }
 
                 if (release != null) {
-                   // Update the cached repo with new details
-                   val updatedRepo = repo.copy(
-                       latestTagName = release.tagName,
-                       latestReleaseName = release.name,
-                       latestReleaseBody = release.body,
-                       latestReleaseUrl = release.htmlUrl,
-                       downloadUrl = release.assets.find { it.name == repo.selectedApkName }?.downloadUrl ?: release.assets.firstOrNull { it.name.endsWith(".apk") }?.downloadUrl,
-                       publishedAt = release.publishedAt,
-                       // Keep existing flags
-                   )
-                   SettingsRepository(context).addOrUpdateTrackedRepo(updatedRepo)
-                   loadTrackedRepos(context)
+                    // Update the cached repo with new details
+                    val updatedRepo = repo.copy(
+                        latestTagName = release.tagName,
+                        latestReleaseName = release.name,
+                        latestReleaseBody = release.body,
+                        latestReleaseUrl = release.htmlUrl,
+                        downloadUrl = release.assets.find { it.name == repo.selectedApkName }?.downloadUrl
+                            ?: release.assets.firstOrNull { it.name.endsWith(".apk") }?.downloadUrl,
+                        publishedAt = release.publishedAt,
+                        // Keep existing flags
+                    )
+                    SettingsRepository(context).addOrUpdateTrackedRepo(updatedRepo)
+                    loadTrackedRepos(context)
                 }
             } catch (e: Exception) {
-               if (e.message == "RATE_LIMIT") {
-                   _errorMessage.value = context.getString(com.sameerasw.essentials.R.string.error_rate_limited)
-               }
-               // Ignore others
+                if (e.message == "RATE_LIMIT") {
+                    _errorMessage.value =
+                        context.getString(com.sameerasw.essentials.R.string.error_rate_limited)
+                }
+                // Ignore others
             }
         }
+    }
+
+    fun checkForUpdates(context: Context) {
+        if (_trackedRepos.value.isEmpty()) return
+
+        viewModelScope.launch {
+            val reposToCheck = _trackedRepos.value
+            _refreshingRepoIds.value = reposToCheck.map { it.fullName }.toSet()
+            _updateProgress.value = 0f
+            var completedCount = 0
+
+            val settingsRepo = SettingsRepository(context)
+            val token = settingsRepo.getGitHubToken()
+
+            val updatedRepos = reposToCheck.toMutableList()
+            var changesMade = false
+
+            for (i in updatedRepos.indices) {
+                val repo = updatedRepos[i]
+                try {
+                    val release = if (repo.allowPreReleases) {
+                        val releases =
+                            gitHubRepository.getReleases(repo.owner, repo.name, token)
+                        releases.firstOrNull()
+                    } else {
+                        gitHubRepository.getLatestRelease(repo.owner, repo.name, token)
+                    }
+
+                    if (release != null) {
+                        var isUpdateAvailable = false
+
+                        if (repo.mappedPackageName != null) {
+                            val installedVersion =
+                                AppUtil.getAppVersion(context, repo.mappedPackageName)
+                            if (installedVersion != null) {
+                                isUpdateAvailable = compareVersions(
+                                    release.tagName,
+                                    installedVersion
+                                ) > 0
+                            }
+                        }
+
+                        val newRepo = repo.copy(
+                            latestTagName = release.tagName,
+                            latestReleaseName = release.name,
+                            latestReleaseBody = release.body,
+                            latestReleaseUrl = release.htmlUrl,
+                            downloadUrl = release.assets.find { it.name == repo.selectedApkName }?.downloadUrl
+                                ?: release.assets.firstOrNull { it.name.endsWith(".apk") }?.downloadUrl,
+                            publishedAt = release.publishedAt,
+                            isUpdateAvailable = isUpdateAvailable,
+                            lastETag = null
+                        )
+
+                        if (newRepo != repo) {
+                            updatedRepos[i] = newRepo
+                            changesMade = true
+                        }
+                    }
+                } catch (e: Exception) {
+                    if (e.message == "RATE_LIMIT") {
+                        _errorMessage.value =
+                            context.getString(com.sameerasw.essentials.R.string.error_rate_limited)
+                        break
+                    }
+                } finally {
+                    _refreshingRepoIds.value = _refreshingRepoIds.value - repo.fullName
+                    completedCount++
+                    _updateProgress.value = completedCount.toFloat() / reposToCheck.size
+                }
+            }
+
+            if (changesMade) {
+                settingsRepo.saveTrackedRepos(updatedRepos)
+                _trackedRepos.value = updatedRepos
+            }
+        }
+    }
+
+    private fun compareVersions(v1: String, v2: String): Int {
+        val cleanV1 = v1.replace(Regex("[^0-9.]"), "").split(".")
+        val cleanV2 = v2.replace(Regex("[^0-9.]"), "").split(".")
+        
+        val length = maxOf(cleanV1.size, cleanV2.size)
+        
+        for (i in 0 until length) {
+            val num1 = cleanV1.getOrNull(i)?.toIntOrNull() ?: 0
+            val num2 = cleanV2.getOrNull(i)?.toIntOrNull() ?: 0
+            
+            if (num1 > num2) return 1
+            if (num1 < num2) return -1
+        }
+        
+        return 0
     }
 }

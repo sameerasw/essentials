@@ -30,9 +30,11 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun TrackedRepoCard(
     repo: TrackedRepo,
+    isLoading: Boolean = false,
     onClick: () -> Unit,
     onShowReleaseNotes: () -> Unit = {}
 ) {
@@ -157,7 +159,9 @@ fun TrackedRepoCard(
                 }
             }
             
-            if (repo.isUpdateAvailable || repo.mappedPackageName == null) {
+            if (isLoading) {
+                CircularWavyProgressIndicator()
+            } else if (repo.isUpdateAvailable || repo.mappedPackageName == null) {
                 IconButton(
                     onClick = {
                         HapticUtil.performMediumHaptic(view)

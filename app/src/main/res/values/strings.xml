@@ -524,6 +524,7 @@
     <string name="tab_freeze_subtitle">Disabled apps</string>
     <string name="tab_diy_subtitle">Do It Yourself</string>
     <string name="tab_apps_subtitle">Find and manage apps</string>
+    <string name="feat_app_updates_title">App Updates</string>
     <string name="tab_app_updates_title">App Updates</string>
     <string name="action_add_repo">Add Repository</string>
     <string name="action_edit_repo">Edit Repository</string>
@@ -542,6 +543,10 @@
     <string name="action_untrack">Untrack</string>
     <string name="label_pending">Pending</string>
     <string name="label_up_to_date">Up-to-date</string>
+    <string name="feat_app_updates_desc">Track and download the latest releases for your favorite apps directly from GitHub.</string>
+    <string name="error_invalid_repo_format">Invalid format. Use owner/repo or GitHub URL</string>
+    <string name="error_generic_search">An error occurred during search</string>
+    <string name="label_auto">Auto</string>
     <string name="label_options">Options</string>
     <string name="option_allow_prereleases">Check for pre-releases</string>
     <string name="option_notifications">Notifications</string>
@@ -1075,7 +1080,8 @@
     <string name="auth_copy_code_instruction">1. Copy your code:</string>
     <string name="auth_paste_code_instruction">2. Paste the code on GitHub:</string>
 
-    <string name="label_auto">Auto</string>
     <string name="label_found_apks">Found APKs</string>
     <string name="label_readme">README</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="action_start">Get Started</string>
 </resources>

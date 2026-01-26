@@ -193,4 +193,13 @@ suspend fun getAppsByPackageNames(context: Context, packageNames: List<String>):
         iconCache[packageName] = bitmap
         return bitmap
     }
+
+    fun getAppVersion(context: Context, packageName: String): String? {
+        return try {
+            val pInfo = context.packageManager.getPackageInfo(packageName, 0)
+            pInfo.versionName
+        } catch (e: Exception) {
+            null
+        }
+    }
 }

@@ -582,6 +582,21 @@ object FeatureRegistry {
             override fun isToggleEnabled(viewModel: MainViewModel, context: Context) = 
                 viewModel.isNotificationListenerEnabled.value && viewModel.isAccessibilityEnabled.value
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) = viewModel.setAmbientMusicGlanceEnabled(enabled)
+        },
+        
+        object : Feature(
+            id = "App updates",
+            title = R.string.feat_app_updates_title,
+            iconRes = R.drawable.rounded_downloading_24,
+            category = R.string.cat_tools,
+            description = R.string.feat_app_updates_desc,
+            showToggle = false
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = true
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+            override fun onClick(context: Context, viewModel: MainViewModel) {
+                context.startActivity(android.content.Intent(context, com.sameerasw.essentials.AppUpdatesActivity::class.java))
+            }
         }
     )
 }
