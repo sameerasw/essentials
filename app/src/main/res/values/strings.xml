@@ -534,6 +534,10 @@
     <string name="label_latest_release">Latest Release</string>
     <string name="action_view_readme">View README</string>
     <string name="label_stars">%d Stars</string>
+    <string name="label_installed_app">Installed app</string>
+    <string name="label_not_installed">Not installed</string>
+    <string name="action_pick_app">Pick app</string>
+    <string name="action_select_app">Select app</string>
 
     <!-- Keyboard Setup -->
     <string name="label_keyboard_setup">Keyboard Setup</string>

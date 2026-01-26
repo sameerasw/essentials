@@ -1,12 +1,15 @@
 package com.sameerasw.essentials.viewmodels
 
+import android.content.Context
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sameerasw.essentials.data.repository.GitHubRepository
+import com.sameerasw.essentials.domain.model.NotificationApp
 import com.sameerasw.essentials.domain.model.github.GitHubRelease
 import com.sameerasw.essentials.domain.model.github.GitHubRepo
+import com.sameerasw.essentials.utils.AppUtil
 import kotlinx.coroutines.launch
 
 class AppUpdatesViewModel : ViewModel() {
@@ -30,12 +33,19 @@ class AppUpdatesViewModel : ViewModel() {
     private val _readmeContent = mutableStateOf<String?>(null)
     val readmeContent: State<String?> = _readmeContent
 
+    private val _selectedApp = mutableStateOf<NotificationApp?>(null)
+    val selectedApp: State<NotificationApp?> = _selectedApp
+
     fun onSearchQueryChanged(query: String) {
         _searchQuery.value = query
         _errorMessage.value = null
     }
 
-    fun searchRepo() {
+    fun onAppSelected(app: NotificationApp?) {
+        _selectedApp.value = app
+    }
+
+    fun searchRepo(context: Context) {
         val query = _searchQuery.value.trim()
         if (query.isEmpty()) return
 
@@ -51,6 +61,7 @@ class AppUpdatesViewModel : ViewModel() {
         _searchResult.value = null
         _latestRelease.value = null
         _readmeContent.value = null
+        _selectedApp.value = null
 
         viewModelScope.launch {
             try {
@@ -61,12 +72,13 @@ class AppUpdatesViewModel : ViewModel() {
                     val release = gitHubRepository.getLatestRelease(owner, repo)
                     if (release == null || !release.assets.any { it.name.endsWith(".apk") }) {
                         _errorMessage.value = "No APK found in the latest release"
-                        // Still show repo info? User said "search should validate it... contains at least 1 apk file"
-                        // So if no APK, it's an error.
                     } else {
                         _searchResult.value = repoInfo
                         _latestRelease.value = release
                         _readmeContent.value = gitHubRepository.getReadme(owner, repo)
+                        
+                        // Try to find matching installed app
+                        findMatchingApp(context, repoInfo.name)
                     }
                 }
             } catch (e: Exception) {
@@ -75,6 +87,21 @@ class AppUpdatesViewModel : ViewModel() {
                 _isSearching.value = false
             }
         }
+    }
+
+    private suspend fun findMatchingApp(context: Context, repoName: String) {
+        val installedApps = AppUtil.getInstalledApps(context)
+        // Simple name matching logic
+        val normalizedRepoName = repoName.lowercase().replace("-", "").replace("_", "").trim()
+        
+        val matchedApp = installedApps.find { app ->
+            val normalizedAppName = app.appName.lowercase().replace(" ", "").replace("-", "").replace("_", "").trim()
+            normalizedAppName == normalizedRepoName || 
+            normalizedAppName.contains(normalizedRepoName) || 
+            normalizedRepoName.contains(normalizedAppName)
+        }
+        
+        _selectedApp.value = matchedApp
     }
 
     private fun parseRepoQuery(query: String): Pair<String, String>? {
