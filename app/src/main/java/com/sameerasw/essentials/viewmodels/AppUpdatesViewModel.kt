@@ -89,15 +89,16 @@ class AppUpdatesViewModel : ViewModel() {
 
         viewModelScope.launch {
             try {
-                val repoInfo = gitHubRepository.getRepoInfo(owner, repo)
+                val token = SettingsRepository(context).getGitHubToken()
+                val repoInfo = gitHubRepository.getRepoInfo(owner, repo, token)
                 if (repoInfo == null) {
                     _errorMessage.value = "Repository not found"
                 } else {
-                    var release = gitHubRepository.getLatestRelease(owner, repo)
+                    var release = gitHubRepository.getLatestRelease(owner, repo, token)
                     var isPreRelease = false
                     
                     if (release == null) {
-                        val releases = gitHubRepository.getReleases(owner, repo)
+                        val releases = gitHubRepository.getReleases(owner, repo, token)
                         release = releases.firstOrNull()
                         if (release != null) {
                             isPreRelease = true
@@ -109,7 +110,7 @@ class AppUpdatesViewModel : ViewModel() {
                     } else {
                         _searchResult.value = repoInfo
                         _latestRelease.value = release
-                        _readmeContent.value = gitHubRepository.getReadme(owner, repo)
+                        _readmeContent.value = gitHubRepository.getReadme(owner, repo, token)
                         
                         if (isPreRelease || release.prerelease) {
                             _allowPreReleases.value = true
@@ -179,11 +180,12 @@ class AppUpdatesViewModel : ViewModel() {
         
         viewModelScope.launch {
             try {
-                val repoInfo = gitHubRepository.getRepoInfo(repo.owner, repo.name)
-                val release = gitHubRepository.getLatestRelease(repo.owner, repo.name)
+                val token = SettingsRepository(context).getGitHubToken()
+                val repoInfo = gitHubRepository.getRepoInfo(repo.owner, repo.name, token)
+                val release = gitHubRepository.getLatestRelease(repo.owner, repo.name, token)
                 _searchResult.value = repoInfo
                 _latestRelease.value = release
-                _readmeContent.value = gitHubRepository.getReadme(repo.owner, repo.name)
+                _readmeContent.value = gitHubRepository.getReadme(repo.owner, repo.name, token)
                 
                 // Set mapped app
                 if (repo.mappedPackageName != null) {
@@ -260,14 +262,15 @@ class AppUpdatesViewModel : ViewModel() {
     fun fetchReleaseNotesIfNeeded(context: Context, repo: TrackedRepo) {
         if (!repo.latestReleaseBody.isNullOrBlank()) return
 
-        viewModelScope.launch {
+       viewModelScope.launch {
             try {
+                val token = SettingsRepository(context).getGitHubToken()
                 
                 val release = if (repo.allowPreReleases) {
-                   val releases = gitHubRepository.getReleases(repo.owner, repo.name)
+                   val releases = gitHubRepository.getReleases(repo.owner, repo.name, token)
                    releases.firstOrNull()
                 } else {
-                   gitHubRepository.getLatestRelease(repo.owner, repo.name)
+                   gitHubRepository.getLatestRelease(repo.owner, repo.name, token)
                 }
 
                 if (release != null) {

@@ -33,6 +33,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.domain.model.github.GitHubUser
+import coil.compose.AsyncImage
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.draw.clip
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -46,7 +53,10 @@ fun ReusableTopAppBar(
     onSettingsClick: (() -> Unit)? = null,
     onUpdateClick: (() -> Unit)? = null,
     onHelpClick: (() -> Unit)? = null,
+    onGitHubClick: (() -> Unit)? = null,
     hasUpdateAvailable: Boolean = false,
+    hasGitHub: Boolean = false,
+    gitHubUser: GitHubUser? = null,
     hasHelp: Boolean = false,
     helpIconRes: Int = R.drawable.rounded_help_24,
     helpContentDescription: Int = R.string.action_help_guide,
@@ -56,10 +66,14 @@ fun ReusableTopAppBar(
     backIconRes: Int = R.drawable.rounded_arrow_back_24,
     isSmall: Boolean = false,
     containerColor: Color = MaterialTheme.colorScheme.surfaceContainer,
+    onSignOutClick: (() -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {}
 ) {
     val collapsedFraction = scrollBehavior?.state?.collapsedFraction ?: 0f
     collapsedFraction > 0.5f
+    
+    // Internal state for profile menu
+    var showProfileMenu by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
 
     val titleContent: @Composable () -> Unit = {
             val resolvedTitle = when (title) {
@@ -218,6 +232,74 @@ fun ReusableTopAppBar(
 
             if (hasUpdateAvailable && hasSettings) {
                 Spacer(modifier = Modifier.width(8.dp))
+            }
+
+            if (hasGitHub) {
+                 if (hasUpdateAvailable) {
+                     Spacer(modifier = Modifier.width(8.dp))
+                 }
+                 
+                 val view = LocalView.current
+                 
+                 // Container for Icon and Menu
+                 Box {
+                     IconButton(
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            if (gitHubUser != null) {
+                                showProfileMenu = true
+                            } else {
+                                onGitHubClick?.invoke()
+                            }
+                        },
+                        colors = IconButtonDefaults.iconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceBright
+                        ),
+                        modifier = Modifier.size(48.dp)
+                    ) {
+                        if (gitHubUser != null) {
+                            AsyncImage(
+                                model = gitHubUser.avatarUrl,
+                                contentDescription = stringResource(R.string.action_profile),
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .size(32.dp)
+                                    .clip(CircleShape)
+                            )
+                        } else {
+                            Icon(
+                                painter = painterResource(id = R.drawable.brand_github),
+                                contentDescription = stringResource(R.string.action_sign_in_github),
+                                modifier = Modifier.size(32.dp)
+                            )
+                        }
+                    }
+
+                    if (gitHubUser != null) {
+                        androidx.compose.material3.DropdownMenu(
+                            expanded = showProfileMenu,
+                            onDismissRequest = { showProfileMenu = false }
+                        ) {
+                            androidx.compose.material3.DropdownMenuItem(
+                                text = { Text(stringResource(R.string.action_sign_out)) },
+                                onClick = {
+                                    onSignOutClick?.invoke()
+                                    showProfileMenu = false
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.rounded_logout_24),
+                                        contentDescription = null
+                                    )
+                                }
+                            )
+                        }
+                    }
+                 }
+                
+                if (hasSettings) {
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
             }
 
             if (hasSettings) {

@@ -1030,4 +1030,52 @@
     <string name="connect_to_airsync_summary">Display battery from your connected mac device in AirSync</string>
     <string name="download_airsync">Download AirSync App</string>
     <string name="download_airsync_summary">Required for Mac battery sync</string>
+
+    <!-- GitHub Auth -->
+    <string name="auth_copy_code">Copy code</string>
+    <string name="auth_open_login_page">Open login page</string>
+    <string name="auth_sign_in_rationale">Sign in to extend API call limits</string>
+    <string name="auth_device_code">Device Code</string>
+    <string name="auth_use_code_instruction">Use this code to authorize the app</string>
+    <string name="auth_waiting_for_authorization">Waiting for authorization...</string>
+    <string name="auth_approve_instruction">Please approve the request in your browser</string>
+    <string name="auth_success_title">Successfully signed in!</string>
+    <string name="auth_welcome_format">Welcome, %1$s</string>
+    <string name="auth_complete">Complete</string>
+    <string name="action_sign_in_github">Sign in with GitHub</string>
+    <string name="action_sign_out">Sign out</string>
+    <string name="auth_desc_signed_in">Signed in with GitHub</string>
+    <string name="auth_desc_fetching">Fetching profile...</string>
+    <string name="action_profile">Profile</string>
+
+    <!-- App Updates / Repos -->
+    <string name="desc_notification_updates">Show a notification when an update is found</string>
+    <string name="label_auto_match">Auto match</string>
+    <string name="desc_auto_match">Automatically link to an installed app</string>
+    <string name="action_select">Select</string>
+    <string name="label_release_notes">Release Notes</string>
+    <string name="msg_no_repos_tracked">No repositories tracked yet</string>
+    <string name="msg_loading_release_notes">Loading release notes...</string>
+    <string name="label_no_app_linked">No app linked</string>
+    <string name="format_release_notes_version">Release Notes %1$s</string>
+    <string name="format_updated_relative">Updated %1$s</string>
+    <string name="label_beta_caps">BETA</string>
+
+    <!-- Relative Time -->
+    <string name="time_just_now">just now</string>
+    <string name="time_min_ago">%1$dm ago</string>
+    <string name="time_hour_ago">%1$dh ago</string>
+    <string name="time_day_ago">%1$dd ago</string>
+    <string name="time_month_ago">%1$dmo ago</string>
+    <string name="time_year_ago">%1$dy ago</string>
+
+    <string name="action_retry">Retry</string>
+    <string name="action_start_sign_in">Start Sign In</string>
+    <string name="auth_requesting_code">Requesting device code...</string>
+    <string name="auth_copy_code_instruction">1. Copy your code:</string>
+    <string name="auth_paste_code_instruction">2. Paste the code on GitHub:</string>
+
+    <string name="label_auto">Auto</string>
+    <string name="label_found_apks">Found APKs</string>
+    <string name="label_readme">README</string>
 </resources>

@@ -46,6 +46,8 @@ import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.viewmodels.LocationReachedViewModel
 import com.sameerasw.essentials.ui.components.sheets.UpdateBottomSheet
 import com.sameerasw.essentials.ui.components.sheets.InstructionsBottomSheet
+import com.sameerasw.essentials.ui.components.sheets.GitHubAuthSheet
+import com.sameerasw.essentials.viewmodels.GitHubAuthViewModel
 import com.sameerasw.essentials.ui.composables.configs.FreezeSettingsUI
 import com.sameerasw.essentials.ui.composables.FreezeGridUI
 import androidx.compose.foundation.rememberScrollState
@@ -60,6 +62,7 @@ import kotlinx.coroutines.launch
 class MainActivity : FragmentActivity() {
     val viewModel: MainViewModel by viewModels()
     val locationViewModel: LocationReachedViewModel by viewModels()
+    val gitHubAuthViewModel: GitHubAuthViewModel by viewModels()
     private var isAppReady = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -169,6 +172,20 @@ class MainActivity : FragmentActivity() {
                 val isUpdateAvailable by viewModel.isUpdateAvailable
                 val updateInfo by viewModel.updateInfo
 
+                var showGitHubAuthSheet by remember { mutableStateOf(false) }
+                val gitHubToken by viewModel.gitHubToken
+                val gitHubUser by gitHubAuthViewModel.currentUser
+
+                LaunchedEffect(Unit) {
+                    gitHubAuthViewModel.loadCachedUser(context)
+                }
+
+                LaunchedEffect(gitHubToken) {
+                    if (gitHubToken != null && gitHubUser == null) {
+                        gitHubAuthViewModel.loadUser(gitHubToken!!, context)
+                    }
+                }
+
                 LaunchedEffect(Unit) {
                     viewModel.check(context)
                     // Request notification permission if not granted (Android 13+)
@@ -214,6 +231,13 @@ class MainActivity : FragmentActivity() {
                         onDismissRequest = { showInstructionsSheet = false }
                     )
                 }
+                
+                if (showGitHubAuthSheet) {
+                    GitHubAuthSheet(
+                        viewModel = gitHubAuthViewModel,
+                        onDismissRequest = { showGitHubAuthSheet = false }
+                    )
+                }
                 Scaffold(
                     contentWindowInsets = androidx.compose.foundation.layout.WindowInsets(0, 0, 0, 0),
                     modifier = Modifier
@@ -236,6 +260,10 @@ class MainActivity : FragmentActivity() {
                             onSearchClick = { searchRequested = true },
                             onSettingsClick = { startActivity(Intent(this, SettingsActivity::class.java)) },
                             onUpdateClick = { showUpdateSheet = true },
+                            onGitHubClick = { showGitHubAuthSheet = true },
+                            hasGitHub = currentTab == DIYTabs.APPS,
+                            gitHubUser = gitHubUser,
+                            onSignOutClick = { gitHubAuthViewModel.signOut(context) },
                             onHelpClick = { 
                                 if (currentTab == DIYTabs.APPS) {
                                     startActivity(Intent(this, AppUpdatesActivity::class.java))

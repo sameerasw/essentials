@@ -3,6 +3,7 @@ package com.sameerasw.essentials.data.repository
 import com.google.gson.Gson
 import com.sameerasw.essentials.domain.model.github.GitHubRelease
 import com.sameerasw.essentials.domain.model.github.GitHubRepo
+import com.sameerasw.essentials.domain.model.github.GitHubUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.net.HttpURLConnection
@@ -12,10 +13,13 @@ import java.util.Base64
 class GitHubRepository {
     private val gson = Gson()
 
-    suspend fun getRepoInfo(owner: String, repo: String): GitHubRepo? = withContext(Dispatchers.IO) {
+    suspend fun getRepoInfo(owner: String, repo: String, token: String? = null): GitHubRepo? = withContext(Dispatchers.IO) {
         try {
             val url = URL("https://api.github.com/repos/$owner/$repo")
             val connection = url.openConnection() as HttpURLConnection
+            if (token != null) {
+                connection.setRequestProperty("Authorization", "Bearer $token")
+            }
             if (connection.responseCode == 200) {
                 val data = connection.inputStream.bufferedReader().readText()
                 gson.fromJson(data, GitHubRepo::class.java)
@@ -29,10 +33,13 @@ class GitHubRepository {
         }
     }
 
-    suspend fun getLatestRelease(owner: String, repo: String): GitHubRelease? = withContext(Dispatchers.IO) {
+    suspend fun getLatestRelease(owner: String, repo: String, token: String? = null): GitHubRelease? = withContext(Dispatchers.IO) {
         try {
             val url = URL("https://api.github.com/repos/$owner/$repo/releases/latest")
             val connection = url.openConnection() as HttpURLConnection
+            if (token != null) {
+                connection.setRequestProperty("Authorization", "Bearer $token")
+            }
             if (connection.responseCode == 200) {
                 val data = connection.inputStream.bufferedReader().readText()
                 gson.fromJson(data, GitHubRelease::class.java)
@@ -46,10 +53,13 @@ class GitHubRepository {
         }
     }
 
-    suspend fun getReleases(owner: String, repo: String): List<GitHubRelease> = withContext(Dispatchers.IO) {
+    suspend fun getReleases(owner: String, repo: String, token: String? = null): List<GitHubRelease> = withContext(Dispatchers.IO) {
         try {
             val url = URL("https://api.github.com/repos/$owner/$repo/releases")
             val connection = url.openConnection() as HttpURLConnection
+            if (token != null) {
+                connection.setRequestProperty("Authorization", "Bearer $token")
+            }
             if (connection.responseCode == 200) {
                 val data = connection.inputStream.bufferedReader().readText()
                 val listType = object : com.google.gson.reflect.TypeToken<List<GitHubRelease>>() {}.type
@@ -64,10 +74,13 @@ class GitHubRepository {
         }
     }
 
-    suspend fun getReadme(owner: String, repo: String): String? = withContext(Dispatchers.IO) {
+    suspend fun getReadme(owner: String, repo: String, token: String? = null): String? = withContext(Dispatchers.IO) {
         try {
             val url = URL("https://api.github.com/repos/$owner/$repo/readme")
             val connection = url.openConnection() as HttpURLConnection
+            if (token != null) {
+                connection.setRequestProperty("Authorization", "Bearer $token")
+            }
             if (connection.responseCode == 200) {
                 val data = connection.inputStream.bufferedReader().readText()
                 val readmeMap = gson.fromJson(data, Map::class.java)
@@ -81,6 +94,25 @@ class GitHubRepository {
             } else null
         } catch (e: Exception) {
             if (e.message == "RATE_LIMIT") throw e
+            e.printStackTrace()
+            null
+        }
+    }
+
+    suspend fun getUserProfile(token: String): GitHubUser? = withContext(Dispatchers.IO) {
+        try {
+            val url = URL("https://api.github.com/user")
+            val connection = url.openConnection() as HttpURLConnection
+            connection.setRequestProperty("Authorization", "Bearer $token")
+            connection.setRequestProperty("Accept", "application/vnd.github+json")
+            
+            if (connection.responseCode == 200) {
+                val data = connection.inputStream.bufferedReader().readText()
+                gson.fromJson(data, GitHubUser::class.java)
+            } else if (connection.responseCode == 403 || connection.responseCode == 429) {
+                throw Exception("RATE_LIMIT")
+            } else null
+        } catch (e: Exception) {
             e.printStackTrace()
             null
         }

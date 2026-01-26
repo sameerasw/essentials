@@ -27,6 +27,7 @@ import com.sameerasw.essentials.utils.HapticUtil
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.*
+import com.sameerasw.essentials.utils.TimeUtil
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -52,6 +53,7 @@ fun AddRepoBottomSheet(
     var showReadme by remember { mutableStateOf(false) }
     var showAppPicker by remember { mutableStateOf(false) }
     
+    // APK selection state
     // APK selection state
     var selectedApkName by remember { mutableStateOf("Auto") }
 
@@ -95,7 +97,7 @@ fun AddRepoBottomSheet(
                     .verticalScroll(rememberScrollState())
             ) {
                 Text(
-                    text = "README",
+                    text = stringResource(R.string.label_readme),
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 16.dp)
@@ -298,7 +300,7 @@ fun AddRepoBottomSheet(
                                         fontWeight = FontWeight.Bold
                                     )
                                     Text(
-                                        text = "${latestRelease!!.tagName} • ${formatRelativeDate(latestRelease!!.publishedAt)}",
+                                        text = "${latestRelease!!.tagName} • ${TimeUtil.formatRelativeDate(latestRelease!!.publishedAt, context)}",
                                         style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
@@ -324,7 +326,7 @@ fun AddRepoBottomSheet(
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             Text(
-                                text = "Found APKs",
+                                text = stringResource(R.string.label_found_apks),
                                 style = MaterialTheme.typography.titleSmall,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(top = 8.dp, start = 12.dp)
@@ -351,7 +353,7 @@ fun AddRepoBottomSheet(
                                             horizontalArrangement = Arrangement.SpaceBetween
                                         ) {
                                             Text(
-                                                text = option,
+                                                text = if (option == "Auto") stringResource(R.string.label_auto) else option,
                                                 style = MaterialTheme.typography.bodyMedium,
                                                 fontWeight = if (selectedApkName == option) FontWeight.Bold else FontWeight.Normal,
                                                 color = if (selectedApkName == option) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
@@ -604,23 +606,3 @@ fun AddRepoBottomSheet(
     }
 }
 
-private fun formatRelativeDate(githubDate: String): String {
-    return try {
-        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
-        inputFormat.timeZone = TimeZone.getTimeZone("UTC")
-        val date = inputFormat.parse(githubDate) ?: return githubDate
-        val now = System.currentTimeMillis()
-        val diff = now - date.time
-
-        when {
-            diff < 60000 -> "just now"
-            diff < 3600000 -> "${diff / 60000}m ago"
-            diff < 86400000 -> "${diff / 3600000}h ago"
-            diff < 2592000000L -> "${diff / 86400000}d ago"
-            diff < 31536000000L -> "${diff / 2592000000L}mo ago"
-            else -> "${diff / 31536000000L}y ago"
-        }
-    } catch (e: Exception) {
-        githubDate
-    }
-}

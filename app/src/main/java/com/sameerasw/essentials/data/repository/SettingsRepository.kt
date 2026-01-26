@@ -12,6 +12,7 @@ import com.sameerasw.essentials.domain.HapticFeedbackType
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import com.sameerasw.essentials.domain.model.github.GitHubUser
 import com.sameerasw.essentials.domain.model.TrackedRepo
 
 class SettingsRepository(private val context: Context) {
@@ -128,6 +129,9 @@ class SettingsRepository(private val context: Context) {
         const val KEY_LIKE_SONG_AOD_OVERLAY_ENABLED = "like_song_aod_overlay_enabled" 
         const val KEY_AMBIENT_MUSIC_GLANCE_ENABLED = "ambient_music_glance_enabled"
         const val KEY_AMBIENT_MUSIC_GLANCE_DOCKED_MODE = "ambient_music_glance_docked_mode"
+        
+        const val KEY_GITHUB_ACCESS_TOKEN = "github_access_token"
+        const val KEY_GITHUB_USER_PROFILE = "github_user_profile"
     }
 
     // Observe changes
@@ -522,5 +526,43 @@ class SettingsRepository(private val context: Context) {
         val current = getTrackedRepos().toMutableList()
         current.removeAll { it.fullName == fullName }
         saveTrackedRepos(current)
+    }
+
+    fun getGitHubToken(): String? {
+        return prefs.getString(KEY_GITHUB_ACCESS_TOKEN, null)
+    }
+
+    fun saveGitHubToken(token: String?) {
+        prefs.edit().putString(KEY_GITHUB_ACCESS_TOKEN, token).apply()
+    }
+    
+    // observe token changes
+    val gitHubToken: Flow<String?> = callbackFlow {
+        val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+            if (key == KEY_GITHUB_ACCESS_TOKEN) {
+                trySend(getString(KEY_GITHUB_ACCESS_TOKEN))
+            }
+        }
+        trySend(getString(KEY_GITHUB_ACCESS_TOKEN))
+        prefs.registerOnSharedPreferenceChangeListener(listener)
+        awaitClose { prefs.unregisterOnSharedPreferenceChangeListener(listener) }
+    }
+
+    fun saveGitHubUser(user: GitHubUser?) {
+        if (user == null) {
+            prefs.edit().remove(KEY_GITHUB_USER_PROFILE).apply()
+        } else {
+            val json = gson.toJson(user)
+            prefs.edit().putString(KEY_GITHUB_USER_PROFILE, json).apply()
+        }
+    }
+
+    fun getGitHubUser(): GitHubUser? {
+        val json = prefs.getString(KEY_GITHUB_USER_PROFILE, null) ?: return null
+        return try {
+            gson.fromJson(json, GitHubUser::class.java)
+        } catch (e: Exception) {
+            null
+        }
     }
 }

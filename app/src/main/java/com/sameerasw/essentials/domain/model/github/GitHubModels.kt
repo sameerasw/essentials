@@ -30,3 +30,18 @@ data class GitHubAsset(
     val name: String,
     @SerializedName("browser_download_url") val downloadUrl: String
 )
+
+data class DeviceCodeResponse(
+    @SerializedName("device_code") val deviceCode: String,
+    @SerializedName("user_code") val userCode: String,
+    @SerializedName("verification_uri") val verificationUri: String,
+    @SerializedName("expires_in") val expiresIn: Int,
+    val interval: Int
+)
+
+data class TokenResponse(
+    @SerializedName("access_token") val accessToken: String?,
+    @SerializedName("token_type") val tokenType: String?,
+    @SerializedName("scope") val scope: String?,
+    val error: String?
+)

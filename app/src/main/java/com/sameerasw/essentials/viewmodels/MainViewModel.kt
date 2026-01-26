@@ -158,9 +158,11 @@ class MainViewModel : ViewModel() {
     val isAmbientMusicGlanceDockedModeEnabled = mutableStateOf(false)
 
     private var lastUpdateCheckTime: Long = 0
-    private lateinit var settingsRepository: SettingsRepository
+    lateinit var settingsRepository: SettingsRepository
     private lateinit var updateRepository: UpdateRepository
     private var appContext: Context? = null
+    
+    val gitHubToken = mutableStateOf<String?>(null)
 
     private val preferenceChangeListener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
         // We still use this listener for now, attached via Repository
@@ -257,6 +259,12 @@ class MainViewModel : ViewModel() {
         isBluetoothPermissionGranted.value = PermissionUtils.hasBluetoothPermission(context)
         
         settingsRepository.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
+        
+        viewModelScope.launch {
+            settingsRepository.gitHubToken.collect {
+                gitHubToken.value = it
+            }
+        }
         
         isWidgetEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_WIDGET_ENABLED)
         isStatusBarIconControlEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_STATUS_BAR_ICON_CONTROL_ENABLED)
