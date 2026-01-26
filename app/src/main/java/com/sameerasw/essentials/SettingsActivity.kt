@@ -72,6 +72,7 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import com.sameerasw.essentials.domain.DIYTabs
 import com.sameerasw.essentials.domain.registry.PermissionRegistry
 import com.sameerasw.essentials.ui.components.sheets.InstructionsBottomSheet
 import java.text.SimpleDateFormat
@@ -297,9 +298,13 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
 
         val defaultTab by viewModel.defaultTab
         RoundedCardContainer {
+            val availableTabs = remember(isDeveloperModeEnabled) {
+                if (isDeveloperModeEnabled) DIYTabs.entries else listOf(DIYTabs.ESSENTIALS, DIYTabs.FREEZE, DIYTabs.DIY)
+            }
             DefaultTabPicker(
                 selectedTab = defaultTab,
-                onTabSelected = { viewModel.setDefaultTab(it, context) }
+                onTabSelected = { viewModel.setDefaultTab(it, context) },
+                options = availableTabs
             )
         }
 

@@ -50,6 +50,7 @@ import com.sameerasw.essentials.ui.composables.configs.FreezeSettingsUI
 import com.sameerasw.essentials.ui.composables.FreezeGridUI
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Text
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -180,7 +181,9 @@ class MainActivity : FragmentActivity() {
                 val isDeveloperModeEnabled by viewModel.isDeveloperModeEnabled
                 
                 // Dynamic tabs configuration
-                val tabs = remember { DIYTabs.entries }
+                val tabs = remember(isDeveloperModeEnabled) {
+                    if (isDeveloperModeEnabled) DIYTabs.entries else listOf(DIYTabs.ESSENTIALS, DIYTabs.FREEZE, DIYTabs.DIY)
+                }
                 
                 val defaultTab by viewModel.defaultTab
                 val initialPage = remember(tabs) {
@@ -281,6 +284,20 @@ class MainActivity : FragmentActivity() {
                                     DIYScreen(
                                         modifier = Modifier.padding(innerPadding)
                                     )
+                                }
+                                DIYTabs.APPS -> {
+                                    Box(
+                                        modifier = Modifier
+                                            .padding(innerPadding)
+                                            .fillMaxSize(),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Text(
+                                            text = "Essential Apps - Coming Soon",
+                                            style = MaterialTheme.typography.titleLarge,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
                                 }
                             }
                         }

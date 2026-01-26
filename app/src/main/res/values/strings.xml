@@ -520,8 +520,10 @@
     <string name="tab_freeze">Freeze</string>
     <string name="tab_freeze_title">Frozen</string>
     <string name="tab_diy">DIY</string>
+    <string name="tab_apps">Apps</string>
     <string name="tab_freeze_subtitle">Disabled apps</string>
     <string name="tab_diy_subtitle">Do It Yourself</string>
+    <string name="tab_apps_subtitle">Find and manage apps</string>
 
     <!-- Keyboard Setup -->
     <string name="label_keyboard_setup">Keyboard Setup</string>

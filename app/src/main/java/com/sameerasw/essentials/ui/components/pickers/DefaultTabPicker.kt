@@ -30,9 +30,9 @@ import com.sameerasw.essentials.domain.DIYTabs
 fun DefaultTabPicker(
     selectedTab: DIYTabs,
     onTabSelected: (DIYTabs) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    options: List<DIYTabs> = DIYTabs.entries
 ) {
-    val options = DIYTabs.entries
 
     Row(
         modifier = modifier
