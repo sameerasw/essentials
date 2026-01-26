@@ -48,6 +48,8 @@ fun ReusableTopAppBar(
     onHelpClick: (() -> Unit)? = null,
     hasUpdateAvailable: Boolean = false,
     hasHelp: Boolean = false,
+    helpIconRes: Int = R.drawable.rounded_help_24,
+    helpContentDescription: Int = R.string.action_help_guide,
     scrollBehavior: TopAppBarScrollBehavior? = null,
     subtitle: Any? = null, // Can be Int or String
     isBeta: Boolean = false,
@@ -174,8 +176,8 @@ fun ReusableTopAppBar(
                     modifier = Modifier.size(48.dp)
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.rounded_help_24),
-                        contentDescription = stringResource(R.string.action_help_guide),
+                        painter = painterResource(id = helpIconRes),
+                        contentDescription = stringResource(helpContentDescription),
                         modifier = Modifier.size(32.dp)
                     )
                 }

@@ -231,10 +231,18 @@ class MainActivity : FragmentActivity() {
                             hasSearch = true,
                             hasSettings = true,
                             hasHelp = true,
+                            helpIconRes = if (currentTab == DIYTabs.APPS) R.drawable.rounded_downloading_24 else R.drawable.rounded_help_24,
+                            helpContentDescription = if (currentTab == DIYTabs.APPS) R.string.tab_app_updates_title else R.string.action_help_guide,
                             onSearchClick = { searchRequested = true },
                             onSettingsClick = { startActivity(Intent(this, SettingsActivity::class.java)) },
                             onUpdateClick = { showUpdateSheet = true },
-                            onHelpClick = { showInstructionsSheet = true },
+                            onHelpClick = { 
+                                if (currentTab == DIYTabs.APPS) {
+                                    startActivity(Intent(this, AppUpdatesActivity::class.java))
+                                } else {
+                                    showInstructionsSheet = true
+                                }
+                            },
                             hasUpdateAvailable = isUpdateAvailable,
                             scrollBehavior = scrollBehavior
                         )

@@ -87,6 +87,12 @@
             android:label="Settings"
             android:theme="@style/Theme.Essentials">
         </activity>
+        <activity
+            android:name=".AppUpdatesActivity"
+            android:exported="false"
+            android:label="@string/tab_app_updates_title"
+            android:theme="@style/Theme.Essentials">
+        </activity>
 
         <activity
             android:name=".ui.activities.LocationAlarmActivity"

@@ -524,6 +524,7 @@
     <string name="tab_freeze_subtitle">Disabled apps</string>
     <string name="tab_diy_subtitle">Do It Yourself</string>
     <string name="tab_apps_subtitle">Find and manage apps</string>
+    <string name="tab_app_updates_title">App Updates</string>
 
     <!-- Keyboard Setup -->
     <string name="label_keyboard_setup">Keyboard Setup</string>
