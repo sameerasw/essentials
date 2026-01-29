@@ -337,8 +337,8 @@
     <string name="feat_app_lock_desc">生体認証でアプリを保護</string>
     <string name="feat_freeze_title">フリーズ</string>
     <string name="feat_freeze_desc">あまり使わないアプリを無効にする</string>
-    <string name="feat_watermark_title">Watermark</string>
-    <string name="feat_watermark_desc">Add EXIF data and logos to photos</string>
+    <string name="feat_watermark_title">ウォーターマーク</string>
+    <string name="feat_watermark_desc">写真にEXIFデータとロゴを追加する</string>
     <string name="watermark_style_title">Style</string>
     <string name="watermark_style_overlay">Overlay</string>
     <string name="watermark_style_frame">Frame</string>
