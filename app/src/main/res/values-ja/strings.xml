@@ -183,12 +183,12 @@
     <string name="tile_active">動作中</string>
     <string name="tile_inactive">停止中</string>
     <string name="nfc_tile_label">NFC</string>
-    <string name="tile_private_dns">Private DNS</string>
-    <string name="tile_private_dns_desc">Toggle Private DNS mode</string>
-    <string name="tile_private_dns_auto">Auto</string>
-    <string name="tile_private_dns_off">Off</string>
-    <string name="tile_usb_debugging">USB Debugging</string>
-    <string name="tile_usb_debugging_desc">Toggle USB Debugging</string>
+    <string name="tile_private_dns">プライベートDNS</string>
+    <string name="tile_private_dns_desc">プライベートDNSモードを切り替える</string>
+    <string name="tile_private_dns_auto">自動</string>
+    <string name="tile_private_dns_off">OFF</string>
+    <string name="tile_usb_debugging">USBデバッグ</string>
+    <string name="tile_usb_debugging_desc">USBデバッグを切り替える</string>
     <string name="on">オン</string>
     <string name="off">オフ</string>
     <!-- Screen Locked Security -->
@@ -247,11 +247,11 @@
     <string name="icon_otg">OTGマウス / キーボード</string>
     <string name="icon_samsung_smart">Samsung Smart Features</string>
     <string name="icon_samsung_services">Samsung サービス</string>
-    <string name="icon_ethernet">Ethernet</string>
+    <string name="icon_ethernet">イーサネット</string>
     <!-- Status Bar Settings -->
-    <string name="stb_clock_seconds">Show Seconds in Clock</string>
-    <string name="stb_battery_percentage">Battery Percentage</string>
-    <string name="stb_battery_percentage_always">Always</string>
+    <string name="stb_clock_seconds">時計に秒を表示</string>
+    <string name="stb_battery_percentage">バッテリーパーセンテージ</string>
+    <string name="stb_battery_percentage_always">常に</string>
     <string name="stb_battery_percentage_charging">Charging</string>
     <string name="stb_battery_percentage_never">Never</string>
     <string name="stb_privacy_chip">Camera and Microphone use chips</string>
@@ -339,51 +339,51 @@
     <string name="feat_freeze_desc">あまり使わないアプリを無効にする</string>
     <string name="feat_watermark_title">ウォーターマーク</string>
     <string name="feat_watermark_desc">写真にEXIFデータとロゴを追加する</string>
-    <string name="watermark_style_title">Style</string>
-    <string name="watermark_style_overlay">Overlay</string>
-    <string name="watermark_style_frame">Frame</string>
-    <string name="watermark_show_brand">Device Brand</string>
-    <string name="watermark_show_exif">EXIF Data</string>
-    <string name="watermark_pick_image">Pick Image</string>
-    <string name="watermark_save_success">Image saved to gallery</string>
-    <string name="watermark_save_error">Failed to save image</string>
-    <string name="watermark_processing">Processing...</string>
-    <string name="action_share">Share</string>
-    <string name="watermark_exif_settings">EXIF Settings</string>
-    <string name="watermark_exif_focal_length">Focal Length</string>
-    <string name="watermark_exif_aperture">Aperture</string>
-    <string name="watermark_exif_iso">ISO</string>
-    <string name="watermark_exif_shutter_speed">Shutter Speed</string>
-    <string name="watermark_exif_date">Date &amp; Time</string>
-    <string name="watermark_move_to_top">Move to Top</string>
-    <string name="watermark_left_align">Align Left</string>
-    <string name="watermark_text_size_brand">Brand Size</string>
-    <string name="watermark_text_size_data">Data Size</string>
-    <string name="watermark_text_size_custom">Text Size</string>
-    <string name="watermark_font_options">Font Size</string>
-    <string name="watermark_custom_text">Custom Text</string>
-    <string name="watermark_custom_text_hint">Enter your text...</string>
-    <string name="watermark_custom_text_settings">Custom Text Settings</string>
-    <string name="watermark_spacing">Spacing</string>
-    <string name="watermark_border_width">Border Width</string>
-    <string name="watermark_border_corners">Round Corners</string>
-    <string name="watermark_color_section">Color</string>
-    <string name="watermark_color_light">Light</string>
-    <string name="watermark_color_dark">Dark</string>
-    <string name="watermark_color_accent_light">Accent Light</string>
-    <string name="watermark_color_accent_dark">Accent Dark</string>
-    <string name="watermark_logo_section">Logo</string>
-    <string name="watermark_logo_show">Show Logo</string>
-    <string name="watermark_logo_size">Logo Size</string>
-    <string name="watermark_edit_texts">Edit Watermark Texts</string>
-    <string name="watermark_device_brand">Device brand</string>
-    <string name="watermark_date_time">Date &amp; Time</string>
-    <string name="watermark_no_date">No date information</string>
-    <string name="watermark_rotate_left">Rotate left</string>
-    <string name="watermark_rotate_right">Rotate right</string>
-    <string name="action_next">Next</string>
+    <string name="watermark_style_title">スタイル</string>
+    <string name="watermark_style_overlay">オーバーレイ</string>
+    <string name="watermark_style_frame">フレーム</string>
+    <string name="watermark_show_brand">デバイスブランド</string>
+    <string name="watermark_show_exif">EXIFデータ</string>
+    <string name="watermark_pick_image">画像を選択</string>
+    <string name="watermark_save_success">画像をギャラリーに保存しました</string>
+    <string name="watermark_save_error">画像の保存に失敗しました</string>
+    <string name="watermark_processing">処理中…</string>
+    <string name="action_share">共有</string>
+    <string name="watermark_exif_settings">EXIF設定</string>
+    <string name="watermark_exif_focal_length">焦点距離</string>
+    <string name="watermark_exif_aperture">絞り値</string>
+    <string name="watermark_exif_iso">ISO感度</string>
+    <string name="watermark_exif_shutter_speed">シャッタースピード</string>
+    <string name="watermark_exif_date">日付&amp;時刻</string>
+    <string name="watermark_move_to_top">上に移動</string>
+    <string name="watermark_left_align">左揃え</string>
+    <string name="watermark_text_size_brand">ブランドサイズ</string>
+    <string name="watermark_text_size_data">日付サイズ</string>
+    <string name="watermark_text_size_custom">テキストサイズ</string>
+    <string name="watermark_font_options">フォントサイズ</string>
+    <string name="watermark_custom_text">カスタムテキスト</string>
+    <string name="watermark_custom_text_hint">テキストを入力…</string>
+    <string name="watermark_custom_text_settings">カスタムテキスト設定</string>
+    <string name="watermark_spacing">スペース</string>
+    <string name="watermark_border_width">ボーダーサイズ</string>
+    <string name="watermark_border_corners">角の丸さ</string>
+    <string name="watermark_color_section">カラー</string>
+    <string name="watermark_color_light">ライト</string>
+    <string name="watermark_color_dark">ダーク</string>
+    <string name="watermark_color_accent_light">アクセントライト</string>
+    <string name="watermark_color_accent_dark">アクセントダーク</string>
+    <string name="watermark_logo_section">ロゴ</string>
+    <string name="watermark_logo_show">ロゴをつける</string>
+    <string name="watermark_logo_size">サイズ</string>
+    <string name="watermark_edit_texts">ウォーターマークテキストを編集</string>
+    <string name="watermark_device_brand">デバイスブランド</string>
+    <string name="watermark_date_time">日付&amp;時刻</string>
+    <string name="watermark_no_date">日付の情報がありません</string>
+    <string name="watermark_rotate_left">左に回転</string>
+    <string name="watermark_rotate_right">右に回転</string>
+    <string name="action_next">次へ</string>
     <string name="action_ok">OK</string>
-    <string name="action_save_changes">Save Changes</string>
+    <string name="action_save_changes">変更を保存</string>
     <!-- Search Settings -->
     <string name="search_haptic_title">ウィジェットの触覚フィードバック</string>
     <string name="search_haptic_desc">ウィジェットをタップしたときの触覚フィードバックを選択する</string>
@@ -405,7 +405,7 @@
     <string name="search_flashlight_pulse_desc">新しい通知が届いたらフラッシュライトをゆっくり点滅させる</string>
     <string name="search_only_facing_down_title">下を向いているときのみ</string>
     <string name="search_only_facing_down_desc">デバイスが下を向いているときのみフラッシュライトを点滅</string>
-    <string name="snooze_no_channels_discovered">No system channels discovered yet. They will appear here once detected.</string>
+    <string name="snooze_no_channels_discovered">システムチャンネルはまだ検出されていません。検出されるとここに表示されます。</string>
     <string name="search_qs_blur_title">UIブラー</string>
     <string name="search_qs_blur_desc">システム全体のUIぼかしを切り替える</string>
     <string name="search_qs_bubbles_title">バブル</string>
@@ -435,10 +435,10 @@
     <string name="search_qs_pulse_title">ライト点滅</string>
     <string name="search_qs_pulse_desc">通知が来たときにライトを点滅させるか切り替える</string>
     <string name="search_qs_stay_awake_desc">開発者向けオプションのスリープモードにしないを切り替える</string>
-    <string name="search_qs_private_dns_title">Private DNS</string>
-    <string name="search_qs_private_dns_desc">Cycle Private DNS modes (Off/Auto/Hostname)</string>
-    <string name="search_qs_usb_debugging_title">USB Debugging</string>
-    <string name="search_qs_usb_debugging_desc">Toggle USB Debugging developer option</string>
+    <string name="search_qs_private_dns_title">プライベートDNS</string>
+    <string name="search_qs_private_dns_desc">プライベートDNSモードを切り替える (OFF/自動/ホスト名)</string>
+    <string name="search_qs_usb_debugging_title">USBデバッグ</string>
+    <string name="search_qs_usb_debugging_desc">USBデバッグを使うか切り替える</string>
     <string name="search_remap_enable_title">ボタンリマップを有効にする</string>
     <string name="search_remap_enable_desc">音量ボタンの機能を再設定する機能を使うか切り替える</string>
     <string name="search_remap_haptic_title">リマップ触覚フィードバック</string>
@@ -465,7 +465,7 @@
     <string name="perm_shizuku_install_action">Shizukuをインストール</string>
     <string name="perm_shizuku_grant_title">Shizuku permission</string>
     <string name="perm_shizuku_grant_desc">マップパワーセービングモードを実行するのに必要です。</string>
-    <string name="req_shizuku">Requires Shizuku or Root</string>
+    <string name="req_shizuku">ShizukuまたはRootが必要です</string>
     <string name="perm_root_title">Rootアクセス</string>
     <string name="perm_root_desc">Root権限を使用したシステムアクションをするのに必要です。</string>
     <string name="perm_notif_listener_title">通知アクセス</string>
@@ -551,7 +551,7 @@
     <string name="diy_dim_wallpaper_desc">このアクションでは、壁紙を暗くするために、ShizukuまたはRootが必要です。</string>
     <string name="diy_select_trigger">トリガーを選択</string>
     <string name="diy_create_app_title">アプリ</string>
-    <string name="diy_create_app_desc">Automate based on open app</string>
+    <string name="diy_create_app_desc">アプリが開いたときに実行する</string>
     <string name="diy_select_state">ステータスを選択</string>
     <string name="diy_select_action">アクションを選択</string>
     <string name="diy_in_action_label">条件と合うとき</string>
@@ -565,16 +565,16 @@
     <string name="automation_service_channel_name">オートメーションサービス</string>
     <string name="automation_service_running_title">オートメーション動作中</string>
     <string name="automation_service_running_desc">自動化システムイベントを監視中です</string>
-    <string name="diy_action_device_effects">Device Effects</string>
-    <string name="diy_action_disable_device_effects">Disable Device Effects</string>
-    <string name="diy_device_effects_desc">Control system-level effects like grayscale, AOD suppression, wallpaper dimming, and night mode.</string>
-    <string name="diy_effect_grayscale">Grayscale</string>
-    <string name="diy_effect_suppress_ambient">Suppress Ambient Display</string>
-    <string name="diy_effect_dim_wallpaper">Dim Wallpaper</string>
-    <string name="diy_effect_night_mode">Night Mode</string>
-    <string name="diy_device_effects_android_15_warning">This feature requires Android 15 or higher.</string>
-    <string name="diy_device_effects_enabled">Enabled</string>
-    <string name="diy_device_effects_disabled">Disabled</string>
+    <string name="diy_action_device_effects">デバイスエフェクト</string>
+    <string name="diy_action_disable_device_effects">デバイスエフェクトを無効化</string>
+    <string name="diy_device_effects_desc">グレースケール、常時表示ディスプレイ、暗い壁紙、ナイトモードなどのシステムレベルの効果を制御します。</string>
+    <string name="diy_effect_grayscale">グレースケール</string>
+    <string name="diy_effect_suppress_ambient">常時表示ディスプレイを抑制</string>
+    <string name="diy_effect_dim_wallpaper">暗い壁紙</string>
+    <string name="diy_effect_night_mode">ナイトモード</string>
+    <string name="diy_device_effects_android_15_warning">この機能にはAndroid 15 以上が必要です。</string>
+    <string name="diy_device_effects_enabled">有効</string>
+    <string name="diy_device_effects_disabled">無効</string>
     <!-- About Section -->
     <string name="app_developer_name">Sameera Wijerathna</string>
     <string name="app_description">あなたのPixelとAndroidのオールインワンツールボックス</string>
@@ -769,18 +769,18 @@
         <item>Shizuku</item>
     </string-array>
     <string-array name="keywords_proximity_sensor">
-        <item>proximity</item>
-        <item>sensor</item>
-        <item>face</item>
-        <item>down</item>
+        <item>近接</item>
+        <item>センサー</item>
+        <item>顔</item>
+        <item>下</item>
     </string-array>
     <string-array name="keywords_switch_master">
-        <item>switch</item>
-        <item>master</item>
+        <item>スイッチ</item>
+        <item>マスター</item>
     </string-array>
     <string-array name="keywords_vibration">
-        <item>vibration</item>
-        <item>feel</item>
+        <item>バイブレーション</item>
+        <item>感じる</item>
     </string-array>
     <!-- App Selection Extra -->
     <string name="action_invert_selection">Invert selection</string>
@@ -936,11 +936,11 @@
     <string name="shape_round">Round</string>
     <string name="shape_flat">Flat</string>
     <string name="shape_inverse">Inverse</string>
-    <string name="feat_batteries_title">Batteries</string>
-    <string name="feat_batteries_desc">Monitor your device battery levels</string>
-    <string name="batteries_widget_label">Battery Status</string>
-    <string name="connect_to_airsync">Connect to AirSync</string>
-    <string name="connect_to_airsync_summary">Display battery from your connected mac device in AirSync</string>
-    <string name="download_airsync">Download AirSync App</string>
-    <string name="download_airsync_summary">Required for Mac battery sync</string>
+    <string name="feat_batteries_title">バッテリー</string>
+    <string name="feat_batteries_desc">デバイスのバッテリーレベルを監視</string>
+    <string name="batteries_widget_label">バッテリーステータス</string>
+    <string name="connect_to_airsync">AirSyncと連携</string>
+    <string name="connect_to_airsync_summary">AirSyncで接続されたMacデバイスのバッテリーを表示する</string>
+    <string name="download_airsync">AirSyncアプリをダウンロード</string>
+    <string name="download_airsync_summary">Macのバッテリー同期に必要</string>
 </resources>
