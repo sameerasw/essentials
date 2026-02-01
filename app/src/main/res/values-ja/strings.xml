@@ -271,8 +271,8 @@
     <!-- Search -->
     <string name="search_clock_seconds_title">Clock Seconds</string>
     <string name="search_clock_seconds_desc">Show seconds in status bar clock</string>
-    <string name="search_battery_percentage_title">Battery Percentage</string>
-    <string name="search_battery_percentage_desc">Configure battery percentage visibility</string>
+    <string name="search_battery_percentage_title">バッテリーパーセンテージ</string>
+    <string name="search_battery_percentage_desc">バッテリーパーセンテージ表示の設定</string>
     <string name="search_privacy_chip_title">Privacy Chips</string>
     <string name="search_privacy_chip_desc">Show indicator when camera or mic is in use</string>
     <string name="search_desc_toggle_visibility">%1$sをアイコン表示</string>
@@ -784,7 +784,7 @@
     </string-array>
     <!-- App Selection Extra -->
     <string name="action_invert_selection">Invert selection</string>
-    <string name="toggle_show_system_apps">Show system apps</string>
+    <string name="toggle_show_system_apps">システムアプリを表示</string>
     <!-- Updates -->
     <string name="status_up_to_date">You are up to date</string>
     <string name="warning_pre_release">This is a pre-release version and might be unstable.</string>
@@ -899,7 +899,7 @@
     <string name="location_reached_fsi_title">Full-Screen Alarm Permission</string>
     <string name="location_reached_fsi_desc">Required to wake your device upon arrival. Tap to grant.</string>
     <string name="location_reached_dist_m">%1$dm</string>
-    <string name="location_reached_dist_km">%1$.1f km</string>
+    <string name="location_reached_dist_km">%1$.1fkm</string>
     <string name="location_reached_service_title">Travel Alarm active</string>
     <string name="location_reached_service_remaining">%1$s remaining (%2$d%%)</string>
     <string name="location_reached_channel_name">Travel Progress</string>
@@ -926,16 +926,16 @@
     <string name="label_keyboard_height">キーボードの高さ</string>
     <string name="label_keyboard_bottom_padding">下部の空白</string>
     <string name="label_keyboard_haptics">触覚フィードバック</string>
-    <string name="label_keyboard_roundness">Key Roundness</string>
-    <string name="search_keyboard_roundness_title">Key Roundness</string>
-    <string name="search_keyboard_roundness_desc">Adjust the corner radius of keys</string>
-    <string name="label_keyboard_functions_bottom">Move functions to bottom</string>
-    <string name="label_keyboard_functions_padding">Functions side padding</string>
-    <string name="label_keyboard_haptic_strength">Haptic feedback strength</string>
-    <string name="label_keyboard_shape">Keyboard shape</string>
-    <string name="shape_round">Round</string>
-    <string name="shape_flat">Flat</string>
-    <string name="shape_inverse">Inverse</string>
+    <string name="label_keyboard_roundness">キーの角の丸さ</string>
+    <string name="search_keyboard_roundness_title">キーの角の丸さ</string>
+    <string name="search_keyboard_roundness_desc">キーの角の半径を調整する</string>
+    <string name="label_keyboard_functions_bottom">機能キーを下に移動</string>
+    <string name="label_keyboard_functions_padding">機能キーの端の空白</string>
+    <string name="label_keyboard_haptic_strength">触覚フィードバックの強さ</string>
+    <string name="label_keyboard_shape">キーボードの角</string>
+    <string name="shape_round">丸</string>
+    <string name="shape_flat">フラット</string>
+    <string name="shape_inverse">逆丸</string>
     <string name="feat_batteries_title">バッテリー</string>
     <string name="feat_batteries_desc">デバイスのバッテリーレベルを監視</string>
     <string name="batteries_widget_label">バッテリーステータス</string>
