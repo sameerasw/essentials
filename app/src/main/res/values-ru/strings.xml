@@ -3,15 +3,15 @@
     <string name="app_name">Essentials</string>
     <string name="label_beta">БЕТА</string>
     <string name="accessibility_service_description"><b>Служба специальных возможностей Essentials</b>\n\nЭта служба необходима для следующих функций:\n\n<b>• Переназначение физических кнопок:</b>\nОбнаруживает нажатие кнопок громкости, даже если экран выключен, чтобы вызывать такие действия, как фонарик.\n\n<b>• Индивидуальные настройки приложений:</b>\nОтслеживает текущее активное приложение для применения конкретных профилей для Динамической ночной подсветки, Цвета подсветки уведомлений и блокировку приложений.\n\n<b>• Контроль экрана:</b>\nПозволяет приложению блокировать экран (например, через двойное нажатие или виджет) и обнаруживать изменения состояния экрана.\n\n<b>• Безопасность:</b>\nПредотвращает несанкционированные изменения, обнаруживая содержимое окна, когда устройство заблокировано.\n\n<small>Никакой вводимый текст или конфиденциальные данные не собираются и не передаются.</small></string>
-    <string name="app_icon">App icon</string>
-    <string name="freeze_activity_title">App Freezing</string>
+    <string name="app_icon">Иконка приложения</string>
+    <string name="freeze_activity_title">Заморозка приложений</string>
     <string name="freeze_activity_subtitle">Отключить редко используемые приложения</string>
     <string name="freeze_shortcut_short_label">Заморозка приложений</string>
     <string name="freeze_shortcut_long_label">Открыть заморозку приложений</string>
-    <string name="frozen_app_shortcut_label">Frozen App</string>
+    <string name="frozen_app_shortcut_label">Замороженные приложения</string>
     <string name="screen_off_widget_label">Пустой виджет для отключения экрана</string>
     <string name="app_freezing_tile_label">Заморозка приложений</string>
-    <string name="flashlight_pulse_tile_label">Flashlight Pulse</string>
+    <string name="flashlight_pulse_tile_label">Пульсирование фонарика</string>
     <string name="check_pre_releases_label">Проверять наличие предварительных релизов</string>
     <string name="check_pre_releases_desc">Могут быть нестабильны</string>
     <!-- App Lock -->
@@ -52,10 +52,10 @@
     <string name="action_toggle_mute">Без звука</string>
     <string name="action_ai_assistant">AI ассистент</string>
     <string name="action_take_screenshot">Сделать снимок экрана</string>
-    <string name="action_cycle_sound_modes">Cycle sound modes</string>
-    <string name="action_like_song">Like current song</string>
-    <string name="like_song_settings_title">Like song settings</string>
-    <string name="like_song_settings_desc">This feature requires notification access to detect the currently playing media and trigger the like action. Please enable it below.</string>
+    <string name="action_cycle_sound_modes">Переключение звуковых режимов</string>
+    <string name="action_like_song">Лайкнуть текущий трек</string>
+    <string name="like_song_settings_title">Лайкнуть параметры трека</string>
+    <string name="like_song_settings_desc">Для это функции требуется разрешения на доступ к уведомлениям, чтобы определить воспроизводимый в данный момент медиафайл и запуска соответствующего действия. Пожалуйста, предоставьте разрешение ниже.</string>
     <string name="like_song_toast_enabled">Show toast message</string>
     <string name="like_song_aod_overlay_title">Show overlay on AOD</string>
     <string name="feat_ambient_music_glance_title">Ambient music glance</string>
@@ -118,7 +118,7 @@
     <string name="freeze_when_locked_title">Freeze when locked</string>
     <string name="freeze_delay_title">Freeze delay</string>
     <string name="delay_immediate">Immediate</string>
-    <string name="delay_1m">1m</string>
+    <string name="delay_1m">1мин</string>
     <string name="delay_5m">5m</string>
     <string name="delay_15m">15m</string>
     <string name="delay_manual">Manual</string>
