@@ -119,7 +119,7 @@
     <string name="freeze_delay_title">Freeze delay</string>
     <string name="delay_immediate">Immediate</string>
     <string name="delay_1m">1мин</string>
-    <string name="delay_5m">5m</string>
+    <string name="delay_5m">5мин</string>
     <string name="delay_15m">15m</string>
     <string name="delay_manual">Manual</string>
     <string name="freeze_auto_freeze_section">Auto freeze apps</string>
