@@ -91,11 +91,15 @@
     <string name="caffeinate_battery_optimization_title">Negeer batterijoptimalisatie</string>
     <string name="caffeinate_battery_optimization_desc">Aanbevolen voor betrouwbare service op sommige apparaten</string>
     <string name="caffeinate_abort_screen_off_title">Afbreken bij uitzetten scherm</string>
+    <string name="caffeinate_skip_countdown_title">Skip countdown</string>
+    <string name="caffeinate_skip_countdown_desc">Start Caffeinate immediately.</string>
     <string name="caffeinate_timeout_presets_title">Time-out-voorinstellingen</string>
     <string name="caffeinate_timeout_presets_desc">Selecteer beschikbare tijden voor de tegel in de Snelle instellingen</string>
     <string name="caffeinate_timeout_5m">5 min</string>
     <string name="caffeinate_timeout_10m">10 min</string>
     <string name="caffeinate_timeout_30m">30 min</string>
+    <string name="perm_notif_policy_title">Do Not Disturb access</string>
+    <string name="perm_notif_policy_desc">Required to cycle between sound, vibrate and mute modes</string>
     <string name="caffeinate_timeout_1h">1 uur</string>
     <string name="caffeinate_timeout_infinity">∞</string>
     <string name="caffeinate_starting_in">Start in %1$ds…</string>
