@@ -136,6 +136,7 @@
     <string name="settings_section_flashlight_pulse">Zaklamppuls</string>
     <string name="flashlight_pulse_title">Zaklamppuls</string>
     <string name="flashlight_pulse_facedown_title">Alleen als het apparaat met het scherm naar beneden ligt</string>
+    <string name="flashlight_pulse_same_as_lighting_title">Same apps as notification lighting</string>
     <string name="settings_section_style">Stijl</string>
     <string name="notification_lighting_stroke_adjustment_section">Lijn aanpassen</string>
     <string name="notification_lighting_corner_radius_title">Hoekradius</string>
@@ -302,6 +303,7 @@
     <string name="feat_maps_power_saving_desc">Voor elk Android-apparaat</string>
     <string name="feat_notification_lighting_title">Meldingsverlichting</string>
     <string name="feat_notification_lighting_desc">Verlichting bij meldingen</string>
+    <string name="feat_flashlight_pulse_desc">Pulse the flashlight for notifications</string>
     <string name="feat_sound_mode_tile_title">Geluidsmodustegel</string>
     <string name="feat_sound_mode_tile_desc">Tegel in de Snelle instellingen om de geluidsmodus te veranderen</string>
     <string name="feat_stay_awake_tile_title">\"Wakker blijven\"-tegel</string>
