@@ -19,6 +19,7 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_volume_up_24,
             category = R.string.cat_system,
             description = R.string.feat_sound_modes_desc,
+            permissionKeys = listOf("NOTIFICATION_POLICY"),
             searchableSettings = listOf(
                 SearchSetting(
                     R.string.search_sound_mode_show_slider_title, 
@@ -316,6 +317,7 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_tile_small_24,
             category = R.string.cat_system,
             description = R.string.feat_qs_tiles_desc,
+            permissionKeys = listOf("WRITE_SETTINGS"),
             showToggle = false,
             searchableSettings = listOf(
                 SearchSetting(
@@ -647,6 +649,91 @@ object FeatureRegistry {
             override fun onClick(context: Context, viewModel: MainViewModel) {
                 context.startActivity(android.content.Intent(context, com.sameerasw.essentials.AppUpdatesActivity::class.java))
             }
+        },
+
+        // QS specific features for permission tracking
+        object : Feature(
+            id = "UI Blur tile",
+            title = R.string.tile_ui_blur,
+            iconRes = R.drawable.rounded_blur_on_24,
+            category = R.string.cat_system,
+            description = R.string.feat_qs_tiles_desc,
+            permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
+            showToggle = false,
+            isVisibleInMain = false
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = false
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+        },
+
+        object : Feature(
+            id = "AOD tile",
+            title = R.string.tile_aod,
+            iconRes = R.drawable.rounded_mobile_text_2_24,
+            category = R.string.cat_system,
+            description = R.string.feat_qs_tiles_desc,
+            permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
+            showToggle = false,
+            isVisibleInMain = false
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = false
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+        },
+
+        object : Feature(
+            id = "Mono Audio tile",
+            title = R.string.tile_mono_audio,
+            iconRes = R.drawable.rounded_headphones_24,
+            category = R.string.cat_system,
+            description = R.string.feat_qs_tiles_desc,
+            permissionKeys = if (ShellUtils.isRootEnabled(EssentialsApp.context)) listOf("ROOT") else listOf("SHIZUKU"),
+            showToggle = false,
+            isVisibleInMain = false
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = false
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+        },
+
+        object : Feature(
+            id = "Adaptive Brightness tile",
+            title = R.string.tile_adaptive_brightness,
+            iconRes = R.drawable.rounded_brightness_auto_24,
+            category = R.string.cat_system,
+            description = R.string.feat_qs_tiles_desc,
+            permissionKeys = listOf("WRITE_SETTINGS"),
+            showToggle = false,
+            isVisibleInMain = false
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = false
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+        },
+
+        object : Feature(
+            id = "Private DNS tile",
+            title = R.string.tile_private_dns,
+            iconRes = R.drawable.rounded_dns_24,
+            category = R.string.cat_system,
+            description = R.string.feat_qs_tiles_desc,
+            permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
+            showToggle = false,
+            isVisibleInMain = false
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = false
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+        },
+
+        object : Feature(
+            id = "USB Debugging tile",
+            title = R.string.tile_usb_debugging,
+            iconRes = R.drawable.rounded_adb_24,
+            category = R.string.cat_system,
+            description = R.string.feat_qs_tiles_desc,
+            permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
+            showToggle = false,
+            isVisibleInMain = false
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = false
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
         }
     )
 }

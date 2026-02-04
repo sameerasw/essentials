@@ -109,6 +109,7 @@ class MainViewModel : ViewModel() {
     val isScreenLockedSecurityEnabled = mutableStateOf(false)
     val isDeviceAdminEnabled = mutableStateOf(false)
     val isDeveloperModeEnabled = mutableStateOf(false)
+    val isNotificationPolicyAccessGranted = mutableStateOf(false)
     val skipSilentNotifications = mutableStateOf(true)
     val notificationLightingStyle = mutableStateOf(NotificationLightingStyle.STROKE)
     val notificationLightingColorMode = mutableStateOf(NotificationLightingColorMode.SYSTEM)
@@ -161,6 +162,7 @@ class MainViewModel : ViewModel() {
     val isKeyboardEnabled = mutableStateOf(false)
     val isKeyboardSelected = mutableStateOf(false)
     val isWriteSettingsEnabled = mutableStateOf(false)
+    val isCalendarPermissionGranted = mutableStateOf(false)
 
     // AirSync Bridge
     val isAirSyncConnectionEnabled = mutableStateOf(false)
@@ -282,6 +284,8 @@ class MainViewModel : ViewModel() {
         isKeyboardEnabled.value = PermissionUtils.isKeyboardEnabled(context)
         isKeyboardSelected.value = PermissionUtils.isKeyboardSelected(context)
         isWriteSettingsEnabled.value = PermissionUtils.canWriteSystemSettings(context)
+        isNotificationPolicyAccessGranted.value = PermissionUtils.hasNotificationPolicyAccess(context)
+        isCalendarPermissionGranted.value = PermissionUtils.hasReadCalendarPermission(context)
         
         isBluetoothPermissionGranted.value = PermissionUtils.hasBluetoothPermission(context)
         
@@ -1088,13 +1092,23 @@ class MainViewModel : ViewModel() {
     }
 
     fun requestBluetoothPermission(activity: androidx.activity.ComponentActivity) {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            androidx.core.app.ActivityCompat.requestPermissions(
-                activity,
-                arrayOf(Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN),
-                1005
-            )
-        }
+        androidx.core.app.ActivityCompat.requestPermissions(
+            activity,
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                arrayOf(Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN)
+            } else {
+                arrayOf(Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN)
+            },
+            1005
+        )
+    }
+
+    fun requestCalendarPermission(activity: androidx.activity.ComponentActivity) {
+        androidx.core.app.ActivityCompat.requestPermissions(
+            activity,
+            arrayOf(Manifest.permission.READ_CALENDAR),
+            1006
+        )
     }
 
     fun requestNotificationPermission(activity: androidx.activity.ComponentActivity) {

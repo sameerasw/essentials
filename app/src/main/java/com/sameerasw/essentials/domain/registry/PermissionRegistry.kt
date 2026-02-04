@@ -75,4 +75,7 @@ fun initPermissionRegistry() {
     
     // Calendar sync permission
     PermissionRegistry.register("READ_CALENDAR", R.string.feat_calendar_sync_title)
+
+    // Notification policy permission
+    PermissionRegistry.register("NOTIFICATION_POLICY", R.string.feat_sound_modes_title)
 }
