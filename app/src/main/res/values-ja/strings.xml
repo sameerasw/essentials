@@ -830,7 +830,7 @@
     <!-- Updates -->
     <string name="status_up_to_date">You are up to date</string>
     <string name="warning_pre_release">This is a pre-release version and might be unstable.</string>
-    <string name="release_notes_format">Release Notes %1$s</string>
+    <string name="release_notes_format">Release Notes v%1$s</string>
     <string name="action_view_on_github">GitHubを見る</string>
     <string name="action_download_apk">APKをダウンロード</string>
     <!-- Haptic Types -->
@@ -910,8 +910,8 @@
     <string name="bug_report_email_subject">Essentials Bug Report (バグレポート)</string>
     <string name="bug_report_send_via">送信方法</string>
     <!-- Location Reached -->
-    <string name="feat_location_reached_title">Location reached</string>
-    <string name="feat_location_reached_desc">Get notified when you arrive at a specific destination.</string>
+    <string name="feat_location_reached_title">Are We There Yet?</string>
+    <string name="feat_location_reached_desc">Prepare for your destination.</string>
     <string name="location_reached_pick_destination">目的地</string>
     <string name="location_reached_set_destination_btn">目的地をセット</string>
     <string name="location_reached_status_tracking">トラッキング中：%1$.4f, %2$.4f</string>
@@ -1029,4 +1029,31 @@
     <string name="label_readme">README</string>
     <string name="action_refresh">Refresh</string>
     <string name="action_start">Get Started</string>
+    <!-- Added Missing Group Strings -->
+    <string name="feat_sound_modes_title">Sound mode tile</string>
+    <string name="feat_sound_modes_desc">QS tile to toggle sound mode</string>
+    <string name="search_sound_mode_show_slider_title">Show slider</string>
+    <string name="search_sound_mode_show_slider_desc">Show volume slider in tile</string>
+    <string name="search_sound_mode_behavior_title">Cycle Behavior</string>
+    <string name="search_sound_mode_behavior_desc">Choose modes to cycle through</string>
+    <string name="feat_ambient_music_title">Ambient music glance</string>
+    <string name="feat_ambient_music_desc">Glance at media on AOD</string>
+    <string name="feat_sound_haptics_title">Sound and Haptics</string>
+    <string name="feat_sound_haptics_desc">Volume and haptic features</string>
+    <string name="feat_security_privacy_title">Security and Privacy</string>
+    <string name="feat_security_privacy_desc">Protect and secure your device</string>
+    <string name="feat_notifications_alerts_title">Notifications and Alerts</string>
+    <string name="feat_notifications_alerts_desc">Never miss your priorities</string>
+    <string name="feat_input_actions_title">Input and Actions</string>
+    <string name="feat_input_actions_desc">Control your device with ease</string>
+    <string name="feat_widgets_title">Widgets</string>
+    <string name="feat_widgets_desc">At a glance on your home screen</string>
+    <string name="feat_display_visuals_title">Display</string>
+    <string name="feat_display_visuals_desc">Visuals to enhance your experience</string>
+    <string name="feat_watch_title">Watch</string>
+    <string name="feat_watch_desc">Integrations with WearOS</string>
+    <string name="cat_interaction">Interaction</string>
+    <string name="cat_interface">Interface</string>
+    <string name="cat_display">Display</string>
+    <string name="cat_protection">Protection</string>
 </resources>
