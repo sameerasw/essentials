@@ -308,7 +308,7 @@ class FeatureSettingsActivity : FragmentActivity() {
                         }
                     }
                 ) { innerPadding ->
-                    val hasScroll = featureId != "Sound mode tile"
+                    val hasScroll = featureId != "Sound mode tile" && featureId != "Quick settings tiles"
                     Column(
                         modifier = Modifier
                             .padding(innerPadding)
