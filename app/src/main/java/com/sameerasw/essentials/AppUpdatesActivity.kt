@@ -283,12 +283,14 @@ class AppUpdatesActivity : FragmentActivity() {
                                                 installStatus = if (isInstalling) updatesViewModel.installStatus.value else null,
                                                 downloadProgress = if (isInstalling) updatesViewModel.updateProgress.value else 0f,
                                                 onClick = {
-                                                    if (repo.isUpdateAvailable) {
-                                                        updatesViewModel.downloadAndInstall(context, repo)
-                                                    } else {
-                                                        updatesViewModel.prepareEdit(context, repo)
-                                                        showAddRepoSheet = true
-                                                    }
+                                                    updatesViewModel.prepareEdit(context, repo)
+                                                    showAddRepoSheet = true
+                                                },
+                                                onActionClick = {
+                                                    updatesViewModel.downloadAndInstall(context, repo)
+                                                },
+                                                onDeleteClick = {
+                                                    updatesViewModel.untrackRepo(context, repo.fullName)
                                                 },
                                                 onShowReleaseNotes = {
                                                     repoToShowReleaseNotesFullName = repo.fullName
@@ -323,6 +325,17 @@ class AppUpdatesActivity : FragmentActivity() {
                                                     updatesViewModel.prepareEdit(context, repo)
                                                     showAddRepoSheet = true
                                                 },
+                                                onActionClick = {
+                                                    if (repo.isUpdateAvailable) {
+                                                        updatesViewModel.downloadAndInstall(context, repo)
+                                                    } else {
+                                                        repoToShowReleaseNotesFullName = repo.fullName
+                                                        updatesViewModel.fetchReleaseNotesIfNeeded(context, repo)
+                                                    }
+                                                },
+                                                onDeleteClick = {
+                                                    updatesViewModel.untrackRepo(context, repo.fullName)
+                                                },
                                                 onShowReleaseNotes = {
                                                     repoToShowReleaseNotesFullName = repo.fullName
                                                     updatesViewModel.fetchReleaseNotesIfNeeded(context, repo)
@@ -353,7 +366,14 @@ class AppUpdatesActivity : FragmentActivity() {
                                                 installStatus = if (isInstalling) updatesViewModel.installStatus.value else null,
                                                 downloadProgress = if (isInstalling) updatesViewModel.updateProgress.value else 0f,
                                                 onClick = {
+                                                    updatesViewModel.prepareEdit(context, repo)
+                                                    showAddRepoSheet = true
+                                                },
+                                                onActionClick = {
                                                     updatesViewModel.downloadAndInstall(context, repo)
+                                                },
+                                                onDeleteClick = {
+                                                    updatesViewModel.untrackRepo(context, repo.fullName)
                                                 },
                                                 onShowReleaseNotes = {
                                                     repoToShowReleaseNotesFullName = repo.fullName

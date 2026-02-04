@@ -57,6 +57,8 @@ import com.sameerasw.essentials.ui.components.sheets.UpdateBottomSheet
 import com.sameerasw.essentials.ui.components.sheets.InstructionsBottomSheet
 import com.sameerasw.essentials.ui.components.sheets.GitHubAuthSheet
 import com.sameerasw.essentials.viewmodels.GitHubAuthViewModel
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.composables.configs.FreezeSettingsUI
 import com.sameerasw.essentials.ui.composables.FreezeGridUI
 import androidx.compose.foundation.rememberScrollState
@@ -81,9 +83,11 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.sameerasw.essentials.domain.model.TrackedRepo
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -493,12 +497,14 @@ class MainActivity : FragmentActivity() {
                                                                     installStatus = if (isInstalling) updatesViewModel.installStatus.value else null,
                                                                     downloadProgress = if (isInstalling) updatesViewModel.updateProgress.value else 0f,
                                                                     onClick = {
-                                                                        if (repo.isUpdateAvailable) {
-                                                                            updatesViewModel.downloadAndInstall(context, repo)
-                                                                        } else {
-                                                                            updatesViewModel.prepareEdit(context, repo)
-                                                                            showAddRepoSheet = true
-                                                                        }
+                                                                        updatesViewModel.prepareEdit(context, repo)
+                                                                        showAddRepoSheet = true
+                                                                    },
+                                                                    onActionClick = {
+                                                                        updatesViewModel.downloadAndInstall(context, repo)
+                                                                    },
+                                                                    onDeleteClick = {
+                                                                        updatesViewModel.untrackRepo(context, repo.fullName)
                                                                     },
                                                                     onShowReleaseNotes = {
                                                                         repoToShowReleaseNotesFullName = repo.fullName
@@ -533,6 +539,17 @@ class MainActivity : FragmentActivity() {
                                                                         updatesViewModel.prepareEdit(context, repo)
                                                                         showAddRepoSheet = true
                                                                     },
+                                                                    onActionClick = {
+                                                                        if (repo.isUpdateAvailable) {
+                                                                            updatesViewModel.downloadAndInstall(context, repo)
+                                                                        } else {
+                                                                            repoToShowReleaseNotesFullName = repo.fullName
+                                                                            updatesViewModel.fetchReleaseNotesIfNeeded(context, repo)
+                                                                        }
+                                                                    },
+                                                                    onDeleteClick = {
+                                                                        updatesViewModel.untrackRepo(context, repo.fullName)
+                                                                    },
                                                                     onShowReleaseNotes = {
                                                                         repoToShowReleaseNotesFullName = repo.fullName
                                                                         updatesViewModel.fetchReleaseNotesIfNeeded(context, repo)
@@ -563,7 +580,14 @@ class MainActivity : FragmentActivity() {
                                                                     installStatus = if (isInstalling) updatesViewModel.installStatus.value else null,
                                                                     downloadProgress = if (isInstalling) updatesViewModel.updateProgress.value else 0f,
                                                                     onClick = {
+                                                                        updatesViewModel.prepareEdit(context, repo)
+                                                                        showAddRepoSheet = true
+                                                                    },
+                                                                    onActionClick = {
                                                                         updatesViewModel.downloadAndInstall(context, repo)
+                                                                    },
+                                                                    onDeleteClick = {
+                                                                        updatesViewModel.untrackRepo(context, repo.fullName)
                                                                     },
                                                                     onShowReleaseNotes = {
                                                                         repoToShowReleaseNotesFullName = repo.fullName
@@ -577,8 +601,8 @@ class MainActivity : FragmentActivity() {
                                             }
                                         }
 
-                                        // FAB
-                                        FloatingActionButton(
+                                    // FAB
+                                    FloatingActionButton(
                                             onClick = {
                                                 HapticUtil.performMediumHaptic(view)
                                                 showAddRepoSheet = true 

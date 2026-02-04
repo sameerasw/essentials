@@ -1,12 +1,15 @@
 package com.sameerasw.essentials.ui.components.cards
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,7 +33,10 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class, androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
 fun TrackedRepoCard(
     repo: TrackedRepo,
@@ -38,20 +44,30 @@ fun TrackedRepoCard(
     installStatus: String? = null,
     downloadProgress: Float = 0f,
     onClick: () -> Unit,
+    onActionClick: () -> Unit,
+    onDeleteClick: () -> Unit = {},
     onShowReleaseNotes: () -> Unit = {}
 ) {
     val view = LocalView.current
     val context = LocalContext.current
-    
-    Card(
-        onClick = {
-            HapticUtil.performUIHaptic(view)
-            onClick()
-        },
+    var showMenu by remember { androidx.compose.runtime.mutableStateOf(false) }
+
+    Box {
+        Card(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceBright
         ),
-        shape = MaterialTheme.shapes.extraSmall
+        shape = MaterialTheme.shapes.extraSmall,
+        modifier = Modifier.combinedClickable(
+            onClick = {
+                HapticUtil.performUIHaptic(view)
+                onClick()
+            },
+            onLongClick = {
+                HapticUtil.performMediumHaptic(view)
+                showMenu = true
+            }
+        )
     ) {
         Row(
             modifier = Modifier
@@ -178,7 +194,7 @@ fun TrackedRepoCard(
                 IconButton(
                     onClick = {
                         HapticUtil.performMediumHaptic(view)
-                        onClick()
+                        onActionClick()
                     }
                 ) {
                     Icon(
@@ -205,5 +221,43 @@ fun TrackedRepoCard(
             }
         }
     }
+
+    SegmentedDropdownMenu(
+        expanded = showMenu,
+        onDismissRequest = { showMenu = false }
+    ) {
+        SegmentedDropdownMenuItem(
+            text = { Text(stringResource(R.string.action_edit)) },
+            onClick = {
+                showMenu = false
+                onClick()
+            },
+            leadingIcon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.rounded_edit_24),
+                    contentDescription = null
+                )
+            }
+        )
+        SegmentedDropdownMenuItem(
+            text = { Text(stringResource(R.string.action_delete)) },
+            onClick = {
+                showMenu = false
+                onDeleteClick()
+            },
+            leadingIcon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.rounded_delete_24),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.error
+                )
+            },
+            colors = MenuDefaults.itemColors(
+                textColor = MaterialTheme.colorScheme.error,
+                leadingIconColor = MaterialTheme.colorScheme.error
+            )
+        )
+    }
+}
 }
 
