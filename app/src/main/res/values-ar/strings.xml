@@ -91,11 +91,15 @@
     <string name="caffeinate_battery_optimization_title">Ignore battery optimization</string>
     <string name="caffeinate_battery_optimization_desc">Recommended for reliable service on some devices</string>
     <string name="caffeinate_abort_screen_off_title">Abort with screen off</string>
+    <string name="caffeinate_skip_countdown_title">Skip countdown</string>
+    <string name="caffeinate_skip_countdown_desc">Start Caffeinate immediately.</string>
     <string name="caffeinate_timeout_presets_title">Timeout Presets</string>
     <string name="caffeinate_timeout_presets_desc">Select available durations for QS tile</string>
     <string name="caffeinate_timeout_5m">5 دقائق</string>
     <string name="caffeinate_timeout_10m">10 دقائق</string>
     <string name="caffeinate_timeout_30m">30 دقيقة</string>
+    <string name="perm_notif_policy_title">Do Not Disturb access</string>
+    <string name="perm_notif_policy_desc">Required to cycle between sound, vibrate and mute modes</string>
     <string name="caffeinate_timeout_1h">ساعة</string>
     <string name="caffeinate_timeout_infinity">∞</string>
     <string name="caffeinate_starting_in">Starting in %1$ds…</string>
