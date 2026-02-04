@@ -243,6 +243,9 @@ class MainViewModel : ViewModel() {
             SettingsRepository.KEY_CALENDAR_SYNC_ENABLED -> {
                 isCalendarSyncEnabled.value = settingsRepository.getBoolean(key)
             }
+            SettingsRepository.KEY_TRACKED_REPOS -> {
+                appContext?.let { refreshTrackedUpdates(it) }
+            }
         }
     }
 
@@ -502,7 +505,8 @@ class MainViewModel : ViewModel() {
                 isCheckingUpdate.value = false
             }
         }
-    
+    }
+
     fun refreshTrackedUpdates(context: Context) {
         val trackedRepos = settingsRepository.getTrackedRepos()
         if (trackedRepos.isEmpty()) {
@@ -511,8 +515,6 @@ class MainViewModel : ViewModel() {
         }
         
         hasPendingUpdates.value = trackedRepos.any { it.isUpdateAvailable }
-        
-    }
     }
 
     private fun isDeviceAdminActive(context: Context): Boolean {
@@ -1456,12 +1458,5 @@ class MainViewModel : ViewModel() {
     fun generateBugReport(context: Context): String {
         val settingsJson = settingsRepository.getAllConfigsAsJsonString()
         return com.sameerasw.essentials.utils.LogManager.generateReport(context, settingsJson)
-    }
-
-    fun refreshTrackedUpdates(context: Context) {
-        viewModelScope.launch {
-            val repos = SettingsRepository(context).getTrackedRepos()
-            hasPendingUpdates.value = repos.any { it.isUpdateAvailable }
-        }
     }
 }
