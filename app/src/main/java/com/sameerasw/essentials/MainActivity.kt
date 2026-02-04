@@ -338,7 +338,15 @@ class MainActivity : FragmentActivity() {
                             helpIconRes = R.drawable.rounded_help_24,
                             helpContentDescription = R.string.action_help_guide,
                             onSearchClick = { searchRequested = true },
-                            onSettingsClick = { startActivity(Intent(this, SettingsActivity::class.java)) },
+                            onSettingsClick = { 
+                                if (currentTab == DIYTabs.FREEZE) {
+                                    startActivity(Intent(this, FeatureSettingsActivity::class.java).apply {
+                                        putExtra("feature", "Freeze")
+                                    })
+                                } else {
+                                    startActivity(Intent(this, SettingsActivity::class.java))
+                                }
+                            },
                             onUpdateClick = { showUpdateSheet = true },
                             onGitHubClick = { showGitHubAuthSheet = true },
                             hasGitHub = currentTab == DIYTabs.APPS,
