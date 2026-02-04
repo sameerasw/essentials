@@ -88,6 +88,7 @@ fun LogoCarouselPicker(
         R.drawable.google,
         R.drawable.moto,
         R.drawable.nothing,
+        R.drawable.oneplus,
         R.drawable.oppo,
         R.drawable.samsung,
         R.drawable.sony,

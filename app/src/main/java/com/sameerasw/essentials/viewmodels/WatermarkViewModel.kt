@@ -104,6 +104,7 @@ class WatermarkViewModel(
             make.contains("nothing") -> R.drawable.nothing
             make.contains("cmf") -> R.drawable.cmf
             make.contains("motorola") || make.contains("moto") -> R.drawable.moto
+            make.contains("oneplus") || model.contains("oneplus") -> R.drawable.oneplus
             else -> null
         }
     }
