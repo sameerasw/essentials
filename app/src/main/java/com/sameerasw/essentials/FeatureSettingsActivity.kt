@@ -67,12 +67,14 @@ import com.sameerasw.essentials.ui.composables.configs.MapsPowerSavingSettingsUI
 import com.sameerasw.essentials.viewmodels.CaffeinateViewModel
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.viewmodels.StatusBarIconViewModel
+import com.sameerasw.essentials.viewmodels.WatchViewModel
 import com.sameerasw.essentials.ui.components.sheets.PermissionItem
 import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
 
 import com.sameerasw.essentials.ui.composables.configs.AppLockSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ScreenLockedSecuritySettingsUI
 import com.sameerasw.essentials.ui.composables.configs.KeyboardSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.WatchSettingsUI
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.domain.registry.FeatureRegistry
 import com.sameerasw.essentials.ui.components.cards.FeatureCard
@@ -127,6 +129,7 @@ class FeatureSettingsActivity : FragmentActivity() {
             val viewModel: MainViewModel = viewModel()
             val statusBarViewModel: StatusBarIconViewModel = viewModel()
             val caffeinateViewModel: CaffeinateViewModel = viewModel()
+            val watchViewModel: WatchViewModel = viewModel()
 
             // Automatic refresh on resume
             val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
@@ -139,6 +142,9 @@ class FeatureSettingsActivity : FragmentActivity() {
                         }
                         if (featureId == "Caffeinate") {
                             caffeinateViewModel.check(context)
+                        }
+                        if (featureId == "Watch") {
+                            watchViewModel.check(context)
                         }
                     }
                 }
@@ -309,6 +315,13 @@ class FeatureSettingsActivity : FragmentActivity() {
                             .fillMaxSize()
                             .then(if (hasScroll) Modifier.verticalScroll(rememberScrollState()) else Modifier)
                     ) {
+                        if (featureId == "Watch") {
+                            WatchSettingsUI(
+                                viewModel = watchViewModel,
+                                modifier = Modifier.padding(top = 16.dp)
+                            )
+                        }
+
                         val children =
                             FeatureRegistry.ALL_FEATURES.filter { it.parentFeatureId == featureId }
                         if (children.isNotEmpty()) {
