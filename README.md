@@ -27,6 +27,9 @@ Essential tools, mods and workarounds for Pixels and other Androids
 - [Localization](#localization)
 - [Contributing](#contributing)
 
+## Extension
+- [WearOS Companion app](https://github.com/sameerasw/essentials-wear)
+
 # Features
 
 ### Tools
