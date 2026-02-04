@@ -20,6 +20,7 @@ class CaffeinateViewModel : ViewModel() {
     val postNotificationsGranted = mutableStateOf(false)
     val batteryOptimizationGranted = mutableStateOf(false)
     val abortWithScreenOff = mutableStateOf(true)
+    val skipCountdown = mutableStateOf(false)
     val enabledPresets = mutableStateOf(setOf<Int>())
 
     fun check(context: Context) {
@@ -34,6 +35,7 @@ class CaffeinateViewModel : ViewModel() {
 
         val prefs = context.getSharedPreferences("caffeinate_prefs", Context.MODE_PRIVATE)
         abortWithScreenOff.value = prefs.getBoolean("abort_screen_off", true)
+        skipCountdown.value = prefs.getBoolean("skip_countdown", false)
         
         val savedPresets = prefs.getStringSet("enabled_presets", timeoutPresets.map { it.toString() }.toSet())
         enabledPresets.value = savedPresets?.map { it.toInt() }?.toSet() ?: timeoutPresets.toSet()
@@ -62,6 +64,12 @@ class CaffeinateViewModel : ViewModel() {
             }
             context.startService(intent)
         }
+    }
+
+    fun setSkipCountdown(value: Boolean, context: Context) {
+        val prefs = context.getSharedPreferences("caffeinate_prefs", Context.MODE_PRIVATE)
+        prefs.edit().putBoolean("skip_countdown", value).apply()
+        skipCountdown.value = value
     }
 
     fun toggle(context: Context) {

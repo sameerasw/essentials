@@ -117,6 +117,14 @@ fun CaffeinateSettingsUI(
                 onCheckedChange = { viewModel.setAbortWithScreenOff(it, context) },
                 iconRes = R.drawable.rounded_power_settings_new_24,
             )
+            
+            IconToggleItem(
+                title = stringResource(R.string.caffeinate_skip_countdown_title),
+                description = stringResource(R.string.caffeinate_skip_countdown_desc),
+                isChecked = viewModel.skipCountdown.value,
+                onCheckedChange = { viewModel.setSkipCountdown(it, context) },
+                iconRes = R.drawable.rounded_timer_off_24,
+            )
         }
 
         RoundedCardContainer {
