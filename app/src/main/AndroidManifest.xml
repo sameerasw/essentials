@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-feature android:name="android.hardware.camera.flashlight" android:required="false" />
 
     <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE" />

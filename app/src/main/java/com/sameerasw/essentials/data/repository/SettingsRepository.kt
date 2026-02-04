@@ -129,6 +129,9 @@ class SettingsRepository(private val context: Context) {
         const val KEY_LIKE_SONG_AOD_OVERLAY_ENABLED = "like_song_aod_overlay_enabled" 
         const val KEY_AMBIENT_MUSIC_GLANCE_ENABLED = "ambient_music_glance_enabled"
         const val KEY_AMBIENT_MUSIC_GLANCE_DOCKED_MODE = "ambient_music_glance_docked_mode"
+        const val KEY_CALENDAR_SYNC_ENABLED = "calendar_sync_enabled"
+        const val KEY_CALENDAR_SYNC_SELECTED_CALENDARS = "calendar_sync_selected_calendars"
+        const val KEY_CALENDAR_SYNC_PERIODIC_ENABLED = "calendar_sync_periodic_enabled"
         
         const val KEY_GITHUB_ACCESS_TOKEN = "github_access_token"
         const val KEY_GITHUB_USER_PROFILE = "github_user_profile"
@@ -264,6 +267,25 @@ class SettingsRepository(private val context: Context) {
     fun saveDIYTab(tab: com.sameerasw.essentials.domain.DIYTabs) {
         putString(KEY_DEFAULT_TAB, tab.name)
     }
+
+    fun getCalendarSyncSelectedCalendars(): Set<String> {
+        val json = prefs.getString(KEY_CALENDAR_SYNC_SELECTED_CALENDARS, null)
+        return if (json != null) {
+            try {
+                gson.fromJson(json, object : TypeToken<Set<String>>() {}.type) ?: emptySet()
+            } catch (e: Exception) {
+                emptySet()
+            }
+        } else emptySet()
+    }
+
+    fun saveCalendarSyncSelectedCalendars(calendarIds: Set<String>) {
+        val json = gson.toJson(calendarIds)
+        putString(KEY_CALENDAR_SYNC_SELECTED_CALENDARS, json)
+    }
+
+    fun isCalendarSyncPeriodicEnabled(): Boolean = getBoolean(KEY_CALENDAR_SYNC_PERIODIC_ENABLED, false)
+    fun setCalendarSyncPeriodicEnabled(enabled: Boolean) = putBoolean(KEY_CALENDAR_SYNC_PERIODIC_ENABLED, enabled)
     
     // App Selection Helper Generic
     private fun loadAppSelection(key: String): List<AppSelection> {

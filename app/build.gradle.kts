@@ -100,6 +100,9 @@ dependencies {
 
     // Google Maps & Location
     implementation(libs.play.services.location)
+    implementation(libs.play.services.wearable)
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.gson)
     
     // Kotlin Reflect for dynamic sealed class serialization
     implementation(kotlin("reflect"))

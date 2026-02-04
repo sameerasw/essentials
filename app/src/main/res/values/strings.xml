@@ -356,6 +356,8 @@
     <string name="feat_freeze_desc">Disable rarely used apps</string>
     <string name="feat_watermark_title">Watermark</string>
     <string name="feat_watermark_desc">Add EXIF data and logos to photos</string>
+    <string name="feat_calendar_sync_title">Calendar Sync</string>
+    <string name="feat_calendar_sync_desc">Sync events to your watch</string>
     <string name="watermark_style_title">Style</string>
     <string name="watermark_style_overlay">Overlay</string>
     <string name="watermark_style_frame">Frame</string>
@@ -401,6 +403,15 @@
     <string name="action_next">Next</string>
     <string name="action_ok">OK</string>
     <string name="action_save_changes">Save Changes</string>
+    <string name="calendar_sync_settings_title">Calendar Sync Settings</string>
+    <string name="calendar_sync_select_calendars">Sync specific calendars</string>
+    <string name="calendar_sync_select_calendars_desc">Choose which calendars to sync to watch</string>
+    <string name="calendar_sync_periodic_title">Periodic Sync</string>
+    <string name="calendar_sync_periodic_desc">Sync every 15 minutes if changes found</string>
+    <string name="calendar_sync_sync_now">Sync Now</string>
+    <string name="calendar_sync_manual_sync_desc">Trigger immediate sync to watch</string>
+    <string name="calendar_sync_no_calendars">No local calendars found</string>
+    <string name="calendar_sync_sync_started">Calendar sync started</string>
 
     <!-- Search Settings -->
     <string name="search_haptic_title">Widget Haptic feedback</string>
@@ -507,6 +518,8 @@
     <string name="perm_overlay_desc">Required to display the notification lighting overlay on the screen</string>
     <string name="perm_device_admin_title">Device Administrator</string>
     <string name="perm_device_admin_desc">Required to hard-lock the device (disabling biometrics) on unauthorized access attempts</string>
+    <string name="perm_read_calendar_title">Read Calendar</string>
+    <string name="perm_read_calendar_desc">Required to sync upcoming events to your watch.</string>
     <string name="perm_action_grant">Grant Permission</string>
     <string name="perm_action_copy_adb">Copy ADB</string>
     <string name="perm_action_check">Check</string>

@@ -550,6 +550,18 @@ object FeatureRegistry {
                 context.startActivity(android.content.Intent(context, WatermarkActivity::class.java))
             }
         },
+
+        object : Feature(
+            id = "Calendar Sync",
+            title = R.string.feat_calendar_sync_title,
+            iconRes = R.drawable.rounded_calendar_today_24,
+            category = R.string.cat_tools,
+            description = R.string.feat_calendar_sync_desc,
+            permissionKeys = listOf("READ_CALENDAR")
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = viewModel.isCalendarSyncEnabled.value
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) = viewModel.setCalendarSyncEnabled(enabled, context)
+        },
         
         object : Feature(
             id = "Call vibrations",

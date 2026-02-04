@@ -14,10 +14,13 @@ foundationLayout = "1.10.0"
 ui = "1.10.0"
 foundation = "1.10.0"
 playServicesLocation = "21.3.0"
+playServicesWearable = "18.1.0"
+gson = "2.10.1"
 material = "1.13.0"
 material3 = "1.4.0"
 foundationLayoutVersion = "1.10.1"
 foundationVersion = "1.10.1"
+work = "2.9.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -42,10 +45,13 @@ androidx-compose-foundation-layout = { group = "androidx.compose.foundation", na
 androidx-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "ui" }
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
+play-services-wearable = { group = "com.google.android.gms", name = "play-services-wearable", version.ref = "playServicesWearable" }
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 androidx-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundationLayoutVersion" }
 androidx-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundationVersion" }
+androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
