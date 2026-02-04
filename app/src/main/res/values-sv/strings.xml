@@ -136,6 +136,7 @@
     <string name="settings_section_flashlight_pulse">Flashlight Pulse</string>
     <string name="flashlight_pulse_title">Flashlight pulse</string>
     <string name="flashlight_pulse_facedown_title">Only while facing down</string>
+    <string name="flashlight_pulse_same_as_lighting_title">Same apps as notification lighting</string>
     <string name="settings_section_style">Style</string>
     <string name="notification_lighting_stroke_adjustment_section">Stroke adjustment</string>
     <string name="notification_lighting_corner_radius_title">Corner radius</string>
@@ -302,6 +303,7 @@
     <string name="feat_maps_power_saving_desc">For any Android device</string>
     <string name="feat_notification_lighting_title">Notification lighting</string>
     <string name="feat_notification_lighting_desc">Light up for notifications</string>
+    <string name="feat_flashlight_pulse_desc">Pulse the flashlight for notifications</string>
     <string name="feat_sound_mode_tile_title">Sound mode tile</string>
     <string name="feat_sound_mode_tile_desc">QS tile to toggle sound mode</string>
     <string name="feat_stay_awake_tile_title">Stay awake tile</string>
