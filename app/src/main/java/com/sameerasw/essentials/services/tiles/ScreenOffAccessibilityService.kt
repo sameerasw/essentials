@@ -15,6 +15,7 @@ import android.os.Looper
 import android.view.KeyEvent
 import android.os.Vibrator
 import android.view.accessibility.AccessibilityEvent
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.utils.performHapticFeedback
 import kotlinx.coroutines.CoroutineScope
@@ -36,6 +37,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
     private lateinit var buttonRemapHandler: ButtonRemapHandler
     private lateinit var appFlowHandler: AppFlowHandler
     private lateinit var securityHandler: SecurityHandler
+    private lateinit var ambientGlanceHandler: AmbientGlanceHandler
 
     private var screenReceiver: BroadcastReceiver? = null
     
@@ -58,6 +60,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         buttonRemapHandler = ButtonRemapHandler(this, flashlightHandler)
         appFlowHandler = AppFlowHandler(this)
         securityHandler = SecurityHandler(this)
+        ambientGlanceHandler = AmbientGlanceHandler(this)
         
         flashlightHandler.register()
         
@@ -67,6 +70,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
                 when (intent?.action) {
                     Intent.ACTION_SCREEN_ON -> {
                         notificationLightingHandler.onScreenOn()
+                        ambientGlanceHandler.dismissImmediately()
                         freezeHandler.removeCallbacks(freezeRunnable)
                         stopInputEventListener()
                     }
@@ -74,12 +78,16 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
                         appFlowHandler.clearAuthenticated()
                         scheduleFreeze()
                         startInputEventListenerIfEnabled()
+                        ambientGlanceHandler.checkAndShowOnScreenOff()
                     }
                     Intent.ACTION_USER_PRESENT -> {
                         securityHandler.restoreAnimationScale()
                     }
                     InputEventListenerService.ACTION_VOLUME_LONG_PRESSED -> {
                         buttonRemapHandler.handleExternalVolumeLongPress(intent)
+                    }
+                    "SHOW_AMBIENT_GLANCE" -> {
+                        ambientGlanceHandler.handleIntent(intent)
                     }
                 }
             }
@@ -89,6 +97,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
             addAction(Intent.ACTION_SCREEN_OFF)
             addAction(Intent.ACTION_USER_PRESENT)
             addAction(InputEventListenerService.ACTION_VOLUME_LONG_PRESSED)
+            addAction("SHOW_AMBIENT_GLANCE")
         }
         registerReceiver(screenReceiver, filter, RECEIVER_EXPORTED)
 
@@ -133,6 +142,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         sensorManager.unregisterListener(this)
         securityHandler.restoreAnimationScale()
         notificationLightingHandler.removeOverlay()
+        ambientGlanceHandler.removeOverlay()
         stopInputEventListener()
         serviceScope.cancel()
         super.onDestroy()
@@ -164,7 +174,39 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 
     override fun onKeyEvent(event: KeyEvent): Boolean {
+        val keyCode = event.keyCode
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            val powerManager = getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
+            if (!powerManager.isInteractive && event.action == KeyEvent.ACTION_DOWN) {
+                triggerAmbientGlanceVolume(keyCode)
+            }
+        }
         return buttonRemapHandler.onKeyEvent(event) || super.onKeyEvent(event)
+    }
+
+    private fun triggerAmbientGlanceVolume(keyCode: Int) {
+        val prefs = getSharedPreferences(SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
+        if (prefs.getBoolean(SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_ENABLED, false)) {
+            val title = prefs.getString("current_media_title", null)
+            val artist = prefs.getString("current_media_artist", null)
+            
+            val audioManager = getSystemService(Context.AUDIO_SERVICE) as android.media.AudioManager
+            val currentVolume = audioManager.getStreamVolume(android.media.AudioManager.STREAM_MUSIC)
+            val maxVolume = audioManager.getStreamMaxVolume(android.media.AudioManager.STREAM_MUSIC)
+            val percentage = (currentVolume.toFloat() / maxVolume.toFloat() * 100).toInt()
+
+            val isDockedMode = prefs.getBoolean(SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_DOCKED_MODE, false)
+
+            val intent = Intent("SHOW_AMBIENT_GLANCE").apply {
+                putExtra("event_type", "volume")
+                putExtra("track_title", title)
+                putExtra("artist_name", artist)
+                putExtra("volume_percentage", percentage)
+                putExtra("volume_key_code", keyCode)
+                putExtra("is_docked_mode", isDockedMode)
+            }
+            ambientGlanceHandler.handleIntent(intent)
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -188,6 +230,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
             }
             
             "SHOW_NOTIFICATION_LIGHTING" -> notificationLightingHandler.handleIntent(intent)
+            "SHOW_AMBIENT_GLANCE" -> ambientGlanceHandler.handleIntent(intent)
             
             "APP_AUTHENTICATED" -> intent.getStringExtra("package_name")?.let { appFlowHandler.onAuthenticated(it) }
             "APP_AUTHENTICATION_FAILED" -> performGlobalAction(GLOBAL_ACTION_HOME)

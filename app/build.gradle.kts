@@ -71,6 +71,8 @@ dependencies {
     implementation(libs.androidx.compose.foundation)
     implementation(libs.material)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.foundation.layout)
+    implementation(libs.androidx.foundation)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -98,6 +100,9 @@ dependencies {
 
     // Google Maps & Location
     implementation(libs.play.services.location)
+    implementation(libs.play.services.wearable)
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.gson)
     
     // Kotlin Reflect for dynamic sealed class serialization
     implementation(kotlin("reflect"))

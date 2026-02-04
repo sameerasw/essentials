@@ -1,4 +1,4 @@
-package com.sameerasw.essentials.ui.composables.watermark
+package com.sameerasw.essentials.ui.components.watermark
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box

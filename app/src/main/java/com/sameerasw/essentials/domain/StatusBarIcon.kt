@@ -86,6 +86,13 @@ object StatusBarIconRegistry {
             categoryRes = CAT_CONNECTIVITY,
             iconRes = R.drawable.rounded_cast_24
         ),
+        StatusBarIcon(
+            id = "ethernet",
+            displayNameRes = R.string.icon_ethernet,
+            blacklistNames = listOf("ethernet"),
+            categoryRes = CAT_CONNECTIVITY,
+            iconRes = R.drawable.rounded_lan_24
+        ),
 
         // --- Phone & Network ---
         StatusBarIcon(

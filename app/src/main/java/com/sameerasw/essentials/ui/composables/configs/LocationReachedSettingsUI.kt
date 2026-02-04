@@ -37,6 +37,13 @@ fun LocationReachedSettingsUI(
     val distance by locationViewModel.currentDistance
     val isProcessing by locationViewModel.isProcessingCoordinates
     val startDistance by locationViewModel.startDistance
+    
+    DisposableEffect(locationViewModel) {
+        locationViewModel.startUiTracking()
+        onDispose {
+            locationViewModel.stopUiTracking()
+        }
+    }
 
     Column(
         modifier = modifier

@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-feature android:name="android.hardware.camera.flashlight" android:required="false" />
 
     <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE" />
@@ -29,6 +31,7 @@
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <permission android:name="com.sameerasw.permission.ESSENTIALS_AIRSYNC_BRIDGE" android:protectionLevel="signature" />
     <uses-permission android:name="com.sameerasw.permission.ESSENTIALS_AIRSYNC_BRIDGE" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
 
     <uses-permission android:name="android.permission.WRITE_SETTINGS" tools:ignore="ProtectedPermissions" />
@@ -85,6 +88,12 @@
             android:name=".SettingsActivity"
             android:exported="false"
             android:label="Settings"
+            android:theme="@style/Theme.Essentials">
+        </activity>
+        <activity
+            android:name=".AppUpdatesActivity"
+            android:exported="false"
+            android:label="@string/tab_app_updates_title"
             android:theme="@style/Theme.Essentials">
         </activity>
 
@@ -206,7 +215,7 @@
             android:theme="@style/Theme.Essentials.Translucent" />
 
         <activity
-            android:name=".ui.composables.watermark.WatermarkActivity"
+            android:name=".ui.activities.WatermarkActivity"
             android:exported="true"
             android:label="@string/feat_watermark_title"
             android:theme="@style/Theme.Essentials">
@@ -585,6 +594,47 @@
                 <action android:name="com.sameerasw.essentials.action.UPDATE_MAC_BATTERY" />
             </intent-filter>
         </receiver>
+
+        <receiver
+            android:name=".services.receivers.CallVibrationReceiver"
+            android:exported="true"
+            android:permission="android.permission.READ_PHONE_STATE">
+            <intent-filter>
+                <action android:name="android.intent.action.PHONE_STATE" />
+                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".services.receivers.StatusBarAutomationReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".services.dreams.AmbientDreamService"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="Ambience"
+            android:permission="android.permission.BIND_DREAM_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.dreams.DreamService" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

@@ -25,6 +25,7 @@ class EssentialsApp : Application() {
         // Init Automation
         com.sameerasw.essentials.domain.diy.DIYRepository.init(this)
         com.sameerasw.essentials.services.automation.AutomationManager.init(this)
+        com.sameerasw.essentials.services.CalendarSyncManager.init(this)
 
         val intentFilter = IntentFilter(Intent.ACTION_SCREEN_OFF)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

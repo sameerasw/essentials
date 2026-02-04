@@ -12,7 +12,12 @@ import android.provider.Settings
 import android.view.inputmethod.InputMethodManager
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import android.provider.CalendarContract
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -74,6 +79,8 @@ class MainViewModel : ViewModel() {
     val remapHapticType = mutableStateOf(HapticFeedbackType.DOUBLE)
     val isDynamicNightLightEnabled = mutableStateOf(false)
     val snoozeChannels = mutableStateOf<List<com.sameerasw.essentials.domain.model.SnoozeChannel>>(emptyList())
+    val mapsChannels = mutableStateOf<List<com.sameerasw.essentials.domain.model.MapsChannel>>(emptyList())
+    val isSnoozeHeadsUpEnabled = mutableStateOf(false)
     val isFlashlightAlwaysTurnOffEnabled = mutableStateOf(false)
     val isFlashlightFadeEnabled = mutableStateOf(false)
     val isFlashlightAdjustEnabled = mutableStateOf(false)
@@ -82,18 +89,27 @@ class MainViewModel : ViewModel() {
     val flashlightLastIntensity = mutableStateOf(1)
     val isFlashlightPulseEnabled = mutableStateOf(false)
     val isFlashlightPulseFacedownOnly = mutableStateOf(true)
+    val isFlashlightPulseUseLightingApps = mutableStateOf(true)
     val isLocationPermissionGranted = mutableStateOf(false)
     val isBackgroundLocationPermissionGranted = mutableStateOf(false)
     val isFullScreenIntentPermissionGranted = mutableStateOf(false)
     val isBluetoothPermissionGranted = mutableStateOf(false)
     
     val isBluetoothDevicesEnabled = mutableStateOf(false)
+    val isCallVibrationsEnabled = mutableStateOf(false)
+    val isCalendarSyncEnabled = mutableStateOf(false)
+    val isCalendarSyncPeriodicEnabled = mutableStateOf(false)
+    
+    data class CalendarAccount(val id: Long, val name: String, val accountName: String, val isSelected: Boolean)
+    val availableCalendars = mutableStateListOf<CalendarAccount>()
+    val selectedCalendarIds = mutableStateOf(setOf<String>())
 
 
 
     val isScreenLockedSecurityEnabled = mutableStateOf(false)
     val isDeviceAdminEnabled = mutableStateOf(false)
     val isDeveloperModeEnabled = mutableStateOf(false)
+    val isNotificationPolicyAccessGranted = mutableStateOf(false)
     val skipSilentNotifications = mutableStateOf(true)
     val notificationLightingStyle = mutableStateOf(NotificationLightingStyle.STROKE)
     val notificationLightingColorMode = mutableStateOf(NotificationLightingColorMode.SYSTEM)
@@ -127,6 +143,7 @@ class MainViewModel : ViewModel() {
     val isRootEnabled = mutableStateOf(false)
     val isRootAvailable = mutableStateOf(false)
     val isRootPermissionGranted = mutableStateOf(false)
+    val hasPendingUpdates = mutableStateOf(false)
 
     val isPitchBlackThemeEnabled = mutableStateOf(false)
     
@@ -145,6 +162,7 @@ class MainViewModel : ViewModel() {
     val isKeyboardEnabled = mutableStateOf(false)
     val isKeyboardSelected = mutableStateOf(false)
     val isWriteSettingsEnabled = mutableStateOf(false)
+    val isCalendarPermissionGranted = mutableStateOf(false)
 
     // AirSync Bridge
     val isAirSyncConnectionEnabled = mutableStateOf(false)
@@ -154,11 +172,14 @@ class MainViewModel : ViewModel() {
     val isMacConnected = mutableStateOf(false)
     val batteryWidgetMaxDevices = mutableIntStateOf(8)
     val isBatteryWidgetBackgroundEnabled = mutableStateOf(true)
+    val isAmbientMusicGlanceDockedModeEnabled = mutableStateOf(false)
 
     private var lastUpdateCheckTime: Long = 0
-    private lateinit var settingsRepository: SettingsRepository
+    lateinit var settingsRepository: SettingsRepository
     private lateinit var updateRepository: UpdateRepository
     private var appContext: Context? = null
+    
+    val gitHubToken = mutableStateOf<String?>(null)
 
     private val preferenceChangeListener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
         // We still use this listener for now, attached via Repository
@@ -206,8 +227,35 @@ class MainViewModel : ViewModel() {
             SettingsRepository.KEY_SNOOZE_DISCOVERED_CHANNELS, SettingsRepository.KEY_SNOOZE_BLOCKED_CHANNELS -> {
                 appContext?.let { loadSnoozeChannels(it) }
             }
+            SettingsRepository.KEY_MAPS_DISCOVERED_CHANNELS, SettingsRepository.KEY_MAPS_DETECTION_CHANNELS -> {
+                appContext?.let { loadMapsChannels(it) }
+            }
+            SettingsRepository.KEY_SNOOZE_HEADS_UP_ENABLED -> {
+                isSnoozeHeadsUpEnabled.value = settingsRepository.getBoolean(key)
+            }
             SettingsRepository.KEY_PINNED_FEATURES -> {
                 pinnedFeatureKeys.value = settingsRepository.getPinnedFeatures()
+            }
+            SettingsRepository.KEY_CALL_VIBRATIONS_ENABLED -> {
+                isCallVibrationsEnabled.value = settingsRepository.getBoolean(key)
+            }
+            SettingsRepository.KEY_LIKE_SONG_TOAST_ENABLED -> {
+                isLikeSongToastEnabled.value = settingsRepository.getBoolean(key)
+            }
+            SettingsRepository.KEY_LIKE_SONG_AOD_OVERLAY_ENABLED -> {
+                isLikeSongAodOverlayEnabled.value = settingsRepository.getBoolean(key)
+            }
+            SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_ENABLED -> {
+                isAmbientMusicGlanceEnabled.value = settingsRepository.getBoolean(key)
+            }
+            SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_DOCKED_MODE -> {
+                isAmbientMusicGlanceDockedModeEnabled.value = settingsRepository.getBoolean(key)
+            }
+            SettingsRepository.KEY_CALENDAR_SYNC_ENABLED -> {
+                isCalendarSyncEnabled.value = settingsRepository.getBoolean(key)
+            }
+            SettingsRepository.KEY_TRACKED_REPOS -> {
+                appContext?.let { refreshTrackedUpdates(it) }
             }
         }
     }
@@ -219,10 +267,7 @@ class MainViewModel : ViewModel() {
         
         isAccessibilityEnabled.value = PermissionUtils.isAccessibilityServiceEnabled(context)
         isWriteSecureSettingsEnabled.value = PermissionUtils.canWriteSecureSettings(context)
-        isReadPhoneStateEnabled.value = ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.READ_PHONE_STATE
-        ) == PackageManager.PERMISSION_GRANTED
+        isReadPhoneStateEnabled.value = PermissionUtils.hasReadPhoneStatePermission(context)
         isPostNotificationsEnabled.value = ContextCompat.checkSelfPermission(
             context,
             Manifest.permission.POST_NOTIFICATIONS
@@ -239,10 +284,18 @@ class MainViewModel : ViewModel() {
         isKeyboardEnabled.value = PermissionUtils.isKeyboardEnabled(context)
         isKeyboardSelected.value = PermissionUtils.isKeyboardSelected(context)
         isWriteSettingsEnabled.value = PermissionUtils.canWriteSystemSettings(context)
+        isNotificationPolicyAccessGranted.value = PermissionUtils.hasNotificationPolicyAccess(context)
+        isCalendarPermissionGranted.value = PermissionUtils.hasReadCalendarPermission(context)
         
         isBluetoothPermissionGranted.value = PermissionUtils.hasBluetoothPermission(context)
         
         settingsRepository.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
+        
+        viewModelScope.launch {
+            settingsRepository.gitHubToken.collect {
+                gitHubToken.value = it
+            }
+        }
         
         isWidgetEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_WIDGET_ENABLED)
         isStatusBarIconControlEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_STATUS_BAR_ICON_CONTROL_ENABLED)
@@ -312,6 +365,8 @@ class MainViewModel : ViewModel() {
         
         isDynamicNightLightEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_DYNAMIC_NIGHT_LIGHT_ENABLED)
         loadSnoozeChannels(context)
+        loadMapsChannels(context)
+        isSnoozeHeadsUpEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_SNOOZE_HEADS_UP_ENABLED)
         isFlashlightAlwaysTurnOffEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_ALWAYS_TURN_OFF_ENABLED)
         isFlashlightFadeEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_FADE_ENABLED)
         isFlashlightAdjustEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_ADJUST_INTENSITY_ENABLED)
@@ -320,6 +375,7 @@ class MainViewModel : ViewModel() {
         flashlightLastIntensity.value = settingsRepository.getInt(SettingsRepository.KEY_FLASHLIGHT_LAST_INTENSITY, 1)
         isFlashlightPulseEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_PULSE_ENABLED)
         isFlashlightPulseFacedownOnly.value = settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_PULSE_FACEDOWN_ONLY, true)
+        isFlashlightPulseUseLightingApps.value = settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_PULSE_SAME_AS_LIGHTING, true)
         isPitchBlackThemeEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_PITCH_BLACK_THEME_ENABLED)
 
         keyboardHeight.floatValue = settingsRepository.getFloat(SettingsRepository.KEY_KEYBOARD_HEIGHT, 54f)
@@ -344,6 +400,7 @@ class MainViewModel : ViewModel() {
         isBluetoothDevicesEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_SHOW_BLUETOOTH_DEVICES, false)
         batteryWidgetMaxDevices.intValue = settingsRepository.getBatteryWidgetMaxDevices()
         isBatteryWidgetBackgroundEnabled.value = settingsRepository.isBatteryWidgetBackgroundEnabled()
+        isCallVibrationsEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_CALL_VIBRATIONS_ENABLED)
 
         isScreenLockedSecurityEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED)
         isDeviceAdminEnabled.value = isDeviceAdminActive(context)
@@ -358,6 +415,15 @@ class MainViewModel : ViewModel() {
         isDeveloperModeEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_DEVELOPER_MODE_ENABLED)
         isPreReleaseCheckEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_CHECK_PRE_RELEASES_ENABLED)
         pinnedFeatureKeys.value = settingsRepository.getPinnedFeatures()
+        isLikeSongToastEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_LIKE_SONG_TOAST_ENABLED, true)
+        isLikeSongAodOverlayEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_LIKE_SONG_AOD_OVERLAY_ENABLED, false)
+        isAmbientMusicGlanceEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_ENABLED, false)
+        isAmbientMusicGlanceDockedModeEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_DOCKED_MODE, false)
+        isCalendarSyncEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_CALENDAR_SYNC_ENABLED, false)
+        isCalendarSyncPeriodicEnabled.value = settingsRepository.isCalendarSyncPeriodicEnabled()
+        selectedCalendarIds.value = settingsRepository.getCalendarSyncSelectedCalendars()
+        
+        refreshTrackedUpdates(context)
     }
 
     fun onSearchQueryChanged(query: String, context: Context) {
@@ -457,6 +523,16 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    fun refreshTrackedUpdates(context: Context) {
+        val trackedRepos = settingsRepository.getTrackedRepos()
+        if (trackedRepos.isEmpty()) {
+            hasPendingUpdates.value = false
+            return
+        }
+        
+        hasPendingUpdates.value = trackedRepos.any { it.isUpdateAvailable }
+    }
+
     private fun isDeviceAdminActive(context: Context): Boolean {
         return PermissionUtils.isDeviceAdminActive(context)
     }
@@ -474,6 +550,15 @@ class MainViewModel : ViewModel() {
             context.startActivity(intent)
         }
     }
+    
+    fun requestReadPhoneStatePermission(activity: Activity) {
+        androidx.core.app.ActivityCompat.requestPermissions(
+            activity,
+            arrayOf(android.Manifest.permission.READ_PHONE_STATE),
+            1005
+        )
+    }
+
 
     fun setWidgetEnabled(enabled: Boolean, context: Context) {
         isWidgetEnabled.value = enabled
@@ -541,6 +626,11 @@ class MainViewModel : ViewModel() {
         settingsRepository.putBoolean(SettingsRepository.KEY_BUTTON_REMAP_ENABLED, enabled)
     }
 
+    fun setCallVibrationsEnabled(enabled: Boolean) {
+        isCallVibrationsEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_CALL_VIBRATIONS_ENABLED, enabled)
+    }
+
     fun setButtonRemapUseShizuku(enabled: Boolean, context: Context) {
         isButtonRemapUseShizuku.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_BUTTON_REMAP_USE_SHIZUKU, enabled)
@@ -580,6 +670,130 @@ class MainViewModel : ViewModel() {
         isAppLockEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_APP_LOCK_ENABLED, enabled)
     }
+    
+    val isLikeSongToastEnabled = mutableStateOf(false)
+
+    fun setLikeSongToastEnabled(enabled: Boolean) {
+        isLikeSongToastEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_LIKE_SONG_TOAST_ENABLED, enabled)
+    }
+
+    val isLikeSongAodOverlayEnabled = mutableStateOf(false)
+
+    fun setLikeSongAodOverlayEnabled(enabled: Boolean) {
+        isLikeSongAodOverlayEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_LIKE_SONG_AOD_OVERLAY_ENABLED, enabled)
+    }
+
+    val isAmbientMusicGlanceEnabled = mutableStateOf(false)
+
+    fun setAmbientMusicGlanceEnabled(enabled: Boolean) {
+        isAmbientMusicGlanceEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_ENABLED, enabled)
+    }
+
+    fun setAmbientMusicGlanceDockedModeEnabled(enabled: Boolean) {
+        isAmbientMusicGlanceDockedModeEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_DOCKED_MODE, enabled)
+    }
+
+    fun setCalendarSyncEnabled(enabled: Boolean, context: Context) {
+        isCalendarSyncEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_CALENDAR_SYNC_ENABLED, enabled)
+        if (enabled) {
+            com.sameerasw.essentials.services.CalendarSyncManager.forceSync(context)
+            if (isCalendarSyncPeriodicEnabled.value) {
+                schedulePeriodicCalendarSync(context)
+            }
+        } else {
+            cancelPeriodicCalendarSync(context)
+        }
+    }
+
+    fun fetchCalendars(context: Context) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) return
+        
+        viewModelScope.launch(Dispatchers.IO) {
+            val calendars = mutableListOf<CalendarAccount>()
+            val projection = arrayOf(
+                CalendarContract.Calendars._ID,
+                CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
+                CalendarContract.Calendars.ACCOUNT_NAME
+            )
+            
+            context.contentResolver.query(
+                CalendarContract.Calendars.CONTENT_URI,
+                projection,
+                null,
+                null,
+                null
+            )?.use { cursor ->
+                val idColumn = cursor.getColumnIndexOrThrow(CalendarContract.Calendars._ID)
+                val nameColumn = cursor.getColumnIndexOrThrow(CalendarContract.Calendars.CALENDAR_DISPLAY_NAME)
+                val accountColumn = cursor.getColumnIndexOrThrow(CalendarContract.Calendars.ACCOUNT_NAME)
+                
+                while (cursor.moveToNext()) {
+                    val id = cursor.getLong(idColumn)
+                    val name = cursor.getString(nameColumn)
+                    val account = cursor.getString(accountColumn)
+                    calendars.add(CalendarAccount(id, name, account, selectedCalendarIds.value.contains(id.toString())))
+                }
+            }
+            
+            withContext(Dispatchers.Main) {
+                availableCalendars.clear()
+                availableCalendars.addAll(calendars)
+            }
+        }
+    }
+
+    fun toggleCalendarSelection(calendarId: Long) {
+        val currentIds = selectedCalendarIds.value.toMutableSet()
+        val idString = calendarId.toString()
+        if (currentIds.contains(idString)) {
+            currentIds.remove(idString)
+        } else {
+            currentIds.add(idString)
+        }
+        selectedCalendarIds.value = currentIds
+        settingsRepository.saveCalendarSyncSelectedCalendars(currentIds)
+        
+        // Update availableCalendars list
+        val index = availableCalendars.indexOfFirst { it.id == calendarId }
+        if (index != -1) {
+            availableCalendars[index] = availableCalendars[index].copy(isSelected = currentIds.contains(idString))
+        }
+    }
+
+    fun setCalendarSyncPeriodicEnabled(enabled: Boolean, context: Context) {
+        isCalendarSyncPeriodicEnabled.value = enabled
+        settingsRepository.setCalendarSyncPeriodicEnabled(enabled)
+        if (enabled && isCalendarSyncEnabled.value) {
+            schedulePeriodicCalendarSync(context)
+        } else {
+            cancelPeriodicCalendarSync(context)
+        }
+    }
+
+    private fun schedulePeriodicCalendarSync(context: Context) {
+        val workRequest = PeriodicWorkRequestBuilder<com.sameerasw.essentials.services.CalendarSyncWorker>(
+            15, java.util.concurrent.TimeUnit.MINUTES
+        ).build()
+        
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+            "calendar_sync_work",
+            ExistingPeriodicWorkPolicy.UPDATE,
+            workRequest
+        )
+    }
+
+    private fun cancelPeriodicCalendarSync(context: Context) {
+        WorkManager.getInstance(context).cancelUniqueWork("calendar_sync_work")
+    }
+
+    fun triggerCalendarSyncNow(context: Context) {
+        com.sameerasw.essentials.services.CalendarSyncManager.forceSync(context)
+    }
 
     fun setFreezeWhenLockedEnabled(enabled: Boolean, context: Context) {
         isFreezeWhenLockedEnabled.value = enabled
@@ -609,6 +823,11 @@ class MainViewModel : ViewModel() {
     fun setFlashlightPulseFacedownOnly(enabled: Boolean, context: Context) {
         isFlashlightPulseFacedownOnly.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_FLASHLIGHT_PULSE_FACEDOWN_ONLY, enabled)
+    }
+
+    fun setFlashlightPulseUseLightingApps(enabled: Boolean, context: Context) {
+        isFlashlightPulseUseLightingApps.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_FLASHLIGHT_PULSE_SAME_AS_LIGHTING, enabled)
     }
 
     // Helper to show the overlay service for testing/triggering
@@ -873,13 +1092,23 @@ class MainViewModel : ViewModel() {
     }
 
     fun requestBluetoothPermission(activity: androidx.activity.ComponentActivity) {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            androidx.core.app.ActivityCompat.requestPermissions(
-                activity,
-                arrayOf(Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN),
-                1005
-            )
-        }
+        androidx.core.app.ActivityCompat.requestPermissions(
+            activity,
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                arrayOf(Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN)
+            } else {
+                arrayOf(Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN)
+            },
+            1005
+        )
+    }
+
+    fun requestCalendarPermission(activity: androidx.activity.ComponentActivity) {
+        androidx.core.app.ActivityCompat.requestPermissions(
+            activity,
+            arrayOf(Manifest.permission.READ_CALENDAR),
+            1006
+        )
     }
 
     fun requestNotificationPermission(activity: androidx.activity.ComponentActivity) {
@@ -980,6 +1209,18 @@ class MainViewModel : ViewModel() {
 
     fun updateNotificationLightingAppEnabled(context: Context, packageName: String, enabled: Boolean) {
         settingsRepository.updateNotificationLightingAppSelection(packageName, enabled)
+    }
+
+    fun loadFlashlightPulseSelectedApps(context: Context): List<AppSelection> {
+        return settingsRepository.loadFlashlightPulseSelectedApps()
+    }
+
+    fun saveFlashlightPulseSelectedApps(context: Context, apps: List<AppSelection>) {
+        settingsRepository.saveFlashlightPulseSelectedApps(apps)
+    }
+
+    fun updateFlashlightPulseAppEnabled(context: Context, packageName: String, enabled: Boolean) {
+        settingsRepository.updateFlashlightPulseAppSelection(packageName, enabled)
     }
 
     // Notification Lighting Corner Radius Methods
@@ -1182,6 +1423,31 @@ class MainViewModel : ViewModel() {
         loadSnoozeChannels(context)
     }
 
+    private fun loadMapsChannels(context: Context) {
+        val discovered = settingsRepository.loadMapsDiscoveredChannels()
+        val detectionIds = settingsRepository.loadMapsDetectionChannels()
+        
+        mapsChannels.value = discovered.map { channel ->
+            channel.copy(isEnabled = detectionIds.contains(channel.id))
+        }.distinctBy { it.id }.sortedBy { it.name }
+    }
+
+    fun setMapsChannelDetected(channelId: String, detected: Boolean, context: Context) {
+        val currentDetected = settingsRepository.loadMapsDetectionChannels().toMutableSet()
+        if (detected) {
+            currentDetected.add(channelId)
+        } else {
+            currentDetected.remove(channelId)
+        }
+        settingsRepository.saveMapsDetectionChannels(currentDetected)
+        loadMapsChannels(context)
+    }
+
+    fun setSnoozeHeadsUpEnabled(enabled: Boolean, context: Context) {
+        isSnoozeHeadsUpEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_SNOOZE_HEADS_UP_ENABLED, enabled)
+    }
+
     fun setFlashlightAlwaysTurnOffEnabled(enabled: Boolean, context: Context) {
         isFlashlightAlwaysTurnOffEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_FLASHLIGHT_ALWAYS_TURN_OFF_ENABLED, enabled)
@@ -1261,5 +1527,4 @@ class MainViewModel : ViewModel() {
         val settingsJson = settingsRepository.getAllConfigsAsJsonString()
         return com.sameerasw.essentials.utils.LogManager.generateReport(context, settingsJson)
     }
-
 }

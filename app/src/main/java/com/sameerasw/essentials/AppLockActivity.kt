@@ -141,6 +141,7 @@ class AppLockActivity : FragmentActivity() {
             .setTitle("App Lock")
             .setSubtitle("Unlock to access $appLabel")
             .setAllowedAuthenticators(androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG or androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL)
+            .setConfirmationRequired(false)
             .build()
 
         biometricPrompt.authenticate(promptInfo)

@@ -33,7 +33,12 @@ class MetadataProvider(
                 shutterSpeed = exif.getAttribute(ExifInterface.TAG_EXPOSURE_TIME)?.let { "${it}s" },
                 iso = exif.getAttribute(ExifInterface.TAG_PHOTOGRAPHIC_SENSITIVITY)?.let { "ISO $it" },
                 date = exif.getAttribute(ExifInterface.TAG_DATETIME_ORIGINAL),
-                focalLength = exif.getAttribute(ExifInterface.TAG_FOCAL_LENGTH)?.let { "${it}mm" }
+                focalLength = exif.getAttributeDouble(ExifInterface.TAG_FOCAL_LENGTH, 0.0).let { 
+                    if (it > 0) {
+                        val formatted = if (it % 1.0 == 0.0) it.toInt().toString() else it.toString()
+                        "${formatted}mm"
+                    } else null
+                }
             )
         } catch (e: Exception) {
             e.printStackTrace()

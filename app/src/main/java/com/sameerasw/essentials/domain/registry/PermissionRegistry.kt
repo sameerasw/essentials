@@ -21,6 +21,7 @@ fun initPermissionRegistry() {
     PermissionRegistry.register("ACCESSIBILITY", R.string.feat_dynamic_night_light_title)
     PermissionRegistry.register("ACCESSIBILITY", R.string.feat_screen_locked_security_title)
     PermissionRegistry.register("ACCESSIBILITY", R.string.feat_app_lock_title)
+    PermissionRegistry.register("ACCESSIBILITY", R.string.feat_ambient_music_glance_title)
 
     // Write secure settings permission
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_statusbar_icons_title)
@@ -41,6 +42,8 @@ fun initPermissionRegistry() {
     // Notification listener permission
     PermissionRegistry.register("NOTIFICATION_LISTENER", R.string.feat_maps_power_saving_title)
     PermissionRegistry.register("NOTIFICATION_LISTENER", R.string.feat_notification_lighting_title)
+    PermissionRegistry.register("NOTIFICATION_LISTENER", R.string.feat_call_vibrations_title)
+    PermissionRegistry.register("NOTIFICATION_LISTENER", R.string.feat_ambient_music_glance_title)
 
     // Bluetooth permissions
     PermissionRegistry.register("BLUETOOTH_CONNECT", R.string.feat_batteries_title)
@@ -54,6 +57,7 @@ fun initPermissionRegistry() {
 
     // Read phone state permission
     PermissionRegistry.register("READ_PHONE_STATE", R.string.search_smart_data_title)
+    PermissionRegistry.register("READ_PHONE_STATE", R.string.feat_call_vibrations_title)
 
     // Device Admin permission
     PermissionRegistry.register("DEVICE_ADMIN", R.string.feat_screen_locked_security_title)
@@ -68,4 +72,10 @@ fun initPermissionRegistry() {
 
     // Modify system settings permission
     PermissionRegistry.register("WRITE_SETTINGS", R.string.feat_qs_tiles_title)
+    
+    // Calendar sync permission
+    PermissionRegistry.register("READ_CALENDAR", R.string.feat_calendar_sync_title)
+
+    // Notification policy permission
+    PermissionRegistry.register("NOTIFICATION_POLICY", R.string.feat_sound_modes_title)
 }

@@ -55,7 +55,11 @@ class CaffeinateTileService : BaseTileService() {
                 60 -> "1h"
                 else -> "${CaffeinateController.selectedTimeout.value}m"
             }
-            getString(R.string.caffeinate_starting_in, CaffeinateController.startingTimeLeft.value) + " ($timeoutStr)"
+            if (CaffeinateController.isActive.value) {
+                "$timeoutStr"
+            } else {
+                getString(R.string.caffeinate_starting_in, CaffeinateController.startingTimeLeft.value) + " ($timeoutStr)"
+            }
         } else if (CaffeinateController.isActive.value) {
             getString(R.string.caffeinate_active)
         } else {
@@ -65,7 +69,6 @@ class CaffeinateTileService : BaseTileService() {
     }
 
     override fun hasFeaturePermission(): Boolean {
-        // Wake lock doesn't require permissions
         return true
     }
 

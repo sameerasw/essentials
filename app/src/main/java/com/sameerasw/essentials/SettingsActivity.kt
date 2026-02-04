@@ -72,8 +72,10 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import com.sameerasw.essentials.domain.DIYTabs
 import com.sameerasw.essentials.domain.registry.PermissionRegistry
 import com.sameerasw.essentials.ui.components.sheets.InstructionsBottomSheet
+import com.sameerasw.essentials.utils.PermissionUtils
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -166,7 +168,7 @@ class SettingsActivity : ComponentActivity() {
     @Suppress("DEPRECATION")
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 1001 || requestCode == 1002 || requestCode == 1003) {
+        if (requestCode in 1001..1006) {
             viewModel.check(this)
         }
     }
@@ -183,6 +185,12 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
     val isOverlayPermissionGranted by viewModel.isOverlayPermissionGranted
     val isNotificationListenerEnabled by viewModel.isNotificationListenerEnabled
     val isDefaultBrowserSet by viewModel.isDefaultBrowserSet
+    val isWriteSettingsEnabled by viewModel.isWriteSettingsEnabled
+    val isNotificationPolicyAccessGranted by viewModel.isNotificationPolicyAccessGranted
+    val isLocationPermissionGranted by viewModel.isLocationPermissionGranted
+    val isBackgroundLocationPermissionGranted by viewModel.isBackgroundLocationPermissionGranted
+    val isDeviceAdminEnabled by viewModel.isDeviceAdminEnabled
+    val isCalendarPermissionGranted by viewModel.isCalendarPermissionGranted
     val context = LocalContext.current
     val isAppHapticsEnabled = remember { mutableStateOf(HapticUtil.loadAppHapticsEnabled(context)) }
     var isPermissionsExpanded by remember { mutableStateOf(false) }
@@ -297,9 +305,13 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
 
         val defaultTab by viewModel.defaultTab
         RoundedCardContainer {
+            val availableTabs = remember(isDeveloperModeEnabled) {
+                if (isDeveloperModeEnabled) DIYTabs.entries else listOf(DIYTabs.ESSENTIALS, DIYTabs.FREEZE, DIYTabs.DIY)
+            }
             DefaultTabPicker(
                 selectedTab = defaultTab,
-                onTabSelected = { viewModel.setDefaultTab(it, context) }
+                onTabSelected = { viewModel.setDefaultTab(it, context) },
+                options = availableTabs
             )
         }
 
@@ -463,6 +475,74 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
                             val settingsIntent = Intent(Settings.ACTION_SETTINGS)
                             context.startActivity(settingsIntent)
                         }
+                    },
+                )
+
+                PermissionCard(
+                    iconRes = R.drawable.rounded_settings_motion_mode_24,
+                    title = stringResource(R.string.perm_write_settings_title),
+                    dependentFeatures = PermissionRegistry.getFeatures("WRITE_SETTINGS"),
+                    actionLabel = if (isWriteSettingsEnabled) "Granted" else "Grant Permission",
+                    isGranted = isWriteSettingsEnabled,
+                    onActionClick = {
+                        PermissionUtils.openWriteSettings(context)
+                    },
+                )
+
+                PermissionCard(
+                    iconRes = R.drawable.rounded_notifications_off_24,
+                    title = stringResource(R.string.perm_notif_policy_title),
+                    dependentFeatures = PermissionRegistry.getFeatures("NOTIFICATION_POLICY"),
+                    actionLabel = if (isNotificationPolicyAccessGranted) "Granted" else "Grant Permission",
+                    isGranted = isNotificationPolicyAccessGranted,
+                    onActionClick = {
+                        PermissionUtils.openNotificationPolicySettings(context)
+                    },
+                )
+
+                PermissionCard(
+                    iconRes = R.drawable.rounded_location_on_24,
+                    title = "Location Access",
+                    dependentFeatures = PermissionRegistry.getFeatures("LOCATION"),
+                    actionLabel = if (isLocationPermissionGranted) "Granted" else "Grant Permission",
+                    isGranted = isLocationPermissionGranted,
+                    onActionClick = {
+                        viewModel.requestLocationPermission(context as ComponentActivity)
+                    },
+                )
+
+                if (isLocationPermissionGranted && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    PermissionCard(
+                        iconRes = R.drawable.rounded_location_on_24,
+                        title = "Background Location",
+                        dependentFeatures = PermissionRegistry.getFeatures("BACKGROUND_LOCATION"),
+                        actionLabel = if (isBackgroundLocationPermissionGranted) "Granted" else "Grant Permission",
+                        isGranted = isBackgroundLocationPermissionGranted,
+                        onActionClick = {
+                            viewModel.requestBackgroundLocationPermission(context as ComponentActivity)
+                        },
+                    )
+                }
+
+                PermissionCard(
+                    iconRes = R.drawable.rounded_admin_panel_settings_24,
+                    title = "Device Admin",
+                    dependentFeatures = PermissionRegistry.getFeatures("DEVICE_ADMIN"),
+                    actionLabel = if (isDeviceAdminEnabled) "Granted" else "Enable Admin",
+                    isGranted = isDeviceAdminEnabled,
+                    onActionClick = {
+                        viewModel.requestDeviceAdmin(context)
+                    },
+                )
+
+                PermissionCard(
+                    iconRes = R.drawable.rounded_calendar_today_24,
+                    title = "Calendar",
+                    dependentFeatures = PermissionRegistry.getFeatures("READ_CALENDAR"),
+                    actionLabel = if (isCalendarPermissionGranted) "Granted" else "Grant Permission",
+                    isGranted = isCalendarPermissionGranted,
+                    onActionClick = {
+                        viewModel.requestCalendarPermission(context as ComponentActivity)
                     },
                 )
             }

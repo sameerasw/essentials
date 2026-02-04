@@ -186,6 +186,7 @@ class ButtonRemapHandler(
             "Take screenshot" -> takeScreenshot()
             "Cycle sound modes" -> cycleSoundModes()
             "Toggle media volume" -> toggleMediaVolume()
+            "Like current song" -> service.sendBroadcast(Intent("com.sameerasw.essentials.ACTION_LIKE_CURRENT_SONG").setPackage(service.packageName))
         }
     }
 

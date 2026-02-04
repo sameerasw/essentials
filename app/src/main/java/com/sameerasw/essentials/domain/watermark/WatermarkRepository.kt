@@ -36,6 +36,7 @@ class WatermarkRepository(
     private val PREF_BORDER_CORNER = androidx.datastore.preferences.core.intPreferencesKey("border_corner")
     private val PREF_SHOW_LOGO = booleanPreferencesKey("show_logo")
     private val PREF_LOGO_SIZE = androidx.datastore.preferences.core.intPreferencesKey("logo_size")
+    private val PREF_ROTATION = androidx.datastore.preferences.core.intPreferencesKey("rotation")
 
     val watermarkOptions: Flow<WatermarkOptions> = context.dataStore.data
         .map { preferences ->
@@ -73,7 +74,8 @@ class WatermarkRepository(
                 borderCorner = preferences[PREF_BORDER_CORNER] ?: 0,
                 showLogo = preferences[PREF_SHOW_LOGO] ?: false,
                 logoResId = null, 
-                logoSize = preferences[PREF_LOGO_SIZE] ?: 50
+                logoSize = preferences[PREF_LOGO_SIZE] ?: 50,
+                rotation = preferences[PREF_ROTATION] ?: 0
             )
         }
 
@@ -167,5 +169,9 @@ class WatermarkRepository(
 
     suspend fun updateLogoSize(size: Int) {
         context.dataStore.edit { it[PREF_LOGO_SIZE] = size }
+    }
+
+    suspend fun updateRotation(rotation: Int) {
+        context.dataStore.edit { it[PREF_ROTATION] = rotation }
     }
 }

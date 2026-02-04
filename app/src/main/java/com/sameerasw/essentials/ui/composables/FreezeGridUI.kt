@@ -102,7 +102,7 @@ fun FreezeGridUI(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(32.dp),
+                    .padding(18.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
@@ -123,7 +123,7 @@ fun FreezeGridUI(
         } else {
             RoundedCardContainer(
                 modifier = Modifier
-                    .padding(horizontal = 24.dp)
+                    .padding(horizontal = 16.dp)
                     .padding(top = 24.dp),
             ) {
                 LazyVerticalGrid(

@@ -57,7 +57,10 @@ data class WatermarkOptions(
     val borderCorner: Int = 0,
     val showLogo: Boolean = false,
     val logoResId: Int? = null,
-    val logoSize: Int = 50
+    val logoSize: Int = 50,
+    val overriddenBrandText: String? = null,
+    val overriddenDateText: String? = null,
+    val rotation: Int = 0
 )
 
 class WatermarkEngine(
@@ -68,7 +71,6 @@ class WatermarkEngine(
         val inputStream = context.contentResolver.openInputStream(uri) 
             ?: throw IllegalStateException("Cannot open input stream")
         
-        // Decode bitmap - mutable to allow drawing if Overlay
         val originalBitmap = BitmapFactory.decodeStream(inputStream, null, BitmapFactory.Options().apply {
             inMutable = true
             inPreferredConfig = Bitmap.Config.ARGB_8888
@@ -142,9 +144,20 @@ class WatermarkEngine(
 
     suspend fun processBitmap(bitmap: Bitmap, uri: Uri, options: WatermarkOptions): Bitmap = withContext(Dispatchers.Default) {
         val exifData = metadataProvider.extractExif(uri)
+        
+        // Apply Rotation
+        val rotated = if (options.rotation != 0) {
+            val matrix = android.graphics.Matrix().apply { postRotate(options.rotation.toFloat()) }
+            val rb = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+            if (rb != bitmap) bitmap.recycle()
+            rb
+        } else {
+            bitmap
+        }
+
         val result = when (options.style) {
-            WatermarkStyle.OVERLAY -> drawOverlay(bitmap, exifData, options)
-            WatermarkStyle.FRAME -> drawFrame(bitmap, exifData, options)
+            WatermarkStyle.OVERLAY -> drawOverlay(rotated, exifData, options)
+            WatermarkStyle.FRAME -> drawFrame(rotated, exifData, options)
         }
         
         applyBorder(result, options)
@@ -225,7 +238,7 @@ class WatermarkEngine(
 
         // Draw Brand
         if (options.showDeviceBrand) {
-            val brandString = buildBrandString(exifData)
+            val brandString = buildBrandString(exifData, options)
             val brandPaint = Paint(paint).apply {
                 typeface = Typeface.DEFAULT_BOLD
                 textSize = baseSize * brandScale
@@ -442,7 +455,7 @@ class WatermarkEngine(
         val textX = margin + logoAreaWidth
 
         if (options.showDeviceBrand) {
-            val brandString = buildBrandString(exifData)
+            val brandString = buildBrandString(exifData, options)
             canvas.drawText(brandString, textX, currentLeftY, brandPaint)
             currentLeftY += (brandPaint.textSize * 0.2f) + customPaint.textSize
         } else if (options.showCustomText && options.customText.isNotEmpty()) {
@@ -585,7 +598,8 @@ class WatermarkEngine(
         }
     }
 
-    private fun buildBrandString(exif: ExifData): String {
+    private fun buildBrandString(exif: ExifData, options: WatermarkOptions): String {
+        options.overriddenBrandText?.let { return it }
         return if (!exif.make.isNullOrEmpty() && !exif.model.isNullOrEmpty()) {
             if (exif.model.contains(exif.make, ignoreCase = true)) {
                 exif.model
@@ -614,7 +628,7 @@ class WatermarkEngine(
         if (options.showIso) exif.iso?.let { 
             list.add(ExifItem(it, R.drawable.rounded_grain_24)) 
         }
-        if (options.showDate) exif.date?.let { 
+        if (options.showDate) (options.overriddenDateText ?: exif.date)?.let { 
             list.add(ExifItem(formatDate(it), R.drawable.rounded_date_range_24)) 
         }
         
@@ -655,26 +669,28 @@ class WatermarkEngine(
 
     private fun formatShutterSpeed(raw: String): String {
         // raw usually comes as "0.02s" or "1/100s" from MetadataProvider due to appended "s" in provider
-        // but if we are robust, we check.
         val value = raw.removeSuffix("s")
-        // If it's a fraction, keep it (photographers prefer fractions)
+        
+        // If it's already a fraction, keep it
         if (value.contains("/")) return raw
         
         return try {
-            val doubleVal = value.toDouble()
-            // Round to max 2 decimals
-            // usage of %.2f might result in 0.00 for very fast speeds? 
-            // User asked "maximum of 2 decimals", implying checking if it has more.
-            // But if it is 0.0005, 0.00 is bad.
-            // Maybe they mean for long exposures e.g. 2.534s -> 0.53s.
-            // Let's assume standard formatting.
-            if (doubleVal >= 1 || doubleVal == 0.0) {
-                 java.lang.String.format(java.util.Locale.US, "%.2fs", doubleVal).removeSuffix(".00s").removeSuffix("0s") + "s"
+            val exposureTime = value.toDouble()
+            
+            if (exposureTime <= 0) return raw
+            
+            if (exposureTime >= 1.0) {
+                // For 1.0s or more, show as integer if possible, else 1 decimal
+                val formatted = if (exposureTime % 1.0 == 0.0) {
+                    exposureTime.toInt().toString()
+                } else {
+                    java.lang.String.format(java.util.Locale.US, "%.1f", exposureTime)
+                }
+                "${formatted}s"
             } else {
-                // Formatting small decimals
-                // user request: "round to maximum of 2 decimals"
-                // If 0.016 -> 0.02s
-                java.lang.String.format(java.util.Locale.US, "%.2fs", doubleVal)
+                // For sub-second, convert to 1/N format
+                val denominator = (1.0 / exposureTime).roundToInt()
+                "1/${denominator}s"
             }
         } catch (e: Exception) {
             raw

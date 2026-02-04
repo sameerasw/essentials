@@ -56,6 +56,12 @@ object CaffeinateController {
         selectedTimeout.value = sortedPresets.firstOrNull() ?: timeoutPresets.first()
         
         registerScreenOffReceiver(context)
+        
+        if (isSkipCountdownEnabled(context)) {
+            startService(context)
+            isStarting.value = true
+        }
+        
         resetSelectionTimer(context)
     }
 
@@ -92,6 +98,12 @@ object CaffeinateController {
         val nextIndex = (currentIndex + 1) % sortedPresets.size
         
         selectedTimeout.value = sortedPresets[nextIndex]
+        
+        if (isActive.value) {
+            startService(context)
+            isStarting.value = true
+        }
+        
         resetSelectionTimer(context)
         refreshTile(context)
     }
@@ -133,6 +145,11 @@ object CaffeinateController {
         val prefs = context.getSharedPreferences("caffeinate_prefs", Context.MODE_PRIVATE)
         val savedPresets = prefs.getStringSet("enabled_presets", timeoutPresets.map { it.toString() }.toSet())
         return savedPresets?.map { it.toInt() }?.toSet() ?: timeoutPresets.toSet()
+    }
+
+    private fun isSkipCountdownEnabled(context: Context): Boolean {
+        val prefs = context.getSharedPreferences("caffeinate_prefs", Context.MODE_PRIVATE)
+        return prefs.getBoolean("skip_countdown", false)
     }
 
     private fun isWakeLockServiceRunning(context: Context): Boolean {
