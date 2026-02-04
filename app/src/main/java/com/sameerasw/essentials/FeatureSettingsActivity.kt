@@ -643,6 +643,13 @@ class FeatureSettingsActivity : FragmentActivity() {
                                     highlightSetting = highlightSetting
                                 )
                             }
+                            "Calendar Sync" -> {
+                                com.sameerasw.essentials.ui.composables.configs.CalendarSyncSettingsUI(
+                                    viewModel = viewModel,
+                                    modifier = Modifier.padding(top = 16.dp),
+                                    highlightKey = highlightSetting
+                                )
+                            }
                             // else -> default UI (optional cleanup)
                         }
                     }

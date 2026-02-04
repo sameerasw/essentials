@@ -5,6 +5,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
@@ -25,7 +26,9 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -40,7 +43,8 @@ fun DIYFloatingToolbar(
     currentPage: Int,
     tabs: List<DIYTabs>,
     onTabSelected: (Int) -> Unit,
-    scrollBehavior: FloatingToolbarScrollBehavior
+    scrollBehavior: FloatingToolbarScrollBehavior,
+    badges: Map<DIYTabs, Boolean> = emptyMap()
 ) {
     var expanded by remember { mutableStateOf(true) }
     var interactionCount by remember { mutableStateOf(0) }
@@ -173,16 +177,29 @@ fun DIYFloatingToolbar(
                             )
                         }
                     ) {
-                        Icon(
-                            painter = painterResource(id = tab.iconRes),
-                            contentDescription = stringResource(id = tab.title),
-                            tint = if (isSelected) {
-                                MaterialTheme.colorScheme.primary
-                            } else {
-                                MaterialTheme.colorScheme.background
-                            },
-                            modifier = Modifier.size(24.dp)
-                        )
+                        Box {
+                            Icon(
+                                painter = painterResource(id = tab.iconRes),
+                                contentDescription = stringResource(id = tab.title),
+                                tint = if (isSelected) {
+                                    MaterialTheme.colorScheme.primary
+                                } else {
+                                    MaterialTheme.colorScheme.background
+                                },
+                                modifier = Modifier.size(24.dp)
+                            )
+                            if (badges[tab] == true) {
+                                androidx.compose.foundation.Canvas(
+                                    modifier = Modifier
+                                        .size(8.dp)
+                                        .align(Alignment.TopEnd)
+                                ) {
+                                    drawCircle(
+                                        color = if (isSelected) Color.Red else Color.Red, // Always red for now
+                                    )
+                                }
+                            }
+                        }
                     }
 
                     // Animated spacing between buttons

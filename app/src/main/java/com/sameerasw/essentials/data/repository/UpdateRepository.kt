@@ -11,13 +11,20 @@ class UpdateRepository {
 
     suspend fun checkForUpdates(isPreReleaseCheckEnabled: Boolean, currentVersion: String): UpdateInfo? = withContext(Dispatchers.IO) {
         try {
-            val url = if (isPreReleaseCheckEnabled) {
-                URL("https://api.github.com/repos/sameerasw/essentials/releases")
+            val urlString = if (isPreReleaseCheckEnabled) {
+                "https://api.github.com/repos/sameerasw/essentials/releases"
             } else {
-                URL("https://api.github.com/repos/sameerasw/essentials/releases/latest")
+                "https://api.github.com/repos/sameerasw/essentials/releases/latest"
             }
             
-            val releaseData = url.readText()
+            val url = URL(urlString)
+            val connection = url.openConnection() as java.net.HttpURLConnection
+            
+            if (connection.responseCode != 200) {
+                return@withContext null
+            }
+
+            val releaseData = connection.inputStream.bufferedReader().readText()
 
             val release: Map<String, Any>? = if (isPreReleaseCheckEnabled) {
                 val listType = object : TypeToken<List<Map<String, Any>>>() {}.type

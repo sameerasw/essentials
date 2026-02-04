@@ -12,7 +12,12 @@ import android.provider.Settings
 import android.view.inputmethod.InputMethodManager
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import android.provider.CalendarContract
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -89,6 +94,12 @@ class MainViewModel : ViewModel() {
     
     val isBluetoothDevicesEnabled = mutableStateOf(false)
     val isCallVibrationsEnabled = mutableStateOf(false)
+    val isCalendarSyncEnabled = mutableStateOf(false)
+    val isCalendarSyncPeriodicEnabled = mutableStateOf(false)
+    
+    data class CalendarAccount(val id: Long, val name: String, val accountName: String, val isSelected: Boolean)
+    val availableCalendars = mutableStateListOf<CalendarAccount>()
+    val selectedCalendarIds = mutableStateOf(setOf<String>())
 
 
 
@@ -128,6 +139,7 @@ class MainViewModel : ViewModel() {
     val isRootEnabled = mutableStateOf(false)
     val isRootAvailable = mutableStateOf(false)
     val isRootPermissionGranted = mutableStateOf(false)
+    val hasPendingUpdates = mutableStateOf(false)
 
     val isPitchBlackThemeEnabled = mutableStateOf(false)
     
@@ -158,9 +170,11 @@ class MainViewModel : ViewModel() {
     val isAmbientMusicGlanceDockedModeEnabled = mutableStateOf(false)
 
     private var lastUpdateCheckTime: Long = 0
-    private lateinit var settingsRepository: SettingsRepository
+    lateinit var settingsRepository: SettingsRepository
     private lateinit var updateRepository: UpdateRepository
     private var appContext: Context? = null
+    
+    val gitHubToken = mutableStateOf<String?>(null)
 
     private val preferenceChangeListener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
         // We still use this listener for now, attached via Repository
@@ -226,6 +240,12 @@ class MainViewModel : ViewModel() {
             SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_DOCKED_MODE -> {
                 isAmbientMusicGlanceDockedModeEnabled.value = settingsRepository.getBoolean(key)
             }
+            SettingsRepository.KEY_CALENDAR_SYNC_ENABLED -> {
+                isCalendarSyncEnabled.value = settingsRepository.getBoolean(key)
+            }
+            SettingsRepository.KEY_TRACKED_REPOS -> {
+                appContext?.let { refreshTrackedUpdates(it) }
+            }
         }
     }
 
@@ -257,6 +277,12 @@ class MainViewModel : ViewModel() {
         isBluetoothPermissionGranted.value = PermissionUtils.hasBluetoothPermission(context)
         
         settingsRepository.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
+        
+        viewModelScope.launch {
+            settingsRepository.gitHubToken.collect {
+                gitHubToken.value = it
+            }
+        }
         
         isWidgetEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_WIDGET_ENABLED)
         isStatusBarIconControlEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_STATUS_BAR_ICON_CONTROL_ENABLED)
@@ -377,6 +403,11 @@ class MainViewModel : ViewModel() {
         isLikeSongAodOverlayEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_LIKE_SONG_AOD_OVERLAY_ENABLED, false)
         isAmbientMusicGlanceEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_ENABLED, false)
         isAmbientMusicGlanceDockedModeEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_DOCKED_MODE, false)
+        isCalendarSyncEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_CALENDAR_SYNC_ENABLED, false)
+        isCalendarSyncPeriodicEnabled.value = settingsRepository.isCalendarSyncPeriodicEnabled()
+        selectedCalendarIds.value = settingsRepository.getCalendarSyncSelectedCalendars()
+        
+        refreshTrackedUpdates(context)
     }
 
     fun onSearchQueryChanged(query: String, context: Context) {
@@ -474,6 +505,16 @@ class MainViewModel : ViewModel() {
                 isCheckingUpdate.value = false
             }
         }
+    }
+
+    fun refreshTrackedUpdates(context: Context) {
+        val trackedRepos = settingsRepository.getTrackedRepos()
+        if (trackedRepos.isEmpty()) {
+            hasPendingUpdates.value = false
+            return
+        }
+        
+        hasPendingUpdates.value = trackedRepos.any { it.isUpdateAvailable }
     }
 
     private fun isDeviceAdminActive(context: Context): Boolean {
@@ -638,6 +679,104 @@ class MainViewModel : ViewModel() {
     fun setAmbientMusicGlanceDockedModeEnabled(enabled: Boolean) {
         isAmbientMusicGlanceDockedModeEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_DOCKED_MODE, enabled)
+    }
+
+    fun setCalendarSyncEnabled(enabled: Boolean, context: Context) {
+        isCalendarSyncEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_CALENDAR_SYNC_ENABLED, enabled)
+        if (enabled) {
+            com.sameerasw.essentials.services.CalendarSyncManager.forceSync(context)
+            if (isCalendarSyncPeriodicEnabled.value) {
+                schedulePeriodicCalendarSync(context)
+            }
+        } else {
+            cancelPeriodicCalendarSync(context)
+        }
+    }
+
+    fun fetchCalendars(context: Context) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) return
+        
+        viewModelScope.launch(Dispatchers.IO) {
+            val calendars = mutableListOf<CalendarAccount>()
+            val projection = arrayOf(
+                CalendarContract.Calendars._ID,
+                CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
+                CalendarContract.Calendars.ACCOUNT_NAME
+            )
+            
+            context.contentResolver.query(
+                CalendarContract.Calendars.CONTENT_URI,
+                projection,
+                null,
+                null,
+                null
+            )?.use { cursor ->
+                val idColumn = cursor.getColumnIndexOrThrow(CalendarContract.Calendars._ID)
+                val nameColumn = cursor.getColumnIndexOrThrow(CalendarContract.Calendars.CALENDAR_DISPLAY_NAME)
+                val accountColumn = cursor.getColumnIndexOrThrow(CalendarContract.Calendars.ACCOUNT_NAME)
+                
+                while (cursor.moveToNext()) {
+                    val id = cursor.getLong(idColumn)
+                    val name = cursor.getString(nameColumn)
+                    val account = cursor.getString(accountColumn)
+                    calendars.add(CalendarAccount(id, name, account, selectedCalendarIds.value.contains(id.toString())))
+                }
+            }
+            
+            withContext(Dispatchers.Main) {
+                availableCalendars.clear()
+                availableCalendars.addAll(calendars)
+            }
+        }
+    }
+
+    fun toggleCalendarSelection(calendarId: Long) {
+        val currentIds = selectedCalendarIds.value.toMutableSet()
+        val idString = calendarId.toString()
+        if (currentIds.contains(idString)) {
+            currentIds.remove(idString)
+        } else {
+            currentIds.add(idString)
+        }
+        selectedCalendarIds.value = currentIds
+        settingsRepository.saveCalendarSyncSelectedCalendars(currentIds)
+        
+        // Update availableCalendars list
+        val index = availableCalendars.indexOfFirst { it.id == calendarId }
+        if (index != -1) {
+            availableCalendars[index] = availableCalendars[index].copy(isSelected = currentIds.contains(idString))
+        }
+    }
+
+    fun setCalendarSyncPeriodicEnabled(enabled: Boolean, context: Context) {
+        isCalendarSyncPeriodicEnabled.value = enabled
+        settingsRepository.setCalendarSyncPeriodicEnabled(enabled)
+        if (enabled && isCalendarSyncEnabled.value) {
+            schedulePeriodicCalendarSync(context)
+        } else {
+            cancelPeriodicCalendarSync(context)
+        }
+    }
+
+    private fun schedulePeriodicCalendarSync(context: Context) {
+        val workRequest = PeriodicWorkRequestBuilder<com.sameerasw.essentials.services.CalendarSyncWorker>(
+            15, java.util.concurrent.TimeUnit.MINUTES
+        ).build()
+        
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+            "calendar_sync_work",
+            ExistingPeriodicWorkPolicy.UPDATE,
+            workRequest
+        )
+    }
+
+    private fun cancelPeriodicCalendarSync(context: Context) {
+        WorkManager.getInstance(context).cancelUniqueWork("calendar_sync_work")
+    }
+
+    fun triggerCalendarSyncNow(context: Context) {
+        com.sameerasw.essentials.services.CalendarSyncManager.forceSync(context)
     }
 
     fun setFreezeWhenLockedEnabled(enabled: Boolean, context: Context) {
@@ -1320,5 +1459,4 @@ class MainViewModel : ViewModel() {
         val settingsJson = settingsRepository.getAllConfigsAsJsonString()
         return com.sameerasw.essentials.utils.LogManager.generateReport(context, settingsJson)
     }
-
 }

@@ -72,4 +72,7 @@ fun initPermissionRegistry() {
 
     // Modify system settings permission
     PermissionRegistry.register("WRITE_SETTINGS", R.string.feat_qs_tiles_title)
+    
+    // Calendar sync permission
+    PermissionRegistry.register("READ_CALENDAR", R.string.feat_calendar_sync_title)
 }
