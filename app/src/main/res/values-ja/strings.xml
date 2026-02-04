@@ -91,11 +91,15 @@
     <string name="caffeinate_battery_optimization_title">バッテリーの最適化を無視</string>
     <string name="caffeinate_battery_optimization_desc">一部のデバイスで信頼性の高いサービスが提供される場合に推奨されます</string>
     <string name="caffeinate_abort_screen_off_title">画面をオフにして停止</string>
+    <string name="caffeinate_skip_countdown_title">Skip countdown</string>
+    <string name="caffeinate_skip_countdown_desc">Start Caffeinate immediately.</string>
     <string name="caffeinate_timeout_presets_title">タイムアウト時間</string>
     <string name="caffeinate_timeout_presets_desc">クイック設定タイルでオンにしたときの動作時間</string>
     <string name="caffeinate_timeout_5m">5分</string>
     <string name="caffeinate_timeout_10m">10分</string>
     <string name="caffeinate_timeout_30m">30分</string>
+    <string name="perm_notif_policy_title">Do Not Disturb access</string>
+    <string name="perm_notif_policy_desc">Required to cycle between sound, vibrate and mute modes</string>
     <string name="caffeinate_timeout_1h">1時間</string>
     <string name="caffeinate_timeout_infinity">無限</string>
     <string name="caffeinate_starting_in">あと%1$dで開始します…</string>
