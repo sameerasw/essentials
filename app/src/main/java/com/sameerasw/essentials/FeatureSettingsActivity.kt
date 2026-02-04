@@ -178,11 +178,14 @@ class FeatureSettingsActivity : FragmentActivity() {
 
                 // Permission sheet state
                 var showPermissionSheet by remember { mutableStateOf(false) }
+                var childFeatureForPermissions by remember { mutableStateOf<String?>(null) }
+
                 val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
                 val isWriteSecureSettingsEnabled by viewModel.isWriteSecureSettingsEnabled
                 val isOverlayPermissionGranted by viewModel.isOverlayPermissionGranted
                 val isNotificationLightingAccessibilityEnabled by viewModel.isNotificationLightingAccessibilityEnabled
                 val isNotificationListenerEnabled by viewModel.isNotificationListenerEnabled
+                val isReadPhoneStateEnabled by viewModel.isReadPhoneStateEnabled
 
                 // FAB State for Notification Lighting
                 var fabExpanded by remember { mutableStateOf(true) }
@@ -201,7 +204,8 @@ class FeatureSettingsActivity : FragmentActivity() {
                     isWriteSecureSettingsEnabled,
                     isOverlayPermissionGranted,
                     isNotificationLightingAccessibilityEnabled,
-                    isNotificationListenerEnabled
+                    isNotificationListenerEnabled,
+                    isReadPhoneStateEnabled
                 ) {
                     val hasMissingPermissions = when (featureId) {
                         "Screen off widget" -> !isAccessibilityEnabled
@@ -215,13 +219,22 @@ class FeatureSettingsActivity : FragmentActivity() {
                         "Freeze" -> !com.sameerasw.essentials.utils.ShellUtils.hasPermission(context)
                         "Location reached" -> !viewModel.isLocationPermissionGranted.value || !viewModel.isBackgroundLocationPermissionGranted.value
                         "Quick settings tiles" -> !viewModel.isWriteSettingsEnabled.value
+                        // Top level checks for other features (rarely hit if they are children, but safe to add)
+                        "Ambient music glance" -> !isAccessibilityEnabled || !isNotificationListenerEnabled
+                        "Call vibrations" -> !isReadPhoneStateEnabled || !isNotificationListenerEnabled
+                        "Maps power saving mode" -> !isNotificationListenerEnabled || !com.sameerasw.essentials.utils.ShellUtils.hasPermission(context)
+                        "Caffeinate" -> !viewModel.isPostNotificationsEnabled.value
                         else -> false
                     }
-                    showPermissionSheet = hasMissingPermissions
+                    if (hasMissingPermissions) {
+                        showPermissionSheet = true
+                    }
                 }
 
-                if (showPermissionSheet) {
-                    val permissionItems = when (featureId) {
+
+                            if (showPermissionSheet) {
+                    val targetPermissionFeatureId = childFeatureForPermissions ?: featureId
+                    val permissionItems = when (targetPermissionFeatureId) {
                         "Screen off widget" -> listOf(
                             PermissionItem(
                                 iconRes = R.drawable.rounded_settings_accessibility_24,
@@ -298,7 +311,7 @@ class FeatureSettingsActivity : FragmentActivity() {
                             )
                         )
 
-                        "Notification lighting" -> listOf(
+                        "Notification lighting", "Ambient music glance" -> listOf(
                             PermissionItem(
                                 iconRes = R.drawable.rounded_magnify_fullscreen_24,
                                 title = R.string.perm_overlay_title,
@@ -390,17 +403,61 @@ class FeatureSettingsActivity : FragmentActivity() {
                             )
                         )
 
-                        "Snooze system notifications" -> listOf(
+                        "Snooze system notifications", "Call vibrations", "Maps power saving mode" -> mutableListOf(
                             PermissionItem(
-                                iconRes = R.drawable.rounded_snooze_24,
+                                iconRes = R.drawable.rounded_notifications_unread_24,
                                 title = R.string.perm_notif_listener_title,
-                                description = R.string.perm_notif_listener_desc_snooze,
+                                description = when (targetPermissionFeatureId) {
+                                    "Snooze system notifications" -> R.string.perm_notif_listener_desc_snooze
+                                    "Call vibrations" -> R.string.perm_notif_listener_desc_call_vibrations
+                                    "Maps power saving mode" -> R.string.perm_notif_listener_desc_maps
+                                    else -> R.string.perm_notif_listener_desc_lighting
+                                },
                                 dependentFeatures = PermissionRegistry.getFeatures("NOTIFICATION_LISTENER"),
                                 actionLabel = R.string.perm_action_grant,
                                 action = { viewModel.requestNotificationListenerPermission(context) },
                                 isGranted = isNotificationListenerEnabled
                             )
-                        )
+                        ).apply {
+                            if (targetPermissionFeatureId == "Call vibrations") {
+                                add(
+                                    PermissionItem(
+                                        iconRes = R.drawable.rounded_mobile_vibrate_24,
+                                        title = R.string.permission_read_phone_state_title,
+                                        description = R.string.permission_read_phone_state_desc_call_vibrations,
+                                        dependentFeatures = PermissionRegistry.getFeatures("READ_PHONE_STATE"),
+                                        actionLabel = R.string.perm_action_grant,
+                                        action = {
+                                            androidx.core.app.ActivityCompat.requestPermissions(
+                                                this@FeatureSettingsActivity,
+                                                arrayOf(android.Manifest.permission.READ_PHONE_STATE),
+                                                102
+                                            )
+                                        },
+                                        isGranted = isReadPhoneStateEnabled
+                                    )
+                                )
+                            }
+                            if (targetPermissionFeatureId == "Maps power saving mode") {
+                                add(
+                                    PermissionItem(
+                                        iconRes = R.drawable.rounded_adb_24,
+                                        title = R.string.req_shizuku,
+                                        description = R.string.perm_shizuku_grant_desc,
+                                        dependentFeatures = PermissionRegistry.getFeatures("ROOT_SHIZUKU"),
+                                        actionLabel = R.string.perm_action_grant,
+                                        action = {
+                                            if (com.sameerasw.essentials.utils.ShellUtils.isRootEnabled(context)) {
+                                                viewModel.check(context) // Re-check root
+                                            } else {
+                                                com.sameerasw.essentials.utils.ShizukuUtils.requestPermission()
+                                            }
+                                        },
+                                        isGranted = com.sameerasw.essentials.utils.ShellUtils.hasPermission(context)
+                                    )
+                                )
+                            }
+                        }
 
                         "Screen locked security" -> listOf(
                             PermissionItem(
@@ -525,13 +582,70 @@ class FeatureSettingsActivity : FragmentActivity() {
                             )
                         )
 
+                        "Caffeinate" -> listOf(
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_notifications_unread_24,
+                                title = R.string.permission_post_notifications_title,
+                                description = R.string.permission_post_notifications_desc,
+                                dependentFeatures = PermissionRegistry.getFeatures("POST_NOTIFICATIONS"),
+                                actionLabel = R.string.perm_action_grant,
+                                action = {
+                                    androidx.core.app.ActivityCompat.requestPermissions(
+                                        this@FeatureSettingsActivity,
+                                        arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+                                        103
+                                    )
+                                },
+                                isGranted = viewModel.isPostNotificationsEnabled.value
+                            )
+                        )
+                        
+                        "Batteries" -> listOf(
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_battery_charging_60_24,
+                                title = R.string.icon_bluetooth,
+                                description = R.string.show_bluetooth_devices_summary,
+                                dependentFeatures = PermissionRegistry.getFeatures("BLUETOOTH_CONNECT"),
+                                actionLabel = R.string.perm_action_grant,
+                                action = {
+                                     androidx.core.app.ActivityCompat.requestPermissions(
+                                         this@FeatureSettingsActivity,
+                                         arrayOf(android.Manifest.permission.BLUETOOTH_CONNECT, android.Manifest.permission.BLUETOOTH_SCAN),
+                                         104
+                                     )
+                                },
+                                isGranted = androidx.core.content.ContextCompat.checkSelfPermission(context, android.Manifest.permission.BLUETOOTH_CONNECT) == android.content.pm.PackageManager.PERMISSION_GRANTED
+                            )
+                        )
+
+                        "Calendar Sync" -> listOf(
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_calendar_today_24,
+                                title = R.string.perm_read_calendar_title,
+                                description = R.string.perm_read_calendar_desc,
+                                dependentFeatures = PermissionRegistry.getFeatures("READ_CALENDAR"),
+                                actionLabel = R.string.perm_action_grant,
+                                action = {
+                                    androidx.core.app.ActivityCompat.requestPermissions(
+                                        this@FeatureSettingsActivity,
+                                        arrayOf(android.Manifest.permission.READ_CALENDAR),
+                                        101
+                                    )
+                                },
+                                isGranted = androidx.core.content.ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_CALENDAR) == android.content.pm.PackageManager.PERMISSION_GRANTED
+                            )
+                        )
+
                         else -> emptyList()
                     }
 
                     if (permissionItems.isNotEmpty()) {
                         PermissionsBottomSheet(
-                            onDismissRequest = { showPermissionSheet = false },
-                            featureTitle = if (featureObj != null) stringResource(featureObj.title) else featureId,
+                            onDismissRequest = {
+                                showPermissionSheet = false
+                                childFeatureForPermissions = null
+                            },
+                            featureTitle = if (featureObj != null && childFeatureForPermissions == null) stringResource(featureObj.title) else targetPermissionFeatureId,
                             permissions = permissionItems
                         )
                     }
@@ -595,16 +709,30 @@ class FeatureSettingsActivity : FragmentActivity() {
                                     .padding(top = 16.dp)
                             ) {
                                 children.forEachIndexed { index, child ->
-                                    FeatureCard(
-                                        title = child.title,
-                                        description = child.description,
-                                        iconRes = child.iconRes,
-                                        isEnabled = child.isEnabled(viewModel),
-                                        isToggleEnabled = child.isToggleEnabled(viewModel, context),
-                                        showToggle = child.showToggle,
-                                        hasMoreSettings = child.hasMoreSettings,
-                                        isBeta = child.isBeta,
-                                        onToggle = { enabled ->
+                                    val permissionAwareToggle: (Boolean) -> Unit = { enabled ->
+                                        val missingPermission = when (child.id) {
+                                            "Screen off widget" -> !isAccessibilityEnabled
+                                            "Statusbar icons" -> !isWriteSecureSettingsEnabled
+                                            "Notification lighting" -> !isOverlayPermissionGranted || !isNotificationLightingAccessibilityEnabled || !isNotificationListenerEnabled
+                                            "Button remap" -> !isAccessibilityEnabled
+                                            "Dynamic night light" -> !isAccessibilityEnabled || !isWriteSecureSettingsEnabled
+                                            "Snooze system notifications" -> !isNotificationListenerEnabled
+                                            "Screen locked security" -> !isAccessibilityEnabled || !isWriteSecureSettingsEnabled || !viewModel.isDeviceAdminEnabled.value
+                                            "App lock" -> !isAccessibilityEnabled
+                                            "Freeze" -> !com.sameerasw.essentials.utils.ShellUtils.hasPermission(context)
+                                            "Ambient music glance" -> !isAccessibilityEnabled || !isNotificationListenerEnabled
+                                            "Call vibrations" -> !isReadPhoneStateEnabled || !isNotificationListenerEnabled
+                                            "Calendar Sync" -> androidx.core.content.ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_CALENDAR) != android.content.pm.PackageManager.PERMISSION_GRANTED
+                                            "Batteries" -> (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S && androidx.core.content.ContextCompat.checkSelfPermission(context, android.Manifest.permission.BLUETOOTH_CONNECT) != android.content.pm.PackageManager.PERMISSION_GRANTED)
+                                            "Maps power saving mode" -> !isNotificationListenerEnabled || !com.sameerasw.essentials.utils.ShellUtils.hasPermission(context)
+                                            "Caffeinate" -> !viewModel.isPostNotificationsEnabled.value
+                                            else -> false
+                                        }
+
+                                        if (missingPermission) {
+                                            childFeatureForPermissions = child.id
+                                            showPermissionSheet = true
+                                        } else {
                                             if (child.category == R.string.cat_security) {
                                                 BiometricHelper.showBiometricPrompt(
                                                     activity = this@FeatureSettingsActivity,
@@ -626,7 +754,20 @@ class FeatureSettingsActivity : FragmentActivity() {
                                             } else {
                                                 child.onToggle(viewModel, context, enabled)
                                             }
-                                        },
+                                        }
+                                    }
+
+                                    FeatureCard(
+                                        title = child.title,
+                                        description = child.description,
+                                        iconRes = child.iconRes,
+                                        isEnabled = child.isEnabled(viewModel),
+                                        isToggleEnabled = child.isToggleEnabled(viewModel, context),
+                                        showToggle = child.showToggle,
+                                        onDisabledToggleClick = { permissionAwareToggle(true) },
+                                        hasMoreSettings = child.hasMoreSettings,
+                                        isBeta = child.isBeta,
+                                        onToggle = permissionAwareToggle,
                                         onClick = {
                                             if (child.category == R.string.cat_security) {
                                                 BiometricHelper.showBiometricPrompt(
