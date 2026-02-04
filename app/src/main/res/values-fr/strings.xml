@@ -836,7 +836,7 @@
     <!-- Updates -->
     <string name="status_up_to_date">Vous êtes à jour</string>
     <string name="warning_pre_release">Ceci est une version bêta qui peut être instable.</string>
-    <string name="release_notes_format">Release Notes %1$s</string>
+    <string name="release_notes_format">Notes de mise à jour v%1$s</string>
     <string name="action_view_on_github">Voir sur GitHub</string>
     <string name="action_download_apk">Télécharger l\'APK</string>
     <!-- Haptic Types -->

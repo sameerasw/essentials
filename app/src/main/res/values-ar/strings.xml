@@ -836,7 +836,7 @@
     <!-- Updates -->
     <string name="status_up_to_date">You are up to date</string>
     <string name="warning_pre_release">This is a pre-release version and might be unstable.</string>
-    <string name="release_notes_format">Release Notes %1$s</string>
+    <string name="release_notes_format">Release Notes v%1$s</string>
     <string name="action_view_on_github">View on GitHub</string>
     <string name="action_download_apk">Download APK</string>
     <!-- Haptic Types -->

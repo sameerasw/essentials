@@ -49,24 +49,11 @@ class ButtonRemapHandler(
         val powerManager = service.getSystemService(Context.POWER_SERVICE) as PowerManager
         val isScreenInteractive = try { powerManager.isInteractive } catch(e: Exception) { false }
         
-        // This usually requires import of the isAod method or similar logic. 
-        // Typically AOD check is: Display.STATE_DOZE or STATE_DOZE_SUSPEND
         val isAod = isAodShowing()
 
         val shellReady = com.sameerasw.essentials.utils.ShellUtils.isAvailable(service) && com.sameerasw.essentials.utils.ShellUtils.hasPermission(service)
         val devicePathDetected = !prefs.getString("shizuku_detected_device_path", null).isNullOrEmpty()
 
-        // If using Shizuku and screen off, verify if we should INTERCEPT or let Shizuku handle it? 
-        // Original logic: returns true (consumes event) if isMapped or isTorchControl.
-        // Wait, if returns true here, the accessibility service consumes it, so it DOES NOT reach the app?
-        // Actually, accessibility service `onKeyEvent` returning true means "I handled this, don't pass it to the system/app".
-        // The original logic checks: "if ... return true". 
-        // It seems this block is to prevent system volume change if we are going to handle it via Shizuku service separately?
-        // OR, the original logic meant: "If handled by Shizuku InputEventListenerService, we also consume it here so system volume doesn't change?"
-        // But InputEventListenerService is a separate service. 
-        // The check `if (isButtonRemapUseShizuku ...)` suggests we might skip handling here because Shizuku service handles it?
-        // NO, the return true means "CONSUME". So if Shizuku is handling it, we consume it here to prevent default volume action?
-        // Let's stick to the original logic flow.
         
         val useShell = isButtonRemapUseShizuku || com.sameerasw.essentials.utils.ShellUtils.isRootEnabled(service)
 
