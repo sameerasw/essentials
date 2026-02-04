@@ -33,8 +33,12 @@ abstract class Feature(
     val hasMoreSettings: Boolean = true,
     val isBeta: Boolean = false,
     val parentFeatureId: String? = null,
-    val isVisibleInMain: Boolean = true
+    val isVisibleInMain: Boolean = true,
+    @StringRes val authTitle: Int = 0,
+    @StringRes val authSubtitle: Int = 0
 ) {
+    val requiresAuth: Boolean = category == com.sameerasw.essentials.R.string.cat_protection
+
     abstract fun isEnabled(viewModel: MainViewModel): Boolean
     
     open fun isToggleEnabled(viewModel: MainViewModel, context: Context): Boolean = true

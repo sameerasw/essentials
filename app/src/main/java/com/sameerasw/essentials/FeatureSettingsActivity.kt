@@ -78,6 +78,7 @@ import com.sameerasw.essentials.domain.registry.FeatureRegistry
 import com.sameerasw.essentials.ui.components.cards.FeatureCard
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.BiometricHelper
+import com.sameerasw.essentials.utils.BiometricSecurityHelper
 
 @OptIn(ExperimentalMaterial3Api::class)
 class FeatureSettingsActivity : FragmentActivity() {
@@ -341,27 +342,14 @@ class FeatureSettingsActivity : FragmentActivity() {
                                             childFeatureForPermissions = child.id
                                             showPermissionSheet = true
                                         } else {
-                                            if (child.category == R.string.cat_security) {
-                                                BiometricHelper.showBiometricPrompt(
-                                                    activity = this@FeatureSettingsActivity,
-                                                    title = getString(
-                                                        R.string.biometric_title_settings_format,
-                                                        getString(child.title)
-                                                    ),
-                                                    subtitle = if (enabled) getString(R.string.biometric_subtitle_enable_feature) else getString(
-                                                        R.string.biometric_subtitle_disable_feature
-                                                    ),
-                                                    onSuccess = {
-                                                        child.onToggle(
-                                                            viewModel,
-                                                            context,
-                                                            enabled
-                                                        )
-                                                    }
-                                                )
-                                            } else {
-                                                child.onToggle(viewModel, context, enabled)
-                                            }
+                                            BiometricSecurityHelper.runWithAuth(
+                                                activity = this@FeatureSettingsActivity,
+                                                feature = child,
+                                                isToggle = true,
+                                                action = {
+                                                    child.onToggle(viewModel, context, enabled)
+                                                }
+                                            )
                                         }
                                     }
 
@@ -377,24 +365,13 @@ class FeatureSettingsActivity : FragmentActivity() {
                                         isBeta = child.isBeta,
                                         onToggle = permissionAwareToggle,
                                         onClick = {
-                                            if (child.category == R.string.cat_security) {
-                                                BiometricHelper.showBiometricPrompt(
-                                                    activity = this@FeatureSettingsActivity,
-                                                    title = getString(
-                                                        R.string.biometric_title_settings_format,
-                                                        getString(child.title)
-                                                    ),
-                                                    subtitle = getString(R.string.biometric_subtitle_access_settings),
-                                                    onSuccess = {
-                                                        child.onClick(
-                                                            context,
-                                                            viewModel
-                                                        )
-                                                    }
-                                                )
-                                            } else {
-                                                child.onClick(context, viewModel)
-                                            }
+                                            BiometricSecurityHelper.runWithAuth(
+                                                activity = this@FeatureSettingsActivity,
+                                                feature = child,
+                                                action = {
+                                                    child.onClick(context, viewModel)
+                                                }
+                                            )
                                         },
                                         isPinned = pinnedFeatureKeys.contains(child.id),
                                         onPinToggle = { viewModel.togglePinFeature(child.id) }

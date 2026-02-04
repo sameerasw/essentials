@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.fragment.app.FragmentActivity
 import com.sameerasw.essentials.utils.BiometricHelper
+import com.sameerasw.essentials.utils.BiometricSecurityHelper
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -766,16 +767,13 @@ fun SetupFeatures(
             FavoriteCarousel(
                 pinnedKeys = pinnedFeatureKeys,
                 onFeatureClick = { feature ->
-                    if (feature.category == R.string.cat_security && context is FragmentActivity) {
-                        BiometricHelper.showBiometricPrompt(
-                            activity = context,
-                            title = context.getString(R.string.biometric_title_settings_format, context.getString(feature.title)),
-                            subtitle = context.getString(R.string.biometric_subtitle_access_settings),
-                            onSuccess = { feature.onClick(context, viewModel) }
-                        )
-                    } else {
-                        feature.onClick(context, viewModel)
-                    }
+                    BiometricSecurityHelper.runWithAuth(
+                        activity = context as FragmentActivity,
+                        feature = feature,
+                        action = {
+                            feature.onClick(context, viewModel)
+                        }
+                    )
                 },
                 onFeatureLongClick = { feature ->
                     viewModel.togglePinFeature(feature.id)
@@ -840,7 +838,23 @@ fun SetupFeatures(
                             isEnabled = true,
                             onToggle = {},
                             onClick = {
-                                val action = {
+                                val feature = allFeatures.find { it.id == result.featureKey }
+                                if (feature != null) {
+                                    BiometricSecurityHelper.runWithAuth(
+                                        activity = context as FragmentActivity,
+                                        feature = feature,
+                                        action = {
+                                            context.startActivity(
+                                                Intent(context, FeatureSettingsActivity::class.java).apply {
+                                                    putExtra("feature", result.featureKey)
+                                                    result.targetSettingHighlightKey?.let {
+                                                        putExtra("highlight_setting", it)
+                                                    }
+                                                }
+                                            )
+                                        }
+                                    )
+                                } else {
                                     context.startActivity(
                                         Intent(context, FeatureSettingsActivity::class.java).apply {
                                             putExtra("feature", result.featureKey)
@@ -849,16 +863,6 @@ fun SetupFeatures(
                                             }
                                         }
                                     )
-                                }
-                                if (result.category == "Security and Privacy" && context is FragmentActivity) {
-                                    BiometricHelper.showBiometricPrompt(
-                                        activity = context,
-                                        title = context.getString(R.string.biometric_title_settings_format, result.title),
-                                        subtitle = context.getString(R.string.biometric_subtitle_access_settings),
-                                        onSuccess = action
-                                    )
-                                } else {
-                                    action()
                                 }
                             },
                             iconRes = result.icon ?: R.drawable.rounded_settings_24,
@@ -888,28 +892,23 @@ fun SetupFeatures(
                             title = feature.title,
                             isEnabled = feature.isEnabled(viewModel),
                             onToggle = { enabled ->
-                                if (feature.category == R.string.cat_security && context is FragmentActivity) {
-                                    BiometricHelper.showBiometricPrompt(
-                                        activity = context,
-                                        title = context.getString(R.string.biometric_title_settings_format, context.getString(feature.title)),
-                                        subtitle = if (enabled) context.getString(R.string.biometric_subtitle_enable_feature) else context.getString(R.string.biometric_subtitle_disable_feature),
-                                        onSuccess = { feature.onToggle(viewModel, context, enabled) }
-                                    )
-                                } else {
-                                    feature.onToggle(viewModel, context, enabled)
-                                }
+                                BiometricSecurityHelper.runWithAuth(
+                                    activity = context as FragmentActivity,
+                                    feature = feature,
+                                    isToggle = true,
+                                    action = {
+                                        feature.onToggle(viewModel, context, enabled)
+                                    }
+                                )
                             },
                             onClick = {
-                                if (feature.category == R.string.cat_security && context is FragmentActivity) {
-                                    BiometricHelper.showBiometricPrompt(
-                                        activity = context,
-                                        title = context.getString(R.string.biometric_title_settings_format, context.getString(feature.title)),
-                                        subtitle = context.getString(R.string.biometric_subtitle_access_settings),
-                                        onSuccess = { feature.onClick(context, viewModel) }
-                                    )
-                                } else {
-                                    feature.onClick(context, viewModel)
-                                }
+                                BiometricSecurityHelper.runWithAuth(
+                                    activity = context as FragmentActivity,
+                                    feature = feature,
+                                    action = {
+                                        feature.onClick(context, viewModel)
+                                    }
+                                )
                             },
                             iconRes = feature.iconRes,
                             modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
