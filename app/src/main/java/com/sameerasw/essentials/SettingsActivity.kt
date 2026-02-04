@@ -305,9 +305,7 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
 
         val defaultTab by viewModel.defaultTab
         RoundedCardContainer {
-            val availableTabs = remember(isDeveloperModeEnabled) {
-                if (isDeveloperModeEnabled) DIYTabs.entries else listOf(DIYTabs.ESSENTIALS, DIYTabs.FREEZE, DIYTabs.DIY)
-            }
+            val availableTabs = remember { DIYTabs.entries }
             DefaultTabPicker(
                 selectedTab = defaultTab,
                 onTabSelected = { viewModel.setDefaultTab(it, context) },
