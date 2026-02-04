@@ -91,11 +91,15 @@
     <string name="caffeinate_battery_optimization_title">Ignorer l\'optimisation de la batterie</string>
     <string name="caffeinate_battery_optimization_desc">Recommandé pour un service fiable sur certains appareils</string>
     <string name="caffeinate_abort_screen_off_title">Désactiver au verrouillage de l\'écran</string>
+    <string name="caffeinate_skip_countdown_title">Skip countdown</string>
+    <string name="caffeinate_skip_countdown_desc">Start Caffeinate immediately.</string>
     <string name="caffeinate_timeout_presets_title">Préréglages de délais</string>
     <string name="caffeinate_timeout_presets_desc">Sélectionner les durées valables pour le bloc de \"Réglages rapides\"</string>
     <string name="caffeinate_timeout_5m">5m</string>
     <string name="caffeinate_timeout_10m">10m</string>
     <string name="caffeinate_timeout_30m">30m</string>
+    <string name="perm_notif_policy_title">Do Not Disturb access</string>
+    <string name="perm_notif_policy_desc">Required to cycle between sound, vibrate and mute modes</string>
     <string name="caffeinate_timeout_1h">1h</string>
     <string name="caffeinate_timeout_infinity">∞</string>
     <string name="caffeinate_starting_in">Démarrage dans %1$ds…</string>
