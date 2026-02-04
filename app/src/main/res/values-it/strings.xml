@@ -92,11 +92,15 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string name="caffeinate_battery_optimization_title">Ignore battery optimization</string>
     <string name="caffeinate_battery_optimization_desc">Recommended for reliable service on some devices</string>
     <string name="caffeinate_abort_screen_off_title">Abort with screen off</string>
+    <string name="caffeinate_skip_countdown_title">Skip countdown</string>
+    <string name="caffeinate_skip_countdown_desc">Start Caffeinate immediately.</string>
     <string name="caffeinate_timeout_presets_title">Timeout Presets</string>
     <string name="caffeinate_timeout_presets_desc">Select available durations for QS tile</string>
     <string name="caffeinate_timeout_5m">5m</string>
     <string name="caffeinate_timeout_10m">10m</string>
     <string name="caffeinate_timeout_30m">30m</string>
+    <string name="perm_notif_policy_title">Do Not Disturb access</string>
+    <string name="perm_notif_policy_desc">Required to cycle between sound, vibrate and mute modes</string>
     <string name="caffeinate_timeout_1h">1h</string>
     <string name="caffeinate_timeout_infinity">∞</string>
     <string name="caffeinate_starting_in">Starting in %1$ds…</string>
