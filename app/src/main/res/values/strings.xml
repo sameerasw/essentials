@@ -1135,6 +1135,9 @@
     
     <string name="feat_watch_title">Watch</string>
     <string name="feat_watch_desc">Integrations with WearOS</string>
+    <string name="watch_no_companion_title">No Watch detected</string>
+    <string name="watch_no_companion_desc">It looks like you do not have the Essentials Wear companion app installed on your watch.</string>
+    <string name="watch_install_companion_action">Install Companion</string>
 
 
     <string name="cat_interaction">Interaction</string>
