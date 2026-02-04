@@ -136,6 +136,7 @@
     <string name="settings_section_flashlight_pulse">Impulsion de lampe torche</string>
     <string name="flashlight_pulse_title">Impulsion de lampe torche</string>
     <string name="flashlight_pulse_facedown_title">Seulement quand le téléphone est vers le bas</string>
+    <string name="flashlight_pulse_same_as_lighting_title">Same apps as notification lighting</string>
     <string name="settings_section_style">Style</string>
     <string name="notification_lighting_stroke_adjustment_section">Ajustement du trait</string>
     <string name="notification_lighting_corner_radius_title">Rayon des coins</string>
@@ -302,6 +303,7 @@
     <string name="feat_maps_power_saving_desc">Pour tout appareil Android</string>
     <string name="feat_notification_lighting_title">Éclairage de notifications</string>
     <string name="feat_notification_lighting_desc">Éclairer pour les notifications</string>
+    <string name="feat_flashlight_pulse_desc">Pulse the flashlight for notifications</string>
     <string name="feat_sound_mode_tile_title">Raccourci de mode de sonnerie</string>
     <string name="feat_sound_mode_tile_desc">Bloc \"Réglages rapides\" pour changer le mode de sonnerie</string>
     <string name="feat_stay_awake_tile_title">Bloc \"rester allumé\"</string>
