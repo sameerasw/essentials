@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Essentials</string>
     <string name="label_beta">BÊTA</string>
-    <string name="accessibility_service_description"><b>Service d\'accessibilité Essentials</b>\n\nCe service est requis pour les fonctionnalités suivantes :\n\n<b>• Réattribution d\'un bouton physique :</b>\nDétecte les appuis sur le bouton volume même si l\'écran est éteint pour déclencher des actions comme allumer la lampe-torche.\n\n<b>• Réglage par appli :</b>\nSurveille les applications actives pour appliquer des profils spécifiques pour le mode éclairage nocturne dynamique, le réglage de couleurs des notifications et le verrouillage d\'applis.\n\n<b>• Contrôler l\'écran :</b>\nAutorise l\'application à verrouiller l\'écran (par exemple en utilisant le Double Tap ou les Widgets) et détecter le changement d\'état de l\'écran.\n\n<b>• Sécurité :</b>\nPrévenir les changements non autorisé en détectant le contenu des fenêtres lorsque l\'appareil est verrouillé.\n\n<small>Aucun texte saisi ou de données utilisateur sensibles sont collectées ou transmises.</small></string>
+    <string name="accessibility_service_description"><b>Service d\'accessibilité Essentials</b>\n\nCe service est requis pour les fonctionnalités suivantes :\n\n<b>• Réattribution d\'un bouton physique :</b>\nDétecte les appuis sur le bouton volume même si l\'écran est éteint pour déclencher des actions comme allumer la lampe-torche.\n\n<b>• Réglage par appli :</b>\nSurveille les applications actives pour appliquer des profils spécifiques pour le mode éclairage nocturne dynamique, le réglage de couleurs des notifications lumineuses et le verrouillage d\'applis.\n\n<b>• Contrôler l\'écran :</b>\nAutorise l\'application à verrouiller l\'écran (par exemple en utilisant le Double Tap ou les Widgets) et détecter le changement d\'état de l\'écran.\n\n<b>• Sécurité :</b>\nPrévenir les changements non autorisé en détectant le contenu des fenêtres lorsque l\'appareil est verrouillé.\n\n<small>Aucun texte saisi ou de données utilisateur sensibles sont collectées ou transmises.</small></string>
     <string name="app_icon">Icône de l\'appli</string>
     <string name="freeze_activity_title">Gel d\'applis</string>
     <string name="freeze_activity_subtitle">Désactiver les applis rarement utilisées</string>
@@ -307,7 +307,7 @@
     <string name="feat_maps_power_saving_desc">Pour tout appareil Android</string>
     <string name="feat_notification_lighting_title">Éclairage de notifications</string>
     <string name="feat_notification_lighting_desc">Éclairer pour les notifications</string>
-    <string name="feat_flashlight_pulse_desc">Faire clignoter la lampe torche aux notifications</string>
+    <string name="feat_flashlight_pulse_desc">Faire clignoter le flash à la réception de notifications</string>
     <string name="feat_sound_mode_tile_title">Raccourci de mode de sonnerie</string>
     <string name="feat_sound_mode_tile_desc">Bloc \"Réglages rapides\" pour changer le mode de sonnerie</string>
     <string name="feat_stay_awake_tile_title">Bloc \"rester allumé\"</string>
@@ -437,7 +437,7 @@
     <string name="search_qs_caffeinate_desc">Basculer le maintient de l\'écran allumé</string>
     <string name="search_qs_sound_title">Mode de sonnerie</string>
     <string name="search_qs_sound_desc">Changer le mode de sonnerie (Sonnerie/Vibreur/Silencieux)</string>
-    <string name="search_qs_lighting_title">Éclairage de notifications</string>
+    <string name="search_qs_lighting_title">Notifications lumineuses</string>
     <string name="search_qs_lighting_desc">Activer/désactiver le service de notifications lumineuses</string>
     <string name="search_qs_night_light_title">Éclairage nocturne dynamique</string>
     <string name="search_qs_night_light_desc">Basculer l\'automatisation du mode Éclairage nocturne</string>
@@ -450,7 +450,7 @@
     <string name="search_qs_freeze_title">Gel d\'applis</string>
     <string name="search_qs_freeze_desc">Lancer la grille de gel d\'applis</string>
     <string name="search_qs_pulse_title">Impulsion de lampe torche</string>
-    <string name="search_qs_pulse_desc">Activer/désactiver l\'impulsion de lampe-torche</string>
+    <string name="search_qs_pulse_desc">Activer/désactiver le clignotement du flash</string>
     <string name="search_qs_stay_awake_desc">Basculer l\'option développeur \"Rester allumé\"</string>
     <string name="search_qs_private_dns_title">DNS Privé</string>
     <string name="search_qs_private_dns_desc">Changer le mode de DNS privé (Désactivé/Auto/Nom d\'hôte)</string>
@@ -502,7 +502,7 @@
     <string name="perm_write_settings_title">Modifier les paramètres système</string>
     <string name="perm_write_settings_desc">Requise pour activer/désactiver la luminosité adaptative et d\'autres paramètres système</string>
     <string name="perm_overlay_title">Permission de superposition</string>
-    <string name="perm_overlay_desc">Requise pour afficher la superposition de l\'éclairage de notification sur l\'écran</string>
+    <string name="perm_overlay_desc">Requise pour afficher la superposition de l\'éclairage des notifications lumineuses sur l\'écran</string>
     <string name="perm_device_admin_title">Administrateur de l\'appareil</string>
     <string name="perm_device_admin_desc">Requise pour faire un verrouillage forcé de l\'appareil (désactiver la biométrie) lors d\'accès non autorisés</string>
     <string name="perm_read_calendar_title">Lire les calendriers</string>
@@ -612,12 +612,12 @@
     <string name="action_disable">Désactiver</string>
     <string name="automation_service_channel_name">Service d\'automatisation</string>
     <string name="automation_service_running_title">Automatisations actives</string>
-    <string name="automation_service_running_desc">Analyse des événements système pour vos automatisations</string>
+    <string name="automation_service_running_desc">Surveiller les événements système pour vos automatisations</string>
     <string name="diy_action_device_effects">Effets d\'appareil</string>
     <string name="diy_action_disable_device_effects">Désactiver les effets d\'appareil</string>
     <string name="diy_device_effects_desc">Contrôler les effets systèmes comme l\'échelle des gris, la suppression de l\'Always-On Display, l\'assombrissement du fond d\'écran et le mode nuit.</string>
     <string name="diy_effect_grayscale">Échelle des gris</string>
-    <string name="diy_effect_suppress_ambient">Enlever l\'éclairage ambient</string>
+    <string name="diy_effect_suppress_ambient">Enlever l\'éclairage ambiant</string>
     <string name="diy_effect_dim_wallpaper">Fond d\'écran assombri</string>
     <string name="diy_effect_night_mode">Mode nuit</string>
     <string name="diy_device_effects_android_15_warning">Cette fonctionnalité nécessite Android 15 ou supérieur.</string>
@@ -894,8 +894,8 @@
     <string name="instruction_section_security_desc">Absolument pas. \n\nAucune appli tierce ne peut interférer à 100% avec le comportement normale d\'un appareil et le verrouillage d\'applis n\'est qu\'une superposition pour empêcher d\'interagir avec les applications. Il y a toujours des moyens de le contourner et ce n\'est pas un système parfait. \n\nDe même pour la fonctionnalité de protection de l\'écran de verrouillage qui détecte simplement une tentative d\'action avec les blocs de réglages réseau dans les réglages rapides et se superpose pour empêcher leur utilisation, ils sont toujours disponibles pour quiconque sur les appareils Pixels et si quelqu\'un souhaite réellement désactiver le réseau il le pourra, surtout avec un bloc de réglage du Mode Avion que cette appli ne peut bloquer. \n\nCes fonctionnalités sont expérimentales et ne devraient pas être considérées comme sûres. \n\nAlternatives sécurisées :\n - Verrouillage d\'applis : Le \"Dossier Sécurisé\" et \"Espace privé\" sur les Pixels et Samsung.\n - Empêcher l\'accès aux réseaux mobiles : Vérifiez que les paramètres de protection contre le vol ainsi que ceux de localisation hors-ligne/éteint soient activés sur l\'appareil. Vous devriez également envisager d\'installer Graphene OS pour une meilleure sécurité.</string>
     <string name="instruction_section_statusbar_title">Icônes de la barre d\'état</string>
     <string name="instruction_section_statusbar_desc">Vous avez peut-être remarqué que même après avoir réinitialisé les icônes de la barre d\'état, certaines icônes comme celles de la rotation de l\'appareil ou les écouteurs filaires peuvent rester visibles. Ceci est dû à comment la liste noire de la barre d\'état est implémenté dans Android et de comment votre constructeur les a personnalisé. \nVous pourriez avoir à effectuer plus d\'ajustements. \n\nDe plus, toutes les options de visibilité des icônes peuvent ne pas marcher car elle dépendent de l\'implémentation faite par votre constructeur et la disponibilité.</string>
-    <string name="instruction_section_lighting_title">L\'éclairage de notification ne marche pas</string>
-    <string name="instruction_section_lighting_desc">Cela dépend du constructeur. Certains comme OneUI n\'ont pas l\'air d\'autoriser les superpositions au-dessus de l\'Always-On Display ce qui empêche les effets de lumière d\'être affichés. Dans ce cas, essayez l\'éclairage ambiant comme solution. </string>
+    <string name="instruction_section_lighting_title">Les notifications lumineuses ne marchent pas</string>
+    <string name="instruction_section_lighting_desc">Cela dépend du constructeur. Certains comme OneUI n\'ont pas l\'air d\'autoriser les superpositions au-dessus de l\'affichage l\'Always-On ce qui empêche les effets de lumière d\'être affichés. Dans ce cas, essayez l\'éclairage ambiant comme solution. </string>
     <string name="instruction_section_button_title">La réatttribution de boutons ne marche pas quand l\'écran est éteint</string>
     <string name="instruction_section_button_desc">Certains constructeurs limitent le service d\'accessibilité quand l\'écran est éteint mais peuvent toujours marcher si le Always-On Display est actif. \nDans ce cas, vous pouvez peut-être utiliser les boutons réattribués avec l\'Always-On Display allumé, mais pas lorsqu\'il est éteint. \n\nComme solution, vous devrez utiliser la permission Shizuku et activer \"Utiliser Shizuku ou l\'accès racine (root)\" dans les paramètres de réattributions de boutons de l\'application ce qui permet d\'identifier des saisies physiques.\nCe n\'est pas garanti que cela fonctionne sur tous les appareils et a besoin d\'être testé.\n\nEt même si elle st activée, la méthode Shizuku ne sera utilisée qu\'en cas de besoin. Autrement, le service d\'accessibilité sera utilisé.</string>
     <string name="instruction_section_flashlight_title">Le contrôle de la luminosité de la lampe-torche ne marche pas</string>
@@ -1049,7 +1049,7 @@
     <string name="feat_security_privacy_title">Sécurité et Confidentialité</string>
     <string name="feat_security_privacy_desc">Protégez et sécurisez votre appareil</string>
     <string name="feat_notifications_alerts_title">Notifications et alertes</string>
-    <string name="feat_notifications_alerts_desc">Ne manquez jamais vos prioritées</string>
+    <string name="feat_notifications_alerts_desc">Ne manquez jamais vos priorités</string>
     <string name="feat_input_actions_title">Entrées et actions</string>
     <string name="feat_input_actions_desc">Contrôlez avec aisance votre appareil</string>
     <string name="feat_widgets_title">Widgets</string>
