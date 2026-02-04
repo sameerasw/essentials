@@ -194,7 +194,7 @@
     <string name="tile_private_dns_off">Uit</string>
     <string name="tile_usb_debugging">USB-foutopsporing</string>
     <string name="tile_usb_debugging_desc">USB-foutopsporing in-/uitschakelen</string>
-    <string name="on"> Aan</string>
+    <string name="on">Aan</string>
     <string name="off">Uit</string>
     <!-- Screen Locked Security -->
     <string name="screen_locked_security_title">Beveiliging bij vergrendeling</string>
@@ -647,130 +647,130 @@
     <string name="label_shizuku_ritaka">Shizuku (Rikka)</string>
     <string name="label_shizuku_tuozi">Shizuku (TuoZi)</string>
     <string name="label_search_content_description">Zoeken</string>
-    <string name="perm_device_admin_explanation">Required to hard-lock the device when unauthorized network changes are attempted on lock screen.</string>
-    <string name="biometric_subtitle_access_settings">Authenticate to access settings</string>
-    <string name="biometric_subtitle_enable_feature">Authenticate to enable this feature</string>
-    <string name="biometric_subtitle_disable_feature">Authenticate to disable this feature</string>
-    <string name="biometric_title_settings_format">%1$s Settings</string>
-    <string name="keyword_feature">feature</string>
-    <string name="keyword_settings">settings</string>
-    <string name="keyword_hide">hide</string>
-    <string name="keyword_show">show</string>
-    <string name="keyword_visibility">visibility</string>
-    <string name="error_loading_apps">Error loading apps: %1$s</string>
+    <string name="perm_device_admin_explanation">Vereist om het apparaat compleet te vergrendelen bij onbevoegde netwerkwijzigingen op het vergrendelscherm.</string>
+    <string name="biometric_subtitle_access_settings">Authenticeren om toegang te krijgen tot de instellingen</string>
+    <string name="biometric_subtitle_enable_feature">Authenticeren om deze functie in te schakelen</string>
+    <string name="biometric_subtitle_disable_feature">Authenticeren om deze functie uit te schakelen</string>
+    <string name="biometric_title_settings_format">%1$s Instellingen</string>
+    <string name="keyword_feature">functie</string>
+    <string name="keyword_settings">instellingen</string>
+    <string name="keyword_hide">verbergen</string>
+    <string name="keyword_show">tonen</string>
+    <string name="keyword_visibility">zichtbaarheid</string>
+    <string name="error_loading_apps">Fout bij laden van apps: %1$s</string>
     <string-array name="keywords_haptic">
-        <item>vibration</item>
-        <item>touch</item>
-        <item>feel</item>
+        <item>trillen</item>
+        <item>aanraken</item>
+        <item>gevoel</item>
     </string-array>
     <string-array name="keywords_network_visibility">
-        <item>network</item>
-        <item>visibility</item>
-        <item>auto</item>
-        <item>hide</item>
+        <item>netwerk</item>
+        <item>zichtbaarheid</item>
+        <item>automatisch</item>
+        <item>verbergen</item>
     </string-array>
     <string-array name="keywords_restore_default">
-        <item>restore</item>
-        <item>default</item>
-        <item>icon</item>
+        <item>herstellen</item>
+        <item>standaard</item>
+        <item>icoon</item>
     </string-array>
     <string-array name="keywords_keyboard">
-        <item>keyboard</item>
-        <item>height</item>
-        <item>padding</item>
-        <item>haptic</item>
-        <item>input</item>
+        <item>toetsenbord</item>
+        <item>hoogte</item>
+        <item>afstand</item>
+        <item>haptisch</item>
+        <item>invoer</item>
     </string-array>
     <string-array name="keywords_alert">
-        <item>visible</item>
-        <item>alert</item>
+        <item>zichtbaar</item>
+        <item>alarm</item>
     </string-array>
     <string-array name="keywords_flashlight">
-        <item>light</item>
-        <item>torch</item>
+        <item>licht</item>
+        <item>lamp</item>
     </string-array>
     <string-array name="keywords_flashlight_pulse">
-        <item>light</item>
-        <item>torch</item>
-        <item>pulse</item>
-        <item>notification</item>
+        <item>licht</item>
+        <item>lamp</item>
+        <item>puls</item>
+        <item>melding</item>
     </string-array>
     <string-array name="keywords_qs_tile">
-        <item>tile</item>
-        <item>qs</item>
-        <item>awake</item>
+        <item>tegel</item>
+        <item>snelle instellingen</item>
+        <item>wakker</item>
     </string-array>
     <string-array name="keywords_qs_stay_awake">
-        <item>awake</item>
-        <item>developer</item>
-        <item>power</item>
-        <item>charge</item>
+        <item>wakker</item>
+        <item>ontwikkelaar</item>
+        <item>energie</item>
+        <item>laden</item>
     </string-array>
     <string-array name="keywords_notification_lighting">
-        <item>glow</item>
-        <item>notification</item>
+        <item>gloei</item>
+        <item>melding</item>
         <item>led</item>
     </string-array>
     <string-array name="keywords_round_shape">
-        <item>round</item>
-        <item>shape</item>
-        <item>edge</item>
+        <item>rond</item>
+        <item>vorm</item>
+        <item>rand</item>
     </string-array>
     <string-array name="keywords_privacy">
-        <item>secure</item>
+        <item>beveiligd</item>
         <item>privacy</item>
-        <item>biometric</item>
-        <item>face</item>
-        <item>fingerprint</item>
+        <item>biometrie</item>
+        <item>gezicht</item>
+        <item>vinger</item>
     </string-array>
     <string-array name="keywords_sound_accessibility">
-        <item>sound</item>
-        <item>accessibility</item>
-        <item>hear</item>
+        <item>geluid</item>
+        <item>toegankelijkheid</item>
+        <item>horen</item>
     </string-array>
     <string-array name="keywords_timeout">
-        <item>stay</item>
-        <item>on</item>
-        <item>timeout</item>
+        <item>blijven</item>
+        <item>aan</item>
+        <item>time-out</item>
     </string-array>
     <string-array name="keywords_wake_display">
-        <item>touch</item>
-        <item>wake</item>
-        <item>display</item>
+        <item>aanraken</item>
+        <item>wekken</item>
+        <item>scherm</item>
     </string-array>
     <string-array name="keywords_mtp">
         <item>usb</item>
-        <item>file</item>
-        <item>transfer</item>
+        <item>bestand</item>
+        <item>overdragen</item>
         <item>mtp</item>
     </string-array>
     <string-array name="keywords_timer">
         <item>timer</item>
-        <item>wait</item>
-        <item>timeout</item>
+        <item>wachten</item>
+        <item>time-out</item>
     </string-array>
-    <string name="label_keyboard_always_dark">Always dark theme</string>
-    <string name="label_keyboard_pitch_black">Pitch black theme</string>
-    <string name="label_keyboard_clipboard_enabled">Clipboard History</string>
+    <string name="label_keyboard_always_dark">Altijd donker thema</string>
+    <string name="label_keyboard_pitch_black">Pikzwart thema</string>
+    <string name="label_keyboard_clipboard_enabled">Klembordgeschiedenis</string>
     <string-array name="keywords_selection">
-        <item>list</item>
-        <item>picker</item>
-        <item>selection</item>
+        <item>lijst</item>
+        <item>kiezer</item>
+        <item>selectie</item>
     </string-array>
     <string-array name="keywords_visual_style">
-        <item>animation</item>
-        <item>visual</item>
-        <item>look</item>
+        <item>animatie</item>
+        <item>visueel</item>
+        <item>uiterlijk</item>
     </string-array>
     <string-array name="keywords_quiet_filter">
-        <item>quiet</item>
-        <item>ignore</item>
+        <item>stil</item>
+        <item>negeren</item>
         <item>filter</item>
     </string-array>
     <string-array name="keywords_automation_lock">
-        <item>automation</item>
-        <item>auto</item>
-        <item>lock</item>
+        <item>automatisatie</item>
+        <item>automatisch</item>
+        <item>vergrendelen</item>
     </string-array>
     <string-array name="keywords_adb_debug">
         <item>adb</item>
@@ -778,78 +778,78 @@
         <item>debug</item>
     </string-array>
     <string-array name="keywords_battery_charge">
-        <item>battery</item>
-        <item>charge</item>
-        <item>power</item>
+        <item>batterij</item>
+        <item>laden</item>
+        <item>energie</item>
     </string-array>
     <string-array name="keywords_blur_glass">
-        <item>blur</item>
-        <item>glass</item>
-        <item>vignette</item>
+        <item>vervaging</item>
+        <item>glas</item>
+        <item>vignet</item>
     </string-array>
     <string-array name="keywords_float_window">
-        <item>float</item>
-        <item>window</item>
+        <item>zweven</item>
+        <item>venster</item>
         <item>overlay</item>
     </string-array>
     <string-array name="keywords_always_display">
-        <item>always</item>
-        <item>display</item>
-        <item>clock</item>
+        <item>altijd</item>
+        <item>scherm</item>
+        <item>klok</item>
     </string-array>
     <string-array name="keywords_audio_mute">
         <item>audio</item>
-        <item>mute</item>
+        <item>dempen</item>
         <item>volume</item>
     </string-array>
     <string-array name="keywords_blue_filter">
-        <item>blue</item>
+        <item>blauw</item>
         <item>filter</item>
-        <item>auto</item>
+        <item>automatisch</item>
     </string-array>
     <string-array name="keywords_app_freezing">
-        <item>freeze</item>
+        <item>bevriezen</item>
         <item>shizuku</item>
     </string-array>
     <string-array name="keywords_manual_now">
-        <item>manual</item>
-        <item>now</item>
+        <item>manueel</item>
+        <item>nu</item>
         <item>shizuku</item>
     </string-array>
     <string-array name="keywords_proximity_sensor">
-        <item>proximity</item>
+        <item>nabijheid</item>
         <item>sensor</item>
-        <item>face</item>
-        <item>down</item>
+        <item>gezicht</item>
+        <item>beneden</item>
     </string-array>
     <string-array name="keywords_switch_master">
-        <item>switch</item>
-        <item>master</item>
+        <item>schakelaar</item>
+        <item>hoofd</item>
     </string-array>
     <string-array name="keywords_vibration">
-        <item>vibration</item>
-        <item>feel</item>
+        <item>trillen</item>
+        <item>gevoel</item>
     </string-array>
     <!-- App Selection Extra -->
-    <string name="action_invert_selection">Invert selection</string>
-    <string name="toggle_show_system_apps">Show system apps</string>
+    <string name="action_invert_selection">Selectie omdraaien</string>
+    <string name="toggle_show_system_apps">Systeemapps tonen</string>
     <!-- Updates -->
-    <string name="status_up_to_date">You are up to date</string>
-    <string name="warning_pre_release">This is a pre-release version and might be unstable.</string>
-    <string name="release_notes_format">Release Notes v%1$s</string>
-    <string name="action_view_on_github">View on GitHub</string>
-    <string name="action_download_apk">Download APK</string>
+    <string name="status_up_to_date">Je bent actueel</string>
+    <string name="warning_pre_release">Dit is een vooruitgave en kan mogelijk instabiel zijn.</string>
+    <string name="release_notes_format">Versieopmerkingen v%1$s</string>
+    <string name="action_view_on_github">Bekijken op GitHub</string>
+    <string name="action_download_apk">APK downloaden</string>
     <!-- Haptic Types -->
-    <string name="haptic_none">None</string>
-    <string name="haptic_subtle">Subtle</string>
-    <string name="haptic_double">Double</string>
-    <string name="haptic_click">Click</string>
-    <string name="haptic_tick">Tick</string>
+    <string name="haptic_none">Geen</string>
+    <string name="haptic_subtle">Subtiel</string>
+    <string name="haptic_double">Dubbel</string>
+    <string name="haptic_click">Klik</string>
+    <string name="haptic_tick">Tik</string>
     <!-- Flashlight Intensity Overlay -->
-    <string name="action_turn_off">Turn Off</string>
-    <string name="feature_flashlight_brightness_title">Flashlight Brightness</string>
+    <string name="action_turn_off">Uitzetten</string>
+    <string name="feature_flashlight_brightness_title">Helderheid van zaklamp</string>
     <!-- QS / Activities -->
-    <string name="feature_settings_format">%1$s Settings</string>
+    <string name="feature_settings_format">%1$s Instellingen</string>
     <string name="auth_confirm_identity_settings">Confirm identity to open settings</string>
     <string name="auth_required_title">Authentication Required</string>
     <string name="auth_confirm_identity_subtitle">Confirm your identity</string>
@@ -1058,6 +1058,9 @@
     <string name="feat_display_visuals_desc">Visuals to enhance your experience</string>
     <string name="feat_watch_title">Watch</string>
     <string name="feat_watch_desc">Integrations with WearOS</string>
+    <string name="watch_no_companion_title">No Watch detected</string>
+    <string name="watch_no_companion_desc">It looks like you do not have the Essentials Wear companion app installed on your watch.</string>
+    <string name="watch_install_companion_action">Install Companion</string>
     <string name="cat_interaction">Interaction</string>
     <string name="cat_interface">Interface</string>
     <string name="cat_display">Display</string>
