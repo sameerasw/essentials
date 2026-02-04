@@ -89,6 +89,7 @@ class MainViewModel : ViewModel() {
     val flashlightLastIntensity = mutableStateOf(1)
     val isFlashlightPulseEnabled = mutableStateOf(false)
     val isFlashlightPulseFacedownOnly = mutableStateOf(true)
+    val isFlashlightPulseUseLightingApps = mutableStateOf(true)
     val isLocationPermissionGranted = mutableStateOf(false)
     val isBackgroundLocationPermissionGranted = mutableStateOf(false)
     val isFullScreenIntentPermissionGranted = mutableStateOf(false)
@@ -370,6 +371,7 @@ class MainViewModel : ViewModel() {
         flashlightLastIntensity.value = settingsRepository.getInt(SettingsRepository.KEY_FLASHLIGHT_LAST_INTENSITY, 1)
         isFlashlightPulseEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_PULSE_ENABLED)
         isFlashlightPulseFacedownOnly.value = settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_PULSE_FACEDOWN_ONLY, true)
+        isFlashlightPulseUseLightingApps.value = settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_PULSE_SAME_AS_LIGHTING, true)
         isPitchBlackThemeEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_PITCH_BLACK_THEME_ENABLED)
 
         keyboardHeight.floatValue = settingsRepository.getFloat(SettingsRepository.KEY_KEYBOARD_HEIGHT, 54f)
@@ -819,6 +821,11 @@ class MainViewModel : ViewModel() {
         settingsRepository.putBoolean(SettingsRepository.KEY_FLASHLIGHT_PULSE_FACEDOWN_ONLY, enabled)
     }
 
+    fun setFlashlightPulseUseLightingApps(enabled: Boolean, context: Context) {
+        isFlashlightPulseUseLightingApps.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_FLASHLIGHT_PULSE_SAME_AS_LIGHTING, enabled)
+    }
+
     // Helper to show the overlay service for testing/triggering
     fun triggerNotificationLighting(context: Context) {
         val radius = settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_CORNER_RADIUS, 20f)
@@ -1188,6 +1195,18 @@ class MainViewModel : ViewModel() {
 
     fun updateNotificationLightingAppEnabled(context: Context, packageName: String, enabled: Boolean) {
         settingsRepository.updateNotificationLightingAppSelection(packageName, enabled)
+    }
+
+    fun loadFlashlightPulseSelectedApps(context: Context): List<AppSelection> {
+        return settingsRepository.loadFlashlightPulseSelectedApps()
+    }
+
+    fun saveFlashlightPulseSelectedApps(context: Context, apps: List<AppSelection>) {
+        settingsRepository.saveFlashlightPulseSelectedApps(apps)
+    }
+
+    fun updateFlashlightPulseAppEnabled(context: Context, packageName: String, enabled: Boolean) {
+        settingsRepository.updateFlashlightPulseAppSelection(packageName, enabled)
     }
 
     // Notification Lighting Corner Radius Methods

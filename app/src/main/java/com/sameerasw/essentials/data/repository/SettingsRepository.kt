@@ -138,6 +138,9 @@ class SettingsRepository(private val context: Context) {
         
         const val KEY_GITHUB_ACCESS_TOKEN = "github_access_token"
         const val KEY_GITHUB_USER_PROFILE = "github_user_profile"
+        
+        const val KEY_FLASHLIGHT_PULSE_SELECTED_APPS = "flashlight_pulse_selected_apps"
+        const val KEY_FLASHLIGHT_PULSE_SAME_AS_LIGHTING = "flashlight_pulse_same_as_lighting"
     }
 
     // Observe changes
@@ -326,6 +329,10 @@ class SettingsRepository(private val context: Context) {
     fun loadFreezeSelectedApps() = loadAppSelection(KEY_FREEZE_SELECTED_APPS)
     fun saveFreezeSelectedApps(apps: List<AppSelection>) = saveAppSelection(KEY_FREEZE_SELECTED_APPS, apps.filter { it.isEnabled })
     fun updateFreezeAppSelection(packageName: String, enabled: Boolean) = updateAppSelection(KEY_FREEZE_SELECTED_APPS, packageName, enabled)
+
+    fun loadFlashlightPulseSelectedApps() = loadAppSelection(KEY_FLASHLIGHT_PULSE_SELECTED_APPS)
+    fun saveFlashlightPulseSelectedApps(apps: List<AppSelection>) = saveAppSelection(KEY_FLASHLIGHT_PULSE_SELECTED_APPS, apps)
+    fun updateFlashlightPulseAppSelection(packageName: String, enabled: Boolean) = updateAppSelection(KEY_FLASHLIGHT_PULSE_SELECTED_APPS, packageName, enabled)
 
     private fun updateAppSelection(key: String, packageName: String, enabled: Boolean) {
         val current = loadAppSelection(key).toMutableList()

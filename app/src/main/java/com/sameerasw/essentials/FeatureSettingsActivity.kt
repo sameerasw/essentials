@@ -938,6 +938,14 @@ class FeatureSettingsActivity : FragmentActivity() {
                                         highlightSetting = highlightSetting
                                     )
                                 }
+
+                                "Flashlight pulse" -> {
+                                    com.sameerasw.essentials.ui.composables.configs.FlashlightPulseSettingsUI(
+                                        viewModel = viewModel,
+                                        modifier = Modifier.padding(top = 16.dp),
+                                        highlightSetting = highlightSetting
+                                    )
+                                }
                             }
                         }
                     }

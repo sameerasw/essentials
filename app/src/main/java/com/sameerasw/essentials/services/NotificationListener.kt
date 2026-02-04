@@ -613,15 +613,17 @@ class NotificationListener : NotificationListenerService() {
                         } else {
                             startNotificationLighting()
                         }
-
-                        // Also trigger flashlight pulse if enabled
-                        if (prefs.getBoolean("flashlight_pulse_enabled", false)) {
-                            val pulseIntent = Intent(applicationContext, FlashlightActionReceiver::class.java).apply {
-                                action = FlashlightActionReceiver.ACTION_PULSE_NOTIFICATION
-                            }
-                            applicationContext.sendBroadcast(pulseIntent)
-                        }
                     }
+                }
+            }
+
+            // Also trigger flashlight pulse if enabled
+            if (prefs.getBoolean(SettingsRepository.KEY_FLASHLIGHT_PULSE_ENABLED, false)) {
+                if (isAppSelectedForFlashlightPulse(sbn.packageName)) {
+                    val pulseIntent = Intent(applicationContext, FlashlightActionReceiver::class.java).apply {
+                        action = FlashlightActionReceiver.ACTION_PULSE_NOTIFICATION
+                    }
+                    applicationContext.sendBroadcast(pulseIntent)
                 }
             }
         } catch (_: Exception) {
@@ -770,6 +772,36 @@ class NotificationListener : NotificationListenerService() {
 
         } catch (_: Exception) {
             // If there's an error, default to allowing all apps (backward compatibility)
+            return true
+        }
+    }
+
+    private fun isAppSelectedForFlashlightPulse(packageName: String): Boolean {
+        try {
+            val prefs = applicationContext.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+
+            // If "same as lighting" toggle is ON, use notification lighting's app selection
+            val sameAsLighting = prefs.getBoolean(SettingsRepository.KEY_FLASHLIGHT_PULSE_SAME_AS_LIGHTING, true)
+            if (sameAsLighting) {
+                return isAppSelectedForNotificationLighting(packageName)
+            }
+
+            val json = prefs.getString(SettingsRepository.KEY_FLASHLIGHT_PULSE_SELECTED_APPS, null)
+            if (json == null) {
+                return true
+            }
+
+            val gson = com.google.gson.Gson()
+            val type = object : com.google.gson.reflect.TypeToken<List<com.sameerasw.essentials.domain.model.AppSelection>>() {}.type
+            val selectedApps: List<com.sameerasw.essentials.domain.model.AppSelection> = gson.fromJson(json, type)
+
+            // Find the app in the saved list
+            val app = selectedApps.find { it.packageName == packageName }
+            val result = app?.isEnabled ?: true
+            return result
+
+        } catch (_: Exception) {
+            // If there's an error, default to allowing all apps
             return true
         }
     }

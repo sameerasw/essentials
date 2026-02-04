@@ -244,9 +244,7 @@ object FeatureRegistry {
             searchableSettings = listOf(
                 SearchSetting(R.string.search_lighting_style_title, R.string.search_lighting_style_desc, "style", R.array.keywords_visual_style),
                 SearchSetting(R.string.search_corner_radius_title, R.string.search_corner_radius_desc, "corner_radius", R.array.keywords_round_shape),
-                SearchSetting(R.string.search_skip_silent_title, R.string.search_skip_silent_desc, "skip_silent_notifications", R.array.keywords_quiet_filter),
-                SearchSetting(R.string.search_flashlight_pulse_title, R.string.search_flashlight_pulse_desc, "flashlight_pulse", R.array.keywords_flashlight_pulse),
-                SearchSetting(R.string.search_only_facing_down_title, R.string.search_only_facing_down_desc, "flashlight_pulse_facedown", R.array.keywords_proximity_sensor)
+                SearchSetting(R.string.search_skip_silent_title, R.string.search_skip_silent_desc, "skip_silent_notifications", R.array.keywords_quiet_filter)
             ),
             showToggle = true,
             parentFeatureId = "Notifications"
@@ -255,6 +253,26 @@ object FeatureRegistry {
             override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
                 viewModel.isOverlayPermissionGranted.value && viewModel.isNotificationLightingAccessibilityEnabled.value && viewModel.isNotificationListenerEnabled.value
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) = viewModel.setNotificationLightingEnabled(enabled, context)
+        },
+
+        object : Feature(
+            id = "Flashlight pulse",
+            title = R.string.flashlight_pulse_title,
+            iconRes = R.drawable.rounded_flashlight_on_24,
+            category = R.string.cat_system,
+            description = R.string.feat_flashlight_pulse_desc,
+            permissionKeys = listOf("NOTIFICATION_LISTENER"),
+            searchableSettings = listOf(
+                SearchSetting(R.string.search_flashlight_pulse_title, R.string.search_flashlight_pulse_desc, "flashlight_pulse", R.array.keywords_flashlight_pulse),
+                SearchSetting(R.string.search_only_facing_down_title, R.string.search_only_facing_down_desc, "flashlight_pulse_facedown", R.array.keywords_proximity_sensor)
+            ),
+            showToggle = true,
+            parentFeatureId = "Notifications"
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = viewModel.isFlashlightPulseEnabled.value
+            override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
+                viewModel.isNotificationListenerEnabled.value
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) = viewModel.setFlashlightPulseEnabled(enabled, context)
         },
 
 

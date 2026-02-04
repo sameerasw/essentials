@@ -119,37 +119,6 @@ fun NotificationLightingSettingsUI(
 
         // Style Picker
         Text(
-            text = stringResource(R.string.settings_section_flashlight_pulse),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        RoundedCardContainer{
-            IconToggleItem(
-                iconRes = R.drawable.rounded_flashlight_on_24,
-                title = stringResource(R.string.flashlight_pulse_title),
-                isChecked = viewModel.isFlashlightPulseEnabled.value,
-                onCheckedChange = { checked ->
-                    viewModel.setFlashlightPulseEnabled(checked, context)
-                },
-                modifier = Modifier.highlight(highlightSetting == "flashlight_pulse")
-            )
-            if (viewModel.isFlashlightPulseEnabled.value) {
-                IconToggleItem(
-                    iconRes = R.drawable.rounded_mobile_text_24,
-                    title = stringResource(R.string.flashlight_pulse_facedown_title),
-                    isChecked = viewModel.isFlashlightPulseFacedownOnly.value,
-                    onCheckedChange = { checked ->
-                        viewModel.setFlashlightPulseFacedownOnly(checked, context)
-                    },
-                    modifier = Modifier.highlight(highlightSetting == "flashlight_pulse_facedown")
-                )
-            }
-        }
-
-        // Style Picker
-        Text(
             text = stringResource(R.string.settings_section_style),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
