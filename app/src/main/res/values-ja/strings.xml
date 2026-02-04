@@ -136,6 +136,7 @@
     <string name="settings_section_flashlight_pulse">ライト点滅</string>
     <string name="flashlight_pulse_title">ライト点滅</string>
     <string name="flashlight_pulse_facedown_title">下を向いているときのみ</string>
+    <string name="flashlight_pulse_same_as_lighting_title">Same apps as notification lighting</string>
     <string name="settings_section_style">スタイル</string>
     <string name="notification_lighting_stroke_adjustment_section">ストローク調整</string>
     <string name="notification_lighting_corner_radius_title">角の半径</string>
@@ -302,6 +303,7 @@
     <string name="feat_maps_power_saving_desc">どのAndroidデバイスでも使えるように</string>
     <string name="feat_notification_lighting_title">通知ライト</string>
     <string name="feat_notification_lighting_desc">通知時に点灯</string>
+    <string name="feat_flashlight_pulse_desc">Pulse the flashlight for notifications</string>
     <string name="feat_sound_mode_tile_title">サイレントモードタイル</string>
     <string name="feat_sound_mode_tile_desc">クイック設定タイルでサイレントモードを切り替える</string>
     <string name="feat_stay_awake_tile_title">スリープしないタイル</string>
