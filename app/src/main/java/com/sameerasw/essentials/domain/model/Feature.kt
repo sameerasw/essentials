@@ -31,7 +31,9 @@ abstract class Feature(
     val searchableSettings: List<SearchSetting> = emptyList(),
     val showToggle: Boolean = true,
     val hasMoreSettings: Boolean = true,
-    val isBeta: Boolean = false
+    val isBeta: Boolean = false,
+    val parentFeatureId: String? = null,
+    val isVisibleInMain: Boolean = true
 ) {
     abstract fun isEnabled(viewModel: MainViewModel): Boolean
     

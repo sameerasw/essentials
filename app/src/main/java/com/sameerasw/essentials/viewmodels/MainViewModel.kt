@@ -80,6 +80,7 @@ class MainViewModel : ViewModel() {
     val isDynamicNightLightEnabled = mutableStateOf(false)
     val snoozeChannels = mutableStateOf<List<com.sameerasw.essentials.domain.model.SnoozeChannel>>(emptyList())
     val mapsChannels = mutableStateOf<List<com.sameerasw.essentials.domain.model.MapsChannel>>(emptyList())
+    val isSnoozeHeadsUpEnabled = mutableStateOf(false)
     val isFlashlightAlwaysTurnOffEnabled = mutableStateOf(false)
     val isFlashlightFadeEnabled = mutableStateOf(false)
     val isFlashlightAdjustEnabled = mutableStateOf(false)
@@ -226,6 +227,9 @@ class MainViewModel : ViewModel() {
             SettingsRepository.KEY_MAPS_DISCOVERED_CHANNELS, SettingsRepository.KEY_MAPS_DETECTION_CHANNELS -> {
                 appContext?.let { loadMapsChannels(it) }
             }
+            SettingsRepository.KEY_SNOOZE_HEADS_UP_ENABLED -> {
+                isSnoozeHeadsUpEnabled.value = settingsRepository.getBoolean(key)
+            }
             SettingsRepository.KEY_PINNED_FEATURES -> {
                 pinnedFeatureKeys.value = settingsRepository.getPinnedFeatures()
             }
@@ -357,6 +361,7 @@ class MainViewModel : ViewModel() {
         isDynamicNightLightEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_DYNAMIC_NIGHT_LIGHT_ENABLED)
         loadSnoozeChannels(context)
         loadMapsChannels(context)
+        isSnoozeHeadsUpEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_SNOOZE_HEADS_UP_ENABLED)
         isFlashlightAlwaysTurnOffEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_ALWAYS_TURN_OFF_ENABLED)
         isFlashlightFadeEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_FADE_ENABLED)
         isFlashlightAdjustEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_ADJUST_INTENSITY_ENABLED)
@@ -1403,6 +1408,11 @@ class MainViewModel : ViewModel() {
         }
         settingsRepository.saveMapsDetectionChannels(currentDetected)
         loadMapsChannels(context)
+    }
+
+    fun setSnoozeHeadsUpEnabled(enabled: Boolean, context: Context) {
+        isSnoozeHeadsUpEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_SNOOZE_HEADS_UP_ENABLED, enabled)
     }
 
     fun setFlashlightAlwaysTurnOffEnabled(enabled: Boolean, context: Context) {

@@ -865,7 +865,7 @@ fun SetupFeatures(
                             modifier = Modifier.padding(horizontal = 0.dp, vertical = 0.dp),
                             showToggle = false,
                             hasMoreSettings = true,
-                            isBeta = result.isBeta, // Added isBeta
+                            isBeta = result.isBeta,
                             descriptionOverride = if (result.parentFeature != null) "${result.parentFeature} > ${result.description}" else result.description,
                             isPinned = pinnedFeatureKeys.contains(result.featureKey),
                             onPinToggle = {
@@ -876,25 +876,14 @@ fun SetupFeatures(
                 }
             }
         } else {
-            // Render filtered features grouped by category (Original View)
-            val categories = filtered.map { it.category }.distinct()
-            for (category in categories) {
-                val categoryFeatures = filtered.filter { it.category == category }
+            // Render Top Level Features (No Categories)
+            val topLevelFeatures = allFeatures.filter { it.parentFeatureId == null && it.isVisibleInMain }
 
-                // Show category header if there are features in this category
-                if (categoryFeatures.isNotEmpty()) {
-                    Text(
-                        text = stringResource(id = category),
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.padding(start = 32.dp, top = 16.dp, bottom = 8.dp),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-
+            if (topLevelFeatures.isNotEmpty()) {
                 RoundedCardContainer(
                     modifier = Modifier.padding(horizontal = 16.dp),
                 ) {
-                    for (feature in categoryFeatures) {
+                    topLevelFeatures.forEachIndexed { index, feature ->
                         FeatureCard(
                             title = feature.title,
                             isEnabled = feature.isEnabled(viewModel),
@@ -936,7 +925,8 @@ fun SetupFeatures(
                             isPinned = pinnedFeatureKeys.contains(feature.id),
                             onPinToggle = {
                                 viewModel.togglePinFeature(feature.id)
-                            }
+                            },
+
                         )
                     }
                 }

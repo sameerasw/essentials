@@ -75,6 +75,9 @@ import com.sameerasw.essentials.ui.composables.configs.ScreenLockedSecuritySetti
 import com.sameerasw.essentials.ui.composables.configs.KeyboardSettingsUI
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.domain.registry.FeatureRegistry
+import com.sameerasw.essentials.ui.components.cards.FeatureCard
+import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
+import com.sameerasw.essentials.utils.BiometricHelper
 
 @OptIn(ExperimentalMaterial3Api::class)
 class FeatureSettingsActivity : FragmentActivity() {
@@ -123,7 +126,7 @@ class FeatureSettingsActivity : FragmentActivity() {
             val viewModel: MainViewModel = viewModel()
             val statusBarViewModel: StatusBarIconViewModel = viewModel()
             val caffeinateViewModel: CaffeinateViewModel = viewModel()
-            
+
             // Automatic refresh on resume
             val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
             DisposableEffect(lifecycleOwner) {
@@ -147,9 +150,10 @@ class FeatureSettingsActivity : FragmentActivity() {
             LaunchedEffect(Unit) {
                 viewModel.check(context)
             }
-            
+
             val isPitchBlackThemeEnabled by viewModel.isPitchBlackThemeEnabled
-            
+            val pinnedFeatureKeys by viewModel.pinnedFeatureKeys
+
             EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
                 val view = LocalView.current
                 val prefs = context.getSharedPreferences("essentials_prefs", MODE_PRIVATE)
@@ -191,7 +195,14 @@ class FeatureSettingsActivity : FragmentActivity() {
                 }
 
                 // Show permission sheet if feature has missing permissions
-                LaunchedEffect(featureId, isAccessibilityEnabled, isWriteSecureSettingsEnabled, isOverlayPermissionGranted, isNotificationLightingAccessibilityEnabled, isNotificationListenerEnabled) {
+                LaunchedEffect(
+                    featureId,
+                    isAccessibilityEnabled,
+                    isWriteSecureSettingsEnabled,
+                    isOverlayPermissionGranted,
+                    isNotificationLightingAccessibilityEnabled,
+                    isNotificationListenerEnabled
+                ) {
                     val hasMissingPermissions = when (featureId) {
                         "Screen off widget" -> !isAccessibilityEnabled
                         "Statusbar icons" -> !isWriteSecureSettingsEnabled
@@ -224,6 +235,7 @@ class FeatureSettingsActivity : FragmentActivity() {
                                 isGranted = isAccessibilityEnabled
                             )
                         )
+
                         "Statusbar icons" -> listOf(
                             PermissionItem(
                                 iconRes = R.drawable.rounded_security_24,
@@ -232,14 +244,17 @@ class FeatureSettingsActivity : FragmentActivity() {
                                 dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
                                 actionLabel = R.string.perm_action_copy_adb,
                                 action = {
-                                    val adbCommand = "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
-                                    val clipboard = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+                                    val adbCommand =
+                                        "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
+                                    val clipboard =
+                                        context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
                                     val clip = ClipData.newPlainText("adb_command", adbCommand)
                                     clipboard.setPrimaryClip(clip)
                                 },
                                 secondaryActionLabel = R.string.perm_action_check,
                                 secondaryAction = {
-                                    viewModel.isWriteSecureSettingsEnabled.value = viewModel.canWriteSecureSettings(context)
+                                    viewModel.isWriteSecureSettingsEnabled.value =
+                                        viewModel.canWriteSecureSettings(context)
                                 },
                                 isGranted = isWriteSecureSettingsEnabled
                             ),
@@ -250,7 +265,10 @@ class FeatureSettingsActivity : FragmentActivity() {
                                 dependentFeatures = PermissionRegistry.getFeatures("WRITE_SETTINGS"),
                                 actionLabel = R.string.perm_action_grant,
                                 action = {
-                                    val intent = Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, Uri.parse("package:${context.packageName}"))
+                                    val intent = Intent(
+                                        Settings.ACTION_MANAGE_WRITE_SETTINGS,
+                                        Uri.parse("package:${context.packageName}")
+                                    )
                                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                                     context.startActivity(intent)
                                 },
@@ -267,14 +285,19 @@ class FeatureSettingsActivity : FragmentActivity() {
                                         com.sameerasw.essentials.utils.ShizukuUtils.requestPermission()
                                     } else {
                                         try {
-                                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://shizuku.rikka.app/download/"))
+                                            val intent = Intent(
+                                                Intent.ACTION_VIEW,
+                                                Uri.parse("https://shizuku.rikka.app/download/")
+                                            )
                                             context.startActivity(intent)
-                                        } catch (e: Exception) {}
+                                        } catch (e: Exception) {
+                                        }
                                     }
                                 },
                                 isGranted = com.sameerasw.essentials.utils.ShizukuUtils.hasPermission()
                             )
                         )
+
                         "Notification lighting" -> listOf(
                             PermissionItem(
                                 iconRes = R.drawable.rounded_magnify_fullscreen_24,
@@ -283,7 +306,10 @@ class FeatureSettingsActivity : FragmentActivity() {
                                 dependentFeatures = PermissionRegistry.getFeatures("DRAW_OVERLAYS"),
                                 actionLabel = R.string.perm_action_grant,
                                 action = {
-                                    val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:${context.packageName}"))
+                                    val intent = Intent(
+                                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                        Uri.parse("package:${context.packageName}")
+                                    )
                                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                                     context.startActivity(intent)
                                 },
@@ -312,6 +338,7 @@ class FeatureSettingsActivity : FragmentActivity() {
                                 isGranted = isNotificationListenerEnabled
                             )
                         )
+
                         "Button remap" -> listOf(
                             PermissionItem(
                                 iconRes = R.drawable.rounded_settings_accessibility_24,
@@ -325,6 +352,7 @@ class FeatureSettingsActivity : FragmentActivity() {
                                 isGranted = isAccessibilityEnabled
                             )
                         )
+
                         "Dynamic night light" -> listOf(
                             PermissionItem(
                                 iconRes = R.drawable.rounded_settings_accessibility_24,
@@ -346,18 +374,22 @@ class FeatureSettingsActivity : FragmentActivity() {
                                 dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
                                 actionLabel = R.string.perm_action_copy_adb,
                                 action = {
-                                    val adbCommand = "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
-                                    val clipboard = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+                                    val adbCommand =
+                                        "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
+                                    val clipboard =
+                                        context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
                                     val clip = ClipData.newPlainText("adb_command", adbCommand)
                                     clipboard.setPrimaryClip(clip)
                                 },
                                 secondaryActionLabel = R.string.perm_action_check,
                                 secondaryAction = {
-                                    viewModel.isWriteSecureSettingsEnabled.value = viewModel.canWriteSecureSettings(context)
+                                    viewModel.isWriteSecureSettingsEnabled.value =
+                                        viewModel.canWriteSecureSettings(context)
                                 },
                                 isGranted = isWriteSecureSettingsEnabled
                             )
                         )
+
                         "Snooze system notifications" -> listOf(
                             PermissionItem(
                                 iconRes = R.drawable.rounded_snooze_24,
@@ -369,6 +401,7 @@ class FeatureSettingsActivity : FragmentActivity() {
                                 isGranted = isNotificationListenerEnabled
                             )
                         )
+
                         "Screen locked security" -> listOf(
                             PermissionItem(
                                 iconRes = R.drawable.rounded_settings_accessibility_24,
@@ -388,8 +421,10 @@ class FeatureSettingsActivity : FragmentActivity() {
                                 dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
                                 actionLabel = R.string.perm_action_copy_adb,
                                 action = {
-                                    val adbCommand = "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
-                                    val clipboard = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+                                    val adbCommand =
+                                        "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
+                                    val clipboard =
+                                        context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
                                     val clip = ClipData.newPlainText("adb_command", adbCommand)
                                     clipboard.setPrimaryClip(clip)
                                 },
@@ -407,6 +442,7 @@ class FeatureSettingsActivity : FragmentActivity() {
                                 isGranted = viewModel.isDeviceAdminEnabled.value
                             )
                         )
+
                         "App lock" -> listOf(
                             PermissionItem(
                                 iconRes = R.drawable.rounded_settings_accessibility_24,
@@ -420,8 +456,10 @@ class FeatureSettingsActivity : FragmentActivity() {
                                 isGranted = isAccessibilityEnabled
                             )
                         )
+
                         "Freeze" -> {
-                            val isRootEnabled = com.sameerasw.essentials.utils.ShellUtils.isRootEnabled(context)
+                            val isRootEnabled =
+                                com.sameerasw.essentials.utils.ShellUtils.isRootEnabled(context)
                             listOf(
                                 if (isRootEnabled) {
                                     PermissionItem(
@@ -446,6 +484,7 @@ class FeatureSettingsActivity : FragmentActivity() {
                                 }
                             )
                         }
+
                         "Location reached" -> listOf(
                             PermissionItem(
                                 iconRes = R.drawable.rounded_navigation_24,
@@ -466,6 +505,7 @@ class FeatureSettingsActivity : FragmentActivity() {
                                 isGranted = viewModel.isBackgroundLocationPermissionGranted.value
                             )
                         )
+
                         "Quick settings tiles" -> listOf(
                             PermissionItem(
                                 iconRes = R.drawable.rounded_security_24,
@@ -474,13 +514,17 @@ class FeatureSettingsActivity : FragmentActivity() {
                                 dependentFeatures = PermissionRegistry.getFeatures("WRITE_SETTINGS"),
                                 actionLabel = R.string.perm_action_grant,
                                 action = {
-                                    val intent = Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, Uri.parse("package:${context.packageName}"))
+                                    val intent = Intent(
+                                        Settings.ACTION_MANAGE_WRITE_SETTINGS,
+                                        Uri.parse("package:${context.packageName}")
+                                    )
                                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                                     context.startActivity(intent)
                                 },
                                 isGranted = viewModel.isWriteSettingsEnabled.value
                             )
                         )
+
                         else -> emptyList()
                     }
 
@@ -493,9 +537,15 @@ class FeatureSettingsActivity : FragmentActivity() {
                     }
                 }
 
-                val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+                val scrollBehavior =
+                    TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
                 Scaffold(
-                    contentWindowInsets = androidx.compose.foundation.layout.WindowInsets(0, 0, 0, 0),
+                    contentWindowInsets = androidx.compose.foundation.layout.WindowInsets(
+                        0,
+                        0,
+                        0,
+                        0
+                    ),
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     containerColor = MaterialTheme.colorScheme.surfaceContainer,
                     topBar = {
@@ -517,7 +567,12 @@ class FeatureSettingsActivity : FragmentActivity() {
                                     viewModel.triggerNotificationLighting(context)
                                 },
                                 expanded = fabExpanded,
-                                icon = { Icon(painter = painterResource(id = R.drawable.rounded_play_arrow_24), contentDescription = null) },
+                                icon = {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.rounded_play_arrow_24),
+                                        contentDescription = null
+                                    )
+                                },
                                 text = { Text(stringResource(R.string.action_preview)) },
                                 modifier = Modifier.height(64.dp)
                             )
@@ -531,135 +586,218 @@ class FeatureSettingsActivity : FragmentActivity() {
                             .fillMaxSize()
                             .then(if (hasScroll) Modifier.verticalScroll(rememberScrollState()) else Modifier)
                     ) {
-                        when (featureId) {
-                            "Screen off widget" -> {
-                                ScreenOffWidgetSettingsUI(
-                                    viewModel = viewModel,
-                                    selectedHaptic = selectedHaptic,
-                                    onHapticSelected = { type -> selectedHaptic = type },
-                                    vibrator = vibrator,
-                                    prefs = prefs,
-                                    modifier = Modifier.padding(top = 16.dp),
-                                    highlightSetting = highlightSetting
-                                )
+                        val children =
+                            FeatureRegistry.ALL_FEATURES.filter { it.parentFeatureId == featureId }
+                        if (children.isNotEmpty()) {
+                            RoundedCardContainer(
+                                modifier = Modifier
+                                    .padding(horizontal = 16.dp)
+                                    .padding(top = 16.dp)
+                            ) {
+                                children.forEachIndexed { index, child ->
+                                    FeatureCard(
+                                        title = child.title,
+                                        description = child.description,
+                                        iconRes = child.iconRes,
+                                        isEnabled = child.isEnabled(viewModel),
+                                        isToggleEnabled = child.isToggleEnabled(viewModel, context),
+                                        showToggle = child.showToggle,
+                                        hasMoreSettings = child.hasMoreSettings,
+                                        isBeta = child.isBeta,
+                                        onToggle = { enabled ->
+                                            if (child.category == R.string.cat_security) {
+                                                BiometricHelper.showBiometricPrompt(
+                                                    activity = this@FeatureSettingsActivity,
+                                                    title = getString(
+                                                        R.string.biometric_title_settings_format,
+                                                        getString(child.title)
+                                                    ),
+                                                    subtitle = if (enabled) getString(R.string.biometric_subtitle_enable_feature) else getString(
+                                                        R.string.biometric_subtitle_disable_feature
+                                                    ),
+                                                    onSuccess = {
+                                                        child.onToggle(
+                                                            viewModel,
+                                                            context,
+                                                            enabled
+                                                        )
+                                                    }
+                                                )
+                                            } else {
+                                                child.onToggle(viewModel, context, enabled)
+                                            }
+                                        },
+                                        onClick = {
+                                            if (child.category == R.string.cat_security) {
+                                                BiometricHelper.showBiometricPrompt(
+                                                    activity = this@FeatureSettingsActivity,
+                                                    title = getString(
+                                                        R.string.biometric_title_settings_format,
+                                                        getString(child.title)
+                                                    ),
+                                                    subtitle = getString(R.string.biometric_subtitle_access_settings),
+                                                    onSuccess = {
+                                                        child.onClick(
+                                                            context,
+                                                            viewModel
+                                                        )
+                                                    }
+                                                )
+                                            } else {
+                                                child.onClick(context, viewModel)
+                                            }
+                                        },
+                                        isPinned = pinnedFeatureKeys.contains(child.id),
+                                        onPinToggle = { viewModel.togglePinFeature(child.id) }
+                                    )
+                                }
                             }
-                            "Statusbar icons" -> {
-                                StatusBarIconSettingsUI(
-                                    viewModel = statusBarViewModel,
-                                    modifier = Modifier.padding(top = 16.dp),
-                                    highlightSetting = highlightSetting
-                                )
+                        } else {
+                            when (featureId) {
+                                "Screen off widget" -> {
+                                    ScreenOffWidgetSettingsUI(
+                                        viewModel = viewModel,
+                                        selectedHaptic = selectedHaptic,
+                                        onHapticSelected = { type -> selectedHaptic = type },
+                                        vibrator = vibrator,
+                                        prefs = prefs,
+                                        modifier = Modifier.padding(top = 16.dp),
+                                        highlightSetting = highlightSetting
+                                    )
+                                }
+
+                                "Statusbar icons" -> {
+                                    StatusBarIconSettingsUI(
+                                        viewModel = statusBarViewModel,
+                                        modifier = Modifier.padding(top = 16.dp),
+                                        highlightSetting = highlightSetting
+                                    )
+                                }
+
+                                "Caffeinate" -> {
+                                    CaffeinateSettingsUI(
+                                        viewModel = caffeinateViewModel,
+                                        modifier = Modifier.padding(top = 16.dp),
+                                        highlightSetting = highlightSetting
+                                    )
+                                }
+
+                                "Notification lighting" -> {
+                                    NotificationLightingSettingsUI(
+                                        viewModel = viewModel,
+                                        modifier = Modifier.padding(top = 16.dp),
+                                        highlightSetting = highlightSetting
+                                    )
+                                }
+
+                                "Sound mode tile" -> {
+                                    SoundModeTileSettingsUI(
+                                        modifier = Modifier.padding(top = 16.dp),
+                                        highlightSetting = highlightSetting
+                                    )
+                                }
+
+                                "Button remap" -> {
+                                    ButtonRemapSettingsUI(
+                                        viewModel = viewModel,
+                                        modifier = Modifier.padding(top = 16.dp),
+                                        highlightSetting = highlightSetting
+                                    )
+                                }
+
+                                "Dynamic night light" -> {
+                                    DynamicNightLightSettingsUI(
+                                        viewModel = viewModel,
+                                        modifier = Modifier.padding(top = 16.dp),
+                                        highlightSetting = highlightSetting
+                                    )
+                                }
+
+                                "Snooze system notifications" -> {
+                                    SnoozeNotificationsSettingsUI(
+                                        viewModel = viewModel,
+                                        modifier = Modifier.padding(top = 16.dp),
+                                        highlightSetting = highlightSetting
+                                    )
+                                }
+
+                                "Screen locked security" -> {
+                                    ScreenLockedSecuritySettingsUI(
+                                        viewModel = viewModel,
+                                        modifier = Modifier.padding(top = 16.dp),
+                                        highlightSetting = highlightSetting
+                                    )
+                                }
+
+                                "App lock" -> {
+                                    AppLockSettingsUI(
+                                        viewModel = viewModel,
+                                        highlightKey = highlightSetting
+                                    )
+                                }
+
+                                "Freeze" -> {
+                                    com.sameerasw.essentials.ui.composables.configs.FreezeSettingsUI(
+                                        viewModel = viewModel,
+                                        modifier = Modifier.padding(top = 16.dp),
+                                        highlightKey = highlightSetting
+                                    )
+                                }
+
+                                "Quick settings tiles" -> {
+                                    QuickSettingsTilesSettingsUI(
+                                        modifier = Modifier.padding(top = 16.dp),
+                                        highlightSetting = highlightSetting
+                                    )
+                                }
+
+                                "Location reached" -> {
+                                    LocationReachedSettingsUI(
+                                        mainViewModel = viewModel,
+                                        modifier = Modifier.padding(top = 16.dp),
+                                        highlightSetting = highlightSetting
+                                    )
+                                }
+
+                                "System Keyboard" -> {
+                                    KeyboardSettingsUI(
+                                        viewModel = viewModel,
+                                        modifier = Modifier.padding(top = 16.dp),
+                                        highlightSetting = highlightSetting
+                                    )
+                                }
+
+                                "Batteries" -> {
+                                    BatteriesSettingsUI(
+                                        viewModel = viewModel,
+                                        modifier = Modifier.padding(top = 16.dp)
+                                    )
+                                }
+
+                                "Ambient music glance" -> {
+                                    AmbientMusicGlanceSettingsUI(
+                                        viewModel = viewModel,
+                                        modifier = Modifier.padding(top = 16.dp),
+                                        highlightSetting = highlightSetting
+                                    )
+                                }
+
+                                "Calendar Sync" -> {
+                                    com.sameerasw.essentials.ui.composables.configs.CalendarSyncSettingsUI(
+                                        viewModel = viewModel,
+                                        modifier = Modifier.padding(top = 16.dp),
+                                        highlightKey = highlightSetting
+                                    )
+                                }
+
+                                "Maps power saving mode" -> {
+                                    MapsPowerSavingSettingsUI(
+                                        viewModel = viewModel,
+                                        modifier = Modifier.padding(top = 16.dp),
+                                        highlightSetting = highlightSetting
+                                    )
+                                }
                             }
-                            "Caffeinate" -> {
-                                CaffeinateSettingsUI(
-                                    viewModel = caffeinateViewModel,
-                                    modifier = Modifier.padding(top = 16.dp),
-                                    highlightSetting = highlightSetting
-                                )
-                            }
-                            "Notification lighting" -> {
-                                NotificationLightingSettingsUI(
-                                    viewModel = viewModel,
-                                    modifier = Modifier.padding(top = 16.dp),
-                                    highlightSetting = highlightSetting
-                                )
-                            }
-                            "Sound mode tile" -> {
-                                SoundModeTileSettingsUI(
-                                    modifier = Modifier.padding(top = 16.dp),
-                                    highlightSetting = highlightSetting
-                                )
-                            }
-                            "Button remap" -> {
-                                ButtonRemapSettingsUI(
-                                    viewModel = viewModel,
-                                    modifier = Modifier.padding(top = 16.dp),
-                                    highlightSetting = highlightSetting
-                                )
-                            }
-                            "Dynamic night light" -> {
-                                DynamicNightLightSettingsUI(
-                                    viewModel = viewModel,
-                                    modifier = Modifier.padding(top = 16.dp),
-                                    highlightSetting = highlightSetting
-                                )
-                            }
-                            "Snooze system notifications" -> {
-                                SnoozeNotificationsSettingsUI(
-                                    viewModel = viewModel,
-                                    modifier = Modifier.padding(top = 16.dp),
-                                    highlightSetting = highlightSetting
-                                )
-                            }
-                            "Screen locked security" -> {
-                                ScreenLockedSecuritySettingsUI(
-                                    viewModel = viewModel,
-                                    modifier = Modifier.padding(top = 16.dp),
-                                    highlightSetting = highlightSetting
-                                )
-                            }
-                            "App lock" -> {
-                                AppLockSettingsUI(
-                                    viewModel = viewModel,
-                                    highlightKey = highlightSetting
-                                )
-                            }
-                            "Freeze" -> {
-                                com.sameerasw.essentials.ui.composables.configs.FreezeSettingsUI(
-                                    viewModel = viewModel,
-                                    modifier = Modifier.padding(top = 16.dp),
-                                    highlightKey = highlightSetting
-                                )
-                            }
-                            "Quick settings tiles" -> {
-                                QuickSettingsTilesSettingsUI(
-                                    modifier = Modifier.padding(top = 16.dp),
-                                    highlightSetting = highlightSetting
-                                )
-                            }
-                            "Location reached" -> {
-                                LocationReachedSettingsUI(
-                                    mainViewModel = viewModel,
-                                    modifier = Modifier.padding(top = 16.dp),
-                                    highlightSetting = highlightSetting
-                                )
-                            }
-                            "System Keyboard" -> {
-                                KeyboardSettingsUI(
-                                    viewModel = viewModel,
-                                    modifier = Modifier.padding(top = 16.dp),
-                                    highlightSetting = highlightSetting
-                                )
-                            }
-                            "Batteries" -> {
-                                BatteriesSettingsUI(
-                                    viewModel = viewModel,
-                                    modifier = Modifier.padding(top = 16.dp)
-                                )
-                            }
-                            "Ambient music glance" -> {
-                                AmbientMusicGlanceSettingsUI(
-                                    viewModel = viewModel,
-                                    modifier = Modifier.padding(top = 16.dp),
-                                    highlightSetting = highlightSetting
-                                )
-                            }
-<<<<<<< HEAD
-                            "Calendar Sync" -> {
-                                com.sameerasw.essentials.ui.composables.configs.CalendarSyncSettingsUI(
-                                    viewModel = viewModel,
-                                    modifier = Modifier.padding(top = 16.dp),
-                                    highlightKey = highlightSetting
-=======
-                            "Maps power saving mode" -> {
-                                MapsPowerSavingSettingsUI(
-                                    viewModel = viewModel,
-                                    modifier = Modifier.padding(top = 16.dp),
-                                    highlightSetting = highlightSetting
->>>>>>> 37baec7 (Fix #162 Attempt at maps power saving language independent detection)
-                                )
-                            }
-                            // else -> default UI (optional cleanup)
                         }
                     }
                 }

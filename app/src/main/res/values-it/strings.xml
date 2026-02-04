@@ -869,8 +869,8 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string name="bug_report_email_subject">Essentials Bug Report</string>
     <string name="bug_report_send_via">Send via</string>
     <!-- Location Reached -->
-    <string name="feat_location_reached_title">Location reached</string>
-    <string name="feat_location_reached_desc">Get notified when you arrive at a specific destination.</string>
+    <string name="feat_location_reached_title">Are We There Yet?</string>
+    <string name="feat_location_reached_desc">Prepare for your destination.</string>
     <string name="location_reached_pick_destination">Destination</string>
     <string name="location_reached_set_destination_btn">Set Destination</string>
     <string name="location_reached_status_tracking">Tracking: %1$.4f, %2$.4f</string>

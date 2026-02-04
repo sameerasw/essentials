@@ -70,6 +70,7 @@ class SettingsRepository(private val context: Context) {
         
         const val KEY_SNOOZE_DISCOVERED_CHANNELS = "snooze_discovered_channels"
         const val KEY_SNOOZE_BLOCKED_CHANNELS = "snooze_blocked_channels"
+        const val KEY_SNOOZE_HEADS_UP_ENABLED = "snooze_heads_up_enabled"
         
         const val KEY_FLASHLIGHT_ALWAYS_TURN_OFF_ENABLED = "flashlight_always_turn_off_enabled"
         const val KEY_FLASHLIGHT_FADE_ENABLED = "flashlight_fade_enabled"
