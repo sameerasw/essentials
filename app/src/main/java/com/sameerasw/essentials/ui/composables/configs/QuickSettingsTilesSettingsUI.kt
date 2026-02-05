@@ -137,6 +137,7 @@ fun QuickSettingsTilesSettingsUI(
             category = R.string.cat_system,
             description = 0,
             aboutDescription = selectedHelpTile!!.aboutDescription,
+            permissionKeys = selectedHelpTile!!.permissionKeys,
             showToggle = false
         ) {
             override fun isEnabled(viewModel: MainViewModel) = true

@@ -25,14 +25,25 @@ import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.Feature
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
+
 import com.sameerasw.essentials.utils.ColorUtil
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.sameerasw.essentials.viewmodels.MainViewModel
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
+import com.sameerasw.essentials.utils.PermissionUIHelper
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FeatureHelpBottomSheet(
     onDismissRequest: () -> Unit,
-    feature: Feature
+    feature: Feature,
+    viewModel: MainViewModel = viewModel()
 ) {
+    val context = LocalContext.current
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
@@ -47,7 +58,7 @@ fun FeatureHelpBottomSheet(
             Row(
                 modifier = Modifier.fillMaxWidth().padding(start = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                  Box(
                     modifier = Modifier
@@ -91,6 +102,53 @@ fun FeatureHelpBottomSheet(
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 }
+            }
+
+            // Permissions
+            if (feature.permissionKeys.isNotEmpty()) {
+                val permissions = PermissionUIHelper.getPermissionItems(feature.permissionKeys, context, viewModel)
+                if (permissions.isNotEmpty()) {
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp)
+                    ) {
+                        items(permissions) { permission ->
+                            AssistChip(
+                                onClick = { },
+                                label = {
+                                    val titleText = when (val t = permission.title) {
+                                        is Int -> stringResource(t)
+                                        is String -> t
+                                        else -> ""
+                                    }
+                                    Text(
+                                        text = titleText,
+                                        style = MaterialTheme.typography.labelMedium
+                                    )
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        painter = painterResource(id = permission.iconRes),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                },
+                                colors = AssistChipDefaults.assistChipColors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                                    labelColor = MaterialTheme.colorScheme.onSurface,
+                                    leadingIconContentColor = MaterialTheme.colorScheme.primary
+                                ),
+                                border = AssistChipDefaults.assistChipBorder(true)
+                            )
+                        }
+                    }
+                } else {
+                     Spacer(modifier = Modifier.height(16.dp))
+                }
+            } else {
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }
