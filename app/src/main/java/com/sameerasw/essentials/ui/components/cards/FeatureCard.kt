@@ -47,11 +47,12 @@ fun FeatureCard(
     isToggleEnabled: Boolean = true,
     showToggle: Boolean = true,
     onDisabledToggleClick: (() -> Unit)? = null,
-    description: Any? = null, // Can be Int or String
-    descriptionOverride: String? = null, // For cases where we search and prepend parent feature name
+    description: Any? = null,
+    descriptionOverride: String? = null, 
     isBeta: Boolean = false,
     isPinned: Boolean = false,
-    onPinToggle: (() -> Unit)? = null
+    onPinToggle: (() -> Unit)? = null,
+    onHelpClick: (() -> Unit)? = null
 ) {
     val view = LocalView.current
     var showMenu by remember { mutableStateOf(false) }
@@ -203,6 +204,24 @@ fun FeatureCard(
                         leadingIcon = {
                             Icon(
                                 painter = painterResource(id = if (isPinned) R.drawable.rounded_bookmark_remove_24 else R.drawable.rounded_bookmark_24),
+                                contentDescription = null
+                            )
+                        }
+                    )
+                }
+                
+                if (onHelpClick != null) {
+                    SegmentedDropdownMenuItem(
+                        text = { 
+                            Text(stringResource(R.string.action_what_is_this))
+                        },
+                        onClick = {
+                            showMenu = false
+                            onHelpClick()
+                        },
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.rounded_help_24),
                                 contentDescription = null
                             )
                         }

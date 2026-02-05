@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -204,6 +205,10 @@ class FeatureSettingsActivity : FragmentActivity() {
                     }
                 }
 
+                // Help Sheet State
+                var showHelpSheet by remember { mutableStateOf(false) }
+                var selectedHelpFeature by remember { mutableStateOf<com.sameerasw.essentials.domain.model.Feature?>(null) }
+
                 // Show permission sheet if feature has missing permissions
                 LaunchedEffect(
                     featureId,
@@ -266,6 +271,16 @@ class FeatureSettingsActivity : FragmentActivity() {
                     }
                 }
 
+                if (showHelpSheet && selectedHelpFeature != null) {
+                    com.sameerasw.essentials.ui.components.sheets.FeatureHelpBottomSheet(
+                        onDismissRequest = {
+                            showHelpSheet = false
+                            selectedHelpFeature = null
+                        },
+                        feature = selectedHelpFeature!!
+                    )
+                }
+
                 val scrollBehavior =
                     TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
                 Scaffold(
@@ -285,7 +300,50 @@ class FeatureSettingsActivity : FragmentActivity() {
                             onBackClick = { finish() },
                             scrollBehavior = scrollBehavior,
                             subtitle = if (featureObj != null) stringResource(featureObj.description) else "",
-                            isBeta = featureObj?.isBeta ?: false
+                            isBeta = featureObj?.isBeta ?: false,
+                            actions = {
+                                if (featureObj != null && featureObj.aboutDescription != null) {
+                                    var showMenu by remember { mutableStateOf(false) }
+                                    androidx.compose.material3.IconButton(
+                                        onClick = { 
+                                            HapticUtil.performVirtualKeyHaptic(view)
+                                            showMenu = true 
+                                        },
+                                        colors = androidx.compose.material3.IconButtonDefaults.iconButtonColors(
+                                            containerColor = MaterialTheme.colorScheme.surfaceBright
+                                        ),
+                                        modifier = Modifier.size(48.dp)
+                                    ) {
+                                        androidx.compose.material3.Icon(
+                                            painter = painterResource(id = R.drawable.rounded_more_vert_24), 
+                                            contentDescription = stringResource(R.string.content_desc_more_options),
+                                            modifier = Modifier.size(32.dp)
+                                        )
+                                        
+                                        com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu(
+                                            expanded = showMenu,
+                                            onDismissRequest = { showMenu = false }
+                                        ) {
+                                            com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem(
+                                                text = { 
+                                                    Text(stringResource(R.string.action_what_is_this))
+                                                },
+                                                onClick = {
+                                                    showMenu = false
+                                                    selectedHelpFeature = featureObj
+                                                    showHelpSheet = true
+                                                },
+                                                leadingIcon = {
+                                                    Icon(
+                                                        painter = painterResource(id = R.drawable.rounded_help_24),
+                                                        contentDescription = null
+                                                    )
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
+                            }
                         )
                     },
                     floatingActionButton = {
@@ -387,7 +445,13 @@ class FeatureSettingsActivity : FragmentActivity() {
                                             )
                                         },
                                         isPinned = pinnedFeatureKeys.contains(child.id),
-                                        onPinToggle = { viewModel.togglePinFeature(child.id) }
+                                        onPinToggle = { viewModel.togglePinFeature(child.id) },
+                                        onHelpClick = if (child.aboutDescription != null) {
+                                            {
+                                                selectedHelpFeature = child
+                                                showHelpSheet = true
+                                            }
+                                        } else null
                                     )
                                 }
                             }

@@ -35,7 +35,8 @@ abstract class Feature(
     val parentFeatureId: String? = null,
     val isVisibleInMain: Boolean = true,
     @StringRes val authTitle: Int = 0,
-    @StringRes val authSubtitle: Int = 0
+    @StringRes val authSubtitle: Int = 0,
+    @StringRes val aboutDescription: Int? = null
 ) {
     val requiresAuth: Boolean = category == com.sameerasw.essentials.R.string.cat_protection
 
