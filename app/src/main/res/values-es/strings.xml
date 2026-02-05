@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Essentials</string>
-    <string name="label_beta">BETA</string>
-    <string name="accessibility_service_description"><b>Essentials Accessibility Service</b>\n\nThis service is required for the following advanced features:\n\n<b>• Physical Button Remapping:</b>\nDetects volume button presses even when the screen is off to trigger actions like the Flashlight.\n\n<b>• Per-App Settings:</b>\nMonitors the currently active app to apply specific profiles for Dynamic Night Light, Notification Lighting Colors, and App Lock.\n\n<b>• Screen Control:</b>\nAllows the app to lock the screen (e.g. via Double Tap or Widgets) and detect screen state changes.\n\n<b>• Security:</b>\nPrevents unauthorized changes by detecting window content when the device is locked.\n\n<small>No input text or sensitive user data is collected or transmitted.</small></string>
-    <string name="app_icon">App icon</string>
-    <string name="freeze_activity_title">App Freezing</string>
-    <string name="freeze_activity_subtitle">Disable apps that are rarely used</string>
-    <string name="freeze_shortcut_short_label">App Freezing</string>
-    <string name="freeze_shortcut_long_label">Open App Freezing</string>
-    <string name="frozen_app_shortcut_label">Frozen App</string>
-    <string name="screen_off_widget_label">Empty screen off widget</string>
-    <string name="app_freezing_tile_label">App Freezing</string>
-    <string name="flashlight_pulse_tile_label">Flashlight Pulse</string>
-    <string name="check_pre_releases_label">Check for pre-releases</string>
-    <string name="check_pre_releases_desc">Might be unstable</string>
+    <string name="label_beta">Beta </string>
+    <string name="accessibility_service_description"><b>Servicio de Accesibilidad Esencial</b>\n\nEste servicio es necesario para las siguientes funciones avanzadas:\n\n<b>• Reasignación de Botones Físicos:</b>\nDetecta las pulsaciones de los botones de volumen incluso con la pantalla apagada para activar acciones como la Linterna.\n\n<b>• Ajustes por App:</b>\nSupervisa la app activa para aplicar perfiles específicos de Luz Nocturna Dinámica, Colores de Iluminación de Notificaciones y Bloqueo de Apps.\n\n<b>• Control de Pantalla:</b>\nPermite que la app bloquee la pantalla (p. ej., mediante Doble Toque o Widgets) y detecte cambios de estado.\n\n<b>• Seguridad:</b>\nEvita cambios no autorizados al detectar el contenido de la ventana cuando el dispositivo está bloqueado.\n\n<small>No se recopila ni transmite texto de entrada ni datos confidenciales del usuario.</small></string>
+    <string name="app_icon">Icono de la aplicación</string>
+    <string name="freeze_activity_title">Congelar aplicación</string>
+    <string name="freeze_activity_subtitle">Desactivar aplicaciones que rara vez se utilizan</string>
+    <string name="freeze_shortcut_short_label">Congelar aplicación</string>
+    <string name="freeze_shortcut_long_label">Abrir aplicación congelada</string>
+    <string name="frozen_app_shortcut_label">Aplicación congelada</string>
+    <string name="screen_off_widget_label">Pantalla vacía fuera del widget</string>
+    <string name="app_freezing_tile_label">Congelar aplicación</string>
+    <string name="flashlight_pulse_tile_label">Pulso de linterna</string>
+    <string name="check_pre_releases_label">Consultar pre lanzamientos</string>
+    <string name="check_pre_releases_desc">Podría ser inestable</string>
     <!-- App Lock -->
-    <string name="settings_section_security">Security</string>
-    <string name="app_lock_enable_title">Enable app lock</string>
-    <string name="app_lock_auth_title">App Lock Security</string>
+    <string name="settings_section_security">Seguridad</string>
+    <string name="app_lock_enable_title">Habilitar bloqueo de aplicaciones</string>
+    <string name="app_lock_auth_title"></string>
     <string name="app_lock_enable_auth_subtitle">Authenticate to enable app lock</string>
     <string name="app_lock_disable_auth_subtitle">Authenticate to disable app lock</string>
     <string name="app_lock_select_apps_title">Select locked apps</string>
