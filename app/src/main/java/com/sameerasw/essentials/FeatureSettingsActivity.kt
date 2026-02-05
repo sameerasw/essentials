@@ -163,6 +163,9 @@ class FeatureSettingsActivity : FragmentActivity() {
             val pinnedFeatureKeys by viewModel.pinnedFeatureKeys
 
             EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
+                androidx.compose.runtime.CompositionLocalProvider(
+                    com.sameerasw.essentials.ui.state.LocalMenuStateManager provides remember { com.sameerasw.essentials.ui.state.MenuStateManager() }
+                ) {
                 val view = LocalView.current
                 val prefs = context.getSharedPreferences("essentials_prefs", MODE_PRIVATE)
 
@@ -208,6 +211,7 @@ class FeatureSettingsActivity : FragmentActivity() {
                 // Help Sheet State
                 var showHelpSheet by remember { mutableStateOf(false) }
                 var selectedHelpFeature by remember { mutableStateOf<com.sameerasw.essentials.domain.model.Feature?>(null) }
+
 
                 // Show permission sheet if feature has missing permissions
                 LaunchedEffect(
@@ -611,6 +615,7 @@ class FeatureSettingsActivity : FragmentActivity() {
                             }
                         }
                     }
+                }
                 }
             }
         }

@@ -61,6 +61,11 @@ import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.ui.draw.blur
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.ui.draw.alpha
 
 data class QSTileInfo(
     val titleRes: Int,
@@ -84,6 +89,7 @@ fun QuickSettingsTilesSettingsUI(
     
     var showHelpSheet by remember { mutableStateOf(false) }
     var selectedHelpTile by remember { mutableStateOf<QSTileInfo?>(null) }
+
 
     val tiles = listOf(
         QSTileInfo(R.string.tile_ui_blur, R.drawable.rounded_blur_on_24, UiBlurTileService::class.java, listOf("WRITE_SECURE_SETTINGS"), R.string.about_desc_ui_blur),
@@ -235,10 +241,34 @@ fun QSTileCard(
 ) {
     val view = LocalView.current
     var showMenu by remember { mutableStateOf(false) }
+    
+    val menuState = com.sameerasw.essentials.ui.state.LocalMenuStateManager.current
+    LaunchedEffect(showMenu) {
+        if (showMenu) {
+            menuState.activeId = tile.titleRes
+        } else {
+            if (menuState.activeId == tile.titleRes) {
+                menuState.activeId = null
+            }
+        }
+    }
+    
+    val isBlurred = menuState.activeId != null && menuState.activeId != tile.titleRes
+    val blurRadius by animateDpAsState(
+        targetValue = if (isBlurred) 10.dp else 0.dp,
+        animationSpec = tween(durationMillis = 500),
+        label = "blur"
+    )
+    val alpha by animateFloatAsState(
+        targetValue = if (isBlurred) 0.5f else 1f,
+        animationSpec = tween(durationMillis = 500),
+        label = "alpha"
+    )
 
     Box(
         modifier = modifier
             .fillMaxWidth()
+            .alpha(alpha)
             .clip(RoundedCornerShape(24.dp))
             .background(if (isMissingPermissions) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.primary)
             .combinedClickable(
@@ -248,15 +278,15 @@ fun QSTileCard(
                 },
                 onLongClick = {
                     if (onHelpClick != null) {
-                         com.sameerasw.essentials.utils.HapticUtil.performVirtualKeyHaptic(view)
-                         showMenu = true
+                        com.sameerasw.essentials.utils.HapticUtil.performVirtualKeyHaptic(view)
+                        showMenu = true
                     }
                 }
             )
             .padding(16.dp)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().blur(blurRadius),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
