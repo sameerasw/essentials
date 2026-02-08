@@ -188,7 +188,7 @@
     <string name="tile_active">Aktiv</string>
     <string name="tile_inactive">Inaktiv</string>
     <string name="nfc_tile_label">NFC</string>
-    <string name="tile_private_dns">Private DNS</string>
+    <string name="tile_private_dns">Privates DNS</string>
     <string name="tile_private_dns_desc">Toggle Private DNS mode</string>
     <string name="tile_private_dns_auto">Auto</string>
     <string name="tile_private_dns_off">Off</string>
@@ -256,9 +256,9 @@
     <!-- Status Bar Settings -->
     <string name="stb_clock_seconds">Show Seconds in Clock</string>
     <string name="stb_battery_percentage">Battery Percentage</string>
-    <string name="stb_battery_percentage_always">Always</string>
-    <string name="stb_battery_percentage_charging">Charging</string>
-    <string name="stb_battery_percentage_never">Never</string>
+    <string name="stb_battery_percentage_always">Immer</string>
+    <string name="stb_battery_percentage_charging">Beim Laden</string>
+    <string name="stb_battery_percentage_never">Nie</string>
     <string name="stb_privacy_chip">Camera and Microphone use chips</string>
     <string name="smart_data_title">Intelligente Daten</string>
     <string name="permission_read_phone_state_title">Telefonstatus lesen</string>
@@ -1071,16 +1071,16 @@
     <string name="action_refresh">Refresh</string>
     <string name="action_start">Get Started</string>
     <!-- Added Missing Group Strings -->
-    <string name="feat_sound_modes_title">Sound mode tile</string>
-    <string name="feat_sound_modes_desc">QS tile to toggle sound mode</string>
-    <string name="search_sound_mode_show_slider_title">Show slider</string>
-    <string name="search_sound_mode_show_slider_desc">Show volume slider in tile</string>
+    <string name="feat_sound_modes_title">Tonmodus-Kachel</string>
+    <string name="feat_sound_modes_desc">Kachel in den Schnelleinstellungen zum Umschalten des Tonmodus</string>
+    <string name="search_sound_mode_show_slider_title">Schieberegler anzeigen</string>
+    <string name="search_sound_mode_show_slider_desc">Lautstärkeregler in Kachel anzeigen</string>
     <string name="search_sound_mode_behavior_title">Cycle Behavior</string>
     <string name="search_sound_mode_behavior_desc">Choose modes to cycle through</string>
     <string name="feat_ambient_music_title">Ambient music glance</string>
     <string name="feat_ambient_music_desc">Glance at media on AOD</string>
-    <string name="feat_sound_haptics_title">Sound and Haptics</string>
-    <string name="feat_sound_haptics_desc">Volume and haptic features</string>
+    <string name="feat_sound_haptics_title">Ton und Haptik</string>
+    <string name="feat_sound_haptics_desc">Lautstärke und haptische Funktionen</string>
     <string name="feat_security_privacy_title">Security and Privacy</string>
     <string name="feat_security_privacy_desc">Protect and secure your device</string>
     <string name="feat_notifications_alerts_title">Notifications and Alerts</string>
