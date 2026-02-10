@@ -94,6 +94,7 @@ class MainViewModel : ViewModel() {
     val isBackgroundLocationPermissionGranted = mutableStateOf(false)
     val isFullScreenIntentPermissionGranted = mutableStateOf(false)
     val isBluetoothPermissionGranted = mutableStateOf(false)
+    val isUsageStatsPermissionGranted = mutableStateOf(false)
     
     val isBluetoothDevicesEnabled = mutableStateOf(false)
     val isCallVibrationsEnabled = mutableStateOf(false)
@@ -127,6 +128,7 @@ class MainViewModel : ViewModel() {
     val freezePickedApps = mutableStateOf<List<NotificationApp>>(emptyList())
     val isFreezePickedAppsLoading = mutableStateOf(false)
     val freezeAutoExcludedApps = mutableStateOf<Set<String>>(emptySet())
+    val isFreezeDontFreezeActiveAppsEnabled = mutableStateOf(false)
 
     // Search state
     val searchQuery = mutableStateOf("")
@@ -197,6 +199,7 @@ class MainViewModel : ViewModel() {
             SettingsRepository.KEY_BUTTON_REMAP_ENABLED -> isButtonRemapEnabled.value = settingsRepository.getBoolean(key)
             SettingsRepository.KEY_APP_LOCK_ENABLED -> isAppLockEnabled.value = settingsRepository.getBoolean(key)
             SettingsRepository.KEY_FREEZE_WHEN_LOCKED_ENABLED -> isFreezeWhenLockedEnabled.value = settingsRepository.getBoolean(key)
+            SettingsRepository.KEY_FREEZE_DONT_FREEZE_ACTIVE_APPS -> isFreezeDontFreezeActiveAppsEnabled.value = settingsRepository.getBoolean(key)
             SettingsRepository.KEY_FREEZE_LOCK_DELAY_INDEX -> freezeLockDelayIndex.intValue = settingsRepository.getInt(key, 1)
             SettingsRepository.KEY_FREEZE_AUTO_EXCLUDED_APPS -> {
                 freezeAutoExcludedApps.value = settingsRepository.getFreezeAutoExcludedApps()
@@ -286,6 +289,7 @@ class MainViewModel : ViewModel() {
         isWriteSettingsEnabled.value = PermissionUtils.canWriteSystemSettings(context)
         isNotificationPolicyAccessGranted.value = PermissionUtils.hasNotificationPolicyAccess(context)
         isCalendarPermissionGranted.value = PermissionUtils.hasReadCalendarPermission(context)
+        isUsageStatsPermissionGranted.value = PermissionUtils.hasUsageStatsPermission(context)
         
         isBluetoothPermissionGranted.value = PermissionUtils.hasBluetoothPermission(context)
         
@@ -410,6 +414,7 @@ class MainViewModel : ViewModel() {
         lastUpdateCheckTime = settingsRepository.getLong(SettingsRepository.KEY_LAST_UPDATE_CHECK_TIME)
         isAppLockEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_APP_LOCK_ENABLED)
         isFreezeWhenLockedEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_FREEZE_WHEN_LOCKED_ENABLED)
+        isFreezeDontFreezeActiveAppsEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_FREEZE_DONT_FREEZE_ACTIVE_APPS)
         freezeLockDelayIndex.intValue = settingsRepository.getInt(SettingsRepository.KEY_FREEZE_LOCK_DELAY_INDEX, 1)
         freezeAutoExcludedApps.value = settingsRepository.getFreezeAutoExcludedApps()
         isDeveloperModeEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_DEVELOPER_MODE_ENABLED)
@@ -798,6 +803,11 @@ class MainViewModel : ViewModel() {
     fun setFreezeWhenLockedEnabled(enabled: Boolean, context: Context) {
         isFreezeWhenLockedEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_FREEZE_WHEN_LOCKED_ENABLED, enabled)
+    }
+
+    fun setFreezeDontFreezeActiveAppsEnabled(enabled: Boolean, context: Context) {
+        isFreezeDontFreezeActiveAppsEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_FREEZE_DONT_FREEZE_ACTIVE_APPS, enabled)
     }
 
     fun setFreezeLockDelayIndex(index: Int, context: Context) {

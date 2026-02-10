@@ -105,7 +105,7 @@ fun QuickSettingsTilesSettingsUI(
         QSTileInfo(R.string.tile_app_lock, R.drawable.rounded_shield_lock_24, AppLockTileService::class.java, listOf("ACCESSIBILITY"), R.string.about_desc_app_lock),
         QSTileInfo(R.string.tile_mono_audio, R.drawable.rounded_headphones_24, MonoAudioTileService::class.java, if (ShellUtils.isRootEnabled(context)) listOf("ROOT") else listOf("SHIZUKU"), R.string.about_desc_mono_audio),
         QSTileInfo(R.string.tile_flashlight, R.drawable.rounded_flashlight_on_24, FlashlightTileService::class.java, emptyList(), R.string.about_desc_flashlight_tile),
-        QSTileInfo(R.string.tile_app_freezing, R.drawable.rounded_mode_cool_24, AppFreezingTileService::class.java, if (ShellUtils.isRootEnabled(context)) listOf("ROOT") else listOf("SHIZUKU"), R.string.about_desc_freeze),
+        QSTileInfo(R.string.tile_app_freezing, R.drawable.rounded_app_badging_24, AppFreezingTileService::class.java, if (ShellUtils.isRootEnabled(context)) listOf("ROOT", "USAGE_STATS", "NOTIFICATION_LISTENER") else listOf("SHIZUKU", "USAGE_STATS", "NOTIFICATION_LISTENER"), R.string.about_desc_freeze),
         QSTileInfo(R.string.tile_flashlight_pulse, R.drawable.outline_backlight_high_24, FlashlightPulseTileService::class.java, listOf("NOTIFICATION_LISTENER"), R.string.about_desc_flashlight_pulse),
         QSTileInfo(R.string.tile_stay_awake, R.drawable.rounded_av_timer_24, StayAwakeTileService::class.java, listOf("WRITE_SECURE_SETTINGS"), R.string.about_desc_stay_awake),
         QSTileInfo(R.string.nfc_tile_label, R.drawable.rounded_nfc_24, NfcTileService::class.java, if (ShellUtils.isRootEnabled(context)) listOf("ROOT") else listOf("SHIZUKU"), R.string.about_desc_nfc),

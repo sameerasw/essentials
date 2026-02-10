@@ -553,7 +553,7 @@ object FeatureRegistry {
             category = R.string.cat_tools,
             description = R.string.feat_freeze_desc,
             aboutDescription = R.string.about_desc_freeze,
-            permissionKeys = if (ShellUtils.isRootEnabled(EssentialsApp.context)) listOf("ROOT") else listOf("SHIZUKU"),
+            permissionKeys = if (ShellUtils.isRootEnabled(EssentialsApp.context)) listOf("ROOT", "USAGE_STATS", "NOTIFICATION_LISTENER") else listOf("SHIZUKU", "USAGE_STATS", "NOTIFICATION_LISTENER"),
             searchableSettings = listOf(
                 SearchSetting(R.string.search_freeze_pick_title, R.string.search_freeze_pick_desc, "freeze_selected_apps", R.array.keywords_selection),
                 SearchSetting(R.string.search_freeze_all_title, R.string.search_freeze_all_desc, "freeze_all_manual", R.array.keywords_manual_now),

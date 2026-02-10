@@ -35,6 +35,8 @@ import com.sameerasw.essentials.ui.components.sheets.PermissionItem
 import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.components.cards.AppToggleItem
 import com.sameerasw.essentials.domain.registry.PermissionRegistry
+import com.sameerasw.essentials.utils.PermissionUIHelper
+import com.sameerasw.essentials.utils.PermissionUtils
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -46,6 +48,8 @@ fun FreezeSettingsUI(
     val context = LocalContext.current
     val view = LocalView.current
     var isAppSelectionSheetOpen by remember { mutableStateOf(false) }
+    var showPermissionSheet by remember { mutableStateOf(false) }
+    var permissionsToRequest by remember { mutableStateOf<List<String>>(emptyList()) }
     
     val isShizukuAvailable by viewModel.isShizukuAvailable
     val isShizukuPermissionGranted by viewModel.isShizukuPermissionGranted
@@ -57,7 +61,6 @@ fun FreezeSettingsUI(
     val unfreezeInteractionSource = remember { MutableInteractionSource() }
     val moreInteractionSource = remember { MutableInteractionSource() }
 
-    var showPermissionSheet by remember { mutableStateOf(false) }
     val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
     var initialEnabledPackageNames by remember { mutableStateOf<Set<String>?>(null) }
 
@@ -220,6 +223,7 @@ fun FreezeSettingsUI(
                 isChecked = viewModel.isFreezeWhenLockedEnabled.value,
                 onCheckedChange = { enabled ->
                     if (enabled && !isAccessibilityEnabled) {
+                        permissionsToRequest = listOf("ACCESSIBILITY")
                         showPermissionSheet = true
                     } else {
                         viewModel.setFreezeWhenLockedEnabled(enabled, context)
@@ -227,6 +231,26 @@ fun FreezeSettingsUI(
                 },
                 enabled = true,
                 modifier = Modifier.highlight(highlightKey == "freeze_when_locked_enabled")
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_app_badging_24,
+                title = stringResource(R.string.freeze_dont_freeze_active_apps_title),
+                isChecked = viewModel.isFreezeDontFreezeActiveAppsEnabled.value,
+                onCheckedChange = { enabled ->
+                    val missing = mutableListOf<String>()
+                    if (!PermissionUtils.hasUsageStatsPermission(context)) missing.add("USAGE_STATS")
+                    if (!PermissionUtils.hasNotificationListenerPermission(context)) missing.add("NOTIFICATION_LISTENER")
+
+                    if (enabled && missing.isNotEmpty()) {
+                        permissionsToRequest = missing
+                        showPermissionSheet = true
+                    } else {
+                        viewModel.setFreezeDontFreezeActiveAppsEnabled(enabled, context)
+                    }
+                },
+                enabled = true,
+                modifier = Modifier.highlight(highlightKey == "freeze_dont_freeze_active_apps")
             )
 
             Column(
@@ -346,23 +370,29 @@ fun FreezeSettingsUI(
         }
 
         if (showPermissionSheet) {
-            PermissionsBottomSheet(
-                onDismissRequest = { showPermissionSheet = false },
-                featureTitle = R.string.permission_feature_freeze_locked,
-                permissions = listOf(
-                    PermissionItem(
-                        iconRes = R.drawable.rounded_settings_accessibility_24,
-                        title = R.string.permission_accessibility_title,
-                        description = R.string.permission_accessibility_desc_freeze,
-                        dependentFeatures = listOf(R.string.freeze_when_locked_title),
-                        actionLabel = R.string.action_enable_in_settings,
-                        action = {
-                            context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-                        },
-                        isGranted = isAccessibilityEnabled
+            val missingPermissions = permissionsToRequest.filter { key ->
+                when (key) {
+                    "ACCESSIBILITY" -> !isAccessibilityEnabled
+                    "USAGE_STATS" -> !PermissionUtils.hasUsageStatsPermission(context)
+                    "NOTIFICATION_LISTENER" -> !PermissionUtils.hasNotificationListenerPermission(context)
+                    else -> false
+                }
+            }
+
+            if (missingPermissions.isNotEmpty()) {
+                PermissionsBottomSheet(
+                    onDismissRequest = { showPermissionSheet = false },
+                    featureTitle = R.string.feat_freeze_title,
+                    permissions = PermissionUIHelper.getPermissionItems(
+                        missingPermissions,
+                        context,
+                        viewModel,
+                        context as? android.app.Activity
                     )
                 )
-            )
+            } else {
+                showPermissionSheet = false
+            }
         }
     }
 }

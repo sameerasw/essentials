@@ -60,7 +60,8 @@ object PermissionUIHelper {
             "NOTIFICATION_LISTENER" -> PermissionItem(
                 iconRes = R.drawable.rounded_notifications_unread_24,
                 title = R.string.perm_notif_listener_title,
-                description = R.string.perm_notif_listener_desc_lighting,
+                description = if (PermissionRegistry.getFeatures("NOTIFICATION_LISTENER").contains(R.string.feat_freeze_title))
+                    R.string.perm_notif_listener_desc_freeze else R.string.perm_notif_listener_desc_lighting,
                 dependentFeatures = PermissionRegistry.getFeatures("NOTIFICATION_LISTENER"),
                 actionLabel = R.string.perm_action_grant,
                 action = { viewModel.requestNotificationListenerPermission(context) },
@@ -209,6 +210,16 @@ object PermissionUIHelper {
                     }
                 },
                 isGranted = ActivityCompat.checkSelfPermission(context, android.Manifest.permission.READ_CALENDAR) == android.content.pm.PackageManager.PERMISSION_GRANTED
+            )
+
+            "USAGE_STATS" -> PermissionItem(
+                iconRes = R.drawable.rounded_data_usage_24,
+                title = R.string.perm_usage_stats_title,
+                description = R.string.perm_usage_stats_desc,
+                dependentFeatures = PermissionRegistry.getFeatures("USAGE_STATS"),
+                actionLabel = R.string.perm_action_grant,
+                action = { PermissionUtils.openUsageStatsSettings(context) },
+                isGranted = PermissionUtils.hasUsageStatsPermission(context)
             )
 
             else -> null
