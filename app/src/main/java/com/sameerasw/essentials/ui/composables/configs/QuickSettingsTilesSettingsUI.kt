@@ -84,6 +84,20 @@ fun QuickSettingsTilesSettingsUI(
     val view = LocalView.current
     val viewModel: MainViewModel = viewModel()
 
+    val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
+    val isWriteSecureSettingsEnabled by viewModel.isWriteSecureSettingsEnabled
+    val isNotificationListenerEnabled by viewModel.isNotificationListenerEnabled
+    val isOverlayPermissionGranted by viewModel.isOverlayPermissionGranted
+    val isWriteSettingsEnabled by viewModel.isWriteSettingsEnabled
+    val isNotificationPolicyAccessGranted by viewModel.isNotificationPolicyAccessGranted
+    val isPostNotificationsEnabled by viewModel.isPostNotificationsEnabled
+    val isReadPhoneStateEnabled by viewModel.isReadPhoneStateEnabled
+    val isLocationPermissionGranted by viewModel.isLocationPermissionGranted
+    val isBackgroundLocationPermissionGranted by viewModel.isBackgroundLocationPermissionGranted
+    val isShizukuPermissionGranted by viewModel.isShizukuPermissionGranted
+    val isUsageStatsPermissionGranted by viewModel.isUsageStatsPermissionGranted
+    val isRootPermissionGranted by viewModel.isRootPermissionGranted
+
     var showPermissionSheet by remember { mutableStateOf(false) }
     var selectedTileForPermissions by remember { mutableStateOf<QSTileInfo?>(null) }
     

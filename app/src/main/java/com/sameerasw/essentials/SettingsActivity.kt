@@ -460,6 +460,28 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
                 )
 
                 PermissionCard(
+                    iconRes = R.drawable.rounded_security_24,
+                    title = stringResource(R.string.perm_write_settings_title),
+                    dependentFeatures = PermissionRegistry.getFeatures("WRITE_SETTINGS"),
+                    actionLabel = if (isWriteSettingsEnabled) "Granted" else "Grant Permission",
+                    isGranted = isWriteSettingsEnabled,
+                    onActionClick = {
+                        PermissionUtils.openWriteSettings(context)
+                    },
+                )
+
+                PermissionCard(
+                    iconRes = R.drawable.rounded_volume_up_24,
+                    title = stringResource(R.string.perm_notif_policy_title),
+                    dependentFeatures = PermissionRegistry.getFeatures("NOTIFICATION_POLICY"),
+                    actionLabel = if (isNotificationPolicyAccessGranted) "Granted" else "Grant Permission",
+                    isGranted = isNotificationPolicyAccessGranted,
+                    onActionClick = {
+                        PermissionUtils.openNotificationPolicySettings(context)
+                    },
+                )
+
+                PermissionCard(
                     iconRes = R.drawable.rounded_open_in_browser_24,
                     title = "Default Browser",
                     dependentFeatures = PermissionRegistry.getFeatures("DEFAULT_BROWSER"),

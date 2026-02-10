@@ -35,7 +35,7 @@ object PermissionUIHelper {
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     context.startActivity(intent)
                 },
-                isGranted = PermissionUtils.isAccessibilityServiceEnabled(context)
+                isGranted = viewModel.isAccessibilityEnabled.value
             )
 
             "WRITE_SECURE_SETTINGS" -> PermissionItem(
@@ -54,7 +54,7 @@ object PermissionUIHelper {
                 secondaryAction = {
                     viewModel.check(context)
                 },
-                isGranted = PermissionUtils.canWriteSecureSettings(context)
+                isGranted = viewModel.isWriteSecureSettingsEnabled.value
             )
 
             "NOTIFICATION_LISTENER" -> PermissionItem(
@@ -65,7 +65,7 @@ object PermissionUIHelper {
                 dependentFeatures = PermissionRegistry.getFeatures("NOTIFICATION_LISTENER"),
                 actionLabel = R.string.perm_action_grant,
                 action = { viewModel.requestNotificationListenerPermission(context) },
-                isGranted = PermissionUtils.hasNotificationListenerPermission(context)
+                isGranted = viewModel.isNotificationListenerEnabled.value
             )
 
             "DRAW_OVERLAYS" -> PermissionItem(
@@ -75,7 +75,7 @@ object PermissionUIHelper {
                 dependentFeatures = PermissionRegistry.getFeatures("DRAW_OVERLAYS"),
                 actionLabel = R.string.perm_action_grant,
                 action = { PermissionUtils.openOverlaySettings(context) },
-                isGranted = PermissionUtils.canDrawOverlays(context)
+                isGranted = viewModel.isOverlayPermissionGranted.value
             )
 
             "WRITE_SETTINGS" -> PermissionItem(
@@ -85,7 +85,7 @@ object PermissionUIHelper {
                 dependentFeatures = PermissionRegistry.getFeatures("WRITE_SETTINGS"),
                 actionLabel = R.string.perm_action_grant,
                 action = { PermissionUtils.openWriteSettings(context) },
-                isGranted = PermissionUtils.canWriteSystemSettings(context)
+                isGranted = viewModel.isWriteSettingsEnabled.value
             )
 
             "NOTIFICATION_POLICY" -> PermissionItem(
@@ -95,7 +95,7 @@ object PermissionUIHelper {
                 dependentFeatures = PermissionRegistry.getFeatures("NOTIFICATION_POLICY"),
                 actionLabel = R.string.perm_action_grant,
                 action = { PermissionUtils.openNotificationPolicySettings(context) },
-                isGranted = PermissionUtils.hasNotificationPolicyAccess(context)
+                isGranted = viewModel.isNotificationPolicyAccessGranted.value
             )
 
             "POST_NOTIFICATIONS" -> PermissionItem(
@@ -119,7 +119,7 @@ object PermissionUIHelper {
                         context.startActivity(intent)
                     }
                 },
-                isGranted = PermissionUtils.isPostNotificationsEnabled(context)
+                isGranted = viewModel.isPostNotificationsEnabled.value
             )
 
             "READ_PHONE_STATE" -> PermissionItem(
@@ -137,7 +137,7 @@ object PermissionUIHelper {
                         )
                     }
                 },
-                isGranted = PermissionUtils.hasReadPhoneStatePermission(context)
+                isGranted = viewModel.isReadPhoneStateEnabled.value
             )
 
             "LOCATION" -> PermissionItem(
@@ -149,7 +149,7 @@ object PermissionUIHelper {
                 action = { 
                     (activity as? androidx.activity.ComponentActivity)?.let { viewModel.requestLocationPermission(it) }
                 },
-                isGranted = PermissionUtils.hasLocationPermission(context)
+                isGranted = viewModel.isLocationPermissionGranted.value
             )
 
             "BACKGROUND_LOCATION" -> PermissionItem(
@@ -161,7 +161,7 @@ object PermissionUIHelper {
                 action = { 
                     (activity as? androidx.activity.ComponentActivity)?.let { viewModel.requestBackgroundLocationPermission(it) }
                 },
-                isGranted = PermissionUtils.hasBackgroundLocationPermission(context)
+                isGranted = viewModel.isBackgroundLocationPermissionGranted.value
             )
 
             "DEVICE_ADMIN" -> PermissionItem(
@@ -209,7 +209,7 @@ object PermissionUIHelper {
                         )
                     }
                 },
-                isGranted = ActivityCompat.checkSelfPermission(context, android.Manifest.permission.READ_CALENDAR) == android.content.pm.PackageManager.PERMISSION_GRANTED
+                isGranted = viewModel.isCalendarPermissionGranted.value
             )
 
             "USAGE_STATS" -> PermissionItem(
@@ -219,7 +219,7 @@ object PermissionUIHelper {
                 dependentFeatures = PermissionRegistry.getFeatures("USAGE_STATS"),
                 actionLabel = R.string.perm_action_grant,
                 action = { PermissionUtils.openUsageStatsSettings(context) },
-                isGranted = PermissionUtils.hasUsageStatsPermission(context)
+                isGranted = viewModel.isUsageStatsPermissionGranted.value
             )
 
             else -> null
