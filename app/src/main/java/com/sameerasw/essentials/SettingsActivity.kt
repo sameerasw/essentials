@@ -191,6 +191,7 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
     val isBackgroundLocationPermissionGranted by viewModel.isBackgroundLocationPermissionGranted
     val isDeviceAdminEnabled by viewModel.isDeviceAdminEnabled
     val isCalendarPermissionGranted by viewModel.isCalendarPermissionGranted
+    val isUsageStatsPermissionGranted by viewModel.isUsageStatsPermissionGranted
     val context = LocalContext.current
     val isAppHapticsEnabled = remember { mutableStateOf(HapticUtil.loadAppHapticsEnabled(context)) }
     var isPermissionsExpanded by remember { mutableStateOf(false) }
@@ -495,6 +496,17 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
                     isGranted = isNotificationPolicyAccessGranted,
                     onActionClick = {
                         PermissionUtils.openNotificationPolicySettings(context)
+                    },
+                )
+
+                PermissionCard(
+                    iconRes = R.drawable.rounded_data_usage_24,
+                    title = stringResource(R.string.perm_usage_stats_title),
+                    dependentFeatures = PermissionRegistry.getFeatures("USAGE_STATS"),
+                    actionLabel = if (isUsageStatsPermissionGranted) "Granted" else "Grant Permission",
+                    isGranted = isUsageStatsPermissionGranted,
+                    onActionClick = {
+                        PermissionUtils.openUsageStatsSettings(context)
                     },
                 )
 
