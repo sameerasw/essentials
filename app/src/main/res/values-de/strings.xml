@@ -133,6 +133,11 @@
     <string name="permission_accessibility_title">Barrierefreiheitsdienst</string>
     <string name="permission_accessibility_desc_freeze">Erforderlich, um den Bildschirmstatus für das automatische Einfrieren zu erkennen.</string>
     <string name="action_enable_in_settings">In den Einstellungen aktivieren</string>
+    <string name="freeze_dont_freeze_active_apps_title">Don\'t freeze active apps</string>
+    <string name="freeze_dont_freeze_active_apps_desc">Avoid freezing apps that are in use, streaming media, or have active notifications</string>
+    <string name="perm_usage_stats_title">Usage Stats</string>
+    <string name="perm_usage_stats_desc">Required to detect which apps are currently in the foreground to avoid freezing them</string>
+    <string name="perm_notif_listener_desc_freeze">Required to detect playing media and active notifications to avoid freezing them</string>
     <!-- Notification Lighting -->
     <string name="notification_lighting_screen_off_title">Nur bei ausgeschaltetem Bildschirm anzeigen</string>
     <string name="notification_lighting_skip_silent_title">Stille Benachrichtigungen überspringen</string>
