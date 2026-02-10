@@ -499,6 +499,8 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string name="perm_accessibility_title">Accessibility Service</string>
     <string name="perm_accessibility_desc_common">Required for App Lock, Screen off widget and other features to detect interactions</string>
     <string name="perm_accessibility_desc_lighting">Required to trigger notification lighting on new notifications</string>
+    <string name="perm_default_browser_title">Default Browser</string>
+    <string name="perm_default_browser_desc">Required to handle links efficiently</string>
     <string name="perm_accessibility_desc_remap">Required to intercept hardware button events</string>
     <string name="perm_accessibility_desc_ambient_music_glance">Required to intercept volume key events while the screen is off to trigger the Ambient Glance overlay.</string>
     <string name="perm_accessibility_desc_night_light">Needed to monitor foreground applications.</string>
