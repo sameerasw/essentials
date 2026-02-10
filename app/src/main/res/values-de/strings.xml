@@ -498,6 +498,8 @@
     <string name="perm_accessibility_title">Barrierefreiheitsdienst</string>
     <string name="perm_accessibility_desc_common">Benötigt für App-Sperre, Display-aus-Widget und andere Funktionen zur Erkennung von Interaktionen</string>
     <string name="perm_accessibility_desc_lighting">Benötigt, um das Benachrichtigungslicht bei neuen Benachrichtigungen auszulösen</string>
+    <string name="perm_default_browser_title">Default Browser</string>
+    <string name="perm_default_browser_desc">Required to handle links efficiently</string>
     <string name="perm_accessibility_desc_remap">Benötigt zum Abfangen von Hardware-Tastenereignissen</string>
     <string name="perm_accessibility_desc_ambient_music_glance">Required to intercept volume key events while the screen is off to trigger the Ambient Glance overlay.</string>
     <string name="perm_accessibility_desc_night_light">Benötigt zur Überwachung von Vordergrundanwendungen.</string>
