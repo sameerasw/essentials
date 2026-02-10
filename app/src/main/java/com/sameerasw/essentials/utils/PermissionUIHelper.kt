@@ -222,6 +222,26 @@ object PermissionUIHelper {
                 isGranted = viewModel.isUsageStatsPermissionGranted.value
             )
 
+            "DEFAULT_BROWSER" -> PermissionItem(
+                iconRes = R.drawable.rounded_open_in_browser_24,
+                title = R.string.perm_default_browser_title,
+                description = R.string.perm_default_browser_desc,
+                dependentFeatures = PermissionRegistry.getFeatures("DEFAULT_BROWSER"),
+                actionLabel = R.string.perm_action_grant,
+                action = {
+                    val intent = Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    try {
+                        context.startActivity(intent)
+                    } catch (e: Exception) {
+                        val settingsIntent = Intent(Settings.ACTION_SETTINGS)
+                        settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        context.startActivity(settingsIntent)
+                    }
+                },
+                isGranted = viewModel.isDefaultBrowserSet.value
+            )
+
             else -> null
         }
     }

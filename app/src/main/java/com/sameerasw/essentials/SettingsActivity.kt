@@ -483,7 +483,7 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
 
                 PermissionCard(
                     iconRes = R.drawable.rounded_open_in_browser_24,
-                    title = "Default Browser",
+                    title = stringResource(R.string.perm_default_browser_title),
                     dependentFeatures = PermissionRegistry.getFeatures("DEFAULT_BROWSER"),
                     actionLabel = if (isDefaultBrowserSet) "Granted" else "Set as Default",
                     isGranted = isDefaultBrowserSet,
