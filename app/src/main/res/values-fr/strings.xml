@@ -498,6 +498,8 @@
     <string name="perm_accessibility_title">Service d\'accessibilité</string>
     <string name="perm_accessibility_desc_common">Requis pour le verrouillage d\'applis, le widget de verrouillage et d\'autres fonctionnalités pour détecter les interactions</string>
     <string name="perm_accessibility_desc_lighting">Requis pour déclencher l\'éclairage lors de la réception d\'une nouvelle notification</string>
+    <string name="perm_default_browser_title">Default Browser</string>
+    <string name="perm_default_browser_desc">Required to handle links efficiently</string>
     <string name="perm_accessibility_desc_remap">Requis pour intercepter les appuis sur les boutons physiques</string>
     <string name="perm_accessibility_desc_ambient_music_glance">Requis pour intercepter les appuis sur le bouton volume quand l\'écran est éteint pour déclencher la superposition d\'aperçu ambiant.</string>
     <string name="perm_accessibility_desc_night_light">Requis pour surveiller les applications en avant-plan.</string>
