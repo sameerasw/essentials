@@ -158,6 +158,10 @@ fun SetupFeatures(
     var showSheet by remember { mutableStateOf(false) }
     var currentFeature by remember { mutableStateOf<Int?>(null) }
 
+    // Help Sheet State
+    var showHelpSheet by remember { mutableStateOf(false) }
+    var selectedHelpFeature by remember { mutableStateOf<com.sameerasw.essentials.domain.model.Feature?>(null) }
+
     // Periodic check for Caffeinate status
     LaunchedEffect(Unit) {
         while (true) {
@@ -707,6 +711,16 @@ fun SetupFeatures(
         }
     }
 
+    if (showHelpSheet && selectedHelpFeature != null) {
+        com.sameerasw.essentials.ui.components.sheets.FeatureHelpBottomSheet(
+            onDismissRequest = {
+                showHelpSheet = false
+                selectedHelpFeature = null
+            },
+            feature = selectedHelpFeature!!
+        )
+    }
+
     val scrollState = rememberScrollState()
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
@@ -874,7 +888,16 @@ fun SetupFeatures(
                             isPinned = pinnedFeatureKeys.contains(result.featureKey),
                             onPinToggle = {
                                 viewModel.togglePinFeature(result.featureKey)
-                            }
+                            },
+                             onHelpClick = if (allFeatures.find { it.id == result.featureKey }?.aboutDescription != null) {
+                                {
+                                    val feature = allFeatures.find { it.id == result.featureKey }
+                                    if (feature != null) {
+                                        selectedHelpFeature = feature
+                                        showHelpSheet = true
+                                    }
+                                }
+                            } else null
                         )
                     }
                 }
@@ -925,7 +948,12 @@ fun SetupFeatures(
                             onPinToggle = {
                                 viewModel.togglePinFeature(feature.id)
                             },
-
+                            onHelpClick = if (feature.aboutDescription != null) {
+                                {
+                                    selectedHelpFeature = feature
+                                    showHelpSheet = true
+                                }
+                            } else null
                         )
                     }
                 }

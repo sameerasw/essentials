@@ -190,6 +190,9 @@ class MainActivity : FragmentActivity() {
         setContent {
             val isPitchBlackThemeEnabled by viewModel.isPitchBlackThemeEnabled
             EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
+                androidx.compose.runtime.CompositionLocalProvider(
+                    com.sameerasw.essentials.ui.state.LocalMenuStateManager provides remember { com.sameerasw.essentials.ui.state.MenuStateManager() }
+                ) {
                 val context = LocalContext.current
                 val view = LocalView.current
                 val versionName = try {
@@ -635,6 +638,7 @@ class MainActivity : FragmentActivity() {
                 // Mark app as ready after composing (happens very quickly)
                 LaunchedEffect(Unit) {
                     isAppReady = true
+                }
                 }
             }
         }

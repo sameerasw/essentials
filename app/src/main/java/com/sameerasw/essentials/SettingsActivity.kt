@@ -191,6 +191,7 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
     val isBackgroundLocationPermissionGranted by viewModel.isBackgroundLocationPermissionGranted
     val isDeviceAdminEnabled by viewModel.isDeviceAdminEnabled
     val isCalendarPermissionGranted by viewModel.isCalendarPermissionGranted
+    val isUsageStatsPermissionGranted by viewModel.isUsageStatsPermissionGranted
     val context = LocalContext.current
     val isAppHapticsEnabled = remember { mutableStateOf(HapticUtil.loadAppHapticsEnabled(context)) }
     var isPermissionsExpanded by remember { mutableStateOf(false) }
@@ -459,8 +460,30 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
                 )
 
                 PermissionCard(
+                    iconRes = R.drawable.rounded_security_24,
+                    title = stringResource(R.string.perm_write_settings_title),
+                    dependentFeatures = PermissionRegistry.getFeatures("WRITE_SETTINGS"),
+                    actionLabel = if (isWriteSettingsEnabled) "Granted" else "Grant Permission",
+                    isGranted = isWriteSettingsEnabled,
+                    onActionClick = {
+                        PermissionUtils.openWriteSettings(context)
+                    },
+                )
+
+                PermissionCard(
+                    iconRes = R.drawable.rounded_volume_up_24,
+                    title = stringResource(R.string.perm_notif_policy_title),
+                    dependentFeatures = PermissionRegistry.getFeatures("NOTIFICATION_POLICY"),
+                    actionLabel = if (isNotificationPolicyAccessGranted) "Granted" else "Grant Permission",
+                    isGranted = isNotificationPolicyAccessGranted,
+                    onActionClick = {
+                        PermissionUtils.openNotificationPolicySettings(context)
+                    },
+                )
+
+                PermissionCard(
                     iconRes = R.drawable.rounded_open_in_browser_24,
-                    title = "Default Browser",
+                    title = stringResource(R.string.perm_default_browser_title),
                     dependentFeatures = PermissionRegistry.getFeatures("DEFAULT_BROWSER"),
                     actionLabel = if (isDefaultBrowserSet) "Granted" else "Set as Default",
                     isGranted = isDefaultBrowserSet,
@@ -495,6 +518,17 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
                     isGranted = isNotificationPolicyAccessGranted,
                     onActionClick = {
                         PermissionUtils.openNotificationPolicySettings(context)
+                    },
+                )
+
+                PermissionCard(
+                    iconRes = R.drawable.rounded_data_usage_24,
+                    title = stringResource(R.string.perm_usage_stats_title),
+                    dependentFeatures = PermissionRegistry.getFeatures("USAGE_STATS"),
+                    actionLabel = if (isUsageStatsPermissionGranted) "Granted" else "Grant Permission",
+                    isGranted = isUsageStatsPermissionGranted,
+                    onActionClick = {
+                        PermissionUtils.openUsageStatsSettings(context)
                     },
                 )
 

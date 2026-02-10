@@ -19,6 +19,7 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_volume_up_24,
             category = R.string.cat_system,
             description = R.string.feat_sound_modes_desc,
+            aboutDescription = R.string.about_desc_sound_mode_tile,
             permissionKeys = listOf("NOTIFICATION_POLICY"),
             searchableSettings = listOf(
                 SearchSetting(
@@ -45,6 +46,7 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_music_note_24,
             category = R.string.cat_interface,
             description = R.string.feat_ambient_music_desc,
+            aboutDescription = R.string.about_desc_ambient_music_glance,
             permissionKeys = listOf("ACCESSIBILITY", "NOTIFICATION_LISTENER"),
             showToggle = true,
             isBeta = true,
@@ -62,6 +64,7 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_mobile_vibrate_24,
             category = R.string.cat_system,
             description = R.string.feat_call_vibrations_desc,
+            aboutDescription = R.string.about_desc_call_vibrations,
             permissionKeys = listOf("READ_PHONE_STATE", "NOTIFICATION_LISTENER"),
             hasMoreSettings = false,
             parentFeatureId = "Sound"
@@ -156,6 +159,7 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_widgets_24,
             category = R.string.cat_interface,
             description = R.string.feat_screen_off_widget_desc,
+            aboutDescription = R.string.about_desc_screen_off_widget,
             permissionKeys = listOf("ACCESSIBILITY"),
             searchableSettings = listOf(
                 SearchSetting(
@@ -179,6 +183,7 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_signal_cellular_alt_24, // Use requested icon
             category = R.string.cat_system,
             description = R.string.feat_statusbar_icons_desc,
+            aboutDescription = R.string.about_desc_statusbar_icons,
             permissionKeys = listOf("WRITE_SECURE_SETTINGS", "WRITE_SETTINGS"),
             searchableSettings = listOf(
                 SearchSetting(R.string.search_smart_wifi_title, R.string.search_smart_wifi_desc, "smart_wifi", R.array.keywords_network_visibility),
@@ -202,6 +207,7 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_coffee_24,
             category = R.string.cat_tools,
             description = R.string.feat_caffeinate_desc,
+            aboutDescription = R.string.about_desc_caffeinate,
             permissionKeys = listOf("POST_NOTIFICATIONS"),
             searchableSettings = listOf(
                 SearchSetting(
@@ -225,6 +231,7 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_navigation_24,
             category = R.string.cat_tools,
             description = R.string.feat_maps_power_saving_desc,
+            aboutDescription = R.string.about_desc_maps_power_saving,
             permissionKeys = if (ShellUtils.isRootEnabled(EssentialsApp.context)) listOf("ROOT", "NOTIFICATION_LISTENER") else listOf("SHIZUKU", "NOTIFICATION_LISTENER"),
             hasMoreSettings = false
         ) {
@@ -242,6 +249,7 @@ object FeatureRegistry {
             category = R.string.cat_interface,
             description = R.string.feat_notification_lighting_desc,
             permissionKeys = listOf("DRAW_OVERLAYS", "ACCESSIBILITY", "NOTIFICATION_LISTENER"),
+            aboutDescription = R.string.about_desc_notification_lighting,
             searchableSettings = listOf(
                 SearchSetting(R.string.search_lighting_style_title, R.string.search_lighting_style_desc, "style", R.array.keywords_visual_style),
                 SearchSetting(R.string.search_corner_radius_title, R.string.search_corner_radius_desc, "corner_radius", R.array.keywords_round_shape),
@@ -262,6 +270,7 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_flashlight_on_24,
             category = R.string.cat_system,
             description = R.string.feat_flashlight_pulse_desc,
+            aboutDescription = R.string.about_desc_flashlight_pulse,
             permissionKeys = listOf("NOTIFICATION_LISTENER"),
             searchableSettings = listOf(
                 SearchSetting(R.string.search_flashlight_pulse_title, R.string.search_flashlight_pulse_desc, "flashlight_pulse", R.array.keywords_flashlight_pulse),
@@ -298,6 +307,7 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_snooze_24,
             category = R.string.cat_interface,
             description = R.string.feat_snooze_notifications_desc,
+            aboutDescription = R.string.about_desc_snooze_notifications,
             permissionKeys = listOf("NOTIFICATION_LISTENER"),
             showToggle = true,
             searchableSettings = emptyList(),
@@ -317,6 +327,7 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_tile_small_24,
             category = R.string.cat_system,
             description = R.string.feat_qs_tiles_desc,
+            aboutDescription = R.string.about_desc_quick_settings_tiles,
             permissionKeys = listOf("WRITE_SETTINGS"),
             showToggle = false,
             searchableSettings = listOf(
@@ -451,6 +462,7 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_switch_access_3_24,
             category = R.string.cat_interaction,
             description = R.string.feat_button_remap_desc,
+            aboutDescription = R.string.about_desc_button_remap,
             permissionKeys = if (ShellUtils.isRootEnabled(EssentialsApp.context)) listOf("ACCESSIBILITY", "ROOT") else listOf("ACCESSIBILITY", "SHIZUKU"),
             showToggle = true,
             searchableSettings = listOf(
@@ -471,6 +483,7 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_nightlight_24,
             category = R.string.cat_display,
             description = R.string.feat_dynamic_night_light_desc,
+            aboutDescription = R.string.about_desc_dynamic_night_light,
             permissionKeys = listOf("ACCESSIBILITY", "WRITE_SECURE_SETTINGS"),
             searchableSettings = listOf(
                 SearchSetting(R.string.search_night_light_enable_title, R.string.search_night_light_enable_desc, "dynamic_night_light_toggle", R.array.keywords_switch_master)
@@ -490,6 +503,7 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_security_24,
             category = R.string.cat_protection,
             description = R.string.feat_screen_locked_security_desc,
+            aboutDescription = R.string.about_desc_screen_locked_security,
             permissionKeys = listOf("ACCESSIBILITY", "WRITE_SECURE_SETTINGS", "DEVICE_ADMIN"),
             parentFeatureId = "Security"
         ) {
@@ -505,6 +519,7 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_apps_24,
             category = R.string.cat_protection,
             description = R.string.feat_app_lock_desc,
+            aboutDescription = R.string.about_desc_app_lock,
             permissionKeys = listOf("ACCESSIBILITY"),
             searchableSettings = listOf(
                 SearchSetting(R.string.search_app_lock_enable_title, R.string.search_app_lock_enable_desc, "app_lock_enabled", R.array.keywords_privacy),
@@ -523,6 +538,7 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_navigation_24,
             category = R.string.cat_tools,
             description = R.string.feat_location_reached_desc,
+            aboutDescription = R.string.about_desc_location_reached,
             permissionKeys = listOf("LOCATION", "BACKGROUND_LOCATION", "USE_FULL_SCREEN_INTENT"),
             showToggle = false
         ) {
@@ -536,7 +552,8 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_mode_cool_24,
             category = R.string.cat_tools,
             description = R.string.feat_freeze_desc,
-            permissionKeys = if (ShellUtils.isRootEnabled(EssentialsApp.context)) listOf("ROOT") else listOf("SHIZUKU"),
+            aboutDescription = R.string.about_desc_freeze,
+            permissionKeys = if (ShellUtils.isRootEnabled(EssentialsApp.context)) listOf("ROOT", "USAGE_STATS", "NOTIFICATION_LISTENER") else listOf("SHIZUKU", "USAGE_STATS", "NOTIFICATION_LISTENER"),
             searchableSettings = listOf(
                 SearchSetting(R.string.search_freeze_pick_title, R.string.search_freeze_pick_desc, "freeze_selected_apps", R.array.keywords_selection),
                 SearchSetting(R.string.search_freeze_all_title, R.string.search_freeze_all_desc, "freeze_all_manual", R.array.keywords_manual_now),
@@ -558,6 +575,7 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_keyboard_24,
             category = R.string.cat_system,
             description = R.string.feat_system_keyboard_desc,
+            aboutDescription = R.string.about_desc_system_keyboard,
             hasMoreSettings = true,
             showToggle = false,
             searchableSettings = listOf(
@@ -578,6 +596,7 @@ object FeatureRegistry {
             // "Batteries"
             category = R.string.cat_tools,
             description = R.string.feat_batteries_desc,
+            aboutDescription = R.string.about_desc_batteries,
             permissionKeys = listOf("BLUETOOTH_CONNECT", "BLUETOOTH_SCAN"),
             showToggle = false,
             hasMoreSettings = true,
@@ -594,6 +613,7 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_draw_24,
             category = R.string.cat_tools,
             description = R.string.feat_watermark_desc,
+            aboutDescription = R.string.about_desc_watermark,
             showToggle = false
         ) {
             override fun isEnabled(viewModel: MainViewModel) = true
@@ -609,6 +629,7 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_sync_24, // Use sync icon
             category = R.string.cat_tools,
             description = R.string.feat_calendar_sync_desc,
+            aboutDescription = R.string.about_desc_calendar_sync,
             permissionKeys = listOf("READ_CALENDAR"),
             parentFeatureId = "Watch"
         ) {
@@ -641,6 +662,7 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_downloading_24,
             category = R.string.cat_tools,
             description = R.string.feat_app_updates_desc,
+            aboutDescription = R.string.about_desc_app_updates,
             showToggle = false,
             isVisibleInMain = false
         ) {
@@ -728,6 +750,21 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_adb_24,
             category = R.string.cat_system,
             description = R.string.feat_qs_tiles_desc,
+            permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
+            showToggle = false,
+            isVisibleInMain = false
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = false
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+        },
+
+        object : Feature(
+            id = "Developer Options tile",
+            title = R.string.tile_developer_options,
+            iconRes = R.drawable.rounded_mobile_code_24,
+            category = R.string.cat_system,
+            description = R.string.feat_qs_tiles_desc,
+            aboutDescription = R.string.about_desc_developer_options,
             permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
             showToggle = false,
             isVisibleInMain = false

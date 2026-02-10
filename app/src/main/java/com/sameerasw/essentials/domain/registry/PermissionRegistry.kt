@@ -28,11 +28,14 @@ fun initPermissionRegistry() {
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_sound_mode_tile_title)
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_dynamic_night_light_title)
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_screen_locked_security_title)
+    PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.tile_developer_options)
 
 
     // Shizuku permission
     PermissionRegistry.register("SHIZUKU", R.string.feat_freeze_title)
     PermissionRegistry.register("SHIZUKU", R.string.feat_maps_power_saving_title)
+    PermissionRegistry.register("USAGE_STATS", R.string.feat_freeze_title)
+    PermissionRegistry.register("NOTIFICATION_LISTENER", R.string.feat_freeze_title)
     
     // Root permission
     PermissionRegistry.register("ROOT", R.string.feat_maps_power_saving_title)
@@ -78,4 +81,7 @@ fun initPermissionRegistry() {
 
     // Notification policy permission
     PermissionRegistry.register("NOTIFICATION_POLICY", R.string.feat_sound_modes_title)
+
+    // Default browser permission
+    PermissionRegistry.register("DEFAULT_BROWSER", R.string.feat_link_actions_title)
 }

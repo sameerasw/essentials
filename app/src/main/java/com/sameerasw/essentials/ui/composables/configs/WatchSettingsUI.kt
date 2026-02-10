@@ -36,7 +36,7 @@ fun WatchSettingsUI(
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
     ) {
-        if (isWatchDetected) {
+        if (!isWatchDetected) {
             RoundedCardContainer(
                 modifier = Modifier
                     .padding(bottom = 18.dp)

@@ -1,5 +1,11 @@
 package com.sameerasw.essentials.ui.components.cards
 
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.draw.blur
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.ui.draw.alpha
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -47,32 +53,59 @@ fun FeatureCard(
     isToggleEnabled: Boolean = true,
     showToggle: Boolean = true,
     onDisabledToggleClick: (() -> Unit)? = null,
-    description: Any? = null, // Can be Int or String
-    descriptionOverride: String? = null, // For cases where we search and prepend parent feature name
+    description: Any? = null,
+    descriptionOverride: String? = null, 
     isBeta: Boolean = false,
     isPinned: Boolean = false,
-    onPinToggle: (() -> Unit)? = null
+    onPinToggle: (() -> Unit)? = null,
+    onHelpClick: (() -> Unit)? = null
 ) {
     val view = LocalView.current
     var showMenu by remember { mutableStateOf(false) }
+    
+    val menuState = com.sameerasw.essentials.ui.state.LocalMenuStateManager.current
+    LaunchedEffect(showMenu) {
+        if (showMenu) {
+            menuState.activeId = title
+        } else {
+            if (menuState.activeId == title) {
+                menuState.activeId = null
+            }
+        }
+    }
+    
+    val isBlurred = menuState.activeId != null && menuState.activeId != title
+    val blurRadius by animateDpAsState(
+        targetValue = if (isBlurred) 10.dp else 0.dp, 
+        animationSpec = tween(durationMillis = 500),
+        label = "blur"
+    )
+    val alpha by animateFloatAsState(
+        targetValue = if (isBlurred) 0.5f else 1f, 
+        animationSpec = tween(durationMillis = 500),
+        label = "alpha"
+    )
 
     Card(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceBright
         ),
         shape = MaterialTheme.shapes.extraSmall,
-        modifier = modifier.combinedClickable(
-            onClick = {
-                HapticUtil.performVirtualKeyHaptic(view)
-                onClick()
-            },
-            onLongClick = {
-                HapticUtil.performVirtualKeyHaptic(view)
-                showMenu = true
-            }
-        )) {
+        modifier = modifier
+            .alpha(alpha)
+            .combinedClickable(
+                onClick = {
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    onClick()
+                },
+                onLongClick = {
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    showMenu = true
+                }
+            )) {
         Box(modifier = Modifier
             .fillMaxWidth()
+            .blur(blurRadius)
             .padding(16.dp)) {
 
             val resolvedTitle = when (title) {
@@ -203,6 +236,24 @@ fun FeatureCard(
                         leadingIcon = {
                             Icon(
                                 painter = painterResource(id = if (isPinned) R.drawable.rounded_bookmark_remove_24 else R.drawable.rounded_bookmark_24),
+                                contentDescription = null
+                            )
+                        }
+                    )
+                }
+                
+                if (onHelpClick != null) {
+                    SegmentedDropdownMenuItem(
+                        text = { 
+                            Text(stringResource(R.string.action_what_is_this))
+                        },
+                        onClick = {
+                            showMenu = false
+                            onHelpClick()
+                        },
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.rounded_help_24),
                                 contentDescription = null
                             )
                         }

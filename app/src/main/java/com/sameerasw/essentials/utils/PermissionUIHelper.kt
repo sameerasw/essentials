@@ -35,7 +35,7 @@ object PermissionUIHelper {
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     context.startActivity(intent)
                 },
-                isGranted = PermissionUtils.isAccessibilityServiceEnabled(context)
+                isGranted = viewModel.isAccessibilityEnabled.value
             )
 
             "WRITE_SECURE_SETTINGS" -> PermissionItem(
@@ -54,17 +54,18 @@ object PermissionUIHelper {
                 secondaryAction = {
                     viewModel.check(context)
                 },
-                isGranted = PermissionUtils.canWriteSecureSettings(context)
+                isGranted = viewModel.isWriteSecureSettingsEnabled.value
             )
 
             "NOTIFICATION_LISTENER" -> PermissionItem(
                 iconRes = R.drawable.rounded_notifications_unread_24,
                 title = R.string.perm_notif_listener_title,
-                description = R.string.perm_notif_listener_desc_lighting,
+                description = if (PermissionRegistry.getFeatures("NOTIFICATION_LISTENER").contains(R.string.feat_freeze_title))
+                    R.string.perm_notif_listener_desc_freeze else R.string.perm_notif_listener_desc_lighting,
                 dependentFeatures = PermissionRegistry.getFeatures("NOTIFICATION_LISTENER"),
                 actionLabel = R.string.perm_action_grant,
                 action = { viewModel.requestNotificationListenerPermission(context) },
-                isGranted = PermissionUtils.hasNotificationListenerPermission(context)
+                isGranted = viewModel.isNotificationListenerEnabled.value
             )
 
             "DRAW_OVERLAYS" -> PermissionItem(
@@ -74,7 +75,7 @@ object PermissionUIHelper {
                 dependentFeatures = PermissionRegistry.getFeatures("DRAW_OVERLAYS"),
                 actionLabel = R.string.perm_action_grant,
                 action = { PermissionUtils.openOverlaySettings(context) },
-                isGranted = PermissionUtils.canDrawOverlays(context)
+                isGranted = viewModel.isOverlayPermissionGranted.value
             )
 
             "WRITE_SETTINGS" -> PermissionItem(
@@ -84,7 +85,7 @@ object PermissionUIHelper {
                 dependentFeatures = PermissionRegistry.getFeatures("WRITE_SETTINGS"),
                 actionLabel = R.string.perm_action_grant,
                 action = { PermissionUtils.openWriteSettings(context) },
-                isGranted = PermissionUtils.canWriteSystemSettings(context)
+                isGranted = viewModel.isWriteSettingsEnabled.value
             )
 
             "NOTIFICATION_POLICY" -> PermissionItem(
@@ -94,7 +95,7 @@ object PermissionUIHelper {
                 dependentFeatures = PermissionRegistry.getFeatures("NOTIFICATION_POLICY"),
                 actionLabel = R.string.perm_action_grant,
                 action = { PermissionUtils.openNotificationPolicySettings(context) },
-                isGranted = PermissionUtils.hasNotificationPolicyAccess(context)
+                isGranted = viewModel.isNotificationPolicyAccessGranted.value
             )
 
             "POST_NOTIFICATIONS" -> PermissionItem(
@@ -118,7 +119,7 @@ object PermissionUIHelper {
                         context.startActivity(intent)
                     }
                 },
-                isGranted = PermissionUtils.isPostNotificationsEnabled(context)
+                isGranted = viewModel.isPostNotificationsEnabled.value
             )
 
             "READ_PHONE_STATE" -> PermissionItem(
@@ -136,7 +137,7 @@ object PermissionUIHelper {
                         )
                     }
                 },
-                isGranted = PermissionUtils.hasReadPhoneStatePermission(context)
+                isGranted = viewModel.isReadPhoneStateEnabled.value
             )
 
             "LOCATION" -> PermissionItem(
@@ -148,7 +149,7 @@ object PermissionUIHelper {
                 action = { 
                     (activity as? androidx.activity.ComponentActivity)?.let { viewModel.requestLocationPermission(it) }
                 },
-                isGranted = PermissionUtils.hasLocationPermission(context)
+                isGranted = viewModel.isLocationPermissionGranted.value
             )
 
             "BACKGROUND_LOCATION" -> PermissionItem(
@@ -160,7 +161,7 @@ object PermissionUIHelper {
                 action = { 
                     (activity as? androidx.activity.ComponentActivity)?.let { viewModel.requestBackgroundLocationPermission(it) }
                 },
-                isGranted = PermissionUtils.hasBackgroundLocationPermission(context)
+                isGranted = viewModel.isBackgroundLocationPermissionGranted.value
             )
 
             "DEVICE_ADMIN" -> PermissionItem(
@@ -208,7 +209,37 @@ object PermissionUIHelper {
                         )
                     }
                 },
-                isGranted = ActivityCompat.checkSelfPermission(context, android.Manifest.permission.READ_CALENDAR) == android.content.pm.PackageManager.PERMISSION_GRANTED
+                isGranted = viewModel.isCalendarPermissionGranted.value
+            )
+
+            "USAGE_STATS" -> PermissionItem(
+                iconRes = R.drawable.rounded_data_usage_24,
+                title = R.string.perm_usage_stats_title,
+                description = R.string.perm_usage_stats_desc,
+                dependentFeatures = PermissionRegistry.getFeatures("USAGE_STATS"),
+                actionLabel = R.string.perm_action_grant,
+                action = { PermissionUtils.openUsageStatsSettings(context) },
+                isGranted = viewModel.isUsageStatsPermissionGranted.value
+            )
+
+            "DEFAULT_BROWSER" -> PermissionItem(
+                iconRes = R.drawable.rounded_open_in_browser_24,
+                title = R.string.perm_default_browser_title,
+                description = R.string.perm_default_browser_desc,
+                dependentFeatures = PermissionRegistry.getFeatures("DEFAULT_BROWSER"),
+                actionLabel = R.string.perm_action_grant,
+                action = {
+                    val intent = Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    try {
+                        context.startActivity(intent)
+                    } catch (e: Exception) {
+                        val settingsIntent = Intent(Settings.ACTION_SETTINGS)
+                        settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        context.startActivity(settingsIntent)
+                    }
+                },
+                isGranted = viewModel.isDefaultBrowserSet.value
             )
 
             else -> null
