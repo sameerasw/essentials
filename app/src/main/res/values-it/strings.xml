@@ -134,6 +134,11 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string name="permission_accessibility_title">Accessibility Service</string>
     <string name="permission_accessibility_desc_freeze">Required to detect screen state for automatic freezing.</string>
     <string name="action_enable_in_settings">Enable in Settings</string>
+    <string name="freeze_dont_freeze_active_apps_title">Don\'t freeze active apps</string>
+    <string name="freeze_dont_freeze_active_apps_desc">Avoid freezing apps that are in use, streaming media, or have active notifications</string>
+    <string name="perm_usage_stats_title">Usage Stats</string>
+    <string name="perm_usage_stats_desc">Required to detect which apps are currently in the foreground to avoid freezing them</string>
+    <string name="perm_notif_listener_desc_freeze">Required to detect playing media and active notifications to avoid freezing them</string>
     <!-- Notification Lighting -->
     <string name="notification_lighting_screen_off_title">Only show when screen off</string>
     <string name="notification_lighting_skip_silent_title">Skip silent notifications</string>
