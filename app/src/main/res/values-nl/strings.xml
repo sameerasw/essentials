@@ -498,6 +498,8 @@
     <string name="perm_accessibility_title">Toegankelijkheidsservice</string>
     <string name="perm_accessibility_desc_common">Vereist voor Appvergrendeling, Schermuitzetwidget en andere functies om interacties te detecteren</string>
     <string name="perm_accessibility_desc_lighting">Vereist om meldingsverlichting te starten bij nieuwe meldingen</string>
+    <string name="perm_default_browser_title">Default Browser</string>
+    <string name="perm_default_browser_desc">Required to handle links efficiently</string>
     <string name="perm_accessibility_desc_remap">Vereist om indrukken van knoppen te onderscheppen</string>
     <string name="perm_accessibility_desc_ambient_music_glance">Vereist om indrukken van de volumetoets te onderscheppen wanneer het scherm uit is om de \"Muziek in één blik\"-overlay te tonen.</string>
     <string name="perm_accessibility_desc_night_light">Vereist om voorgrondapplicaties in de gaten te houden.</string>
