@@ -133,6 +133,11 @@
     <string name="permission_accessibility_title">アクセシビリティサービス</string>
     <string name="permission_accessibility_desc_freeze">自動フリーズのために画面の状態を検出するのに必要です。</string>
     <string name="action_enable_in_settings">設定で有効にする</string>
+    <string name="freeze_dont_freeze_active_apps_title">Don\'t freeze active apps</string>
+    <string name="freeze_dont_freeze_active_apps_desc">Avoid freezing apps that are in use, streaming media, or have active notifications</string>
+    <string name="perm_usage_stats_title">Usage Stats</string>
+    <string name="perm_usage_stats_desc">Required to detect which apps are currently in the foreground to avoid freezing them</string>
+    <string name="perm_notif_listener_desc_freeze">Required to detect playing media and active notifications to avoid freezing them</string>
     <!-- Notification Lighting -->
     <string name="notification_lighting_screen_off_title">画面がオフのときにのみ表示</string>
     <string name="notification_lighting_skip_silent_title">マナーモードを無視</string>
