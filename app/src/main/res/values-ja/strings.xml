@@ -498,6 +498,8 @@
     <string name="perm_accessibility_title">アクセシビリティサービス</string>
     <string name="perm_accessibility_desc_common">アプリロック、画面オフウィジェット、その他の機能でインタラクションを検知するために必要</string>
     <string name="perm_accessibility_desc_lighting">新しい通知を検知して通知ライトを動作させるために必要</string>
+    <string name="perm_default_browser_title">Default Browser</string>
+    <string name="perm_default_browser_desc">Required to handle links efficiently</string>
     <string name="perm_accessibility_desc_remap">ハードウェアボタンイベントをインターセプトするために必要</string>
     <string name="perm_accessibility_desc_ambient_music_glance">Required to intercept volume key events while the screen is off to trigger the Ambient Glance overlay.</string>
     <string name="perm_accessibility_desc_night_light">フォグラウンドアプリを検知するために必要です。</string>
