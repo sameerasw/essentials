@@ -756,6 +756,21 @@ object FeatureRegistry {
         ) {
             override fun isEnabled(viewModel: MainViewModel) = false
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+        },
+
+        object : Feature(
+            id = "Developer Options tile",
+            title = R.string.tile_developer_options,
+            iconRes = R.drawable.rounded_mobile_code_24,
+            category = R.string.cat_system,
+            description = R.string.feat_qs_tiles_desc,
+            aboutDescription = R.string.about_desc_developer_options,
+            permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
+            showToggle = false,
+            isVisibleInMain = false
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = false
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
         }
     )
 }

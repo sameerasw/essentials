@@ -28,6 +28,7 @@ fun initPermissionRegistry() {
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_sound_mode_tile_title)
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_dynamic_night_light_title)
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_screen_locked_security_title)
+    PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.tile_developer_options)
 
 
     // Shizuku permission

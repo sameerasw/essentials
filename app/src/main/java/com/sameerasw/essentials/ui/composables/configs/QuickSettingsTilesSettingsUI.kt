@@ -47,6 +47,7 @@ import com.sameerasw.essentials.services.tiles.AdaptiveBrightnessTileService
 import com.sameerasw.essentials.services.tiles.MapsPowerSavingTileService
 import com.sameerasw.essentials.services.tiles.PrivateDnsTileService
 import com.sameerasw.essentials.services.tiles.UsbDebuggingTileService
+import com.sameerasw.essentials.services.tiles.DeveloperOptionsTileService
 import com.sameerasw.essentials.ui.modifiers.highlight
 
 import androidx.compose.runtime.*
@@ -126,7 +127,8 @@ fun QuickSettingsTilesSettingsUI(
         QSTileInfo(R.string.tile_adaptive_brightness, R.drawable.rounded_brightness_auto_24, AdaptiveBrightnessTileService::class.java, listOf("WRITE_SETTINGS"), R.string.about_desc_adaptive_brightness),
         QSTileInfo(R.string.feat_maps_power_saving_title, R.drawable.rounded_navigation_24, MapsPowerSavingTileService::class.java, if (ShellUtils.isRootEnabled(context)) listOf("ROOT", "NOTIFICATION_LISTENER") else listOf("SHIZUKU", "NOTIFICATION_LISTENER"), R.string.about_desc_maps_power_saving),
         QSTileInfo(R.string.tile_private_dns, R.drawable.rounded_dns_24, PrivateDnsTileService::class.java, listOf("WRITE_SECURE_SETTINGS"), R.string.about_desc_private_dns),
-        QSTileInfo(R.string.tile_usb_debugging, R.drawable.rounded_adb_24, UsbDebuggingTileService::class.java, listOf("WRITE_SECURE_SETTINGS"), R.string.about_desc_usb_debugging)
+        QSTileInfo(R.string.tile_usb_debugging, R.drawable.rounded_adb_24, UsbDebuggingTileService::class.java, listOf("WRITE_SECURE_SETTINGS"), R.string.about_desc_usb_debugging),
+        QSTileInfo(R.string.tile_developer_options, R.drawable.rounded_mobile_code_24, DeveloperOptionsTileService::class.java, listOf("WRITE_SECURE_SETTINGS"), R.string.about_desc_developer_options)
     )
 
     if (showPermissionSheet && selectedTileForPermissions != null) {
