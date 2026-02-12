@@ -97,14 +97,18 @@ object CalendarSyncManager {
         Log.d(TAG, "Starting sync...")
         val events = queryUpcomingEvents(context)
         
-        // Get Material You theme color
-        var themeColor: Int? = null
+        // Get Material You theme colors
+        var primaryColor: Int? = null
+        var secondaryColor: Int? = null
+        var tertiaryColor: Int? = null
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            themeColor = context.getColor(android.R.color.system_accent1_600)
+            primaryColor = context.getColor(android.R.color.system_accent1_600)
+            secondaryColor = context.getColor(android.R.color.system_accent2_600)
+            tertiaryColor = context.getColor(android.R.color.system_accent3_600)
         }
 
-        Log.d(TAG, "Found ${events.size} upcoming events, themeColor=$themeColor")
-        sendToWearable(context, events, themeColor)
+        Log.d(TAG, "Found ${events.size} upcoming events, colors: P=$primaryColor, S=$secondaryColor, T=$tertiaryColor")
+        sendToWearable(context, events, primaryColor, secondaryColor, tertiaryColor)
     }
 
     private fun queryUpcomingEvents(context: Context): List<CalendarEvent> {
@@ -161,7 +165,7 @@ object CalendarSyncManager {
         return events
     }
 
-    private fun sendToWearable(context: Context, events: List<CalendarEvent>, themeColor: Int?) {
+    private fun sendToWearable(context: Context, events: List<CalendarEvent>, primaryColor: Int?, secondaryColor: Int?, tertiaryColor: Int?) {
         val putDataMapReq = PutDataMapRequest.create(SYNC_PATH)
         val dataMap = putDataMapReq.dataMap
         
@@ -178,7 +182,9 @@ object CalendarSyncManager {
         }
         
         dataMap.putDataMapArrayList("events", eventList)
-        themeColor?.let { dataMap.putInt("theme_color", it) }
+        primaryColor?.let { dataMap.putInt("theme_primary_color", it) }
+        secondaryColor?.let { dataMap.putInt("theme_secondary_color", it) }
+        tertiaryColor?.let { dataMap.putInt("theme_tertiary_color", it) }
         dataMap.putLong("timestamp", System.currentTimeMillis())
         
         val putDataReq = putDataMapReq.asPutDataRequest()
