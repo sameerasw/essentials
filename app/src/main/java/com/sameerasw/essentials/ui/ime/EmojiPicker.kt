@@ -19,7 +19,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -37,6 +41,7 @@ fun EmojiPicker(
     isHapticsEnabled: Boolean = true,
     hapticStrength: Float = 0.5f,
     onEmojiSelected: (String) -> Unit,
+    onSwipeDownToExit: () -> Unit = {},
     bottomContentPadding: Dp = 0.dp
 ) {
     val scope = rememberCoroutineScope()
@@ -65,10 +70,30 @@ fun EmojiPicker(
         }
     }
 
+    // Nested Scroll for swipe-down exit gesture
+    val nestedScrollConnection = remember {
+        object : NestedScrollConnection {
+            override fun onPreScroll(
+                available: Offset,
+                source: NestedScrollSource
+            ): Offset {
+                if (pagerState.currentPage == 0 && available.y > 50f) {
+                    val gridState = gridStates[0]
+                    if (gridState?.firstVisibleItemIndex == 0 && gridState.firstVisibleItemScrollOffset == 0) {
+                        onSwipeDownToExit()
+                        return available
+                    }
+                }
+                return Offset.Zero
+            }
+        }
+    }
+
     Row(
         modifier = modifier
             .fillMaxSize()
             .background(Color.Transparent)
+            .nestedScroll(nestedScrollConnection)
     ) {
         // Emoji Grid Area (Left side)
         VerticalPager(

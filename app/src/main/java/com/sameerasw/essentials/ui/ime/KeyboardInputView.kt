@@ -15,6 +15,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -56,6 +57,7 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -176,14 +178,23 @@ fun KeyButton(
 
                         // Wait for up or cancel of THIS specific pointer
                         var up: PointerInputChange? = null
+                        var isCanceledByMovement = false
                         while (up == null) {
                             val event = awaitPointerEvent()
                             val change = event.changes.find { it.id == down.id }
                             if (change == null || change.isConsumed) {
                                 // Canceled or lost tracker
                                 break
-                            } else if (change.changedToUp()) {
-                                up = change
+                            } else {
+                                // Check if user moved too far (swiped)
+                                val distance = (change.position - down.position).getDistance()
+                                if (distance > viewConfiguration.touchSlop) {
+                                    isCanceledByMovement = true
+                                }
+                                
+                                if (change.changedToUp()) {
+                                    up = change
+                                }
                             }
                         }
 
@@ -192,7 +203,7 @@ fun KeyButton(
 
                         if (up != null) {
                             scope.launch { interactionSource.emit(PressInteraction.Release(press)) }
-                            if (!isLongClickTriggered) {
+                            if (!isLongClickTriggered && !isCanceledByMovement) {
                                 onClick()
                             }
                         } else {
@@ -344,6 +355,15 @@ fun KeyboardInputView(
             .height(totalHeight)
             .clip(containerShape)
             .background(MaterialTheme.colorScheme.surfaceContainer)
+            .pointerInput(Unit) {
+                detectVerticalDragGestures { change, dragAmount ->
+                    if (!isEmojiMode && dragAmount < -20f) { // Swipe up
+                        isEmojiMode = true
+                        isClipboardMode = false
+                        performHeavyHaptic()
+                    }
+                }
+            }
             .padding(
                 bottom = if (isEmojiMode) 0.dp else bottomPadding,
                 start = 6.dp,
@@ -559,6 +579,12 @@ fun KeyboardInputView(
                         hapticStrength = hapticStrength,
                         onEmojiSelected = { emoji ->
                             onType(emoji)
+                        },
+                        onSwipeDownToExit = {
+                            if (isEmojiMode) {
+                                isEmojiMode = false
+                                performHeavyHaptic()
+                            }
                         },
                         bottomContentPadding = bottomPadding
                     )
