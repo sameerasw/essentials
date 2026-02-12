@@ -165,7 +165,7 @@ class SettingsActivity : ComponentActivity() {
         Shizuku.removeRequestPermissionResultListener(shizukuPermissionResultListener)
     }
 
-    @Suppress("DEPRECATION")
+    @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode in 1001..1006) {

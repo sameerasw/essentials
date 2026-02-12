@@ -189,7 +189,7 @@ class NotificationLightingService : Service() {
             }
 
             // We delegated to the accessibility service; stop foreground and finish quickly.
-            try { if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) stopForeground(true) } catch (_: Exception) {}
+            try { if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) stopForeground(Service.STOP_FOREGROUND_REMOVE) } catch (_: Exception) {}
 
             // stop this service; accessibility service will show overlay
             stopSelf()

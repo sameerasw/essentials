@@ -89,14 +89,14 @@ class LiquidShape(private val curveHeight: Float) : androidx.compose.ui.graphics
             moveTo(0f, 0f)
             // Curve down from (0,0) to (R, R) with control point at (0, R)
             // This creates a vertical tangent at the wall and horizontal at the bottom
-            quadraticBezierTo(0f, curveHeight, curveHeight, curveHeight)
+            quadraticTo(0f, curveHeight, curveHeight, curveHeight)
             
             // Flat bottom of the meniscus
             lineTo(size.width - curveHeight, curveHeight)
             
             // Right Horn
             // Curve up from (W-R, R) to (W, 0) with control point at (W, R)
-            quadraticBezierTo(size.width, curveHeight, size.width, 0f)
+            quadraticTo(size.width, curveHeight, size.width, 0f)
             
             // Rest of the box
             lineTo(size.width, size.height)
@@ -341,7 +341,7 @@ fun KeyboardInputView(
                         val threshold = 70f
 
                         override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-                            if (source == NestedScrollSource.Drag) {
+                            if (source == NestedScrollSource.UserInput) {
                                 accumulatedScroll += available.x
                                 if (kotlin.math.abs(accumulatedScroll) >= threshold) {
                                     performScrollHaptic()

@@ -152,6 +152,7 @@ object CaffeinateController {
         return prefs.getBoolean("skip_countdown", false)
     }
 
+    @Suppress("DEPRECATION")
     private fun isWakeLockServiceRunning(context: Context): Boolean {
         val manager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         for (service in manager.getRunningServices(Int.MAX_VALUE)) {

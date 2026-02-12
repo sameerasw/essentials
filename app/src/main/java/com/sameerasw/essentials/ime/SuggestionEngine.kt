@@ -127,6 +127,7 @@ class SuggestionEngine(private val context: Context) : SpellCheckerSession.Spell
         if (s != null) {
             try {
                 // Request suggestions. The callback onGetSuggestions will merge results
+                @Suppress("DEPRECATION")
                 s.getSuggestions(TextInfo(word), 5)
             } catch (e: Exception) {
                 Log.e(TAG, "Android lookup failed", e)

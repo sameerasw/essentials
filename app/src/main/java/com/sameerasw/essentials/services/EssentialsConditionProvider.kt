@@ -8,6 +8,7 @@ import android.service.notification.Condition
 import android.service.notification.ConditionProviderService
 import android.util.Log
 
+@Suppress("DEPRECATION")
 class EssentialsConditionProvider : ConditionProviderService() {
 
     companion object {

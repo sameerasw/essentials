@@ -376,7 +376,12 @@ class NotificationListener : NotificationListenerService() {
     private fun handleMediaUpdate(sbn: StatusBarNotification) {
          try {
              val extras = sbn.notification.extras
-             val token = extras.getParcelable<android.media.session.MediaSession.Token>(Notification.EXTRA_MEDIA_SESSION)
+             val token = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                 extras.getParcelable(Notification.EXTRA_MEDIA_SESSION, android.media.session.MediaSession.Token::class.java)
+             } else {
+                 @Suppress("DEPRECATION")
+                 extras.getParcelable(Notification.EXTRA_MEDIA_SESSION)
+             }
              
              if (token != null) {
                  val controller = android.media.session.MediaController(this, token)

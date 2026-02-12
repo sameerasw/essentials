@@ -45,7 +45,7 @@ class UpdateRepository {
             val latestVersion = (release["tag_name"] as? String)?.removePrefix("v") ?: "0.0"
             val body = release["body"] as? String ?: ""
             val releaseUrl = release["html_url"] as? String ?: ""
-            val assets = release["assets"] as? List<Map<String, Any>>
+            val assets = (release["assets"] as? List<*>)?.filterIsInstance<Map<String, Any>>()
             val downloadUrl = assets?.firstOrNull { it["name"].toString() == "app-release.apk" }?.get("browser_download_url") as? String 
                 ?: assets?.firstOrNull { it["name"].toString().endsWith(".apk") }?.get("browser_download_url") as? String 
                 ?: ""

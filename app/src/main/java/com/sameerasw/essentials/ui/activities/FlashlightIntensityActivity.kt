@@ -2,6 +2,7 @@ package com.sameerasw.essentials.ui.activities
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -32,7 +33,12 @@ class FlashlightIntensityActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
-        val componentName = intent?.getParcelableExtra<android.content.ComponentName>("android.intent.extra.COMPONENT_NAME")
+        val componentName = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent?.getParcelableExtra("android.intent.extra.COMPONENT_NAME", android.content.ComponentName::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            intent?.getParcelableExtra("android.intent.extra.COMPONENT_NAME")
+        }
         if (componentName != null && componentName.className != "com.sameerasw.essentials.services.tiles.FlashlightTileService") {
             // Redirect to MainActivity for other tiles
             val mainIntent = Intent(this, com.sameerasw.essentials.MainActivity::class.java).apply {

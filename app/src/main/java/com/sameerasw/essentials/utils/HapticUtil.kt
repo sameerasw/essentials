@@ -66,14 +66,26 @@ object HapticUtil {
      */
     fun performHapticForService(context: android.content.Context, type: HapticFeedbackType = HapticFeedbackType.SUBTLE) {
         if (!isAppHapticsEnabled.value) return
-        val vibrator = context.getSystemService(android.content.Context.VIBRATOR_SERVICE) as android.os.Vibrator
+        val vibrator = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            val vibratorManager = context.getSystemService(android.content.Context.VIBRATOR_MANAGER_SERVICE) as android.os.VibratorManager
+            vibratorManager.defaultVibrator
+        } else {
+            @Suppress("DEPRECATION")
+            context.getSystemService(android.content.Context.VIBRATOR_SERVICE) as android.os.Vibrator
+        }
         performHapticFeedback(vibrator, type)
     }
 
     fun performCustomHaptic(view: View, strength: Float) {
         if (!isAppHapticsEnabled.value) return
         
-        val vibrator = view.context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        val vibrator = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            val vibratorManager = view.context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as android.os.VibratorManager
+            vibratorManager.defaultVibrator
+        } else {
+            @Suppress("DEPRECATION")
+            view.context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        }
         
         // Use Primitives (API 30+) for the most consistent, crisp feedback with scaling
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {

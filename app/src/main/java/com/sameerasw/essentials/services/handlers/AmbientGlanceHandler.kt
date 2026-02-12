@@ -76,7 +76,7 @@ class AmbientGlanceHandler(
                 val duration = activeSession.metadata?.getLong(android.media.MediaMetadata.METADATA_KEY_DURATION) ?: 0L
                 
                 if (duration > 0) {
-                    val progress = (position.toFloat() / duration.toFloat() * 100).toInt()
+                    val progress = (position * 100 / duration).toInt()
                     volumeStrokeView?.updatePercentage(progress)
                 }
             } else {
@@ -437,6 +437,7 @@ class AmbientGlanceHandler(
             WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY
         }
         
+        @Suppress("DEPRECATION")
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.MATCH_PARENT,

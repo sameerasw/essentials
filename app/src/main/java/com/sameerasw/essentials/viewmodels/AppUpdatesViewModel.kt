@@ -477,6 +477,7 @@ class AppUpdatesViewModel : ViewModel() {
                 "${context.packageName}.fileprovider",
                 file
             )
+            @Suppress("DEPRECATION")
             val intent = Intent(Intent.ACTION_INSTALL_PACKAGE).apply {
                 data = apkUri
                 flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK

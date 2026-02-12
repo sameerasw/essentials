@@ -175,6 +175,7 @@ class NotificationLightingHandler(
                         overlayViews.add(ambientOverlay)
                         
                         try {
+                            @Suppress("DEPRECATION")
                             val wakeLock = powerManager.newWakeLock(
                                 PowerManager.SCREEN_BRIGHT_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP,
                                 "essentials:NotificationLighting"
@@ -195,6 +196,7 @@ class NotificationLightingHandler(
                         overlayViews.add(overlay)
                         
                         try {
+                            @Suppress("DEPRECATION")
                             val wakeLock = powerManager.newWakeLock(
                                 PowerManager.SCREEN_BRIGHT_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP,
                                 "essentials:NotificationLighting"

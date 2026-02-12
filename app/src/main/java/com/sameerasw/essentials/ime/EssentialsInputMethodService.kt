@@ -343,7 +343,7 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                             // Check if we should merge with the top of the stack
                             // We merge if both are NOT whitespace (building a word)
                             // If either is whitespace, we treat it as a separator and start a new chunk
-                            val topIsWhitespace = top.all { it.isWhitespace() }
+                            val topIsWhitespace = top?.all { it.isWhitespace() } == true
                             
                             if (!isWhitespace && !topIsWhitespace) {
                                 // Merge: Prepend captured char to top

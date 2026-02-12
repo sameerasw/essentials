@@ -134,7 +134,7 @@ object LogManager {
             try {
                 val pInfo = context.packageManager.getPackageInfo(context.packageName, 0)
                 put("AppVersionName", pInfo.versionName)
-                put("AppVersionCode", if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) pInfo.longVersionCode else pInfo.versionCode.toLong())
+                put("AppVersionCode", if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) pInfo.longVersionCode else @Suppress("DEPRECATION") pInfo.versionCode.toLong())
             } catch (e: Exception) {
                 put("AppVersion", "Unknown")
             }

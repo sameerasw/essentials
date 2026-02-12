@@ -61,6 +61,7 @@ class CaffeinateWakeLockService : Service() {
         updatePrefs()
 
         val pm = getSystemService(POWER_SERVICE) as PowerManager
+        @Suppress("DEPRECATION")
         wakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP, "Caffeinate::WakeLock")
         wakeLock?.acquire()
 

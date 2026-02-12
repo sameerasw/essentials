@@ -1,6 +1,8 @@
 package com.sameerasw.essentials
 
+import android.app.Activity
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.FrameLayout
@@ -160,7 +162,12 @@ class AppLockActivity : FragmentActivity() {
         }
         startService(serviceIntent)
         finish()
-        overridePendingTransition(0, 0)
+        if (Build.VERSION.SDK_INT >= 34) {
+            overrideActivityTransition(Activity.OVERRIDE_TRANSITION_CLOSE, 0, 0)
+        } else {
+            @Suppress("DEPRECATION")
+            overridePendingTransition(0, 0)
+        }
     }
 
     private fun notifyFailureAndFinish() {
@@ -169,12 +176,19 @@ class AppLockActivity : FragmentActivity() {
         }
         startService(serviceIntent)
         finish()
-        overridePendingTransition(0, 0)
+        if (Build.VERSION.SDK_INT >= 34) {
+            overrideActivityTransition(Activity.OVERRIDE_TRANSITION_CLOSE, 0, 0)
+        } else {
+            @Suppress("DEPRECATION")
+            overridePendingTransition(0, 0)
+        }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         // Prevent going back, treated as cancel/failure
         notifyFailureAndFinish()
+        @Suppress("DEPRECATION")
         super.onBackPressed()
     }
 }

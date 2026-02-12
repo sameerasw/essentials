@@ -114,7 +114,7 @@ class WatermarkEngine(
                     androidx.exifinterface.media.ExifInterface.TAG_GPS_TIMESTAMP,
                     androidx.exifinterface.media.ExifInterface.TAG_MAKE,
                     androidx.exifinterface.media.ExifInterface.TAG_MODEL,
-                    androidx.exifinterface.media.ExifInterface.TAG_ISO_SPEED_RATINGS,
+                    androidx.exifinterface.media.ExifInterface.TAG_PHOTOGRAPHIC_SENSITIVITY,
                     androidx.exifinterface.media.ExifInterface.TAG_SUBSEC_TIME,
                     androidx.exifinterface.media.ExifInterface.TAG_WHITE_BALANCE
                 )
@@ -257,14 +257,13 @@ class WatermarkEngine(
             
             val destRect = RectF(logoX, logoY, logoX + logoWidth, logoY + logoHeight)
             
-            if (shadowColor != null) {
-                val shadowPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                    colorFilter = android.graphics.PorterDuffColorFilter(shadowColor, android.graphics.PorterDuff.Mode.SRC_IN)
-                    alpha = 128
-                }
-                val shadowRect = RectF(destRect).apply { offset(2f, 2f) }
-                canvas.drawBitmap(logoBitmap, null, shadowRect, shadowPaint)
+            val shadowPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                colorFilter = android.graphics.PorterDuffColorFilter(shadowColor!!, android.graphics.PorterDuff.Mode.SRC_IN)
+                alpha = 128
             }
+            val shadowRect = RectF(destRect).apply { offset(2f, 2f) }
+            canvas.drawBitmap(logoBitmap, null, shadowRect, shadowPaint)
+            
             canvas.drawBitmap(logoBitmap, null, destRect, null)
         }
 
@@ -301,7 +300,7 @@ class WatermarkEngine(
         val maxAvailableWidth = if (options.showDeviceBrand) {
             (bitmap.width - margin * 2) * 0.6f
         } else {
-            (bitmap.width - margin * 2).toFloat()
+            (bitmap.width - margin * 2)
         }
         
         var exifRows: List<List<ExifItem>> = emptyList()
