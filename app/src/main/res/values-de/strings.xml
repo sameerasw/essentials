@@ -12,7 +12,7 @@
     <string name="app_freezing_tile_label">Apps einfrieren</string>
     <string name="flashlight_pulse_tile_label">Taschenlampenimpuls</string>
     <string name="check_pre_releases_label">Prüfe nach Vorabversionen</string>
-    <string name="check_pre_releases_desc">Können instabil sein</string>
+    <string name="check_pre_releases_desc">Könnte instabil sein</string>
     <!-- App Lock -->
     <string name="settings_section_security">Sicherheit</string>
     <string name="app_lock_enable_title">Aktiviere App-Sperre</string>
