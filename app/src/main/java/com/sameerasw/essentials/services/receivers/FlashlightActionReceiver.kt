@@ -20,7 +20,7 @@ class FlashlightActionReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val action = intent.action ?: return
         Log.d("FlashlightAction", "Action received: $action")
-        
+
         val serviceIntent = Intent(context, ScreenOffAccessibilityService::class.java).apply {
             this.action = action
             if (intent.hasExtra(EXTRA_INTENSITY)) {

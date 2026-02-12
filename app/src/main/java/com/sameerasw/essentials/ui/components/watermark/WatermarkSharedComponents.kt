@@ -51,8 +51,9 @@ fun ColorModeOption(
             Color(androidx.core.graphics.ColorUtils.HSLToColor(hsl))
         }
     }
-    
-    val borderColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
+
+    val borderColor =
+        if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
     val borderWidth = if (isSelected) 3.dp else 1.dp
 
     Box(
@@ -65,9 +66,9 @@ fun ColorModeOption(
                 color = borderColor,
                 shape = CircleShape
             )
-            .clickable { 
+            .clickable {
                 performUIHaptic(view)
-                onClick() 
+                onClick()
             },
         contentAlignment = Alignment.Center
     ) {
@@ -101,10 +102,10 @@ fun LogoCarouselPicker(
         R.drawable.vivo,
         R.drawable.xiaomi
     )
-    
+
     val carouselState = rememberCarouselState { logos.size }
     val view = LocalView.current
-    
+
     HorizontalMultiBrowseCarousel(
         state = carouselState,
         preferredItemWidth = 80.dp,
@@ -119,9 +120,11 @@ fun LogoCarouselPicker(
     ) { index ->
         val resId = logos[index]
         val isSelected = selectedResId == resId
-        val containerColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceContainerHigh
-        val contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
-        
+        val containerColor =
+            if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceContainerHigh
+        val contentColor =
+            if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+
         Box(
             modifier = Modifier
                 .fillMaxSize()

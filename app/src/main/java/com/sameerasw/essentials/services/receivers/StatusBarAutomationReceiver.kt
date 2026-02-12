@@ -37,11 +37,14 @@ class StatusBarAutomationReceiver : BroadcastReceiver() {
         } catch (e: Exception) {
             try {
                 success = Settings.Secure.putInt(context.contentResolver, key, value)
-            } catch (e2: Exception) {}
+            } catch (e2: Exception) {
+            }
         }
 
         // Background Shizuku/Root fallback
-        if (!success || !Settings.System.getInt(context.contentResolver, key, -1).let { it == value }) {
+        if (!success || !Settings.System.getInt(context.contentResolver, key, -1)
+                .let { it == value }
+        ) {
             if (com.sameerasw.essentials.utils.ShizukuUtils.hasPermission()) {
                 com.sameerasw.essentials.utils.ShizukuUtils.runCommand("settings put system $key $value")
                 com.sameerasw.essentials.utils.ShizukuUtils.runCommand("settings put secure $key $value")

@@ -21,7 +21,7 @@ class EssentialsApp : Application() {
         context = applicationContext
         ShizukuUtils.initialize()
         com.sameerasw.essentials.utils.LogManager.init(this)
-        
+
         // Init Automation
         com.sameerasw.essentials.domain.diy.DIYRepository.init(this)
         com.sameerasw.essentials.services.automation.AutomationManager.init(this)
@@ -29,7 +29,7 @@ class EssentialsApp : Application() {
 
         val intentFilter = IntentFilter(Intent.ACTION_SCREEN_OFF)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(screenOffReceiver, intentFilter, Context.RECEIVER_EXPORTED)
+            registerReceiver(screenOffReceiver, intentFilter, RECEIVER_EXPORTED)
         } else {
             registerReceiver(screenOffReceiver, intentFilter)
         }

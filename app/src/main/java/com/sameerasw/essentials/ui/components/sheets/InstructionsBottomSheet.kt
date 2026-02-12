@@ -220,9 +220,18 @@ fun InstructionsBottomSheet(
                                 putExtra(Intent.EXTRA_SUBJECT, "Hello from Essentials")
                             }
                             try {
-                                context.startActivity(Intent.createChooser(emailIntent, context.getString(R.string.send_email_chooser_title)))
+                                context.startActivity(
+                                    Intent.createChooser(
+                                        emailIntent,
+                                        context.getString(R.string.send_email_chooser_title)
+                                    )
+                                )
                             } catch (e: ActivityNotFoundException) {
-                                Toast.makeText(context, context.getString(R.string.error_no_email_app), Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.error_no_email_app),
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         },
                         modifier = Modifier.padding(horizontal = 4.dp)
@@ -262,7 +271,10 @@ fun InstructionsBottomSheet(
 @Composable
 fun ExpandableGuideSection(section: InstructionSection) {
     var expanded by remember { mutableStateOf(false) }
-    val rotation by animateFloatAsState(targetValue = if (expanded) 180f else 0f, label = "arrow_rotation")
+    val rotation by animateFloatAsState(
+        targetValue = if (expanded) 180f else 0f,
+        label = "arrow_rotation"
+    )
     val context = LocalContext.current
 
     Card(
@@ -306,7 +318,9 @@ fun ExpandableGuideSection(section: InstructionSection) {
 
                 Icon(
                     painter = painterResource(id = R.drawable.rounded_keyboard_arrow_down_24),
-                    contentDescription = if (expanded) stringResource(R.string.action_collapse) else stringResource(R.string.action_expand),
+                    contentDescription = if (expanded) stringResource(R.string.action_collapse) else stringResource(
+                        R.string.action_expand
+                    ),
                     modifier = Modifier.rotate(rotation)
                 )
             }
@@ -395,7 +409,10 @@ private fun InstructionStepItem(
 
         Image(
             painter = painterResource(id = imageRes),
-            contentDescription = stringResource(R.string.instruction_step_image_description, stepNumber),
+            contentDescription = stringResource(
+                R.string.instruction_step_image_description,
+                stepNumber
+            ),
             modifier = Modifier
                 .fillMaxWidth(fraction = 0.95f)
                 .clip(RoundedCornerShape(12.dp)),

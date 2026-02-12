@@ -38,28 +38,29 @@ class GitHubAuthRepository {
         }
     }
 
-    suspend fun pollForToken(deviceCode: String, interval: Int): TokenResponse? = withContext(Dispatchers.IO) {
-        val requestBody = FormBody.Builder()
-            .add("client_id", clientId)
-            .add("device_code", deviceCode)
-            .add("grant_type", "urn:ietf:params:oauth:grant-type:device_code")
-            .build()
+    suspend fun pollForToken(deviceCode: String, interval: Int): TokenResponse? =
+        withContext(Dispatchers.IO) {
+            val requestBody = FormBody.Builder()
+                .add("client_id", clientId)
+                .add("device_code", deviceCode)
+                .add("grant_type", "urn:ietf:params:oauth:grant-type:device_code")
+                .build()
 
-        val request = Request.Builder()
-            .url("https://github.com/login/oauth/access_token")
-            .header("Accept", "application/json")
-            .post(requestBody)
-            .build()
+            val request = Request.Builder()
+                .url("https://github.com/login/oauth/access_token")
+                .header("Accept", "application/json")
+                .post(requestBody)
+                .build()
 
-        try {
-            val response = client.newCall(request).execute()
-            if (!response.isSuccessful) return@withContext null
+            try {
+                val response = client.newCall(request).execute()
+                if (!response.isSuccessful) return@withContext null
 
-            val responseBody = response.body?.string() ?: return@withContext null
-            gson.fromJson(responseBody, TokenResponse::class.java)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
+                val responseBody = response.body?.string() ?: return@withContext null
+                gson.fromJson(responseBody, TokenResponse::class.java)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
         }
-    }
 }

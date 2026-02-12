@@ -21,7 +21,7 @@ class PowerModule : AutomationModule {
     override val id: String = ID
     private var automations: List<Automation> = emptyList()
     private val scope = CoroutineScope(Dispatchers.IO)
-    
+
     // State tracking
     private var isCharging = false
 
@@ -35,6 +35,7 @@ class PowerModule : AutomationModule {
                         handleStateChange(context, true)
                     }
                 }
+
                 Intent.ACTION_POWER_DISCONNECTED -> {
                     if (isCharging) {
                         isCharging = false
@@ -59,8 +60,8 @@ class PowerModule : AutomationModule {
         }
         val status: Int = batteryStatus?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: -1
         isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
-                     status == BatteryManager.BATTERY_STATUS_FULL
-                     
+                status == BatteryManager.BATTERY_STATUS_FULL
+
         if (isCharging) {
             handleStateChange(context, true)
         }
@@ -94,13 +95,23 @@ class PowerModule : AutomationModule {
             automations.filter { it.type == Automation.Type.STATE }
                 .forEach { automation ->
                     if (automation.state is DIYState.Charging) {
-                         if (isActive) {
-                             // Entry
-                             automation.entryAction?.let { CombinedActionExecutor.execute(context, it) }
-                         } else {
-                             // Exit
-                             automation.exitAction?.let { CombinedActionExecutor.execute(context, it) }
-                         }
+                        if (isActive) {
+                            // Entry
+                            automation.entryAction?.let {
+                                CombinedActionExecutor.execute(
+                                    context,
+                                    it
+                                )
+                            }
+                        } else {
+                            // Exit
+                            automation.exitAction?.let {
+                                CombinedActionExecutor.execute(
+                                    context,
+                                    it
+                                )
+                            }
+                        }
                     }
                 }
         }

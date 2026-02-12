@@ -23,10 +23,11 @@ class DynamicNightLightTileService : BaseTileService() {
     override fun hasFeaturePermission(): Boolean {
         // Accessibility is required to monitor apps
         return PermissionUtils.isAccessibilityServiceEnabled(this) &&
-               PermissionUtils.canWriteSecureSettings(this)
+                PermissionUtils.canWriteSecureSettings(this)
     }
 
-    override fun getTileIcon(): Icon = Icon.createWithResource(this, R.drawable.rounded_nightlight_24)
+    override fun getTileIcon(): Icon =
+        Icon.createWithResource(this, R.drawable.rounded_nightlight_24)
 
     override fun getTileState(): Int {
         val enabled = getSharedPreferences("essentials_prefs", MODE_PRIVATE)

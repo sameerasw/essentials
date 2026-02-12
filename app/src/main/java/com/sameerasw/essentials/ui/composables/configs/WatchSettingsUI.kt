@@ -24,7 +24,7 @@ fun WatchSettingsUI(
     viewModel: WatchViewModel,
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
+    LocalContext.current
     val uriHandler = LocalUriHandler.current
     val isWatchDetected = viewModel.isWatchDetected.value
 

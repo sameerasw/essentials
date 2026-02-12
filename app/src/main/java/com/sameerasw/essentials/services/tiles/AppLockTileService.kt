@@ -19,7 +19,10 @@ class AppLockTileService : BaseTileService() {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
             putExtra("feature_pref_key", "app_lock_enabled")
             putExtra("auth_title", "App Lock Security")
-            putExtra("auth_subtitle", if (isEnabled) "Authenticate to disable app lock" else "Authenticate to enable app lock")
+            putExtra(
+                "auth_subtitle",
+                if (isEnabled) "Authenticate to disable app lock" else "Authenticate to enable app lock"
+            )
         }
 
         if (Build.VERSION.SDK_INT >= 34) {
@@ -46,7 +49,8 @@ class AppLockTileService : BaseTileService() {
         return PermissionUtils.isAccessibilityServiceEnabled(this)
     }
 
-    override fun getTileIcon(): Icon = Icon.createWithResource(this, R.drawable.rounded_shield_lock_24)
+    override fun getTileIcon(): Icon =
+        Icon.createWithResource(this, R.drawable.rounded_shield_lock_24)
 
     override fun getTileState(): Int {
         val enabled = getSharedPreferences("essentials_prefs", MODE_PRIVATE)

@@ -44,7 +44,7 @@ fun DIYScreen(
     val context = LocalContext.current
     val automations by viewModel.automations.collectAsState()
     val focusManager = LocalFocusManager.current
-    
+
     var showNewAutomationSheet by remember { mutableStateOf(false) }
 
     Box(modifier = modifier.fillMaxSize()) {
@@ -92,7 +92,12 @@ fun DIYScreen(
                                     AutomationItem(
                                         automation = automation,
                                         onClick = {
-                                            context.startActivity(AutomationEditorActivity.createIntent(context, automation.id))
+                                            context.startActivity(
+                                                AutomationEditorActivity.createIntent(
+                                                    context,
+                                                    automation.id
+                                                )
+                                            )
                                         },
                                         onDelete = {
                                             viewModel.deleteAutomation(automation.id)
@@ -121,7 +126,12 @@ fun DIYScreen(
                                     AutomationItem(
                                         automation = automation,
                                         onClick = {
-                                            context.startActivity(AutomationEditorActivity.createIntent(context, automation.id))
+                                            context.startActivity(
+                                                AutomationEditorActivity.createIntent(
+                                                    context,
+                                                    automation.id
+                                                )
+                                            )
                                         },
                                         onDelete = {
                                             viewModel.deleteAutomation(automation.id)
@@ -137,13 +147,13 @@ fun DIYScreen(
                 }
             }
         }
-        
+
         // FAB
         val view = LocalView.current
         FloatingActionButton(
-            onClick = { 
+            onClick = {
                 HapticUtil.performUIHaptic(view)
-                showNewAutomationSheet = true 
+                showNewAutomationSheet = true
             },
             modifier = Modifier
                 .align(Alignment.BottomEnd)

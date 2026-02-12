@@ -24,7 +24,7 @@ object PermissionUtils {
     }
 
     fun canWriteSecureSettings(context: Context): Boolean {
-        return context.checkSelfPermission(android.Manifest.permission.WRITE_SECURE_SETTINGS) == 
+        return context.checkSelfPermission(android.Manifest.permission.WRITE_SECURE_SETTINGS) ==
                 android.content.pm.PackageManager.PERMISSION_GRANTED
     }
 
@@ -61,7 +61,8 @@ object PermissionUtils {
                 context.contentResolver,
                 Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
             )
-            val serviceName = "${context.packageName}/${ScreenOffAccessibilityService::class.java.name}"
+            val serviceName =
+                "${context.packageName}/${ScreenOffAccessibilityService::class.java.name}"
             enabledServices?.contains(serviceName) == true
         } catch (e: Exception) {
             false
@@ -73,10 +74,16 @@ object PermissionUtils {
             val pm = context.packageManager
             val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("http://www.example.com"))
             val resolveInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                pm.resolveActivity(browserIntent, android.content.pm.PackageManager.ResolveInfoFlags.of(android.content.pm.PackageManager.MATCH_DEFAULT_ONLY.toLong()))
+                pm.resolveActivity(
+                    browserIntent,
+                    android.content.pm.PackageManager.ResolveInfoFlags.of(android.content.pm.PackageManager.MATCH_DEFAULT_ONLY.toLong())
+                )
             } else {
                 @Suppress("DEPRECATION")
-                pm.resolveActivity(browserIntent, android.content.pm.PackageManager.MATCH_DEFAULT_ONLY)
+                pm.resolveActivity(
+                    browserIntent,
+                    android.content.pm.PackageManager.MATCH_DEFAULT_ONLY
+                )
             }
             resolveInfo?.activityInfo?.packageName == context.packageName
         } catch (e: Exception) {
@@ -102,7 +109,7 @@ object PermissionUtils {
     }
 
     fun hasBackgroundLocationPermission(context: Context): Boolean {
-        return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             androidx.core.content.ContextCompat.checkSelfPermission(
                 context,
                 android.Manifest.permission.ACCESS_BACKGROUND_LOCATION
@@ -114,12 +121,14 @@ object PermissionUtils {
 
     fun canUseFullScreenIntent(context: Context): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
+            val nm =
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
             nm.canUseFullScreenIntent()
         } else {
             true
         }
     }
+
     fun isKeyboardEnabled(context: Context): Boolean {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         val enabledImeList = imm.enabledInputMethodList
@@ -144,10 +153,10 @@ object PermissionUtils {
                 context,
                 android.Manifest.permission.BLUETOOTH_CONNECT
             ) == android.content.pm.PackageManager.PERMISSION_GRANTED &&
-            androidx.core.content.ContextCompat.checkSelfPermission(
-                context,
-                android.Manifest.permission.BLUETOOTH_SCAN
-            ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+                    androidx.core.content.ContextCompat.checkSelfPermission(
+                        context,
+                        android.Manifest.permission.BLUETOOTH_SCAN
+                    ) == android.content.pm.PackageManager.PERMISSION_GRANTED
         } else {
             true
         }
@@ -161,7 +170,8 @@ object PermissionUtils {
     }
 
     fun hasNotificationPolicyAccess(context: Context): Boolean {
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
         return notificationManager.isNotificationPolicyAccessGranted
     }
 
@@ -242,6 +252,7 @@ object PermissionUtils {
             val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(intent)
-        } catch (_: Exception) {}
+        } catch (_: Exception) {
+        }
     }
 }

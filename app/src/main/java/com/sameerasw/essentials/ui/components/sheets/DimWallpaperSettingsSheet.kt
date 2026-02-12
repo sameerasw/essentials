@@ -48,7 +48,7 @@ fun DimWallpaperSettingsSheet(
 ) {
     val view = LocalView.current
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    
+
     var dimAmount by remember { mutableFloatStateOf(initialAction.dimAmount) }
 
     ModalBottomSheet(
@@ -78,7 +78,7 @@ fun DimWallpaperSettingsSheet(
                 shape = RoundedCornerShape(24.dp)
             ) {
                 Column {
-                     Row(
+                    Row(
                         modifier = Modifier.padding(16.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -106,41 +106,50 @@ fun DimWallpaperSettingsSheet(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-                    
+
                     // Permission Icons
-                     Row(
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
+                        horizontalArrangement = Arrangement.spacedBy(
+                            16.dp,
+                            Alignment.CenterHorizontally
+                        )
                     ) {
                         // Shizuku Icon
-                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                             Icon(
-                                 painter = painterResource(R.drawable.rounded_adb_24),
-                                 contentDescription = "Shizuku",
-                                 tint = MaterialTheme.colorScheme.primary,
-                                 modifier = Modifier.size(20.dp)
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.rounded_adb_24),
+                                contentDescription = "Shizuku",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(20.dp)
                             )
                             Text("Shizuku", style = MaterialTheme.typography.labelMedium)
                         }
 
-                         // Root Icon
-                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                             Icon(
-                                 painter = painterResource(R.drawable.rounded_numbers_24),
-                                 contentDescription = "Root",
-                                 tint = MaterialTheme.colorScheme.primary,
-                                 modifier = Modifier.size(20.dp)
+                        // Root Icon
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.rounded_numbers_24),
+                                contentDescription = "Root",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(20.dp)
                             )
                             Text("Root", style = MaterialTheme.typography.labelMedium)
                         }
                     }
                 }
             }
-            
+
             // Slider Card
-             Card(
+            Card(
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.surfaceBright
                 ),
@@ -152,22 +161,22 @@ fun DimWallpaperSettingsSheet(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                         Text(
+                        Text(
                             text = "Dim Amount",
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurface
                         )
-                         Text(
+                        Text(
                             text = "${(dimAmount * 100).toInt()}%",
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.primary
                         )
                     }
-                   
+
                     Slider(
                         value = dimAmount,
-                        onValueChange = { 
-                            dimAmount = it 
+                        onValueChange = {
+                            dimAmount = it
                             HapticUtil.performSliderHaptic(view)
                         },
                         valueRange = 0f..1f,
@@ -192,7 +201,7 @@ fun DimWallpaperSettingsSheet(
                         contentColor = MaterialTheme.colorScheme.onSurface
                     )
                 ) {
-                     Icon(
+                    Icon(
                         painter = painterResource(id = R.drawable.rounded_close_24),
                         contentDescription = null,
                         modifier = Modifier.size(20.dp)
@@ -208,7 +217,7 @@ fun DimWallpaperSettingsSheet(
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                     Icon(
+                    Icon(
                         painter = painterResource(id = R.drawable.rounded_check_24),
                         contentDescription = null,
                         modifier = Modifier.size(20.dp)

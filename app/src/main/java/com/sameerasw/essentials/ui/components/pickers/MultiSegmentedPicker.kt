@@ -29,7 +29,7 @@ fun <T> MultiSegmentedPicker(
     modifier: Modifier = Modifier
 ) {
     val view = LocalView.current
-    
+
     Row(
         modifier = modifier
             .background(

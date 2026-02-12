@@ -19,9 +19,9 @@ class QSPreferencesActivity : ComponentActivity() {
             @Suppress("DEPRECATION")
             intent.getParcelableExtra(Intent.EXTRA_COMPONENT_NAME)
         }
-        
+
         Log.d("QSPreferences", "Received long-press for: ${componentName?.className}")
-        
+
         if (componentName != null) {
             // Special case for Sound Mode to open the system volume panel
             if (componentName.className == "com.sameerasw.essentials.services.tiles.SoundModeTileService") {
@@ -87,7 +87,7 @@ class QSPreferencesActivity : ComponentActivity() {
                 }
             }
         }
-        
+
         finish()
     }
 }

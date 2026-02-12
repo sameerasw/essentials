@@ -83,53 +83,178 @@ fun QuickSettingsTilesSettingsUI(
     highlightSetting: String? = null
 ) {
     val context = LocalContext.current
-    val view = LocalView.current
+    LocalView.current
     val viewModel: MainViewModel = viewModel()
-
-    val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
-    val isWriteSecureSettingsEnabled by viewModel.isWriteSecureSettingsEnabled
-    val isNotificationListenerEnabled by viewModel.isNotificationListenerEnabled
-    val isOverlayPermissionGranted by viewModel.isOverlayPermissionGranted
-    val isWriteSettingsEnabled by viewModel.isWriteSettingsEnabled
-    val isNotificationPolicyAccessGranted by viewModel.isNotificationPolicyAccessGranted
-    val isPostNotificationsEnabled by viewModel.isPostNotificationsEnabled
-    val isReadPhoneStateEnabled by viewModel.isReadPhoneStateEnabled
-    val isLocationPermissionGranted by viewModel.isLocationPermissionGranted
-    val isBackgroundLocationPermissionGranted by viewModel.isBackgroundLocationPermissionGranted
-    val isShizukuPermissionGranted by viewModel.isShizukuPermissionGranted
-    val isUsageStatsPermissionGranted by viewModel.isUsageStatsPermissionGranted
-    val isRootPermissionGranted by viewModel.isRootPermissionGranted
 
     var showPermissionSheet by remember { mutableStateOf(false) }
     var selectedTileForPermissions by remember { mutableStateOf<QSTileInfo?>(null) }
-    
+
     var showHelpSheet by remember { mutableStateOf(false) }
     var selectedHelpTile by remember { mutableStateOf<QSTileInfo?>(null) }
 
 
     val tiles = listOf(
-        QSTileInfo(R.string.tile_ui_blur, R.drawable.rounded_blur_on_24, UiBlurTileService::class.java, listOf("WRITE_SECURE_SETTINGS"), R.string.about_desc_ui_blur),
-        QSTileInfo(R.string.tile_bubbles, R.drawable.rounded_bubble_24, BubblesTileService::class.java, listOf("WRITE_SECURE_SETTINGS"), R.string.about_desc_bubbles),
-        QSTileInfo(R.string.tile_sensitive_content, R.drawable.rounded_notifications_off_24, PrivateNotificationsTileService::class.java, listOf("WRITE_SECURE_SETTINGS"), R.string.about_desc_sensitive_content),
-        QSTileInfo(R.string.tile_tap_to_wake, R.drawable.rounded_touch_app_24, TapToWakeTileService::class.java, listOf("WRITE_SECURE_SETTINGS"), R.string.about_desc_tap_to_wake),
-        QSTileInfo(R.string.tile_aod, R.drawable.rounded_mobile_text_2_24, AlwaysOnDisplayTileService::class.java, listOf("WRITE_SECURE_SETTINGS"), R.string.about_desc_aod),
-        QSTileInfo(R.string.tile_caffeinate, R.drawable.rounded_coffee_24, CaffeinateTileService::class.java, listOf("POST_NOTIFICATIONS"), R.string.about_desc_caffeinate),
-        QSTileInfo(R.string.tile_sound_mode, R.drawable.rounded_volume_up_24, SoundModeTileService::class.java, listOf("NOTIFICATION_POLICY"), R.string.about_desc_sound_mode_tile),
-        QSTileInfo(R.string.tile_notification_lighting, R.drawable.rounded_blur_linear_24, NotificationLightingTileService::class.java, listOf("DRAW_OVERLAYS", "ACCESSIBILITY", "NOTIFICATION_LISTENER"), R.string.about_desc_notification_lighting),
-        QSTileInfo(R.string.tile_dynamic_night_light, R.drawable.rounded_nightlight_24, DynamicNightLightTileService::class.java, listOf("ACCESSIBILITY", "WRITE_SECURE_SETTINGS"), R.string.about_desc_dynamic_night_light),
-        QSTileInfo(R.string.tile_locked_security, R.drawable.rounded_security_24, ScreenLockedSecurityTileService::class.java, listOf("ACCESSIBILITY", "WRITE_SECURE_SETTINGS", "DEVICE_ADMIN"), R.string.about_desc_screen_locked_security),
-        QSTileInfo(R.string.tile_app_lock, R.drawable.rounded_shield_lock_24, AppLockTileService::class.java, listOf("ACCESSIBILITY"), R.string.about_desc_app_lock),
-        QSTileInfo(R.string.tile_mono_audio, R.drawable.rounded_headphones_24, MonoAudioTileService::class.java, if (ShellUtils.isRootEnabled(context)) listOf("ROOT") else listOf("SHIZUKU"), R.string.about_desc_mono_audio),
-        QSTileInfo(R.string.tile_flashlight, R.drawable.rounded_flashlight_on_24, FlashlightTileService::class.java, emptyList(), R.string.about_desc_flashlight_tile),
-        QSTileInfo(R.string.tile_app_freezing, R.drawable.rounded_app_badging_24, AppFreezingTileService::class.java, if (ShellUtils.isRootEnabled(context)) listOf("ROOT", "USAGE_STATS", "NOTIFICATION_LISTENER") else listOf("SHIZUKU", "USAGE_STATS", "NOTIFICATION_LISTENER"), R.string.about_desc_freeze),
-        QSTileInfo(R.string.tile_flashlight_pulse, R.drawable.outline_backlight_high_24, FlashlightPulseTileService::class.java, listOf("NOTIFICATION_LISTENER"), R.string.about_desc_flashlight_pulse),
-        QSTileInfo(R.string.tile_stay_awake, R.drawable.rounded_av_timer_24, StayAwakeTileService::class.java, listOf("WRITE_SECURE_SETTINGS"), R.string.about_desc_stay_awake),
-        QSTileInfo(R.string.nfc_tile_label, R.drawable.rounded_nfc_24, NfcTileService::class.java, if (ShellUtils.isRootEnabled(context)) listOf("ROOT") else listOf("SHIZUKU"), R.string.about_desc_nfc),
-        QSTileInfo(R.string.tile_adaptive_brightness, R.drawable.rounded_brightness_auto_24, AdaptiveBrightnessTileService::class.java, listOf("WRITE_SETTINGS"), R.string.about_desc_adaptive_brightness),
-        QSTileInfo(R.string.feat_maps_power_saving_title, R.drawable.rounded_navigation_24, MapsPowerSavingTileService::class.java, if (ShellUtils.isRootEnabled(context)) listOf("ROOT", "NOTIFICATION_LISTENER") else listOf("SHIZUKU", "NOTIFICATION_LISTENER"), R.string.about_desc_maps_power_saving),
-        QSTileInfo(R.string.tile_private_dns, R.drawable.rounded_dns_24, PrivateDnsTileService::class.java, listOf("WRITE_SECURE_SETTINGS"), R.string.about_desc_private_dns),
-        QSTileInfo(R.string.tile_usb_debugging, R.drawable.rounded_adb_24, UsbDebuggingTileService::class.java, listOf("WRITE_SECURE_SETTINGS"), R.string.about_desc_usb_debugging),
-        QSTileInfo(R.string.tile_developer_options, R.drawable.rounded_mobile_code_24, DeveloperOptionsTileService::class.java, listOf("WRITE_SECURE_SETTINGS"), R.string.about_desc_developer_options)
+        QSTileInfo(
+            R.string.tile_ui_blur,
+            R.drawable.rounded_blur_on_24,
+            UiBlurTileService::class.java,
+            listOf("WRITE_SECURE_SETTINGS"),
+            R.string.about_desc_ui_blur
+        ),
+        QSTileInfo(
+            R.string.tile_bubbles,
+            R.drawable.rounded_bubble_24,
+            BubblesTileService::class.java,
+            listOf("WRITE_SECURE_SETTINGS"),
+            R.string.about_desc_bubbles
+        ),
+        QSTileInfo(
+            R.string.tile_sensitive_content,
+            R.drawable.rounded_notifications_off_24,
+            PrivateNotificationsTileService::class.java,
+            listOf("WRITE_SECURE_SETTINGS"),
+            R.string.about_desc_sensitive_content
+        ),
+        QSTileInfo(
+            R.string.tile_tap_to_wake,
+            R.drawable.rounded_touch_app_24,
+            TapToWakeTileService::class.java,
+            listOf("WRITE_SECURE_SETTINGS"),
+            R.string.about_desc_tap_to_wake
+        ),
+        QSTileInfo(
+            R.string.tile_aod,
+            R.drawable.rounded_mobile_text_2_24,
+            AlwaysOnDisplayTileService::class.java,
+            listOf("WRITE_SECURE_SETTINGS"),
+            R.string.about_desc_aod
+        ),
+        QSTileInfo(
+            R.string.tile_caffeinate,
+            R.drawable.rounded_coffee_24,
+            CaffeinateTileService::class.java,
+            listOf("POST_NOTIFICATIONS"),
+            R.string.about_desc_caffeinate
+        ),
+        QSTileInfo(
+            R.string.tile_sound_mode,
+            R.drawable.rounded_volume_up_24,
+            SoundModeTileService::class.java,
+            listOf("NOTIFICATION_POLICY"),
+            R.string.about_desc_sound_mode_tile
+        ),
+        QSTileInfo(
+            R.string.tile_notification_lighting,
+            R.drawable.rounded_blur_linear_24,
+            NotificationLightingTileService::class.java,
+            listOf("DRAW_OVERLAYS", "ACCESSIBILITY", "NOTIFICATION_LISTENER"),
+            R.string.about_desc_notification_lighting
+        ),
+        QSTileInfo(
+            R.string.tile_dynamic_night_light,
+            R.drawable.rounded_nightlight_24,
+            DynamicNightLightTileService::class.java,
+            listOf("ACCESSIBILITY", "WRITE_SECURE_SETTINGS"),
+            R.string.about_desc_dynamic_night_light
+        ),
+        QSTileInfo(
+            R.string.tile_locked_security,
+            R.drawable.rounded_security_24,
+            ScreenLockedSecurityTileService::class.java,
+            listOf("ACCESSIBILITY", "WRITE_SECURE_SETTINGS", "DEVICE_ADMIN"),
+            R.string.about_desc_screen_locked_security
+        ),
+        QSTileInfo(
+            R.string.tile_app_lock,
+            R.drawable.rounded_shield_lock_24,
+            AppLockTileService::class.java,
+            listOf("ACCESSIBILITY"),
+            R.string.about_desc_app_lock
+        ),
+        QSTileInfo(
+            R.string.tile_mono_audio,
+            R.drawable.rounded_headphones_24,
+            MonoAudioTileService::class.java,
+            if (ShellUtils.isRootEnabled(context)) listOf("ROOT") else listOf("SHIZUKU"),
+            R.string.about_desc_mono_audio
+        ),
+        QSTileInfo(
+            R.string.tile_flashlight,
+            R.drawable.rounded_flashlight_on_24,
+            FlashlightTileService::class.java,
+            emptyList(),
+            R.string.about_desc_flashlight_tile
+        ),
+        QSTileInfo(
+            R.string.tile_app_freezing,
+            R.drawable.rounded_app_badging_24,
+            AppFreezingTileService::class.java,
+            if (ShellUtils.isRootEnabled(context)) listOf(
+                "ROOT",
+                "USAGE_STATS",
+                "NOTIFICATION_LISTENER"
+            ) else listOf("SHIZUKU", "USAGE_STATS", "NOTIFICATION_LISTENER"),
+            R.string.about_desc_freeze
+        ),
+        QSTileInfo(
+            R.string.tile_flashlight_pulse,
+            R.drawable.outline_backlight_high_24,
+            FlashlightPulseTileService::class.java,
+            listOf("NOTIFICATION_LISTENER"),
+            R.string.about_desc_flashlight_pulse
+        ),
+        QSTileInfo(
+            R.string.tile_stay_awake,
+            R.drawable.rounded_av_timer_24,
+            StayAwakeTileService::class.java,
+            listOf("WRITE_SECURE_SETTINGS"),
+            R.string.about_desc_stay_awake
+        ),
+        QSTileInfo(
+            R.string.nfc_tile_label,
+            R.drawable.rounded_nfc_24,
+            NfcTileService::class.java,
+            if (ShellUtils.isRootEnabled(context)) listOf("ROOT") else listOf("SHIZUKU"),
+            R.string.about_desc_nfc
+        ),
+        QSTileInfo(
+            R.string.tile_adaptive_brightness,
+            R.drawable.rounded_brightness_auto_24,
+            AdaptiveBrightnessTileService::class.java,
+            listOf("WRITE_SETTINGS"),
+            R.string.about_desc_adaptive_brightness
+        ),
+        QSTileInfo(
+            R.string.feat_maps_power_saving_title,
+            R.drawable.rounded_navigation_24,
+            MapsPowerSavingTileService::class.java,
+            if (ShellUtils.isRootEnabled(context)) listOf(
+                "ROOT",
+                "NOTIFICATION_LISTENER"
+            ) else listOf("SHIZUKU", "NOTIFICATION_LISTENER"),
+            R.string.about_desc_maps_power_saving
+        ),
+        QSTileInfo(
+            R.string.tile_private_dns,
+            R.drawable.rounded_dns_24,
+            PrivateDnsTileService::class.java,
+            listOf("WRITE_SECURE_SETTINGS"),
+            R.string.about_desc_private_dns
+        ),
+        QSTileInfo(
+            R.string.tile_usb_debugging,
+            R.drawable.rounded_adb_24,
+            UsbDebuggingTileService::class.java,
+            listOf("WRITE_SECURE_SETTINGS"),
+            R.string.about_desc_usb_debugging
+        ),
+        QSTileInfo(
+            R.string.tile_developer_options,
+            R.drawable.rounded_mobile_code_24,
+            DeveloperOptionsTileService::class.java,
+            listOf("WRITE_SECURE_SETTINGS"),
+            R.string.about_desc_developer_options
+        )
     )
 
     if (showPermissionSheet && selectedTileForPermissions != null) {
@@ -164,9 +289,14 @@ fun QuickSettingsTilesSettingsUI(
             showToggle = false
         ) {
             override fun isEnabled(viewModel: MainViewModel) = true
-            override fun onToggle(viewModel: MainViewModel, context: android.content.Context, enabled: Boolean) {}
+            override fun onToggle(
+                viewModel: MainViewModel,
+                context: android.content.Context,
+                enabled: Boolean
+            ) {
+            }
         }
-        
+
         com.sameerasw.essentials.ui.components.sheets.FeatureHelpBottomSheet(
             onDismissRequest = {
                 showHelpSheet = false
@@ -191,14 +321,23 @@ fun QuickSettingsTilesSettingsUI(
                 rowTiles.forEach { tile ->
                     // Map permission keys to actual granted state
                     val allPermissionsGranted = tile.permissionKeys.all { key ->
-                        PermissionUIHelper.getPermissionItem(key, context, viewModel)?.isGranted == true
+                        PermissionUIHelper.getPermissionItem(
+                            key,
+                            context,
+                            viewModel
+                        )?.isGranted == true
                     }
 
                     QSTileCard(
                         tile = tile,
                         modifier = Modifier
                             .weight(1f)
-                            .highlight(highlightSetting.equals(context.getString(tile.titleRes), ignoreCase = true)),
+                            .highlight(
+                                highlightSetting.equals(
+                                    context.getString(tile.titleRes),
+                                    ignoreCase = true
+                                )
+                            ),
                         isMissingPermissions = !allPermissionsGranted,
                         onClick = {
                             if (!allPermissionsGranted) {
@@ -206,21 +345,30 @@ fun QuickSettingsTilesSettingsUI(
                                 showPermissionSheet = true
                             } else {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                    val statusBarManager = context.getSystemService(StatusBarManager::class.java)
+                                    val statusBarManager =
+                                        context.getSystemService(StatusBarManager::class.java)
                                     val componentName = ComponentName(context, tile.serviceClass)
-                                    
+
                                     statusBarManager.requestAddTileService(
                                         componentName,
                                         context.getString(tile.titleRes),
                                         Icon.createWithResource(context, tile.iconRes),
                                         context.mainExecutor
                                     ) { result ->
-                                         if(result == StatusBarManager.TILE_ADD_REQUEST_RESULT_TILE_ALREADY_ADDED){
-                                             Toast.makeText(context, context.getString(R.string.qs_tile_already_added), Toast.LENGTH_SHORT).show()
-                                         }
+                                        if (result == StatusBarManager.TILE_ADD_REQUEST_RESULT_TILE_ALREADY_ADDED) {
+                                            Toast.makeText(
+                                                context,
+                                                context.getString(R.string.qs_tile_already_added),
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
                                     }
                                 } else {
-                                    Toast.makeText(context, context.getString(R.string.qs_tile_requires_android_13), Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(
+                                        context,
+                                        context.getString(R.string.qs_tile_requires_android_13),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }
                             }
                         },
@@ -238,7 +386,7 @@ fun QuickSettingsTilesSettingsUI(
                 }
             }
         }
-        
+
         Text(
             text = "Long press a tile to see what it does",
             style = MaterialTheme.typography.labelMedium,
@@ -258,7 +406,7 @@ fun QSTileCard(
 ) {
     val view = LocalView.current
     var showMenu by remember { mutableStateOf(false) }
-    
+
     val menuState = com.sameerasw.essentials.ui.state.LocalMenuStateManager.current
     LaunchedEffect(showMenu) {
         if (showMenu) {
@@ -269,7 +417,7 @@ fun QSTileCard(
             }
         }
     }
-    
+
     val isBlurred = menuState.activeId != null && menuState.activeId != tile.titleRes
     val blurRadius by animateDpAsState(
         targetValue = if (isBlurred) 10.dp else 0.dp,
@@ -303,7 +451,9 @@ fun QSTileCard(
             .padding(16.dp)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().blur(blurRadius),
+            modifier = Modifier
+                .fillMaxWidth()
+                .blur(blurRadius),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
@@ -313,7 +463,7 @@ fun QSTileCard(
                 tint = if (isMissingPermissions) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier.padding(8.dp)
             )
-            
+
             Column {
                 Text(
                     text = stringResource(tile.titleRes),
@@ -325,7 +475,9 @@ fun QSTileCard(
                 Text(
                     text = if (isMissingPermissions) "Grant permission" else stringResource(R.string.action_add),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = if (isMissingPermissions) MaterialTheme.colorScheme.onErrorContainer.copy(alpha = 0.8f) else MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
+                    color = if (isMissingPermissions) MaterialTheme.colorScheme.onErrorContainer.copy(
+                        alpha = 0.8f
+                    ) else MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
                     maxLines = 1,
                     overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                 )
@@ -337,8 +489,8 @@ fun QSTileCard(
                 expanded = showMenu,
                 onDismissRequest = { showMenu = false }
             ) {
-                 com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem(
-                    text = { 
+                com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem(
+                    text = {
                         Text(stringResource(R.string.action_what_is_this))
                     },
                     onClick = {

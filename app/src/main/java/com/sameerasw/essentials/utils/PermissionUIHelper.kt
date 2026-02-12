@@ -44,7 +44,8 @@ object PermissionUIHelper {
                 dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
                 actionLabel = R.string.perm_action_copy_adb,
                 action = {
-                    val adbCommand = "adb shell pm grant ${context.packageName} android.permission.WRITE_SECURE_SETTINGS"
+                    val adbCommand =
+                        "adb shell pm grant ${context.packageName} android.permission.WRITE_SECURE_SETTINGS"
                     val clipboard = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
                     val clip = ClipData.newPlainText("adb_command", adbCommand)
                     clipboard.setPrimaryClip(clip)
@@ -59,7 +60,9 @@ object PermissionUIHelper {
             "NOTIFICATION_LISTENER" -> PermissionItem(
                 iconRes = R.drawable.rounded_notifications_unread_24,
                 title = R.string.perm_notif_listener_title,
-                description = if (PermissionRegistry.getFeatures("NOTIFICATION_LISTENER").contains(R.string.feat_freeze_title))
+                description = if (PermissionRegistry.getFeatures("NOTIFICATION_LISTENER")
+                        .contains(R.string.feat_freeze_title)
+                )
                     R.string.perm_notif_listener_desc_freeze else R.string.perm_notif_listener_desc_lighting,
                 dependentFeatures = PermissionRegistry.getFeatures("NOTIFICATION_LISTENER"),
                 actionLabel = R.string.perm_action_grant,
@@ -111,7 +114,7 @@ object PermissionUIHelper {
                             103
                         )
                     } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                         val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                        val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
                             putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
                             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         }
@@ -145,8 +148,12 @@ object PermissionUIHelper {
                 description = R.string.perm_location_desc,
                 dependentFeatures = PermissionRegistry.getFeatures("LOCATION"),
                 actionLabel = R.string.perm_action_grant,
-                action = { 
-                    (activity as? androidx.activity.ComponentActivity)?.let { viewModel.requestLocationPermission(it) }
+                action = {
+                    (activity as? androidx.activity.ComponentActivity)?.let {
+                        viewModel.requestLocationPermission(
+                            it
+                        )
+                    }
                 },
                 isGranted = viewModel.isLocationPermissionGranted.value
             )
@@ -157,8 +164,12 @@ object PermissionUIHelper {
                 description = R.string.perm_bg_location_desc,
                 dependentFeatures = PermissionRegistry.getFeatures("BACKGROUND_LOCATION"),
                 actionLabel = R.string.perm_action_grant,
-                action = { 
-                    (activity as? androidx.activity.ComponentActivity)?.let { viewModel.requestBackgroundLocationPermission(it) }
+                action = {
+                    (activity as? androidx.activity.ComponentActivity)?.let {
+                        viewModel.requestBackgroundLocationPermission(
+                            it
+                        )
+                    }
                 },
                 isGranted = viewModel.isBackgroundLocationPermissionGranted.value
             )
@@ -192,7 +203,7 @@ object PermissionUIHelper {
                 action = { viewModel.requestShizukuPermission() },
                 isGranted = viewModel.isShizukuPermissionGranted.value
             )
-            
+
             "READ_CALENDAR" -> PermissionItem(
                 iconRes = R.drawable.rounded_sync_24,
                 title = R.string.feat_calendar_sync_title,

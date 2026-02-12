@@ -81,8 +81,19 @@ fun DynamicNightLightSettingsUI(
             AppSelectionSheet(
                 onDismissRequest = { showAppSelectionSheet = false },
                 onLoadApps = { viewModel.loadDynamicNightLightSelectedApps(it) },
-                onSaveApps = { ctx, apps -> viewModel.saveDynamicNightLightSelectedApps(ctx, apps) },
-                onAppToggle = { ctx, pkg, enabled -> viewModel.updateDynamicNightLightAppEnabled(ctx, pkg, enabled) },
+                onSaveApps = { ctx, apps ->
+                    viewModel.saveDynamicNightLightSelectedApps(
+                        ctx,
+                        apps
+                    )
+                },
+                onAppToggle = { ctx, pkg, enabled ->
+                    viewModel.updateDynamicNightLightAppEnabled(
+                        ctx,
+                        pkg,
+                        enabled
+                    )
+                },
                 context = context
             )
         }

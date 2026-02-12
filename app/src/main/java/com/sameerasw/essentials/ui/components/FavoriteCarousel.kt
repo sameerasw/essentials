@@ -106,7 +106,7 @@ fun FavoriteCarousel(
             val view = LocalView.current
             val resolvedTitle = stringResource(id = feature.title)
             var showMenu by remember { mutableStateOf(false) }
-            
+
             val menuState = com.sameerasw.essentials.ui.state.LocalMenuStateManager.current
             LaunchedEffect(showMenu) {
                 if (showMenu) {
@@ -117,7 +117,7 @@ fun FavoriteCarousel(
                     }
                 }
             }
-            
+
             val isBlurred = menuState.activeId != null && menuState.activeId != feature.id
             val blurRadius by animateDpAsState(
                 targetValue = if (isBlurred) 10.dp else 0.dp,

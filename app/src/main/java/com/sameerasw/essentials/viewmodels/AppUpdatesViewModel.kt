@@ -46,7 +46,7 @@ class AppUpdatesViewModel : ViewModel() {
 
     private val _selectedApp = mutableStateOf<NotificationApp?>(null)
     val selectedApp: State<NotificationApp?> = _selectedApp
-    
+
     private val _trackedRepos = mutableStateOf<List<TrackedRepo>>(emptyList())
     val trackedRepos: State<List<TrackedRepo>> = _trackedRepos
 
@@ -62,7 +62,7 @@ class AppUpdatesViewModel : ViewModel() {
     // New options state
     private val _allowPreReleases = mutableStateOf(false)
     val allowPreReleases: State<Boolean> = _allowPreReleases
-    
+
     private val _notificationsEnabled = mutableStateOf(true)
     val notificationsEnabled: State<Boolean> = _notificationsEnabled
 
@@ -80,7 +80,7 @@ class AppUpdatesViewModel : ViewModel() {
     fun onAppSelected(app: NotificationApp?) {
         _selectedApp.value = app
     }
-    
+
     fun loadTrackedRepos(context: Context) {
         _isLoading.value = true
         viewModelScope.launch {
@@ -116,7 +116,7 @@ class AppUpdatesViewModel : ViewModel() {
                 } else {
                     var release = gitHubRepository.getLatestRelease(owner, repo, token)
                     var isPreRelease = false
-                    
+
                     if (release == null) {
                         val releases = gitHubRepository.getReleases(owner, repo, token)
                         release = releases.firstOrNull()
@@ -131,18 +131,19 @@ class AppUpdatesViewModel : ViewModel() {
                         _searchResult.value = repoInfo
                         _latestRelease.value = release
                         _readmeContent.value = gitHubRepository.getReadme(owner, repo, token)
-                        
+
                         if (isPreRelease || release.prerelease) {
                             _allowPreReleases.value = true
                         }
-                        
+
                         // Try to find matching installed app
                         findMatchingApp(context, repoInfo.name)
                     }
                 }
             } catch (e: Exception) {
                 if (e.message == "RATE_LIMIT") {
-                    _errorMessage.value = context.getString(com.sameerasw.essentials.R.string.error_rate_limited)
+                    _errorMessage.value =
+                        context.getString(R.string.error_rate_limited)
                 } else {
                     _errorMessage.value = context.getString(R.string.error_generic_search)
                 }
@@ -151,12 +152,12 @@ class AppUpdatesViewModel : ViewModel() {
             }
         }
     }
-    
+
     fun trackRepo(context: Context, selectedApk: String) {
         val repo = _searchResult.value ?: return
         val release = _latestRelease.value ?: return
         val app = _selectedApp.value
-        
+
         val trackedRepo = TrackedRepo(
             owner = repo.owner.login,
             name = repo.name,
@@ -168,7 +169,8 @@ class AppUpdatesViewModel : ViewModel() {
             latestReleaseName = release.name,
             latestReleaseBody = release.body,
             latestReleaseUrl = release.htmlUrl,
-            downloadUrl = release.assets.find { it.name == selectedApk }?.downloadUrl ?: release.assets.firstOrNull { it.name.endsWith(".apk") }?.downloadUrl,
+            downloadUrl = release.assets.find { it.name == selectedApk }?.downloadUrl
+                ?: release.assets.firstOrNull { it.name.endsWith(".apk") }?.downloadUrl,
             publishedAt = release.publishedAt,
             selectedApkName = selectedApk,
             mappedPackageName = app?.packageName,
@@ -176,17 +178,17 @@ class AppUpdatesViewModel : ViewModel() {
             allowPreReleases = _allowPreReleases.value,
             notificationsEnabled = _notificationsEnabled.value
         )
-        
+
         SettingsRepository(context).addOrUpdateTrackedRepo(trackedRepo)
         loadTrackedRepos(context)
         clearSearch()
     }
-    
+
     fun untrackRepo(context: Context, fullName: String) {
         SettingsRepository(context).removeTrackedRepo(fullName)
         loadTrackedRepos(context)
     }
-    
+
     fun prepareEdit(context: Context, repo: TrackedRepo) {
         _searchQuery.value = repo.fullName
         _isSearching.value = true
@@ -197,7 +199,7 @@ class AppUpdatesViewModel : ViewModel() {
         _selectedApp.value = null
         _allowPreReleases.value = repo.allowPreReleases
         _notificationsEnabled.value = repo.notificationsEnabled
-        
+
         viewModelScope.launch {
             try {
                 val token = SettingsRepository(context).getGitHubToken()
@@ -206,15 +208,17 @@ class AppUpdatesViewModel : ViewModel() {
                 _searchResult.value = repoInfo
                 _latestRelease.value = release
                 _readmeContent.value = gitHubRepository.getReadme(repo.owner, repo.name, token)
-                
+
                 // Set mapped app
                 if (repo.mappedPackageName != null) {
                     val installedApps = AppUtil.getInstalledApps(context)
-                    _selectedApp.value = installedApps.find { it.packageName == repo.mappedPackageName }
+                    _selectedApp.value =
+                        installedApps.find { it.packageName == repo.mappedPackageName }
                 }
             } catch (e: Exception) {
                 if (e.message == "RATE_LIMIT") {
-                    _errorMessage.value = context.getString(com.sameerasw.essentials.R.string.error_rate_limited)
+                    _errorMessage.value =
+                        context.getString(R.string.error_rate_limited)
                 }
                 // Fallback to offline data? User said it should open but didn't specify offline support.
                 // For now just clear searching
@@ -228,14 +232,15 @@ class AppUpdatesViewModel : ViewModel() {
         val installedApps = AppUtil.getInstalledApps(context)
         // Simple name matching logic
         val normalizedRepoName = repoName.lowercase().replace("-", "").replace("_", "").trim()
-        
+
         val matchedApp = installedApps.find { app ->
-            val normalizedAppName = app.appName.lowercase().replace(" ", "").replace("-", "").replace("_", "").trim()
-            normalizedAppName == normalizedRepoName || 
-            normalizedAppName.contains(normalizedRepoName) || 
-            normalizedRepoName.contains(normalizedAppName)
+            val normalizedAppName =
+                app.appName.lowercase().replace(" ", "").replace("-", "").replace("_", "").trim()
+            normalizedAppName == normalizedRepoName ||
+                    normalizedAppName.contains(normalizedRepoName) ||
+                    normalizedRepoName.contains(normalizedAppName)
         }
-        
+
         _selectedApp.value = matchedApp
     }
 
@@ -311,7 +316,7 @@ class AppUpdatesViewModel : ViewModel() {
             } catch (e: Exception) {
                 if (e.message == "RATE_LIMIT") {
                     _errorMessage.value =
-                        context.getString(com.sameerasw.essentials.R.string.error_rate_limited)
+                        context.getString(R.string.error_rate_limited)
                 }
                 // Ignore others
             }
@@ -378,7 +383,7 @@ class AppUpdatesViewModel : ViewModel() {
                 } catch (e: Exception) {
                     if (e.message == "RATE_LIMIT") {
                         _errorMessage.value =
-                            context.getString(com.sameerasw.essentials.R.string.error_rate_limited)
+                            context.getString(R.string.error_rate_limited)
                         break
                     }
                 } finally {
@@ -398,13 +403,13 @@ class AppUpdatesViewModel : ViewModel() {
     private fun compareVersions(v1: String, v2: String): Int {
         val cleanV1 = v1.replace(Regex("[^0-9.]"), "").split(".")
         val cleanV2 = v2.replace(Regex("[^0-9.]"), "").split(".")
-        
+
         val length = maxOf(cleanV1.size, cleanV2.size)
-        
+
         for (i in 0 until length) {
             val num1 = cleanV1.getOrNull(i)?.toIntOrNull() ?: 0
             val num2 = cleanV2.getOrNull(i)?.toIntOrNull() ?: 0
-            
+
             if (num1 > num2) return 1
             if (num1 < num2) return -1
         }
@@ -422,10 +427,10 @@ class AppUpdatesViewModel : ViewModel() {
                 // Use external cache dir if possible for better accessibility by shell/shizuku
                 val cacheDir = context.externalCacheDir ?: context.cacheDir
                 val file = File(cacheDir, "${repo.name}.apk")
-                
+
                 // Ensure parent exists
                 file.parentFile?.mkdirs()
-                
+
                 val url = URL(downloadUrl)
                 val connection = url.openConnection() as HttpURLConnection
                 connection.connect()
@@ -476,6 +481,7 @@ class AppUpdatesViewModel : ViewModel() {
                 "${context.packageName}.fileprovider",
                 file
             )
+
             @Suppress("DEPRECATION")
             val intent = Intent(Intent.ACTION_INSTALL_PACKAGE).apply {
                 data = apkUri

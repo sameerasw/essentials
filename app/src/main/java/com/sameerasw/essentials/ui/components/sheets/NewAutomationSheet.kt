@@ -61,7 +61,7 @@ fun NewAutomationSheet(
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.weight(1f)
                 )
-                
+
                 OutlinedIconButton(
                     onClick = { /* TODO: Implement import */ },
                     enabled = false
@@ -116,9 +116,9 @@ private fun AutomationTypeOption(
         shape = RoundedCornerShape(4.dp),
         modifier = modifier
             .fillMaxWidth()
-            .clickable { 
+            .clickable {
                 HapticUtil.performUIHaptic(view)
-                onClick() 
+                onClick()
             }
     ) {
         Row(
@@ -150,7 +150,9 @@ private fun AutomationTypeOption(
             Icon(
                 painter = painterResource(R.drawable.rounded_chevron_right_24),
                 contentDescription = null,
-                modifier = Modifier.padding(end = 4.dp).size(24.dp),
+                modifier = Modifier
+                    .padding(end = 4.dp)
+                    .size(24.dp),
             )
         }
     }

@@ -78,7 +78,7 @@ fun AddRepoBottomSheet(
     var showReleaseNotes by remember { mutableStateOf(false) }
     var showReadme by remember { mutableStateOf(false) }
     var showAppPicker by remember { mutableStateOf(false) }
-    
+
     // APK selection state
     // APK selection state
     var selectedApkName by remember { mutableStateOf("Auto") }
@@ -97,7 +97,8 @@ fun AddRepoBottomSheet(
         val updateInfo = UpdateInfo(
             versionName = latestRelease!!.tagName,
             releaseNotes = latestRelease!!.body ?: "",
-            downloadUrl = latestRelease!!.assets.firstOrNull { it.name.endsWith(".apk") }?.downloadUrl ?: "",
+            downloadUrl = latestRelease!!.assets.firstOrNull { it.name.endsWith(".apk") }?.downloadUrl
+                ?: "",
             releaseUrl = latestRelease!!.htmlUrl,
             isUpdateAvailable = false
         )
@@ -110,9 +111,9 @@ fun AddRepoBottomSheet(
 
     if (showReadme && readmeContent != null) {
         ModalBottomSheet(
-            onDismissRequest = { 
+            onDismissRequest = {
                 HapticUtil.performUIHaptic(view)
-                showReadme = false 
+                showReadme = false
             },
             containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
         ) {
@@ -161,7 +162,9 @@ fun AddRepoBottomSheet(
             }
 
             Text(
-                text = if (isTracked) stringResource(R.string.action_edit_repo) else stringResource(R.string.action_add_repo),
+                text = if (isTracked) stringResource(R.string.action_edit_repo) else stringResource(
+                    R.string.action_add_repo
+                ),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
@@ -243,7 +246,7 @@ fun AddRepoBottomSheet(
                                     fontWeight = FontWeight.Bold
                                 )
                             }
-                            
+
                             if (searchResult!!.description != null) {
                                 Text(
                                     text = searchResult!!.description!!,
@@ -251,7 +254,7 @@ fun AddRepoBottomSheet(
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
-                            
+
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -264,7 +267,10 @@ fun AddRepoBottomSheet(
                                     contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                                 ) {
                                     Row(
-                                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                                        modifier = Modifier.padding(
+                                            horizontal = 12.dp,
+                                            vertical = 6.dp
+                                        ),
                                         verticalAlignment = Alignment.CenterVertically,
                                         horizontalArrangement = Arrangement.spacedBy(6.dp)
                                     ) {
@@ -274,7 +280,10 @@ fun AddRepoBottomSheet(
                                             modifier = Modifier.size(16.dp)
                                         )
                                         Text(
-                                            text = stringResource(R.string.label_stars, searchResult!!.stars),
+                                            text = stringResource(
+                                                R.string.label_stars,
+                                                searchResult!!.stars
+                                            ),
                                             style = MaterialTheme.typography.labelMedium,
                                             fontWeight = FontWeight.Bold
                                         )
@@ -285,10 +294,14 @@ fun AddRepoBottomSheet(
                                     TextButton(
                                         onClick = {
                                             HapticUtil.performUIHaptic(view)
-                                            showReadme = true 
+                                            showReadme = true
                                         }
                                     ) {
-                                        Icon(painterResource(id = R.drawable.rounded_mobile_text_2_24), null, Modifier.size(18.dp))
+                                        Icon(
+                                            painterResource(id = R.drawable.rounded_mobile_text_2_24),
+                                            null,
+                                            Modifier.size(18.dp)
+                                        )
                                         Spacer(Modifier.width(8.dp))
                                         Text(stringResource(R.string.action_view_readme))
                                     }
@@ -302,7 +315,7 @@ fun AddRepoBottomSheet(
                         Surface(
                             onClick = {
                                 HapticUtil.performUIHaptic(view)
-                                showReleaseNotes = true 
+                                showReleaseNotes = true
                             },
                             color = MaterialTheme.colorScheme.surfaceContainer
                         ) {
@@ -326,7 +339,12 @@ fun AddRepoBottomSheet(
                                         fontWeight = FontWeight.Bold
                                     )
                                     Text(
-                                        text = "${latestRelease!!.tagName} • ${TimeUtil.formatRelativeDate(latestRelease!!.publishedAt, context)}",
+                                        text = "${latestRelease!!.tagName} • ${
+                                            TimeUtil.formatRelativeDate(
+                                                latestRelease!!.publishedAt,
+                                                context
+                                            )
+                                        }",
                                         style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
@@ -345,7 +363,7 @@ fun AddRepoBottomSheet(
                     val apkAssets = remember(latestRelease) {
                         latestRelease!!.assets.filter { it.name.endsWith(".apk") }
                     }
-                    
+
                     if (apkAssets.isNotEmpty()) {
                         Column(
                             modifier = Modifier.fillMaxWidth(),
@@ -357,17 +375,17 @@ fun AddRepoBottomSheet(
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(top = 8.dp, start = 12.dp)
                             )
-                            
+
                             RoundedCardContainer {
                                 val options = remember(apkAssets) {
                                     listOf("Auto") + apkAssets.map { it.name }
                                 }
-                                
+
                                 options.forEach { option ->
                                     Surface(
                                         onClick = {
                                             HapticUtil.performUIHaptic(view)
-                                            selectedApkName = option 
+                                            selectedApkName = option
                                         },
                                         color = MaterialTheme.colorScheme.surfaceContainer
                                     ) {
@@ -388,7 +406,7 @@ fun AddRepoBottomSheet(
                                                 selected = (selectedApkName == option),
                                                 onClick = {
                                                     HapticUtil.performUIHaptic(view)
-                                                    selectedApkName = option 
+                                                    selectedApkName = option
                                                 }
                                             )
                                         }
@@ -410,13 +428,13 @@ fun AddRepoBottomSheet(
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(top = 8.dp, start = 12.dp)
                     )
-                    
+
                     RoundedCardContainer {
                         // Not installed option
                         Surface(
                             onClick = {
                                 HapticUtil.performUIHaptic(view)
-                                viewModel.onAppSelected(null) 
+                                viewModel.onAppSelected(null)
                             },
                             color = MaterialTheme.colorScheme.surfaceContainer
                         ) {
@@ -437,17 +455,17 @@ fun AddRepoBottomSheet(
                                     selected = selectedApp == null,
                                     onClick = {
                                         HapticUtil.performUIHaptic(view)
-                                        viewModel.onAppSelected(null) 
+                                        viewModel.onAppSelected(null)
                                     }
                                 )
                             }
                         }
-                        
+
                         // Pick app / Selected app option
                         Surface(
                             onClick = {
                                 HapticUtil.performUIHaptic(view)
-                                showAppPicker = true 
+                                showAppPicker = true
                             },
                             color = MaterialTheme.colorScheme.surfaceContainer
                         ) {
@@ -502,89 +520,89 @@ fun AddRepoBottomSheet(
                                     selected = selectedApp != null,
                                     onClick = {
                                         HapticUtil.performUIHaptic(view)
-                                        showAppPicker = true 
+                                        showAppPicker = true
                                     }
                                 )
                             }
                         }
                     }
-                // Options section
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Text(
-                        text = stringResource(R.string.label_options),
-                        style = MaterialTheme.typography.titleSmall,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(top = 8.dp, start = 12.dp)
-                    )
-                    
-                    RoundedCardContainer {
-                        // Pre-releases option
-                        Surface(
-                            onClick = {
-                                HapticUtil.performUIHaptic(view)
-                                viewModel.setAllowPreReleases(!allowPreReleases)
-                            },
-                            color = MaterialTheme.colorScheme.surfaceContainer
-                        ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp, vertical = 12.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
+                    // Options section
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.label_options),
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(top = 8.dp, start = 12.dp)
+                        )
+
+                        RoundedCardContainer {
+                            // Pre-releases option
+                            Surface(
+                                onClick = {
+                                    HapticUtil.performUIHaptic(view)
+                                    viewModel.setAllowPreReleases(!allowPreReleases)
+                                },
+                                color = MaterialTheme.colorScheme.surfaceContainer
                             ) {
-                                Text(
-                                    text = stringResource(R.string.option_allow_prereleases),
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurface 
-                                )
-                                androidx.compose.material3.Switch(
-                                    checked = allowPreReleases,
-                                    onCheckedChange = {
-                                        HapticUtil.performUIHaptic(view)
-                                        viewModel.setAllowPreReleases(it)
-                                    }
-                                )
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text(
+                                        text = stringResource(R.string.option_allow_prereleases),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                    androidx.compose.material3.Switch(
+                                        checked = allowPreReleases,
+                                        onCheckedChange = {
+                                            HapticUtil.performUIHaptic(view)
+                                            viewModel.setAllowPreReleases(it)
+                                        }
+                                    )
+                                }
                             }
-                        }
-                        
-                        // Notifications option
-                        Surface(
-                            onClick = {
-                                HapticUtil.performUIHaptic(view)
-                                viewModel.setNotificationsEnabled(!notificationsEnabled)
-                            },
-                            color = MaterialTheme.colorScheme.surfaceContainer
-                        ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 16.dp, vertical = 12.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
+
+                            // Notifications option
+                            Surface(
+                                onClick = {
+                                    HapticUtil.performUIHaptic(view)
+                                    viewModel.setNotificationsEnabled(!notificationsEnabled)
+                                },
+                                color = MaterialTheme.colorScheme.surfaceContainer
                             ) {
-                                Text(
-                                    text = stringResource(R.string.option_notifications),
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurface 
-                                )
-                                androidx.compose.material3.Switch(
-                                    checked = notificationsEnabled,
-                                    onCheckedChange = {
-                                        HapticUtil.performUIHaptic(view)
-                                        viewModel.setNotificationsEnabled(it)
-                                    }
-                                )
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text(
+                                        text = stringResource(R.string.option_notifications),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                    androidx.compose.material3.Switch(
+                                        checked = notificationsEnabled,
+                                        onCheckedChange = {
+                                            HapticUtil.performUIHaptic(view)
+                                            viewModel.setNotificationsEnabled(it)
+                                        }
+                                    )
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            val isTracked = remember(searchResult, viewModel.trackedRepos.value) {
+                val isTracked = remember(searchResult, viewModel.trackedRepos.value) {
                     viewModel.trackedRepos.value.any { it.fullName == searchResult?.fullName }
                 }
 
@@ -608,14 +626,14 @@ fun AddRepoBottomSheet(
                         OutlinedButton(
                             onClick = {
                                 HapticUtil.performUIHaptic(view)
-                                viewModel.clearSearch() 
+                                viewModel.clearSearch()
                             },
                             modifier = Modifier.weight(1f)
                         ) {
                             Text(stringResource(R.string.action_cancel))
                         }
                     }
-                    
+
                     Button(
                         onClick = {
                             HapticUtil.performMediumHaptic(view)
@@ -624,7 +642,11 @@ fun AddRepoBottomSheet(
                         },
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text(if (isTracked) stringResource(R.string.action_save) else stringResource(R.string.action_track))
+                        Text(
+                            if (isTracked) stringResource(R.string.action_save) else stringResource(
+                                R.string.action_track
+                            )
+                        )
                     }
                 }
             }

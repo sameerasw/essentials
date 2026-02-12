@@ -33,24 +33,29 @@ fun WatermarkPreview(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
+
             is WatermarkUiState.Processing -> {
                 CircularProgressIndicator()
             }
+
             is WatermarkUiState.Success -> {
                 val targetFile = uiState.file
-                var visibleFile by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(targetFile) }
-                var targetReady by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
-                
+                var visibleFile by androidx.compose.runtime.remember {
+                    androidx.compose.runtime.mutableStateOf(
+                        targetFile
+                    )
+                }
+
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                     AsyncImage(
+                    AsyncImage(
                         model = visibleFile,
                         contentDescription = null,
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Fit
-                     )
-                     
-                     if (targetFile != visibleFile) {
-                         AsyncImage(
+                    )
+
+                    if (targetFile != visibleFile) {
+                        AsyncImage(
                             model = targetFile,
                             contentDescription = "Preview",
                             modifier = Modifier.fillMaxSize(),
@@ -58,10 +63,11 @@ fun WatermarkPreview(
                             onSuccess = {
                                 visibleFile = targetFile
                             }
-                         )
-                     }
+                        )
+                    }
                 }
             }
+
             is WatermarkUiState.Error -> {
                 Text(
                     text = uiState.message,

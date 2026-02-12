@@ -51,14 +51,16 @@ fun FeatureHelpBottomSheet(
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            
+
             // Header with Icon and Title
             Row(
-                modifier = Modifier.fillMaxWidth().padding(start = 8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                 Box(
+                Box(
                     modifier = Modifier
                         .size(48.dp)
                         .background(
@@ -74,7 +76,7 @@ fun FeatureHelpBottomSheet(
                         tint = ColorUtil.getVibrantColorFor(stringResource(feature.title))
                     )
                 }
-                
+
                 Column {
                     Text(
                         text = stringResource(feature.title),
@@ -93,7 +95,7 @@ fun FeatureHelpBottomSheet(
                     } else {
                         stringResource(feature.description)
                     }
-                    
+
                     Text(
                         text = description,
                         style = MaterialTheme.typography.bodyLarge,
@@ -104,7 +106,11 @@ fun FeatureHelpBottomSheet(
 
             // Permissions
             if (feature.permissionKeys.isNotEmpty()) {
-                val permissions = PermissionUIHelper.getPermissionItems(feature.permissionKeys, context, viewModel)
+                val permissions = PermissionUIHelper.getPermissionItems(
+                    feature.permissionKeys,
+                    context,
+                    viewModel
+                )
                 if (permissions.isNotEmpty()) {
                     LazyRow(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -143,7 +149,7 @@ fun FeatureHelpBottomSheet(
                         }
                     }
                 } else {
-                     Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
             } else {
                 Spacer(modifier = Modifier.height(16.dp))

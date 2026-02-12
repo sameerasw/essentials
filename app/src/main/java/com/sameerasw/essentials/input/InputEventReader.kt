@@ -23,9 +23,9 @@ class InputEventReader(private val devicePath: String) {
         )
         inputStream = process?.inputStream
         inputStream != null
-    } catch (e: Exception) { 
+    } catch (e: Exception) {
         e.printStackTrace()
-        false 
+        false
     }
 
     fun readEvent(): InputEvent? {
@@ -33,7 +33,8 @@ class InputEventReader(private val devicePath: String) {
             // Read loop to ensure full buffer is filled
             var bytesRead = 0
             while (bytesRead < INPUT_EVENT_SIZE) {
-                val result = inputStream?.read(buffer, bytesRead, INPUT_EVENT_SIZE - bytesRead) ?: -1
+                val result =
+                    inputStream?.read(buffer, bytesRead, INPUT_EVENT_SIZE - bytesRead) ?: -1
                 if (result == -1) return null
                 bytesRead += result
             }
@@ -46,13 +47,16 @@ class InputEventReader(private val devicePath: String) {
                 code = bb.short.toInt() and 0xFFFF,
                 value = bb.int
             )
-        } catch (e: Exception) { null }
+        } catch (e: Exception) {
+            null
+        }
     }
 
-    fun close() { 
+    fun close() {
         try {
             process?.destroy()
             inputStream?.close()
-        } catch (e: Exception) {}
+        } catch (e: Exception) {
+        }
     }
 }

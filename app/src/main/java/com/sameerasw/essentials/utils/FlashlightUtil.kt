@@ -16,7 +16,8 @@ object FlashlightUtil {
         val cameraManager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
         return try {
             val characteristics = cameraManager.getCameraCharacteristics(cameraId)
-            val maxLevel = characteristics.get(CameraCharacteristics.FLASH_INFO_STRENGTH_MAXIMUM_LEVEL) ?: 0
+            val maxLevel =
+                characteristics.get(CameraCharacteristics.FLASH_INFO_STRENGTH_MAXIMUM_LEVEL) ?: 0
             maxLevel > 1
         } catch (e: Exception) {
             Log.e(TAG, "Error checking intensity support", e)
@@ -68,9 +69,12 @@ object FlashlightUtil {
         durationMs: Long = 250L,
         steps: Int = 10
     ) {
-        Log.d(TAG, "fadeFlashlight: from=$fromLevel, to=$toLevel, duration=${durationMs}ms, steps=$steps")
+        Log.d(
+            TAG,
+            "fadeFlashlight: from=$fromLevel, to=$toLevel, duration=${durationMs}ms, steps=$steps"
+        )
         val cameraManager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
-        
+
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
             cameraManager.setTorchMode(cameraId, toLevel > 0)
             return
@@ -88,7 +92,7 @@ object FlashlightUtil {
                 }
                 delay(delayPerStep)
             }
-            
+
             if (toLevel > 0) {
                 cameraManager.turnOnTorchWithStrengthLevel(cameraId, toLevel)
             } else {

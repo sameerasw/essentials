@@ -38,37 +38,37 @@ fun GlowSidesPicker(
     )
     val view = LocalView.current
 
-        Row(
-            modifier = modifier
-                .background(
-                    color = MaterialTheme.colorScheme.surfaceBright,
-                    shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd)
-                )
-                .padding(10.dp),
-            horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
-        ) {
-            val modifiers = List(options.size) { Modifier.weight(1f) }
+    Row(
+        modifier = modifier
+            .background(
+                color = MaterialTheme.colorScheme.surfaceBright,
+                shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd)
+            )
+            .padding(10.dp),
+        horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+    ) {
+        val modifiers = List(options.size) { Modifier.weight(1f) }
 
-            options.forEachIndexed { index, (side, iconRes) ->
-                ToggleButton(
-                    checked = selectedSides.contains(side),
-                    onCheckedChange = { checked ->
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        onSideToggled(side, checked)
-                    },
-                    modifier = modifiers[index].semantics { role = Role.Checkbox },
-                    shapes = when (index) {
-                        0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
-                        options.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
-                        else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
-                    },
-                ) {
-                    Icon(
-                        painter = painterResource(id = iconRes),
-                        contentDescription = side.name,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
+        options.forEachIndexed { index, (side, iconRes) ->
+            ToggleButton(
+                checked = selectedSides.contains(side),
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    onSideToggled(side, checked)
+                },
+                modifier = modifiers[index].semantics { role = Role.Checkbox },
+                shapes = when (index) {
+                    0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+                    options.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                    else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
+                },
+            ) {
+                Icon(
+                    painter = painterResource(id = iconRes),
+                    contentDescription = side.name,
+                    modifier = Modifier.size(24.dp)
+                )
             }
         }
+    }
 }

@@ -91,10 +91,14 @@ fun AppSelectionSheet(
 
                 withContext(Dispatchers.Main) {
                     selectedApps = merged
-                    initialEnabledPackageNames = merged.filter { it.isEnabled }.map { it.packageName }.toSet()
+                    initialEnabledPackageNames =
+                        merged.filter { it.isEnabled }.map { it.packageName }.toSet()
                 }
             } catch (e: Exception) {
-                android.util.Log.e("AppSelectionSheet", context.getString(R.string.error_loading_apps, e.message ?: ""))
+                android.util.Log.e(
+                    "AppSelectionSheet",
+                    context.getString(R.string.error_loading_apps, e.message ?: "")
+                )
             } finally {
                 withContext(Dispatchers.Main) {
                     isLoadingApps = false
@@ -104,10 +108,13 @@ fun AppSelectionSheet(
     }
 
     val filteredApps = selectedApps.filter {
-        val matchesSearch = searchQuery.isEmpty() || it.appName.contains(searchQuery, ignoreCase = true)
-        val isVisible = !it.isSystemApp || showSystemApps || it.isEnabled // Always show if enabled, or if system toggle checks out
+        val matchesSearch =
+            searchQuery.isEmpty() || it.appName.contains(searchQuery, ignoreCase = true)
+        val isVisible =
+            !it.isSystemApp || showSystemApps || it.isEnabled // Always show if enabled, or if system toggle checks out
         matchesSearch && isVisible
-    }.sortedWith(compareByDescending<NotificationApp> { initialEnabledPackageNames.contains(it.packageName) }.thenBy { it.appName.lowercase() })
+    }
+        .sortedWith(compareByDescending<NotificationApp> { initialEnabledPackageNames.contains(it.packageName) }.thenBy { it.appName.lowercase() })
 
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
@@ -130,7 +137,7 @@ fun AppSelectionSheet(
                     text = stringResource(R.string.action_select_apps),
                     style = MaterialTheme.typography.headlineSmall
                 )
-                
+
                 androidx.compose.material3.IconButton(
                     onClick = {
                         HapticUtil.performVirtualKeyHaptic(view)
@@ -140,7 +147,9 @@ fun AppSelectionSheet(
                         }
                         selectedApps = updatedList
                         scope.launch(Dispatchers.IO) {
-                            onSaveApps(context, updatedList.map { AppSelection(it.packageName, it.isEnabled) })
+                            onSaveApps(
+                                context,
+                                updatedList.map { AppSelection(it.packageName, it.isEnabled) })
                         }
                     }
                 ) {
@@ -173,9 +182,9 @@ fun AppSelectionSheet(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(16.dp))
-                    .clickable { 
+                    .clickable {
                         HapticUtil.performVirtualKeyHaptic(view)
-                        showSystemApps = !showSystemApps 
+                        showSystemApps = !showSystemApps
                     }
                     .padding(8.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -195,9 +204,9 @@ fun AppSelectionSheet(
                 )
                 Switch(
                     checked = showSystemApps,
-                    onCheckedChange = { 
+                    onCheckedChange = {
                         HapticUtil.performVirtualKeyHaptic(view)
-                        showSystemApps = it 
+                        showSystemApps = it
                     }
                 )
             }
@@ -229,16 +238,23 @@ fun AppSelectionSheet(
                                 val updatedList = selectedApps.map {
                                     if (it.packageName == app.packageName) it.copy(isEnabled = isChecked) else it
                                 }
-                                
+
                                 // If toggled via switch, update specific app then save all
                                 updatedList.find { it.packageName == app.packageName }?.let {
                                     onAppToggle?.invoke(context, it.packageName, it.isEnabled)
                                 }
-                                
+
                                 selectedApps = updatedList
                                 scope.launch(Dispatchers.IO) {
                                     // Use updatedList here to ensure we save the new state
-                                    onSaveApps(context, updatedList.map { AppSelection(it.packageName, it.isEnabled) })
+                                    onSaveApps(
+                                        context,
+                                        updatedList.map {
+                                            AppSelection(
+                                                it.packageName,
+                                                it.isEnabled
+                                            )
+                                        })
                                 }
                             }
                         )

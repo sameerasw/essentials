@@ -23,13 +23,13 @@ object FeatureRegistry {
             permissionKeys = listOf("NOTIFICATION_POLICY"),
             searchableSettings = listOf(
                 SearchSetting(
-                    R.string.search_sound_mode_show_slider_title, 
-                    R.string.search_sound_mode_show_slider_desc, 
+                    R.string.search_sound_mode_show_slider_title,
+                    R.string.search_sound_mode_show_slider_desc,
                     "sound_mode_show_slider"
                 ),
                 SearchSetting(
-                    R.string.search_sound_mode_behavior_title, 
-                    R.string.search_sound_mode_behavior_desc, 
+                    R.string.search_sound_mode_behavior_title,
+                    R.string.search_sound_mode_behavior_desc,
                     "sound_mode_cycle_behavior"
                 )
             ),
@@ -52,10 +52,14 @@ object FeatureRegistry {
             isBeta = true,
             parentFeatureId = "Sound"
         ) {
-            override fun isEnabled(viewModel: MainViewModel) = viewModel.isAmbientMusicGlanceEnabled.value
-            override fun isToggleEnabled(viewModel: MainViewModel, context: Context) = 
+            override fun isEnabled(viewModel: MainViewModel) =
+                viewModel.isAmbientMusicGlanceEnabled.value
+
+            override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
                 viewModel.isNotificationListenerEnabled.value && viewModel.isAccessibilityEnabled.value
-            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) = viewModel.setAmbientMusicGlanceEnabled(enabled)
+
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
+                viewModel.setAmbientMusicGlanceEnabled(enabled)
         },
 
         object : Feature(
@@ -69,10 +73,15 @@ object FeatureRegistry {
             hasMoreSettings = false,
             parentFeatureId = "Sound"
         ) {
-            override fun isEnabled(viewModel: MainViewModel) = viewModel.isCallVibrationsEnabled.value
-            override fun isToggleEnabled(viewModel: MainViewModel, context: Context) = 
+            override fun isEnabled(viewModel: MainViewModel) =
+                viewModel.isCallVibrationsEnabled.value
+
+            override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
                 viewModel.isReadPhoneStateEnabled.value && viewModel.isNotificationListenerEnabled.value
-            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) = viewModel.setCallVibrationsEnabled(enabled)
+
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
+                viewModel.setCallVibrationsEnabled(enabled)
+
             override fun onClick(context: Context, viewModel: MainViewModel) {}
         },
         object : Feature(
@@ -186,19 +195,51 @@ object FeatureRegistry {
             aboutDescription = R.string.about_desc_statusbar_icons,
             permissionKeys = listOf("WRITE_SECURE_SETTINGS", "WRITE_SETTINGS"),
             searchableSettings = listOf(
-                SearchSetting(R.string.search_smart_wifi_title, R.string.search_smart_wifi_desc, "smart_wifi", R.array.keywords_network_visibility),
-                SearchSetting(R.string.search_smart_data_title, R.string.search_smart_data_desc, "smart_data", R.array.keywords_network_visibility),
-                SearchSetting(R.string.search_reset_icons_title, R.string.search_reset_icons_desc, "reset_icons", R.array.keywords_restore_default),
-                SearchSetting(R.string.search_clock_seconds_title, R.string.search_clock_seconds_desc, "clock_seconds"),
-                SearchSetting(R.string.search_battery_percentage_title, R.string.search_battery_percentage_desc, "battery_percentage"),
-                SearchSetting(R.string.search_privacy_chip_title, R.string.search_privacy_chip_desc, "privacy_chip")
+                SearchSetting(
+                    R.string.search_smart_wifi_title,
+                    R.string.search_smart_wifi_desc,
+                    "smart_wifi",
+                    R.array.keywords_network_visibility
+                ),
+                SearchSetting(
+                    R.string.search_smart_data_title,
+                    R.string.search_smart_data_desc,
+                    "smart_data",
+                    R.array.keywords_network_visibility
+                ),
+                SearchSetting(
+                    R.string.search_reset_icons_title,
+                    R.string.search_reset_icons_desc,
+                    "reset_icons",
+                    R.array.keywords_restore_default
+                ),
+                SearchSetting(
+                    R.string.search_clock_seconds_title,
+                    R.string.search_clock_seconds_desc,
+                    "clock_seconds"
+                ),
+                SearchSetting(
+                    R.string.search_battery_percentage_title,
+                    R.string.search_battery_percentage_desc,
+                    "battery_percentage"
+                ),
+                SearchSetting(
+                    R.string.search_privacy_chip_title,
+                    R.string.search_privacy_chip_desc,
+                    "privacy_chip"
+                )
             ),
             showToggle = false,
             parentFeatureId = "Display"
         ) {
-            override fun isEnabled(viewModel: MainViewModel) = viewModel.isStatusBarIconControlEnabled.value
-            override fun isToggleEnabled(viewModel: MainViewModel, context: Context) = viewModel.isWriteSecureSettingsEnabled.value
-            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) = viewModel.setStatusBarIconControlEnabled(enabled, context)
+            override fun isEnabled(viewModel: MainViewModel) =
+                viewModel.isStatusBarIconControlEnabled.value
+
+            override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
+                viewModel.isWriteSecureSettingsEnabled.value
+
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
+                viewModel.setStatusBarIconControlEnabled(enabled, context)
         },
 
         object : Feature(
@@ -221,7 +262,9 @@ object FeatureRegistry {
         ) {
             override fun isEnabled(viewModel: MainViewModel) = viewModel.isCaffeinateActive.value
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {
-                if (enabled) viewModel.startCaffeinate(context) else viewModel.stopCaffeinate(context)
+                if (enabled) viewModel.startCaffeinate(context) else viewModel.stopCaffeinate(
+                    context
+                )
             }
         },
 
@@ -232,13 +275,21 @@ object FeatureRegistry {
             category = R.string.cat_tools,
             description = R.string.feat_maps_power_saving_desc,
             aboutDescription = R.string.about_desc_maps_power_saving,
-            permissionKeys = if (ShellUtils.isRootEnabled(EssentialsApp.context)) listOf("ROOT", "NOTIFICATION_LISTENER") else listOf("SHIZUKU", "NOTIFICATION_LISTENER"),
+            permissionKeys = if (ShellUtils.isRootEnabled(EssentialsApp.context)) listOf(
+                "ROOT",
+                "NOTIFICATION_LISTENER"
+            ) else listOf("SHIZUKU", "NOTIFICATION_LISTENER"),
             hasMoreSettings = false
         ) {
-            override fun isEnabled(viewModel: MainViewModel) = viewModel.isMapsPowerSavingEnabled.value
+            override fun isEnabled(viewModel: MainViewModel) =
+                viewModel.isMapsPowerSavingEnabled.value
+
             override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
                 ShellUtils.hasPermission(context) && viewModel.isNotificationListenerEnabled.value
-            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) = viewModel.setMapsPowerSavingEnabled(enabled, context)
+
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
+                viewModel.setMapsPowerSavingEnabled(enabled, context)
+
             override fun onClick(context: Context, viewModel: MainViewModel) {}
         },
 
@@ -251,17 +302,36 @@ object FeatureRegistry {
             permissionKeys = listOf("DRAW_OVERLAYS", "ACCESSIBILITY", "NOTIFICATION_LISTENER"),
             aboutDescription = R.string.about_desc_notification_lighting,
             searchableSettings = listOf(
-                SearchSetting(R.string.search_lighting_style_title, R.string.search_lighting_style_desc, "style", R.array.keywords_visual_style),
-                SearchSetting(R.string.search_corner_radius_title, R.string.search_corner_radius_desc, "corner_radius", R.array.keywords_round_shape),
-                SearchSetting(R.string.search_skip_silent_title, R.string.search_skip_silent_desc, "skip_silent_notifications", R.array.keywords_quiet_filter)
+                SearchSetting(
+                    R.string.search_lighting_style_title,
+                    R.string.search_lighting_style_desc,
+                    "style",
+                    R.array.keywords_visual_style
+                ),
+                SearchSetting(
+                    R.string.search_corner_radius_title,
+                    R.string.search_corner_radius_desc,
+                    "corner_radius",
+                    R.array.keywords_round_shape
+                ),
+                SearchSetting(
+                    R.string.search_skip_silent_title,
+                    R.string.search_skip_silent_desc,
+                    "skip_silent_notifications",
+                    R.array.keywords_quiet_filter
+                )
             ),
             showToggle = true,
             parentFeatureId = "Notifications"
         ) {
-            override fun isEnabled(viewModel: MainViewModel) = viewModel.isNotificationLightingEnabled.value
+            override fun isEnabled(viewModel: MainViewModel) =
+                viewModel.isNotificationLightingEnabled.value
+
             override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
                 viewModel.isOverlayPermissionGranted.value && viewModel.isNotificationLightingAccessibilityEnabled.value && viewModel.isNotificationListenerEnabled.value
-            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) = viewModel.setNotificationLightingEnabled(enabled, context)
+
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
+                viewModel.setNotificationLightingEnabled(enabled, context)
         },
 
         object : Feature(
@@ -273,19 +343,31 @@ object FeatureRegistry {
             aboutDescription = R.string.about_desc_flashlight_pulse,
             permissionKeys = listOf("NOTIFICATION_LISTENER"),
             searchableSettings = listOf(
-                SearchSetting(R.string.search_flashlight_pulse_title, R.string.search_flashlight_pulse_desc, "flashlight_pulse", R.array.keywords_flashlight_pulse),
-                SearchSetting(R.string.search_only_facing_down_title, R.string.search_only_facing_down_desc, "flashlight_pulse_facedown", R.array.keywords_proximity_sensor)
+                SearchSetting(
+                    R.string.search_flashlight_pulse_title,
+                    R.string.search_flashlight_pulse_desc,
+                    "flashlight_pulse",
+                    R.array.keywords_flashlight_pulse
+                ),
+                SearchSetting(
+                    R.string.search_only_facing_down_title,
+                    R.string.search_only_facing_down_desc,
+                    "flashlight_pulse_facedown",
+                    R.array.keywords_proximity_sensor
+                )
             ),
             showToggle = true,
             parentFeatureId = "Notifications"
         ) {
-            override fun isEnabled(viewModel: MainViewModel) = viewModel.isFlashlightPulseEnabled.value
+            override fun isEnabled(viewModel: MainViewModel) =
+                viewModel.isFlashlightPulseEnabled.value
+
             override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
                 viewModel.isNotificationListenerEnabled.value
-            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) = viewModel.setFlashlightPulseEnabled(enabled, context)
+
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
+                viewModel.setFlashlightPulseEnabled(enabled, context)
         },
-
-
 
 
         object : Feature(
@@ -313,12 +395,17 @@ object FeatureRegistry {
             searchableSettings = emptyList(),
             parentFeatureId = "Notifications"
         ) {
-            override fun isEnabled(viewModel: MainViewModel) = viewModel.isSnoozeHeadsUpEnabled.value
-            override fun isToggleEnabled(viewModel: MainViewModel, context: Context) = viewModel.isNotificationListenerEnabled.value
-            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) = viewModel.setSnoozeHeadsUpEnabled(
-                enabled,
-                context = context
-            )
+            override fun isEnabled(viewModel: MainViewModel) =
+                viewModel.isSnoozeHeadsUpEnabled.value
+
+            override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
+                viewModel.isNotificationListenerEnabled.value
+
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
+                viewModel.setSnoozeHeadsUpEnabled(
+                    enabled,
+                    context = context
+                )
         },
 
         object : Feature(
@@ -463,18 +550,39 @@ object FeatureRegistry {
             category = R.string.cat_interaction,
             description = R.string.feat_button_remap_desc,
             aboutDescription = R.string.about_desc_button_remap,
-            permissionKeys = if (ShellUtils.isRootEnabled(EssentialsApp.context)) listOf("ACCESSIBILITY", "ROOT") else listOf("ACCESSIBILITY", "SHIZUKU"),
+            permissionKeys = if (ShellUtils.isRootEnabled(EssentialsApp.context)) listOf(
+                "ACCESSIBILITY",
+                "ROOT"
+            ) else listOf("ACCESSIBILITY", "SHIZUKU"),
             showToggle = true,
             searchableSettings = listOf(
-                SearchSetting(R.string.search_remap_enable_title, R.string.search_remap_enable_desc, "enable_remap", R.array.keywords_switch_master),
-                SearchSetting(R.string.search_remap_haptic_title, R.string.search_remap_haptic_desc, "remap_haptic", R.array.keywords_vibration),
-                SearchSetting(R.string.search_remap_flashlight_title, R.string.search_remap_flashlight_desc, "flashlight_toggle", R.array.keywords_flashlight)
+                SearchSetting(
+                    R.string.search_remap_enable_title,
+                    R.string.search_remap_enable_desc,
+                    "enable_remap",
+                    R.array.keywords_switch_master
+                ),
+                SearchSetting(
+                    R.string.search_remap_haptic_title,
+                    R.string.search_remap_haptic_desc,
+                    "remap_haptic",
+                    R.array.keywords_vibration
+                ),
+                SearchSetting(
+                    R.string.search_remap_flashlight_title,
+                    R.string.search_remap_flashlight_desc,
+                    "flashlight_toggle",
+                    R.array.keywords_flashlight
+                )
             ),
             parentFeatureId = "Input"
         ) {
             override fun isEnabled(viewModel: MainViewModel) = viewModel.isButtonRemapEnabled.value
-            override fun isToggleEnabled(viewModel: MainViewModel, context: Context) = viewModel.isAccessibilityEnabled.value
-            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) = viewModel.setButtonRemapEnabled(enabled, context)
+            override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
+                viewModel.isAccessibilityEnabled.value
+
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
+                viewModel.setButtonRemapEnabled(enabled, context)
         },
 
         object : Feature(
@@ -486,15 +594,24 @@ object FeatureRegistry {
             aboutDescription = R.string.about_desc_dynamic_night_light,
             permissionKeys = listOf("ACCESSIBILITY", "WRITE_SECURE_SETTINGS"),
             searchableSettings = listOf(
-                SearchSetting(R.string.search_night_light_enable_title, R.string.search_night_light_enable_desc, "dynamic_night_light_toggle", R.array.keywords_switch_master)
+                SearchSetting(
+                    R.string.search_night_light_enable_title,
+                    R.string.search_night_light_enable_desc,
+                    "dynamic_night_light_toggle",
+                    R.array.keywords_switch_master
+                )
             ),
             showToggle = true,
             parentFeatureId = "Display"
         ) {
-            override fun isEnabled(viewModel: MainViewModel) = viewModel.isDynamicNightLightEnabled.value
+            override fun isEnabled(viewModel: MainViewModel) =
+                viewModel.isDynamicNightLightEnabled.value
+
             override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
                 viewModel.isAccessibilityEnabled.value && viewModel.isWriteSecureSettingsEnabled.value
-            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) = viewModel.setDynamicNightLightEnabled(enabled, context)
+
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
+                viewModel.setDynamicNightLightEnabled(enabled, context)
         },
 
         object : Feature(
@@ -507,10 +624,14 @@ object FeatureRegistry {
             permissionKeys = listOf("ACCESSIBILITY", "WRITE_SECURE_SETTINGS", "DEVICE_ADMIN"),
             parentFeatureId = "Security"
         ) {
-            override fun isEnabled(viewModel: MainViewModel) = viewModel.isScreenLockedSecurityEnabled.value
+            override fun isEnabled(viewModel: MainViewModel) =
+                viewModel.isScreenLockedSecurityEnabled.value
+
             override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
                 viewModel.isAccessibilityEnabled.value && viewModel.isWriteSecureSettingsEnabled.value && viewModel.isDeviceAdminEnabled.value
-            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) = viewModel.setScreenLockedSecurityEnabled(enabled, context)
+
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
+                viewModel.setScreenLockedSecurityEnabled(enabled, context)
         },
 
         object : Feature(
@@ -522,14 +643,27 @@ object FeatureRegistry {
             aboutDescription = R.string.about_desc_app_lock,
             permissionKeys = listOf("ACCESSIBILITY"),
             searchableSettings = listOf(
-                SearchSetting(R.string.search_app_lock_enable_title, R.string.search_app_lock_enable_desc, "app_lock_enabled", R.array.keywords_privacy),
-                SearchSetting(R.string.search_app_lock_pick_title, R.string.search_app_lock_pick_desc, "app_lock_selected_apps", R.array.keywords_selection)
+                SearchSetting(
+                    R.string.search_app_lock_enable_title,
+                    R.string.search_app_lock_enable_desc,
+                    "app_lock_enabled",
+                    R.array.keywords_privacy
+                ),
+                SearchSetting(
+                    R.string.search_app_lock_pick_title,
+                    R.string.search_app_lock_pick_desc,
+                    "app_lock_selected_apps",
+                    R.array.keywords_selection
+                )
             ),
             parentFeatureId = "Security"
         ) {
             override fun isEnabled(viewModel: MainViewModel) = viewModel.isAppLockEnabled.value
-            override fun isToggleEnabled(viewModel: MainViewModel, context: Context) = viewModel.isAccessibilityEnabled.value
-            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) = viewModel.setAppLockEnabled(enabled, context)
+            override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
+                viewModel.isAccessibilityEnabled.value
+
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
+                viewModel.setAppLockEnabled(enabled, context)
         },
 
         object : Feature(
@@ -553,12 +687,36 @@ object FeatureRegistry {
             category = R.string.cat_tools,
             description = R.string.feat_freeze_desc,
             aboutDescription = R.string.about_desc_freeze,
-            permissionKeys = if (ShellUtils.isRootEnabled(EssentialsApp.context)) listOf("ROOT", "USAGE_STATS", "NOTIFICATION_LISTENER") else listOf("SHIZUKU", "USAGE_STATS", "NOTIFICATION_LISTENER"),
+            permissionKeys = if (ShellUtils.isRootEnabled(EssentialsApp.context)) listOf(
+                "ROOT",
+                "USAGE_STATS",
+                "NOTIFICATION_LISTENER"
+            ) else listOf("SHIZUKU", "USAGE_STATS", "NOTIFICATION_LISTENER"),
             searchableSettings = listOf(
-                SearchSetting(R.string.search_freeze_pick_title, R.string.search_freeze_pick_desc, "freeze_selected_apps", R.array.keywords_selection),
-                SearchSetting(R.string.search_freeze_all_title, R.string.search_freeze_all_desc, "freeze_all_manual", R.array.keywords_manual_now),
-                SearchSetting(R.string.search_freeze_locked_title, R.string.search_freeze_locked_desc, "freeze_when_locked_enabled", R.array.keywords_automation_lock),
-                SearchSetting(R.string.search_freeze_delay_title, R.string.search_freeze_delay_desc, "freeze_lock_delay_index", R.array.keywords_timer)
+                SearchSetting(
+                    R.string.search_freeze_pick_title,
+                    R.string.search_freeze_pick_desc,
+                    "freeze_selected_apps",
+                    R.array.keywords_selection
+                ),
+                SearchSetting(
+                    R.string.search_freeze_all_title,
+                    R.string.search_freeze_all_desc,
+                    "freeze_all_manual",
+                    R.array.keywords_manual_now
+                ),
+                SearchSetting(
+                    R.string.search_freeze_locked_title,
+                    R.string.search_freeze_locked_desc,
+                    "freeze_when_locked_enabled",
+                    R.array.keywords_automation_lock
+                ),
+                SearchSetting(
+                    R.string.search_freeze_delay_title,
+                    R.string.search_freeze_delay_desc,
+                    "freeze_lock_delay_index",
+                    R.array.keywords_timer
+                )
             ),
             showToggle = false,
             isVisibleInMain = false
@@ -566,6 +724,7 @@ object FeatureRegistry {
             override fun isEnabled(viewModel: MainViewModel) = true
             override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
                 ShellUtils.hasPermission(context)
+
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
         },
 
@@ -579,9 +738,24 @@ object FeatureRegistry {
             hasMoreSettings = true,
             showToggle = false,
             searchableSettings = listOf(
-                SearchSetting(R.string.search_keyboard_height_title, R.string.search_keyboard_height_desc, "keyboard_height", R.array.keywords_keyboard),
-                SearchSetting(R.string.search_keyboard_padding_title, R.string.search_keyboard_padding_desc, "keyboard_bottom_padding", R.array.keywords_keyboard),
-                SearchSetting(R.string.search_keyboard_haptics_title, R.string.search_keyboard_haptics_desc, "keyboard_haptics", R.array.keywords_vibration)
+                SearchSetting(
+                    R.string.search_keyboard_height_title,
+                    R.string.search_keyboard_height_desc,
+                    "keyboard_height",
+                    R.array.keywords_keyboard
+                ),
+                SearchSetting(
+                    R.string.search_keyboard_padding_title,
+                    R.string.search_keyboard_padding_desc,
+                    "keyboard_bottom_padding",
+                    R.array.keywords_keyboard
+                ),
+                SearchSetting(
+                    R.string.search_keyboard_haptics_title,
+                    R.string.search_keyboard_haptics_desc,
+                    "keyboard_haptics",
+                    R.array.keywords_vibration
+                )
             ),
             parentFeatureId = "Input"
         ) {
@@ -634,9 +808,10 @@ object FeatureRegistry {
             parentFeatureId = "Watch"
         ) {
             override fun isEnabled(viewModel: MainViewModel) = viewModel.isCalendarSyncEnabled.value
-            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) = viewModel.setCalendarSyncEnabled(enabled, context)
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
+                viewModel.setCalendarSyncEnabled(enabled, context)
         },
-        
+
 
         object : Feature(
             id = "Ambient music glance",
@@ -650,12 +825,16 @@ object FeatureRegistry {
             isBeta = true,
             isVisibleInMain = false
         ) {
-            override fun isEnabled(viewModel: MainViewModel) = viewModel.isAmbientMusicGlanceEnabled.value
-            override fun isToggleEnabled(viewModel: MainViewModel, context: Context) = 
+            override fun isEnabled(viewModel: MainViewModel) =
+                viewModel.isAmbientMusicGlanceEnabled.value
+
+            override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
                 viewModel.isNotificationListenerEnabled.value && viewModel.isAccessibilityEnabled.value
-            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) = viewModel.setAmbientMusicGlanceEnabled(enabled)
+
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
+                viewModel.setAmbientMusicGlanceEnabled(enabled)
         },
-        
+
         object : Feature(
             id = "App updates",
             title = R.string.feat_app_updates_title,
@@ -669,7 +848,12 @@ object FeatureRegistry {
             override fun isEnabled(viewModel: MainViewModel) = true
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
             override fun onClick(context: Context, viewModel: MainViewModel) {
-                context.startActivity(android.content.Intent(context, com.sameerasw.essentials.AppUpdatesActivity::class.java))
+                context.startActivity(
+                    Intent(
+                        context,
+                        com.sameerasw.essentials.AppUpdatesActivity::class.java
+                    )
+                )
             }
         },
 
@@ -708,7 +892,9 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_headphones_24,
             category = R.string.cat_system,
             description = R.string.feat_qs_tiles_desc,
-            permissionKeys = if (ShellUtils.isRootEnabled(EssentialsApp.context)) listOf("ROOT") else listOf("SHIZUKU"),
+            permissionKeys = if (ShellUtils.isRootEnabled(EssentialsApp.context)) listOf("ROOT") else listOf(
+                "SHIZUKU"
+            ),
             showToggle = false,
             isVisibleInMain = false
         ) {

@@ -35,7 +35,7 @@ fun AppLockSettingsUI(
 ) {
     val context = LocalContext.current
     var isAppSelectionSheetOpen by remember { mutableStateOf(false) }
-    
+
     val isAppLockEnabled by viewModel.isAppLockEnabled
     val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
 
@@ -66,7 +66,9 @@ fun AppLockSettingsUI(
                         BiometricHelper.showBiometricPrompt(
                             activity = context,
                             title = context.getString(R.string.app_lock_auth_title),
-                            subtitle = if (enabled) context.getString(R.string.app_lock_enable_auth_subtitle) else context.getString(R.string.app_lock_disable_auth_subtitle),
+                            subtitle = if (enabled) context.getString(R.string.app_lock_enable_auth_subtitle) else context.getString(
+                                R.string.app_lock_disable_auth_subtitle
+                            ),
                             onSuccess = { viewModel.setAppLockEnabled(enabled, context) }
                         )
                     } else {
@@ -117,7 +119,13 @@ fun AppLockSettingsUI(
                 onDismissRequest = { isAppSelectionSheetOpen = false },
                 onLoadApps = { viewModel.loadAppLockSelectedApps(it) },
                 onSaveApps = { ctx, apps -> viewModel.saveAppLockSelectedApps(ctx, apps) },
-                onAppToggle = { ctx, pkg, enabled -> viewModel.updateAppLockAppEnabled(ctx, pkg, enabled) }
+                onAppToggle = { ctx, pkg, enabled ->
+                    viewModel.updateAppLockAppEnabled(
+                        ctx,
+                        pkg,
+                        enabled
+                    )
+                }
             )
         }
     }

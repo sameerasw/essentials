@@ -21,7 +21,7 @@ class NotificationLightingHandler(
     private var windowManager: WindowManager? = null
     private val overlayViews = mutableListOf<View>()
     private val handler = Handler(Looper.getMainLooper())
-    
+
     // Config state
     private var cornerRadiusDp: Float = OverlayHelper.CORNER_RADIUS_DP.toFloat()
     private var strokeThicknessDp: Float = OverlayHelper.STROKE_DP.toFloat()
@@ -34,30 +34,45 @@ class NotificationLightingHandler(
     private var pulseCount: Int = 1
     private var pulseDuration: Long = 3000
     private var edgeLightingStyle: NotificationLightingStyle = NotificationLightingStyle.STROKE
-    private var glowSides: Set<NotificationLightingSide> = setOf(NotificationLightingSide.LEFT, NotificationLightingSide.RIGHT)
+    private var glowSides: Set<NotificationLightingSide> =
+        setOf(NotificationLightingSide.LEFT, NotificationLightingSide.RIGHT)
     private var indicatorX: Float = 50f
     private var indicatorY: Float = 2f
     private var indicatorScale: Float = 1.0f
-    
+
     private var isAmbientDisplayRequested: Boolean = false
     private var isAmbientShowLockScreen: Boolean = false
     private var isInterrupted: Boolean = false
 
     fun handleIntent(intent: Intent) {
-         if (intent.action == "SHOW_NOTIFICATION_LIGHTING") {
-            cornerRadiusDp = intent.getFloatExtra("corner_radius_dp", OverlayHelper.CORNER_RADIUS_DP.toFloat())
-            strokeThicknessDp = intent.getFloatExtra("stroke_thickness_dp", OverlayHelper.STROKE_DP.toFloat())
+        if (intent.action == "SHOW_NOTIFICATION_LIGHTING") {
+            cornerRadiusDp =
+                intent.getFloatExtra("corner_radius_dp", OverlayHelper.CORNER_RADIUS_DP.toFloat())
+            strokeThicknessDp =
+                intent.getFloatExtra("stroke_thickness_dp", OverlayHelper.STROKE_DP.toFloat())
             isPreview = intent.getBooleanExtra("is_preview", false)
             ignoreScreenState = intent.getBooleanExtra("ignore_screen_state", false)
-            colorMode = NotificationLightingColorMode.valueOf(intent.getStringExtra("color_mode") ?: "SYSTEM")
+            colorMode = NotificationLightingColorMode.valueOf(
+                intent.getStringExtra("color_mode") ?: "SYSTEM"
+            )
             customColor = intent.getIntExtra("custom_color", 0)
-            resolvedColor = if (intent.hasExtra("resolved_color")) intent.getIntExtra("resolved_color", 0) else null
+            resolvedColor = if (intent.hasExtra("resolved_color")) intent.getIntExtra(
+                "resolved_color",
+                0
+            ) else null
             pulseCount = intent.getIntExtra("pulse_count", 1)
             pulseDuration = intent.getLongExtra("pulse_duration", 3000)
             val styleName = intent.getStringExtra("style")
-            edgeLightingStyle = if (styleName != null) NotificationLightingStyle.valueOf(styleName) else NotificationLightingStyle.STROKE
+            edgeLightingStyle =
+                if (styleName != null) NotificationLightingStyle.valueOf(styleName) else NotificationLightingStyle.STROKE
             val glowSidesArray = intent.getStringArrayExtra("glow_sides")
-            glowSides = glowSidesArray?.mapNotNull { try { NotificationLightingSide.valueOf(it) } catch(_: Exception) { null } }?.toSet() 
+            glowSides = glowSidesArray?.mapNotNull {
+                try {
+                    NotificationLightingSide.valueOf(it)
+                } catch (_: Exception) {
+                    null
+                }
+            }?.toSet()
                 ?: setOf(NotificationLightingSide.LEFT, NotificationLightingSide.RIGHT)
             indicatorX = intent.getFloatExtra("indicator_x", 50f)
             indicatorY = intent.getFloatExtra("indicator_y", 2f)
@@ -65,13 +80,13 @@ class NotificationLightingHandler(
             isAmbientDisplayRequested = intent.getBooleanExtra("is_ambient_display", false)
             isAmbientShowLockScreen = intent.getBooleanExtra("is_ambient_show_lock_screen", false)
             isInterrupted = false
-            
+
             val removePreview = intent.getBooleanExtra("remove_preview", false)
             if (removePreview) {
                 removeOverlay()
                 return
             }
-            
+
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     showNotificationLighting()
@@ -93,7 +108,7 @@ class NotificationLightingHandler(
     }
 
     fun removeOverlay() {
-         for (overlay in overlayViews) {
+        for (overlay in overlayViews) {
             try {
                 OverlayHelper.fadeOutAndRemoveOverlay(windowManager, overlay, overlayViews)
             } catch (e: Exception) {
@@ -104,7 +119,7 @@ class NotificationLightingHandler(
     }
 
     private fun showNotificationLighting() {
-         // For preview mode, remove existing overlays first
+        // For preview mode, remove existing overlays first
         if (overlayViews.isNotEmpty()) {
             removeOverlay()
         }
@@ -113,7 +128,8 @@ class NotificationLightingHandler(
 
         val overlayType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             try {
-                WindowManager.LayoutParams::class.java.getField("TYPE_ACCESSIBILITY_OVERLAY").getInt(null)
+                WindowManager.LayoutParams::class.java.getField("TYPE_ACCESSIBILITY_OVERLAY")
+                    .getInt(null)
             } catch (_: Exception) {
                 WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
             }
@@ -136,11 +152,11 @@ class NotificationLightingHandler(
                     }
                 }
             }
-            
+
             val overlay = OverlayHelper.createOverlayView(
-                service, 
-                color, 
-                strokeDp = strokeThicknessDp, 
+                service,
+                color,
+                strokeDp = strokeThicknessDp,
                 cornerRadiusDp = cornerRadiusDp,
                 style = edgeLightingStyle,
                 glowSides = glowSides,
@@ -149,8 +165,9 @@ class NotificationLightingHandler(
             val params = OverlayHelper.createOverlayLayoutParams(overlayType)
 
             val isScreenOn = powerManager.isInteractive
-            val showBackground = isAmbientDisplayRequested && !isScreenOn && !isPreview && !isAmbientShowLockScreen
-            
+            val showBackground =
+                isAmbientDisplayRequested && !isScreenOn && !isPreview && !isAmbientShowLockScreen
+
             if (isAmbientDisplayRequested && !isScreenOn && !isPreview) {
                 if (showBackground) {
                     val ambientOverlay = OverlayHelper.createOverlayView(
@@ -163,28 +180,34 @@ class NotificationLightingHandler(
                         indicatorScale = indicatorScale,
                         showBackground = true
                     )
-                    val ambientParams = OverlayHelper.createOverlayLayoutParams(overlayType, isTouchable = true)
-                    
+                    val ambientParams =
+                        OverlayHelper.createOverlayLayoutParams(overlayType, isTouchable = true)
+
                     ambientOverlay.setOnTouchListener { _, _ ->
                         isInterrupted = true
                         removeOverlay()
                         true
                     }
 
-                    if (OverlayHelper.addOverlayView(windowManager, ambientOverlay, ambientParams)) {
+                    if (OverlayHelper.addOverlayView(
+                            windowManager,
+                            ambientOverlay,
+                            ambientParams
+                        )
+                    ) {
                         overlayViews.add(ambientOverlay)
-                        
+
                         try {
                             @Suppress("DEPRECATION")
                             val wakeLock = powerManager.newWakeLock(
                                 PowerManager.SCREEN_BRIGHT_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP,
                                 "essentials:NotificationLighting"
                             )
-                            wakeLock.acquire(10000L) 
+                            wakeLock.acquire(10000L)
                         } catch (e: Exception) {
                             Log.e("NotificationLighting", "Failed to wake screen", e)
                         }
-                        
+
                         handler.postDelayed({
                             if (!isInterrupted) {
                                 startPulsing(ambientOverlay)
@@ -194,7 +217,7 @@ class NotificationLightingHandler(
                 } else {
                     if (OverlayHelper.addOverlayView(windowManager, overlay, params)) {
                         overlayViews.add(overlay)
-                        
+
                         try {
                             @Suppress("DEPRECATION")
                             val wakeLock = powerManager.newWakeLock(
@@ -224,13 +247,22 @@ class NotificationLightingHandler(
                 if (OverlayHelper.addOverlayView(windowManager, overlay, params)) {
                     overlayViews.add(overlay)
                     if (isPreview) {
-                        OverlayHelper.showPreview(overlay, edgeLightingStyle, strokeThicknessDp, indicatorX, indicatorY, indicatorScale)
+                        OverlayHelper.showPreview(
+                            overlay,
+                            edgeLightingStyle,
+                            strokeThicknessDp,
+                            indicatorX,
+                            indicatorY,
+                            indicatorScale
+                        )
                     } else {
                         startPulsing(overlay)
                     }
                 }
             }
-        } catch (e: Exception) { e.printStackTrace() }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun startPulsing(overlay: View) {
@@ -246,7 +278,7 @@ class NotificationLightingHandler(
         ) {
             if (isAmbientDisplayRequested && !isInterrupted && !isPreview && !isAmbientShowLockScreen) {
                 service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_LOCK_SCREEN)
-                
+
                 handler.postDelayed({
                     OverlayHelper.fadeOutAndRemoveOverlay(windowManager, overlay, overlayViews)
                 }, 500)

@@ -88,9 +88,13 @@ fun AutomationItem(
                 onDismissRequest = { showMenu = false },
                 offset = DpOffset(0.dp, 0.dp),
             ) {
-                val toggleText = if (automation.isEnabled) stringResource(R.string.action_disable) else stringResource(R.string.action_enable)
-                val toggleIcon = if (automation.isEnabled) R.drawable.rounded_close_24 else R.drawable.rounded_check_24
-                
+                val toggleText =
+                    if (automation.isEnabled) stringResource(R.string.action_disable) else stringResource(
+                        R.string.action_enable
+                    )
+                val toggleIcon =
+                    if (automation.isEnabled) R.drawable.rounded_close_24 else R.drawable.rounded_check_24
+
                 SegmentedDropdownMenuItem(
                     text = { Text(toggleText) },
                     onClick = {
@@ -133,95 +137,79 @@ fun AutomationItem(
             }
 
             Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .height(IntrinsicSize.Min),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            RoundedCardContainer(
-                cornerRadius = 18.dp,
                 modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight(),
+                    .fillMaxWidth()
+                    .padding(8.dp)
+                    .height(IntrinsicSize.Min),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                val icon = when (automation.type) {
-                    Automation.Type.TRIGGER -> automation.trigger?.icon
-                    Automation.Type.STATE -> automation.state?.icon
-                    Automation.Type.APP -> R.drawable.rounded_apps_24
-                }
-                
-                val titleString = when (automation.type) {
-                    Automation.Type.TRIGGER -> automation.trigger?.title?.let { stringResource(it) }
-                    Automation.Type.STATE -> automation.state?.title?.let { stringResource(it) }
-                    Automation.Type.APP -> stringResource(R.string.diy_create_app_title) + " (${automation.selectedApps.size})"
-                }
+                RoundedCardContainer(
+                    cornerRadius = 18.dp,
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight(),
+                ) {
+                    val icon = when (automation.type) {
+                        Automation.Type.TRIGGER -> automation.trigger?.icon
+                        Automation.Type.STATE -> automation.state?.icon
+                        Automation.Type.APP -> R.drawable.rounded_apps_24
+                    }
 
-                if (icon != null && titleString != null) {
-                    Surface(
-                        color = MaterialTheme.colorScheme.secondaryContainer,
-                        shape = RoundedCornerShape(16.dp),
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .padding(12.dp)
-                                .fillMaxHeight(),
-                            verticalAlignment = Alignment.CenterVertically
+                    val titleString = when (automation.type) {
+                        Automation.Type.TRIGGER -> automation.trigger?.title?.let {
+                            stringResource(
+                                it
+                            )
+                        }
+
+                        Automation.Type.STATE -> automation.state?.title?.let { stringResource(it) }
+                        Automation.Type.APP -> stringResource(R.string.diy_create_app_title) + " (${automation.selectedApps.size})"
+                    }
+
+                    if (icon != null && titleString != null) {
+                        Surface(
+                            color = MaterialTheme.colorScheme.secondaryContainer,
+                            shape = RoundedCornerShape(16.dp),
+                            modifier = Modifier.fillMaxSize()
                         ) {
-                            val context = LocalContext.current
-                            val validatedIcon = remember(icon) {
-                                try {
-                                    if (context.resources.getResourceTypeName(icon) == "drawable") icon
-                                    else R.drawable.rounded_do_not_disturb_on_24
-                                } catch (e: Exception) {
-                                    R.drawable.rounded_do_not_disturb_on_24
+                            Row(
+                                modifier = Modifier
+                                    .padding(12.dp)
+                                    .fillMaxHeight(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                val context = LocalContext.current
+                                val validatedIcon = remember(icon) {
+                                    try {
+                                        if (context.resources.getResourceTypeName(icon) == "drawable") icon
+                                        else R.drawable.rounded_do_not_disturb_on_24
+                                    } catch (e: Exception) {
+                                        R.drawable.rounded_do_not_disturb_on_24
+                                    }
                                 }
+                                Icon(
+                                    painter = painterResource(id = validatedIcon),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(24.dp),
+                                    tint = MaterialTheme.colorScheme.onSecondaryContainer
+                                )
+                                Spacer(modifier = Modifier.width(12.dp))
+                                Text(
+                                    text = titleString,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.onSecondaryContainer,
+                                    fontWeight = FontWeight.SemiBold,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
                             }
-                            Icon(
-                                painter = painterResource(id = validatedIcon),
-                                contentDescription = null,
-                                modifier = Modifier.size(24.dp),
-                                tint = MaterialTheme.colorScheme.onSecondaryContainer
-                            )
-                            Spacer(modifier = Modifier.width(12.dp))
-                            Text(
-                                text = titleString,
-                                style = MaterialTheme.typography.titleMedium,
-                                color = MaterialTheme.colorScheme.onSecondaryContainer,
-                                fontWeight = FontWeight.SemiBold,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
                         }
                     }
                 }
-            }
 
 
-            if (automation.type == Automation.Type.TRIGGER) {
-                // Separator Icon
-                Box(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clip(CircleShape)
-                        .padding(horizontal = 3.dp)
-                        .background(MaterialTheme.colorScheme.primaryContainer),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.rounded_arrow_forward_24),
-                        contentDescription = null,
-                        modifier = Modifier.size(16.dp),
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                }
-            } else {
-                Column(
-                    modifier = Modifier.fillMaxHeight(),
-                    verticalArrangement = Arrangement.SpaceAround,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
+                if (automation.type == Automation.Type.TRIGGER) {
+                    // Separator Icon
                     Box(
                         modifier = Modifier
                             .size(24.dp)
@@ -237,44 +225,65 @@ fun AutomationItem(
                             tint = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     }
-
-                    Box(
-                        modifier = Modifier
-                            .size(24.dp)
-                            .clip(CircleShape)
-                            .padding(horizontal = 3.dp)
-                            .background(MaterialTheme.colorScheme.primaryContainer),
-                        contentAlignment = Alignment.Center
+                } else {
+                    Column(
+                        modifier = Modifier.fillMaxHeight(),
+                        verticalArrangement = Arrangement.SpaceAround,
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Icon(
-                            painter = painterResource(R.drawable.rounded_arrow_back_24),
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp),
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer
-                        )
+                        Box(
+                            modifier = Modifier
+                                .size(24.dp)
+                                .clip(CircleShape)
+                                .padding(horizontal = 3.dp)
+                                .background(MaterialTheme.colorScheme.primaryContainer),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.rounded_arrow_forward_24),
+                                contentDescription = null,
+                                modifier = Modifier.size(16.dp),
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                        }
+
+                        Box(
+                            modifier = Modifier
+                                .size(24.dp)
+                                .clip(CircleShape)
+                                .padding(horizontal = 3.dp)
+                                .background(MaterialTheme.colorScheme.primaryContainer),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.rounded_arrow_back_24),
+                                contentDescription = null,
+                                modifier = Modifier.size(16.dp),
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                        }
                     }
                 }
-            }
 
-            // Right Side: Actions (Weight 1 to fill space)
+                // Right Side: Actions (Weight 1 to fill space)
 
-            RoundedCardContainer(
-                cornerRadius = 18.dp,
-                modifier = Modifier
-                    .weight(1f),
-            ) {
-                if (automation.type == Automation.Type.TRIGGER) {
-                    automation.actions.forEach { action ->
-                        ActionItem(action = action)
+                RoundedCardContainer(
+                    cornerRadius = 18.dp,
+                    modifier = Modifier
+                        .weight(1f),
+                ) {
+                    if (automation.type == Automation.Type.TRIGGER) {
+                        automation.actions.forEach { action ->
+                            ActionItem(action = action)
+                        }
+                    } else {
+                        // State Actions (In/Out)
+                        ActionItem(action = automation.entryAction)
+                        ActionItem(action = automation.exitAction)
                     }
-                } else {
-                    // State Actions (In/Out)
-                    ActionItem(action = automation.entryAction)
-                    ActionItem(action = automation.exitAction)
                 }
             }
         }
-    }
     }
 }
 

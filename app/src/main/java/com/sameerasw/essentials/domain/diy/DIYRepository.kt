@@ -19,7 +19,7 @@ object DIYRepository {
 
     private val _automations = MutableStateFlow<List<Automation>>(emptyList())
     val automations = _automations.asStateFlow()
-    
+
     private var prefs: SharedPreferences? = null
     private val gson = GsonBuilder()
         .registerTypeAdapter(Trigger::class.java, SealedAdapter(Trigger::class))
@@ -27,8 +27,13 @@ object DIYRepository {
         .registerTypeAdapter(Action::class.java, SealedAdapter(Action::class))
         .create()
 
-    private class SealedAdapter<T : Any>(private val kClass: KClass<T>) : JsonSerializer<T>, JsonDeserializer<T> {
-        override fun serialize(src: T, typeOfSrc: java.lang.reflect.Type, context: JsonSerializationContext): JsonElement {
+    private class SealedAdapter<T : Any>(private val kClass: KClass<T>) : JsonSerializer<T>,
+        JsonDeserializer<T> {
+        override fun serialize(
+            src: T,
+            typeOfSrc: java.lang.reflect.Type,
+            context: JsonSerializationContext
+        ): JsonElement {
             val element = context.serialize(src)
             if (element.isJsonObject) {
                 element.asJsonObject.addProperty("type", src::class.simpleName)
@@ -36,17 +41,21 @@ object DIYRepository {
             return element
         }
 
-        override fun deserialize(json: JsonElement, typeOfT: java.lang.reflect.Type, context: JsonDeserializationContext): T? {
+        override fun deserialize(
+            json: JsonElement,
+            typeOfT: java.lang.reflect.Type,
+            context: JsonDeserializationContext
+        ): T? {
             val typeName = json.asJsonObject.get("type").asString
             val subClass = kClass.sealedSubclasses.firstOrNull { it.simpleName == typeName }
-            
+
             return if (subClass != null) {
-                 // Determine if it's an object or class
-                 if (subClass.objectInstance != null) {
-                     subClass.objectInstance
-                 } else {
-                     context.deserialize(json, subClass.java)
-                 }
+                // Determine if it's an object or class
+                if (subClass.objectInstance != null) {
+                    subClass.objectInstance
+                } else {
+                    context.deserialize(json, subClass.java)
+                }
             } else {
                 null
             }

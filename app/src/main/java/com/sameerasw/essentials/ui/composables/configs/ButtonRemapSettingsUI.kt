@@ -61,7 +61,7 @@ fun ButtonRemapSettingsUI(
 ) {
     val context = LocalContext.current
     val showLikeSongOptions = remember { mutableStateOf(false) }
-    
+
     if (showLikeSongOptions.value) {
         LikeSongSettingsSheet(
             onDismiss = { showLikeSongOptions.value = false },
@@ -74,16 +74,16 @@ fun ButtonRemapSettingsUI(
     var selectedScreenTab by remember { mutableIntStateOf(0) } // 0: Off, 1: On
     var selectedButtonTab by remember { mutableIntStateOf(0) } // 0: Up, 1: Down
     var showFlashlightOptions by remember { mutableStateOf(false) }
-    
+
     val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
     var shizukuStatus by remember { mutableStateOf(ShizukuStatus.NOT_RUNNING) }
     val shizukuHelper = remember { ShizukuPermissionHelper(context) }
-    
+
     // Check Shizuku status on resume
-     androidx.compose.runtime.DisposableEffect(lifecycleOwner) {
+    androidx.compose.runtime.DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
-                 shizukuStatus = shizukuHelper.getStatus()
+                shizukuStatus = shizukuHelper.getStatus()
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
@@ -140,12 +140,20 @@ fun ButtonRemapSettingsUI(
                                 } else if (isRootEnabled && !shellHasPermission) {
                                     // Root logic
                                     viewModel.setButtonRemapUseShizuku(true, context)
-                                    com.sameerasw.essentials.utils.ShellUtils.runCommand(context, "id")
+                                    com.sameerasw.essentials.utils.ShellUtils.runCommand(
+                                        context,
+                                        "id"
+                                    )
                                 } else {
                                     // Provider not running
                                     viewModel.setButtonRemapUseShizuku(true, context)
-                                    val toastRes = if (isRootEnabled) R.string.root_not_available_toast else R.string.shizuku_not_running_toast
-                                    android.widget.Toast.makeText(context, context.getString(toastRes), android.widget.Toast.LENGTH_SHORT).show()
+                                    val toastRes =
+                                        if (isRootEnabled) R.string.root_not_available_toast else R.string.shizuku_not_running_toast
+                                    android.widget.Toast.makeText(
+                                        context,
+                                        context.getString(toastRes),
+                                        android.widget.Toast.LENGTH_SHORT
+                                    ).show()
                                 }
                             } else {
                                 viewModel.setButtonRemapUseShizuku(false, context)
@@ -506,7 +514,12 @@ fun ButtonRemapSettingsUI(
                         title = stringResource(R.string.flashlight_always_off_title),
                         description = stringResource(R.string.flashlight_always_off_desc),
                         isChecked = viewModel.isFlashlightAlwaysTurnOffEnabled.value,
-                        onCheckedChange = { viewModel.setFlashlightAlwaysTurnOffEnabled(it, context) }
+                        onCheckedChange = {
+                            viewModel.setFlashlightAlwaysTurnOffEnabled(
+                                it,
+                                context
+                            )
+                        }
                     )
                 }
 
@@ -515,7 +528,9 @@ fun ButtonRemapSettingsUI(
                         HapticUtil.performVirtualKeyHaptic(view)
                         showFlashlightOptions = false
                     },
-                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
                     shape = MaterialTheme.shapes.extraLarge
                 ) {
                     Text(stringResource(R.string.action_done))
@@ -540,9 +555,9 @@ fun RemapActionItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { 
+            .clickable {
                 HapticUtil.performUIHaptic(view)
-                onClick() 
+                onClick()
             }
             .background(
                 color = MaterialTheme.colorScheme.surfaceBright,

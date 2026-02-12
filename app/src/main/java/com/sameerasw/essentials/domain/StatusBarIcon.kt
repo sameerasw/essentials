@@ -105,7 +105,13 @@ object StatusBarIconRegistry {
         StatusBarIcon(
             id = "phone_signal",
             displayNameRes = R.string.icon_phone_signal,
-            blacklistNames = listOf("phone_signal", "phone_signal_second_stub", "phone_evdo_signal", "cdma_eri", "wimax"),
+            blacklistNames = listOf(
+                "phone_signal",
+                "phone_signal_second_stub",
+                "phone_evdo_signal",
+                "cdma_eri",
+                "wimax"
+            ),
             categoryRes = CAT_PHONE_NETWORK,
             iconRes = R.drawable.rounded_signal_cellular_alt_24
         ),
@@ -275,14 +281,28 @@ object StatusBarIconRegistry {
         StatusBarIcon(
             id = "samsung_smart",
             displayNameRes = R.string.icon_samsung_smart,
-            blacklistNames = listOf("glove", "gesture", "smart_scroll", "face", "smart_network", "smart_bonding"),
+            blacklistNames = listOf(
+                "glove",
+                "gesture",
+                "smart_scroll",
+                "face",
+                "smart_network",
+                "smart_bonding"
+            ),
             categoryRes = CAT_OEM_SPECIFIC,
             iconRes = R.drawable.rounded_fiber_smart_record_24
         ),
         StatusBarIcon(
             id = "samsung_services",
             displayNameRes = R.string.icon_samsung_services,
-            blacklistNames = listOf("wearable_gear", "femtoicon", "com.samsung.rcs", "toddler", "keyguard_wakeup", "safezone"),
+            blacklistNames = listOf(
+                "wearable_gear",
+                "femtoicon",
+                "com.samsung.rcs",
+                "toddler",
+                "keyguard_wakeup",
+                "safezone"
+            ),
             categoryRes = CAT_OEM_SPECIFIC,
             iconRes = R.drawable.rounded_interests_24
         )
@@ -296,7 +316,8 @@ object StatusBarIconRegistry {
 
     fun getIconById(id: String): StatusBarIcon? = iconMap[id]
 
-    fun getIconByBlacklistName(blacklistName: String): StatusBarIcon? = blacklistNameMap[blacklistName]
+    fun getIconByBlacklistName(blacklistName: String): StatusBarIcon? =
+        blacklistNameMap[blacklistName]
 
     /**
      * Get all blacklist names that should be hidden

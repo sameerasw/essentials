@@ -57,7 +57,7 @@ fun LikeSongSettingsSheet(
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-            
+
             Text(
                 text = stringResource(R.string.like_song_settings_desc),
                 style = MaterialTheme.typography.bodyMedium,
@@ -65,45 +65,59 @@ fun LikeSongSettingsSheet(
                 modifier = Modifier.padding(bottom = 24.dp)
             )
 
-            val componentName = android.content.ComponentName(context, com.sameerasw.essentials.services.NotificationListener::class.java)
-            val enabledListeners = android.provider.Settings.Secure.getString(context.contentResolver, "enabled_notification_listeners")
-            val hasNotificationAccess = enabledListeners != null && enabledListeners.contains(componentName.flattenToString())
-            
+            val componentName = android.content.ComponentName(
+                context,
+                com.sameerasw.essentials.services.NotificationListener::class.java
+            )
+            val enabledListeners = android.provider.Settings.Secure.getString(
+                context.contentResolver,
+                "enabled_notification_listeners"
+            )
+            val hasNotificationAccess =
+                enabledListeners != null && enabledListeners.contains(componentName.flattenToString())
+
             if (!hasNotificationAccess) {
                 Button(
                     onClick = {
-                        val intent = Intent(android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
+                        val intent =
+                            Intent(android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
                         context.startActivity(intent)
                     },
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.rounded_notification_settings_24),
                         contentDescription = null,
-                        modifier = Modifier.padding(end = 8.dp).size(20.dp)
+                        modifier = Modifier
+                            .padding(end = 8.dp)
+                            .size(20.dp)
                     )
                     Text(text = stringResource(R.string.grant_notification_access))
                 }
             } else {
-                 Card(
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f)
                     ),
                     shape = RoundedCornerShape(16.dp)
                 ) {
-                     Row(
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(16.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                             painter = painterResource(id = R.drawable.rounded_check_circle_24),
-                             contentDescription = null,
-                             modifier = Modifier.size(24.dp),
-                             tint = MaterialTheme.colorScheme.primary
+                            painter = painterResource(id = R.drawable.rounded_check_circle_24),
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp),
+                            tint = MaterialTheme.colorScheme.primary
                         )
                         Spacer(modifier = Modifier.width(16.dp))
                         Text(
@@ -120,23 +134,23 @@ fun LikeSongSettingsSheet(
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(bottom = 8.dp, top = 8.dp)
             )
-            
+
             RoundedCardContainer {
-                 IconToggleItem(
+                IconToggleItem(
                     iconRes = R.drawable.rounded_chat_info_24,
                     title = stringResource(R.string.like_song_toast_enabled),
                     isChecked = viewModel.isLikeSongToastEnabled.value,
                     onCheckedChange = { viewModel.setLikeSongToastEnabled(it) }
                 )
-                
-                 IconToggleItem(
+
+                IconToggleItem(
                     iconRes = R.drawable.rounded_music_video_24,
                     title = stringResource(R.string.like_song_aod_overlay_title),
                     isChecked = viewModel.isLikeSongAodOverlayEnabled.value,
                     onCheckedChange = { viewModel.setLikeSongAodOverlayEnabled(it) }
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(24.dp))
         }
     }

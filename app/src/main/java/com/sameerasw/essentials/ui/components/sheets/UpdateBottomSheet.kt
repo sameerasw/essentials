@@ -85,14 +85,18 @@ fun UpdateBottomSheet(
                     )
 
                     Text(
-                        text = if (updateInfo.isUpdateAvailable) stringResource(R.string.update_available_title) else stringResource(R.string.status_up_to_date),
+                        text = if (updateInfo.isUpdateAvailable) stringResource(R.string.update_available_title) else stringResource(
+                            R.string.status_up_to_date
+                        ),
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold
                     )
 
                     val isPreRelease = remember(updateInfo.versionName) {
                         val v = updateInfo.versionName.lowercase()
-                        v.contains("beta") || v.contains("alpha") || v.contains("rc") || v.contains("pre")
+                        v.contains("beta") || v.contains("alpha") || v.contains("rc") || v.contains(
+                            "pre"
+                        )
                     }
 
                     if (isPreRelease) {
@@ -127,7 +131,10 @@ fun UpdateBottomSheet(
                             horizontalAlignment = Alignment.Start
                         ) {
                             Text(
-                                text = stringResource(R.string.release_notes_format, updateInfo.versionName),
+                                text = stringResource(
+                                    R.string.release_notes_format,
+                                    updateInfo.versionName
+                                ),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold
                             )
@@ -151,7 +158,8 @@ fun UpdateBottomSheet(
                     if (updateInfo.releaseUrl.isNotEmpty()) {
                         OutlinedButton(
                             onClick = {
-                                val intent = Intent(Intent.ACTION_VIEW, updateInfo.releaseUrl.toUri())
+                                val intent =
+                                    Intent(Intent.ACTION_VIEW, updateInfo.releaseUrl.toUri())
                                 context.startActivity(intent)
                             },
                             modifier = Modifier.fillMaxWidth()
@@ -169,7 +177,8 @@ fun UpdateBottomSheet(
                     if (updateInfo.isUpdateAvailable && updateInfo.downloadUrl.isNotEmpty()) {
                         Button(
                             onClick = {
-                                val intent = Intent(Intent.ACTION_VIEW, updateInfo.downloadUrl.toUri())
+                                val intent =
+                                    Intent(Intent.ACTION_VIEW, updateInfo.downloadUrl.toUri())
                                 context.startActivity(intent)
                             },
                             modifier = Modifier.fillMaxWidth()

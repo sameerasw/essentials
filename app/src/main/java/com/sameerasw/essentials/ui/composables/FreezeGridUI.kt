@@ -312,7 +312,7 @@ fun ExpandableFreezeFab(
                     targetValue = if (fabMenuExpanded) 1f else 0f,
                     label = "fab_icon_animation"
                 )
-                
+
                 Icon(
                     painter = painterResource(
                         id = if (fabMenuExpanded) R.drawable.rounded_close_24 else R.drawable.rounded_mode_cool_24
@@ -328,7 +328,12 @@ fun ExpandableFreezeFab(
                 fabMenuExpanded = false
                 onFreezeAll()
             },
-            icon = { Icon(painterResource(id = R.drawable.rounded_mode_cool_24), contentDescription = null) },
+            icon = {
+                Icon(
+                    painterResource(id = R.drawable.rounded_mode_cool_24),
+                    contentDescription = null
+                )
+            },
             text = { Text(text = "Freeze All") },
         )
         FloatingActionButtonMenuItem(
@@ -336,7 +341,12 @@ fun ExpandableFreezeFab(
                 fabMenuExpanded = false
                 onUnfreezeAll()
             },
-            icon = { Icon(painterResource(id = R.drawable.rounded_mode_cool_off_24), contentDescription = null) },
+            icon = {
+                Icon(
+                    painterResource(id = R.drawable.rounded_mode_cool_off_24),
+                    contentDescription = null
+                )
+            },
             text = { Text(text = "Unfreeze All") },
         )
         FloatingActionButtonMenuItem(
@@ -344,7 +354,12 @@ fun ExpandableFreezeFab(
                 fabMenuExpanded = false
                 onFreezeAutomatic()
             },
-            icon = { Icon(painterResource(id = R.drawable.rounded_nest_farsight_cool_24), contentDescription = null) },
+            icon = {
+                Icon(
+                    painterResource(id = R.drawable.rounded_nest_farsight_cool_24),
+                    contentDescription = null
+                )
+            },
             text = { Text(text = "Freeze Automatic") },
         )
     }

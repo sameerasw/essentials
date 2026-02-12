@@ -53,7 +53,10 @@ fun RoundedCardLazyContainer(
                             putExtra(Intent.EXTRA_TEXT, uri.toString())
                         }
                     }
-                    intent.setClassName(info.resolveInfo.activityInfo.packageName, info.resolveInfo.activityInfo.name)
+                    intent.setClassName(
+                        info.resolveInfo.activityInfo.packageName,
+                        info.resolveInfo.activityInfo.name
+                    )
                     context.startActivity(intent)
                     onFinish()
                 }

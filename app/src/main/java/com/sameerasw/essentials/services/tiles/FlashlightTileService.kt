@@ -54,7 +54,8 @@ class FlashlightTileService : BaseTileService() {
     override fun hasFeaturePermission(): Boolean = true
 
     override fun getTileIcon(): Icon {
-        val resId = if (isTorchOn) R.drawable.round_flashlight_on_24 else R.drawable.rounded_flashlight_on_24
+        val resId =
+            if (isTorchOn) R.drawable.round_flashlight_on_24 else R.drawable.rounded_flashlight_on_24
         return Icon.createWithResource(this, resId)
     }
 

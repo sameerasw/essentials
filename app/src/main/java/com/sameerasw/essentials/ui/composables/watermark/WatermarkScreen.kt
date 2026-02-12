@@ -55,7 +55,7 @@ fun WatermarkScreen(
     val view = LocalView.current
     var showExifSheet by remember { mutableStateOf(false) }
     var showEditSheet by remember { mutableStateOf(false) }
-    
+
     val options by viewModel.options.collectAsState()
     val previewState by viewModel.previewUiState.collectAsState()
     val saveState by viewModel.uiState.collectAsState()
@@ -70,10 +70,16 @@ fun WatermarkScreen(
                 Toast.makeText(context, R.string.watermark_save_success, Toast.LENGTH_SHORT).show()
                 viewModel.resetState()
             }
+
             is WatermarkUiState.Error -> {
-                Toast.makeText(context, (saveState as WatermarkUiState.Error).message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    (saveState as WatermarkUiState.Error).message,
+                    Toast.LENGTH_SHORT
+                ).show()
                 viewModel.resetState()
             }
+
             else -> {}
         }
     }
@@ -103,7 +109,12 @@ fun WatermarkScreen(
                                         putExtra(Intent.EXTRA_STREAM, sharedUri)
                                         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                                     }
-                                    context.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.action_share)))
+                                    context.startActivity(
+                                        Intent.createChooser(
+                                            shareIntent,
+                                            context.getString(R.string.action_share)
+                                        )
+                                    )
                                 }
                             }
                         },
@@ -115,9 +126,9 @@ fun WatermarkScreen(
         floatingActionButton = {
             if (initialUri != null) {
                 FloatingActionButton(
-                    onClick = { 
+                    onClick = {
                         performUIHaptic(view)
-                        showEditSheet = true 
+                        showEditSheet = true
                     },
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     contentColor = MaterialTheme.colorScheme.onPrimaryContainer
@@ -220,14 +231,14 @@ private fun WatermarkActions(
                     modifier = Modifier.size(18.dp)
                 )
             }
-            
+
             Spacer(Modifier.size(8.dp))
             var showMenu by remember { mutableStateOf(false) }
-            
+
             Box {
                 Button(onClick = {
                     performUIHaptic(view)
-                    showMenu = true 
+                    showMenu = true
                 }) {
                     Icon(
                         painter = painterResource(R.drawable.rounded_save_24),
@@ -237,7 +248,7 @@ private fun WatermarkActions(
                     Spacer(Modifier.size(8.dp))
                     Text(stringResource(R.string.action_save))
                 }
-                
+
                 SegmentedDropdownMenu(
                     expanded = showMenu,
                     onDismissRequest = { showMenu = false },
@@ -257,7 +268,7 @@ private fun WatermarkActions(
                         },
                         enabled = saveState !is WatermarkUiState.Processing
                     )
-                    
+
                     SegmentedDropdownMenuItem(
                         text = { Text(stringResource(R.string.action_save)) },
                         leadingIcon = {

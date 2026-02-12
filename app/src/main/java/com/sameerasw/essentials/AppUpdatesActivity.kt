@@ -87,7 +87,7 @@ class AppUpdatesActivity : FragmentActivity() {
 
             var showAddRepoSheet by remember { mutableStateOf(false) }
             val errorMessage by updatesViewModel.errorMessage
-            
+
             LaunchedEffect(errorMessage) {
                 if (errorMessage != null && !showAddRepoSheet) {
                     Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
@@ -101,13 +101,14 @@ class AppUpdatesActivity : FragmentActivity() {
             }
 
             EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
-                val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
-                
+                val scrollBehavior =
+                    TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+
 
                 if (showAddRepoSheet) {
                     AddRepoBottomSheet(
                         viewModel = updatesViewModel,
-                        onDismissRequest = { 
+                        onDismissRequest = {
                             showAddRepoSheet = false
                             updatesViewModel.clearSearch()
                         },
@@ -117,7 +118,7 @@ class AppUpdatesActivity : FragmentActivity() {
                         }
                     )
                 }
-                
+
                 if (repoToShowReleaseNotesFullName != null) {
                     val repo = trackedRepos.find { it.fullName == repoToShowReleaseNotesFullName }
                     if (repo != null) {
@@ -139,7 +140,12 @@ class AppUpdatesActivity : FragmentActivity() {
                 }
 
                 Scaffold(
-                    contentWindowInsets = androidx.compose.foundation.layout.WindowInsets(0, 0, 0, 0),
+                    contentWindowInsets = androidx.compose.foundation.layout.WindowInsets(
+                        0,
+                        0,
+                        0,
+                        0
+                    ),
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     containerColor = MaterialTheme.colorScheme.surfaceContainer,
                     topBar = {
@@ -151,7 +157,7 @@ class AppUpdatesActivity : FragmentActivity() {
                             scrollBehavior = scrollBehavior,
                             actions = {
                                 androidx.compose.material3.IconButton(
-                                    onClick = { 
+                                    onClick = {
                                         HapticUtil.performMediumHaptic(view)
                                         updatesViewModel.checkForUpdates(context)
                                     },
@@ -181,13 +187,13 @@ class AppUpdatesActivity : FragmentActivity() {
                         FloatingActionButton(
                             onClick = {
                                 HapticUtil.performMediumHaptic(view)
-                                showAddRepoSheet = true 
+                                showAddRepoSheet = true
                             },
                             containerColor = MaterialTheme.colorScheme.primaryContainer,
                             contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                         ) {
                             androidx.compose.material3.Icon(
-                                painter = androidx.compose.ui.res.painterResource(id = R.drawable.rounded_add_24),
+                                painter = painterResource(id = R.drawable.rounded_add_24),
                                 contentDescription = stringResource(R.string.action_add_repo)
                             )
                         }
@@ -197,15 +203,19 @@ class AppUpdatesActivity : FragmentActivity() {
                         updatesViewModel.loadTrackedRepos(context)
                     }
 
-                    val pending = trackedRepos.filter { it.isUpdateAvailable && it.mappedPackageName != null }
-                        .sortedByDescending { it.publishedAt }
-                    val upToDate = trackedRepos.filter { !it.isUpdateAvailable && it.mappedPackageName != null }
-                        .sortedByDescending { it.publishedAt }
+                    val pending =
+                        trackedRepos.filter { it.isUpdateAvailable && it.mappedPackageName != null }
+                            .sortedByDescending { it.publishedAt }
+                    val upToDate =
+                        trackedRepos.filter { !it.isUpdateAvailable && it.mappedPackageName != null }
+                            .sortedByDescending { it.publishedAt }
                     val notInstalled = trackedRepos.filter { it.mappedPackageName == null }
 
                     if (isLoading && trackedRepos.isEmpty()) {
                         Column(
-                            modifier = Modifier.padding(innerPadding).fillMaxSize(),
+                            modifier = Modifier
+                                .padding(innerPadding)
+                                .fillMaxSize(),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center
                         ) {
@@ -255,7 +265,8 @@ class AppUpdatesActivity : FragmentActivity() {
                                 item {
                                     RoundedCardContainer {
                                         pending.forEach { repo ->
-                                            val isInstalling = updatesViewModel.installingRepoId.value == repo.fullName
+                                            val isInstalling =
+                                                updatesViewModel.installingRepoId.value == repo.fullName
                                             TrackedRepoCard(
                                                 repo = repo,
                                                 isLoading = refreshingRepoIds.contains(repo.fullName),
@@ -266,14 +277,23 @@ class AppUpdatesActivity : FragmentActivity() {
                                                     showAddRepoSheet = true
                                                 },
                                                 onActionClick = {
-                                                    updatesViewModel.downloadAndInstall(context, repo)
+                                                    updatesViewModel.downloadAndInstall(
+                                                        context,
+                                                        repo
+                                                    )
                                                 },
                                                 onDeleteClick = {
-                                                    updatesViewModel.untrackRepo(context, repo.fullName)
+                                                    updatesViewModel.untrackRepo(
+                                                        context,
+                                                        repo.fullName
+                                                    )
                                                 },
                                                 onShowReleaseNotes = {
                                                     repoToShowReleaseNotesFullName = repo.fullName
-                                                    updatesViewModel.fetchReleaseNotesIfNeeded(context, repo)
+                                                    updatesViewModel.fetchReleaseNotesIfNeeded(
+                                                        context,
+                                                        repo
+                                                    )
                                                 }
                                             )
                                         }
@@ -294,7 +314,8 @@ class AppUpdatesActivity : FragmentActivity() {
                                 item {
                                     RoundedCardContainer {
                                         upToDate.forEach { repo ->
-                                            val isInstalling = updatesViewModel.installingRepoId.value == repo.fullName
+                                            val isInstalling =
+                                                updatesViewModel.installingRepoId.value == repo.fullName
                                             TrackedRepoCard(
                                                 repo = repo,
                                                 isLoading = refreshingRepoIds.contains(repo.fullName),
@@ -306,18 +327,31 @@ class AppUpdatesActivity : FragmentActivity() {
                                                 },
                                                 onActionClick = {
                                                     if (repo.isUpdateAvailable) {
-                                                        updatesViewModel.downloadAndInstall(context, repo)
+                                                        updatesViewModel.downloadAndInstall(
+                                                            context,
+                                                            repo
+                                                        )
                                                     } else {
-                                                        repoToShowReleaseNotesFullName = repo.fullName
-                                                        updatesViewModel.fetchReleaseNotesIfNeeded(context, repo)
+                                                        repoToShowReleaseNotesFullName =
+                                                            repo.fullName
+                                                        updatesViewModel.fetchReleaseNotesIfNeeded(
+                                                            context,
+                                                            repo
+                                                        )
                                                     }
                                                 },
                                                 onDeleteClick = {
-                                                    updatesViewModel.untrackRepo(context, repo.fullName)
+                                                    updatesViewModel.untrackRepo(
+                                                        context,
+                                                        repo.fullName
+                                                    )
                                                 },
                                                 onShowReleaseNotes = {
                                                     repoToShowReleaseNotesFullName = repo.fullName
-                                                    updatesViewModel.fetchReleaseNotesIfNeeded(context, repo)
+                                                    updatesViewModel.fetchReleaseNotesIfNeeded(
+                                                        context,
+                                                        repo
+                                                    )
                                                 }
                                             )
                                         }
@@ -338,7 +372,8 @@ class AppUpdatesActivity : FragmentActivity() {
                                 item {
                                     RoundedCardContainer {
                                         notInstalled.forEach { repo ->
-                                            val isInstalling = updatesViewModel.installingRepoId.value == repo.fullName
+                                            val isInstalling =
+                                                updatesViewModel.installingRepoId.value == repo.fullName
                                             TrackedRepoCard(
                                                 repo = repo,
                                                 isLoading = refreshingRepoIds.contains(repo.fullName),
@@ -349,14 +384,23 @@ class AppUpdatesActivity : FragmentActivity() {
                                                     showAddRepoSheet = true
                                                 },
                                                 onActionClick = {
-                                                    updatesViewModel.downloadAndInstall(context, repo)
+                                                    updatesViewModel.downloadAndInstall(
+                                                        context,
+                                                        repo
+                                                    )
                                                 },
                                                 onDeleteClick = {
-                                                    updatesViewModel.untrackRepo(context, repo.fullName)
+                                                    updatesViewModel.untrackRepo(
+                                                        context,
+                                                        repo.fullName
+                                                    )
                                                 },
                                                 onShowReleaseNotes = {
                                                     repoToShowReleaseNotesFullName = repo.fullName
-                                                    updatesViewModel.fetchReleaseNotesIfNeeded(context, repo)
+                                                    updatesViewModel.fetchReleaseNotesIfNeeded(
+                                                        context,
+                                                        repo
+                                                    )
                                                 }
                                             )
                                         }

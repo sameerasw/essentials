@@ -51,9 +51,12 @@ import com.sameerasw.essentials.utils.HapticUtil
 class FlashlightIntensityActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         val componentName = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent?.getParcelableExtra("android.intent.extra.COMPONENT_NAME", android.content.ComponentName::class.java)
+            intent?.getParcelableExtra(
+                "android.intent.extra.COMPONENT_NAME",
+                android.content.ComponentName::class.java
+            )
         } else {
             @Suppress("DEPRECATION")
             intent?.getParcelableExtra("android.intent.extra.COMPONENT_NAME")
@@ -72,7 +75,8 @@ class FlashlightIntensityActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            val viewModel: com.sameerasw.essentials.viewmodels.MainViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+            val viewModel: com.sameerasw.essentials.viewmodels.MainViewModel =
+                androidx.lifecycle.viewmodel.compose.viewModel()
             val context = LocalContext.current
             LaunchedEffect(Unit) {
                 viewModel.check(context)
@@ -90,21 +94,27 @@ fun FlashlightIntensityOverlay(onDismiss: () -> Unit) {
     val context = LocalContext.current
     val view = LocalView.current
     val prefs = remember { context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE) }
-    
+
     // Get flashlight max level
-    val maxLevel = remember { 
-        val cameraManager = context.getSystemService(Context.CAMERA_SERVICE) as android.hardware.camera2.CameraManager
+    val maxLevel = remember {
+        val cameraManager =
+            context.getSystemService(Context.CAMERA_SERVICE) as android.hardware.camera2.CameraManager
         val cameraId = try {
             cameraManager.cameraIdList.firstOrNull { id ->
-                cameraManager.getCameraCharacteristics(id).get(android.hardware.camera2.CameraCharacteristics.FLASH_INFO_AVAILABLE) == true
+                cameraManager.getCameraCharacteristics(id)
+                    .get(android.hardware.camera2.CameraCharacteristics.FLASH_INFO_AVAILABLE) == true
             } ?: "0"
         } catch (e: Exception) {
             "0"
         }
         FlashlightUtil.getMaxLevel(context, cameraId)
     }
-    
-    var intensity by remember { mutableFloatStateOf(prefs.getInt("flashlight_last_intensity", 1).toFloat()) }
+
+    var intensity by remember {
+        mutableFloatStateOf(
+            prefs.getInt("flashlight_last_intensity", 1).toFloat()
+        )
+    }
     var lastSentLevel by remember { mutableIntStateOf(intensity.toInt()) }
 
     LaunchedEffect(Unit) {
@@ -152,41 +162,42 @@ fun FlashlightIntensityOverlay(onDismiss: () -> Unit) {
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(48.dp)
                 )
-                
+
                 Text(
                     text = stringResource(R.string.feature_flashlight_brightness_title),
                     style = MaterialTheme.typography.titleLarge
                 )
-                
+
                 Slider(
                     value = intensity,
                     onValueChange = { newVal ->
                         intensity = newVal
                         val level = newVal.toInt().coerceIn(1, maxLevel)
-                        
+
                         if (level != lastSentLevel) {
                             lastSentLevel = level
                             // Send broadcast to update intensity
-                            val intent = Intent(context, FlashlightActionReceiver::class.java).apply {
-                                action = FlashlightActionReceiver.ACTION_SET_INTENSITY
-                                putExtra(FlashlightActionReceiver.EXTRA_INTENSITY, level)
-                            }
+                            val intent =
+                                Intent(context, FlashlightActionReceiver::class.java).apply {
+                                    action = FlashlightActionReceiver.ACTION_SET_INTENSITY
+                                    putExtra(FlashlightActionReceiver.EXTRA_INTENSITY, level)
+                                }
                             context.sendBroadcast(intent)
-                            
+
                             // Persist
                             prefs.edit().putInt("flashlight_last_intensity", level).apply()
-                            
+
                             HapticUtil.performSliderHaptic(view)
                         }
                     },
                     valueRange = 1f..maxLevel.toFloat()
                 )
-                
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    
+
                     OutlinedButton(
                         onClick = onDismiss,
                         modifier = Modifier.weight(1f),
@@ -197,9 +208,10 @@ fun FlashlightIntensityOverlay(onDismiss: () -> Unit) {
 
                     Button(
                         onClick = {
-                            val intent = Intent(context, FlashlightActionReceiver::class.java).apply {
-                                action = FlashlightActionReceiver.ACTION_OFF
-                            }
+                            val intent =
+                                Intent(context, FlashlightActionReceiver::class.java).apply {
+                                    action = FlashlightActionReceiver.ACTION_OFF
+                                }
                             context.sendBroadcast(intent)
                             onDismiss()
                         },

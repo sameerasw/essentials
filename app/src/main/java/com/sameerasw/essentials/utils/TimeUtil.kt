@@ -20,7 +20,11 @@ object TimeUtil {
                 diff < 3600000 -> context.getString(R.string.time_min_ago, diff / 60000)
                 diff < 86400000 -> context.getString(R.string.time_hour_ago, diff / 3600000)
                 diff < 2592000000L -> context.getString(R.string.time_day_ago, diff / 86400000)
-                diff < 31536000000L -> context.getString(R.string.time_month_ago, diff / 2592000000L)
+                diff < 31536000000L -> context.getString(
+                    R.string.time_month_ago,
+                    diff / 2592000000L
+                )
+
                 else -> context.getString(R.string.time_year_ago, diff / 31536000000L)
             }
         } catch (e: Exception) {

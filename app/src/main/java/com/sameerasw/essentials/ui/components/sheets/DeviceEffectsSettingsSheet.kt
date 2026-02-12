@@ -51,7 +51,7 @@ fun DeviceEffectsSettingsSheet(
 ) {
     val view = LocalView.current
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    
+
     var enabled by remember { mutableStateOf(initialAction.enabled) }
     var grayscale by remember { mutableStateOf(initialAction.grayscale) }
     var suppressAmbient by remember { mutableStateOf(initialAction.suppressAmbient) }
@@ -114,7 +114,7 @@ fun DeviceEffectsSettingsSheet(
                         )
                         if (android.os.Build.VERSION.SDK_INT < 35) {
                             Spacer(modifier = Modifier.size(8.dp))
-                             Text(
+                            Text(
                                 text = stringResource(R.string.diy_device_effects_android_15_warning),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.error,
@@ -124,12 +124,12 @@ fun DeviceEffectsSettingsSheet(
                     }
                 }
             }
-            
+
             // Settings Container
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 // Master Toggle (Enable/Disable)
                 Card(
-                     colors = CardDefaults.cardColors(
+                    colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.surfaceBright
                     ),
                     shape = RoundedCornerShape(24.dp)
@@ -155,14 +155,14 @@ fun DeviceEffectsSettingsSheet(
                                 ),
                             contentAlignment = Alignment.Center
                         ) {
-                             Icon(
+                            Icon(
                                 painter = painterResource(id = if (enabled) R.drawable.rounded_check_circle_24 else R.drawable.rounded_cancel_24),
                                 contentDescription = null,
                                 modifier = Modifier.size(24.dp),
                                 tint = if (enabled) ColorUtil.getVibrantColorFor(toggleTitle) else MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
-                       
+
                         Text(
                             text = stringResource(if (enabled) R.string.diy_device_effects_enabled else R.string.diy_device_effects_disabled),
                             style = MaterialTheme.typography.titleMedium,
@@ -195,19 +195,31 @@ fun DeviceEffectsSettingsSheet(
                                 isChecked = grayscale,
                                 onCheckedChange = { grayscale = it }
                             )
-                            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f), modifier = Modifier.padding(horizontal = 16.dp))
+                            HorizontalDivider(
+                                color = MaterialTheme.colorScheme.outlineVariant.copy(
+                                    alpha = 0.5f
+                                ), modifier = Modifier.padding(horizontal = 16.dp)
+                            )
                             EffectToggleItem(
                                 title = stringResource(R.string.diy_effect_suppress_ambient),
                                 isChecked = suppressAmbient,
                                 onCheckedChange = { suppressAmbient = it }
                             )
-                            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f), modifier = Modifier.padding(horizontal = 16.dp))
+                            HorizontalDivider(
+                                color = MaterialTheme.colorScheme.outlineVariant.copy(
+                                    alpha = 0.5f
+                                ), modifier = Modifier.padding(horizontal = 16.dp)
+                            )
                             EffectToggleItem(
                                 title = stringResource(R.string.diy_effect_dim_wallpaper),
                                 isChecked = dimWallpaper,
                                 onCheckedChange = { dimWallpaper = it }
                             )
-                            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f), modifier = Modifier.padding(horizontal = 16.dp))
+                            HorizontalDivider(
+                                color = MaterialTheme.colorScheme.outlineVariant.copy(
+                                    alpha = 0.5f
+                                ), modifier = Modifier.padding(horizontal = 16.dp)
+                            )
                             EffectToggleItem(
                                 title = stringResource(R.string.diy_effect_night_mode),
                                 isChecked = nightMode,
@@ -234,7 +246,7 @@ fun DeviceEffectsSettingsSheet(
                         contentColor = MaterialTheme.colorScheme.onSurface
                     )
                 ) {
-                     Icon(
+                    Icon(
                         painter = painterResource(id = R.drawable.rounded_close_24),
                         contentDescription = null,
                         modifier = Modifier.size(20.dp)
@@ -246,18 +258,20 @@ fun DeviceEffectsSettingsSheet(
                 Button(
                     onClick = {
                         HapticUtil.performVirtualKeyHaptic(view)
-                        onSave(initialAction.copy(
-                            enabled = enabled,
-                            grayscale = grayscale,
-                            suppressAmbient = suppressAmbient,
-                            dimWallpaper = dimWallpaper,
-                            nightMode = nightMode
-                        ))
+                        onSave(
+                            initialAction.copy(
+                                enabled = enabled,
+                                grayscale = grayscale,
+                                suppressAmbient = suppressAmbient,
+                                dimWallpaper = dimWallpaper,
+                                nightMode = nightMode
+                            )
+                        )
                     },
                     enabled = android.os.Build.VERSION.SDK_INT >= 35,
                     modifier = Modifier.weight(1f)
                 ) {
-                     Icon(
+                    Icon(
                         painter = painterResource(id = R.drawable.rounded_check_24),
                         contentDescription = null,
                         modifier = Modifier.size(20.dp)

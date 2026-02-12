@@ -20,7 +20,8 @@ class PrivateNotificationsTileService : BaseTileService() {
     }
 
     override fun getTileIcon(): Icon {
-        val iconRes = if (arePrivateNotificationsAllowed()) R.drawable.rounded_notifications_unread_24 else R.drawable.rounded_notifications_off_24
+        val iconRes =
+            if (arePrivateNotificationsAllowed()) R.drawable.rounded_notifications_unread_24 else R.drawable.rounded_notifications_off_24
         return Icon.createWithResource(this, iconRes)
     }
 
@@ -35,6 +36,10 @@ class PrivateNotificationsTileService : BaseTileService() {
 
     private fun arePrivateNotificationsAllowed(): Boolean {
         // 1 = allowed, 0 = not allowed
-        return Settings.Secure.getInt(contentResolver, "lock_screen_allow_private_notifications", 1) == 1
+        return Settings.Secure.getInt(
+            contentResolver,
+            "lock_screen_allow_private_notifications",
+            1
+        ) == 1
     }
 }

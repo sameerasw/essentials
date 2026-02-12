@@ -35,13 +35,14 @@ class StatusBarIconViewModel : ViewModel() {
     val isWriteSettingsEnabled = mutableStateOf(false)
 
     // Dynamic icon visibility states based on registry
-    private val iconVisibilities = mutableMapOf<String, androidx.compose.runtime.MutableState<Boolean>>()
+    private val iconVisibilities =
+        mutableMapOf<String, androidx.compose.runtime.MutableState<Boolean>>()
 
     private var updateJob: Job? = null
     private var smartWifiJob: Job? = null
     private var smartDataJob: Job? = null
     private val scope = CoroutineScope(Dispatchers.Main)
-    
+
     private var batteryReceiver: android.content.BroadcastReceiver? = null
 
     companion object {
@@ -99,7 +100,8 @@ class StatusBarIconViewModel : ViewModel() {
         loadSmartWiFiPref(context)
         loadSmartDataPref(context)
         loadSelectedNetworkTypes(context)
-        isWriteSettingsEnabled.value = com.sameerasw.essentials.utils.PermissionUtils.canWriteSystemSettings(context)
+        isWriteSettingsEnabled.value =
+            com.sameerasw.essentials.utils.PermissionUtils.canWriteSystemSettings(context)
         loadStatusBarSettings(context)
 
         if (isSmartWiFiEnabled.value && isWriteSecureSettingsEnabled.value) {
@@ -109,7 +111,7 @@ class StatusBarIconViewModel : ViewModel() {
         if (isSmartDataEnabled.value && isWriteSecureSettingsEnabled.value) {
             startSmartDataUpdates(context)
         }
-        
+
         if (batteryPercentageMode.value == 2) {
             startBatteryStatusListener(context)
         }
@@ -117,16 +119,20 @@ class StatusBarIconViewModel : ViewModel() {
 
     private fun startBatteryStatusListener(context: Context) {
         if (batteryReceiver != null) return
-        
+
         batteryReceiver = object : android.content.BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 if (batteryPercentageMode.value == 2) {
                     val isCharging = intent.action == Intent.ACTION_POWER_CONNECTED
-                    updateSettingsValue(context, "status_bar_show_battery_percent", if (isCharging) 1 else 0)
+                    updateSettingsValue(
+                        context,
+                        "status_bar_show_battery_percent",
+                        if (isCharging) 1 else 0
+                    )
                 }
             }
         }
-        
+
         val filter = IntentFilter().apply {
             addAction(Intent.ACTION_POWER_CONNECTED)
             addAction(Intent.ACTION_POWER_DISCONNECTED)
@@ -138,7 +144,8 @@ class StatusBarIconViewModel : ViewModel() {
         batteryReceiver?.let {
             try {
                 context.unregisterReceiver(it)
-            } catch (e: Exception) {}
+            } catch (e: Exception) {
+            }
             batteryReceiver = null
         }
     }
@@ -153,7 +160,10 @@ class StatusBarIconViewModel : ViewModel() {
 
         // Save to preferences
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
-            putBoolean(StatusBarIconRegistry.getIconById(iconId)?.preferencesKey ?: "icon_${iconId}_visible", visible)
+            putBoolean(
+                StatusBarIconRegistry.getIconById(iconId)?.preferencesKey
+                    ?: "icon_${iconId}_visible", visible
+            )
         }
 
         updateIconBlacklist(context)
@@ -244,7 +254,10 @@ class StatusBarIconViewModel : ViewModel() {
 
     fun updateSelectedNetworkTypes(context: Context, enabled: Boolean) {
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-        val currentTypes = prefs.getStringSet(PREF_SELECTED_NETWORK_TYPES, setOf(NetworkType.NETWORK_4G.name, NetworkType.NETWORK_5G.name))?.toMutableSet() ?: mutableSetOf()
+        val currentTypes = prefs.getStringSet(
+            PREF_SELECTED_NETWORK_TYPES,
+            setOf(NetworkType.NETWORK_4G.name, NetworkType.NETWORK_5G.name)
+        )?.toMutableSet() ?: mutableSetOf()
 
         if (enabled) {
             currentTypes.add(NetworkType.NETWORK_5G.name)
@@ -326,8 +339,12 @@ class StatusBarIconViewModel : ViewModel() {
         val visibilities = getIconVisibilities().toMutableMap()
 
         val shouldHideMobileData = selectedNetworkTypes.value.contains(networkType) ||
-            (selectedNetworkTypes.value.contains(NetworkType.NETWORK_OTHER) &&
-             !setOf(NetworkType.NETWORK_5G, NetworkType.NETWORK_4G, NetworkType.NETWORK_3G).contains(networkType))
+                (selectedNetworkTypes.value.contains(NetworkType.NETWORK_OTHER) &&
+                        !setOf(
+                            NetworkType.NETWORK_5G,
+                            NetworkType.NETWORK_4G,
+                            NetworkType.NETWORK_3G
+                        ).contains(networkType))
 
         visibilities["mobile_data"] = !shouldHideMobileData
 
@@ -345,15 +362,19 @@ class StatusBarIconViewModel : ViewModel() {
                 return NetworkType.NETWORK_OTHER
             }
 
-            val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val connectivityManager =
+                context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val network = connectivityManager.activeNetwork ?: return NetworkType.NETWORK_OTHER
-            val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return NetworkType.NETWORK_OTHER
+            val capabilities = connectivityManager.getNetworkCapabilities(network)
+                ?: return NetworkType.NETWORK_OTHER
 
             if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
                 return NetworkType.NETWORK_OTHER
             }
 
-            val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+            val telephonyManager =
+                context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+
             @Suppress("DEPRECATION")
             val networkType = telephonyManager.networkType
 
@@ -361,11 +382,13 @@ class StatusBarIconViewModel : ViewModel() {
                 TelephonyManager.NETWORK_TYPE_NR -> NetworkType.NETWORK_5G
                 TelephonyManager.NETWORK_TYPE_LTE,
                 TelephonyManager.NETWORK_TYPE_HSPAP -> NetworkType.NETWORK_4G
+
                 TelephonyManager.NETWORK_TYPE_HSDPA,
                 TelephonyManager.NETWORK_TYPE_HSUPA,
                 TelephonyManager.NETWORK_TYPE_HSPA,
                 TelephonyManager.NETWORK_TYPE_UMTS,
                 TelephonyManager.NETWORK_TYPE_TD_SCDMA -> NetworkType.NETWORK_3G
+
                 else -> NetworkType.NETWORK_OTHER
             }
         } catch (@Suppress("UNUSED_PARAMETER") e: Exception) {
@@ -375,7 +398,8 @@ class StatusBarIconViewModel : ViewModel() {
 
     private fun isWifiConnected(context: Context): Boolean {
         return try {
-            val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val connectivityManager =
+                context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val network = connectivityManager.activeNetwork ?: return false
             val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
             capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
@@ -404,7 +428,10 @@ class StatusBarIconViewModel : ViewModel() {
 
     private fun loadSelectedNetworkTypes(context: Context) {
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-        val currentTypes = prefs.getStringSet(PREF_SELECTED_NETWORK_TYPES, setOf(NetworkType.NETWORK_4G.name, NetworkType.NETWORK_5G.name)) ?: setOf()
+        val currentTypes = prefs.getStringSet(
+            PREF_SELECTED_NETWORK_TYPES,
+            setOf(NetworkType.NETWORK_4G.name, NetworkType.NETWORK_5G.name)
+        ) ?: setOf()
         selectedNetworkTypes.value = currentTypes.map { NetworkType.valueOf(it) }.toSet()
     }
 
@@ -451,7 +478,8 @@ class StatusBarIconViewModel : ViewModel() {
         setBatteryPercentageMode(0, context)
 
         // Build default visibility map
-        val defaultVisibilities = StatusBarIconRegistry.ALL_ICONS.associate { it.id to it.defaultVisible }
+        val defaultVisibilities =
+            StatusBarIconRegistry.ALL_ICONS.associate { it.id to it.defaultVisible }
 
         // Clear preferences
         resetAllIconVisibilities(context, defaultVisibilities)
@@ -462,12 +490,18 @@ class StatusBarIconViewModel : ViewModel() {
         batteryPercentageMode.value = prefs.getInt(PREF_BATTERY_PERCENT_MODE, 0)
 
         // Load Clock Seconds
-        isClockSecondsEnabled.value = (Settings.Secure.getInt(context.contentResolver, "clock_seconds", 0) == 1 ||
-                                      Settings.System.getInt(context.contentResolver, "clock_seconds", 0) == 1)
+        isClockSecondsEnabled.value =
+            (Settings.Secure.getInt(context.contentResolver, "clock_seconds", 0) == 1 ||
+                    Settings.System.getInt(context.contentResolver, "clock_seconds", 0) == 1)
 
         // Load Privacy Chip
-        isPrivacyChipEnabled.value = (Settings.Secure.getInt(context.contentResolver, "privacy_chip_2447_enabled", 1) == 1 ||
-                                     Settings.System.getInt(context.contentResolver, "privacy_chip_2447_enabled", 1) == 1)
+        isPrivacyChipEnabled.value =
+            (Settings.Secure.getInt(context.contentResolver, "privacy_chip_2447_enabled", 1) == 1 ||
+                    Settings.System.getInt(
+                        context.contentResolver,
+                        "privacy_chip_2447_enabled",
+                        1
+                    ) == 1)
     }
 
     fun setClockSecondsEnabled(enabled: Boolean, context: Context) {
@@ -485,27 +519,29 @@ class StatusBarIconViewModel : ViewModel() {
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
             putInt(PREF_BATTERY_PERCENT_MODE, mode)
         }
-        
+
         if (mode == 2) {
             startBatteryStatusListener(context)
         } else {
             stopBatteryStatusListener(context)
         }
-        
+
         val systemValue = when (mode) {
             1 -> 1 // Always
             2 -> { // Charging
-                val batteryStatus: Intent? = IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { ifilter ->
-                    context.registerReceiver(null, ifilter)
-                }
+                val batteryStatus: Intent? =
+                    IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { ifilter ->
+                        context.registerReceiver(null, ifilter)
+                    }
                 val status: Int = batteryStatus?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: -1
                 val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
-                                 status == BatteryManager.BATTERY_STATUS_FULL
+                        status == BatteryManager.BATTERY_STATUS_FULL
                 if (isCharging) 1 else 0
             }
+
             else -> 0 // Never
         }
-        
+
         updateSettingsValue(context, "status_bar_show_battery_percent", systemValue)
     }
 
@@ -524,14 +560,16 @@ class StatusBarIconViewModel : ViewModel() {
         }
 
         // If standard API failed, fallback to Shizuku OR Root
-        if (!success || !Settings.System.getInt(context.contentResolver, key, -1).let { it == value }) {
-             if (com.sameerasw.essentials.utils.ShizukuUtils.hasPermission()) {
-                 com.sameerasw.essentials.utils.ShizukuUtils.runCommand("settings put system $key $value")
-                 com.sameerasw.essentials.utils.ShizukuUtils.runCommand("settings put secure $key $value")
-             } else if (com.sameerasw.essentials.utils.RootUtils.isRootPermissionGranted()) {
-                 com.sameerasw.essentials.utils.RootUtils.runCommand("settings put system $key $value")
-                 com.sameerasw.essentials.utils.RootUtils.runCommand("settings put secure $key $value")
-             }
+        if (!success || !Settings.System.getInt(context.contentResolver, key, -1)
+                .let { it == value }
+        ) {
+            if (com.sameerasw.essentials.utils.ShizukuUtils.hasPermission()) {
+                com.sameerasw.essentials.utils.ShizukuUtils.runCommand("settings put system $key $value")
+                com.sameerasw.essentials.utils.ShizukuUtils.runCommand("settings put secure $key $value")
+            } else if (com.sameerasw.essentials.utils.RootUtils.isRootPermissionGranted()) {
+                com.sameerasw.essentials.utils.RootUtils.runCommand("settings put system $key $value")
+                com.sameerasw.essentials.utils.RootUtils.runCommand("settings put secure $key $value")
+            }
         }
     }
 }

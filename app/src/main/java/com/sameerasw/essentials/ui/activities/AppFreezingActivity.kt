@@ -94,14 +94,15 @@ class AppFreezingActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             window.isNavigationBarContrastEnforced = false
         }
-        
-        
+
+
         setContent {
-            val viewModel: com.sameerasw.essentials.viewmodels.MainViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+            val viewModel: com.sameerasw.essentials.viewmodels.MainViewModel =
+                androidx.lifecycle.viewmodel.compose.viewModel()
             val context = LocalContext.current
             LaunchedEffect(Unit) {
                 viewModel.check(context)
@@ -112,13 +113,13 @@ class AppFreezingActivity : ComponentActivity() {
                 val view = LocalView.current
                 val pickedApps by viewModel.freezePickedApps
                 val isPickedAppsLoading by viewModel.isFreezePickedAppsLoading
-                val isPostNotificationsEnabled by viewModel.isPostNotificationsEnabled
-    
+
                 val gridState = rememberLazyGridState()
-                val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+                val scrollBehavior =
+                    TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
                 val frozenStates = remember { mutableStateMapOf<String, Boolean>() }
                 val lifecycleOwner = LocalLifecycleOwner.current
-                
+
                 // Refresh frozen states when activity gains focus
                 DisposableEffect(lifecycleOwner) {
                     val observer = LifecycleEventObserver { _, event ->
@@ -136,7 +137,8 @@ class AppFreezingActivity : ComponentActivity() {
                 LaunchedEffect(pickedApps) {
                     withContext(Dispatchers.IO) {
                         pickedApps.forEach { app ->
-                            frozenStates[app.packageName] = FreezeManager.isAppFrozen(context, app.packageName)
+                            frozenStates[app.packageName] =
+                                FreezeManager.isAppFrozen(context, app.packageName)
                         }
                     }
                 }
@@ -154,9 +156,10 @@ class AppFreezingActivity : ComponentActivity() {
                             actions = {
                                 IconButton(onClick = {
                                     HapticUtil.performVirtualKeyHaptic(view)
-                                    val intent = Intent(context, FeatureSettingsActivity::class.java).apply {
-                                        putExtra("feature", "Freeze")
-                                    }
+                                    val intent =
+                                        Intent(context, FeatureSettingsActivity::class.java).apply {
+                                            putExtra("feature", "Freeze")
+                                        }
                                     context.startActivity(intent)
                                 }) {
                                     Icon(
@@ -182,7 +185,10 @@ class AppFreezingActivity : ComponentActivity() {
                             .padding(innerPadding)
                     ) {
                         if (isPickedAppsLoading && pickedApps.isEmpty()) {
-                            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
                                 LoadingIndicator()
                             }
                         } else if (pickedApps.isEmpty()) {
@@ -267,9 +273,9 @@ fun AppGridItem(
         modifier = Modifier
             .fillMaxWidth()
             .combinedClickable(
-                onClick = { 
+                onClick = {
                     HapticUtil.performVirtualKeyHaptic(view)
-                    onClick() 
+                    onClick()
                 },
                 onLongClick = {
                     HapticUtil.performVirtualKeyHaptic(view)
@@ -376,23 +382,38 @@ fun ExpandableFreezeFab(
                 fabMenuExpanded = false
                 onFreezeAll()
             },
-            icon = { Icon(painterResource(id = R.drawable.rounded_mode_cool_24), contentDescription = null) },
+            icon = {
+                Icon(
+                    painterResource(id = R.drawable.rounded_mode_cool_24),
+                    contentDescription = null
+                )
+            },
             text = { Text(text = "Freeze All") },
         )
         FloatingActionButtonMenuItem(
-            onClick = { 
+            onClick = {
                 fabMenuExpanded = false
-                onUnfreezeAll() 
+                onUnfreezeAll()
             },
-            icon = { Icon(painterResource(id = R.drawable.rounded_mode_cool_off_24), contentDescription = null) },
+            icon = {
+                Icon(
+                    painterResource(id = R.drawable.rounded_mode_cool_off_24),
+                    contentDescription = null
+                )
+            },
             text = { Text(text = "Unfreeze All") },
         )
         FloatingActionButtonMenuItem(
-            onClick = { 
+            onClick = {
                 fabMenuExpanded = false
-                onFreezeAutomatic() 
+                onFreezeAutomatic()
             },
-            icon = { Icon(painterResource(id = R.drawable.rounded_nest_farsight_cool_24), contentDescription = null) },
+            icon = {
+                Icon(
+                    painterResource(id = R.drawable.rounded_nest_farsight_cool_24),
+                    contentDescription = null
+                )
+            },
             text = { Text(text = "Freeze Automatic") },
         )
     }

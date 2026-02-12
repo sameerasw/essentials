@@ -14,7 +14,7 @@ import com.sameerasw.essentials.data.repository.SettingsRepository
 object CalendarSyncManager {
     private const val TAG = "CalendarSyncManager"
     private const val SYNC_PATH = "/calendar_events"
-    
+
     private var isSyncEnabled = false
     private var observer: ContentObserver? = null
 
@@ -26,11 +26,11 @@ object CalendarSyncManager {
     fun init(context: Context) {
         val repo = SettingsRepository(context)
         isSyncEnabled = repo.getBoolean(SettingsRepository.KEY_CALENDAR_SYNC_ENABLED, false)
-        
+
         if (isSyncEnabled) {
             startSync(context)
         }
-        
+
         // Listen for preference changes to start/stop sync
         repo.registerOnSharedPreferenceChangeListener { _, key ->
             if (key == SettingsRepository.KEY_CALENDAR_SYNC_ENABLED) {
@@ -50,17 +50,17 @@ object CalendarSyncManager {
 
     private fun startSync(context: Context) {
         if (observer != null) return
-        
+
         // Initial sync
         syncEvents(context)
-        
+
         observer = object : ContentObserver(Handler(Looper.getMainLooper())) {
             override fun onChange(selfChange: Boolean) {
                 Log.d(TAG, "Calendar content changed, syncing...")
                 syncEvents(context)
             }
         }
-        
+
         try {
             context.contentResolver.registerContentObserver(
                 CalendarContract.Events.CONTENT_URI,
@@ -86,15 +86,19 @@ object CalendarSyncManager {
             Log.d(TAG, "Sync disabled, skipping")
             return
         }
-        
-        if (androidx.core.content.ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_CALENDAR) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+
+        if (androidx.core.content.ContextCompat.checkSelfPermission(
+                context,
+                android.Manifest.permission.READ_CALENDAR
+            ) != android.content.pm.PackageManager.PERMISSION_GRANTED
+        ) {
             Log.w(TAG, "READ_CALENDAR permission not granted, skipping sync")
             return
         }
-        
+
         Log.d(TAG, "Starting sync...")
         val events = queryUpcomingEvents(context)
-        
+
         // Get Material You theme colors
         var primaryColor: Int? = null
         var secondaryColor: Int? = null
@@ -105,7 +109,10 @@ object CalendarSyncManager {
             tertiaryColor = context.getColor(android.R.color.system_accent3_600)
         }
 
-        Log.d(TAG, "Found ${events.size} upcoming events, colors: P=$primaryColor, S=$secondaryColor, T=$tertiaryColor")
+        Log.d(
+            TAG,
+            "Found ${events.size} upcoming events, colors: P=$primaryColor, S=$secondaryColor, T=$tertiaryColor"
+        )
         sendToWearable(context, events, primaryColor, secondaryColor, tertiaryColor)
     }
 
@@ -113,7 +120,7 @@ object CalendarSyncManager {
         val events = mutableListOf<CalendarEvent>()
         val startTime = System.currentTimeMillis()
         val endTime = startTime + 24 * 60 * 60 * 1000 * 7 // Next 7 days
-        
+
         val projection = arrayOf(
             CalendarContract.Instances.EVENT_ID,
             CalendarContract.Instances.TITLE,
@@ -122,16 +129,16 @@ object CalendarSyncManager {
             CalendarContract.Instances.ALL_DAY,
             CalendarContract.Instances.EVENT_LOCATION
         )
-        
+
         val builder = CalendarContract.Instances.CONTENT_URI.buildUpon()
         android.content.ContentUris.appendId(builder, startTime)
         android.content.ContentUris.appendId(builder, endTime)
-        
+
         Log.d(TAG, "queryUpcomingEvents: range=$startTime to $endTime, URI=${builder.build()}")
-        
+
         val repo = SettingsRepository(context)
         val selectedIds = repo.getCalendarSyncSelectedCalendars()
-        
+
         val selection = if (selectedIds.isNotEmpty()) {
             "${CalendarContract.Instances.CALENDAR_ID} IN (${selectedIds.joinToString(",")})"
         } else null
@@ -143,9 +150,9 @@ object CalendarSyncManager {
             null,
             CalendarContract.Instances.BEGIN + " ASC"
         )
-        
+
         Log.d(TAG, "queryUpcomingEvents: selection=$selection, cursorCount=${cursor?.count ?: 0}")
-        
+
         cursor?.use {
             while (it.moveToNext()) {
                 val idValue = it.getLong(0)
@@ -154,19 +161,25 @@ object CalendarSyncManager {
                 val end = it.getLong(3)
                 val allDay = it.getInt(4) != 0
                 val location = it.getString(5)
-                
+
                 events.add(CalendarEvent(idValue, title, begin, end, allDay, location))
                 if (events.size >= 10) break // Limit to top 10 events for Wear OS
             }
         }
-        
+
         return events
     }
 
-    private fun sendToWearable(context: Context, events: List<CalendarEvent>, primaryColor: Int?, secondaryColor: Int?, tertiaryColor: Int?) {
+    private fun sendToWearable(
+        context: Context,
+        events: List<CalendarEvent>,
+        primaryColor: Int?,
+        secondaryColor: Int?,
+        tertiaryColor: Int?
+    ) {
         val putDataMapReq = PutDataMapRequest.create(SYNC_PATH)
         val dataMap = putDataMapReq.dataMap
-        
+
         val eventList = ArrayList<DataMap>()
         for (event in events) {
             val map = DataMap()
@@ -178,16 +191,16 @@ object CalendarSyncManager {
             map.putString("location", event.location ?: "")
             eventList.add(map)
         }
-        
+
         dataMap.putDataMapArrayList("events", eventList)
         primaryColor?.let { dataMap.putInt("theme_primary_color", it) }
         secondaryColor?.let { dataMap.putInt("theme_secondary_color", it) }
         tertiaryColor?.let { dataMap.putInt("theme_tertiary_color", it) }
         dataMap.putLong("timestamp", System.currentTimeMillis())
-        
+
         val putDataReq = putDataMapReq.asPutDataRequest()
         putDataReq.setUrgent()
-        
+
         Wearable.getDataClient(context).putDataItem(putDataReq)
             .addOnSuccessListener {
                 Log.d(TAG, "Successfully synced ${events.size} events to wearable")

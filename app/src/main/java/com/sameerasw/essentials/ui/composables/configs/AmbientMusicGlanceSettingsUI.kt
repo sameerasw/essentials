@@ -27,12 +27,12 @@ fun AmbientMusicGlanceSettingsUI(
 ) {
     val context = LocalContext.current
     var showPermissionSheet by remember { androidx.compose.runtime.mutableStateOf(false) }
-    
+
     val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
     val isNotificationListenerEnabled by viewModel.isNotificationListenerEnabled
-    
+
     val isPermissionGranted = isAccessibilityEnabled && isNotificationListenerEnabled
-    
+
     if (showPermissionSheet) {
         com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet(
             onDismissRequest = { showPermissionSheet = false },
@@ -45,7 +45,8 @@ fun AmbientMusicGlanceSettingsUI(
                     dependentFeatures = listOf(R.string.feat_ambient_music_glance_title),
                     actionLabel = R.string.perm_action_enable,
                     action = {
-                        val intent = android.content.Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                        val intent =
+                            android.content.Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS)
                         intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK
                         context.startActivity(intent)
                     },
@@ -63,15 +64,15 @@ fun AmbientMusicGlanceSettingsUI(
             )
         )
     }
-    
+
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        
+
         RoundedCardContainer {
-             IconToggleItem(
+            IconToggleItem(
                 iconRes = R.drawable.rounded_blur_on_24,
                 title = stringResource(R.string.feat_ambient_music_glance_title),
                 description = stringResource(R.string.feat_ambient_music_glance_desc),

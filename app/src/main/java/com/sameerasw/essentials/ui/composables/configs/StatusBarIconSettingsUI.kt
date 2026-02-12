@@ -51,9 +51,11 @@ fun StatusBarIconSettingsUI(
 ) {
     val context = LocalContext.current
     val view = LocalView.current
-    val isPermissionGranted = viewModel.isWriteSecureSettingsEnabled.value || viewModel.isShizukuAvailable.value || viewModel.isRootAvailable.value
+    val isPermissionGranted =
+        viewModel.isWriteSecureSettingsEnabled.value || viewModel.isShizukuAvailable.value || viewModel.isRootAvailable.value
     val hasWriteSettings = viewModel.isWriteSettingsEnabled.value
-    val batteryPermissionGranted = isPermissionGranted || hasWriteSettings || viewModel.isShizukuAvailable.value || viewModel.isRootAvailable.value
+    val batteryPermissionGranted =
+        isPermissionGranted || hasWriteSettings || viewModel.isShizukuAvailable.value || viewModel.isRootAvailable.value
 
     var showPermissionSheet by remember { mutableStateOf(false) }
 
@@ -107,7 +109,8 @@ fun StatusBarIconSettingsUI(
     ) {
         // Iterate through categories
         categories.forEach { categoryRes ->
-            val iconsInCat = StatusBarIconRegistry.ALL_ICONS.filter { it.categoryRes == categoryRes }
+            val iconsInCat =
+                StatusBarIconRegistry.ALL_ICONS.filter { it.categoryRes == categoryRes }
             if (iconsInCat.isNotEmpty()) {
                 Text(
                     text = stringResource(categoryRes),
@@ -122,7 +125,8 @@ fun StatusBarIconSettingsUI(
                     cornerRadius = 24.dp
                 ) {
                     iconsInCat.forEach { icon ->
-                        val isChecked = viewModel.getIconVisibility(icon.id)?.value ?: icon.defaultVisible
+                        val isChecked =
+                            viewModel.getIconVisibility(icon.id)?.value ?: icon.defaultVisible
                         IconToggleItem(
                             iconRes = icon.iconRes ?: R.drawable.rounded_info_24,
                             title = stringResource(icon.displayNameRes),
@@ -168,15 +172,15 @@ fun StatusBarIconSettingsUI(
                     .highlight(highlightSetting == "smart_data")
                     .clickable {
                         HapticUtil.performUIHaptic(view)
-                    val hasPermission = ContextCompat.checkSelfPermission(
-                        context,
-                        Manifest.permission.READ_PHONE_STATE
-                    ) == PackageManager.PERMISSION_GRANTED
+                        val hasPermission = ContextCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.READ_PHONE_STATE
+                        ) == PackageManager.PERMISSION_GRANTED
 
-                    if (!hasPermission) {
-                        showPermissionSheet = true
+                        if (!hasPermission) {
+                            showPermissionSheet = true
+                        }
                     }
-                }
             ) {
                 IconToggleItem(
                     iconRes = R.drawable.rounded_android_cell_dual_5_bar_alert_24,
@@ -218,23 +222,25 @@ fun StatusBarIconSettingsUI(
                     ) == PackageManager.PERMISSION_GRANTED)
 
                 if (isSwitchDisabled) {
-                    Box(modifier = Modifier.matchParentSize().clickable {
-                        HapticUtil.performUIHaptic(view)
-                        val hasPermission = ContextCompat.checkSelfPermission(
-                            context,
-                            Manifest.permission.READ_PHONE_STATE
-                        ) == PackageManager.PERMISSION_GRANTED
+                    Box(modifier = Modifier
+                        .matchParentSize()
+                        .clickable {
+                            HapticUtil.performUIHaptic(view)
+                            val hasPermission = ContextCompat.checkSelfPermission(
+                                context,
+                                Manifest.permission.READ_PHONE_STATE
+                            ) == PackageManager.PERMISSION_GRANTED
 
-                        if (!hasPermission) {
-                            showPermissionSheet = true
-                        }
-                    })
+                            if (!hasPermission) {
+                                showPermissionSheet = true
+                            }
+                        })
                 }
             }
 
             // Network Type Picker (only show when Smart Data is enabled)
             if (viewModel.isSmartDataEnabled.value) {
-                Column() {
+                Column {
                     NetworkTypePicker(
                         selectedTypes = viewModel.selectedNetworkTypes.value,
                         onTypesSelected = { selectedTypes ->
@@ -279,7 +285,7 @@ fun StatusBarIconSettingsUI(
                 enabled = isPermissionGranted,
                 modifier = Modifier.highlight(highlightSetting == "clock_seconds")
             )
-            
+
             IconToggleItem(
                 iconRes = R.drawable.rounded_security_24,
                 title = stringResource(R.string.stb_privacy_chip),
@@ -290,7 +296,7 @@ fun StatusBarIconSettingsUI(
                 enabled = isPermissionGranted,
                 modifier = Modifier.highlight(highlightSetting == "privacy_chip")
             )
-            
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -302,13 +308,17 @@ fun StatusBarIconSettingsUI(
                     .highlight(highlightSetting == "battery_percentage")
             ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
                     verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
                 ) {
                     Text(
                         text = stringResource(R.string.stb_battery_percentage),
                         style = MaterialTheme.typography.titleSmall,
-                        color = if (batteryPermissionGranted) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                        color = if (batteryPermissionGranted) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(
+                            alpha = 0.38f
+                        )
                     )
                     if (!viewModel.isShizukuAvailable.value && !viewModel.isRootAvailable.value) {
                         Spacer(modifier = Modifier.weight(1f))
@@ -333,7 +343,9 @@ fun StatusBarIconSettingsUI(
                             else -> ""
                         }
                     },
-                    modifier = Modifier.fillMaxWidth().then(if (!batteryPermissionGranted) Modifier.alpha(0.5f) else Modifier),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .then(if (!batteryPermissionGranted) Modifier.alpha(0.5f) else Modifier),
                 )
             }
         }

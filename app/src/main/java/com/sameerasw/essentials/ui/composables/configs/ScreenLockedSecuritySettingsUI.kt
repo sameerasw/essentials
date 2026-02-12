@@ -56,8 +56,15 @@ fun ScreenLockedSecuritySettingsUI(
                         BiometricHelper.showBiometricPrompt(
                             activity = context,
                             title = context.getString(R.string.screen_locked_security_dialog_title),
-                            subtitle = if (isChecked) context.getString(R.string.screen_locked_security_auth_enable) else context.getString(R.string.screen_locked_security_auth_disable),
-                            onSuccess = { viewModel.setScreenLockedSecurityEnabled(isChecked, context) }
+                            subtitle = if (isChecked) context.getString(R.string.screen_locked_security_auth_enable) else context.getString(
+                                R.string.screen_locked_security_auth_disable
+                            ),
+                            onSuccess = {
+                                viewModel.setScreenLockedSecurityEnabled(
+                                    isChecked,
+                                    context
+                                )
+                            }
                         )
                     } else {
                         viewModel.setScreenLockedSecurityEnabled(isChecked, context)

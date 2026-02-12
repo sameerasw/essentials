@@ -21,6 +21,7 @@ class LinkPickerActivity : ComponentActivity() {
                 val text = intent.getStringExtra(Intent.EXTRA_TEXT) ?: ""
                 extractUrl(text)?.let { Uri.parse(it) }
             }
+
             else -> intent.data
         }
 
@@ -32,14 +33,19 @@ class LinkPickerActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            val viewModel: com.sameerasw.essentials.viewmodels.MainViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+            val viewModel: com.sameerasw.essentials.viewmodels.MainViewModel =
+                androidx.lifecycle.viewmodel.compose.viewModel()
             val context = androidx.compose.ui.platform.LocalContext.current
             androidx.compose.runtime.LaunchedEffect(Unit) {
                 viewModel.check(context)
             }
             val isPitchBlackThemeEnabled by viewModel.isPitchBlackThemeEnabled
             EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
-                LinkPickerScreen(uri = uri, onFinish = { finish() }, modifier = Modifier.fillMaxSize())
+                LinkPickerScreen(
+                    uri = uri,
+                    onFinish = { finish() },
+                    modifier = Modifier.fillMaxSize()
+                )
             }
         }
     }

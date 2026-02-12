@@ -35,7 +35,7 @@ import kotlinx.coroutines.cancel
 class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListener {
 
     private val serviceScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
-    
+
     // Handlers
     private lateinit var flashlightHandler: FlashlightHandler
     private lateinit var notificationLightingHandler: NotificationLightingHandler
@@ -45,11 +45,11 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
     private lateinit var ambientGlanceHandler: AmbientGlanceHandler
 
     private var screenReceiver: BroadcastReceiver? = null
-    
+
     // Proximity
     private val sensorManager by lazy { getSystemService(SENSOR_SERVICE) as SensorManager }
     private var proximitySensor: Sensor? = null
-    
+
     // Freeze Logic
     private val freezeHandler = Handler(Looper.getMainLooper())
     private val freezeRunnable = Runnable {
@@ -58,7 +58,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
 
     override fun onCreate() {
         super.onCreate()
-        
+
         // Initialize Handlers
         flashlightHandler = FlashlightHandler(this, serviceScope)
         notificationLightingHandler = NotificationLightingHandler(this)
@@ -66,9 +66,9 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         appFlowHandler = AppFlowHandler(this)
         securityHandler = SecurityHandler(this)
         ambientGlanceHandler = AmbientGlanceHandler(this)
-        
+
         flashlightHandler.register()
-        
+
         // Screen Receiver
         screenReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
@@ -79,18 +79,22 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
                         freezeHandler.removeCallbacks(freezeRunnable)
                         stopInputEventListener()
                     }
+
                     Intent.ACTION_SCREEN_OFF -> {
                         appFlowHandler.clearAuthenticated()
                         scheduleFreeze()
                         startInputEventListenerIfEnabled()
                         ambientGlanceHandler.checkAndShowOnScreenOff()
                     }
+
                     Intent.ACTION_USER_PRESENT -> {
                         securityHandler.restoreAnimationScale()
                     }
+
                     InputEventListenerService.ACTION_VOLUME_LONG_PRESSED -> {
                         buttonRemapHandler.handleExternalVolumeLongPress(intent)
                     }
+
                     "SHOW_AMBIENT_GLANCE" -> {
                         ambientGlanceHandler.handleIntent(intent)
                     }
@@ -112,11 +116,11 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
             sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
         }
     }
-    
+
     private fun scheduleFreeze() {
         val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
         val isFreezeWhenLockedEnabled = prefs.getBoolean("freeze_when_locked_enabled", false)
-        
+
         if (isFreezeWhenLockedEnabled) {
             val delayIndex = prefs.getInt("freeze_lock_delay_index", 1)
             val delayMs = when (delayIndex) {
@@ -126,7 +130,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
                 3 -> 900_000L // 15 minutes
                 else -> -1L // Never
             }
-            
+
             if (delayMs >= 0) {
                 freezeHandler.removeCallbacks(freezeRunnable)
                 freezeHandler.postDelayed(freezeRunnable, delayMs)
@@ -142,7 +146,10 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
     }
 
     override fun onDestroy() {
-        try { unregisterReceiver(screenReceiver) } catch (_: Exception) {}
+        try {
+            unregisterReceiver(screenReceiver)
+        } catch (_: Exception) {
+        }
         flashlightHandler.unregister()
         sensorManager.unregisterListener(this)
         securityHandler.restoreAnimationScale()
@@ -155,23 +162,23 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         if (event == null) return
-        
+
         securityHandler.onAccessibilityEvent(event)
-        
+
         if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
             val packageName = event.packageName?.toString() ?: return
             appFlowHandler.onPackageChanged(packageName)
         }
     }
 
-    override fun onInterrupt() { }
+    override fun onInterrupt() {}
 
     override fun onSensorChanged(event: SensorEvent?) {
         if (event?.sensor?.type == Sensor.TYPE_PROXIMITY) {
             val distance = event.values[0]
             val maxRange = event.sensor.maximumRange
             val isBlocked = distance < maxRange && distance < 5f
-            
+
             flashlightHandler.isProximityBlocked = isBlocked
         }
     }
@@ -181,7 +188,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
     override fun onKeyEvent(event: KeyEvent): Boolean {
         val keyCode = event.keyCode
         if (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-            val powerManager = getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
+            val powerManager = getSystemService(POWER_SERVICE) as android.os.PowerManager
             if (!powerManager.isInteractive && event.action == KeyEvent.ACTION_DOWN) {
                 triggerAmbientGlanceVolume(keyCode)
             }
@@ -190,17 +197,19 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
     }
 
     private fun triggerAmbientGlanceVolume(keyCode: Int) {
-        val prefs = getSharedPreferences(SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
+        val prefs = getSharedPreferences(SettingsRepository.PREFS_NAME, MODE_PRIVATE)
         if (prefs.getBoolean(SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_ENABLED, false)) {
             val title = prefs.getString("current_media_title", null)
             val artist = prefs.getString("current_media_artist", null)
-            
-            val audioManager = getSystemService(Context.AUDIO_SERVICE) as android.media.AudioManager
-            val currentVolume = audioManager.getStreamVolume(android.media.AudioManager.STREAM_MUSIC)
+
+            val audioManager = getSystemService(AUDIO_SERVICE) as android.media.AudioManager
+            val currentVolume =
+                audioManager.getStreamVolume(android.media.AudioManager.STREAM_MUSIC)
             val maxVolume = audioManager.getStreamMaxVolume(android.media.AudioManager.STREAM_MUSIC)
             val percentage = (currentVolume.toFloat() / maxVolume.toFloat() * 100).toInt()
 
-            val isDockedMode = prefs.getBoolean(SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_DOCKED_MODE, false)
+            val isDockedMode =
+                prefs.getBoolean(SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_DOCKED_MODE, false)
 
             val intent = Intent("SHOW_AMBIENT_GLANCE").apply {
                 putExtra("event_type", "volume")
@@ -216,11 +225,12 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val action = intent?.action ?: return super.onStartCommand(intent, flags, startId)
-        
+
         when (action) {
             "LOCK_SCREEN" -> {
                 val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
-                val hapticTypeStr = prefs.getString("haptic_feedback_type", HapticFeedbackType.NONE.name)
+                val hapticTypeStr =
+                    prefs.getString("haptic_feedback_type", HapticFeedbackType.NONE.name)
                 val hapticType = try {
                     HapticFeedbackType.valueOf(hapticTypeStr ?: HapticFeedbackType.NONE.name)
                 } catch (e: Exception) {
@@ -228,24 +238,28 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
                 }
 
                 if (hapticType != HapticFeedbackType.NONE) {
-                    val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
+                    val vibrator = getSystemService(VIBRATOR_SERVICE) as? Vibrator
                     vibrator?.let { performHapticFeedback(it, hapticType) }
                 }
                 securityHandler.lockDevice()
             }
-            
+
             "SHOW_NOTIFICATION_LIGHTING" -> notificationLightingHandler.handleIntent(intent)
             "SHOW_AMBIENT_GLANCE" -> ambientGlanceHandler.handleIntent(intent)
-            
-            "APP_AUTHENTICATED" -> intent.getStringExtra("package_name")?.let { appFlowHandler.onAuthenticated(it) }
+
+            "APP_AUTHENTICATED" -> intent.getStringExtra("package_name")
+                ?.let { appFlowHandler.onAuthenticated(it) }
+
             "APP_AUTHENTICATION_FAILED" -> performGlobalAction(GLOBAL_ACTION_HOME)
-            
+
             FlashlightActionReceiver.ACTION_INCREASE,
             FlashlightActionReceiver.ACTION_DECREASE,
             FlashlightActionReceiver.ACTION_OFF,
             FlashlightActionReceiver.ACTION_TOGGLE,
             FlashlightActionReceiver.ACTION_SET_INTENSITY,
-            FlashlightActionReceiver.ACTION_PULSE_NOTIFICATION -> flashlightHandler.handleIntent(intent)
+            FlashlightActionReceiver.ACTION_PULSE_NOTIFICATION -> flashlightHandler.handleIntent(
+                intent
+            )
         }
         return super.onStartCommand(intent, flags, startId)
     }
@@ -254,7 +268,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
         val isEnabled = prefs.getBoolean("button_remap_enabled", false)
         val useShizuku = prefs.getBoolean("button_remap_use_shizuku", false)
-        
+
         if (isEnabled && useShizuku) {
             try {
                 val intent = Intent(this, InputEventListenerService::class.java)

@@ -41,7 +41,7 @@ abstract class Feature(
     val requiresAuth: Boolean = category == com.sameerasw.essentials.R.string.cat_protection
 
     abstract fun isEnabled(viewModel: MainViewModel): Boolean
-    
+
     open fun isToggleEnabled(viewModel: MainViewModel, context: Context): Boolean = true
 
     abstract fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean)

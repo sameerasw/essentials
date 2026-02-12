@@ -73,41 +73,41 @@ fun KeyboardSettingsUI(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    if (!isKeyboardEnabled) {
-                        Button(
-                            onClick = { viewModel.openImeSettings(context) },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.rounded_settings_24),
-                                contentDescription = null,
-                                modifier = Modifier.size(20.dp)
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Text(stringResource(R.string.btn_enable_keyboard))
-                        }
-                    } else if (!isKeyboardSelected) {
-                        Button(
-                            onClick = { viewModel.showImePicker(context) },
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.rounded_keyboard_24),
-                                contentDescription = null,
-                                modifier = Modifier.size(20.dp)
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Text(stringResource(R.string.btn_select_keyboard))
-                        }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                if (!isKeyboardEnabled) {
+                    Button(
+                        onClick = { viewModel.openImeSettings(context) },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.rounded_settings_24),
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Text(stringResource(R.string.btn_enable_keyboard))
+                    }
+                } else if (!isKeyboardSelected) {
+                    Button(
+                        onClick = { viewModel.showImePicker(context) },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.rounded_keyboard_24),
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Text(stringResource(R.string.btn_select_keyboard))
                     }
                 }
+            }
         }
 
         // Test Field
@@ -115,7 +115,9 @@ fun KeyboardSettingsUI(
             value = text,
             onValueChange = { text = it },
             label = { Text(stringResource(R.string.test_keyboard_hint)) },
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp),
             shape = RoundedCornerShape(24.dp)
         )
 

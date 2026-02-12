@@ -65,20 +65,23 @@ fun WatermarkPreviewArea(
     val configuration = LocalConfiguration.current
     val screenHeightDp = configuration.screenHeightDp.dp
     val view = LocalView.current
-    
+
     val maxPreviewHeightDp = screenHeightDp * 0.6f
     val minPreviewHeightDp = screenHeightDp * 0.3f
-    
+
     val maxPx = with(density) { maxPreviewHeightDp.toPx() }
     val minPx = with(density) { minPreviewHeightDp.toPx() }
-    
+
     val previewHeightPxState = remember { mutableFloatStateOf(maxPx) }
     var previewHeightPx by previewHeightPxState
     var showRotationMenu by remember { mutableStateOf(false) }
-    
+
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
-            override fun onPreScroll(available: androidx.compose.ui.geometry.Offset, source: NestedScrollSource): androidx.compose.ui.geometry.Offset {
+            override fun onPreScroll(
+                available: androidx.compose.ui.geometry.Offset,
+                source: NestedScrollSource
+            ): androidx.compose.ui.geometry.Offset {
                 val delta = available.y
                 if (delta < 0) {
                     val newHeight = (previewHeightPx + delta).coerceIn(minPx, maxPx)
@@ -92,7 +95,11 @@ fun WatermarkPreviewArea(
                 return androidx.compose.ui.geometry.Offset.Zero
             }
 
-            override fun onPostScroll(consumed: androidx.compose.ui.geometry.Offset, available: androidx.compose.ui.geometry.Offset, source: NestedScrollSource): androidx.compose.ui.geometry.Offset {
+            override fun onPostScroll(
+                consumed: androidx.compose.ui.geometry.Offset,
+                available: androidx.compose.ui.geometry.Offset,
+                source: NestedScrollSource
+            ): androidx.compose.ui.geometry.Offset {
                 val delta = available.y
                 if (delta > 0) {
                     val newHeight = (previewHeightPx + delta).coerceIn(minPx, maxPx)
@@ -121,7 +128,7 @@ fun WatermarkPreviewArea(
                 .clip(if (initialUri == null) RoundedCornerShape(24.dp) else RectangleShape)
                 .background(if (initialUri == null) MaterialTheme.colorScheme.surfaceContainerHigh else Color.Transparent)
                 .combinedClickable(
-                    onClick = { 
+                    onClick = {
                         performUIHaptic(view)
                         if (initialUri == null) {
                             onPickImage()
@@ -139,39 +146,39 @@ fun WatermarkPreviewArea(
         ) {
             if (initialUri == null) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                     Icon(
-                         painter = painterResource(R.drawable.rounded_add_photo_alternate_24),
-                         contentDescription = null, 
-                         modifier = Modifier.size(64.dp),
-                         tint = MaterialTheme.colorScheme.primary
-                     )
-                     Spacer(Modifier.size(8.dp))
-                     Text(
-                         stringResource(R.string.watermark_pick_image),
-                         style = MaterialTheme.typography.bodyLarge,
-                         color = MaterialTheme.colorScheme.onSurfaceVariant
-                     )
+                    Icon(
+                        painter = painterResource(R.drawable.rounded_add_photo_alternate_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(64.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(Modifier.size(8.dp))
+                    Text(
+                        stringResource(R.string.watermark_pick_image),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
             } else {
                 val current = previewState
                 var lastSuccess by remember { mutableStateOf<WatermarkUiState.Success?>(null) }
-                
+
                 if (current is WatermarkUiState.Success) {
                     lastSuccess = current
                 }
-                
+
                 val showBlur = current is WatermarkUiState.Processing
-                
+
                 val blurRadius by animateDpAsState(
                     targetValue = if (showBlur) 16.dp else 0.dp,
                     label = "blur"
                 )
-                
+
                 val alpha by animateFloatAsState(
                     targetValue = if (showBlur) 0.6f else 1f,
                     label = "alpha"
                 )
-                
+
                 Box(contentAlignment = Alignment.Center) {
                     if (lastSuccess != null) {
                         Box(
@@ -231,7 +238,7 @@ fun WatermarkPreviewArea(
                 }
             }
         }
-        
+
         content(PaddingValues(0.dp))
     }
 }

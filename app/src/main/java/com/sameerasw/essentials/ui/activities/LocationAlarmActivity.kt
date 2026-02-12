@@ -54,9 +54,10 @@ class LocationAlarmActivity : ComponentActivity() {
         enableEdgeToEdge()
         showWhenLockedAndTurnScreenOn()
         super.onCreate(savedInstanceState)
-        
+
         setContent {
-            val viewModel: com.sameerasw.essentials.viewmodels.MainViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+            val viewModel: com.sameerasw.essentials.viewmodels.MainViewModel =
+                androidx.lifecycle.viewmodel.compose.viewModel()
             val context = androidx.compose.ui.platform.LocalContext.current
             androidx.compose.runtime.LaunchedEffect(Unit) {
                 viewModel.check(context)
@@ -68,7 +69,7 @@ class LocationAlarmActivity : ComponentActivity() {
                 })
             }
         }
-        
+
         startUrgentVibration()
     }
 
@@ -76,7 +77,7 @@ class LocationAlarmActivity : ComponentActivity() {
         super.onStop()
         stopAlarmAndFinish()
     }
-    
+
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
         stopAlarmAndFinish()
@@ -90,30 +91,31 @@ class LocationAlarmActivity : ComponentActivity() {
             @Suppress("DEPRECATION")
             window.addFlags(
                 WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
-                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
             )
         }
-        
+
         // Keyguard dismissal
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val keyguardManager = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
+            val keyguardManager = getSystemService(KEYGUARD_SERVICE) as KeyguardManager
             keyguardManager.requestDismissKeyguard(this, null)
         } else {
             @Suppress("DEPRECATION")
             window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD)
         }
-        
+
         // Keep screen on
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     private fun startUrgentVibration() {
         val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val vibratorManager = getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+            val vibratorManager =
+                getSystemService(VIBRATOR_MANAGER_SERVICE) as VibratorManager
             vibratorManager.defaultVibrator
         } else {
             @Suppress("DEPRECATION")
-            getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            getSystemService(VIBRATOR_SERVICE) as Vibrator
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -128,26 +130,27 @@ class LocationAlarmActivity : ComponentActivity() {
 
     private fun stopAlarmAndFinish() {
         val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val vibratorManager = getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+            val vibratorManager =
+                getSystemService(VIBRATOR_MANAGER_SERVICE) as VibratorManager
             vibratorManager.defaultVibrator
         } else {
             @Suppress("DEPRECATION")
-            getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            getSystemService(VIBRATOR_SERVICE) as Vibrator
         }
         try {
             vibrator.cancel()
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        
+
         // Disable alarm in repo
         val repo = LocationReachedRepository(this)
         val alarm = repo.getAlarm()
         repo.saveAlarm(alarm.copy(isEnabled = false))
-        
+
         // Stop the progress service
         LocationReachedService.stop(this)
-        
+
         if (!isFinishing) {
             finish()
         }
@@ -163,7 +166,7 @@ class LocationAlarmActivity : ComponentActivity() {
 @Composable
 fun LocationAlarmScreen(onFinish: () -> Unit) {
     val infiniteTransition = rememberInfiniteTransition(label = "alarm")
-    
+
     val scale by infiniteTransition.animateFloat(
         initialValue = 1f,
         targetValue = 1.15f,
@@ -198,9 +201,9 @@ fun LocationAlarmScreen(onFinish: () -> Unit) {
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(48.dp))
-            
+
             Text(
                 text = stringResource(R.string.location_reached_alarm_title),
                 style = MaterialTheme.typography.headlineLarge.copy(
@@ -209,15 +212,15 @@ fun LocationAlarmScreen(onFinish: () -> Unit) {
                 ),
                 color = MaterialTheme.colorScheme.onSurface
             )
-            
+
             Text(
                 text = stringResource(R.string.location_reached_alarm_subtitle),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface
             )
-            
+
             Spacer(modifier = Modifier.height(80.dp))
-            
+
             Button(
                 onClick = onFinish,
                 modifier = Modifier

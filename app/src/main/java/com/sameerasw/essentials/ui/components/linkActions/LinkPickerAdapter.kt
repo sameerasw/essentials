@@ -71,9 +71,15 @@ import java.text.Collator
 import java.util.Locale
 
 private const val TAG = "LinkPickerScreen"
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LinkPickerScreen(uri: Uri, onFinish: () -> Unit, modifier: Modifier = Modifier, demo: Boolean = false) {
+fun LinkPickerScreen(
+    uri: Uri,
+    onFinish: () -> Unit,
+    modifier: Modifier = Modifier,
+    demo: Boolean = false
+) {
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
 
@@ -81,10 +87,10 @@ fun LinkPickerScreen(uri: Uri, onFinish: () -> Unit, modifier: Modifier = Modifi
     var currentUri by remember { mutableStateOf(uri) }
     var showEditSheet by remember { mutableStateOf(false) }
     var editingText by remember { mutableStateOf(currentUri.toString()) }
-    
+
     // Search state
     var searchQuery by remember { mutableStateOf("") }
-    
+
     // App lists
     var baseOpenWithApps by remember { mutableStateOf<List<ResolvedAppInfo>>(emptyList()) }
     var baseShareWithApps by remember { mutableStateOf<List<ResolvedAppInfo>>(emptyList()) }
@@ -157,8 +163,10 @@ fun LinkPickerScreen(uri: Uri, onFinish: () -> Unit, modifier: Modifier = Modifi
         },
         bottomBar = {
             val items = listOf("Open With", "Share With")
-            val selectedIcons = listOf(R.drawable.rounded_open_in_browser_24, R.drawable.rounded_share_24)
-            val unselectedIcons = listOf(R.drawable.rounded_open_in_browser_24, R.drawable.rounded_share_24)
+            val selectedIcons =
+                listOf(R.drawable.rounded_open_in_browser_24, R.drawable.rounded_share_24)
+            val unselectedIcons =
+                listOf(R.drawable.rounded_open_in_browser_24, R.drawable.rounded_share_24)
 
             NavigationBar(
                 windowInsets = NavigationBarDefaults.windowInsets
@@ -203,7 +211,9 @@ fun LinkPickerScreen(uri: Uri, onFinish: () -> Unit, modifier: Modifier = Modifi
             }
         }
 
-        Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)) {
             // Link display and Edit action
             Row(
                 modifier = Modifier
@@ -295,11 +305,11 @@ fun LinkPickerScreen(uri: Uri, onFinish: () -> Unit, modifier: Modifier = Modifi
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 placeholder = { Text("Search apps") },
-                leadingIcon = { 
+                leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.rounded_search_24),
                         contentDescription = "Search"
-                    ) 
+                    )
                 },
                 singleLine = true,
                 shape = RoundedCornerShape(12.dp)
@@ -318,10 +328,27 @@ fun LinkPickerScreen(uri: Uri, onFinish: () -> Unit, modifier: Modifier = Modifi
                 ) { page ->
                     when (page) {
                         0 -> {
-                            OpenWithContent(openWithApps, currentUri, onFinish, Modifier, togglePin, pinnedPackages.value, demo)
+                            OpenWithContent(
+                                openWithApps,
+                                currentUri,
+                                onFinish,
+                                Modifier,
+                                togglePin,
+                                pinnedPackages.value,
+                                demo
+                            )
                         }
+
                         1 -> {
-                            ShareWithContent(shareWithApps, currentUri, onFinish, Modifier, togglePin, pinnedPackages.value, demo)
+                            ShareWithContent(
+                                shareWithApps,
+                                currentUri,
+                                onFinish,
+                                Modifier,
+                                togglePin,
+                                pinnedPackages.value,
+                                demo
+                            )
                         }
                     }
                 }
@@ -362,9 +389,13 @@ fun LinkPickerScreen(uri: Uri, onFinish: () -> Unit, modifier: Modifier = Modifi
                     FilledIconButton(
                         onClick = {
                             var text = editingText.trim()
-                            
+
                             if (text.contains(" ")) {
-                                Toast.makeText(context, "Invalid Link: Contains spaces", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    context,
+                                    "Invalid Link: Contains spaces",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                                 return@FilledIconButton
                             }
 
@@ -373,18 +404,23 @@ fun LinkPickerScreen(uri: Uri, onFinish: () -> Unit, modifier: Modifier = Modifi
                                 if (!text.contains("://")) {
                                     text = "https://$text"
                                 }
-                                
+
                                 try {
                                     val newUri = Uri.parse(text)
                                     // Validate scheme
                                     if (newUri.scheme.isNullOrBlank()) {
-                                        Toast.makeText(context, "Invalid Link: Missing scheme", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(
+                                            context,
+                                            "Invalid Link: Missing scheme",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
                                     } else {
                                         currentUri = newUri
                                         showEditSheet = false
                                     }
                                 } catch (_: Exception) {
-                                    Toast.makeText(context, "Invalid URI", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, "Invalid URI", Toast.LENGTH_SHORT)
+                                        .show()
                                 }
                             }
                         }
@@ -450,8 +486,8 @@ private fun queryOpenWithApps(context: Context, uri: Uri): List<ResolvedAppInfo>
 
         // Map to ResolvedAppInfo and sort
         val collator = Collator.getInstance(Locale.getDefault())
-        val resolvedList = filtered.map { 
-            ResolvedAppInfo(it, it.loadLabel(pm).toString()) 
+        val resolvedList = filtered.map {
+            ResolvedAppInfo(it, it.loadLabel(pm).toString())
         }.sortedWith { o1, o2 ->
             collator.compare(
                 o1.label.lowercase(Locale.getDefault()),
@@ -496,7 +532,10 @@ private fun queryShareWithApps(context: Context, uri: Uri): List<ResolvedAppInfo
             .filter {
                 val shouldInclude = it.activityInfo.packageName != ourPackageName
                 if (!shouldInclude) {
-                    Log.d(TAG, "Filtering out our own app from share: ${it.activityInfo.packageName}")
+                    Log.d(
+                        TAG,
+                        "Filtering out our own app from share: ${it.activityInfo.packageName}"
+                    )
                 }
                 shouldInclude
             }
@@ -506,8 +545,8 @@ private fun queryShareWithApps(context: Context, uri: Uri): List<ResolvedAppInfo
 
         // Map to ResolvedAppInfo and sort
         val collator = Collator.getInstance(Locale.getDefault())
-        val resolvedList = filtered.map { 
-            ResolvedAppInfo(it, it.loadLabel(pm).toString()) 
+        val resolvedList = filtered.map {
+            ResolvedAppInfo(it, it.loadLabel(pm).toString())
         }.sortedWith { o1, o2 ->
             collator.compare(
                 o1.label.lowercase(Locale.getDefault()),

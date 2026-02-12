@@ -72,11 +72,11 @@ object LogManager {
             append("Stack Trace:\n$stackTrace\n")
             append("\n--- Last Logs before crash ---\n")
             synchronized(logBuffer) {
-               // Take last 50 logs for context
-               logBuffer.takeLast(50).forEach { entry ->
-                   append(formatLogEntry(entry))
-                   append("\n")
-               }
+                // Take last 50 logs for context
+                logBuffer.takeLast(50).forEach { entry ->
+                    append(formatLogEntry(entry))
+                    append("\n")
+                }
             }
         }
 
@@ -92,7 +92,7 @@ object LogManager {
         addLog("INFO", tag, message)
         Log.i(tag, message)
     }
-    
+
     fun debug(tag: String, message: String) {
         addLog("DEBUG", tag, message)
         Log.d(tag, message)
@@ -102,7 +102,7 @@ object LogManager {
         addLog("ERROR", tag, message, throwable)
         Log.e(tag, message, throwable)
     }
-    
+
     fun warn(tag: String, message: String) {
         addLog("WARN", tag, message)
         Log.w(tag, message)
@@ -134,7 +134,12 @@ object LogManager {
             try {
                 val pInfo = context.packageManager.getPackageInfo(context.packageName, 0)
                 put("AppVersionName", pInfo.versionName)
-                put("AppVersionCode", if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) pInfo.longVersionCode else @Suppress("DEPRECATION") pInfo.versionCode.toLong())
+                put(
+                    "AppVersionCode",
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) pInfo.longVersionCode else @Suppress(
+                        "DEPRECATION"
+                    ) pInfo.versionCode.toLong()
+                )
             } catch (e: Exception) {
                 put("AppVersion", "Unknown")
             }

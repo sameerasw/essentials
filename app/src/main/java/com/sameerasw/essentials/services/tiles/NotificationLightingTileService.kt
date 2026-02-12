@@ -23,11 +23,12 @@ class NotificationLightingTileService : BaseTileService() {
     override fun hasFeaturePermission(): Boolean {
         // Notification listener is required for notification lighting
         return PermissionUtils.hasNotificationListenerPermission(this) &&
-               PermissionUtils.isNotificationLightingAccessibilityServiceEnabled(this) &&
-               PermissionUtils.canDrawOverlays(this)
+                PermissionUtils.isNotificationLightingAccessibilityServiceEnabled(this) &&
+                PermissionUtils.canDrawOverlays(this)
     }
 
-    override fun getTileIcon(): Icon? = Icon.createWithResource(this, R.drawable.rounded_blur_linear_24)
+    override fun getTileIcon(): Icon =
+        Icon.createWithResource(this, R.drawable.rounded_blur_linear_24)
 
     override fun getTileState(): Int {
         val enabled = getSharedPreferences("essentials_prefs", MODE_PRIVATE)

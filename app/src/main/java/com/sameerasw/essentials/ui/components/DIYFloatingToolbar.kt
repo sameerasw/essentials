@@ -153,7 +153,7 @@ fun DIYFloatingToolbar(
                                 expanded = true
                             } else {
                                 bumpingTab = index
-                                bumpKey++ 
+                                bumpKey++
                                 onTabSelected(index)
                             }
                         },

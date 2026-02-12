@@ -28,7 +28,10 @@ object BiometricSecurityHelper {
         val title = if (feature.authTitle != 0) {
             activity.getString(feature.authTitle)
         } else {
-            activity.getString(R.string.biometric_title_settings_format, activity.getString(feature.title))
+            activity.getString(
+                R.string.biometric_title_settings_format,
+                activity.getString(feature.title)
+            )
         }
 
         val subtitle = if (feature.authSubtitle != 0) {

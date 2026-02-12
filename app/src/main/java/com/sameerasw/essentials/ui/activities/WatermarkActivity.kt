@@ -26,17 +26,18 @@ class WatermarkActivity : ComponentActivity() {
 
     private var initialUri by mutableStateOf<Uri?>(null)
 
-    private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-        if (uri != null) {
-            try {
-                val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
-                contentResolver.takePersistableUriPermission(uri, flag)
-            } catch (e: Exception) {
-                // Ignore if not persistable
+    private val pickMedia =
+        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            if (uri != null) {
+                try {
+                    val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    contentResolver.takePersistableUriPermission(uri, flag)
+                } catch (e: Exception) {
+                    // Ignore if not persistable
+                }
+                initialUri = uri
             }
-            initialUri = uri
         }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -56,15 +57,17 @@ class WatermarkActivity : ComponentActivity() {
         val settingsRepository = SettingsRepository(this)
 
         setContent {
-            val isPitchBlackThemeEnabled by settingsRepository.isPitchBlackThemeEnabled.collectAsState(initial = false)
-            
+            val isPitchBlackThemeEnabled by settingsRepository.isPitchBlackThemeEnabled.collectAsState(
+                initial = false
+            )
+
             EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
                 Surface(color = MaterialTheme.colorScheme.surfaceContainer) {
                     val context = LocalContext.current
                     val viewModel: WatermarkViewModel = viewModel(
                         factory = WatermarkViewModel.provideFactory(context)
                     )
-                    
+
                     WatermarkScreen(
                         initialUri = initialUri,
                         onPickImage = {

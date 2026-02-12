@@ -15,11 +15,12 @@ import kotlinx.coroutines.launch
 class GitHubAuthViewModel : ViewModel() {
     private val authRepository = GitHubAuthRepository()
     private val gitHubRepository = com.sameerasw.essentials.data.repository.GitHubRepository()
-    
+
     private val _authState = mutableStateOf<AuthState>(AuthState.Idle)
     val authState: State<AuthState> = _authState
 
-    private val _currentUser = mutableStateOf<com.sameerasw.essentials.domain.model.github.GitHubUser?>(null)
+    private val _currentUser =
+        mutableStateOf<com.sameerasw.essentials.domain.model.github.GitHubUser?>(null)
     val currentUser: State<com.sameerasw.essentials.domain.model.github.GitHubUser?> = _currentUser
 
     private var pollingJob: Job? = null
@@ -47,7 +48,7 @@ class GitHubAuthViewModel : ViewModel() {
             while (isActive) {
                 delay(currentInterval)
                 val tokenResponse = authRepository.pollForToken(deviceCode, intervalSeconds)
-                
+
                 if (tokenResponse != null) {
                     when {
                         tokenResponse.accessToken != null -> {
@@ -55,20 +56,25 @@ class GitHubAuthViewModel : ViewModel() {
                             pollingJob?.cancel()
                             return@launch
                         }
+
                         tokenResponse.error == "authorization_pending" -> {
                             // Continue polling
                         }
+
                         tokenResponse.error == "slow_down" -> {
                             currentInterval += 5000L
                         }
+
                         tokenResponse.error == "expired_token" -> {
                             _authState.value = AuthState.Error("Code expired. Please try again.")
                             pollingJob?.cancel()
                             return@launch
                         }
+
                         else -> {
-                             // "access_denied" or other errors
-                            _authState.value = AuthState.Error("Authentication failed: ${tokenResponse.error}")
+                            // "access_denied" or other errors
+                            _authState.value =
+                                AuthState.Error("Authentication failed: ${tokenResponse.error}")
                             pollingJob?.cancel()
                             return@launch
                         }
@@ -85,14 +91,14 @@ class GitHubAuthViewModel : ViewModel() {
 
     fun loadUser(token: String, context: Context) {
         viewModelScope.launch {
-             val user = gitHubRepository.getUserProfile(token)
-             if (user != null) {
-                 _currentUser.value = user
-                 SettingsRepository(context).saveGitHubUser(user)
-             }
+            val user = gitHubRepository.getUserProfile(token)
+            if (user != null) {
+                _currentUser.value = user
+                SettingsRepository(context).saveGitHubUser(user)
+            }
         }
     }
-    
+
     fun loadCachedUser(context: Context) {
         viewModelScope.launch {
             _currentUser.value = SettingsRepository(context).getGitHubUser()
@@ -106,7 +112,7 @@ class GitHubAuthViewModel : ViewModel() {
         _authState.value = AuthState.Idle
         pollingJob?.cancel()
     }
-    
+
     fun cancelAuthFlow() {
         pollingJob?.cancel()
         _authState.value = AuthState.Idle

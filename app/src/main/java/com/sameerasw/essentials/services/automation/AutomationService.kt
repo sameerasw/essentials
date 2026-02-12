@@ -25,10 +25,11 @@ class AutomationService : Service() {
         super.onCreate()
         isRunning = true
         createNotificationChannel()
-        startForeground(NOTIFICATION_ID, createNotification(), 
+        startForeground(
+            NOTIFICATION_ID, createNotification(),
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE else 0
         )
-        
+
         // Modules will be started by AutomationManager calling onServiceCreated/Updated
         AutomationManager.onServiceConnected(this)
     }

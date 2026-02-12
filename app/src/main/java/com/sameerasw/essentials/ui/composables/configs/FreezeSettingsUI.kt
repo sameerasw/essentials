@@ -62,16 +62,16 @@ fun FreezeSettingsUI(
     var isAppSelectionSheetOpen by remember { mutableStateOf(false) }
     var showPermissionSheet by remember { mutableStateOf(false) }
     var permissionsToRequest by remember { mutableStateOf<List<String>>(emptyList()) }
-    
+
     val isShizukuAvailable by viewModel.isShizukuAvailable
     val isShizukuPermissionGranted by viewModel.isShizukuPermissionGranted
     val pickedApps by viewModel.freezePickedApps
-    
+
     var isMenuExpanded by remember { mutableStateOf(false) }
 
-    val freezeInteractionSource = remember { MutableInteractionSource() }
-    val unfreezeInteractionSource = remember { MutableInteractionSource() }
-    val moreInteractionSource = remember { MutableInteractionSource() }
+    remember { MutableInteractionSource() }
+    remember { MutableInteractionSource() }
+    remember { MutableInteractionSource() }
 
     val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
     var initialEnabledPackageNames by remember { mutableStateOf<Set<String>?>(null) }
@@ -98,111 +98,111 @@ fun FreezeSettingsUI(
             spacing = 2.dp,
             cornerRadius = 24.dp
         ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .highlight(highlightKey == "freeze_all_manual")
-        ) {
-            Row(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(
-                        color = MaterialTheme.colorScheme.surfaceBright,
-                        shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd)
-                    )
-                    .padding(12.dp),
-                horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
-                verticalAlignment = Alignment.CenterVertically
+                    .highlight(highlightKey == "freeze_all_manual")
             ) {
-                // Freeze Button
-                Button(
-                    onClick = {
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        viewModel.freezeAllAuto(context)
-                    },
-                    modifier = Modifier.weight(1f),
-                    enabled = isShizukuAvailable && isShizukuPermissionGranted,
-                    shape = ButtonDefaults.shape // Keep default look
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            color = MaterialTheme.colorScheme.surfaceBright,
+                            shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd)
+                        )
+                        .padding(12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.rounded_mode_cool_24),
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(Modifier.size(8.dp))
-                    Text(stringResource(R.string.action_freeze))
-                }
-
-                // Unfreeze Button
-                Button(
-                    onClick = {
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        viewModel.unfreezeAllAuto(context)
-                    },
-                    modifier = Modifier.weight(1f),
-                    enabled = isShizukuAvailable && isShizukuPermissionGranted,
-                    shape = ButtonDefaults.shape
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.rounded_mode_cool_off_24),
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(Modifier.size(8.dp))
-                    Text(stringResource(R.string.action_unfreeze))
-                }
-
-                // More Menu Button
-                IconButton(
-                    onClick = {
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        isMenuExpanded = true
-                    },
-                    enabled = isShizukuAvailable && isShizukuPermissionGranted
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.rounded_more_vert_24),
-                        contentDescription = stringResource(R.string.content_desc_more_options)
-                    )
-
-                    DropdownMenu(
-                        expanded = isMenuExpanded,
-                        onDismissRequest = { isMenuExpanded = false }
+                    // Freeze Button
+                    Button(
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.freezeAllAuto(context)
+                        },
+                        modifier = Modifier.weight(1f),
+                        enabled = isShizukuAvailable && isShizukuPermissionGranted,
+                        shape = ButtonDefaults.shape // Keep default look
                     ) {
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.action_freeze_all)) },
-                            onClick = {
-                                HapticUtil.performVirtualKeyHaptic(view)
-                                viewModel.freezeAllManual(context)
-                                isMenuExpanded = false
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.rounded_mode_cool_24),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(18.dp)
-                                )
-                            }
+                        Icon(
+                            painter = painterResource(id = R.drawable.rounded_mode_cool_24),
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp)
                         )
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.action_unfreeze_all)) },
-                            onClick = {
-                                HapticUtil.performVirtualKeyHaptic(view)
-                                viewModel.unfreezeAllManual(context)
-                                isMenuExpanded = false
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.rounded_mode_cool_off_24),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(18.dp)
-                                )
-                            }
+                        Spacer(Modifier.size(8.dp))
+                        Text(stringResource(R.string.action_freeze))
+                    }
+
+                    // Unfreeze Button
+                    Button(
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.unfreezeAllAuto(context)
+                        },
+                        modifier = Modifier.weight(1f),
+                        enabled = isShizukuAvailable && isShizukuPermissionGranted,
+                        shape = ButtonDefaults.shape
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.rounded_mode_cool_off_24),
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp)
                         )
+                        Spacer(Modifier.size(8.dp))
+                        Text(stringResource(R.string.action_unfreeze))
+                    }
+
+                    // More Menu Button
+                    IconButton(
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            isMenuExpanded = true
+                        },
+                        enabled = isShizukuAvailable && isShizukuPermissionGranted
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.rounded_more_vert_24),
+                            contentDescription = stringResource(R.string.content_desc_more_options)
+                        )
+
+                        DropdownMenu(
+                            expanded = isMenuExpanded,
+                            onDismissRequest = { isMenuExpanded = false }
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.action_freeze_all)) },
+                                onClick = {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    viewModel.freezeAllManual(context)
+                                    isMenuExpanded = false
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.rounded_mode_cool_24),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.action_unfreeze_all)) },
+                                onClick = {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    viewModel.unfreezeAllManual(context)
+                                    isMenuExpanded = false
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.rounded_mode_cool_off_24),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                }
+                            )
+                        }
                     }
                 }
             }
-        }
 
             FeatureCard(
                 title = R.string.freeze_pick_apps_title,
@@ -278,10 +278,12 @@ fun FreezeSettingsUI(
                 Text(
                     text = stringResource(R.string.freeze_delay_title),
                     style = MaterialTheme.typography.bodyLarge,
-                    color = if (viewModel.isFreezeWhenLockedEnabled.value) 
-                        MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                    color = if (viewModel.isFreezeWhenLockedEnabled.value)
+                        MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(
+                        alpha = 0.38f
+                    )
                 )
-                
+
                 val labels = listOf(
                     stringResource(R.string.delay_immediate),
                     stringResource(R.string.delay_1m),
@@ -297,7 +299,7 @@ fun FreezeSettingsUI(
                     enabled = viewModel.isFreezeWhenLockedEnabled.value,
                     modifier = Modifier.padding(top = 4.dp)
                 )
-                
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -317,20 +319,27 @@ fun FreezeSettingsUI(
 
         if (isFreezePickedAppsLoading) {
             Row(
-                modifier = Modifier.fillMaxWidth().padding(vertical = 32.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 32.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
                 LoadingIndicator()
             }
         } else if (pickedApps.isNotEmpty()) {
             if (initialEnabledPackageNames == null) {
-                initialEnabledPackageNames = pickedApps.filter { it.isEnabled }.map { it.packageName }.toSet()
+                initialEnabledPackageNames =
+                    pickedApps.filter { it.isEnabled }.map { it.packageName }.toSet()
             }
-            
+
             val sortedApps = remember(pickedApps, initialEnabledPackageNames) {
                 val allowed = initialEnabledPackageNames ?: emptySet()
                 pickedApps.sortedWith(
-                    compareByDescending<com.sameerasw.essentials.domain.model.NotificationApp> { allowed.contains(it.packageName) }
+                    compareByDescending<com.sameerasw.essentials.domain.model.NotificationApp> {
+                        allowed.contains(
+                            it.packageName
+                        )
+                    }
                         .thenBy { it.appName.lowercase() }
                 )
             }
@@ -351,7 +360,7 @@ fun FreezeSettingsUI(
                         title = app.appName,
                         isChecked = app.isEnabled,
                         onCheckedChange = { isChecked ->
-                             viewModel.updateFreezeAppAutoFreeze(context, app.packageName, isChecked)
+                            viewModel.updateFreezeAppAutoFreeze(context, app.packageName, isChecked)
                         }
                     )
                 }
@@ -377,7 +386,13 @@ fun FreezeSettingsUI(
                 onDismissRequest = { isAppSelectionSheetOpen = false },
                 onLoadApps = { viewModel.loadFreezeSelectedApps(it) },
                 onSaveApps = { ctx, apps -> viewModel.saveFreezeSelectedApps(ctx, apps) },
-                onAppToggle = { ctx, pkg, enabled -> viewModel.updateFreezeAppEnabled(ctx, pkg, enabled) }
+                onAppToggle = { ctx, pkg, enabled ->
+                    viewModel.updateFreezeAppEnabled(
+                        ctx,
+                        pkg,
+                        enabled
+                    )
+                }
             )
         }
 
@@ -386,7 +401,10 @@ fun FreezeSettingsUI(
                 when (key) {
                     "ACCESSIBILITY" -> !isAccessibilityEnabled
                     "USAGE_STATS" -> !PermissionUtils.hasUsageStatsPermission(context)
-                    "NOTIFICATION_LISTENER" -> !PermissionUtils.hasNotificationListenerPermission(context)
+                    "NOTIFICATION_LISTENER" -> !PermissionUtils.hasNotificationListenerPermission(
+                        context
+                    )
+
                     else -> false
                 }
             }

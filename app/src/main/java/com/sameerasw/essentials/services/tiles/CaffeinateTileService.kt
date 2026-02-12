@@ -8,7 +8,7 @@ import com.sameerasw.essentials.domain.controller.CaffeinateController
 import com.sameerasw.essentials.services.CaffeinateWakeLockService
 
 class CaffeinateTileService : BaseTileService() {
- 
+
     private val handler = android.os.Handler(android.os.Looper.getMainLooper())
     private val refreshRunnable = object : Runnable {
         override fun run() {
@@ -38,7 +38,7 @@ class CaffeinateTileService : BaseTileService() {
         } else {
             CaffeinateController.toggle(this)
         }
-        
+
         // Start refreshing if needed
         handler.removeCallbacks(refreshRunnable)
         handler.post(refreshRunnable)
@@ -56,7 +56,10 @@ class CaffeinateTileService : BaseTileService() {
             if (CaffeinateController.isActive.value) {
                 "$timeoutStr"
             } else {
-                getString(R.string.caffeinate_starting_in, CaffeinateController.startingTimeLeft.value) + " ($timeoutStr)"
+                getString(
+                    R.string.caffeinate_starting_in,
+                    CaffeinateController.startingTimeLeft.value
+                ) + " ($timeoutStr)"
             }
         } else if (CaffeinateController.isActive.value) {
             getString(R.string.caffeinate_active)

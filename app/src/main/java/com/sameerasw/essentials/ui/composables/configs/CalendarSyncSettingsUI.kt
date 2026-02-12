@@ -81,7 +81,8 @@ fun CalendarSyncSettingsUI(
                 onCheckedChange = {
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.triggerCalendarSyncNow(context)
-                    Toast.makeText(context, R.string.calendar_sync_sync_started, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, R.string.calendar_sync_sync_started, Toast.LENGTH_SHORT)
+                        .show()
                 },
                 enabled = isEnabled,
                 showToggle = false,
@@ -107,7 +108,7 @@ fun CalendarSyncSettingsUI(
             )
         } else {
             val groupedCalendars = calendars.groupBy { it.accountName }
-            
+
             groupedCalendars.forEach { (accountName, accountCalendars) ->
                 Text(
                     text = accountName,
@@ -115,7 +116,7 @@ fun CalendarSyncSettingsUI(
                     modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 4.dp),
                     color = MaterialTheme.colorScheme.primary
                 )
-                
+
                 RoundedCardContainer {
                     accountCalendars.forEach { calendar ->
                         CalendarSelectionItem(
@@ -150,9 +151,9 @@ fun CalendarSelectionItem(
     ) {
         Checkbox(
             checked = calendar.isSelected,
-            onCheckedChange = { 
+            onCheckedChange = {
                 HapticUtil.performVirtualKeyHaptic(view)
-                onToggle() 
+                onToggle()
             },
             enabled = isEnabled
         )
@@ -161,9 +162,11 @@ fun CalendarSelectionItem(
             Text(
                 text = calendar.name,
                 style = MaterialTheme.typography.bodyLarge,
-                color = if (isEnabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
+                color = if (isEnabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                    alpha = 0.38f
+                )
             )
-            
+
         }
     }
 }

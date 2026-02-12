@@ -31,7 +31,11 @@ fun NotificationLightingStylePicker(
     onStyleSelected: (NotificationLightingStyle) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val styles = listOf(NotificationLightingStyle.STROKE, NotificationLightingStyle.GLOW, NotificationLightingStyle.INDICATOR)
+    val styles = listOf(
+        NotificationLightingStyle.STROKE,
+        NotificationLightingStyle.GLOW,
+        NotificationLightingStyle.INDICATOR
+    )
     val icons = listOf(
         R.drawable.rounded_rounded_corner_24,
         R.drawable.rounded_blur_linear_24,
@@ -41,7 +45,7 @@ fun NotificationLightingStylePicker(
 
     val selectedIndex = styles.indexOf(selectedStyle).coerceAtLeast(0)
 
-    RoundedCardContainer(modifier = Modifier){
+    RoundedCardContainer(modifier = Modifier) {
         Row(
             modifier = modifier
                 .background(

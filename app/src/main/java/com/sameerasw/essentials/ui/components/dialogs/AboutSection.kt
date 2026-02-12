@@ -64,7 +64,11 @@ fun AboutSection(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(text = "$appName v$versionName", style = MaterialTheme.typography.headlineLarge)
-            Text(text = description, style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center)
+            Text(
+                text = description,
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Center
+            )
 
             Image(
                 painter = painterResource(id = R.drawable.avatar),
@@ -76,13 +80,17 @@ fun AboutSection(
                     .background(MaterialTheme.colorScheme.primary)
                     .combinedClickable(
                         onClick = {},
-                        onLongClick = { 
+                        onLongClick = {
                             onAvatarLongClick()
                         }
                     )
             )
 
-            Text(text = stringResource(R.string.developed_by_format, developerName), style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center)
+            Text(
+                text = stringResource(R.string.developed_by_format, developerName),
+                style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Center
+            )
 
             FlowRow(
                 modifier = Modifier.fillMaxWidth(),
@@ -132,10 +140,16 @@ fun AboutSection(
                             putExtra(Intent.EXTRA_SUBJECT, "Hello from Essentials")
                         }
                         try {
-                            context.startActivity(Intent.createChooser(emailIntent, context.getString(R.string.send_email_chooser_title)))
+                            context.startActivity(
+                                Intent.createChooser(
+                                    emailIntent,
+                                    context.getString(R.string.send_email_chooser_title)
+                                )
+                            )
                         } catch (e: ActivityNotFoundException) {
                             Log.w("AboutSection", "No email app available", e)
-                            Toast.makeText(context, R.string.error_no_email_app, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, R.string.error_no_email_app, Toast.LENGTH_SHORT)
+                                .show()
                         }
                     },
                     modifier = Modifier.padding(horizontal = 4.dp)
@@ -184,7 +198,11 @@ fun AboutSection(
                 }
             }
 
-            Text(text = stringResource(R.string.label_other_apps), style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center)
+            Text(
+                text = stringResource(R.string.label_other_apps),
+                style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Center
+            )
 
             FlowRow(
                 modifier = Modifier.fillMaxWidth(),
@@ -195,7 +213,8 @@ fun AboutSection(
 
                 OutlinedButton(
                     onClick = {
-                        val websiteUrl = "https://play.google.com/store/apps/details?id=com.sameerasw.airsync&hl=en"
+                        val websiteUrl =
+                            "https://play.google.com/store/apps/details?id=com.sameerasw.airsync&hl=en"
                         val intent = Intent(Intent.ACTION_VIEW, websiteUrl.toUri())
                         context.startActivity(intent)
                     },
