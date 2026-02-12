@@ -13,13 +13,13 @@ import androidx.compose.material3.ToggleButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import com.sameerasw.essentials.utils.HapticUtil
-import androidx.compose.ui.res.stringResource
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.utils.HapticUtil
 
 enum class NetworkType {
     NETWORK_5G,

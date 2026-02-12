@@ -4,12 +4,10 @@ import com.google.gson.Gson
 import com.sameerasw.essentials.domain.model.github.DeviceCodeResponse
 import com.sameerasw.essentials.domain.model.github.TokenResponse
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import java.io.IOException
 
 class GitHubAuthRepository {
     private val client = OkHttpClient()

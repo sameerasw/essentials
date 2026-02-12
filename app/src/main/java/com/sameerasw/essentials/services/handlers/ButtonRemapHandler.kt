@@ -8,15 +8,13 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.os.PowerManager
+import android.os.Vibrator
+import android.os.VibratorManager
 import android.util.Log
 import android.view.KeyEvent
-import android.os.VibratorManager
-import android.os.Vibrator
-import android.app.NotificationManager
 import com.sameerasw.essentials.domain.HapticFeedbackType
-import com.sameerasw.essentials.utils.performHapticFeedback
-import com.sameerasw.essentials.utils.ShizukuUtils
 import com.sameerasw.essentials.services.InputEventListenerService
+import com.sameerasw.essentials.utils.performHapticFeedback
 
 class ButtonRemapHandler(
     private val service: AccessibilityService,

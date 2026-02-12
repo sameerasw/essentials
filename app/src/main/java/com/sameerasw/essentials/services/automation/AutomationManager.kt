@@ -5,7 +5,6 @@ import android.content.Intent
 import com.sameerasw.essentials.domain.diy.Automation
 import com.sameerasw.essentials.domain.diy.DIYRepository
 import com.sameerasw.essentials.domain.diy.Trigger
-import com.sameerasw.essentials.domain.diy.State as DIYState
 import com.sameerasw.essentials.services.automation.modules.AutomationModule
 import com.sameerasw.essentials.services.automation.modules.DisplayModule
 import com.sameerasw.essentials.services.automation.modules.PowerModule
@@ -13,6 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentHashMap
+import com.sameerasw.essentials.domain.diy.State as DIYState
 
 object AutomationManager {
     private val scope = CoroutineScope(Dispatchers.Main)

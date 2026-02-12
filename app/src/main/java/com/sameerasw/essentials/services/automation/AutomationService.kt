@@ -10,7 +10,6 @@ import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.sameerasw.essentials.R
-import com.sameerasw.essentials.services.automation.modules.AutomationModule
 
 class AutomationService : Service() {
 

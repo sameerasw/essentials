@@ -1,11 +1,9 @@
 package com.sameerasw.essentials.services.tiles
 
-import android.content.Context
-import android.content.Intent
+import android.graphics.drawable.Icon
 import android.provider.Settings
 import android.service.quicksettings.Tile
 import com.sameerasw.essentials.R
-import android.graphics.drawable.Icon
 
 
 class StayAwakeTileService : BaseTileService() {

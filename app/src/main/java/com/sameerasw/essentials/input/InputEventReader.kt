@@ -1,11 +1,8 @@
 package com.sameerasw.essentials.input
 
+import java.io.InputStream
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
-import java.io.InputStream
-
-import rikka.shizuku.Shizuku
-import com.sameerasw.essentials.shizuku.ShizukuProcessHelper
 
 class InputEventReader(private val devicePath: String) {
     companion object {

@@ -18,7 +18,6 @@ import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.HapticUtil
-import kotlin.math.abs
 
 class NotificationListener : NotificationListenerService() {
     

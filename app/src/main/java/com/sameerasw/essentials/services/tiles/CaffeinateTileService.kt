@@ -1,10 +1,8 @@
 package com.sameerasw.essentials.services.tiles
 
 import android.app.ActivityManager
-import android.content.Intent
 import android.provider.Settings
 import android.service.quicksettings.Tile
-import androidx.core.content.ContextCompat
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.controller.CaffeinateController
 import com.sameerasw.essentials.services.CaffeinateWakeLockService

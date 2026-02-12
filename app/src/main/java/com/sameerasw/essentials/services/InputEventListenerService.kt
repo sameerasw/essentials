@@ -4,15 +4,19 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import android.util.Log
+import android.view.Display
 import androidx.core.app.NotificationCompat
 import com.sameerasw.essentials.input.InputDeviceScanner
 import com.sameerasw.essentials.input.VolumeLongPressDetector
 import com.sameerasw.essentials.input.VolumePressEvent
 import com.sameerasw.essentials.shizuku.ShizukuPermissionHelper
-import com.sameerasw.essentials.shizuku.ShizukuStatus
-import android.view.Display
-import android.view.WindowManager
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class InputEventListenerService : Service() {
     companion object {

@@ -2,15 +2,13 @@ package com.sameerasw.essentials.utils
 
 import android.content.Context
 import android.content.pm.ApplicationInfo
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.AdaptiveIconDrawable
 import android.util.Log
-import androidx.core.graphics.createBitmap
-import androidx.core.graphics.drawable.toBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.core.graphics.createBitmap
 import androidx.palette.graphics.Palette
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.NotificationApp

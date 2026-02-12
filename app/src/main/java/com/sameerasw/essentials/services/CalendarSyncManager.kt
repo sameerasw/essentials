@@ -2,7 +2,6 @@ package com.sameerasw.essentials.services
 
 import android.content.Context
 import android.database.ContentObserver
-import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.provider.CalendarContract
@@ -11,7 +10,6 @@ import com.google.android.gms.wearable.DataMap
 import com.google.android.gms.wearable.PutDataMapRequest
 import com.google.android.gms.wearable.Wearable
 import com.sameerasw.essentials.data.repository.SettingsRepository
-import java.util.Calendar
 
 object CalendarSyncManager {
     private const val TAG = "CalendarSyncManager"

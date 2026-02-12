@@ -9,11 +9,10 @@ import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import com.google.gson.Gson
-import com.sameerasw.essentials.domain.model.AppSelection
 import com.google.gson.reflect.TypeToken
-
 import com.sameerasw.essentials.domain.diy.Automation
 import com.sameerasw.essentials.domain.diy.DIYRepository
+import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

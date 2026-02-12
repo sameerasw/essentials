@@ -7,9 +7,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import androidx.annotation.ColorInt
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
-import com.sameerasw.essentials.R
 import kotlin.math.PI
 
 object BatteryRingDrawer {

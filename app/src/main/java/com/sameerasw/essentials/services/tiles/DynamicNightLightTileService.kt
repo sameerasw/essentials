@@ -2,9 +2,9 @@ package com.sameerasw.essentials.services.tiles
 
 import android.graphics.drawable.Icon
 import android.service.quicksettings.Tile
+import androidx.core.content.edit
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.utils.PermissionUtils
-import androidx.core.content.edit
 
 class DynamicNightLightTileService : BaseTileService() {
 

@@ -8,18 +8,16 @@ import android.view.textservice.SuggestionsInfo
 import android.view.textservice.TextInfo
 import android.view.textservice.TextServicesManager
 import com.darkrockstudios.symspellkt.api.SpellChecker
-import com.darkrockstudios.symspellkt.impl.SymSpell
 import com.darkrockstudios.symspellkt.common.Verbosity
+import com.darkrockstudios.symspellkt.impl.SymSpell
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
-import java.util.Locale
 
 private const val TAG = "SuggestionEngine"
 

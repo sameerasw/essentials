@@ -1,28 +1,27 @@
 package com.sameerasw.essentials.viewmodels
 
 import android.content.Context
+import android.content.Intent
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.GitHubRepository
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.model.NotificationApp
+import com.sameerasw.essentials.domain.model.TrackedRepo
 import com.sameerasw.essentials.domain.model.github.GitHubRelease
 import com.sameerasw.essentials.domain.model.github.GitHubRepo
 import com.sameerasw.essentials.utils.AppUtil
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
-import android.content.Intent
-import androidx.core.content.FileProvider
-import com.sameerasw.essentials.R
-
-import com.sameerasw.essentials.data.repository.SettingsRepository
-import com.sameerasw.essentials.domain.model.TrackedRepo
 
 class AppUpdatesViewModel : ViewModel() {
     private val gitHubRepository = GitHubRepository()

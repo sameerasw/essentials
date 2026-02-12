@@ -1,20 +1,33 @@
 package com.sameerasw.essentials.services
 
-import android.app.*
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.drawable.Icon
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import com.sameerasw.essentials.MainActivity
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.LocationReachedRepository
-import com.sameerasw.essentials.MainActivity
-import kotlinx.coroutines.*
-import kotlin.math.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 class LocationReachedService : Service() {
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)

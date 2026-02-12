@@ -10,12 +10,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.magnifier
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,29 +35,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.domain.HapticFeedbackType
+import com.sameerasw.essentials.shizuku.ShizukuPermissionHelper
+import com.sameerasw.essentials.shizuku.ShizukuStatus
 import com.sameerasw.essentials.ui.components.cards.FeatureCard
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.pickers.HapticFeedbackPicker
 import com.sameerasw.essentials.ui.components.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.modifiers.highlight
-import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
-import com.sameerasw.essentials.shizuku.ShizukuPermissionHelper
-import com.sameerasw.essentials.services.InputEventListenerService
-import com.sameerasw.essentials.shizuku.ShizukuStatus
-import com.sameerasw.essentials.utils.ShizukuUtils
-import android.content.Intent
-import androidx.compose.foundation.layout.height
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.compose.ui.platform.LocalLifecycleOwner
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

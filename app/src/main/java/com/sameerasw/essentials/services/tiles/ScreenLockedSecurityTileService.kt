@@ -6,8 +6,8 @@ import android.graphics.drawable.Icon
 import android.os.Build
 import android.service.quicksettings.Tile
 import com.sameerasw.essentials.R
-import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.ui.activities.TileAuthActivity
+import com.sameerasw.essentials.utils.PermissionUtils
 
 class ScreenLockedSecurityTileService : BaseTileService() {
 

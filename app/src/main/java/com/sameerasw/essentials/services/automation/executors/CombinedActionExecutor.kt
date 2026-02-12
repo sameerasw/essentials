@@ -1,11 +1,9 @@
 package com.sameerasw.essentials.services.automation.executors
 
 import android.content.Context
-import android.content.Intent
 import android.hardware.camera2.CameraManager
 import android.os.Build
 import com.sameerasw.essentials.domain.diy.Action
-import com.sameerasw.essentials.utils.HapticUtil
 
 object CombinedActionExecutor {
 

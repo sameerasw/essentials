@@ -1,14 +1,6 @@
 package com.sameerasw.essentials.utils
 
 import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
-import android.os.IBinder
-import com.sameerasw.essentials.utils.ShizukuUtils
-import moe.shizuku.server.IShizukuService
-import rikka.shizuku.Shizuku
-import rikka.shizuku.ShizukuBinderWrapper
-import java.lang.reflect.Method
 
 object FreezeManager {
     private const val TAG = "FreezeManager"

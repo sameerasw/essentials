@@ -7,8 +7,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.ui.Modifier
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import com.sameerasw.essentials.ui.components.linkActions.LinkPickerScreen
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 

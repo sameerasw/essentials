@@ -3,7 +3,6 @@ package com.sameerasw.essentials.services.handlers
 import android.app.NotificationManager
 import android.content.Context
 import android.media.AudioManager
-import com.sameerasw.essentials.utils.HapticUtil
 
 class SoundModeHandler(private val context: Context) {
 

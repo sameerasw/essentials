@@ -3,18 +3,13 @@ package com.sameerasw.essentials.ui.composables.configs
 import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import com.sameerasw.essentials.ui.components.pickers.MultiSegmentedPicker
-import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -23,15 +18,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.sameerasw.essentials.viewmodels.CaffeinateViewModel
+import androidx.core.net.toUri
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
+import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.components.pickers.MultiSegmentedPicker
 import com.sameerasw.essentials.ui.components.sheets.PermissionItem
 import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
-import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
-import com.sameerasw.essentials.ui.modifiers.highlight
-import androidx.core.net.toUri
+import com.sameerasw.essentials.viewmodels.CaffeinateViewModel
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable

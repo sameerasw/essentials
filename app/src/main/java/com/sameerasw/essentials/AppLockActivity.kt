@@ -11,9 +11,9 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
-import androidx.fragment.app.FragmentActivity
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import java.util.concurrent.Executor
 

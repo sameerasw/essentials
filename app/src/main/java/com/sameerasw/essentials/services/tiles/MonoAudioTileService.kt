@@ -4,7 +4,6 @@ import android.graphics.drawable.Icon
 import android.provider.Settings
 import android.service.quicksettings.Tile
 import com.sameerasw.essentials.R
-import com.sameerasw.essentials.utils.ShizukuUtils
 
 class MonoAudioTileService : BaseTileService() {
 

@@ -4,16 +4,16 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
-import com.sameerasw.essentials.domain.HapticFeedbackType
+import com.sameerasw.essentials.domain.model.TrackedRepo
+import com.sameerasw.essentials.domain.model.github.GitHubUser
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import com.sameerasw.essentials.domain.model.github.GitHubUser
-import com.sameerasw.essentials.domain.model.TrackedRepo
 
 class SettingsRepository(private val context: Context) {
 

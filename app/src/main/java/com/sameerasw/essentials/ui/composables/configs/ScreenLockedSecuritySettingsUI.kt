@@ -10,16 +10,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.res.stringResource
+import androidx.fragment.app.FragmentActivity
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.modifiers.highlight
-import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.utils.BiometricHelper
-import androidx.fragment.app.FragmentActivity
+import com.sameerasw.essentials.viewmodels.MainViewModel
 
 @Composable
 fun ScreenLockedSecuritySettingsUI(

@@ -12,20 +12,25 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Handler
 import android.os.Looper
-import android.view.KeyEvent
 import android.os.Vibrator
+import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
+import com.sameerasw.essentials.services.InputEventListenerService
+import com.sameerasw.essentials.services.handlers.AmbientGlanceHandler
+import com.sameerasw.essentials.services.handlers.AppFlowHandler
+import com.sameerasw.essentials.services.handlers.ButtonRemapHandler
+import com.sameerasw.essentials.services.handlers.FlashlightHandler
+import com.sameerasw.essentials.services.handlers.NotificationLightingHandler
+import com.sameerasw.essentials.services.handlers.SecurityHandler
+import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
+import com.sameerasw.essentials.utils.FreezeManager
 import com.sameerasw.essentials.utils.performHapticFeedback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
-import com.sameerasw.essentials.services.handlers.*
-import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
-import com.sameerasw.essentials.utils.FreezeManager
-import com.sameerasw.essentials.services.InputEventListenerService
 
 class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListener {
 

@@ -6,17 +6,12 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
-import com.google.gson.JsonObject
 import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
 import com.google.gson.reflect.TypeToken
-import com.sameerasw.essentials.domain.diy.Action
-import kotlin.reflect.KClass
-import com.sameerasw.essentials.domain.diy.Automation
-import com.sameerasw.essentials.domain.diy.State
-import com.sameerasw.essentials.domain.diy.Trigger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlin.reflect.KClass
 
 object DIYRepository {
     private const val PREFS_NAME = "diy_automations_prefs"

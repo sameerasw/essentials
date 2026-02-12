@@ -5,8 +5,8 @@ import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
 import android.os.Build
 import android.util.Log
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.delay
 
 object FlashlightUtil {
     private const val TAG = "FlashlightUtil"

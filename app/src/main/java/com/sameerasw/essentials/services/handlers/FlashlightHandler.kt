@@ -19,9 +19,9 @@ import android.os.VibratorManager
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
 import com.sameerasw.essentials.utils.FlashlightUtil
-import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.utils.performHapticFeedback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job

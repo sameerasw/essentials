@@ -1,9 +1,7 @@
 package com.sameerasw.essentials.utils
 
 import android.annotation.SuppressLint
-import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
-import android.bluetooth.BluetoothProfile
 import android.content.Context
 import androidx.annotation.Keep
 

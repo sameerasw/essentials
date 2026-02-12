@@ -12,7 +12,6 @@ import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.services.handlers.SoundModeHandler
-import com.sameerasw.essentials.utils.HapticUtil
 
 class SoundModeTileService : TileService() {
 

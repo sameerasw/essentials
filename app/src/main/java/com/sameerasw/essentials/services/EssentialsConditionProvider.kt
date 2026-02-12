@@ -2,7 +2,6 @@ package com.sameerasw.essentials.services
 
 import android.content.ComponentName
 import android.content.Context
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.service.notification.Condition
 import android.service.notification.ConditionProviderService

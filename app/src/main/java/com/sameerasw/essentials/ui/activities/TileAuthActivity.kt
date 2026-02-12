@@ -1,12 +1,10 @@
 package com.sameerasw.essentials.ui.activities
 
-import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.core.content.edit
-import com.sameerasw.essentials.utils.BiometricHelper
 import androidx.fragment.app.FragmentActivity
+import com.sameerasw.essentials.utils.BiometricHelper
 
 class TileAuthActivity : FragmentActivity() {
 

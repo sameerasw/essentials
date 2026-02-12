@@ -7,12 +7,10 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import com.sameerasw.essentials.services.NotificationListener
-import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
-import com.sameerasw.essentials.services.receivers.SecurityDeviceAdminReceiver
-
 import android.view.inputmethod.InputMethodManager
-import com.sameerasw.essentials.ime.EssentialsInputMethodService
+import com.sameerasw.essentials.services.NotificationListener
+import com.sameerasw.essentials.services.receivers.SecurityDeviceAdminReceiver
+import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 
 object PermissionUtils {
 

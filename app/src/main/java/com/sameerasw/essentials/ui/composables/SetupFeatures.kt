@@ -13,11 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.fragment.app.FragmentActivity
-import com.sameerasw.essentials.utils.BiometricHelper
-import com.sameerasw.essentials.utils.BiometricSecurityHelper
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -45,15 +41,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import com.sameerasw.essentials.domain.registry.FeatureRegistry
+import androidx.fragment.app.FragmentActivity
 import com.sameerasw.essentials.FeatureSettingsActivity
-import com.sameerasw.essentials.domain.registry.PermissionRegistry
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.domain.registry.FeatureRegistry
+import com.sameerasw.essentials.domain.registry.PermissionRegistry
+import com.sameerasw.essentials.ui.components.FavoriteCarousel
 import com.sameerasw.essentials.ui.components.cards.FeatureCard
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
-import com.sameerasw.essentials.ui.components.FavoriteCarousel
 import com.sameerasw.essentials.ui.components.sheets.PermissionItem
 import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
+import com.sameerasw.essentials.utils.BiometricSecurityHelper
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import kotlinx.coroutines.delay
 
