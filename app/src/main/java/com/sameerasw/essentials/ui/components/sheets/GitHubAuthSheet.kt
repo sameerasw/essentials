@@ -2,14 +2,12 @@ package com.sameerasw.essentials.ui.components.sheets
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalButton
@@ -92,6 +90,7 @@ fun GitHubAuthSheet(
                         Text(stringResource(R.string.action_start_sign_in))
                     }
                 }
+
                 is AuthState.Loading -> {
                     LoadingIndicator()
                     Text(
@@ -99,6 +98,7 @@ fun GitHubAuthSheet(
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
+
                 is AuthState.CodeReceived -> {
                     Text(
                         text = stringResource(R.string.auth_copy_code_instruction),
@@ -121,7 +121,10 @@ fun GitHubAuthSheet(
                             clipboardManager.setText(AnnotatedString(state.userCode))
                         }
                     ) {
-                        Icon(painter = painterResource(id = R.drawable.rounded_content_copy_24), contentDescription = null)
+                        Icon(
+                            painter = painterResource(id = R.drawable.rounded_content_copy_24),
+                            contentDescription = null
+                        )
                         Spacer(modifier = Modifier.padding(4.dp))
                         Text(stringResource(R.string.auth_copy_code))
                     }
@@ -141,19 +144,21 @@ fun GitHubAuthSheet(
                     ) {
                         Text(stringResource(R.string.auth_open_login_page))
                     }
-                    
+
                     Text(
                         text = stringResource(R.string.auth_waiting_for_authorization),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
+
                 is AuthState.Authenticated -> {
                     viewModel.saveToken(context, state.token)
                     LaunchedEffect(Unit) {
                         onDismissRequest()
                     }
                 }
+
                 is AuthState.Error -> {
                     Text(
                         text = state.message,

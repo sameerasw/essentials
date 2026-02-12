@@ -5,40 +5,26 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.material3.Icon
-import androidx.compose.ui.res.painterResource
-import androidx.compose.runtime.getValue
-import androidx.compose.material3.Text
-import androidx.compose.foundation.layout.Row
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
-import com.sameerasw.essentials.ui.components.pickers.HapticFeedbackPicker
-import com.sameerasw.essentials.ui.components.pickers.DefaultTabPicker
-import com.sameerasw.essentials.ui.components.pickers.SegmentedPicker
-import com.sameerasw.essentials.ui.components.ReusableTopAppBar
-import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
-import com.sameerasw.essentials.ui.theme.EssentialsTheme
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -47,50 +33,61 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.core.app.ActivityCompat
-import com.sameerasw.essentials.ui.components.cards.IconToggleItem
-import com.sameerasw.essentials.ui.components.cards.PermissionCard
-import com.sameerasw.essentials.ui.components.dialogs.AboutSection
-import com.sameerasw.essentials.viewmodels.MainViewModel
-import com.sameerasw.essentials.utils.HapticUtil
-import com.sameerasw.essentials.ui.components.sheets.UpdateBottomSheet
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import android.widget.Toast
-import androidx.compose.foundation.background
-import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
 import com.sameerasw.essentials.domain.DIYTabs
 import com.sameerasw.essentials.domain.registry.PermissionRegistry
+import com.sameerasw.essentials.ui.components.ReusableTopAppBar
+import com.sameerasw.essentials.ui.components.cards.IconToggleItem
+import com.sameerasw.essentials.ui.components.cards.PermissionCard
+import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.components.dialogs.AboutSection
+import com.sameerasw.essentials.ui.components.pickers.DefaultTabPicker
 import com.sameerasw.essentials.ui.components.sheets.InstructionsBottomSheet
+import com.sameerasw.essentials.ui.components.sheets.UpdateBottomSheet
+import com.sameerasw.essentials.ui.theme.EssentialsTheme
+import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionUtils
+import com.sameerasw.essentials.viewmodels.MainViewModel
+import rikka.shizuku.Shizuku
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import rikka.shizuku.Shizuku
 
 @OptIn(ExperimentalMaterial3Api::class)
 class SettingsActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
 
-    private val shizukuPermissionResultListener = Shizuku.OnRequestPermissionResultListener { _, grantResult ->
-        if (grantResult == android.content.pm.PackageManager.PERMISSION_GRANTED) {
-            viewModel.check(this)
+    private val shizukuPermissionResultListener =
+        Shizuku.OnRequestPermissionResultListener { _, grantResult ->
+            if (grantResult == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                viewModel.check(this)
+            }
         }
-    }
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -105,7 +102,8 @@ class SettingsActivity : ComponentActivity() {
             val isPitchBlackThemeEnabled by viewModel.isPitchBlackThemeEnabled
             EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
                 val context = LocalContext.current
-                val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+                val scrollBehavior =
+                    TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
                 var showBugReportSheet by remember { mutableStateOf(false) }
 
@@ -121,7 +119,12 @@ class SettingsActivity : ComponentActivity() {
                 }
 
                 Scaffold(
-                    contentWindowInsets = androidx.compose.foundation.layout.WindowInsets(0, 0, 0, 0),
+                    contentWindowInsets = androidx.compose.foundation.layout.WindowInsets(
+                        0,
+                        0,
+                        0,
+                        0
+                    ),
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     containerColor = MaterialTheme.colorScheme.surfaceContainer,
                     topBar = {
@@ -149,7 +152,10 @@ class SettingsActivity : ComponentActivity() {
                         )
                     }
                 ) { innerPadding ->
-                    SettingsContent(viewModel = viewModel, modifier = Modifier.padding(innerPadding))
+                    SettingsContent(
+                        viewModel = viewModel,
+                        modifier = Modifier.padding(innerPadding)
+                    )
                 }
             }
         }
@@ -165,8 +171,12 @@ class SettingsActivity : ComponentActivity() {
         Shizuku.removeRequestPermissionResultListener(shizukuPermissionResultListener)
     }
 
-    @Suppress("DEPRECATION")
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    @Deprecated("Deprecated in Java")
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode in 1001..1006) {
             viewModel.check(this)
@@ -201,7 +211,6 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
     val isUpdateNotificationEnabled by viewModel.isUpdateNotificationEnabled
     val isPreReleaseCheckEnabled by viewModel.isPreReleaseCheckEnabled
     val isRootEnabled by viewModel.isRootEnabled
-    val isRootAvailable by viewModel.isRootAvailable
     val isRootPermissionGranted by viewModel.isRootPermissionGranted
     val isDeveloperModeEnabled by viewModel.isDeveloperModeEnabled
     var showInstructionsSheet by remember { mutableStateOf(false) }
@@ -213,7 +222,8 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
             try {
                 context.contentResolver.openOutputStream(it)?.use { outputStream ->
                     viewModel.exportConfigs(context, outputStream)
-                    Toast.makeText(context, "Config exported successfully", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Config exported successfully", Toast.LENGTH_SHORT)
+                        .show()
                 }
             } catch (e: Exception) {
                 Toast.makeText(context, "Failed to export config", Toast.LENGTH_SHORT).show()
@@ -229,9 +239,11 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
             try {
                 context.contentResolver.openInputStream(it)?.use { inputStream ->
                     if (viewModel.importConfigs(context, inputStream)) {
-                        Toast.makeText(context, "Config imported successfully", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Config imported successfully", Toast.LENGTH_SHORT)
+                            .show()
                     } else {
-                        Toast.makeText(context, "Failed to import config", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Failed to import config", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
             } catch (e: Exception) {
@@ -264,15 +276,15 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.Start
     ) {
         // App Settings Section
-        androidx.compose.material3.Text(
+        Text(
             text = "App Settings",
-            style = androidx.compose.material3.MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
-            color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         RoundedCardContainer {
-            com.sameerasw.essentials.ui.components.cards.IconToggleItem(
+            IconToggleItem(
                 iconRes = R.drawable.rounded_mobile_vibrate_24,
                 title = "Haptic Feedback",
                 isChecked = isAppHapticsEnabled.value,
@@ -325,7 +337,10 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 Text(
                     text = "Permissions",
                     style = MaterialTheme.typography.titleMedium,
@@ -364,8 +379,10 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
                     actionLabel = if (isWriteSecureSettingsEnabled) "Granted" else "Copy ADB Command",
                     isGranted = isWriteSecureSettingsEnabled,
                     onActionClick = {
-                        val adbCommand = "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
-                        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                        val adbCommand =
+                            "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
+                        val clipboard =
+                            context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                         val clip = ClipData.newPlainText("adb_command", adbCommand)
                         clipboard.setPrimaryClip(clip)
                     },
@@ -439,7 +456,10 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
                     actionLabel = if (isOverlayPermissionGranted) "Granted" else "Grant Permission",
                     isGranted = isOverlayPermissionGranted,
                     onActionClick = {
-                        val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, android.net.Uri.parse("package:${context.packageName}"))
+                        val intent = Intent(
+                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                            android.net.Uri.parse("package:${context.packageName}")
+                        )
                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                         context.startActivity(intent)
                     },
@@ -640,7 +660,11 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
                 onAvatarLongClick = {
                     val newState = !isDeveloperModeEnabled
                     viewModel.setDeveloperModeEnabled(newState, context)
-                    Toast.makeText(context, if (newState) "Developer options enabled" else "Developer options disabled", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        if (newState) "Developer options enabled" else "Developer options disabled",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             )
         }
@@ -657,34 +681,37 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
             )
 
             RoundedCardContainer {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(
-                                color = MaterialTheme.colorScheme.surfaceBright,
-                                shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd)
-                            )
-                            .padding(12.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            color = MaterialTheme.colorScheme.surfaceBright,
+                            shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd)
+                        )
+                        .padding(12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Button(
+                        onClick = {
+                            val timeStamp = SimpleDateFormat(
+                                "yyyyMMdd_HHmmss",
+                                Locale.getDefault()
+                            ).format(Date())
+                            exportLauncher.launch("essentials_config_$timeStamp.json")
+                        },
+                        modifier = Modifier.weight(1f)
                     ) {
-                        Button(
-                            onClick = { 
-                                val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-                                exportLauncher.launch("essentials_config_$timeStamp.json")
-                            },
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Text("Export Config")
-                        }
-                        Button(
-                            onClick = { 
-                                importLauncher.launch(arrayOf("application/json"))
-                            },
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Text("Import Config")
-                        }
+                        Text("Export Config")
                     }
+                    Button(
+                        onClick = {
+                            importLauncher.launch(arrayOf("application/json"))
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Import Config")
+                    }
+                }
 
             }
         }

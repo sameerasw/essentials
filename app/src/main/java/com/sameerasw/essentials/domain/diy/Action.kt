@@ -7,11 +7,12 @@ import com.sameerasw.essentials.R
 sealed interface Action {
     @get:StringRes
     val title: Int
+
     @get:DrawableRes
     val icon: Int
-    val permissions: List<String> 
+    val permissions: List<String>
         get() = emptyList()
-    val isConfigurable: Boolean 
+    val isConfigurable: Boolean
         get() = false
 
     data object HapticVibration : Action {
@@ -23,7 +24,7 @@ sealed interface Action {
         override val title: Int = R.string.diy_action_notification
         override val icon: Int = R.drawable.rounded_notifications_unread_24
     }
-    
+
     data object RemoveNotification : Action {
         override val title: Int = R.string.diy_action_remove_notification
         override val icon: Int = R.drawable.rounded_notifications_off_24

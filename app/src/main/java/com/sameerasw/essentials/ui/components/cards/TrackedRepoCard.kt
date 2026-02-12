@@ -2,10 +2,27 @@ package com.sameerasw.essentials.ui.components.cards
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularWavyProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -27,16 +44,15 @@ import androidx.core.graphics.drawable.toBitmap
 import coil.compose.AsyncImage
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.TrackedRepo
-import com.sameerasw.essentials.utils.HapticUtil
-import com.sameerasw.essentials.utils.TimeUtil
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.TimeZone
-
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
+import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.utils.TimeUtil
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class, androidx.compose.foundation.ExperimentalFoundationApi::class)
+@OptIn(
+    ExperimentalMaterial3ExpressiveApi::class,
+    androidx.compose.foundation.ExperimentalFoundationApi::class
+)
 @Composable
 fun TrackedRepoCard(
     repo: TrackedRepo,
@@ -54,52 +70,62 @@ fun TrackedRepoCard(
 
     Box {
         Card(
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceBright
-        ),
-        shape = MaterialTheme.shapes.extraSmall,
-        modifier = Modifier.combinedClickable(
-            onClick = {
-                HapticUtil.performUIHaptic(view)
-                onClick()
-            },
-            onLongClick = {
-                HapticUtil.performMediumHaptic(view)
-                showMenu = true
-            }
-        )
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceBright
+            ),
+            shape = MaterialTheme.shapes.extraSmall,
+            modifier = Modifier.combinedClickable(
+                onClick = {
+                    HapticUtil.performUIHaptic(view)
+                    onClick()
+                },
+                onLongClick = {
+                    HapticUtil.performMediumHaptic(view)
+                    showMenu = true
+                }
+            )
         ) {
-            // Main Icon + Badge
-            Box(
-                modifier = Modifier.size(56.dp)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Main Image (App Icon or Android Icon)
-                if (repo.mappedPackageName != null) {
-                    val appIcon = remember(repo.mappedPackageName) {
-                        try {
-                            context.packageManager.getApplicationIcon(repo.mappedPackageName)
-                        } catch (e: Exception) {
-                            null
+                // Main Icon + Badge
+                Box(
+                    modifier = Modifier.size(56.dp)
+                ) {
+                    // Main Image (App Icon or Android Icon)
+                    if (repo.mappedPackageName != null) {
+                        val appIcon = remember(repo.mappedPackageName) {
+                            try {
+                                context.packageManager.getApplicationIcon(repo.mappedPackageName)
+                            } catch (e: Exception) {
+                                null
+                            }
                         }
-                    }
-                    if (appIcon != null) {
-                        Image(
-                            painter = BitmapPainter(
-                                appIcon.toBitmap().asImageBitmap()
-                            ),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .clip(RoundedCornerShape(12.dp)),
-                            contentScale = ContentScale.Crop
-                        )
+                        if (appIcon != null) {
+                            Image(
+                                painter = BitmapPainter(
+                                    appIcon.toBitmap().asImageBitmap()
+                                ),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .clip(RoundedCornerShape(12.dp)),
+                                contentScale = ContentScale.Crop
+                            )
+                        } else {
+                            Icon(
+                                painter = painterResource(id = R.drawable.rounded_adb_24),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(8.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
                     } else {
                         Icon(
                             painter = painterResource(id = R.drawable.rounded_adb_24),
@@ -107,157 +133,154 @@ fun TrackedRepoCard(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(8.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                        )
+                    }
+
+                    // Avatar Badge (User Profile)
+                    Surface(
+                        modifier = Modifier
+                            .size(24.dp)
+                            .align(Alignment.BottomEnd),
+                        shape = CircleShape,
+                        color = MaterialTheme.colorScheme.surface,
+                        border = androidx.compose.foundation.BorderStroke(
+                            2.dp,
+                            MaterialTheme.colorScheme.surfaceBright
+                        )
+                    ) {
+                        AsyncImage(
+                            model = repo.avatarUrl,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clip(CircleShape),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+                }
+
+                Column(modifier = Modifier.weight(1f)) {
+                    val isInstalled = repo.mappedPackageName != null
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = if (isInstalled) repo.mappedAppName ?: repo.name else repo.name,
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.weight(1f, fill = false)
+                        )
+                        if (isInstalled) {
+                            val cleanVersion =
+                                repo.latestTagName.removePrefix("v").removePrefix("V")
+                            Text(
+                                text = " $cleanVersion",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                                modifier = Modifier.padding(start = 4.dp)
+                            )
+                        }
+                    }
+                    Text(
+                        text = if (isInstalled) repo.fullName else stringResource(R.string.label_no_app_linked),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    if (isInstalled) {
+                        Text(
+                            text = stringResource(
+                                R.string.format_updated_relative,
+                                TimeUtil.formatRelativeDate(repo.publishedAt, context)
+                            ),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                            modifier = Modifier.padding(top = 2.dp)
+                        )
+                    }
+                }
+
+                if (isLoading) {
+                    CircularWavyProgressIndicator()
+                } else if (installStatus != null) {
+                    Column(
+                        modifier = Modifier.width(64.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        CircularWavyProgressIndicator(
+                            progress = { downloadProgress },
+                            modifier = Modifier.size(32.dp)
+                        )
+                    }
+                } else if (repo.isUpdateAvailable || repo.mappedPackageName == null) {
+                    IconButton(
+                        onClick = {
+                            HapticUtil.performMediumHaptic(view)
+                            onActionClick()
+                        }
+                    ) {
+                        Icon(
+                            painter = painterResource(
+                                id = if (repo.isUpdateAvailable) R.drawable.rounded_downloading_24 else R.drawable.rounded_download_24
+                            ),
+                            contentDescription = null,
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }
                 } else {
-                    Icon(
-                        painter = painterResource(id = R.drawable.rounded_adb_24),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(8.dp),
+                    IconButton(
+                        onClick = {
+                            HapticUtil.performUIHaptic(view)
+                            onShowReleaseNotes()
+                        }
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.rounded_release_alert_24),
+                            contentDescription = stringResource(R.string.label_release_notes),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-                    )
-                }
-
-                // Avatar Badge (User Profile)
-                Surface(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .align(Alignment.BottomEnd),
-                    shape = CircleShape,
-                    color = MaterialTheme.colorScheme.surface,
-                    border = androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.surfaceBright)
-                ) {
-                    AsyncImage(
-                        model = repo.avatarUrl,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .clip(CircleShape),
-                        contentScale = ContentScale.Crop
-                    )
-                }
-            }
-            
-            Column(modifier = Modifier.weight(1f)) {
-                val isInstalled = repo.mappedPackageName != null
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = if (isInstalled) repo.mappedAppName ?: repo.name else repo.name,
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(1f, fill = false)
-                    )
-                    if (isInstalled) {
-                        val cleanVersion = repo.latestTagName.removePrefix("v").removePrefix("V")
-                        Text(
-                            text = " $cleanVersion",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
-                            modifier = Modifier.padding(start = 4.dp)
                         )
                     }
                 }
-                Text(
-                    text = if (isInstalled) repo.fullName else stringResource(R.string.label_no_app_linked),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                if (isInstalled) {
-                    Text(
-                        text = stringResource(R.string.format_updated_relative, TimeUtil.formatRelativeDate(repo.publishedAt, context)),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
-                        modifier = Modifier.padding(top = 2.dp)
-                    )
-                }
-            }
-            
-            if (isLoading) {
-                CircularWavyProgressIndicator()
-            } else if (installStatus != null) {
-                Column(
-                    modifier = Modifier.width(64.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    CircularWavyProgressIndicator(
-                        progress = { downloadProgress },
-                        modifier = Modifier.size(32.dp)
-                    )
-                }
-            } else if (repo.isUpdateAvailable || repo.mappedPackageName == null) {
-                IconButton(
-                    onClick = {
-                        HapticUtil.performMediumHaptic(view)
-                        onActionClick()
-                    }
-                ) {
-                    Icon(
-                        painter = painterResource(
-                            id = if (repo.isUpdateAvailable) R.drawable.rounded_downloading_24 else R.drawable.rounded_download_24
-                        ),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                }
-            } else {
-                IconButton(
-                    onClick = {
-                        HapticUtil.performUIHaptic(view)
-                        onShowReleaseNotes()
-                    }
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.rounded_release_alert_24),
-                        contentDescription = stringResource(R.string.label_release_notes),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-                    )
-                }
             }
         }
-    }
 
-    SegmentedDropdownMenu(
-        expanded = showMenu,
-        onDismissRequest = { showMenu = false }
-    ) {
-        SegmentedDropdownMenuItem(
-            text = { Text(stringResource(R.string.action_edit)) },
-            onClick = {
-                showMenu = false
-                onClick()
-            },
-            leadingIcon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.rounded_edit_24),
-                    contentDescription = null
-                )
-            }
-        )
-        SegmentedDropdownMenuItem(
-            text = { Text(stringResource(R.string.action_delete)) },
-            onClick = {
-                showMenu = false
-                onDeleteClick()
-            },
-            leadingIcon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.rounded_delete_24),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.error
-                )
-            },
-            colors = MenuDefaults.itemColors(
-                textColor = MaterialTheme.colorScheme.error,
-                leadingIconColor = MaterialTheme.colorScheme.error
+        SegmentedDropdownMenu(
+            expanded = showMenu,
+            onDismissRequest = { showMenu = false }
+        ) {
+            SegmentedDropdownMenuItem(
+                text = { Text(stringResource(R.string.action_edit)) },
+                onClick = {
+                    showMenu = false
+                    onClick()
+                },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_edit_24),
+                        contentDescription = null
+                    )
+                }
             )
-        )
+            SegmentedDropdownMenuItem(
+                text = { Text(stringResource(R.string.action_delete)) },
+                onClick = {
+                    showMenu = false
+                    onDeleteClick()
+                },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_delete_24),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.error
+                    )
+                },
+                colors = MenuDefaults.itemColors(
+                    textColor = MaterialTheme.colorScheme.error,
+                    leadingIconColor = MaterialTheme.colorScheme.error
+                )
+            )
+        }
     }
-}
 }
 

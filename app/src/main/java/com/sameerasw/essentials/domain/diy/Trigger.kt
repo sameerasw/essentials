@@ -1,6 +1,5 @@
 package com.sameerasw.essentials.domain.diy
 
-import androidx.annotation.StringRes
 import com.sameerasw.essentials.R
 
 sealed interface Trigger {

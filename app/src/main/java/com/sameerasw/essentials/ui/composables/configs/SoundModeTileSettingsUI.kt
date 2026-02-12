@@ -23,20 +23,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.core.content.edit
 import com.sameerasw.essentials.R
-import kotlin.math.min
+import com.sameerasw.essentials.ui.modifiers.highlight
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.text.style.TextAlign
-import com.sameerasw.essentials.ui.modifiers.highlight
+import kotlin.math.min
 
 @Composable
 fun SoundModeTileSettingsUI(
@@ -44,18 +44,30 @@ fun SoundModeTileSettingsUI(
     highlightSetting: String? = null
 ) {
     val context = LocalContext.current
-    val prefs = remember { context.getSharedPreferences("essentials_prefs", android.content.Context.MODE_PRIVATE) }
+    val prefs = remember {
+        context.getSharedPreferences(
+            "essentials_prefs",
+            android.content.Context.MODE_PRIVATE
+        )
+    }
     val defaultOrder = listOf("Sound", "Vibrate", "Silent")
-    val orderString = prefs.getString("sound_mode_order", defaultOrder.joinToString(",")) ?: defaultOrder.joinToString(",")
+    val orderString = prefs.getString("sound_mode_order", defaultOrder.joinToString(","))
+        ?: defaultOrder.joinToString(",")
     var activeModes by remember { mutableStateOf(orderString.split(",")) }
     val disabledString = prefs.getString("sound_mode_disabled", "") ?: ""
-    var disabledModes by remember { mutableStateOf(if (disabledString.isEmpty()) emptyList() else disabledString.split(",")) }
+    var disabledModes by remember {
+        mutableStateOf(
+            if (disabledString.isEmpty()) emptyList() else disabledString.split(
+                ","
+            )
+        )
+    }
     val modeIcons = mapOf(
         "Sound" to R.drawable.rounded_volume_up_24,
         "Vibrate" to R.drawable.rounded_mobile_vibrate_24,
         "Silent" to R.drawable.rounded_volume_off_24
     )
-    
+
     val soundModeNames = mapOf(
         "Sound" to R.string.sound_mode_sound,
         "Vibrate" to R.string.sound_mode_vibrate,
@@ -67,16 +79,20 @@ fun SoundModeTileSettingsUI(
     val reorderableLazyListState = rememberReorderableLazyListState(lazyListState) { from, to ->
         val originalActiveSize = activeModes.size
         val fromMode: String = when {
-            from.index < originalActiveSize -> activeModes.getOrNull(from.index) ?: return@rememberReorderableLazyListState
+            from.index < originalActiveSize -> activeModes.getOrNull(from.index)
+                ?: return@rememberReorderableLazyListState
+
             from.index == originalActiveSize -> "separator"
-            else -> disabledModes.getOrNull(from.index - originalActiveSize - 1) ?: return@rememberReorderableLazyListState
+            else -> disabledModes.getOrNull(from.index - originalActiveSize - 1)
+                ?: return@rememberReorderableLazyListState
         }
         if (fromMode == "separator") return@rememberReorderableLazyListState
         // remove
         if (from.index < originalActiveSize) {
             activeModes = activeModes.toMutableList().apply { removeAt(from.index) }
         } else {
-            disabledModes = disabledModes.toMutableList().apply { removeAt(from.index - originalActiveSize - 1) }
+            disabledModes = disabledModes.toMutableList()
+                .apply { removeAt(from.index - originalActiveSize - 1) }
         }
         // add
         val newActiveSize = activeModes.size
@@ -112,7 +128,8 @@ fun SoundModeTileSettingsUI(
     )
 
     LazyColumn(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier
+            .fillMaxSize()
             .padding(horizontal = 16.dp),
         state = lazyListState,
         verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -128,7 +145,8 @@ fun SoundModeTileSettingsUI(
                                 if (activeModes.size > 2) {
                                     // disable
                                     val modeToDisable = activeModes[index]
-                                    activeModes = activeModes.toMutableList().apply { removeAt(index) }
+                                    activeModes =
+                                        activeModes.toMutableList().apply { removeAt(index) }
                                     disabledModes = disabledModes + modeToDisable
                                 } else if (disabledModes.isNotEmpty()) {
                                     // activate another
@@ -139,7 +157,10 @@ fun SoundModeTileSettingsUI(
                                 // save
                                 prefs.edit {
                                     putString("sound_mode_order", activeModes.joinToString(","))
-                                    putString("sound_mode_disabled", disabledModes.joinToString(","))
+                                    putString(
+                                        "sound_mode_disabled",
+                                        disabledModes.joinToString(",")
+                                    )
                                 }
                                 hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
                             })
@@ -150,13 +171,18 @@ fun SoundModeTileSettingsUI(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            painter = painterResource(id = modeIcons[mode] ?: R.drawable.rounded_volume_up_24),
+                            painter = painterResource(
+                                id = modeIcons[mode] ?: R.drawable.rounded_volume_up_24
+                            ),
                             contentDescription = mode,
                             modifier = Modifier.size(24.dp),
                             tint = MaterialTheme.colorScheme.primary
                         )
                         Spacer(modifier = Modifier.width(12.dp))
-                        Text(stringResource(soundModeNames[mode] ?: R.string.tile_sound_mode), style = MaterialTheme.typography.bodyLarge)
+                        Text(
+                            stringResource(soundModeNames[mode] ?: R.string.tile_sound_mode),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
                         Spacer(modifier = Modifier.weight(1f))
                         IconButton(
                             modifier = Modifier.draggableHandle(
@@ -189,7 +215,9 @@ fun SoundModeTileSettingsUI(
                         text = stringResource(R.string.sound_mode_long_press_hint),
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(16.dp).fillMaxWidth(),
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth(),
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -206,12 +234,16 @@ fun SoundModeTileSettingsUI(
                             detectTapGestures(onLongPress = {
                                 // enable
                                 val modeToEnable = disabledModes[index]
-                                disabledModes = disabledModes.toMutableList().apply { removeAt(index) }
+                                disabledModes =
+                                    disabledModes.toMutableList().apply { removeAt(index) }
                                 activeModes = activeModes + modeToEnable
                                 // save
                                 prefs.edit {
                                     putString("sound_mode_order", activeModes.joinToString(","))
-                                    putString("sound_mode_disabled", disabledModes.joinToString(","))
+                                    putString(
+                                        "sound_mode_disabled",
+                                        disabledModes.joinToString(",")
+                                    )
                                 }
                                 hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
                             })
@@ -222,13 +254,19 @@ fun SoundModeTileSettingsUI(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            painter = painterResource(id = modeIcons[mode] ?: R.drawable.rounded_volume_up_24),
+                            painter = painterResource(
+                                id = modeIcons[mode] ?: R.drawable.rounded_volume_up_24
+                            ),
                             contentDescription = mode,
                             modifier = Modifier.size(24.dp),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Spacer(modifier = Modifier.width(12.dp))
-                        Text(stringResource(soundModeNames[mode] ?: R.string.tile_sound_mode), style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(
+                            stringResource(soundModeNames[mode] ?: R.string.tile_sound_mode),
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                         Spacer(modifier = Modifier.weight(1f))
                         IconButton(
                             modifier = Modifier.draggableHandle(

@@ -63,11 +63,12 @@ fun EditWatermarkSheet(
     var draftCustom by remember { mutableStateOf(currentCustom) }
     var draftDate by remember { mutableStateOf(currentDate) }
     var showBrandToggle by remember { mutableStateOf(options.showDeviceBrand) }
-    
+
     var showDatePicker by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }
-    
-    val displayDate = draftDate?.let { formatDate(it) } ?: stringResource(R.string.watermark_no_date)
+
+    val displayDate =
+        draftDate?.let { formatDate(it) } ?: stringResource(R.string.watermark_no_date)
 
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
@@ -86,7 +87,7 @@ fun EditWatermarkSheet(
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
-            
+
             RoundedCardContainer {
                 Column(
                     modifier = Modifier.background(
@@ -188,15 +189,15 @@ fun EditWatermarkSheet(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 OutlinedButton(
-                    onClick = { 
+                    onClick = {
                         performUIHaptic(view)
-                        onDismissRequest() 
+                        onDismissRequest()
                     },
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(stringResource(R.string.action_cancel))
                 }
-                
+
                 Button(
                     onClick = {
                         performUIHaptic(view)
@@ -209,7 +210,7 @@ fun EditWatermarkSheet(
             }
         }
     }
-    
+
     if (showDatePicker) {
         val initialDateMillis = remember(draftDate) {
             try {
@@ -239,7 +240,7 @@ fun EditWatermarkSheet(
             DatePicker(state = datePickerState)
         }
     }
-    
+
     if (showTimePicker) {
         val (initialHour, initialMinute) = remember(draftDate) {
             try {
@@ -250,12 +251,14 @@ fun EditWatermarkSheet(
                 0 to 0
             }
         }
-        val timePickerState = rememberTimePickerState(initialHour = initialHour, initialMinute = initialMinute)
+        val timePickerState =
+            rememberTimePickerState(initialHour = initialHour, initialMinute = initialMinute)
         AlertDialog(
             onDismissRequest = { showTimePicker = false },
             confirmButton = {
                 TextButton(onClick = {
-                    val timePart = String.format("%02d:%02d:00", timePickerState.hour, timePickerState.minute)
+                    val timePart =
+                        String.format("%02d:%02d:00", timePickerState.hour, timePickerState.minute)
                     val datePart = draftDate?.split(" ")?.getOrNull(0) ?: "2024:01:01"
                     draftDate = "$datePart $timePart"
                     showTimePicker = false

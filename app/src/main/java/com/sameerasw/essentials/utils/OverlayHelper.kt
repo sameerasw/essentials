@@ -3,22 +3,21 @@ package com.sameerasw.essentials.utils
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Color
-import android.animation.ValueAnimator
 import android.graphics.drawable.GradientDrawable
-import android.view.animation.AccelerateDecelerateInterpolator
 import android.os.Build
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.FrameLayout
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.core.content.ContextCompat
 import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -31,8 +30,8 @@ import androidx.savedstate.SavedStateRegistry
 import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
-import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
+import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import androidx.compose.ui.graphics.Color as ComposeColor
 
 /**
@@ -61,7 +60,10 @@ object OverlayHelper {
         strokeDp: Float = STROKE_DP.toFloat(),
         cornerRadiusDp: Float = CORNER_RADIUS_DP.toFloat(),
         style: NotificationLightingStyle = NotificationLightingStyle.STROKE,
-        glowSides: Set<NotificationLightingSide> = setOf(NotificationLightingSide.LEFT, NotificationLightingSide.RIGHT),
+        glowSides: Set<NotificationLightingSide> = setOf(
+            NotificationLightingSide.LEFT,
+            NotificationLightingSide.RIGHT
+        ),
         indicatorScale: Float = 1.0f,
         showBackground: Boolean = false
     ): FrameLayout {
@@ -88,29 +90,38 @@ object OverlayHelper {
         if (showBackground) {
             val strokeView = View(context).apply {
                 background = drawable
-                layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                layoutParams = FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
             }
             overlay.addView(strokeView)
         } else {
             overlay.background = drawable
         }
-        
+
         return overlay
     }
 
-    private fun createGlowOverlayView(context: Context, color: Int, sides: Set<NotificationLightingSide>, showBackground: Boolean): FrameLayout {
+    private fun createGlowOverlayView(
+        context: Context,
+        color: Int,
+        sides: Set<NotificationLightingSide>,
+        showBackground: Boolean
+    ): FrameLayout {
         val overlay = FrameLayout(context)
         if (showBackground) {
             overlay.setBackgroundColor(Color.BLACK)
         }
-        
+
         if (sides.contains(NotificationLightingSide.LEFT)) {
             val leftGlow = View(context).apply {
                 tag = "left_glow"
                 alpha = 0.5f
-                layoutParams = FrameLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT).apply {
-                    gravity = Gravity.START
-                }
+                layoutParams =
+                    FrameLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT).apply {
+                        gravity = Gravity.START
+                    }
                 background = GradientDrawable(
                     GradientDrawable.Orientation.LEFT_RIGHT,
                     intArrayOf(color, Color.TRANSPARENT)
@@ -123,9 +134,10 @@ object OverlayHelper {
             val rightGlow = View(context).apply {
                 tag = "right_glow"
                 alpha = 0.5f
-                layoutParams = FrameLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT).apply {
-                    gravity = Gravity.END
-                }
+                layoutParams =
+                    FrameLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT).apply {
+                        gravity = Gravity.END
+                    }
                 background = GradientDrawable(
                     GradientDrawable.Orientation.RIGHT_LEFT,
                     intArrayOf(color, Color.TRANSPARENT)
@@ -138,9 +150,10 @@ object OverlayHelper {
             val topGlow = View(context).apply {
                 tag = "top_glow"
                 alpha = 0.5f
-                layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0).apply {
-                    gravity = Gravity.TOP
-                }
+                layoutParams =
+                    FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0).apply {
+                        gravity = Gravity.TOP
+                    }
                 background = GradientDrawable(
                     GradientDrawable.Orientation.TOP_BOTTOM,
                     intArrayOf(color, Color.TRANSPARENT)
@@ -153,9 +166,10 @@ object OverlayHelper {
             val bottomGlow = View(context).apply {
                 tag = "bottom_glow"
                 alpha = 0.5f
-                layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0).apply {
-                    gravity = Gravity.BOTTOM
-                }
+                layoutParams =
+                    FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0).apply {
+                        gravity = Gravity.BOTTOM
+                    }
                 background = GradientDrawable(
                     GradientDrawable.Orientation.BOTTOM_TOP,
                     intArrayOf(color, Color.TRANSPARENT)
@@ -168,7 +182,12 @@ object OverlayHelper {
     }
 
     @OptIn(ExperimentalMaterial3ExpressiveApi::class)
-    private fun createIndicatorOverlayView(context: Context, color: Int, indicatorScale: Float, showBackground: Boolean): FrameLayout {
+    private fun createIndicatorOverlayView(
+        context: Context,
+        color: Int,
+        indicatorScale: Float,
+        showBackground: Boolean
+    ): FrameLayout {
         // gettign the new LoadingIndicator on an overlay was not easy.... not at all :)
         val overlay = FrameLayout(context)
         if (showBackground) {
@@ -211,13 +230,15 @@ object OverlayHelper {
      * A lightweight implementation of the owners required by Jetpack Compose
      * to run inside a WindowManager overlay.
      */
-    private class OverlayLifecycleOwner : LifecycleOwner, SavedStateRegistryOwner, ViewModelStoreOwner {
+    private class OverlayLifecycleOwner : LifecycleOwner, SavedStateRegistryOwner,
+        ViewModelStoreOwner {
         private val lifecycleRegistry = LifecycleRegistry(this)
         private val savedStateRegistryController = SavedStateRegistryController.create(this)
         private val store = ViewModelStore()
 
         override val lifecycle: Lifecycle = lifecycleRegistry
-        override val savedStateRegistry: SavedStateRegistry = savedStateRegistryController.savedStateRegistry
+        override val savedStateRegistry: SavedStateRegistry =
+            savedStateRegistryController.savedStateRegistry
         override val viewModelStore: ViewModelStore = store
 
         fun onCreate() {
@@ -257,7 +278,7 @@ object OverlayHelper {
         if (!isTouchable) {
             baseFlags = baseFlags or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
         }
-        
+
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.MATCH_PARENT,
@@ -269,8 +290,10 @@ object OverlayHelper {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             try {
-                params.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
-            } catch (_: Exception) {}
+                params.layoutInDisplayCutoutMode =
+                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+            } catch (_: Exception) {
+            }
         }
 
         return params
@@ -307,7 +330,8 @@ object OverlayHelper {
     fun removeOverlayView(windowManager: WindowManager?, view: View) {
         try {
             windowManager?.removeView(view)
-        } catch (_: Exception) {}
+        } catch (_: Exception) {
+        }
     }
 
     /**
@@ -331,8 +355,8 @@ object OverlayHelper {
      * For STROKE style or others, it just fades in.
      */
     fun showPreview(
-        view: View, 
-        style: NotificationLightingStyle, 
+        view: View,
+        style: NotificationLightingStyle,
         strokeWidthDp: Float,
         indicatorX: Float = 50f,
         indicatorY: Float = 2f,
@@ -344,7 +368,7 @@ object OverlayHelper {
                 // Calculate max pixels using same logic as pulseGlowOverlay
                 val density = view.resources.displayMetrics.density
                 val maxPixels = (strokeWidthDp * density * 12).toInt()
-                
+
                 // Force views to max expansion
                 vg.findViewWithTag<View>("left_glow")?.updateLayoutParams { width = maxPixels }
                 vg.findViewWithTag<View>("right_glow")?.updateLayoutParams { width = maxPixels }
@@ -357,18 +381,18 @@ object OverlayHelper {
             indicator?.apply {
                 scaleX = 1f
                 scaleY = 1f
-                
+
                 // Position based on percentages
                 val parentWidth = view.resources.displayMetrics.widthPixels
                 val parentHeight = view.resources.displayMetrics.heightPixels
-                
+
                 translationX = (parentWidth * (indicatorX / 100f)) - (parentWidth / 2f)
                 translationY = (parentHeight * (indicatorY / 100f)) - (parentHeight / 2f)
                 scaleX = indicatorScale
                 scaleY = indicatorScale
             }
         }
-        
+
         fadeInOverlay(view)
     }
 
@@ -438,17 +462,30 @@ object OverlayHelper {
         onAnimationEnd: (() -> Unit)? = null
     ) {
         if (style == NotificationLightingStyle.GLOW) {
-            pulseGlowOverlay(view as ViewGroup, maxPulses, pulseDurationMillis, strokeWidthDp, onAnimationEnd)
+            pulseGlowOverlay(
+                view as ViewGroup,
+                maxPulses,
+                pulseDurationMillis,
+                strokeWidthDp,
+                onAnimationEnd
+            )
             return
         }
-        
+
         if (style == NotificationLightingStyle.INDICATOR) {
-            pulseIndicatorOverlay(view as ViewGroup, pulseDurationMillis, indicatorX, indicatorY, indicatorScale, onAnimationEnd)
+            pulseIndicatorOverlay(
+                view as ViewGroup,
+                pulseDurationMillis,
+                indicatorX,
+                indicatorY,
+                indicatorScale,
+                onAnimationEnd
+            )
             return
         }
 
         var pulseCount = 0
-        
+
         val durationIn = (pulseDurationMillis * 0.1).toLong()
         val durationHold = (pulseDurationMillis * 0.4).toLong()
         val durationOut = (pulseDurationMillis * 0.5).toLong()
@@ -503,7 +540,7 @@ object OverlayHelper {
 
         val density = view.resources.displayMetrics.density
         val maxPixels = (strokeWidthDp * density * 12).toInt()
-        
+
         var pulseCount = 0
 
         val expandDuration = (pulseDurationMillis * 0.1).toLong()

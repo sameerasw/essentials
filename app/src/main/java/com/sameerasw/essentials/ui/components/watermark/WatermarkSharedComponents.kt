@@ -3,10 +3,17 @@ package com.sameerasw.essentials.ui.components.watermark
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
@@ -44,8 +51,9 @@ fun ColorModeOption(
             Color(androidx.core.graphics.ColorUtils.HSLToColor(hsl))
         }
     }
-    
-    val borderColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
+
+    val borderColor =
+        if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
     val borderWidth = if (isSelected) 3.dp else 1.dp
 
     Box(
@@ -58,9 +66,9 @@ fun ColorModeOption(
                 color = borderColor,
                 shape = CircleShape
             )
-            .clickable { 
+            .clickable {
                 performUIHaptic(view)
-                onClick() 
+                onClick()
             },
         contentAlignment = Alignment.Center
     ) {
@@ -94,10 +102,10 @@ fun LogoCarouselPicker(
         R.drawable.vivo,
         R.drawable.xiaomi
     )
-    
+
     val carouselState = rememberCarouselState { logos.size }
     val view = LocalView.current
-    
+
     HorizontalMultiBrowseCarousel(
         state = carouselState,
         preferredItemWidth = 80.dp,
@@ -112,9 +120,11 @@ fun LogoCarouselPicker(
     ) { index ->
         val resId = logos[index]
         val isSelected = selectedResId == resId
-        val containerColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceContainerHigh
-        val contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
-        
+        val containerColor =
+            if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceContainerHigh
+        val contentColor =
+            if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+
         Box(
             modifier = Modifier
                 .fillMaxSize()

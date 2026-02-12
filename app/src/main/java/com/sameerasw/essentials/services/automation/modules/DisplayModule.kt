@@ -28,10 +28,12 @@ class DisplayModule : AutomationModule {
                     handleTrigger(context, Trigger.ScreenOn)
                     handleStateChange(context, true)
                 }
+
                 Intent.ACTION_SCREEN_OFF -> {
                     handleTrigger(context, Trigger.ScreenOff)
                     handleStateChange(context, false)
                 }
+
                 Intent.ACTION_USER_PRESENT -> {
                     handleTrigger(context, Trigger.DeviceUnlock)
                 }
@@ -78,10 +80,20 @@ class DisplayModule : AutomationModule {
                     if (automation.state is DIYState.ScreenOn) {
                         if (isActive) {
                             // Entry
-                            automation.entryAction?.let { CombinedActionExecutor.execute(context, it) }
+                            automation.entryAction?.let {
+                                CombinedActionExecutor.execute(
+                                    context,
+                                    it
+                                )
+                            }
                         } else {
                             // Exit
-                            automation.exitAction?.let { CombinedActionExecutor.execute(context, it) }
+                            automation.exitAction?.let {
+                                CombinedActionExecutor.execute(
+                                    context,
+                                    it
+                                )
+                            }
                         }
                     }
                 }

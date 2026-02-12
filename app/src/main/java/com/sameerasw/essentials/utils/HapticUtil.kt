@@ -64,52 +64,73 @@ object HapticUtil {
     /**
      * Perform haptic feedback for background services (Context-based)
      */
-    fun performHapticForService(context: android.content.Context, type: HapticFeedbackType = HapticFeedbackType.SUBTLE) {
+    fun performHapticForService(
+        context: Context,
+        type: HapticFeedbackType = HapticFeedbackType.SUBTLE
+    ) {
         if (!isAppHapticsEnabled.value) return
-        val vibrator = context.getSystemService(android.content.Context.VIBRATOR_SERVICE) as android.os.Vibrator
+        val vibrator = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            val vibratorManager =
+                context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as android.os.VibratorManager
+            vibratorManager.defaultVibrator
+        } else {
+            @Suppress("DEPRECATION")
+            context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        }
         performHapticFeedback(vibrator, type)
     }
 
     fun performCustomHaptic(view: View, strength: Float) {
         if (!isAppHapticsEnabled.value) return
-        
-        val vibrator = view.context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        
+
+        val vibrator = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            val vibratorManager =
+                view.context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as android.os.VibratorManager
+            vibratorManager.defaultVibrator
+        } else {
+            @Suppress("DEPRECATION")
+            view.context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        }
+
         // Use Primitives (API 30+) for the most consistent, crisp feedback with scaling
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-             try {
-                 if (vibrator.areAllPrimitivesSupported(android.os.VibrationEffect.Composition.PRIMITIVE_CLICK)) {
-                     val effect = android.os.VibrationEffect.startComposition()
-                         .addPrimitive(android.os.VibrationEffect.Composition.PRIMITIVE_CLICK, strength)
-                         .compose()
-                     
-                     val attrs = android.os.VibrationAttributes.createForUsage(android.os.VibrationAttributes.USAGE_TOUCH)
-                     vibrator.vibrate(effect, attrs)
-                     return
-                 }
-             } catch (e: Exception) {
-                 // Fallback if primitive check fails
-             }
+            try {
+                if (vibrator.areAllPrimitivesSupported(android.os.VibrationEffect.Composition.PRIMITIVE_CLICK)) {
+                    val effect = android.os.VibrationEffect.startComposition()
+                        .addPrimitive(
+                            android.os.VibrationEffect.Composition.PRIMITIVE_CLICK,
+                            strength
+                        )
+                        .compose()
+
+                    val attrs =
+                        android.os.VibrationAttributes.createForUsage(android.os.VibrationAttributes.USAGE_TOUCH)
+                    vibrator.vibrate(effect, attrs)
+                    return
+                }
+            } catch (e: Exception) {
+                // Fallback if primitive check fails
+            }
         }
 
         // Fallback for API 26-29 or devices without primitive support
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             val hasAmplitudeControl = vibrator.hasAmplitudeControl()
-            
+
             if (hasAmplitudeControl) {
                 // Use quadratic scaling for better low-end control
                 val amplitude = (strength * strength * 255).toInt().coerceIn(1, 255)
                 // 12ms is a sweet spot for one-shot clicks
                 val effect = android.os.VibrationEffect.createOneShot(12, amplitude)
-                
+
                 // Use standard vibrate, attributes handled if possible
                 vibrator.vibrate(effect)
             } else {
                 // No amplitude control: differentiate by strength
                 if (strength < 0.5f) {
-                     view.performHapticFeedback(android.view.HapticFeedbackConstants.CLOCK_TICK)
+                    view.performHapticFeedback(android.view.HapticFeedbackConstants.CLOCK_TICK)
                 } else {
-                     view.performHapticFeedback(android.view.HapticFeedbackConstants.KEYBOARD_TAP)
+                    view.performHapticFeedback(android.view.HapticFeedbackConstants.KEYBOARD_TAP)
                 }
             }
         } else {

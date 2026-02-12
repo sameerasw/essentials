@@ -41,7 +41,7 @@ fun ExifSettingsSheet(
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
-            
+
             RoundedCardContainer {
                 IconToggleItem(
                     iconRes = R.drawable.rounded_image_search_24,
@@ -50,46 +50,87 @@ fun ExifSettingsSheet(
                     onCheckedChange = onShowExifChange
                 )
             }
-            
+
             if (options.showExif) {
                 RoundedCardContainer {
-                    val updateExif = { focal: Boolean, aperture: Boolean, iso: Boolean, shutter: Boolean, date: Boolean ->
-                        onExifSettingsChange(focal, aperture, iso, shutter, date)
-                    }
-                    
+                    val updateExif =
+                        { focal: Boolean, aperture: Boolean, iso: Boolean, shutter: Boolean, date: Boolean ->
+                            onExifSettingsChange(focal, aperture, iso, shutter, date)
+                        }
+
                     IconToggleItem(
                         iconRes = R.drawable.rounded_control_camera_24,
                         title = stringResource(R.string.watermark_exif_focal_length),
                         isChecked = options.showFocalLength,
-                        onCheckedChange = { updateExif(it, options.showAperture, options.showIso, options.showShutterSpeed, options.showDate) }
+                        onCheckedChange = {
+                            updateExif(
+                                it,
+                                options.showAperture,
+                                options.showIso,
+                                options.showShutterSpeed,
+                                options.showDate
+                            )
+                        }
                     )
-                    
+
                     IconToggleItem(
                         iconRes = R.drawable.rounded_camera_24,
                         title = stringResource(R.string.watermark_exif_aperture),
                         isChecked = options.showAperture,
-                        onCheckedChange = { updateExif(options.showFocalLength, it, options.showIso, options.showShutterSpeed, options.showDate) }
+                        onCheckedChange = {
+                            updateExif(
+                                options.showFocalLength,
+                                it,
+                                options.showIso,
+                                options.showShutterSpeed,
+                                options.showDate
+                            )
+                        }
                     )
-                     
+
                     IconToggleItem(
                         iconRes = R.drawable.rounded_grain_24,
                         title = stringResource(R.string.watermark_exif_iso),
                         isChecked = options.showIso,
-                        onCheckedChange = { updateExif(options.showFocalLength, options.showAperture, it, options.showShutterSpeed, options.showDate) }
+                        onCheckedChange = {
+                            updateExif(
+                                options.showFocalLength,
+                                options.showAperture,
+                                it,
+                                options.showShutterSpeed,
+                                options.showDate
+                            )
+                        }
                     )
-                    
+
                     IconToggleItem(
                         iconRes = R.drawable.rounded_shutter_speed_24,
                         title = stringResource(R.string.watermark_exif_shutter_speed),
                         isChecked = options.showShutterSpeed,
-                        onCheckedChange = { updateExif(options.showFocalLength, options.showAperture, options.showIso, it, options.showDate) }
+                        onCheckedChange = {
+                            updateExif(
+                                options.showFocalLength,
+                                options.showAperture,
+                                options.showIso,
+                                it,
+                                options.showDate
+                            )
+                        }
                     )
-                    
+
                     IconToggleItem(
                         iconRes = R.drawable.rounded_date_range_24,
                         title = stringResource(R.string.watermark_exif_date),
                         isChecked = options.showDate,
-                        onCheckedChange = { updateExif(options.showFocalLength, options.showAperture, options.showIso, options.showShutterSpeed, it) }
+                        onCheckedChange = {
+                            updateExif(
+                                options.showFocalLength,
+                                options.showAperture,
+                                options.showIso,
+                                options.showShutterSpeed,
+                                it
+                            )
+                        }
                     )
                 }
             }

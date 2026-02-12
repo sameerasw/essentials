@@ -1,17 +1,19 @@
 package com.sameerasw.essentials.ui.components.linkActions
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.content.ClipboardManager
-import android.content.ClipData
-import android.content.Context
-import android.widget.Toast
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,60 +23,63 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import java.text.Collator
-import java.util.Locale
-import kotlinx.coroutines.launch
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import com.sameerasw.essentials.ui.components.ReusableTopAppBar
+import androidx.core.content.edit
 import com.sameerasw.essentials.R
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.FilledIconButton
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.rememberModalBottomSheetState
-import android.content.SharedPreferences
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.Alignment
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
+import com.sameerasw.essentials.ui.components.ReusableTopAppBar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import androidx.core.net.toUri
-import androidx.core.content.edit
+import java.text.Collator
+import java.util.Locale
 
 private const val TAG = "LinkPickerScreen"
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LinkPickerScreen(uri: Uri, onFinish: () -> Unit, modifier: Modifier = Modifier, demo: Boolean = false) {
+fun LinkPickerScreen(
+    uri: Uri,
+    onFinish: () -> Unit,
+    modifier: Modifier = Modifier,
+    demo: Boolean = false
+) {
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
 
@@ -82,10 +87,10 @@ fun LinkPickerScreen(uri: Uri, onFinish: () -> Unit, modifier: Modifier = Modifi
     var currentUri by remember { mutableStateOf(uri) }
     var showEditSheet by remember { mutableStateOf(false) }
     var editingText by remember { mutableStateOf(currentUri.toString()) }
-    
+
     // Search state
     var searchQuery by remember { mutableStateOf("") }
-    
+
     // App lists
     var baseOpenWithApps by remember { mutableStateOf<List<ResolvedAppInfo>>(emptyList()) }
     var baseShareWithApps by remember { mutableStateOf<List<ResolvedAppInfo>>(emptyList()) }
@@ -158,8 +163,10 @@ fun LinkPickerScreen(uri: Uri, onFinish: () -> Unit, modifier: Modifier = Modifi
         },
         bottomBar = {
             val items = listOf("Open With", "Share With")
-            val selectedIcons = listOf(R.drawable.rounded_open_in_browser_24, R.drawable.rounded_share_24)
-            val unselectedIcons = listOf(R.drawable.rounded_open_in_browser_24, R.drawable.rounded_share_24)
+            val selectedIcons =
+                listOf(R.drawable.rounded_open_in_browser_24, R.drawable.rounded_share_24)
+            val unselectedIcons =
+                listOf(R.drawable.rounded_open_in_browser_24, R.drawable.rounded_share_24)
 
             NavigationBar(
                 windowInsets = NavigationBarDefaults.windowInsets
@@ -204,7 +211,9 @@ fun LinkPickerScreen(uri: Uri, onFinish: () -> Unit, modifier: Modifier = Modifi
             }
         }
 
-        Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)) {
             // Link display and Edit action
             Row(
                 modifier = Modifier
@@ -296,11 +305,11 @@ fun LinkPickerScreen(uri: Uri, onFinish: () -> Unit, modifier: Modifier = Modifi
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 placeholder = { Text("Search apps") },
-                leadingIcon = { 
+                leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.rounded_search_24),
                         contentDescription = "Search"
-                    ) 
+                    )
                 },
                 singleLine = true,
                 shape = RoundedCornerShape(12.dp)
@@ -319,10 +328,27 @@ fun LinkPickerScreen(uri: Uri, onFinish: () -> Unit, modifier: Modifier = Modifi
                 ) { page ->
                     when (page) {
                         0 -> {
-                            OpenWithContent(openWithApps, currentUri, onFinish, Modifier, togglePin, pinnedPackages.value, demo)
+                            OpenWithContent(
+                                openWithApps,
+                                currentUri,
+                                onFinish,
+                                Modifier,
+                                togglePin,
+                                pinnedPackages.value,
+                                demo
+                            )
                         }
+
                         1 -> {
-                            ShareWithContent(shareWithApps, currentUri, onFinish, Modifier, togglePin, pinnedPackages.value, demo)
+                            ShareWithContent(
+                                shareWithApps,
+                                currentUri,
+                                onFinish,
+                                Modifier,
+                                togglePin,
+                                pinnedPackages.value,
+                                demo
+                            )
                         }
                     }
                 }
@@ -363,9 +389,13 @@ fun LinkPickerScreen(uri: Uri, onFinish: () -> Unit, modifier: Modifier = Modifi
                     FilledIconButton(
                         onClick = {
                             var text = editingText.trim()
-                            
+
                             if (text.contains(" ")) {
-                                Toast.makeText(context, "Invalid Link: Contains spaces", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    context,
+                                    "Invalid Link: Contains spaces",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                                 return@FilledIconButton
                             }
 
@@ -374,18 +404,23 @@ fun LinkPickerScreen(uri: Uri, onFinish: () -> Unit, modifier: Modifier = Modifi
                                 if (!text.contains("://")) {
                                     text = "https://$text"
                                 }
-                                
+
                                 try {
                                     val newUri = Uri.parse(text)
                                     // Validate scheme
                                     if (newUri.scheme.isNullOrBlank()) {
-                                        Toast.makeText(context, "Invalid Link: Missing scheme", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(
+                                            context,
+                                            "Invalid Link: Missing scheme",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
                                     } else {
                                         currentUri = newUri
                                         showEditSheet = false
                                     }
                                 } catch (_: Exception) {
-                                    Toast.makeText(context, "Invalid URI", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, "Invalid URI", Toast.LENGTH_SHORT)
+                                        .show()
                                 }
                             }
                         }
@@ -451,8 +486,8 @@ private fun queryOpenWithApps(context: Context, uri: Uri): List<ResolvedAppInfo>
 
         // Map to ResolvedAppInfo and sort
         val collator = Collator.getInstance(Locale.getDefault())
-        val resolvedList = filtered.map { 
-            ResolvedAppInfo(it, it.loadLabel(pm).toString()) 
+        val resolvedList = filtered.map {
+            ResolvedAppInfo(it, it.loadLabel(pm).toString())
         }.sortedWith { o1, o2 ->
             collator.compare(
                 o1.label.lowercase(Locale.getDefault()),
@@ -497,7 +532,10 @@ private fun queryShareWithApps(context: Context, uri: Uri): List<ResolvedAppInfo
             .filter {
                 val shouldInclude = it.activityInfo.packageName != ourPackageName
                 if (!shouldInclude) {
-                    Log.d(TAG, "Filtering out our own app from share: ${it.activityInfo.packageName}")
+                    Log.d(
+                        TAG,
+                        "Filtering out our own app from share: ${it.activityInfo.packageName}"
+                    )
                 }
                 shouldInclude
             }
@@ -507,8 +545,8 @@ private fun queryShareWithApps(context: Context, uri: Uri): List<ResolvedAppInfo
 
         // Map to ResolvedAppInfo and sort
         val collator = Collator.getInstance(Locale.getDefault())
-        val resolvedList = filtered.map { 
-            ResolvedAppInfo(it, it.loadLabel(pm).toString()) 
+        val resolvedList = filtered.map {
+            ResolvedAppInfo(it, it.loadLabel(pm).toString())
         }.sortedWith { o1, o2 ->
             collator.compare(
                 o1.label.lowercase(Locale.getDefault()),

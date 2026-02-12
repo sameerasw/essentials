@@ -3,7 +3,6 @@
     <string name="app_name">Essentials</string>
     <string name="label_beta">BETA</string>
     <string name="accessibility_service_description"><b>Essentials Barrierefreiheitsdienst</b>\n\nDieser Dienst ist für die folgenden erweiterten Funktionen erforderlich:\n\n<b>• Neuzuordnung physischer Tasten:</b>\nErkennt das Drücken der Lautstärketasten auch bei ausgeschaltetem Display, um Aktionen wie die Taschenlampe auszulösen.\n\n<b>• Einstellungen pro App:</b>\nÜberwacht die aktuell aktive App, um bestimmte Profile für dynamisches Nachtlicht, Benachrichtigungsfarben und App-Sperre anzuwenden.\n\n<b>• Displaysteuerung:</b>\nErmöglicht es der App, das Display zu sperren (z. B. durch Doppeltippen oder Widgets) und Änderungen des Bildschirmstatus zu erkennen.\n\n<b>• Sicherheit:</b>\nVerhindert unbefugte Änderungen, indem der Fensterinhalt erkennt wird, wenn das Gerät gesperrt ist.\n\n<small>Es werden keine eingegebenen Texte oder sensiblen Benutzerdaten erfasst oder übertragen.</small></string>
-    <string name="app_icon">App-Icon</string>
     <string name="freeze_activity_title">Apps einfrieren</string>
     <string name="freeze_activity_subtitle">Deaktiviere Apps, welche selten verwendet werden</string>
     <string name="freeze_shortcut_short_label">Apps einfrieren</string>
@@ -13,7 +12,7 @@
     <string name="app_freezing_tile_label">Apps einfrieren</string>
     <string name="flashlight_pulse_tile_label">Taschenlampenimpuls</string>
     <string name="check_pre_releases_label">Prüfe nach Vorabversionen</string>
-    <string name="check_pre_releases_desc">Können instabil sein</string>
+    <string name="check_pre_releases_desc">Könnte instabil sein</string>
     <!-- App Lock -->
     <string name="settings_section_security">Sicherheit</string>
     <string name="app_lock_enable_title">Aktiviere App-Sperre</string>
@@ -80,7 +79,6 @@
     <string name="flashlight_always_off_desc">Selbst wenn das Display an ist</string>
     <string name="content_desc_settings">Einstellungen</string>
     <!-- Caffeinate / Permissions -->
-    <string name="settings_section_notification">Benachrichtigung</string>
     <string name="permission_show_notification_title">Benachrichtigung anzeigen</string>
     <string name="permission_post_notifications_title">Benachrichtigungen senden</string>
     <string name="permission_post_notifications_desc">Erlaubt es der App Benachrichtigungen zu zeigen</string>
@@ -89,7 +87,6 @@
     <string name="caffeinate_active">Aktiv</string>
     <string name="caffeinate_notification_desc">Bildschirm wird wach gehalten</string>
     <string name="caffeinate_battery_optimization_title">Ignoriere Batterie-Optimierungen</string>
-    <string name="caffeinate_battery_optimization_desc">Empfohlen für zuverlässigen Betrieb auf einigen Geräten</string>
     <string name="caffeinate_abort_screen_off_title">Abbruch bei ausgeschaltetem Bildschirm</string>
     <string name="caffeinate_skip_countdown_title">Countdown überspringen</string>
     <string name="caffeinate_skip_countdown_desc">Starte Koffein sofort.</string>
@@ -129,12 +126,8 @@
     <string name="freeze_auto_freeze_section">Auto-Einfrieren</string>
     <string name="freeze_automation_hint">Friert ausgewählte Apps beim Sperren des Geräts ein. Wähle eine Verzögerung, um zu vermeiden, dass Apps eingefroren werden, wenn das Display kurz nach dem Ausschalten wieder entsperrt wird.</string>
     <string name="freeze_warning">Das Einfrieren von System-Apps kann gefährlich sein und zu unerwartetem Verhalten führen.</string>
-    <string name="permission_feature_freeze_locked">Einfrieren, beim Sperren</string>
-    <string name="permission_accessibility_title">Barrierefreiheitsdienst</string>
-    <string name="permission_accessibility_desc_freeze">Erforderlich, um den Bildschirmstatus für das automatische Einfrieren zu erkennen.</string>
     <string name="action_enable_in_settings">In den Einstellungen aktivieren</string>
     <string name="freeze_dont_freeze_active_apps_title">Don\'t freeze active apps</string>
-    <string name="freeze_dont_freeze_active_apps_desc">Avoid freezing apps that are in use, streaming media, or have active notifications</string>
     <string name="perm_usage_stats_title">Usage Stats</string>
     <string name="perm_usage_stats_desc">Required to detect which apps are currently in the foreground to avoid freezing them</string>
     <string name="perm_notif_listener_desc_freeze">Required to detect playing media and active notifications to avoid freezing them</string>
@@ -196,11 +189,9 @@
     <string name="about_desc_developer_options">Toggle system Developer Options from a QS tile easily. This may reset some of the developer settings you have modified.</string>
     <string name="nfc_tile_label">NFC</string>
     <string name="tile_private_dns">Privates DNS</string>
-    <string name="tile_private_dns_desc">Toggle Private DNS mode</string>
     <string name="tile_private_dns_auto">Auto</string>
     <string name="tile_private_dns_off">Aus</string>
     <string name="tile_usb_debugging">USB-Debugging</string>
-    <string name="tile_usb_debugging_desc">Toggle USB Debugging</string>
     <string name="on">An</string>
     <string name="off">Aus</string>
     <!-- Screen Locked Security -->
@@ -288,7 +279,6 @@
     <string name="search_privacy_chip_title">Privacy Chips</string>
     <string name="search_privacy_chip_desc">Indikator anzeigen, wenn Kamera oder Mikrofon verwendet werden</string>
     <string name="search_desc_toggle_visibility">Sichtbarkeit für %1$s umschalten</string>
-    <string name="title_favorites">Favoriten</string>
     <string name="action_pin">Zu Favoriten hinzufügen</string>
     <string name="action_unpin">Aus Favoriten entfernen</string>
     <!-- Extraction Batch 1 -->
@@ -296,12 +286,10 @@
     <string name="cat_tools">Werkzeuge</string>
     <string name="cat_visuals">Visuelles</string>
     <string name="cat_system">System</string>
-    <string name="cat_security">Sicherheit und Privatsphäre</string>
     <!-- UI Elements -->
     <string name="search_placeholder">Suche nach Werkzeugen, Modifikationen und Anpassungen</string>
     <string name="search_no_results">Keine Ergebnisse für \"%1$s\"</string>
     <string name="search_results_title">Suchergebnisse</string>
-    <string name="required_for">Benötigt für:</string>
     <string name="requires_following_permissions">%1$s benötigt folgende Berechtigungen</string>
     <!-- Features -->
     <string name="feat_screen_off_widget_title">Display-aus-Widget</string>
@@ -316,9 +304,6 @@
     <string name="feat_notification_lighting_desc">Bei Benachrichtigungen aufleuchten</string>
     <string name="feat_flashlight_pulse_desc">Blitze bei Benachrichtigungen mit der Taschenlampe</string>
     <string name="feat_sound_mode_tile_title">Tonmodus-Kachel</string>
-    <string name="feat_sound_mode_tile_desc">Kachel in den Schnelleinstellungen zum Umschalten des Tonmodus</string>
-    <string name="feat_stay_awake_tile_title">\'Wach bleiben\'-Kachel</string>
-    <string name="feat_stay_awake_tile_desc">Kachel in den Schnelleinstellungen zum Umschalten des Wachbleibens</string>
     <string name="feat_call_vibrations_title">Anrufvibrationen</string>
     <string name="feat_call_vibrations_desc">Vibrate for call actions</string>
     <string name="show_bluetooth_devices">Bluetooth-Geräte anzeigen</string>
@@ -354,15 +339,12 @@
     <string name="feat_watermark_desc">Fotos mit EXIF-Daten und Logos versehen</string>
     <string name="feat_calendar_sync_title">Kalender-Synchronisierung</string>
     <string name="feat_calendar_sync_desc">Synchronisiere deine Ereignisse mit deiner Uhr</string>
-    <string name="watermark_style_title">Stil</string>
     <string name="watermark_style_overlay">Overlay</string>
     <string name="watermark_style_frame">Frame</string>
     <string name="watermark_show_brand">Gerätemarke</string>
     <string name="watermark_show_exif">EXIF Data</string>
     <string name="watermark_pick_image">Pick Image</string>
     <string name="watermark_save_success">Image saved to gallery</string>
-    <string name="watermark_save_error">Failed to save image</string>
-    <string name="watermark_processing">Processing...</string>
     <string name="action_share">Share</string>
     <string name="watermark_exif_settings">EXIF Settings</string>
     <string name="watermark_exif_focal_length">Focal Length</string>
@@ -378,15 +360,10 @@
     <string name="watermark_font_options">Font Size</string>
     <string name="watermark_custom_text">Custom Text</string>
     <string name="watermark_custom_text_hint">Enter your text...</string>
-    <string name="watermark_custom_text_settings">Custom Text Settings</string>
     <string name="watermark_spacing">Spacing</string>
     <string name="watermark_border_width">Border Width</string>
     <string name="watermark_border_corners">Round Corners</string>
     <string name="watermark_color_section">Color</string>
-    <string name="watermark_color_light">Light</string>
-    <string name="watermark_color_dark">Dark</string>
-    <string name="watermark_color_accent_light">Accent Light</string>
-    <string name="watermark_color_accent_dark">Accent Dark</string>
     <string name="watermark_logo_section">Logo</string>
     <string name="watermark_logo_show">Show Logo</string>
     <string name="watermark_logo_size">Logo Size</string>
@@ -401,7 +378,6 @@
     <string name="action_save_changes">Save Changes</string>
     <string name="calendar_sync_settings_title">Calendar Sync Settings</string>
     <string name="calendar_sync_select_calendars">Sync specific calendars</string>
-    <string name="calendar_sync_select_calendars_desc">Choose which calendars to sync to watch</string>
     <string name="calendar_sync_periodic_title">Periodic Sync</string>
     <string name="calendar_sync_periodic_desc">Sync every 15 minutes if changes found</string>
     <string name="calendar_sync_sync_now">Sync Now</string>
@@ -494,7 +470,6 @@
     <string name="perm_root_desc">Benötigt Berechtigungen für Systemaktionen mittels Root-Rechte.</string>
     <string name="perm_notif_listener_title">Benachrichtigungs-Beobachter</string>
     <string name="perm_notif_listener_desc_maps">Benötigt, um zu erkennen, wann Maps navigiert.</string>
-    <string name="perm_notif_listener_desc_call_vibrations">Requires notification listener access to detect when outgoing calls are answered.</string>
     <string name="perm_notif_listener_desc_lighting">Benötigt, um neue Benachrichtigungen zu erkennen</string>
     <string name="perm_notif_listener_desc_snooze">Benötigt, um Benachrichtigungen zu erkennen und stumm zuschalten</string>
     <string name="perm_accessibility_title">Barrierefreiheitsdienst</string>
@@ -514,8 +489,6 @@
     <string name="perm_overlay_desc">Benötigt, um das Benachrichtigungslicht auf dem Bildschirm anzuzeigen</string>
     <string name="perm_device_admin_title">Geräteadministrator</string>
     <string name="perm_device_admin_desc">Benötigt, um das Gerät bei unbefugten Zugriffsversuchen komplett zu sperren (Deaktivierung der Biometriefunktionen)</string>
-    <string name="perm_read_calendar_title">Read Calendar</string>
-    <string name="perm_read_calendar_desc">Required to sync upcoming events to your watch.</string>
     <string name="perm_action_grant">Berechtigung gewähren</string>
     <string name="perm_action_copy_adb">Kopiere ADB-Befehl</string>
     <string name="perm_action_check">Prüfen</string>
@@ -538,7 +511,6 @@
     <string name="action_edit_repo">Repository bearbeiten</string>
     <string name="prompt_enter_repo_url">Gib die GitHub-Repository-URL oder eigentümer/repository ein</string>
     <string name="action_track">Verfolgen</string>
-    <string name="error_invalid_repo_url">Ungültige Repository-URL oder ungültiges Format</string>
     <string name="error_no_apk_found">Keine APK in der neuesten Version gefunden</string>
     <string name="error_repo_not_found">Repository nicht gefunden</string>
     <string name="label_latest_release">Neueste Version</string>
@@ -563,14 +535,10 @@
     <string name="label_keyboard_setup">Tastatur-Einrichtung</string>
     <string name="btn_enable_keyboard">In den Einstellungen aktivieren</string>
     <string name="btn_select_keyboard">Wechsel zu Essentials</string>
-    <string name="status_keyboard_ready">Tastatur ist aktiv und bereit!</string>
     <string name="label_enabled">Aktiviert</string>
     <string name="label_disabled">Deaktiviert</string>
     <string name="tile_adaptive_brightness">Adaptive Helligkeit</string>
-    <string name="tile_adaptive_brightness_desc">Adaptive Helligkeit umschalten</string>
     <string name="tile_maps_power_saving">Maps-Energiesparmodus</string>
-    <string name="tile_maps_power_saving_desc">Maps-Energiesparmodus umschalten</string>
-    <string name="search_placeholder_short">Suche nach Werkzeugen, Modifikationen und Anpassungen</string>
     <string name="action_search">Suche</string>
     <string name="action_stop">Stop</string>
     <string name="label_search">Suche</string>
@@ -617,15 +585,6 @@
     <string name="about_desc_usb_debugging">Toggle USB Debugging.\n\nEnable or disable ADB debugging access directly from the quick settings.</string>
     <string name="action_download">Herunterladen</string>
     <!-- DIY Section -->
-    <string name="coming_soon_title">Do-It-Yourself</string>
-    <string name="coming_soon_desc">Hier bahnt sich etwas Experimentelles an. Bleibe dran für Automatisierungen und erweiterte Modifikationen.</string>
-    <string name="coming_soon_label">Demnächst verfügbar</string>
-    <string name="diy_trigger_label">Auslöser</string>
-    <string name="diy_state_label">Zustand</string>
-    <string name="diy_action_label">Aktion</string>
-    <string name="diy_in_label">Eintritt</string>
-    <string name="diy_out_label">Austritt</string>
-    <string name="diy_automation_label">Automatisierung</string>
     <string name="diy_trigger_screen_off">Display aus</string>
     <string name="diy_trigger_screen_on">Display an</string>
     <string name="diy_trigger_device_unlock">Gerät entsperren</string>
@@ -658,7 +617,6 @@
     <string name="automation_service_running_title">Automatisierungen aktiv</string>
     <string name="automation_service_running_desc">Überwachung von Systemereignissen für deine Automatisierungen</string>
     <string name="diy_action_device_effects">Geräteeffekte</string>
-    <string name="diy_action_disable_device_effects">Deaktiviere Geräteeffekte</string>
     <string name="diy_device_effects_desc">Steuer Effekte auf Systemebene wie Graustufen, AOD-Unterdrückung, Hintergrundbild-Dimmung und Nachtmodus.</string>
     <string name="diy_effect_grayscale">Graustufen</string>
     <string name="diy_effect_suppress_ambient">Ambient Display unterdrücken</string>
@@ -670,14 +628,12 @@
     <!-- About Section -->
     <string name="app_developer_name">Sameera Wijerathna</string>
     <string name="app_description">Die alles umfassende Werkzeugkiste für Ihr Pixel und Android-Geräte</string>
-    <string name="email_subject_hello">Hallo von Essentials</string>
     <!-- Edge Lighting -->
     <string name="color_mode_system">System</string>
     <string name="color_mode_custom">Individuell</string>
     <string name="color_mode_app_specific">App-spezifisch</string>
     <!-- Biometric & Security -->
     <string name="error_auth_failed">Authentifizierung fehlgeschlagen</string>
-    <string name="beta_warning_toast">Dies ist eine Beta-Version. Bitte melde jeglichen Fehler.</string>
     <string name="shortcut_creation_hint_toast">Drücke lange auf eine App im Raster, um eine Verknüpfung hinzuzufügen</string>
     <string name="error_app_uninstalled">App nicht gefunden oder deinstalliert</string>
     <!-- Notifications -->
@@ -693,8 +649,6 @@
     <string name="label_search_content_description">Suche</string>
     <string name="perm_device_admin_explanation">Benötigt, um das Gerät bei unbefugten Netzwerkänderungen auf dem Sperrbildschirm zu sperren.</string>
     <string name="biometric_subtitle_access_settings">Authentifiziere dich, um auf die Einstellungen zuzugreifen</string>
-    <string name="biometric_subtitle_enable_feature">Authentifiziere dich, um diese Funktion zu aktivieren</string>
-    <string name="biometric_subtitle_disable_feature">Authentifizieren dich, um diese Funktion zu deaktivieren</string>
     <string name="biometric_title_settings_format">%1$s Einstellungen</string>
     <string name="keyword_feature">funktion</string>
     <string name="keyword_settings">einstellungen</string>
@@ -725,10 +679,6 @@
         <item>haptik</item>
         <item>eingabe</item>
     </string-array>
-    <string-array name="keywords_alert">
-        <item>sichtbar</item>
-        <item>alarm</item>
-    </string-array>
     <string-array name="keywords_flashlight">
         <item>licht</item>
         <item>lampe</item>
@@ -738,11 +688,6 @@
         <item>lampe</item>
         <item>impuls</item>
         <item>benachrichtigung</item>
-    </string-array>
-    <string-array name="keywords_qs_tile">
-        <item>kachel</item>
-        <item>qs</item>
-        <item>wach</item>
     </string-array>
     <string-array name="keywords_qs_stay_awake">
         <item>wach</item>
@@ -782,12 +727,6 @@
         <item>wecken</item>
         <item>display</item>
     </string-array>
-    <string-array name="keywords_mtp">
-        <item>usb</item>
-        <item>datei</item>
-        <item>übertragen</item>
-        <item>mtp</item>
-    </string-array>
     <string-array name="keywords_timer">
         <item>timer</item>
         <item>warten</item>
@@ -820,11 +759,6 @@
         <item>adb</item>
         <item>usb</item>
         <item>debug</item>
-    </string-array>
-    <string-array name="keywords_battery_charge">
-        <item>batterie</item>
-        <item>laden</item>
-        <item>energie</item>
     </string-array>
     <string-array name="keywords_blur_glass">
         <item>unschärfe</item>
@@ -893,10 +827,6 @@
     <string name="action_turn_off">Ausschalten</string>
     <string name="feature_flashlight_brightness_title">Helligkeit der Taschenlampe</string>
     <!-- QS / Activities -->
-    <string name="feature_settings_format">%1$s Einstellungen</string>
-    <string name="auth_confirm_identity_settings">Identität bestätigen, um Einstellungen zu öffnen</string>
-    <string name="auth_required_title">Authentifizierung benötigt</string>
-    <string name="auth_confirm_identity_subtitle">Bestätige deine Identität</string>
     <string name="error_unlock_network_settings">Entsperre das Handy, um die Netzwerkeinstellungen zu ändern</string>
     <!-- About Section -->
     <string name="developed_by_format">Entwickelt von %1$s\nmit ❤\uFE0F in \uD83C\uDDF1\uD83C\uDDF0</string>
@@ -910,7 +840,6 @@
     <string name="app_canvas">Canvas</string>
     <string name="app_tasks">Tasks</string>
     <string name="app_zero">Zero</string>
-    <string name="content_description_developer_avatar">Entwickler-Avatar</string>
     <!-- Help & Guides -->
     <string name="help_guides_title">Hilfe &amp; Anleitungen</string>
     <string name="need_more_support_reach_out">Du benötigst weitere Unterstützung? Kontaktiere uns,</string>
@@ -947,7 +876,6 @@
     <string name="instruction_section_about_title">Was zum Teufel ist das für eine App?</string>
     <string name="instruction_section_about_desc">Gute Frage,\n\nIch wollte schon immer das Beste aus meinen Geräten herausholen, da ich seit meinem ersten Project Treble-Gerät roote. Und ich liebe die Tasker-App, die in Sachen Automatisierung und Nutzung aller möglichen APIs und internen Funktionen von Android einfach unschlagbar ist. \n\nIch bin also nicht unrooted und zurück bei der Standard-Android-Beta-Erfahrung und wollte das Beste aus den mir zur Verfügung stehenden Möglichkeiten herausholen. Das kann ich auch gleich teilen. Mit meinen Anfängerkenntnissen in Kotlin Jetpack und der Unterstützung vieler Recherche- und Hilfswerkzeuge sowie einer großartigen Community habe ich eine All-in-One-App entwickelt, die alles enthält, was ich mir mit den gegebenen Berechtigungen für mein Android-Gerät gewünscht habe. Und hier ist sie. \n\nFeature-Anfragen sind willkommen, ich werde prüfen, ob sie mit den verfügbaren Berechtigungen und meinen Fähigkeiten realisierbar sind. Was ist heutzutage nicht möglich? :)\n\nWarum nicht im Play Store?\nIch möchte nicht riskieren, dass mein Entwicklerkonto aufgrund der hochsensiblen und internen Berechtigungen und APIs, die in der App verwendet werden, gesperrt wird. Aber angesichts der Entwicklung des Android-Sideloadings werden wir sehen, was wir tun müssen. Ich verstehe die Bedenken, dass sideloadete Apps bösartig sein könnten. \nDa wir gerade beim Thema sind: Wenn du Mac- und Android-Nutzer bist, schaue dir doch meine andere App AirSync an. *schamlose Werbung* \n\nViel Spaß beim Weiterbauen! (っ◕‿◕)っ</string>
     <!-- Bug Reporting -->
-    <string name="action_report_bug">Fehler melden</string>
     <string name="toast_bug_report_copied">Fehlermeldung in die Zwischenablage kopiert</string>
     <string name="bug_report_title">Fehlermeldung</string>
     <string name="bug_report_option_share_logs">bug_report_option_share_logs</string>
@@ -962,22 +890,14 @@
     <!-- Location Reached -->
     <string name="feat_location_reached_title">Are We There Yet?</string>
     <string name="feat_location_reached_desc">Bereite dich auf dein Ziel vor.</string>
-    <string name="location_reached_pick_destination">Ziel</string>
-    <string name="location_reached_set_destination_btn">Ziel setzen</string>
-    <string name="location_reached_status_tracking">Erfassung: %1$.4f, %2$.4f</string>
-    <string name="location_reached_status_none">Kein Ziel gesetzt</string>
     <string name="location_reached_how_to">Öffne deine Karten-App, wähle einen Ort und teile ihn mit Essentials.</string>
     <string name="location_reached_radius_title">Radius: %d m</string>
-    <string name="location_reached_radius_desc">Entfernung zum Auslösen des Alarms</string>
-    <string name="location_reached_enable_title">Benachrichtigung aktivieren</string>
     <string name="perm_location_title">Standort</string>
     <string name="perm_location_desc">Dient zur Erkennung der Ankunft am Zielort.</string>
     <string name="perm_bg_location_title">Hintergrundstandort</string>
     <string name="perm_bg_location_desc">Benötigt, um deine Ankunft zu überwachen, während die App geschlossen oder der Bildschirm ausgeschaltet ist.</string>
     <string name="location_reached_notification_title">Ziel erreicht!</string>
     <string name="location_reached_notification_desc">Du hast dein Ziel erreicht.</string>
-    <string name="location_reached_current_distance">Derzeit %1$.1f km entfernt</string>
-    <string name="location_reached_clear_btn">Ziel leeren</string>
     <string name="location_reached_processing">Verarbeite Standort…</string>
     <string name="location_reached_dist_remaining">VERBLEIBENDE ENTFERNUNG</string>
     <string name="location_reached_calculating">Berechne…</string>
@@ -1013,14 +933,11 @@
     <string name="search_keyboard_padding_desc">Platz unterhalb der Tastatur hinzufügen</string>
     <string name="search_keyboard_haptics_title">Haptisches Feedback</string>
     <string name="search_keyboard_haptics_desc">Bei Tastendruck vibrieren</string>
-    <string name="label_test_keyboard">Teste die Tastatur</string>
     <string name="test_keyboard_hint">Teste die Tastatur</string>
     <string name="label_keyboard_height">Tastaturhöhe</string>
     <string name="label_keyboard_bottom_padding">Unterer Abstand</string>
     <string name="label_keyboard_haptics">Haptisches Feedback</string>
     <string name="label_keyboard_roundness">Tastenrundheit</string>
-    <string name="search_keyboard_roundness_title">Tastenrundheit</string>
-    <string name="search_keyboard_roundness_desc">Eckradius der Tasten anpassen</string>
     <string name="label_keyboard_functions_bottom">Funktionen nach unten verschieben</string>
     <string name="label_keyboard_functions_padding">Seitenabstand Funktionen</string>
     <string name="label_keyboard_haptic_strength">Stärke des haptischen Feedbacks</string>
@@ -1039,30 +956,15 @@
     <string name="auth_copy_code">Copy code</string>
     <string name="auth_open_login_page">Open login page</string>
     <string name="auth_sign_in_rationale">Sign in to extend API call limits</string>
-    <string name="auth_device_code">Device Code</string>
-    <string name="auth_use_code_instruction">Use this code to authorize the app</string>
     <string name="auth_waiting_for_authorization">Waiting for authorization...</string>
-    <string name="auth_approve_instruction">Please approve the request in your browser</string>
-    <string name="auth_success_title">Successfully signed in!</string>
-    <string name="auth_welcome_format">Welcome, %1$s</string>
-    <string name="auth_complete">Complete</string>
     <string name="action_sign_in_github">Mit GitHub anmelden</string>
     <string name="action_sign_out">Sign out</string>
-    <string name="auth_desc_signed_in">Bei GitHub angemeldet</string>
-    <string name="auth_desc_fetching">Fetching profile...</string>
     <string name="action_profile">Profile</string>
     <!-- App Updates / Repos -->
-    <string name="desc_notification_updates">Show a notification when an update is found</string>
-    <string name="label_auto_match">Auto match</string>
-    <string name="desc_auto_match">Automatically link to an installed app</string>
-    <string name="action_select">Select</string>
     <string name="label_release_notes">Release Notes</string>
     <string name="msg_no_repos_tracked">Es werden noch keine Repositorys verfolgt</string>
-    <string name="msg_loading_release_notes">Loading release notes...</string>
     <string name="label_no_app_linked">No app linked</string>
-    <string name="format_release_notes_version">Release Notes %1$s</string>
     <string name="format_updated_relative">Updated %1$s</string>
-    <string name="label_beta_caps">BETA</string>
     <!-- Relative Time -->
     <string name="time_just_now">just now</string>
     <string name="time_min_ago">%1$dm ago</string>
@@ -1078,7 +980,6 @@
     <string name="label_found_apks">Gefundene APKs</string>
     <string name="label_readme">README</string>
     <string name="action_refresh">Aktualisieren</string>
-    <string name="action_start">Get Started</string>
     <!-- Added Missing Group Strings -->
     <string name="feat_sound_modes_title">Tonmodus-Kachel</string>
     <string name="feat_sound_modes_desc">Kachel in den Schnelleinstellungen zum Umschalten des Tonmodus</string>

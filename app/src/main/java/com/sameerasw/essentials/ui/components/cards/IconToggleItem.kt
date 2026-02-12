@@ -100,10 +100,12 @@ fun IconToggleItem(
                 )
 
                 if (!enabled && onDisabledClick != null) {
-                    Box(modifier = Modifier.matchParentSize().clickable {
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        onDisabledClick()
-                    })
+                    Box(modifier = Modifier
+                        .matchParentSize()
+                        .clickable {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            onDisabledClick()
+                        })
                 }
             }
         }

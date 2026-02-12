@@ -3,23 +3,34 @@ package com.sameerasw.essentials.ui.composables.configs
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
-import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.viewmodels.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,7 +81,8 @@ fun CalendarSyncSettingsUI(
                 onCheckedChange = {
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.triggerCalendarSyncNow(context)
-                    Toast.makeText(context, R.string.calendar_sync_sync_started, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, R.string.calendar_sync_sync_started, Toast.LENGTH_SHORT)
+                        .show()
                 },
                 enabled = isEnabled,
                 showToggle = false,
@@ -96,7 +108,7 @@ fun CalendarSyncSettingsUI(
             )
         } else {
             val groupedCalendars = calendars.groupBy { it.accountName }
-            
+
             groupedCalendars.forEach { (accountName, accountCalendars) ->
                 Text(
                     text = accountName,
@@ -104,7 +116,7 @@ fun CalendarSyncSettingsUI(
                     modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 4.dp),
                     color = MaterialTheme.colorScheme.primary
                 )
-                
+
                 RoundedCardContainer {
                     accountCalendars.forEach { calendar ->
                         CalendarSelectionItem(
@@ -139,9 +151,9 @@ fun CalendarSelectionItem(
     ) {
         Checkbox(
             checked = calendar.isSelected,
-            onCheckedChange = { 
+            onCheckedChange = {
                 HapticUtil.performVirtualKeyHaptic(view)
-                onToggle() 
+                onToggle()
             },
             enabled = isEnabled
         )
@@ -150,9 +162,11 @@ fun CalendarSelectionItem(
             Text(
                 text = calendar.name,
                 style = MaterialTheme.typography.bodyLarge,
-                color = if (isEnabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
+                color = if (isEnabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                    alpha = 0.38f
+                )
             )
-            
+
         }
     }
 }

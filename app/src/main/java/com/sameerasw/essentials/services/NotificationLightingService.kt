@@ -16,8 +16,8 @@ import android.view.View
 import android.view.WindowManager
 import androidx.core.app.NotificationCompat
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
-import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
+import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.utils.OverlayHelper
 
@@ -38,7 +38,8 @@ class NotificationLightingService : Service() {
     private var pulseCount: Int = 1
     private var pulseDuration: Long = 3000
     private var edgeLightingStyle: NotificationLightingStyle = NotificationLightingStyle.STROKE
-    private var glowSides: Set<NotificationLightingSide> = setOf(NotificationLightingSide.LEFT, NotificationLightingSide.RIGHT)
+    private var glowSides: Set<NotificationLightingSide> =
+        setOf(NotificationLightingSide.LEFT, NotificationLightingSide.RIGHT)
     private var indicatorX: Float = 50f
     private var indicatorY: Float = 2f
     private var indicatorScale: Float = 1.0f
@@ -72,12 +73,14 @@ class NotificationLightingService : Service() {
                             // best-effort: try to show overlay when screen goes off
                             if (canDrawOverlays()) showOverlay()
                         }
+
                         Intent.ACTION_SCREEN_ON -> {
                             // refresh overlay if needed
                             if (canDrawOverlays()) showOverlay()
                         }
                     }
-                } catch (_: Exception) {}
+                } catch (_: Exception) {
+                }
             }
         }
         val f = IntentFilter().apply {
@@ -88,7 +91,10 @@ class NotificationLightingService : Service() {
     }
 
     override fun onDestroy() {
-        try { unregisterReceiver(screenReceiver) } catch (_: Exception) {}
+        try {
+            unregisterReceiver(screenReceiver)
+        } catch (_: Exception) {
+        }
         removeOverlay()
         super.onDestroy()
     }
@@ -111,21 +117,35 @@ class NotificationLightingService : Service() {
         }
 
         // Get corner radius from intent, default to OverlayHelper.CORNER_RADIUS_DP
-        cornerRadiusDp = intent?.getFloatExtra("corner_radius_dp", OverlayHelper.CORNER_RADIUS_DP.toFloat())
-            ?: OverlayHelper.CORNER_RADIUS_DP.toFloat()
-        strokeThicknessDp = intent?.getFloatExtra("stroke_thickness_dp", OverlayHelper.STROKE_DP.toFloat())
-            ?: OverlayHelper.STROKE_DP.toFloat()
+        cornerRadiusDp =
+            intent?.getFloatExtra("corner_radius_dp", OverlayHelper.CORNER_RADIUS_DP.toFloat())
+                ?: OverlayHelper.CORNER_RADIUS_DP.toFloat()
+        strokeThicknessDp =
+            intent?.getFloatExtra("stroke_thickness_dp", OverlayHelper.STROKE_DP.toFloat())
+                ?: OverlayHelper.STROKE_DP.toFloat()
         isPreview = intent?.getBooleanExtra("is_preview", false) ?: false
         val colorModeName = intent?.getStringExtra("color_mode")
-        colorMode = NotificationLightingColorMode.valueOf(colorModeName ?: NotificationLightingColorMode.SYSTEM.name)
+        colorMode = NotificationLightingColorMode.valueOf(
+            colorModeName ?: NotificationLightingColorMode.SYSTEM.name
+        )
         customColor = intent?.getIntExtra("custom_color", 0) ?: 0
-        resolvedColor = if (intent?.hasExtra("resolved_color") == true) intent.getIntExtra("resolved_color", 0) else null
+        resolvedColor = if (intent?.hasExtra("resolved_color") == true) intent.getIntExtra(
+            "resolved_color",
+            0
+        ) else null
         pulseCount = intent?.getIntExtra("pulse_count", 1) ?: 1
         pulseDuration = intent?.getLongExtra("pulse_duration", 3000L) ?: 3000L
         val styleName = intent?.getStringExtra("style")
-        edgeLightingStyle = if (styleName != null) NotificationLightingStyle.valueOf(styleName) else NotificationLightingStyle.STROKE
+        edgeLightingStyle =
+            if (styleName != null) NotificationLightingStyle.valueOf(styleName) else NotificationLightingStyle.STROKE
         val glowSidesArray = intent?.getStringArrayExtra("glow_sides")
-        glowSides = glowSidesArray?.mapNotNull { try { NotificationLightingSide.valueOf(it) } catch(_: Exception) { null } }?.toSet()
+        glowSides = glowSidesArray?.mapNotNull {
+            try {
+                NotificationLightingSide.valueOf(it)
+            } catch (_: Exception) {
+                null
+            }
+        }?.toSet()
             ?: setOf(NotificationLightingSide.LEFT, NotificationLightingSide.RIGHT)
         indicatorX = intent?.getFloatExtra("indicator_x", 50f) ?: 50f
         indicatorY = intent?.getFloatExtra("indicator_y", 2f) ?: 2f
@@ -138,14 +158,18 @@ class NotificationLightingService : Service() {
             // If accessibility service is enabled, delegate to it
             if (isAccessibilityServiceEnabled()) {
                 try {
-                    val ai = Intent(applicationContext, ScreenOffAccessibilityService::class.java).apply {
+                    val ai = Intent(
+                        applicationContext,
+                        ScreenOffAccessibilityService::class.java
+                    ).apply {
                         action = "SHOW_NOTIFICATION_LIGHTING"
                         putExtra("remove_preview", true)
                     }
                     applicationContext.startService(ai)
-                } catch (_: Exception) {}
+                } catch (_: Exception) {
+                }
             }
-            
+
             // Remove local preview as well
             removeOverlay()
             stopSelf()
@@ -156,27 +180,34 @@ class NotificationLightingService : Service() {
         // If accessibility service is enabled, delegate showing to it for higher elevation
         if (isAccessibilityServiceEnabled()) {
             try {
-                val ai = Intent(applicationContext, ScreenOffAccessibilityService::class.java).apply {
-                    action = "SHOW_NOTIFICATION_LIGHTING"
-                    putExtra("corner_radius_dp", cornerRadiusDp)
-                    putExtra("stroke_thickness_dp", strokeThicknessDp)
-                    putExtra("is_preview", isPreview)
-                    putExtra("ignore_screen_state", ignoreScreenState)
-                    putExtra("color_mode", intent?.getStringExtra("color_mode"))
-                    putExtra("custom_color", intent?.getIntExtra("custom_color", 0) ?: 0)
-                    putExtra("pulse_count", pulseCount)
-                    putExtra("pulse_duration", pulseDuration)
-                    putExtra("style", edgeLightingStyle.name)
-                    putExtra("glow_sides", glowSides.map { it.name }.toTypedArray())
-                    putExtra("indicator_x", indicatorX)
-                    putExtra("indicator_y", indicatorY)
-                    putExtra("indicator_scale", indicatorScale)
-                    if (intent?.hasExtra("resolved_color") == true) {
-                        putExtra("resolved_color", intent.getIntExtra("resolved_color", 0))
+                val ai =
+                    Intent(applicationContext, ScreenOffAccessibilityService::class.java).apply {
+                        action = "SHOW_NOTIFICATION_LIGHTING"
+                        putExtra("corner_radius_dp", cornerRadiusDp)
+                        putExtra("stroke_thickness_dp", strokeThicknessDp)
+                        putExtra("is_preview", isPreview)
+                        putExtra("ignore_screen_state", ignoreScreenState)
+                        putExtra("color_mode", intent?.getStringExtra("color_mode"))
+                        putExtra("custom_color", intent?.getIntExtra("custom_color", 0) ?: 0)
+                        putExtra("pulse_count", pulseCount)
+                        putExtra("pulse_duration", pulseDuration)
+                        putExtra("style", edgeLightingStyle.name)
+                        putExtra("glow_sides", glowSides.map { it.name }.toTypedArray())
+                        putExtra("indicator_x", indicatorX)
+                        putExtra("indicator_y", indicatorY)
+                        putExtra("indicator_scale", indicatorScale)
+                        if (intent?.hasExtra("resolved_color") == true) {
+                            putExtra("resolved_color", intent.getIntExtra("resolved_color", 0))
+                        }
+                        putExtra(
+                            "is_ambient_display",
+                            intent?.getBooleanExtra("is_ambient_display", false) ?: false
+                        )
+                        putExtra(
+                            "is_ambient_show_lock_screen",
+                            intent?.getBooleanExtra("is_ambient_show_lock_screen", false) ?: false
+                        )
                     }
-                    putExtra("is_ambient_display", intent?.getBooleanExtra("is_ambient_display", false) ?: false)
-                    putExtra("is_ambient_show_lock_screen", intent?.getBooleanExtra("is_ambient_show_lock_screen", false) ?: false)
-                }
                 // Use startService to request the accessibility service perform the elevated overlay.
                 // Starting an accessibility service via startForegroundService can cause MissingForegroundServiceType
                 // exceptions because the accessibility service may not declare a foregroundServiceType. startService is
@@ -189,7 +220,12 @@ class NotificationLightingService : Service() {
             }
 
             // We delegated to the accessibility service; stop foreground and finish quickly.
-            try { if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) stopForeground(true) } catch (_: Exception) {}
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) stopForeground(
+                    STOP_FOREGROUND_REMOVE
+                )
+            } catch (_: Exception) {
+            }
 
             // stop this service; accessibility service will show overlay
             stopSelf()
@@ -216,7 +252,11 @@ class NotificationLightingService : Service() {
             if (nm != null) {
                 val existing = nm.getNotificationChannel(CHANNEL_ID)
                 if (existing == null) {
-                    val chan = NotificationChannel(CHANNEL_ID, "Notification Lighting", NotificationManager.IMPORTANCE_LOW)
+                    val chan = NotificationChannel(
+                        CHANNEL_ID,
+                        "Notification Lighting",
+                        NotificationManager.IMPORTANCE_LOW
+                    )
                     chan.setSound(null, null)
                     nm.createNotificationChannel(chan)
                 }
@@ -245,11 +285,11 @@ class NotificationLightingService : Service() {
                     }
                 }
             }
-            
+
             val overlay = OverlayHelper.createOverlayView(
-                this, 
-                color, 
-                strokeDp = strokeThicknessDp, 
+                this,
+                color,
+                strokeDp = strokeThicknessDp,
                 cornerRadiusDp = cornerRadiusDp,
                 style = edgeLightingStyle,
                 glowSides = glowSides,
@@ -262,12 +302,19 @@ class NotificationLightingService : Service() {
                 overlayViews.add(overlay)
                 if (isPreview) {
                     // For preview mode, show static preview
-                    OverlayHelper.showPreview(overlay, edgeLightingStyle, strokeThicknessDp, indicatorX, indicatorY, indicatorScale)
+                    OverlayHelper.showPreview(
+                        overlay,
+                        edgeLightingStyle,
+                        strokeThicknessDp,
+                        indicatorX,
+                        indicatorY,
+                        indicatorScale
+                    )
                 } else {
                     // Normal mode: pulse the overlay
                     OverlayHelper.pulseOverlay(
-                        overlay, 
-                        maxPulses = pulseCount, 
+                        overlay,
+                        maxPulses = pulseCount,
                         pulseDurationMillis = pulseDuration,
                         style = edgeLightingStyle,
                         strokeWidthDp = strokeThicknessDp,
@@ -276,20 +323,27 @@ class NotificationLightingService : Service() {
                         indicatorScale = indicatorScale
                     ) {
                         // When pulsing completes, remove the overlay
-                        OverlayHelper.fadeOutAndRemoveOverlay(windowManager, overlay, overlayViews) {
+                        OverlayHelper.fadeOutAndRemoveOverlay(
+                            windowManager,
+                            overlay,
+                            overlayViews
+                        ) {
                             // When all overlays are removed, stop foreground
                             if (overlayViews.isEmpty()) {
                                 try {
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                         stopForeground(true)
                                     }
-                                } catch (_: Exception) { }
+                                } catch (_: Exception) {
+                                }
                             }
                         }
                     }
                 }
             }
-        } catch (e: Exception) { e.printStackTrace() }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
 
@@ -298,7 +352,8 @@ class NotificationLightingService : Service() {
             // Android 12+ supports TYPE_ACCESSIBILITY_OVERLAY for AOD visibility
             if (isAccessibilityServiceEnabled()) {
                 try {
-                    WindowManager.LayoutParams::class.java.getField("TYPE_ACCESSIBILITY_OVERLAY").getInt(null)
+                    WindowManager.LayoutParams::class.java.getField("TYPE_ACCESSIBILITY_OVERLAY")
+                        .getInt(null)
                 } catch (_: Exception) {
                     WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
                 }
@@ -337,7 +392,8 @@ class NotificationLightingService : Service() {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             stopForeground(true)
                         }
-                    } catch (_: Exception) { }
+                    } catch (_: Exception) {
+                    }
                 }
             }
         }

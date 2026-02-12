@@ -2,15 +2,13 @@ package com.sameerasw.essentials.utils
 
 import android.content.Context
 import android.content.pm.ApplicationInfo
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.AdaptiveIconDrawable
 import android.util.Log
-import androidx.core.graphics.createBitmap
-import androidx.core.graphics.drawable.toBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.core.graphics.createBitmap
 import androidx.palette.graphics.Palette
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.NotificationApp
@@ -19,96 +17,100 @@ import kotlinx.coroutines.withContext
 
 object AppUtil {
     private const val TAG = "AppUtil"
-    
+
     // Cache for extracted brand colors
     private val colorCache = mutableMapOf<String, Int>()
-    
+
     // Cache for app icons to prevent repeated system calls
     private val iconCache = mutableMapOf<String, Bitmap>()
-    
+
     // Target size for app icons to balance quality and performance
     private const val ICON_SIZE = 64
 
     /**
      * Get all installed apps (not just launcher apps)
      */
-    suspend fun getInstalledApps(context: Context): List<NotificationApp> = withContext(Dispatchers.IO) {
-        try {
-            val pm = context.packageManager
+    suspend fun getInstalledApps(context: Context): List<NotificationApp> =
+        withContext(Dispatchers.IO) {
+            try {
+                val pm = context.packageManager
 
-            // Get all installed applications
-            val allApps = pm.getInstalledApplications(0)
-                .filter { appInfo ->
-                    // Filter out our own app
-                    !appInfo.packageName.contains("essentials")
+                // Get all installed applications
+                val allApps = pm.getInstalledApplications(0)
+                    .filter { appInfo ->
+                        // Filter out our own app
+                        !appInfo.packageName.contains("essentials")
+                    }
+
+                val apps = allApps.mapNotNull { appInfo ->
+                    try {
+                        // More accurate system app detection
+                        val flags = appInfo.flags
+                        val isSystemApp = (flags and ApplicationInfo.FLAG_SYSTEM) != 0 &&
+                                (flags and ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) == 0
+
+                        val app = NotificationApp(
+                            packageName = appInfo.packageName,
+                            appName = pm.getApplicationLabel(appInfo).toString(),
+                            isEnabled = false,
+                            icon = getLowQualityIcon(context, appInfo.packageName).asImageBitmap(),
+                            isSystemApp = isSystemApp,
+                            lastUpdated = System.currentTimeMillis()
+                        )
+                        app
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Error loading app ${appInfo.packageName}: ${e.message}")
+                        null
+                    }
                 }
 
-            val apps = allApps.mapNotNull { appInfo ->
+
+                // Log some examples
+                apps.filter { !it.isSystemApp }.take(5).map { it.appName }
+                apps.filter { it.isSystemApp }.take(5).map { it.appName }
+
+                apps.sortedBy { it.appName.lowercase() }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error getting installed apps: ${e.message}")
+                emptyList()
+            }
+        }
+
+    /**
+     * Get specific apps by package names (more efficient for picked lists)
+     */
+    suspend fun getAppsByPackageNames(
+        context: Context,
+        packageNames: List<String>
+    ): List<NotificationApp> = withContext(Dispatchers.IO) {
+        try {
+            val pm = context.packageManager
+            val apps = packageNames.mapNotNull { packageName ->
                 try {
-                    // More accurate system app detection
+                    val appInfo = pm.getApplicationInfo(packageName, 0)
                     val flags = appInfo.flags
                     val isSystemApp = (flags and ApplicationInfo.FLAG_SYSTEM) != 0 &&
-                                     (flags and ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) == 0
+                            (flags and ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) == 0
 
-                    val app = NotificationApp(
+                    NotificationApp(
                         packageName = appInfo.packageName,
                         appName = pm.getApplicationLabel(appInfo).toString(),
                         isEnabled = false,
-                        icon = getLowQualityIcon(context, appInfo.packageName).asImageBitmap(),
+                        icon = getLowQualityIcon(context, packageName).asImageBitmap(),
                         isSystemApp = isSystemApp,
                         lastUpdated = System.currentTimeMillis()
                     )
-                    app
                 } catch (e: Exception) {
-                    Log.w(TAG, "Error loading app ${appInfo.packageName}: ${e.message}")
+                    Log.w(TAG, "Error loading app $packageName: ${e.message}")
                     null
                 }
             }
-
-
-            // Log some examples
-            apps.filter { !it.isSystemApp }.take(5).map { it.appName }
-            apps.filter { it.isSystemApp }.take(5).map { it.appName }
-
             apps.sortedBy { it.appName.lowercase() }
         } catch (e: Exception) {
-            Log.e(TAG, "Error getting installed apps: ${e.message}")
+            Log.e(TAG, "Error getting apps by package name: ${e.message}")
             emptyList()
         }
     }
-
-/**
- * Get specific apps by package names (more efficient for picked lists)
- */
-suspend fun getAppsByPackageNames(context: Context, packageNames: List<String>): List<NotificationApp> = withContext(Dispatchers.IO) {
-    try {
-        val pm = context.packageManager
-        val apps = packageNames.mapNotNull { packageName ->
-            try {
-                val appInfo = pm.getApplicationInfo(packageName, 0)
-                val flags = appInfo.flags
-                val isSystemApp = (flags and ApplicationInfo.FLAG_SYSTEM) != 0 &&
-                                 (flags and ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) == 0
-
-                NotificationApp(
-                    packageName = appInfo.packageName,
-                    appName = pm.getApplicationLabel(appInfo).toString(),
-                    isEnabled = false,
-                    icon = getLowQualityIcon(context, packageName).asImageBitmap(),
-                    isSystemApp = isSystemApp,
-                    lastUpdated = System.currentTimeMillis()
-                )
-            } catch (e: Exception) {
-                Log.w(TAG, "Error loading app $packageName: ${e.message}")
-                null
-            }
-        }
-        apps.sortedBy { it.appName.lowercase() }
-    } catch (e: Exception) {
-        Log.e(TAG, "Error getting apps by package name: ${e.message}")
-        emptyList()
-    }
-}
 
     /**
      * Merge installed apps with saved app selections, keeping user settings and adding new apps
@@ -138,7 +140,7 @@ suspend fun getAppsByPackageNames(context: Context, packageNames: List<String>):
         }
 
         try {
-            val pm = context.packageManager
+            context.packageManager
             // Extract bitmap from drawable, handling AdaptiveIcons
             val bitmap = getLowQualityIcon(context, packageName)
 
@@ -147,7 +149,7 @@ suspend fun getAppsByPackageNames(context: Context, packageNames: List<String>):
                 val color = palette?.getVibrantColor(Color.TRANSPARENT)
                     ?: palette?.getDominantColor(Color.GRAY)
                     ?: Color.GRAY
-                
+
                 // Cache the result
                 colorCache[packageName] = color
                 callback(color)
@@ -180,6 +182,7 @@ suspend fun getAppsByPackageNames(context: Context, packageNames: List<String>):
                     b
                 }
             }
+
             else -> {
                 val bmp = createBitmap(ICON_SIZE, ICON_SIZE)
                 val canvas = Canvas(bmp)
@@ -188,7 +191,7 @@ suspend fun getAppsByPackageNames(context: Context, packageNames: List<String>):
                 bmp
             }
         }
-        
+
         // Cache the result
         iconCache[packageName] = bitmap
         return bitmap

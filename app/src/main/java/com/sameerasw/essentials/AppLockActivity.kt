@@ -1,6 +1,8 @@
 package com.sameerasw.essentials
 
+import android.app.Activity
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.FrameLayout
@@ -9,9 +11,9 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
-import androidx.fragment.app.FragmentActivity
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import java.util.concurrent.Executor
 
@@ -24,23 +26,24 @@ class AppLockActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         // Force Dark Theme
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
             navigationBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT)
         )
-        
+
         window.setBackgroundDrawableResource(android.R.color.black)
-        
+
         // Get accent color (respect Monet on Android 12+)
-        val primaryColor = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            ContextCompat.getColor(this, android.R.color.system_accent1_300)
-        } else {
-            val typedValue = android.util.TypedValue()
-            theme.resolveAttribute(android.R.attr.colorPrimary, typedValue, true)
-            typedValue.data
-        }
+        val primaryColor =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                ContextCompat.getColor(this, android.R.color.system_accent1_300)
+            } else {
+                val typedValue = android.util.TypedValue()
+                theme.resolveAttribute(android.R.attr.colorPrimary, typedValue, true)
+                typedValue.data
+            }
 
         val root = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
@@ -52,7 +55,7 @@ class AppLockActivity : FragmentActivity() {
                 LinearLayout.LayoutParams.MATCH_PARENT
             )
         }
-        
+
         // Composite icon layout
         val iconContainer = FrameLayout(this).apply {
             layoutParams = LinearLayout.LayoutParams(
@@ -69,7 +72,7 @@ class AppLockActivity : FragmentActivity() {
                 gravity = android.view.Gravity.CENTER
             }
         }
-        
+
         val essentialsIconSize = (32 * resources.displayMetrics.density).toInt()
         val essentialsIconView = ImageView(this).apply {
             setImageResource(R.mipmap.ic_launcher_round)
@@ -77,10 +80,10 @@ class AppLockActivity : FragmentActivity() {
                 gravity = android.view.Gravity.BOTTOM or android.view.Gravity.END
             }
         }
-        
+
         iconContainer.addView(appRegistrationIcon)
         iconContainer.addView(essentialsIconView)
-        
+
         val titleView = TextView(this).apply {
             text = "App is locked"
             setTextColor(android.graphics.Color.WHITE)
@@ -88,21 +91,26 @@ class AppLockActivity : FragmentActivity() {
             setPadding(0, (24 * resources.displayMetrics.density).toInt(), 0, 0)
             gravity = android.view.Gravity.CENTER
         }
-        
+
         val subtextView = TextView(this).apply {
             text = "Please authenticate to unlock or \ngive the phone to the owner \n( -_-)"
             setTextColor(android.graphics.Color.WHITE)
             textSize = 14f
             alpha = 0.6f
-            setPadding((48 * resources.displayMetrics.density).toInt(), (8 * resources.displayMetrics.density).toInt(), (48 * resources.displayMetrics.density).toInt(), 0)
+            setPadding(
+                (48 * resources.displayMetrics.density).toInt(),
+                (8 * resources.displayMetrics.density).toInt(),
+                (48 * resources.displayMetrics.density).toInt(),
+                0
+            )
             gravity = android.view.Gravity.CENTER
         }
-        
+
         root.addView(iconContainer)
         root.addView(titleView)
         root.addView(subtextView)
         setContentView(root)
-        
+
         packageToLock = intent.getStringExtra("package_to_lock")
         if (packageToLock == null) {
             finish()
@@ -117,7 +125,8 @@ class AppLockActivity : FragmentActivity() {
         }
 
         executor = ContextCompat.getMainExecutor(this)
-        biometricPrompt = BiometricPrompt(this, executor,
+        biometricPrompt = BiometricPrompt(
+            this, executor,
             object : BiometricPrompt.AuthenticationCallback() {
                 override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                     super.onAuthenticationError(errorCode, errString)
@@ -160,7 +169,12 @@ class AppLockActivity : FragmentActivity() {
         }
         startService(serviceIntent)
         finish()
-        overridePendingTransition(0, 0)
+        if (Build.VERSION.SDK_INT >= 34) {
+            overrideActivityTransition(OVERRIDE_TRANSITION_CLOSE, 0, 0)
+        } else {
+            @Suppress("DEPRECATION")
+            overridePendingTransition(0, 0)
+        }
     }
 
     private fun notifyFailureAndFinish() {
@@ -169,12 +183,19 @@ class AppLockActivity : FragmentActivity() {
         }
         startService(serviceIntent)
         finish()
-        overridePendingTransition(0, 0)
+        if (Build.VERSION.SDK_INT >= 34) {
+            overrideActivityTransition(OVERRIDE_TRANSITION_CLOSE, 0, 0)
+        } else {
+            @Suppress("DEPRECATION")
+            overridePendingTransition(0, 0)
+        }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         // Prevent going back, treated as cancel/failure
         notifyFailureAndFinish()
+        @Suppress("DEPRECATION")
         super.onBackPressed()
     }
 }

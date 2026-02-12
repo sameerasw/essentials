@@ -4,13 +4,15 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -28,16 +30,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.sameerasw.essentials.R
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.material3.Divider
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.ui.res.stringResource
 
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
@@ -67,7 +64,11 @@ fun AboutSection(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(text = "$appName v$versionName", style = MaterialTheme.typography.headlineLarge)
-            Text(text = description, style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center)
+            Text(
+                text = description,
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Center
+            )
 
             Image(
                 painter = painterResource(id = R.drawable.avatar),
@@ -79,13 +80,17 @@ fun AboutSection(
                     .background(MaterialTheme.colorScheme.primary)
                     .combinedClickable(
                         onClick = {},
-                        onLongClick = { 
+                        onLongClick = {
                             onAvatarLongClick()
                         }
                     )
             )
 
-            Text(text = stringResource(R.string.developed_by_format, developerName), style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center)
+            Text(
+                text = stringResource(R.string.developed_by_format, developerName),
+                style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Center
+            )
 
             FlowRow(
                 modifier = Modifier.fillMaxWidth(),
@@ -135,10 +140,16 @@ fun AboutSection(
                             putExtra(Intent.EXTRA_SUBJECT, "Hello from Essentials")
                         }
                         try {
-                            context.startActivity(Intent.createChooser(emailIntent, context.getString(R.string.send_email_chooser_title)))
+                            context.startActivity(
+                                Intent.createChooser(
+                                    emailIntent,
+                                    context.getString(R.string.send_email_chooser_title)
+                                )
+                            )
                         } catch (e: ActivityNotFoundException) {
                             Log.w("AboutSection", "No email app available", e)
-                            Toast.makeText(context, R.string.error_no_email_app, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, R.string.error_no_email_app, Toast.LENGTH_SHORT)
+                                .show()
                         }
                     },
                     modifier = Modifier.padding(horizontal = 4.dp)
@@ -187,7 +198,11 @@ fun AboutSection(
                 }
             }
 
-            Text(text = stringResource(R.string.label_other_apps), style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center)
+            Text(
+                text = stringResource(R.string.label_other_apps),
+                style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Center
+            )
 
             FlowRow(
                 modifier = Modifier.fillMaxWidth(),
@@ -198,7 +213,8 @@ fun AboutSection(
 
                 OutlinedButton(
                     onClick = {
-                        val websiteUrl = "https://play.google.com/store/apps/details?id=com.sameerasw.airsync&hl=en"
+                        val websiteUrl =
+                            "https://play.google.com/store/apps/details?id=com.sameerasw.airsync&hl=en"
                         val intent = Intent(Intent.ACTION_VIEW, websiteUrl.toUri())
                         context.startActivity(intent)
                     },

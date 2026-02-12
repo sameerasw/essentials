@@ -1,67 +1,59 @@
 package com.sameerasw.essentials.ime
 
-import android.app.Service
-import android.content.Intent
+import android.content.ClipboardManager
+import android.content.Context
 import android.inputmethodservice.InputMethodService
-import android.os.IBinder
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
-import androidx.annotation.CallSuper
-import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.setViewTreeLifecycleOwner
 import androidx.lifecycle.setViewTreeViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistry
 import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.ui.ime.KeyboardInputView
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
-import com.sameerasw.essentials.data.repository.SettingsRepository
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.sameerasw.essentials.viewmodels.MainViewModel
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
-
-import android.view.inputmethod.InputConnection
-import android.content.ClipboardManager
-import android.content.Context
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import android.util.Log
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
-class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewModelStoreOwner, SavedStateRegistryOwner, ClipboardManager.OnPrimaryClipChangedListener {
+class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewModelStoreOwner,
+    SavedStateRegistryOwner, ClipboardManager.OnPrimaryClipChangedListener {
     private val lifecycleRegistry by lazy { LifecycleRegistry(this) }
     private val store by lazy { ViewModelStore() }
     private val savedStateRegistryController by lazy { SavedStateRegistryController.create(this) }
     private val suggestionEngine by lazy { SuggestionEngine(this) }
-    
+
     private lateinit var clipboardManager: ClipboardManager
     private val _clipboardHistory = MutableStateFlow<List<String>>(emptyList())
     val clipboardHistory: StateFlow<List<String>> = _clipboardHistory.asStateFlow()
-    
+
     private var currentKeyboardShape: Int = 0
     private var currentKeyboardRoundness: Float = 24f
     private var composedInputView: View? = null
-    
+
     // Undo Stack
     private val undoStack = java.util.ArrayDeque<String>()
 
@@ -76,12 +68,12 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
         super.onCreate()
         savedStateRegistryController.performRestore(null)
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        
+
         // Initialize suggestion engine
         suggestionEngine.initialize(lifecycleScope)
-        
+
         try {
-            clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            clipboardManager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
             val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
             if (prefs.getBoolean(SettingsRepository.KEY_KEYBOARD_CLIPBOARD_ENABLED, true)) {
                 clipboardManager.addPrimaryClipChangedListener(this)
@@ -92,7 +84,7 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
             Log.e("EssentialsIME", "Error init clipboard", e)
         }
     }
-    
+
     override fun onPrimaryClipChanged() {
         Log.d("EssentialsIME", "Clipboard changed")
         updateClipboardHistory()
@@ -101,7 +93,7 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
     private fun updateClipboardHistory() {
         if (!::clipboardManager.isInitialized) return
         if (!clipboardManager.hasPrimaryClip()) return
-        
+
         try {
             val clip = clipboardManager.primaryClip ?: return
             if (clip.itemCount > 0) {
@@ -121,7 +113,7 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                 }
             }
         } catch (e: Exception) {
-             Log.e("EssentialsIME", "Error reading clipboard", e)
+            Log.e("EssentialsIME", "Error reading clipboard", e)
         }
     }
 
@@ -144,89 +136,211 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
         view.setContent {
             EssentialsTheme {
                 val context = androidx.compose.ui.platform.LocalContext.current
-                val prefs = remember { context.getSharedPreferences("essentials_prefs", MODE_PRIVATE) }
-                
+                val prefs =
+                    remember { context.getSharedPreferences("essentials_prefs", MODE_PRIVATE) }
+
                 // State variables for settings
-                var rawKeyboardHeight by remember { mutableFloatStateOf(prefs.getFloat(SettingsRepository.KEY_KEYBOARD_HEIGHT, 400f)) }
+                var rawKeyboardHeight by remember {
+                    mutableFloatStateOf(
+                        prefs.getFloat(
+                            SettingsRepository.KEY_KEYBOARD_HEIGHT,
+                            400f
+                        )
+                    )
+                }
                 // Migration check
                 if (rawKeyboardHeight < 100f) {
-                     rawKeyboardHeight = 400f
-                     prefs.edit().putFloat(SettingsRepository.KEY_KEYBOARD_HEIGHT, 280f).apply()
+                    rawKeyboardHeight = 400f
+                    prefs.edit().putFloat(SettingsRepository.KEY_KEYBOARD_HEIGHT, 280f).apply()
                 }
                 var keyboardHeight by remember { mutableFloatStateOf(rawKeyboardHeight) }
-                var bottomPadding by remember { mutableFloatStateOf(prefs.getFloat(SettingsRepository.KEY_KEYBOARD_BOTTOM_PADDING, 0f)) }
-                var keyboardRoundness by remember { mutableFloatStateOf(prefs.getFloat(SettingsRepository.KEY_KEYBOARD_ROUNDNESS, 24f)) }
-                var keyboardShape by remember { mutableIntStateOf(prefs.getInt(SettingsRepository.KEY_KEYBOARD_SHAPE, 0)) }
-                
+                var bottomPadding by remember {
+                    mutableFloatStateOf(
+                        prefs.getFloat(
+                            SettingsRepository.KEY_KEYBOARD_BOTTOM_PADDING,
+                            0f
+                        )
+                    )
+                }
+                var keyboardRoundness by remember {
+                    mutableFloatStateOf(
+                        prefs.getFloat(
+                            SettingsRepository.KEY_KEYBOARD_ROUNDNESS,
+                            24f
+                        )
+                    )
+                }
+                var keyboardShape by remember {
+                    mutableIntStateOf(
+                        prefs.getInt(
+                            SettingsRepository.KEY_KEYBOARD_SHAPE,
+                            0
+                        )
+                    )
+                }
+
                 // Sync with internal state
                 LaunchedEffect(keyboardRoundness, keyboardShape) {
                     currentKeyboardRoundness = keyboardRoundness
                     currentKeyboardShape = keyboardShape
                     // Trigger insets re-computation when these change
                     if (window?.window?.decorView?.isAttachedToWindow == true) {
-                         window?.window?.decorView?.requestLayout()
+                        window?.window?.decorView?.requestLayout()
                     }
                 }
-                
-                var isFunctionsBottom by remember { mutableStateOf(prefs.getBoolean(SettingsRepository.KEY_KEYBOARD_FUNCTIONS_BOTTOM, false)) }
-                var functionsPadding by remember { mutableFloatStateOf(prefs.getFloat(SettingsRepository.KEY_KEYBOARD_FUNCTIONS_PADDING, 0f)) }
-                var isHapticsEnabled by remember { mutableStateOf(prefs.getBoolean(SettingsRepository.KEY_KEYBOARD_HAPTICS_ENABLED, true)) }
-                var hapticStrength by remember { mutableFloatStateOf(prefs.getFloat(SettingsRepository.KEY_KEYBOARD_HAPTIC_STRENGTH, 0.5f)) }
-                var isAlwaysDark by remember { mutableStateOf(prefs.getBoolean(SettingsRepository.KEY_KEYBOARD_ALWAYS_DARK, false)) }
-                var isPitchBlack by remember { mutableStateOf(prefs.getBoolean(SettingsRepository.KEY_KEYBOARD_PITCH_BLACK, false)) }
 
-                var isKeyboardClipboardEnabled by remember { mutableStateOf(prefs.getBoolean(SettingsRepository.KEY_KEYBOARD_CLIPBOARD_ENABLED, true)) }
+                var isFunctionsBottom by remember {
+                    mutableStateOf(
+                        prefs.getBoolean(
+                            SettingsRepository.KEY_KEYBOARD_FUNCTIONS_BOTTOM,
+                            false
+                        )
+                    )
+                }
+                var functionsPadding by remember {
+                    mutableFloatStateOf(
+                        prefs.getFloat(
+                            SettingsRepository.KEY_KEYBOARD_FUNCTIONS_PADDING,
+                            0f
+                        )
+                    )
+                }
+                var isHapticsEnabled by remember {
+                    mutableStateOf(
+                        prefs.getBoolean(
+                            SettingsRepository.KEY_KEYBOARD_HAPTICS_ENABLED,
+                            true
+                        )
+                    )
+                }
+                var hapticStrength by remember {
+                    mutableFloatStateOf(
+                        prefs.getFloat(
+                            SettingsRepository.KEY_KEYBOARD_HAPTIC_STRENGTH,
+                            0.5f
+                        )
+                    )
+                }
+                var isAlwaysDark by remember {
+                    mutableStateOf(
+                        prefs.getBoolean(
+                            SettingsRepository.KEY_KEYBOARD_ALWAYS_DARK,
+                            false
+                        )
+                    )
+                }
+                var isPitchBlack by remember {
+                    mutableStateOf(
+                        prefs.getBoolean(
+                            SettingsRepository.KEY_KEYBOARD_PITCH_BLACK,
+                            false
+                        )
+                    )
+                }
+
+                var isKeyboardClipboardEnabled by remember {
+                    mutableStateOf(
+                        prefs.getBoolean(
+                            SettingsRepository.KEY_KEYBOARD_CLIPBOARD_ENABLED,
+                            true
+                        )
+                    )
+                }
 
                 // Observe SharedPreferences changes
                 DisposableEffect(prefs) {
-                    val listener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
-                        when (key) {
-                            SettingsRepository.KEY_KEYBOARD_HEIGHT -> {
-                                val height = sharedPreferences.getFloat(SettingsRepository.KEY_KEYBOARD_HEIGHT, 280f)
-                                keyboardHeight = if (height < 100f) 280f else height
-                            }
-                            SettingsRepository.KEY_KEYBOARD_BOTTOM_PADDING -> {
-                                bottomPadding = sharedPreferences.getFloat(SettingsRepository.KEY_KEYBOARD_BOTTOM_PADDING, 0f)
-                            }
-                            SettingsRepository.KEY_KEYBOARD_ROUNDNESS -> {
-                                keyboardRoundness = sharedPreferences.getFloat(SettingsRepository.KEY_KEYBOARD_ROUNDNESS, 24f)
-                            }
-                            SettingsRepository.KEY_KEYBOARD_SHAPE -> {
-                                keyboardShape = sharedPreferences.getInt(SettingsRepository.KEY_KEYBOARD_SHAPE, 0)
-                            }
-                            SettingsRepository.KEY_KEYBOARD_FUNCTIONS_BOTTOM -> {
-                                isFunctionsBottom = sharedPreferences.getBoolean(SettingsRepository.KEY_KEYBOARD_FUNCTIONS_BOTTOM, false)
-                            }
-                            SettingsRepository.KEY_KEYBOARD_FUNCTIONS_PADDING -> {
-                                functionsPadding = sharedPreferences.getFloat(SettingsRepository.KEY_KEYBOARD_FUNCTIONS_PADDING, 0f)
-                            }
-                            SettingsRepository.KEY_KEYBOARD_HAPTICS_ENABLED -> {
-                                isHapticsEnabled = sharedPreferences.getBoolean(SettingsRepository.KEY_KEYBOARD_HAPTICS_ENABLED, true)
-                            }
-                            SettingsRepository.KEY_KEYBOARD_HAPTIC_STRENGTH -> {
-                                hapticStrength = sharedPreferences.getFloat(SettingsRepository.KEY_KEYBOARD_HAPTIC_STRENGTH, 0.5f)
-                            }
-                            SettingsRepository.KEY_KEYBOARD_ALWAYS_DARK -> {
-                                isAlwaysDark = sharedPreferences.getBoolean(SettingsRepository.KEY_KEYBOARD_ALWAYS_DARK, false)
-                            }
-                            SettingsRepository.KEY_KEYBOARD_PITCH_BLACK -> {
-                                isPitchBlack = sharedPreferences.getBoolean(SettingsRepository.KEY_KEYBOARD_PITCH_BLACK, false)
-                            }
-                            SettingsRepository.KEY_KEYBOARD_CLIPBOARD_ENABLED -> {
-                                isKeyboardClipboardEnabled = sharedPreferences.getBoolean(SettingsRepository.KEY_KEYBOARD_CLIPBOARD_ENABLED, true)
-                                if (isKeyboardClipboardEnabled) {
-                                    if (::clipboardManager.isInitialized) {
-                                        clipboardManager.addPrimaryClipChangedListener(this@EssentialsInputMethodService)
-                                        updateClipboardHistory()
-                                    }
-                                } else {
-                                    if (::clipboardManager.isInitialized) {
-                                        clipboardManager.removePrimaryClipChangedListener(this@EssentialsInputMethodService)
+                    val listener =
+                        android.content.SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
+                            when (key) {
+                                SettingsRepository.KEY_KEYBOARD_HEIGHT -> {
+                                    val height = sharedPreferences.getFloat(
+                                        SettingsRepository.KEY_KEYBOARD_HEIGHT,
+                                        280f
+                                    )
+                                    keyboardHeight = if (height < 100f) 280f else height
+                                }
+
+                                SettingsRepository.KEY_KEYBOARD_BOTTOM_PADDING -> {
+                                    bottomPadding = sharedPreferences.getFloat(
+                                        SettingsRepository.KEY_KEYBOARD_BOTTOM_PADDING,
+                                        0f
+                                    )
+                                }
+
+                                SettingsRepository.KEY_KEYBOARD_ROUNDNESS -> {
+                                    keyboardRoundness = sharedPreferences.getFloat(
+                                        SettingsRepository.KEY_KEYBOARD_ROUNDNESS,
+                                        24f
+                                    )
+                                }
+
+                                SettingsRepository.KEY_KEYBOARD_SHAPE -> {
+                                    keyboardShape = sharedPreferences.getInt(
+                                        SettingsRepository.KEY_KEYBOARD_SHAPE,
+                                        0
+                                    )
+                                }
+
+                                SettingsRepository.KEY_KEYBOARD_FUNCTIONS_BOTTOM -> {
+                                    isFunctionsBottom = sharedPreferences.getBoolean(
+                                        SettingsRepository.KEY_KEYBOARD_FUNCTIONS_BOTTOM,
+                                        false
+                                    )
+                                }
+
+                                SettingsRepository.KEY_KEYBOARD_FUNCTIONS_PADDING -> {
+                                    functionsPadding = sharedPreferences.getFloat(
+                                        SettingsRepository.KEY_KEYBOARD_FUNCTIONS_PADDING,
+                                        0f
+                                    )
+                                }
+
+                                SettingsRepository.KEY_KEYBOARD_HAPTICS_ENABLED -> {
+                                    isHapticsEnabled = sharedPreferences.getBoolean(
+                                        SettingsRepository.KEY_KEYBOARD_HAPTICS_ENABLED,
+                                        true
+                                    )
+                                }
+
+                                SettingsRepository.KEY_KEYBOARD_HAPTIC_STRENGTH -> {
+                                    hapticStrength = sharedPreferences.getFloat(
+                                        SettingsRepository.KEY_KEYBOARD_HAPTIC_STRENGTH,
+                                        0.5f
+                                    )
+                                }
+
+                                SettingsRepository.KEY_KEYBOARD_ALWAYS_DARK -> {
+                                    isAlwaysDark = sharedPreferences.getBoolean(
+                                        SettingsRepository.KEY_KEYBOARD_ALWAYS_DARK,
+                                        false
+                                    )
+                                }
+
+                                SettingsRepository.KEY_KEYBOARD_PITCH_BLACK -> {
+                                    isPitchBlack = sharedPreferences.getBoolean(
+                                        SettingsRepository.KEY_KEYBOARD_PITCH_BLACK,
+                                        false
+                                    )
+                                }
+
+                                SettingsRepository.KEY_KEYBOARD_CLIPBOARD_ENABLED -> {
+                                    isKeyboardClipboardEnabled = sharedPreferences.getBoolean(
+                                        SettingsRepository.KEY_KEYBOARD_CLIPBOARD_ENABLED,
+                                        true
+                                    )
+                                    if (isKeyboardClipboardEnabled) {
+                                        if (::clipboardManager.isInitialized) {
+                                            clipboardManager.addPrimaryClipChangedListener(this@EssentialsInputMethodService)
+                                            updateClipboardHistory()
+                                        }
+                                    } else {
+                                        if (::clipboardManager.isInitialized) {
+                                            clipboardManager.removePrimaryClipChangedListener(this@EssentialsInputMethodService)
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
                     prefs.registerOnSharedPreferenceChangeListener(listener)
                     onDispose {
                         prefs.unregisterOnSharedPreferenceChangeListener(listener)
@@ -242,46 +356,46 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                 ) {
                     KeyboardInputView(
                         keyboardHeight = keyboardHeight.dp,
-                    bottomPadding = bottomPadding.dp,
-                    keyRoundness = keyboardRoundness.dp,
-                    keyboardShape = keyboardShape,
-                    isHapticsEnabled = isHapticsEnabled,
-                    hapticStrength = hapticStrength,
-                    isFunctionsBottom = isFunctionsBottom,
-                    functionsPadding = functionsPadding.dp,
-                    isClipboardEnabled = isKeyboardClipboardEnabled,
-                    suggestions = suggestions,
-                    clipboardHistory = _clipboardHistory.collectAsState().value,
-                    onSuggestionClick = { word ->
-                        val ic = currentInputConnection
-                        if (ic != null) {
-                            val textBefore = ic.getTextBeforeCursor(50, 0)?.toString() ?: ""
-                            val lastWord = textBefore.split(Regex("\\s+")).lastOrNull() ?: ""
-                            if (lastWord.isNotEmpty()) {
-                                ic.deleteSurroundingText(lastWord.length, 0)
+                        bottomPadding = bottomPadding.dp,
+                        keyRoundness = keyboardRoundness.dp,
+                        keyboardShape = keyboardShape,
+                        isHapticsEnabled = isHapticsEnabled,
+                        hapticStrength = hapticStrength,
+                        isFunctionsBottom = isFunctionsBottom,
+                        functionsPadding = functionsPadding.dp,
+                        isClipboardEnabled = isKeyboardClipboardEnabled,
+                        suggestions = suggestions,
+                        clipboardHistory = _clipboardHistory.collectAsState().value,
+                        onSuggestionClick = { word ->
+                            val ic = currentInputConnection
+                            if (ic != null) {
+                                val textBefore = ic.getTextBeforeCursor(50, 0)?.toString() ?: ""
+                                val lastWord = textBefore.split(Regex("\\s+")).lastOrNull() ?: ""
+                                if (lastWord.isNotEmpty()) {
+                                    ic.deleteSurroundingText(lastWord.length, 0)
+                                }
+                                ic.commitText(word + " ", 1)
+                                suggestionEngine.clearSuggestions()
                             }
-                            ic.commitText(word + " ", 1)
-                            suggestionEngine.clearSuggestions()
+                        },
+                        onType = { text ->
+                            currentInputConnection?.commitText(text, 1)
+                        },
+                        onPasteClick = { text ->
+                            currentInputConnection?.commitText(text, 1)
+                        },
+                        onUndoClick = {
+                            val ic = currentInputConnection
+                            if (ic != null && undoStack.isNotEmpty()) {
+                                val textToRestore = undoStack.pop()
+                                ic.commitText(textToRestore, 1)
+                            }
+                        },
+                        onKeyPress = { keyCode ->
+                            handleKeyPress(keyCode)
                         }
-                    },
-                    onType = { text ->
-                        currentInputConnection?.commitText(text, 1)
-                    },
-                    onPasteClick = { text ->
-                        currentInputConnection?.commitText(text, 1)
-                    },
-                    onUndoClick = {
-                        val ic = currentInputConnection
-                        if (ic != null && undoStack.isNotEmpty()) {
-                            val textToRestore = undoStack.pop()
-                            ic.commitText(textToRestore, 1)
-                        }
-                    },
-                    onKeyPress = { keyCode ->
-                        handleKeyPress(keyCode)
-                    }
-                )
-                    }
+                    )
+                }
             }
         }
         composedInputView = view
@@ -324,7 +438,7 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
 
     private fun handleKeyPress(keyCode: Int) {
         val inputConnection = currentInputConnection ?: return
-        
+
         when (keyCode) {
             KeyEvent.KEYCODE_DEL -> {
                 val selectedText = inputConnection.getSelectedText(0)
@@ -337,14 +451,14 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                     if (!before.isNullOrEmpty()) {
                         val char = before[0]
                         val isWhitespace = char.isWhitespace()
-                        
+
                         if (undoStack.isNotEmpty()) {
                             val top = undoStack.peek()
                             // Check if we should merge with the top of the stack
                             // We merge if both are NOT whitespace (building a word)
                             // If either is whitespace, we treat it as a separator and start a new chunk
-                            val topIsWhitespace = top.all { it.isWhitespace() }
-                            
+                            val topIsWhitespace = top?.all { it.isWhitespace() } == true
+
                             if (!isWhitespace && !topIsWhitespace) {
                                 // Merge: Prepend captured char to top
                                 val merged = char + undoStack.pop()
@@ -360,24 +474,25 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                     inputConnection.deleteSurroundingText(1, 0)
                 }
             }
+
             else -> {
                 sendDownUpKeyEvents(keyCode)
             }
         }
     }
 
-    override fun onComputeInsets(outInsets: InputMethodService.Insets) {
+    override fun onComputeInsets(outInsets: Insets) {
         super.onComputeInsets(outInsets)
         val inputView = this.composedInputView ?: return
-        
+
         // Default behavior: contentTopInsets is the top of the input view (relative to window)
         // If we are in "Inverse" shape (2), we have extra top padding equal to roundness.
         // We want the app to ignore this padding, so we lower the contentTopInsets.
-        
+
         if (currentKeyboardShape == 2) {
             val density = resources.displayMetrics.density
             val extraPaddingPx = (currentKeyboardRoundness * density).toInt()
-            
+
             // Allow the app to draw behind the "horns" area (the top padding)
             // By moving the content inset down by the padding amount
             val visibleHeight = inputView.height - extraPaddingPx
@@ -393,27 +508,34 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
         newSelStart: Int, newSelEnd: Int,
         candidatesStart: Int, candidatesEnd: Int
     ) {
-        super.onUpdateSelection(oldSelStart, oldSelEnd, newSelStart, newSelEnd, candidatesStart, candidatesEnd)
-        
+        super.onUpdateSelection(
+            oldSelStart,
+            oldSelEnd,
+            newSelStart,
+            newSelEnd,
+            candidatesStart,
+            candidatesEnd
+        )
+
         // Lookup suggestion for current word
         if (newSelStart == newSelEnd) {
-             val ic = currentInputConnection
-             if (ic != null) {
-                  val textBefore = ic.getTextBeforeCursor(50, 0)?.toString()
-                  if (!textBefore.isNullOrEmpty()) {
-                       val lastWord = textBefore.split(Regex("\\s+")).lastOrNull() ?: ""
-                       // Run lookup
-                       if (lastWord.isNotEmpty() && lastWord.all { it.isLetter() }) {
-                           lifecycleScope.launch(kotlinx.coroutines.Dispatchers.Default) {
-                                suggestionEngine.lookup(lastWord)
-                           }
-                       } else {
-                           suggestionEngine.clearSuggestions()
-                       }
-                  } else {
-                       suggestionEngine.clearSuggestions()
-                  }
-             }
+            val ic = currentInputConnection
+            if (ic != null) {
+                val textBefore = ic.getTextBeforeCursor(50, 0)?.toString()
+                if (!textBefore.isNullOrEmpty()) {
+                    val lastWord = textBefore.split(Regex("\\s+")).lastOrNull() ?: ""
+                    // Run lookup
+                    if (lastWord.isNotEmpty() && lastWord.all { it.isLetter() }) {
+                        lifecycleScope.launch(kotlinx.coroutines.Dispatchers.Default) {
+                            suggestionEngine.lookup(lastWord)
+                        }
+                    } else {
+                        suggestionEngine.clearSuggestions()
+                    }
+                } else {
+                    suggestionEngine.clearSuggestions()
+                }
+            }
         }
     }
 }

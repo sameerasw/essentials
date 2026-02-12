@@ -41,7 +41,7 @@ fun FlashlightPulseSettingsUI(
     var showAppSelectionSheet by remember { mutableStateOf(false) }
 
     Column(modifier = modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        
+
         Text(
             text = stringResource(R.string.settings_section_flashlight_pulse),
             style = MaterialTheme.typography.titleMedium,
@@ -102,7 +102,13 @@ fun FlashlightPulseSettingsUI(
                 onDismissRequest = { showAppSelectionSheet = false },
                 onLoadApps = { viewModel.loadFlashlightPulseSelectedApps(it) },
                 onSaveApps = { ctx, apps -> viewModel.saveFlashlightPulseSelectedApps(ctx, apps) },
-                onAppToggle = { ctx, pkg, enabled -> viewModel.updateFlashlightPulseAppEnabled(ctx, pkg, enabled) },
+                onAppToggle = { ctx, pkg, enabled ->
+                    viewModel.updateFlashlightPulseAppEnabled(
+                        ctx,
+                        pkg,
+                        enabled
+                    )
+                },
                 context = context
             )
         }

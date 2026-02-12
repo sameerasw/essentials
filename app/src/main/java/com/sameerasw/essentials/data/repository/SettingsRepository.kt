@@ -4,25 +4,26 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
-import com.sameerasw.essentials.domain.HapticFeedbackType
+import com.sameerasw.essentials.domain.model.TrackedRepo
+import com.sameerasw.essentials.domain.model.github.GitHubUser
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import com.sameerasw.essentials.domain.model.github.GitHubUser
-import com.sameerasw.essentials.domain.model.TrackedRepo
 
 class SettingsRepository(private val context: Context) {
 
-    private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    private val prefs: SharedPreferences =
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     private val gson = Gson()
 
     companion object {
         const val PREFS_NAME = "essentials_prefs"
-        
+
         // Keys
         const val KEY_WIDGET_ENABLED = "widget_enabled"
         const val KEY_STATUS_BAR_ICON_CONTROL_ENABLED = "status_bar_icon_control_enabled"
@@ -32,7 +33,8 @@ class SettingsRepository(private val context: Context) {
         const val KEY_EDGE_LIGHTING_ENABLED = "edge_lighting_enabled"
         const val KEY_EDGE_LIGHTING_ONLY_SCREEN_OFF = "edge_lighting_only_screen_off"
         const val KEY_EDGE_LIGHTING_AMBIENT_DISPLAY = "edge_lighting_ambient_display"
-        const val KEY_EDGE_LIGHTING_AMBIENT_SHOW_LOCK_SCREEN = "edge_lighting_ambient_show_lock_screen"
+        const val KEY_EDGE_LIGHTING_AMBIENT_SHOW_LOCK_SCREEN =
+            "edge_lighting_ambient_show_lock_screen"
         const val KEY_EDGE_LIGHTING_SKIP_SILENT = "edge_lighting_skip_silent"
         const val KEY_EDGE_LIGHTING_SKIP_PERSISTENT = "edge_lighting_skip_persistent"
         const val KEY_EDGE_LIGHTING_STYLE = "edge_lighting_style"
@@ -47,12 +49,13 @@ class SettingsRepository(private val context: Context) {
         const val KEY_EDGE_LIGHTING_CORNER_RADIUS = "edge_lighting_corner_radius"
         const val KEY_EDGE_LIGHTING_STROKE_THICKNESS = "edge_lighting_stroke_thickness"
         const val KEY_EDGE_LIGHTING_SELECTED_APPS = "edge_lighting_selected_apps"
-        
+
         const val KEY_CALL_VIBRATIONS_ENABLED = "call_vibrations_enabled"
         const val KEY_LAST_CALL_STATE = "last_call_state"
-        
+
         const val KEY_BUTTON_REMAP_ENABLED = "button_remap_enabled"
-        const val KEY_FLASHLIGHT_VOLUME_TOGGLE_ENABLED = "flashlight_volume_toggle_enabled" // Legacy
+        const val KEY_FLASHLIGHT_VOLUME_TOGGLE_ENABLED =
+            "flashlight_volume_toggle_enabled" // Legacy
         const val KEY_BUTTON_REMAP_USE_SHIZUKU = "button_remap_use_shizuku"
         const val KEY_SHIZUKU_DETECTED_DEVICE_PATH = "shizuku_detected_device_path"
         const val KEY_FLASHLIGHT_TRIGGER_BUTTON = "flashlight_trigger_button" // Legacy
@@ -64,14 +67,14 @@ class SettingsRepository(private val context: Context) {
         const val KEY_BUTTON_REMAP_VOL_DOWN_ACTION_ON = "button_remap_vol_down_action_on"
         const val KEY_BUTTON_REMAP_HAPTIC_TYPE = "button_remap_haptic_type"
         const val KEY_FLASHLIGHT_HAPTIC_TYPE = "flashlight_haptic_type" // Legacy
-        
+
         const val KEY_DYNAMIC_NIGHT_LIGHT_ENABLED = "dynamic_night_light_enabled"
         const val KEY_DYNAMIC_NIGHT_LIGHT_SELECTED_APPS = "dynamic_night_light_selected_apps"
-        
+
         const val KEY_SNOOZE_DISCOVERED_CHANNELS = "snooze_discovered_channels"
         const val KEY_SNOOZE_BLOCKED_CHANNELS = "snooze_blocked_channels"
         const val KEY_SNOOZE_HEADS_UP_ENABLED = "snooze_heads_up_enabled"
-        
+
         const val KEY_FLASHLIGHT_ALWAYS_TURN_OFF_ENABLED = "flashlight_always_turn_off_enabled"
         const val KEY_FLASHLIGHT_FADE_ENABLED = "flashlight_fade_enabled"
         const val KEY_FLASHLIGHT_ADJUST_INTENSITY_ENABLED = "flashlight_adjust_intensity_enabled"
@@ -82,27 +85,27 @@ class SettingsRepository(private val context: Context) {
         const val KEY_FLASHLIGHT_PULSE_FACEDOWN_ONLY = "flashlight_pulse_facedown_only"
 
         const val KEY_SCREEN_LOCKED_SECURITY_ENABLED = "screen_locked_security_enabled"
-        
+
         const val KEY_AUTO_UPDATE_ENABLED = "auto_update_enabled"
         const val KEY_UPDATE_NOTIFICATION_ENABLED = "update_notification_enabled"
         const val KEY_LAST_UPDATE_CHECK_TIME = "last_update_check_time"
         const val KEY_CHECK_PRE_RELEASES_ENABLED = "check_pre_releases_enabled"
-        
+
         const val KEY_APP_LOCK_ENABLED = "app_lock_enabled"
         const val KEY_APP_LOCK_SELECTED_APPS = "app_lock_selected_apps"
-        
+
         const val KEY_FREEZE_WHEN_LOCKED_ENABLED = "freeze_when_locked_enabled"
         const val KEY_FREEZE_LOCK_DELAY_INDEX = "freeze_lock_delay_index"
         const val KEY_FREEZE_AUTO_EXCLUDED_APPS = "freeze_auto_excluded_apps"
         const val KEY_FREEZE_SELECTED_APPS = "freeze_selected_apps"
         const val KEY_FREEZE_DONT_FREEZE_ACTIVE_APPS = "freeze_dont_freeze_active_apps"
-        
+
         const val KEY_DEVELOPER_MODE_ENABLED = "developer_mode_enabled"
         const val KEY_HAPTIC_FEEDBACK_TYPE = "haptic_feedback_type"
         const val KEY_DEFAULT_TAB = "default_tab"
         const val KEY_USE_ROOT = "use_root"
         const val KEY_PITCH_BLACK_THEME_ENABLED = "pitch_black_theme_enabled"
-        
+
         const val KEY_KEYBOARD_HEIGHT = "keyboard_height"
         const val KEY_TRACKED_REPOS = "tracked_repos"
         const val KEY_KEYBOARD_BOTTOM_PADDING = "keyboard_bottom_padding"
@@ -122,24 +125,24 @@ class SettingsRepository(private val context: Context) {
         const val KEY_MAC_BATTERY_IS_CHARGING = "mac_battery_is_charging"
         const val KEY_MAC_BATTERY_LAST_UPDATED = "mac_battery_last_updated"
         const val KEY_AIRSYNC_MAC_CONNECTED = "airsync_mac_connected"
-        
+
         const val KEY_BLUETOOTH_DEVICES_BATTERY = "bluetooth_devices_battery"
         const val KEY_SHOW_BLUETOOTH_DEVICES = "show_bluetooth_devices"
         const val KEY_BATTERY_WIDGET_MAX_DEVICES = "battery_widget_max_devices"
         const val KEY_BATTERY_WIDGET_BACKGROUND_ENABLED = "battery_widget_background_enabled"
-        
+
         const val KEY_PINNED_FEATURES = "pinned_features"
         const val KEY_LIKE_SONG_TOAST_ENABLED = "like_song_toast_enabled"
-        const val KEY_LIKE_SONG_AOD_OVERLAY_ENABLED = "like_song_aod_overlay_enabled" 
+        const val KEY_LIKE_SONG_AOD_OVERLAY_ENABLED = "like_song_aod_overlay_enabled"
         const val KEY_AMBIENT_MUSIC_GLANCE_ENABLED = "ambient_music_glance_enabled"
         const val KEY_AMBIENT_MUSIC_GLANCE_DOCKED_MODE = "ambient_music_glance_docked_mode"
         const val KEY_CALENDAR_SYNC_ENABLED = "calendar_sync_enabled"
         const val KEY_CALENDAR_SYNC_SELECTED_CALENDARS = "calendar_sync_selected_calendars"
         const val KEY_CALENDAR_SYNC_PERIODIC_ENABLED = "calendar_sync_periodic_enabled"
-        
+
         const val KEY_GITHUB_ACCESS_TOKEN = "github_access_token"
         const val KEY_GITHUB_USER_PROFILE = "github_user_profile"
-        
+
         const val KEY_FLASHLIGHT_PULSE_SELECTED_APPS = "flashlight_pulse_selected_apps"
         const val KEY_FLASHLIGHT_PULSE_SAME_AS_LIGHTING = "flashlight_pulse_same_as_lighting"
     }
@@ -191,19 +194,21 @@ class SettingsRepository(private val context: Context) {
             }
         }
     }
+
     fun getLong(key: String, default: Long = 0L): Long = prefs.getLong(key, default)
-    
+
     // General Setters
     fun putBoolean(key: String, value: Boolean) = prefs.edit().putBoolean(key, value).apply()
     fun putString(key: String, value: String?) = prefs.edit().putString(key, value).apply()
     fun putInt(key: String, value: Int) = prefs.edit().putInt(key, value).apply()
     fun putFloat(key: String, value: Float) = prefs.edit().putFloat(key, value).apply()
     fun putLong(key: String, value: Long) = prefs.edit().putLong(key, value).apply()
-    
+
     // Specific Getters with logic from ViewModel
-    
+
     fun getNotificationLightingStyle(): NotificationLightingStyle {
-        val styleName = prefs.getString(KEY_EDGE_LIGHTING_STYLE, NotificationLightingStyle.STROKE.name)
+        val styleName =
+            prefs.getString(KEY_EDGE_LIGHTING_STYLE, NotificationLightingStyle.STROKE.name)
         return try {
             NotificationLightingStyle.valueOf(styleName ?: NotificationLightingStyle.STROKE.name)
         } catch (e: Exception) {
@@ -212,9 +217,12 @@ class SettingsRepository(private val context: Context) {
     }
 
     fun getNotificationLightingColorMode(): NotificationLightingColorMode {
-        val colorModeName = prefs.getString(KEY_EDGE_LIGHTING_COLOR_MODE, NotificationLightingColorMode.SYSTEM.name)
+        val colorModeName =
+            prefs.getString(KEY_EDGE_LIGHTING_COLOR_MODE, NotificationLightingColorMode.SYSTEM.name)
         return try {
-            NotificationLightingColorMode.valueOf(colorModeName ?: NotificationLightingColorMode.SYSTEM.name)
+            NotificationLightingColorMode.valueOf(
+                colorModeName ?: NotificationLightingColorMode.SYSTEM.name
+            )
         } catch (e: Exception) {
             NotificationLightingColorMode.SYSTEM
         }
@@ -244,10 +252,12 @@ class SettingsRepository(private val context: Context) {
         return if (json != null) {
             try {
                 gson.fromJson(json, object : TypeToken<Set<String>>() {}.type) ?: emptySet()
-            } catch (e: Exception) { emptySet() }
+            } catch (e: Exception) {
+                emptySet()
+            }
         } else emptySet()
     }
-    
+
     fun saveFreezeAutoExcludedApps(apps: Set<String>) {
         val json = gson.toJson(apps)
         putString(KEY_FREEZE_AUTO_EXCLUDED_APPS, json)
@@ -263,9 +273,14 @@ class SettingsRepository(private val context: Context) {
     }
 
     fun getDIYTab(): com.sameerasw.essentials.domain.DIYTabs {
-        val tabName = prefs.getString(KEY_DEFAULT_TAB, com.sameerasw.essentials.domain.DIYTabs.ESSENTIALS.name)
+        val tabName = prefs.getString(
+            KEY_DEFAULT_TAB,
+            com.sameerasw.essentials.domain.DIYTabs.ESSENTIALS.name
+        )
         return try {
-            com.sameerasw.essentials.domain.DIYTabs.valueOf(tabName ?: com.sameerasw.essentials.domain.DIYTabs.ESSENTIALS.name)
+            com.sameerasw.essentials.domain.DIYTabs.valueOf(
+                tabName ?: com.sameerasw.essentials.domain.DIYTabs.ESSENTIALS.name
+            )
         } catch (e: Exception) {
             com.sameerasw.essentials.domain.DIYTabs.ESSENTIALS
         }
@@ -291,9 +306,12 @@ class SettingsRepository(private val context: Context) {
         putString(KEY_CALENDAR_SYNC_SELECTED_CALENDARS, json)
     }
 
-    fun isCalendarSyncPeriodicEnabled(): Boolean = getBoolean(KEY_CALENDAR_SYNC_PERIODIC_ENABLED, false)
-    fun setCalendarSyncPeriodicEnabled(enabled: Boolean) = putBoolean(KEY_CALENDAR_SYNC_PERIODIC_ENABLED, enabled)
-    
+    fun isCalendarSyncPeriodicEnabled(): Boolean =
+        getBoolean(KEY_CALENDAR_SYNC_PERIODIC_ENABLED, false)
+
+    fun setCalendarSyncPeriodicEnabled(enabled: Boolean) =
+        putBoolean(KEY_CALENDAR_SYNC_PERIODIC_ENABLED, enabled)
+
     // App Selection Helper Generic
     private fun loadAppSelection(key: String): List<AppSelection> {
         val json = prefs.getString(key, null)
@@ -313,27 +331,44 @@ class SettingsRepository(private val context: Context) {
         val json = gson.toJson(apps)
         putString(key, json)
     }
-    
+
     // Feature specific App selections
     fun loadNotificationLightingSelectedApps() = loadAppSelection(KEY_EDGE_LIGHTING_SELECTED_APPS)
-    fun saveNotificationLightingSelectedApps(apps: List<AppSelection>) = saveAppSelection(KEY_EDGE_LIGHTING_SELECTED_APPS, apps)
-    fun updateNotificationLightingAppSelection(packageName: String, enabled: Boolean) = updateAppSelection(KEY_EDGE_LIGHTING_SELECTED_APPS, packageName, enabled)
-    
-    fun loadDynamicNightLightSelectedApps() = loadAppSelection(KEY_DYNAMIC_NIGHT_LIGHT_SELECTED_APPS)
-    fun saveDynamicNightLightSelectedApps(apps: List<AppSelection>) = saveAppSelection(KEY_DYNAMIC_NIGHT_LIGHT_SELECTED_APPS, apps)
-    fun updateDynamicNightLightAppSelection(packageName: String, enabled: Boolean) = updateAppSelection(KEY_DYNAMIC_NIGHT_LIGHT_SELECTED_APPS, packageName, enabled)
-    
+    fun saveNotificationLightingSelectedApps(apps: List<AppSelection>) =
+        saveAppSelection(KEY_EDGE_LIGHTING_SELECTED_APPS, apps)
+
+    fun updateNotificationLightingAppSelection(packageName: String, enabled: Boolean) =
+        updateAppSelection(KEY_EDGE_LIGHTING_SELECTED_APPS, packageName, enabled)
+
+    fun loadDynamicNightLightSelectedApps() =
+        loadAppSelection(KEY_DYNAMIC_NIGHT_LIGHT_SELECTED_APPS)
+
+    fun saveDynamicNightLightSelectedApps(apps: List<AppSelection>) =
+        saveAppSelection(KEY_DYNAMIC_NIGHT_LIGHT_SELECTED_APPS, apps)
+
+    fun updateDynamicNightLightAppSelection(packageName: String, enabled: Boolean) =
+        updateAppSelection(KEY_DYNAMIC_NIGHT_LIGHT_SELECTED_APPS, packageName, enabled)
+
     fun loadAppLockSelectedApps() = loadAppSelection(KEY_APP_LOCK_SELECTED_APPS)
-    fun saveAppLockSelectedApps(apps: List<AppSelection>) = saveAppSelection(KEY_APP_LOCK_SELECTED_APPS, apps)
-    fun updateAppLockAppSelection(packageName: String, enabled: Boolean) = updateAppSelection(KEY_APP_LOCK_SELECTED_APPS, packageName, enabled)
-    
+    fun saveAppLockSelectedApps(apps: List<AppSelection>) =
+        saveAppSelection(KEY_APP_LOCK_SELECTED_APPS, apps)
+
+    fun updateAppLockAppSelection(packageName: String, enabled: Boolean) =
+        updateAppSelection(KEY_APP_LOCK_SELECTED_APPS, packageName, enabled)
+
     fun loadFreezeSelectedApps() = loadAppSelection(KEY_FREEZE_SELECTED_APPS)
-    fun saveFreezeSelectedApps(apps: List<AppSelection>) = saveAppSelection(KEY_FREEZE_SELECTED_APPS, apps.filter { it.isEnabled })
-    fun updateFreezeAppSelection(packageName: String, enabled: Boolean) = updateAppSelection(KEY_FREEZE_SELECTED_APPS, packageName, enabled)
+    fun saveFreezeSelectedApps(apps: List<AppSelection>) =
+        saveAppSelection(KEY_FREEZE_SELECTED_APPS, apps.filter { it.isEnabled })
+
+    fun updateFreezeAppSelection(packageName: String, enabled: Boolean) =
+        updateAppSelection(KEY_FREEZE_SELECTED_APPS, packageName, enabled)
 
     fun loadFlashlightPulseSelectedApps() = loadAppSelection(KEY_FLASHLIGHT_PULSE_SELECTED_APPS)
-    fun saveFlashlightPulseSelectedApps(apps: List<AppSelection>) = saveAppSelection(KEY_FLASHLIGHT_PULSE_SELECTED_APPS, apps)
-    fun updateFlashlightPulseAppSelection(packageName: String, enabled: Boolean) = updateAppSelection(KEY_FLASHLIGHT_PULSE_SELECTED_APPS, packageName, enabled)
+    fun saveFlashlightPulseSelectedApps(apps: List<AppSelection>) =
+        saveAppSelection(KEY_FLASHLIGHT_PULSE_SELECTED_APPS, apps)
+
+    fun updateFlashlightPulseAppSelection(packageName: String, enabled: Boolean) =
+        updateAppSelection(KEY_FLASHLIGHT_PULSE_SELECTED_APPS, packageName, enabled)
 
     private fun updateAppSelection(key: String, packageName: String, enabled: Boolean) {
         val current = loadAppSelection(key).toMutableList()
@@ -350,11 +385,11 @@ class SettingsRepository(private val context: Context) {
         // I should call the specific save method or generic save method?
         // If I use generic saveAppSelection(key, current), for freeze apps, I might save disabled apps if I don't filter.
         // Let's look at saveFreezeSelectedApps: it calls saveAppSelection(KEY..., apps.filter { it.isEnabled })
-        
+
         if (key == KEY_FREEZE_SELECTED_APPS) {
-             saveAppSelection(key, current.filter { it.isEnabled })
+            saveAppSelection(key, current.filter { it.isEnabled })
         } else {
-             saveAppSelection(key, current)
+            saveAppSelection(key, current)
         }
     }
 
@@ -362,7 +397,8 @@ class SettingsRepository(private val context: Context) {
     fun loadSnoozeDiscoveredChannels(): List<com.sameerasw.essentials.domain.model.SnoozeChannel> {
         val json = prefs.getString(KEY_SNOOZE_DISCOVERED_CHANNELS, null)
         return if (json != null) {
-            val type = object : TypeToken<List<com.sameerasw.essentials.domain.model.SnoozeChannel>>() {}.type
+            val type = object :
+                TypeToken<List<com.sameerasw.essentials.domain.model.SnoozeChannel>>() {}.type
             try {
                 gson.fromJson(json, type) ?: emptyList()
             } catch (e: Exception) {
@@ -401,7 +437,8 @@ class SettingsRepository(private val context: Context) {
     fun loadMapsDiscoveredChannels(): List<com.sameerasw.essentials.domain.model.MapsChannel> {
         val json = prefs.getString(KEY_MAPS_DISCOVERED_CHANNELS, null)
         return if (json != null) {
-            val type = object : TypeToken<List<com.sameerasw.essentials.domain.model.MapsChannel>>() {}.type
+            val type = object :
+                TypeToken<List<com.sameerasw.essentials.domain.model.MapsChannel>>() {}.type
             try {
                 gson.fromJson(json, type) ?: emptyList()
             } catch (e: Exception) {
@@ -428,7 +465,11 @@ class SettingsRepository(private val context: Context) {
             }
         } else {
             // Default to navigation related channel IDs if none are selected yet
-            setOf("navigation_notification_channel", "primary_navigation_channel_v1", "primary_navigation_channel_v2")
+            setOf(
+                "navigation_notification_channel",
+                "primary_navigation_channel_v1",
+                "primary_navigation_channel_v2"
+            )
         }
     }
 
@@ -436,22 +477,28 @@ class SettingsRepository(private val context: Context) {
         val json = gson.toJson(channels)
         putString(KEY_MAPS_DETECTION_CHANNELS, json)
     }
-    
+
     // Config Export/Import
     fun getAllConfigsAsJsonString(): String {
         return try {
             val allConfigs = mutableMapOf<String, Map<String, Map<String, Any>>>()
-            val prefFiles = listOf("essentials_prefs", "caffeinate_prefs", "link_prefs", "diy_automations_prefs")
+            val prefFiles = listOf(
+                "essentials_prefs",
+                "caffeinate_prefs",
+                "link_prefs",
+                "diy_automations_prefs"
+            )
 
             prefFiles.forEach { fileName ->
                 val p = context.getSharedPreferences(fileName, Context.MODE_PRIVATE)
                 val wrapperMap = mutableMapOf<String, Map<String, Any>>()
-                
+
                 p.all.forEach { (key, value) ->
                     // Skip app lists as requested, and stale data
-                    if (key.endsWith("_selected_apps") || key == "freeze_auto_excluded_apps" || 
+                    if (key.endsWith("_selected_apps") || key == "freeze_auto_excluded_apps" ||
                         key.startsWith("mac_battery_") || key == "airsync_mac_connected" ||
-                        key == KEY_SNOOZE_DISCOVERED_CHANNELS || key == KEY_MAPS_DISCOVERED_CHANNELS) {
+                        key == KEY_SNOOZE_DISCOVERED_CHANNELS || key == KEY_MAPS_DISCOVERED_CHANNELS
+                    ) {
                         return@forEach
                     }
 
@@ -493,7 +540,7 @@ class SettingsRepository(private val context: Context) {
             val json = inputStream.bufferedReader().use { it.readText() }
             val type = object : TypeToken<Map<String, Map<String, Map<String, Any>>>>() {}.type
             val allConfigs: Map<String, Map<String, Map<String, Any>>> = gson.fromJson(json, type)
-            
+
             allConfigs.forEach { (fileName, prefWrapper) ->
                 val p = context.getSharedPreferences(fileName, Context.MODE_PRIVATE)
                 p.edit().apply {
@@ -501,7 +548,7 @@ class SettingsRepository(private val context: Context) {
                     prefWrapper.forEach { (key, item) ->
                         val itemType = item["type"] as? String
                         val itemValue = item["value"]
-                        
+
                         if (itemType != null && itemValue != null) {
                             try {
                                 when (itemType) {
@@ -527,13 +574,17 @@ class SettingsRepository(private val context: Context) {
             e.printStackTrace()
             false
         } finally {
-            try { inputStream.close() } catch(e: Exception) {}
+            try {
+                inputStream.close()
+            } catch (e: Exception) {
+            }
         }
     }
 
     fun getBluetoothDevicesBattery(): List<com.sameerasw.essentials.utils.BluetoothBatteryUtils.BluetoothDeviceBattery> {
         val json = prefs.getString(KEY_BLUETOOTH_DEVICES_BATTERY, null) ?: return emptyList()
-        val type = object : TypeToken<List<com.sameerasw.essentials.utils.BluetoothBatteryUtils.BluetoothDeviceBattery>>() {}.type
+        val type = object :
+            TypeToken<List<com.sameerasw.essentials.utils.BluetoothBatteryUtils.BluetoothDeviceBattery>>() {}.type
         return try {
             gson.fromJson(json, type) ?: emptyList()
         } catch (e: Exception) {
@@ -547,20 +598,26 @@ class SettingsRepository(private val context: Context) {
     }
 
     fun isBluetoothDevicesEnabled(): Boolean = getBoolean(KEY_SHOW_BLUETOOTH_DEVICES, false)
-    fun setBluetoothDevicesEnabled(enabled: Boolean) = putBoolean(KEY_SHOW_BLUETOOTH_DEVICES, enabled)
+    fun setBluetoothDevicesEnabled(enabled: Boolean) =
+        putBoolean(KEY_SHOW_BLUETOOTH_DEVICES, enabled)
 
     fun getBatteryWidgetMaxDevices(): Int = getInt(KEY_BATTERY_WIDGET_MAX_DEVICES, 8)
     fun setBatteryWidgetMaxDevices(count: Int) = putInt(KEY_BATTERY_WIDGET_MAX_DEVICES, count)
 
-    fun isBatteryWidgetBackgroundEnabled(): Boolean = getBoolean(KEY_BATTERY_WIDGET_BACKGROUND_ENABLED, true)
-    fun setBatteryWidgetBackgroundEnabled(enabled: Boolean) = putBoolean(KEY_BATTERY_WIDGET_BACKGROUND_ENABLED, enabled)
+    fun isBatteryWidgetBackgroundEnabled(): Boolean =
+        getBoolean(KEY_BATTERY_WIDGET_BACKGROUND_ENABLED, true)
+
+    fun setBatteryWidgetBackgroundEnabled(enabled: Boolean) =
+        putBoolean(KEY_BATTERY_WIDGET_BACKGROUND_ENABLED, enabled)
 
     fun getPinnedFeatures(): List<String> {
         val json = prefs.getString(KEY_PINNED_FEATURES, null)
         return if (json != null) {
             try {
                 gson.fromJson(json, object : TypeToken<List<String>>() {}.type) ?: emptyList()
-            } catch (e: Exception) { emptyList() }
+            } catch (e: Exception) {
+                emptyList()
+            }
         } else emptyList()
     }
 
@@ -608,7 +665,7 @@ class SettingsRepository(private val context: Context) {
     fun saveGitHubToken(token: String?) {
         prefs.edit().putString(KEY_GITHUB_ACCESS_TOKEN, token).apply()
     }
-    
+
     // observe token changes
     val gitHubToken: Flow<String?> = callbackFlow {
         val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->

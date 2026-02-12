@@ -1,23 +1,30 @@
 package com.sameerasw.essentials.ui.composables.configs
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.ui.res.stringResource
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.FragmentActivity
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.cards.FeatureCard
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
-import com.sameerasw.essentials.ui.components.cards.PermissionCard
-import com.sameerasw.essentials.ui.components.sheets.AppSelectionSheet
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
-import com.sameerasw.essentials.viewmodels.MainViewModel
-import com.sameerasw.essentials.utils.PermissionUtils
-import com.sameerasw.essentials.utils.BiometricHelper
-import androidx.fragment.app.FragmentActivity
+import com.sameerasw.essentials.ui.components.sheets.AppSelectionSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
+import com.sameerasw.essentials.utils.BiometricHelper
+import com.sameerasw.essentials.viewmodels.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,7 +35,7 @@ fun AppLockSettingsUI(
 ) {
     val context = LocalContext.current
     var isAppSelectionSheetOpen by remember { mutableStateOf(false) }
-    
+
     val isAppLockEnabled by viewModel.isAppLockEnabled
     val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
 
@@ -59,7 +66,9 @@ fun AppLockSettingsUI(
                         BiometricHelper.showBiometricPrompt(
                             activity = context,
                             title = context.getString(R.string.app_lock_auth_title),
-                            subtitle = if (enabled) context.getString(R.string.app_lock_enable_auth_subtitle) else context.getString(R.string.app_lock_disable_auth_subtitle),
+                            subtitle = if (enabled) context.getString(R.string.app_lock_enable_auth_subtitle) else context.getString(
+                                R.string.app_lock_disable_auth_subtitle
+                            ),
                             onSuccess = { viewModel.setAppLockEnabled(enabled, context) }
                         )
                     } else {
@@ -110,7 +119,13 @@ fun AppLockSettingsUI(
                 onDismissRequest = { isAppSelectionSheetOpen = false },
                 onLoadApps = { viewModel.loadAppLockSelectedApps(it) },
                 onSaveApps = { ctx, apps -> viewModel.saveAppLockSelectedApps(ctx, apps) },
-                onAppToggle = { ctx, pkg, enabled -> viewModel.updateAppLockAppEnabled(ctx, pkg, enabled) }
+                onAppToggle = { ctx, pkg, enabled ->
+                    viewModel.updateAppLockAppEnabled(
+                        ctx,
+                        pkg,
+                        enabled
+                    )
+                }
             )
         }
     }

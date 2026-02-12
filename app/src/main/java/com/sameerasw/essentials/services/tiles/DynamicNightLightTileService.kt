@@ -2,9 +2,9 @@ package com.sameerasw.essentials.services.tiles
 
 import android.graphics.drawable.Icon
 import android.service.quicksettings.Tile
+import androidx.core.content.edit
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.utils.PermissionUtils
-import androidx.core.content.edit
 
 class DynamicNightLightTileService : BaseTileService() {
 
@@ -23,10 +23,11 @@ class DynamicNightLightTileService : BaseTileService() {
     override fun hasFeaturePermission(): Boolean {
         // Accessibility is required to monitor apps
         return PermissionUtils.isAccessibilityServiceEnabled(this) &&
-               PermissionUtils.canWriteSecureSettings(this)
+                PermissionUtils.canWriteSecureSettings(this)
     }
 
-    override fun getTileIcon(): Icon = Icon.createWithResource(this, R.drawable.rounded_nightlight_24)
+    override fun getTileIcon(): Icon =
+        Icon.createWithResource(this, R.drawable.rounded_nightlight_24)
 
     override fun getTileState(): Int {
         val enabled = getSharedPreferences("essentials_prefs", MODE_PRIVATE)

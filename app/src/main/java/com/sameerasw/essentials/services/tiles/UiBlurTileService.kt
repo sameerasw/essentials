@@ -20,7 +20,8 @@ class UiBlurTileService : BaseTileService() {
     }
 
     override fun getTileIcon(): Icon {
-        val iconRes = if (isBlurEnabled()) R.drawable.rounded_blur_on_24 else R.drawable.rounded_blur_off_24
+        val iconRes =
+            if (isBlurEnabled()) R.drawable.rounded_blur_on_24 else R.drawable.rounded_blur_off_24
         return Icon.createWithResource(this, iconRes)
     }
 

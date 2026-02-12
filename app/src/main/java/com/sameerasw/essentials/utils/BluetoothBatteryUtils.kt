@@ -1,9 +1,7 @@
 package com.sameerasw.essentials.utils
 
 import android.annotation.SuppressLint
-import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
-import android.bluetooth.BluetoothProfile
 import android.content.Context
 import androidx.annotation.Keep
 
@@ -18,7 +16,8 @@ object BluetoothBatteryUtils {
 
     @SuppressLint("MissingPermission")
     fun getPairedDevicesBattery(context: Context): List<BluetoothDeviceBattery> {
-        val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
+        val bluetoothManager =
+            context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
         val adapter = bluetoothManager?.adapter ?: return emptyList()
 
         if (!adapter.isEnabled) return emptyList()
@@ -28,7 +27,7 @@ object BluetoothBatteryUtils {
         } catch (e: SecurityException) {
             return emptyList()
         }
-        
+
         val batteryList = mutableListOf<BluetoothDeviceBattery>()
 
         devices.forEach { device ->
@@ -47,7 +46,7 @@ object BluetoothBatteryUtils {
                 // Reflection might fail or permission issues
             }
         }
-        
+
         return batteryList
     }
 }

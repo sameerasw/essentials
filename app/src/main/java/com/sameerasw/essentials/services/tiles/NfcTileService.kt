@@ -35,10 +35,10 @@ class NfcTileService : BaseTileService() {
     override fun onTileClick() {
         val nfcAdapter = NfcAdapter.getDefaultAdapter(this) ?: return
         val currentlyEnabled = nfcAdapter.isEnabled
-        
+
         // Toggle the state
         val success = setNfcEnabled(this, !currentlyEnabled)
-        
+
         if (success) {
             val tile = qsTile
             if (tile != null) {
@@ -59,7 +59,7 @@ class NfcTileService : BaseTileService() {
         return checkCallingOrSelfPermission(android.Manifest.permission.WRITE_SECURE_SETTINGS) == android.content.pm.PackageManager.PERMISSION_GRANTED
     }
 
-    override fun getTileIcon(): Icon? {
+    override fun getTileIcon(): Icon {
         val nfcAdapter = NfcAdapter.getDefaultAdapter(this)
         val isEnabled = nfcAdapter?.isEnabled == true
         val resId = if (isEnabled) R.drawable.rounded_nfc_24 else R.drawable.rounded_nfc_24
@@ -73,7 +73,7 @@ class NfcTileService : BaseTileService() {
 
     private fun setNfcEnabled(context: Context, enable: Boolean): Boolean {
         val nfcAdapter = NfcAdapter.getDefaultAdapter(context) ?: return false
-        
+
         return try {
             val methodName = if (enable) "enable" else "disable"
             // Get the hidden method from the NfcAdapter class

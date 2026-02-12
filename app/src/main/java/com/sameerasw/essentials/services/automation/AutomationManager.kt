@@ -5,7 +5,6 @@ import android.content.Intent
 import com.sameerasw.essentials.domain.diy.Automation
 import com.sameerasw.essentials.domain.diy.DIYRepository
 import com.sameerasw.essentials.domain.diy.Trigger
-import com.sameerasw.essentials.domain.diy.State as DIYState
 import com.sameerasw.essentials.services.automation.modules.AutomationModule
 import com.sameerasw.essentials.services.automation.modules.DisplayModule
 import com.sameerasw.essentials.services.automation.modules.PowerModule
@@ -13,18 +12,19 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentHashMap
+import com.sameerasw.essentials.domain.diy.State as DIYState
 
 object AutomationManager {
     private val scope = CoroutineScope(Dispatchers.Main)
     private var service: AutomationService? = null
     private var applicationContext: Context? = null
-    
+
     // Active modules map: ModuleID -> Module Instance
     private val activeModules = ConcurrentHashMap<String, AutomationModule>()
 
     fun init(context: Context) {
         applicationContext = context.applicationContext
-        
+
         // Observe repository
         scope.launch {
             DIYRepository.automations.collect { automations ->
@@ -70,26 +70,32 @@ object AutomationManager {
                             requiredModuleIds.add(PowerModule.ID)
                             powerAutomations.add(automation)
                         }
+
                         is Trigger.ScreenOn, is Trigger.ScreenOff, is Trigger.DeviceUnlock -> {
                             requiredModuleIds.add(DisplayModule.ID)
                             displayAutomations.add(automation)
                         }
+
                         else -> {}
                     }
                 }
+
                 Automation.Type.STATE -> {
                     when (automation.state) {
                         is DIYState.Charging -> {
                             requiredModuleIds.add(PowerModule.ID)
                             powerAutomations.add(automation)
                         }
+
                         is DIYState.ScreenOn -> {
                             requiredModuleIds.add(DisplayModule.ID)
                             displayAutomations.add(automation)
                         }
+
                         else -> {}
                     }
                 }
+
                 Automation.Type.APP -> {
                     // Handled by AppFlowHandler
                 }
@@ -106,7 +112,7 @@ object AutomationManager {
         }
 
         // Module Management
-        
+
         // Power Module
         if (requiredModuleIds.contains(PowerModule.ID)) {
             val module = activeModules.getOrPut(PowerModule.ID) {

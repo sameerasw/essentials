@@ -3,9 +3,28 @@ package com.sameerasw.essentials.ui.composables.watermark
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -36,7 +55,7 @@ fun WatermarkScreen(
     val view = LocalView.current
     var showExifSheet by remember { mutableStateOf(false) }
     var showEditSheet by remember { mutableStateOf(false) }
-    
+
     val options by viewModel.options.collectAsState()
     val previewState by viewModel.previewUiState.collectAsState()
     val saveState by viewModel.uiState.collectAsState()
@@ -51,10 +70,16 @@ fun WatermarkScreen(
                 Toast.makeText(context, R.string.watermark_save_success, Toast.LENGTH_SHORT).show()
                 viewModel.resetState()
             }
+
             is WatermarkUiState.Error -> {
-                Toast.makeText(context, (saveState as WatermarkUiState.Error).message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    (saveState as WatermarkUiState.Error).message,
+                    Toast.LENGTH_SHORT
+                ).show()
                 viewModel.resetState()
             }
+
             else -> {}
         }
     }
@@ -84,7 +109,12 @@ fun WatermarkScreen(
                                         putExtra(Intent.EXTRA_STREAM, sharedUri)
                                         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                                     }
-                                    context.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.action_share)))
+                                    context.startActivity(
+                                        Intent.createChooser(
+                                            shareIntent,
+                                            context.getString(R.string.action_share)
+                                        )
+                                    )
                                 }
                             }
                         },
@@ -96,9 +126,9 @@ fun WatermarkScreen(
         floatingActionButton = {
             if (initialUri != null) {
                 FloatingActionButton(
-                    onClick = { 
+                    onClick = {
                         performUIHaptic(view)
-                        showEditSheet = true 
+                        showEditSheet = true
                     },
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     contentColor = MaterialTheme.colorScheme.onPrimaryContainer
@@ -201,14 +231,14 @@ private fun WatermarkActions(
                     modifier = Modifier.size(18.dp)
                 )
             }
-            
+
             Spacer(Modifier.size(8.dp))
             var showMenu by remember { mutableStateOf(false) }
-            
+
             Box {
                 Button(onClick = {
                     performUIHaptic(view)
-                    showMenu = true 
+                    showMenu = true
                 }) {
                     Icon(
                         painter = painterResource(R.drawable.rounded_save_24),
@@ -218,7 +248,7 @@ private fun WatermarkActions(
                     Spacer(Modifier.size(8.dp))
                     Text(stringResource(R.string.action_save))
                 }
-                
+
                 SegmentedDropdownMenu(
                     expanded = showMenu,
                     onDismissRequest = { showMenu = false },
@@ -238,7 +268,7 @@ private fun WatermarkActions(
                         },
                         enabled = saveState !is WatermarkUiState.Processing
                     )
-                    
+
                     SegmentedDropdownMenuItem(
                         text = { Text(stringResource(R.string.action_save)) },
                         leadingIcon = {

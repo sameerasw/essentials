@@ -41,7 +41,8 @@ class ShortcutHandlerActivity : ComponentActivity() {
 
         if (packageName != null) {
             setContent {
-                val viewModel: com.sameerasw.essentials.viewmodels.MainViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+                val viewModel: com.sameerasw.essentials.viewmodels.MainViewModel =
+                    androidx.lifecycle.viewmodel.compose.viewModel()
                 val context = androidx.compose.ui.platform.LocalContext.current
                 androidx.compose.runtime.LaunchedEffect(Unit) {
                     viewModel.check(context)
@@ -71,7 +72,11 @@ class ShortcutHandlerActivity : ComponentActivity() {
                     startActivity(launchIntent)
                 } else {
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(this@ShortcutHandlerActivity, R.string.error_app_uninstalled, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@ShortcutHandlerActivity,
+                            R.string.error_app_uninstalled,
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
                 finish()

@@ -8,22 +8,21 @@ import android.view.textservice.SuggestionsInfo
 import android.view.textservice.TextInfo
 import android.view.textservice.TextServicesManager
 import com.darkrockstudios.symspellkt.api.SpellChecker
-import com.darkrockstudios.symspellkt.impl.SymSpell
 import com.darkrockstudios.symspellkt.common.Verbosity
+import com.darkrockstudios.symspellkt.impl.SymSpell
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
-import java.util.Locale
 
 private const val TAG = "SuggestionEngine"
 
-class SuggestionEngine(private val context: Context) : SpellCheckerSession.SpellCheckerSessionListener {
+class SuggestionEngine(private val context: Context) :
+    SpellCheckerSession.SpellCheckerSessionListener {
 
     // SymSpell
     private var symSpell: SpellChecker? = null
@@ -44,7 +43,8 @@ class SuggestionEngine(private val context: Context) : SpellCheckerSession.Spell
         // Init Android Session (Main Thread)
         scope.launch(Dispatchers.Main) {
             try {
-                val tsm = context.getSystemService(Context.TEXT_SERVICES_MANAGER_SERVICE) as? TextServicesManager
+                val tsm =
+                    context.getSystemService(Context.TEXT_SERVICES_MANAGER_SERVICE) as? TextServicesManager
                 if (tsm != null) {
                     session = tsm.newSpellCheckerSession(null, null, this@SuggestionEngine, true)
                     Log.d(TAG, "Android SpellCheckerSession created")
@@ -78,8 +78,12 @@ class SuggestionEngine(private val context: Context) : SpellCheckerSession.Spell
                         val parts = line.split(" ")
                         if (parts.size >= 2) {
                             try {
-                                checker.createDictionaryEntry(parts[0], parts[1].toLongOrNull()?.toDouble() ?: 0.0)
-                            } catch (e: Exception) { /* ignore */ }
+                                checker.createDictionaryEntry(
+                                    parts[0],
+                                    parts[1].toLongOrNull()?.toDouble() ?: 0.0
+                                )
+                            } catch (e: Exception) { /* ignore */
+                            }
                         }
                     }
                     symSpell = checker
@@ -127,6 +131,7 @@ class SuggestionEngine(private val context: Context) : SpellCheckerSession.Spell
         if (s != null) {
             try {
                 // Request suggestions. The callback onGetSuggestions will merge results
+                @Suppress("DEPRECATION")
                 s.getSuggestions(TextInfo(word), 5)
             } catch (e: Exception) {
                 Log.e(TAG, "Android lookup failed", e)
@@ -137,13 +142,13 @@ class SuggestionEngine(private val context: Context) : SpellCheckerSession.Spell
     override fun onGetSuggestions(results: Array<out SuggestionsInfo>?) {
         // Runs on binder thread usually, switch to Main logic if needed, but StateFlow is thread safe.
         // We want to merge with currentSymSpellSuggestions
-        
+
         if (results.isNullOrEmpty()) return
 
         val info = results[0]
         // info.cookie or sequence is implementation dependent, assuming it matches 'currentWord' roughly
         // Ideally we check validity but for simplicity we merge.
-        
+
         val androidSuggestions = mutableListOf<String>()
         val count = info.suggestionsCount
         if (count > 0) {

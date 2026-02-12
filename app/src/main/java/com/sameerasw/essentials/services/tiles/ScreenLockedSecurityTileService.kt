@@ -6,8 +6,8 @@ import android.graphics.drawable.Icon
 import android.os.Build
 import android.service.quicksettings.Tile
 import com.sameerasw.essentials.R
-import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.ui.activities.TileAuthActivity
+import com.sameerasw.essentials.utils.PermissionUtils
 
 class ScreenLockedSecurityTileService : BaseTileService() {
 
@@ -19,7 +19,10 @@ class ScreenLockedSecurityTileService : BaseTileService() {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
             putExtra("feature_pref_key", "screen_locked_security_enabled")
             putExtra("auth_title", "Screen Locked Security")
-            putExtra("auth_subtitle", if (isEnabled) "Authenticate to disable screen locked security" else "Authenticate to enable screen locked security")
+            putExtra(
+                "auth_subtitle",
+                if (isEnabled) "Authenticate to disable screen locked security" else "Authenticate to enable screen locked security"
+            )
         }
 
         if (Build.VERSION.SDK_INT >= 34) {
@@ -44,8 +47,8 @@ class ScreenLockedSecurityTileService : BaseTileService() {
     override fun hasFeaturePermission(): Boolean {
         // Accessibility, Device Admin and Write Secure Settings are required
         return PermissionUtils.isAccessibilityServiceEnabled(this) &&
-               PermissionUtils.isDeviceAdminActive(this) &&
-               PermissionUtils.canWriteSecureSettings(this)
+                PermissionUtils.isDeviceAdminActive(this) &&
+                PermissionUtils.canWriteSecureSettings(this)
     }
 
     override fun getTileIcon(): Icon = Icon.createWithResource(this, R.drawable.rounded_security_24)

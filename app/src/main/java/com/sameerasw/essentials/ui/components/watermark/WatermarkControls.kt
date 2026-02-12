@@ -2,12 +2,27 @@ package com.sameerasw.essentials.ui.components.watermark
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -65,9 +80,9 @@ fun WatermarkControls(
             SegmentedPicker(
                 items = WatermarkStyle.entries,
                 selectedItem = options.style,
-                onItemSelected = { 
+                onItemSelected = {
                     performUIHaptic(view)
-                    onStyleChange(it) 
+                    onStyleChange(it)
                 },
                 labelProvider = { style ->
                     when (style) {
@@ -82,9 +97,9 @@ fun WatermarkControls(
                     }
 
                     Icon(
-                         painter = painterResource(id = iconRes),
-                         contentDescription = null,
-                         modifier = Modifier.size(18.dp)
+                        painter = painterResource(id = iconRes),
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
                     )
                 },
                 modifier = Modifier.fillMaxWidth()
@@ -92,7 +107,7 @@ fun WatermarkControls(
 
             // Style-specific options
             if (options.style == WatermarkStyle.FRAME) {
-                 IconToggleItem(
+                IconToggleItem(
                     iconRes = R.drawable.rounded_top_panel_close_24,
                     title = stringResource(R.string.watermark_move_to_top),
                     isChecked = options.moveToTop,
@@ -116,9 +131,9 @@ fun WatermarkControls(
                         shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd)
                     )
                     .heightIn(min = 56.dp)
-                    .clickable { 
+                    .clickable {
                         performUIHaptic(view)
-                        onShowExifClick() 
+                        onShowExifClick()
                     }
                     .padding(12.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -132,13 +147,13 @@ fun WatermarkControls(
                     tint = MaterialTheme.colorScheme.primary
                 )
                 Spacer(modifier = Modifier.size(2.dp))
-                
+
                 Text(
                     text = stringResource(R.string.watermark_show_exif),
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.weight(1f)
                 )
-                
+
                 Icon(
                     painter = painterResource(id = R.drawable.rounded_chevron_right_24),
                     contentDescription = null,
@@ -152,8 +167,8 @@ fun WatermarkControls(
             ConfigSliderItem(
                 title = stringResource(R.string.watermark_spacing),
                 value = paddingValue,
-                onValueChange = { 
-                    paddingValue = it 
+                onValueChange = {
+                    paddingValue = it
                     performSliderHaptic(view)
                 },
                 onValueChangeFinished = { onPaddingChange(paddingValue.toInt()) },
@@ -171,15 +186,15 @@ fun WatermarkControls(
                 modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            
+
             RoundedCardContainer(modifier = Modifier.fillMaxWidth()) {
                 if (options.showDeviceBrand) {
                     var brandSize by remember(options.brandTextSize) { mutableFloatStateOf(options.brandTextSize.toFloat()) }
                     ConfigSliderItem(
                         title = stringResource(R.string.watermark_text_size_brand),
                         value = brandSize,
-                        onValueChange = { 
-                            brandSize = it 
+                        onValueChange = {
+                            brandSize = it
                             performSliderHaptic(view)
                         },
                         onValueChangeFinished = { onBrandTextSizeChange(brandSize.toInt()) },
@@ -194,8 +209,8 @@ fun WatermarkControls(
                     ConfigSliderItem(
                         title = stringResource(R.string.watermark_text_size_data),
                         value = dataSize,
-                        onValueChange = { 
-                            dataSize = it 
+                        onValueChange = {
+                            dataSize = it
                             performSliderHaptic(view)
                         },
                         onValueChangeFinished = { onDataTextSizeChange(dataSize.toInt()) },
@@ -204,14 +219,14 @@ fun WatermarkControls(
                         valueFormatter = { "${it.toInt()}%" }
                     )
                 }
-                
+
                 if (options.showCustomText) {
                     var customSize by remember(options.customTextSize) { mutableFloatStateOf(options.customTextSize.toFloat()) }
                     ConfigSliderItem(
                         title = stringResource(R.string.watermark_text_size_custom),
                         value = customSize,
-                        onValueChange = { 
-                            customSize = it 
+                        onValueChange = {
+                            customSize = it
                             performSliderHaptic(view)
                         },
                         onValueChangeFinished = { onCustomTextSizeChange(customSize.toInt()) },
@@ -230,7 +245,7 @@ fun WatermarkControls(
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-        
+
         RoundedCardContainer(modifier = Modifier.fillMaxWidth()) {
             IconToggleItem(
                 iconRes = R.drawable.rounded_image_24,
@@ -238,20 +253,20 @@ fun WatermarkControls(
                 isChecked = showLogo,
                 onCheckedChange = onShowLogoChange
             )
-            
+
             if (showLogo) {
                 LogoCarouselPicker(
                     selectedResId = logoResId,
                     onLogoSelected = onLogoResIdChange,
                     modifier = Modifier.fillMaxWidth()
                 )
-                
+
                 var logoSizeValue by remember(options.logoSize) { mutableFloatStateOf(options.logoSize.toFloat()) }
                 ConfigSliderItem(
                     title = stringResource(R.string.watermark_logo_size),
                     value = logoSizeValue,
-                    onValueChange = { 
-                        logoSizeValue = it 
+                    onValueChange = {
+                        logoSizeValue = it
                         performSliderHaptic(view)
                     },
                     onValueChangeFinished = { onLogoSizeChange(logoSizeValue.toInt()) },
@@ -269,14 +284,14 @@ fun WatermarkControls(
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-        
+
         RoundedCardContainer(modifier = Modifier.fillMaxWidth()) {
             var strokeValue by remember(options.borderStroke) { mutableFloatStateOf(options.borderStroke.toFloat()) }
             ConfigSliderItem(
                 title = stringResource(R.string.watermark_border_width),
                 value = strokeValue,
-                onValueChange = { 
-                    strokeValue = it 
+                onValueChange = {
+                    strokeValue = it
                     performSliderHaptic(view)
                 },
                 onValueChangeFinished = { onBorderStrokeChange(strokeValue.toInt()) },
@@ -284,13 +299,13 @@ fun WatermarkControls(
                 increment = 5f,
                 valueFormatter = { "${it.toInt()}%" }
             )
-            
+
             var cornerValue by remember(options.borderCorner) { mutableFloatStateOf(options.borderCorner.toFloat()) }
             ConfigSliderItem(
                 title = stringResource(R.string.watermark_border_corners),
                 value = cornerValue,
-                onValueChange = { 
-                    cornerValue = it 
+                onValueChange = {
+                    cornerValue = it
                     performSliderHaptic(view)
                 },
                 onValueChangeFinished = { onBorderCornerChange(cornerValue.toInt()) },
@@ -307,7 +322,7 @@ fun WatermarkControls(
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-        
+
         RoundedCardContainer(modifier = Modifier.fillMaxWidth()) {
             Row(
                 modifier = Modifier

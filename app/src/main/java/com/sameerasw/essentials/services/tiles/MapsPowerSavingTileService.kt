@@ -40,7 +40,7 @@ class MapsPowerSavingTileService : BaseTileService() {
         return hasShell && hasNotif
     }
 
-    override fun getTileIcon(): Icon? {
+    override fun getTileIcon(): Icon {
         return Icon.createWithResource(this, R.drawable.rounded_navigation_24)
     }
 
@@ -55,6 +55,9 @@ class MapsPowerSavingTileService : BaseTileService() {
     }
 
     private fun isMapsPowerSavingEnabled(): Boolean {
-        return settingsRepository.getBoolean(SettingsRepository.KEY_MAPS_POWER_SAVING_ENABLED, false)
+        return settingsRepository.getBoolean(
+            SettingsRepository.KEY_MAPS_POWER_SAVING_ENABLED,
+            false
+        )
     }
 }

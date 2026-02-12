@@ -41,8 +41,14 @@ object RootUtils {
         } catch (e: InterruptedException) {
             false
         } finally {
-            try { os?.close() } catch (e: Exception) {}
-            try { process?.destroy() } catch (e: Exception) {}
+            try {
+                os?.close()
+            } catch (e: Exception) {
+            }
+            try {
+                process?.destroy()
+            } catch (e: Exception) {
+            }
         }
     }
 

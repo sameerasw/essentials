@@ -7,6 +7,7 @@ import com.sameerasw.essentials.R
 sealed interface State {
     @get:StringRes
     val title: Int
+
     @get:DrawableRes
     val icon: Int
 

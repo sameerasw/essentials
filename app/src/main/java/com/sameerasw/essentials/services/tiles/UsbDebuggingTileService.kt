@@ -35,7 +35,7 @@ class UsbDebuggingTileService : BaseTileService() {
         return PermissionUtils.canWriteSecureSettings(this)
     }
 
-    override fun getTileIcon(): Icon? {
+    override fun getTileIcon(): Icon {
         return Icon.createWithResource(this, R.drawable.rounded_adb_24)
     }
 

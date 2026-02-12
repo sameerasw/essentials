@@ -13,11 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.fragment.app.FragmentActivity
-import com.sameerasw.essentials.utils.BiometricHelper
-import com.sameerasw.essentials.utils.BiometricSecurityHelper
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -45,15 +41,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import com.sameerasw.essentials.domain.registry.FeatureRegistry
+import androidx.fragment.app.FragmentActivity
 import com.sameerasw.essentials.FeatureSettingsActivity
-import com.sameerasw.essentials.domain.registry.PermissionRegistry
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.domain.registry.FeatureRegistry
+import com.sameerasw.essentials.domain.registry.PermissionRegistry
+import com.sameerasw.essentials.ui.components.FavoriteCarousel
 import com.sameerasw.essentials.ui.components.cards.FeatureCard
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
-import com.sameerasw.essentials.ui.components.FavoriteCarousel
 import com.sameerasw.essentials.ui.components.sheets.PermissionItem
 import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
+import com.sameerasw.essentials.utils.BiometricSecurityHelper
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import kotlinx.coroutines.delay
 
@@ -77,7 +75,6 @@ fun SetupFeatures(
     val isNotificationLightingAccessibilityEnabled by viewModel.isNotificationLightingAccessibilityEnabled
     val isRootEnabled by viewModel.isRootEnabled
     val isRootPermissionGranted by viewModel.isRootPermissionGranted
-    val isRootAvailable by viewModel.isRootAvailable
     val isReadPhoneStateEnabled by viewModel.isReadPhoneStateEnabled
     viewModel.isButtonRemapEnabled.value
     viewModel.isDynamicNightLightEnabled.value
@@ -98,8 +95,9 @@ fun SetupFeatures(
                         description = R.string.perm_root_desc,
                         dependentFeatures = PermissionRegistry.getFeatures("ROOT"),
                         actionLabel = R.string.perm_action_grant,
-                        action = { 
-                            viewModel.isRootPermissionGranted.value = com.sameerasw.essentials.utils.RootUtils.isRootPermissionGranted()
+                        action = {
+                            viewModel.isRootPermissionGranted.value =
+                                com.sameerasw.essentials.utils.RootUtils.isRootPermissionGranted()
                         },
                         isGranted = isRootPermissionGranted
                     )
@@ -115,8 +113,10 @@ fun SetupFeatures(
                         dependentFeatures = PermissionRegistry.getFeatures("SHIZUKU"),
                         actionLabel = R.string.perm_shizuku_install_action,
                         action = {
-                            val intent = Intent(Intent.ACTION_VIEW,
-                                "https://play.google.com/store/apps/details?id=moe.shizuku.privileged.api".toUri())
+                            val intent = Intent(
+                                Intent.ACTION_VIEW,
+                                "https://play.google.com/store/apps/details?id=moe.shizuku.privileged.api".toUri()
+                            )
                             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                             context.startActivity(intent)
                         },
@@ -160,7 +160,11 @@ fun SetupFeatures(
 
     // Help Sheet State
     var showHelpSheet by remember { mutableStateOf(false) }
-    var selectedHelpFeature by remember { mutableStateOf<com.sameerasw.essentials.domain.model.Feature?>(null) }
+    var selectedHelpFeature by remember {
+        mutableStateOf<com.sameerasw.essentials.domain.model.Feature?>(
+            null
+        )
+    }
 
     // Periodic check for Caffeinate status
     LaunchedEffect(Unit) {
@@ -201,6 +205,7 @@ fun SetupFeatures(
                         )
                     }
                 }
+
                 R.string.feat_statusbar_icons_title -> {
                     if (!isWriteSecureSettingsEnabled) {
                         missing.add(
@@ -211,23 +216,28 @@ fun SetupFeatures(
                                 dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
                                 actionLabel = R.string.perm_action_copy_adb,
                                 action = {
-                                    val adbCommand = "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
-                                    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                    val adbCommand =
+                                        "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
+                                    val clipboard =
+                                        context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                                     val clip = ClipData.newPlainText("adb_command", adbCommand)
                                     clipboard.setPrimaryClip(clip)
                                 },
                                 secondaryActionLabel = R.string.perm_action_check,
                                 secondaryAction = {
-                                    viewModel.isWriteSecureSettingsEnabled.value = viewModel.canWriteSecureSettings(context)
+                                    viewModel.isWriteSecureSettingsEnabled.value =
+                                        viewModel.canWriteSecureSettings(context)
                                 },
                                 isGranted = isWriteSecureSettingsEnabled
                             )
                         )
                     }
                 }
+
                 FEATURE_MAPS_POWER_SAVING -> {
                     missing.addAll(buildMapsPowerSavingPermissionItems())
                 }
+
                 R.string.feat_notification_lighting_title -> {
                     if (!isOverlayPermissionGranted) {
                         missing.add(
@@ -238,8 +248,10 @@ fun SetupFeatures(
                                 dependentFeatures = PermissionRegistry.getFeatures("DRAW_OVERLAYS"),
                                 actionLabel = R.string.perm_action_grant,
                                 action = {
-                                    val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                                        "package:${context.packageName}".toUri())
+                                    val intent = Intent(
+                                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                        "package:${context.packageName}".toUri()
+                                    )
                                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                                     context.startActivity(intent)
                                 },
@@ -278,6 +290,7 @@ fun SetupFeatures(
                         )
                     }
                 }
+
                 R.string.feat_button_remap_title -> {
                     if (!isAccessibilityEnabled) {
                         missing.add(
@@ -297,6 +310,7 @@ fun SetupFeatures(
                         )
                     }
                 }
+
                 R.string.feat_dynamic_night_light_title -> {
                     if (!isAccessibilityEnabled) {
                         missing.add(
@@ -359,8 +373,10 @@ fun SetupFeatures(
                                 dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
                                 actionLabel = R.string.perm_action_copy_adb,
                                 action = {
-                                    val adbCommand = "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
-                                    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                    val adbCommand =
+                                        "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
+                                    val clipboard =
+                                        context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                                     val clip = ClipData.newPlainText("adb_command", adbCommand)
                                     clipboard.setPrimaryClip(clip)
                                 },
@@ -384,6 +400,7 @@ fun SetupFeatures(
                         )
                     }
                 }
+
                 R.string.feat_app_lock_title -> {
                     if (!isAccessibilityEnabled) {
                         missing.add(
@@ -403,6 +420,7 @@ fun SetupFeatures(
                         )
                     }
                 }
+
                 R.string.feat_call_vibrations_title -> {
                     if (!viewModel.isReadPhoneStateEnabled.value) {
                         missing.add(
@@ -431,6 +449,7 @@ fun SetupFeatures(
                         )
                     }
                 }
+
                 R.string.feat_ambient_music_glance_title -> {
                     if (!isAccessibilityEnabled) {
                         missing.add(
@@ -441,7 +460,8 @@ fun SetupFeatures(
                                 dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
                                 actionLabel = R.string.perm_action_enable,
                                 action = {
-                                    val intent = Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                                    val intent =
+                                        Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
                                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                                     context.startActivity(intent)
                                 },
@@ -486,6 +506,7 @@ fun SetupFeatures(
                     isGranted = isAccessibilityEnabled
                 )
             )
+
             R.string.feat_statusbar_icons_title -> listOf(
                 PermissionItem(
                     iconRes = R.drawable.rounded_security_24,
@@ -494,18 +515,22 @@ fun SetupFeatures(
                     dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
                     actionLabel = R.string.perm_action_copy_adb,
                     action = {
-                        val adbCommand = "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
-                        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                        val adbCommand =
+                            "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
+                        val clipboard =
+                            context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                         val clip = ClipData.newPlainText("adb_command", adbCommand)
                         clipboard.setPrimaryClip(clip)
                     },
                     secondaryActionLabel = R.string.perm_action_check,
                     secondaryAction = {
-                        viewModel.isWriteSecureSettingsEnabled.value = viewModel.canWriteSecureSettings(context)
+                        viewModel.isWriteSecureSettingsEnabled.value =
+                            viewModel.canWriteSecureSettings(context)
                     },
                     isGranted = isWriteSecureSettingsEnabled
                 )
             )
+
             FEATURE_MAPS_POWER_SAVING -> buildMapsPowerSavingPermissionItems()
             R.string.feat_notification_lighting_title -> listOf(
                 PermissionItem(
@@ -515,8 +540,10 @@ fun SetupFeatures(
                     dependentFeatures = PermissionRegistry.getFeatures("DRAW_OVERLAYS"),
                     actionLabel = R.string.perm_action_grant,
                     action = {
-                        val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                            "package:${context.packageName}".toUri())
+                        val intent = Intent(
+                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                            "package:${context.packageName}".toUri()
+                        )
                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                         context.startActivity(intent)
                     },
@@ -545,6 +572,7 @@ fun SetupFeatures(
                     isGranted = isNotificationListenerEnabled
                 )
             )
+
             R.string.feat_button_remap_title -> listOf(
                 PermissionItem(
                     iconRes = R.drawable.rounded_settings_accessibility_24,
@@ -560,6 +588,7 @@ fun SetupFeatures(
                     isGranted = isAccessibilityEnabled
                 )
             )
+
             R.string.feat_snooze_notifications_title -> listOf(
                 PermissionItem(
                     iconRes = R.drawable.rounded_snooze_24,
@@ -571,6 +600,7 @@ fun SetupFeatures(
                     isGranted = isNotificationListenerEnabled
                 )
             )
+
             R.string.feat_dynamic_night_light_title -> listOf(
                 PermissionItem(
                     iconRes = R.drawable.rounded_settings_accessibility_24,
@@ -595,6 +625,7 @@ fun SetupFeatures(
                     isGranted = isWriteSecureSettingsEnabled
                 )
             )
+
             R.string.feat_screen_locked_security_title -> listOf(
                 PermissionItem(
                     iconRes = R.drawable.rounded_settings_accessibility_24,
@@ -616,8 +647,10 @@ fun SetupFeatures(
                     dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
                     actionLabel = R.string.perm_action_copy_adb,
                     action = {
-                        val adbCommand = "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
-                        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                        val adbCommand =
+                            "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
+                        val clipboard =
+                            context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                         val clip = ClipData.newPlainText("adb_command", adbCommand)
                         clipboard.setPrimaryClip(clip)
                     },
@@ -651,6 +684,7 @@ fun SetupFeatures(
                     isGranted = isAccessibilityEnabled
                 )
             )
+
             R.string.feat_call_vibrations_title -> listOf(
                 PermissionItem(
                     iconRes = R.drawable.rounded_mobile_24,
@@ -671,6 +705,7 @@ fun SetupFeatures(
                     isGranted = isNotificationListenerEnabled
                 )
             )
+
             R.string.feat_ambient_music_glance_title -> listOf(
                 PermissionItem(
                     iconRes = R.drawable.rounded_settings_accessibility_24,
@@ -679,7 +714,7 @@ fun SetupFeatures(
                     dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
                     actionLabel = R.string.perm_action_enable,
                     action = {
-                        val intent = Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                         context.startActivity(intent)
                     },
@@ -695,6 +730,7 @@ fun SetupFeatures(
                     isGranted = isNotificationListenerEnabled
                 )
             )
+
             else -> emptyList()
         }
 
@@ -727,8 +763,6 @@ fun SetupFeatures(
     var isFocused by remember { mutableStateOf(false) }
 
     val allFeatures = FeatureRegistry.ALL_FEATURES
-
-    var filtered by remember { mutableStateOf(allFeatures.toList()) }
 
     LaunchedEffect(searchRequested) {
         if (searchRequested) {
@@ -767,7 +801,11 @@ fun SetupFeatures(
                     modifier = Modifier.size(24.dp)
                 )
             },
-            placeholder = { if (!isFocused && viewModel.searchQuery.value.isEmpty()) Text(stringResource(R.string.search_placeholder)) },
+            placeholder = {
+                if (!isFocused && viewModel.searchQuery.value.isEmpty()) Text(
+                    stringResource(R.string.search_placeholder)
+                )
+            },
             shape = MaterialTheme.shapes.extraExtraLarge,
             singleLine = true,
             colors = OutlinedTextFieldDefaults.colors(
@@ -859,7 +897,10 @@ fun SetupFeatures(
                                         feature = feature,
                                         action = {
                                             context.startActivity(
-                                                Intent(context, FeatureSettingsActivity::class.java).apply {
+                                                Intent(
+                                                    context,
+                                                    FeatureSettingsActivity::class.java
+                                                ).apply {
                                                     putExtra("feature", result.featureKey)
                                                     result.targetSettingHighlightKey?.let {
                                                         putExtra("highlight_setting", it)
@@ -889,7 +930,7 @@ fun SetupFeatures(
                             onPinToggle = {
                                 viewModel.togglePinFeature(result.featureKey)
                             },
-                             onHelpClick = if (allFeatures.find { it.id == result.featureKey }?.aboutDescription != null) {
+                            onHelpClick = if (allFeatures.find { it.id == result.featureKey }?.aboutDescription != null) {
                                 {
                                     val feature = allFeatures.find { it.id == result.featureKey }
                                     if (feature != null) {
@@ -904,7 +945,8 @@ fun SetupFeatures(
             }
         } else {
             // Render Top Level Features (No Categories)
-            val topLevelFeatures = allFeatures.filter { it.parentFeatureId == null && it.isVisibleInMain }
+            val topLevelFeatures =
+                allFeatures.filter { it.parentFeatureId == null && it.isVisibleInMain }
 
             if (topLevelFeatures.isNotEmpty()) {
                 RoundedCardContainer(

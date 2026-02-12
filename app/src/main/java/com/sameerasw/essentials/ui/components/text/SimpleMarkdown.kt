@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -66,9 +65,15 @@ fun SimpleMarkdown(
                     }
                     HeaderLine(block.text, style, block.isCentered)
                 }
+
                 is MarkdownBlock.Text -> MarkdownText(block.text, block.isCentered)
                 is MarkdownBlock.BulletPoint -> BulletPointLine(block.text, block.isCentered)
-                is MarkdownBlock.OrderedList -> OrderedListLine(block.index, block.text, block.isCentered)
+                is MarkdownBlock.OrderedList -> OrderedListLine(
+                    block.index,
+                    block.text,
+                    block.isCentered
+                )
+
                 is MarkdownBlock.ImageGroup -> ImageBlock(block.images, block.isCentered)
                 is MarkdownBlock.CodeBlock -> CodeBlock(block.code)
                 is MarkdownBlock.HorizontalRule -> HorizontalRule()
@@ -82,7 +87,9 @@ private sealed class MarkdownBlock {
     data class Header(val text: String, val level: Int, val isCentered: Boolean) : MarkdownBlock()
     data class Text(val text: String, val isCentered: Boolean) : MarkdownBlock()
     data class BulletPoint(val text: String, val isCentered: Boolean) : MarkdownBlock()
-    data class OrderedList(val index: String, val text: String, val isCentered: Boolean) : MarkdownBlock()
+    data class OrderedList(val index: String, val text: String, val isCentered: Boolean) :
+        MarkdownBlock()
+
     data class ImageGroup(val images: List<ImageData>, val isCentered: Boolean) : MarkdownBlock()
     data class CodeBlock(val code: String) : MarkdownBlock()
     object HorizontalRule : MarkdownBlock()
@@ -151,37 +158,84 @@ private fun parseMarkdownToBlocks(content: String): List<MarkdownBlock> {
             }
 
             trimmedLine.startsWith("######") -> {
-                blocks.add(MarkdownBlock.Header(trimmedLine.substringAfter("######").trim(), 6, isInsideCenter))
+                blocks.add(
+                    MarkdownBlock.Header(
+                        trimmedLine.substringAfter("######").trim(),
+                        6,
+                        isInsideCenter
+                    )
+                )
             }
 
             trimmedLine.startsWith("#####") -> {
-                blocks.add(MarkdownBlock.Header(trimmedLine.substringAfter("#####").trim(), 5, isInsideCenter))
+                blocks.add(
+                    MarkdownBlock.Header(
+                        trimmedLine.substringAfter("#####").trim(),
+                        5,
+                        isInsideCenter
+                    )
+                )
             }
 
             trimmedLine.startsWith("####") -> {
-                blocks.add(MarkdownBlock.Header(trimmedLine.substringAfter("####").trim(), 4, isInsideCenter))
+                blocks.add(
+                    MarkdownBlock.Header(
+                        trimmedLine.substringAfter("####").trim(),
+                        4,
+                        isInsideCenter
+                    )
+                )
             }
 
             trimmedLine.startsWith("###") -> {
-                blocks.add(MarkdownBlock.Header(trimmedLine.substringAfter("###").trim(), 3, isInsideCenter))
+                blocks.add(
+                    MarkdownBlock.Header(
+                        trimmedLine.substringAfter("###").trim(),
+                        3,
+                        isInsideCenter
+                    )
+                )
             }
 
             trimmedLine.startsWith("##") -> {
-                blocks.add(MarkdownBlock.Header(trimmedLine.substringAfter("##").trim(), 2, isInsideCenter))
+                blocks.add(
+                    MarkdownBlock.Header(
+                        trimmedLine.substringAfter("##").trim(),
+                        2,
+                        isInsideCenter
+                    )
+                )
             }
 
             trimmedLine.startsWith("#") -> {
-                blocks.add(MarkdownBlock.Header(trimmedLine.substringAfter("#").trim(), 1, isInsideCenter))
+                blocks.add(
+                    MarkdownBlock.Header(
+                        trimmedLine.substringAfter("#").trim(),
+                        1,
+                        isInsideCenter
+                    )
+                )
             }
 
             trimmedLine.startsWith("-") || (trimmedLine.startsWith("*") && trimmedLine.getOrNull(1) == ' ') -> {
-                blocks.add(MarkdownBlock.BulletPoint(trimmedLine.substring(1).trim(), isInsideCenter))
+                blocks.add(
+                    MarkdownBlock.BulletPoint(
+                        trimmedLine.substring(1).trim(),
+                        isInsideCenter
+                    )
+                )
             }
 
             trimmedLine.firstOrNull()?.isDigit() == true && trimmedLine.contains(". ") -> {
                 val index = trimmedLine.substringBefore(". ")
                 if (index.all { it.isDigit() }) {
-                    blocks.add(MarkdownBlock.OrderedList(index, trimmedLine.substringAfter(". ").trim(), isInsideCenter))
+                    blocks.add(
+                        MarkdownBlock.OrderedList(
+                            index,
+                            trimmedLine.substringAfter(". ").trim(),
+                            isInsideCenter
+                        )
+                    )
                 } else {
                     blocks.add(MarkdownBlock.Text(line, isInsideCenter))
                 }
@@ -382,7 +436,8 @@ private fun parseMarkdown(text: String): AnnotatedString {
         var cursor = 0
 
         // Regex for Bold (**text**), Italic (*text* or _text_), Underline (<u>text</u>), Links ([text](url)), and Inline Code (`code`)
-        val regex = Regex("(\\*\\*.*?\\*\\*)|(\\*.*?\\*)|(_.*?_)|(<u>.*?</u>)|(\\[.*?]\\(.*?\\))|(`.*?`)")
+        val regex =
+            Regex("(\\*\\*.*?\\*\\*)|(\\*.*?\\*)|(_.*?_)|(<u>.*?</u>)|(\\[.*?]\\(.*?\\))|(`.*?`)")
         val matches = regex.findAll(text)
 
         matches.forEach { match ->
@@ -400,7 +455,9 @@ private fun parseMarkdown(text: String): AnnotatedString {
                     }
                 }
 
-                (matchValue.startsWith("*") && matchValue.endsWith("*") && !matchValue.startsWith("**")) || (matchValue.startsWith("_") && matchValue.endsWith("_")) -> {
+                (matchValue.startsWith("*") && matchValue.endsWith("*") && !matchValue.startsWith("**")) || (matchValue.startsWith(
+                    "_"
+                ) && matchValue.endsWith("_")) -> {
                     withStyle(style = SpanStyle(fontStyle = FontStyle.Italic)) {
                         append(matchValue.substring(1, matchValue.length - 1))
                     }
@@ -507,7 +564,7 @@ private fun SimpleMarkdownPreview() {
         }
         ```
     """.trimIndent()
-    
+
     MaterialTheme {
         Box(modifier = Modifier.padding(16.dp)) {
             SimpleMarkdown(content = markdown)

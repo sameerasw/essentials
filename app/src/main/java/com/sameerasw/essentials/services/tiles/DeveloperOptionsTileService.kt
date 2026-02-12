@@ -35,7 +35,7 @@ class DeveloperOptionsTileService : BaseTileService() {
         return PermissionUtils.canWriteSecureSettings(this)
     }
 
-    override fun getTileIcon(): Icon? {
+    override fun getTileIcon(): Icon {
         return Icon.createWithResource(this, R.drawable.rounded_mobile_code_24)
     }
 
@@ -46,7 +46,11 @@ class DeveloperOptionsTileService : BaseTileService() {
     override fun onTileClick() {
         val newState = if (isDevOptionsEnabled()) 0 else 1
         try {
-            Settings.Global.putInt(contentResolver, Settings.Global.DEVELOPMENT_SETTINGS_ENABLED, newState)
+            Settings.Global.putInt(
+                contentResolver,
+                Settings.Global.DEVELOPMENT_SETTINGS_ENABLED,
+                newState
+            )
         } catch (e: Exception) {
             // Permission check in BaseTileService handles this
         }
@@ -54,7 +58,10 @@ class DeveloperOptionsTileService : BaseTileService() {
 
     private fun isDevOptionsEnabled(): Boolean {
         return try {
-            Settings.Global.getInt(contentResolver, Settings.Global.DEVELOPMENT_SETTINGS_ENABLED) == 1
+            Settings.Global.getInt(
+                contentResolver,
+                Settings.Global.DEVELOPMENT_SETTINGS_ENABLED
+            ) == 1
         } catch (e: Exception) {
             false
         }

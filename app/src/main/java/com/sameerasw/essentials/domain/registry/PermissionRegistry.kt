@@ -10,7 +10,8 @@ object PermissionRegistry {
         if (!list.contains(featureTitleRes)) list.add(featureTitleRes)
     }
 
-    fun getFeatures(permissionKey: String): List<Int> = registry[permissionKey]?.toList() ?: emptyList()
+    fun getFeatures(permissionKey: String): List<Int> =
+        registry[permissionKey]?.toList() ?: emptyList()
 }
 
 // Register existing dependencies
@@ -36,7 +37,7 @@ fun initPermissionRegistry() {
     PermissionRegistry.register("SHIZUKU", R.string.feat_maps_power_saving_title)
     PermissionRegistry.register("USAGE_STATS", R.string.feat_freeze_title)
     PermissionRegistry.register("NOTIFICATION_LISTENER", R.string.feat_freeze_title)
-    
+
     // Root permission
     PermissionRegistry.register("ROOT", R.string.feat_maps_power_saving_title)
     PermissionRegistry.register("ROOT", R.string.feat_freeze_title)
@@ -75,7 +76,7 @@ fun initPermissionRegistry() {
 
     // Modify system settings permission
     PermissionRegistry.register("WRITE_SETTINGS", R.string.feat_qs_tiles_title)
-    
+
     // Calendar sync permission
     PermissionRegistry.register("READ_CALENDAR", R.string.feat_calendar_sync_title)
 

@@ -1,9 +1,7 @@
 package com.sameerasw.essentials.ui.composables.configs
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,12 +11,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
-import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.viewmodels.MainViewModel
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.mutableStateOf
 
 @OptIn(androidx.compose.material3.ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -43,38 +36,41 @@ fun BatteriesSettingsUI(
 
             if (isAirSyncInstalled) {
                 ListItem(
-                    leadingContent = { 
+                    leadingContent = {
                         androidx.compose.material3.Icon(
                             painter = androidx.compose.ui.res.painterResource(R.drawable.rounded_laptop_mac_24),
-                            contentDescription = null 
-                        ) 
+                            contentDescription = null
+                        )
                     },
                     headlineContent = { Text(stringResource(R.string.connect_to_airsync)) },
                     supportingContent = { Text(stringResource(R.string.connect_to_airsync_summary)) },
                     trailingContent = {
                         androidx.compose.material3.Switch(
                             checked = viewModel.isAirSyncConnectionEnabled.value,
-                            onCheckedChange = { 
+                            onCheckedChange = {
                                 haptic.performHapticFeedback(androidx.compose.ui.hapticfeedback.HapticFeedbackType.TextHandleMove)
-                                viewModel.setAirSyncConnectionEnabled(it, context) 
+                                viewModel.setAirSyncConnectionEnabled(it, context)
                             }
                         )
                     }
                 )
             } else {
                 ListItem(
-                    leadingContent = { 
-                         androidx.compose.material3.Icon(
+                    leadingContent = {
+                        androidx.compose.material3.Icon(
                             painter = androidx.compose.ui.res.painterResource(R.drawable.rounded_laptop_mac_24),
-                            contentDescription = null 
-                        ) 
+                            contentDescription = null
+                        )
                     },
                     headlineContent = { Text(stringResource(R.string.download_airsync)) },
                     supportingContent = { Text(stringResource(R.string.download_airsync_summary)) },
                     trailingContent = {
                         androidx.compose.material3.Button(
                             onClick = {
-                                val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://play.google.com/store/apps/details?id=com.sameerasw.airsync"))
+                                val intent = android.content.Intent(
+                                    android.content.Intent.ACTION_VIEW,
+                                    android.net.Uri.parse("https://play.google.com/store/apps/details?id=com.sameerasw.airsync")
+                                )
                                 intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK
                                 context.startActivity(intent)
                             }
@@ -88,7 +84,7 @@ fun BatteriesSettingsUI(
             // Bluetooth Devices
             val isBluetoothEnabled = viewModel.isBluetoothDevicesEnabled.value
             val isPermissionGranted = viewModel.isBluetoothPermissionGranted.value
-            
+
             val launcher = androidx.activity.compose.rememberLauncherForActivityResult(
                 contract = androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions()
             ) { permissions ->
@@ -98,13 +94,13 @@ fun BatteriesSettingsUI(
                     viewModel.setBluetoothDevicesEnabled(true, context)
                 }
             }
-            
+
             ListItem(
-                leadingContent = { 
-                     androidx.compose.material3.Icon(
+                leadingContent = {
+                    androidx.compose.material3.Icon(
                         painter = androidx.compose.ui.res.painterResource(R.drawable.rounded_bluetooth_24),
-                        contentDescription = null 
-                    ) 
+                        contentDescription = null
+                    )
                 },
                 headlineContent = { Text(stringResource(R.string.show_bluetooth_devices)) },
                 supportingContent = { Text(stringResource(R.string.show_bluetooth_devices_summary)) },
@@ -151,11 +147,11 @@ fun BatteriesSettingsUI(
                         Text(stringResource(R.string.limit_max_devices_summary))
                         androidx.compose.material3.Slider(
                             value = viewModel.batteryWidgetMaxDevices.intValue.toFloat(),
-                            onValueChange = { 
+                            onValueChange = {
                                 val newInt = it.toInt()
                                 if (newInt != viewModel.batteryWidgetMaxDevices.intValue) {
                                     haptic.performHapticFeedback(androidx.compose.ui.hapticfeedback.HapticFeedbackType.TextHandleMove)
-                                    viewModel.setBatteryWidgetMaxDevices(newInt, context) 
+                                    viewModel.setBatteryWidgetMaxDevices(newInt, context)
                                 }
                             },
                             valueRange = 1f..8f,
@@ -184,9 +180,9 @@ fun BatteriesSettingsUI(
                 trailingContent = {
                     androidx.compose.material3.Switch(
                         checked = viewModel.isBatteryWidgetBackgroundEnabled.value,
-                        onCheckedChange = {  
+                        onCheckedChange = {
                             haptic.performHapticFeedback(androidx.compose.ui.hapticfeedback.HapticFeedbackType.TextHandleMove)
-                            viewModel.setBatteryWidgetBackgroundEnabled(it, context) 
+                            viewModel.setBatteryWidgetBackgroundEnabled(it, context)
                         }
                     )
                 }

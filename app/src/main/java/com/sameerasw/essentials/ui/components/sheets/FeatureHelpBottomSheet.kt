@@ -10,7 +10,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -19,22 +23,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.sameerasw.essentials.R
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sameerasw.essentials.domain.model.Feature
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
-
 import com.sameerasw.essentials.utils.ColorUtil
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.sameerasw.essentials.viewmodels.MainViewModel
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.AssistChipDefaults
 import com.sameerasw.essentials.utils.PermissionUIHelper
+import com.sameerasw.essentials.viewmodels.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,14 +51,16 @@ fun FeatureHelpBottomSheet(
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            
+
             // Header with Icon and Title
             Row(
-                modifier = Modifier.fillMaxWidth().padding(start = 8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                 Box(
+                Box(
                     modifier = Modifier
                         .size(48.dp)
                         .background(
@@ -76,7 +76,7 @@ fun FeatureHelpBottomSheet(
                         tint = ColorUtil.getVibrantColorFor(stringResource(feature.title))
                     )
                 }
-                
+
                 Column {
                     Text(
                         text = stringResource(feature.title),
@@ -95,7 +95,7 @@ fun FeatureHelpBottomSheet(
                     } else {
                         stringResource(feature.description)
                     }
-                    
+
                     Text(
                         text = description,
                         style = MaterialTheme.typography.bodyLarge,
@@ -106,7 +106,11 @@ fun FeatureHelpBottomSheet(
 
             // Permissions
             if (feature.permissionKeys.isNotEmpty()) {
-                val permissions = PermissionUIHelper.getPermissionItems(feature.permissionKeys, context, viewModel)
+                val permissions = PermissionUIHelper.getPermissionItems(
+                    feature.permissionKeys,
+                    context,
+                    viewModel
+                )
                 if (permissions.isNotEmpty()) {
                     LazyRow(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -145,7 +149,7 @@ fun FeatureHelpBottomSheet(
                         }
                     }
                 } else {
-                     Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
             } else {
                 Spacer(modifier = Modifier.height(16.dp))

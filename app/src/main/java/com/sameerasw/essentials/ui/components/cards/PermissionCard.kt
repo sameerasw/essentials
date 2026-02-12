@@ -16,12 +16,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.utils.HapticUtil
@@ -43,7 +43,10 @@ fun PermissionCard(
     val view = LocalView.current
 
     Card(modifier = modifier.fillMaxWidth(), shape = MaterialTheme.shapes.extraSmall) {
-        Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Column(
+            modifier = Modifier.padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
 
                 Spacer(modifier = Modifier.size(12.dp))
@@ -77,7 +80,10 @@ fun PermissionCard(
                             is String -> f
                             else -> ""
                         }
-                        Text(text = "• $resolvedFeature", style = MaterialTheme.typography.bodyMedium)
+                        Text(
+                            text = "• $resolvedFeature",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                     }
                 }
             }
@@ -127,7 +133,10 @@ fun PermissionCard(
                     }, modifier = Modifier.fillMaxWidth()) {
                         Text(resolvedActionLabel)
                         Spacer(modifier = Modifier.weight(1f))
-                        Icon(painter = painterResource(id = R.drawable.rounded_arrow_forward_24), contentDescription = null)
+                        Icon(
+                            painter = painterResource(id = R.drawable.rounded_arrow_forward_24),
+                            contentDescription = null
+                        )
                     }
                 }
             } else {
@@ -164,7 +173,10 @@ fun PermissionCard(
                     }, modifier = Modifier.fillMaxWidth()) {
                         Text(resolvedActionLabel)
                         Spacer(modifier = Modifier.weight(1f))
-                        Icon(painter = painterResource(id = R.drawable.rounded_arrow_forward_24), contentDescription = null)
+                        Icon(
+                            painter = painterResource(id = R.drawable.rounded_arrow_forward_24),
+                            contentDescription = null
+                        )
                     }
                 }
             }

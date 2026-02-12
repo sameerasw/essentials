@@ -6,7 +6,8 @@ import com.sameerasw.essentials.data.repository.SettingsRepository
 object ShellUtils {
 
     fun isRootEnabled(context: Context): Boolean {
-        val prefs = context.getSharedPreferences(SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
+        val prefs =
+            context.getSharedPreferences(SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
         return prefs.getBoolean(SettingsRepository.KEY_USE_ROOT, false)
     }
 

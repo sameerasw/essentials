@@ -8,7 +8,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class LocationReachedRepository(context: Context) {
-    private val prefs: SharedPreferences = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+    private val prefs: SharedPreferences =
+        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
 
     companion object {
         private val _isProcessing = MutableStateFlow(false)
@@ -40,8 +41,18 @@ class LocationReachedRepository(context: Context) {
     }
 
     fun getAlarm(): LocationAlarm {
-        val lat = java.lang.Double.longBitsToDouble(prefs.getLong("location_reached_lat", java.lang.Double.doubleToRawLongBits(0.0)))
-        val lng = java.lang.Double.longBitsToDouble(prefs.getLong("location_reached_lng", java.lang.Double.doubleToRawLongBits(0.0)))
+        val lat = java.lang.Double.longBitsToDouble(
+            prefs.getLong(
+                "location_reached_lat",
+                java.lang.Double.doubleToRawLongBits(0.0)
+            )
+        )
+        val lng = java.lang.Double.longBitsToDouble(
+            prefs.getLong(
+                "location_reached_lng",
+                java.lang.Double.doubleToRawLongBits(0.0)
+            )
+        )
         val radius = prefs.getInt("location_reached_radius", 1000)
         val enabled = prefs.getBoolean("location_reached_enabled", false)
         return LocationAlarm(lat, lng, radius, enabled)

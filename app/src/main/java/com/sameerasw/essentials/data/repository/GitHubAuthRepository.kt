@@ -4,12 +4,10 @@ import com.google.gson.Gson
 import com.sameerasw.essentials.domain.model.github.DeviceCodeResponse
 import com.sameerasw.essentials.domain.model.github.TokenResponse
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import java.io.IOException
 
 class GitHubAuthRepository {
     private val client = OkHttpClient()
@@ -40,28 +38,29 @@ class GitHubAuthRepository {
         }
     }
 
-    suspend fun pollForToken(deviceCode: String, interval: Int): TokenResponse? = withContext(Dispatchers.IO) {
-        val requestBody = FormBody.Builder()
-            .add("client_id", clientId)
-            .add("device_code", deviceCode)
-            .add("grant_type", "urn:ietf:params:oauth:grant-type:device_code")
-            .build()
+    suspend fun pollForToken(deviceCode: String, interval: Int): TokenResponse? =
+        withContext(Dispatchers.IO) {
+            val requestBody = FormBody.Builder()
+                .add("client_id", clientId)
+                .add("device_code", deviceCode)
+                .add("grant_type", "urn:ietf:params:oauth:grant-type:device_code")
+                .build()
 
-        val request = Request.Builder()
-            .url("https://github.com/login/oauth/access_token")
-            .header("Accept", "application/json")
-            .post(requestBody)
-            .build()
+            val request = Request.Builder()
+                .url("https://github.com/login/oauth/access_token")
+                .header("Accept", "application/json")
+                .post(requestBody)
+                .build()
 
-        try {
-            val response = client.newCall(request).execute()
-            if (!response.isSuccessful) return@withContext null
+            try {
+                val response = client.newCall(request).execute()
+                if (!response.isSuccessful) return@withContext null
 
-            val responseBody = response.body?.string() ?: return@withContext null
-            gson.fromJson(responseBody, TokenResponse::class.java)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
+                val responseBody = response.body?.string() ?: return@withContext null
+                gson.fromJson(responseBody, TokenResponse::class.java)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
         }
-    }
 }

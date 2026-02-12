@@ -3,13 +3,13 @@ package com.sameerasw.essentials.services.handlers
 import android.app.NotificationManager
 import android.content.Context
 import android.media.AudioManager
-import com.sameerasw.essentials.utils.HapticUtil
 
 class SoundModeHandler(private val context: Context) {
 
     fun cycleNextMode(): Int? {
         val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         if (!notificationManager.isNotificationPolicyAccessGranted) {
             return null
@@ -17,7 +17,8 @@ class SoundModeHandler(private val context: Context) {
 
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
         val defaultOrder = listOf("Sound", "Vibrate", "Silent")
-        val orderString = prefs.getString("sound_mode_order", defaultOrder.joinToString(",")) ?: defaultOrder.joinToString(",")
+        val orderString = prefs.getString("sound_mode_order", defaultOrder.joinToString(","))
+            ?: defaultOrder.joinToString(",")
         val order = orderString.split(",")
 
         val currentMode = when (audioManager.ringerMode) {

@@ -25,17 +25,19 @@ class MetadataProvider(
             if (inputStream == null) return ExifData()
 
             val exif = ExifInterface(inputStream)
-            
+
             ExifData(
                 make = exif.getAttribute(ExifInterface.TAG_MAKE),
                 model = exif.getAttribute(ExifInterface.TAG_MODEL),
                 aperture = exif.getAttribute(ExifInterface.TAG_F_NUMBER)?.let { "f/$it" },
                 shutterSpeed = exif.getAttribute(ExifInterface.TAG_EXPOSURE_TIME)?.let { "${it}s" },
-                iso = exif.getAttribute(ExifInterface.TAG_PHOTOGRAPHIC_SENSITIVITY)?.let { "ISO $it" },
+                iso = exif.getAttribute(ExifInterface.TAG_PHOTOGRAPHIC_SENSITIVITY)
+                    ?.let { "ISO $it" },
                 date = exif.getAttribute(ExifInterface.TAG_DATETIME_ORIGINAL),
-                focalLength = exif.getAttributeDouble(ExifInterface.TAG_FOCAL_LENGTH, 0.0).let { 
+                focalLength = exif.getAttributeDouble(ExifInterface.TAG_FOCAL_LENGTH, 0.0).let {
                     if (it > 0) {
-                        val formatted = if (it % 1.0 == 0.0) it.toInt().toString() else it.toString()
+                        val formatted =
+                            if (it % 1.0 == 0.0) it.toInt().toString() else it.toString()
                         "${formatted}mm"
                     } else null
                 }

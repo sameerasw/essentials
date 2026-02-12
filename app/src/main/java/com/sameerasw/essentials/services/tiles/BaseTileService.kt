@@ -5,8 +5,8 @@ import android.os.Build
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import androidx.annotation.RequiresApi
-import com.sameerasw.essentials.utils.HapticUtil
 import androidx.core.content.edit
+import com.sameerasw.essentials.utils.HapticUtil
 
 @RequiresApi(Build.VERSION_CODES.N)
 abstract class BaseTileService : TileService() {

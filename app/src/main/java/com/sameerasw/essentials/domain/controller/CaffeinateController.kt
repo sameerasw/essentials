@@ -42,7 +42,10 @@ object CaffeinateController {
     }
 
     private fun refreshTile(context: Context) {
-        TileService.requestListeningState(context, ComponentName(context, CaffeinateTileService::class.java))
+        TileService.requestListeningState(
+            context,
+            ComponentName(context, CaffeinateTileService::class.java)
+        )
     }
 
     private fun startSelection(context: Context) {
@@ -51,17 +54,17 @@ object CaffeinateController {
 
         isStarting.value = true
         startingTimeLeft.value = 5
-        
+
         val sortedPresets = timeoutPresets.filter { enabledPresets.contains(it) }
         selectedTimeout.value = sortedPresets.firstOrNull() ?: timeoutPresets.first()
-        
+
         registerScreenOffReceiver(context)
-        
+
         if (isSkipCountdownEnabled(context)) {
             startService(context)
             isStarting.value = true
         }
-        
+
         resetSelectionTimer(context)
     }
 
@@ -78,32 +81,38 @@ object CaffeinateController {
                 }
             }
         }
-        appContext.registerReceiver(screenOffReceiver, android.content.IntentFilter(Intent.ACTION_SCREEN_OFF))
+        appContext.registerReceiver(
+            screenOffReceiver,
+            android.content.IntentFilter(Intent.ACTION_SCREEN_OFF)
+        )
     }
 
     private fun unregisterScreenOffReceiver(context: Context) {
         val appContext = context.applicationContext
         screenOffReceiver?.let {
-            try { appContext.unregisterReceiver(it) } catch (_: Exception) {}
+            try {
+                appContext.unregisterReceiver(it)
+            } catch (_: Exception) {
+            }
         }
         screenOffReceiver = null
     }
 
     fun cycleTimeout(context: Context) {
         if (!isStarting.value) return
-        
+
         val enabledPresets = getEnabledPresets(context)
         val sortedPresets = timeoutPresets.filter { enabledPresets.contains(it) }
         val currentIndex = sortedPresets.indexOf(selectedTimeout.value)
         val nextIndex = (currentIndex + 1) % sortedPresets.size
-        
+
         selectedTimeout.value = sortedPresets[nextIndex]
-        
+
         if (isActive.value) {
             startService(context)
             isStarting.value = true
         }
-        
+
         resetSelectionTimer(context)
         refreshTile(context)
     }
@@ -143,7 +152,8 @@ object CaffeinateController {
 
     private fun getEnabledPresets(context: Context): Set<Int> {
         val prefs = context.getSharedPreferences("caffeinate_prefs", Context.MODE_PRIVATE)
-        val savedPresets = prefs.getStringSet("enabled_presets", timeoutPresets.map { it.toString() }.toSet())
+        val savedPresets =
+            prefs.getStringSet("enabled_presets", timeoutPresets.map { it.toString() }.toSet())
         return savedPresets?.map { it.toInt() }?.toSet() ?: timeoutPresets.toSet()
     }
 
@@ -152,6 +162,7 @@ object CaffeinateController {
         return prefs.getBoolean("skip_countdown", false)
     }
 
+    @Suppress("DEPRECATION")
     private fun isWakeLockServiceRunning(context: Context): Boolean {
         val manager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         for (service in manager.getRunningServices(Int.MAX_VALUE)) {
