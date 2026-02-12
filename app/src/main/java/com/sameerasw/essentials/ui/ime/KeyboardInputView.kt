@@ -373,7 +373,7 @@ fun KeyboardInputView(
     val row2Letters = remember { listOf("a", "s", "d", "f", "g", "h", "j", "k", "l") }
     val row3Letters = remember { listOf("z", "x", "c", "v", "b", "n", "m") }
 
-    val row1Symbols = remember { listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "0") }
+    val row1Symbols = remember { listOf("~", "\\", "|", "^", "<", ">", "[", "]", "{", "}") }
     val row2Symbols = remember { listOf("@", "#", "$", "%", "&", "-", "+", "(", ")", "/") }
     val row3Symbols = remember { listOf("*", "\"", "'", ":", ";", "!", "?") }
 
