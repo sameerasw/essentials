@@ -288,6 +288,47 @@ fun KeyboardInputView(
     var isClipboardMode by remember { mutableStateOf(false) }
     var isEmojiMode by remember { mutableStateOf(false) }
     var isSuggestionsCollapsed by remember { mutableStateOf(false) }
+    var currentWord by remember { mutableStateOf("") }
+
+    val emojiCandidates = remember(currentWord) {
+        if (currentWord.length >= 3) {
+            EmojiData.allEmojis
+                .filter { it.name.contains(currentWord, ignoreCase = true) }
+                .take(5)
+                .map { it.emoji }
+        } else {
+            emptyList()
+        }
+    }
+
+    val mergedSuggestions = remember(suggestions, emojiCandidates) {
+        if (emojiCandidates.isNotEmpty() && suggestions.isNotEmpty()) {
+            // Priority: Text 1 -> Emoji 1 -> Remaining Text -> Remaining Emojis
+            listOf(suggestions[0]) + emojiCandidates.take(1) + suggestions.drop(1) + emojiCandidates.drop(1)
+        } else {
+            emojiCandidates + suggestions
+        }
+    }
+
+    fun handleType(text: String) {
+        onType(text)
+        if (text.length == 1 && (text[0].isLetterOrDigit() || text[0] == '\'')) {
+            currentWord += text
+        } else {
+            currentWord = ""
+        }
+    }
+
+    fun handleKeyPress(keyCode: Int) {
+        onKeyPress(keyCode)
+        if (keyCode == android.view.KeyEvent.KEYCODE_DEL) {
+            if (currentWord.isNotEmpty()) {
+                currentWord = currentWord.dropLast(1)
+            }
+        } else {
+            currentWord = ""
+        }
+    }
 
     // Total Height animation
     val animatedTotalHeight by animateDpAsState(
@@ -378,7 +419,7 @@ fun KeyboardInputView(
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         val FunctionRow: @Composable (Modifier) -> Unit = { modifier ->
-            val hasSuggestions = suggestions.isNotEmpty()
+            val hasSuggestions = mergedSuggestions.isNotEmpty()
             val showSuggestions = hasSuggestions && !isEmojiMode && !isSuggestionsCollapsed
 
             val rotation by animateFloatAsState(
@@ -412,7 +453,7 @@ fun KeyboardInputView(
             ) { targetShowSuggestions ->
                 if (targetShowSuggestions) {
                     val collapseInteraction = remember { MutableInteractionSource() }
-                    val carouselState = rememberCarouselState { suggestions.count() }
+                    val carouselState = rememberCarouselState { mergedSuggestions.count() }
 
                     Row(
                         modifier = Modifier.fillMaxSize(),
@@ -452,7 +493,7 @@ fun KeyboardInputView(
                             maxSmallItemWidth = 20.dp,
                             contentPadding = PaddingValues(start = functionsPadding)
                         ) { i ->
-                            val suggestion = suggestions[i]
+                            val suggestion = mergedSuggestions[i]
                             val suggInteraction = remember { MutableInteractionSource() }
                             val animatedRadius by animateDpAsState(
                                 targetValue = keyRoundness,
@@ -460,7 +501,12 @@ fun KeyboardInputView(
                             )
 
                             KeyButton(
-                                onClick = { onSuggestionClick(suggestion) },
+                                onClick = { 
+                                    onSuggestionClick(suggestion)
+                                    // If it's an emoji (single char usually, or check length), don't add space if app does, 
+                                    // but we just pass it out. Let's reset currentWord if it's a COMMIT.
+                                    currentWord = "" 
+                                },
                                 onPress = { performLightHaptic() },
                                 interactionSource = suggInteraction,
                                 containerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -662,7 +708,7 @@ fun KeyboardInputView(
                         isHapticsEnabled = isHapticsEnabled,
                         hapticStrength = hapticStrength,
                         onEmojiSelected = { emoji ->
-                            onType(emoji)
+                            handleType(emoji)
                         },
                         onSwipeDownToExit = {
                             if (isEmojiMode) {
@@ -690,7 +736,7 @@ fun KeyboardInputView(
                                         val numInteraction = remember { MutableInteractionSource() }
                                         val isPressed by numInteraction.collectIsPressedAsState()
                                         KeyButton(
-                                            onClick = { onType(char) },
+                                            onClick = { handleType(char) },
                                             onPress = { performLightHaptic() },
                                             interactionSource = numInteraction,
                                             containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
@@ -731,7 +777,7 @@ fun KeyboardInputView(
                                         )
                                         KeyButton(
                                             onClick = {
-                                                onType(displayLabel)
+                                                handleType(displayLabel)
                                                 if (shiftState == ShiftState.ON) shiftState = ShiftState.OFF
                                             },
                                             onPress = { performLightHaptic() },
@@ -781,7 +827,7 @@ fun KeyboardInputView(
                                             )
                                             KeyButton(
                                                 onClick = {
-                                                    onType(displayLabel)
+                                                    handleType(displayLabel)
                                                     if (shiftState == ShiftState.ON) shiftState = ShiftState.OFF
                                                 },
                                                 onPress = { performLightHaptic() },
@@ -884,7 +930,7 @@ fun KeyboardInputView(
                                         )
                                         KeyButton(
                                             onClick = {
-                                                onType(displayLabel)
+                                                handleType(displayLabel)
                                                 if (shiftState == ShiftState.ON) shiftState = ShiftState.OFF
                                             },
                                             onPress = { performLightHaptic() },
@@ -944,7 +990,7 @@ fun KeyboardInputView(
                                                             (kotlin.math.abs(delAccumulatedDx) / delSweepThreshold).toInt()
                                                         repeat(steps) {
                                                             performLightHaptic()
-                                                            onKeyPress(KeyEvent.KEYCODE_DEL)
+                                                            handleKeyPress(KeyEvent.KEYCODE_DEL)
                                                         }
                                                         delAccumulatedDx %= delSweepThreshold
                                                     }
@@ -963,7 +1009,7 @@ fun KeyboardInputView(
                                                                 PressInteraction.Release(press)
                                                             )
                                                         }
-                                                        onKeyPress(KeyEvent.KEYCODE_DEL)
+                                                        handleKeyPress(KeyEvent.KEYCODE_DEL)
                                                     } else {
                                                         scope.launch {
                                                             backspaceInteraction.emit(
@@ -1028,7 +1074,7 @@ fun KeyboardInputView(
                                     label = "cornerRadius"
                                 )
                                 KeyButton(
-                                    onClick = { onType(",") },
+                                    onClick = { handleType(",") },
                                     onPress = { performLightHaptic() },
                                     interactionSource = commaInteraction,
                                     containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -1080,7 +1126,7 @@ fun KeyboardInputView(
                                                             if (accumulatedDx > 0) KeyEvent.KEYCODE_DPAD_RIGHT else KeyEvent.KEYCODE_DPAD_LEFT
                                                         repeat(steps) {
                                                             performLightHaptic()
-                                                            onKeyPress(keycode)
+                                                            handleKeyPress(keycode)
                                                         }
                                                         accumulatedDx %= sweepThreshold
                                                     }
@@ -1097,7 +1143,7 @@ fun KeyboardInputView(
                                                     spaceInteraction.emit(PressInteraction.Release(press))
                                                 },
                                                 onTap = {
-                                                    onType(" ")
+                                                    handleType(" ")
                                                 }
                                             )
                                         }
@@ -1115,7 +1161,7 @@ fun KeyboardInputView(
                                     label = "cornerRadius"
                                 )
                                 KeyButton(
-                                    onClick = { onType(".") },
+                                    onClick = { handleType(".") },
                                     onPress = { performLightHaptic() },
                                     interactionSource = dotInteraction,
                                     containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -1141,7 +1187,7 @@ fun KeyboardInputView(
                                     label = "cornerRadius"
                                 )
                                 KeyButton(
-                                    onClick = { onKeyPress(KeyEvent.KEYCODE_ENTER) },
+                                    onClick = { handleKeyPress(KeyEvent.KEYCODE_ENTER) },
                                     onPress = { performLightHaptic() },
                                     interactionSource = returnInteraction,
                                     containerColor = MaterialTheme.colorScheme.primaryContainer,
