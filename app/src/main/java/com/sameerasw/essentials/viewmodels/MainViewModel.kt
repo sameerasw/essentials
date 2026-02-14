@@ -729,6 +729,19 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    fun clearUserDictionary(context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val file = java.io.File(context.filesDir, "user_dict.txt")
+            if (file.exists()) {
+                file.delete()
+                withContext(Dispatchers.Main) {
+                    userDictionaryWords.value = emptyMap()
+                }
+                settingsRepository.putLong(SettingsRepository.KEY_USER_DICT_LAST_UPDATE, System.currentTimeMillis())
+            }
+        }
+    }
+
     fun setPitchBlackThemeEnabled(enabled: Boolean, context: Context) {
         isPitchBlackThemeEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_PITCH_BLACK_THEME_ENABLED, enabled)
