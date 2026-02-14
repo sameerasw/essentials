@@ -71,6 +71,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -373,8 +374,8 @@ fun KeyboardInputView(
     val row2Letters = remember { listOf("a", "s", "d", "f", "g", "h", "j", "k", "l") }
     val row3Letters = remember { listOf("z", "x", "c", "v", "b", "n", "m") }
 
-    val row1Symbols = remember { listOf("~", "\\", "|", "^", "<", ">", "[", "]", "{", "}") }
-    val row2Symbols = remember { listOf("@", "#", "$", "%", "&", "-", "+", "(", ")", "/") }
+    val row1Symbols = remember { listOf("~", "\\", "|", "^", "%", "=", "<", ">", "[", "]") }
+    val row2Symbols = remember { listOf("@", "#", "$", "_", "&", "-", "+", "(", ")", "/") }
     val row3Symbols = remember { listOf("*", "\"", "'", ":", ";", "!", "?") }
 
     val currentRow1 = if (isSymbols) row1Symbols else row1Letters
@@ -1059,7 +1060,7 @@ fun KeyboardInputView(
                                         .fillMaxHeight()
                                 ) {
                                     Text(
-                                        text = if (isSymbols) "ABC" else "?#/",
+                                        text = stringResource(if (isSymbols) R.string.label_kbd_abc else R.string.label_kbd_symbols),
                                         style = MaterialTheme.typography.titleLarge,
                                         fontWeight = FontWeight.Medium,
                                         fontFamily = CustomFontFamily
