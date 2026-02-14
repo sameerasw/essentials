@@ -14,7 +14,9 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
@@ -195,9 +197,12 @@ fun KeyButton(
                                 // Canceled or lost tracker
                                 break
                             } else {
-                                // Check if user moved too far (swiped)
-                                val distance = (change.position - down.position).getDistance()
-                                if (distance > viewConfiguration.touchSlop) {
+                                val x = change.position.x
+                                val y = change.position.y
+                                val boundsSlop = viewConfiguration.touchSlop
+                                
+                                if (x < -boundsSlop || y < -boundsSlop || 
+                                    x > size.width + boundsSlop || y > size.height + boundsSlop) {
                                     isCanceledByMovement = true
                                 }
                                 
@@ -287,6 +292,7 @@ fun KeyboardInputView(
     onOpened: Int = 0
 ) {
     val view = LocalView.current
+    val viewConfiguration = LocalViewConfiguration.current
     val scope = rememberCoroutineScope()
 
     var isSymbols by remember { mutableStateOf(false) }
@@ -527,8 +533,8 @@ fun KeyboardInputView(
                                 },
                                 onPress = { performLightHaptic() },
                                 interactionSource = suggInteraction,
-                                containerColor = if (isLearned) MaterialTheme.colorScheme.tertiaryContainer else MaterialTheme.colorScheme.secondaryContainer,
-                                contentColor = if (isLearned) MaterialTheme.colorScheme.onTertiaryContainer else MaterialTheme.colorScheme.onSecondaryContainer,
+                                containerColor = if (isLearned) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondaryContainer,
+                                contentColor = if (isLearned) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondaryContainer,
                                 shape = RoundedCornerShape(animatedRadius),
                                 modifier = Modifier
                                     .fillMaxHeight()
@@ -1132,38 +1138,71 @@ fun KeyboardInputView(
                                         .bounceClick(spaceInteraction)
                                         .clip(RoundedCornerShape(animatedRadiusSpace))
                                         .pointerInput(Unit) {
-                                            detectHorizontalDragGestures(
-                                                onDragStart = { accumulatedDx = 0f },
-                                                onHorizontalDrag = { change, dragAmount ->
-                                                    change.consume()
-                                                    accumulatedDx += dragAmount
-                                                    val absDx = kotlin.math.abs(accumulatedDx)
-                                                    if (absDx >= sweepThreshold) {
-                                                        val steps = (absDx / sweepThreshold).toInt()
-                                                        val keycode =
-                                                            if (accumulatedDx > 0) KeyEvent.KEYCODE_DPAD_RIGHT else KeyEvent.KEYCODE_DPAD_LEFT
-                                                        repeat(steps) {
-                                                            performLightHaptic()
-                                                            handleKeyPress(keycode)
+                                            val viewConfig = viewConfiguration
+                                            awaitEachGesture {
+                                                val down = awaitFirstDown(requireUnconsumed = false)
+                                                val press = PressInteraction.Press(down.position)
+                                                scope.launch { spaceInteraction.emit(press) }
+                                                performLightHaptic()
+
+                                                var isDragStarted = false
+                                                var totalDx = 0f
+                                                var cursorAccumulator = 0f
+                                                
+                                                // Increased slop for spacebar to prevent accidental cursor moves
+                                                val customSlop = viewConfig.touchSlop * 2.5f
+
+                                                var upOrCancel: PointerInputChange? = null
+
+                                                while (true) {
+                                                    val event = awaitPointerEvent()
+                                                    val change = event.changes.find { it.id == down.id }
+                                                    
+                                                    if (change == null || change.isConsumed) {
+                                                        break
+                                                    }
+
+                                                    if (change.changedToUp()) {
+                                                        upOrCancel = change
+                                                        break
+                                                    }
+
+                                                    if (change.positionChange() != Offset.Zero) {
+                                                        totalDx += (change.position.x - change.previousPosition.x)
+                                                        val dxFromOrigin = totalDx
+                                                        
+                                                        if (!isDragStarted) {
+                                                            if (kotlin.math.abs(dxFromOrigin) > customSlop) {
+                                                                isDragStarted = true
+                                                                cursorAccumulator = 0f 
+                                                            }
                                                         }
-                                                        accumulatedDx %= sweepThreshold
+                                                        
+                                                        if (isDragStarted) {
+                                                            change.consume()
+                                                            cursorAccumulator += (change.position.x - change.previousPosition.x)
+                                                            
+                                                            val absDx = kotlin.math.abs(cursorAccumulator)
+                                                            if (absDx >= sweepThreshold) {
+                                                                val steps = (absDx / sweepThreshold).toInt()
+                                                                val keycode = if (cursorAccumulator > 0) KeyEvent.KEYCODE_DPAD_RIGHT else KeyEvent.KEYCODE_DPAD_LEFT
+                                                                repeat(steps) {
+                                                                    performLightHaptic()
+                                                                    handleKeyPress(keycode)
+                                                                }
+                                                                cursorAccumulator %= sweepThreshold
+                                                            }
+                                                        }
                                                     }
                                                 }
-                                            )
-                                        }
-                                        .pointerInput(Unit) {
-                                            detectTapGestures(
-                                                onPress = { offset ->
-                                                    val press = PressInteraction.Press(offset)
-                                                    spaceInteraction.emit(press)
-                                                    performLightHaptic()
-                                                    tryAwaitRelease()
-                                                    spaceInteraction.emit(PressInteraction.Release(press))
-                                                },
-                                                onTap = {
-                                                    handleType(" ")
+
+                                                if (upOrCancel != null && !isDragStarted) {
+                                                     handleType(" ")
+                                                     scope.launch { spaceInteraction.emit(PressInteraction.Release(press)) }
+                                                } else {
+                                                     scope.launch { spaceInteraction.emit(PressInteraction.Cancel(press)) }
                                                 }
-                                            )
+                                            }
                                         }
                                         .background(animatedColorSpace),
                                     contentAlignment = Alignment.Center

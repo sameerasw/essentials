@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.ui.composables.sheets
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -77,39 +78,44 @@ fun UserDictionaryBottomSheet(
                     modifier = Modifier.padding(vertical = 32.dp)
                 )
             } else {
+                val view = androidx.compose.ui.platform.LocalView.current
                 LazyColumn(
-                    contentPadding = PaddingValues(bottom = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
-                    items(words.entries.toList().sortedByDescending { it.value }) { (word, freq) ->
-                         RoundedCardContainer(
-                             spacing = 0.dp,
-                             containerColor = MaterialTheme.colorScheme.surfaceBright
-                         ) {
-                             Row(
-                                 modifier = Modifier
-                                     .fillMaxWidth()
-                                     .padding(horizontal = 16.dp, vertical = 12.dp),
-                                 verticalAlignment = Alignment.CenterVertically
-                             ) {
-                                 Column(modifier = Modifier.weight(1f)) {
+                    item {
+                        RoundedCardContainer(
+                            spacing = 2.dp
+                        ) {
+                             words.entries.toList().sortedByDescending { it.value }.forEach { (word, freq) ->
+                                 Row(
+                                     modifier = Modifier
+                                         .fillMaxWidth()
+                                         .background(MaterialTheme.colorScheme.surfaceBright)
+                                         .padding(horizontal = 16.dp, vertical = 12.dp),
+                                     verticalAlignment = Alignment.CenterVertically,
+                                     horizontalArrangement = Arrangement.SpaceBetween
+                                 ) {
                                      Text(
                                          text = word,
-                                         style = MaterialTheme.typography.titleMedium
+                                         style = MaterialTheme.typography.bodyMedium,
+                                         color = MaterialTheme.colorScheme.onSurface,
+                                         modifier = Modifier.weight(1f)
                                      )
-                                 }
-                                 
-                                 IconButton(
-                                     onClick = { viewModel.deleteUserWord(word, context) }
-                                 ) {
-                                     Icon(
-                                         painter = painterResource(R.drawable.rounded_delete_24),
-                                         contentDescription = "Delete",
-                                         tint = MaterialTheme.colorScheme.error
-                                     )
+                                     
+                                     IconButton(
+                                         onClick = { 
+                                             com.sameerasw.essentials.utils.HapticUtil.performVirtualKeyHaptic(view)
+                                             viewModel.deleteUserWord(word, context) 
+                                         }
+                                     ) {
+                                         Icon(
+                                             painter = painterResource(R.drawable.rounded_delete_24),
+                                             contentDescription = "Delete",
+                                             tint = MaterialTheme.colorScheme.error
+                                         )
+                                     }
                                  }
                              }
-                         }
+                        }
                     }
                 }
             }
