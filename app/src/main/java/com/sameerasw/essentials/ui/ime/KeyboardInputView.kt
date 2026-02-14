@@ -456,7 +456,7 @@ fun KeyboardInputView(
                 targetValue = if (showSuggestions) 45f else 0f,
                 animationSpec = spring(
                     dampingRatio = Spring.DampingRatioLowBouncy,
-                    stiffness = Spring.StiffnessLow
+                    stiffness = Spring.StiffnessMedium
                 ),
                 label = "controlIconRotation"
             )
@@ -466,7 +466,7 @@ fun KeyboardInputView(
                 transitionSpec = {
                     val springSpec = spring<IntOffset>(
                         dampingRatio = Spring.DampingRatioLowBouncy,
-                        stiffness = Spring.StiffnessLow
+                        stiffness = Spring.StiffnessMedium
                     )
                     if (targetState) {
                         // Expand
@@ -1131,8 +1131,11 @@ fun KeyboardInputView(
                                             return@KeyButton
                                         }
                                         if (pressDuration < 250) {
-                                            if (!wasSymOffAtDown) isSymbols = false 
-                                            else isSymbols = !isSymbols 
+                                            if (!wasSymOffAtDown) { 
+                                                // Was ON at start. Tap means toggle OFF.
+                                                isSymbols = false 
+                                            }
+                                            // Else: Was OFF at start. onPress turned it ON. Tap means "Commit" (keep it ON). Do nothing.
                                         } else {
                                             if (wasSymOffAtDown) isSymbols = false
                                         }
