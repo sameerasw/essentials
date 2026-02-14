@@ -544,31 +544,34 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                     undoStack.push(selectedText.toString())
                     inputConnection.commitText("", 1)
                 } else {
-                    val before = inputConnection.getTextBeforeCursor(1, 0)
+                    val before = inputConnection.getTextBeforeCursor(2, 0)
                     if (!before.isNullOrEmpty()) {
-                        val char = before[0]
-                        val isWhitespace = char.isWhitespace()
+                        var deleteCount = 1
+                        val len = before.length
+                        if (len >= 2 && Character.isSurrogatePair(before[len - 2], before[len - 1])) {
+                            deleteCount = 2
+                        }
+                        
+                        val charToDelete = before.subSequence(len - deleteCount, len).toString()
+                        val isWhitespace = charToDelete.all { it.isWhitespace() }
 
                         if (undoStack.isNotEmpty()) {
                             val top = undoStack.peek()
-                            // Check if we should merge with the top of the stack
-                            // We merge if both are NOT whitespace (building a word)
-                            // If either is whitespace, we treat it as a separator and start a new chunk
                             val topIsWhitespace = top?.all { it.isWhitespace() } == true
 
                             if (!isWhitespace && !topIsWhitespace) {
-                                // Merge: Prepend captured char to top
-                                val merged = char + undoStack.pop()
+                                
+                                val merged = charToDelete + undoStack.pop()
                                 undoStack.push(merged)
                             } else {
-                                // Start new entry
-                                undoStack.push(char.toString())
+                                undoStack.push(charToDelete)
                             }
                         } else {
-                            undoStack.push(char.toString())
+                            undoStack.push(charToDelete)
                         }
+
+                        inputConnection.deleteSurroundingText(deleteCount, 0)
                     }
-                    inputConnection.deleteSurroundingText(1, 0)
                 }
             }
 
