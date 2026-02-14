@@ -80,6 +80,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.ime.EssentialsInputMethodService
@@ -140,6 +141,7 @@ fun KeyButton(
     onClick: () -> Unit,
     onPress: () -> Unit = {}, // For Haptics/Anim
     onLongClick: (() -> Unit)? = null,
+    secondaryText: String? = null,
     interactionSource: MutableInteractionSource,
     shape: androidx.compose.ui.graphics.Shape,
     containerColor: androidx.compose.ui.graphics.Color,
@@ -232,6 +234,18 @@ fun KeyButton(
             androidx.compose.material3.LocalContentColor provides animatedContentColor,
             content = content
         )
+
+        // Secondary Text (Top Center)
+        if (secondaryText != null) {
+            Text(
+                text = secondaryText,
+                style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
+                color = animatedContentColor.copy(alpha = 0.6f),
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(top = 2.dp, end = 4.dp)
+            )
+        }
     }
 }
 
@@ -291,6 +305,7 @@ fun KeyboardInputView(
     onKeyPress: (Int) -> Unit,
     onCursorMove: (Int, Boolean, Boolean) -> Unit = { keyCode, _, _ -> onKeyPress(keyCode) },
     onCursorDrag: (Boolean) -> Unit = {},
+    isLongPressSymbolsEnabled: Boolean = false,
     onOpened: Int = 0
 ) {
     val view = LocalView.current
@@ -406,6 +421,11 @@ fun KeyboardInputView(
     val row1Symbols = remember { listOf("~", "\\", "|", "^", "%", "=", "<", ">", "[", "]") }
     val row2Symbols = remember { listOf("@", "#", "$", "_", "&", "-", "+", "(", ")", "/") }
     val row3Symbols = remember { listOf("*", "\"", "'", ":", ";", "!", "?") }
+    
+    // Long Press Symbols Mapping
+    val row1LongPress = remember { listOf("%", "\\", "|", "=", "[", "]", "<", ">", "{", "}") }
+    val row2LongPress = remember { listOf("@", "#", "$", "_", "&", "-", "+", "(", ")") }
+    val row3LongPress = remember { listOf("*", "\"", "'", ":", ";", "!", "?") }
 
     val currentRow1 = if (isSymbols) row1Symbols else row1Letters
     val currentRow2 = if (isSymbols) row2Symbols else row2Letters
@@ -796,7 +816,7 @@ fun KeyboardInputView(
                                 .fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
                             content = {
-                                currentRow1.forEach { char ->
+                                currentRow1.forEachIndexed { index, char ->
                                     key(char) {
                                         val displayLabel =
                                             if (shiftState != ShiftState.OFF && !isSymbols) char.uppercase() else char
@@ -806,12 +826,17 @@ fun KeyboardInputView(
                                             targetValue = if (isPressed) 4.dp else keyRoundness,
                                             label = "cornerRadius"
                                         )
+                                        
+                                        val secondary = if (!isSymbols && isLongPressSymbolsEnabled && index < row1LongPress.size) row1LongPress[index] else null
+                                        
                                         KeyButton(
                                             onClick = {
                                                 handleType(displayLabel)
                                                 if (shiftState == ShiftState.ON) shiftState = ShiftState.OFF
                                             },
                                             onPress = { performLightHaptic() },
+                                            onLongClick = if (secondary != null) { { handleType(secondary) } } else null,
+                                            secondaryText = secondary,
                                             interactionSource = row1Interaction,
                                             containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
                                             contentColor = MaterialTheme.colorScheme.onSurface,
@@ -846,7 +871,7 @@ fun KeyboardInputView(
                                 modifier = Modifier.weight(currentRow2.size.toFloat()),
                                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                                 content = {
-                                    currentRow2.forEach { char ->
+                                    currentRow2.forEachIndexed { index, char ->
                                         key(char) {
                                             val displayLabel =
                                                 if (shiftState != ShiftState.OFF && !isSymbols) char.uppercase() else char
@@ -856,12 +881,17 @@ fun KeyboardInputView(
                                                 targetValue = if (isPressed) 4.dp else keyRoundness,
                                                 label = "cornerRadius"
                                             )
+                                            
+                                            val secondary = if (!isSymbols && isLongPressSymbolsEnabled && index < row2LongPress.size) row2LongPress[index] else null
+                                            
                                             KeyButton(
                                                 onClick = {
                                                     handleType(displayLabel)
                                                     if (shiftState == ShiftState.ON) shiftState = ShiftState.OFF
                                                 },
                                                 onPress = { performLightHaptic() },
+                                                onLongClick = if (secondary != null) { { handleType(secondary) } } else null,
+                                                secondaryText = secondary,
                                                 interactionSource = row2Interaction,
                                                 containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
                                                 contentColor = MaterialTheme.colorScheme.onSurface,
@@ -982,7 +1012,7 @@ fun KeyboardInputView(
                                     )
                                 }
 
-                                currentRow3.forEach { char ->
+                                currentRow3.forEachIndexed { index, char ->
                                     key(char) {
                                         val displayLabel =
                                             if (shiftState != ShiftState.OFF && !isSymbols) char.uppercase() else char
@@ -992,12 +1022,17 @@ fun KeyboardInputView(
                                             targetValue = if (isPressed) 4.dp else keyRoundness,
                                             label = "cornerRadius"
                                         )
+                                        
+                                        val secondary = if (!isSymbols && isLongPressSymbolsEnabled && index < row3LongPress.size) row3LongPress[index] else null
+
                                         KeyButton(
                                             onClick = {
                                                 handleType(displayLabel)
                                                 if (shiftState == ShiftState.ON) shiftState = ShiftState.OFF
                                             },
                                             onPress = { performLightHaptic() },
+                                            onLongClick = if (secondary != null) { { handleType(secondary) } } else null,
+                                            secondaryText = secondary,
                                             interactionSource = row3Interaction,
                                             containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
                                             contentColor = MaterialTheme.colorScheme.onSurface,

@@ -258,6 +258,15 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                     )
                 }
 
+                var isLongPressSymbolsEnabled by remember {
+                    mutableStateOf(
+                        prefs.getBoolean(
+                            SettingsRepository.KEY_KEYBOARD_LONG_PRESS_SYMBOLS,
+                            false
+                        )
+                    )
+                }
+
                 // Observe SharedPreferences changes
                 DisposableEffect(prefs) {
                     val listener =
@@ -362,6 +371,12 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                                         suggestionEngine.loadUserDictionary()
                                     }
                                 }
+                                SettingsRepository.KEY_KEYBOARD_LONG_PRESS_SYMBOLS -> {
+                                    isLongPressSymbolsEnabled = sharedPreferences.getBoolean(
+                                        SettingsRepository.KEY_KEYBOARD_LONG_PRESS_SYMBOLS,
+                                        false
+                                    )
+                                }
                             }
                         }
                     prefs.registerOnSharedPreferenceChangeListener(listener)
@@ -388,6 +403,7 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                         isFunctionsBottom = isFunctionsBottom,
                         functionsPadding = functionsPadding.dp,
                         isClipboardEnabled = isKeyboardClipboardEnabled,
+                        isLongPressSymbolsEnabled = isLongPressSymbolsEnabled,
                         suggestions = suggestions,
                         clipboardHistory = _clipboardHistory.collectAsState().value,
                         onOpened = resetTrigger,

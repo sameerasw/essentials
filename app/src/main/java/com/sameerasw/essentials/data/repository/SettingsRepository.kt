@@ -118,6 +118,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_KEYBOARD_ALWAYS_DARK = "keyboard_always_dark"
         const val KEY_KEYBOARD_PITCH_BLACK = "keyboard_pitch_black"
         const val KEY_KEYBOARD_CLIPBOARD_ENABLED = "keyboard_clipboard_enabled"
+        const val KEY_KEYBOARD_LONG_PRESS_SYMBOLS = "keyboard_long_press_symbols"
 
         // Essentials-AirSync Bridge
         const val KEY_AIRSYNC_CONNECTION_ENABLED = "airsync_connection_enabled"

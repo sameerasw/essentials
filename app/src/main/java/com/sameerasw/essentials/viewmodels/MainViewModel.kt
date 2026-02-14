@@ -176,6 +176,7 @@ class MainViewModel : ViewModel() {
     val isUserDictionaryEnabled = mutableStateOf(false)
     val userDictionaryWords = mutableStateOf<Map<String, Long>>(emptyMap())
     val isUserDictionarySheetVisible = mutableStateOf(false)
+    val isLongPressSymbolsEnabled = mutableStateOf(false)
 
     // AirSync Bridge
     val isAirSyncConnectionEnabled = mutableStateOf(false)
@@ -281,6 +282,9 @@ class MainViewModel : ViewModel() {
 
                 SettingsRepository.KEY_KEYBOARD_CLIPBOARD_ENABLED -> isKeyboardClipboardEnabled.value =
                     settingsRepository.getBoolean(key, true)
+
+                SettingsRepository.KEY_KEYBOARD_LONG_PRESS_SYMBOLS -> isLongPressSymbolsEnabled.value =
+                    settingsRepository.getBoolean(key, false)
 
                 SettingsRepository.KEY_AIRSYNC_CONNECTION_ENABLED -> isAirSyncConnectionEnabled.value =
                     settingsRepository.getBoolean(key)
@@ -558,6 +562,8 @@ class MainViewModel : ViewModel() {
             settingsRepository.getBoolean(SettingsRepository.KEY_KEYBOARD_CLIPBOARD_ENABLED, true)
         isUserDictionaryEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_USER_DICTIONARY_ENABLED, false)
+        isLongPressSymbolsEnabled.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_KEYBOARD_LONG_PRESS_SYMBOLS, false)
 
         isAirSyncConnectionEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_AIRSYNC_CONNECTION_ENABLED)
@@ -679,6 +685,11 @@ class MainViewModel : ViewModel() {
     fun setUserDictionaryEnabled(enabled: Boolean, context: Context) {
         isUserDictionaryEnabled.value = enabled
         settingsRepository.setUserDictionaryEnabled(enabled)
+    }
+
+    fun setLongPressSymbolsEnabled(enabled: Boolean, context: Context) {
+        isLongPressSymbolsEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_KEYBOARD_LONG_PRESS_SYMBOLS, enabled)
     }
     
     fun loadUserDictionaryWords(context: Context) {

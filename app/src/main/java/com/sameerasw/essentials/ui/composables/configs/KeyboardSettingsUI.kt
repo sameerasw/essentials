@@ -283,6 +283,14 @@ fun KeyboardSettingsUI(
             )
 
             IconToggleItem(
+                iconRes = R.drawable.rounded_keyboard_24,
+                title = "Long press for symbols",
+                isChecked = viewModel.isLongPressSymbolsEnabled.value,
+                onCheckedChange = { viewModel.setLongPressSymbolsEnabled(it, context) },
+                modifier = Modifier.highlight(highlightSetting == "keyboard_long_press_symbols")
+            )
+
+            IconToggleItem(
                 iconRes = R.drawable.rounded_book_2_24,
                 title = "User Dictionary (Learn words)",
                 isChecked = viewModel.isUserDictionaryEnabled.value,
