@@ -289,7 +289,7 @@ fun KeyboardInputView(
     onUndoClick: () -> Unit = {},
     onType: (String) -> Unit,
     onKeyPress: (Int) -> Unit,
-    onCursorMove: (Int, Boolean) -> Unit = { keyCode, _ -> onKeyPress(keyCode) },
+    onCursorMove: (Int, Boolean, Boolean) -> Unit = { keyCode, _, _ -> onKeyPress(keyCode) },
     onOpened: Int = 0
 ) {
     val view = LocalView.current
@@ -305,6 +305,8 @@ fun KeyboardInputView(
     
     // Track if Shift was used for selection
     var isSelectionPerformed by remember { mutableStateOf(false) }
+    // Track if Symbols was used for word jump
+    var isWordJumpPerformed by remember { mutableStateOf(false) }
 
     val emojiCandidates = remember(currentWord) {
         if (currentWord.length >= 3) {
@@ -1104,13 +1106,45 @@ fun KeyboardInputView(
                                 // Symbols Toggle
                                 val symInteraction = remember { MutableInteractionSource() }
                                 val isPressedSym by symInteraction.collectIsPressedAsState()
+                                var symPressTime by remember { androidx.compose.runtime.mutableLongStateOf(0L) }
+                                var wasSymOffAtDown by remember { mutableStateOf(false) }
+
+                                // Reset Symbols on release if used for modifier
+                                LaunchedEffect(isPressedSym) {
+                                    if (!isPressedSym) {
+                                        if (isWordJumpPerformed && wasSymOffAtDown) {
+                                            isSymbols = false
+                                        }
+                                    }
+                                }
+
                                 val animatedRadiusSym by animateDpAsState(
                                     targetValue = if (isPressedSym) 4.dp else keyRoundness,
                                     label = "cornerRadius"
                                 )
                                 KeyButton(
-                                    onClick = { isSymbols = !isSymbols },
-                                    onPress = { performLightHaptic() },
+                                    onClick = { 
+                                        val pressDuration = System.currentTimeMillis() - symPressTime
+                                        if (isWordJumpPerformed) {
+                                            if (wasSymOffAtDown) isSymbols = false
+                                            return@KeyButton
+                                        }
+                                        if (pressDuration < 250) {
+                                            if (!wasSymOffAtDown) isSymbols = false 
+                                            else isSymbols = !isSymbols 
+                                        } else {
+                                            if (wasSymOffAtDown) isSymbols = false
+                                        }
+                                    },
+                                    onPress = { 
+                                        performLightHaptic()
+                                        symPressTime = System.currentTimeMillis()
+                                        wasSymOffAtDown = !isSymbols
+                                        isWordJumpPerformed = false
+                                        if (wasSymOffAtDown) {
+                                            isSymbols = true
+                                        }
+                                    },
                                     interactionSource = symInteraction,
                                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                                     contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -1230,7 +1264,12 @@ fun KeyboardInputView(
                                                                     if (isSelection) {
                                                                         isSelectionPerformed = true
                                                                     }
-                                                                    onCursorMove(keycode, isSelection)
+                                                                    // Use Symbols press state to decide if we are jumping words
+                                                                    val isWordJump = isPressedSym
+                                                                    if (isWordJump) {
+                                                                        isWordJumpPerformed = true
+                                                                    }
+                                                                    onCursorMove(keycode, isSelection, isWordJump)
                                                                 }
                                                                 cursorAccumulator %= sweepThreshold
                                                             }

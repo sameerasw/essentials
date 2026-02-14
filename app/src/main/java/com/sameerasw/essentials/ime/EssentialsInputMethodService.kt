@@ -435,26 +435,37 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                         onKeyPress = { keyCode ->
                             handleKeyPress(keyCode)
                         },
-                        onCursorMove = { keyCode, isSelection ->
+                        onCursorMove = { keyCode, isSelection, isWordJump ->
                             val ic = currentInputConnection
                             if (ic != null) {
-                                if (isSelection) {
+                                if (isSelection || isWordJump) {
                                     val eventTime = System.currentTimeMillis()
-                                    // Press Shift
-                                    ic.sendKeyEvent(
-                                        KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_SHIFT_LEFT, 0, 0)
-                                    )
+                                    var metaState = 0
+                                    
+                                    // Press Modifiers
+                                    if (isSelection) {
+                                        ic.sendKeyEvent(KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_SHIFT_LEFT, 0, 0))
+                                        metaState = metaState or KeyEvent.META_SHIFT_ON or KeyEvent.META_SHIFT_LEFT_ON
+                                    }
+                                    if (isWordJump) {
+                                        ic.sendKeyEvent(KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_CTRL_LEFT, 0, 0))
+                                        metaState = metaState or KeyEvent.META_CTRL_ON or KeyEvent.META_CTRL_LEFT_ON
+                                    }
+
                                     // The Arrow Key
                                     ic.sendKeyEvent(
-                                        KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN, keyCode, 0, KeyEvent.META_SHIFT_ON or KeyEvent.META_SHIFT_LEFT_ON)
+                                        KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN, keyCode, 0, metaState)
                                     )
                                     ic.sendKeyEvent(
-                                        KeyEvent(eventTime, eventTime, KeyEvent.ACTION_UP, keyCode, 0, KeyEvent.META_SHIFT_ON or KeyEvent.META_SHIFT_LEFT_ON)
+                                        KeyEvent(eventTime, eventTime, KeyEvent.ACTION_UP, keyCode, 0, metaState)
                                     )
-                                    // Release Shift
-                                    ic.sendKeyEvent(
-                                        KeyEvent(eventTime, eventTime, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_SHIFT_LEFT, 0, 0)
-                                    )
+
+                                    if (isWordJump) {
+                                        ic.sendKeyEvent(KeyEvent(eventTime, eventTime, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_CTRL_LEFT, 0, 0))
+                                    }
+                                    if (isSelection) {
+                                        ic.sendKeyEvent(KeyEvent(eventTime, eventTime, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_SHIFT_LEFT, 0, 0))
+                                    }
                                 } else {
                                     handleKeyPress(keyCode)
                                 }
