@@ -168,65 +168,27 @@ fun KeyButton(
             .clip(shape)
             .background(animatedContainerColor)
             .pointerInput(onClick, onLongClick, onPress) {
-                awaitPointerEventScope {
-                    while (true) {
-                        val down = awaitFirstDown(requireUnconsumed = false)
-                        val press = PressInteraction.Press(down.position)
-                        onPress()
+                detectTapGestures(
+                    onPress = { offset ->
+                        val press = PressInteraction.Press(offset)
                         scope.launch { interactionSource.emit(press) }
-
-                        var released = false
-                        var isLongClickTriggered = false
-
-                        val longPressJob = onLongClick?.let {
-                            scope.launch {
-                                delay(viewConfiguration.longPressTimeoutMillis)
-                                if (!released) {
-                                    isLongClickTriggered = true
-                                    it()
-                                    HapticUtil.performHeavyHaptic(view)
-                                }
-                            }
-                        }
-
-                        // Wait for up or cancel of THIS specific pointer
-                        var up: PointerInputChange? = null
-                        var isCanceledByMovement = false
-                        while (up == null) {
-                            val event = awaitPointerEvent()
-                            val change = event.changes.find { it.id == down.id }
-                            if (change == null || change.isConsumed) {
-                                // Canceled or lost tracker
-                                break
-                            } else {
-                                val x = change.position.x
-                                val y = change.position.y
-                                val boundsSlop = viewConfiguration.touchSlop
-                                
-                                if (x < -boundsSlop || y < -boundsSlop || 
-                                    x > size.width + boundsSlop || y > size.height + boundsSlop) {
-                                    isCanceledByMovement = true
-                                }
-                                
-                                if (change.changedToUp()) {
-                                    up = change
-                                }
-                            }
-                        }
-
-                        released = true
-                        longPressJob?.cancel()
-
-                        if (up != null) {
+                        onPress()
+                        if (tryAwaitRelease()) {
                             scope.launch { interactionSource.emit(PressInteraction.Release(press)) }
-                            if (!isLongClickTriggered && !isCanceledByMovement) {
-                                onClick()
-                            }
                         } else {
                             scope.launch { interactionSource.emit(PressInteraction.Cancel(press)) }
                         }
+                    },
+                    onLongPress = {
+                        if (onLongClick != null) {
+                            onLongClick()
+                            HapticUtil.performHeavyHaptic(view)
+                        }
+                    },
+                    onTap = {
+                        onClick()
                     }
-                }
+                )
             },
         contentAlignment = Alignment.Center
     ) {
