@@ -289,6 +289,7 @@ fun KeyboardInputView(
     onUndoClick: () -> Unit = {},
     onType: (String) -> Unit,
     onKeyPress: (Int) -> Unit,
+    onCursorMove: (Int, Boolean) -> Unit = { keyCode, _ -> onKeyPress(keyCode) },
     onOpened: Int = 0
 ) {
     val view = LocalView.current
@@ -301,6 +302,9 @@ fun KeyboardInputView(
     var isEmojiMode by remember { mutableStateOf(false) }
     var isSuggestionsCollapsed by remember { mutableStateOf(false) }
     var currentWord by remember { mutableStateOf("") }
+    
+    // Track if Shift was used for selection
+    var isSelectionPerformed by remember { mutableStateOf(false) }
 
     val emojiCandidates = remember(currentWord) {
         if (currentWord.length >= 3) {
@@ -889,6 +893,19 @@ fun KeyboardInputView(
                                 // Shift Key
                                 val shiftInteraction = remember { MutableInteractionSource() }
                                 val isPressed by shiftInteraction.collectIsPressedAsState()
+                                
+                                var shiftPressTime by remember { androidx.compose.runtime.mutableLongStateOf(0L) }
+                                var wasShiftOffAtDown by remember { mutableStateOf(false) }
+
+                                // Reset Shift on release if used for selection
+                                LaunchedEffect(isPressed) {
+                                    if (!isPressed) {
+                                        if (isSelectionPerformed && wasShiftOffAtDown) {
+                                            shiftState = ShiftState.OFF
+                                        }
+                                    }
+                                }
+
                                 val animatedRadius by animateDpAsState(
                                     targetValue = if (isPressed) 4.dp else keyRoundness,
                                     label = "cornerRadius"
@@ -897,13 +914,33 @@ fun KeyboardInputView(
                                 KeyButton(
                                     onClick = {
                                         if (!isSymbols) {
-                                            shiftState =
-                                                if (shiftState == ShiftState.OFF) ShiftState.ON else ShiftState.OFF
+                                            val pressDuration = System.currentTimeMillis() - shiftPressTime
+                                            
+                                            if (pressDuration < 250) {
+                                                if (wasShiftOffAtDown) {
+                                                } else {
+                                                    shiftState = ShiftState.OFF
+                                                }
+                                            } else {
+                                                if (wasShiftOffAtDown) {
+                                                    shiftState = ShiftState.OFF
+                                                }
+                                            }
                                         }
                                     },
-                                    onPress = { performLightHaptic() },
-                                    onLongClick = {
+                                    onPress = { 
+                                        performLightHaptic()
                                         if (!isSymbols) {
+                                            shiftPressTime = System.currentTimeMillis()
+                                            wasShiftOffAtDown = (shiftState == ShiftState.OFF)
+                                            isSelectionPerformed = false // Reset selection tracker
+                                            if (wasShiftOffAtDown) {
+                                                shiftState = ShiftState.ON
+                                            }
+                                        }
+                                    },
+                                    onLongClick = {
+                                        if (!isSymbols && !isSelectionPerformed) {
                                             performHeavyHaptic()
                                             shiftState = ShiftState.LOCKED
                                         }
@@ -1188,7 +1225,12 @@ fun KeyboardInputView(
                                                                 val keycode = if (cursorAccumulator > 0) KeyEvent.KEYCODE_DPAD_RIGHT else KeyEvent.KEYCODE_DPAD_LEFT
                                                                 repeat(steps) {
                                                                     performLightHaptic()
-                                                                    handleKeyPress(keycode)
+                                                                    // Use Shift state to decide if we are selecting text
+                                                                    val isSelection = shiftState != ShiftState.OFF
+                                                                    if (isSelection) {
+                                                                        isSelectionPerformed = true
+                                                                    }
+                                                                    onCursorMove(keycode, isSelection)
                                                                 }
                                                                 cursorAccumulator %= sweepThreshold
                                                             }

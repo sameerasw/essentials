@@ -434,6 +434,31 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                         },
                         onKeyPress = { keyCode ->
                             handleKeyPress(keyCode)
+                        },
+                        onCursorMove = { keyCode, isSelection ->
+                            val ic = currentInputConnection
+                            if (ic != null) {
+                                if (isSelection) {
+                                    val eventTime = System.currentTimeMillis()
+                                    // Press Shift
+                                    ic.sendKeyEvent(
+                                        KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_SHIFT_LEFT, 0, 0)
+                                    )
+                                    // The Arrow Key
+                                    ic.sendKeyEvent(
+                                        KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN, keyCode, 0, KeyEvent.META_SHIFT_ON or KeyEvent.META_SHIFT_LEFT_ON)
+                                    )
+                                    ic.sendKeyEvent(
+                                        KeyEvent(eventTime, eventTime, KeyEvent.ACTION_UP, keyCode, 0, KeyEvent.META_SHIFT_ON or KeyEvent.META_SHIFT_LEFT_ON)
+                                    )
+                                    // Release Shift
+                                    ic.sendKeyEvent(
+                                        KeyEvent(eventTime, eventTime, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_SHIFT_LEFT, 0, 0)
+                                    )
+                                } else {
+                                    handleKeyPress(keyCode)
+                                }
+                            }
                         }
                     )
                 }
