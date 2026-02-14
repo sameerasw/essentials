@@ -1010,4 +1010,6 @@
     <string name="cat_interface">Interface</string>
     <string name="cat_display">Affichage</string>
     <string name="cat_protection">Protection</string>
+    <string name="label_kbd_abc">ABC</string>
+    <string name="label_kbd_symbols">\?#/</string>
 </resources>
