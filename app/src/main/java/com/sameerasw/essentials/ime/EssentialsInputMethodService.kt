@@ -56,8 +56,8 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
     private var currentKeyboardRoundness: Float = 24f
     private var composedInputView: View? = null
 
-    // Undo Stack
-    private val undoStack = java.util.ArrayDeque<String>()
+    // Undo Manager
+    private val undoRedoManager = UndoRedoManager()
 
     // Suggestion Lookup Job
     private var lookupJob: Job? = null
@@ -414,13 +414,16 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                                 val textBefore = ic.getTextBeforeCursor(50, 0)?.toString() ?: ""
                                 val lastWord = textBefore.split(Regex("\\s+")).lastOrNull() ?: ""
                                 if (lastWord.isNotEmpty()) {
+                                    undoRedoManager.recordDelete(lastWord)
                                     ic.deleteSurroundingText(lastWord.length, 0)
                                 }
+                                undoRedoManager.recordInsert(word + " ")
                                 ic.commitText(word + " ", 1)
                                 suggestionEngine.clearSuggestions()
                             }
                         },
                         onType = { text ->
+                            undoRedoManager.recordInsert(text)
                             currentInputConnection?.commitText(text, 1)
                             if (isUserDictionaryEnabled && text.length == 1 && !text[0].isLetterOrDigit()) {
                                 val ic = currentInputConnection
@@ -439,14 +442,12 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                             }
                         },
                         onPasteClick = { text ->
+                            undoRedoManager.recordInsert(text)
                             currentInputConnection?.commitText(text, 1)
                         },
                         onUndoClick = {
                             val ic = currentInputConnection
-                            if (ic != null && undoStack.isNotEmpty()) {
-                                val textToRestore = undoStack.pop()
-                                ic.commitText(textToRestore, 1)
-                            }
+                            undoRedoManager.undo(ic)
                         },
                         onKeyPress = { keyCode ->
                             handleKeyPress(keyCode)
@@ -540,8 +541,8 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
             KeyEvent.KEYCODE_DEL -> {
                 val selectedText = inputConnection.getSelectedText(0)
                 if (selectedText != null && selectedText.isNotEmpty()) {
-                    // Selection deleted -> always push as new entry
-                    undoStack.push(selectedText.toString())
+                    // Delete selection
+                    undoRedoManager.recordDelete(selectedText.toString())
                     inputConnection.commitText("", 1)
                 } else {
                     val before = inputConnection.getTextBeforeCursor(2, 0)
@@ -553,23 +554,7 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                         }
                         
                         val charToDelete = before.subSequence(len - deleteCount, len).toString()
-                        val isWhitespace = charToDelete.all { it.isWhitespace() }
-
-                        if (undoStack.isNotEmpty()) {
-                            val top = undoStack.peek()
-                            val topIsWhitespace = top?.all { it.isWhitespace() } == true
-
-                            if (!isWhitespace && !topIsWhitespace) {
-                                
-                                val merged = charToDelete + undoStack.pop()
-                                undoStack.push(merged)
-                            } else {
-                                undoStack.push(charToDelete)
-                            }
-                        } else {
-                            undoStack.push(charToDelete)
-                        }
-
+                        undoRedoManager.recordDelete(charToDelete)
                         inputConnection.deleteSurroundingText(deleteCount, 0)
                     }
                 }
