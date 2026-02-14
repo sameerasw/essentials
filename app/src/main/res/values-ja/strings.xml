@@ -52,8 +52,8 @@
     <string name="action_ai_assistant">アシスタント</string>
     <string name="action_take_screenshot">スクリーンショット</string>
     <string name="action_cycle_sound_modes">サイレントモードを切り替え</string>
-    <string name="action_like_song">Like current song</string>
-    <string name="like_song_settings_title">Like song settings</string>
+    <string name="action_like_song">この曲をいいね</string>
+    <string name="like_song_settings_title">いいねした曲を設定</string>
     <string name="like_song_settings_desc">This feature requires notification access to detect the currently playing media and trigger the like action. Please enable it below.</string>
     <string name="like_song_toast_enabled">Show toast message</string>
     <string name="like_song_aod_overlay_title">Show overlay on AOD</string>
@@ -527,10 +527,10 @@
     <string name="error_invalid_repo_format">フォーマットが正しくありません。GitHubのURLまたは オーナー名/レポジトリ名 を入力してください</string>
     <string name="error_generic_search">An error occurred during search</string>
     <string name="label_auto">自動</string>
-    <string name="label_options">Options</string>
+    <string name="label_options">オプション</string>
     <string name="option_allow_prereleases">プレリリースもチェックする</string>
     <string name="option_notifications">通知する</string>
-    <string name="error_rate_limited">GitHub rate limit exceeded. Please try again later.</string>
+    <string name="error_rate_limited">GitHubのレート制限を超えました。あとでもう一度試してください。</string>
     <!-- Keyboard Setup -->
     <string name="label_keyboard_setup">キーボードセットアップ</string>
     <string name="btn_enable_keyboard">設定で有効にする</string>
@@ -547,15 +547,15 @@
     <string name="action_done">完了</string>
     <string name="action_preview">プレビュー</string>
     <string name="action_help_guide">ヘルプガイド</string>
-    <string name="action_what_is_this">What is this?</string>
+    <string name="action_what_is_this">これは何？</string>
     <string name="update_available_title">アップデートがあります</string>
-    <string name="about_desc_ambient_music_glance">Ambient Music Glance shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
-    <string name="about_desc_notification_lighting">Notification Lighting adds a beautiful edge lighting effect when you receive notifications.\n\nYou can customize the animation style, colors, and behavior. It works even when the screen is off (OEM dependent) or on top of your current app. Pick apps, notification priority or what behavior it should be triggering on from given controls. If your OEM does not support overlays above AOD, sue the Ambient display option found below.</string>
-    <string name="about_desc_screen_off_widget">Easily turn the screen off with a tap on a transparent resizable widget that does not add icons or any clutter to your home screen.</string>
-    <string name="about_desc_statusbar_icons">Take full control over your status bar icons.\n\nHide specific icons like WiFi, Bluetooth, or cellular data to keep your status bar clean. You can also customize the clock format and battery indicator with some smart controls as well. These are the list of available AOSP controls so your device OS might not respect all the controls.</string>
-    <string name="about_desc_caffeinate">Caffeinate prevents your screen from turning off automatically.\n\nKeep your screen awake for a specific duration or indefinitely. Useful when reading long articles or referencing a recipe.</string>
-    <string name="about_desc_maps_power_saving">Get the Pixel 10 series exclusive Google Maps Power Saving mode with the minimal pitch black background to display over your lock screen on any Android device. Start a navigation session, turn the screen off and back on. </string>
-    <string name="about_desc_flashlight_pulse">Pulse the flashlight when you receive a notification.\n\nWith devices have hardware support for flashlight dimming, the pulse will be smoothly animated.</string>
+    <string name="about_desc_ambient_music_glance">アンビエントミュージックは、音楽の再生中や再生内容が変更されたときに、ロック画面に再生中のオーバーレイを表示します。\n\nデバイスがAOD経由のオーバーレイをサポートしていない場合は、充電中に Android 設定で追加されたアンビエンス スクリーンセーバーを代替手段として選択できます。</string>
+    <string name="about_desc_notification_lighting">通知ライトは、通知を受け取った際に美しいエッジライティング効果を追加します。\n\nアニメーションのスタイル、色、動作をカスタマイズできます。画面がオフの場合でも、または現在使用しているアプリの画面上に表示されている場合でも機能します(OEMによって異なります)。アプリ、通知の優先度、またはトリガーする動作を、指定されたコントロールから選択してください。お使いのOEMがAOD上のオーバーレイをサポートしていない場合は、下記のアンビエントディスプレイオプションをご利用ください。</string>
+    <string name="about_desc_screen_off_widget">ホーム画面にアイコンや雑然としたものを追加しない、透明でサイズ変更可能なウィジェットをタップするだけで、簡単に画面をオフにできます。</string>
+    <string name="about_desc_statusbar_icons">ステータスバーのアイコンを自由にコントロールできます。\n\nWi-Fi、Bluetooth、モバイルデータ通信など、特定のアイコンを非表示にして、ステータスバーをすっきりと保ちます。また、スマートコントロールを使って時計の表示形式やバッテリーインジケーターをカスタマイズすることもできます。これらは利用可能なAOSPコントロールのリストであるため、お使いのデバイスのOSによっては、すべてのコントロールが反映されない場合があります。</string>
+    <string name="about_desc_caffeinate">カフェラテは画面の自動オフを防止します。\n\n画面を一定時間または無期限に点灯させ続けます。長文記事の閲覧やレシピ参照時に便利です。</string>
+    <string name="about_desc_maps_power_saving">Pixel 10シリーズ限定のGoogleマップ省電力モードを使います。Android端末のロック画面に表示される、最小限の真っ黒な背景が特徴です。ナビゲーションを開始し、画面をオフにしてから再度オンにしてみてください。 </string>
+    <string name="about_desc_flashlight_pulse">通知を受信したときにフラッシュライトを点滅させます。\n\nフラッシュライトの調光機能に対応したデバイスでは、点滅が滑らかにアニメーション表示されます。</string>
     <string name="about_desc_snooze_notifications">Snooze annoying persistent system notifications which can not be modified by default. \n\nPlease wait until the notification arrives and then go into this feature where it\'s notification channel will be listed. Select that to snooze from next time.\n\nAny snoozed notification can still be accessed from your notification history in Android.</string>
     <string name="about_desc_quick_settings_tiles">Add custom tiles to your Quick Settings panel.\n\nLong press any of them to learn what they do.</string>
     <string name="about_desc_button_remap">Remap your hardware buttons to perform different actions and shortcuts.\n\nCustomize what happens when you long press volume buttons with certain conditions. \n\nSome behavior such as screen off trigger or flashlight controls might be OEM dependent on their implementation and may not work on all devices as expected. Some scenarios could be worked around using Shizuku permissions but may not give the same experience due to the implementations.</string>
