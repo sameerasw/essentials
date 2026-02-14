@@ -118,6 +118,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_KEYBOARD_ALWAYS_DARK = "keyboard_always_dark"
         const val KEY_KEYBOARD_PITCH_BLACK = "keyboard_pitch_black"
         const val KEY_KEYBOARD_CLIPBOARD_ENABLED = "keyboard_clipboard_enabled"
+        const val KEY_KEYBOARD_LONG_PRESS_SYMBOLS = "keyboard_long_press_symbols"
 
         // Essentials-AirSync Bridge
         const val KEY_AIRSYNC_CONNECTION_ENABLED = "airsync_connection_enabled"
@@ -145,6 +146,9 @@ class SettingsRepository(private val context: Context) {
 
         const val KEY_FLASHLIGHT_PULSE_SELECTED_APPS = "flashlight_pulse_selected_apps"
         const val KEY_FLASHLIGHT_PULSE_SAME_AS_LIGHTING = "flashlight_pulse_same_as_lighting"
+
+        const val KEY_USER_DICTIONARY_ENABLED = "user_dictionary_enabled"
+        const val KEY_USER_DICT_LAST_UPDATE = "user_dict_last_update"
     }
 
     // Observe changes
@@ -695,4 +699,7 @@ class SettingsRepository(private val context: Context) {
             null
         }
     }
+
+    fun isUserDictionaryEnabled(): Boolean = getBoolean(KEY_USER_DICTIONARY_ENABLED, false)
+    fun setUserDictionaryEnabled(enabled: Boolean) = putBoolean(KEY_USER_DICTIONARY_ENABLED, enabled)
 }

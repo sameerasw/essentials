@@ -1,6 +1,7 @@
 package com.sameerasw.essentials.ui.composables.configs
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -280,8 +281,41 @@ fun KeyboardSettingsUI(
                 onCheckedChange = { viewModel.setKeyboardClipboardEnabled(it, context) },
                 modifier = Modifier.highlight(highlightSetting == "keyboard_clipboard_enabled")
             )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_keyboard_24,
+                title = "Long press for symbols",
+                isChecked = viewModel.isLongPressSymbolsEnabled.value,
+                onCheckedChange = { viewModel.setLongPressSymbolsEnabled(it, context) },
+                modifier = Modifier.highlight(highlightSetting == "keyboard_long_press_symbols")
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_book_2_24,
+                title = "User Dictionary (Learn words)",
+                isChecked = viewModel.isUserDictionaryEnabled.value,
+                onCheckedChange = { viewModel.setUserDictionaryEnabled(it, context) },
+                modifier = Modifier.highlight(highlightSetting == "user_dictionary_enabled")
+            )
+
+            if (viewModel.isUserDictionaryEnabled.value) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_settings_24,
+                    title = "Manage Learned Words",
+                    isChecked = false,
+                    showToggle = false,
+                    onCheckedChange = { viewModel.isUserDictionarySheetVisible.value = true }
+                )
+            }
         }
 
         Spacer(Modifier.height(32.dp))
+        
+        if (viewModel.isUserDictionarySheetVisible.value) {
+            com.sameerasw.essentials.ui.composables.sheets.UserDictionaryBottomSheet(
+                viewModel = viewModel,
+                onDismissRequest = { viewModel.isUserDictionarySheetVisible.value = false }
+            )
+        }
     }
 }

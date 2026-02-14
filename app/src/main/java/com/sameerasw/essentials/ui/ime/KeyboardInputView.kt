@@ -1,14 +1,25 @@
 package com.sameerasw.essentials.ui.ime
 
 import android.view.KeyEvent
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -19,10 +30,12 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -35,7 +48,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
@@ -48,22 +63,29 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.changedToUp
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.ime.EssentialsInputMethodService
+import com.sameerasw.essentials.ime.Suggestion
+import com.sameerasw.essentials.ime.SuggestionType
 import com.sameerasw.essentials.utils.HapticUtil
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -119,6 +141,7 @@ fun KeyButton(
     onClick: () -> Unit,
     onPress: () -> Unit = {}, // For Haptics/Anim
     onLongClick: (() -> Unit)? = null,
+    secondaryText: String? = null,
     interactionSource: MutableInteractionSource,
     shape: androidx.compose.ui.graphics.Shape,
     containerColor: androidx.compose.ui.graphics.Color,
@@ -145,53 +168,27 @@ fun KeyButton(
             .clip(shape)
             .background(animatedContainerColor)
             .pointerInput(onClick, onLongClick, onPress) {
-                awaitPointerEventScope {
-                    while (true) {
-                        val down = awaitFirstDown(requireUnconsumed = false)
-                        val press = PressInteraction.Press(down.position)
-                        onPress()
+                detectTapGestures(
+                    onPress = { offset ->
+                        val press = PressInteraction.Press(offset)
                         scope.launch { interactionSource.emit(press) }
-
-                        var released = false
-                        var isLongClickTriggered = false
-
-                        val longPressJob = onLongClick?.let {
-                            scope.launch {
-                                delay(viewConfiguration.longPressTimeoutMillis)
-                                if (!released) {
-                                    isLongClickTriggered = true
-                                    it()
-                                    HapticUtil.performHeavyHaptic(view)
-                                }
-                            }
-                        }
-
-                        // Wait for up or cancel of THIS specific pointer
-                        var up: PointerInputChange? = null
-                        while (up == null) {
-                            val event = awaitPointerEvent()
-                            val change = event.changes.find { it.id == down.id }
-                            if (change == null || change.isConsumed) {
-                                // Canceled or lost tracker
-                                break
-                            } else if (change.changedToUp()) {
-                                up = change
-                            }
-                        }
-
-                        released = true
-                        longPressJob?.cancel()
-
-                        if (up != null) {
+                        onPress()
+                        if (tryAwaitRelease()) {
                             scope.launch { interactionSource.emit(PressInteraction.Release(press)) }
-                            if (!isLongClickTriggered) {
-                                onClick()
-                            }
                         } else {
                             scope.launch { interactionSource.emit(PressInteraction.Cancel(press)) }
                         }
+                    },
+                    onLongPress = {
+                        if (onLongClick != null) {
+                            onLongClick()
+                            HapticUtil.performHeavyHaptic(view)
+                        }
+                    },
+                    onTap = {
+                        onClick()
                     }
-                }
+                )
             },
         contentAlignment = Alignment.Center
     ) {
@@ -199,6 +196,18 @@ fun KeyButton(
             androidx.compose.material3.LocalContentColor provides animatedContentColor,
             content = content
         )
+
+        // Secondary Text (Top Center)
+        if (secondaryText != null) {
+            Text(
+                text = secondaryText,
+                style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
+                color = animatedContentColor.copy(alpha = 0.6f),
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(top = 2.dp, end = 4.dp)
+            )
+        }
     }
 }
 
@@ -249,18 +258,101 @@ fun KeyboardInputView(
     isFunctionsBottom: Boolean = false,
     functionsPadding: Dp = 0.dp,
     isClipboardEnabled: Boolean = true,
-    suggestions: List<String> = emptyList(),
+    suggestions: List<Suggestion> = emptyList(),
     clipboardHistory: List<String> = emptyList(),
-    onSuggestionClick: (String) -> Unit = {},
+    onSuggestionClick: (Suggestion) -> Unit = {},
     onPasteClick: (String) -> Unit = {},
     onUndoClick: () -> Unit = {},
     onType: (String) -> Unit,
-    onKeyPress: (Int) -> Unit
+    onKeyPress: (Int) -> Unit,
+    onCursorMove: (Int, Boolean, Boolean) -> Unit = { keyCode, _, _ -> onKeyPress(keyCode) },
+    onCursorDrag: (Boolean) -> Unit = {},
+    isLongPressSymbolsEnabled: Boolean = false,
+    onOpened: Int = 0
 ) {
     val view = LocalView.current
+    val viewConfiguration = LocalViewConfiguration.current
     val scope = rememberCoroutineScope()
-    // Total Height is passed as keyboardHeight
-    val totalHeight = keyboardHeight
+
+    var isSymbols by remember { mutableStateOf(false) }
+    var shiftState by remember { mutableStateOf(ShiftState.OFF) }
+    var isClipboardMode by remember { mutableStateOf(false) }
+    var isEmojiMode by remember { mutableStateOf(false) }
+    var isSuggestionsCollapsed by remember { mutableStateOf(false) }
+    var currentWord by remember { mutableStateOf("") }
+    
+    // Track if Shift was used for selection
+    var isSelectionPerformed by remember { mutableStateOf(false) }
+    // Track if Symbols was used for word jump
+    var isWordJumpPerformed by remember { mutableStateOf(false) }
+
+    val emojiCandidates = remember(currentWord) {
+        if (currentWord.length >= 3) {
+            EmojiData.allEmojis
+                .filter { it.name.contains(currentWord, ignoreCase = true) }
+                .take(5)
+                .map { Suggestion(it.emoji, SuggestionType.Prediction) } // Wrap emojis as Suggestions
+        } else {
+            emptyList()
+        }
+    }
+
+    val mergedSuggestions = remember(suggestions, emojiCandidates) {
+        if (emojiCandidates.isNotEmpty() && suggestions.isNotEmpty()) {
+            // Priority: Text 1 -> Emoji 1 -> Remaining Text -> Remaining Emojis
+            listOf(suggestions[0]) + emojiCandidates.take(1) + suggestions.drop(1) + emojiCandidates.drop(1)
+        } else {
+            emojiCandidates + suggestions
+        }
+    }
+
+    fun handleType(text: String) {
+        onType(text)
+        if (text.length == 1 && (text[0].isLetterOrDigit() || text[0] == '\'')) {
+            currentWord += text
+        } else {
+            currentWord = ""
+        }
+    }
+
+    fun handleKeyPress(keyCode: Int) {
+        onKeyPress(keyCode)
+        if (keyCode == android.view.KeyEvent.KEYCODE_DEL) {
+            if (currentWord.isNotEmpty()) {
+                currentWord = currentWord.dropLast(1)
+            }
+        } else {
+            currentWord = ""
+        }
+    }
+
+    // Total Height animation
+    val animatedTotalHeight by animateDpAsState(
+        targetValue = if (isEmojiMode) keyboardHeight + 120.dp else keyboardHeight,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioLowBouncy,
+            stiffness = Spring.StiffnessMedium
+        ),
+        label = "TotalHeightAnimation"
+    )
+    val totalHeight = animatedTotalHeight
+
+    // Pre-load Emoji data on startup (Background thread)
+    LaunchedEffect(Unit) {
+        EmojiData.load(view.context, scope)
+    }
+
+    LaunchedEffect(onOpened) {
+        if (onOpened > 0) {
+            isSymbols = false
+            isEmojiMode = false
+            isClipboardMode = false
+            isSuggestionsCollapsed = false
+            shiftState = ShiftState.OFF
+            currentWord = ""
+        }
+    }
+
     fun performLightHaptic() {
         if (isHapticsEnabled) {
             HapticUtil.performCustomHaptic(view, hapticStrength)
@@ -279,11 +371,6 @@ fun KeyboardInputView(
         }
     }
 
-    var isSymbols by remember { mutableStateOf(false) }
-    var shiftState by remember { mutableStateOf(ShiftState.OFF) }
-    var isClipboardMode by remember { mutableStateOf(false) }
-
-
     val CustomFontFamily = remember { FontFamily(Font(R.font.google_sans_flex)) }
 
     // Layers
@@ -293,10 +380,14 @@ fun KeyboardInputView(
     val row2Letters = remember { listOf("a", "s", "d", "f", "g", "h", "j", "k", "l") }
     val row3Letters = remember { listOf("z", "x", "c", "v", "b", "n", "m") }
 
-    val row1Symbols = remember { listOf("!", "@", "#", "$", "%", "^", "&", "*", "(", ")") }
-    val row2Symbols = remember { listOf("-", "_", "+", "=", "[", "]", "{", "}", "\\", "|") }
-    // Adjusted row 3 symbols to exactly 7 items to match row 3 letters
-    val row3Symbols = remember { listOf(";", ":", "'", "\"", ",", ".", "/") }
+    val row1Symbols = remember { listOf("~", "\\", "|", "^", "%", "=", "<", ">", "[", "]") }
+    val row2Symbols = remember { listOf("@", "#", "$", "_", "&", "-", "+", "(", ")", "/") }
+    val row3Symbols = remember { listOf("*", "\"", "'", ":", ";", "!", "?") }
+    
+    // Long Press Symbols Mapping
+    val row1LongPress = remember { listOf("%", "\\", "|", "=", "[", "]", "<", ">", "{", "}") }
+    val row2LongPress = remember { listOf("@", "#", "$", "_", "&", "-", "+", "(", ")") }
+    val row3LongPress = remember { listOf("*", "\"", "'", ":", ";", "!", "?") }
 
     val currentRow1 = if (isSymbols) row1Symbols else row1Letters
     val currentRow2 = if (isSymbols) row2Symbols else row2Letters
@@ -321,8 +412,17 @@ fun KeyboardInputView(
             .height(totalHeight)
             .clip(containerShape)
             .background(MaterialTheme.colorScheme.surfaceContainer)
+            .pointerInput(Unit) {
+                detectVerticalDragGestures { change, dragAmount ->
+                    if (!isEmojiMode && dragAmount < -20f) { // Swipe up
+                        isEmojiMode = true
+                        isClipboardMode = false
+                        performHeavyHaptic()
+                    }
+                }
+            }
             .padding(
-                bottom = bottomPadding,
+                bottom = if (isEmojiMode) 0.dp else bottomPadding,
                 start = 6.dp,
                 end = 6.dp,
                 top = 6.dp + extraTopPadding
@@ -331,71 +431,143 @@ fun KeyboardInputView(
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         val FunctionRow: @Composable (Modifier) -> Unit = { modifier ->
-            val hasSuggestions = suggestions.isNotEmpty()
+            val hasSuggestions = mergedSuggestions.isNotEmpty()
+            val showSuggestions = hasSuggestions && !isEmojiMode && !isSuggestionsCollapsed
 
-            Box(modifier = modifier) {
-                if (hasSuggestions) {
-                    val carouselState = rememberCarouselState { suggestions.count() }
+            val rotation by animateFloatAsState(
+                targetValue = if (showSuggestions) 45f else 0f,
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioLowBouncy,
+                    stiffness = Spring.StiffnessMedium
+                ),
+                label = "controlIconRotation"
+            )
 
-                    val nestedScrollConnection = remember {
-                        object : NestedScrollConnection {
-                            var accumulatedScroll = 0f
-                            val threshold = 70f
+            AnimatedContent(
+                targetState = showSuggestions,
+                transitionSpec = {
+                    val springSpec = spring<IntOffset>(
+                        dampingRatio = Spring.DampingRatioLowBouncy,
+                        stiffness = Spring.StiffnessMedium
+                    )
+                    if (targetState) {
+                        // Expand
+                        (fadeIn() + slideInHorizontally(animationSpec = springSpec) { it })
+                            .togetherWith(fadeOut() + slideOutHorizontally(animationSpec = springSpec) { -it })
+                    } else {
+                        // Collapse
+                        (fadeIn() + slideInHorizontally(animationSpec = springSpec) { -it })
+                            .togetherWith(fadeOut() + slideOutHorizontally(animationSpec = springSpec) { it })
+                    }
+                },
+                label = "FunctionRowTransition",
+                modifier = modifier
+            ) { targetShowSuggestions ->
+                if (targetShowSuggestions) {
+                    val collapseInteraction = remember { MutableInteractionSource() }
+                    val carouselState = rememberCarouselState { mergedSuggestions.count() }
 
-                            override fun onPreScroll(
-                                available: Offset,
-                                source: NestedScrollSource
-                            ): Offset {
-                                if (source == NestedScrollSource.UserInput) {
-                                    accumulatedScroll += available.x
-                                    if (kotlin.math.abs(accumulatedScroll) >= threshold) {
-                                        performScrollHaptic()
-                                        accumulatedScroll = 0f
+                    Row(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        val nestedScrollConnection = remember {
+                            object : NestedScrollConnection {
+                                var accumulatedScroll = 0f
+                                val threshold = 70f
+
+                                override fun onPreScroll(
+                                    available: Offset,
+                                    source: NestedScrollSource
+                                ): Offset {
+                                    if (source == NestedScrollSource.UserInput) {
+                                        accumulatedScroll += available.x
+                                        if (kotlin.math.abs(accumulatedScroll) >= threshold) {
+                                            performScrollHaptic()
+                                            accumulatedScroll = 0f
+                                        }
                                     }
+                                    return Offset.Zero
                                 }
-                                return Offset.Zero
                             }
                         }
-                    }
 
-                    HorizontalMultiBrowseCarousel(
-                        state = carouselState,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight()
-                            .nestedScroll(nestedScrollConnection),
-                        preferredItemWidth = 150.dp,
-                        itemSpacing = 4.dp,
-                        minSmallItemWidth = 10.dp,
-                        maxSmallItemWidth = 20.dp,
-                        contentPadding = PaddingValues(horizontal = functionsPadding)
-                    ) { i ->
-                        val suggestion = suggestions[i]
-                        val suggInteraction = remember { MutableInteractionSource() }
-                        // Use a slightly smaller radius for pressed state or keep uniform
-                        val animatedRadius by animateDpAsState(
-                            targetValue = keyRoundness,
-                            label = "cornerRadius"
+                        HorizontalMultiBrowseCarousel(
+                            state = carouselState,
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxHeight()
+                                .nestedScroll(nestedScrollConnection),
+                            preferredItemWidth = 150.dp,
+                            itemSpacing = 4.dp,
+                            minSmallItemWidth = 10.dp,
+                            maxSmallItemWidth = 20.dp,
+                            contentPadding = PaddingValues(start = functionsPadding)
+                        ) { i ->
+                            val suggestion = mergedSuggestions[i]
+                            val isLearned = suggestion.type == SuggestionType.Learned
+                            val suggInteraction = remember { MutableInteractionSource() }
+                            val animatedRadius by animateDpAsState(
+                                targetValue = keyRoundness,
+                                label = "cornerRadius"
+                            )
+
+                            KeyButton(
+                                onClick = { 
+                                    onSuggestionClick(suggestion)
+                                    // If it's an emoji (single char usually, or check length), don't add space if app does, 
+                                    // but we just pass it out. Let's reset currentWord if it's a COMMIT.
+                                    currentWord = "" 
+                                },
+                                onPress = { performLightHaptic() },
+                                interactionSource = suggInteraction,
+                                containerColor = if (isLearned) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.7f),
+                                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                                shape = RoundedCornerShape(animatedRadius),
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .fillMaxWidth()
+                                    .maskClip(RoundedCornerShape(animatedRadius))
+                            ) {
+                                Text(
+                                    text = suggestion.text,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    fontFamily = CustomFontFamily,
+                                    maxLines = 1
+                                )
+                            }
+                        }
+
+                        // Collapse Button (Far Right)
+                        val isCollapsePressed by collapseInteraction.collectIsPressedAsState()
+                        val collapseRadius by animateDpAsState(
+                            targetValue = if (isCollapsePressed) 4.dp else keyRoundness,
+                            label = "collapseRadius"
                         )
 
                         KeyButton(
-                            onClick = { onSuggestionClick(suggestion) },
+                            onClick = { 
+                                isSuggestionsCollapsed = true 
+                                performLightHaptic()
+                            },
                             onPress = { performLightHaptic() },
-                            interactionSource = suggInteraction,
-                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                            shape = RoundedCornerShape(animatedRadius),
+                            interactionSource = collapseInteraction,
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                            contentColor = MaterialTheme.colorScheme.onSurface,
+                            shape = RoundedCornerShape(collapseRadius),
                             modifier = Modifier
                                 .fillMaxHeight()
-                                .fillMaxWidth()
-                                .maskClip(RoundedCornerShape(animatedRadius))
+                                .width(50.dp)
+                                .padding(end = functionsPadding)
                         ) {
-                            Text(
-                                text = suggestion,
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontWeight = FontWeight.Bold,
-                                fontFamily = CustomFontFamily,
-                                maxLines = 1
+                            Icon(
+                                painter = painterResource(id = R.drawable.rounded_add_24),
+                                contentDescription = "Collapse Suggestions",
+                                modifier = Modifier
+                                    .size(18.dp)
+                                    .graphicsLayer { rotationZ = rotation }
                             )
                         }
                     }
@@ -407,13 +579,18 @@ fun KeyboardInputView(
                             .padding(horizontal = functionsPadding),
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
                         content = {
-                            val functions = remember(isClipboardEnabled) {
+                            val functions = remember(isClipboardEnabled, isEmojiMode, isSuggestionsCollapsed, hasSuggestions) {
                                 val list = mutableListOf(
                                     R.drawable.ic_emoji to "Emoji",
-                                    R.drawable.ic_undo to "Undo"
+                                    if (isEmojiMode) R.drawable.rounded_backspace_24 to "Backspace" 
+                                    else R.drawable.ic_undo to "Undo"
                                 )
                                 if (isClipboardEnabled) {
                                     list.add(1, R.drawable.ic_clipboard to "Clipboard")
+                                }
+                                // Add Expand button if collapsed and suggestions exist
+                                if (isSuggestionsCollapsed && hasSuggestions && !isEmojiMode) {
+                                    list.add(R.drawable.rounded_add_24 to "Expand")
                                 }
                                 list
                             }
@@ -430,543 +607,758 @@ fun KeyboardInputView(
                                     onClick = {
                                         if (desc == "Clipboard") {
                                             isClipboardMode = !isClipboardMode
+                                            if (isClipboardMode) isEmojiMode = false
                                         } else if (desc == "Undo") {
                                             onUndoClick()
-                                        } else {
-                                            // Other functions
+                                        } else if (desc == "Emoji") {
+                                            isEmojiMode = !isEmojiMode
+                                            if (isEmojiMode) isClipboardMode = false
+                                        } else if (desc == "Backspace") {
+                                            onKeyPress(android.view.KeyEvent.KEYCODE_DEL)
+                                        } else if (desc == "Expand") {
+                                            isSuggestionsCollapsed = false
                                         }
                                     },
                                     onPress = { performLightHaptic() },
                                     interactionSource = fnInteraction,
-                                    containerColor = if (desc == "Clipboard" && isClipboardMode) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHighest,
-                                    contentColor = if (desc == "Clipboard" && isClipboardMode) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface,
+                                    containerColor = if ((desc == "Clipboard" && isClipboardMode) || (desc == "Emoji" && isEmojiMode)) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHighest,
+                                    contentColor = if ((desc == "Clipboard" && isClipboardMode) || (desc == "Emoji" && isEmojiMode)) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface,
                                     shape = RoundedCornerShape(animatedRadius),
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .fillMaxHeight()
+                                    modifier = if (desc == "Expand") {
+                                        Modifier.width(50.dp).fillMaxHeight()
+                                    } else {
+                                        Modifier.weight(1.3f).fillMaxHeight()
+                                    }
                                 ) {
                                     Icon(
                                         painter = painterResource(id = iconRes),
                                         contentDescription = desc,
-                                        modifier = Modifier.size(20.dp)
+                                        modifier = Modifier
+                                            .size(if (desc == "Expand") 18.dp else 20.dp)
+                                            .then(
+                                                if (desc == "Expand") {
+                                                    Modifier.graphicsLayer { rotationZ = rotation }
+                                                } else {
+                                                    Modifier
+                                                }
+                                            )
                                     )
                                 }
                             }
                         }
                     )
                 }
-            } // End Box/Modifier wrapper
+            }
         }
 
         if (!isFunctionsBottom) {
-            FunctionRow(Modifier.weight(0.65f))
+            FunctionRow(
+                Modifier
+                    .height(48.dp)
+                    .fillMaxWidth()
+            )
         }
 
-        if (isClipboardMode && isClipboardEnabled) {
-            Box(
-                modifier = Modifier
-                    .weight(5f)
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(keyRoundness))
-                    .background(MaterialTheme.colorScheme.surfaceContainerLow)
-                    .padding(8.dp)
-            ) {
-                if (clipboardHistory.isEmpty()) {
-                    Text(
-                        text = "Clipboard is empty",
-                        modifier = Modifier.align(Alignment.Center),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                } else {
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(2),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+        val currentMode = when {
+            isEmojiMode -> 1
+            isClipboardMode && isClipboardEnabled -> 2
+            else -> 0
+        }
+
+        AnimatedContent(
+            targetState = currentMode,
+            transitionSpec = {
+                (fadeIn(animationSpec = spring(stiffness = Spring.StiffnessMedium)) togetherWith
+                        fadeOut(animationSpec = spring(stiffness = Spring.StiffnessMedium)))
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(5f),
+            label = "KeyboardModeAnimation"
+        ) { mode ->
+            when (mode) {
+                2 -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(keyRoundness))
+                            .background(MaterialTheme.colorScheme.surfaceContainerLow)
+                            .padding(8.dp)
                     ) {
-                        items(clipboardHistory) { clipText ->
-                            ClipboardItem(
-                                text = clipText,
-                                shape = RoundedCornerShape(keyRoundness),
-                                onClick = {
-                                    onPasteClick(clipText)
-                                    isClipboardMode = false
-                                },
-                                modifier = Modifier.fillMaxWidth()
+                        if (clipboardHistory.isEmpty()) {
+                            Text(
+                                text = "Clipboard is empty",
+                                modifier = Modifier.align(Alignment.Center),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
-                        }
-                    }
-                }
-            }
-        } else {
-            // Dedicated Number Row
-            ButtonGroup(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                content = {
-                    numberRow.forEach { char ->
-                        key(char) {
-                            val numInteraction = remember { MutableInteractionSource() }
-                            val isPressed by numInteraction.collectIsPressedAsState()
-                            KeyButton(
-                                onClick = { onType(char) },
-                                onPress = { performLightHaptic() },
-                                interactionSource = numInteraction,
-                                containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-                                contentColor = MaterialTheme.colorScheme.onSurface,
-                                shape = RoundedCornerShape(keyRoundness),
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .fillMaxHeight()
+                        } else {
+                            LazyVerticalGrid(
+                                columns = GridCells.Fixed(2),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                                modifier = Modifier.fillMaxSize()
                             ) {
-                                Text(
-                                    text = char,
-                                    style = MaterialTheme.typography.titleLarge,
-                                    fontWeight = FontWeight.Medium,
-                                    fontFamily = CustomFontFamily
-                                )
+                                items(clipboardHistory) { clipText ->
+                                    ClipboardItem(
+                                        text = clipText,
+                                        shape = RoundedCornerShape(keyRoundness),
+                                        onClick = {
+                                            onPasteClick(clipText)
+                                            isClipboardMode = false
+                                        },
+                                        modifier = Modifier.fillMaxWidth()
+                                    )
+                                }
                             }
                         }
                     }
                 }
-            )
-
-            // Row 1
-            ButtonGroup(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                content = {
-                    currentRow1.forEach { char ->
-                        key(char) {
-                            val displayLabel =
-                                if (shiftState != ShiftState.OFF && !isSymbols) char.uppercase() else char
-                            val row1Interaction = remember { MutableInteractionSource() }
-                            val isPressed by row1Interaction.collectIsPressedAsState()
-                            val animatedRadius by animateDpAsState(
-                                targetValue = if (isPressed) 4.dp else keyRoundness,
-                                label = "cornerRadius"
-                            )
-                            KeyButton(
-                                onClick = {
-                                    onType(displayLabel)
-                                    if (shiftState == ShiftState.ON) shiftState = ShiftState.OFF
-                                },
-                                onPress = { performLightHaptic() },
-                                interactionSource = row1Interaction,
-                                containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-                                contentColor = MaterialTheme.colorScheme.onSurface,
-                                shape = RoundedCornerShape(animatedRadius),
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .fillMaxHeight()
-                            ) {
-                                Text(
-                                    text = displayLabel,
-                                    style = MaterialTheme.typography.titleLarge,
-                                    fontWeight = FontWeight.Medium,
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                    fontFamily = CustomFontFamily
-                                )
+                1 -> {
+                    EmojiPicker(
+                        modifier = Modifier.fillMaxSize(),
+                        keyRoundness = keyRoundness,
+                        isHapticsEnabled = isHapticsEnabled,
+                        hapticStrength = hapticStrength,
+                        onEmojiSelected = { emoji ->
+                            handleType(emoji)
+                        },
+                        onSwipeDownToExit = {
+                            if (isEmojiMode) {
+                                isEmojiMode = false
+                                performHeavyHaptic()
                             }
-                        }
-                    }
+                        },
+                        bottomContentPadding = bottomPadding
+                    )
                 }
-            )
+                else -> {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        // Dedicated Number Row
+                        ButtonGroup(
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            content = {
+                                numberRow.forEach { char ->
+                                    key(char) {
+                                        val numInteraction = remember { MutableInteractionSource() }
+                                        val isPressed by numInteraction.collectIsPressedAsState()
+                                        KeyButton(
+                                            onClick = { handleType(char) },
+                                            onPress = { performLightHaptic() },
+                                            interactionSource = numInteraction,
+                                            containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                                            contentColor = MaterialTheme.colorScheme.onSurface,
+                                            shape = RoundedCornerShape(keyRoundness),
+                                            modifier = Modifier
+                                                .weight(1f)
+                                                .fillMaxHeight()
+                                        ) {
+                                            Text(
+                                                text = char,
+                                                style = MaterialTheme.typography.titleLarge,
+                                                fontWeight = FontWeight.Medium,
+                                                fontFamily = CustomFontFamily
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        )
 
-            // Row 2
-            Row(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                if (!isSymbols) Spacer(modifier = Modifier.weight(0.5f))
+                        // Row 1
+                        ButtonGroup(
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            content = {
+                                currentRow1.forEachIndexed { index, char ->
+                                    key(char) {
+                                        val displayLabel =
+                                            if (shiftState != ShiftState.OFF && !isSymbols) char.uppercase() else char
+                                        val row1Interaction = remember { MutableInteractionSource() }
+                                        val isPressed by row1Interaction.collectIsPressedAsState()
+                                        val animatedRadius by animateDpAsState(
+                                            targetValue = if (isPressed) 4.dp else keyRoundness,
+                                            label = "cornerRadius"
+                                        )
+                                        
+                                        val secondary = if (!isSymbols && isLongPressSymbolsEnabled && index < row1LongPress.size) row1LongPress[index] else null
+                                        
+                                        KeyButton(
+                                            onClick = {
+                                                handleType(displayLabel)
+                                                if (shiftState == ShiftState.ON) shiftState = ShiftState.OFF
+                                            },
+                                            onPress = { performLightHaptic() },
+                                            onLongClick = if (secondary != null) { { handleType(secondary) } } else null,
+                                            secondaryText = secondary,
+                                            interactionSource = row1Interaction,
+                                            containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                                            contentColor = MaterialTheme.colorScheme.onSurface,
+                                            shape = RoundedCornerShape(animatedRadius),
+                                            modifier = Modifier
+                                                .weight(1f)
+                                                .fillMaxHeight()
+                                        ) {
+                                            Text(
+                                                text = displayLabel,
+                                                style = MaterialTheme.typography.titleLarge,
+                                                fontWeight = FontWeight.Medium,
+                                                color = MaterialTheme.colorScheme.onSurface,
+                                                fontFamily = CustomFontFamily
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        )
 
-                ButtonGroup(
-                    modifier = Modifier.weight(currentRow2.size.toFloat()),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    content = {
-                        currentRow2.forEach { char ->
-                            key(char) {
-                                val displayLabel =
-                                    if (shiftState != ShiftState.OFF && !isSymbols) char.uppercase() else char
-                                val row2Interaction = remember { MutableInteractionSource() }
-                                val isPressed by row2Interaction.collectIsPressedAsState()
+                        // Row 2
+                        Row(
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            if (!isSymbols) Spacer(modifier = Modifier.weight(0.5f))
+
+                            ButtonGroup(
+                                modifier = Modifier.weight(currentRow2.size.toFloat()),
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                content = {
+                                    currentRow2.forEachIndexed { index, char ->
+                                        key(char) {
+                                            val displayLabel =
+                                                if (shiftState != ShiftState.OFF && !isSymbols) char.uppercase() else char
+                                            val row2Interaction = remember { MutableInteractionSource() }
+                                            val isPressed by row2Interaction.collectIsPressedAsState()
+                                            val animatedRadius by animateDpAsState(
+                                                targetValue = if (isPressed) 4.dp else keyRoundness,
+                                                label = "cornerRadius"
+                                            )
+                                            
+                                            val secondary = if (!isSymbols && isLongPressSymbolsEnabled && index < row2LongPress.size) row2LongPress[index] else null
+                                            
+                                            KeyButton(
+                                                onClick = {
+                                                    handleType(displayLabel)
+                                                    if (shiftState == ShiftState.ON) shiftState = ShiftState.OFF
+                                                },
+                                                onPress = { performLightHaptic() },
+                                                onLongClick = if (secondary != null) { { handleType(secondary) } } else null,
+                                                secondaryText = secondary,
+                                                interactionSource = row2Interaction,
+                                                containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                                                contentColor = MaterialTheme.colorScheme.onSurface,
+                                                shape = RoundedCornerShape(animatedRadius),
+                                                modifier = Modifier
+                                                    .weight(1f)
+                                                    .fillMaxHeight()
+                                            ) {
+                                                Text(
+                                                    text = displayLabel,
+                                                    style = MaterialTheme.typography.titleLarge,
+                                                    fontWeight = FontWeight.Medium,
+                                                    color = MaterialTheme.colorScheme.onSurface,
+                                                    fontFamily = CustomFontFamily
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            )
+
+                            if (!isSymbols) Spacer(modifier = Modifier.weight(0.5f))
+                        }
+
+                        // Row 3 (with Shift/Backspace logic)
+                        ButtonGroup(
+                            modifier = Modifier
+                                .weight(1f)
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            content = {
+                                // Shift Key
+                                val shiftInteraction = remember { MutableInteractionSource() }
+                                val isPressed by shiftInteraction.collectIsPressedAsState()
+                                
+                                var shiftPressTime by remember { androidx.compose.runtime.mutableLongStateOf(0L) }
+                                var wasShiftOffAtDown by remember { mutableStateOf(false) }
+
+                                // Reset Shift on release if used for selection
+                                LaunchedEffect(isPressed) {
+                                    if (!isPressed) {
+                                        if (isSelectionPerformed && wasShiftOffAtDown) {
+                                            shiftState = ShiftState.OFF
+                                        }
+                                    }
+                                }
+
                                 val animatedRadius by animateDpAsState(
                                     targetValue = if (isPressed) 4.dp else keyRoundness,
                                     label = "cornerRadius"
                                 )
+
                                 KeyButton(
                                     onClick = {
-                                        onType(displayLabel)
-                                        if (shiftState == ShiftState.ON) shiftState = ShiftState.OFF
+                                        if (!isSymbols) {
+                                            val pressDuration = System.currentTimeMillis() - shiftPressTime
+                                            
+                                            if (pressDuration < 250) {
+                                                if (wasShiftOffAtDown) {
+                                                } else {
+                                                    shiftState = ShiftState.OFF
+                                                }
+                                            } else {
+                                                if (wasShiftOffAtDown) {
+                                                    shiftState = ShiftState.OFF
+                                                }
+                                            }
+                                        }
                                     },
-                                    onPress = { performLightHaptic() },
-                                    interactionSource = row2Interaction,
-                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-                                    contentColor = MaterialTheme.colorScheme.onSurface,
+                                    onPress = { 
+                                        performLightHaptic()
+                                        if (!isSymbols) {
+                                            shiftPressTime = System.currentTimeMillis()
+                                            wasShiftOffAtDown = (shiftState == ShiftState.OFF)
+                                            isSelectionPerformed = false // Reset selection tracker
+                                            if (wasShiftOffAtDown) {
+                                                shiftState = ShiftState.ON
+                                            }
+                                        }
+                                    },
+                                    onLongClick = {
+                                        if (!isSymbols && !isSelectionPerformed) {
+                                            performHeavyHaptic()
+                                            shiftState = ShiftState.LOCKED
+                                        }
+                                    },
+                                    interactionSource = shiftInteraction,
+                                    containerColor = if (isSymbols) {
+                                        MaterialTheme.colorScheme.surfaceContainerHighest.copy(alpha = 0.5f)
+                                    } else if (shiftState != ShiftState.OFF) {
+                                        MaterialTheme.colorScheme.primary
+                                    } else {
+                                        MaterialTheme.colorScheme.primaryContainer
+                                    },
+                                    contentColor = if (isSymbols) {
+                                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
+                                    } else if (shiftState != ShiftState.OFF) {
+                                        MaterialTheme.colorScheme.onPrimary
+                                    } else {
+                                        MaterialTheme.colorScheme.onPrimaryContainer
+                                    },
                                     shape = RoundedCornerShape(animatedRadius),
                                     modifier = Modifier
-                                        .weight(1f)
+                                        .weight(1.5f)
                                         .fillMaxHeight()
                                 ) {
-                                    Text(
-                                        text = displayLabel,
-                                        style = MaterialTheme.typography.titleLarge,
-                                        fontWeight = FontWeight.Medium,
-                                        color = MaterialTheme.colorScheme.onSurface,
-                                        fontFamily = CustomFontFamily
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.key_shift),
+                                        contentDescription = "Shift",
+                                        modifier = Modifier.size(24.dp),
+                                        tint = if (isSymbols) {
+                                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
+                                        } else if (shiftState != ShiftState.OFF) {
+                                            MaterialTheme.colorScheme.onPrimary
+                                        } else {
+                                            MaterialTheme.colorScheme.onPrimaryContainer
+                                        }
+                                    )
+                                }
+
+                                currentRow3.forEachIndexed { index, char ->
+                                    key(char) {
+                                        val displayLabel =
+                                            if (shiftState != ShiftState.OFF && !isSymbols) char.uppercase() else char
+                                        val row3Interaction = remember { MutableInteractionSource() }
+                                        val isPressed by row3Interaction.collectIsPressedAsState()
+                                        val animatedRadius by animateDpAsState(
+                                            targetValue = if (isPressed) 4.dp else keyRoundness,
+                                            label = "cornerRadius"
+                                        )
+                                        
+                                        val secondary = if (!isSymbols && isLongPressSymbolsEnabled && index < row3LongPress.size) row3LongPress[index] else null
+
+                                        KeyButton(
+                                            onClick = {
+                                                handleType(displayLabel)
+                                                if (shiftState == ShiftState.ON) shiftState = ShiftState.OFF
+                                            },
+                                            onPress = { performLightHaptic() },
+                                            onLongClick = if (secondary != null) { { handleType(secondary) } } else null,
+                                            secondaryText = secondary,
+                                            interactionSource = row3Interaction,
+                                            containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                                            contentColor = MaterialTheme.colorScheme.onSurface,
+                                            shape = RoundedCornerShape(animatedRadius),
+                                            modifier = Modifier
+                                                .weight(1f)
+                                                .fillMaxHeight()
+                                        ) {
+                                            Text(
+                                                text = displayLabel,
+                                                style = MaterialTheme.typography.titleLarge,
+                                                fontWeight = FontWeight.Medium,
+                                                color = MaterialTheme.colorScheme.onSurface,
+                                                fontFamily = CustomFontFamily
+                                            )
+                                        }
+                                    }
+                                }
+
+                                // Backspace Key
+                                val backspaceInteraction = remember { MutableInteractionSource() }
+                                val isPressedDel by backspaceInteraction.collectIsPressedAsState()
+                                val animatedRadiusDel by animateDpAsState(
+                                    targetValue = if (isPressedDel) 4.dp else keyRoundness,
+                                    label = "cornerRadius"
+                                )
+                                var delAccumulatedDx by remember { mutableStateOf(0f) }
+                                val delSweepThreshold = 25f
+
+                                val animatedColorDel by animateColorAsState(
+                                    targetValue = if (isPressedDel) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.primaryContainer,
+                                    label = "DelColor"
+                                )
+                                val animatedContentColorDel by animateColorAsState(
+                                    targetValue = if (isPressedDel) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onPrimaryContainer,
+                                    label = "DelContentColor"
+                                )
+
+                                Box(
+                                    modifier = Modifier
+                                        .weight(1.5f)
+                                        .fillMaxHeight()
+                                        .bounceClick(backspaceInteraction)
+                                        .clip(RoundedCornerShape(animatedRadiusDel))
+                                        .pointerInput(Unit) {
+                                            detectHorizontalDragGestures(
+                                                onDragStart = { delAccumulatedDx = 0f },
+                                                onHorizontalDrag = { change, dragAmount ->
+                                                    change.consume()
+                                                    delAccumulatedDx += dragAmount
+                                                    // Moving left (negative dx) for delete
+                                                    if (delAccumulatedDx <= -delSweepThreshold) {
+                                                        val steps =
+                                                            (kotlin.math.abs(delAccumulatedDx) / delSweepThreshold).toInt()
+                                                        repeat(steps) {
+                                                            performLightHaptic()
+                                                            handleKeyPress(KeyEvent.KEYCODE_DEL)
+                                                        }
+                                                        delAccumulatedDx %= delSweepThreshold
+                                                    }
+                                                }
+                                            )
+                                        }
+                                        .pointerInput(Unit) {
+                                            detectTapGestures(
+                                                onPress = { offset ->
+                                                    val press = PressInteraction.Press(offset)
+                                                    performLightHaptic()
+                                                    scope.launch { backspaceInteraction.emit(press) }
+                                                    if (tryAwaitRelease()) {
+                                                        scope.launch {
+                                                            backspaceInteraction.emit(
+                                                                PressInteraction.Release(press)
+                                                            )
+                                                        }
+                                                        handleKeyPress(KeyEvent.KEYCODE_DEL)
+                                                    } else {
+                                                        scope.launch {
+                                                            backspaceInteraction.emit(
+                                                                PressInteraction.Cancel(press)
+                                                            )
+                                                        }
+                                                    }
+                                                }
+                                            )
+                                        }
+                                        .background(animatedColorDel),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.rounded_backspace_24),
+                                        contentDescription = "Backspace",
+                                        modifier = Modifier.size(24.dp),
+                                        tint = animatedContentColorDel
                                     )
                                 }
                             }
-                        }
-                    }
-                )
-
-                if (!isSymbols) Spacer(modifier = Modifier.weight(0.5f))
-            }
-
-            // Row 3 (with Shift/Backspace logic)
-            ButtonGroup(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                content = {
-                    // Shift Key - Only show if not in symbols mode
-                    if (!isSymbols) {
-                        val shiftInteraction = remember { MutableInteractionSource() }
-                        val isPressed by shiftInteraction.collectIsPressedAsState()
-                        val animatedRadius by animateDpAsState(
-                            targetValue = if (isPressed) 4.dp else keyRoundness,
-                            label = "cornerRadius"
                         )
 
-                        KeyButton(
-                            onClick = {
-                                shiftState =
-                                    if (shiftState == ShiftState.OFF) ShiftState.ON else ShiftState.OFF
-                            },
-                            onPress = { performLightHaptic() },
-                            onLongClick = {
-                                performHeavyHaptic()
-                                shiftState = ShiftState.LOCKED
-                            },
-                            interactionSource = shiftInteraction,
-                            containerColor = if (shiftState != ShiftState.OFF) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primaryContainer,
-                            contentColor = if (shiftState != ShiftState.OFF) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimaryContainer,
-                            shape = RoundedCornerShape(animatedRadius),
+                        // Row 4 (Sym, Space, Return)
+                        ButtonGroup(
                             modifier = Modifier
-                                .weight(1.5f)
-                                .fillMaxHeight()
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.key_shift),
-                                contentDescription = "Shift",
-                                modifier = Modifier.size(24.dp),
-                                tint = if (shiftState != ShiftState.OFF) MaterialTheme.colorScheme.onPrimary
-                                else MaterialTheme.colorScheme.onPrimaryContainer
-                            )
-                        }
-                    } else {
-                        Spacer(modifier = Modifier.weight(1.5f))
-                    }
+                                .weight(1f)
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            content = {
+                                // Symbols Toggle
+                                val symInteraction = remember { MutableInteractionSource() }
+                                val isPressedSym by symInteraction.collectIsPressedAsState()
+                                var symPressTime by remember { androidx.compose.runtime.mutableLongStateOf(0L) }
+                                var wasSymOffAtDown by remember { mutableStateOf(false) }
 
-                    currentRow3.forEach { char ->
-                        key(char) {
-                            val displayLabel =
-                                if (shiftState != ShiftState.OFF && !isSymbols) char.uppercase() else char
-                            val row3Interaction = remember { MutableInteractionSource() }
-                            val isPressed by row3Interaction.collectIsPressedAsState()
-                            val animatedRadius by animateDpAsState(
-                                targetValue = if (isPressed) 4.dp else keyRoundness,
-                                label = "cornerRadius"
-                            )
-                            KeyButton(
-                                onClick = {
-                                    onType(displayLabel)
-                                    if (shiftState == ShiftState.ON) shiftState = ShiftState.OFF
-                                },
-                                onPress = { performLightHaptic() },
-                                interactionSource = row3Interaction,
-                                containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-                                contentColor = MaterialTheme.colorScheme.onSurface,
-                                shape = RoundedCornerShape(animatedRadius),
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .fillMaxHeight()
-                            ) {
-                                Text(
-                                    text = displayLabel,
-                                    style = MaterialTheme.typography.titleLarge,
-                                    fontWeight = FontWeight.Medium,
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                    fontFamily = CustomFontFamily
-                                )
-                            }
-                        }
-                    }
-
-                    // Backspace Key
-                    val backspaceInteraction = remember { MutableInteractionSource() }
-                    val isPressedDel by backspaceInteraction.collectIsPressedAsState()
-                    val animatedRadiusDel by animateDpAsState(
-                        targetValue = if (isPressedDel) 4.dp else keyRoundness,
-                        label = "cornerRadius"
-                    )
-                    var delAccumulatedDx by remember { mutableStateOf(0f) }
-                    val delSweepThreshold = 25f
-
-                    val animatedColorDel by animateColorAsState(
-                        targetValue = if (isPressedDel) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.primaryContainer,
-                        label = "DelColor"
-                    )
-                    val animatedContentColorDel by animateColorAsState(
-                        targetValue = if (isPressedDel) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onPrimaryContainer,
-                        label = "DelContentColor"
-                    )
-
-                    Box(
-                        modifier = Modifier
-                            .weight(1.5f)
-                            .fillMaxHeight()
-                            .bounceClick(backspaceInteraction)
-                            .clip(RoundedCornerShape(animatedRadiusDel))
-                            .pointerInput(Unit) {
-                                detectHorizontalDragGestures(
-                                    onDragStart = { delAccumulatedDx = 0f },
-                                    onHorizontalDrag = { change, dragAmount ->
-                                        change.consume()
-                                        delAccumulatedDx += dragAmount
-                                        // Moving left (negative dx) for delete
-                                        if (delAccumulatedDx <= -delSweepThreshold) {
-                                            val steps =
-                                                (kotlin.math.abs(delAccumulatedDx) / delSweepThreshold).toInt()
-                                            repeat(steps) {
-                                                performLightHaptic()
-                                                onKeyPress(KeyEvent.KEYCODE_DEL)
-                                            }
-                                            delAccumulatedDx %= delSweepThreshold
+                                // Reset Symbols on release if used for modifier
+                                LaunchedEffect(isPressedSym) {
+                                    if (!isPressedSym) {
+                                        if (isWordJumpPerformed && wasSymOffAtDown) {
+                                            isSymbols = false
                                         }
                                     }
+                                }
+
+                                val animatedRadiusSym by animateDpAsState(
+                                    targetValue = if (isPressedSym) 4.dp else keyRoundness,
+                                    label = "cornerRadius"
                                 )
-                            }
-                            .pointerInput(Unit) {
-                                detectTapGestures(
-                                    onPress = { offset ->
-                                        val press = PressInteraction.Press(offset)
-                                        performLightHaptic()
-                                        scope.launch { backspaceInteraction.emit(press) }
-                                        if (tryAwaitRelease()) {
-                                            scope.launch {
-                                                backspaceInteraction.emit(
-                                                    PressInteraction.Release(press)
-                                                )
+                                KeyButton(
+                                    onClick = { 
+                                        val pressDuration = System.currentTimeMillis() - symPressTime
+                                        if (isWordJumpPerformed) {
+                                            if (wasSymOffAtDown) isSymbols = false
+                                            return@KeyButton
+                                        }
+                                        if (pressDuration < 250) {
+                                            if (!wasSymOffAtDown) { 
+                                                // Was ON at start. Tap means toggle OFF.
+                                                isSymbols = false 
                                             }
-                                            onKeyPress(KeyEvent.KEYCODE_DEL)
+                                            // Else: Was OFF at start. onPress turned it ON. Tap means "Commit" (keep it ON). Do nothing.
                                         } else {
-                                            scope.launch {
-                                                backspaceInteraction.emit(
-                                                    PressInteraction.Cancel(press)
-                                                )
-                                            }
+                                            if (wasSymOffAtDown) isSymbols = false
                                         }
-                                    }
-                                )
-                            }
-                            .background(animatedColorDel),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.rounded_backspace_24),
-                            contentDescription = "Backspace",
-                            modifier = Modifier.size(24.dp),
-                            tint = animatedContentColorDel
-                        )
-                    }
-                }
-            )
-
-            // Row 4 (Sym, Space, Return)
-            ButtonGroup(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                content = {
-                    // Symbols Toggle
-                    val symInteraction = remember { MutableInteractionSource() }
-                    val isPressedSym by symInteraction.collectIsPressedAsState()
-                    val animatedRadiusSym by animateDpAsState(
-                        targetValue = if (isPressedSym) 4.dp else keyRoundness,
-                        label = "cornerRadius"
-                    )
-                    KeyButton(
-                        onClick = { isSymbols = !isSymbols },
-                        onPress = { performLightHaptic() },
-                        interactionSource = symInteraction,
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                        shape = RoundedCornerShape(animatedRadiusSym),
-                        modifier = Modifier
-                            .weight(1.2f)
-                            .fillMaxHeight()
-                    ) {
-                        Text(
-                            text = if (isSymbols) "ABC" else "?#/",
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Medium,
-                            fontFamily = CustomFontFamily
-                        )
-                    }
-
-                    // Comma Key
-                    val commaInteraction = remember { MutableInteractionSource() }
-                    val isPressedComma by commaInteraction.collectIsPressedAsState()
-                    val animatedRadiusComma by animateDpAsState(
-                        targetValue = if (isPressedComma) 4.dp else keyRoundness,
-                        label = "cornerRadius"
-                    )
-                    KeyButton(
-                        onClick = { onType(",") },
-                        onPress = { performLightHaptic() },
-                        interactionSource = commaInteraction,
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                        shape = RoundedCornerShape(animatedRadiusComma),
-                        modifier = Modifier
-                            .weight(0.7f)
-                            .fillMaxHeight()
-                    ) {
-                        Text(
-                            text = ",",
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Medium,
-                            fontFamily = CustomFontFamily
-                        )
-                    }
-
-                    // Space
-                    val spaceInteraction = remember { MutableInteractionSource() }
-                    val isPressedSpace by spaceInteraction.collectIsPressedAsState()
-                    val animatedRadiusSpace by animateDpAsState(
-                        targetValue = if (isPressedSpace) 4.dp else keyRoundness,
-                        label = "cornerRadius"
-                    )
-                    var accumulatedDx by remember { mutableStateOf(0f) }
-                    val sweepThreshold = 25f // pixels per cursor move
-
-                    val animatedColorSpace by animateColorAsState(
-                        targetValue = if (isPressedSpace) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHighest,
-                        label = "SpaceColor"
-                    )
-
-                    Box(
-                        modifier = Modifier
-                            .weight(3f)
-                            .fillMaxHeight()
-                            .bounceClick(spaceInteraction)
-                            .clip(RoundedCornerShape(animatedRadiusSpace))
-                            .pointerInput(Unit) {
-                                detectHorizontalDragGestures(
-                                    onDragStart = { accumulatedDx = 0f },
-                                    onHorizontalDrag = { change, dragAmount ->
-                                        change.consume()
-                                        accumulatedDx += dragAmount
-                                        val absDx = kotlin.math.abs(accumulatedDx)
-                                        if (absDx >= sweepThreshold) {
-                                            val steps = (absDx / sweepThreshold).toInt()
-                                            val keycode =
-                                                if (accumulatedDx > 0) KeyEvent.KEYCODE_DPAD_RIGHT else KeyEvent.KEYCODE_DPAD_LEFT
-                                            repeat(steps) {
-                                                performLightHaptic()
-                                                onKeyPress(keycode)
-                                            }
-                                            accumulatedDx %= sweepThreshold
-                                        }
-                                    }
-                                )
-                            }
-                            .pointerInput(Unit) {
-                                detectTapGestures(
-                                    onPress = { offset ->
-                                        val press = PressInteraction.Press(offset)
-                                        spaceInteraction.emit(press)
-                                        performLightHaptic()
-                                        tryAwaitRelease()
-                                        spaceInteraction.emit(PressInteraction.Release(press))
                                     },
-                                    onTap = {
-                                        onType(" ")
-                                    }
+                                    onPress = { 
+                                        performLightHaptic()
+                                        symPressTime = System.currentTimeMillis()
+                                        wasSymOffAtDown = !isSymbols
+                                        isWordJumpPerformed = false
+                                        if (wasSymOffAtDown) {
+                                            isSymbols = true
+                                        }
+                                    },
+                                    interactionSource = symInteraction,
+                                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    shape = RoundedCornerShape(animatedRadiusSym),
+                                    modifier = Modifier
+                                        .weight(1.2f)
+                                        .fillMaxHeight()
+                                ) {
+                                    Text(
+                                        text = stringResource(if (isSymbols) R.string.label_kbd_abc else R.string.label_kbd_symbols),
+                                        style = MaterialTheme.typography.titleLarge,
+                                        fontWeight = FontWeight.Medium,
+                                        fontFamily = CustomFontFamily
+                                    )
+                                }
+
+                                // Comma Key
+                                val commaInteraction = remember { MutableInteractionSource() }
+                                val isPressedComma by commaInteraction.collectIsPressedAsState()
+                                val animatedRadiusComma by animateDpAsState(
+                                    targetValue = if (isPressedComma) 4.dp else keyRoundness,
+                                    label = "cornerRadius"
                                 )
+                                KeyButton(
+                                    onClick = { handleType(",") },
+                                    onPress = { performLightHaptic() },
+                                    interactionSource = commaInteraction,
+                                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    shape = RoundedCornerShape(animatedRadiusComma),
+                                    modifier = Modifier
+                                        .weight(0.7f)
+                                        .fillMaxHeight()
+                                ) {
+                                    Text(
+                                        text = ",",
+                                        style = MaterialTheme.typography.titleLarge,
+                                        fontWeight = FontWeight.Medium,
+                                        fontFamily = CustomFontFamily
+                                    )
+                                }
+
+                                // Space
+                                val spaceInteraction = remember { MutableInteractionSource() }
+                                val isPressedSpace by spaceInteraction.collectIsPressedAsState()
+                                val animatedRadiusSpace by animateDpAsState(
+                                    targetValue = if (isPressedSpace) 4.dp else keyRoundness,
+                                    label = "cornerRadius"
+                                )
+                                var accumulatedDx by remember { mutableStateOf(0f) }
+                                val sweepThreshold = 25f // pixels per cursor move
+
+                                val animatedColorSpace by animateColorAsState(
+                                    targetValue = if (isPressedSpace) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHighest,
+                                    label = "SpaceColor"
+                                )
+
+                                Box(
+                                    modifier = Modifier
+                                        .weight(3f)
+                                        .fillMaxHeight()
+                                        .bounceClick(spaceInteraction)
+                                        .clip(RoundedCornerShape(animatedRadiusSpace))
+                                        .pointerInput(Unit) {
+                                            val viewConfig = viewConfiguration
+                                            awaitEachGesture {
+                                                val down = awaitFirstDown(requireUnconsumed = false)
+                                                val press = PressInteraction.Press(down.position)
+                                                scope.launch { spaceInteraction.emit(press) }
+                                                performLightHaptic()
+
+                                                var isDragStarted = false
+                                                var totalDx = 0f
+                                                var cursorAccumulator = 0f
+                                                
+                                                // Increased slop for spacebar to prevent accidental cursor moves
+                                                val customSlop = viewConfig.touchSlop * 2.5f
+
+                                                var upOrCancel: PointerInputChange? = null
+
+                                                while (true) {
+                                                    val event = awaitPointerEvent()
+                                                    val change = event.changes.find { it.id == down.id }
+                                                    
+                                                    if (change == null || change.isConsumed) {
+                                                        break
+                                                    }
+
+                                                    if (change.changedToUp()) {
+                                                        upOrCancel = change
+                                                        break
+                                                    }
+
+                                                    if (change.positionChange() != Offset.Zero) {
+                                                        totalDx += (change.position.x - change.previousPosition.x)
+                                                        val dxFromOrigin = totalDx
+                                                        
+                                                        if (!isDragStarted) {
+                                                            if (kotlin.math.abs(dxFromOrigin) > customSlop) {
+                                                                isDragStarted = true
+                                                                onCursorDrag(true)
+                                                                cursorAccumulator = 0f 
+                                                            }
+                                                        }
+                                                        
+                                                        if (isDragStarted) {
+                                                            change.consume()
+                                                            cursorAccumulator += (change.position.x - change.previousPosition.x)
+                                                            
+                                                            val absDx = kotlin.math.abs(cursorAccumulator)
+                                                            if (absDx >= sweepThreshold) {
+                                                                val steps = (absDx / sweepThreshold).toInt()
+                                                                val keycode = if (cursorAccumulator > 0) KeyEvent.KEYCODE_DPAD_RIGHT else KeyEvent.KEYCODE_DPAD_LEFT
+                                                                repeat(steps) {
+                                                                    performLightHaptic()
+                                                                    // Use Shift state to decide if we are selecting text
+                                                                    val isSelection = shiftState != ShiftState.OFF
+                                                                    if (isSelection) {
+                                                                        isSelectionPerformed = true
+                                                                    }
+                                                                    // Use Symbols press state to decide if we are jumping words
+                                                                    val isWordJump = isPressedSym
+                                                                    if (isWordJump) {
+                                                                        isWordJumpPerformed = true
+                                                                    }
+                                                                    onCursorMove(keycode, isSelection, isWordJump)
+                                                                }
+                                                                cursorAccumulator %= sweepThreshold
+                                                            }
+                                                        }
+                                                    }
+                                                }
+
+                                                if (upOrCancel != null && !isDragStarted) {
+                                                     handleType(" ")
+                                                     scope.launch { spaceInteraction.emit(PressInteraction.Release(press)) }
+                                                } else {
+                                                     if (isDragStarted) {
+                                                         onCursorDrag(false)
+                                                     }
+                                                     scope.launch { spaceInteraction.emit(PressInteraction.Cancel(press)) }
+                                                }
+                                            }
+                                        }
+                                        .background(animatedColorSpace),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    // Empty space
+                                }
+
+                                // Dot Key
+                                val dotInteraction = remember { MutableInteractionSource() }
+                                val isPressedDot by dotInteraction.collectIsPressedAsState()
+                                val animatedRadiusDot by animateDpAsState(
+                                    targetValue = if (isPressedDot) 4.dp else keyRoundness,
+                                    label = "cornerRadius"
+                                )
+                                KeyButton(
+                                    onClick = { handleType(".") },
+                                    onPress = { performLightHaptic() },
+                                    interactionSource = dotInteraction,
+                                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    shape = RoundedCornerShape(animatedRadiusDot),
+                                    modifier = Modifier
+                                        .weight(0.7f)
+                                        .fillMaxHeight()
+                                ) {
+                                    Text(
+                                        text = ".",
+                                        style = MaterialTheme.typography.titleLarge,
+                                        fontWeight = FontWeight.Medium,
+                                        fontFamily = CustomFontFamily
+                                    )
+                                }
+
+                                // Return
+                                val returnInteraction = remember { MutableInteractionSource() }
+                                val isPressedReturn by returnInteraction.collectIsPressedAsState()
+                                val animatedRadiusReturn by animateDpAsState(
+                                    targetValue = if (isPressedReturn) 4.dp else keyRoundness,
+                                    label = "cornerRadius"
+                                )
+                                KeyButton(
+                                    onClick = { handleKeyPress(KeyEvent.KEYCODE_ENTER) },
+                                    onPress = { performLightHaptic() },
+                                    interactionSource = returnInteraction,
+                                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    shape = RoundedCornerShape(animatedRadiusReturn),
+                                    modifier = Modifier
+                                        .weight(1.5f)
+                                        .fillMaxHeight()
+                                ) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.rounded_keyboard_return_24),
+                                        contentDescription = "Return",
+                                        modifier = Modifier.size(24.dp)
+                                    )
+                                }
                             }
-                            .background(animatedColorSpace),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        // Empty space
-                    }
-
-                    // Dot Key
-                    val dotInteraction = remember { MutableInteractionSource() }
-                    val isPressedDot by dotInteraction.collectIsPressedAsState()
-                    val animatedRadiusDot by animateDpAsState(
-                        targetValue = if (isPressedDot) 4.dp else keyRoundness,
-                        label = "cornerRadius"
-                    )
-                    KeyButton(
-                        onClick = { onType(".") },
-                        onPress = { performLightHaptic() },
-                        interactionSource = dotInteraction,
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                        shape = RoundedCornerShape(animatedRadiusDot),
-                        modifier = Modifier
-                            .weight(0.7f)
-                            .fillMaxHeight()
-                    ) {
-                        Text(
-                            text = ".",
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Medium,
-                            fontFamily = CustomFontFamily
-                        )
-                    }
-
-                    // Return
-                    val returnInteraction = remember { MutableInteractionSource() }
-                    val isPressedReturn by returnInteraction.collectIsPressedAsState()
-                    val animatedRadiusReturn by animateDpAsState(
-                        targetValue = if (isPressedReturn) 4.dp else keyRoundness,
-                        label = "cornerRadius"
-                    )
-                    KeyButton(
-                        onClick = { onKeyPress(KeyEvent.KEYCODE_ENTER) },
-                        onPress = { performLightHaptic() },
-                        interactionSource = returnInteraction,
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                        shape = RoundedCornerShape(animatedRadiusReturn),
-                        modifier = Modifier
-                            .weight(1.5f)
-                            .fillMaxHeight()
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.rounded_keyboard_return_24),
-                            contentDescription = "Return",
-                            modifier = Modifier.size(24.dp)
                         )
                     }
                 }
-            )
+            }
         }
 
         if (isFunctionsBottom) {
-            FunctionRow(Modifier.weight(0.65f))
+            FunctionRow(
+                Modifier
+                    .height(48.dp)
+                    .fillMaxWidth()
+            )
         }
     }
 }

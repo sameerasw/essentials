@@ -173,6 +173,10 @@ class MainViewModel : ViewModel() {
     val isKeyboardSelected = mutableStateOf(false)
     val isWriteSettingsEnabled = mutableStateOf(false)
     val isCalendarPermissionGranted = mutableStateOf(false)
+    val isUserDictionaryEnabled = mutableStateOf(false)
+    val userDictionaryWords = mutableStateOf<Map<String, Long>>(emptyMap())
+    val isUserDictionarySheetVisible = mutableStateOf(false)
+    val isLongPressSymbolsEnabled = mutableStateOf(false)
 
     // AirSync Bridge
     val isAirSyncConnectionEnabled = mutableStateOf(false)
@@ -278,6 +282,9 @@ class MainViewModel : ViewModel() {
 
                 SettingsRepository.KEY_KEYBOARD_CLIPBOARD_ENABLED -> isKeyboardClipboardEnabled.value =
                     settingsRepository.getBoolean(key, true)
+
+                SettingsRepository.KEY_KEYBOARD_LONG_PRESS_SYMBOLS -> isLongPressSymbolsEnabled.value =
+                    settingsRepository.getBoolean(key, false)
 
                 SettingsRepository.KEY_AIRSYNC_CONNECTION_ENABLED -> isAirSyncConnectionEnabled.value =
                     settingsRepository.getBoolean(key)
@@ -553,6 +560,10 @@ class MainViewModel : ViewModel() {
             settingsRepository.getBoolean(SettingsRepository.KEY_KEYBOARD_PITCH_BLACK, false)
         isKeyboardClipboardEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_KEYBOARD_CLIPBOARD_ENABLED, true)
+        isUserDictionaryEnabled.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_USER_DICTIONARY_ENABLED, false)
+        isLongPressSymbolsEnabled.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_KEYBOARD_LONG_PRESS_SYMBOLS, false)
 
         isAirSyncConnectionEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_AIRSYNC_CONNECTION_ENABLED)
@@ -669,6 +680,66 @@ class MainViewModel : ViewModel() {
         settingsRepository.putBoolean(SettingsRepository.KEY_USE_ROOT, enabled)
         isRootEnabled.value = enabled
         check(context)
+    }
+
+    fun setUserDictionaryEnabled(enabled: Boolean, context: Context) {
+        isUserDictionaryEnabled.value = enabled
+        settingsRepository.setUserDictionaryEnabled(enabled)
+    }
+
+    fun setLongPressSymbolsEnabled(enabled: Boolean, context: Context) {
+        isLongPressSymbolsEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_KEYBOARD_LONG_PRESS_SYMBOLS, enabled)
+    }
+    
+    fun loadUserDictionaryWords(context: Context) {
+        val ims = context.applicationContext as? com.sameerasw.essentials.ime.EssentialsInputMethodService
+        
+        viewModelScope.launch(Dispatchers.IO) {
+            val file = java.io.File(context.filesDir, "user_dict.txt")
+            if (file.exists()) {
+                val map = mutableMapOf<String, Long>()
+                file.forEachLine { line ->
+                    val parts = line.split(" ")
+                    if (parts.size >= 2) {
+                         map[parts[0]] = parts[1].toLongOrNull() ?: 1L
+                    }
+                }
+                withContext(Dispatchers.Main) {
+                    userDictionaryWords.value = map
+                }
+            } else {
+                 withContext(Dispatchers.Main) {
+                    userDictionaryWords.value = emptyMap()
+                }
+            }
+        }
+    }
+    
+    fun deleteUserWord(word: String, context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            // Read, remove, write
+            val file = java.io.File(context.filesDir, "user_dict.txt")
+            if (file.exists()) {
+                val lines = file.readLines().filter { !it.startsWith("$word ") }
+                file.writeText(lines.joinToString("\n"))
+                loadUserDictionaryWords(context)
+                settingsRepository.putLong(SettingsRepository.KEY_USER_DICT_LAST_UPDATE, System.currentTimeMillis())
+            }
+        }
+    }
+
+    fun clearUserDictionary(context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val file = java.io.File(context.filesDir, "user_dict.txt")
+            if (file.exists()) {
+                file.delete()
+                withContext(Dispatchers.Main) {
+                    userDictionaryWords.value = emptyMap()
+                }
+                settingsRepository.putLong(SettingsRepository.KEY_USER_DICT_LAST_UPDATE, System.currentTimeMillis())
+            }
+        }
     }
 
     fun setPitchBlackThemeEnabled(enabled: Boolean, context: Context) {

@@ -50,12 +50,14 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
     private val _clipboardHistory = MutableStateFlow<List<String>>(emptyList())
     val clipboardHistory: StateFlow<List<String>> = _clipboardHistory.asStateFlow()
 
+    private val kbdResetTrigger = MutableStateFlow(0)
+
     private var currentKeyboardShape: Int = 0
     private var currentKeyboardRoundness: Float = 24f
     private var composedInputView: View? = null
 
-    // Undo Stack
-    private val undoStack = java.util.ArrayDeque<String>()
+    // Undo Manager
+    private val undoRedoManager = UndoRedoManager()
 
     // Suggestion Lookup Job
     private var lookupJob: Job? = null
@@ -247,6 +249,24 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                     )
                 }
 
+                var isUserDictionaryEnabled by remember {
+                    mutableStateOf(
+                        prefs.getBoolean(
+                            SettingsRepository.KEY_USER_DICTIONARY_ENABLED,
+                            false
+                        )
+                    )
+                }
+
+                var isLongPressSymbolsEnabled by remember {
+                    mutableStateOf(
+                        prefs.getBoolean(
+                            SettingsRepository.KEY_KEYBOARD_LONG_PRESS_SYMBOLS,
+                            false
+                        )
+                    )
+                }
+
                 // Observe SharedPreferences changes
                 DisposableEffect(prefs) {
                     val listener =
@@ -339,6 +359,24 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                                         }
                                     }
                                 }
+
+                                SettingsRepository.KEY_USER_DICTIONARY_ENABLED -> {
+                                    isUserDictionaryEnabled = sharedPreferences.getBoolean(
+                                        SettingsRepository.KEY_USER_DICTIONARY_ENABLED,
+                                        false
+                                    )
+                                }
+                                SettingsRepository.KEY_USER_DICT_LAST_UPDATE -> {
+                                    lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                                        suggestionEngine.loadUserDictionary()
+                                    }
+                                }
+                                SettingsRepository.KEY_KEYBOARD_LONG_PRESS_SYMBOLS -> {
+                                    isLongPressSymbolsEnabled = sharedPreferences.getBoolean(
+                                        SettingsRepository.KEY_KEYBOARD_LONG_PRESS_SYMBOLS,
+                                        false
+                                    )
+                                }
                             }
                         }
                     prefs.registerOnSharedPreferenceChangeListener(listener)
@@ -349,6 +387,7 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
 
                 val useDarkTheme = isAlwaysDark || androidx.compose.foundation.isSystemInDarkTheme()
                 val suggestions by suggestionEngine.suggestions.collectAsState()
+                val resetTrigger by kbdResetTrigger.collectAsState()
 
                 EssentialsTheme(
                     darkTheme = useDarkTheme,
@@ -364,35 +403,93 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                         isFunctionsBottom = isFunctionsBottom,
                         functionsPadding = functionsPadding.dp,
                         isClipboardEnabled = isKeyboardClipboardEnabled,
+                        isLongPressSymbolsEnabled = isLongPressSymbolsEnabled,
                         suggestions = suggestions,
                         clipboardHistory = _clipboardHistory.collectAsState().value,
-                        onSuggestionClick = { word ->
+                        onOpened = resetTrigger,
+                        onSuggestionClick = { suggestion ->
+                            val word = suggestion.text
                             val ic = currentInputConnection
                             if (ic != null) {
                                 val textBefore = ic.getTextBeforeCursor(50, 0)?.toString() ?: ""
                                 val lastWord = textBefore.split(Regex("\\s+")).lastOrNull() ?: ""
                                 if (lastWord.isNotEmpty()) {
+                                    undoRedoManager.recordDelete(lastWord)
                                     ic.deleteSurroundingText(lastWord.length, 0)
                                 }
+                                undoRedoManager.recordInsert(word + " ")
                                 ic.commitText(word + " ", 1)
                                 suggestionEngine.clearSuggestions()
                             }
                         },
                         onType = { text ->
+                            undoRedoManager.recordInsert(text)
                             currentInputConnection?.commitText(text, 1)
+                            if (isUserDictionaryEnabled && text.length == 1 && !text[0].isLetterOrDigit()) {
+                                val ic = currentInputConnection
+                                if (ic != null) {
+                                    val textBefore = ic.getTextBeforeCursor(50, 0)?.toString()
+                                    if (!textBefore.isNullOrEmpty()) {
+                                        val content = textBefore.dropLast(1)
+                                        val lastWord = content.split(Regex("[^a-zA-Z0-9']")).lastOrNull() ?: ""
+                                        if (lastWord.isNotEmpty()) {
+                                            lifecycleScope.launch(kotlinx.coroutines.Dispatchers.Default) {
+                                                suggestionEngine.learnWord(lastWord)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         },
                         onPasteClick = { text ->
+                            undoRedoManager.recordInsert(text)
                             currentInputConnection?.commitText(text, 1)
                         },
                         onUndoClick = {
                             val ic = currentInputConnection
-                            if (ic != null && undoStack.isNotEmpty()) {
-                                val textToRestore = undoStack.pop()
-                                ic.commitText(textToRestore, 1)
-                            }
+                            undoRedoManager.undo(ic)
                         },
                         onKeyPress = { keyCode ->
                             handleKeyPress(keyCode)
+                        },
+                        onCursorMove = { keyCode, isSelection, isWordJump ->
+                            val ic = currentInputConnection
+                            if (ic != null) {
+                                if (isSelection || isWordJump) {
+                                    val eventTime = System.currentTimeMillis()
+                                    var metaState = 0
+                                    
+                                    // Press Modifiers
+                                    if (isSelection) {
+                                        ic.sendKeyEvent(KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_SHIFT_LEFT, 0, 0))
+                                        metaState = metaState or KeyEvent.META_SHIFT_ON or KeyEvent.META_SHIFT_LEFT_ON
+                                    }
+                                    if (isWordJump) {
+                                        ic.sendKeyEvent(KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_CTRL_LEFT, 0, 0))
+                                        metaState = metaState or KeyEvent.META_CTRL_ON or KeyEvent.META_CTRL_LEFT_ON
+                                    }
+
+                                    // The Arrow Key
+                                    ic.sendKeyEvent(
+                                        KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN, keyCode, 0, metaState)
+                                    )
+                                    ic.sendKeyEvent(
+                                        KeyEvent(eventTime, eventTime, KeyEvent.ACTION_UP, keyCode, 0, metaState)
+                                    )
+
+                                    if (isWordJump) {
+                                        ic.sendKeyEvent(KeyEvent(eventTime, eventTime, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_CTRL_LEFT, 0, 0))
+                                    }
+                                    if (isSelection) {
+                                        ic.sendKeyEvent(KeyEvent(eventTime, eventTime, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_SHIFT_LEFT, 0, 0))
+                                    }
+                                } else {
+                                    handleKeyPress(keyCode)
+                                }
+                            }
+                        },
+                        onCursorDrag = { isDragging ->
+                            onCursorDrag(isDragging)
                         }
                     )
                 }
@@ -425,6 +522,7 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
     override fun onFinishInputView(finishingInput: Boolean) {
         super.onFinishInputView(finishingInput)
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+        kbdResetTrigger.value++
     }
 
     override fun onDestroy() {
@@ -443,35 +541,22 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
             KeyEvent.KEYCODE_DEL -> {
                 val selectedText = inputConnection.getSelectedText(0)
                 if (selectedText != null && selectedText.isNotEmpty()) {
-                    // Selection deleted -> always push as new entry
-                    undoStack.push(selectedText.toString())
+                    // Delete selection
+                    undoRedoManager.recordDelete(selectedText.toString())
                     inputConnection.commitText("", 1)
                 } else {
-                    val before = inputConnection.getTextBeforeCursor(1, 0)
+                    val before = inputConnection.getTextBeforeCursor(2, 0)
                     if (!before.isNullOrEmpty()) {
-                        val char = before[0]
-                        val isWhitespace = char.isWhitespace()
-
-                        if (undoStack.isNotEmpty()) {
-                            val top = undoStack.peek()
-                            // Check if we should merge with the top of the stack
-                            // We merge if both are NOT whitespace (building a word)
-                            // If either is whitespace, we treat it as a separator and start a new chunk
-                            val topIsWhitespace = top?.all { it.isWhitespace() } == true
-
-                            if (!isWhitespace && !topIsWhitespace) {
-                                // Merge: Prepend captured char to top
-                                val merged = char + undoStack.pop()
-                                undoStack.push(merged)
-                            } else {
-                                // Start new entry
-                                undoStack.push(char.toString())
-                            }
-                        } else {
-                            undoStack.push(char.toString())
+                        var deleteCount = 1
+                        val len = before.length
+                        if (len >= 2 && Character.isSurrogatePair(before[len - 2], before[len - 1])) {
+                            deleteCount = 2
                         }
+                        
+                        val charToDelete = before.subSequence(len - deleteCount, len).toString()
+                        undoRedoManager.recordDelete(charToDelete)
+                        inputConnection.deleteSurroundingText(deleteCount, 0)
                     }
-                    inputConnection.deleteSurroundingText(1, 0)
                 }
             }
 
@@ -503,6 +588,33 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
         }
     }
 
+    private var isCursorDragging = false
+
+    fun onCursorDrag(isDragging: Boolean) {
+        isCursorDragging = isDragging
+        if (!isDragging) {
+            // Drag finished, update suggestions now
+            updateSuggestions()
+        }
+    }
+
+    private fun updateSuggestions() {
+        val ic = currentInputConnection ?: return
+        val textBefore = ic.getTextBeforeCursor(50, 0)?.toString()
+        if (!textBefore.isNullOrEmpty()) {
+            val lastWord = textBefore.split(Regex("\\s+")).lastOrNull() ?: ""
+            if (lastWord.isNotEmpty() && lastWord.all { it.isLetter() }) {
+                lifecycleScope.launch(kotlinx.coroutines.Dispatchers.Default) {
+                    suggestionEngine.lookup(lastWord)
+                }
+            } else {
+                suggestionEngine.clearSuggestions()
+            }
+        } else {
+            suggestionEngine.clearSuggestions()
+        }
+    }
+
     override fun onUpdateSelection(
         oldSelStart: Int, oldSelEnd: Int,
         newSelStart: Int, newSelEnd: Int,
@@ -517,25 +629,11 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
             candidatesEnd
         )
 
+        if (isCursorDragging) return
+
         // Lookup suggestion for current word
         if (newSelStart == newSelEnd) {
-            val ic = currentInputConnection
-            if (ic != null) {
-                val textBefore = ic.getTextBeforeCursor(50, 0)?.toString()
-                if (!textBefore.isNullOrEmpty()) {
-                    val lastWord = textBefore.split(Regex("\\s+")).lastOrNull() ?: ""
-                    // Run lookup
-                    if (lastWord.isNotEmpty() && lastWord.all { it.isLetter() }) {
-                        lifecycleScope.launch(kotlinx.coroutines.Dispatchers.Default) {
-                            suggestionEngine.lookup(lastWord)
-                        }
-                    } else {
-                        suggestionEngine.clearSuggestions()
-                    }
-                } else {
-                    suggestionEngine.clearSuggestions()
-                }
-            }
+             updateSuggestions()
         }
     }
 }
