@@ -279,7 +279,8 @@ fun KeyboardInputView(
     onPasteClick: (String) -> Unit = {},
     onUndoClick: () -> Unit = {},
     onType: (String) -> Unit,
-    onKeyPress: (Int) -> Unit
+    onKeyPress: (Int) -> Unit,
+    onOpened: Int = 0
 ) {
     val view = LocalView.current
     val scope = rememberCoroutineScope()
@@ -345,6 +346,17 @@ fun KeyboardInputView(
     // Pre-load Emoji data on startup (Background thread)
     LaunchedEffect(Unit) {
         EmojiData.load(view.context, scope)
+    }
+
+    LaunchedEffect(onOpened) {
+        if (onOpened > 0) {
+            isSymbols = false
+            isEmojiMode = false
+            isClipboardMode = false
+            isSuggestionsCollapsed = false
+            shiftState = ShiftState.OFF
+            currentWord = ""
+        }
     }
 
     fun performLightHaptic() {

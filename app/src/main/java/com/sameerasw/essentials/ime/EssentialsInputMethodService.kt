@@ -50,6 +50,8 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
     private val _clipboardHistory = MutableStateFlow<List<String>>(emptyList())
     val clipboardHistory: StateFlow<List<String>> = _clipboardHistory.asStateFlow()
 
+    private val kbdResetTrigger = MutableStateFlow(0)
+
     private var currentKeyboardShape: Int = 0
     private var currentKeyboardRoundness: Float = 24f
     private var composedInputView: View? = null
@@ -349,6 +351,7 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
 
                 val useDarkTheme = isAlwaysDark || androidx.compose.foundation.isSystemInDarkTheme()
                 val suggestions by suggestionEngine.suggestions.collectAsState()
+                val resetTrigger by kbdResetTrigger.collectAsState()
 
                 EssentialsTheme(
                     darkTheme = useDarkTheme,
@@ -366,6 +369,7 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                         isClipboardEnabled = isKeyboardClipboardEnabled,
                         suggestions = suggestions,
                         clipboardHistory = _clipboardHistory.collectAsState().value,
+                        onOpened = resetTrigger,
                         onSuggestionClick = { word ->
                             val ic = currentInputConnection
                             if (ic != null) {
@@ -425,6 +429,7 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
     override fun onFinishInputView(finishingInput: Boolean) {
         super.onFinishInputView(finishingInput)
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+        kbdResetTrigger.value++
     }
 
     override fun onDestroy() {
