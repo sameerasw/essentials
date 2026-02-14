@@ -249,6 +249,15 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                     )
                 }
 
+                var isUserDictionaryEnabled by remember {
+                    mutableStateOf(
+                        prefs.getBoolean(
+                            SettingsRepository.KEY_USER_DICTIONARY_ENABLED,
+                            false
+                        )
+                    )
+                }
+
                 // Observe SharedPreferences changes
                 DisposableEffect(prefs) {
                     val listener =
@@ -341,6 +350,18 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                                         }
                                     }
                                 }
+
+                                SettingsRepository.KEY_USER_DICTIONARY_ENABLED -> {
+                                    isUserDictionaryEnabled = sharedPreferences.getBoolean(
+                                        SettingsRepository.KEY_USER_DICTIONARY_ENABLED,
+                                        false
+                                    )
+                                }
+                                SettingsRepository.KEY_USER_DICT_LAST_UPDATE -> {
+                                    lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                                        suggestionEngine.loadUserDictionary()
+                                    }
+                                }
                             }
                         }
                     prefs.registerOnSharedPreferenceChangeListener(listener)
@@ -370,7 +391,8 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                         suggestions = suggestions,
                         clipboardHistory = _clipboardHistory.collectAsState().value,
                         onOpened = resetTrigger,
-                        onSuggestionClick = { word ->
+                        onSuggestionClick = { suggestion ->
+                            val word = suggestion.text
                             val ic = currentInputConnection
                             if (ic != null) {
                                 val textBefore = ic.getTextBeforeCursor(50, 0)?.toString() ?: ""
@@ -384,6 +406,21 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                         },
                         onType = { text ->
                             currentInputConnection?.commitText(text, 1)
+                            if (isUserDictionaryEnabled && text.length == 1 && !text[0].isLetterOrDigit()) {
+                                val ic = currentInputConnection
+                                if (ic != null) {
+                                    val textBefore = ic.getTextBeforeCursor(50, 0)?.toString()
+                                    if (!textBefore.isNullOrEmpty()) {
+                                        val content = textBefore.dropLast(1)
+                                        val lastWord = content.split(Regex("[^a-zA-Z0-9']")).lastOrNull() ?: ""
+                                        if (lastWord.isNotEmpty()) {
+                                            lifecycleScope.launch(kotlinx.coroutines.Dispatchers.Default) {
+                                                suggestionEngine.learnWord(lastWord)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         },
                         onPasteClick = { text ->
                             currentInputConnection?.commitText(text, 1)

@@ -79,6 +79,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.data.repository.SettingsRepository
+import com.sameerasw.essentials.ime.EssentialsInputMethodService
+import com.sameerasw.essentials.ime.Suggestion
+import com.sameerasw.essentials.ime.SuggestionType
 import com.sameerasw.essentials.utils.HapticUtil
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -273,9 +277,9 @@ fun KeyboardInputView(
     isFunctionsBottom: Boolean = false,
     functionsPadding: Dp = 0.dp,
     isClipboardEnabled: Boolean = true,
-    suggestions: List<String> = emptyList(),
+    suggestions: List<Suggestion> = emptyList(),
     clipboardHistory: List<String> = emptyList(),
-    onSuggestionClick: (String) -> Unit = {},
+    onSuggestionClick: (Suggestion) -> Unit = {},
     onPasteClick: (String) -> Unit = {},
     onUndoClick: () -> Unit = {},
     onType: (String) -> Unit,
@@ -297,7 +301,7 @@ fun KeyboardInputView(
             EmojiData.allEmojis
                 .filter { it.name.contains(currentWord, ignoreCase = true) }
                 .take(5)
-                .map { it.emoji }
+                .map { Suggestion(it.emoji, SuggestionType.Prediction) } // Wrap emojis as Suggestions
         } else {
             emptyList()
         }
@@ -507,6 +511,7 @@ fun KeyboardInputView(
                             contentPadding = PaddingValues(start = functionsPadding)
                         ) { i ->
                             val suggestion = mergedSuggestions[i]
+                            val isLearned = suggestion.type == SuggestionType.Learned
                             val suggInteraction = remember { MutableInteractionSource() }
                             val animatedRadius by animateDpAsState(
                                 targetValue = keyRoundness,
@@ -522,8 +527,8 @@ fun KeyboardInputView(
                                 },
                                 onPress = { performLightHaptic() },
                                 interactionSource = suggInteraction,
-                                containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                                containerColor = if (isLearned) MaterialTheme.colorScheme.tertiaryContainer else MaterialTheme.colorScheme.secondaryContainer,
+                                contentColor = if (isLearned) MaterialTheme.colorScheme.onTertiaryContainer else MaterialTheme.colorScheme.onSecondaryContainer,
                                 shape = RoundedCornerShape(animatedRadius),
                                 modifier = Modifier
                                     .fillMaxHeight()
@@ -531,7 +536,7 @@ fun KeyboardInputView(
                                     .maskClip(RoundedCornerShape(animatedRadius))
                             ) {
                                 Text(
-                                    text = suggestion,
+                                    text = suggestion.text,
                                     style = MaterialTheme.typography.bodyMedium,
                                     fontWeight = FontWeight.Bold,
                                     fontFamily = CustomFontFamily,
