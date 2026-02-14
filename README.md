@@ -3,6 +3,10 @@
 Essential tools, mods and workarounds for Pixels and other Androids
 
 <p align="center">
+<img width="99%" src="https://github.com/user-attachments/assets/c0849951-4cf0-4a91-9964-f7c212977af1" />
+</p>
+
+<p align="center">
   <a href="https://github.com/sameerasw/essentials/releases/latest"><img alt="GitHub Downloads (specific asset, all releases)" src="https://img.shields.io/github/downloads/sameerasw/essentials/app-release.apk?displayAssetName=false&style=for-the-badge&logo=android&logoColor=%23fff&labelColor=%2348C&color=%2348C">
 </a>
   <a href="https://github.com/sameerasw/essentials/issues/new?template=bug_report.md"><img alt="GitHub Issues or Pull Requests by label" src="https://img.shields.io/github/issues/sameerasw/essentials/bug?style=for-the-badge&logo=openbugbounty&logoColor=%23fff&label=bug%3F&labelColor=%232a6&color=%232a6">
@@ -12,10 +16,19 @@ Essential tools, mods and workarounds for Pixels and other Androids
 </a>
   <a href="https://sameerasw.com"><img src="https://img.shields.io/badge/My%20website-orange?style=for-the-badge&logo=googlechrome&logoColor=%23000&labelColor=%233AFFB8&color=%233AFFB8" alt="My website" /></a>
   <a href="https://t.me/tidwib"><img src="https://img.shields.io/badge/Community-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white" alt="Community" /></a>
-  <a href="https://crowdin.com/project/essentials-android"><img alt="Crowdin" src="https://badges.crowdin.net/essentials-android/localized.svg?style=for-the-badge">
 </p>
 
-> ### Essentials got featured by HowToMen! 🎉 <br><br> [![Essentials got featured by HowToMen!](https://github.com/user-attachments/assets/9dffa436-034e-4d59-811e-f5979b000414)](https://youtu.be/7favc9MDedQ?si=dduc7452R5Yxj7Aa&t=79)
+<p align="center">
+  <a href="https://crowdin.com/project/essentials-android"><img alt="Crowdin" src="https://badges.crowdin.net/essentials-android/localized.svg?style=for-the-badge"> </a>
+</p>
+
+<p align="center">
+<strong>Essentials got featured by HowToMen! 🎉</strong>
+</p>
+<p align="center">
+  <a href="https://youtu.be/7favc9MDedQ?si=dduc7452R5Yxj7Aa&t=79"><img width="25%" alt="Frame 6" src="https://github.com/user-attachments/assets/8bda579e-3ab6-4255-955e-7755598511f2" /></a>
+  <a href="https://youtu.be/iY3FBMTA15A?si=L2XX4sZQn3iKf2EZ&t=753"><img width="25%" alt="Frame 7" src="https://github.com/user-attachments/assets/abab16b1-3750-4c0e-8a15-4928cb9253d4" /></a>
+</p>
 
 ## Navigation
 
@@ -32,60 +45,76 @@ Essential tools, mods and workarounds for Pixels and other Androids
 
 # Features
 
-### Tools
+#### Sound and Haptics
+- Sound mode switcher
+- Ambient music glance - Media playback on AOD and screensaver
+- Call vibrations - For call accept, decline and ending
 
-- **Maps Power Saving Mode**: Optimize battery usage during Google Maps navigation by managing screen state (requires Shizuku or Root).
-- **Are we there yet? (Travel Alarm)**: Never miss your stop again. Set a destination and get notified when you are nearby. Features real-time distance tracking in the status bar and Live Activity support on the lock screen.
-- **DIY Automation**: Create custom automations based on device triggers (e.g., app launches, time) or states (e.g., screen on/off, battery level).
-- **Screen Off Widget**: An invisible widget that can be placed on the home screen to quickly lock the device without using the power button. Now with configurable haptic feedback.
-- **Caffeinate**: A Quick Settings tile to keep the display awake indefinitely or for a set duration.
-- **Sound Mode Tile**: A Quick Settings tile to toggle between Ring, Vibrate, and Silent sound modes.
-- **Button Remap**: Long-press or double-tap hardware buttons to trigger various actions like flashlight, camera, or custom shortcuts. Supports screen-off remapping with Shizuku or Root.
-- **Link Actions**: Intercept and manage how links are opened, allowing you to choose specific apps for different link types.
-- **Snooze System Notifications**: Automatically snooze persistent system notifications that cannot be dismissed normally.
-- **App Freezing**: Easily freeze/unfreeze apps to save battery and system resources. Includes auto-freezing, frozen app shortcuts, and a dedicated management UI.
-- **App Lock**: Secure your applications with a dedicated app lock feature. Integrated with Quick Settings for easy toggling.
-- **Flashlight Enhancements**: Advanced flashlight control with smooth fade-in/out, volume key intensity adjustment, global brightness controls, and live activity support.
-- **Screen Locked Security**: Protect your device by disabling sensitive Quick Settings tiles and power menu when the device is locked.
-- **A keyboard**: That no one asked for.
-- **Watermark**: Watermark your captures and EXIF data
+#### Security and Privacy
+- Screen locked security - Prevent network tile access when locked
+- App lock
 
-### Visuals
+#### Notifications and Alerts
+- Notification lighting - Edge lighting and more alerts for notifications
+- Flashlight pulse - Pulse flashlight for notifications
+- Snooze system notifications
 
-- **Status Bar Icons**: Detailed control over which system icons (WiFi, Data, Battery, etc.) are visible in the status bar.
-- **Notification Lighting**: Display a customizable lighting effect with styles (Glow, Spinner, Stroke), per-app colors, flashlight pulse support, and ambient display improvements.
-- **Dynamic Night Light**: Automatically toggle Night Light mode based on the currently active application.
+#### Input and Actions
+- Link actions - Intercept and share links from default apps
+- Button remap
+- Keyboard
 
-### Quick Settings Tiles
+#### Widgets
+- Screen off empty widget
+- Batteries
 
-A collection of useful tiles to toggle system settings:
+#### Display
+- Customize statusbar icons
+- Caffeinate to keep screen awake
+- Dynamic night light - App based night light
 
-- **UI Blur**: Toggle system-wide UI blur effects.
-- **Bubbles**: Toggle notification bubbles.
-- **Sensitive Content**: Toggle the visibility of sensitive notification content on the lock screen.
-- **Tap to Wake**: Toggle tap-to-wake functionality.
-- **AOD**: Toggle Always on Display.
-- **Caffeinate**: Keep screen awake.
-- **Sound Mode**: Toggle Ring/Vibrate/Silent.
-- **Mono Audio**: Toggle mono audio output.
-- **Notification Lighting**: Toggle Notification Lighting service.
-- **Locked Security**: Toggle Screen Locked Security.
-- **Dynamic Night Light**: Toggle Dynamic Night Light.
-- **App Freezing**: Toggle app freezing functionality.
-- **App Lock**: Toggle application lock.
-- **Flashlight**: Toggle flashlight with brightness adjustment support.
-- **NFC**: Toggle NFC functionality.
-- **Flashlight Pulse**: Pulse flashlight for notifications
-- **Stay Awake**: Using the developer options
-- **Maps Power Saving Mode**: Easier access
-- **Adaptive Brightness**: Especially for Pixels
+#### Watch
+- Sync all calendars to your WearOS watch periodically
+
+#### Other
+- Maps power saving mode - For not just Pixel 10, Any Android device
+- Are we there yet? - Get reminded when your stop is closeby
+- Watermark - Add EXIF data and logos to captured photos
+- Flashlight enhancements - With brightness controls and global fade-in-out effect
+
+#### DIY
+- Automate things yourself and make custom triggers
+
+#### App Freezing
+- Save power and less distractions by freezing away rarely used apps
+
+#### App Updater
+- Check for sideloaded app updates directly from GitHub
+
+#### Quick Settings Tiles
+- Toggle UI blur
+- Toggle chat bubbles
+- Toggle sensitive content on lock screen
+- Toggle tap to wake
+- Toggle AOD
+- Caffeinate controls
+- Sound mode switcher
+- Mono audio toggle
+- Flashlight controls and brightness adjustment
+- Stay awake
+- NFC toggle
+- Adaptive brightness toggle
+- Private DNS toggle
+- USB debugging toggle
+- Developer options toggle
+- Toggle other in-app features
 
 # Requirements
 
 - Android 8.0 or higher (Feature support may vary)
 - App permissions are optional, Grant necessary permissions for each feature
 - Targetted for Google Pixel devices extending to other Androids
-- Tested on Google Pixel 7 (Android 16 beta program)
+- Tested on Google Pixel 7 (Android 17 beta program)
 
 # Screenshots
 
@@ -128,6 +157,9 @@ We welcome contributions from the community! Whether you're fixing a bug, adding
 
 Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
+# Thanks
+- [chalda-pnuzig/emojis.json](https://github.com/chalda-pnuzig/emojis.json) - Keyboard emojis
+
 # Stars <3
 
 <a href="https://star-history.com/#sameerasw/essentials&Date">
@@ -141,5 +173,6 @@ Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of co
 ---
 
 <p align="center">
-  Last updated: 2026-01-15
+  Last updated: 2026-02-14
 </p>
+
