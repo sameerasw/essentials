@@ -290,6 +290,7 @@ fun KeyboardInputView(
     onType: (String) -> Unit,
     onKeyPress: (Int) -> Unit,
     onCursorMove: (Int, Boolean, Boolean) -> Unit = { keyCode, _, _ -> onKeyPress(keyCode) },
+    onCursorDrag: (Boolean) -> Unit = {},
     onOpened: Int = 0
 ) {
     val view = LocalView.current
@@ -539,8 +540,8 @@ fun KeyboardInputView(
                                 },
                                 onPress = { performLightHaptic() },
                                 interactionSource = suggInteraction,
-                                containerColor = if (isLearned) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondaryContainer,
-                                contentColor = if (isLearned) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondaryContainer,
+                                containerColor = if (isLearned) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.secondaryContainer,
+                                contentColor = if (isLearned) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSecondaryContainer,
                                 shape = RoundedCornerShape(animatedRadius),
                                 modifier = Modifier
                                     .fillMaxHeight()
@@ -1245,6 +1246,7 @@ fun KeyboardInputView(
                                                         if (!isDragStarted) {
                                                             if (kotlin.math.abs(dxFromOrigin) > customSlop) {
                                                                 isDragStarted = true
+                                                                onCursorDrag(true)
                                                                 cursorAccumulator = 0f 
                                                             }
                                                         }
@@ -1281,6 +1283,9 @@ fun KeyboardInputView(
                                                      handleType(" ")
                                                      scope.launch { spaceInteraction.emit(PressInteraction.Release(press)) }
                                                 } else {
+                                                     if (isDragStarted) {
+                                                         onCursorDrag(false)
+                                                     }
                                                      scope.launch { spaceInteraction.emit(PressInteraction.Cancel(press)) }
                                                 }
                                             }

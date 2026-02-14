@@ -470,6 +470,9 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                                     handleKeyPress(keyCode)
                                 }
                             }
+                        },
+                        onCursorDrag = { isDragging ->
+                            onCursorDrag(isDragging)
                         }
                     )
                 }
@@ -581,6 +584,33 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
         }
     }
 
+    private var isCursorDragging = false
+
+    fun onCursorDrag(isDragging: Boolean) {
+        isCursorDragging = isDragging
+        if (!isDragging) {
+            // Drag finished, update suggestions now
+            updateSuggestions()
+        }
+    }
+
+    private fun updateSuggestions() {
+        val ic = currentInputConnection ?: return
+        val textBefore = ic.getTextBeforeCursor(50, 0)?.toString()
+        if (!textBefore.isNullOrEmpty()) {
+            val lastWord = textBefore.split(Regex("\\s+")).lastOrNull() ?: ""
+            if (lastWord.isNotEmpty() && lastWord.all { it.isLetter() }) {
+                lifecycleScope.launch(kotlinx.coroutines.Dispatchers.Default) {
+                    suggestionEngine.lookup(lastWord)
+                }
+            } else {
+                suggestionEngine.clearSuggestions()
+            }
+        } else {
+            suggestionEngine.clearSuggestions()
+        }
+    }
+
     override fun onUpdateSelection(
         oldSelStart: Int, oldSelEnd: Int,
         newSelStart: Int, newSelEnd: Int,
@@ -595,25 +625,11 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
             candidatesEnd
         )
 
+        if (isCursorDragging) return
+
         // Lookup suggestion for current word
         if (newSelStart == newSelEnd) {
-            val ic = currentInputConnection
-            if (ic != null) {
-                val textBefore = ic.getTextBeforeCursor(50, 0)?.toString()
-                if (!textBefore.isNullOrEmpty()) {
-                    val lastWord = textBefore.split(Regex("\\s+")).lastOrNull() ?: ""
-                    // Run lookup
-                    if (lastWord.isNotEmpty() && lastWord.all { it.isLetter() }) {
-                        lifecycleScope.launch(kotlinx.coroutines.Dispatchers.Default) {
-                            suggestionEngine.lookup(lastWord)
-                        }
-                    } else {
-                        suggestionEngine.clearSuggestions()
-                    }
-                } else {
-                    suggestionEngine.clearSuggestions()
-                }
-            }
+             updateSuggestions()
         }
     }
 }
