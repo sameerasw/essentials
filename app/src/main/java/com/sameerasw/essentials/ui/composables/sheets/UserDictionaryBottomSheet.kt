@@ -55,6 +55,7 @@ fun UserDictionaryBottomSheet(
 
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
+        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
         sheetState = sheetState
     ) {
         Column(
