@@ -560,8 +560,8 @@ fun KeyboardInputView(
                                 },
                                 onPress = { performLightHaptic() },
                                 interactionSource = suggInteraction,
-                                containerColor = if (isLearned) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.secondaryContainer,
-                                contentColor = if (isLearned) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onSecondaryContainer,
+                                containerColor = if (isLearned) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.7f),
+                                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
                                 shape = RoundedCornerShape(animatedRadius),
                                 modifier = Modifier
                                     .fillMaxHeight()
