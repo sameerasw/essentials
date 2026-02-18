@@ -195,6 +195,19 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string name="tile_usb_debugging">USB Debugging</string>
     <string name="on">On</string>
     <string name="off">Off</string>
+    <string name="private_dns_custom_title">Custom Private DNS</string>
+    <string name="private_dns_presets_title">Common DNS Presets</string>
+    <string name="private_dns_hostname_label">Provider hostname</string>
+    <string name="dns_preset_adguard">AdGuard DNS</string>
+    <string name="dns_preset_adguard_hostname">dns.adguard.com</string>
+    <string name="dns_preset_google">Google Public DNS</string>
+    <string name="dns_preset_google_hostname">dns.google</string>
+    <string name="dns_preset_cloudflare">Cloudflare DNS</string>
+    <string name="dns_preset_cloudflare_hostname">1dot1dot1dot1.cloudflare-dns.com</string>
+    <string name="dns_preset_quad9">Quad9 DNS</string>
+    <string name="dns_preset_quad9_hostname">dns.quad9.net</string>
+    <string name="dns_preset_cleanbrowsing">CleanBrowsing</string>
+    <string name="dns_preset_cleanbrowsing_hostname">adult-filter-dns.cleanbrowsing.org</string>
     <!-- Screen Locked Security -->
     <string name="screen_locked_security_title">Screen locked security</string>
     <string name="screen_locked_security_dialog_title">Screen Locked Security</string>
@@ -1013,4 +1026,12 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string name="cat_protection">Protection</string>
     <string name="label_kbd_abc">ABC</string>
     <string name="label_kbd_symbols">\?#/</string>
+    <string name="msg_restrict_own_app_repo">Oi! You can check updates in app settings, No need to add here XD</string>
+    <string name="action_export">Export</string>
+    <string name="action_import">Import</string>
+    <string name="msg_export_success">Repositories exported successfully</string>
+    <string name="msg_export_failed">Failed to export repositories</string>
+    <string name="msg_import_success">Repositories imported successfully</string>
+    <string name="msg_import_failed">Failed to import repositories</string>
+    <string name="label_apps">Apps</string>
 </resources>
