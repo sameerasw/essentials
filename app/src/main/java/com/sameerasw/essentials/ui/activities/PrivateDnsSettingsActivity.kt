@@ -113,7 +113,7 @@ fun PrivateDnsSettingsOverlay(onDismiss: () -> Unit) {
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.rounded_dns_24),
+                    painter = painterResource(id = R.drawable.router_24px),
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(32.dp)
@@ -180,6 +180,7 @@ fun PrivateDnsSettingsOverlay(onDismiss: () -> Unit) {
                     Text(
                         text = stringResource(R.string.private_dns_presets_title),
                         style = MaterialTheme.typography.labelLarge,
+                        modifier = Modifier.padding(horizontal = 16.dp),
                         color = MaterialTheme.colorScheme.primary
                     )
 
