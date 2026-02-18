@@ -72,7 +72,9 @@ class QSPreferencesActivity : ComponentActivity() {
                 "com.sameerasw.essentials.services.tiles.NfcTileService" -> "NFC"
                 "com.sameerasw.essentials.services.tiles.AdaptiveBrightnessTileService" -> "Quick settings tiles"
                 "com.sameerasw.essentials.services.tiles.MapsPowerSavingTileService" -> "Maps power saving mode"
-                "com.sameerasw.essentials.services.tiles.PrivateDnsTileService" -> "Private DNS"
+                "com.sameerasw.essentials.services.tiles.UsbDebuggingTileService" -> "Quick settings tiles"
+                "com.sameerasw.essentials.services.tiles.DeveloperOptionsTileService" -> "Quick settings tiles"
+                "com.sameerasw.essentials.services.tiles.BatteryNotificationTileService" -> "Battery notification"
                 else -> null
             }
 

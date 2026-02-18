@@ -102,6 +102,7 @@ class MainViewModel : ViewModel() {
     val isCallVibrationsEnabled = mutableStateOf(false)
     val isCalendarSyncEnabled = mutableStateOf(false)
     val isCalendarSyncPeriodicEnabled = mutableStateOf(false)
+    val isBatteryNotificationEnabled = mutableStateOf(false)
 
     data class CalendarAccount(
         val id: Long,
@@ -627,9 +628,37 @@ class MainViewModel : ViewModel() {
         isCalendarSyncEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_CALENDAR_SYNC_ENABLED, false)
         isCalendarSyncPeriodicEnabled.value = settingsRepository.isCalendarSyncPeriodicEnabled()
+        isBatteryNotificationEnabled.value = settingsRepository.isBatteryNotificationEnabled()
         selectedCalendarIds.value = settingsRepository.getCalendarSyncSelectedCalendars()
 
         refreshTrackedUpdates(context)
+        if (isBatteryNotificationEnabled.value) {
+            startBatteryNotificationService(context)
+        }
+    }
+
+    private fun startBatteryNotificationService(context: Context) {
+        val intent = Intent(context, com.sameerasw.essentials.services.BatteryNotificationService::class.java)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            context.startForegroundService(intent)
+        } else {
+            context.startService(intent)
+        }
+    }
+
+    private fun stopBatteryNotificationService(context: Context) {
+        val intent = Intent(context, com.sameerasw.essentials.services.BatteryNotificationService::class.java)
+        context.stopService(intent)
+    }
+
+    fun setBatteryNotificationEnabled(enabled: Boolean, context: Context) {
+        isBatteryNotificationEnabled.value = enabled
+        settingsRepository.setBatteryNotificationEnabled(enabled)
+        if (enabled) {
+            startBatteryNotificationService(context)
+        } else {
+            stopBatteryNotificationService(context)
+        }
     }
 
     fun onSearchQueryChanged(query: String, context: Context) {

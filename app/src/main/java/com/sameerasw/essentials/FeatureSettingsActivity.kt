@@ -50,6 +50,7 @@ import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.composables.configs.AmbientMusicGlanceSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.AppLockSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.BatteriesSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.BatteryNotificationSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ButtonRemapSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.CaffeinateSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.DynamicNightLightSettingsUI
@@ -241,6 +242,7 @@ class FeatureSettingsActivity : FragmentActivity() {
                             )
 
                             "Caffeinate" -> !viewModel.isPostNotificationsEnabled.value
+                            "Battery notification" -> !viewModel.isPostNotificationsEnabled.value || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !viewModel.isBluetoothPermissionGranted.value)
                             else -> false
                         }
                         if (hasMissingPermissions) {
@@ -429,6 +431,7 @@ class FeatureSettingsActivity : FragmentActivity() {
                                                 )
 
                                                 "Caffeinate" -> !viewModel.isPostNotificationsEnabled.value
+                                                "Battery notification" -> !viewModel.isPostNotificationsEnabled.value || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !viewModel.isBluetoothPermissionGranted.value)
                                                 else -> false
                                             }
 
@@ -600,6 +603,14 @@ class FeatureSettingsActivity : FragmentActivity() {
                                         BatteriesSettingsUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp)
+                                        )
+                                    }
+
+                                    "Battery notification" -> {
+                                        BatteryNotificationSettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightKey = highlightSetting
                                         )
                                     }
 

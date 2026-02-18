@@ -45,6 +45,7 @@ import com.sameerasw.essentials.services.tiles.AdaptiveBrightnessTileService
 import com.sameerasw.essentials.services.tiles.AlwaysOnDisplayTileService
 import com.sameerasw.essentials.services.tiles.AppFreezingTileService
 import com.sameerasw.essentials.services.tiles.AppLockTileService
+import com.sameerasw.essentials.services.tiles.BatteryNotificationTileService
 import com.sameerasw.essentials.services.tiles.BubblesTileService
 import com.sameerasw.essentials.services.tiles.CaffeinateTileService
 import com.sameerasw.essentials.services.tiles.DeveloperOptionsTileService
@@ -254,6 +255,13 @@ fun QuickSettingsTilesSettingsUI(
             DeveloperOptionsTileService::class.java,
             listOf("WRITE_SECURE_SETTINGS"),
             R.string.about_desc_developer_options
+        ),
+        QSTileInfo(
+            R.string.feat_battery_notification_title,
+            R.drawable.rounded_battery_charging_60_24,
+            BatteryNotificationTileService::class.java,
+            listOf("POST_NOTIFICATIONS", "BLUETOOTH_CONNECT", "BLUETOOTH_SCAN"),
+            R.string.feat_battery_notification_desc
         )
     )
 
