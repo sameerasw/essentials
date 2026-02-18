@@ -216,6 +216,14 @@
             android:theme="@style/Theme.Essentials.Translucent" />
 
         <activity
+            android:name=".ui.activities.PrivateDnsSettingsActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:theme="@style/Theme.Essentials.Translucent" />
+
+        <activity
             android:name=".ui.activities.WatermarkActivity"
             android:exported="true"
             android:label="@string/feat_watermark_title"
