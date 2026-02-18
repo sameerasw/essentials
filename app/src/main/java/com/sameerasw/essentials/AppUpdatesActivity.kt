@@ -4,15 +4,23 @@ import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.SystemBarStyle
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularWavyProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -22,8 +30,10 @@ import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,6 +57,9 @@ import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.AppUpdatesViewModel
 import com.sameerasw.essentials.viewmodels.MainViewModel
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 class AppUpdatesActivity : FragmentActivity() {
@@ -87,6 +100,61 @@ class AppUpdatesActivity : FragmentActivity() {
 
             var showAddRepoSheet by remember { mutableStateOf(false) }
             val errorMessage by updatesViewModel.errorMessage
+
+            val exportLauncher = rememberLauncherForActivityResult(
+                contract = ActivityResultContracts.CreateDocument("application/json")
+            ) { uri ->
+                uri?.let {
+                    try {
+                        context.contentResolver.openOutputStream(it)?.use { outputStream ->
+                            updatesViewModel.exportTrackedRepos(context, outputStream)
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.msg_export_success),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    } catch (e: Exception) {
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.msg_export_failed),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+            val importLauncher = rememberLauncherForActivityResult(
+                contract = ActivityResultContracts.OpenDocument()
+            ) { uri ->
+                uri?.let {
+                    try {
+                        context.contentResolver.openInputStream(it)?.use { inputStream ->
+                            if (updatesViewModel.importTrackedRepos(context, inputStream)) {
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.msg_import_success),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.msg_import_failed),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.msg_import_failed),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        e.printStackTrace()
+                    }
+                }
+            }
 
             LaunchedEffect(errorMessage) {
                 if (errorMessage != null && !showAddRepoSheet) {
@@ -229,16 +297,25 @@ class AppUpdatesActivity : FragmentActivity() {
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center
                         ) {
-                            androidx.compose.material3.Icon(
-                                painter = painterResource(id = R.drawable.rounded_apps_24),
-                                contentDescription = null,
-                                modifier = Modifier.size(64.dp),
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-                            )
                             androidx.compose.material3.Text(
                                 text = stringResource(R.string.msg_no_repos_tracked),
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+
+                            Spacer(modifier = Modifier.height(32.dp))
+
+                            androidx.compose.material3.Text(
+                                text = stringResource(R.string.label_apps),
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier.padding(bottom = 12.dp),
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+
+                            ImportExportButtons(
+                                view = view,
+                                exportLauncher = exportLauncher,
+                                importLauncher = importLauncher
                             )
                         }
                     } else {
@@ -246,7 +323,7 @@ class AppUpdatesActivity : FragmentActivity() {
                             modifier = Modifier.fillMaxSize(),
                             contentPadding = androidx.compose.foundation.layout.PaddingValues(
                                 top = innerPadding.calculateTopPadding() + 16.dp,
-                                bottom = innerPadding.calculateBottomPadding() + 80.dp,
+                                bottom = innerPadding.calculateBottomPadding() + 100.dp,
                                 start = 16.dp,
                                 end = 16.dp
                             ),
@@ -407,10 +484,84 @@ class AppUpdatesActivity : FragmentActivity() {
                                     }
                                 }
                             }
+
+                            // Apps Section
+                            item {
+                                androidx.compose.material3.Text(
+                                    text = stringResource(R.string.label_apps),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    modifier = Modifier.padding(start = 16.dp, bottom = 8.dp),
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                ImportExportButtons(
+                                    view = view,
+                                    exportLauncher = exportLauncher,
+                                    importLauncher = importLauncher
+                                )
+                            }
                         }
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun ImportExportButtons(
+    view: android.view.View,
+    exportLauncher: androidx.activity.result.ActivityResultLauncher<String>,
+    importLauncher: androidx.activity.result.ActivityResultLauncher<Array<String>>
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Button(
+            onClick = {
+                HapticUtil.performUIHaptic(view)
+                val timeStamp = SimpleDateFormat(
+                    "yyyyMMdd_HHmmss",
+                    Locale.getDefault()
+                ).format(Date())
+                exportLauncher.launch("essentials_updates_$timeStamp.json")
+            },
+            modifier = Modifier.weight(1f),
+            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        ) {
+            androidx.compose.material3.Icon(
+                painter = painterResource(id = R.drawable.rounded_arrow_warm_up_24),
+                contentDescription = null,
+                modifier = Modifier.size(18.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(stringResource(R.string.action_export))
+        }
+
+        Button(
+            onClick = {
+                HapticUtil.performUIHaptic(view)
+                importLauncher.launch(arrayOf("application/json"))
+            },
+            modifier = Modifier.weight(1f),
+            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        ) {
+            androidx.compose.material3.Icon(
+                painter = painterResource(id = R.drawable.rounded_arrow_cool_down_24),
+                contentDescription = null,
+                modifier = Modifier.size(18.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(stringResource(R.string.action_import))
         }
     }
 }

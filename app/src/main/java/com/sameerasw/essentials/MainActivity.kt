@@ -13,8 +13,11 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -22,6 +25,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularWavyProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -38,6 +42,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -57,6 +62,12 @@ import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import android.widget.Toast
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import com.sameerasw.essentials.domain.DIYTabs
 import com.sameerasw.essentials.domain.registry.initPermissionRegistry
 import com.sameerasw.essentials.ui.components.DIYFloatingToolbar
@@ -286,6 +297,44 @@ class MainActivity : FragmentActivity() {
                     var repoToShowReleaseNotesFullName by remember { mutableStateOf<String?>(null) }
                     val trackedRepos by updatesViewModel.trackedRepos
 
+                    val exportLauncher = rememberLauncherForActivityResult(
+                        contract = ActivityResultContracts.CreateDocument("application/json")
+                    ) { uri ->
+                        uri?.let {
+                            contentResolver.openOutputStream(it)?.use { outputStream ->
+                                updatesViewModel.exportTrackedRepos(context, outputStream)
+                                Toast.makeText(
+                                    context,
+                                    getString(R.string.msg_export_success),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                    }
+
+                    val importLauncher = rememberLauncherForActivityResult(
+                        contract = ActivityResultContracts.OpenDocument()
+                    ) { uri ->
+                        uri?.let {
+                            contentResolver.openInputStream(it)?.use { inputStream ->
+                                if (updatesViewModel.importTrackedRepos(context, inputStream)) {
+                                    updatesViewModel.loadTrackedRepos(context)
+                                    Toast.makeText(
+                                        context,
+                                        getString(R.string.msg_import_success),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        getString(R.string.msg_import_failed),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+                        }
+                    }
+
                     if (showAddRepoSheet) {
                         AddRepoBottomSheet(
                             viewModel = updatesViewModel,
@@ -473,18 +522,25 @@ class MainActivity : FragmentActivity() {
                                                     horizontalAlignment = Alignment.CenterHorizontally,
                                                     verticalArrangement = Arrangement.Center
                                                 ) {
-                                                    Icon(
-                                                        painter = painterResource(id = R.drawable.rounded_apps_24),
-                                                        contentDescription = null,
-                                                        modifier = Modifier.size(64.dp),
-                                                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(
-                                                            alpha = 0.5f
-                                                        )
-                                                    )
                                                     Text(
                                                         text = stringResource(R.string.msg_no_repos_tracked),
                                                         style = MaterialTheme.typography.bodyLarge,
                                                         color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                    )
+
+                                                    Spacer(modifier = Modifier.height(32.dp))
+
+                                                    Text(
+                                                        text = stringResource(R.string.label_apps),
+                                                        style = MaterialTheme.typography.titleMedium,
+                                                        modifier = Modifier.padding(bottom = 12.dp),
+                                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                    )
+
+                                                    ImportExportButtons(
+                                                        view = view,
+                                                        exportLauncher = exportLauncher,
+                                                        importLauncher = importLauncher
                                                     )
                                                 }
                                             } else {
@@ -689,6 +745,25 @@ class MainActivity : FragmentActivity() {
                                                             }
                                                         }
                                                     }
+
+                                                    // Apps Section
+                                                    item {
+                                                        Text(
+                                                            text = stringResource(R.string.label_apps),
+                                                            style = MaterialTheme.typography.titleMedium,
+                                                            modifier = Modifier.padding(
+                                                                start = 16.dp,
+                                                                bottom = 8.dp
+                                                            ),
+                                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                        )
+                                                        Spacer(modifier = Modifier.height(8.dp))
+                                                        ImportExportButtons(
+                                                            view = view,
+                                                            exportLauncher = exportLauncher,
+                                                            importLauncher = importLauncher
+                                                        )
+                                                    }
                                                 }
                                             }
 
@@ -749,6 +824,64 @@ class MainActivity : FragmentActivity() {
                 }
                 startActivity(settingsIntent)
             }
+        }
+    }
+}
+
+@Composable
+private fun ImportExportButtons(
+    view: android.view.View,
+    exportLauncher: androidx.activity.result.ActivityResultLauncher<String>,
+    importLauncher: androidx.activity.result.ActivityResultLauncher<Array<String>>
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Button(
+            onClick = {
+                HapticUtil.performUIHaptic(view)
+                val timeStamp = SimpleDateFormat(
+                    "yyyyMMdd_HHmmss",
+                    Locale.getDefault()
+                ).format(Date())
+                exportLauncher.launch("essentials_updates_$timeStamp.json")
+            },
+            modifier = Modifier.weight(1f),
+            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.rounded_arrow_warm_up_24),
+                contentDescription = null,
+                modifier = Modifier.size(18.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(stringResource(R.string.action_export))
+        }
+
+        Button(
+            onClick = {
+                HapticUtil.performUIHaptic(view)
+                importLauncher.launch(arrayOf("application/json"))
+            },
+            modifier = Modifier.weight(1f),
+            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.rounded_arrow_cool_down_24),
+                contentDescription = null,
+                modifier = Modifier.size(18.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(stringResource(R.string.action_import))
         }
     }
 }
