@@ -54,7 +54,7 @@
     <string name="action_cycle_sound_modes">Tonmodus durchschalten</string>
     <string name="action_like_song">Aktuellen Song liken</string>
     <string name="like_song_settings_title">Like song settings</string>
-    <string name="like_song_settings_desc">This feature requires notification access to detect the currently playing media and trigger the like action. Please enable it below.</string>
+    <string name="like_song_settings_desc">Diese Funktion erfordert Zugriff auf Benachrichtigungen, um die aktuell wiedergegebenen Medien zu erkennen und die entsprechende Aktion auszulösen. Bitte aktiviere diese Funktion unten.</string>
     <string name="like_song_toast_enabled">Show toast message</string>
     <string name="like_song_aod_overlay_title">Show overlay on AOD</string>
     <string name="feat_ambient_music_glance_title">Blick auf die Musik</string>
@@ -343,9 +343,9 @@
     <string name="watermark_style_frame">Frame</string>
     <string name="watermark_show_brand">Gerätemarke</string>
     <string name="watermark_show_exif">EXIF Data</string>
-    <string name="watermark_pick_image">Pick Image</string>
-    <string name="watermark_save_success">Image saved to gallery</string>
-    <string name="action_share">Share</string>
+    <string name="watermark_pick_image">Bild auswählen</string>
+    <string name="watermark_save_success">Bild in Galerie gespeichert</string>
+    <string name="action_share">Teilen</string>
     <string name="watermark_exif_settings">EXIF Settings</string>
     <string name="watermark_exif_focal_length">Focal Length</string>
     <string name="watermark_exif_aperture">Aperture</string>
@@ -379,11 +379,11 @@
     <string name="calendar_sync_settings_title">Calendar Sync Settings</string>
     <string name="calendar_sync_select_calendars">Sync specific calendars</string>
     <string name="calendar_sync_periodic_title">Periodic Sync</string>
-    <string name="calendar_sync_periodic_desc">Sync every 15 minutes if changes found</string>
-    <string name="calendar_sync_sync_now">Sync Now</string>
-    <string name="calendar_sync_manual_sync_desc">Trigger immediate sync to watch</string>
-    <string name="calendar_sync_no_calendars">No local calendars found</string>
-    <string name="calendar_sync_sync_started">Calendar sync started</string>
+    <string name="calendar_sync_periodic_desc">Alle 15 Minuten synchronisieren, wenn Änderungen gefunden werden</string>
+    <string name="calendar_sync_sync_now">Jetzt synchronisieren</string>
+    <string name="calendar_sync_manual_sync_desc">Sofortige Synchronisierung zur Smartwatch auslösen</string>
+    <string name="calendar_sync_no_calendars">Keine lokalen Kalender gefunden</string>
+    <string name="calendar_sync_sync_started">Kalendersynchronisierung gestartet</string>
     <!-- Search Settings -->
     <string name="search_haptic_title">Haptisches Feedback bei Widgets</string>
     <string name="search_haptic_desc">Wähle haptisches Feedback für Widget-Tipps</string>
@@ -435,10 +435,10 @@
     <string name="search_qs_pulse_title">Taschenlampenimpuls</string>
     <string name="search_qs_pulse_desc">Taschenlampenimpuls bei Benachrichtigungen ein-/ausschalten</string>
     <string name="search_qs_stay_awake_desc">Entwickleroption „Wach bleiben“ umschalten</string>
-    <string name="search_qs_private_dns_title">Private DNS</string>
+    <string name="search_qs_private_dns_title">Privates DNS</string>
     <string name="search_qs_private_dns_desc">Cycle Private DNS modes (Off/Auto/Hostname)</string>
-    <string name="search_qs_usb_debugging_title">USB Debugging</string>
-    <string name="search_qs_usb_debugging_desc">Toggle USB Debugging developer option</string>
+    <string name="search_qs_usb_debugging_title">USB-Debugging</string>
+    <string name="search_qs_usb_debugging_desc">USB-Debugging-Entwickleroption umschalten</string>
     <string name="search_remap_enable_title">Aktiviere Tastenneubelegung</string>
     <string name="search_remap_enable_desc">Hauptschalter für die Neuzuweisung der Lautstärketasten</string>
     <string name="search_remap_haptic_title">Haptisches Feedback neu zuordnen</string>
@@ -465,7 +465,7 @@
     <string name="perm_shizuku_install_action">Installiere Shizuku</string>
     <string name="perm_shizuku_grant_title">Shizuku permission</string>
     <string name="perm_shizuku_grant_desc">Benötigt, um Energiesparbefehle auszuführen, während Maps navigiert.</string>
-    <string name="req_shizuku">Requires Shizuku or Root</string>
+    <string name="req_shizuku">Benötigt Shizuku oder Root</string>
     <string name="perm_root_title">Root-Zugang</string>
     <string name="perm_root_desc">Benötigt Berechtigungen für Systemaktionen mittels Root-Rechte.</string>
     <string name="perm_notif_listener_title">Benachrichtigungs-Beobachter</string>
@@ -475,10 +475,10 @@
     <string name="perm_accessibility_title">Barrierefreiheitsdienst</string>
     <string name="perm_accessibility_desc_common">Benötigt für App-Sperre, Display-aus-Widget und andere Funktionen zur Erkennung von Interaktionen</string>
     <string name="perm_accessibility_desc_lighting">Benötigt, um das Benachrichtigungslicht bei neuen Benachrichtigungen auszulösen</string>
-    <string name="perm_default_browser_title">Default Browser</string>
-    <string name="perm_default_browser_desc">Required to handle links efficiently</string>
+    <string name="perm_default_browser_title">Standardbrowser</string>
+    <string name="perm_default_browser_desc">Benötigt für die effiziente Verwaltung von Links</string>
     <string name="perm_accessibility_desc_remap">Benötigt zum Abfangen von Hardware-Tastenereignissen</string>
-    <string name="perm_accessibility_desc_ambient_music_glance">Required to intercept volume key events while the screen is off to trigger the Ambient Glance overlay.</string>
+    <string name="perm_accessibility_desc_ambient_music_glance">Benötigt, um Volumetastenereignisse bei ausgeschaltetem Bildschirm abzufangen, um das \"Blick auf die Musik\"-Overlay auszulösen.</string>
     <string name="perm_accessibility_desc_night_light">Benötigt zur Überwachung von Vordergrundanwendungen.</string>
     <string name="perm_write_secure_title">Geschützte Einstellungen umschreiben</string>
     <string name="perm_write_secure_desc_common">Benötigt für Statusleisten-Symbole und Sicherheit bei Bildschirmsperre</string>
@@ -525,12 +525,12 @@
     <string name="label_up_to_date">Aktuell</string>
     <string name="feat_app_updates_desc">Verfolge und lade die neuesten Versionen deiner Lieblings-Apps direkt von GitHub herunter.</string>
     <string name="error_invalid_repo_format">Ungültiges Format. Verwende eigentümer/repository oder die GitHub-URL</string>
-    <string name="error_generic_search">An error occurred during search</string>
+    <string name="error_generic_search">Während der Suche ist ein Fehler aufgetreten</string>
     <string name="label_auto">Auto</string>
-    <string name="label_options">Options</string>
+    <string name="label_options">Optionen</string>
     <string name="option_allow_prereleases">Prüfe nach Vorabversionen</string>
     <string name="option_notifications">Benachrichtigungen</string>
-    <string name="error_rate_limited">GitHub rate limit exceeded. Please try again later.</string>
+    <string name="error_rate_limited">GitHub-Ratenlimit überschritten. Bitte versuche es später erneut.</string>
     <!-- Keyboard Setup -->
     <string name="label_keyboard_setup">Tastatur-Einrichtung</string>
     <string name="btn_enable_keyboard">In den Einstellungen aktivieren</string>
@@ -547,7 +547,7 @@
     <string name="action_done">Fertig</string>
     <string name="action_preview">Vorschau</string>
     <string name="action_help_guide">Hilfe-Leitfaden</string>
-    <string name="action_what_is_this">What is this?</string>
+    <string name="action_what_is_this">Was ist das?</string>
     <string name="update_available_title">Aktualisierung verfügbar</string>
     <string name="about_desc_ambient_music_glance">\"Blick auf die Musik\" zeigt ein Overlay der aktuellen Wiedergabe auf dem Sperrbildschirm an, wenn Musik abgespielt wird und sich die Wiedergabe ändert. \n\nWenn dein Gerät keine Überlagerungen über dem AOD unterstützt, kannst du während des Ladevorgangs alternativ den in den Android-Einstellungen hinzugefügten Bildschirmschoner wählen.</string>
     <string name="about_desc_notification_lighting">Notification Lighting adds a beautiful edge lighting effect when you receive notifications.\n\nYou can customize the animation style, colors, and behavior. It works even when the screen is off (OEM dependent) or on top of your current app. Pick apps, notification priority or what behavior it should be triggering on from given controls. If your OEM does not support overlays above AOD, sue the Ambient display option found below.</string>
@@ -973,10 +973,10 @@
     <string name="time_month_ago">%1$dmo ago</string>
     <string name="time_year_ago">%1$dy ago</string>
     <string name="action_retry">Retry</string>
-    <string name="action_start_sign_in">Start Sign In</string>
+    <string name="action_start_sign_in">Anmeldung starten</string>
     <string name="auth_requesting_code">Requesting device code...</string>
-    <string name="auth_copy_code_instruction">1. Copy your code:</string>
-    <string name="auth_paste_code_instruction">2. Paste the code on GitHub:</string>
+    <string name="auth_copy_code_instruction">1. Kopiere deinen Code:</string>
+    <string name="auth_paste_code_instruction">2. Kopiere den Code auf GitHub:</string>
     <string name="label_found_apks">Gefundene APKs</string>
     <string name="label_readme">README</string>
     <string name="action_refresh">Aktualisieren</string>
