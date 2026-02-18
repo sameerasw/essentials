@@ -638,6 +638,8 @@
     <string name="diy_device_effects_android_15_warning">Cette fonctionnalité nécessite Android 15 ou supérieur.</string>
     <string name="diy_device_effects_enabled">Activé</string>
     <string name="diy_device_effects_disabled">Désactivé</string>
+    <string name="diy_action_sound_mode">Sound Mode</string>
+    <string name="diy_sound_mode_desc">This action allows switching between Sound, Vibrate, and Silent modes based on triggers. It requires Do Not Disturb access.</string>
     <!-- About Section -->
     <string name="app_developer_name">Sameera Wijerathna</string>
     <string name="app_description">L\'outil tout-en-un pour votre Pixel ou vos appareils Android</string>
@@ -965,6 +967,13 @@
     <string name="connect_to_airsync_summary">Afficher la batterie de votre appareil Mac connecté dans AirSync</string>
     <string name="download_airsync">Télécharger l\'appli AirSync</string>
     <string name="download_airsync_summary">Requis pour synchroniser la batterie d\'un Mac</string>
+    <string name="feat_battery_notification_title">Battery notification</string>
+    <string name="feat_battery_notification_desc">Persistent battery status notification</string>
+    <string name="about_desc_battery_notification">Replicate the battery widget experience in your notification shade. It will show the battery levels of all your connected devices in a single persistent notification, updated in real-time. This includes your Mac (via AirSync) and Bluetooth accessories.</string>
+    <string name="battery_notification_channel_name">Battery Status Notification</string>
+    <string name="battery_notification_channel_desc">Persistent notification showing connected devices battery levels</string>
+    <string name="perm_nearby_devices_title">Nearby Devices</string>
+    <string name="perm_nearby_devices_desc">Required to detect and retrieve battery information from Bluetooth accessories</string>
     <!-- GitHub Auth -->
     <string name="auth_copy_code">Copier le code</string>
     <string name="auth_open_login_page">Ouvrir la page d\'authentification</string>
