@@ -669,6 +669,8 @@
     <string name="diy_device_effects_android_15_warning">This feature requires Android 15 or higher.</string>
     <string name="diy_device_effects_enabled">Enabled</string>
     <string name="diy_device_effects_disabled">Disabled</string>
+    <string name="diy_action_sound_mode">Sound Mode</string>
+    <string name="diy_sound_mode_desc">This action allows switching between Sound, Vibrate, and Silent modes based on triggers. It requires Do Not Disturb access.</string>
 
     <!-- About Section -->
     <string name="app_developer_name">Sameera Wijerathna</string>

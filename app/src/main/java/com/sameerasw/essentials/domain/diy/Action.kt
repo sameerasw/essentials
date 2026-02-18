@@ -65,5 +65,18 @@ sealed interface Action {
         override val isConfigurable: Boolean = true
     }
 
+    enum class SoundModeType {
+        SOUND, VIBRATE, SILENT
+    }
 
+    data class SoundMode(val mode: SoundModeType = SoundModeType.SOUND) : Action {
+        override val title: Int get() = R.string.diy_action_sound_mode
+        override val icon: Int get() = when (mode) {
+            SoundModeType.SOUND -> R.drawable.rounded_volume_up_24
+            SoundModeType.VIBRATE -> R.drawable.rounded_mobile_vibrate_24
+            SoundModeType.SILENT -> R.drawable.rounded_volume_off_24
+        }
+        override val permissions: List<String> = listOf("notification_policy")
+        override val isConfigurable: Boolean = true
+    }
 }

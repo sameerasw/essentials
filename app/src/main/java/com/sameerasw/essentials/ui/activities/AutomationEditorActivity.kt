@@ -73,6 +73,7 @@ import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.components.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.components.sheets.DimWallpaperSettingsSheet
+import com.sameerasw.essentials.ui.components.sheets.SoundModeSettingsSheet
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.HapticUtil
@@ -224,6 +225,7 @@ class AutomationEditorActivity : ComponentActivity() {
                 // Config Sheets
                 var showDimSettings by remember { mutableStateOf(false) }
                 var showDeviceEffectsSettings by remember { mutableStateOf(false) }
+                var showSoundModeSettings by remember { mutableStateOf(false) }
                 var configAction by remember { mutableStateOf<Action?>(null) } // Generic config action
 
                 // Validation
@@ -527,7 +529,8 @@ class AutomationEditorActivity : ComponentActivity() {
                                                 Action.TurnOffFlashlight,
                                                 Action.ToggleFlashlight,
                                                 Action.HapticVibration,
-                                                Action.DimWallpaper()
+                                                Action.DimWallpaper(),
+                                                Action.SoundMode()
                                             )
                                             // Only show Device Effects on Android 15+ 
                                             actions.add(Action.DeviceEffects())
@@ -600,6 +603,8 @@ class AutomationEditorActivity : ComponentActivity() {
                                                             showDimSettings = true
                                                         } else if (resolvedAction is Action.DeviceEffects) {
                                                             showDeviceEffectsSettings = true
+                                                        } else if (resolvedAction is Action.SoundMode) {
+                                                            showSoundModeSettings = true
                                                         }
                                                     }
                                                 )
@@ -635,6 +640,24 @@ class AutomationEditorActivity : ComponentActivity() {
                                 onDismiss = { showDeviceEffectsSettings = false },
                                 onSave = { newAction ->
                                     showDeviceEffectsSettings = false
+                                    when (automationType) {
+                                        Automation.Type.TRIGGER -> selectedAction = newAction
+                                        Automation.Type.STATE, Automation.Type.APP -> {
+                                            if (selectedActionTab == 0) selectedInAction = newAction
+                                            else selectedOutAction = newAction
+                                        }
+                                    }
+                                    configAction = null
+                                }
+                            )
+                        }
+
+                        if (showSoundModeSettings && configAction is Action.SoundMode) {
+                            SoundModeSettingsSheet(
+                                initialAction = configAction as Action.SoundMode,
+                                onDismiss = { showSoundModeSettings = false },
+                                onSave = { newAction ->
+                                    showSoundModeSettings = false
                                     when (automationType) {
                                         Automation.Type.TRIGGER -> selectedAction = newAction
                                         Automation.Type.STATE, Automation.Type.APP -> {
