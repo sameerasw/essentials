@@ -639,6 +639,8 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string name="diy_device_effects_android_15_warning">This feature requires Android 15 or higher.</string>
     <string name="diy_device_effects_enabled">Enabled</string>
     <string name="diy_device_effects_disabled">Disabled</string>
+    <string name="diy_action_sound_mode">Sound Mode</string>
+    <string name="diy_sound_mode_desc">This action allows switching between Sound, Vibrate, and Silent modes based on triggers. It requires Do Not Disturb access.</string>
     <!-- About Section -->
     <string name="app_developer_name">Sameera Wijerathna</string>
     <string name="app_description">The all-in-one toolbox for your Pixel and Androids</string>
@@ -966,6 +968,13 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string name="connect_to_airsync_summary">Display battery from your connected mac device in AirSync</string>
     <string name="download_airsync">Download AirSync App</string>
     <string name="download_airsync_summary">Required for Mac battery sync</string>
+    <string name="feat_battery_notification_title">Battery notification</string>
+    <string name="feat_battery_notification_desc">Persistent battery status notification</string>
+    <string name="about_desc_battery_notification">Replicate the battery widget experience in your notification shade. It will show the battery levels of all your connected devices in a single persistent notification, updated in real-time. This includes your Mac (via AirSync) and Bluetooth accessories.</string>
+    <string name="battery_notification_channel_name">Battery Status Notification</string>
+    <string name="battery_notification_channel_desc">Persistent notification showing connected devices battery levels</string>
+    <string name="perm_nearby_devices_title">Nearby Devices</string>
+    <string name="perm_nearby_devices_desc">Required to detect and retrieve battery information from Bluetooth accessories</string>
     <!-- GitHub Auth -->
     <string name="auth_copy_code">Copy code</string>
     <string name="auth_open_login_page">Open login page</string>
