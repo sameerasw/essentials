@@ -1104,4 +1104,5 @@
     <string name="cat_protection">Protection</string>
     <string name="label_kbd_abc">ABC</string>
     <string name="label_kbd_symbols">?#/</string>
+    <string name="msg_restrict_own_app_repo">Oi! You can check updates in app settings, No need to add here XD</string>
 </resources>

@@ -41,6 +41,9 @@ class AppUpdatesViewModel : ViewModel() {
     private val _errorMessage = mutableStateOf<String?>(null)
     val errorMessage: State<String?> = _errorMessage
 
+    private val _shouldDismissSheet = mutableStateOf(false)
+    val shouldDismissSheet: State<Boolean> = _shouldDismissSheet
+
     private val _readmeContent = mutableStateOf<String?>(null)
     val readmeContent: State<String?> = _readmeContent
 
@@ -100,6 +103,11 @@ class AppUpdatesViewModel : ViewModel() {
         }
 
         val (owner, repo) = parts
+        if (owner.lowercase() == "sameerasw" && repo.lowercase() == "essentials") {
+            _errorMessage.value = context.getString(R.string.msg_restrict_own_app_repo)
+            _shouldDismissSheet.value = true
+            return
+        }
         _isSearching.value = true
         _errorMessage.value = null
         _searchResult.value = null
@@ -274,6 +282,10 @@ class AppUpdatesViewModel : ViewModel() {
 
     fun clearError() {
         _errorMessage.value = null
+    }
+
+    fun consumeDismissSignal() {
+        _shouldDismissSheet.value = false
     }
 
     fun setAllowPreReleases(allow: Boolean) {

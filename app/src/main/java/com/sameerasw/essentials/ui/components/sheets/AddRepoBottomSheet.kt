@@ -93,6 +93,18 @@ fun AddRepoBottomSheet(
         }
     }
 
+    val shouldDismiss by viewModel.shouldDismissSheet
+    LaunchedEffect(shouldDismiss) {
+        if (shouldDismiss) {
+            errorMessage?.let {
+                android.widget.Toast.makeText(context, it, android.widget.Toast.LENGTH_LONG).show()
+                viewModel.clearError()
+            }
+            onDismissRequest()
+            viewModel.consumeDismissSignal()
+        }
+    }
+
     if (showReleaseNotes && latestRelease != null) {
         val updateInfo = UpdateInfo(
             versionName = latestRelease!!.tagName,
