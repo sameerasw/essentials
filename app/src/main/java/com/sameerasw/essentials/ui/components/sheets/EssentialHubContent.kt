@@ -11,23 +11,37 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.gestures.AnchoredDraggableState
+import androidx.compose.foundation.gestures.DraggableAnchors
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sameerasw.essentials.ui.theme.GoogleSansFlex
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.roundToInt
 
-@OptIn(ExperimentalMaterial3Api::class)
+private enum class DragState {
+    Open, Dismissed
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun EssentialHubContent(
     modifier: Modifier = Modifier,
     isVisible: Boolean,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onProgressChanged: (Float) -> Unit = {}
 ) {
     var currentTime by remember { mutableStateOf(Calendar.getInstance().time) }
 
@@ -44,7 +58,34 @@ fun EssentialHubContent(
     val timeFormat = remember(is24Hour) { SimpleDateFormat(timeFormatPattern, Locale.getDefault()) }
     val dateFormat = remember { SimpleDateFormat("EEEE, MMMM d", Locale.getDefault()) }
 
+    val density = LocalDensity.current
+    val dragState = remember {
+        AnchoredDraggableState(
+            initialValue = DragState.Open,
+            positionalThreshold = { distance: Float -> distance * 0.5f },
+            velocityThreshold = { with(density) { 100.dp.toPx() } },
+            snapAnimationSpec = spring(),
+            decayAnimationSpec = exponentialDecay(),
+            confirmValueChange = { newValue: DragState ->
+                if (newValue == DragState.Dismissed) {
+                    onDismiss()
+                }
+                true
+            }
+        )
+    }
 
+    LaunchedEffect(dragState.offset) {
+        if (!dragState.offset.isNaN()) {
+            val anchors = dragState.anchors
+            val openPos = anchors.positionOf(DragState.Open)
+            val dismissedPos = anchors.positionOf(DragState.Dismissed)
+            if (dismissedPos > openPos) {
+                val progress = ((dragState.offset - openPos) / (dismissedPos - openPos)).coerceIn(0f, 1f)
+                onProgressChanged(progress)
+            }
+        }
+    }
 
     Box(
         modifier = modifier
@@ -77,6 +118,23 @@ fun EssentialHubContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(0.75f)
+                    .onSizeChanged { size ->
+                        val anchors = DraggableAnchors {
+                            DragState.Open at 0f
+                            DragState.Dismissed at size.height.toFloat()
+                        }
+                        dragState.updateAnchors(anchors)
+                    }
+                    .offset {
+                        IntOffset(
+                            x = 0,
+                            y = dragState
+                                .offset
+                                .roundToInt()
+                                .coerceAtLeast(0)
+                        )
+                    }
+                    .anchoredDraggable(dragState, Orientation.Vertical)
                     .background(
                         brush = Brush.verticalGradient(
                             colors = listOf(
@@ -110,10 +168,10 @@ fun EssentialHubContent(
 
                 // Date
                 Text(
-                    text = dateFormat.format(currentTime).uppercase(),
+                    text = dateFormat.format(currentTime),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Light,
                     fontFamily = GoogleSansFlex,
                     letterSpacing = 2.sp
                 )
@@ -125,7 +183,7 @@ fun EssentialHubContent(
                     text = timeFormat.format(currentTime),
                     style = MaterialTheme.typography.displayLarge.copy(
                         fontSize = 110.sp,
-                        fontWeight = FontWeight.ExtraBold,
+                        fontWeight = FontWeight.Medium,
                         fontFamily = GoogleSansFlex,
                         letterSpacing = (-4).sp
                     ),

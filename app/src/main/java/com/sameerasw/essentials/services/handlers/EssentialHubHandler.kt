@@ -57,7 +57,7 @@ class EssentialHubHandler(private val service: AccessibilityService) {
                 layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                blurBehindRadius = 100
+                blurBehindRadius = 50
             }
         }
 
@@ -76,7 +76,10 @@ class EssentialHubHandler(private val service: AccessibilityService) {
                 EssentialsTheme {
                     EssentialHubContent(
                         isVisible = visible,
-                        onDismiss = { hideHub() }
+                        onDismiss = { hideHub() },
+                        onProgressChanged = { progress ->
+                            updateBackgroundEffects(progress)
+                        }
                     )
                 }
             }
@@ -86,17 +89,11 @@ class EssentialHubHandler(private val service: AccessibilityService) {
             windowManager.addView(overlayView, params)
             isHubVisible = true
             
-            val animator = android.animation.ValueAnimator.ofFloat(0f, 0.5f).apply {
+            val animator = android.animation.ValueAnimator.ofFloat(1f, 0f).apply {
                 duration = 300
                 addUpdateListener { animation ->
-                    val value = animation.animatedValue as Float
-                    val updatedParams = overlayView?.layoutParams as? WindowManager.LayoutParams
-                    updatedParams?.dimAmount = value
-                    if (updatedParams != null && overlayView != null) {
-                        try {
-                            windowManager.updateViewLayout(overlayView, updatedParams)
-                        } catch (_: Exception) {}
-                    }
+                    val progress = animation.animatedValue as Float
+                    updateBackgroundEffects(progress)
                 }
             }
             animator.start()
@@ -109,25 +106,38 @@ class EssentialHubHandler(private val service: AccessibilityService) {
         }
     }
 
+    private fun updateBackgroundEffects(progress: Float) {
+        val invertedProgress = (1f - progress).coerceIn(0f, 1f)
+        val dimAmount = (invertedProgress * 0.5f).coerceAtLeast(0.01f) // Keep tiny dim for "behind" pass
+        val blurRadius = (invertedProgress * 50).toInt()
+
+        val updatedParams = overlayView?.layoutParams as? WindowManager.LayoutParams
+        if (updatedParams != null && overlayView != null) {
+            updatedParams.dimAmount = dimAmount
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                updatedParams.blurBehindRadius = blurRadius
+//                updatedParams.backgroundBlurRadius = blurRadius
+            }
+            try {
+                windowManager.updateViewLayout(overlayView, updatedParams)
+            } catch (_: Exception) {}
+        }
+    }
+
     fun hideHub() {
         if (!isHubVisible || overlayView == null) return
         isVisibleState.value = false
         
-        val animator = android.animation.ValueAnimator.ofFloat(0.5f, 0f).apply {
+        val animator = android.animation.ValueAnimator.ofFloat(0f, 1f).apply {
             duration = 300
             addUpdateListener { animation ->
-                val value = animation.animatedValue as Float
-                val updatedParams = overlayView?.layoutParams as? WindowManager.LayoutParams
-                updatedParams?.dimAmount = value
-                if (updatedParams != null && overlayView != null) {
-                    try {
-                        windowManager.updateViewLayout(overlayView, updatedParams)
-                    } catch (_: Exception) {}
-                }
+                val progress = animation.animatedValue as Float
+                updateBackgroundEffects(progress)
             }
         }
         animator.start()
 
+        // Wait for exit animation (300ms defined in EssentialHubContent)
         android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
             removeViewImmediately()
         }, 300)
