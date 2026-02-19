@@ -11,6 +11,8 @@ import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import com.sameerasw.essentials.domain.model.TrackedRepo
 import com.sameerasw.essentials.domain.model.github.GitHubUser
+import com.sameerasw.essentials.utils.RootUtils
+import com.sameerasw.essentials.utils.ShizukuUtils
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -147,8 +149,16 @@ class SettingsRepository(private val context: Context) {
         const val KEY_FLASHLIGHT_PULSE_SELECTED_APPS = "flashlight_pulse_selected_apps"
         const val KEY_FLASHLIGHT_PULSE_SAME_AS_LIGHTING = "flashlight_pulse_same_as_lighting"
 
+        const val KEY_BATTERY_NOTIFICATION_ENABLED = "battery_notification_enabled"
         const val KEY_USER_DICTIONARY_ENABLED = "user_dictionary_enabled"
         const val KEY_USER_DICT_LAST_UPDATE = "user_dict_last_update"
+
+        const val KEY_FONT_SCALE = "font_scale"
+        const val KEY_FONT_WEIGHT = "font_weight"
+        const val KEY_ANIMATOR_DURATION_SCALE = "animator_duration_scale"
+        const val KEY_TRANSITION_ANIMATION_SCALE = "transition_animation_scale"
+        const val KEY_WINDOW_ANIMATION_SCALE = "window_animation_scale"
+        const val KEY_SMALLEST_WIDTH = "smallest_width"
     }
 
     // Observe changes
@@ -202,11 +212,13 @@ class SettingsRepository(private val context: Context) {
     fun getLong(key: String, default: Long = 0L): Long = prefs.getLong(key, default)
 
     // General Setters
+    fun contains(key: String): Boolean = prefs.contains(key)
     fun putBoolean(key: String, value: Boolean) = prefs.edit().putBoolean(key, value).apply()
     fun putString(key: String, value: String?) = prefs.edit().putString(key, value).apply()
     fun putInt(key: String, value: Int) = prefs.edit().putInt(key, value).apply()
     fun putFloat(key: String, value: Float) = prefs.edit().putFloat(key, value).apply()
     fun putLong(key: String, value: Long) = prefs.edit().putLong(key, value).apply()
+    fun remove(key: String) = prefs.edit().remove(key).apply()
 
     // Specific Getters with logic from ViewModel
 
@@ -702,4 +714,134 @@ class SettingsRepository(private val context: Context) {
 
     fun isUserDictionaryEnabled(): Boolean = getBoolean(KEY_USER_DICTIONARY_ENABLED, false)
     fun setUserDictionaryEnabled(enabled: Boolean) = putBoolean(KEY_USER_DICTIONARY_ENABLED, enabled)
+
+    fun isBatteryNotificationEnabled(): Boolean = getBoolean(KEY_BATTERY_NOTIFICATION_ENABLED, false)
+    fun setBatteryNotificationEnabled(enabled: Boolean) = putBoolean(KEY_BATTERY_NOTIFICATION_ENABLED, enabled)
+
+    fun getFontScale(): Float {
+        return try {
+            android.provider.Settings.System.getFloat(context.contentResolver, android.provider.Settings.System.FONT_SCALE)
+        } catch (e: Exception) {
+            1.0f
+        }
+    }
+
+    fun setFontScale(scale: Float) {
+        putFloat(KEY_FONT_SCALE, scale)
+        try {
+            android.provider.Settings.System.putFloat(context.contentResolver, android.provider.Settings.System.FONT_SCALE, scale)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun getFontWeight(): Int {
+        return try {
+            android.provider.Settings.Secure.getInt(context.contentResolver, "font_weight_adjustment")
+        } catch (e: Exception) {
+            0
+        }
+    }
+
+    fun setFontWeight(weight: Int) {
+        putInt(KEY_FONT_WEIGHT, weight)
+        try {
+            android.provider.Settings.Secure.putInt(context.contentResolver, "font_weight_adjustment", weight)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun getSmallestWidth(): Int {
+        val forcedDensity = try {
+            android.provider.Settings.Secure.getInt(context.contentResolver, "display_density_forced")
+        } catch (e: Exception) {
+            0
+        }
+        if (forcedDensity > 0) {
+            val metrics = context.resources.displayMetrics
+            val widthPx = Math.min(metrics.widthPixels, metrics.heightPixels)
+            return (widthPx * 160) / forcedDensity
+        }
+        return context.resources.configuration.smallestScreenWidthDp
+    }
+
+    fun setSmallestWidth(widthDp: Int) {
+        putInt(KEY_SMALLEST_WIDTH, widthDp)
+        val metrics = context.resources.displayMetrics
+        val widthPx = Math.min(metrics.widthPixels, metrics.heightPixels)
+        val density = (widthPx * 160) / widthDp
+        
+        val command = "wm density $density"
+        if (ShizukuUtils.isShizukuAvailable() && ShizukuUtils.hasPermission()) {
+            ShizukuUtils.runCommand(command)
+        } else if (RootUtils.isRootAvailable()) {
+            RootUtils.runCommand(command)
+        } else {
+            try {
+                android.provider.Settings.Secure.putInt(context.contentResolver, "display_density_forced", density)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun resetSmallestWidth() {
+        val command = "wm density reset"
+        if (ShizukuUtils.isShizukuAvailable() && ShizukuUtils.hasPermission()) {
+            ShizukuUtils.runCommand(command)
+        } else if (RootUtils.isRootAvailable()) {
+            RootUtils.runCommand(command)
+        } else {
+            try {
+                android.provider.Settings.Secure.putString(context.contentResolver, "display_density_forced", null)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        remove(KEY_SMALLEST_WIDTH)
+    }
+
+    fun getAnimationScale(key: String): Float {
+        return try {
+            android.provider.Settings.Global.getFloat(context.contentResolver, key)
+        } catch (e: Exception) {
+            1.0f
+        }
+    }
+
+    fun setAnimationScale(key: String, scale: Float) {
+        when (key) {
+            android.provider.Settings.Global.ANIMATOR_DURATION_SCALE -> putFloat(KEY_ANIMATOR_DURATION_SCALE, scale)
+            android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE -> putFloat(KEY_TRANSITION_ANIMATION_SCALE, scale)
+            android.provider.Settings.Global.WINDOW_ANIMATION_SCALE -> putFloat(KEY_WINDOW_ANIMATION_SCALE, scale)
+        }
+        try {
+            android.provider.Settings.Global.putFloat(context.contentResolver, key, scale)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun syncSystemSettingsWithSaved() {
+        try {
+            if (contains(KEY_FONT_SCALE)) {
+                setFontScale(getFloat(KEY_FONT_SCALE, 1.0f))
+            }
+            if (contains(KEY_FONT_WEIGHT)) {
+                setFontWeight(getInt(KEY_FONT_WEIGHT, 0))
+            }
+            if (contains(KEY_ANIMATOR_DURATION_SCALE)) {
+                setAnimationScale(android.provider.Settings.Global.ANIMATOR_DURATION_SCALE, getFloat(KEY_ANIMATOR_DURATION_SCALE, 1.0f))
+            }
+            if (contains(KEY_TRANSITION_ANIMATION_SCALE)) {
+                setAnimationScale(android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE, getFloat(KEY_TRANSITION_ANIMATION_SCALE, 1.0f))
+            }
+            if (contains(KEY_WINDOW_ANIMATION_SCALE)) {
+                setAnimationScale(android.provider.Settings.Global.WINDOW_ANIMATION_SCALE, getFloat(KEY_WINDOW_ANIMATION_SCALE, 1.0f))
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 }

@@ -50,6 +50,7 @@ import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.composables.configs.AmbientMusicGlanceSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.AppLockSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.BatteriesSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.BatteryNotificationSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ButtonRemapSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.CaffeinateSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.DynamicNightLightSettingsUI
@@ -63,6 +64,7 @@ import com.sameerasw.essentials.ui.composables.configs.ScreenOffWidgetSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.SnoozeNotificationsSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.SoundModeTileSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.StatusBarIconSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.TextAnimationsSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.WatchSettingsUI
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.BiometricSecurityHelper
@@ -241,6 +243,8 @@ class FeatureSettingsActivity : FragmentActivity() {
                             )
 
                             "Caffeinate" -> !viewModel.isPostNotificationsEnabled.value
+                            "Battery notification" -> !viewModel.isPostNotificationsEnabled.value || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !viewModel.isBluetoothPermissionGranted.value)
+                            "Text and animations" -> !viewModel.isWriteSettingsEnabled.value || !isWriteSecureSettingsEnabled
                             else -> false
                         }
                         if (hasMissingPermissions) {
@@ -429,6 +433,8 @@ class FeatureSettingsActivity : FragmentActivity() {
                                                 )
 
                                                 "Caffeinate" -> !viewModel.isPostNotificationsEnabled.value
+                                                "Battery notification" -> !viewModel.isPostNotificationsEnabled.value || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !viewModel.isBluetoothPermissionGranted.value)
+                                                "Text and animations" -> !viewModel.isWriteSettingsEnabled.value || !isWriteSecureSettingsEnabled
                                                 else -> false
                                             }
 
@@ -603,6 +609,14 @@ class FeatureSettingsActivity : FragmentActivity() {
                                         )
                                     }
 
+                                    "Battery notification" -> {
+                                        BatteryNotificationSettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightKey = highlightSetting
+                                        )
+                                    }
+
                                     "Ambient music glance" -> {
                                         AmbientMusicGlanceSettingsUI(
                                             viewModel = viewModel,
@@ -629,6 +643,14 @@ class FeatureSettingsActivity : FragmentActivity() {
 
                                     "Flashlight pulse" -> {
                                         com.sameerasw.essentials.ui.composables.configs.FlashlightPulseSettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting
+                                        )
+                                    }
+
+                                    "Text and animations" -> {
+                                        TextAnimationsSettingsUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightSetting = highlightSetting

@@ -49,7 +49,11 @@ class PrivateDnsTileService : BaseTileService() {
     }
 
     override fun getTileIcon(): Icon {
-        return Icon.createWithResource(this, R.drawable.rounded_dns_24)
+        return when (getPrivateDnsMode()) {
+            MODE_AUTO -> Icon.createWithResource(this, R.drawable.router_24px)
+            MODE_OFF -> Icon.createWithResource(this, R.drawable.router_off_24px)
+            else -> Icon.createWithResource(this, R.drawable.router_24px_filled)
+        }
     }
 
     override fun getTileState(): Int {

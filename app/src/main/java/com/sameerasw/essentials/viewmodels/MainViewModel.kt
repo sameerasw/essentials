@@ -8,6 +8,10 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.database.ContentObserver
+import android.net.Uri
+import android.os.Handler
+import android.os.Looper
 import android.provider.CalendarContract
 import android.provider.Settings
 import android.view.inputmethod.InputMethodManager
@@ -40,6 +44,7 @@ import com.sameerasw.essentials.services.receivers.SecurityDeviceAdminReceiver
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.PermissionUtils
+import com.sameerasw.essentials.utils.RootUtils
 import com.sameerasw.essentials.utils.ShizukuUtils
 import com.sameerasw.essentials.utils.UpdateNotificationHelper
 import kotlinx.coroutines.Dispatchers
@@ -102,6 +107,7 @@ class MainViewModel : ViewModel() {
     val isCallVibrationsEnabled = mutableStateOf(false)
     val isCalendarSyncEnabled = mutableStateOf(false)
     val isCalendarSyncPeriodicEnabled = mutableStateOf(false)
+    val isBatteryNotificationEnabled = mutableStateOf(false)
 
     data class CalendarAccount(
         val id: Long,
@@ -187,6 +193,13 @@ class MainViewModel : ViewModel() {
     val batteryWidgetMaxDevices = mutableIntStateOf(8)
     val isBatteryWidgetBackgroundEnabled = mutableStateOf(true)
     val isAmbientMusicGlanceDockedModeEnabled = mutableStateOf(false)
+    val fontScale = mutableFloatStateOf(1.0f)
+    val fontWeight = mutableIntStateOf(0)
+    val animatorDurationScale = mutableFloatStateOf(1.0f)
+    val transitionAnimationScale = mutableFloatStateOf(1.0f)
+    val windowAnimationScale = mutableFloatStateOf(1.0f)
+    val smallestWidth = mutableIntStateOf(360)
+    val hasShizukuPermission = mutableStateOf(false)
 
     private var lastUpdateCheckTime: Long = 0
     lateinit var settingsRepository: SettingsRepository
@@ -195,157 +208,192 @@ class MainViewModel : ViewModel() {
 
     val gitHubToken = mutableStateOf<String?>(null)
 
+    private val contentObserver = object : ContentObserver(Handler(Looper.getMainLooper())) {
+        override fun onChange(selfChange: Boolean, uri: Uri?) {
+            uri?.let {
+                when (it) {
+                    Settings.System.getUriFor(Settings.System.FONT_SCALE) -> {
+                        fontScale.floatValue = settingsRepository.getFontScale()
+                    }
+                    Settings.Secure.getUriFor("font_weight_adjustment") -> {
+                        fontWeight.intValue = settingsRepository.getFontWeight()
+                    }
+                    Settings.Global.getUriFor(Settings.Global.ANIMATOR_DURATION_SCALE) -> {
+                        animatorDurationScale.floatValue = settingsRepository.getAnimationScale(Settings.Global.ANIMATOR_DURATION_SCALE)
+                    }
+                    Settings.Global.getUriFor(Settings.Global.TRANSITION_ANIMATION_SCALE) -> {
+                        transitionAnimationScale.floatValue = settingsRepository.getAnimationScale(Settings.Global.TRANSITION_ANIMATION_SCALE)
+                    }
+                    Settings.Global.getUriFor(Settings.Global.WINDOW_ANIMATION_SCALE) -> {
+                        windowAnimationScale.floatValue = settingsRepository.getAnimationScale(Settings.Global.WINDOW_ANIMATION_SCALE)
+                    }
+                    Settings.Secure.getUriFor("display_density_forced") -> {
+                        smallestWidth.intValue = settingsRepository.getSmallestWidth()
+                    }
+                }
+            }
+        }
+    }
+
     private val preferenceChangeListener =
-        android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-            // We still use this listener for now, attached via Repository
-            if (key == null) return@OnSharedPreferenceChangeListener
+        object : android.content.SharedPreferences.OnSharedPreferenceChangeListener {
+            override fun onSharedPreferenceChanged(sharedPreferences: android.content.SharedPreferences?, key: String?) {
+                if (key == null) return
 
-            when (key) {
-                SettingsRepository.KEY_EDGE_LIGHTING_ENABLED -> isNotificationLightingEnabled.value =
-                    settingsRepository.getBoolean(key)
+                when (key) {
+                    SettingsRepository.KEY_EDGE_LIGHTING_ENABLED -> isNotificationLightingEnabled.value =
+                        settingsRepository.getBoolean(key)
 
-                SettingsRepository.KEY_DYNAMIC_NIGHT_LIGHT_ENABLED -> isDynamicNightLightEnabled.value =
-                    settingsRepository.getBoolean(key)
+                    SettingsRepository.KEY_DYNAMIC_NIGHT_LIGHT_ENABLED -> isDynamicNightLightEnabled.value =
+                        settingsRepository.getBoolean(key)
 
-                SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED -> isScreenLockedSecurityEnabled.value =
-                    settingsRepository.getBoolean(key)
+                    SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED -> isScreenLockedSecurityEnabled.value =
+                        settingsRepository.getBoolean(key)
 
-                SettingsRepository.KEY_MAPS_POWER_SAVING_ENABLED -> {
-                    isMapsPowerSavingEnabled.value = settingsRepository.getBoolean(key)
-                    MapsState.isEnabled = isMapsPowerSavingEnabled.value
-                }
+                    SettingsRepository.KEY_MAPS_POWER_SAVING_ENABLED -> {
+                        isMapsPowerSavingEnabled.value = settingsRepository.getBoolean(key)
+                        MapsState.isEnabled = isMapsPowerSavingEnabled.value
+                    }
 
-                SettingsRepository.KEY_STATUS_BAR_ICON_CONTROL_ENABLED -> isStatusBarIconControlEnabled.value =
-                    settingsRepository.getBoolean(key)
+                    SettingsRepository.KEY_STATUS_BAR_ICON_CONTROL_ENABLED -> isStatusBarIconControlEnabled.value =
+                        settingsRepository.getBoolean(key)
 
-                SettingsRepository.KEY_BUTTON_REMAP_ENABLED -> isButtonRemapEnabled.value =
-                    settingsRepository.getBoolean(key)
+                    SettingsRepository.KEY_BUTTON_REMAP_ENABLED -> isButtonRemapEnabled.value =
+                        settingsRepository.getBoolean(key)
 
-                SettingsRepository.KEY_APP_LOCK_ENABLED -> isAppLockEnabled.value =
-                    settingsRepository.getBoolean(key)
+                    SettingsRepository.KEY_APP_LOCK_ENABLED -> isAppLockEnabled.value =
+                        settingsRepository.getBoolean(key)
 
-                SettingsRepository.KEY_FREEZE_WHEN_LOCKED_ENABLED -> isFreezeWhenLockedEnabled.value =
-                    settingsRepository.getBoolean(key)
+                    SettingsRepository.KEY_FREEZE_WHEN_LOCKED_ENABLED -> isFreezeWhenLockedEnabled.value =
+                        settingsRepository.getBoolean(key)
 
-                SettingsRepository.KEY_FREEZE_DONT_FREEZE_ACTIVE_APPS -> isFreezeDontFreezeActiveAppsEnabled.value =
-                    settingsRepository.getBoolean(key)
+                    SettingsRepository.KEY_FREEZE_DONT_FREEZE_ACTIVE_APPS -> isFreezeDontFreezeActiveAppsEnabled.value =
+                        settingsRepository.getBoolean(key)
 
-                SettingsRepository.KEY_FREEZE_LOCK_DELAY_INDEX -> freezeLockDelayIndex.intValue =
-                    settingsRepository.getInt(key, 1)
+                    SettingsRepository.KEY_FREEZE_LOCK_DELAY_INDEX -> freezeLockDelayIndex.intValue =
+                        settingsRepository.getInt(key, 1)
 
-                SettingsRepository.KEY_FREEZE_AUTO_EXCLUDED_APPS -> {
-                    freezeAutoExcludedApps.value = settingsRepository.getFreezeAutoExcludedApps()
-                }
+                    SettingsRepository.KEY_FREEZE_AUTO_EXCLUDED_APPS -> {
+                        freezeAutoExcludedApps.value = settingsRepository.getFreezeAutoExcludedApps()
+                    }
 
-                SettingsRepository.KEY_USE_ROOT -> isRootEnabled.value =
-                    settingsRepository.getBoolean(key)
+                    SettingsRepository.KEY_USE_ROOT -> isRootEnabled.value =
+                        settingsRepository.getBoolean(key)
 
-                SettingsRepository.KEY_CHECK_PRE_RELEASES_ENABLED -> isPreReleaseCheckEnabled.value =
-                    settingsRepository.getBoolean(key)
+                    SettingsRepository.KEY_CHECK_PRE_RELEASES_ENABLED -> isPreReleaseCheckEnabled.value =
+                        settingsRepository.getBoolean(key)
 
-                SettingsRepository.KEY_DEVELOPER_MODE_ENABLED -> {
-                    isDeveloperModeEnabled.value = settingsRepository.getBoolean(key)
-                }
+                    SettingsRepository.KEY_DEVELOPER_MODE_ENABLED -> {
+                        isDeveloperModeEnabled.value = settingsRepository.getBoolean(key)
+                    }
 
-                SettingsRepository.KEY_PITCH_BLACK_THEME_ENABLED -> isPitchBlackThemeEnabled.value =
-                    settingsRepository.getBoolean(key)
+                    SettingsRepository.KEY_PITCH_BLACK_THEME_ENABLED -> isPitchBlackThemeEnabled.value =
+                        settingsRepository.getBoolean(key)
 
-                SettingsRepository.KEY_KEYBOARD_HEIGHT -> keyboardHeight.floatValue =
-                    settingsRepository.getFloat(key, 54f)
+                    SettingsRepository.KEY_KEYBOARD_HEIGHT -> keyboardHeight.floatValue =
+                        settingsRepository.getFloat(key, 54f)
 
-                SettingsRepository.KEY_KEYBOARD_BOTTOM_PADDING -> keyboardBottomPadding.floatValue =
-                    settingsRepository.getFloat(key, 0f)
+                    SettingsRepository.KEY_KEYBOARD_BOTTOM_PADDING -> keyboardBottomPadding.floatValue =
+                        settingsRepository.getFloat(key, 0f)
 
-                SettingsRepository.KEY_KEYBOARD_ROUNDNESS -> keyboardRoundness.floatValue =
-                    settingsRepository.getFloat(key, 24f)
+                    SettingsRepository.KEY_KEYBOARD_ROUNDNESS -> keyboardRoundness.floatValue =
+                        settingsRepository.getFloat(key, 24f)
 
-                SettingsRepository.KEY_KEYBOARD_HAPTICS_ENABLED -> isKeyboardHapticsEnabled.value =
-                    settingsRepository.getBoolean(key)
+                    SettingsRepository.KEY_KEYBOARD_HAPTICS_ENABLED -> isKeyboardHapticsEnabled.value =
+                        settingsRepository.getBoolean(key)
 
-                SettingsRepository.KEY_KEYBOARD_FUNCTIONS_BOTTOM -> isKeyboardFunctionsBottom.value =
-                    settingsRepository.getBoolean(key)
+                    SettingsRepository.KEY_KEYBOARD_FUNCTIONS_BOTTOM -> isKeyboardFunctionsBottom.value =
+                        settingsRepository.getBoolean(key)
 
-                SettingsRepository.KEY_KEYBOARD_FUNCTIONS_PADDING -> keyboardFunctionsPadding.floatValue =
-                    settingsRepository.getFloat(key, 0f)
+                    SettingsRepository.KEY_KEYBOARD_FUNCTIONS_PADDING -> keyboardFunctionsPadding.floatValue =
+                        settingsRepository.getFloat(key, 0f)
 
-                SettingsRepository.KEY_KEYBOARD_HAPTIC_STRENGTH -> keyboardHapticStrength.floatValue =
-                    settingsRepository.getFloat(key, 0.5f)
+                    SettingsRepository.KEY_KEYBOARD_HAPTIC_STRENGTH -> keyboardHapticStrength.floatValue =
+                        settingsRepository.getFloat(key, 0.5f)
 
-                SettingsRepository.KEY_KEYBOARD_SHAPE -> keyboardShape.intValue =
-                    settingsRepository.getInt(key, 0)
+                    SettingsRepository.KEY_KEYBOARD_SHAPE -> keyboardShape.intValue =
+                        settingsRepository.getInt(key, 0)
 
-                SettingsRepository.KEY_KEYBOARD_ALWAYS_DARK -> isKeyboardAlwaysDark.value =
-                    settingsRepository.getBoolean(key, false)
+                    SettingsRepository.KEY_KEYBOARD_ALWAYS_DARK -> isKeyboardAlwaysDark.value =
+                        settingsRepository.getBoolean(key, false)
 
-                SettingsRepository.KEY_KEYBOARD_PITCH_BLACK -> isKeyboardPitchBlack.value =
-                    settingsRepository.getBoolean(key, false)
+                    SettingsRepository.KEY_KEYBOARD_PITCH_BLACK -> isKeyboardPitchBlack.value =
+                        settingsRepository.getBoolean(key, false)
 
-                SettingsRepository.KEY_KEYBOARD_CLIPBOARD_ENABLED -> isKeyboardClipboardEnabled.value =
-                    settingsRepository.getBoolean(key, true)
+                    SettingsRepository.KEY_KEYBOARD_CLIPBOARD_ENABLED -> isKeyboardClipboardEnabled.value =
+                        settingsRepository.getBoolean(key, true)
 
-                SettingsRepository.KEY_KEYBOARD_LONG_PRESS_SYMBOLS -> isLongPressSymbolsEnabled.value =
-                    settingsRepository.getBoolean(key, false)
+                    SettingsRepository.KEY_KEYBOARD_LONG_PRESS_SYMBOLS -> isLongPressSymbolsEnabled.value =
+                        settingsRepository.getBoolean(key, false)
 
-                SettingsRepository.KEY_AIRSYNC_CONNECTION_ENABLED -> isAirSyncConnectionEnabled.value =
-                    settingsRepository.getBoolean(key)
+                    SettingsRepository.KEY_AIRSYNC_CONNECTION_ENABLED -> isAirSyncConnectionEnabled.value =
+                        settingsRepository.getBoolean(key)
 
-                SettingsRepository.KEY_MAC_BATTERY_LEVEL -> macBatteryLevel.intValue =
-                    settingsRepository.getInt(key, -1)
+                    SettingsRepository.KEY_MAC_BATTERY_LEVEL -> macBatteryLevel.intValue =
+                        settingsRepository.getInt(key, -1)
 
-                SettingsRepository.KEY_MAC_BATTERY_IS_CHARGING -> isMacBatteryCharging.value =
-                    settingsRepository.getBoolean(key, false)
+                    SettingsRepository.KEY_MAC_BATTERY_IS_CHARGING -> isMacBatteryCharging.value =
+                        settingsRepository.getBoolean(key, false)
 
-                SettingsRepository.KEY_MAC_BATTERY_LAST_UPDATED -> macBatteryLastUpdated.value =
-                    settingsRepository.getLong(key, 0L)
+                    SettingsRepository.KEY_MAC_BATTERY_LAST_UPDATED -> macBatteryLastUpdated.value =
+                        settingsRepository.getLong(key, 0L)
 
-                SettingsRepository.KEY_AIRSYNC_MAC_CONNECTED -> isMacConnected.value =
-                    settingsRepository.getBoolean(key, false)
+                    SettingsRepository.KEY_AIRSYNC_MAC_CONNECTED -> isMacConnected.value =
+                        settingsRepository.getBoolean(key, false)
 
-                SettingsRepository.KEY_BATTERY_WIDGET_MAX_DEVICES -> batteryWidgetMaxDevices.intValue =
-                    settingsRepository.getInt(key, 8)
+                    SettingsRepository.KEY_BATTERY_WIDGET_MAX_DEVICES -> batteryWidgetMaxDevices.intValue =
+                        settingsRepository.getInt(key, 8)
 
-                SettingsRepository.KEY_SNOOZE_DISCOVERED_CHANNELS, SettingsRepository.KEY_SNOOZE_BLOCKED_CHANNELS -> {
-                    appContext?.let { loadSnoozeChannels(it) }
-                }
+                    SettingsRepository.KEY_SNOOZE_DISCOVERED_CHANNELS, SettingsRepository.KEY_SNOOZE_BLOCKED_CHANNELS -> {
+                        appContext?.let { loadSnoozeChannels(it) }
+                    }
 
-                SettingsRepository.KEY_MAPS_DISCOVERED_CHANNELS, SettingsRepository.KEY_MAPS_DETECTION_CHANNELS -> {
-                    appContext?.let { loadMapsChannels(it) }
-                }
+                    SettingsRepository.KEY_MAPS_DISCOVERED_CHANNELS, SettingsRepository.KEY_MAPS_DETECTION_CHANNELS -> {
+                        appContext?.let { loadMapsChannels(it) }
+                    }
 
-                SettingsRepository.KEY_SNOOZE_HEADS_UP_ENABLED -> {
-                    isSnoozeHeadsUpEnabled.value = settingsRepository.getBoolean(key)
-                }
+                    SettingsRepository.KEY_SNOOZE_HEADS_UP_ENABLED -> {
+                        isSnoozeHeadsUpEnabled.value = settingsRepository.getBoolean(key)
+                    }
 
-                SettingsRepository.KEY_PINNED_FEATURES -> {
-                    pinnedFeatureKeys.value = settingsRepository.getPinnedFeatures()
-                }
+                    SettingsRepository.KEY_PINNED_FEATURES -> {
+                        pinnedFeatureKeys.value = settingsRepository.getPinnedFeatures()
+                    }
 
-                SettingsRepository.KEY_CALL_VIBRATIONS_ENABLED -> {
-                    isCallVibrationsEnabled.value = settingsRepository.getBoolean(key)
-                }
+                    SettingsRepository.KEY_CALL_VIBRATIONS_ENABLED -> {
+                        isCallVibrationsEnabled.value = settingsRepository.getBoolean(key)
+                    }
 
-                SettingsRepository.KEY_LIKE_SONG_TOAST_ENABLED -> {
-                    isLikeSongToastEnabled.value = settingsRepository.getBoolean(key)
-                }
+                    SettingsRepository.KEY_LIKE_SONG_TOAST_ENABLED -> {
+                        isLikeSongToastEnabled.value = settingsRepository.getBoolean(key)
+                    }
 
-                SettingsRepository.KEY_LIKE_SONG_AOD_OVERLAY_ENABLED -> {
-                    isLikeSongAodOverlayEnabled.value = settingsRepository.getBoolean(key)
-                }
+                    SettingsRepository.KEY_LIKE_SONG_AOD_OVERLAY_ENABLED -> {
+                        isLikeSongAodOverlayEnabled.value = settingsRepository.getBoolean(key)
+                    }
 
-                SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_ENABLED -> {
-                    isAmbientMusicGlanceEnabled.value = settingsRepository.getBoolean(key)
-                }
+                    SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_ENABLED -> {
+                        isAmbientMusicGlanceEnabled.value = settingsRepository.getBoolean(key)
+                    }
 
-                SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_DOCKED_MODE -> {
-                    isAmbientMusicGlanceDockedModeEnabled.value = settingsRepository.getBoolean(key)
-                }
+                    SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_DOCKED_MODE -> {
+                        isAmbientMusicGlanceDockedModeEnabled.value = settingsRepository.getBoolean(key)
+                    }
 
-                SettingsRepository.KEY_CALENDAR_SYNC_ENABLED -> {
-                    isCalendarSyncEnabled.value = settingsRepository.getBoolean(key)
-                }
+                    SettingsRepository.KEY_CALENDAR_SYNC_ENABLED -> {
+                        isCalendarSyncEnabled.value = settingsRepository.getBoolean(key)
+                    }
 
-                SettingsRepository.KEY_TRACKED_REPOS -> {
-                    appContext?.let { refreshTrackedUpdates(it) }
+                    SettingsRepository.KEY_TRACKED_REPOS -> {
+                        appContext?.let { refreshTrackedUpdates(it) }
+                    }
+
+                    SettingsRepository.KEY_FONT_SCALE -> fontScale.floatValue = settingsRepository.getFontScale()
+                    SettingsRepository.KEY_FONT_WEIGHT -> fontWeight.intValue = settingsRepository.getFontWeight()
+                    SettingsRepository.KEY_ANIMATOR_DURATION_SCALE -> animatorDurationScale.floatValue = settingsRepository.getAnimationScale(android.provider.Settings.Global.ANIMATOR_DURATION_SCALE)
+                    SettingsRepository.KEY_TRANSITION_ANIMATION_SCALE -> transitionAnimationScale.floatValue = settingsRepository.getAnimationScale(android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE)
+                    SettingsRepository.KEY_WINDOW_ANIMATION_SCALE -> windowAnimationScale.floatValue = settingsRepository.getAnimationScale(android.provider.Settings.Global.WINDOW_ANIMATION_SCALE)
+                    SettingsRepository.KEY_SMALLEST_WIDTH -> smallestWidth.intValue = settingsRepository.getSmallestWidth()
                 }
             }
         }
@@ -384,6 +432,37 @@ class MainViewModel : ViewModel() {
 
         isBluetoothPermissionGranted.value = PermissionUtils.hasBluetoothPermission(context)
 
+        context.contentResolver.registerContentObserver(
+            Settings.System.getUriFor(Settings.System.FONT_SCALE),
+            false,
+            contentObserver
+        )
+        context.contentResolver.registerContentObserver(
+            Settings.Secure.getUriFor("font_weight_adjustment"),
+            false,
+            contentObserver
+        )
+        context.contentResolver.registerContentObserver(
+            Settings.Global.getUriFor(Settings.Global.ANIMATOR_DURATION_SCALE),
+            false,
+            contentObserver
+        )
+        context.contentResolver.registerContentObserver(
+            Settings.Global.getUriFor(Settings.Global.TRANSITION_ANIMATION_SCALE),
+            false,
+            contentObserver
+        )
+        context.contentResolver.registerContentObserver(
+            Settings.Global.getUriFor(Settings.Global.WINDOW_ANIMATION_SCALE),
+            false,
+            contentObserver
+        )
+        context.contentResolver.registerContentObserver(
+            Settings.Secure.getUriFor("display_density_forced"),
+            false,
+            contentObserver
+        )
+
         settingsRepository.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
 
         viewModelScope.launch {
@@ -395,6 +474,15 @@ class MainViewModel : ViewModel() {
         isWidgetEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_WIDGET_ENABLED)
         isStatusBarIconControlEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_STATUS_BAR_ICON_CONTROL_ENABLED)
+        
+        fontScale.floatValue = settingsRepository.getFontScale()
+        fontWeight.intValue = settingsRepository.getFontWeight()
+        animatorDurationScale.floatValue = settingsRepository.getAnimationScale(android.provider.Settings.Global.ANIMATOR_DURATION_SCALE)
+        transitionAnimationScale.floatValue = settingsRepository.getAnimationScale(android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE)
+        windowAnimationScale.floatValue = settingsRepository.getAnimationScale(android.provider.Settings.Global.WINDOW_ANIMATION_SCALE)
+        smallestWidth.intValue = settingsRepository.getSmallestWidth()
+        hasShizukuPermission.value = ShizukuUtils.hasPermission() || RootUtils.isRootAvailable()
+
         isMapsPowerSavingEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_MAPS_POWER_SAVING_ENABLED)
         isNotificationLightingEnabled.value =
@@ -627,9 +715,37 @@ class MainViewModel : ViewModel() {
         isCalendarSyncEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_CALENDAR_SYNC_ENABLED, false)
         isCalendarSyncPeriodicEnabled.value = settingsRepository.isCalendarSyncPeriodicEnabled()
+        isBatteryNotificationEnabled.value = settingsRepository.isBatteryNotificationEnabled()
         selectedCalendarIds.value = settingsRepository.getCalendarSyncSelectedCalendars()
 
         refreshTrackedUpdates(context)
+        if (isBatteryNotificationEnabled.value) {
+            startBatteryNotificationService(context)
+        }
+    }
+
+    private fun startBatteryNotificationService(context: Context) {
+        val intent = Intent(context, com.sameerasw.essentials.services.BatteryNotificationService::class.java)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            context.startForegroundService(intent)
+        } else {
+            context.startService(intent)
+        }
+    }
+
+    private fun stopBatteryNotificationService(context: Context) {
+        val intent = Intent(context, com.sameerasw.essentials.services.BatteryNotificationService::class.java)
+        context.stopService(intent)
+    }
+
+    fun setBatteryNotificationEnabled(enabled: Boolean, context: Context) {
+        isBatteryNotificationEnabled.value = enabled
+        settingsRepository.setBatteryNotificationEnabled(enabled)
+        if (enabled) {
+            startBatteryNotificationService(context)
+        } else {
+            stopBatteryNotificationService(context)
+        }
     }
 
     fun onSearchQueryChanged(query: String, context: Context) {
@@ -976,6 +1092,62 @@ class MainViewModel : ViewModel() {
     fun setAmbientMusicGlanceEnabled(enabled: Boolean) {
         isAmbientMusicGlanceEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_ENABLED, enabled)
+    }
+
+    fun updateFontScale(scale: Float) {
+        fontScale.floatValue = scale
+    }
+
+    fun saveFontScale() {
+        settingsRepository.setFontScale(fontScale.floatValue)
+    }
+
+    fun setFontScale(scale: Float) {
+        fontScale.floatValue = scale
+        settingsRepository.setFontScale(scale)
+    }
+
+    fun setFontWeight(weight: Int) {
+        fontWeight.intValue = weight
+        settingsRepository.setFontWeight(weight)
+    }
+
+    fun setAnimationScale(key: String, scale: Float) {
+        when (key) {
+            android.provider.Settings.Global.ANIMATOR_DURATION_SCALE -> animatorDurationScale.floatValue = scale
+            android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE -> transitionAnimationScale.floatValue = scale
+            android.provider.Settings.Global.WINDOW_ANIMATION_SCALE -> windowAnimationScale.floatValue = scale
+        }
+        settingsRepository.setAnimationScale(key, scale)
+    }
+
+    fun resetTextToDefault() {
+        setFontScale(1.0f)
+        setFontWeight(0)
+    }
+
+    fun resetAnimationsToDefault() {
+        setAnimationScale(android.provider.Settings.Global.ANIMATOR_DURATION_SCALE, 1.0f)
+        setAnimationScale(android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE, 1.0f)
+        setAnimationScale(android.provider.Settings.Global.WINDOW_ANIMATION_SCALE, 1.0f)
+    }
+
+    fun updateSmallestWidth(width: Int) {
+        smallestWidth.intValue = width
+    }
+
+    fun saveSmallestWidth() {
+        settingsRepository.setSmallestWidth(smallestWidth.intValue)
+    }
+
+    fun setSmallestWidth(width: Int) {
+        smallestWidth.intValue = width
+        settingsRepository.setSmallestWidth(width)
+    }
+
+    fun resetScaleToDefault() {
+        settingsRepository.resetSmallestWidth()
+        smallestWidth.intValue = settingsRepository.getSmallestWidth()
     }
 
     fun setAmbientMusicGlanceDockedModeEnabled(enabled: Boolean) {
@@ -1906,6 +2078,7 @@ class MainViewModel : ViewModel() {
     fun importConfigs(context: Context, inputStream: java.io.InputStream): Boolean {
         val success = settingsRepository.importConfigs(inputStream)
         if (success) {
+            settingsRepository.syncSystemSettingsWithSaved()
             check(context)
         }
         return success
@@ -1915,5 +2088,13 @@ class MainViewModel : ViewModel() {
     fun generateBugReport(context: Context): String {
         val settingsJson = settingsRepository.getAllConfigsAsJsonString()
         return com.sameerasw.essentials.utils.LogManager.generateReport(context, settingsJson)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        appContext?.contentResolver?.unregisterContentObserver(contentObserver)
+        if (::settingsRepository.isInitialized) {
+            settingsRepository.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener)
+        }
     }
 }

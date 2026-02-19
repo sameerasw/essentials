@@ -2,6 +2,7 @@ package com.sameerasw.essentials.services.automation.executors
 
 import android.content.Context
 import android.hardware.camera2.CameraManager
+import android.media.AudioManager
 import android.os.Build
 import com.sameerasw.essentials.domain.diy.Action
 
@@ -172,6 +173,20 @@ object CombinedActionExecutor {
                             e.printStackTrace()
                         }
                     }
+                }
+            }
+
+            is Action.SoundMode -> {
+                val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+                val ringerMode = when (action.mode) {
+                    Action.SoundModeType.SOUND -> AudioManager.RINGER_MODE_NORMAL
+                    Action.SoundModeType.VIBRATE -> AudioManager.RINGER_MODE_VIBRATE
+                    Action.SoundModeType.SILENT -> AudioManager.RINGER_MODE_SILENT
+                }
+                try {
+                    audioManager.ringerMode = ringerMode
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
             }
         }

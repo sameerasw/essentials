@@ -20,11 +20,16 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
+import java.io.InputStream
+import java.io.OutputStream
 import java.net.HttpURLConnection
 import java.net.URL
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class AppUpdatesViewModel : ViewModel() {
     private val gitHubRepository = GitHubRepository()
+    private val gson = Gson()
 
     private val _searchQuery = mutableStateOf("")
     val searchQuery: State<String> = _searchQuery
@@ -40,6 +45,9 @@ class AppUpdatesViewModel : ViewModel() {
 
     private val _errorMessage = mutableStateOf<String?>(null)
     val errorMessage: State<String?> = _errorMessage
+
+    private val _shouldDismissSheet = mutableStateOf(false)
+    val shouldDismissSheet: State<Boolean> = _shouldDismissSheet
 
     private val _readmeContent = mutableStateOf<String?>(null)
     val readmeContent: State<String?> = _readmeContent
@@ -100,6 +108,11 @@ class AppUpdatesViewModel : ViewModel() {
         }
 
         val (owner, repo) = parts
+        if (owner.lowercase() == "sameerasw" && repo.lowercase() == "essentials") {
+            _errorMessage.value = context.getString(R.string.msg_restrict_own_app_repo)
+            _shouldDismissSheet.value = true
+            return
+        }
         _isSearching.value = true
         _errorMessage.value = null
         _searchResult.value = null
@@ -274,6 +287,10 @@ class AppUpdatesViewModel : ViewModel() {
 
     fun clearError() {
         _errorMessage.value = null
+    }
+
+    fun consumeDismissSignal() {
+        _shouldDismissSheet.value = false
     }
 
     fun setAllowPreReleases(allow: Boolean) {
@@ -496,4 +513,53 @@ class AppUpdatesViewModel : ViewModel() {
             _installingRepoId.value = null
         }
     }
-}
+
+        fun exportTrackedRepos(context: Context, outputStream: OutputStream) {
+            try {
+                val repos = SettingsRepository(context).getTrackedRepos()
+                val json = gson.toJson(repos)
+                outputStream.write(json.toByteArray())
+                outputStream.flush()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                try {
+                    outputStream.close()
+                } catch (e: Exception) {
+                }
+            }
+        }
+
+        fun importTrackedRepos(context: Context, inputStream: InputStream): Boolean {
+            return try {
+                val json = inputStream.bufferedReader().use { it.readText() }
+                val type = object : TypeToken<List<TrackedRepo>>() {}.type
+                val importedRepos: List<TrackedRepo> = gson.fromJson(json, type)
+                if (importedRepos.isNotEmpty()) {
+                    val settingsRepo = SettingsRepository(context)
+                    val currentRepos = settingsRepo.getTrackedRepos().toMutableList()
+                    importedRepos.forEach { imported ->
+                        val index = currentRepos.indexOfFirst { it.fullName == imported.fullName }
+                        if (index != -1) {
+                            currentRepos[index] = imported
+                        } else {
+                            currentRepos.add(imported)
+                        }
+                    }
+                    settingsRepo.saveTrackedRepos(currentRepos)
+                    loadTrackedRepos(context)
+                    true
+                } else {
+                    false
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                false
+            } finally {
+                try {
+                    inputStream.close()
+                } catch (e: Exception) {
+                }
+            }
+        }
+    }

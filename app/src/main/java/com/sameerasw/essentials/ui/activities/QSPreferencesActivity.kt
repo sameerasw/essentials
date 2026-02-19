@@ -42,6 +42,15 @@ class QSPreferencesActivity : ComponentActivity() {
                 return
             }
 
+            if (componentName.className == "com.sameerasw.essentials.services.tiles.PrivateDnsTileService") {
+                val intent = Intent(this, PrivateDnsSettingsActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                }
+                startActivity(intent)
+                finish()
+                return
+            }
+
             if (componentName.className == "com.sameerasw.essentials.services.tiles.AdaptiveBrightnessTileService") {
                 val displayIntent = Intent(Settings.ACTION_DISPLAY_SETTINGS).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -63,6 +72,9 @@ class QSPreferencesActivity : ComponentActivity() {
                 "com.sameerasw.essentials.services.tiles.NfcTileService" -> "NFC"
                 "com.sameerasw.essentials.services.tiles.AdaptiveBrightnessTileService" -> "Quick settings tiles"
                 "com.sameerasw.essentials.services.tiles.MapsPowerSavingTileService" -> "Maps power saving mode"
+                "com.sameerasw.essentials.services.tiles.UsbDebuggingTileService" -> "Quick settings tiles"
+                "com.sameerasw.essentials.services.tiles.DeveloperOptionsTileService" -> "Quick settings tiles"
+                "com.sameerasw.essentials.services.tiles.BatteryNotificationTileService" -> "Battery notification"
                 else -> null
             }
 

@@ -216,6 +216,14 @@
             android:theme="@style/Theme.Essentials.Translucent" />
 
         <activity
+            android:name=".ui.activities.PrivateDnsSettingsActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:theme="@style/Theme.Essentials.Translucent" />
+
+        <activity
             android:name=".ui.activities.WatermarkActivity"
             android:exported="true"
             android:label="@string/feat_watermark_title"
@@ -313,6 +321,14 @@
             android:foregroundServiceType="specialUse">
             <property android:name="android.app.property.FOREGROUND_SERVICE_TYPE_SPECIAL_USE_DESCRIPTION"
                 android:value="Caffeinate Service" />
+        </service>
+        <service
+            android:name=".services.BatteryNotificationService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property android:name="android.app.property.FOREGROUND_SERVICE_TYPE_SPECIAL_USE_DESCRIPTION"
+                android:value="Battery Notification Service" />
         </service>
         <service
             android:name=".services.tiles.SoundModeTileService"
@@ -584,6 +600,17 @@
                 <action android:name="com.sameerasw.essentials.ACTION_FLASHLIGHT_OFF" />
             </intent-filter>
         </receiver>
+
+        <service
+            android:name=".services.tiles.BatteryNotificationTileService"
+            android:exported="true"
+            android:icon="@drawable/rounded_battery_charging_60_24"
+            android:label="@string/feat_battery_notification_title"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
 
         <receiver
             android:name=".services.receivers.SecurityDeviceAdminReceiver"
