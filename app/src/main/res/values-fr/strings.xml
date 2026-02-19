@@ -1042,4 +1042,19 @@
     <string name="msg_import_success">Repositories imported successfully</string>
     <string name="msg_import_failed">Failed to import repositories</string>
     <string name="label_apps">Applis</string>
+    <string name="feat_text_animations_title">Scale and Animations</string>
+    <string name="feat_text_animations_desc">Adjust system scale and animations</string>
+    <string name="settings_section_text">Text</string>
+    <string name="label_font_scale">Font Scale</string>
+    <string name="label_font_weight">Font Weight</string>
+    <string name="label_reset_default">Reset</string>
+    <string name="settings_section_scale">Scale</string>
+    <string name="label_smallest_width">Smallest Width</string>
+    <string name="msg_shizuku_permission_required">Shizuku permission required to adjust scale</string>
+    <string name="label_grant_permission">Grant Permission</string>
+    <string name="settings_section_animations">Animations</string>
+    <string name="label_animator_duration_scale">Animator duration scale</string>
+    <string name="label_transition_animation_scale">Transition animation scale</string>
+    <string name="label_window_animation_scale">Window animation scale</string>
+    <string name="about_desc_text_animations">Adjust system-wide font scale, weight, and animation speeds. Note that some settings may require advanced permissions or a device reboot for certain apps to reflect changes. \n\nAdditional shizuku or root permission may be necessary for scale adjustments</string>
 </resources>
