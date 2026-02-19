@@ -32,7 +32,7 @@ import java.util.*
 import kotlin.math.roundToInt
 
 private enum class DragState {
-    Open, Dismissed
+    Expanded, Partial, Dismissed
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -61,7 +61,7 @@ fun EssentialHubContent(
     val density = LocalDensity.current
     val dragState = remember {
         AnchoredDraggableState(
-            initialValue = DragState.Open,
+            initialValue = DragState.Partial,
             positionalThreshold = { distance: Float -> distance * 0.5f },
             velocityThreshold = { with(density) { 100.dp.toPx() } },
             snapAnimationSpec = spring(),
@@ -78,13 +78,19 @@ fun EssentialHubContent(
     LaunchedEffect(dragState.offset) {
         if (!dragState.offset.isNaN()) {
             val anchors = dragState.anchors
-            val openPos = anchors.positionOf(DragState.Open)
+            val partialPos = anchors.positionOf(DragState.Partial)
             val dismissedPos = anchors.positionOf(DragState.Dismissed)
-            if (dismissedPos > openPos) {
-                val progress = ((dragState.offset - openPos) / (dismissedPos - openPos)).coerceIn(0f, 1f)
+            
+            if (dismissedPos > partialPos) {
+                val progress = ((dragState.offset - partialPos) / (dismissedPos - partialPos)).coerceIn(0f, 1f)
                 onProgressChanged(progress)
             }
         }
+    }
+
+    val statusBarHeightPx = remember(density) {
+        val id = context.resources.getIdentifier("status_bar_height", "dimen", "android")
+        if (id > 0) context.resources.getDimensionPixelSize(id).toFloat() else 0f
     }
 
     Box(
@@ -117,21 +123,20 @@ fun EssentialHubContent(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(0.75f)
+                    .fillMaxHeight()
                     .onSizeChanged { size ->
                         val anchors = DraggableAnchors {
-                            DragState.Open at 0f
+                            DragState.Expanded at statusBarHeightPx
+                            DragState.Partial at size.height * 0.25f
                             DragState.Dismissed at size.height.toFloat()
                         }
                         dragState.updateAnchors(anchors)
                     }
                     .offset {
+                        val offset = if (dragState.offset.isNaN()) 0f else dragState.offset
                         IntOffset(
                             x = 0,
-                            y = dragState
-                                .offset
-                                .roundToInt()
-                                .coerceAtLeast(0)
+                            y = offset.roundToInt().coerceAtLeast(0)
                         )
                     }
                     .anchoredDraggable(dragState, Orientation.Vertical)
