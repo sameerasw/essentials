@@ -150,6 +150,21 @@ object FeatureRegistry {
             override fun isEnabled(viewModel: MainViewModel) = true
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
         },
+
+        object : Feature(
+            id = "Text and animations",
+            title = R.string.feat_text_animations_title,
+            iconRes = R.drawable.rounded_mobile_text_24,
+            category = R.string.cat_interface,
+            description = R.string.feat_text_animations_desc,
+            aboutDescription = R.string.about_desc_text_animations,
+            permissionKeys = listOf("WRITE_SETTINGS", "WRITE_SECURE_SETTINGS"),
+            showToggle = false,
+            parentFeatureId = "Display"
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = true
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+        },
         object : Feature(
             id = "Watch",
             title = R.string.feat_watch_title,

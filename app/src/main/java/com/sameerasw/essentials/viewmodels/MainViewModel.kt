@@ -8,6 +8,10 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.database.ContentObserver
+import android.net.Uri
+import android.os.Handler
+import android.os.Looper
 import android.provider.CalendarContract
 import android.provider.Settings
 import android.view.inputmethod.InputMethodManager
@@ -40,6 +44,7 @@ import com.sameerasw.essentials.services.receivers.SecurityDeviceAdminReceiver
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.PermissionUtils
+import com.sameerasw.essentials.utils.RootUtils
 import com.sameerasw.essentials.utils.ShizukuUtils
 import com.sameerasw.essentials.utils.UpdateNotificationHelper
 import kotlinx.coroutines.Dispatchers
@@ -188,6 +193,13 @@ class MainViewModel : ViewModel() {
     val batteryWidgetMaxDevices = mutableIntStateOf(8)
     val isBatteryWidgetBackgroundEnabled = mutableStateOf(true)
     val isAmbientMusicGlanceDockedModeEnabled = mutableStateOf(false)
+    val fontScale = mutableFloatStateOf(1.0f)
+    val fontWeight = mutableIntStateOf(0)
+    val animatorDurationScale = mutableFloatStateOf(1.0f)
+    val transitionAnimationScale = mutableFloatStateOf(1.0f)
+    val windowAnimationScale = mutableFloatStateOf(1.0f)
+    val smallestWidth = mutableIntStateOf(360)
+    val hasShizukuPermission = mutableStateOf(false)
 
     private var lastUpdateCheckTime: Long = 0
     lateinit var settingsRepository: SettingsRepository
@@ -195,6 +207,33 @@ class MainViewModel : ViewModel() {
     private var appContext: Context? = null
 
     val gitHubToken = mutableStateOf<String?>(null)
+
+    private val contentObserver = object : ContentObserver(Handler(Looper.getMainLooper())) {
+        override fun onChange(selfChange: Boolean, uri: Uri?) {
+            uri?.let {
+                when (it) {
+                    Settings.System.getUriFor(Settings.System.FONT_SCALE) -> {
+                        fontScale.floatValue = settingsRepository.getFontScale()
+                    }
+                    Settings.Secure.getUriFor("font_weight_adjustment") -> {
+                        fontWeight.intValue = settingsRepository.getFontWeight()
+                    }
+                    Settings.Global.getUriFor(Settings.Global.ANIMATOR_DURATION_SCALE) -> {
+                        animatorDurationScale.floatValue = settingsRepository.getAnimationScale(Settings.Global.ANIMATOR_DURATION_SCALE)
+                    }
+                    Settings.Global.getUriFor(Settings.Global.TRANSITION_ANIMATION_SCALE) -> {
+                        transitionAnimationScale.floatValue = settingsRepository.getAnimationScale(Settings.Global.TRANSITION_ANIMATION_SCALE)
+                    }
+                    Settings.Global.getUriFor(Settings.Global.WINDOW_ANIMATION_SCALE) -> {
+                        windowAnimationScale.floatValue = settingsRepository.getAnimationScale(Settings.Global.WINDOW_ANIMATION_SCALE)
+                    }
+                    Settings.Secure.getUriFor("display_density_forced") -> {
+                        smallestWidth.intValue = settingsRepository.getSmallestWidth()
+                    }
+                }
+            }
+        }
+    }
 
     private val preferenceChangeListener =
         object : android.content.SharedPreferences.OnSharedPreferenceChangeListener {
@@ -348,6 +387,13 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_TRACKED_REPOS -> {
                         appContext?.let { refreshTrackedUpdates(it) }
                     }
+
+                    SettingsRepository.KEY_FONT_SCALE -> fontScale.floatValue = settingsRepository.getFontScale()
+                    SettingsRepository.KEY_FONT_WEIGHT -> fontWeight.intValue = settingsRepository.getFontWeight()
+                    SettingsRepository.KEY_ANIMATOR_DURATION_SCALE -> animatorDurationScale.floatValue = settingsRepository.getAnimationScale(android.provider.Settings.Global.ANIMATOR_DURATION_SCALE)
+                    SettingsRepository.KEY_TRANSITION_ANIMATION_SCALE -> transitionAnimationScale.floatValue = settingsRepository.getAnimationScale(android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE)
+                    SettingsRepository.KEY_WINDOW_ANIMATION_SCALE -> windowAnimationScale.floatValue = settingsRepository.getAnimationScale(android.provider.Settings.Global.WINDOW_ANIMATION_SCALE)
+                    SettingsRepository.KEY_SMALLEST_WIDTH -> smallestWidth.intValue = settingsRepository.getSmallestWidth()
                 }
             }
         }
@@ -386,6 +432,37 @@ class MainViewModel : ViewModel() {
 
         isBluetoothPermissionGranted.value = PermissionUtils.hasBluetoothPermission(context)
 
+        context.contentResolver.registerContentObserver(
+            Settings.System.getUriFor(Settings.System.FONT_SCALE),
+            false,
+            contentObserver
+        )
+        context.contentResolver.registerContentObserver(
+            Settings.Secure.getUriFor("font_weight_adjustment"),
+            false,
+            contentObserver
+        )
+        context.contentResolver.registerContentObserver(
+            Settings.Global.getUriFor(Settings.Global.ANIMATOR_DURATION_SCALE),
+            false,
+            contentObserver
+        )
+        context.contentResolver.registerContentObserver(
+            Settings.Global.getUriFor(Settings.Global.TRANSITION_ANIMATION_SCALE),
+            false,
+            contentObserver
+        )
+        context.contentResolver.registerContentObserver(
+            Settings.Global.getUriFor(Settings.Global.WINDOW_ANIMATION_SCALE),
+            false,
+            contentObserver
+        )
+        context.contentResolver.registerContentObserver(
+            Settings.Secure.getUriFor("display_density_forced"),
+            false,
+            contentObserver
+        )
+
         settingsRepository.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
 
         viewModelScope.launch {
@@ -397,6 +474,15 @@ class MainViewModel : ViewModel() {
         isWidgetEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_WIDGET_ENABLED)
         isStatusBarIconControlEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_STATUS_BAR_ICON_CONTROL_ENABLED)
+        
+        fontScale.floatValue = settingsRepository.getFontScale()
+        fontWeight.intValue = settingsRepository.getFontWeight()
+        animatorDurationScale.floatValue = settingsRepository.getAnimationScale(android.provider.Settings.Global.ANIMATOR_DURATION_SCALE)
+        transitionAnimationScale.floatValue = settingsRepository.getAnimationScale(android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE)
+        windowAnimationScale.floatValue = settingsRepository.getAnimationScale(android.provider.Settings.Global.WINDOW_ANIMATION_SCALE)
+        smallestWidth.intValue = settingsRepository.getSmallestWidth()
+        hasShizukuPermission.value = ShizukuUtils.hasPermission() || RootUtils.isRootAvailable()
+
         isMapsPowerSavingEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_MAPS_POWER_SAVING_ENABLED)
         isNotificationLightingEnabled.value =
@@ -1006,6 +1092,62 @@ class MainViewModel : ViewModel() {
     fun setAmbientMusicGlanceEnabled(enabled: Boolean) {
         isAmbientMusicGlanceEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_ENABLED, enabled)
+    }
+
+    fun updateFontScale(scale: Float) {
+        fontScale.floatValue = scale
+    }
+
+    fun saveFontScale() {
+        settingsRepository.setFontScale(fontScale.floatValue)
+    }
+
+    fun setFontScale(scale: Float) {
+        fontScale.floatValue = scale
+        settingsRepository.setFontScale(scale)
+    }
+
+    fun setFontWeight(weight: Int) {
+        fontWeight.intValue = weight
+        settingsRepository.setFontWeight(weight)
+    }
+
+    fun setAnimationScale(key: String, scale: Float) {
+        when (key) {
+            android.provider.Settings.Global.ANIMATOR_DURATION_SCALE -> animatorDurationScale.floatValue = scale
+            android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE -> transitionAnimationScale.floatValue = scale
+            android.provider.Settings.Global.WINDOW_ANIMATION_SCALE -> windowAnimationScale.floatValue = scale
+        }
+        settingsRepository.setAnimationScale(key, scale)
+    }
+
+    fun resetTextToDefault() {
+        setFontScale(1.0f)
+        setFontWeight(0)
+    }
+
+    fun resetAnimationsToDefault() {
+        setAnimationScale(android.provider.Settings.Global.ANIMATOR_DURATION_SCALE, 1.0f)
+        setAnimationScale(android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE, 1.0f)
+        setAnimationScale(android.provider.Settings.Global.WINDOW_ANIMATION_SCALE, 1.0f)
+    }
+
+    fun updateSmallestWidth(width: Int) {
+        smallestWidth.intValue = width
+    }
+
+    fun saveSmallestWidth() {
+        settingsRepository.setSmallestWidth(smallestWidth.intValue)
+    }
+
+    fun setSmallestWidth(width: Int) {
+        smallestWidth.intValue = width
+        settingsRepository.setSmallestWidth(width)
+    }
+
+    fun resetScaleToDefault() {
+        settingsRepository.resetSmallestWidth()
+        smallestWidth.intValue = settingsRepository.getSmallestWidth()
     }
 
     fun setAmbientMusicGlanceDockedModeEnabled(enabled: Boolean) {
@@ -1936,6 +2078,7 @@ class MainViewModel : ViewModel() {
     fun importConfigs(context: Context, inputStream: java.io.InputStream): Boolean {
         val success = settingsRepository.importConfigs(inputStream)
         if (success) {
+            settingsRepository.syncSystemSettingsWithSaved()
             check(context)
         }
         return success
@@ -1945,5 +2088,13 @@ class MainViewModel : ViewModel() {
     fun generateBugReport(context: Context): String {
         val settingsJson = settingsRepository.getAllConfigsAsJsonString()
         return com.sameerasw.essentials.utils.LogManager.generateReport(context, settingsJson)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        appContext?.contentResolver?.unregisterContentObserver(contentObserver)
+        if (::settingsRepository.isInitialized) {
+            settingsRepository.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener)
+        }
     }
 }
