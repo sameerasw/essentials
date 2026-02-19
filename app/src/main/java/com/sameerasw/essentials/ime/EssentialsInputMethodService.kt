@@ -449,9 +449,12 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                             val ic = currentInputConnection
                             undoRedoManager.undo(ic)
                         },
-                        onKeyPress = { keyCode ->
-                            handleKeyPress(keyCode)
-                        },
+                         onKeyPress = { keyCode ->
+                             handleKeyPress(keyCode)
+                         },
+                         canDelete = {
+                             currentInputConnection?.getTextBeforeCursor(1, 0)?.isNotEmpty() == true
+                         },
                         onCursorMove = { keyCode, isSelection, isWordJump ->
                             val ic = currentInputConnection
                             if (ic != null) {

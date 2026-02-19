@@ -146,6 +146,8 @@ fun KeyButton(
     shape: androidx.compose.ui.graphics.Shape,
     containerColor: androidx.compose.ui.graphics.Color,
     contentColor: androidx.compose.ui.graphics.Color,
+    onRepeat: (() -> Unit)? = null,
+    canRepeat: (() -> Boolean)? = null,
     content: @Composable () -> Unit
 ) {
     val isPressed by interactionSource.collectIsPressedAsState()
@@ -173,10 +175,35 @@ fun KeyButton(
                         val press = PressInteraction.Press(offset)
                         scope.launch { interactionSource.emit(press) }
                         onPress()
-                        if (tryAwaitRelease()) {
-                            scope.launch { interactionSource.emit(PressInteraction.Release(press)) }
-                        } else {
-                            scope.launch { interactionSource.emit(PressInteraction.Cancel(press)) }
+                        
+                        var isReleased = false
+                        val repeatJob = if (onRepeat != null) {
+                            scope.launch {
+                                delay(500) 
+                                while (!isReleased) {
+                                    if (canRepeat?.invoke() != false) {
+                                        onRepeat()
+                                        delay(50)
+                                    } else {
+                                        break
+                                    }
+                                }
+                            }
+                        } else null
+
+                        try {
+                            if (tryAwaitRelease()) {
+                                isReleased = true
+                                repeatJob?.cancel()
+                                scope.launch { interactionSource.emit(PressInteraction.Release(press)) }
+                            } else {
+                                isReleased = true
+                                repeatJob?.cancel()
+                                scope.launch { interactionSource.emit(PressInteraction.Cancel(press)) }
+                            }
+                        } catch (e: Exception) {
+                            isReleased = true
+                            repeatJob?.cancel()
                         }
                     },
                     onLongPress = {
@@ -268,7 +295,8 @@ fun KeyboardInputView(
     onCursorMove: (Int, Boolean, Boolean) -> Unit = { keyCode, _, _ -> onKeyPress(keyCode) },
     onCursorDrag: (Boolean) -> Unit = {},
     isLongPressSymbolsEnabled: Boolean = false,
-    onOpened: Int = 0
+    onOpened: Int = 0,
+    canDelete: () -> Boolean = { true }
 ) {
     val view = LocalView.current
     val viewConfiguration = LocalViewConfiguration.current
@@ -618,6 +646,15 @@ fun KeyboardInputView(
                                         } else if (desc == "Expand") {
                                             isSuggestionsCollapsed = false
                                         }
+                                    },
+                                    onRepeat = {
+                                        if (desc == "Backspace") {
+                                            onKeyPress(android.view.KeyEvent.KEYCODE_DEL)
+                                            performLightHaptic()
+                                        }
+                                    },
+                                    canRepeat = {
+                                        if (desc == "Backspace") canDelete() else true
                                     },
                                     onPress = { performLightHaptic() },
                                     interactionSource = fnInteraction,
@@ -1022,6 +1059,7 @@ fun KeyboardInputView(
                                     label = "cornerRadius"
                                 )
                                 var delAccumulatedDx by remember { mutableStateOf(0f) }
+                                var isDraggingDel by remember { mutableStateOf(false) }
                                 val delSweepThreshold = 25f
 
                                 val animatedColorDel by animateColorAsState(
@@ -1041,7 +1079,12 @@ fun KeyboardInputView(
                                         .clip(RoundedCornerShape(animatedRadiusDel))
                                         .pointerInput(Unit) {
                                             detectHorizontalDragGestures(
-                                                onDragStart = { delAccumulatedDx = 0f },
+                                                onDragStart = { 
+                                                    delAccumulatedDx = 0f 
+                                                    isDraggingDel = true
+                                                },
+                                                onDragEnd = { isDraggingDel = false },
+                                                onDragCancel = { isDraggingDel = false },
                                                 onHorizontalDrag = { change, dragAmount ->
                                                     change.consume()
                                                     delAccumulatedDx += dragAmount
@@ -1064,19 +1107,45 @@ fun KeyboardInputView(
                                                     val press = PressInteraction.Press(offset)
                                                     performLightHaptic()
                                                     scope.launch { backspaceInteraction.emit(press) }
-                                                    if (tryAwaitRelease()) {
-                                                        scope.launch {
-                                                            backspaceInteraction.emit(
-                                                                PressInteraction.Release(press)
-                                                            )
+                                                    
+                                                    var isReleased = false
+                                                     val repeatJob = scope.launch {
+                                                         delay(500) 
+                                                         while (!isReleased && !isDraggingDel) {
+                                                             if (canDelete()) {
+                                                                 handleKeyPress(KeyEvent.KEYCODE_DEL)
+                                                                 performLightHaptic()
+                                                                 delay(50)
+                                                             } else {
+                                                                 break
+                                                             }
+                                                         }
+                                                     }
+
+                                                    try {
+                                                        if (tryAwaitRelease()) {
+                                                            isReleased = true
+                                                            repeatJob.cancel()
+                                                            scope.launch {
+                                                                backspaceInteraction.emit(
+                                                                    PressInteraction.Release(press)
+                                                                )
+                                                            }
+                                                            if (!isDraggingDel) {
+                                                                handleKeyPress(KeyEvent.KEYCODE_DEL)
+                                                            }
+                                                        } else {
+                                                            isReleased = true
+                                                            repeatJob.cancel()
+                                                            scope.launch {
+                                                                backspaceInteraction.emit(
+                                                                    PressInteraction.Cancel(press)
+                                                                )
+                                                            }
                                                         }
-                                                        handleKeyPress(KeyEvent.KEYCODE_DEL)
-                                                    } else {
-                                                        scope.launch {
-                                                            backspaceInteraction.emit(
-                                                                PressInteraction.Cancel(press)
-                                                            )
-                                                        }
+                                                    } catch (e: Exception) {
+                                                        isReleased = true
+                                                        repeatJob.cancel()
                                                     }
                                                 }
                                             )
