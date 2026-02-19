@@ -54,6 +54,7 @@
     <string name="action_take_screenshot">Take screenshot</string>
     <string name="action_cycle_sound_modes">Cycle sound modes</string>
     <string name="action_like_song">Like current song</string>
+    <string name="action_essential_hub">Essential Hub</string>
     <string name="like_song_settings_title">Like song settings</string>
     <string name="like_song_settings_desc">This feature requires notification access to detect the currently playing media and trigger the like action. Please enable it below.</string>
     <string name="like_song_toast_enabled">Show toast message</string>
@@ -369,6 +370,8 @@
     <string name="feat_watermark_desc">Add EXIF data and logos to photos</string>
     <string name="feat_calendar_sync_title">Calendar Sync</string>
     <string name="feat_calendar_sync_desc">Sync events to your watch</string>
+    <string name="feat_essential_hub_title">Essential Hub</string>
+    <string name="feat_essential_hub_desc">Quick access anywhere</string>
     <string name="watermark_style_overlay">Overlay</string>
     <string name="watermark_style_frame">Frame</string>
     <string name="watermark_show_brand">Device Brand</string>

@@ -43,6 +43,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
     private lateinit var appFlowHandler: AppFlowHandler
     private lateinit var securityHandler: SecurityHandler
     private lateinit var ambientGlanceHandler: AmbientGlanceHandler
+    private lateinit var essentialHubHandler: com.sameerasw.essentials.services.handlers.EssentialHubHandler
 
     private var screenReceiver: BroadcastReceiver? = null
 
@@ -66,6 +67,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         appFlowHandler = AppFlowHandler(this)
         securityHandler = SecurityHandler(this)
         ambientGlanceHandler = AmbientGlanceHandler(this)
+        essentialHubHandler = com.sameerasw.essentials.services.handlers.EssentialHubHandler(this)
 
         flashlightHandler.register()
 
@@ -109,6 +111,8 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
             addAction("SHOW_AMBIENT_GLANCE")
         }
         registerReceiver(screenReceiver, filter, RECEIVER_EXPORTED)
+
+        buttonRemapHandler.setEssentialHubHandler(essentialHubHandler)
 
         // Proximity
         proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)
@@ -155,6 +159,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         securityHandler.restoreAnimationScale()
         notificationLightingHandler.removeOverlay()
         ambientGlanceHandler.removeOverlay()
+        essentialHubHandler.hideHub()
         stopInputEventListener()
         serviceScope.cancel()
         super.onDestroy()

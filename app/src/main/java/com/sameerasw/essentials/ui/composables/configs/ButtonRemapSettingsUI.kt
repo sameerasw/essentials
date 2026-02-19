@@ -429,6 +429,12 @@ fun ButtonRemapSettingsUI(
                             iconRes = R.drawable.rounded_screenshot_region_24,
                         )
                     }
+                    RemapActionItem(
+                        title = stringResource(R.string.action_essential_hub),
+                        isSelected = currentAction == "Essential Hub",
+                        onClick = { onActionSelected("Essential Hub") },
+                        iconRes = R.drawable.rounded_info_24, // Using rounded_info_24 for now
+                    )
                 }
             }
         }

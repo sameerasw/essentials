@@ -202,6 +202,20 @@ object FeatureRegistry {
         },
 
         object : Feature(
+            id = "Essential Hub",
+            title = R.string.feat_essential_hub_title,
+            iconRes = R.drawable.rounded_info_24,
+            category = R.string.cat_interface,
+            description = R.string.feat_essential_hub_desc,
+            aboutDescription = R.string.feat_essential_hub_desc,
+            permissionKeys = listOf("ACCESSIBILITY"),
+            showToggle = false
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = true
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+        },
+
+        object : Feature(
             id = "Statusbar icons",
             title = R.string.feat_statusbar_icons_title,
             iconRes = R.drawable.rounded_signal_cellular_alt_24, // Use requested icon

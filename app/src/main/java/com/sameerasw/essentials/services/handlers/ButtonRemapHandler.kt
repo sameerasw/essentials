@@ -20,6 +20,11 @@ class ButtonRemapHandler(
     private val service: AccessibilityService,
     private val flashlightHandler: FlashlightHandler
 ) {
+    private var essentialHubHandler: com.sameerasw.essentials.services.handlers.EssentialHubHandler? = null
+
+    fun setEssentialHubHandler(handler: com.sameerasw.essentials.services.handlers.EssentialHubHandler) {
+        this.essentialHubHandler = handler
+    }
     private val soundModeHandler = SoundModeHandler(service)
     private val handler = Handler(Looper.getMainLooper())
     private var isLongPressTriggered: Boolean = false
@@ -202,6 +207,7 @@ class ButtonRemapHandler(
                     service.packageName
                 )
             )
+            "Essential Hub" -> essentialHubHandler?.showHub()
         }
     }
 
