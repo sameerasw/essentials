@@ -18,6 +18,7 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -44,6 +45,8 @@ fun EssentialHubContent(
     onProgressChanged: (Float) -> Unit = {}
 ) {
     var currentTime by remember { mutableStateOf(Calendar.getInstance().time) }
+    var clockWidth by remember { mutableFloatStateOf(0f) }
+    var clockHeight by remember { mutableFloatStateOf(0f) }
 
     LaunchedEffect(Unit) {
         while (true) {
@@ -93,16 +96,18 @@ fun EssentialHubContent(
         if (id > 0) context.resources.getDimensionPixelSize(id).toFloat() else 0f
     }
 
-    Box(
+    BoxWithConstraints(
         modifier = modifier
             .fillMaxSize()
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
                 onClick = onDismiss
-            ),
-        contentAlignment = Alignment.BottomCenter
+            )
     ) {
+        val screenHeight = constraints.maxHeight.toFloat()
+        val screenWidth = constraints.maxWidth.toFloat()
+
         AnimatedVisibility(
             visible = isVisible,
             enter = slideInVertically(
@@ -120,90 +125,137 @@ fun EssentialHubContent(
                 )
             ) + fadeOut(animationSpec = tween(300))
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-                    .onSizeChanged { size ->
-                        val anchors = DraggableAnchors {
-                            DragState.Expanded at statusBarHeightPx
-                            DragState.Partial at size.height * 0.25f
-                            DragState.Dismissed at size.height.toFloat()
+            val offset = if (dragState.offset.isNaN()) screenHeight else dragState.offset
+            val anchors = dragState.anchors
+            val partialPos = if (anchors.size > 0) anchors.positionOf(DragState.Partial) else screenHeight * 0.25f
+            val expandedPos = if (anchors.size > 0) anchors.positionOf(DragState.Expanded) else statusBarHeightPx
+            
+            val eProgress = if (partialPos != expandedPos) {
+                ((partialPos - offset) / (partialPos - expandedPos)).coerceIn(0f, 1f)
+            } else 0f
+
+            Box(modifier = Modifier.fillMaxSize()) {
+                // Interactive Clock Layer
+                Box(
+                    modifier = Modifier
+                        .wrapContentSize(Alignment.TopStart)
+                        .onSizeChanged { size ->
+                            clockWidth = size.width.toFloat()
+                            clockHeight = size.height.toFloat()
                         }
-                        dragState.updateAnchors(anchors)
-                    }
-                    .offset {
-                        val offset = if (dragState.offset.isNaN()) 0f else dragState.offset
-                        IntOffset(
-                            x = 0,
-                            y = offset.roundToInt().coerceAtLeast(0)
-                        )
-                    }
-                    .anchoredDraggable(dragState, Orientation.Vertical)
-                    .background(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(
-                                MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f),
-                                MaterialTheme.colorScheme.surfaceContainerHigh
-                            )
-                        ),
-                        shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
-                    )
-                    .windowInsetsPadding(WindowInsets.navigationBars)
-                    .padding(24.dp)
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null,
-                        onClick = {} 
-                    ),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                // Drag handle
-                Box(
-                    modifier = Modifier
-                        .width(36.dp)
-                        .height(4.dp)
-                        .background(
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
-                            shape = RoundedCornerShape(2.dp)
-                        )
-                )
+                        .graphicsLayer {
+                            val targetScale = 24f / 110f
+                            val currentScale = 1f - (eProgress * (1f - targetScale))
+                            scaleX = currentScale
+                            scaleY = currentScale
+                            
+                            val paddingPx = with(density) { 16.dp.toPx() }
+                            val handlePaddingPx = with(density) { 32.dp.toPx() }
+                            
+                            transformOrigin = androidx.compose.ui.graphics.TransformOrigin(0.1f, 0f)
 
-                Spacer(modifier = Modifier.height(48.dp))
+                            val startX = (screenWidth - clockWidth) / 2f
+                            val endX = paddingPx
+                            
+                           val startY = offset - handlePaddingPx - clockHeight
+                            val currentClockHeight = if (clockHeight > 0) clockHeight * currentScale else 0f
+                            val targetClockHeight = if (clockHeight > 0) clockHeight * targetScale else 0f
+                            val endY = (statusBarHeightPx - targetClockHeight) / 2f
 
-                // Date
-                Text(
-                    text = dateFormat.format(currentTime),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Light,
-                    fontFamily = GoogleSansFlex,
-                    letterSpacing = 2.sp
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Time
-                Text(
-                    text = timeFormat.format(currentTime),
-                    style = MaterialTheme.typography.displayLarge.copy(
-                        fontSize = 110.sp,
-                        fontWeight = FontWeight.Medium,
-                        fontFamily = GoogleSansFlex,
-                        letterSpacing = (-4).sp
-                    ),
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth(),
-                    contentAlignment = Alignment.Center
+                            translationX = lerp(startX, endX, eProgress)
+                            translationY = lerp(startY, endY, eProgress)
+                        }
                 ) {
-                    // TBD
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        // Date (Fades out)
+                        Text(
+                            text = dateFormat.format(currentTime),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.Light,
+                            fontFamily = GoogleSansFlex,
+                            letterSpacing = 2.sp,
+                            modifier = Modifier.graphicsLayer {
+                                alpha = (1f - eProgress).coerceIn(0f, 1f)
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        // Time
+                        Text(
+                            text = timeFormat.format(currentTime),
+                            style = MaterialTheme.typography.displayLarge.copy(
+                                fontSize = 110.sp,
+                                fontWeight = FontWeight.Medium,
+                                fontFamily = GoogleSansFlex,
+                                letterSpacing = (-4).sp
+                            ),
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+
+                // Sheet Layer
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .onSizeChanged { size ->
+                            val currentAnchors = DraggableAnchors {
+                                DragState.Expanded at statusBarHeightPx
+                                DragState.Partial at size.height * 0.25f
+                                DragState.Dismissed at size.height.toFloat()
+                            }
+                            dragState.updateAnchors(currentAnchors)
+                        }
+                        .offset {
+                            IntOffset(
+                                x = 0,
+                                y = offset.roundToInt().coerceAtLeast(0)
+                            )
+                        }
+                        .anchoredDraggable(dragState, Orientation.Vertical)
+                        .background(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(
+                                    MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f),
+                                    MaterialTheme.colorScheme.surfaceContainerHigh
+                                )
+                            ),
+                            shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
+                        )
+                        .windowInsetsPadding(WindowInsets.navigationBars)
+                        .padding(horizontal = 24.dp, vertical = 12.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // Drag handle
+                    Box(
+                        modifier = Modifier
+                            .width(36.dp)
+                            .height(4.dp)
+                            .background(
+                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
+                                shape = RoundedCornerShape(2.dp)
+                            )
+                    )
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        // TBD
+                    }
                 }
             }
         }
     }
+}
+
+private fun lerp(start: Float, stop: Float, fraction: Float): Float {
+    return (1 - fraction) * start + fraction * stop
 }
