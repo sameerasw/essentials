@@ -19,6 +19,13 @@ class EssentialsApp : Application() {
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
+        
+        try {
+            resources?.configuration
+        } catch (e: Exception) {
+            
+        }
+
         ShizukuUtils.initialize()
         com.sameerasw.essentials.utils.LogManager.init(this)
 

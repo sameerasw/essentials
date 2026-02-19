@@ -25,14 +25,16 @@ class BatteryNotificationService : Service() {
     private val NOTIF_ID = 8822
     private val CHANNEL_ID = "battery_notification_channel"
 
-    private val preferenceChangeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-        if (key == SettingsRepository.KEY_AIRSYNC_MAC_CONNECTED ||
-            key == SettingsRepository.KEY_MAC_BATTERY_LEVEL ||
-            key == SettingsRepository.KEY_MAC_BATTERY_IS_CHARGING ||
-            key == SettingsRepository.KEY_BLUETOOTH_DEVICES_BATTERY ||
-            key == SettingsRepository.KEY_SHOW_BLUETOOTH_DEVICES
-        ) {
-            updateNotification()
+    private val preferenceChangeListener = object : SharedPreferences.OnSharedPreferenceChangeListener {
+        override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+            if (key == SettingsRepository.KEY_AIRSYNC_MAC_CONNECTED ||
+                key == SettingsRepository.KEY_MAC_BATTERY_LEVEL ||
+                key == SettingsRepository.KEY_MAC_BATTERY_IS_CHARGING ||
+                key == SettingsRepository.KEY_BLUETOOTH_DEVICES_BATTERY ||
+                key == SettingsRepository.KEY_SHOW_BLUETOOTH_DEVICES
+            ) {
+                updateNotification()
+            }
         }
     }
 

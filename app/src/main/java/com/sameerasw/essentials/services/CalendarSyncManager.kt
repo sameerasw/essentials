@@ -1,6 +1,7 @@
 package com.sameerasw.essentials.services
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.database.ContentObserver
 import android.os.Handler
 import android.os.Looper
@@ -32,20 +33,22 @@ object CalendarSyncManager {
         }
 
         // Listen for preference changes to start/stop sync
-        repo.registerOnSharedPreferenceChangeListener { _, key ->
-            if (key == SettingsRepository.KEY_CALENDAR_SYNC_ENABLED) {
-                val enabled = repo.getBoolean(key, false)
-                if (enabled != isSyncEnabled) {
-                    isSyncEnabled = enabled
-                    if (isSyncEnabled) {
-                        startSync(context)
-                        forceSync(context)
-                    } else {
-                        stopSync(context)
+        repo.registerOnSharedPreferenceChangeListener(object : SharedPreferences.OnSharedPreferenceChangeListener {
+            override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+                if (key == SettingsRepository.KEY_CALENDAR_SYNC_ENABLED) {
+                    val enabled = repo.getBoolean(key, false)
+                    if (enabled != isSyncEnabled) {
+                        isSyncEnabled = enabled
+                        if (isSyncEnabled) {
+                            startSync(context)
+                            forceSync(context)
+                        } else {
+                            stopSync(context)
+                        }
                     }
                 }
             }
-        }
+        })
     }
 
     private fun startSync(context: Context) {
