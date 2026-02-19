@@ -58,6 +58,7 @@ Essential tools, mods and workarounds for Pixels and other Androids
 - Notification lighting - Edge lighting and more alerts for notifications
 - Flashlight pulse - Pulse flashlight for notifications
 - Snooze system notifications
+- Battery notification for all your devices
 
 #### Input and Actions
 - Link actions - Intercept and share links from default apps
@@ -72,6 +73,7 @@ Essential tools, mods and workarounds for Pixels and other Androids
 - Customize statusbar icons
 - Caffeinate to keep screen awake
 - Dynamic night light - App based night light
+- Scale and animation adjustments
 
 #### Watch
 - Sync all calendars to your WearOS watch periodically
@@ -81,6 +83,7 @@ Essential tools, mods and workarounds for Pixels and other Androids
 - Are we there yet? - Get reminded when your stop is closeby
 - Watermark - Add EXIF data and logos to captured photos
 - Flashlight enhancements - With brightness controls and global fade-in-out effect
+- Private DNS - Pick your custom DNS or cycle through them easily
 
 #### DIY
 - Automate things yourself and make custom triggers
@@ -153,6 +156,10 @@ Help us bring Essentials to more people around the world! If you're fluent in an
 
 # Contributing
 
+<a href="https://github.com/sameerasw/essentials/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=sameerasw/essentials" />
+</a>
+
 We welcome contributions from the community! Whether you're fixing a bug, adding a new feature, or improving documentation, your help is appreciated.
 
 Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
@@ -173,6 +180,6 @@ Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of co
 ---
 
 <p align="center">
-  Last updated: 2026-02-14
+  Last updated: 2026-02-19
 </p>
 
