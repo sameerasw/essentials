@@ -108,7 +108,7 @@ class EssentialHubHandler(private val service: AccessibilityService) {
 
     private fun updateBackgroundEffects(progress: Float) {
         val invertedProgress = (1f - progress).coerceIn(0f, 1f)
-        val dimAmount = (invertedProgress * 0.5f).coerceAtLeast(0.01f) // Keep tiny dim for "behind" pass
+        val dimAmount = 0.01f
         val blurRadius = (invertedProgress * 50).toInt()
 
         val updatedParams = overlayView?.layoutParams as? WindowManager.LayoutParams

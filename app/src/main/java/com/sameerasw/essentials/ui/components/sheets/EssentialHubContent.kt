@@ -135,6 +135,27 @@ fun EssentialHubContent(
             } else 0f
 
             Box(modifier = Modifier.fillMaxSize()) {
+                val dismissalProgress = remember(dragState.offset) {
+                    if (!dragState.offset.isNaN()) {
+                        val anchors = dragState.anchors
+                        val partialPos = try { anchors.positionOf(DragState.Partial) } catch (e: Exception) { 0f }
+                        val dismissedPos = try { anchors.positionOf(DragState.Dismissed) } catch (e: Exception) { 0f }
+                        if (dismissedPos > partialPos) {
+                            ((dragState.offset - partialPos) / (dismissedPos - partialPos)).coerceIn(0f, 1f)
+                        } else 0f
+                    } else 0f
+                }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            MaterialTheme.colorScheme.surface.copy(
+                                alpha = (0.4f * (1f - dismissalProgress)).coerceIn(0f, 1f)
+                            )
+                        )
+                )
+
                 // Interactive Clock Layer
                 Box(
                     modifier = Modifier
@@ -219,7 +240,7 @@ fun EssentialHubContent(
                         .background(
                             brush = Brush.verticalGradient(
                                 colors = listOf(
-                                    MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f),
+                                    MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f),
                                     MaterialTheme.colorScheme.surfaceContainerHigh
                                 )
                             ),
