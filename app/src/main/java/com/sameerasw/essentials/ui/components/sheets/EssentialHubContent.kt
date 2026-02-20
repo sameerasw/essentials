@@ -26,7 +26,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.Canvas
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.sameerasw.essentials.R
+import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.theme.GoogleSansFlex
+import com.sameerasw.essentials.viewmodels.MainViewModel
+import com.sameerasw.essentials.utils.BluetoothBatteryUtils
+import android.os.BatteryManager
+import android.content.Context
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.*
@@ -267,9 +279,11 @@ fun EssentialHubContent(
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxWidth(),
-                        contentAlignment = Alignment.Center
+                        contentAlignment = Alignment.TopCenter
                     ) {
-                        // TBD
+                        Column {
+                            BatteryWidgetCard()
+                        }
                     }
                 }
             }
@@ -279,4 +293,181 @@ fun EssentialHubContent(
 
 private fun lerp(start: Float, stop: Float, fraction: Float): Float {
     return (1 - fraction) * start + fraction * stop
+}
+
+@Composable
+fun BatteryWidgetCard(
+    viewModel: MainViewModel = viewModel()
+) {
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        viewModel.check(context)
+    }
+
+    val batteryManager = remember { context.getSystemService(Context.BATTERY_SERVICE) as BatteryManager }
+    
+    var androidLevel by remember { mutableIntStateOf(batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)) }
+    var isAndroidCharging by remember { 
+        mutableStateOf(batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_STATUS) == BatteryManager.BATTERY_STATUS_CHARGING) 
+    }
+    var bluetoothDevices by remember { mutableStateOf(BluetoothBatteryUtils.getPairedDevicesBattery(context)) }
+
+    // Refresh every minute
+    LaunchedEffect(Unit) {
+        while (true) {
+            androidLevel = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
+            isAndroidCharging = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_STATUS) == BatteryManager.BATTERY_STATUS_CHARGING
+            bluetoothDevices = BluetoothBatteryUtils.getPairedDevicesBattery(context)
+            delay(60000)
+        }
+    }
+    
+    val items = remember(androidLevel, isAndroidCharging, viewModel.macBatteryLevel.intValue, viewModel.isMacConnected.value, bluetoothDevices) {
+        mutableListOf<BatteryData>().apply {
+            // Android
+            add(BatteryData(context.getString(R.string.icon_battery), androidLevel, R.drawable.rounded_mobile_24, isAndroidCharging))
+            
+            // Mac
+            if (viewModel.isMacConnected.value && viewModel.macBatteryLevel.intValue != -1) {
+                add(BatteryData(context.getString(R.string.app_airsync), viewModel.macBatteryLevel.intValue, R.drawable.rounded_laptop_mac_24, viewModel.isMacBatteryCharging.value))
+            } else if (viewModel.macBatteryLevel.intValue != -1) {
+                if (viewModel.isAirSyncConnectionEnabled.value) {
+                    add(BatteryData(context.getString(R.string.app_airsync), viewModel.macBatteryLevel.intValue, R.drawable.rounded_laptop_mac_24, viewModel.isMacBatteryCharging.value))
+                }
+            }
+            
+            // Bluetooth
+            bluetoothDevices.take(viewModel.batteryWidgetMaxDevices.intValue - size).forEach { device ->
+                val icon = when {
+                    device.name.contains("watch", true) -> R.drawable.rounded_watch_24
+                    device.name.contains("bud", true) || device.name.contains("pod", true) || 
+                    device.name.contains("head", true) -> R.drawable.rounded_headphones_24
+                    else -> R.drawable.rounded_bluetooth_24
+                }
+                add(BatteryData(device.name.split(" ").firstOrNull() ?: "BT", device.level, icon, false))
+            }
+        }
+    }
+
+    RoundedCardContainer(
+        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            items.forEach { item ->
+                BatteryItem(item)
+            }
+        }
+    }
+}
+
+data class BatteryData(
+    val name: String,
+    val level: Int,
+    val icon: Int,
+    val isCharging: Boolean
+)
+
+@Composable
+fun BatteryItem(data: BatteryData) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Box(contentAlignment = Alignment.Center, modifier = Modifier.size(72.dp)) {
+            // Progress Ring
+            BatteryRing(
+                progress = data.level / 100f,
+                isCharging = data.isCharging,
+                modifier = Modifier.fillMaxSize()
+            )
+            
+            // Icon
+            Icon(
+                painter = painterResource(id = data.icon),
+                contentDescription = null,
+                modifier = Modifier.size(36.dp),
+                tint = if (data.isCharging) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+            )
+        }
+    }
+}
+
+@Composable
+fun BatteryRing(
+    progress: Float,
+    isCharging: Boolean,
+    modifier: Modifier = Modifier
+) {
+    val primaryColor = MaterialTheme.colorScheme.primary
+    val trackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+    val errorColor = MaterialTheme.colorScheme.error
+    val surfaceColor = MaterialTheme.colorScheme.surfaceContainerHigh
+    
+    val ringColor = when {
+        isCharging -> primaryColor
+        progress <= 0.15f -> errorColor
+        else -> primaryColor
+    }
+
+    Box(modifier = modifier.padding(4.dp), contentAlignment = Alignment.Center) {
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            val strokeWidth = 4.dp.toPx()
+            
+            // Track
+            drawArc(
+                color = trackColor,
+                startAngle = 0f,
+                sweepAngle = 360f,
+                useCenter = false,
+                style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
+            )
+            
+            // Progress
+            drawArc(
+                color = ringColor,
+                startAngle = -90f,
+                sweepAngle = 360f * progress,
+                useCenter = false,
+                style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
+            )
+            
+            // Charging Indicator Bubble
+            if (isCharging) {
+                val bubbleRadius = 8.dp.toPx()
+                val angleRad = Math.toRadians(-90.0).toFloat()
+                val centerX = size.width / 2
+                val centerY = size.height / 2
+                val radius = (size.width / 2)
+                
+                val bubbleX = centerX + radius * Math.cos(angleRad.toDouble()).toFloat()
+                val bubbleY = centerY + radius * Math.sin(angleRad.toDouble()).toFloat()
+                
+                drawCircle(
+                    color = ringColor,
+                    radius = bubbleRadius,
+                    center = androidx.compose.ui.geometry.Offset(bubbleX, bubbleY)
+                )
+            }
+        }
+        
+        if (isCharging) {
+            Icon(
+                painter = painterResource(id = R.drawable.rounded_flash_on_24),
+                contentDescription = null,
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .offset(y = (-4).dp)
+                    .size(16.dp),
+                tint = surfaceColor
+            )
+        }
+    }
 }
