@@ -161,11 +161,18 @@ class BatteryNotificationService : Service() {
     private fun createCompositeBitmap(items: List<BatteryItemData>): Bitmap {
         val itemSize = 256
         val spacing = 48
-        val totalWidth = items.size * itemSize + (items.size - 1) * spacing
+        
+        val actualContentWidth = items.size * itemSize + (items.size - 1).coerceAtLeast(0) * spacing
+        
+        val minWideItems = 3
+        val minWideWidth = minWideItems * itemSize + (minWideItems - 1) * spacing
+        val totalWidth = actualContentWidth.coerceAtLeast(minWideWidth)
         val totalHeight = itemSize
 
         val composite = Bitmap.createBitmap(totalWidth, totalHeight, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(composite)
+
+        val startX = (totalWidth - actualContentWidth) / 2f
 
         val accentColor = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             getColor(android.R.color.system_accent1_100)
@@ -189,7 +196,7 @@ class BatteryNotificationService : Service() {
                 item.statusIconRes?.let { ContextCompat.getDrawable(this, it) },
                 itemSize, itemSize
             )
-            canvas.drawBitmap(itemBitmap, (index * (itemSize + spacing)).toFloat(), 0f, null)
+            canvas.drawBitmap(itemBitmap, startX + (index * (itemSize + spacing)).toFloat(), 0f, null)
         }
 
         return composite
