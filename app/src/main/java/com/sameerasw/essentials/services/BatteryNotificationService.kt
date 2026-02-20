@@ -43,10 +43,16 @@ class BatteryNotificationService : Service() {
         settingsRepository = SettingsRepository(this)
         createNotificationChannel()
         settingsRepository.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
+        
+        startForeground(NOTIF_ID, buildBaseNotification(getString(R.string.feat_batteries_title), ""))
+        
         updateNotification()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+             startForeground(NOTIF_ID, buildBaseNotification(getString(R.string.feat_batteries_title), ""))
+        }
         updateNotification()
         return START_STICKY
     }
@@ -77,26 +83,39 @@ class BatteryNotificationService : Service() {
 
     private fun updateNotification() {
         val batteryItems = fetchBatteryData()
-        if (batteryItems.isEmpty()) {
-            stopForeground(true)
-            stopSelf()
-            return
+        
+        val notification = if (batteryItems.isEmpty()) {
+            buildBaseNotification(
+                getString(R.string.feat_batteries_title),
+                getString(R.string.battery_notification_no_devices)
+            )
+        } else {
+            val bitmap = createCompositeBitmap(batteryItems)
+            NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.rounded_battery_charging_60_24)
+                .setLargeIcon(bitmap)
+                .setStyle(NotificationCompat.BigPictureStyle()
+                    .bigPicture(bitmap)
+                    .bigLargeIcon(null as Bitmap?))
+                .setContentTitle(getString(R.string.feat_batteries_title))
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setOngoing(true)
+                .setSilent(true)
+                .build()
         }
 
-        val bitmap = createCompositeBitmap(batteryItems)
-        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+        startForeground(NOTIF_ID, notification)
+    }
+
+    private fun buildBaseNotification(title: String, content: String): Notification {
+        return NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.rounded_battery_charging_60_24)
-            .setLargeIcon(bitmap)
-            .setStyle(NotificationCompat.BigPictureStyle()
-                .bigPicture(bitmap)
-                .bigLargeIcon(null as Bitmap?))
-            .setContentTitle(getString(R.string.feat_batteries_title))
+            .setContentTitle(title)
+            .setContentText(content)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setOngoing(true)
             .setSilent(true)
             .build()
-
-        startForeground(NOTIF_ID, notification)
     }
 
     private fun fetchBatteryData(): List<BatteryItemData> {
@@ -142,11 +161,18 @@ class BatteryNotificationService : Service() {
     private fun createCompositeBitmap(items: List<BatteryItemData>): Bitmap {
         val itemSize = 256
         val spacing = 48
-        val totalWidth = items.size * itemSize + (items.size - 1) * spacing
+        
+        val actualContentWidth = items.size * itemSize + (items.size - 1).coerceAtLeast(0) * spacing
+        
+        val minWideItems = 3
+        val minWideWidth = minWideItems * itemSize + (minWideItems - 1) * spacing
+        val totalWidth = actualContentWidth.coerceAtLeast(minWideWidth)
         val totalHeight = itemSize
 
         val composite = Bitmap.createBitmap(totalWidth, totalHeight, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(composite)
+
+        val startX = (totalWidth - actualContentWidth) / 2f
 
         val accentColor = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             getColor(android.R.color.system_accent1_100)
@@ -170,7 +196,7 @@ class BatteryNotificationService : Service() {
                 item.statusIconRes?.let { ContextCompat.getDrawable(this, it) },
                 itemSize, itemSize
             )
-            canvas.drawBitmap(itemBitmap, (index * (itemSize + spacing)).toFloat(), 0f, null)
+            canvas.drawBitmap(itemBitmap, startX + (index * (itemSize + spacing)).toFloat(), 0f, null)
         }
 
         return composite

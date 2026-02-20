@@ -693,6 +693,7 @@
     <string name="update_channel_name">App Updates</string>
     <string name="update_channel_desc">Notifications for new app updates</string>
     <string name="notification_update_available">Update available</string>
+    <string name="battery_notification_no_devices">No devices connected</string>
 
     <string name="label_unknown">Unknown</string>
     <string name="network_type_5g">5G</string>
