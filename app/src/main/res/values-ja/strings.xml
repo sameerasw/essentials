@@ -655,6 +655,7 @@
     <string name="update_channel_name">アプリアップデート</string>
     <string name="update_channel_desc">新しいアップデートの通知</string>
     <string name="notification_update_available">アップデートがあります</string>
+    <string name="battery_notification_no_devices">No devices connected</string>
     <string name="label_unknown">不明</string>
     <string name="network_type_5g">5G</string>
     <string name="network_type_4g">4G</string>
