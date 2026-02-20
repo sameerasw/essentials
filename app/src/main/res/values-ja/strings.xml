@@ -1057,5 +1057,5 @@
     <string name="label_animator_duration_scale">Animator再生時間スケール</string>
     <string name="label_transition_animation_scale">トランジションアニメスケール</string>
     <string name="label_window_animation_scale">ウィンドウアニメスケール</string>
-    <string name="about_desc_text_animations">Adjust system-wide font scale, weight, and animation speeds. Note that some settings may require advanced permissions or a device reboot for certain apps to reflect changes. \n\nAdditional shizuku or root permission may be necessary for scale adjustments</string>
+    <string name="about_desc_text_animations">システム全体のフォントサイズ、太さ、アニメーション速度を調整します。一部のアプリでは変更を反映させるために高度な権限やデバイスの再起動が必要な場合があります。\n\nサイズ調整には追加のShizuku権限またはRoot権限が必要になる場合があります</string>
 </resources>
