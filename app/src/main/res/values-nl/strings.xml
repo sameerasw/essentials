@@ -655,6 +655,7 @@
     <string name="update_channel_name">Appupdates</string>
     <string name="update_channel_desc">Meldingen voor nieuwe appupdates</string>
     <string name="notification_update_available">Update beschikbaar</string>
+    <string name="battery_notification_no_devices">No devices connected</string>
     <string name="label_unknown">Onbekend</string>
     <string name="network_type_5g">5G</string>
     <string name="network_type_4g">4G</string>
