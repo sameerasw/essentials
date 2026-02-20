@@ -194,9 +194,9 @@
     <string name="tile_usb_debugging">USB-foutopsporing</string>
     <string name="on">Aan</string>
     <string name="off">Uit</string>
-    <string name="private_dns_custom_title">Custom Private DNS</string>
-    <string name="private_dns_presets_title">Common DNS Presets</string>
-    <string name="private_dns_hostname_label">Provider hostname</string>
+    <string name="private_dns_custom_title">Aangepaste Privé-DNS</string>
+    <string name="private_dns_presets_title">Aangepaste DNS-voorinstellingen</string>
+    <string name="private_dns_hostname_label">Hostnaam van provider</string>
     <string name="dns_preset_adguard">AdGuard DNS</string>
     <string name="dns_preset_adguard_hostname">dns.adguard.com</string>
     <string name="dns_preset_google">Google Public DNS</string>
@@ -638,8 +638,8 @@
     <string name="diy_device_effects_android_15_warning">Deze functie vereist Android 15 of hoger.</string>
     <string name="diy_device_effects_enabled">Ingeschakeld</string>
     <string name="diy_device_effects_disabled">Uitgeschakeld</string>
-    <string name="diy_action_sound_mode">Sound Mode</string>
-    <string name="diy_sound_mode_desc">This action allows switching between Sound, Vibrate, and Silent modes based on triggers. It requires Do Not Disturb access.</string>
+    <string name="diy_action_sound_mode">Geluidsmodus</string>
+    <string name="diy_sound_mode_desc">Deze actie laat je switchen tussen Geluid, Trillen en de Stille modi op basis van triggers. Het vereist hiervoor toegang tot Niet Storen.</string>
     <!-- About Section -->
     <string name="app_developer_name">Sameera Wijerathna</string>
     <string name="app_description">De alles omvattende gereedschapskist voor je Pixel en Android-apparaten</string>
@@ -655,7 +655,7 @@
     <string name="update_channel_name">Appupdates</string>
     <string name="update_channel_desc">Meldingen voor nieuwe appupdates</string>
     <string name="notification_update_available">Update beschikbaar</string>
-    <string name="battery_notification_no_devices">No devices connected</string>
+    <string name="battery_notification_no_devices">Geen apparaten verbonden</string>
     <string name="label_unknown">Onbekend</string>
     <string name="network_type_5g">5G</string>
     <string name="network_type_4g">4G</string>
@@ -882,14 +882,14 @@
     <string name="instruction_section_security_title">Zijn appvergrendeling en beveiliging bij vergrendeling echt veilig?</string>
     <string name="instruction_section_security_desc">Absoluut niet. \n\nElke app van een derde partij kan niet 100% normale apparaatinteracties onderbreken en zelfs de appvergrendeling is alleen een overlay boven geselecteerde apps om interactie met ze te voorkomen. Er zijn manieren om het te omzeilen en het is niet onfeilbaar. \n\nHetzelfde geldt voor Beveiliging bij vergrendeling, wat detecteert wanneer iemand probeert de netwerktegels te gebruiken, wat nog steeds om een of andere reden toegankelijk is op Pixels. Dus als ze het goed genoeg proberen, kunnen ze de tegels nog steeds gebruiken en zeker als je de tegel van de vliegtuigstand aan de snelle instellingen hebt toegevoegd, kan deze app daarmee geen aanrakingen voorkomen. \n\nDeze functies zijn alleen experimenten voor licht gebruik en zijn niet aanbevolen als sterke beveiligingsmethoden. \n\nVeilige alternatieven:\n - Appvergrendeling: Privéruimte en Veilige map op Pixels en Samsung\n - Voorkomen van toegang tot mobiele netwerken: Zorg ervoor dat je de Diefstalbeveiliging en Vind-plek apparaatinstellingen aan hebt staan. Je kan ook eens naar Graphene OS kijken.</string>
     <string name="instruction_section_statusbar_title">Iconen van de statusbalk</string>
-    <string name="instruction_section_statusbar_desc">You may notice that even after resetting the statusbar icons, Some icons such as device rotation, wired headphone icons may stay visible. This is due to how the statubar blacklist is implemented in Android and how your OEM may have customized them. \nYou may need further adjustments. \n\nAlso not all icon visibility options may work as they depend on the OEM implementations and availability.</string>
-    <string name="instruction_section_lighting_title">Notification lighting does not work</string>
-    <string name="instruction_section_lighting_desc">It depends on the OEM. Some like OneUI does not seem to allow overlays above the AOD preventing the lighting effects being shown. In this case, try the ambient display as a workaround. </string>
-    <string name="instruction_section_button_title">Button remap does not work while display is off</string>
+    <string name="instruction_section_statusbar_desc">Je hebt misschien door dat zelfs na het resetten van de iconen van de statusbalk, sommige iconen zoals de draaiing van het apparaat en het icoon bij bedrade koptelefoons kunnen nog zichtbaar zijn. Dit komt door hoe de zwarte lijst van de statusbalk is geïmplementeerd in Android en hoe je OEM het heeft aangepast. \n\nOok werken alle opties mogelijk niet omdat ze afhankelijk zijn van de OEM-implementaties.</string>
+    <string name="instruction_section_lighting_title">De meldingsverlichting werkt niet</string>
+    <string name="instruction_section_lighting_desc">Het hangt af van de OEM. Sommige zoals OneUI lijken niet overlays toe te staan boven het Always-On Display wat voorkomt dat lichteffecten worden weergegeven. In dat geval, probeer dan de Ambient Display als een omweg.</string>
+    <string name="instruction_section_button_title">Het opnieuw toewijzen van knoppen werkt niet terwijl het scherm uit is</string>
     <string name="instruction_section_button_desc">Some OEMs limit the accessibility service reporting once the display is actually off but they may still work while the AOD is on. \nIn this case, you may able to use button remaps with AOD on but not with off. \n\nAs a workaround, you will need to use Shizuku permissions and turn on the \'Use Shizuku\' toggle in button remap settings which identifies and listen to hardware input events.\nThis is not guaranteed to work on all devices and needs testing.\n\nAnd even if it\'s on, Shizuku method only will be used when it\'s needed. Otherwise it will always fallback to Accessibility which also handles the blocking of the actual input during long press.</string>
-    <string name="instruction_section_flashlight_title">Flashlight brightness does not work</string>
-    <string name="instruction_section_flashlight_desc">Only a limited number of devices got hardware and software support adjusting the flashlight intensity. \n\n\'The minimum version of Android is 13 (SDK33).\nFlashlight brightness control only supports HAL version 3.8 and higher, so among the supported devices, the latest ones (For example, Pixel 6/7, Samsung S23, etc.)\'\npolodarb/Flashlight-Tiramisu</string>
-    <string name="instruction_section_about_title">What the hell is this app?</string>
+    <string name="instruction_section_flashlight_title">De helderheid van de zaklamp werkt niet</string>
+    <string name="instruction_section_flashlight_desc">Alleen een kleine hoeveelheid aan apparaten heeft hardware- en softwareondersteuning voor het veranderen van zaklampintensiteit. \n\nDe minimumversie is Android 13 (SDK33).\nHet veranderen van de zaklamphelderheid ondersteunt alleen HAL-versie 3.8 of hoger, bij de ondersteunde apparaten horen de nieuwste modellen bijvoorbeeld de Pixel 6/7, Galaxy S23, etc.)\'\npolodarb/Flashlight-Tiramisu</string>
+    <string name="instruction_section_about_title">Wat in hemelsnaam is dit voor een app?</string>
     <string name="instruction_section_about_desc">Good question,\n\nI always wanted to extract the most out of my devices as I\'ve been a rooted user for ever since I got my first Project Treble device. And I\'ve been loving the Tasker app which is like the god when comes automation and utilizing every possible API and internal features of Android.\n\nSo I am not unrooted and back on stock Android beta experience and wanted to get the most out from what is possible with given privileges. Might as well share them. So with my beginner knowledge in Kotlin Jetpack and with the support of many research and assist tools and also the great community, I built an all-in-one app containing everything I wanted to be in my Android with given permissions. And here it is.\n\nFeature requests are welcome, I will consider and see if they are achievable with available permissions and my skills. Nowadays what is not possible. :)\n\nWhy not on Play Store?\nI don\'t wanna risk getting my Developer account banned due to the highly sensitive and internal permissions and APIs being used in the app. But with the way Android sideloading is headed, let\'s see what we have to do. I do understand the concerns of sideloaded apps being malicious.\nWhile we are at the topic, Checkout my other app AirSync if you are a mac + Android user. *shameless plug*\n\nEnjoy, Keep building! (っ◕‿◕)っ</string>
     <!-- Bug Reporting -->
     <string name="toast_bug_report_copied">Bug report copied to clipboard</string>
