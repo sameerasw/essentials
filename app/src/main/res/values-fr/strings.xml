@@ -655,6 +655,7 @@
     <string name="update_channel_name">Mises à jour</string>
     <string name="update_channel_desc">Notifications pour une mise à jour de l\'appli</string>
     <string name="notification_update_available">Mise à jour disponible</string>
+    <string name="battery_notification_no_devices">No devices connected</string>
     <string name="label_unknown">Inconnu</string>
     <string name="network_type_5g">5G</string>
     <string name="network_type_4g">4G</string>
