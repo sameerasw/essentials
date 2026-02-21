@@ -17,6 +17,7 @@ import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.sameerasw.essentials.ui.components.sheets.EssentialHubContent
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
+import com.sameerasw.essentials.utils.HapticUtil
 
 class EssentialHubHandler(private val service: AccessibilityService) {
 
@@ -27,9 +28,11 @@ class EssentialHubHandler(private val service: AccessibilityService) {
 
     fun toggleHub() {
         if (isHubVisible) {
+            overlayView?.let { HapticUtil.performMediumHaptic(it) }
             hideHub()
         } else {
             showHub()
+            overlayView?.let { HapticUtil.performMediumHaptic(it) }
         }
     }
 

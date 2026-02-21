@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.services.tiles
 
+import android.accessibilityservice.AccessibilityButtonController
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.AccessibilityServiceInfo
 import android.content.BroadcastReceiver
@@ -26,7 +27,7 @@ import com.sameerasw.essentials.services.handlers.NotificationLightingHandler
 import com.sameerasw.essentials.services.handlers.SecurityHandler
 import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
 import com.sameerasw.essentials.utils.FreezeManager
-import com.sameerasw.essentials.utils.performHapticFeedback
+import com.sameerasw.essentials.utils.HapticUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -44,6 +45,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
     private lateinit var securityHandler: SecurityHandler
     private lateinit var ambientGlanceHandler: AmbientGlanceHandler
     private lateinit var essentialHubHandler: com.sameerasw.essentials.services.handlers.EssentialHubHandler
+    private var accessibilityButtonCallback: AccessibilityButtonController.AccessibilityButtonCallback? = null
 
     private var screenReceiver: BroadcastReceiver? = null
 
@@ -147,6 +149,16 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         serviceInfo = serviceInfo.apply {
             flags = flags or AccessibilityServiceInfo.FLAG_REQUEST_FILTER_KEY_EVENTS
         }
+
+        val controller = accessibilityButtonController
+        accessibilityButtonCallback = object : AccessibilityButtonController.AccessibilityButtonCallback() {
+            override fun onClicked(controller: AccessibilityButtonController) {
+                essentialHubHandler.toggleHub()
+            }
+        }
+        accessibilityButtonCallback?.let {
+            controller.registerAccessibilityButtonCallback(it)
+        }
     }
 
     override fun onDestroy() {
@@ -162,6 +174,9 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         essentialHubHandler.hideHub()
         stopInputEventListener()
         serviceScope.cancel()
+        accessibilityButtonCallback?.let {
+            accessibilityButtonController.unregisterAccessibilityButtonCallback(it)
+        }
         super.onDestroy()
     }
 
@@ -243,8 +258,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
                 }
 
                 if (hapticType != HapticFeedbackType.NONE) {
-                    val vibrator = getSystemService(VIBRATOR_SERVICE) as? Vibrator
-                    vibrator?.let { performHapticFeedback(it, hapticType) }
+                    HapticUtil.performHapticForService(this, hapticType)
                 }
                 securityHandler.lockDevice()
             }
