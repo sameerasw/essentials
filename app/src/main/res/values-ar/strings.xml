@@ -8,17 +8,17 @@
     <string name="freeze_shortcut_short_label">تجميد التطبيق</string>
     <string name="freeze_shortcut_long_label">تجميد التطبيق المفتوح</string>
     <string name="frozen_app_shortcut_label">تطبيق مجمد</string>
-    <string name="screen_off_widget_label">Empty screen off widget</string>
+    <string name="screen_off_widget_label">قُفْل الشاشة ودجيت فارغ</string>
     <string name="app_freezing_tile_label">تجميد التطبيق</string>
     <string name="flashlight_pulse_tile_label">نبض المصباح</string>
-    <string name="check_pre_releases_label">Check for pre-releases</string>
-    <string name="check_pre_releases_desc">Might be unstable</string>
+    <string name="check_pre_releases_label">البحث عن أحدث إصدار بيتا pre-releases</string>
+    <string name="check_pre_releases_desc">قد يكون غير مستقر</string>
     <!-- App Lock -->
     <string name="settings_section_security">الأمن</string>
-    <string name="app_lock_enable_title">Enable app lock</string>
-    <string name="app_lock_auth_title">App Lock Security</string>
-    <string name="app_lock_enable_auth_subtitle">Authenticate to enable app lock</string>
-    <string name="app_lock_disable_auth_subtitle">Authenticate to disable app lock</string>
+    <string name="app_lock_enable_title">تفعيل قُفْل التطبيقات</string>
+    <string name="app_lock_auth_title">أمان قُفْل التطبيقات</string>
+    <string name="app_lock_enable_auth_subtitle">قم بالمصادقة لتفعيل قفل التطبيق</string>
+    <string name="app_lock_disable_auth_subtitle">قم بالمصادقة لتعطيل قفل التطبيق</string>
     <string name="app_lock_select_apps_title">Select locked apps</string>
     <string name="app_lock_select_apps_desc">Choose which apps require authentication</string>
     <string name="app_lock_description">Secure your apps with biometric authentication. Locked apps will require authentication when launching, Stays unlocked until the screen turns off.</string>
