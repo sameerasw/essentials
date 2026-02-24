@@ -58,7 +58,7 @@ Essential tools, mods and workarounds for Pixels and other Androids
 - Notification lighting - Edge lighting and more alerts for notifications
 - Flashlight pulse - Pulse flashlight for notifications
 - Snooze system notifications
-- Battery notification for all your devices
+- Battery notification for all your connected devices
 
 #### Input and Actions
 - Link actions - Intercept and share links from default apps
