@@ -420,25 +420,25 @@ class MainActivity : FragmentActivity() {
                                     if (currentTab == DIYTabs.APPS) {
                                         IconButton(
                                             onClick = {
-                                                HapticUtil.performMediumHaptic(view)
+                                                HapticUtil.performVirtualKeyHaptic(view)
                                                 updatesViewModel.checkForUpdates(context)
                                             },
                                             enabled = refreshingRepoIds.isEmpty(),
                                             colors = IconButtonDefaults.iconButtonColors(
                                                 containerColor = MaterialTheme.colorScheme.surfaceBright
                                             ),
-                                            modifier = Modifier.size(48.dp)
+                                            modifier = Modifier.size(40.dp)
                                         ) {
                                             if (refreshingRepoIds.isNotEmpty()) {
                                                 CircularWavyProgressIndicator(
                                                     progress = { animatedProgress },
-                                                    modifier = Modifier.size(32.dp)
+                                                    modifier = Modifier.size(24.dp)
                                                 )
                                             } else {
                                                 Icon(
                                                     painter = painterResource(id = R.drawable.rounded_refresh_24),
                                                     contentDescription = stringResource(R.string.action_refresh),
-                                                    modifier = Modifier.size(32.dp)
+                                                    modifier = Modifier.size(24.dp)
                                                 )
                                             }
                                         }

@@ -324,12 +324,12 @@ class FeatureSettingsActivity : FragmentActivity() {
                                             colors = androidx.compose.material3.IconButtonDefaults.iconButtonColors(
                                                 containerColor = MaterialTheme.colorScheme.surfaceBright
                                             ),
-                                            modifier = Modifier.size(48.dp)
+                                            modifier = Modifier.size(40.dp)
                                         ) {
                                             Icon(
                                                 painter = painterResource(id = R.drawable.rounded_more_vert_24),
                                                 contentDescription = stringResource(R.string.content_desc_more_options),
-                                                modifier = Modifier.size(32.dp)
+                                                modifier = Modifier.size(24.dp)
                                             )
 
                                             com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu(

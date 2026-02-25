@@ -265,7 +265,8 @@ fun ReusableTopAppBar(
                     },
                     colors = IconButtonDefaults.iconButtonColors(
                         containerColor = MaterialTheme.colorScheme.surfaceBright
-                    )
+                    ),
+                    modifier = Modifier.size(40.dp)
                 ) {
                     if (gitHubUser != null) {
                         AsyncImage(
