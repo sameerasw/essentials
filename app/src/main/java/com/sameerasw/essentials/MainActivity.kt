@@ -11,6 +11,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -65,6 +67,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.alpha
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import androidx.activity.compose.PredictiveBackHandler
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
@@ -249,7 +256,6 @@ class MainActivity : FragmentActivity() {
                         updatesViewModel.loadTrackedRepos(context)
                     }
 
-
                     // Dynamic tabs configuration
                     val tabs = remember { DIYTabs.entries }
 
@@ -258,8 +264,32 @@ class MainActivity : FragmentActivity() {
                         val index = tabs.indexOf(defaultTab)
                         if (index != -1) index else 0
                     }
-                    
                     var currentPage by remember { androidx.compose.runtime.mutableIntStateOf(initialPage) }
+                    val backProgress = remember { Animatable(0f) }
+                    val scope = rememberCoroutineScope()
+
+                    // Handle predictive back button for tab navigation
+                    PredictiveBackHandler(enabled = currentPage > 0) { progress ->
+                        try {
+                            progress.collect { backEvent ->
+                                backProgress.snapTo(backEvent.progress)
+                            }
+                            currentPage = 0
+                            scope.launch {
+                                backProgress.animateTo(
+                                    targetValue = 0f,
+                                    animationSpec = tween(durationMillis = 400)
+                                )
+                            }
+                        } catch (e: java.util.concurrent.CancellationException) {
+                            scope.launch {
+                                backProgress.animateTo(
+                                    targetValue = 0f,
+                                    animationSpec = tween(durationMillis = 300)
+                                )
+                            }
+                        }
+                    }
 
                     // Gracefully handle tab removal (e.g. disabling Developer Mode)
                     LaunchedEffect(tabs) {
@@ -489,6 +519,9 @@ class MainActivity : FragmentActivity() {
                                         )
                                     )
                                 },
+                                modifier = Modifier
+                                    .scale(1f - (backProgress.value * 0.05f))
+                                    .alpha(1f - (backProgress.value * 0.3f)),
                                 label = "Tab Transition"
                             ) { targetPage ->
                                 when (tabs[targetPage]) {
