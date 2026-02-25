@@ -10,6 +10,13 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -466,18 +473,36 @@ class MainActivity : FragmentActivity() {
                                 badges = mapOf(DIYTabs.APPS to viewModel.hasPendingUpdates.value)
                             )
 
-                            when (tabs[currentPage]) {
-                                    DIYTabs.ESSENTIALS -> {
-                                        SetupFeatures(
-                                            viewModel = viewModel,
-                                            modifier = Modifier.padding(innerPadding),
-                                            searchRequested = searchRequested,
-                                            onSearchHandled = { searchRequested = false },
-                                            onHelpClick = { showInstructionsSheet = true }
-                                        )
-                                    }
+                            AnimatedContent(
+                                targetState = currentPage,
+                                transitionSpec = {
+                                    val animationSpec = tween<Float>(durationMillis = 400)
+                                    val slideOffset = 150
 
-                                    DIYTabs.FREEZE -> {
+                                    (fadeIn(animationSpec = animationSpec) + slideInVertically(
+                                        animationSpec = tween(durationMillis = 400),
+                                        initialOffsetY = { slideOffset }
+                                    )).togetherWith(
+                                        fadeOut(animationSpec = animationSpec) + slideOutVertically(
+                                            animationSpec = tween(durationMillis = 400),
+                                            targetOffsetY = { slideOffset }
+                                        )
+                                    )
+                                },
+                                label = "Tab Transition"
+                            ) { targetPage ->
+                                when (tabs[targetPage]) {
+                                        DIYTabs.ESSENTIALS -> {
+                                            SetupFeatures(
+                                                viewModel = viewModel,
+                                                modifier = Modifier.padding(innerPadding),
+                                                searchRequested = searchRequested,
+                                                onSearchHandled = { searchRequested = false },
+                                                onHelpClick = { showInstructionsSheet = true }
+                                            )
+                                        }
+
+                                        DIYTabs.FREEZE -> {
                                         FreezeGridUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(innerPadding),
@@ -792,7 +817,8 @@ class MainActivity : FragmentActivity() {
                 }
             }
         }
-
+    }
+    
     override fun onResume() {
         super.onResume()
         viewModel.check(this)

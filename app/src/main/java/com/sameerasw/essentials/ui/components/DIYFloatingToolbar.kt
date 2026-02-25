@@ -1,6 +1,8 @@
 package com.sameerasw.essentials.ui.components
 
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -67,24 +69,33 @@ fun DIYFloatingToolbar(
                 // Animate width for spacing
                 val itemWidth by animateDpAsState(
                     targetValue = if (expanded || isSelected) 48.dp else 0.dp,
-                    animationSpec = tween(durationMillis = 300),
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                        stiffness = Spring.StiffnessLow
+                    ),
                     label = "item_width_$index"
                 )
 
                 // Animate label width for active tab
                 val labelWidth by animateDpAsState(
                     targetValue = if (isSelected) 80.dp else 0.dp,
-                    animationSpec = tween(durationMillis = 300),
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                        stiffness = Spring.StiffnessLow
+                    ),
                     label = "label_width_$index"
                 )
 
                 // Animate spacer width
                 val spacerWidth by animateDpAsState(
                     targetValue = if (index < tabs.size - 1) 8.dp else 0.dp,
-                    animationSpec = tween(durationMillis = 300),
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                        stiffness = Spring.StiffnessLow
+                    ),
                     label = "spacer_width_$index"
                 )
-
+                
                 // Always render the button, but animate its visibility
                 if (itemWidth > 0.dp || isSelected) {
                     IconButton(
