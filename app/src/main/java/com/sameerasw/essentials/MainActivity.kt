@@ -251,14 +251,13 @@ class MainActivity : FragmentActivity() {
                         val index = tabs.indexOf(defaultTab)
                         if (index != -1) index else 0
                     }
-                    val pagerState =
-                        rememberPagerState(initialPage = initialPage, pageCount = { tabs.size })
-                    val scope = rememberCoroutineScope()
+                    
+                    var currentPage by remember { androidx.compose.runtime.mutableIntStateOf(initialPage) }
 
                     // Gracefully handle tab removal (e.g. disabling Developer Mode)
                     LaunchedEffect(tabs) {
-                        if (pagerState.currentPage >= tabs.size) {
-                            pagerState.scrollToPage(0)
+                        if (currentPage >= tabs.size) {
+                            currentPage = 0
                         }
                     }
                     val exitAlwaysScrollBehavior =
@@ -381,8 +380,8 @@ class MainActivity : FragmentActivity() {
                             .nestedScroll(exitAlwaysScrollBehavior),
                         containerColor = MaterialTheme.colorScheme.surfaceContainer,
                         topBar = {
-                            val currentTab = remember(tabs, pagerState.currentPage) {
-                                tabs.getOrNull(pagerState.currentPage) ?: tabs.firstOrNull()
+                            val currentTab = remember(tabs, currentPage) {
+                                tabs.getOrNull(currentPage) ?: tabs.firstOrNull()
                                 ?: DIYTabs.ESSENTIALS
                             }
                             ReusableTopAppBar(
@@ -457,25 +456,17 @@ class MainActivity : FragmentActivity() {
                                     .align(Alignment.BottomCenter)
                                     .offset(y = -ScreenOffset)
                                     .zIndex(1f),
-                                currentPage = pagerState.currentPage,
+                                currentPage = currentPage,
                                 tabs = tabs,
                                 onTabSelected = { index ->
                                     HapticUtil.performUIHaptic(view)
-                                    scope.launch {
-                                        pagerState.animateScrollToPage(index)
-                                    }
+                                    currentPage = index
                                 },
                                 scrollBehavior = exitAlwaysScrollBehavior,
                                 badges = mapOf(DIYTabs.APPS to viewModel.hasPendingUpdates.value)
                             )
 
-                            HorizontalPager(
-                                state = pagerState,
-                                modifier = Modifier.fillMaxSize(),
-                                verticalAlignment = Alignment.Top,
-                                beyondViewportPageCount = 1
-                            ) { page ->
-                                when (tabs[page]) {
+                            when (tabs[currentPage]) {
                                     DIYTabs.ESSENTIALS -> {
                                         SetupFeatures(
                                             viewModel = viewModel,
@@ -794,7 +785,6 @@ class MainActivity : FragmentActivity() {
                         }
                     }
 
-
                     // Mark app as ready after composing (happens very quickly)
                     LaunchedEffect(Unit) {
                         isAppReady = true
@@ -802,7 +792,6 @@ class MainActivity : FragmentActivity() {
                 }
             }
         }
-    }
 
     override fun onResume() {
         super.onResume()
