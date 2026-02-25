@@ -159,7 +159,7 @@ fun FavoriteCarousel(
                 ) {
                     Box(
                         modifier = Modifier
-                            .size(48.dp)
+                            .size(40.dp)
                             .background(
                                 color = ColorUtil.getPastelColorFor(resolvedTitle),
                                 shape = CircleShape
@@ -169,7 +169,7 @@ fun FavoriteCarousel(
                         Icon(
                             painter = painterResource(id = feature.iconRes),
                             contentDescription = resolvedTitle,
-                            modifier = Modifier.size(28.dp),
+                            modifier = Modifier.size(24.dp),
                             tint = ColorUtil.getVibrantColorFor(resolvedTitle)
                         )
                     }

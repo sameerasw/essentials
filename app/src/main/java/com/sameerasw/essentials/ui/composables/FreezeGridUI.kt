@@ -123,14 +123,14 @@ fun FreezeGridUI(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(18.dp),
+                    .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.rounded_mode_cool_24),
                     contentDescription = null,
-                    modifier = Modifier.size(64.dp),
+                    modifier = Modifier.size(24.dp),
                     tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -145,14 +145,14 @@ fun FreezeGridUI(
             RoundedCardContainer(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
-                    .padding(top = 24.dp),
+                    .padding(top = 16.dp),
             ) {
                 LazyVerticalGrid(
                     columns = GridCells.Adaptive(minSize = 88.dp),
                     state = gridState,
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(
-                        bottom = contentPadding.calculateBottomPadding() + 88.dp,
+                        bottom = 150.dp,
                         top = 0.dp
                     ),
                     horizontalArrangement = Arrangement.spacedBy(2.dp),
@@ -184,7 +184,7 @@ fun FreezeGridUI(
         Box(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(bottom = contentPadding.calculateBottomPadding() + 16.dp, end = 16.dp)
+                .padding(bottom = 150.dp, end = 16.dp)
         ) {
             ExpandableFreezeFab(
                 onUnfreezeAll = { viewModel.unfreezeAllApps(context) },
@@ -274,7 +274,6 @@ fun AppGridItem(
             Text(
                 text = app.appName,
                 style = MaterialTheme.typography.labelSmall,
-                fontSize = 11.sp,
                 textAlign = TextAlign.Center,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,

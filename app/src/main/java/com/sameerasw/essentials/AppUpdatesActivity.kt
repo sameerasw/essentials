@@ -323,7 +323,7 @@ class AppUpdatesActivity : FragmentActivity() {
                             modifier = Modifier.fillMaxSize(),
                             contentPadding = androidx.compose.foundation.layout.PaddingValues(
                                 top = innerPadding.calculateTopPadding() + 16.dp,
-                                bottom = innerPadding.calculateBottomPadding() + 100.dp,
+                                bottom = 150.dp,
                                 start = 16.dp,
                                 end = 16.dp
                             ),

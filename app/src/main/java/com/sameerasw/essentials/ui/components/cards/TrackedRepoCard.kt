@@ -210,7 +210,7 @@ fun TrackedRepoCard(
                     ) {
                         CircularWavyProgressIndicator(
                             progress = { downloadProgress },
-                            modifier = Modifier.size(32.dp)
+                            modifier = Modifier.size(24.dp)
                         )
                     }
                 } else if (repo.isUpdateAvailable || repo.mappedPackageName == null) {

@@ -80,7 +80,7 @@ fun UpdateBottomSheet(
                     Icon(
                         painter = painterResource(id = if (updateInfo.isUpdateAvailable) R.drawable.rounded_mobile_arrow_down_24 else R.drawable.rounded_mobile_check_24),
                         contentDescription = null,
-                        modifier = Modifier.size(64.dp),
+                        modifier = Modifier.size(24.dp),
                         tint = if (updateInfo.isUpdateAvailable) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
                     )
 
@@ -113,7 +113,7 @@ fun UpdateBottomSheet(
                                     painter = painterResource(id = R.drawable.rounded_mobile_code_24),
                                     contentDescription = null,
                                     tint = MaterialTheme.colorScheme.error,
-                                    modifier = Modifier.size(20.dp)
+                                    modifier = Modifier.size(24.dp)
                                 )
                                 Text(
                                     text = stringResource(R.string.warning_pre_release),
@@ -167,7 +167,7 @@ fun UpdateBottomSheet(
                             Icon(
                                 painter = painterResource(id = R.drawable.brand_github),
                                 contentDescription = null,
-                                modifier = Modifier.size(18.dp)
+                                modifier = Modifier.size(24.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(stringResource(R.string.action_view_on_github))
@@ -187,7 +187,7 @@ fun UpdateBottomSheet(
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(32.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
             }
         }

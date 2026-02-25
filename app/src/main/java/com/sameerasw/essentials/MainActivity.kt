@@ -557,7 +557,7 @@ class MainActivity : FragmentActivity() {
                                                     modifier = Modifier.fillMaxSize(),
                                                     contentPadding = androidx.compose.foundation.layout.PaddingValues(
                                                         top = innerPadding.calculateTopPadding() + 16.dp,
-                                                        bottom = innerPadding.calculateBottomPadding() + 88.dp, // Extra padding for FAB
+                                                        bottom = 150.dp,
                                                         start = 16.dp,
                                                         end = 16.dp
                                                     ),
@@ -776,7 +776,7 @@ class MainActivity : FragmentActivity() {
                                                 modifier = Modifier
                                                     .align(Alignment.BottomEnd)
                                                     .padding(
-                                                        bottom = innerPadding.calculateBottomPadding() + 32.dp,
+                                                        bottom = 150.dp,
                                                         end = 32.dp
                                                     ),
                                                 containerColor = MaterialTheme.colorScheme.primaryContainer,

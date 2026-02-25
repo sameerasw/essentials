@@ -70,7 +70,7 @@ fun LocationReachedSettingsUI(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(24.dp),
+                    .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 LoadingIndicator()
@@ -85,16 +85,16 @@ fun LocationReachedSettingsUI(
             // Destination Set State
             RoundedCardContainer(
                 modifier = Modifier,
-                cornerRadius = 24.dp
+                cornerRadius = 28.dp
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(
                             color = MaterialTheme.colorScheme.surfaceBright,
-                            shape = androidx.compose.foundation.shape.RoundedCornerShape(24.dp)
+                            shape = androidx.compose.foundation.shape.RoundedCornerShape(28.dp)
                         )
-                        .padding(20.dp),
+                        .padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
@@ -164,7 +164,7 @@ fun LocationReachedSettingsUI(
                         Icon(
                             painter = painterResource(id = R.drawable.rounded_my_location_24),
                             contentDescription = null,
-                            modifier = Modifier.size(48.dp),
+                            modifier = Modifier.size(24.dp),
                             tint = MaterialTheme.colorScheme.primary
                         )
                         Spacer(modifier = Modifier.height(16.dp))
@@ -224,7 +224,7 @@ fun LocationReachedSettingsUI(
                             Icon(
                                 painterResource(R.drawable.rounded_map_24),
                                 contentDescription = null,
-                                modifier = Modifier.size(18.dp)
+                                modifier = Modifier.size(24.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(stringResource(R.string.location_reached_view_map))
@@ -239,7 +239,7 @@ fun LocationReachedSettingsUI(
                             Icon(
                                 painterResource(R.drawable.rounded_delete_24),
                                 contentDescription = null,
-                                modifier = Modifier.size(18.dp)
+                                modifier = Modifier.size(24.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(stringResource(R.string.location_reached_clear))
@@ -251,18 +251,18 @@ fun LocationReachedSettingsUI(
             // Empty State
             RoundedCardContainer(
                 modifier = Modifier.fillMaxWidth(),
-                cornerRadius = 24.dp
+                cornerRadius = 28.dp
             ) {
                 Column(
                     modifier = Modifier
-                        .padding(32.dp)
+                        .padding(16.dp)
                         .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.rounded_add_location_alt_24),
                         contentDescription = null,
-                        modifier = Modifier.size(64.dp),
+                        modifier = Modifier.size(24.dp),
                         tint = MaterialTheme.colorScheme.surfaceVariant
                     )
                     Spacer(modifier = Modifier.height(16.dp))
@@ -308,7 +308,7 @@ fun LocationReachedSettingsUI(
 
         RoundedCardContainer(
             modifier = Modifier,
-            cornerRadius = 24.dp
+            cornerRadius = 28.dp
         ) {
             Column(
                 modifier = Modifier
@@ -333,9 +333,9 @@ fun LocationReachedSettingsUI(
             RoundedCardContainer(
                 modifier = Modifier.background(
                     color = MaterialTheme.colorScheme.errorContainer,
-                    shape = androidx.compose.foundation.shape.RoundedCornerShape(24.dp)
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(28.dp)
                 ),
-                cornerRadius = 24.dp
+                cornerRadius = 28.dp
             ) {
                 IconToggleItem(
                     title = stringResource(R.string.location_reached_fsi_title),

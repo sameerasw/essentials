@@ -116,7 +116,7 @@ fun PrivateDnsSettingsOverlay(onDismiss: () -> Unit) {
                     painter = painterResource(id = R.drawable.router_24px),
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(32.dp)
+                    modifier = Modifier.size(24.dp)
                 )
                 Text(
                     text = stringResource(R.string.tile_private_dns),
@@ -212,14 +212,14 @@ fun PrivateDnsSettingsOverlay(onDismiss: () -> Unit) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 24.dp, top = 12.dp),
+                    .padding(bottom = 16.dp, top = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 OutlinedButton(
                     onClick = onDismiss,
                     modifier = Modifier
                         .weight(1f)
-                        .height(56.dp),
+                        .height(48.dp),
                     shape = RoundedCornerShape(24.dp)
                 ) {
                     Text(stringResource(R.string.action_cancel))
@@ -248,7 +248,7 @@ fun PrivateDnsSettingsOverlay(onDismiss: () -> Unit) {
                     },
                     modifier = Modifier
                         .weight(1f)
-                        .height(56.dp),
+                        .height(48.dp),
                     shape = RoundedCornerShape(24.dp)
                 ) {
                     Text(stringResource(R.string.action_save))

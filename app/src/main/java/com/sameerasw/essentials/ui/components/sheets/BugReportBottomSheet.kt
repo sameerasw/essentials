@@ -113,8 +113,8 @@ fun BugReportBottomSheet(
     ) {
         Column(
             modifier = Modifier
-                .padding(horizontal = 24.dp)
-                .padding(bottom = 32.dp)
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 24.dp)
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -129,7 +129,7 @@ fun BugReportBottomSheet(
                 Column(
                     modifier = Modifier
                         .background(MaterialTheme.colorScheme.surfaceBright)
-                        .padding(24.dp)
+                        .padding(16.dp)
                         .fillMaxWidth()
                 ) {
                     Text(
@@ -160,7 +160,7 @@ fun BugReportBottomSheet(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable { isRawReportExpanded = !isRawReportExpanded }
-                                .padding(vertical = 16.dp, horizontal = 24.dp),
+                                .padding(16.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -236,7 +236,7 @@ fun BugReportBottomSheet(
                     Icon(
                         painter = painterResource(R.drawable.brand_github),
                         contentDescription = null,
-                        modifier = Modifier.size(18.dp)
+                        modifier = Modifier.size(24.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(stringResource(R.string.action_report_github))
@@ -269,7 +269,7 @@ fun BugReportBottomSheet(
                     Icon(
                         painter = painterResource(R.drawable.rounded_mail_24),
                         contentDescription = null,
-                        modifier = Modifier.size(18.dp)
+                        modifier = Modifier.size(24.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(stringResource(R.string.action_report_email))
@@ -293,7 +293,7 @@ fun BugReportBottomSheet(
                     Icon(
                         painter = painterResource(R.drawable.rounded_content_copy_24),
                         contentDescription = null,
-                        modifier = Modifier.size(18.dp)
+                        modifier = Modifier.size(24.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(stringResource(R.string.action_copy_clipboard))

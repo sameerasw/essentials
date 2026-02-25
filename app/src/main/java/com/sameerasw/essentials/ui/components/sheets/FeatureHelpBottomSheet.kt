@@ -62,7 +62,7 @@ fun FeatureHelpBottomSheet(
             ) {
                 Box(
                     modifier = Modifier
-                        .size(48.dp)
+                        .size(40.dp)
                         .background(
                             color = ColorUtil.getPastelColorFor(stringResource(feature.title)),
                             shape = CircleShape
@@ -72,7 +72,7 @@ fun FeatureHelpBottomSheet(
                     Icon(
                         painter = painterResource(id = feature.iconRes),
                         contentDescription = null,
-                        modifier = Modifier.size(32.dp),
+                        modifier = Modifier.size(24.dp),
                         tint = ColorUtil.getVibrantColorFor(stringResource(feature.title))
                     )
                 }

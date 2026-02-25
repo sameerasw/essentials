@@ -75,7 +75,7 @@ fun DIYScreen(
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
-                    contentPadding = PaddingValues(bottom = 80.dp)
+                    contentPadding = PaddingValues(bottom = 150.dp)
                 ) {
                     if (enabledAutomations.isNotEmpty()) {
                         item {
