@@ -56,7 +56,7 @@ fun DIYFloatingToolbar(
                 androidx.compose.foundation.layout.WindowInsets.navigationBars
             ),
         expanded = expanded,
-//        scrollBehavior = scrollBehavior,
+        scrollBehavior = scrollBehavior,
         colors = FloatingToolbarDefaults.vibrantFloatingToolbarColors(
             toolbarContentColor = MaterialTheme.colorScheme.onSurface,
             toolbarContainerColor = MaterialTheme.colorScheme.primary,
