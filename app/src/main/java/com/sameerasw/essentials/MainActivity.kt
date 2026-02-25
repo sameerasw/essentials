@@ -455,7 +455,7 @@ class MainActivity : FragmentActivity() {
                             DIYFloatingToolbar(
                                 modifier = Modifier
                                     .align(Alignment.BottomCenter)
-                                    .offset(y = -ScreenOffset - 12.dp)
+                                    .offset(y = -ScreenOffset)
                                     .zIndex(1f),
                                 currentPage = pagerState.currentPage,
                                 tabs = tabs,
