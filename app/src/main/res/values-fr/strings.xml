@@ -113,6 +113,8 @@
     <string name="content_desc_more_options">Plus d\'options</string>
     <string name="action_freeze_all">Geler toutes les applis</string>
     <string name="action_unfreeze_all">Dégeler toutes les applis</string>
+    <string name="action_export_freeze">Export frozen apps list</string>
+    <string name="action_import_freeze">Import frozen apps list</string>
     <string name="freeze_pick_apps_title">Choisir les applis à geler</string>
     <string name="freeze_pick_apps_desc">Choisir quelles applis peuvent être gelées</string>
     <string name="settings_section_automation">Automatisation</string>
