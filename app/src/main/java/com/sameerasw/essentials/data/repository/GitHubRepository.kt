@@ -70,9 +70,7 @@ class GitHubRepository {
             }
             if (connection.responseCode == 200) {
                 val data = connection.inputStream.bufferedReader().readText()
-                val listType =
-                    object : com.google.gson.reflect.TypeToken<List<GitHubRelease>>() {}.type
-                gson.fromJson(data, listType)
+                gson.fromJson(data, Array<GitHubRelease>::class.java).toList()
             } else if (connection.responseCode == 403 || connection.responseCode == 429) {
                 throw Exception("RATE_LIMIT")
             } else emptyList()

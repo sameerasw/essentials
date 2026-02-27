@@ -1,7 +1,6 @@
 package com.sameerasw.essentials.data.repository
 
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.sameerasw.essentials.domain.model.UpdateInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -30,8 +29,8 @@ class UpdateRepository {
             val releaseData = connection.inputStream.bufferedReader().readText()
 
             val release: Map<String, Any>? = if (isPreReleaseCheckEnabled) {
-                val listType = object : TypeToken<List<Map<String, Any>>>() {}.type
-                val releases: List<Map<String, Any>> = Gson().fromJson(releaseData, listType)
+                val releases = Gson().fromJson(releaseData, Array<Any>::class.java)
+                    .filterIsInstance<Map<String, Any>>()
 
                 // Find the true latest release using SemanticVersion comparison
                 releases.maxByOrNull { rel ->
@@ -39,8 +38,7 @@ class UpdateRepository {
                     SemanticVersion.parse(tagName)
                 }
             } else {
-                val mapType = object : TypeToken<Map<String, Any>>() {}.type
-                Gson().fromJson(releaseData, mapType)
+                Gson().fromJson(releaseData, Map::class.java) as? Map<String, Any>
             }
 
             if (release == null) return@withContext null

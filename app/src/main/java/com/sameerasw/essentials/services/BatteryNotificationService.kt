@@ -17,7 +17,6 @@ import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.utils.BatteryRingDrawer
 import com.sameerasw.essentials.utils.BluetoothBatteryUtils
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 class BatteryNotificationService : Service() {
 
@@ -141,8 +140,7 @@ class BatteryNotificationService : Service() {
 
         if (isShowBluetoothEnabled && !bluetoothJson.isNullOrEmpty() && bluetoothJson != "[]") {
             try {
-                val type = object : TypeToken<List<BluetoothBatteryUtils.BluetoothDeviceBattery>>() {}.type
-                val devices: List<BluetoothBatteryUtils.BluetoothDeviceBattery> = Gson().fromJson(bluetoothJson, type) ?: emptyList()
+                val devices: List<BluetoothBatteryUtils.BluetoothDeviceBattery> = Gson().fromJson(bluetoothJson, Array<BluetoothBatteryUtils.BluetoothDeviceBattery>::class.java).toList()
                 devices.forEach { device ->
                     val iconRes = when {
                         device.name.contains("watch", true) || device.name.contains("gear", true) || device.name.contains("fit", true) -> R.drawable.rounded_watch_24

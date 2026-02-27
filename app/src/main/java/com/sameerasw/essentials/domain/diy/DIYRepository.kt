@@ -72,7 +72,7 @@ object DIYRepository {
         val json = prefs?.getString(KEY_AUTOMATIONS, null)
         val loadedList: List<Automation> = if (json != null) {
             try {
-                val type = object : TypeToken<List<Automation>>() {}.type
+                val type = object : com.google.gson.reflect.TypeToken<List<Automation>>() {}.type
                 gson.fromJson(json, type) ?: emptyList()
             } catch (e: Exception) {
                 emptyList()

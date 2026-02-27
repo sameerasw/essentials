@@ -77,12 +77,10 @@ class NotificationListener : NotificationListenerService() {
                 )
                 val discoveredJson = prefs.getString("maps_discovered_channels", null)
                 val gson = com.google.gson.Gson()
-                val type = object :
-                    com.google.gson.reflect.TypeToken<List<com.sameerasw.essentials.domain.model.MapsChannel>>() {}.type
                 val discoveredChannels: MutableList<com.sameerasw.essentials.domain.model.MapsChannel> =
                     if (discoveredJson != null) {
                         try {
-                            gson.fromJson(discoveredJson, type) ?: mutableListOf()
+                            gson.fromJson(discoveredJson, Array<com.sameerasw.essentials.domain.model.MapsChannel>::class.java).toMutableList()
                         } catch (_: Exception) {
                             mutableListOf()
                         }
@@ -131,12 +129,10 @@ class NotificationListener : NotificationListenerService() {
                 )
                 val discoveredJson = prefs.getString("snooze_discovered_channels", null)
                 val gson = com.google.gson.Gson()
-                val type = object :
-                    com.google.gson.reflect.TypeToken<List<com.sameerasw.essentials.domain.model.SnoozeChannel>>() {}.type
                 val discoveredChannels: MutableList<com.sameerasw.essentials.domain.model.SnoozeChannel> =
                     if (discoveredJson != null) {
                         try {
-                            gson.fromJson(discoveredJson, type) ?: mutableListOf()
+                            gson.fromJson(discoveredJson, Array<com.sameerasw.essentials.domain.model.SnoozeChannel>::class.java).toMutableList()
                         } catch (_: Exception) {
                             mutableListOf()
                         }
@@ -566,9 +562,7 @@ class NotificationListener : NotificationListenerService() {
                     val blockedChannelsJson = prefs.getString("snooze_blocked_channels", null)
                     val blockedChannels: Set<String> = if (blockedChannelsJson != null) {
                         try {
-                            val type =
-                                object : com.google.gson.reflect.TypeToken<Set<String>>() {}.type
-                            com.google.gson.Gson().fromJson(blockedChannelsJson, type) ?: emptySet()
+                            com.google.gson.Gson().fromJson(blockedChannelsJson, Array<String>::class.java).toSet()
                         } catch (_: Exception) {
                             emptySet()
                         }
@@ -665,10 +659,8 @@ class NotificationListener : NotificationListenerService() {
                         val gson = com.google.gson.Gson()
                         val glowSidesJson = prefs.getString("edge_lighting_glow_sides", null)
                         val glowSides: Set<NotificationLightingSide> = if (glowSidesJson != null) {
-                            val type = object :
-                                com.google.gson.reflect.TypeToken<Set<NotificationLightingSide>>() {}.type
                             try {
-                                gson.fromJson(glowSidesJson, type)
+                                gson.fromJson(glowSidesJson, Array<NotificationLightingSide>::class.java).toSet()
                             } catch (_: Exception) {
                                 setOf(NotificationLightingSide.LEFT, NotificationLightingSide.RIGHT)
                             }
@@ -856,8 +848,7 @@ class NotificationListener : NotificationListenerService() {
         val detectionChannelsJson = prefs.getString("maps_detection_channels", null)
         val detectionChannels: Set<String> = if (detectionChannelsJson != null) {
             try {
-                val type = object : com.google.gson.reflect.TypeToken<Set<String>>() {}.type
-                com.google.gson.Gson().fromJson(detectionChannelsJson, type) ?: emptySet()
+                com.google.gson.Gson().fromJson(detectionChannelsJson, Array<String>::class.java).toSet()
             } catch (_: Exception) {
                 emptySet()
             }
@@ -917,10 +908,8 @@ class NotificationListener : NotificationListenerService() {
             // If no saved preferences, allow all apps by default
 
             val gson = com.google.gson.Gson()
-            val type = object :
-                com.google.gson.reflect.TypeToken<List<com.sameerasw.essentials.domain.model.AppSelection>>() {}.type
             val selectedApps: List<com.sameerasw.essentials.domain.model.AppSelection> =
-                gson.fromJson(json, type)
+                gson.fromJson(json, Array<com.sameerasw.essentials.domain.model.AppSelection>::class.java).toList()
 
             // Find the app in the saved list
             val app = selectedApps.find { it.packageName == packageName }
@@ -951,10 +940,8 @@ class NotificationListener : NotificationListenerService() {
             }
 
             val gson = com.google.gson.Gson()
-            val type = object :
-                com.google.gson.reflect.TypeToken<List<com.sameerasw.essentials.domain.model.AppSelection>>() {}.type
             val selectedApps: List<com.sameerasw.essentials.domain.model.AppSelection> =
-                gson.fromJson(json, type)
+                gson.fromJson(json, Array<com.sameerasw.essentials.domain.model.AppSelection>::class.java).toList()
 
             // Find the app in the saved list
             val app = selectedApps.find { it.packageName == packageName }
