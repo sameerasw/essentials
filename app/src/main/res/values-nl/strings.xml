@@ -113,6 +113,8 @@
     <string name="content_desc_more_options">Meer opties</string>
     <string name="action_freeze_all">Bevries alle apps</string>
     <string name="action_unfreeze_all">Ontdooi alle apps</string>
+    <string name="action_export_freeze">Export frozen apps list</string>
+    <string name="action_import_freeze">Import frozen apps list</string>
     <string name="freeze_pick_apps_title">Kies apps om te bevriezen</string>
     <string name="freeze_pick_apps_desc">Kies welke apps bevroren kunnen worden</string>
     <string name="settings_section_automation">Automatisatie</string>
