@@ -1,5 +1,7 @@
 package com.sameerasw.essentials.ui.composables.configs
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -68,6 +70,34 @@ fun FreezeSettingsUI(
     val pickedApps by viewModel.freezePickedApps
 
     var isMenuExpanded by remember { mutableStateOf(false) }
+
+    val exportLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.CreateDocument("application/json")
+    ) { uri ->
+        uri?.let {
+            try {
+                context.contentResolver.openOutputStream(it)?.use { stream ->
+                    viewModel.exportFreezeApps(stream)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    val importLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument()
+    ) { uri ->
+        uri?.let {
+            try {
+                context.contentResolver.openInputStream(it)?.use { stream ->
+                    viewModel.importFreezeApps(context, stream)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
 
     remember { MutableInteractionSource() }
     remember { MutableInteractionSource() }
@@ -194,6 +224,36 @@ fun FreezeSettingsUI(
                                 leadingIcon = {
                                     Icon(
                                         painter = painterResource(id = R.drawable.rounded_mode_cool_off_24),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.action_export_freeze)) },
+                                onClick = {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    exportLauncher.launch("freeze_apps_backup.json")
+                                    isMenuExpanded = false
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.rounded_arrow_warm_up_24),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.action_import_freeze)) },
+                                onClick = {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    importLauncher.launch(arrayOf("application/json"))
+                                    isMenuExpanded = false
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.rounded_arrow_cool_down_24),
                                         contentDescription = null,
                                         modifier = Modifier.size(18.dp)
                                     )

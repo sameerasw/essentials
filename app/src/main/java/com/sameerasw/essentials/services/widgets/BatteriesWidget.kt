@@ -126,10 +126,8 @@ class BatteriesWidget : GlanceAppWidget() {
                 // Bluetooth Items
                 if (hasBluetooth) {
                     try {
-                        val type = object :
-                            com.google.gson.reflect.TypeToken<List<com.sameerasw.essentials.utils.BluetoothBatteryUtils.BluetoothDeviceBattery>>() {}.type
                         val devices: List<com.sameerasw.essentials.utils.BluetoothBatteryUtils.BluetoothDeviceBattery> =
-                            com.google.gson.Gson().fromJson(bluetoothJson, type) ?: emptyList()
+                            com.google.gson.Gson().fromJson(bluetoothJson, Array<com.sameerasw.essentials.utils.BluetoothBatteryUtils.BluetoothDeviceBattery>::class.java).toList()
 
                         devices.forEach { device ->
                             val iconRes = when {

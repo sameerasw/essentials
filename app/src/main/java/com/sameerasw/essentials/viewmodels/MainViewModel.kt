@@ -2079,11 +2079,60 @@ class MainViewModel : ViewModel() {
         val success = settingsRepository.importConfigs(inputStream)
         if (success) {
             settingsRepository.syncSystemSettingsWithSaved()
+            com.sameerasw.essentials.domain.diy.DIYRepository.reloadAutomations()
+            refreshFreezePickedApps(context, silent = true)
             check(context)
         }
         return success
     }
 
+    fun exportFreezeApps(outputStream: java.io.OutputStream) {
+        try {
+            val apps = settingsRepository.loadFreezeSelectedApps()
+            val gson = com.google.gson.Gson()
+            val json = gson.toJson(apps)
+            outputStream.write(json.toByteArray())
+            outputStream.flush()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            try {
+                outputStream.close()
+            } catch (e: Exception) {
+            }
+        }
+    }
+
+    fun importFreezeApps(context: Context, inputStream: java.io.InputStream): Boolean {
+        return try {
+            val json = inputStream.bufferedReader().use { it.readText() }
+            val gson = com.google.gson.Gson()
+            val apps = gson.fromJson(json, Array<AppSelection>::class.java).toList()
+
+            // Filter out non-installed apps
+            val pm = context.packageManager
+            val installedApps = apps.filter { app ->
+                try {
+                    pm.getPackageInfo(app.packageName, 0)
+                    true
+                } catch (e: Exception) {
+                    false
+                }
+            }
+
+            settingsRepository.saveFreezeSelectedApps(installedApps)
+            refreshFreezePickedApps(context, silent = true)
+            true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        } finally {
+            try {
+                inputStream.close()
+            } catch (e: Exception) {
+            }
+        }
+    }
 
     fun generateBugReport(context: Context): String {
         val settingsJson = settingsRepository.getAllConfigsAsJsonString()

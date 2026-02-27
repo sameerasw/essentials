@@ -32,6 +32,7 @@
 # Kotlin Reflect
 -keep class kotlin.reflect.** { *; }
 -keep class com.sameerasw.essentials.domain.model.** { *; }
+-keep class com.sameerasw.essentials.domain.diy.** { *; }
 
 # Prevent over-minification of settings and registry classes
 -keep class com.sameerasw.essentials.data.repository.** { *; }

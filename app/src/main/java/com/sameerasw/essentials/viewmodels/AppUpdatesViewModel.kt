@@ -25,7 +25,6 @@ import java.io.OutputStream
 import java.net.HttpURLConnection
 import java.net.URL
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 class AppUpdatesViewModel : ViewModel() {
     private val gitHubRepository = GitHubRepository()
@@ -533,8 +532,7 @@ class AppUpdatesViewModel : ViewModel() {
         fun importTrackedRepos(context: Context, inputStream: InputStream): Boolean {
             return try {
                 val json = inputStream.bufferedReader().use { it.readText() }
-                val type = object : TypeToken<List<TrackedRepo>>() {}.type
-                val importedRepos: List<TrackedRepo> = gson.fromJson(json, type)
+                val importedRepos: List<TrackedRepo> = gson.fromJson(json, Array<TrackedRepo>::class.java).toList()
                 if (importedRepos.isNotEmpty()) {
                     val settingsRepo = SettingsRepository(context)
                     val currentRepos = settingsRepo.getTrackedRepos().toMutableList()

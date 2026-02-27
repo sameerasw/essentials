@@ -9,7 +9,6 @@ import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.sameerasw.essentials.domain.diy.Automation
 import com.sameerasw.essentials.domain.diy.DIYRepository
 import com.sameerasw.essentials.domain.model.AppSelection
@@ -78,7 +77,7 @@ class AppFlowHandler(
         val json = prefs.getString("app_lock_selected_apps", null)
         val selectedApps: List<AppSelection> = if (json != null) {
             try {
-                Gson().fromJson(json, object : TypeToken<List<AppSelection>>() {}.type)
+                Gson().fromJson(json, Array<AppSelection>::class.java).toList()
             } catch (_: Exception) {
                 emptyList()
             }
@@ -134,7 +133,7 @@ class AppFlowHandler(
         val json = prefs.getString("dynamic_night_light_selected_apps", null)
         val selectedApps: List<AppSelection> = if (json != null) {
             try {
-                Gson().fromJson(json, object : TypeToken<List<AppSelection>>() {}.type)
+                Gson().fromJson(json, Array<AppSelection>::class.java).toList()
             } catch (_: Exception) {
                 emptyList()
             }

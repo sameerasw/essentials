@@ -3,7 +3,6 @@ package com.sameerasw.essentials.data.repository
 import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
@@ -247,9 +246,8 @@ class SettingsRepository(private val context: Context) {
     fun getNotificationLightingGlowSides(): Set<NotificationLightingSide> {
         val json = prefs.getString(KEY_EDGE_LIGHTING_GLOW_SIDES, null)
         return if (json != null) {
-            val type = object : TypeToken<Set<NotificationLightingSide>>() {}.type
             try {
-                gson.fromJson(json, type)
+                gson.fromJson(json, Array<NotificationLightingSide>::class.java).toSet()
             } catch (e: Exception) {
                 setOf(NotificationLightingSide.LEFT, NotificationLightingSide.RIGHT)
             }
@@ -267,7 +265,7 @@ class SettingsRepository(private val context: Context) {
         val json = prefs.getString(KEY_FREEZE_AUTO_EXCLUDED_APPS, null)
         return if (json != null) {
             try {
-                gson.fromJson(json, object : TypeToken<Set<String>>() {}.type) ?: emptySet()
+                gson.fromJson(json, Array<String>::class.java).toSet()
             } catch (e: Exception) {
                 emptySet()
             }
@@ -310,7 +308,7 @@ class SettingsRepository(private val context: Context) {
         val json = prefs.getString(KEY_CALENDAR_SYNC_SELECTED_CALENDARS, null)
         return if (json != null) {
             try {
-                gson.fromJson(json, object : TypeToken<Set<String>>() {}.type) ?: emptySet()
+                gson.fromJson(json, Array<String>::class.java).toSet()
             } catch (e: Exception) {
                 emptySet()
             }
@@ -332,9 +330,8 @@ class SettingsRepository(private val context: Context) {
     private fun loadAppSelection(key: String): List<AppSelection> {
         val json = prefs.getString(key, null)
         return if (json != null) {
-            val type = object : TypeToken<List<AppSelection>>() {}.type
             try {
-                gson.fromJson(json, type) ?: emptyList()
+                gson.fromJson(json, Array<AppSelection>::class.java).toList()
             } catch (e: Exception) {
                 emptyList()
             }
@@ -413,10 +410,8 @@ class SettingsRepository(private val context: Context) {
     fun loadSnoozeDiscoveredChannels(): List<com.sameerasw.essentials.domain.model.SnoozeChannel> {
         val json = prefs.getString(KEY_SNOOZE_DISCOVERED_CHANNELS, null)
         return if (json != null) {
-            val type = object :
-                TypeToken<List<com.sameerasw.essentials.domain.model.SnoozeChannel>>() {}.type
             try {
-                gson.fromJson(json, type) ?: emptyList()
+                gson.fromJson(json, Array<com.sameerasw.essentials.domain.model.SnoozeChannel>::class.java).toList()
             } catch (e: Exception) {
                 emptyList()
             }
@@ -433,9 +428,8 @@ class SettingsRepository(private val context: Context) {
     fun loadSnoozeBlockedChannels(): Set<String> {
         val json = prefs.getString(KEY_SNOOZE_BLOCKED_CHANNELS, null)
         return if (json != null) {
-            val type = object : TypeToken<Set<String>>() {}.type
             try {
-                gson.fromJson(json, type) ?: emptySet()
+                gson.fromJson(json, Array<String>::class.java).toSet()
             } catch (e: Exception) {
                 emptySet()
             }
@@ -453,10 +447,8 @@ class SettingsRepository(private val context: Context) {
     fun loadMapsDiscoveredChannels(): List<com.sameerasw.essentials.domain.model.MapsChannel> {
         val json = prefs.getString(KEY_MAPS_DISCOVERED_CHANNELS, null)
         return if (json != null) {
-            val type = object :
-                TypeToken<List<com.sameerasw.essentials.domain.model.MapsChannel>>() {}.type
             try {
-                gson.fromJson(json, type) ?: emptyList()
+                gson.fromJson(json, Array<com.sameerasw.essentials.domain.model.MapsChannel>::class.java).toList()
             } catch (e: Exception) {
                 emptyList()
             }
@@ -473,9 +465,8 @@ class SettingsRepository(private val context: Context) {
     fun loadMapsDetectionChannels(): Set<String> {
         val json = prefs.getString(KEY_MAPS_DETECTION_CHANNELS, null)
         return if (json != null) {
-            val type = object : TypeToken<Set<String>>() {}.type
             try {
-                gson.fromJson(json, type) ?: emptySet()
+                gson.fromJson(json, Array<String>::class.java).toSet()
             } catch (e: Exception) {
                 emptySet()
             }
@@ -510,9 +501,8 @@ class SettingsRepository(private val context: Context) {
                 val wrapperMap = mutableMapOf<String, Map<String, Any>>()
 
                 p.all.forEach { (key, value) ->
-                    // Skip app lists as requested, and stale data
-                    if (key.endsWith("_selected_apps") || key == "freeze_auto_excluded_apps" ||
-                        key.startsWith("mac_battery_") || key == "airsync_mac_connected" ||
+                    if (key == "freeze_auto_excluded_apps" || key.endsWith("_selected_apps")) {
+                    } else if (key.startsWith("mac_battery_") || key == "airsync_mac_connected" ||
                         key == KEY_SNOOZE_DISCOVERED_CHANNELS || key == KEY_MAPS_DISCOVERED_CHANNELS
                     ) {
                         return@forEach
@@ -554,8 +544,7 @@ class SettingsRepository(private val context: Context) {
     fun importConfigs(inputStream: java.io.InputStream): Boolean {
         return try {
             val json = inputStream.bufferedReader().use { it.readText() }
-            val type = object : TypeToken<Map<String, Map<String, Map<String, Any>>>>() {}.type
-            val allConfigs: Map<String, Map<String, Map<String, Any>>> = gson.fromJson(json, type)
+            val allConfigs: Map<String, Map<String, Map<String, Any>>> = gson.fromJson(json, Map::class.java) as Map<String, Map<String, Map<String, Any>>>
 
             allConfigs.forEach { (fileName, prefWrapper) ->
                 val p = context.getSharedPreferences(fileName, Context.MODE_PRIVATE)
@@ -599,10 +588,8 @@ class SettingsRepository(private val context: Context) {
 
     fun getBluetoothDevicesBattery(): List<com.sameerasw.essentials.utils.BluetoothBatteryUtils.BluetoothDeviceBattery> {
         val json = prefs.getString(KEY_BLUETOOTH_DEVICES_BATTERY, null) ?: return emptyList()
-        val type = object :
-            TypeToken<List<com.sameerasw.essentials.utils.BluetoothBatteryUtils.BluetoothDeviceBattery>>() {}.type
         return try {
-            gson.fromJson(json, type) ?: emptyList()
+            gson.fromJson(json, Array<com.sameerasw.essentials.utils.BluetoothBatteryUtils.BluetoothDeviceBattery>::class.java).toList()
         } catch (e: Exception) {
             emptyList()
         }
@@ -630,7 +617,7 @@ class SettingsRepository(private val context: Context) {
         val json = prefs.getString(KEY_PINNED_FEATURES, null)
         return if (json != null) {
             try {
-                gson.fromJson(json, object : TypeToken<List<String>>() {}.type) ?: emptyList()
+                gson.fromJson(json, Array<String>::class.java).toList()
             } catch (e: Exception) {
                 emptyList()
             }
@@ -644,9 +631,8 @@ class SettingsRepository(private val context: Context) {
 
     fun getTrackedRepos(): List<TrackedRepo> {
         val json = prefs.getString(KEY_TRACKED_REPOS, null) ?: return emptyList()
-        val type = object : TypeToken<List<TrackedRepo>>() {}.type
         return try {
-            gson.fromJson(json, type)
+            gson.fromJson(json, Array<TrackedRepo>::class.java).toList()
         } catch (e: Exception) {
             emptyList()
         }

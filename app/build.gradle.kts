@@ -21,13 +21,30 @@ android {
         applicationId = "com.sameerasw.essentials"
         minSdk = 26
         targetSdk = 36
-        versionCode = 29
-        versionName = "11.5"
+        versionCode = 30
+        versionName = "11.6"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
+
+//        optimized dev build
+
+//          debug {
+//             isMinifyEnabled = true
+//             isShrinkResources = true
+//             isDebuggable = false
+//
+//             proguardFiles(
+//                 getDefaultProguardFile("proguard-android-optimize.txt"),
+//                 "proguard-rules.pro"
+//             )
+//          }
+
+        // end
+
+
         release {
             isMinifyEnabled = true
             isShrinkResources = true

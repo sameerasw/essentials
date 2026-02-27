@@ -43,15 +43,11 @@ object FreezeManager {
 
         if (json != null) {
             val gson = com.google.gson.Gson()
-            val type = object :
-                com.google.gson.reflect.TypeToken<List<com.sameerasw.essentials.domain.model.AppSelection>>() {}.type
-            val excludedType = object : com.google.gson.reflect.TypeToken<Set<String>>() {}.type
-
             try {
                 val apps: List<com.sameerasw.essentials.domain.model.AppSelection> =
-                    gson.fromJson(json, type)
+                    gson.fromJson(json, Array<com.sameerasw.essentials.domain.model.AppSelection>::class.java).toList()
                 val excludedSet: Set<String> = if (excludedJson != null) {
-                    gson.fromJson(excludedJson, excludedType) ?: emptySet()
+                    gson.fromJson(excludedJson, Array<String>::class.java).toSet()
                 } else emptySet()
 
                 apps.forEach { app ->
@@ -146,11 +142,9 @@ object FreezeManager {
         val json = prefs.getString("freeze_selected_apps", null)
         if (json != null) {
             val gson = com.google.gson.Gson()
-            val type = object :
-                com.google.gson.reflect.TypeToken<List<com.sameerasw.essentials.domain.model.AppSelection>>() {}.type
             try {
                 val apps: List<com.sameerasw.essentials.domain.model.AppSelection> =
-                    gson.fromJson(json, type)
+                    gson.fromJson(json, Array<com.sameerasw.essentials.domain.model.AppSelection>::class.java).toList()
                 apps.forEach { app ->
                     freezeApp(context, app.packageName)
                 }
@@ -170,15 +164,11 @@ object FreezeManager {
 
         if (json != null) {
             val gson = com.google.gson.Gson()
-            val type = object :
-                com.google.gson.reflect.TypeToken<List<com.sameerasw.essentials.domain.model.AppSelection>>() {}.type
-            val excludedType = object : com.google.gson.reflect.TypeToken<Set<String>>() {}.type
-
             try {
                 val apps: List<com.sameerasw.essentials.domain.model.AppSelection> =
-                    gson.fromJson(json, type)
+                    gson.fromJson(json, Array<com.sameerasw.essentials.domain.model.AppSelection>::class.java).toList()
                 val excludedSet: Set<String> = if (excludedJson != null) {
-                    gson.fromJson(excludedJson, excludedType) ?: emptySet()
+                    gson.fromJson(excludedJson, Array<String>::class.java).toSet()
                 } else emptySet()
 
                 apps.forEach { app ->
@@ -200,11 +190,9 @@ object FreezeManager {
         val json = prefs.getString("freeze_selected_apps", null)
         if (json != null) {
             val gson = com.google.gson.Gson()
-            val type = object :
-                com.google.gson.reflect.TypeToken<List<com.sameerasw.essentials.domain.model.AppSelection>>() {}.type
             try {
                 val apps: List<com.sameerasw.essentials.domain.model.AppSelection> =
-                    gson.fromJson(json, type)
+                    gson.fromJson(json, Array<com.sameerasw.essentials.domain.model.AppSelection>::class.java).toList()
                 apps.forEach { app ->
                     unfreezeApp(context, app.packageName)
                 }
