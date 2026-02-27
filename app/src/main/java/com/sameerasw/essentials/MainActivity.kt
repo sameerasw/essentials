@@ -92,6 +92,8 @@ import com.sameerasw.essentials.ui.components.sheets.AddRepoBottomSheet
 import com.sameerasw.essentials.ui.components.sheets.GitHubAuthSheet
 import com.sameerasw.essentials.ui.components.sheets.InstructionsBottomSheet
 import com.sameerasw.essentials.ui.components.sheets.UpdateBottomSheet
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.composables.DIYScreen
 import com.sameerasw.essentials.ui.composables.FreezeGridUI
 import com.sameerasw.essentials.ui.composables.SetupFeatures
@@ -233,6 +235,7 @@ class MainActivity : FragmentActivity() {
                     val updateInfo by viewModel.updateInfo
 
                     var showGitHubAuthSheet by remember { mutableStateOf(false) }
+                    var showNewAutomationSheet by remember { mutableStateOf(false) }
                     val gitHubToken by viewModel.gitHubToken
                     val gitHubUser by gitHubAuthViewModel.currentUser
 
@@ -426,8 +429,8 @@ class MainActivity : FragmentActivity() {
                                 subtitle = currentTab.subtitle,
                                 hasBack = false,
                                 hasSearch = true,
-                                hasSettings = true,
-                                hasHelp = currentTab != DIYTabs.APPS,
+                                hasSettings = currentTab == DIYTabs.ESSENTIALS || currentTab == DIYTabs.FREEZE,
+                                hasHelp = currentTab == DIYTabs.ESSENTIALS,
                                 helpIconRes = R.drawable.rounded_help_24,
                                 helpContentDescription = R.string.action_help_guide,
                                 onSearchClick = { searchRequested = true },
@@ -453,32 +456,136 @@ class MainActivity : FragmentActivity() {
                                     showInstructionsSheet = true
                                 },
                                 actions = {
-                                    if (currentTab == DIYTabs.APPS) {
-                                        IconButton(
-                                            onClick = {
-                                                HapticUtil.performVirtualKeyHaptic(view)
-                                                updatesViewModel.checkForUpdates(context)
-                                            },
-                                            enabled = refreshingRepoIds.isEmpty(),
-                                            colors = IconButtonDefaults.iconButtonColors(
-                                                containerColor = MaterialTheme.colorScheme.surfaceBright
-                                            ),
-                                            modifier = Modifier.size(40.dp)
-                                        ) {
-                                            if (refreshingRepoIds.isNotEmpty()) {
-                                                CircularWavyProgressIndicator(
-                                                    progress = { animatedProgress },
-                                                    modifier = Modifier.size(24.dp)
+                                    when (currentTab) {
+                                        DIYTabs.FREEZE -> {
+                                            var showFreezeMenu by remember { mutableStateOf(false) }
+                                            Box {
+                                                IconButton(
+                                                    onClick = {
+                                                        HapticUtil.performVirtualKeyHaptic(view)
+                                                        showFreezeMenu = true
+                                                    },
+                                                    colors = IconButtonDefaults.iconButtonColors(
+                                                        containerColor = MaterialTheme.colorScheme.surfaceBright
+                                                    )
+                                                ) {
+                                                    Icon(
+                                                        painter = painterResource(id = R.drawable.rounded_mode_cool_24),
+                                                        contentDescription = stringResource(R.string.tab_freeze)
+                                                    )
+                                                }
+
+                                                SegmentedDropdownMenu(
+                                                    expanded = showFreezeMenu,
+                                                    onDismissRequest = { showFreezeMenu = false }
+                                                ) {
+                                                    SegmentedDropdownMenuItem(
+                                                        text = { Text(stringResource(R.string.action_freeze_all)) },
+                                                        onClick = {
+                                                            showFreezeMenu = false
+                                                            viewModel.freezeAllApps(context)
+                                                        },
+                                                        leadingIcon = {
+                                                            Icon(
+                                                                painter = painterResource(id = R.drawable.rounded_mode_cool_24),
+                                                                contentDescription = null
+                                                            )
+                                                        }
+                                                    )
+                                                    SegmentedDropdownMenuItem(
+                                                        text = { Text(stringResource(R.string.action_unfreeze_all)) },
+                                                        onClick = {
+                                                            showFreezeMenu = false
+                                                            viewModel.unfreezeAllApps(context)
+                                                        },
+                                                        leadingIcon = {
+                                                            Icon(
+                                                                painter = painterResource(id = R.drawable.rounded_mode_cool_off_24),
+                                                                contentDescription = null
+                                                            )
+                                                        }
+                                                    )
+                                                    SegmentedDropdownMenuItem(
+                                                        text = { Text("Freeze Automatic") },
+                                                        onClick = {
+                                                            showFreezeMenu = false
+                                                            viewModel.freezeAutomaticApps(context)
+                                                        },
+                                                        leadingIcon = {
+                                                            Icon(
+                                                                painter = painterResource(id = R.drawable.rounded_nest_farsight_cool_24),
+                                                                contentDescription = null
+                                                            )
+                                                        }
+                                                    )
+                                                }
+                                            }
+                                            Spacer(modifier = Modifier.width(8.dp))
+                                        }
+
+                                        DIYTabs.DIY -> {
+                                            IconButton(
+                                                onClick = {
+                                                    HapticUtil.performVirtualKeyHaptic(view)
+                                                    showNewAutomationSheet = true
+                                                },
+                                                colors = IconButtonDefaults.iconButtonColors(
+                                                    containerColor = MaterialTheme.colorScheme.surfaceBright
                                                 )
-                                            } else {
+                                            ) {
                                                 Icon(
-                                                    painter = painterResource(id = R.drawable.rounded_refresh_24),
-                                                    contentDescription = stringResource(R.string.action_refresh),
-                                                    modifier = Modifier.size(24.dp)
+                                                    painter = painterResource(id = R.drawable.rounded_add_24),
+                                                    contentDescription = stringResource(R.string.diy_editor_new_title)
                                                 )
                                             }
+                                            Spacer(modifier = Modifier.width(8.dp))
                                         }
-                                        Spacer(modifier = Modifier.width(8.dp))
+
+                                        DIYTabs.APPS -> {
+                                            IconButton(
+                                                onClick = {
+                                                    HapticUtil.performVirtualKeyHaptic(view)
+                                                    showAddRepoSheet = true
+                                                },
+                                                colors = IconButtonDefaults.iconButtonColors(
+                                                    containerColor = MaterialTheme.colorScheme.surfaceBright
+                                                )
+                                            ) {
+                                                Icon(
+                                                    painter = painterResource(id = R.drawable.rounded_add_24),
+                                                    contentDescription = stringResource(R.string.action_add_repo)
+                                                )
+                                            }
+                                            Spacer(modifier = Modifier.width(8.dp))
+
+                                            IconButton(
+                                                onClick = {
+                                                    HapticUtil.performVirtualKeyHaptic(view)
+                                                    updatesViewModel.checkForUpdates(context)
+                                                },
+                                                enabled = refreshingRepoIds.isEmpty(),
+                                                colors = IconButtonDefaults.iconButtonColors(
+                                                    containerColor = MaterialTheme.colorScheme.surfaceBright
+                                                ),
+                                                modifier = Modifier.size(40.dp)
+                                            ) {
+                                                if (refreshingRepoIds.isNotEmpty()) {
+                                                    CircularWavyProgressIndicator(
+                                                        progress = { animatedProgress },
+                                                        modifier = Modifier.size(24.dp)
+                                                    )
+                                                } else {
+                                                    Icon(
+                                                        painter = painterResource(id = R.drawable.rounded_refresh_24),
+                                                        contentDescription = stringResource(R.string.action_refresh),
+                                                        modifier = Modifier.size(24.dp)
+                                                    )
+                                                }
+                                            }
+                                            Spacer(modifier = Modifier.width(8.dp))
+                                        }
+
+                                        else -> {}
                                     }
                                 },
                                 hasUpdateAvailable = isUpdateAvailable,
@@ -545,7 +652,9 @@ class MainActivity : FragmentActivity() {
 
                                     DIYTabs.DIY -> {
                                         DIYScreen(
-                                            modifier = Modifier.padding(innerPadding)
+                                            modifier = Modifier.padding(innerPadding),
+                                            showNewAutomationSheet = showNewAutomationSheet,
+                                            onDismissNewAutomationSheet = { showNewAutomationSheet = false }
                                         )
                                     }
 
@@ -816,29 +925,9 @@ class MainActivity : FragmentActivity() {
                                                 }
                                             }
 
-                                            // FAB
-                                            FloatingActionButton(
-                                                onClick = {
-                                                    HapticUtil.performMediumHaptic(view)
-                                                    showAddRepoSheet = true
-                                                },
-                                                modifier = Modifier
-                                                    .align(Alignment.BottomEnd)
-                                                    .padding(
-                                                        bottom = 150.dp,
-                                                        end = 32.dp
-                                                    ),
-                                                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                                                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                                            ) {
-                                                Icon(
-                                                    painter = painterResource(id = R.drawable.rounded_add_24),
-                                                    contentDescription = stringResource(R.string.action_add_repo)
-                                                )
                                             }
                                         }
                                     }
-                                }
                             }
                         }
                     }

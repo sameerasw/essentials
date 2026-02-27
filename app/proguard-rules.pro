@@ -19,3 +19,20 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Gson rules
+-keep class com.google.gson.** { *; }
+-keepattributes Signature
+-keepattributes *Annotation*
+
+# Shizuku rules
+-keep class rikka.shizuku.** { *; }
+-keep class dev.rikka.shizuku.** { *; }
+
+# Kotlin Reflect
+-keep class kotlin.reflect.** { *; }
+-keep class com.sameerasw.essentials.domain.model.** { *; }
+
+# Prevent over-minification of settings and registry classes
+-keep class com.sameerasw.essentials.data.repository.** { *; }
+-keep class com.sameerasw.essentials.domain.registry.** { *; }
