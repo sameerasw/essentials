@@ -192,6 +192,9 @@
     <string name="tile_private_dns_auto">自動</string>
     <string name="tile_private_dns_off">OFF</string>
     <string name="tile_usb_debugging">USBデバッグ</string>
+    <string name="tile_color_picker">Color Picker</string>
+    <string name="toast_eyedropper_failed">Are you sure you\'re on Androdi 17? (╯°_°）╯</string>
+    <string name="subtitle_eye_dropper">Eye Dropper</string>
     <string name="on">オン</string>
     <string name="off">オフ</string>
     <string name="private_dns_custom_title">カスタムプライベートDNS</string>
@@ -596,6 +599,7 @@
     <string name="about_desc_adaptive_brightness">明るさ自動調整の切り替え\n\n周囲の明るさに基づく画面の明るさの自動調整を有効または無効にします。</string>
     <string name="about_desc_private_dns">プライベートDNSを切り替えるます。\n\nオフ、自動、プライベートDNSプロバイダーモードを切り替えます。</string>
     <string name="about_desc_usb_debugging">USBデバッグを切り替えます。\n\nクイック設定から直接ADBデバッグアクセスを有効または無効にします。</string>
+    <string name="about_desc_color_picker">Launch the eye dropper tool to pick colors introduced in Android 17 BETA 2</string>
     <string name="action_download">ダウンロード</string>
     <!-- DIY Section -->
     <string name="diy_trigger_screen_off">画面オフ</string>
