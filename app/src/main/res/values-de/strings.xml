@@ -192,6 +192,9 @@
     <string name="tile_private_dns_auto">Auto</string>
     <string name="tile_private_dns_off">Aus</string>
     <string name="tile_usb_debugging">USB-Debugging</string>
+    <string name="tile_color_picker">Color Picker</string>
+    <string name="toast_eyedropper_failed">Are you sure you\'re on Androdi 17? (╯°_°）╯</string>
+    <string name="subtitle_eye_dropper">Eye Dropper</string>
     <string name="on">An</string>
     <string name="off">Aus</string>
     <string name="private_dns_custom_title">Custom Private DNS</string>
@@ -596,6 +599,7 @@
     <string name="about_desc_adaptive_brightness">Toggle adaptive brightness.\n\nEnable or disable automatic screen brightness adjustment based on ambient light.</string>
     <string name="about_desc_private_dns">Toggle Private DNS.\n\nCycle through Off, Automatic, and Private DNS provider modes.</string>
     <string name="about_desc_usb_debugging">Toggle USB Debugging.\n\nEnable or disable ADB debugging access directly from the quick settings.</string>
+    <string name="about_desc_color_picker">Launch the eye dropper tool to pick colors introduced in Android 17 BETA 2</string>
     <string name="action_download">Herunterladen</string>
     <!-- DIY Section -->
     <string name="diy_trigger_screen_off">Display aus</string>
