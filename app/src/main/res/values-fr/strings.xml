@@ -192,6 +192,9 @@
     <string name="tile_private_dns_auto">Auto</string>
     <string name="tile_private_dns_off">Désactivé</string>
     <string name="tile_usb_debugging">Débogage USB</string>
+    <string name="tile_color_picker">Color Picker</string>
+    <string name="toast_eyedropper_failed">Are you sure you\'re on Androdi 17? (╯°_°）╯</string>
+    <string name="subtitle_eye_dropper">Eye Dropper</string>
     <string name="on">Activer</string>
     <string name="off">Désactiver</string>
     <string name="private_dns_custom_title">DNS Privé personnalisé</string>
@@ -596,6 +599,7 @@
     <string name="about_desc_adaptive_brightness">Activez ou désactivez la luminosité adaptative.\n\nActivez ou désactivez l\'ajustement automatiquement de la luminosité de l\'écran en fonction de la lumière ambiante.</string>
     <string name="about_desc_private_dns">Activez ou désactivez le DNS Privé.\n\nChangez entre les modes désactivé, automatique et nom d\'hôte. </string>
     <string name="about_desc_usb_debugging">Activez ou désactivez le débogage USB.\n\nActivez ou désactiver l\'accès au débogage ADB directement depuis les \"Réglages rapides\".</string>
+    <string name="about_desc_color_picker">Launch the eye dropper tool to pick colors introduced in Android 17 BETA 2</string>
     <string name="action_download">Télécharger</string>
     <!-- DIY Section -->
     <string name="diy_trigger_screen_off">Écran éteint</string>
