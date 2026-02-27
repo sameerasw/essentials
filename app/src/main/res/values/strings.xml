@@ -117,6 +117,8 @@
     <string name="content_desc_more_options">More options</string>
     <string name="action_freeze_all">Freeze all apps</string>
     <string name="action_unfreeze_all">Unfreeze all apps</string>
+    <string name="action_export_freeze">Export frozen apps list</string>
+    <string name="action_import_freeze">Import frozen apps list</string>
     <string name="freeze_pick_apps_title">Pick apps to freeze</string>
     <string name="freeze_pick_apps_desc">Choose which apps can be frozen</string>
     <string name="settings_section_automation">Automation</string>
