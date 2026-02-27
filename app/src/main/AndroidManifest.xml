@@ -30,8 +30,8 @@
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
     <uses-permission android:name="android.permission.POST_PROMOTED_NOTIFICATIONS" tools:ignore="UnusedAttribute" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
-    <permission android:name="${applicationId}.permission.ESSENTIALS_AIRSYNC_BRIDGE" android:protectionLevel="signature" />
-    <uses-permission android:name="${applicationId}.permission.ESSENTIALS_AIRSYNC_BRIDGE" />
+    <permission android:name="com.sameerasw.permission.ESSENTIALS_AIRSYNC_BRIDGE" android:protectionLevel="signature" />
+    <uses-permission android:name="com.sameerasw.permission.ESSENTIALS_AIRSYNC_BRIDGE" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
 
