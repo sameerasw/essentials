@@ -113,6 +113,8 @@
     <string name="content_desc_more_options">Weitere Optionen</string>
     <string name="action_freeze_all">Friere alle Apps ein</string>
     <string name="action_unfreeze_all">Taue alle Apps auf</string>
+    <string name="action_export_freeze">Export frozen apps list</string>
+    <string name="action_import_freeze">Import frozen apps list</string>
     <string name="freeze_pick_apps_title">Wähle Apps zum Einfrieren</string>
     <string name="freeze_pick_apps_desc">Wähle, welche Apps eingefroren werden können</string>
     <string name="settings_section_automation">Automatisierung</string>
