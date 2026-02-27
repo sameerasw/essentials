@@ -195,14 +195,14 @@ class AppFreezingActivity : ComponentActivity() {
                             Column(
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .padding(32.dp),
+                                    .padding(16.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 verticalArrangement = Arrangement.Center
                             ) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.rounded_mode_cool_24),
                                     contentDescription = null,
-                                    modifier = Modifier.size(64.dp),
+                                    modifier = Modifier.size(24.dp),
                                     tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
                                 )
                                 Spacer(modifier = Modifier.height(16.dp))
@@ -216,7 +216,7 @@ class AppFreezingActivity : ComponentActivity() {
                         } else {
                             RoundedCardContainer(
                                 modifier = Modifier
-                                    .padding(24.dp)
+                                    .padding(16.dp)
                             ) {
                                 LazyVerticalGrid(
                                     columns = GridCells.Adaptive(minSize = 88.dp),
@@ -334,7 +334,6 @@ fun AppGridItem(
             Text(
                 text = app.appName,
                 style = MaterialTheme.typography.labelSmall,
-                fontSize = 11.sp,
                 textAlign = TextAlign.Center,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,

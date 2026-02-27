@@ -52,12 +52,15 @@ fun initPermissionRegistry() {
     // Bluetooth permissions
     PermissionRegistry.register("BLUETOOTH_CONNECT", R.string.feat_batteries_title)
     PermissionRegistry.register("BLUETOOTH_SCAN", R.string.feat_batteries_title)
+    PermissionRegistry.register("BLUETOOTH_CONNECT", R.string.feat_battery_notification_title)
+    PermissionRegistry.register("BLUETOOTH_SCAN", R.string.feat_battery_notification_title)
 
     // Draw over other apps permission
     PermissionRegistry.register("DRAW_OVER_OTHER_APPS", R.string.feat_notification_lighting_title)
 
     // Post notifications permission
     PermissionRegistry.register("POST_NOTIFICATIONS", R.string.feat_caffeinate_title)
+    PermissionRegistry.register("POST_NOTIFICATIONS", R.string.feat_battery_notification_title)
 
     // Read phone state permission
     PermissionRegistry.register("READ_PHONE_STATE", R.string.search_smart_data_title)

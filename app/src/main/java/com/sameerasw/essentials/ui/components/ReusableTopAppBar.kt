@@ -166,13 +166,12 @@ fun ReusableTopAppBar(
                 },
                 colors = IconButtonDefaults.iconButtonColors(
                     containerColor = MaterialTheme.colorScheme.surfaceBright
-                ),
-                modifier = Modifier.size(48.dp)
+                )
             ) {
                 Icon(
                     painter = painterResource(id = backIconRes),
                     contentDescription = stringResource(R.string.action_back),
-                    modifier = Modifier.size(32.dp)
+                    modifier = Modifier.size(24.dp)
                 )
             }
         }
@@ -190,14 +189,13 @@ fun ReusableTopAppBar(
                 },
                 colors = IconButtonDefaults.iconButtonColors(
                     containerColor = MaterialTheme.colorScheme.surfaceBright
-                ),
-                modifier = Modifier.size(48.dp)
+                )
             ) {
                 Box {
                     Icon(
                         painter = painterResource(id = helpIconRes),
                         contentDescription = stringResource(helpContentDescription),
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(24.dp)
                     )
                     if (hasHelpBadge) {
                         Box(
@@ -224,14 +222,13 @@ fun ReusableTopAppBar(
                 },
                 colors = IconButtonDefaults.iconButtonColors(
                     containerColor = MaterialTheme.colorScheme.surfaceBright
-                ),
-                modifier = Modifier.size(48.dp)
+                )
             ) {
                 Box {
                     Icon(
                         painter = painterResource(id = R.drawable.rounded_mobile_arrow_down_24),
                         contentDescription = stringResource(R.string.update_available_title),
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(24.dp)
                     )
                     // Red dot
                     Box(
@@ -269,7 +266,7 @@ fun ReusableTopAppBar(
                     colors = IconButtonDefaults.iconButtonColors(
                         containerColor = MaterialTheme.colorScheme.surfaceBright
                     ),
-                    modifier = Modifier.size(48.dp)
+                    modifier = Modifier.size(40.dp)
                 ) {
                     if (gitHubUser != null) {
                         AsyncImage(
@@ -277,14 +274,14 @@ fun ReusableTopAppBar(
                             contentDescription = stringResource(R.string.action_profile),
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
-                                .size(32.dp)
+                                .size(24.dp)
                                 .clip(CircleShape)
                         )
                     } else {
                         Icon(
                             painter = painterResource(id = R.drawable.brand_github),
                             contentDescription = stringResource(R.string.action_sign_in_github),
-                            modifier = Modifier.size(32.dp)
+                            modifier = Modifier.size(24.dp)
                         )
                     }
                 }
@@ -325,13 +322,12 @@ fun ReusableTopAppBar(
                 },
                 colors = IconButtonDefaults.iconButtonColors(
                     containerColor = MaterialTheme.colorScheme.surfaceBright
-                ),
-                modifier = Modifier.size(48.dp)
+                )
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.rounded_settings_heart_24),
                     contentDescription = stringResource(R.string.content_desc_settings),
-                    modifier = Modifier.size(32.dp)
+                    modifier = Modifier.size(24.dp)
                 )
             }
         }
@@ -354,8 +350,8 @@ fun ReusableTopAppBar(
                 containerColor = containerColor
             ),
             modifier = Modifier.padding(horizontal = 8.dp),
-            expandedHeight = if (subtitle != null) 200.dp else 160.dp,
-            collapsedHeight = 64.dp,
+            expandedHeight = if (subtitle != null) 152.dp else 120.dp,
+            collapsedHeight = TopAppBarDefaults.LargeAppBarCollapsedHeight,
             title = titleContent,
             navigationIcon = navigationIconContent,
             actions = actionsContent,

@@ -139,7 +139,7 @@ fun FlashlightIntensityOverlay(onDismiss: () -> Unit) {
     ) {
         Card(
             modifier = Modifier
-                .padding(24.dp)
+                .padding(16.dp)
                 .fillMaxWidth()
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
@@ -152,7 +152,7 @@ fun FlashlightIntensityOverlay(onDismiss: () -> Unit) {
             )
         ) {
             Column(
-                modifier = Modifier.padding(24.dp),
+                modifier = Modifier.padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
@@ -160,7 +160,7 @@ fun FlashlightIntensityOverlay(onDismiss: () -> Unit) {
                     painter = painterResource(id = R.drawable.rounded_flashlight_on_24),
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(48.dp)
+                    modifier = Modifier.size(24.dp)
                 )
 
                 Text(

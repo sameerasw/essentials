@@ -780,7 +780,7 @@ fun SetupFeatures(
             .pointerInput(Unit) {
                 detectTapGestures(onTap = { focusManager.clearFocus() })
             }
-            .padding(vertical = 24.dp),
+            .padding(top = 16.dp, bottom = 150.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
@@ -791,7 +791,7 @@ fun SetupFeatures(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(24.dp)
+                .padding(16.dp)
                 .focusRequester(focusRequester)
                 .onFocusChanged { isFocused = it.isFocused },
             leadingIcon = {

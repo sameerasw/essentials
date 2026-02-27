@@ -102,6 +102,7 @@ class SettingsActivity : ComponentActivity() {
             val isPitchBlackThemeEnabled by viewModel.isPitchBlackThemeEnabled
             EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
                 val context = LocalContext.current
+                val view = LocalView.current
                 val scrollBehavior =
                     TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
@@ -136,16 +137,19 @@ class SettingsActivity : ComponentActivity() {
                             scrollBehavior = scrollBehavior,
                             actions = {
                                 androidx.compose.material3.IconButton(
-                                    onClick = { showBugReportSheet = true },
+                                    onClick = {
+                                        HapticUtil.performVirtualKeyHaptic(view)
+                                        showBugReportSheet = true
+                                    },
                                     colors = androidx.compose.material3.IconButtonDefaults.iconButtonColors(
                                         containerColor = MaterialTheme.colorScheme.surfaceBright
                                     ),
-                                    modifier = Modifier.size(48.dp)
+                                    modifier = Modifier.size(40.dp)
                                 ) {
                                     Icon(
                                         painter = painterResource(id = R.drawable.rounded_bug_report_24),
                                         contentDescription = "Report Bug",
-                                        modifier = Modifier.size(32.dp)
+                                        modifier = Modifier.size(24.dp)
                                     )
                                 }
                             }

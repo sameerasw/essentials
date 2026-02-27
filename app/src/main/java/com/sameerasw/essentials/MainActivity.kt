@@ -10,6 +10,15 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -58,6 +67,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.alpha
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import androidx.activity.compose.PredictiveBackHandler
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
@@ -242,7 +256,6 @@ class MainActivity : FragmentActivity() {
                         updatesViewModel.loadTrackedRepos(context)
                     }
 
-
                     // Dynamic tabs configuration
                     val tabs = remember { DIYTabs.entries }
 
@@ -251,14 +264,37 @@ class MainActivity : FragmentActivity() {
                         val index = tabs.indexOf(defaultTab)
                         if (index != -1) index else 0
                     }
-                    val pagerState =
-                        rememberPagerState(initialPage = initialPage, pageCount = { tabs.size })
+                    var currentPage by remember { androidx.compose.runtime.mutableIntStateOf(initialPage) }
+                    val backProgress = remember { Animatable(0f) }
                     val scope = rememberCoroutineScope()
+
+                    // Handle predictive back button for tab navigation
+                    PredictiveBackHandler(enabled = currentPage > 0) { progress ->
+                        try {
+                            progress.collect { backEvent ->
+                                backProgress.snapTo(backEvent.progress)
+                            }
+                            currentPage = 0
+                            scope.launch {
+                                backProgress.animateTo(
+                                    targetValue = 0f,
+                                    animationSpec = tween(durationMillis = 400)
+                                )
+                            }
+                        } catch (e: java.util.concurrent.CancellationException) {
+                            scope.launch {
+                                backProgress.animateTo(
+                                    targetValue = 0f,
+                                    animationSpec = tween(durationMillis = 300)
+                                )
+                            }
+                        }
+                    }
 
                     // Gracefully handle tab removal (e.g. disabling Developer Mode)
                     LaunchedEffect(tabs) {
-                        if (pagerState.currentPage >= tabs.size) {
-                            pagerState.scrollToPage(0)
+                        if (currentPage >= tabs.size) {
+                            currentPage = 0
                         }
                     }
                     val exitAlwaysScrollBehavior =
@@ -381,8 +417,8 @@ class MainActivity : FragmentActivity() {
                             .nestedScroll(exitAlwaysScrollBehavior),
                         containerColor = MaterialTheme.colorScheme.surfaceContainer,
                         topBar = {
-                            val currentTab = remember(tabs, pagerState.currentPage) {
-                                tabs.getOrNull(pagerState.currentPage) ?: tabs.firstOrNull()
+                            val currentTab = remember(tabs, currentPage) {
+                                tabs.getOrNull(currentPage) ?: tabs.firstOrNull()
                                 ?: DIYTabs.ESSENTIALS
                             }
                             ReusableTopAppBar(
@@ -420,25 +456,25 @@ class MainActivity : FragmentActivity() {
                                     if (currentTab == DIYTabs.APPS) {
                                         IconButton(
                                             onClick = {
-                                                HapticUtil.performMediumHaptic(view)
+                                                HapticUtil.performVirtualKeyHaptic(view)
                                                 updatesViewModel.checkForUpdates(context)
                                             },
                                             enabled = refreshingRepoIds.isEmpty(),
                                             colors = IconButtonDefaults.iconButtonColors(
                                                 containerColor = MaterialTheme.colorScheme.surfaceBright
                                             ),
-                                            modifier = Modifier.size(48.dp)
+                                            modifier = Modifier.size(40.dp)
                                         ) {
                                             if (refreshingRepoIds.isNotEmpty()) {
                                                 CircularWavyProgressIndicator(
                                                     progress = { animatedProgress },
-                                                    modifier = Modifier.size(32.dp)
+                                                    modifier = Modifier.size(24.dp)
                                                 )
                                             } else {
                                                 Icon(
                                                     painter = painterResource(id = R.drawable.rounded_refresh_24),
                                                     contentDescription = stringResource(R.string.action_refresh),
-                                                    modifier = Modifier.size(32.dp)
+                                                    modifier = Modifier.size(24.dp)
                                                 )
                                             }
                                         }
@@ -455,38 +491,51 @@ class MainActivity : FragmentActivity() {
                             DIYFloatingToolbar(
                                 modifier = Modifier
                                     .align(Alignment.BottomCenter)
-                                    .offset(y = -ScreenOffset - 12.dp)
+                                    .offset(y = -ScreenOffset)
                                     .zIndex(1f),
-                                currentPage = pagerState.currentPage,
+                                currentPage = currentPage,
                                 tabs = tabs,
                                 onTabSelected = { index ->
                                     HapticUtil.performUIHaptic(view)
-                                    scope.launch {
-                                        pagerState.animateScrollToPage(index)
-                                    }
+                                    currentPage = index
                                 },
                                 scrollBehavior = exitAlwaysScrollBehavior,
                                 badges = mapOf(DIYTabs.APPS to viewModel.hasPendingUpdates.value)
                             )
 
-                            HorizontalPager(
-                                state = pagerState,
-                                modifier = Modifier.fillMaxSize(),
-                                verticalAlignment = Alignment.Top,
-                                beyondViewportPageCount = 1
-                            ) { page ->
-                                when (tabs[page]) {
-                                    DIYTabs.ESSENTIALS -> {
-                                        SetupFeatures(
-                                            viewModel = viewModel,
-                                            modifier = Modifier.padding(innerPadding),
-                                            searchRequested = searchRequested,
-                                            onSearchHandled = { searchRequested = false },
-                                            onHelpClick = { showInstructionsSheet = true }
-                                        )
-                                    }
+                            AnimatedContent(
+                                targetState = currentPage,
+                                transitionSpec = {
+                                    val animationSpec = tween<Float>(durationMillis = 400)
+                                    val slideOffset = 150
 
-                                    DIYTabs.FREEZE -> {
+                                    (fadeIn(animationSpec = animationSpec) + slideInVertically(
+                                        animationSpec = tween(durationMillis = 400),
+                                        initialOffsetY = { slideOffset }
+                                    )).togetherWith(
+                                        fadeOut(animationSpec = animationSpec) + slideOutVertically(
+                                            animationSpec = tween(durationMillis = 400),
+                                            targetOffsetY = { slideOffset }
+                                        )
+                                    )
+                                },
+                                modifier = Modifier
+                                    .scale(1f - (backProgress.value * 0.05f))
+                                    .alpha(1f - (backProgress.value * 0.3f)),
+                                label = "Tab Transition"
+                            ) { targetPage ->
+                                when (tabs[targetPage]) {
+                                        DIYTabs.ESSENTIALS -> {
+                                            SetupFeatures(
+                                                viewModel = viewModel,
+                                                modifier = Modifier.padding(innerPadding),
+                                                searchRequested = searchRequested,
+                                                onSearchHandled = { searchRequested = false },
+                                                onHelpClick = { showInstructionsSheet = true }
+                                            )
+                                        }
+
+                                        DIYTabs.FREEZE -> {
                                         FreezeGridUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(innerPadding),
@@ -557,7 +606,7 @@ class MainActivity : FragmentActivity() {
                                                     modifier = Modifier.fillMaxSize(),
                                                     contentPadding = androidx.compose.foundation.layout.PaddingValues(
                                                         top = innerPadding.calculateTopPadding() + 16.dp,
-                                                        bottom = innerPadding.calculateBottomPadding() + 88.dp, // Extra padding for FAB
+                                                        bottom = 150.dp,
                                                         start = 16.dp,
                                                         end = 16.dp
                                                     ),
@@ -776,7 +825,7 @@ class MainActivity : FragmentActivity() {
                                                 modifier = Modifier
                                                     .align(Alignment.BottomEnd)
                                                     .padding(
-                                                        bottom = innerPadding.calculateBottomPadding() + 32.dp,
+                                                        bottom = 150.dp,
                                                         end = 32.dp
                                                     ),
                                                 containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -794,7 +843,6 @@ class MainActivity : FragmentActivity() {
                         }
                     }
 
-
                     // Mark app as ready after composing (happens very quickly)
                     LaunchedEffect(Unit) {
                         isAppReady = true
@@ -803,7 +851,7 @@ class MainActivity : FragmentActivity() {
             }
         }
     }
-
+    
     override fun onResume() {
         super.onResume()
         viewModel.check(this)

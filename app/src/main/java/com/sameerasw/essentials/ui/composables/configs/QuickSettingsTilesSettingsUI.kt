@@ -250,6 +250,13 @@ fun QuickSettingsTilesSettingsUI(
             R.string.about_desc_usb_debugging
         ),
         QSTileInfo(
+            R.string.tile_color_picker,
+            R.drawable.rounded_colorize_24,
+            com.sameerasw.essentials.services.tiles.ColorPickerTileService::class.java,
+            emptyList(),
+            R.string.about_desc_color_picker
+        ),
+        QSTileInfo(
             R.string.tile_developer_options,
             R.drawable.rounded_mobile_code_24,
             DeveloperOptionsTileService::class.java,

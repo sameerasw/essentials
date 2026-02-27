@@ -226,25 +226,25 @@ class AppUpdatesActivity : FragmentActivity() {
                             actions = {
                                 androidx.compose.material3.IconButton(
                                     onClick = {
-                                        HapticUtil.performMediumHaptic(view)
+                                        HapticUtil.performVirtualKeyHaptic(view)
                                         updatesViewModel.checkForUpdates(context)
                                     },
                                     enabled = refreshingRepoIds.isEmpty(),
                                     colors = IconButtonDefaults.iconButtonColors(
                                         containerColor = MaterialTheme.colorScheme.surfaceBright
                                     ),
-                                    modifier = Modifier.size(48.dp)
+                                    modifier = Modifier.size(40.dp)
                                 ) {
                                     if (refreshingRepoIds.isNotEmpty()) {
                                         CircularWavyProgressIndicator(
                                             progress = { animatedProgress },
-                                            modifier = Modifier.size(32.dp)
+                                            modifier = Modifier.size(24.dp)
                                         )
                                     } else {
                                         androidx.compose.material3.Icon(
                                             painter = painterResource(id = R.drawable.rounded_refresh_24),
                                             contentDescription = stringResource(R.string.action_refresh),
-                                            modifier = Modifier.size(32.dp)
+                                            modifier = Modifier.size(24.dp)
                                         )
                                     }
                                 }
@@ -323,7 +323,7 @@ class AppUpdatesActivity : FragmentActivity() {
                             modifier = Modifier.fillMaxSize(),
                             contentPadding = androidx.compose.foundation.layout.PaddingValues(
                                 top = innerPadding.calculateTopPadding() + 16.dp,
-                                bottom = innerPadding.calculateBottomPadding() + 100.dp,
+                                bottom = 150.dp,
                                 start = 16.dp,
                                 end = 16.dp
                             ),

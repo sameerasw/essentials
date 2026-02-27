@@ -50,6 +50,7 @@
         android:localeConfig="@xml/locales_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:enableOnBackInvokedCallback="true"
         android:theme="@style/Theme.Essentials">
         <activity
             android:name=".MainActivity"
@@ -575,6 +576,16 @@
             android:exported="true"
             android:icon="@drawable/rounded_adb_24"
             android:label="@string/tile_usb_debugging"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".services.tiles.ColorPickerTileService"
+            android:exported="true"
+            android:icon="@drawable/rounded_colorize_24"
+            android:label="@string/tile_color_picker"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
