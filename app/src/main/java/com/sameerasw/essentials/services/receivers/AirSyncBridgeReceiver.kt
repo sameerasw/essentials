@@ -21,7 +21,14 @@ class AirSyncBridgeReceiver : BroadcastReceiver() {
             )
 
             val repository = SettingsRepository(context)
-            if (repository.getBoolean(SettingsRepository.KEY_AIRSYNC_CONNECTION_ENABLED)) {
+            val isEnabled = repository.getBoolean(SettingsRepository.KEY_AIRSYNC_CONNECTION_ENABLED)
+            
+            android.util.Log.d(
+                "AirSyncBridge",
+                "Received Mac status broadcast. Bridge enabled: $isEnabled, level=$level, charging=$isCharging"
+            )
+
+            if (isEnabled) {
                 repository.putInt(SettingsRepository.KEY_MAC_BATTERY_LEVEL, level)
                 repository.putBoolean(SettingsRepository.KEY_MAC_BATTERY_IS_CHARGING, isCharging)
                 repository.putLong(SettingsRepository.KEY_MAC_BATTERY_LAST_UPDATED, lastUpdated)
