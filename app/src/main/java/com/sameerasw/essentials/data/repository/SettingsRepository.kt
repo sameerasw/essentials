@@ -510,9 +510,8 @@ class SettingsRepository(private val context: Context) {
                 val wrapperMap = mutableMapOf<String, Map<String, Any>>()
 
                 p.all.forEach { (key, value) ->
-                    // Skip app lists as requested, and stale data
-                    if (key.endsWith("_selected_apps") || key == "freeze_auto_excluded_apps" ||
-                        key.startsWith("mac_battery_") || key == "airsync_mac_connected" ||
+                    if (key == "freeze_auto_excluded_apps" || key.endsWith("_selected_apps")) {
+                    } else if (key.startsWith("mac_battery_") || key == "airsync_mac_connected" ||
                         key == KEY_SNOOZE_DISCOVERED_CHANNELS || key == KEY_MAPS_DISCOVERED_CHANNELS
                     ) {
                         return@forEach

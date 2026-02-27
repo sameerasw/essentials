@@ -65,10 +65,10 @@ object DIYRepository {
     fun init(context: Context) {
         if (prefs != null) return
         prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        loadAutomations()
+        reloadAutomations()
     }
 
-    private fun loadAutomations() {
+    fun reloadAutomations() {
         val json = prefs?.getString(KEY_AUTOMATIONS, null)
         val loadedList: List<Automation> = if (json != null) {
             try {

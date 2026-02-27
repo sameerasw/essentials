@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
+import com.sameerasw.essentials.BuildConfig
 import kotlinx.coroutines.launch
 
 class BatteriesWidgetReceiver : GlanceAppWidgetReceiver() {
@@ -112,7 +113,7 @@ class BatteriesWidgetReceiver : GlanceAppWidgetReceiver() {
                     }
                 context.sendBroadcast(
                     requestIntent,
-                    "com.sameerasw.permission.ESSENTIALS_AIRSYNC_BRIDGE"
+                    "${BuildConfig.APPLICATION_ID}.permission.ESSENTIALS_AIRSYNC_BRIDGE"
                 )
             } catch (e: Exception) {
                 // Ignore if AirSync not installed/found

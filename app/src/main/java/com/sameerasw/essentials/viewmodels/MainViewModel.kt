@@ -2079,6 +2079,8 @@ class MainViewModel : ViewModel() {
         val success = settingsRepository.importConfigs(inputStream)
         if (success) {
             settingsRepository.syncSystemSettingsWithSaved()
+            com.sameerasw.essentials.domain.diy.DIYRepository.reloadAutomations()
+            refreshFreezePickedApps(context, silent = true)
             check(context)
         }
         return success
