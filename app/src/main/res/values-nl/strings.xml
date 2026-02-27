@@ -192,6 +192,9 @@
     <string name="tile_private_dns_auto">Automatisch</string>
     <string name="tile_private_dns_off">Uit</string>
     <string name="tile_usb_debugging">USB-foutopsporing</string>
+    <string name="tile_color_picker">Color Picker</string>
+    <string name="toast_eyedropper_failed">Are you sure you\'re on Androdi 17? (╯°_°）╯</string>
+    <string name="subtitle_eye_dropper">Eye Dropper</string>
     <string name="on">Aan</string>
     <string name="off">Uit</string>
     <string name="private_dns_custom_title">Aangepaste Privé-DNS</string>
@@ -596,6 +599,7 @@
     <string name="about_desc_adaptive_brightness">Aanpasbare helderheid in-/uitschakelen\n\nHet automatisch aanpassen van de schermhelderheid op basis van de lichtcondities in-/uitschakelen.</string>
     <string name="about_desc_private_dns">Privé-DNS in-/uitschakelen.\n\nDoor de Uit/Automatisch/Hostnaam privé-DNS-modi schakelen.</string>
     <string name="about_desc_usb_debugging">USB-foutopsporing in-/uitschakelen.\n\nToegang tot foutopsporing via USB in-/uitschakelen via de snelle instellingen.</string>
+    <string name="about_desc_color_picker">Launch the eye dropper tool to pick colors introduced in Android 17 BETA 2</string>
     <string name="action_download">Downloaden</string>
     <!-- DIY Section -->
     <string name="diy_trigger_screen_off">Scherm uit</string>
