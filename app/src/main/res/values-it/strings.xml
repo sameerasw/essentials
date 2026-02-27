@@ -114,6 +114,8 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string name="content_desc_more_options">Altre opzioni</string>
     <string name="action_freeze_all">Blocca tutte le app</string>
     <string name="action_unfreeze_all">Sblocca tutte le app</string>
+    <string name="action_export_freeze">Export frozen apps list</string>
+    <string name="action_import_freeze">Import frozen apps list</string>
     <string name="freeze_pick_apps_title">Scegli le app da bloccare</string>
     <string name="freeze_pick_apps_desc">Choose which apps can be frozen</string>
     <string name="settings_section_automation">Automation</string>

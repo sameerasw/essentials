@@ -113,6 +113,8 @@
     <string name="content_desc_more_options">その他のオプション</string>
     <string name="action_freeze_all">すべてのアプリをフリーズ</string>
     <string name="action_unfreeze_all">すべてのアプリのフリーズを解除</string>
+    <string name="action_export_freeze">Export frozen apps list</string>
+    <string name="action_import_freeze">Import frozen apps list</string>
     <string name="freeze_pick_apps_title">フリーズさせるアプリを選択</string>
     <string name="freeze_pick_apps_desc">フリーズできるアプリを選択してください</string>
     <string name="settings_section_automation">自動化</string>
