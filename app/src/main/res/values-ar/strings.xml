@@ -8,17 +8,17 @@
     <string name="freeze_shortcut_short_label">تجميد التطبيق</string>
     <string name="freeze_shortcut_long_label">تجميد التطبيق المفتوح</string>
     <string name="frozen_app_shortcut_label">تطبيق مجمد</string>
-    <string name="screen_off_widget_label">Empty screen off widget</string>
+    <string name="screen_off_widget_label">قُفْل الشاشة ودجيت فارغ</string>
     <string name="app_freezing_tile_label">تجميد التطبيق</string>
     <string name="flashlight_pulse_tile_label">نبض المصباح</string>
-    <string name="check_pre_releases_label">Check for pre-releases</string>
-    <string name="check_pre_releases_desc">Might be unstable</string>
+    <string name="check_pre_releases_label">البحث عن أحدث إصدار بيتا pre-releases</string>
+    <string name="check_pre_releases_desc">قد يكون غير مستقر</string>
     <!-- App Lock -->
     <string name="settings_section_security">الأمن</string>
-    <string name="app_lock_enable_title">Enable app lock</string>
-    <string name="app_lock_auth_title">App Lock Security</string>
-    <string name="app_lock_enable_auth_subtitle">Authenticate to enable app lock</string>
-    <string name="app_lock_disable_auth_subtitle">Authenticate to disable app lock</string>
+    <string name="app_lock_enable_title">تفعيل قُفْل التطبيقات</string>
+    <string name="app_lock_auth_title">أمان قُفْل التطبيقات</string>
+    <string name="app_lock_enable_auth_subtitle">قم بالمصادقة لتفعيل قفل التطبيق</string>
+    <string name="app_lock_disable_auth_subtitle">قم بالمصادقة لتعطيل قفل التطبيق</string>
     <string name="app_lock_select_apps_title">Select locked apps</string>
     <string name="app_lock_select_apps_desc">Choose which apps require authentication</string>
     <string name="app_lock_description">Secure your apps with biometric authentication. Locked apps will require authentication when launching, Stays unlocked until the screen turns off.</string>
@@ -192,6 +192,9 @@
     <string name="tile_private_dns_auto">Auto</string>
     <string name="tile_private_dns_off">Off</string>
     <string name="tile_usb_debugging">USB Debugging</string>
+    <string name="tile_color_picker">Color Picker</string>
+    <string name="toast_eyedropper_failed">Are you sure you\'re on Androdi 17? (╯°_°）╯</string>
+    <string name="subtitle_eye_dropper">Eye Dropper</string>
     <string name="on">On</string>
     <string name="off">Off</string>
     <string name="private_dns_custom_title">Custom Private DNS</string>
@@ -596,6 +599,7 @@
     <string name="about_desc_adaptive_brightness">Toggle adaptive brightness.\n\nEnable or disable automatic screen brightness adjustment based on ambient light.</string>
     <string name="about_desc_private_dns">Toggle Private DNS.\n\nCycle through Off, Automatic, and Private DNS provider modes.</string>
     <string name="about_desc_usb_debugging">Toggle USB Debugging.\n\nEnable or disable ADB debugging access directly from the quick settings.</string>
+    <string name="about_desc_color_picker">Launch the eye dropper tool to pick colors introduced in Android 17 BETA 2</string>
     <string name="action_download">Download</string>
     <!-- DIY Section -->
     <string name="diy_trigger_screen_off">Screen Off</string>
@@ -655,6 +659,7 @@
     <string name="update_channel_name">App Updates</string>
     <string name="update_channel_desc">Notifications for new app updates</string>
     <string name="notification_update_available">Update available</string>
+    <string name="battery_notification_no_devices">No devices connected</string>
     <string name="label_unknown">Unknown</string>
     <string name="network_type_5g">5G</string>
     <string name="network_type_4g">4G</string>

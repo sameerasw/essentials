@@ -2,20 +2,20 @@
 <resources>
     <string name="app_name">Essentials</string>
     <string name="label_beta">BETA</string>
-    <string name="accessibility_service_description"><b>Essentials Accessibility Service</b>\n\nThis service is required for the following advanced features:\n\n<b>• Physical Button Remapping:</b>\nDetects volume button presses even when the screen is off to trigger actions like the Flashlight.\n\n<b>• Per-App Settings:</b>\nMonitors the currently active app to apply specific profiles for Dynamic Night Light, Notification Lighting Colors, and App Lock.\n\n<b>• Screen Control:</b>\nAllows the app to lock the screen (e.g. via Double Tap or Widgets) and detect screen state changes.\n\n<b>• Security:</b>\nPrevents unauthorized changes by detecting window content when the device is locked.\n\n<small>No input text or sensitive user data is collected or transmitted.</small></string>
-    <string name="freeze_activity_title">App Freezing</string>
-    <string name="freeze_activity_subtitle">Disable apps that are rarely used</string>
-    <string name="freeze_shortcut_short_label">App Freezing</string>
-    <string name="freeze_shortcut_long_label">Open App Freezing</string>
-    <string name="frozen_app_shortcut_label">Frozen App</string>
+    <string name="accessibility_service_description"><b>Essentials Erişilebilirlik Servisi</b>\n\nBu servis bazı gelişmiş özellikler için gereklidir:\n\n<b>Fiziksel Tuş Atama:</b>\nEkran kapalıyken bile ses tuşlarını algılayıp Fener gibi özellikleri aktif etmeyi sağlar.\n\n<b>Uygulama Başına Ayarlar:</b>\nDinamik Gece Işığı, Bildirim Aydınlatma Renkleri ve Uygulama Kilitleme gibi özelliklere spesifik profiller ayarlamak için şu anda kullanılan uygulamayı gözetler.\n\n<b>Ekran Kontrolu:</b>\nUygulamaların ekranı kapatmasına ve ekran durumunu değiştirmesine olanak sağlar (Ekrana Çift Tıklama veya bir Widget gibi)\n\n<b>Güvenlik:</b>\nEkran kapalıyken açık olan uygulamayı tespit ederek izin verilmeyen değişiklikleri engeller.\n\n<small>Yazılı olan bilgiler veya kullanıcı bilgileri toplanmaz veya aktarılmaz.</small></string>
+    <string name="freeze_activity_title">Uygulama Dondurma</string>
+    <string name="freeze_activity_subtitle">Nadir olarak kullanılan uygulamaları dondur</string>
+    <string name="freeze_shortcut_short_label">Uygulama Dondurma</string>
+    <string name="freeze_shortcut_long_label">Uygulama Dondurmayı Aç</string>
+    <string name="frozen_app_shortcut_label">Dondurulmuş Uygulama</string>
     <string name="screen_off_widget_label">Empty screen off widget</string>
-    <string name="app_freezing_tile_label">App Freezing</string>
+    <string name="app_freezing_tile_label">Uygulama Dondur</string>
     <string name="flashlight_pulse_tile_label">Flashlight Pulse</string>
     <string name="check_pre_releases_label">Check for pre-releases</string>
-    <string name="check_pre_releases_desc">Might be unstable</string>
+    <string name="check_pre_releases_desc">Stabil olmayabilir</string>
     <!-- App Lock -->
-    <string name="settings_section_security">Security</string>
-    <string name="app_lock_enable_title">Enable app lock</string>
+    <string name="settings_section_security">Güvenlik</string>
+    <string name="app_lock_enable_title">Uygulama kilitlemeyi etkinleştir</string>
     <string name="app_lock_auth_title">App Lock Security</string>
     <string name="app_lock_enable_auth_subtitle">Authenticate to enable app lock</string>
     <string name="app_lock_disable_auth_subtitle">Authenticate to disable app lock</string>
@@ -26,7 +26,7 @@
     <string name="app_lock_biometric_note">Another note, the biometric authentication prompt only lets you use STRONG secure class methods. Face unlock security methods in WEAK class in devices such as Pixel 7 will only be able to utilize the available other STRONG auth methods such as fingerprint or pin.</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Enable Button Remap</string>
-    <string name="button_remap_use_shizuku_title">Use Shizuku</string>
+    <string name="button_remap_use_shizuku_title">Shizuku\'yu Kullan</string>
     <string name="button_remap_use_shizuku_desc">Works with screen off (Recommended)</string>
     <string name="shizuku_not_running_toast">Shizuku is not running</string>
     <string name="shizuku_detected_prefix">Detected %1$s</string>
@@ -192,6 +192,9 @@
     <string name="tile_private_dns_auto">Auto</string>
     <string name="tile_private_dns_off">Off</string>
     <string name="tile_usb_debugging">USB Debugging</string>
+    <string name="tile_color_picker">Color Picker</string>
+    <string name="toast_eyedropper_failed">Are you sure you\'re on Androdi 17? (╯°_°）╯</string>
+    <string name="subtitle_eye_dropper">Eye Dropper</string>
     <string name="on">On</string>
     <string name="off">Off</string>
     <string name="private_dns_custom_title">Custom Private DNS</string>
@@ -596,6 +599,7 @@
     <string name="about_desc_adaptive_brightness">Toggle adaptive brightness.\n\nEnable or disable automatic screen brightness adjustment based on ambient light.</string>
     <string name="about_desc_private_dns">Toggle Private DNS.\n\nCycle through Off, Automatic, and Private DNS provider modes.</string>
     <string name="about_desc_usb_debugging">Toggle USB Debugging.\n\nEnable or disable ADB debugging access directly from the quick settings.</string>
+    <string name="about_desc_color_picker">Launch the eye dropper tool to pick colors introduced in Android 17 BETA 2</string>
     <string name="action_download">Download</string>
     <!-- DIY Section -->
     <string name="diy_trigger_screen_off">Screen Off</string>
@@ -655,6 +659,7 @@
     <string name="update_channel_name">App Updates</string>
     <string name="update_channel_desc">Notifications for new app updates</string>
     <string name="notification_update_available">Update available</string>
+    <string name="battery_notification_no_devices">No devices connected</string>
     <string name="label_unknown">Unknown</string>
     <string name="network_type_5g">5G</string>
     <string name="network_type_4g">4G</string>

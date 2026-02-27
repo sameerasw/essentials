@@ -52,11 +52,11 @@
     <string name="action_ai_assistant">アシスタント</string>
     <string name="action_take_screenshot">スクリーンショット</string>
     <string name="action_cycle_sound_modes">サイレントモードを切り替え</string>
-    <string name="action_like_song">この曲をいいね</string>
-    <string name="like_song_settings_title">いいねした曲を設定</string>
-    <string name="like_song_settings_desc">This feature requires notification access to detect the currently playing media and trigger the like action. Please enable it below.</string>
-    <string name="like_song_toast_enabled">Show toast message</string>
-    <string name="like_song_aod_overlay_title">Show overlay on AOD</string>
+    <string name="action_like_song">再生中の曲をいいね</string>
+    <string name="like_song_settings_title">いいね設定</string>
+    <string name="like_song_settings_desc">この機能は、現在再生中のメディアを検出し「いいね」アクションをトリガーするために通知アクセスを必要とします。下記で有効にしてください。</string>
+    <string name="like_song_toast_enabled">トーストメッセージを表示</string>
+    <string name="like_song_aod_overlay_title">AODにオーバーレイを表示</string>
     <string name="feat_ambient_music_glance_title">アンビエントミュージック</string>
     <string name="feat_ambient_music_glance_desc">AODにメディアの情報を表示</string>
     <string name="ambient_glance_docked_mode_title">ドックモード</string>
@@ -192,11 +192,14 @@
     <string name="tile_private_dns_auto">自動</string>
     <string name="tile_private_dns_off">OFF</string>
     <string name="tile_usb_debugging">USBデバッグ</string>
+    <string name="tile_color_picker">Color Picker</string>
+    <string name="toast_eyedropper_failed">Are you sure you\'re on Androdi 17? (╯°_°）╯</string>
+    <string name="subtitle_eye_dropper">Eye Dropper</string>
     <string name="on">オン</string>
     <string name="off">オフ</string>
-    <string name="private_dns_custom_title">Custom Private DNS</string>
-    <string name="private_dns_presets_title">Common DNS Presets</string>
-    <string name="private_dns_hostname_label">Provider hostname</string>
+    <string name="private_dns_custom_title">カスタムプライベートDNS</string>
+    <string name="private_dns_presets_title">一般的なDNSプリセット</string>
+    <string name="private_dns_hostname_label">プロバイダーホスト名</string>
     <string name="dns_preset_adguard">AdGuard DNS</string>
     <string name="dns_preset_adguard_hostname">dns.adguard.com</string>
     <string name="dns_preset_google">Google Public DNS</string>
@@ -538,7 +541,7 @@
     <string name="label_up_to_date">最新</string>
     <string name="feat_app_updates_desc">お気に入りのアプリの最新リリースを GitHub から直接追跡してダウンロードします。</string>
     <string name="error_invalid_repo_format">フォーマットが正しくありません。GitHubのURLまたは オーナー名/レポジトリ名 を入力してください</string>
-    <string name="error_generic_search">An error occurred during search</string>
+    <string name="error_generic_search">検索中にエラーが発生しました</string>
     <string name="label_auto">自動</string>
     <string name="label_options">オプション</string>
     <string name="option_allow_prereleases">プレリリースもチェックする</string>
@@ -596,6 +599,7 @@
     <string name="about_desc_adaptive_brightness">明るさ自動調整の切り替え\n\n周囲の明るさに基づく画面の明るさの自動調整を有効または無効にします。</string>
     <string name="about_desc_private_dns">プライベートDNSを切り替えるます。\n\nオフ、自動、プライベートDNSプロバイダーモードを切り替えます。</string>
     <string name="about_desc_usb_debugging">USBデバッグを切り替えます。\n\nクイック設定から直接ADBデバッグアクセスを有効または無効にします。</string>
+    <string name="about_desc_color_picker">Launch the eye dropper tool to pick colors introduced in Android 17 BETA 2</string>
     <string name="action_download">ダウンロード</string>
     <!-- DIY Section -->
     <string name="diy_trigger_screen_off">画面オフ</string>
@@ -638,8 +642,8 @@
     <string name="diy_device_effects_android_15_warning">この機能にはAndroid 15 以上が必要です。</string>
     <string name="diy_device_effects_enabled">有効</string>
     <string name="diy_device_effects_disabled">無効</string>
-    <string name="diy_action_sound_mode">Sound Mode</string>
-    <string name="diy_sound_mode_desc">This action allows switching between Sound, Vibrate, and Silent modes based on triggers. It requires Do Not Disturb access.</string>
+    <string name="diy_action_sound_mode">サイレントモード</string>
+    <string name="diy_sound_mode_desc">この操作により、トリガーに基づいてサイレントオフ、バイブレーション、サイレントを切り替えることができます。マナーモードへのアクセス権が必要です。</string>
     <!-- About Section -->
     <string name="app_developer_name">Sameera Wijerathna</string>
     <string name="app_description">あなたのPixelとAndroidのオールインワンツールボックス</string>
@@ -655,6 +659,7 @@
     <string name="update_channel_name">アプリアップデート</string>
     <string name="update_channel_desc">新しいアップデートの通知</string>
     <string name="notification_update_available">アップデートがあります</string>
+    <string name="battery_notification_no_devices">接続中のデバイスがありません</string>
     <string name="label_unknown">不明</string>
     <string name="network_type_5g">5G</string>
     <string name="network_type_4g">4G</string>
@@ -967,13 +972,13 @@
     <string name="connect_to_airsync_summary">AirSyncで接続されたMacデバイスのバッテリーを表示する</string>
     <string name="download_airsync">AirSyncアプリをダウンロード</string>
     <string name="download_airsync_summary">Macのバッテリー同期に必要</string>
-    <string name="feat_battery_notification_title">Battery notification</string>
-    <string name="feat_battery_notification_desc">Persistent battery status notification</string>
-    <string name="about_desc_battery_notification">Replicate the battery widget experience in your notification shade. It will show the battery levels of all your connected devices in a single persistent notification, updated in real-time. This includes your Mac (via AirSync) and Bluetooth accessories.</string>
-    <string name="battery_notification_channel_name">Battery Status Notification</string>
-    <string name="battery_notification_channel_desc">Persistent notification showing connected devices battery levels</string>
-    <string name="perm_nearby_devices_title">Nearby Devices</string>
-    <string name="perm_nearby_devices_desc">Required to detect and retrieve battery information from Bluetooth accessories</string>
+    <string name="feat_battery_notification_title">バッテリー通知</string>
+    <string name="feat_battery_notification_desc">バッテリーステータスの持続通知</string>
+    <string name="about_desc_battery_notification">通知シェードにバッテリーウィジェットの機能を再現します。接続された全デバイスのバッテリー残量を、リアルタイムで更新される常時表示の通知で一元表示します。これにはMac（AirSync経由）とBluetoothアクセサリが含まれます。</string>
+    <string name="battery_notification_channel_name">バッテリーステータス通知</string>
+    <string name="battery_notification_channel_desc">接続されたデバイスのバッテリー残量を表示する常時通知</string>
+    <string name="perm_nearby_devices_title">付近のデバイス</string>
+    <string name="perm_nearby_devices_desc">Bluetoothアクセサリからバッテリー情報を検出および取得するために必要です</string>
     <!-- GitHub Auth -->
     <string name="auth_copy_code">コードをコピー</string>
     <string name="auth_open_login_page">ログインページを開く</string>
@@ -984,8 +989,8 @@
     <string name="action_profile">プロフィール</string>
     <!-- App Updates / Repos -->
     <string name="label_release_notes">リリースノート</string>
-    <string name="msg_no_repos_tracked">No repositories tracked yet</string>
-    <string name="label_no_app_linked">No app linked</string>
+    <string name="msg_no_repos_tracked">追跡しているレポジトリはありません</string>
+    <string name="label_no_app_linked">未リンクアプリ</string>
     <string name="format_updated_relative">%1$s更新済み</string>
     <!-- Relative Time -->
     <string name="time_just_now">たった今</string>
@@ -999,7 +1004,7 @@
     <string name="auth_requesting_code">デバイスコードを生成中…</string>
     <string name="auth_copy_code_instruction">1. デバイスコードをコピー：</string>
     <string name="auth_paste_code_instruction">2. GitHubにコードを貼り付ける：</string>
-    <string name="label_found_apks">Found APKs</string>
+    <string name="label_found_apks">見つかったAPK</string>
     <string name="label_readme">README</string>
     <string name="action_refresh">再読み込み</string>
     <!-- Added Missing Group Strings -->
@@ -1035,26 +1040,26 @@
     <string name="label_kbd_abc">ABC</string>
     <string name="label_kbd_symbols">\?#/</string>
     <string name="msg_restrict_own_app_repo">Oi! You can check updates in app settings, No need to add here XD</string>
-    <string name="action_export">Export</string>
-    <string name="action_import">Import</string>
-    <string name="msg_export_success">Repositories exported successfully</string>
-    <string name="msg_export_failed">Failed to export repositories</string>
-    <string name="msg_import_success">Repositories imported successfully</string>
-    <string name="msg_import_failed">Failed to import repositories</string>
-    <string name="label_apps">Apps</string>
-    <string name="feat_text_animations_title">Scale and Animations</string>
-    <string name="feat_text_animations_desc">Adjust system scale and animations</string>
-    <string name="settings_section_text">Text</string>
-    <string name="label_font_scale">Font Scale</string>
-    <string name="label_font_weight">Font Weight</string>
-    <string name="label_reset_default">Reset</string>
-    <string name="settings_section_scale">Scale</string>
-    <string name="label_smallest_width">Smallest Width</string>
-    <string name="msg_shizuku_permission_required">Shizuku permission required to adjust scale</string>
-    <string name="label_grant_permission">Grant Permission</string>
-    <string name="settings_section_animations">Animations</string>
-    <string name="label_animator_duration_scale">Animator duration scale</string>
-    <string name="label_transition_animation_scale">Transition animation scale</string>
-    <string name="label_window_animation_scale">Window animation scale</string>
-    <string name="about_desc_text_animations">Adjust system-wide font scale, weight, and animation speeds. Note that some settings may require advanced permissions or a device reboot for certain apps to reflect changes. \n\nAdditional shizuku or root permission may be necessary for scale adjustments</string>
+    <string name="action_export">エクスポート</string>
+    <string name="action_import">インポート</string>
+    <string name="msg_export_success">レポジトリのエクスポートに成功しました</string>
+    <string name="msg_export_failed">レポジトリのエクスポートに失敗しました</string>
+    <string name="msg_import_success">レポジトリのインポートに成功しました</string>
+    <string name="msg_import_failed">レポジトリのインポートに失敗しました</string>
+    <string name="label_apps">アプリ</string>
+    <string name="feat_text_animations_title">スケールとアニメーション</string>
+    <string name="feat_text_animations_desc">システムスケールとアニメーションを調整する</string>
+    <string name="settings_section_text">テキスト</string>
+    <string name="label_font_scale">フォントサイズ</string>
+    <string name="label_font_weight">フォントの太さ</string>
+    <string name="label_reset_default">リセット</string>
+    <string name="settings_section_scale">大きさ</string>
+    <string name="label_smallest_width">最小幅</string>
+    <string name="msg_shizuku_permission_required">スケール調整にはShizuku権限が必要です</string>
+    <string name="label_grant_permission">権限を付与</string>
+    <string name="settings_section_animations">アニメーション</string>
+    <string name="label_animator_duration_scale">Animator再生時間スケール</string>
+    <string name="label_transition_animation_scale">トランジションアニメスケール</string>
+    <string name="label_window_animation_scale">ウィンドウアニメスケール</string>
+    <string name="about_desc_text_animations">システム全体のフォントサイズ、太さ、アニメーション速度を調整します。一部のアプリでは変更を反映させるために高度な権限やデバイスの再起動が必要な場合があります。\n\nサイズ調整には追加のShizuku権限またはRoot権限が必要になる場合があります</string>
 </resources>
