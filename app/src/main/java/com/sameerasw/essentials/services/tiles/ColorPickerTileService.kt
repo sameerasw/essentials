@@ -29,8 +29,7 @@ class ColorPickerTileService : BaseTileService() {
     override fun getTileState(): Int = Tile.STATE_INACTIVE
 
     override fun onTileClick() {
-        val intent = Intent(Intent.ACTION_MAIN).apply {
-            component = ComponentName("com.android.eyedropper", "com.android.eyedropper.MainActivity")
+        val intent = Intent(this, com.sameerasw.essentials.ui.activities.ColorPickerActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
 
