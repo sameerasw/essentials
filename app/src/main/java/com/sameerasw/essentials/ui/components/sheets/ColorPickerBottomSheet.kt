@@ -3,6 +3,7 @@ package com.sameerasw.essentials.ui.components.sheets
 import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -91,14 +92,15 @@ fun ColorPickerBottomSheet(
                 modifier = Modifier
                     .size(160.dp)
                     .clip(MaterialShapes.Cookie6Sided.toShape())
-                    .background(Color(colorInt)),
+                    .background(Color(colorInt))
+                    .border(5.dp, MaterialTheme.colorScheme.outline, MaterialShapes.Cookie6Sided.toShape()),
                 contentAlignment = Alignment.Center
             ) {
-                // Subtle overlay to make light colors readable
-                Image(
+                Icon(
                     painter = painterResource(id = R.drawable.rounded_palette_24),
                     contentDescription = null,
-                    modifier = Modifier.size(48.dp)
+                    modifier = Modifier.size(48.dp),
+                    tint = MaterialTheme.colorScheme.outline
                 )
             }
 
@@ -114,7 +116,7 @@ fun ColorPickerBottomSheet(
 
             // Formatted Color Text
             Surface(
-                color = MaterialTheme.colorScheme.surfaceContainerHighest,
+                color = MaterialTheme.colorScheme.surfaceBright,
                 shape = MaterialTheme.shapes.extraSmall,
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -141,12 +143,12 @@ fun ColorPickerBottomSheet(
                         HapticUtil.performMediumHaptic(view)
                         onRetake()
                     },
-                    modifier = Modifier.weight(0.5f)
+                    modifier = Modifier.weight(0.75f).height(56.dp)
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.rounded_colorize_24),
                         contentDescription = null,
-                        modifier = Modifier.size(18.dp)
+                        modifier = Modifier.size(24.dp)
                     )
                 }
 
@@ -162,11 +164,12 @@ fun ColorPickerBottomSheet(
                         val shareIntent = Intent.createChooser(sendIntent, null)
                         context.startActivity(shareIntent)
                     },
-                    modifier = Modifier.weight(1.5f)
+                    modifier = Modifier.weight(1.5f).height(56.dp)
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.rounded_share_24),
-                        contentDescription = "Share"
+                        contentDescription = "Share",
+                        modifier = Modifier.size(24.dp)
                     )
                 }
 
@@ -178,12 +181,12 @@ fun ColorPickerBottomSheet(
                         android.widget.Toast.makeText(context, "Copied to clipboard", android.widget.Toast.LENGTH_SHORT).show()
                         onDismissRequest()
                     },
-                    modifier = Modifier.weight(1.5f)
+                    modifier = Modifier.weight(1.5f).height(56.dp)
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.rounded_content_copy_24),
                         contentDescription = null,
-                        modifier = Modifier.size(18.dp)
+                        modifier = Modifier.size(24.dp)
                     )
                 }
             }
