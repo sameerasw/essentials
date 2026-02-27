@@ -101,6 +101,10 @@
         <activity
             android:name=".ui.activities.ColorPickerActivity"
             android:exported="false"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:launchMode="singleInstance"
+            android:taskAffinity=""
             android:theme="@style/Theme.Essentials.Translucent">
         </activity>
 
