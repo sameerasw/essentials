@@ -252,6 +252,31 @@ object PermissionUIHelper {
                 isGranted = viewModel.isDefaultBrowserSet.value
             )
 
+            "BLUETOOTH_CONNECT", "BLUETOOTH_SCAN" -> PermissionItem(
+                iconRes = R.drawable.rounded_bluetooth_24,
+                title = R.string.perm_nearby_devices_title,
+                description = R.string.perm_nearby_devices_desc,
+                dependentFeatures = PermissionRegistry.getFeatures(key),
+                actionLabel = R.string.perm_action_grant,
+                action = {
+                    if (activity != null) {
+                        val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                            arrayOf(
+                                android.Manifest.permission.BLUETOOTH_CONNECT,
+                                android.Manifest.permission.BLUETOOTH_SCAN
+                            )
+                        } else {
+                            arrayOf(
+                                android.Manifest.permission.BLUETOOTH,
+                                android.Manifest.permission.BLUETOOTH_ADMIN
+                            )
+                        }
+                        ActivityCompat.requestPermissions(activity, permissions, 105)
+                    }
+                },
+                isGranted = viewModel.isBluetoothPermissionGranted.value
+            )
+
             else -> null
         }
     }
