@@ -60,6 +60,15 @@ class QSPreferencesActivity : ComponentActivity() {
                 return
             }
 
+            if (componentName.className == "com.sameerasw.essentials.services.tiles.DeveloperOptionsTileService") {
+                val devIntent = Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                }
+                startActivity(devIntent)
+                finish()
+                return
+            }
+
             val feature = when (componentName.className) {
                 "com.sameerasw.essentials.services.tiles.CaffeinateTileService" -> "Caffeinate"
                 "com.sameerasw.essentials.services.tiles.NotificationLightingTileService" -> "Notification lighting"
@@ -73,7 +82,6 @@ class QSPreferencesActivity : ComponentActivity() {
                 "com.sameerasw.essentials.services.tiles.AdaptiveBrightnessTileService" -> "Quick settings tiles"
                 "com.sameerasw.essentials.services.tiles.MapsPowerSavingTileService" -> "Maps power saving mode"
                 "com.sameerasw.essentials.services.tiles.UsbDebuggingTileService" -> "Quick settings tiles"
-                "com.sameerasw.essentials.services.tiles.DeveloperOptionsTileService" -> "Quick settings tiles"
                 "com.sameerasw.essentials.services.tiles.BatteryNotificationTileService" -> "Battery notification"
                 "com.sameerasw.essentials.services.tiles.ChargeQuickTileService" -> "Quick settings tiles"
                 "com.sameerasw.essentials.services.tiles.AlwaysOnDisplayTileService" -> "Always on Display"
