@@ -212,6 +212,10 @@
     <string name="dns_preset_quad9_hostname">dns.quad9.net</string>
     <string name="dns_preset_cleanbrowsing">CleanBrowsing</string>
     <string name="dns_preset_cleanbrowsing_hostname">adult-filter-dns.cleanbrowsing.org</string>
+    <string name="tile_charge_optimization">Charging</string>
+    <string name="limit_to_80">Limit to 80%</string>
+    <string name="adaptive_charging">Adaptive</string>
+    <string name="deactivated">Not optimized</string>
     <!-- Screen Locked Security -->
     <string name="screen_locked_security_title">Beveiliging bij vergrendeling</string>
     <string name="screen_locked_security_dialog_title">Beveiliging bij vergrendeling</string>
@@ -602,6 +606,7 @@
     <string name="about_desc_private_dns">Privé-DNS in-/uitschakelen.\n\nDoor de Uit/Automatisch/Hostnaam privé-DNS-modi schakelen.</string>
     <string name="about_desc_usb_debugging">USB-foutopsporing in-/uitschakelen.\n\nToegang tot foutopsporing via USB in-/uitschakelen via de snelle instellingen.</string>
     <string name="about_desc_color_picker">Open het pipethulpmiddel om kleuren te kiezen, geïntroduceerd in Android 17 Bèta 2</string>
+    <string name="about_desc_charge_optimization">Optimize your battery life by limiting the maximum charge or using adaptive charging. This is specially designed for Pixel devices to ensure longevity and healthy charging cycles.\n\nCredits: TebbeUbben/ChargeQuickTile</string>
     <string name="action_download">Downloaden</string>
     <!-- DIY Section -->
     <string name="diy_trigger_screen_off">Scherm uit</string>
@@ -829,6 +834,12 @@
     <string-array name="keywords_vibration">
         <item>trillen</item>
         <item>gevoel</item>
+    </string-array>
+    <string-array name="keywords_battery">
+        <item>battery</item>
+        <item>charge</item>
+        <item>optimization</item>
+        <item>pixel</item>
     </string-array>
     <!-- App Selection Extra -->
     <string name="action_invert_selection">Selectie omdraaien</string>
