@@ -212,6 +212,10 @@
     <string name="dns_preset_quad9_hostname">dns.quad9.net</string>
     <string name="dns_preset_cleanbrowsing">CleanBrowsing</string>
     <string name="dns_preset_cleanbrowsing_hostname">adult-filter-dns.cleanbrowsing.org</string>
+    <string name="tile_charge_optimization">Charging</string>
+    <string name="limit_to_80">Limit to 80%</string>
+    <string name="adaptive_charging">Adaptive</string>
+    <string name="deactivated">Not optimized</string>
     <!-- Screen Locked Security -->
     <string name="screen_locked_security_title">Sécurité d\'écran verrouillé</string>
     <string name="screen_locked_security_dialog_title">Écran de verrouillage</string>
@@ -602,6 +606,7 @@
     <string name="about_desc_private_dns">Activez ou désactivez le DNS Privé.\n\nChangez entre les modes désactivé, automatique et nom d\'hôte. </string>
     <string name="about_desc_usb_debugging">Activez ou désactivez le débogage USB.\n\nActivez ou désactiver l\'accès au débogage ADB directement depuis les \"Réglages rapides\".</string>
     <string name="about_desc_color_picker">Launch the eye dropper tool to pick colors introduced in Android 17 BETA 2</string>
+    <string name="about_desc_charge_optimization">Optimize your battery life by limiting the maximum charge or using adaptive charging. This is specially designed for Pixel devices to ensure longevity and healthy charging cycles.\n\nCredits: TebbeUbben/ChargeQuickTile</string>
     <string name="action_download">Télécharger</string>
     <!-- DIY Section -->
     <string name="diy_trigger_screen_off">Écran éteint</string>
@@ -829,6 +834,12 @@
     <string-array name="keywords_vibration">
         <item>vibration</item>
         <item>ressenti</item>
+    </string-array>
+    <string-array name="keywords_battery">
+        <item>battery</item>
+        <item>charge</item>
+        <item>optimization</item>
+        <item>pixel</item>
     </string-array>
     <!-- App Selection Extra -->
     <string name="action_invert_selection">Inverser la sélection</string>
