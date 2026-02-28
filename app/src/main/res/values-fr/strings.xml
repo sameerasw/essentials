@@ -1082,4 +1082,8 @@
     <string name="label_transition_animation_scale">Échelle d\'animation des transitions </string>
     <string name="label_window_animation_scale">Échelle d\'animation des fenêtres </string>
     <string name="about_desc_text_animations">Ajustez la taille de la police, son épaisseur et les vitesses d\'animations pour tout le système. Veuillez noter que certains paramètres peuvent nécessiter des permissions avancées ou un redémarrage pour certaines applis afin d\'appliquer les modifications. \n\nDes permissions additionnelles comme Shizuku ou l\'accès racine (root) peuvent être nécessaires pour l\'ajustement des échelles</string>
+    <string name="feat_aod_force_turn_off_title">Force turn off AOD</string>
+    <string name="feat_aod_force_turn_off_desc">Force turn off the AOD when no notifications. Requires accessibility permission.</string>
+    <string name="feat_auto_accessibility_title">Auto accessibility</string>
+    <string name="feat_auto_accessibility_desc">Automatically grants the accessibility permission on app launch if missing using WRITE_SECURE_SETTINGS.</string>
 </resources>
