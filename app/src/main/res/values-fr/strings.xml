@@ -61,6 +61,10 @@
     <string name="feat_ambient_music_glance_desc">Aperçu du média joué sur le mode Always-on</string>
     <string name="ambient_glance_docked_mode_title">Mode docké</string>
     <string name="ambient_glance_docked_mode_desc">Garder la superposition visible indéfiniment quand de la musique est jouée sur le mode Always-on</string>
+    <string name="feat_notification_glance_title">Notification glance</string>
+    <string name="feat_notification_glance_desc">Keep AOD on while notifications are pending</string>
+    <string name="notification_glance_same_as_lighting_title">Same apps as notification lighting</string>
+    <string name="notification_glance_desc">This feature will dynamically enable Always on Display when a notification arrives from a selected app, and disable it once all matching notifications are dismissed. Pick apps or use the same selection as notification lighting.</string>
     <string name="grant_notification_access">Accorder l\'accès aux notifications</string>
     <string name="action_toggle_media_volume">Activer/désactiver le volume du média</string>
     <string name="button_remap_screen_off_hint">Quand l\'écran est éteint, appuyez longuement sur le bouton sélectionné pour déclencher son action assignée. Sur les appareils Pixel, cette action ne se déclenche que si le mode Always-on est activé à cause de limitations systèmes.</string>
@@ -212,6 +216,10 @@
     <string name="dns_preset_quad9_hostname">dns.quad9.net</string>
     <string name="dns_preset_cleanbrowsing">CleanBrowsing</string>
     <string name="dns_preset_cleanbrowsing_hostname">adult-filter-dns.cleanbrowsing.org</string>
+    <string name="tile_charge_optimization">Charging</string>
+    <string name="limit_to_80">Limit to 80%</string>
+    <string name="adaptive_charging">Adaptive</string>
+    <string name="deactivated">Not optimized</string>
     <!-- Screen Locked Security -->
     <string name="screen_locked_security_title">Sécurité d\'écran verrouillé</string>
     <string name="screen_locked_security_dialog_title">Écran de verrouillage</string>
@@ -355,6 +363,8 @@
     <string name="feat_freeze_desc">Désactiver les applications rarement utilisées</string>
     <string name="feat_watermark_title">Filigrane</string>
     <string name="feat_watermark_desc">Ajoutez des données EXIF et des logos aux photos</string>
+    <string name="feat_always_on_display_title">Always on Display</string>
+    <string name="feat_always_on_display_desc">Show time and info while screen off</string>
     <string name="feat_calendar_sync_title">Synchronisation des calendriers</string>
     <string name="feat_calendar_sync_desc">Synchroniser les événements sur votre montre</string>
     <string name="watermark_style_overlay">Superposition</string>
@@ -594,6 +604,7 @@
     <string name="about_desc_sensitive_content">Masquer le contenu sensible sur l\'écran de verrouillage.\n\nChoisissez le contenu des notifications à afficher ou à cacher quand votre appareil est verrouillé.</string>
     <string name="about_desc_tap_to_wake">Activez ou désactivez la fonctionnalité \"Appuyer pour activer l\'écran\".\n\nActivez ou désactivez la capacité de rallumer votre écran avec un appui.</string>
     <string name="about_desc_aod">Activez ou désactivez le mode Always-on.\n\nActivez ou désactivez rapidement le mode Always-on qui permet de voir des informations une fois l\'écran éteint.</string>
+    <string name="about_desc_notification_glance">Automatically control your Always On Display based on your notifications. When a message or alert arrives from a selected app, AOD will stay on until you dismiss the notification, ensuring you never miss important info without wasting battery when no alerts are present.</string>
     <string name="about_desc_mono_audio">Combinez les deux canaux audios en mono.\n\nCela peut être utile quand vous utilisez un seul écouteur ou pour l\'aide à l\'accessibilité.</string>
     <string name="about_desc_flashlight_tile">Activez ou désactivez la lampe torche.\n\nUn appui long ouvre les contrôles d\'intensité en fonction de l\'implémentation matérielle que certains appareils peuvent manquer.</string>
     <string name="about_desc_stay_awake">Gardez l\'écran allumé pendant la charge.\n\nEmpêchez l\'écran de s\'éteindre tant que l\'appareil est connecté à une source d\'énergie qui convient au débogage USB.</string>
@@ -602,6 +613,7 @@
     <string name="about_desc_private_dns">Activez ou désactivez le DNS Privé.\n\nChangez entre les modes désactivé, automatique et nom d\'hôte. </string>
     <string name="about_desc_usb_debugging">Activez ou désactivez le débogage USB.\n\nActivez ou désactiver l\'accès au débogage ADB directement depuis les \"Réglages rapides\".</string>
     <string name="about_desc_color_picker">Launch the eye dropper tool to pick colors introduced in Android 17 BETA 2</string>
+    <string name="about_desc_charge_optimization">Optimize your battery life by limiting the maximum charge or using adaptive charging. This is specially designed for Pixel devices to ensure longevity and healthy charging cycles.\n\nCredits: TebbeUbben/ChargeQuickTile</string>
     <string name="action_download">Télécharger</string>
     <!-- DIY Section -->
     <string name="diy_trigger_screen_off">Écran éteint</string>
@@ -829,6 +841,12 @@
     <string-array name="keywords_vibration">
         <item>vibration</item>
         <item>ressenti</item>
+    </string-array>
+    <string-array name="keywords_battery">
+        <item>battery</item>
+        <item>charge</item>
+        <item>optimization</item>
+        <item>pixel</item>
     </string-array>
     <!-- App Selection Extra -->
     <string name="action_invert_selection">Inverser la sélection</string>
@@ -1064,4 +1082,8 @@
     <string name="label_transition_animation_scale">Échelle d\'animation des transitions </string>
     <string name="label_window_animation_scale">Échelle d\'animation des fenêtres </string>
     <string name="about_desc_text_animations">Ajustez la taille de la police, son épaisseur et les vitesses d\'animations pour tout le système. Veuillez noter que certains paramètres peuvent nécessiter des permissions avancées ou un redémarrage pour certaines applis afin d\'appliquer les modifications. \n\nDes permissions additionnelles comme Shizuku ou l\'accès racine (root) peuvent être nécessaires pour l\'ajustement des échelles</string>
+    <string name="feat_aod_force_turn_off_title">Force turn off AOD</string>
+    <string name="feat_aod_force_turn_off_desc">Force turn off the AOD when no notifications. Requires accessibility permission.</string>
+    <string name="feat_auto_accessibility_title">Auto accessibility</string>
+    <string name="feat_auto_accessibility_desc">Automatically grants the accessibility permission on app launch if missing using WRITE_SECURE_SETTINGS.</string>
 </resources>
