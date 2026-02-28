@@ -445,6 +445,9 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                             undoRedoManager.recordInsert(text)
                             currentInputConnection?.commitText(text, 1)
                         },
+                        onDeleteClipboardItem = { text ->
+                            deleteClipboardItem(text)
+                        },
                         onUndoClick = {
                             val ic = currentInputConnection
                             undoRedoManager.undo(ic)
@@ -637,6 +640,12 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
         // Lookup suggestion for current word
         if (newSelStart == newSelEnd) {
              updateSuggestions()
+        }
+    }
+    fun deleteClipboardItem(text: String) {
+        val current = _clipboardHistory.value.toMutableList()
+        if (current.remove(text)) {
+            _clipboardHistory.value = current
         }
     }
 }

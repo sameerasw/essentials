@@ -36,9 +36,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonGroup
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -289,6 +288,7 @@ fun KeyboardInputView(
     clipboardHistory: List<String> = emptyList(),
     onSuggestionClick: (Suggestion) -> Unit = {},
     onPasteClick: (String) -> Unit = {},
+    onDeleteClipboardItem: (String) -> Unit = {},
     onUndoClick: () -> Unit = {},
     onType: (String) -> Unit,
     onKeyPress: (Int) -> Unit,
@@ -730,21 +730,58 @@ fun KeyboardInputView(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         } else {
-                            LazyVerticalGrid(
-                                columns = GridCells.Fixed(2),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            LazyColumn(
                                 verticalArrangement = Arrangement.spacedBy(8.dp),
                                 modifier = Modifier.fillMaxSize()
                             ) {
-                                items(clipboardHistory) { clipText ->
-                                    ClipboardItem(
-                                        text = clipText,
-                                        shape = RoundedCornerShape(keyRoundness),
-                                        onClick = {
-                                            onPasteClick(clipText)
-                                            isClipboardMode = false
+                                items(clipboardHistory, key = { it }) { clipText ->
+                                    val dismissState = androidx.compose.material3.rememberSwipeToDismissBoxState(
+                                        confirmValueChange = { value ->
+                                            if (value == androidx.compose.material3.SwipeToDismissBoxValue.StartToEnd || 
+                                                value == androidx.compose.material3.SwipeToDismissBoxValue.EndToStart) {
+                                                onDeleteClipboardItem(clipText)
+                                                performHeavyHaptic()
+                                                true
+                                            } else false
+                                        }
+                                    )
+
+                                    androidx.compose.material3.SwipeToDismissBox(
+                                        state = dismissState,
+                                        backgroundContent = {
+                                            val color by animateColorAsState(
+                                                when (dismissState.targetValue) {
+                                                    androidx.compose.material3.SwipeToDismissBoxValue.Settled -> MaterialTheme.colorScheme.surfaceContainerLow
+                                                    else -> MaterialTheme.colorScheme.errorContainer
+                                                }, label = "dismissBackground"
+                                            )
+                                            Box(
+                                                Modifier
+                                                    .fillMaxSize()
+                                                    .clip(RoundedCornerShape(keyRoundness))
+                                                    .background(color)
+                                                    .padding(horizontal = 16.dp),
+                                                contentAlignment = if (dismissState.dismissDirection == androidx.compose.material3.SwipeToDismissBoxValue.StartToEnd) 
+                                                    Alignment.CenterStart else Alignment.CenterEnd
+                                            ) {
+                                                Icon(
+                                                    painter = painterResource(R.drawable.rounded_delete_24),
+                                                    contentDescription = "Delete",
+                                                    tint = MaterialTheme.colorScheme.onErrorContainer
+                                                )
+                                            }
                                         },
-                                        modifier = Modifier.fillMaxWidth()
+                                        content = {
+                                            ClipboardItem(
+                                                text = clipText,
+                                                shape = RoundedCornerShape(keyRoundness),
+                                                onClick = {
+                                                    onPasteClick(clipText)
+                                                    isClipboardMode = false
+                                                },
+                                                modifier = Modifier.fillMaxWidth()
+                                            )
+                                        }
                                     )
                                 }
                             }
