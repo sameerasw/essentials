@@ -62,6 +62,10 @@
     <string name="feat_ambient_music_glance_desc">Glance at media on AOD</string>
     <string name="ambient_glance_docked_mode_title">Docked mode</string>
     <string name="ambient_glance_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
+    <string name="feat_notification_glance_title">Notification glance</string>
+    <string name="feat_notification_glance_desc">Keep AOD on while notifications are pending</string>
+    <string name="notification_glance_same_as_lighting_title">Same apps as notification lighting</string>
+    <string name="notification_glance_desc">This feature will dynamically enable Always on Display when a notification arrives from a selected app, and disable it once all matching notifications are dismissed. Pick apps or use the same selection as notification lighting.</string>
     <string name="grant_notification_access">Grant notification access</string>
     <string name="action_toggle_media_volume">Toggle media volume</string>
     <string name="button_remap_screen_off_hint">When the screen is off, long-press the selected button to trigger its assigned action. On Pixel devices, this action only gets triggered if the AOD is on due to system limitations.</string>
@@ -376,6 +380,8 @@
     <string name="feat_freeze_desc">Disable rarely used apps</string>
     <string name="feat_watermark_title">Watermark</string>
     <string name="feat_watermark_desc">Add EXIF data and logos to photos</string>
+    <string name="feat_always_on_display_title">Always on Display</string>
+    <string name="feat_always_on_display_desc">Show time and info while screen off</string>
     <string name="feat_calendar_sync_title">Calendar Sync</string>
     <string name="feat_calendar_sync_desc">Sync events to your watch</string>
     <string name="watermark_style_overlay">Overlay</string>
@@ -624,6 +630,7 @@
     <string name="about_desc_sensitive_content">Hide sensitive content on the lock screen.\n\nToggle whether notification content is shown or hidden when your device is locked.</string>
     <string name="about_desc_tap_to_wake">Toggle tap to wake functionality.\n\nEnable or disable the ability to wake your screen with a tap.</string>
     <string name="about_desc_aod">Toggle Always On Display.\n\nQuickly enable or disable the always-on display to view info at a glance.</string>
+    <string name="about_desc_notification_glance">Automatically control your Always On Display based on your notifications. When a message or alert arrives from a selected app, AOD will stay on until you dismiss the notification, ensuring you never miss important info without wasting battery when no alerts are present.</string>
     <string name="about_desc_mono_audio">Combine audio channels into mono.\n\nUseful when using a single earbud or for accessibility purposes.</string>
     <string name="about_desc_flashlight_tile">Toggle the flashlight.\n\nA Long pressing opens the controls for intensity adjustment which might need hardware implementation which some devices may lack.</string>
     <string name="about_desc_stay_awake">Keep the screen awake while charging.\n\nPrevents the screen from sleeping as long as the device is connected to a power source which is suitable for developers during debugging.</string>
@@ -1155,4 +1162,6 @@
     <string name="label_transition_animation_scale">Transition animation scale</string>
     <string name="label_window_animation_scale">Window animation scale</string>
     <string name="about_desc_text_animations">Adjust system-wide font scale, weight, and animation speeds. Note that some settings may require advanced permissions or a device reboot for certain apps to reflect changes. \n\nAdditional shizuku or root permission may be necessary for scale adjustments</string>
+    <string name="feat_aod_force_turn_off_title">Force turn off AOD</string>
+    <string name="feat_aod_force_turn_off_desc">Force turn off the AOD when no notifications. Requires accessibility permission.</string>
 </resources>
