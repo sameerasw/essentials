@@ -1164,4 +1164,6 @@
     <string name="about_desc_text_animations">Adjust system-wide font scale, weight, and animation speeds. Note that some settings may require advanced permissions or a device reboot for certain apps to reflect changes. \n\nAdditional shizuku or root permission may be necessary for scale adjustments</string>
     <string name="feat_aod_force_turn_off_title">Force turn off AOD</string>
     <string name="feat_aod_force_turn_off_desc">Force turn off the AOD when no notifications. Requires accessibility permission.</string>
+    <string name="feat_auto_accessibility_title">Auto accessibility</string>
+    <string name="feat_auto_accessibility_desc">Automatically grants the accessibility permission on app launch if missing using WRITE_SECURE_SETTINGS.</string>
 </resources>
