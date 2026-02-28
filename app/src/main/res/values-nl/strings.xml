@@ -1082,4 +1082,8 @@
     <string name="label_transition_animation_scale">Overgangsanimatieschaal</string>
     <string name="label_window_animation_scale">Vensteranimatieschaal</string>
     <string name="about_desc_text_animations">Pas de systeemwijde lettertypegrootte, gewicht en animatiesnelheden aan. Let erop dat sommige instellingen mogelijk geavanceerde machtigingen vereisen of het herstarten van het apparaat voordat sommige apps wijzigingen weergeven. \n\nToegevoegde Shizuku- of rootmachtigingen kunnen mogelijk nodig zijn voor het wijzigen van de schaal</string>
+    <string name="feat_aod_force_turn_off_title">Force turn off AOD</string>
+    <string name="feat_aod_force_turn_off_desc">Force turn off the AOD when no notifications. Requires accessibility permission.</string>
+    <string name="feat_auto_accessibility_title">Auto accessibility</string>
+    <string name="feat_auto_accessibility_desc">Automatically grants the accessibility permission on app launch if missing using WRITE_SECURE_SETTINGS.</string>
 </resources>
