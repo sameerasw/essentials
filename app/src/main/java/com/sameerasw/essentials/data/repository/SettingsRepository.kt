@@ -158,6 +158,9 @@ class SettingsRepository(private val context: Context) {
         const val KEY_TRANSITION_ANIMATION_SCALE = "transition_animation_scale"
         const val KEY_WINDOW_ANIMATION_SCALE = "window_animation_scale"
         const val KEY_SMALLEST_WIDTH = "smallest_width"
+        const val KEY_NOTIFICATION_GLANCE_ENABLED = "notification_glance_enabled"
+        const val KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING = "notification_glance_same_as_lighting"
+        const val KEY_NOTIFICATION_GLANCE_SELECTED_APPS = "notification_glance_selected_apps"
     }
 
     // Observe changes
@@ -382,6 +385,14 @@ class SettingsRepository(private val context: Context) {
 
     fun updateFlashlightPulseAppSelection(packageName: String, enabled: Boolean) =
         updateAppSelection(KEY_FLASHLIGHT_PULSE_SELECTED_APPS, packageName, enabled)
+
+    fun loadNotificationGlanceSelectedApps() = loadAppSelection(KEY_NOTIFICATION_GLANCE_SELECTED_APPS)
+
+    fun saveNotificationGlanceSelectedApps(apps: List<AppSelection>) =
+        saveAppSelection(KEY_NOTIFICATION_GLANCE_SELECTED_APPS, apps)
+
+    fun updateNotificationGlanceAppSelection(packageName: String, enabled: Boolean) =
+        updateAppSelection(KEY_NOTIFICATION_GLANCE_SELECTED_APPS, packageName, enabled)
 
     private fun updateAppSelection(key: String, packageName: String, enabled: Boolean) {
         val current = loadAppSelection(key).toMutableList()

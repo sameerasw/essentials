@@ -27,6 +27,8 @@ class NotificationListener : NotificationListenerService() {
             "com.sameerasw.essentials.ACTION_REQUEST_AMBIENT_GLANCE"
     }
 
+    private val activeGlanceNotifications = mutableSetOf<String>()
+
     private val likeActionReceiver = object : android.content.BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == ACTION_LIKE_CURRENT_SONG) {
@@ -749,6 +751,8 @@ class NotificationListener : NotificationListenerService() {
                     applicationContext.sendBroadcast(pulseIntent)
                 }
             }
+
+            handleNotificationGlance(sbn, true)
         } catch (_: Exception) {
             // ignore failures
         }
@@ -802,6 +806,70 @@ class NotificationListener : NotificationListenerService() {
         lastCallVibrateTime.remove(sbn.key)
         if (sbn.packageName == "com.google.android.apps.maps") {
             MapsState.hasNavigationNotification = false
+        }
+        handleNotificationGlance(sbn, false)
+    }
+
+    private fun handleNotificationGlance(sbn: StatusBarNotification, isPosted: Boolean) {
+        try {
+            val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+            val enabled = prefs.getBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_ENABLED, false)
+            if (!enabled) {
+                if (activeGlanceNotifications.isNotEmpty()) {
+                    activeGlanceNotifications.clear()
+                    updateAodState(false)
+                }
+                return
+            }
+
+            val pkg = sbn.packageName
+            if (pkg == packageName) return
+
+            if (isPosted) {
+                if (isAppSelectedForNotificationGlance(pkg)) {
+                    activeGlanceNotifications.add(sbn.key)
+                }
+            } else {
+                activeGlanceNotifications.remove(sbn.key)
+            }
+
+            updateAodState(activeGlanceNotifications.isNotEmpty())
+
+        } catch (e: Exception) {
+            Log.e("NotificationListener", "Error in handleNotificationGlance", e)
+        }
+    }
+
+    private fun updateAodState(enable: Boolean) {
+        try {
+            val currentValue = Settings.Secure.getInt(contentResolver, "doze_always_on", 0)
+            val newValue = if (enable) 1 else 0
+            if (currentValue != newValue) {
+                Settings.Secure.putInt(contentResolver, "doze_always_on", newValue)
+            }
+        } catch (e: Exception) {
+            Log.e("NotificationListener", "Failed to update AOD state", e)
+        }
+    }
+
+    private fun isAppSelectedForNotificationGlance(packageName: String): Boolean {
+        try {
+            val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+            val sameAsLighting = prefs.getBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING, true)
+            if (sameAsLighting) {
+                return isAppSelectedForNotificationLighting(packageName)
+            }
+
+            val json = prefs.getString(SettingsRepository.KEY_NOTIFICATION_GLANCE_SELECTED_APPS, null)
+            if (json == null) return true
+
+            val selectedApps: List<com.sameerasw.essentials.domain.model.AppSelection> =
+                com.google.gson.Gson().fromJson(json, Array<com.sameerasw.essentials.domain.model.AppSelection>::class.java).toList()
+
+            val app = selectedApps.find { it.packageName == packageName }
+            return app?.isEnabled ?: true
+        } catch (_: Exception) {
+            return true
         }
     }
 

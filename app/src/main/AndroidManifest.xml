@@ -407,16 +407,6 @@
         </service>
 
         <service
-            android:name=".services.tiles.AlwaysOnDisplayTileService"
-            android:exported="true"
-            android:icon="@drawable/rounded_mobile_text_2_24"
-            android:label="AOD"
-            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
-            <intent-filter>
-                <action android:name="android.service.quicksettings.action.QS_TILE" />
-            </intent-filter>
-        </service>
-        <service
             android:name=".services.tiles.NotificationLightingTileService"
             android:exported="true"
             android:icon="@drawable/rounded_blur_linear_24"
@@ -631,6 +621,7 @@
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
         </service>
+
         <service
             android:name=".services.tiles.ChargeQuickTileService"
             android:exported="true"
@@ -639,6 +630,18 @@
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".services.tiles.AlwaysOnDisplayTileService"
+            android:exported="true"
+            android:icon="@drawable/rounded_mobile_text_2_24"
+            android:label="@string/feat_always_on_display_title"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+                <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />
             </intent-filter>
         </service>
 

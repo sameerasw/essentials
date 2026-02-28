@@ -76,6 +76,7 @@ class QSPreferencesActivity : ComponentActivity() {
                 "com.sameerasw.essentials.services.tiles.DeveloperOptionsTileService" -> "Quick settings tiles"
                 "com.sameerasw.essentials.services.tiles.BatteryNotificationTileService" -> "Battery notification"
                 "com.sameerasw.essentials.services.tiles.ChargeQuickTileService" -> "Quick settings tiles"
+                "com.sameerasw.essentials.services.tiles.AlwaysOnDisplayTileService" -> "Always on Display"
                 else -> null
             }
 

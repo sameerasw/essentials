@@ -109,6 +109,8 @@ class MainViewModel : ViewModel() {
     val isCalendarSyncPeriodicEnabled = mutableStateOf(false)
     val isBatteryNotificationEnabled = mutableStateOf(false)
     val isAodEnabled = mutableStateOf(false)
+    val isNotificationGlanceEnabled = mutableStateOf(false)
+    val isNotificationGlanceSameAsLightingEnabled = mutableStateOf(true)
 
 
     data class CalendarAccount(
@@ -399,6 +401,8 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_TRANSITION_ANIMATION_SCALE -> transitionAnimationScale.floatValue = settingsRepository.getAnimationScale(android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE)
                     SettingsRepository.KEY_WINDOW_ANIMATION_SCALE -> windowAnimationScale.floatValue = settingsRepository.getAnimationScale(android.provider.Settings.Global.WINDOW_ANIMATION_SCALE)
                     SettingsRepository.KEY_SMALLEST_WIDTH -> smallestWidth.intValue = settingsRepository.getSmallestWidth()
+                    SettingsRepository.KEY_NOTIFICATION_GLANCE_ENABLED -> isNotificationGlanceEnabled.value = settingsRepository.getBoolean(key)
+                    SettingsRepository.KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING -> isNotificationGlanceSameAsLightingEnabled.value = settingsRepository.getBoolean(key, true)
                 }
             }
         }
@@ -730,6 +734,8 @@ class MainViewModel : ViewModel() {
         isCalendarSyncPeriodicEnabled.value = settingsRepository.isCalendarSyncPeriodicEnabled()
         isBatteryNotificationEnabled.value = settingsRepository.isBatteryNotificationEnabled()
         selectedCalendarIds.value = settingsRepository.getCalendarSyncSelectedCalendars()
+        isNotificationGlanceEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_ENABLED)
+        isNotificationGlanceSameAsLightingEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING, true)
 
         refreshTrackedUpdates(context)
         if (isBatteryNotificationEnabled.value) {
@@ -2153,8 +2159,30 @@ class MainViewModel : ViewModel() {
     }
 
     fun setAodEnabled(enabled: Boolean) {
-        settingsRepository.setAodEnabled(enabled)
         isAodEnabled.value = enabled
+        settingsRepository.setAodEnabled(enabled)
+    }
+
+    fun setNotificationGlanceEnabled(enabled: Boolean) {
+        isNotificationGlanceEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_ENABLED, enabled)
+    }
+
+    fun setNotificationGlanceSameAsLightingEnabled(enabled: Boolean) {
+        isNotificationGlanceSameAsLightingEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING, enabled)
+    }
+
+    fun loadNotificationGlanceSelectedApps(context: Context): List<AppSelection> {
+        return settingsRepository.loadNotificationGlanceSelectedApps()
+    }
+
+    fun saveNotificationGlanceSelectedApps(context: Context, apps: List<AppSelection>) {
+        settingsRepository.saveNotificationGlanceSelectedApps(apps)
+    }
+
+    fun updateNotificationGlanceAppEnabled(context: Context, packageName: String, enabled: Boolean) {
+        settingsRepository.updateNotificationGlanceAppSelection(packageName, enabled)
     }
 
     override fun onCleared() {
