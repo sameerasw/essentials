@@ -191,6 +191,27 @@ class MainActivity : FragmentActivity() {
                     )
                 }
 
+                // Animate the branding icon if it exists
+                val brandingViewId = resources.getIdentifier("splashscreen_branding_view", "id", "android")
+                val brandingView = if (brandingViewId != 0) {
+                    splashScreenView.findViewById<android.view.View>(brandingViewId)
+                } else {
+                    null
+                }
+
+                if (brandingView != null) {
+                    ObjectAnimator.ofFloat(
+                        brandingView,
+                        "translationY",
+                        0f,
+                        -brandingView.height.toFloat()
+                    ).apply {
+                        interpolator = AnticipateInterpolator()
+                        duration = 750
+                        start()
+                    }
+                }
+
                 fadeOut.start()
             } catch (e: Exception) {
                 // Fallback for any unexpected exceptions during animation

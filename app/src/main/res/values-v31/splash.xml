@@ -6,6 +6,7 @@
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground_light</item>
+        <item name="android:windowSplashScreenBrandingImage">@drawable/ic_branding_avatar</item>
         <item name="windowSplashScreenAnimationDuration">3000</item>
         <item name="postSplashScreenTheme">@style/Theme.Essentials</item>
     </style>

@@ -2,7 +2,8 @@
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
-    android:viewportHeight="108">
+    android:viewportHeight="108"
+    android:tint="@color/branding_icon_background">
   <group>
     <clip-path
         android:pathData="M43.75,15.75l48.5,28l-28,48.5l-48.5,-28z"/>
