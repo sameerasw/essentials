@@ -1082,4 +1082,8 @@
     <string name="label_transition_animation_scale">トランジションアニメスケール</string>
     <string name="label_window_animation_scale">ウィンドウアニメスケール</string>
     <string name="about_desc_text_animations">システム全体のフォントサイズ、太さ、アニメーション速度を調整します。一部のアプリでは変更を反映させるために高度な権限やデバイスの再起動が必要な場合があります。\n\nサイズ調整には追加のShizuku権限またはRoot権限が必要になる場合があります</string>
+    <string name="feat_aod_force_turn_off_title">Force turn off AOD</string>
+    <string name="feat_aod_force_turn_off_desc">Force turn off the AOD when no notifications. Requires accessibility permission.</string>
+    <string name="feat_auto_accessibility_title">Auto accessibility</string>
+    <string name="feat_auto_accessibility_desc">Automatically grants the accessibility permission on app launch if missing using WRITE_SECURE_SETTINGS.</string>
 </resources>
