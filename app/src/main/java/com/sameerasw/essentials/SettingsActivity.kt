@@ -717,6 +717,13 @@ fun SettingsContent(viewModel: MainViewModel, modifier: Modifier = Modifier) {
                     }
                 }
 
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_settings_accessibility_24,
+                    title = stringResource(R.string.feat_auto_accessibility_title),
+                    description = stringResource(R.string.feat_auto_accessibility_desc),
+                    isChecked = viewModel.isAutoAccessibilityEnabled.value,
+                    onCheckedChange = { viewModel.setAutoAccessibilityEnabled(it, context) }
+                )
             }
         }
 

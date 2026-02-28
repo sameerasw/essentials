@@ -111,6 +111,7 @@ class MainViewModel : ViewModel() {
     val isAodEnabled = mutableStateOf(false)
     val isNotificationGlanceEnabled = mutableStateOf(false)
     val isAodForceTurnOffEnabled = mutableStateOf(false)
+    val isAutoAccessibilityEnabled = mutableStateOf(false)
     val isNotificationGlanceSameAsLightingEnabled = mutableStateOf(true)
 
 
@@ -405,6 +406,7 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_NOTIFICATION_GLANCE_ENABLED -> isNotificationGlanceEnabled.value = settingsRepository.getBoolean(key)
                     SettingsRepository.KEY_AOD_FORCE_TURN_OFF_ENABLED -> isAodForceTurnOffEnabled.value = settingsRepository.getBoolean(key)
                     SettingsRepository.KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING -> isNotificationGlanceSameAsLightingEnabled.value = settingsRepository.getBoolean(key, true)
+                    SettingsRepository.KEY_AUTO_ACCESSIBILITY_ENABLED -> isAutoAccessibilityEnabled.value = settingsRepository.getBoolean(key)
                 }
             }
         }
@@ -416,13 +418,50 @@ class MainViewModel : ViewModel() {
 
         isAccessibilityEnabled.value = PermissionUtils.isAccessibilityServiceEnabled(context)
         isWriteSecureSettingsEnabled.value = PermissionUtils.canWriteSecureSettings(context)
+        isShizukuAvailable.value = ShizukuUtils.isShizukuAvailable()
+        isShizukuPermissionGranted.value = ShizukuUtils.hasPermission()
+        isAutoAccessibilityEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_AUTO_ACCESSIBILITY_ENABLED)
+
+        if (isAutoAccessibilityEnabled.value && !isAccessibilityEnabled.value) {
+            val serviceName = "${context.packageName}/${ScreenOffAccessibilityService::class.java.name}"
+            var success = false
+
+            if (isWriteSecureSettingsEnabled.value) {
+                try {
+                    val enabledServices = Settings.Secure.getString(
+                        context.contentResolver,
+                        Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
+                    ) ?: ""
+                    val newServices = if (enabledServices.isEmpty()) serviceName else if (!enabledServices.contains(serviceName)) "$enabledServices:$serviceName" else enabledServices
+                    Settings.Secure.putString(
+                        context.contentResolver,
+                        Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,
+                        newServices
+                    )
+                    Settings.Secure.putString(
+                        context.contentResolver,
+                        Settings.Secure.ACCESSIBILITY_ENABLED,
+                        "1"
+                    )
+                    success = true
+                } catch (e: Exception) {
+                    success = false
+                }
+            }
+
+            if (success) {
+                isAccessibilityEnabled.value = PermissionUtils.isAccessibilityServiceEnabled(context)
+                if (isAccessibilityEnabled.value) {
+                    android.widget.Toast.makeText(context, "Accessibility auto-granted", android.widget.Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
         isReadPhoneStateEnabled.value = PermissionUtils.hasReadPhoneStatePermission(context)
         isPostNotificationsEnabled.value = ContextCompat.checkSelfPermission(
             context,
             Manifest.permission.POST_NOTIFICATIONS
         ) == PackageManager.PERMISSION_GRANTED
-        isShizukuAvailable.value = ShizukuUtils.isShizukuAvailable()
-        isShizukuPermissionGranted.value = ShizukuUtils.hasPermission()
         isNotificationListenerEnabled.value =
             PermissionUtils.hasNotificationListenerPermission(context)
         isOverlayPermissionGranted.value = PermissionUtils.canDrawOverlays(context)
@@ -2154,6 +2193,11 @@ class MainViewModel : ViewModel() {
             } catch (e: Exception) {
             }
         }
+    }
+
+    fun setAutoAccessibilityEnabled(isEnabled: Boolean, context: Context) {
+        settingsRepository.putBoolean(SettingsRepository.KEY_AUTO_ACCESSIBILITY_ENABLED, isEnabled)
+        isAutoAccessibilityEnabled.value = isEnabled
     }
 
     fun generateBugReport(context: Context): String {
