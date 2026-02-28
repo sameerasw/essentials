@@ -71,6 +71,7 @@ Essential tools, mods and workarounds for Pixels and other Androids
 
 #### Display
 - Customize statusbar icons
+- Dynamic Always on Display
 - Caffeinate to keep screen awake
 - Dynamic night light - App based night light
 - Scale and animation adjustments
@@ -84,6 +85,7 @@ Essential tools, mods and workarounds for Pixels and other Androids
 - Watermark - Add EXIF data and logos to captured photos
 - Flashlight enhancements - With brightness controls and global fade-in-out effect
 - Private DNS - Pick your custom DNS or cycle through them easily
+- Eye dropper - Android 17 color picker
 
 #### DIY
 - Automate things yourself and make custom triggers
@@ -101,6 +103,7 @@ Essential tools, mods and workarounds for Pixels and other Androids
 - Toggle tap to wake
 - Toggle AOD
 - Caffeinate controls
+- Charging optimization (Pixel)
 - Sound mode switcher
 - Mono audio toggle
 - Flashlight controls and brightness adjustment
@@ -166,6 +169,7 @@ Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of co
 
 # Thanks
 - [chalda-pnuzig/emojis.json](https://github.com/chalda-pnuzig/emojis.json) - Keyboard emojis
+- [TebbeUbben/ChargeQuickTile](https://github.com/TebbeUbben/ChargeQuickTile) - Pixel charging QS
 
 # Stars <3
 
@@ -180,6 +184,6 @@ Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of co
 ---
 
 <p align="center">
-  Last updated: 2026-02-19
+  Last updated: 2026-03-01
 </p>
 
