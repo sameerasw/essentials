@@ -77,7 +77,7 @@ fun AlwaysOnDisplaySettingsUI(
                 isChecked = viewModel.isNotificationGlanceEnabled.value,
                 onCheckedChange = { checked ->
                     HapticUtil.performVirtualKeyHaptic(view)
-                    viewModel.setNotificationGlanceEnabled(checked)
+                    viewModel.toggleNotificationGlanceEnabled(checked)
                 },
                 modifier = Modifier.highlight(highlightSetting == "notification_glance_enabled")
             )
@@ -92,6 +92,24 @@ fun AlwaysOnDisplaySettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "notification_glance_same_apps")
             )
+
+            val isAccessibilityEnabled = viewModel.isAccessibilityEnabled.value
+            IconToggleItem(
+                iconRes = R.drawable.rounded_power_settings_new_24,
+                title = stringResource(R.string.feat_aod_force_turn_off_title),
+                isChecked = viewModel.isAodForceTurnOffEnabled.value,
+                onCheckedChange = { checked ->
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    // Check latest snapshot inside lambda
+                    val currentlyEnabled = com.sameerasw.essentials.utils.PermissionUtils.isAccessibilityServiceEnabled(context)
+                    if (checked && !currentlyEnabled) {
+                        com.sameerasw.essentials.utils.PermissionUtils.openAccessibilitySettings(context)
+                    } else {
+                        viewModel.toggleAodForceTurnOffEnabled(checked)
+                    }
+                },
+                modifier = Modifier.highlight(highlightSetting == "aod_force_turn_off")
+            )
         }
 
         Text(
@@ -100,6 +118,13 @@ fun AlwaysOnDisplaySettingsUI(
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+
+            Text(
+                text = stringResource(R.string.feat_aod_force_turn_off_desc),
+                modifier = Modifier.padding(16.dp),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
 
         if (!viewModel.isNotificationGlanceSameAsLightingEnabled.value) {
             Button(

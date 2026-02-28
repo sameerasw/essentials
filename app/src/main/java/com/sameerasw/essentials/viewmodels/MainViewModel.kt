@@ -110,6 +110,7 @@ class MainViewModel : ViewModel() {
     val isBatteryNotificationEnabled = mutableStateOf(false)
     val isAodEnabled = mutableStateOf(false)
     val isNotificationGlanceEnabled = mutableStateOf(false)
+    val isAodForceTurnOffEnabled = mutableStateOf(false)
     val isNotificationGlanceSameAsLightingEnabled = mutableStateOf(true)
 
 
@@ -402,6 +403,7 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_WINDOW_ANIMATION_SCALE -> windowAnimationScale.floatValue = settingsRepository.getAnimationScale(android.provider.Settings.Global.WINDOW_ANIMATION_SCALE)
                     SettingsRepository.KEY_SMALLEST_WIDTH -> smallestWidth.intValue = settingsRepository.getSmallestWidth()
                     SettingsRepository.KEY_NOTIFICATION_GLANCE_ENABLED -> isNotificationGlanceEnabled.value = settingsRepository.getBoolean(key)
+                    SettingsRepository.KEY_AOD_FORCE_TURN_OFF_ENABLED -> isAodForceTurnOffEnabled.value = settingsRepository.getBoolean(key)
                     SettingsRepository.KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING -> isNotificationGlanceSameAsLightingEnabled.value = settingsRepository.getBoolean(key, true)
                 }
             }
@@ -735,6 +737,7 @@ class MainViewModel : ViewModel() {
         isBatteryNotificationEnabled.value = settingsRepository.isBatteryNotificationEnabled()
         selectedCalendarIds.value = settingsRepository.getCalendarSyncSelectedCalendars()
         isNotificationGlanceEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_ENABLED)
+        isAodForceTurnOffEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_AOD_FORCE_TURN_OFF_ENABLED)
         isNotificationGlanceSameAsLightingEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING, true)
 
         refreshTrackedUpdates(context)
@@ -2163,11 +2166,15 @@ class MainViewModel : ViewModel() {
         settingsRepository.setAodEnabled(enabled)
     }
 
-    fun setNotificationGlanceEnabled(enabled: Boolean) {
-        isNotificationGlanceEnabled.value = enabled
+    fun toggleNotificationGlanceEnabled(enabled: Boolean) {
         settingsRepository.putBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_ENABLED, enabled)
+        isNotificationGlanceEnabled.value = enabled
     }
 
+    fun toggleAodForceTurnOffEnabled(enabled: Boolean) {
+        settingsRepository.putBoolean(SettingsRepository.KEY_AOD_FORCE_TURN_OFF_ENABLED, enabled)
+        isAodForceTurnOffEnabled.value = enabled
+    }
     fun setNotificationGlanceSameAsLightingEnabled(enabled: Boolean) {
         isNotificationGlanceSameAsLightingEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING, enabled)

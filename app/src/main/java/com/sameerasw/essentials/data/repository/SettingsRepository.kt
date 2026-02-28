@@ -161,6 +161,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_NOTIFICATION_GLANCE_ENABLED = "notification_glance_enabled"
         const val KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING = "notification_glance_same_as_lighting"
         const val KEY_NOTIFICATION_GLANCE_SELECTED_APPS = "notification_glance_selected_apps"
+        const val KEY_AOD_FORCE_TURN_OFF_ENABLED = "aod_force_turn_off_enabled"
     }
 
     // Observe changes

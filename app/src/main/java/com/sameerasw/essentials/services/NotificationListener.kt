@@ -4,6 +4,7 @@ import android.app.Notification
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.PowerManager
 import android.provider.Settings
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
@@ -846,6 +847,18 @@ class NotificationListener : NotificationListenerService() {
             val newValue = if (enable) 1 else 0
             if (currentValue != newValue) {
                 Settings.Secure.putInt(contentResolver, "doze_always_on", newValue)
+                
+                // If turning OFF and force turn off workaround is enabled, trigger it
+                if (!enable) {
+                    val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+                    if (!powerManager.isInteractive) {
+                        val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+                        val forceTurnOffEnabled = prefs.getBoolean(SettingsRepository.KEY_AOD_FORCE_TURN_OFF_ENABLED, false)
+                        if (forceTurnOffEnabled) {
+                            sendBroadcast(Intent("FORCE_TURN_OFF_AOD").setPackage(packageName))
+                        }
+                    }
+                }
             }
         } catch (e: Exception) {
             Log.e("NotificationListener", "Failed to update AOD state", e)
