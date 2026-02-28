@@ -113,8 +113,8 @@
     <string name="content_desc_more_options">その他のオプション</string>
     <string name="action_freeze_all">すべてのアプリをフリーズ</string>
     <string name="action_unfreeze_all">すべてのアプリのフリーズを解除</string>
-    <string name="action_export_freeze">Export frozen apps list</string>
-    <string name="action_import_freeze">Import frozen apps list</string>
+    <string name="action_export_freeze">フリーズアプリリストをエクスポート</string>
+    <string name="action_import_freeze">フリーズアプリリストをインポート</string>
     <string name="freeze_pick_apps_title">フリーズさせるアプリを選択</string>
     <string name="freeze_pick_apps_desc">フリーズできるアプリを選択してください</string>
     <string name="settings_section_automation">自動化</string>
@@ -194,8 +194,8 @@
     <string name="tile_private_dns_auto">自動</string>
     <string name="tile_private_dns_off">OFF</string>
     <string name="tile_usb_debugging">USBデバッグ</string>
-    <string name="tile_color_picker">Color Picker</string>
-    <string name="toast_eyedropper_failed">Are you sure you\'re on Androdi 17? (╯°_°）╯</string>
+    <string name="tile_color_picker">カラーピッカー</string>
+    <string name="toast_eyedropper_failed">本当にAndroid 17を使っていますか？ (╯°_°）╯</string>
     <string name="subtitle_eye_dropper">Eye Dropper</string>
     <string name="on">オン</string>
     <string name="off">オフ</string>
@@ -601,7 +601,7 @@
     <string name="about_desc_adaptive_brightness">明るさ自動調整の切り替え\n\n周囲の明るさに基づく画面の明るさの自動調整を有効または無効にします。</string>
     <string name="about_desc_private_dns">プライベートDNSを切り替えるます。\n\nオフ、自動、プライベートDNSプロバイダーモードを切り替えます。</string>
     <string name="about_desc_usb_debugging">USBデバッグを切り替えます。\n\nクイック設定から直接ADBデバッグアクセスを有効または無効にします。</string>
-    <string name="about_desc_color_picker">Launch the eye dropper tool to pick colors introduced in Android 17 BETA 2</string>
+    <string name="about_desc_color_picker">Android 17 BETA 2で導入されたカラーピッカーツールを起動します</string>
     <string name="action_download">ダウンロード</string>
     <!-- DIY Section -->
     <string name="diy_trigger_screen_off">画面オフ</string>
