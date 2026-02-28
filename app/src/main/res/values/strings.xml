@@ -376,6 +376,8 @@
     <string name="feat_freeze_desc">Disable rarely used apps</string>
     <string name="feat_watermark_title">Watermark</string>
     <string name="feat_watermark_desc">Add EXIF data and logos to photos</string>
+    <string name="feat_always_on_display_title">Always on Display</string>
+    <string name="feat_always_on_display_desc">Show time and info while screen off</string>
     <string name="feat_calendar_sync_title">Calendar Sync</string>
     <string name="feat_calendar_sync_desc">Sync events to your watch</string>
     <string name="watermark_style_overlay">Overlay</string>

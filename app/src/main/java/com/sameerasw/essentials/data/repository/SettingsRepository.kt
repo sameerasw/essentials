@@ -830,4 +830,25 @@ class SettingsRepository(private val context: Context) {
             e.printStackTrace()
         }
     }
+
+    fun isAodEnabled(): Boolean {
+        return android.provider.Settings.Secure.getInt(
+            context.contentResolver,
+            "doze_always_on",
+            1
+        ) == 1
+    }
+
+    fun setAodEnabled(enabled: Boolean) {
+        try {
+            android.provider.Settings.Secure.putInt(
+                context.contentResolver,
+                "doze_always_on",
+                if (enabled) 1 else 0
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 }
+

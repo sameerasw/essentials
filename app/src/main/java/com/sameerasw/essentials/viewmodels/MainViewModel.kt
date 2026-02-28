@@ -108,6 +108,8 @@ class MainViewModel : ViewModel() {
     val isCalendarSyncEnabled = mutableStateOf(false)
     val isCalendarSyncPeriodicEnabled = mutableStateOf(false)
     val isBatteryNotificationEnabled = mutableStateOf(false)
+    val isAodEnabled = mutableStateOf(false)
+
 
     data class CalendarAccount(
         val id: Long,
@@ -229,6 +231,9 @@ class MainViewModel : ViewModel() {
                     }
                     Settings.Secure.getUriFor("display_density_forced") -> {
                         smallestWidth.intValue = settingsRepository.getSmallestWidth()
+                    }
+                    Settings.Secure.getUriFor("doze_always_on") -> {
+                        isAodEnabled.value = settingsRepository.isAodEnabled()
                     }
                 }
             }
@@ -463,6 +468,12 @@ class MainViewModel : ViewModel() {
             contentObserver
         )
 
+        context.contentResolver.registerContentObserver(
+            Settings.Secure.getUriFor("doze_always_on"),
+            false,
+            contentObserver
+        )
+
         settingsRepository.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
 
         viewModelScope.launch {
@@ -514,6 +525,8 @@ class MainViewModel : ViewModel() {
             settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_INDICATOR_X, 50f)
         notificationLightingIndicatorY.value =
             settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_INDICATOR_Y, 2f)
+        isAodEnabled.value = settingsRepository.isAodEnabled()
+
         isRootEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_USE_ROOT)
 
         if (isRootEnabled.value) {
@@ -2139,7 +2152,13 @@ class MainViewModel : ViewModel() {
         return com.sameerasw.essentials.utils.LogManager.generateReport(context, settingsJson)
     }
 
+    fun setAodEnabled(enabled: Boolean) {
+        settingsRepository.setAodEnabled(enabled)
+        isAodEnabled.value = enabled
+    }
+
     override fun onCleared() {
+
         super.onCleared()
         appContext?.contentResolver?.unregisterContentObserver(contentObserver)
         if (::settingsRepository.isInitialized) {

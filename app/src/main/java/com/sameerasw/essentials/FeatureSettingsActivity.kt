@@ -47,7 +47,9 @@ import com.sameerasw.essentials.ui.components.cards.FeatureCard
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.linkActions.LinkPickerScreen
 import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
+import com.sameerasw.essentials.ui.composables.configs.AlwaysOnDisplaySettingsUI
 import com.sameerasw.essentials.ui.composables.configs.AmbientMusicGlanceSettingsUI
+
 import com.sameerasw.essentials.ui.composables.configs.AppLockSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.BatteriesSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.BatteryNotificationSettingsUI
@@ -245,6 +247,7 @@ class FeatureSettingsActivity : FragmentActivity() {
                             "Caffeinate" -> !viewModel.isPostNotificationsEnabled.value
                             "Battery notification" -> !viewModel.isPostNotificationsEnabled.value || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !viewModel.isBluetoothPermissionGranted.value)
                             "Text and animations" -> !viewModel.isWriteSettingsEnabled.value || !isWriteSecureSettingsEnabled
+                            "Always on Display" -> !isWriteSecureSettingsEnabled
                             else -> false
                         }
                         if (hasMissingPermissions) {
@@ -656,7 +659,16 @@ class FeatureSettingsActivity : FragmentActivity() {
                                             highlightSetting = highlightSetting
                                         )
                                     }
+
+                                    "Always on Display" -> {
+                                        AlwaysOnDisplaySettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting
+                                        )
+                                    }
                                 }
+
                             }
                         }
                     }

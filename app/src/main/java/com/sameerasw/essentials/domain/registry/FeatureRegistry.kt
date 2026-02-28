@@ -150,6 +150,23 @@ object FeatureRegistry {
             override fun isEnabled(viewModel: MainViewModel) = true
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
         },
+        object : Feature(
+            id = "Always on Display",
+            title = R.string.feat_always_on_display_title,
+            iconRes = R.drawable.rounded_mobile_text_2_24,
+            category = R.string.cat_interface,
+            description = R.string.feat_always_on_display_desc,
+            aboutDescription = R.string.about_desc_aod,
+            permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
+            showToggle = true,
+            parentFeatureId = "Display"
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = viewModel.isAodEnabled.value
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {
+                viewModel.setAodEnabled(enabled)
+            }
+        },
+
 
         object : Feature(
             id = "Text and animations",
