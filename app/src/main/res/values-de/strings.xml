@@ -61,6 +61,10 @@
     <string name="feat_ambient_music_glance_desc">Ein Blick auf aktive Medien auf dem AOD</string>
     <string name="ambient_glance_docked_mode_title">Dock-Modus</string>
     <string name="ambient_glance_docked_mode_desc">Behalte das Overlay dauerhaft auf dem AOD, während Musik spielt</string>
+    <string name="feat_notification_glance_title">Notification glance</string>
+    <string name="feat_notification_glance_desc">Keep AOD on while notifications are pending</string>
+    <string name="notification_glance_same_as_lighting_title">Same apps as notification lighting</string>
+    <string name="notification_glance_desc">This feature will dynamically enable Always on Display when a notification arrives from a selected app, and disable it once all matching notifications are dismissed. Pick apps or use the same selection as notification lighting.</string>
     <string name="grant_notification_access">Grant notification access</string>
     <string name="action_toggle_media_volume">Medienlautstärke umschalten</string>
     <string name="button_remap_screen_off_hint">Wenn der Bildschirm ausgeschaltet ist, kann durch langes Drücken der ausgewählten Taste die zugehörige Aktion ausgelöst werden. Auf Pixel-Geräten wird diese Aktion aufgrund von Systembeschränkungen nur ausgelöst, wenn das Always-On-Display aktiviert ist.</string>
@@ -212,6 +216,10 @@
     <string name="dns_preset_quad9_hostname">dns.quad9.net</string>
     <string name="dns_preset_cleanbrowsing">CleanBrowsing</string>
     <string name="dns_preset_cleanbrowsing_hostname">adult-filter-dns.cleanbrowsing.org</string>
+    <string name="tile_charge_optimization">Charging</string>
+    <string name="limit_to_80">Limit to 80%</string>
+    <string name="adaptive_charging">Adaptive</string>
+    <string name="deactivated">Not optimized</string>
     <!-- Screen Locked Security -->
     <string name="screen_locked_security_title">Sicherheit bei Bildschirmsperre</string>
     <string name="screen_locked_security_dialog_title">Sicherheit bei Bildschirmsperre</string>
@@ -355,6 +363,8 @@
     <string name="feat_freeze_desc">Selten verwendete Apps deaktivieren</string>
     <string name="feat_watermark_title">Wasserzeichen</string>
     <string name="feat_watermark_desc">Fotos mit EXIF-Daten und Logos versehen</string>
+    <string name="feat_always_on_display_title">Always on Display</string>
+    <string name="feat_always_on_display_desc">Show time and info while screen off</string>
     <string name="feat_calendar_sync_title">Kalender-Synchronisierung</string>
     <string name="feat_calendar_sync_desc">Synchronisiere deine Ereignisse mit deiner Uhr</string>
     <string name="watermark_style_overlay">Overlay</string>
@@ -594,6 +604,7 @@
     <string name="about_desc_sensitive_content">Hide sensitive content on the lock screen.\n\nToggle whether notification content is shown or hidden when your device is locked.</string>
     <string name="about_desc_tap_to_wake">Toggle tap to wake functionality.\n\nEnable or disable the ability to wake your screen with a tap.</string>
     <string name="about_desc_aod">Toggle Always On Display.\n\nQuickly enable or disable the always-on display to view info at a glance.</string>
+    <string name="about_desc_notification_glance">Automatically control your Always On Display based on your notifications. When a message or alert arrives from a selected app, AOD will stay on until you dismiss the notification, ensuring you never miss important info without wasting battery when no alerts are present.</string>
     <string name="about_desc_mono_audio">Combine audio channels into mono.\n\nUseful when using a single earbud or for accessibility purposes.</string>
     <string name="about_desc_flashlight_tile">Toggle the flashlight.\n\nA Long pressing opens the controls for intensity adjustment which might need hardware implementation which some devices may lack.</string>
     <string name="about_desc_stay_awake">Keep the screen awake while charging.\n\nPrevents the screen from sleeping as long as the device is connected to a power source which is suitable for developers during debugging.</string>
@@ -602,6 +613,7 @@
     <string name="about_desc_private_dns">Toggle Private DNS.\n\nCycle through Off, Automatic, and Private DNS provider modes.</string>
     <string name="about_desc_usb_debugging">Toggle USB Debugging.\n\nEnable or disable ADB debugging access directly from the quick settings.</string>
     <string name="about_desc_color_picker">Launch the eye dropper tool to pick colors introduced in Android 17 BETA 2</string>
+    <string name="about_desc_charge_optimization">Optimize your battery life by limiting the maximum charge or using adaptive charging. This is specially designed for Pixel devices to ensure longevity and healthy charging cycles.\n\nCredits: TebbeUbben/ChargeQuickTile</string>
     <string name="action_download">Herunterladen</string>
     <!-- DIY Section -->
     <string name="diy_trigger_screen_off">Display aus</string>
@@ -829,6 +841,12 @@
     <string-array name="keywords_vibration">
         <item>vibration</item>
         <item>gefühl</item>
+    </string-array>
+    <string-array name="keywords_battery">
+        <item>battery</item>
+        <item>charge</item>
+        <item>optimization</item>
+        <item>pixel</item>
     </string-array>
     <!-- App Selection Extra -->
     <string name="action_invert_selection">Auswahl invertieren</string>
@@ -1064,4 +1082,8 @@
     <string name="label_transition_animation_scale">Transition animation scale</string>
     <string name="label_window_animation_scale">Window animation scale</string>
     <string name="about_desc_text_animations">Adjust system-wide font scale, weight, and animation speeds. Note that some settings may require advanced permissions or a device reboot for certain apps to reflect changes. \n\nAdditional shizuku or root permission may be necessary for scale adjustments</string>
+    <string name="feat_aod_force_turn_off_title">Force turn off AOD</string>
+    <string name="feat_aod_force_turn_off_desc">Force turn off the AOD when no notifications. Requires accessibility permission.</string>
+    <string name="feat_auto_accessibility_title">Auto accessibility</string>
+    <string name="feat_auto_accessibility_desc">Automatically grants the accessibility permission on app launch if missing using WRITE_SECURE_SETTINGS.</string>
 </resources>

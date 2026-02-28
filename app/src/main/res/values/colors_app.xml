@@ -2,5 +2,6 @@
 <resources>
     <!-- Light theme window background -->
     <color name="app_window_background">#FFFFFFFF</color>
+    <color name="branding_icon_background">#FF6650a4</color>
 </resources>
 

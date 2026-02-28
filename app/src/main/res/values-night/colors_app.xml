@@ -2,5 +2,6 @@
 <resources>
     <!-- Dark theme window background -->
     <color name="app_window_background">#FF000000</color>
+    <color name="branding_icon_background">#FFD0BCFF</color>
 </resources>
 
