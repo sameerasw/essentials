@@ -566,6 +566,13 @@ object FeatureRegistry {
                     R.string.feat_qs_tiles_title
                 ),
                 SearchSetting(
+                    R.string.tile_charge_optimization,
+                    R.string.about_desc_charge_optimization,
+                    "Charge optimization",
+                    R.array.keywords_battery,
+                    R.string.feat_qs_tiles_title
+                ),
+                SearchSetting(
                     R.string.search_qs_usb_debugging_title,
                     R.string.search_qs_usb_debugging_desc,
                     "USB Debugging",
@@ -986,6 +993,20 @@ object FeatureRegistry {
             category = R.string.cat_system,
             description = R.string.feat_qs_tiles_desc,
             aboutDescription = R.string.about_desc_developer_options,
+            permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
+            showToggle = false,
+            isVisibleInMain = false
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = false
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+        },
+        object : Feature(
+            id = "Charge optimization tile",
+            title = R.string.tile_charge_optimization,
+            iconRes = R.drawable.rounded_battery_android_frame_shield_24,
+            category = R.string.cat_system,
+            description = R.string.feat_qs_tiles_desc,
+            aboutDescription = R.string.about_desc_charge_optimization,
             permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
             showToggle = false,
             isVisibleInMain = false
