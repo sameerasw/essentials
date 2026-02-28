@@ -108,6 +108,12 @@ class MainViewModel : ViewModel() {
     val isCalendarSyncEnabled = mutableStateOf(false)
     val isCalendarSyncPeriodicEnabled = mutableStateOf(false)
     val isBatteryNotificationEnabled = mutableStateOf(false)
+    val isAodEnabled = mutableStateOf(false)
+    val isNotificationGlanceEnabled = mutableStateOf(false)
+    val isAodForceTurnOffEnabled = mutableStateOf(false)
+    val isAutoAccessibilityEnabled = mutableStateOf(false)
+    val isNotificationGlanceSameAsLightingEnabled = mutableStateOf(true)
+
 
     data class CalendarAccount(
         val id: Long,
@@ -229,6 +235,9 @@ class MainViewModel : ViewModel() {
                     }
                     Settings.Secure.getUriFor("display_density_forced") -> {
                         smallestWidth.intValue = settingsRepository.getSmallestWidth()
+                    }
+                    Settings.Secure.getUriFor("doze_always_on") -> {
+                        isAodEnabled.value = settingsRepository.isAodEnabled()
                     }
                 }
             }
@@ -394,6 +403,10 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_TRANSITION_ANIMATION_SCALE -> transitionAnimationScale.floatValue = settingsRepository.getAnimationScale(android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE)
                     SettingsRepository.KEY_WINDOW_ANIMATION_SCALE -> windowAnimationScale.floatValue = settingsRepository.getAnimationScale(android.provider.Settings.Global.WINDOW_ANIMATION_SCALE)
                     SettingsRepository.KEY_SMALLEST_WIDTH -> smallestWidth.intValue = settingsRepository.getSmallestWidth()
+                    SettingsRepository.KEY_NOTIFICATION_GLANCE_ENABLED -> isNotificationGlanceEnabled.value = settingsRepository.getBoolean(key)
+                    SettingsRepository.KEY_AOD_FORCE_TURN_OFF_ENABLED -> isAodForceTurnOffEnabled.value = settingsRepository.getBoolean(key)
+                    SettingsRepository.KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING -> isNotificationGlanceSameAsLightingEnabled.value = settingsRepository.getBoolean(key, true)
+                    SettingsRepository.KEY_AUTO_ACCESSIBILITY_ENABLED -> isAutoAccessibilityEnabled.value = settingsRepository.getBoolean(key)
                 }
             }
         }
@@ -405,13 +418,50 @@ class MainViewModel : ViewModel() {
 
         isAccessibilityEnabled.value = PermissionUtils.isAccessibilityServiceEnabled(context)
         isWriteSecureSettingsEnabled.value = PermissionUtils.canWriteSecureSettings(context)
+        isShizukuAvailable.value = ShizukuUtils.isShizukuAvailable()
+        isShizukuPermissionGranted.value = ShizukuUtils.hasPermission()
+        isAutoAccessibilityEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_AUTO_ACCESSIBILITY_ENABLED)
+
+        if (isAutoAccessibilityEnabled.value && !isAccessibilityEnabled.value) {
+            val serviceName = "${context.packageName}/${ScreenOffAccessibilityService::class.java.name}"
+            var success = false
+
+            if (isWriteSecureSettingsEnabled.value) {
+                try {
+                    val enabledServices = Settings.Secure.getString(
+                        context.contentResolver,
+                        Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
+                    ) ?: ""
+                    val newServices = if (enabledServices.isEmpty()) serviceName else if (!enabledServices.contains(serviceName)) "$enabledServices:$serviceName" else enabledServices
+                    Settings.Secure.putString(
+                        context.contentResolver,
+                        Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,
+                        newServices
+                    )
+                    Settings.Secure.putString(
+                        context.contentResolver,
+                        Settings.Secure.ACCESSIBILITY_ENABLED,
+                        "1"
+                    )
+                    success = true
+                } catch (e: Exception) {
+                    success = false
+                }
+            }
+
+            if (success) {
+                isAccessibilityEnabled.value = PermissionUtils.isAccessibilityServiceEnabled(context)
+                if (isAccessibilityEnabled.value) {
+                    android.widget.Toast.makeText(context, "Accessibility auto-granted", android.widget.Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
         isReadPhoneStateEnabled.value = PermissionUtils.hasReadPhoneStatePermission(context)
         isPostNotificationsEnabled.value = ContextCompat.checkSelfPermission(
             context,
             Manifest.permission.POST_NOTIFICATIONS
         ) == PackageManager.PERMISSION_GRANTED
-        isShizukuAvailable.value = ShizukuUtils.isShizukuAvailable()
-        isShizukuPermissionGranted.value = ShizukuUtils.hasPermission()
         isNotificationListenerEnabled.value =
             PermissionUtils.hasNotificationListenerPermission(context)
         isOverlayPermissionGranted.value = PermissionUtils.canDrawOverlays(context)
@@ -459,6 +509,12 @@ class MainViewModel : ViewModel() {
         )
         context.contentResolver.registerContentObserver(
             Settings.Secure.getUriFor("display_density_forced"),
+            false,
+            contentObserver
+        )
+
+        context.contentResolver.registerContentObserver(
+            Settings.Secure.getUriFor("doze_always_on"),
             false,
             contentObserver
         )
@@ -514,6 +570,8 @@ class MainViewModel : ViewModel() {
             settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_INDICATOR_X, 50f)
         notificationLightingIndicatorY.value =
             settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_INDICATOR_Y, 2f)
+        isAodEnabled.value = settingsRepository.isAodEnabled()
+
         isRootEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_USE_ROOT)
 
         if (isRootEnabled.value) {
@@ -717,6 +775,9 @@ class MainViewModel : ViewModel() {
         isCalendarSyncPeriodicEnabled.value = settingsRepository.isCalendarSyncPeriodicEnabled()
         isBatteryNotificationEnabled.value = settingsRepository.isBatteryNotificationEnabled()
         selectedCalendarIds.value = settingsRepository.getCalendarSyncSelectedCalendars()
+        isNotificationGlanceEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_ENABLED)
+        isAodForceTurnOffEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_AOD_FORCE_TURN_OFF_ENABLED)
+        isNotificationGlanceSameAsLightingEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING, true)
 
         refreshTrackedUpdates(context)
         if (isBatteryNotificationEnabled.value) {
@@ -2134,12 +2195,49 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    fun setAutoAccessibilityEnabled(isEnabled: Boolean, context: Context) {
+        settingsRepository.putBoolean(SettingsRepository.KEY_AUTO_ACCESSIBILITY_ENABLED, isEnabled)
+        isAutoAccessibilityEnabled.value = isEnabled
+    }
+
     fun generateBugReport(context: Context): String {
         val settingsJson = settingsRepository.getAllConfigsAsJsonString()
         return com.sameerasw.essentials.utils.LogManager.generateReport(context, settingsJson)
     }
 
+    fun setAodEnabled(enabled: Boolean) {
+        isAodEnabled.value = enabled
+        settingsRepository.setAodEnabled(enabled)
+    }
+
+    fun toggleNotificationGlanceEnabled(enabled: Boolean) {
+        settingsRepository.putBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_ENABLED, enabled)
+        isNotificationGlanceEnabled.value = enabled
+    }
+
+    fun toggleAodForceTurnOffEnabled(enabled: Boolean) {
+        settingsRepository.putBoolean(SettingsRepository.KEY_AOD_FORCE_TURN_OFF_ENABLED, enabled)
+        isAodForceTurnOffEnabled.value = enabled
+    }
+    fun setNotificationGlanceSameAsLightingEnabled(enabled: Boolean) {
+        isNotificationGlanceSameAsLightingEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING, enabled)
+    }
+
+    fun loadNotificationGlanceSelectedApps(context: Context): List<AppSelection> {
+        return settingsRepository.loadNotificationGlanceSelectedApps()
+    }
+
+    fun saveNotificationGlanceSelectedApps(context: Context, apps: List<AppSelection>) {
+        settingsRepository.saveNotificationGlanceSelectedApps(apps)
+    }
+
+    fun updateNotificationGlanceAppEnabled(context: Context, packageName: String, enabled: Boolean) {
+        settingsRepository.updateNotificationGlanceAppSelection(packageName, enabled)
+    }
+
     override fun onCleared() {
+
         super.onCleared()
         appContext?.contentResolver?.unregisterContentObserver(contentObserver)
         if (::settingsRepository.isInitialized) {

@@ -37,3 +37,8 @@
 # Prevent over-minification of settings and registry classes
 -keep class com.sameerasw.essentials.data.repository.** { *; }
 -keep class com.sameerasw.essentials.domain.registry.** { *; }
+
+# Emoji data classes for Gson
+-keep class com.sameerasw.essentials.ui.ime.EmojiObject { *; }
+-keep class com.sameerasw.essentials.ui.ime.EmojiCategory { *; }
+-keep class com.sameerasw.essentials.ui.ime.EmojiDataResponse { *; }

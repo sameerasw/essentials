@@ -19,6 +19,7 @@ import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.services.InputEventListenerService
 import com.sameerasw.essentials.services.handlers.AmbientGlanceHandler
+import com.sameerasw.essentials.services.handlers.AodForceTurnOffHandler
 import com.sameerasw.essentials.services.handlers.AppFlowHandler
 import com.sameerasw.essentials.services.handlers.ButtonRemapHandler
 import com.sameerasw.essentials.services.handlers.FlashlightHandler
@@ -43,6 +44,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
     private lateinit var appFlowHandler: AppFlowHandler
     private lateinit var securityHandler: SecurityHandler
     private lateinit var ambientGlanceHandler: AmbientGlanceHandler
+    private lateinit var aodForceTurnOffHandler: AodForceTurnOffHandler
 
     private var screenReceiver: BroadcastReceiver? = null
 
@@ -66,6 +68,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         appFlowHandler = AppFlowHandler(this)
         securityHandler = SecurityHandler(this)
         ambientGlanceHandler = AmbientGlanceHandler(this)
+        aodForceTurnOffHandler = AodForceTurnOffHandler(this)
 
         flashlightHandler.register()
 
@@ -76,6 +79,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
                     Intent.ACTION_SCREEN_ON -> {
                         notificationLightingHandler.onScreenOn()
                         ambientGlanceHandler.dismissImmediately()
+                        aodForceTurnOffHandler.removeOverlay()
                         freezeHandler.removeCallbacks(freezeRunnable)
                         stopInputEventListener()
                     }
@@ -98,6 +102,10 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
                     "SHOW_AMBIENT_GLANCE" -> {
                         ambientGlanceHandler.handleIntent(intent)
                     }
+
+                    "FORCE_TURN_OFF_AOD" -> {
+                        aodForceTurnOffHandler.forceTurnOff()
+                    }
                 }
             }
         }
@@ -107,6 +115,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
             addAction(Intent.ACTION_USER_PRESENT)
             addAction(InputEventListenerService.ACTION_VOLUME_LONG_PRESSED)
             addAction("SHOW_AMBIENT_GLANCE")
+            addAction("FORCE_TURN_OFF_AOD")
         }
         registerReceiver(screenReceiver, filter, RECEIVER_EXPORTED)
 
@@ -155,6 +164,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         securityHandler.restoreAnimationScale()
         notificationLightingHandler.removeOverlay()
         ambientGlanceHandler.removeOverlay()
+        aodForceTurnOffHandler.removeOverlay()
         stopInputEventListener()
         serviceScope.cancel()
         super.onDestroy()
@@ -246,6 +256,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
 
             "SHOW_NOTIFICATION_LIGHTING" -> notificationLightingHandler.handleIntent(intent)
             "SHOW_AMBIENT_GLANCE" -> ambientGlanceHandler.handleIntent(intent)
+            "FORCE_TURN_OFF_AOD" -> aodForceTurnOffHandler.forceTurnOff()
 
             "APP_AUTHENTICATED" -> intent.getStringExtra("package_name")
                 ?.let { appFlowHandler.onAuthenticated(it) }

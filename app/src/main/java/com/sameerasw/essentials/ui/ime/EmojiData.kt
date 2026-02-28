@@ -1,7 +1,9 @@
 package com.sameerasw.essentials.ui.ime
 
 import android.content.Context
+import android.util.Log
 import com.google.gson.Gson
+import com.google.gson.annotations.SerializedName
 import com.sameerasw.essentials.R
 import java.io.InputStreamReader
 import androidx.compose.runtime.getValue
@@ -14,8 +16,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 data class EmojiObject(
-    val emoji: String,
-    val name: String
+    @SerializedName("emoji") val emoji: String,
+    @SerializedName("name") val name: String
 )
 
 data class EmojiCategory(
@@ -25,7 +27,7 @@ data class EmojiCategory(
 )
 
 data class EmojiDataResponse(
-    val emojis: Map<String, Map<String, List<EmojiObject>>>
+    @SerializedName("emojis") val emojis: Map<String, Map<String, List<EmojiObject>>>
 )
 
 object EmojiData {
@@ -94,7 +96,7 @@ object EmojiData {
                 reader.close()
                 inputStream.close()
             } catch (e: Exception) {
-                e.printStackTrace()
+                Log.e("EmojiData", "Error loading emojis", e)
                 withContext(Dispatchers.Main) {
                     _isLoading.value = false
                 }

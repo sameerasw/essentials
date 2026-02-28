@@ -158,6 +158,11 @@ class SettingsRepository(private val context: Context) {
         const val KEY_TRANSITION_ANIMATION_SCALE = "transition_animation_scale"
         const val KEY_WINDOW_ANIMATION_SCALE = "window_animation_scale"
         const val KEY_SMALLEST_WIDTH = "smallest_width"
+        const val KEY_NOTIFICATION_GLANCE_ENABLED = "notification_glance_enabled"
+        const val KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING = "notification_glance_same_as_lighting"
+        const val KEY_NOTIFICATION_GLANCE_SELECTED_APPS = "notification_glance_selected_apps"
+        const val KEY_AOD_FORCE_TURN_OFF_ENABLED = "aod_force_turn_off_enabled"
+        const val KEY_AUTO_ACCESSIBILITY_ENABLED = "auto_accessibility_enabled"
     }
 
     // Observe changes
@@ -382,6 +387,14 @@ class SettingsRepository(private val context: Context) {
 
     fun updateFlashlightPulseAppSelection(packageName: String, enabled: Boolean) =
         updateAppSelection(KEY_FLASHLIGHT_PULSE_SELECTED_APPS, packageName, enabled)
+
+    fun loadNotificationGlanceSelectedApps() = loadAppSelection(KEY_NOTIFICATION_GLANCE_SELECTED_APPS)
+
+    fun saveNotificationGlanceSelectedApps(apps: List<AppSelection>) =
+        saveAppSelection(KEY_NOTIFICATION_GLANCE_SELECTED_APPS, apps)
+
+    fun updateNotificationGlanceAppSelection(packageName: String, enabled: Boolean) =
+        updateAppSelection(KEY_NOTIFICATION_GLANCE_SELECTED_APPS, packageName, enabled)
 
     private fun updateAppSelection(key: String, packageName: String, enabled: Boolean) {
         val current = loadAppSelection(key).toMutableList()
@@ -830,4 +843,25 @@ class SettingsRepository(private val context: Context) {
             e.printStackTrace()
         }
     }
+
+    fun isAodEnabled(): Boolean {
+        return android.provider.Settings.Secure.getInt(
+            context.contentResolver,
+            "doze_always_on",
+            1
+        ) == 1
+    }
+
+    fun setAodEnabled(enabled: Boolean) {
+        try {
+            android.provider.Settings.Secure.putInt(
+                context.contentResolver,
+                "doze_always_on",
+                if (enabled) 1 else 0
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 }
+

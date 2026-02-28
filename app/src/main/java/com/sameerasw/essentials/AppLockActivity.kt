@@ -1,20 +1,34 @@
 package com.sameerasw.essentials
 
-import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.activity.SystemBarStyle
+import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.biometric.BiometricPrompt
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
+import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import java.util.concurrent.Executor
 
 class AppLockActivity : FragmentActivity() {
@@ -26,90 +40,7 @@ class AppLockActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Force Dark Theme
-        enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
-            navigationBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT)
-        )
-
-        window.setBackgroundDrawableResource(android.R.color.black)
-
-        // Get accent color (respect Monet on Android 12+)
-        val primaryColor =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                ContextCompat.getColor(this, android.R.color.system_accent1_300)
-            } else {
-                val typedValue = android.util.TypedValue()
-                theme.resolveAttribute(android.R.attr.colorPrimary, typedValue, true)
-                typedValue.data
-            }
-
-        val root = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setBackgroundColor(android.graphics.Color.BLACK)
-            gravity = android.view.Gravity.CENTER_HORIZONTAL
-            setPadding(0, (140 * resources.displayMetrics.density).toInt(), 0, 0)
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
-            )
-        }
-
-        // Composite icon layout
-        val iconContainer = FrameLayout(this).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                (96 * resources.displayMetrics.density).toInt(),
-                (96 * resources.displayMetrics.density).toInt()
-            )
-        }
-
-        val baseIconSize = (80 * resources.displayMetrics.density).toInt()
-        val appRegistrationIcon = ImageView(this).apply {
-            setImageResource(R.drawable.rounded_shield_lock_24)
-            setColorFilter(primaryColor, android.graphics.PorterDuff.Mode.SRC_IN)
-            layoutParams = FrameLayout.LayoutParams(baseIconSize, baseIconSize).apply {
-                gravity = android.view.Gravity.CENTER
-            }
-        }
-
-        val essentialsIconSize = (32 * resources.displayMetrics.density).toInt()
-        val essentialsIconView = ImageView(this).apply {
-            setImageResource(R.mipmap.ic_launcher_round)
-            layoutParams = FrameLayout.LayoutParams(essentialsIconSize, essentialsIconSize).apply {
-                gravity = android.view.Gravity.BOTTOM or android.view.Gravity.END
-            }
-        }
-
-        iconContainer.addView(appRegistrationIcon)
-        iconContainer.addView(essentialsIconView)
-
-        val titleView = TextView(this).apply {
-            text = "App is locked"
-            setTextColor(android.graphics.Color.WHITE)
-            textSize = 22f
-            setPadding(0, (24 * resources.displayMetrics.density).toInt(), 0, 0)
-            gravity = android.view.Gravity.CENTER
-        }
-
-        val subtextView = TextView(this).apply {
-            text = "Please authenticate to unlock or \ngive the phone to the owner \n( -_-)"
-            setTextColor(android.graphics.Color.WHITE)
-            textSize = 14f
-            alpha = 0.6f
-            setPadding(
-                (48 * resources.displayMetrics.density).toInt(),
-                (8 * resources.displayMetrics.density).toInt(),
-                (48 * resources.displayMetrics.density).toInt(),
-                0
-            )
-            gravity = android.view.Gravity.CENTER
-        }
-
-        root.addView(iconContainer)
-        root.addView(titleView)
-        root.addView(subtextView)
-        setContentView(root)
+        enableEdgeToEdge()
 
         packageToLock = intent.getStringExtra("package_to_lock")
         if (packageToLock == null) {
@@ -120,8 +51,14 @@ class AppLockActivity : FragmentActivity() {
         val appLabel = try {
             val appInfo = packageManager.getApplicationInfo(packageToLock!!, 0)
             packageManager.getApplicationLabel(appInfo).toString()
-        } catch (e: Exception) {
+        } catch (e: PackageManager.NameNotFoundException) {
             packageToLock
+        }
+
+        setContent {
+            EssentialsTheme {
+                AppLockScreen()
+            }
         }
 
         executor = ContextCompat.getMainExecutor(this)
@@ -156,13 +93,72 @@ class AppLockActivity : FragmentActivity() {
         biometricPrompt.authenticate(promptInfo)
     }
 
+    @Composable
+    private fun AppLockScreen() {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 140.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Box(
+                    modifier = Modifier.size(96.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_shield_lock_24),
+                        contentDescription = "Lock Icon",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier
+                            .size(80.dp)
+                            .align(Alignment.Center)
+                    )
+
+                    AsyncImage(
+                        model = R.mipmap.ic_launcher_round,
+                        contentDescription = "Essentials App Icon",
+                        modifier = Modifier
+                            .size(32.dp)
+                            .align(Alignment.BottomEnd)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.background)
+                            .padding(2.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Text(
+                    text = "App is locked",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "Please authenticate to unlock or\ngive the phone to the owner\n( -_-)",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .padding(horizontal = 48.dp)
+                        .alpha(0.6f)
+                )
+            }
+        }
+    }
+
     private fun notifySuccessAndFinish() {
         val intent = Intent("APP_AUTHENTICATED").apply {
             `package` = packageName
             putExtra("package_name", packageToLock)
         }
         sendBroadcast(intent)
-        // Also notify via service to be more reliable
         val serviceIntent = Intent(this, ScreenOffAccessibilityService::class.java).apply {
             action = "APP_AUTHENTICATED"
             putExtra("package_name", packageToLock)
@@ -193,7 +189,6 @@ class AppLockActivity : FragmentActivity() {
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
-        // Prevent going back, treated as cancel/failure
         notifyFailureAndFinish()
         @Suppress("DEPRECATION")
         super.onBackPressed()

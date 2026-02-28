@@ -113,6 +113,8 @@
     <string name="content_desc_more_options">Больше Настроек</string>
     <string name="action_freeze_all">Заморозить все приложения</string>
     <string name="action_unfreeze_all">Разморозить все приложения</string>
+    <string name="action_export_freeze">Export frozen apps list</string>
+    <string name="action_import_freeze">Import frozen apps list</string>
     <string name="freeze_pick_apps_title">Выбор Приложения для Заморозки</string>
     <string name="freeze_pick_apps_desc">Выберите, какие приложения будут заморожены</string>
     <string name="settings_section_automation">Автоматизация</string>

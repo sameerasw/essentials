@@ -113,6 +113,8 @@
     <string name="content_desc_more_options">Meer opties</string>
     <string name="action_freeze_all">Bevries alle apps</string>
     <string name="action_unfreeze_all">Ontdooi alle apps</string>
+    <string name="action_export_freeze">Export frozen apps list</string>
+    <string name="action_import_freeze">Import frozen apps list</string>
     <string name="freeze_pick_apps_title">Kies apps om te bevriezen</string>
     <string name="freeze_pick_apps_desc">Kies welke apps bevroren kunnen worden</string>
     <string name="settings_section_automation">Automatisatie</string>
@@ -192,9 +194,9 @@
     <string name="tile_private_dns_auto">Automatisch</string>
     <string name="tile_private_dns_off">Uit</string>
     <string name="tile_usb_debugging">USB-foutopsporing</string>
-    <string name="tile_color_picker">Color Picker</string>
-    <string name="toast_eyedropper_failed">Are you sure you\'re on Androdi 17? (╯°_°）╯</string>
-    <string name="subtitle_eye_dropper">Eye Dropper</string>
+    <string name="tile_color_picker">Kleurenkiezer</string>
+    <string name="toast_eyedropper_failed">Weet je zeker dat je op Android 17 bent? (╯°_°）╯</string>
+    <string name="subtitle_eye_dropper">Pipet</string>
     <string name="on">Aan</string>
     <string name="off">Uit</string>
     <string name="private_dns_custom_title">Aangepaste Privé-DNS</string>
@@ -599,7 +601,7 @@
     <string name="about_desc_adaptive_brightness">Aanpasbare helderheid in-/uitschakelen\n\nHet automatisch aanpassen van de schermhelderheid op basis van de lichtcondities in-/uitschakelen.</string>
     <string name="about_desc_private_dns">Privé-DNS in-/uitschakelen.\n\nDoor de Uit/Automatisch/Hostnaam privé-DNS-modi schakelen.</string>
     <string name="about_desc_usb_debugging">USB-foutopsporing in-/uitschakelen.\n\nToegang tot foutopsporing via USB in-/uitschakelen via de snelle instellingen.</string>
-    <string name="about_desc_color_picker">Launch the eye dropper tool to pick colors introduced in Android 17 BETA 2</string>
+    <string name="about_desc_color_picker">Open het pipethulpmiddel om kleuren te kiezen, geïntroduceerd in Android 17 Bèta 2</string>
     <string name="action_download">Downloaden</string>
     <!-- DIY Section -->
     <string name="diy_trigger_screen_off">Scherm uit</string>

@@ -150,6 +150,23 @@ object FeatureRegistry {
             override fun isEnabled(viewModel: MainViewModel) = true
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
         },
+        object : Feature(
+            id = "Always on Display",
+            title = R.string.feat_always_on_display_title,
+            iconRes = R.drawable.rounded_mobile_text_2_24,
+            category = R.string.cat_interface,
+            description = R.string.feat_always_on_display_desc,
+            aboutDescription = R.string.about_desc_aod,
+            permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
+            showToggle = true,
+            parentFeatureId = "Display"
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = viewModel.isAodEnabled.value
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {
+                viewModel.setAodEnabled(enabled)
+            }
+        },
+
 
         object : Feature(
             id = "Text and animations",
@@ -563,6 +580,13 @@ object FeatureRegistry {
                     R.string.search_qs_private_dns_desc,
                     "Private DNS",
                     R.array.keywords_network_visibility,
+                    R.string.feat_qs_tiles_title
+                ),
+                SearchSetting(
+                    R.string.tile_charge_optimization,
+                    R.string.about_desc_charge_optimization,
+                    "Charge optimization",
+                    R.array.keywords_battery,
                     R.string.feat_qs_tiles_title
                 ),
                 SearchSetting(
@@ -986,6 +1010,20 @@ object FeatureRegistry {
             category = R.string.cat_system,
             description = R.string.feat_qs_tiles_desc,
             aboutDescription = R.string.about_desc_developer_options,
+            permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
+            showToggle = false,
+            isVisibleInMain = false
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = false
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+        },
+        object : Feature(
+            id = "Charge optimization tile",
+            title = R.string.tile_charge_optimization,
+            iconRes = R.drawable.rounded_battery_android_frame_shield_24,
+            category = R.string.cat_system,
+            description = R.string.feat_qs_tiles_desc,
+            aboutDescription = R.string.about_desc_charge_optimization,
             permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
             showToggle = false,
             isVisibleInMain = false

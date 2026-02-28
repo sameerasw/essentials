@@ -48,6 +48,7 @@ import com.sameerasw.essentials.services.tiles.AppLockTileService
 import com.sameerasw.essentials.services.tiles.BatteryNotificationTileService
 import com.sameerasw.essentials.services.tiles.BubblesTileService
 import com.sameerasw.essentials.services.tiles.CaffeinateTileService
+import com.sameerasw.essentials.services.tiles.ChargeQuickTileService
 import com.sameerasw.essentials.services.tiles.DeveloperOptionsTileService
 import com.sameerasw.essentials.services.tiles.DynamicNightLightTileService
 import com.sameerasw.essentials.services.tiles.FlashlightPulseTileService
@@ -269,6 +270,13 @@ fun QuickSettingsTilesSettingsUI(
             BatteryNotificationTileService::class.java,
             listOf("POST_NOTIFICATIONS", "BLUETOOTH_CONNECT", "BLUETOOTH_SCAN"),
             R.string.feat_battery_notification_desc
+        ),
+        QSTileInfo(
+            R.string.tile_charge_optimization,
+            R.drawable.rounded_battery_android_frame_shield_24,
+            ChargeQuickTileService::class.java,
+            listOf("WRITE_SECURE_SETTINGS"),
+            R.string.about_desc_charge_optimization
         )
     )
 
