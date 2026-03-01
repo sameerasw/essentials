@@ -199,7 +199,7 @@
     <string name="tile_private_dns_off">OFF</string>
     <string name="tile_usb_debugging">USBデバッグ</string>
     <string name="tile_color_picker">カラーピッカー</string>
-    <string name="toast_eyedropper_failed">本当にAndroid 17を使っていますか？ (╯°_°）╯</string>
+    <string name="toast_eyedropper_failed">Are you sure you\'re on Android 17? (╯°_°）╯</string>
     <string name="subtitle_eye_dropper">Eye Dropper</string>
     <string name="on">オン</string>
     <string name="off">オフ</string>
