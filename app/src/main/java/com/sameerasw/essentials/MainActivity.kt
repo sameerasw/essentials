@@ -101,6 +101,8 @@ import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.composables.DIYScreen
 import com.sameerasw.essentials.ui.composables.FreezeGridUI
 import com.sameerasw.essentials.ui.composables.SetupFeatures
+import com.sameerasw.essentials.ui.modifiers.BlurDirection
+import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.AppUpdatesViewModel
@@ -438,18 +440,27 @@ class MainActivity : FragmentActivity() {
                             0,
                             0
                         ),
-                        modifier = Modifier
-                            .nestedScroll(exitAlwaysScrollBehavior),
+                        modifier = Modifier,
                         containerColor = MaterialTheme.colorScheme.surfaceContainer,
                         topBar = {}
                     ) { innerPadding ->
+                        val statusBarHeightPx = with(androidx.compose.ui.platform.LocalDensity.current) {
+                            WindowInsets.statusBars.asPaddingValues().calculateTopPadding().toPx()
+                        }
+                        
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
+                                .progressiveBlur(
+                                    blurRadius = 40f,
+                                    height = statusBarHeightPx * 1.15f,
+                                    direction = BlurDirection.TOP
+                                )
                         ) {
                             val currentTab = remember(tabs, currentPage) {
                                 tabs.getOrNull(currentPage) ?: tabs.firstOrNull() ?: DIYTabs.ESSENTIALS
                             }
+
 
                             DIYFloatingToolbar(
                                 modifier = Modifier
@@ -596,7 +607,12 @@ class MainActivity : FragmentActivity() {
                                 },
                                 modifier = Modifier
                                     .scale(1f - (backProgress.value * 0.05f))
-                                    .alpha(1f - (backProgress.value * 0.3f)),
+                                    .alpha(1f - (backProgress.value * 0.3f))
+                                    .progressiveBlur(
+                                        blurRadius = 40f,
+                                        height = with(androidx.compose.ui.platform.LocalDensity.current) { 130.dp.toPx() },
+                                        direction = BlurDirection.BOTTOM
+                                    ),
                                 label = "Tab Transition"
                             ) { targetPage ->
                                     val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
