@@ -9,8 +9,11 @@ import android.provider.Settings
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -57,11 +60,12 @@ import kotlinx.coroutines.delay
 
 private const val FEATURE_MAPS_POWER_SAVING = R.string.feat_maps_power_saving_title
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SetupFeatures(
     viewModel: MainViewModel,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     searchRequested: Boolean = false,
     onSearchHandled: () -> Unit = {},
     onHelpClick: () -> Unit = {}
@@ -779,11 +783,12 @@ fun SetupFeatures(
             .verticalScroll(scrollState)
             .pointerInput(Unit) {
                 detectTapGestures(onTap = { focusManager.clearFocus() })
-            }
-            .padding(top = 16.dp, bottom = 150.dp),
+            },
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
+        Spacer(modifier = Modifier.height(contentPadding.calculateTopPadding()))
+        
         OutlinedTextField(
             value = viewModel.searchQuery.value,
             onValueChange = { new ->
@@ -1001,5 +1006,7 @@ fun SetupFeatures(
                 }
             }
         }
+        
+        Spacer(modifier = Modifier.height(contentPadding.calculateBottomPadding()))
     }
 }

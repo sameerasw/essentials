@@ -18,13 +18,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroupDefaults
@@ -83,7 +79,6 @@ fun FreezeGridUI(
     val pickedApps by viewModel.freezePickedApps
     val isPickedAppsLoading by viewModel.isFreezePickedAppsLoading
 
-    val gridState = rememberLazyGridState()
     val frozenStates = remember { mutableStateMapOf<String, Boolean>() }
     val lifecycleOwner = LocalLifecycleOwner.current
 
@@ -144,6 +139,7 @@ fun FreezeGridUI(
             val isShizukuAvailable by viewModel.isShizukuAvailable
             val isShizukuPermissionGranted by viewModel.isShizukuPermissionGranted
             var isMenuExpanded by remember { mutableStateOf(false) }
+            val scrollState = androidx.compose.foundation.rememberScrollState()
 
             val exportLauncher = rememberLauncherForActivityResult(
                 contract = ActivityResultContracts.CreateDocument("application/json")
@@ -173,29 +169,28 @@ fun FreezeGridUI(
                 }
             }
 
-            RoundedCardContainer(
+            Column(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .padding(top = 16.dp),
+                    .fillMaxSize()
+                    .verticalScroll(scrollState)
             ) {
-                LazyVerticalGrid(
-                    columns = GridCells.Adaptive(minSize = 88.dp),
-                    state = gridState,
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(
-                        bottom = 150.dp,
-                        top = 0.dp
-                    ),
-                    horizontalArrangement = Arrangement.spacedBy(2.dp),
-                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                Spacer(modifier = Modifier.height(contentPadding.calculateTopPadding()))
+                Spacer(modifier = Modifier.height(16.dp))
+
+                RoundedCardContainer(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp),
                 ) {
-                    item(span = { GridItemSpan(maxLineSpan) }) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                    ) {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .background(
                                     color = MaterialTheme.colorScheme.surfaceBright,
-                                    shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd)
+                                    shape = MaterialTheme.shapes.extraSmall
                                 )
                                 .padding(12.dp),
                             horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
@@ -319,27 +314,48 @@ fun FreezeGridUI(
                                 }
                             }
                         }
-                    }
 
-                    items(pickedApps, key = { it.packageName }) { app ->
-                        AppGridItem(
-                            app = app,
-                            isFrozen = frozenStates[app.packageName] ?: false,
-                            isAutoFreezeEnabled = app.isEnabled,
-                            onClick = {
-                                HapticUtil.performVirtualKeyHaptic(view)
-                                viewModel.launchAndUnfreezeApp(
-                                    context,
-                                    app.packageName
-                                )
-                                // We don't finish() here since this is a tab
-                            },
-                            onLongClick = {
-                                ShortcutUtil.pinAppShortcut(context, app)
+                        // App Grid Items
+                        val chunkedApps = pickedApps.chunked(4)
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            verticalArrangement = Arrangement.spacedBy(2.dp)
+                        ) {
+                            chunkedApps.forEach { rowApps ->
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(2.dp)
+                                ) {
+                                    rowApps.forEach { app ->
+                                        Box(modifier = Modifier.weight(1f)) {
+                                            AppGridItem(
+                                                app = app,
+                                                isFrozen = frozenStates[app.packageName] ?: false,
+                                                isAutoFreezeEnabled = app.isEnabled,
+                                                onClick = {
+                                                    HapticUtil.performVirtualKeyHaptic(view)
+                                                    viewModel.launchAndUnfreezeApp(
+                                                        context,
+                                                        app.packageName
+                                                    )
+                                                },
+                                                onLongClick = {
+                                                    ShortcutUtil.pinAppShortcut(context, app)
+                                                }
+                                            )
+                                        }
+                                    }
+                                    repeat(4 - rowApps.size) {
+                                        Spacer(modifier = Modifier.weight(1f))
+                                    }
+                                }
                             }
-                        )
+                        }
                     }
                 }
+
+                Spacer(modifier = Modifier.height(contentPadding.calculateBottomPadding()))
             }
         }
     }

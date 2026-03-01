@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
@@ -33,6 +35,7 @@ import com.sameerasw.essentials.viewmodels.DIYViewModel
 fun DIYScreen(
     modifier: Modifier = Modifier,
     viewModel: DIYViewModel = viewModel(),
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     showNewAutomationSheet: Boolean = false,
     onDismissNewAutomationSheet: () -> Unit = {}
 ) {
@@ -46,8 +49,7 @@ fun DIYScreen(
                 .fillMaxSize()
                 .pointerInput(Unit) {
                     detectTapGestures(onTap = { focusManager.clearFocus() })
-                }
-                .padding(16.dp),
+                },
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start
         ) {
@@ -68,8 +70,15 @@ fun DIYScreen(
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
-                    contentPadding = PaddingValues(bottom = 150.dp)
+                    contentPadding = PaddingValues(
+                        bottom = contentPadding.calculateBottomPadding(),
+                        start = 16.dp,
+                        end = 16.dp
+                    )
                 ) {
+                    item {
+                        Spacer(modifier = Modifier.height(contentPadding.calculateTopPadding()))
+                    }
                     if (enabledAutomations.isNotEmpty()) {
                         item {
                             Text(
