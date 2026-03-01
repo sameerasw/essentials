@@ -199,7 +199,7 @@
     <string name="tile_private_dns_off">Uit</string>
     <string name="tile_usb_debugging">USB-foutopsporing</string>
     <string name="tile_color_picker">Kleurenkiezer</string>
-    <string name="toast_eyedropper_failed">Weet je zeker dat je op Android 17 bent? (╯°_°）╯</string>
+    <string name="toast_eyedropper_failed">Are you sure you\'re on Android 17? (╯°_°）╯</string>
     <string name="subtitle_eye_dropper">Pipet</string>
     <string name="on">Aan</string>
     <string name="off">Uit</string>
