@@ -77,8 +77,11 @@ class ChargeQuickTileService : BaseTileService() {
     }
 
     override fun hasFeaturePermission(): Boolean {
-        return PermissionUtils.canWriteSecureSettings(this)
+        return PermissionUtils.canWriteSecureSettings(this) &&
+                com.sameerasw.essentials.utils.ShellUtils.hasPermission(this) &&
+                com.sameerasw.essentials.utils.ShellUtils.isAvailable(this)
     }
+
 
     override fun getTileIcon(): Icon {
         val adaptiveChargingEnabled = getSecureInt(ADAPTIVE_CHARGING_SETTING, 0) == 1

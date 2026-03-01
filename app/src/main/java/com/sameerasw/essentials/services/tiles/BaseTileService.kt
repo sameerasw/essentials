@@ -7,6 +7,7 @@ import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import androidx.annotation.RequiresApi
 import androidx.core.content.edit
+import com.sameerasw.essentials.R
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.utils.PermissionUtils
@@ -68,8 +69,9 @@ abstract class BaseTileService : TileService() {
         }
         tile.label = getTileLabel()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            tile.subtitle = if (!hasPerm) "Missing permissions" else getTileSubtitle()
+            tile.subtitle = if (!hasPerm) getString(R.string.permission_missing) else getTileSubtitle()
         }
+
         val icon = getTileIcon()
         if (icon != null) {
             tile.icon = icon
