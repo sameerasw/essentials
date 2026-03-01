@@ -220,6 +220,7 @@
     <string name="limit_to_80">Limit to 80%</string>
     <string name="adaptive_charging">Adaptive</string>
     <string name="deactivated">Not optimized</string>
+    <string name="permission_missing">Permission missing</string>
     <!-- Screen Locked Security -->
     <string name="screen_locked_security_title">Screen locked security</string>
     <string name="screen_locked_security_dialog_title">Screen Locked Security</string>
