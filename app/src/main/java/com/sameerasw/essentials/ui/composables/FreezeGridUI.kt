@@ -2,6 +2,8 @@ package com.sameerasw.essentials.ui.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,13 +19,20 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ButtonGroupDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -33,7 +42,9 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,6 +54,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -129,6 +141,38 @@ fun FreezeGridUI(
                 )
             }
         } else {
+            val isShizukuAvailable by viewModel.isShizukuAvailable
+            val isShizukuPermissionGranted by viewModel.isShizukuPermissionGranted
+            var isMenuExpanded by remember { mutableStateOf(false) }
+
+            val exportLauncher = rememberLauncherForActivityResult(
+                contract = ActivityResultContracts.CreateDocument("application/json")
+            ) { uri ->
+                uri?.let {
+                    try {
+                        context.contentResolver.openOutputStream(it)?.use { stream ->
+                            viewModel.exportFreezeApps(stream)
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
+            val importLauncher = rememberLauncherForActivityResult(
+                contract = ActivityResultContracts.OpenDocument()
+            ) { uri ->
+                uri?.let {
+                    try {
+                        context.contentResolver.openInputStream(it)?.use { stream ->
+                            viewModel.importFreezeApps(context, stream)
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+
             RoundedCardContainer(
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
@@ -145,6 +189,138 @@ fun FreezeGridUI(
                     horizontalArrangement = Arrangement.spacedBy(2.dp),
                     verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    color = MaterialTheme.colorScheme.surfaceBright,
+                                    shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd)
+                                )
+                                .padding(12.dp),
+                            horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            // Freeze Button
+                            Button(
+                                onClick = {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    viewModel.freezeAllAuto(context)
+                                },
+                                modifier = Modifier.weight(1f),
+                                enabled = isShizukuAvailable && isShizukuPermissionGranted,
+                                shape = ButtonDefaults.shape
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.rounded_mode_cool_24),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                                Spacer(Modifier.size(8.dp))
+                                Text(stringResource(R.string.action_freeze))
+                            }
+
+                            // Unfreeze Button
+                            Button(
+                                onClick = {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    viewModel.unfreezeAllAuto(context)
+                                },
+                                modifier = Modifier.weight(1f),
+                                enabled = isShizukuAvailable && isShizukuPermissionGranted,
+                                shape = ButtonDefaults.shape
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.rounded_mode_cool_off_24),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                                Spacer(Modifier.size(8.dp))
+                                Text(stringResource(R.string.action_unfreeze))
+                            }
+
+                            // More Menu Button
+                            IconButton(
+                                onClick = {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    isMenuExpanded = true
+                                },
+                                enabled = isShizukuAvailable && isShizukuPermissionGranted
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.rounded_more_vert_24),
+                                    contentDescription = stringResource(R.string.content_desc_more_options)
+                                )
+
+                                DropdownMenu(
+                                    expanded = isMenuExpanded,
+                                    onDismissRequest = { isMenuExpanded = false }
+                                ) {
+                                    DropdownMenuItem(
+                                        text = { Text(stringResource(R.string.action_freeze_all)) },
+                                        onClick = {
+                                            HapticUtil.performVirtualKeyHaptic(view)
+                                            viewModel.freezeAllManual(context)
+                                            isMenuExpanded = false
+                                        },
+                                        leadingIcon = {
+                                            Icon(
+                                                painter = painterResource(id = R.drawable.rounded_mode_cool_24),
+                                                contentDescription = null,
+                                                modifier = Modifier.size(18.dp)
+                                            )
+                                        }
+                                    )
+                                    DropdownMenuItem(
+                                        text = { Text(stringResource(R.string.action_unfreeze_all)) },
+                                        onClick = {
+                                            HapticUtil.performVirtualKeyHaptic(view)
+                                            viewModel.unfreezeAllManual(context)
+                                            isMenuExpanded = false
+                                        },
+                                        leadingIcon = {
+                                            Icon(
+                                                painter = painterResource(id = R.drawable.rounded_mode_cool_off_24),
+                                                contentDescription = null,
+                                                modifier = Modifier.size(18.dp)
+                                            )
+                                        }
+                                    )
+                                    DropdownMenuItem(
+                                        text = { Text(stringResource(R.string.action_export_freeze)) },
+                                        onClick = {
+                                            HapticUtil.performVirtualKeyHaptic(view)
+                                            exportLauncher.launch("freeze_apps_backup.json")
+                                            isMenuExpanded = false
+                                        },
+                                        leadingIcon = {
+                                            Icon(
+                                                painter = painterResource(id = R.drawable.rounded_arrow_warm_up_24),
+                                                contentDescription = null,
+                                                modifier = Modifier.size(18.dp)
+                                            )
+                                        }
+                                    )
+                                    DropdownMenuItem(
+                                        text = { Text(stringResource(R.string.action_import_freeze)) },
+                                        onClick = {
+                                            HapticUtil.performVirtualKeyHaptic(view)
+                                            importLauncher.launch(arrayOf("application/json"))
+                                            isMenuExpanded = false
+                                        },
+                                        leadingIcon = {
+                                            Icon(
+                                                painter = painterResource(id = R.drawable.rounded_arrow_cool_down_24),
+                                                contentDescription = null,
+                                                modifier = Modifier.size(18.dp)
+                                            )
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                    }
+
                     items(pickedApps, key = { it.packageName }) { app ->
                         AppGridItem(
                             app = app,
