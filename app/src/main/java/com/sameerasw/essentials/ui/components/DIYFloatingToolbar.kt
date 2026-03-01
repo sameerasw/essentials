@@ -45,7 +45,8 @@ fun DIYFloatingToolbar(
     tabs: List<DIYTabs>,
     onTabSelected: (Int) -> Unit,
     scrollBehavior: FloatingToolbarScrollBehavior,
-    badges: Map<DIYTabs, Boolean> = emptyMap()
+    badges: Map<DIYTabs, Boolean> = emptyMap(),
+    floatingActionButton: @Composable () -> Unit = {}
 ) {
     // Persistent visibility
     var expanded by remember { mutableStateOf(true) }
@@ -56,6 +57,7 @@ fun DIYFloatingToolbar(
                 androidx.compose.foundation.layout.WindowInsets.navigationBars
             ),
         expanded = expanded,
+        floatingActionButton = floatingActionButton,
         scrollBehavior = scrollBehavior,
         colors = FloatingToolbarDefaults.vibrantFloatingToolbarColors(
             toolbarContentColor = MaterialTheme.colorScheme.onSurface,

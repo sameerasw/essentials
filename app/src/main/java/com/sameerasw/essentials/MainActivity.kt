@@ -79,6 +79,10 @@ import androidx.fragment.app.FragmentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import android.widget.Toast
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import coil.compose.AsyncImage
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -257,6 +261,7 @@ class MainActivity : FragmentActivity() {
 
                     var showGitHubAuthSheet by remember { mutableStateOf(false) }
                     var showNewAutomationSheet by remember { mutableStateOf(false) }
+                    var showFabProfileMenu by remember { mutableStateOf(false) }
                     val gitHubToken by viewModel.gitHubToken
                     val gitHubUser by gitHubAuthViewModel.currentUser
 
@@ -610,12 +615,16 @@ class MainActivity : FragmentActivity() {
                                     }
                                 },
                                 hasUpdateAvailable = isUpdateAvailable,
-                                hasHelpBadge = false,
-                                scrollBehavior = scrollBehavior
-                            )
+                                    hasHelpBadge = false,
+                                    scrollBehavior = scrollBehavior
+                                )
                         }
                     ) { innerPadding ->
                         Box(modifier = Modifier.fillMaxSize()) {
+                            val currentTab = remember(tabs, currentPage) {
+                                tabs.getOrNull(currentPage) ?: tabs.firstOrNull() ?: DIYTabs.ESSENTIALS
+                            }
+
                             DIYFloatingToolbar(
                                 modifier = Modifier
                                     .align(Alignment.BottomCenter)
@@ -628,7 +637,119 @@ class MainActivity : FragmentActivity() {
                                     currentPage = index
                                 },
                                 scrollBehavior = exitAlwaysScrollBehavior,
-                                badges = mapOf(DIYTabs.APPS to viewModel.hasPendingUpdates.value)
+                                badges = mapOf(DIYTabs.APPS to viewModel.hasPendingUpdates.value),
+                                floatingActionButton = {
+                                    Box { // Menu anchor
+                                        FloatingActionButton(
+                                            onClick = {
+                                                HapticUtil.performVirtualKeyHaptic(view)
+                                                when (currentTab) {
+                                                    DIYTabs.ESSENTIALS -> {
+                                                        startActivity(Intent(context, SettingsActivity::class.java))
+                                                    }
+                                                    DIYTabs.FREEZE -> {
+                                                        startActivity(
+                                                            Intent(
+                                                                context,
+                                                                FeatureSettingsActivity::class.java
+                                                            ).apply {
+                                                                putExtra("feature", "Freeze")
+                                                            })
+                                                    }
+                                                    DIYTabs.DIY -> {
+                                                        showNewAutomationSheet = true
+                                                    }
+                                                    DIYTabs.APPS -> {
+                                                        val user = gitHubUser
+                                                        if (user != null) {
+                                                            showFabProfileMenu = true
+                                                        } else {
+                                                            showGitHubAuthSheet = true
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                            shape = MaterialTheme.shapes.large
+                                        ) {
+                                            when (currentTab) {
+                                                DIYTabs.ESSENTIALS -> {
+                                                    Icon(
+                                                        painter = painterResource(id = R.drawable.rounded_settings_heart_24),
+                                                        contentDescription = stringResource(R.string.content_desc_settings)
+                                                    )
+                                                }
+                                                DIYTabs.FREEZE -> {
+                                                    Icon(
+                                                        painter = painterResource(id = R.drawable.rounded_settings_heart_24),
+                                                        contentDescription = stringResource(R.string.content_desc_settings)
+                                                    )
+                                                }
+                                                DIYTabs.DIY -> {
+                                                    Icon(
+                                                        painter = painterResource(id = R.drawable.rounded_add_24),
+                                                        contentDescription = stringResource(R.string.diy_editor_new_title)
+                                                    )
+                                                }
+                                                DIYTabs.APPS -> {
+                                                    val user = gitHubUser
+                                                    if (user != null) {
+                                                        AsyncImage(
+                                                            model = user.avatarUrl,
+                                                            contentDescription = stringResource(R.string.action_profile),
+                                                            contentScale = ContentScale.Crop,
+                                                            modifier = Modifier
+                                                                .size(24.dp)
+                                                                .clip(CircleShape),
+                                                            placeholder = painterResource(id = R.drawable.brand_github),
+                                                            error = painterResource(id = R.drawable.brand_github)
+                                                        )
+                                                    } else {
+                                                        Icon(
+                                                            painter = painterResource(id = R.drawable.brand_github),
+                                                            contentDescription = stringResource(R.string.action_sign_in_github)
+                                                        )
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                        if (currentTab == DIYTabs.APPS) {
+                                            val user = gitHubUser
+                                            if (user != null) {
+                                                SegmentedDropdownMenu(
+                                                    expanded = showFabProfileMenu,
+                                                    onDismissRequest = { showFabProfileMenu = false }
+                                                ) {
+                                                    SegmentedDropdownMenuItem(
+                                                        text = { Text(user.name ?: user.login) },
+                                                        onClick = { showFabProfileMenu = false },
+                                                        leadingIcon = {
+                                                            Icon(
+                                                                painter = painterResource(id = R.drawable.brand_github),
+                                                                contentDescription = null
+                                                            )
+                                                        }
+                                                    )
+                                                    SegmentedDropdownMenuItem(
+                                                        text = { Text(stringResource(R.string.action_sign_out)) },
+                                                        onClick = {
+                                                            gitHubAuthViewModel.signOut(context)
+                                                            showFabProfileMenu = false
+                                                        },
+                                                        leadingIcon = {
+                                                            Icon(
+                                                                painter = painterResource(id = R.drawable.rounded_logout_24),
+                                                                contentDescription = null
+                                                            )
+                                                        }
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             )
 
                             AnimatedContent(
