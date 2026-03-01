@@ -573,6 +573,9 @@
     <string name="label_search">Search</string>
     <!-- UI Components General -->
     <string name="action_back">Back</string>
+    <string name="content_desc_back">Back</string>
+    <string name="label_settings">Settings</string>
+    <string name="action_report_bug">Report a Bug</string>
     <string name="action_done">Done</string>
     <string name="action_preview">Preview</string>
     <string name="action_help_guide">Help Guide</string>
