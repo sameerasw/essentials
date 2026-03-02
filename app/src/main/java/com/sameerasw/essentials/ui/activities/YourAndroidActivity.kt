@@ -120,7 +120,11 @@ class YourAndroidViewModel : ViewModel() {
                     queries.add(deviceCodename)
                 }
 
-                GSMArenaService.fetchSpecs(*queries.toTypedArray())
+                GSMArenaService.fetchSpecs(
+                    preferredName = manufacturer,
+                    preferredModel = model,
+                    queries = queries.toTypedArray()
+                )
             }
             _deviceSpecs.value = specs
             _isSpecsLoading.value = false

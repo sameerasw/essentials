@@ -9,15 +9,23 @@ import org.jsoup.nodes.Document
 object GSMArenaService {
     private const val BASE_URL = "https://www.gsmarena.com"
 
-    fun fetchSpecs(vararg queries: String): DeviceSpecs? {
+    fun fetchSpecs(
+        preferredName: String,
+        preferredModel: String,
+        vararg queries: String
+    ): DeviceSpecs? {
         for (query in queries) {
-            val specs = tryFetchSpecs(query)
+            val specs = tryFetchSpecs(query, preferredName, preferredModel)
             if (specs != null) return specs
         }
         return null
     }
 
-    private fun tryFetchSpecs(query: String): DeviceSpecs? {
+    private fun tryFetchSpecs(
+        query: String,
+        preferredName: String,
+        preferredModel: String
+    ): DeviceSpecs? {
         return try {
             val formattedQuery = query.replace(" ", "+")
             val searchUrl = "$BASE_URL/results.php3?sQuickSearch=yes&sName=$formattedQuery"
@@ -27,12 +35,21 @@ object GSMArenaService {
                 .timeout(30000)
                 .get()
 
-            val firstDeviceElement = searchDoc.select(".makers li").firstOrNull() ?: return null
-            val firstDevicePath = firstDeviceElement.select("a").attr("href")
-            val searchThumbnail = firstDeviceElement.select("img").attr("src")
+            val results = searchDoc.select(".makers li")
+            if (results.isEmpty()) return null
+
+            val bestMatchingElement = results.firstOrNull { element ->
+                val deviceName = element.select("span").text()
+                isBetterMatch(deviceName, preferredName, preferredModel)
+            } ?: results.first()
+
+            val devicePath = bestMatchingElement?.select("a")?.attr("href") ?: ""
+            val searchThumbnail = bestMatchingElement?.select("img")?.attr("src") ?: ""
+            
+            if (devicePath.isBlank()) return null
 
             val deviceUrl =
-                if (firstDevicePath.startsWith("/")) "$BASE_URL$firstDevicePath" else "$BASE_URL/$firstDevicePath"
+                if (devicePath.startsWith("/")) "$BASE_URL$devicePath" else "$BASE_URL/$devicePath"
 
             val deviceDoc: Document = Jsoup.connect(deviceUrl)
                 .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
@@ -110,5 +127,36 @@ object GSMArenaService {
             e.printStackTrace()
             null
         }
+    }
+
+    private fun isBetterMatch(
+        foundName: String,
+        preferredName: String,
+        preferredModel: String
+    ): Boolean {
+        val found = foundName.lowercase()
+        val prefName = preferredName.lowercase()
+        val prefModel = preferredModel.lowercase()
+
+        val variants = listOf("pro", "max", "plus", "xl", "ultra", "fold", "flip", "power", "neo", "gt", "lite", "ace", "prime", "edge")
+        for (variant in variants) {
+            if (found.contains(variant) && !prefName.contains(variant) && !prefModel.contains(variant)) {
+                return false
+            }
+        }
+
+        if (found.contains(prefName) || found.contains(prefModel)) {
+            val modelIndex = found.indexOf(prefName).takeIf { it != -1 } ?: found.indexOf(prefModel)
+            if (modelIndex != -1) {
+                val afterModel = found.substring(modelIndex + (if (found.contains(prefName)) prefName.length else prefModel.length)).trim()
+                if (afterModel.isNotEmpty()) {
+                    val firstWord = afterModel.split(" ").firstOrNull() ?: ""
+                    if (variants.contains(firstWord)) return false
+                }
+            }
+            return true
+        }
+
+        return false
     }
 }
