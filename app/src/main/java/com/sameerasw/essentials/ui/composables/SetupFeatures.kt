@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.provider.Settings
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -866,11 +867,10 @@ fun SetupFeatures(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start
         ) {
-            Spacer(modifier = Modifier.height(contentPadding.calculateTopPadding()))
-            
             val deviceInfo = remember { DeviceUtils.getDeviceInfo(context) }
             val displayFraction = if (isRefreshing) 1f else pullRefreshState.distanceFraction
             val thresholdPassed = displayFraction >= 1f
+            val statusBarPadding = contentPadding.calculateTopPadding()
             
             val cardExpansion by androidx.compose.animation.core.animateDpAsState(
                 targetValue = 120.dp * displayFraction.coerceIn(0f, 1f),
@@ -902,6 +902,30 @@ fun SetupFeatures(
                 label = "borderColor"
             )
 
+            val chevronAlpha by androidx.compose.animation.core.animateFloatAsState(
+                targetValue = if (thresholdPassed) 0f else 1f,
+                animationSpec = androidx.compose.animation.core.tween(durationMillis = 300),
+                label = "chevronAlpha"
+            )
+
+            val chevronWidth by androidx.compose.animation.core.animateDpAsState(
+                targetValue = if (thresholdPassed) 0.dp else 24.dp + 8.dp, // size + spacer
+                animationSpec = androidx.compose.animation.core.tween(durationMillis = 300),
+                label = "chevronWidth"
+            )
+
+            val fontWeight by androidx.compose.animation.core.animateIntAsState(
+                targetValue = if (thresholdPassed) 700 else 500,
+                animationSpec = androidx.compose.animation.core.tween(durationMillis = 300),
+                label = "fontWeight"
+            )
+
+            val textScale by androidx.compose.animation.core.animateFloatAsState(
+                targetValue = if (thresholdPassed) 1.5f else 1f,
+                animationSpec = androidx.compose.animation.core.tween(durationMillis = 300),
+                label = "textScale"
+            )
+
             // My Android
             OutlinedCard(
                 onClick = {
@@ -911,9 +935,14 @@ fun SetupFeatures(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
-                    .padding(top = 16.dp, bottom = 0.dp)
-                    .height(64.dp + cardExpansion),
-                shape = MaterialTheme.shapes.extraLarge,
+                    .padding(top = 0.dp, bottom = 0.dp)
+                    .height(64.dp + statusBarPadding + cardExpansion),
+                shape = RoundedCornerShape(
+                    topStart = 0.dp,
+                    topEnd = 0.dp,
+                    bottomStart = 28.dp,
+                    bottomEnd = 28.dp
+                ),
                 colors = CardDefaults.outlinedCardColors(
                     containerColor = containerColor,
                     contentColor = if (thresholdPassed) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
@@ -922,20 +951,36 @@ fun SetupFeatures(
             ) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+                        Spacer(modifier = Modifier.height(statusBarPadding))
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = androidx.compose.material.icons.Icons.Rounded.KeyboardArrowDown,
-                                contentDescription = null,
-                                modifier = Modifier.size(24.dp).graphicsLayer {
-                                    rotationZ = (displayFraction * 180f).coerceIn(0f, 180f)
-                                },
-                                tint = contentColor
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
+                            Box(
+                                modifier = Modifier
+                                    .width(chevronWidth)
+                                    .graphicsLayer { alpha = chevronAlpha }
+                            ) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(
+                                        imageVector = androidx.compose.material.icons.Icons.Rounded.KeyboardArrowDown,
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .size(24.dp)
+                                            .graphicsLayer {
+                                                rotationZ = (displayFraction * 180f).coerceIn(0f, 180f)
+                                            },
+                                        tint = contentColor
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                }
+                            }
                             Text(
                                 text = deviceInfo.deviceName,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = androidx.compose.ui.text.font.FontWeight.Medium,
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    fontWeight = androidx.compose.ui.text.font.FontWeight(fontWeight)
+                                ),
+                                modifier = Modifier.graphicsLayer {
+                                    scaleX = textScale
+                                    scaleY = textScale
+                                },
                                 color = if (thresholdPassed) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
                             )
                         }
