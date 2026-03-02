@@ -212,27 +212,6 @@ fun DeviceHeroCard(
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.primary
                             )
-                            val isBeta = deviceInfo.buildTag.lowercase().contains("beta")
-                            val isCanary = deviceInfo.buildTag.lowercase().contains("canary")
-
-                            if (isBeta || isCanary) {
-                                Spacer(modifier = Modifier.size(8.dp))
-                                Box(
-                                    modifier = Modifier
-                                        .background(
-                                            MaterialTheme.colorScheme.primary,
-                                            shape = MaterialTheme.shapes.large
-                                        )
-                                        .padding(horizontal = 6.dp, vertical = 2.dp)
-                                ) {
-                                    Text(
-                                        text = if (isCanary) "CANARY" else "BETA",
-                                        style = MaterialTheme.typography.labelSmall,
-                                        fontWeight = FontWeight.Bold,
-                                        color = MaterialTheme.colorScheme.onPrimary
-                                    )
-                                }
-                            }
                         }
                         Text(
                             text = "API ${deviceInfo.sdkInt} • Patch: ${

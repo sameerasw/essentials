@@ -51,7 +51,7 @@ object DeviceUtils {
         activityManager.getMemoryInfo(memoryInfo)
 
         val buildId = Build.DISPLAY
-        val buildInfo = findBuildInfo(context, buildId) ?: getBetaDetailsFromPrefix(buildId)
+        val buildInfo = findBuildInfo(context, buildId)
 
         val deviceSecurityPatch =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) Build.VERSION.SECURITY_PATCH else "Unknown"
@@ -78,45 +78,6 @@ object DeviceUtils {
             buildTag = buildInfo?.optString("tag") ?: "",
             supportedDevices = buildInfo?.optString("devices") ?: ""
         )
-    }
-
-    private fun getBetaDetailsFromPrefix(buildId: String): org.json.JSONObject? {
-        val build = buildId.uppercase()
-        val details = org.json.JSONObject()
-        return when {
-            build.startsWith("UPB") || build.startsWith("U1B") -> {
-                details.put("version", "Android 15 Beta")
-                details.put("tag", "Beta Prefix")
-                details
-            }
-
-            build.startsWith("AP11") || build.startsWith("AP21") || build.startsWith("AP31") -> {
-                details.put("version", "Android 16 Beta")
-                details.put("tag", "Beta Prefix")
-                details
-            }
-
-            build.startsWith("BP") -> {
-                // Check if it's likely a QPR beta based on the request (BPxx)
-                details.put("version", "Android 16 QPR Beta")
-                details.put("tag", "Platform/QPR Beta")
-                details
-            }
-
-            build.startsWith("CP") -> {
-                details.put("version", "Android 17 Beta")
-                details.put("tag", "Developer Beta")
-                details
-            }
-
-            build.startsWith("ZP") -> {
-                details.put("version", "Android Canary")
-                details.put("tag", "Canary Build")
-                details
-            }
-
-            else -> null
-        }
     }
 
     private fun findBuildInfo(context: Context, buildId: String): org.json.JSONObject? {
