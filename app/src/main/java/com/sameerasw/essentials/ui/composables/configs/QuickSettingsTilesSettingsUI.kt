@@ -14,8 +14,12 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -83,7 +87,8 @@ data class QSTileInfo(
 @Composable
 fun QuickSettingsTilesSettingsUI(
     modifier: Modifier = Modifier,
-    highlightSetting: String? = null
+    highlightSetting: String? = null,
+    contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     val context = LocalContext.current
     LocalView.current
@@ -339,11 +344,13 @@ fun QuickSettingsTilesSettingsUI(
 
     Column(
         modifier = modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(16.dp),
+            .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+        Spacer(modifier = Modifier.height(contentPadding.calculateTopPadding()))
+        Spacer(modifier = Modifier.height(16.dp))
         tiles.chunked(2).forEach { rowTiles ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -422,8 +429,10 @@ fun QuickSettingsTilesSettingsUI(
             text = "Long press a tile to see what it does",
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(top = 8.dp, bottom = 48.dp)
+            modifier = Modifier.padding(top = 8.dp)
         )
+
+        Spacer(modifier = Modifier.height(contentPadding.calculateBottomPadding()))
     }
 }
 
