@@ -315,7 +315,7 @@ Le app bloccate richiederanno l\'autenticazione all\'apertura. L\'app rimarrà s
     <string name="cat_visuals">Visuals</string>
     <string name="cat_system">System</string>
     <!-- UI Elements -->
-    <string name="search_placeholder">Search for Tools, Mods and Tweaks</string>
+    <string name="search_placeholder">Search Essentials</string>
     <string name="search_no_results">No results for \"%1$s\"</string>
     <string name="search_results_title">Search Results</string>
     <string name="requires_following_permissions">%1$s requires following permissions</string>
