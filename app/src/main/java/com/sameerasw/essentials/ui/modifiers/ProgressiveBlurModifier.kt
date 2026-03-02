@@ -41,12 +41,17 @@ private val PROGRESSIVE_BLUR_SKSL = """
         half4 accum = half4(0.0);
         float weightSum = 0.0;
         
-        const int SAMPLES = 5; 
+        // Random value for dithering based on pixel coordinates
+        float dither = fract(sin(dot(fragCoord, float2(12.9898, 78.233))) * 43758.5453);
+        float2 jitter = float2(dither - 0.5, fract(dither * 1.618) - 0.5);
+        
+        const int SAMPLES = 4; 
         float offsetScale = radius / float(SAMPLES);
         
         for (int x = -SAMPLES; x <= SAMPLES; x++) {
             for (int y = -SAMPLES; y <= SAMPLES; y++) {
-                float2 offset = float2(float(x), float(y)) * offsetScale;
+                // Apply jittered sampling with dither
+                float2 offset = (float2(float(x), float(y)) + jitter) * offsetScale;
                 
                 float distSq = dot(offset, offset);
                 float radiusSq = radius * radius;
