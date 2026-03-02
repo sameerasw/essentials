@@ -63,7 +63,7 @@
     <string name="ambient_glance_docked_mode_desc">AODで音楽を再生している間、無期限にオーバーレイを表示します</string>
     <string name="feat_notification_glance_title">通知を表示</string>
     <string name="feat_notification_glance_desc">Keep AOD on while notifications are pending</string>
-    <string name="notification_glance_same_as_lighting_title">Same apps as notification lighting</string>
+    <string name="notification_glance_same_as_lighting_title">通知ライトと同じアプリ</string>
     <string name="notification_glance_desc">この機能は、選択したアプリから通知が届いた際に常時表示ディスプレイを自動で有効化し、該当する通知がすべて消去されると無効化します。アプリを選択するか、通知ライト設定と同じ選択を使用してください。</string>
     <string name="grant_notification_access">通知アクセスを付与</string>
     <string name="action_toggle_media_volume">メディア音量を調整</string>
@@ -575,7 +575,7 @@
     <string name="action_back">戻る</string>
     <string name="content_desc_back">戻る</string>
     <string name="label_settings">設定</string>
-    <string name="action_report_bug">Report a Bug</string>
+    <string name="action_report_bug">バグを報告</string>
     <string name="action_done">完了</string>
     <string name="action_preview">プレビュー</string>
     <string name="action_help_guide">ヘルプガイド</string>
@@ -1091,7 +1091,7 @@
     <string name="feat_auto_accessibility_title">Auto accessibility</string>
     <string name="feat_auto_accessibility_desc">Automatically grants the accessibility permission on app launch if missing using WRITE_SECURE_SETTINGS.</string>
     <string name="label_help_guide">ヘルプ＆ガイド</string>
-    <string name="tab_your_android">Your Android</string>
-    <string name="label_device_storage">Storage</string>
-    <string name="label_device_ram">Memory</string>
+    <string name="tab_your_android">あなたのAndroid</string>
+    <string name="label_device_storage">ストレージ</string>
+    <string name="label_device_ram">メモリ</string>
 </resources>
