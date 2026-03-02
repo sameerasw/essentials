@@ -1172,4 +1172,7 @@
     <string name="feat_auto_accessibility_title">Auto accessibility</string>
     <string name="feat_auto_accessibility_desc">Automatically grants the accessibility permission on app launch if missing using WRITE_SECURE_SETTINGS.</string>
     <string name="label_help_guide">Help and Guides</string>
+    <string name="tab_your_android">Your Android</string>
+    <string name="label_device_storage">Storage</string>
+    <string name="label_device_ram">Memory</string>
 </resources>
