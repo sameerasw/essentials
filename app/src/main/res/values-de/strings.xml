@@ -220,6 +220,7 @@
     <string name="limit_to_80">Limit to 80%</string>
     <string name="adaptive_charging">Adaptive</string>
     <string name="deactivated">Not optimized</string>
+    <string name="permission_missing">Permission missing</string>
     <!-- Screen Locked Security -->
     <string name="screen_locked_security_title">Sicherheit bei Bildschirmsperre</string>
     <string name="screen_locked_security_dialog_title">Sicherheit bei Bildschirmsperre</string>
@@ -572,6 +573,9 @@
     <string name="label_search">Suche</string>
     <!-- UI Components General -->
     <string name="action_back">Zurück</string>
+    <string name="content_desc_back">Back</string>
+    <string name="label_settings">Settings</string>
+    <string name="action_report_bug">Report a Bug</string>
     <string name="action_done">Fertig</string>
     <string name="action_preview">Vorschau</string>
     <string name="action_help_guide">Hilfe-Leitfaden</string>
@@ -1086,4 +1090,8 @@
     <string name="feat_aod_force_turn_off_desc">Force turn off the AOD when no notifications. Requires accessibility permission.</string>
     <string name="feat_auto_accessibility_title">Auto accessibility</string>
     <string name="feat_auto_accessibility_desc">Automatically grants the accessibility permission on app launch if missing using WRITE_SECURE_SETTINGS.</string>
+    <string name="label_help_guide">Help and Guides</string>
+    <string name="tab_your_android">Your Android</string>
+    <string name="label_device_storage">Storage</string>
+    <string name="label_device_ram">Memory</string>
 </resources>
