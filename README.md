@@ -35,6 +35,7 @@ Essential tools, mods and workarounds for Pixels and other Androids
 - [Features](#features)
 - [Requirements](#requirements)
 - [Screenshots](#screenshots)
+- [Installation](#installation)
 - [Shell Providers (Shizuku & Root)](#shell-providers-shizuku--root)
 - [Accessibility Permissions](#how-to-grant-accessibility-permissions)
 - [Localization](#localization)
@@ -138,6 +139,25 @@ Essential tools, mods and workarounds for Pixels and other Androids
   <img src="https://github.com/user-attachments/assets/50d762a5-5bc6-46e7-a9ce-9ccfc207957f" width="19%" />
   <img src="https://github.com/user-attachments/assets/d77c91c0-a1b3-45e4-9123-eee0f09a558f" width="19%" />
 </p>
+
+# Installation
+
+During the installation, you probably will see a warning similar to this claiming the app blocked during installation with no way to continue at all.
+
+<img width="25%" alt="image" src="https://github.com/user-attachments/assets/d36c5a92-6d28-43c2-8431-92a7ffd7ac61" />
+
+This is a new restriction on Android with sideloaded apps that can receive sensitive permissions such as Accessibility or notification listener which both Essentials may utilize.
+
+- You can still proceed avoiding this but you will have to temporarily disable Google Play Protect during the installation.
+- But then again, you may notice the toggle for play protect in play store is enabled and grayed out not allowing to be disabled. This is due to the "Advanced protection" feature in Pixels that entirely blocks sideloading. So you will have to disable "Advanced Protection" as well.
+- Follow belwo steps to avoid it during the installation.
+
+![Screenshot_20260304-184451 Large](https://github.com/user-attachments/assets/1402a374-3881-4afc-aff0-269517d0e28f)
+![Screenshot_20260304-184409 Large](https://github.com/user-attachments/assets/b7bf634a-6ea4-4b22-8ccf-09593bf7bbed)
+
+
+> ### IMPORTANT: Yes, this is very annoying but I understand the need of such prevention to avoid users installing potentially harmful apps from unknown sources. Well I hope you trust me to install my app but anyways, You should always verify the trusted source before installing any APK file from the internet. ʅ(°_°)ʃ
+
 
 # Shell Providers (Shizuku & Root)
 
