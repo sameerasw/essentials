@@ -6,6 +6,7 @@ import android.graphics.drawable.Icon
 import android.provider.Settings
 import android.service.quicksettings.Tile
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.utils.DeviceUtils
 
 class UiBlurTileService : BaseTileService() {
 
@@ -16,6 +17,7 @@ class UiBlurTileService : BaseTileService() {
     }
 
     override fun hasFeaturePermission(): Boolean {
+        if (DeviceUtils.isBlurProblematicDevice()) return false
         return checkCallingOrSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED
     }
 
@@ -30,6 +32,7 @@ class UiBlurTileService : BaseTileService() {
     }
 
     override fun onTileClick() {
+        if (DeviceUtils.isBlurProblematicDevice()) return
         val newState = if (isBlurEnabled()) 1 else 0 // 1 = disable blurs, 0 = enable blurs
         Settings.Global.putInt(contentResolver, "disable_window_blurs", newState)
     }

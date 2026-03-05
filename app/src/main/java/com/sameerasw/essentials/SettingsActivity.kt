@@ -75,6 +75,7 @@ import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import rikka.shizuku.Shizuku
@@ -352,12 +353,18 @@ fun SettingsContent(
                 isChecked = viewModel.isPitchBlackThemeEnabled.value,
                 onCheckedChange = { viewModel.setPitchBlackThemeEnabled(it, context) }
             )
+            val isBlurProblematic = remember { DeviceUtils.isBlurProblematicDevice() }
             IconToggleItem(
                 iconRes = R.drawable.rounded_blur_on_24,
-                title = "Use blur",
-                description = "Enable progressive blur elements across the UI",
+                title = stringResource(R.string.label_use_blur),
+                description = if (isBlurProblematic) {
+                    stringResource(R.string.msg_blur_compatibility_error)
+                } else {
+                    stringResource(R.string.desc_use_blur)
+                },
                 isChecked = viewModel.isBlurEnabled.value,
-                onCheckedChange = { viewModel.setBlurEnabled(it, context) }
+                onCheckedChange = { viewModel.setBlurEnabled(it, context) },
+                enabled = !isBlurProblematic
             )
             IconToggleItem(
                 iconRes = R.drawable.rounded_numbers_24,

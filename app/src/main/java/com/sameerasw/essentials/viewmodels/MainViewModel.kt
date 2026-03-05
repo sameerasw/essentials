@@ -43,6 +43,7 @@ import com.sameerasw.essentials.services.NotificationLightingService
 import com.sameerasw.essentials.services.receivers.SecurityDeviceAdminReceiver
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.utils.AppUtil
+import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.utils.RootUtils
 import com.sameerasw.essentials.utils.ShizukuUtils
@@ -409,7 +410,9 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING -> isNotificationGlanceSameAsLightingEnabled.value = settingsRepository.getBoolean(key, true)
                     SettingsRepository.KEY_AUTO_ACCESSIBILITY_ENABLED -> isAutoAccessibilityEnabled.value = settingsRepository.getBoolean(key)
 
-                    SettingsRepository.KEY_USE_BLUR -> isBlurEnabled.value = settingsRepository.getBoolean(key, true)
+                    SettingsRepository.KEY_USE_BLUR -> {
+                        isBlurEnabled.value = if (DeviceUtils.isBlurProblematicDevice()) false else settingsRepository.getBoolean(key, true)
+                    }
                 }
             }
         }
@@ -781,7 +784,7 @@ class MainViewModel : ViewModel() {
         isNotificationGlanceEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_ENABLED)
         isAodForceTurnOffEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_AOD_FORCE_TURN_OFF_ENABLED)
         isNotificationGlanceSameAsLightingEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING, true)
-        isBlurEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_USE_BLUR, true)
+        isBlurEnabled.value = if (DeviceUtils.isBlurProblematicDevice()) false else settingsRepository.getBoolean(SettingsRepository.KEY_USE_BLUR, true)
 
         refreshTrackedUpdates(context)
         if (isBatteryNotificationEnabled.value) {
@@ -929,6 +932,7 @@ class MainViewModel : ViewModel() {
     }
 
     fun setBlurEnabled(enabled: Boolean, context: Context) {
+        if (DeviceUtils.isBlurProblematicDevice() && enabled) return
         isBlurEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_USE_BLUR, enabled)
     }
