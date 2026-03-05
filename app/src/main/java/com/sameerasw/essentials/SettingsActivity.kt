@@ -176,18 +176,9 @@ class SettingsActivity : ComponentActivity() {
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
                             .zIndex(1f),
-                        menuContent = {
-                            MenuItem(
-                                text = { Text(stringResource(R.string.action_report_bug)) },
-                                onClick = { showBugReportSheet = true },
-                                leadingIcon = {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.rounded_bug_report_24),
-                                        contentDescription = null
-                                    )
-                                }
-                            )
-                        }
+                        fabAction = { showBugReportSheet = true },
+                        fabIconRes = R.drawable.rounded_bug_report_24,
+                        fabContentDescription = stringResource(R.string.action_report_bug)
                     )
                 }
             }

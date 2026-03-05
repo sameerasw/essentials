@@ -41,12 +41,46 @@ fun SettingsFloatingToolbar(
     title: String,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
-    menuContent: (@Composable SettingsMenuScope.() -> Unit)? = null
+    menuContent: (@Composable SettingsMenuScope.() -> Unit)? = null,
+    fabAction: (() -> Unit)? = null,
+    fabIconRes: Int? = null,
+    fabContentDescription: String? = null
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
     val view = LocalView.current
 
-    if (menuContent != null) {
+    if (fabAction != null && fabIconRes != null) {
+        HorizontalFloatingToolbar(
+            modifier = modifier
+                .windowInsetsPadding(WindowInsets.navigationBars)
+                .padding(start = 16.dp, end = 16.dp, bottom = 0.dp),
+            expanded = true,
+            floatingActionButton = {
+                FloatingActionButton(
+                    onClick = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        fabAction()
+                    },
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    shape = MaterialTheme.shapes.large,
+                    elevation = androidx.compose.material3.FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = fabIconRes),
+                        contentDescription = fabContentDescription
+                    )
+                }
+            },
+            colors = FloatingToolbarDefaults.vibrantFloatingToolbarColors(
+                toolbarContentColor = MaterialTheme.colorScheme.onSurface,
+                toolbarContainerColor = MaterialTheme.colorScheme.primary,
+            ),
+            content = {
+                ToolbarContent(title, onBackClick)
+            }
+        )
+    } else if (menuContent != null) {
         HorizontalFloatingToolbar(
             modifier = modifier
                 .windowInsetsPadding(WindowInsets.navigationBars)
