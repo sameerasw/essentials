@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Elementi essenziali</string>
     <string name="label_beta">BETA</string>
-    <string name="accessibility_service_description"><b>Essentials Accessibility Service</b>\n\nThis service is required for the following advanced features:\n\n<b>• Physical Button Remapping:</b>\nDetects volume button presses even when the screen is off to trigger actions like the Flashlight.\n\n<b>• Per-App Settings:</b>\nMonitors the currently active app to apply specific profiles for Dynamic Night Light, Notification Lighting Colors, and App Lock.\n\n<b>• Screen Control:</b>\nAllows the app to lock the screen (e.g. via Double Tap or Widgets) and detect screen state changes.\n\n<b>• Security:</b>\nPrevents unauthorized changes by detecting window content when the device is locked.\n\n<small>No input text or sensitive user data is collected or transmitted.</small></string>
+    <string name="accessibility_service_description"><b>Servizio di Accessibilità Essentials</b>\n\nQuesto servizio è richiesto per le seguenti funzioni avanzate:\n\n<b>• Rimappatura dei tasti fisici:</b>\nRileva la pressione dei tasti del volume anche quando lo schermo è spento per attivare azioni come la Torcia.\n\n<b>• Impostazioni per singola app:</b>\nMonitora l\'app attualmente attiva per applicare profili specifici per la Luce notturna dinamica, i colori dell\'illuminazione delle notifiche e il Blocco app.\n\n<b>• Controllo dello schermo:</b>\nConsente all\'app di bloccare lo schermo (ad es. tramite Doppio tocco o Widget) e di rilevare i cambiamenti di stato dello schermo.\n\n<b>• Sicurezza:</b>\nImpedisce modifiche non autorizzate rilevando il contenuto delle finestre quando il dispositivo è bloccato.\n\n<small>Nessun testo inserito o dato sensibile dell\'utente viene raccolto o trasmesso.</small></string>
     <string name="freeze_activity_title">Blocco dell\'app</string>
     <string name="freeze_activity_subtitle">Disattiva le app utilizzate raramente</string>
     <string name="freeze_shortcut_short_label">Blocco dell\'app</string>
@@ -28,125 +28,125 @@
     <string name="button_remap_enable_title">Abilita rimappatura pulsanti</string>
     <string name="button_remap_use_shizuku_title">Usa Shizuku o Root o Root</string>
     <string name="button_remap_use_shizuku_desc">Funziona con lo schermo spento (consigliato)</string>
-    <string name="shizuku_not_running_toast">Shizuku non sta correndo</string>
+    <string name="shizuku_not_running_toast">Shizuku non è in esecuzione</string>
     <string name="shizuku_detected_prefix">Rilevato %1$s</string>
     <string name="shizuku_status_prefix">Stato: %1$s</string>
     <string name="shizuku_open_button">Apri Shizuku</string>
-    <string name="settings_section_flashlight">Torcia elettrica</string>
-    <string name="flashlight_options_title">Opzioni torcia</string>
+    <string name="settings_section_flashlight">Torcia</string>
+    <string name="flashlight_options_title">Impostazioni torcia</string>
     <string name="flashlight_options_desc">Regola la dissolvenza e altre impostazioni</string>
-    <string name="setting_pitch_black_theme_title">Tema nero come la pece</string>
-    <string name="setting_pitch_black_theme_desc">Utilizza lo sfondo nero puro in modalità oscura</string>
-    <string name="settings_section_haptic">Feedback tattile</string>
+    <string name="setting_pitch_black_theme_title">Tema nero OLED</string>
+    <string name="setting_pitch_black_theme_desc">Utilizza lo sfondo nero puro in modalità scura</string>
+    <string name="settings_section_haptic">Feedback Aptico</string>
     <string name="button_remap_section_long_press">Rimappa pressione prolungata</string>
     <string name="screen_off">Schermo Spento</string>
     <string name="screen_on">Schermo acceso</string>
-    <string name="volume_up">Aumenta il volume</string>
+    <string name="volume_up">Volume Su</string>
     <string name="volume_down">Volume giù</string>
     <string name="action_toggle_flashlight">Attiva/disattiva la torcia</string>
-    <string name="action_media_play_pause">Riproduzione/pausa multimediale</string>
-    <string name="action_media_next">Multimediale successivo</string>
-    <string name="action_media_previous">Supporto precedente</string>
+    <string name="action_media_play_pause">Riproduci/pausa media</string>
+    <string name="action_media_next">Media successivo</string>
+    <string name="action_media_previous">Media precedente</string>
     <string name="action_toggle_vibrate">Attiva/disattiva vibrazione</string>
-    <string name="action_toggle_mute">Disattiva l\'audio</string>
+    <string name="action_toggle_mute">Attiva/Disattiva il silenzioso</string>
     <string name="action_ai_assistant">Assistente AI</string>
     <string name="action_take_screenshot">Cattura uno screenshot</string>
-    <string name="action_cycle_sound_modes">Scorrere le modalità audio</string>
+    <string name="action_cycle_sound_modes">Scorri modalità audio</string>
     <string name="action_like_song">Come la canzone attuale</string>
     <string name="like_song_settings_title">Come le impostazioni del brano</string>
-    <string name="like_song_settings_desc">Questa funzione richiede l\'accesso alle notifiche per rilevare il supporto attualmente in riproduzione e attivare l\'azione simile. Si prega di abilitarlo di seguito.</string>
+    <string name="like_song_settings_desc">Questa funzione richiede l\'accesso alle notifiche per rilevare il supporto attualmente in riproduzione e attivare l\'azione mi piace. Si prega di abilitarlo di seguito.</string>
     <string name="like_song_toast_enabled">Mostra il messaggio di avviso popup</string>
     <string name="like_song_aod_overlay_title">Mostra sovrapposizione su AOD</string>
-    <string name="feat_ambient_music_glance_title">Sguardo di musica ambientale</string>
-    <string name="feat_ambient_music_glance_desc">Uno sguardo ai media su AOD</string>
-    <string name="ambient_glance_docked_mode_title">Modalità ancorata</string>
-    <string name="ambient_glance_docked_mode_desc">Mantieni la sovrapposizione visibile a tempo indeterminato mentre la musica viene riprodotta su AOD</string>
+    <string name="feat_ambient_music_glance_title">Musica in ascolto a colpo d\'occhio</string>
+    <string name="feat_ambient_music_glance_desc">Media a colpo d\'occhio su AOD</string>
+    <string name="ambient_glance_docked_mode_title">Modalità dock</string>
+    <string name="ambient_glance_docked_mode_desc">Mantieni la sovrapposizione visibile a tempo indeterminato su AOD mentre la musica è in riproduzione</string>
     <string name="feat_notification_glance_title">Sguardo di notifica</string>
-    <string name="feat_notification_glance_desc">Mantieni AOD attivo mentre le notifiche sono in sospeso</string>
+    <string name="feat_notification_glance_desc">Mantieni AOD attivo se ci sono notifiche</string>
     <string name="notification_glance_same_as_lighting_title">Stesse app dell\'illuminazione delle notifiche</string>
     <string name="notification_glance_desc">Questa funzione abiliterà dinamicamente Always on Display quando arriva una notifica da un\'app selezionata e la disabiliterà una volta che tutte le notifiche corrispondenti verranno ignorate. Scegli le app o utilizza la stessa selezione dell\'illuminazione delle notifiche.</string>
     <string name="grant_notification_access">Concedi l\'accesso alle notifiche</string>
     <string name="action_toggle_media_volume">Attiva/disattiva il volume dei contenuti multimediali</string>
     <string name="button_remap_screen_off_hint">Quando lo schermo è spento, premi a lungo il pulsante selezionato per attivare l\'azione assegnata. Sui dispositivi Pixel, questa azione viene attivata solo se l\'AOD è attivo a causa di limitazioni del sistema.</string>
-    <string name="button_remap_screen_on_hint">Quando lo schermo è acceso, premi a lungo il pulsante selezionato per attivare l\'azione assegnata.</string>
-    <string name="flashlight_intensity_title">Intensità della torcia</string>
+    <string name="button_remap_screen_on_hint">Quando lo schermo è acceso, tieni premuto il tasto selezionato per avviare l\'azione selezionata.</string>
+    <string name="flashlight_intensity_title">Intensità Torcia</string>
     <string name="flashlight_fade_title">Dissolvenza in entrata e in uscita</string>
-    <string name="flashlight_fade_desc">Attiva/disattiva facilmente la torcia</string>
+    <string name="flashlight_fade_desc">Attiva/disattiva la torcia in maniera fluida</string>
     <string name="flashlight_global_title">Controlli globali</string>
     <string name="flashlight_global_desc">Torcia in dissolvenza a livello globale</string>
-    <string name="flashlight_adjust_intensity_title">Regola l\'intensità</string>
-    <string name="flashlight_adjust_intensity_desc">Volume +: regola l\'intensità della torcia</string>
+    <string name="flashlight_adjust_intensity_title">Regola intensità</string>
+    <string name="flashlight_adjust_intensity_desc">Volume +/- regola l\'intensità della torcia</string>
     <string name="flashlight_live_update_title">Aggiornamento in tempo reale</string>
     <string name="flashlight_live_update_desc">Mostra la luminosità nella barra di stato</string>
     <string name="settings_section_other">Altro</string>
-    <string name="flashlight_always_off_title">Spegnere sempre la torcia</string>
+    <string name="flashlight_always_off_title">Spegni sempre la torcia</string>
     <string name="flashlight_always_off_desc">Anche mentre il display è acceso</string>
     <string name="content_desc_settings">Impostazioni</string>
     <!-- Caffeinate / Permissions -->
-    <string name="permission_show_notification_title">Mostra notifica</string>
-    <string name="permission_post_notifications_title">Pubblica notifiche</string>
-    <string name="permission_post_notifications_desc">Consente all\'app di mostrare le notifiche</string>
+    <string name="permission_show_notification_title">Mostra Notifiche</string>
+    <string name="permission_post_notifications_title">Notifiche</string>
+    <string name="permission_post_notifications_desc">Permetti all\'app di mostrare notifiche</string>
     <string name="permission_grant_action">Concedere l\'autorizzazione</string>
-    <string name="caffeinate_notification_title">Caffeinato attivo</string>
+    <string name="caffeinate_notification_title">Caffeina attivo</string>
     <string name="caffeinate_active">Attivo</string>
     <string name="caffeinate_notification_desc">Lo schermo viene mantenuto attivo</string>
     <string name="caffeinate_battery_optimization_title">Ignora l\'ottimizzazione della batteria</string>
     <string name="caffeinate_abort_screen_off_title">Interrompere con lo schermo spento</string>
     <string name="caffeinate_skip_countdown_title">Salta il conto alla rovescia</string>
-    <string name="caffeinate_skip_countdown_desc">Inizia subito Caffeinate.</string>
+    <string name="caffeinate_skip_countdown_desc">Avvia subito Caffeina</string>
     <string name="caffeinate_timeout_presets_title">Preimpostazioni di timeout</string>
     <string name="caffeinate_timeout_presets_desc">Seleziona le durate disponibili per il riquadro QS</string>
     <string name="caffeinate_timeout_5m">5m</string>
     <string name="caffeinate_timeout_10m">10m</string>
     <string name="caffeinate_timeout_30m">30m</string>
     <string name="perm_notif_policy_title">Accesso Non disturbare</string>
-    <string name="perm_notif_policy_desc">Necessario per alternare le modalità suono, vibrazione e silenziamento</string>
+    <string name="perm_notif_policy_desc">Necessario per alternare le modalità suono, vibrazione e silenzioso</string>
     <string name="caffeinate_timeout_1h">1 ora</string>
     <string name="caffeinate_timeout_infinity">∞</string>
-    <string name="caffeinate_starting_in">A partire da %1$ds…</string>
+    <string name="caffeinate_starting_in">Avvio tra %1$ds…</string>
     <string name="caffeinate_remaining">%1$s rimanente</string>
-    <string name="caffeinate_live_channel_desc">Notifica persistente per Caffeinate</string>
+    <string name="caffeinate_live_channel_desc">Notifica persistente per Caffeina</string>
     <!-- Dynamic Night Light -->
     <string name="dynamic_night_light_enable_title">Abilita la luce notturna dinamica</string>
     <string name="dynamic_night_light_apps_section">App che disattivano la luce notturna</string>
-    <string name="action_select_apps">Seleziona le app</string>
+    <string name="action_select_apps">Seleziona app</string>
     <!-- App Freezing -->
     <string name="settings_section_app_control">Controllo dell\'app</string>
-    <string name="action_freeze">Congelare</string>
-    <string name="action_unfreeze">Scongelare</string>
-    <string name="content_desc_more_options">Più opzioni</string>
-    <string name="action_freeze_all">Blocca tutte le app</string>
-    <string name="action_unfreeze_all">Sblocca tutte le app</string>
-    <string name="action_export_freeze">Esporta l\'elenco delle app bloccate</string>
-    <string name="action_import_freeze">Importa l\'elenco delle app bloccate</string>
-    <string name="freeze_pick_apps_title">Scegli le app da bloccare</string>
-    <string name="freeze_pick_apps_desc">Scegli quali app possono essere bloccate</string>
+    <string name="action_freeze">Congela</string>
+    <string name="action_unfreeze">Scongela</string>
+    <string name="content_desc_more_options">Altre opzioni</string>
+    <string name="action_freeze_all">Congela tutte le app</string>
+    <string name="action_unfreeze_all">Scongela tutte le app</string>
+    <string name="action_export_freeze">Esporta l\'elenco delle app congelate</string>
+    <string name="action_import_freeze">Importa l\'elenco delle app congelate</string>
+    <string name="freeze_pick_apps_title">Scegli le app da congelare</string>
+    <string name="freeze_pick_apps_desc">Scegli quali app possono essere congelate</string>
     <string name="settings_section_automation">Automazione</string>
     <string name="freeze_when_locked_title">Congelare quando bloccato</string>
     <string name="freeze_delay_title">Ritardo congelamento</string>
     <string name="delay_immediate">Immediato</string>
-    <string name="delay_1m">1 m</string>
+    <string name="delay_1m">1m</string>
     <string name="delay_5m">5m</string>
     <string name="delay_15m">15m</string>
     <string name="delay_manual">Manuale</string>
-    <string name="freeze_auto_freeze_section">Blocco automatico delle app</string>
-    <string name="freeze_automation_hint">Blocca le app selezionate quando il dispositivo si blocca. Scegli un ritardo per evitare di bloccare le app se sblocchi lo schermo subito dopo averlo spento.</string>
-    <string name="freeze_warning">Il blocco delle app di sistema potrebbe essere pericoloso e causare comportamenti imprevisti.</string>
+    <string name="freeze_auto_freeze_section">Congelamento automatico delle app</string>
+    <string name="freeze_automation_hint">Congela le app selezionate quando il dispositivo si blocca. Scegli un ritardo per evitare di congelare le app se sblocchi lo schermo subito dopo averlo spento.</string>
+    <string name="freeze_warning">Il congelamento delle app di sistema potrebbe essere pericoloso e causare comportamenti imprevisti.</string>
     <string name="action_enable_in_settings">Abilita nelle Impostazioni</string>
-    <string name="freeze_dont_freeze_active_apps_title">Non\'non bloccare le app attive</string>
+    <string name="freeze_dont_freeze_active_apps_title">Non non congelare le app attive</string>
     <string name="perm_usage_stats_title">Statistiche di utilizzo</string>
-    <string name="perm_usage_stats_desc">Necessario per rilevare quali app sono attualmente in primo piano per evitare di bloccarle</string>
-    <string name="perm_notif_listener_desc_freeze">Necessario per rilevare i contenuti multimediali in riproduzione e le notifiche attive per evitare di bloccarle</string>
+    <string name="perm_usage_stats_desc">Necessario per rilevare quali app sono attualmente in primo piano per evitare di congelarle</string>
+    <string name="perm_notif_listener_desc_freeze">Necessario per rilevare i contenuti multimediali in riproduzione e le notifiche attive per evitare di congelarli</string>
     <!-- Notification Lighting -->
     <string name="notification_lighting_screen_off_title">Mostra solo quando lo schermo è spento</string>
-    <string name="notification_lighting_skip_silent_title">Salta le notifiche silenziose</string>
-    <string name="notification_lighting_skip_persistent_title">Salta le notifiche persistenti</string>
-    <string name="settings_section_flashlight_pulse">Impulso della torcia</string>
-    <string name="flashlight_pulse_title">Impulso della torcia</string>
-    <string name="flashlight_pulse_facedown_title">Solo a faccia in giù</string>
+    <string name="notification_lighting_skip_silent_title">Ignora le notifiche silenziose</string>
+    <string name="notification_lighting_skip_persistent_title">Ignora le notifiche persistenti</string>
+    <string name="settings_section_flashlight_pulse">Flash della torcia</string>
+    <string name="flashlight_pulse_title">Flash della torcia</string>
+    <string name="flashlight_pulse_facedown_title">Solo con lo schermo verso il basso</string>
     <string name="flashlight_pulse_same_as_lighting_title">Stesse app dell\'illuminazione delle notifiche</string>
     <string name="settings_section_style">Stile</string>
-    <string name="notification_lighting_stroke_adjustment_section">Regolazione della corsa</string>
+    <string name="notification_lighting_stroke_adjustment_section">Regolazione del bagliore</string>
     <string name="notification_lighting_corner_radius_title">Raggio dell\'angolo</string>
     <string name="notification_lighting_stroke_thickness_title">Spessore del tratto</string>
     <string name="notification_lighting_glow_adjustment_section">Regolazione del bagliore</string>
@@ -157,37 +157,37 @@
     <string name="notification_lighting_indicator_adjustment_section">Regolazione dell\'indicatore</string>
     <string name="notification_lighting_scale_title">Scala</string>
     <string name="notification_lighting_duration_title">Durata</string>
-    <string name="settings_section_animation">Animazione</string>
-    <string name="notification_lighting_pulse_count_title">Conteggio degli impulsi</string>
-    <string name="notification_lighting_pulse_duration_title">Durata dell\'impulso</string>
+    <string name="settings_section_animation">Animazioni</string>
+    <string name="notification_lighting_pulse_count_title">Numero dei flash</string>
+    <string name="notification_lighting_pulse_duration_title">Durata del flash</string>
     <string name="settings_section_color_mode">Modalità colore</string>
-    <string name="settings_section_ambient_display">Visualizzazione ambientale</string>
-    <string name="ambient_display_title">Visualizzazione ambientale</string>
+    <string name="settings_section_ambient_display">Display ambient</string>
+    <string name="ambient_display_title">Display ambient</string>
     <string name="ambient_display_hint">Adatto se non si utilizza AOD.</string>
     <string name="ambient_display_desc">Attiva lo schermo e mostra l\'illuminazione</string>
     <string name="ambient_show_lock_screen_title">Mostra schermata di blocco</string>
     <string name="ambient_show_lock_screen_desc">Nessuna sovrapposizione nera</string>
     <!-- Tiles -->
-    <string name="action_add">Aggiungere</string>
+    <string name="action_add">Aggiungi</string>
     <string name="qs_tile_already_added">Già aggiunto</string>
-    <string name="qs_tile_requires_android_13">Richiede Android 13+</string>
+    <string name="qs_tile_requires_android_13">Richiede Android 13 o successivo</string>
     <string name="tile_ui_blur">Sfocatura dell\'interfaccia utente</string>
     <string name="tile_bubbles">Bolle</string>
     <string name="tile_sensitive_content">Contenuti sensibili</string>
     <string name="tile_tap_to_wake">Tocca per riattivare</string>
     <string name="tile_aod">AOD</string>
-    <string name="tile_caffeinate">Caffeinato</string>
+    <string name="tile_caffeinate">Caffeina</string>
     <string name="tile_sound_mode">Modalità audio</string>
     <string name="tile_notification_lighting">Illuminazione di notifica</string>
-    <string name="tile_dynamic_night_light">Luce notturna dinamica</string>
+    <string name="tile_dynamic_night_light">Luce Notturna Dinamica</string>
     <string name="tile_locked_security">Sicurezza bloccata</string>
-    <string name="tile_app_lock">Blocco dell\'app</string>
+    <string name="tile_app_lock">Blocco app</string>
     <string name="tile_mono_audio">Audio mono</string>
-    <string name="tile_flashlight">Torcia elettrica</string>
-    <string name="tile_app_freezing">Blocco dell\'app</string>
-    <string name="tile_flashlight_pulse">Impulso della torcia</string>
-    <string name="tile_stay_awake">Resta sveglio</string>
-    <string name="input_method_label">Tastiera essenziale</string>
+    <string name="tile_flashlight">Torcia</string>
+    <string name="tile_app_freezing">Congelamento app</string>
+    <string name="tile_flashlight_pulse">Flash della torcia</string>
+    <string name="tile_stay_awake">Rimani attivo</string>
+    <string name="input_method_label">Tastiera Essentials</string>
     <string name="subtype_en_us">Inglese (Stati Uniti)</string>
     <string name="tile_active">Attivo</string>
     <string name="tile_inactive">Inattivo</string>
@@ -195,17 +195,17 @@
     <string name="about_desc_developer_options">Attiva facilmente le Opzioni sviluppatore del sistema da un riquadro QS. Ciò potrebbe ripristinare alcune delle impostazioni dello sviluppatore che hai modificato.</string>
     <string name="nfc_tile_label">NFC</string>
     <string name="tile_private_dns">DNS privato</string>
-    <string name="tile_private_dns_auto">Auto</string>
+    <string name="tile_private_dns_auto">Automatico</string>
     <string name="tile_private_dns_off">Spento</string>
     <string name="tile_usb_debugging">Debug USB</string>
     <string name="tile_color_picker">Selettore colore</string>
-    <string name="toast_eyedropper_failed">Sei sicuro di\'utilizzare Android 17? (╯°_°）╯</string>
+    <string name="toast_eyedropper_failed">Sei sicuro di essere su Android 17? (╯°_°）╯</string>
     <string name="subtitle_eye_dropper">Contagocce</string>
-    <string name="on">SU</string>
-    <string name="off">Spento</string>
+    <string name="on">Attivo</string>
+    <string name="off">Disattivo</string>
     <string name="private_dns_custom_title">DNS privato personalizzato</string>
     <string name="private_dns_presets_title">Preimpostazioni DNS comuni</string>
-    <string name="private_dns_hostname_label">Nome host del fornitore</string>
+    <string name="private_dns_hostname_label">Nome host del provider</string>
     <string name="dns_preset_adguard">DNS di AdGuard</string>
     <string name="dns_preset_adguard_hostname">dns.adguard.com</string>
     <string name="dns_preset_google">DNS pubblico di Google</string>
@@ -214,7 +214,7 @@
     <string name="dns_preset_cloudflare_hostname">1dot1dot1dot1.cloudflare-dns.com</string>
     <string name="dns_preset_quad9">DNS Quad9</string>
     <string name="dns_preset_quad9_hostname">dns.quad9.net</string>
-    <string name="dns_preset_cleanbrowsing">Navigazione pulita</string>
+    <string name="dns_preset_cleanbrowsing">CleanBrowsing</string>
     <string name="dns_preset_cleanbrowsing_hostname">adult-filter-dns.cleanbrowsing.org</string>
     <string name="tile_charge_optimization">In carica</string>
     <string name="limit_to_80">Limita all\'80%</string>
@@ -222,7 +222,7 @@
     <string name="deactivated">Non ottimizzato</string>
     <string name="permission_missing">Manca il permesso</string>
     <!-- Screen Locked Security -->
-    <string name="screen_locked_security_title">Sicurezza bloccata dallo schermo</string>
+    <string name="screen_locked_security_title">Sicurezza dello schermo bloccato</string>
     <string name="screen_locked_security_dialog_title">Sicurezza dello schermo bloccato</string>
     <string name="screen_locked_security_auth_enable">Autenticarsi per abilitare la sicurezza dello schermo bloccato</string>
     <string name="screen_locked_security_auth_disable">Autenticarsi per disabilitare la sicurezza del blocco dello schermo</string>
@@ -555,7 +555,7 @@
     <string name="feat_app_updates_desc">Tieni traccia e scarica le ultime versioni delle tue app preferite direttamente da GitHub.</string>
     <string name="error_invalid_repo_format">Formato non valido. Utilizza il proprietario/repo o l\'URL GitHub</string>
     <string name="error_generic_search">Si è verificato un errore durante la ricerca</string>
-    <string name="label_auto">Auto</string>
+    <string name="label_auto">Automatico</string>
     <string name="label_options">Opzioni</string>
     <string name="option_allow_prereleases">Controlla le pre-release</string>
     <string name="option_notifications">Notifiche</string>
@@ -702,7 +702,7 @@
     <string-array name="keywords_network_visibility">
         <item>rete</item>
         <item>visibilità</item>
-        <item>auto</item>
+        <item>automatico</item>
         <item>nascondere</item>
     </string-array>
     <string-array name="keywords_restore_default">
@@ -790,7 +790,7 @@
     </string-array>
     <string-array name="keywords_automation_lock">
         <item>automazione</item>
-        <item>auto</item>
+        <item>automatico</item>
         <item>serratura</item>
     </string-array>
     <string-array name="keywords_adb_debug">
@@ -821,7 +821,7 @@
     <string-array name="keywords_blue_filter">
         <item>blu</item>
         <item>filtro</item>
-        <item>auto</item>
+        <item>automatico</item>
     </string-array>
     <string-array name="keywords_app_freezing">
         <item>congelare</item>
