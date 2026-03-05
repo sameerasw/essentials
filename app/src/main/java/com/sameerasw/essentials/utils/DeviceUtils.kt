@@ -181,6 +181,11 @@ object DeviceUtils {
                 Build.VERSION.SDK_INT <= 35 // Android 15
     }
 
+    fun isPowerSaveMode(context: Context): Boolean {
+        val powerManager = context.getSystemService(Context.POWER_SERVICE) as? android.os.PowerManager
+        return powerManager?.isPowerSaveMode == true
+    }
+
     private fun String.equalsIgnoreCase(other: String): Boolean {
         return this.equals(other, ignoreCase = true)
     }

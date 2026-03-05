@@ -4,14 +4,17 @@ import android.Manifest
 import android.app.Activity
 import android.app.ActivityManager
 import android.app.admin.DevicePolicyManager
+import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.database.ContentObserver
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
+import android.os.PowerManager
 import android.provider.CalendarContract
 import android.provider.Settings
 import android.view.inputmethod.InputMethodManager
@@ -170,6 +173,8 @@ class MainViewModel : ViewModel() {
 
     val isPitchBlackThemeEnabled = mutableStateOf(false)
     val isBlurEnabled = mutableStateOf(true)
+    val isPowerSaveModeEnabled = mutableStateOf(false)
+    private var powerSaveReceiver: BroadcastReceiver? = null
 
     // Keyboard Customization
     val keyboardHeight = mutableFloatStateOf(54f)
@@ -411,7 +416,7 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_AUTO_ACCESSIBILITY_ENABLED -> isAutoAccessibilityEnabled.value = settingsRepository.getBoolean(key)
 
                     SettingsRepository.KEY_USE_BLUR -> {
-                        isBlurEnabled.value = if (DeviceUtils.isBlurProblematicDevice()) false else settingsRepository.getBoolean(key, true)
+                        appContext?.let { updateBlurState(it) }
                     }
                 }
             }
@@ -524,6 +529,26 @@ class MainViewModel : ViewModel() {
             false,
             contentObserver
         )
+
+        isPowerSaveModeEnabled.value = DeviceUtils.isPowerSaveMode(context)
+        updateBlurState(context)
+
+        if (powerSaveReceiver == null) {
+            powerSaveReceiver = object : BroadcastReceiver() {
+                override fun onReceive(context: Context?, intent: Intent?) {
+                    if (intent?.action == PowerManager.ACTION_POWER_SAVE_MODE_CHANGED) {
+                        context?.let {
+                            isPowerSaveModeEnabled.value = DeviceUtils.isPowerSaveMode(it)
+                            updateBlurState(it)
+                        }
+                    }
+                }
+            }
+            context.registerReceiver(
+                powerSaveReceiver,
+                IntentFilter(PowerManager.ACTION_POWER_SAVE_MODE_CHANGED)
+            )
+        }
 
         settingsRepository.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
 
@@ -784,7 +809,8 @@ class MainViewModel : ViewModel() {
         isNotificationGlanceEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_ENABLED)
         isAodForceTurnOffEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_AOD_FORCE_TURN_OFF_ENABLED)
         isNotificationGlanceSameAsLightingEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING, true)
-        isBlurEnabled.value = if (DeviceUtils.isBlurProblematicDevice()) false else settingsRepository.getBoolean(SettingsRepository.KEY_USE_BLUR, true)
+        isPowerSaveModeEnabled.value = DeviceUtils.isPowerSaveMode(context)
+        updateBlurState(context)
 
         refreshTrackedUpdates(context)
         if (isBatteryNotificationEnabled.value) {
@@ -932,9 +958,16 @@ class MainViewModel : ViewModel() {
     }
 
     fun setBlurEnabled(enabled: Boolean, context: Context) {
-        if (DeviceUtils.isBlurProblematicDevice() && enabled) return
-        isBlurEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_USE_BLUR, enabled)
+        updateBlurState(context)
+    }
+
+    private fun updateBlurState(context: Context) {
+        val useBlurSetting = settingsRepository.getBoolean(SettingsRepository.KEY_USE_BLUR, true)
+        val isProblematic = DeviceUtils.isBlurProblematicDevice()
+        val isPowerSave = DeviceUtils.isPowerSaveMode(context)
+        
+        isBlurEnabled.value = useBlurSetting && !isProblematic && !isPowerSave
     }
 
     fun checkForUpdates(context: Context, manual: Boolean = false) {
@@ -2250,9 +2283,11 @@ class MainViewModel : ViewModel() {
     }
 
     override fun onCleared() {
-
         super.onCleared()
-        appContext?.contentResolver?.unregisterContentObserver(contentObserver)
+        appContext?.let { context ->
+            context.contentResolver.unregisterContentObserver(contentObserver)
+            powerSaveReceiver?.let { context.unregisterReceiver(it) }
+        }
         if (::settingsRepository.isInitialized) {
             settingsRepository.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener)
         }
