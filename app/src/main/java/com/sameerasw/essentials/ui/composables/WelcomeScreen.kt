@@ -71,6 +71,7 @@ fun WelcomeScreen(
 
     val rotationAnimatable = remember { Animatable(0f) }
     var center by remember { mutableStateOf(Offset.Zero) }
+    var hasTriggeredEasterEgg by remember { mutableStateOf(false) }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -131,6 +132,14 @@ fun WelcomeScreen(
                                     
                                     currentRotation += delta.toFloat()
                                     
+                                    // I wonder what this does (｀∇´)
+                                    if (!hasTriggeredEasterEgg && kotlin.math.abs(currentRotation) >= 3600f) {
+                                        hasTriggeredEasterEgg = true
+                                        val rickRollUrl = "https://youtu.be/dQw4w9WgXcQ"
+                                        val intent = Intent(Intent.ACTION_VIEW, rickRollUrl.toUri())
+                                        context.startActivity(intent)
+                                    }
+
                                     // Minor notches - Subtle texture only during drag
                                     val currentMinorNotch = kotlin.math.round(currentRotation / minorStep).toInt()
                                     if (currentMinorNotch != lastMinorNotch) {
