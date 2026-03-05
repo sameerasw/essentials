@@ -10,7 +10,7 @@
     <string name="frozen_app_shortcut_label">Application gelée</string>
     <string name="screen_off_widget_label">Widget de verrouillage invisible </string>
     <string name="app_freezing_tile_label">Gel d\'applis</string>
-    <string name="flashlight_pulse_tile_label">Impulsion de lampe torche</string>
+    <string name="flashlight_pulse_tile_label">Clignotement de la de lampe torche</string>
     <string name="check_pre_releases_label">Obtenir les préversions (bêta)</string>
     <string name="check_pre_releases_desc">Peut-être instable</string>
     <!-- App Lock -->
@@ -30,7 +30,7 @@
     <string name="button_remap_use_shizuku_desc">Fonctionne avec l\'écran éteint (Recommandé)</string>
     <string name="shizuku_not_running_toast">Shizuku n\'est pas actif</string>
     <string name="shizuku_detected_prefix"> %1$s Détecté</string>
-    <string name="shizuku_status_prefix">Status : %1$s</string>
+    <string name="shizuku_status_prefix">Statut : %1$s</string>
     <string name="shizuku_open_button">Ouvrir Shizuku</string>
     <string name="settings_section_flashlight">Lampe-torche</string>
     <string name="flashlight_options_title">Options de la lampe-torche</string>
@@ -63,7 +63,7 @@
     <string name="ambient_glance_docked_mode_desc">Garder la superposition visible indéfiniment quand de la musique est jouée sur le mode Always-on</string>
     <string name="feat_notification_glance_title">Notification glance</string>
     <string name="feat_notification_glance_desc">Keep AOD on while notifications are pending</string>
-    <string name="notification_glance_same_as_lighting_title">Same apps as notification lighting</string>
+    <string name="notification_glance_same_as_lighting_title">Mêmes applis que les notifications lumineuses</string>
     <string name="notification_glance_desc">This feature will dynamically enable Always on Display when a notification arrives from a selected app, and disable it once all matching notifications are dismissed. Pick apps or use the same selection as notification lighting.</string>
     <string name="grant_notification_access">Accorder l\'accès aux notifications</string>
     <string name="action_toggle_media_volume">Activer/désactiver le volume du média</string>
@@ -77,7 +77,7 @@
     <string name="flashlight_adjust_intensity_title">Ajuster l\'intensité</string>
     <string name="flashlight_adjust_intensity_desc">Les boutons Volume + et - ajustent l\'intensité de lampe-torche </string>
     <string name="flashlight_live_update_title">Mise à jour en direct</string>
-    <string name="flashlight_live_update_desc">Afficher la luminosité dans la barre de status</string>
+    <string name="flashlight_live_update_desc">Afficher la luminosité dans la barre de statut</string>
     <string name="settings_section_other">Autre</string>
     <string name="flashlight_always_off_title">Toujours éteindre la lampe-torche</string>
     <string name="flashlight_always_off_desc">Même quand l\'écran est allumé</string>
@@ -117,8 +117,8 @@
     <string name="content_desc_more_options">Plus d\'options</string>
     <string name="action_freeze_all">Geler toutes les applis</string>
     <string name="action_unfreeze_all">Dégeler toutes les applis</string>
-    <string name="action_export_freeze">Export frozen apps list</string>
-    <string name="action_import_freeze">Import frozen apps list</string>
+    <string name="action_export_freeze">Exporter la liste d\'applis gelées</string>
+    <string name="action_import_freeze">Importer la liste d\'applis gelées</string>
     <string name="freeze_pick_apps_title">Choisir les applis à geler</string>
     <string name="freeze_pick_apps_desc">Choisir quelles applis peuvent être gelées</string>
     <string name="settings_section_automation">Automatisation</string>
@@ -141,8 +141,8 @@
     <string name="notification_lighting_screen_off_title">Afficher seulement quand l\'écran est éteint</string>
     <string name="notification_lighting_skip_silent_title">Ignorer les notifications silencieuses</string>
     <string name="notification_lighting_skip_persistent_title">Ignorer les notifications persistantes </string>
-    <string name="settings_section_flashlight_pulse">Impulsion de lampe torche</string>
-    <string name="flashlight_pulse_title">Impulsion de lampe torche</string>
+    <string name="settings_section_flashlight_pulse">Clignotement de la de lampe torche</string>
+    <string name="flashlight_pulse_title">Clignotement de la de lampe torche</string>
     <string name="flashlight_pulse_facedown_title">Seulement quand le téléphone est vers le bas</string>
     <string name="flashlight_pulse_same_as_lighting_title">Mêmes applis que les notifications lumineuses</string>
     <string name="settings_section_style">Style</string>
@@ -185,7 +185,7 @@
     <string name="tile_mono_audio">Audio mono</string>
     <string name="tile_flashlight">Lampe-torche</string>
     <string name="tile_app_freezing">Gel d\'applis</string>
-    <string name="tile_flashlight_pulse">Impulsion de lampe torche</string>
+    <string name="tile_flashlight_pulse">Clignotement de la de lampe torche</string>
     <string name="tile_stay_awake">Rester allumé</string>
     <string name="input_method_label">Clavier Essentials</string>
     <string name="subtype_en_us">Anglais (US)</string>
@@ -198,7 +198,7 @@
     <string name="tile_private_dns_auto">Auto</string>
     <string name="tile_private_dns_off">Désactivé</string>
     <string name="tile_usb_debugging">Débogage USB</string>
-    <string name="tile_color_picker">Color Picker</string>
+    <string name="tile_color_picker">Sélecteur de couleur</string>
     <string name="toast_eyedropper_failed">Are you sure you\'re on Android 17? (╯°_°）╯</string>
     <string name="subtitle_eye_dropper">Eye Dropper</string>
     <string name="on">Activer</string>
@@ -216,11 +216,11 @@
     <string name="dns_preset_quad9_hostname">dns.quad9.net</string>
     <string name="dns_preset_cleanbrowsing">CleanBrowsing</string>
     <string name="dns_preset_cleanbrowsing_hostname">adult-filter-dns.cleanbrowsing.org</string>
-    <string name="tile_charge_optimization">Charging</string>
-    <string name="limit_to_80">Limit to 80%</string>
-    <string name="adaptive_charging">Adaptive</string>
-    <string name="deactivated">Not optimized</string>
-    <string name="permission_missing">Permission missing</string>
+    <string name="tile_charge_optimization">Recharge</string>
+    <string name="limit_to_80">Limiter à 80%</string>
+    <string name="adaptive_charging">Adaptative</string>
+    <string name="deactivated">Non optimisée</string>
+    <string name="permission_missing">Permission manquante</string>
     <!-- Screen Locked Security -->
     <string name="screen_locked_security_title">Sécurité d\'écran verrouillé</string>
     <string name="screen_locked_security_dialog_title">Écran de verrouillage</string>
@@ -241,7 +241,7 @@
     <string name="status_bar_category_connectivity">Connectivité</string>
     <string name="status_bar_category_phone_network">Téléphone &amp; Réseau</string>
     <string name="status_bar_category_audio_media">Audio &amp; Média</string>
-    <string name="status_bar_category_system_status">Status du système</string>
+    <string name="status_bar_category_system_status">Statut du système</string>
     <string name="status_bar_category_oem_specific">Spécifique au constructeur</string>
     <!-- Status Bar Icons -->
     <string name="icon_wifi">Wi-Fi</string>
@@ -255,7 +255,7 @@
     <string name="icon_phone_signal">Signal téléphonique</string>
     <string name="icon_volte">VoLTE / VoNR</string>
     <string name="icon_wifi_calling">Appel Wi-Fi / VoWiFi</string>
-    <string name="icon_call_status">Status d\'appel / Synchronisation</string>
+    <string name="icon_call_status">Statut d\'appel / Synchronisation</string>
     <string name="icon_tty">TTY</string>
     <string name="icon_volume">Volume</string>
     <string name="icon_headset">Casque</string>
@@ -273,7 +273,7 @@
     <string name="icon_managed_profile">Profil géré</string>
     <string name="icon_dnd">Ne pas déranger</string>
     <string name="icon_privacy">Confidentialité &amp; Dossier sécurisé</string>
-    <string name="icon_security_status">Status de sécurité (SU)</string>
+    <string name="icon_security_status">Statut de sécurité (SU)</string>
     <string name="icon_otg">Clavier / Souris OTG</string>
     <string name="icon_samsung_smart">Fonctionnalités intelligentes Samsung</string>
     <string name="icon_samsung_services">Services Samsung</string>
@@ -288,7 +288,7 @@
     <string name="smart_data_title">Données intelligentes</string>
     <string name="permission_read_phone_state_title">Lire l\'état du téléphone</string>
     <string name="permission_read_phone_state_desc">Requise pour détecter le type de réseau pour la fonctionnalité de Données intelligentes</string>
-    <string name="permission_read_phone_state_desc_call_vibrations">Requise pour détecter le changement de status des appels pour déclencher le retour haptique</string>
+    <string name="permission_read_phone_state_desc_call_vibrations">Requise pour détecter le changement de statut des appels pour déclencher le retour haptique</string>
     <string name="settings_section_smart_visibility">Visibilité intelligente</string>
     <string name="smart_wifi_title">Wi-Fi intelligent</string>
     <string name="smart_wifi_desc">Cacher les données mobiles quand un réseau Wi-Fi est connecté</string>
@@ -314,7 +314,7 @@
     <string name="cat_visuals">Visuels</string>
     <string name="cat_system">Système</string>
     <!-- UI Elements -->
-    <string name="search_placeholder">Recherchez des outils, des mods, ou des améliorations</string>
+    <string name="search_placeholder">Rechercher dans Essentials</string>
     <string name="search_no_results">Aucun résultat pour \"%1$s\"</string>
     <string name="search_results_title">Résultats de recherche</string>
     <string name="requires_following_permissions">\"%1$s\" a besoin des permissions suivantes</string>
@@ -364,8 +364,8 @@
     <string name="feat_freeze_desc">Désactiver les applications rarement utilisées</string>
     <string name="feat_watermark_title">Filigrane</string>
     <string name="feat_watermark_desc">Ajoutez des données EXIF et des logos aux photos</string>
-    <string name="feat_always_on_display_title">Always on Display</string>
-    <string name="feat_always_on_display_desc">Show time and info while screen off</string>
+    <string name="feat_always_on_display_title">Mode Always-on</string>
+    <string name="feat_always_on_display_desc">Afficher l\'heure et des infos quand l\'écran est éteint</string>
     <string name="feat_calendar_sync_title">Synchronisation des calendriers</string>
     <string name="feat_calendar_sync_desc">Synchroniser les événements sur votre montre</string>
     <string name="watermark_style_overlay">Superposition</string>
@@ -430,10 +430,10 @@
     <string name="search_corner_radius_desc">Ajuster le rayon des coins des notifications lumineuses</string>
     <string name="search_skip_silent_title">Ignorer les notifications silencieuses</string>
     <string name="search_skip_silent_desc">Ne pas afficher de lumière pour les notifications silencieuses</string>
-    <string name="search_flashlight_pulse_title">Impulsion de lampe torche</string>
+    <string name="search_flashlight_pulse_title">Clignotement de la de lampe torche</string>
     <string name="search_flashlight_pulse_desc">Faire clignoter lentement la lampe-torche pour les nouvelles notifications</string>
     <string name="search_only_facing_down_title">Seulement quand le téléphone est vers le bas</string>
-    <string name="search_only_facing_down_desc">Impulsion de lampe torche seulement quand l\'appareil est vers le bas</string>
+    <string name="search_only_facing_down_desc">Faire clignoter la lampe torche seulement quand l\'appareil est vers le bas</string>
     <string name="snooze_no_channels_discovered">Aucun flux de notification système découvert pour l\'instant. Ils apparaîtront une fois détectés.</string>
     <string name="search_qs_blur_title">Flou d\'interface</string>
     <string name="search_qs_blur_desc">Basculer le flou d\'interface à l\'échelle du système</string>
@@ -461,7 +461,7 @@
     <string name="search_qs_flashlight_desc">Bouton lampe-torche dédié</string>
     <string name="search_qs_freeze_title">Gel d\'applis</string>
     <string name="search_qs_freeze_desc">Lancer la grille de gel d\'applis</string>
-    <string name="search_qs_pulse_title">Impulsion de lampe torche</string>
+    <string name="search_qs_pulse_title">Clignotement de la de lampe torche</string>
     <string name="search_qs_pulse_desc">Activer/désactiver le clignotement du flash</string>
     <string name="search_qs_stay_awake_desc">Basculer l\'option développeur \"Rester allumé\"</string>
     <string name="search_qs_private_dns_title">DNS Privé</string>
@@ -498,7 +498,7 @@
     <string name="perm_root_title">Accès racine (root)</string>
     <string name="perm_root_desc">Permissions requises pour les actions systèmes en utilisant les privilèges racine (root).</string>
     <string name="perm_notif_listener_title">Accès aux notifications</string>
-    <string name="perm_notif_listener_desc_maps">Nécessite l\'accès aux notifications pour surveiller le status de la navigation Google Maps et activer le mode économie d\'énergie quand aucune navigation n\'est en cours.</string>
+    <string name="perm_notif_listener_desc_maps">Nécessite l\'accès aux notifications pour surveiller le statut de la navigation Google Maps et activer le mode économie d\'énergie quand aucune navigation n\'est en cours.</string>
     <string name="perm_notif_listener_desc_lighting">Nécessite l\'accès aux notifications pour détecter les nouvelles notifications et déclencher d\'éclairage des coins.</string>
     <string name="perm_notif_listener_desc_snooze">Nécessite l\'accès aux notifications pour surveiller et mettre en attente les notifications systèmes indésirées.</string>
     <string name="perm_accessibility_title">Service d\'accessibilité</string>
@@ -573,9 +573,9 @@
     <string name="label_search">Rechercher</string>
     <!-- UI Components General -->
     <string name="action_back">Retour</string>
-    <string name="content_desc_back">Back</string>
-    <string name="label_settings">Settings</string>
-    <string name="action_report_bug">Report a Bug</string>
+    <string name="content_desc_back">Retour</string>
+    <string name="label_settings">Paramètres</string>
+    <string name="action_report_bug">Signaler un bogue</string>
     <string name="action_done">OK</string>
     <string name="action_preview">Prévisualiser</string>
     <string name="action_help_guide">Guide d\'aide</string>
@@ -597,7 +597,7 @@
     <string name="about_desc_location_reached">Soyez notifiés quand vous vous approchez de votre destination pour être sûr de ne jamais zapper votre arrêt.\n\nLancez Google Maps, appuyez longuement à proximité de votre destination et veillez à ce qu\'il soit écrit \"Repère placé\" (autrement, le calcul de la distance peut ne pas être précis) et faites partager la position dans l\'appli Essentials pour démarrer le suivi.</string>
     <string name="about_desc_freeze">Gelez des applis pour les empêcher de tourner en arrière-plan.\n\nPrévenir l\'utilisation de la batterie et de données en gelant totalement les applis quand vous ne les utilisez pas. Elles seront dégelées instantanément quand vous les lancez. Les applis ne seront pas visibles dans le tirroir d\'applications et elles ne vont également pas apparaître dans les mises à jour du Play Store quand elles sont gelées.</string>
     <string name="about_desc_system_keyboard">Une méthode d\'entrée personnalisée que personne n\'a demandé.\n\nC\'est juste une expérimentation. De multiples langues peuvent ne pas être supportés car c\'est une implémentation très complexe et chronophage.</string>
-    <string name="about_desc_batteries">Surveillez le niveau de batterie de vos appareils connectés.\n\nRegardez le status de la batterie de vos écouteurs, casques, montres et autres accessoires dans un seul endroit. Connectez l\'application AirSync pour afficher le niveau de batterie de votre Mac également.</string>
+    <string name="about_desc_batteries">Surveillez le niveau de batterie de vos appareils connectés.\n\nRegardez le statut de la batterie de vos écouteurs, casques, montres et autres accessoires dans un seul endroit. Connectez l\'application AirSync pour afficher le niveau de batterie de votre Mac également.</string>
     <string name="about_desc_watermark">Ajoutez une légende ou un filigrane personnalisé à vos photos avec les données EXIF et les informations de l\'appareil.\n\nPartagez directement une image depuis une autre appli vers Essentials pour ajouter facilement un filigrane.</string>
     <string name="about_desc_calendar_sync">Synchronisez tous vos événements à venir de votre calendrier peu importe les restrictions sur les comptes Google qui ne peuvent être ajoutés à cause de politique de travail ou d\'études. \n\nVeillez à installer l\'application WearOS \"Essentials Companion\" pour afficher les événements dans l\'appli ainsi que dans un bloc ou en carte.</string>
     <string name="about_desc_app_updates">Surveillez les mises à jour de vos applis installées.\n\nSoyez notifiés des mises à jour disponibles, regardez les notes de versions et installez-les facilement avec un appui.</string>
@@ -724,7 +724,7 @@
     <string-array name="keywords_flashlight_pulse">
         <item>lumière</item>
         <item>lampe-torche</item>
-        <item>impulsion</item>
+        <item>clignotement</item>
         <item>notification</item>
     </string-array>
     <string-array name="keywords_qs_stay_awake">
@@ -847,10 +847,10 @@
         <item>ressenti</item>
     </string-array>
     <string-array name="keywords_battery">
-        <item>battery</item>
-        <item>charge</item>
-        <item>optimization</item>
-        <item>pixel</item>
+        <item>batterie</item>
+        <item>recharge</item>
+        <item>optimisation</item>
+        <item>Storage</item>
     </string-array>
     <!-- App Selection Extra -->
     <string name="action_invert_selection">Inverser la sélection</string>
@@ -991,15 +991,15 @@
     <string name="shape_inverse">Inverse</string>
     <string name="feat_batteries_title">Batteries</string>
     <string name="feat_batteries_desc">Surveillez le niveau de batterie de vos appareils</string>
-    <string name="batteries_widget_label">Status de la batterie</string>
+    <string name="batteries_widget_label">Statut de la batterie</string>
     <string name="connect_to_airsync">Connecter à AirSync</string>
     <string name="connect_to_airsync_summary">Afficher la batterie de votre appareil Mac connecté dans AirSync</string>
     <string name="download_airsync">Télécharger l\'appli AirSync</string>
     <string name="download_airsync_summary">Requis pour synchroniser la batterie d\'un Mac</string>
     <string name="feat_battery_notification_title">Notification de batterie</string>
-    <string name="feat_battery_notification_desc">Notification du status de la batterie persistante</string>
+    <string name="feat_battery_notification_desc">Notification du statut de la batterie persistante</string>
     <string name="about_desc_battery_notification">Retrouvez l\'expérience du widget de batterie directement dans le menu des notifications. Cela va afficher le niveau de batterie de tous vos appareils connectés dans une seule notification persistante, mise à jour en temps réel. Cela inclut également votre Mac (via AirSync) et les accessoires Bluetooth.</string>
-    <string name="battery_notification_channel_name">Notification de status de la batterie</string>
+    <string name="battery_notification_channel_name">Notification de statut de la batterie</string>
     <string name="battery_notification_channel_desc">Notification persistante qui affiche le niveau de batterie des appareils connectés</string>
     <string name="perm_nearby_devices_title">Appareils à proximité</string>
     <string name="perm_nearby_devices_desc">Requise pour détecter et obtenir les informations sur la batterie des accessoires Bluetooth</string>
@@ -1086,12 +1086,12 @@
     <string name="label_transition_animation_scale">Échelle d\'animation des transitions </string>
     <string name="label_window_animation_scale">Échelle d\'animation des fenêtres </string>
     <string name="about_desc_text_animations">Ajustez la taille de la police, son épaisseur et les vitesses d\'animations pour tout le système. Veuillez noter que certains paramètres peuvent nécessiter des permissions avancées ou un redémarrage pour certaines applis afin d\'appliquer les modifications. \n\nDes permissions additionnelles comme Shizuku ou l\'accès racine (root) peuvent être nécessaires pour l\'ajustement des échelles</string>
-    <string name="feat_aod_force_turn_off_title">Force turn off AOD</string>
+    <string name="feat_aod_force_turn_off_title">Forcer la désactivation du mode Always-on</string>
     <string name="feat_aod_force_turn_off_desc">Force turn off the AOD when no notifications. Requires accessibility permission.</string>
     <string name="feat_auto_accessibility_title">Auto accessibility</string>
     <string name="feat_auto_accessibility_desc">Automatically grants the accessibility permission on app launch if missing using WRITE_SECURE_SETTINGS.</string>
-    <string name="label_help_guide">Help and Guides</string>
-    <string name="tab_your_android">Your Android</string>
-    <string name="label_device_storage">Storage</string>
-    <string name="label_device_ram">Memory</string>
+    <string name="label_help_guide">Aide et Guides</string>
+    <string name="tab_your_android">Votre Android</string>
+    <string name="label_device_storage">Stockage</string>
+    <string name="label_device_ram">Mémoire (RAM)</string>
 </resources>
