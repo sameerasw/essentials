@@ -314,7 +314,7 @@
     <string name="cat_visuals">Beelden</string>
     <string name="cat_system">Systeem</string>
     <!-- UI Elements -->
-    <string name="search_placeholder">Zoeken naar hulpmiddelen, modificaties en aanpassingen</string>
+    <string name="search_placeholder">Search Essentials</string>
     <string name="search_no_results">Geen resultaten voor \"%1$s\"</string>
     <string name="search_results_title">Zoekresultaten</string>
     <string name="requires_following_permissions">%1$s vereist de volgende machtiging:</string>

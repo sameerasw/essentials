@@ -314,7 +314,7 @@
     <string name="cat_visuals">Visuelles</string>
     <string name="cat_system">System</string>
     <!-- UI Elements -->
-    <string name="search_placeholder">Suche nach Werkzeugen, Modifikationen und Anpassungen</string>
+    <string name="search_placeholder">Search Essentials</string>
     <string name="search_no_results">Keine Ergebnisse für \"%1$s\"</string>
     <string name="search_results_title">Suchergebnisse</string>
     <string name="requires_following_permissions">%1$s benötigt folgende Berechtigungen</string>
