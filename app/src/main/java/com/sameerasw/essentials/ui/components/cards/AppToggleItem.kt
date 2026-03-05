@@ -127,7 +127,8 @@ fun AppToggleItem(
                 ) {
                     Text(
                         text = title,
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     if (shouldShowSystemTag) {
                         Box(
@@ -162,7 +163,8 @@ fun AppToggleItem(
             ) {
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 if (shouldShowSystemTag) {
                     Box(
