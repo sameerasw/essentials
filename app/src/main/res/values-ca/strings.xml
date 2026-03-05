@@ -1,1100 +1,1100 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Essentials</string>
+    <string name="app_name">Essencials</string>
     <string name="label_beta">BETA</string>
     <string name="accessibility_service_description"><b>Essentials Accessibility Service</b>\n\nThis service is required for the following advanced features:\n\n<b>• Physical Button Remapping:</b>\nDetects volume button presses even when the screen is off to trigger actions like the Flashlight.\n\n<b>• Per-App Settings:</b>\nMonitors the currently active app to apply specific profiles for Dynamic Night Light, Notification Lighting Colors, and App Lock.\n\n<b>• Screen Control:</b>\nAllows the app to lock the screen (e.g. via Double Tap or Widgets) and detect screen state changes.\n\n<b>• Security:</b>\nPrevents unauthorized changes by detecting window content when the device is locked.\n\n<small>No input text or sensitive user data is collected or transmitted.</small></string>
-    <string name="freeze_activity_title">App Freezing</string>
-    <string name="freeze_activity_subtitle">Disable apps that are rarely used</string>
-    <string name="freeze_shortcut_short_label">App Freezing</string>
-    <string name="freeze_shortcut_long_label">Open App Freezing</string>
-    <string name="frozen_app_shortcut_label">Frozen App</string>
-    <string name="screen_off_widget_label">Empty screen off widget</string>
-    <string name="app_freezing_tile_label">App Freezing</string>
-    <string name="flashlight_pulse_tile_label">Flashlight Pulse</string>
-    <string name="check_pre_releases_label">Check for pre-releases</string>
-    <string name="check_pre_releases_desc">Might be unstable</string>
+    <string name="freeze_activity_title">Congelació d\'aplicacions</string>
+    <string name="freeze_activity_subtitle">Desactiva les aplicacions que s\'utilitzen poques vegades</string>
+    <string name="freeze_shortcut_short_label">Congelació d\'aplicacions</string>
+    <string name="freeze_shortcut_long_label">Obre App Freezing</string>
+    <string name="frozen_app_shortcut_label">Aplicació congelada</string>
+    <string name="screen_off_widget_label">Giny de pantalla buida desactivada</string>
+    <string name="app_freezing_tile_label">Congelació d\'aplicacions</string>
+    <string name="flashlight_pulse_tile_label">Pols de llanterna</string>
+    <string name="check_pre_releases_label">Comproveu les versions prèvies</string>
+    <string name="check_pre_releases_desc">Pot ser inestable</string>
     <!-- App Lock -->
-    <string name="settings_section_security">Security</string>
-    <string name="app_lock_enable_title">Enable app lock</string>
-    <string name="app_lock_auth_title">App Lock Security</string>
-    <string name="app_lock_enable_auth_subtitle">Authenticate to enable app lock</string>
-    <string name="app_lock_disable_auth_subtitle">Authenticate to disable app lock</string>
-    <string name="app_lock_select_apps_title">Select locked apps</string>
-    <string name="app_lock_select_apps_desc">Choose which apps require authentication</string>
-    <string name="app_lock_description">Secure your apps with biometric authentication. Locked apps will require authentication when launching, Stays unlocked until the screen turns off.</string>
-    <string name="app_lock_warning">Beware that this is not a robust solution as this is only a 3rd party application. If you need strong security, consider using Private Space or other such features.</string>
-    <string name="app_lock_biometric_note">Another note, the biometric authentication prompt only lets you use STRONG secure class methods. Face unlock security methods in WEAK class in devices such as Pixel 7 will only be able to utilize the available other STRONG auth methods such as fingerprint or pin.</string>
+    <string name="settings_section_security">Seguretat</string>
+    <string name="app_lock_enable_title">Activa el bloqueig de l\'aplicació</string>
+    <string name="app_lock_auth_title">Seguretat de bloqueig d\'aplicacions</string>
+    <string name="app_lock_enable_auth_subtitle">Autentiqueu-vos per activar el bloqueig d\'aplicacions</string>
+    <string name="app_lock_disable_auth_subtitle">Autentiqueu-vos per desactivar el bloqueig d\'aplicacions</string>
+    <string name="app_lock_select_apps_title">Seleccioneu aplicacions bloquejades</string>
+    <string name="app_lock_select_apps_desc">Trieu quines aplicacions requereixen autenticació</string>
+    <string name="app_lock_description">Assegureu les vostres aplicacions amb l\'autenticació biomètrica. Les aplicacions bloquejades requeriran autenticació quan s\'inicien, romandrà desbloquejada fins que la pantalla s\'apaga.</string>
+    <string name="app_lock_warning">Tingueu en compte que aquesta no és una solució robusta, ja que només és una aplicació de tercers. Si necessiteu una seguretat forta, considereu utilitzar l\'espai privat o altres funcions d\'aquest tipus.</string>
+    <string name="app_lock_biometric_note">Una altra nota, la sol·licitud d\'autenticació biomètrica només us permet utilitzar mètodes de classe segurs FORTS. Els mètodes de seguretat de desbloqueig facial de la classe WEAK en dispositius com ara Pixel 7 només podran utilitzar els altres mètodes d\'autenticació FORTES disponibles, com ara l\'empremta digital o el pin.</string>
     <!-- Button Remap -->
-    <string name="button_remap_enable_title">Enable Button Remap</string>
-    <string name="button_remap_use_shizuku_title">Use Shizuku</string>
-    <string name="button_remap_use_shizuku_desc">Works with screen off (Recommended)</string>
-    <string name="shizuku_not_running_toast">Shizuku is not running</string>
-    <string name="shizuku_detected_prefix">Detected %1$s</string>
-    <string name="shizuku_status_prefix">Status: %1$s</string>
-    <string name="shizuku_open_button">Open Shizuku</string>
-    <string name="settings_section_flashlight">Flashlight</string>
-    <string name="flashlight_options_title">Flashlight options</string>
-    <string name="flashlight_options_desc">Adjust fading and other settings</string>
-    <string name="setting_pitch_black_theme_title">Pitch black theme</string>
-    <string name="setting_pitch_black_theme_desc">Use pure black background in dark mode</string>
-    <string name="settings_section_haptic">Haptic Feedback</string>
-    <string name="button_remap_section_long_press">Remap Long Press</string>
-    <string name="screen_off">Screen Off</string>
-    <string name="screen_on">Screen On</string>
-    <string name="volume_up">Volume Up</string>
-    <string name="volume_down">Volume Down</string>
-    <string name="action_toggle_flashlight">Toggle flashlight</string>
-    <string name="action_media_play_pause">Media play/pause</string>
-    <string name="action_media_next">Media next</string>
-    <string name="action_media_previous">Media previous</string>
-    <string name="action_toggle_vibrate">Toggle vibrate</string>
-    <string name="action_toggle_mute">Toggle mute</string>
-    <string name="action_ai_assistant">AI assistant</string>
-    <string name="action_take_screenshot">Take screenshot</string>
-    <string name="action_cycle_sound_modes">Cycle sound modes</string>
-    <string name="action_like_song">Like current song</string>
-    <string name="like_song_settings_title">Like song settings</string>
-    <string name="like_song_settings_desc">This feature requires notification access to detect the currently playing media and trigger the like action. Please enable it below.</string>
-    <string name="like_song_toast_enabled">Show toast message</string>
-    <string name="like_song_aod_overlay_title">Show overlay on AOD</string>
-    <string name="feat_ambient_music_glance_title">Ambient music glance</string>
-    <string name="feat_ambient_music_glance_desc">Glance at media on AOD</string>
-    <string name="ambient_glance_docked_mode_title">Docked mode</string>
-    <string name="ambient_glance_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
-    <string name="feat_notification_glance_title">Notification glance</string>
-    <string name="feat_notification_glance_desc">Keep AOD on while notifications are pending</string>
-    <string name="notification_glance_same_as_lighting_title">Same apps as notification lighting</string>
-    <string name="notification_glance_desc">This feature will dynamically enable Always on Display when a notification arrives from a selected app, and disable it once all matching notifications are dismissed. Pick apps or use the same selection as notification lighting.</string>
-    <string name="grant_notification_access">Grant notification access</string>
-    <string name="action_toggle_media_volume">Toggle media volume</string>
-    <string name="button_remap_screen_off_hint">When the screen is off, long-press the selected button to trigger its assigned action. On Pixel devices, this action only gets triggered if the AOD is on due to system limitations.</string>
-    <string name="button_remap_screen_on_hint">When the screen is on, long-press the selected button to trigger its assigned action.</string>
-    <string name="flashlight_intensity_title">Flashlight Intensity</string>
-    <string name="flashlight_fade_title">Fade in and out</string>
-    <string name="flashlight_fade_desc">Smoothly toggle flashlight</string>
-    <string name="flashlight_global_title">Global controls</string>
-    <string name="flashlight_global_desc">Fade-in flashlight globally</string>
-    <string name="flashlight_adjust_intensity_title">Adjust intensity</string>
-    <string name="flashlight_adjust_intensity_desc">Volume + - adjusts flashlight intensity</string>
-    <string name="flashlight_live_update_title">Live update</string>
-    <string name="flashlight_live_update_desc">Show brightness in status bar</string>
-    <string name="settings_section_other">Other</string>
-    <string name="flashlight_always_off_title">Always turn off flashlight</string>
-    <string name="flashlight_always_off_desc">Even while display is on</string>
-    <string name="content_desc_settings">Settings</string>
+    <string name="button_remap_enable_title">Activa la reasignació de botons</string>
+    <string name="button_remap_use_shizuku_title">Utilitzeu Shizuku o Root o Root</string>
+    <string name="button_remap_use_shizuku_desc">Funciona amb la pantalla apagada (recomanat)</string>
+    <string name="shizuku_not_running_toast">Shizuku no funciona</string>
+    <string name="shizuku_detected_prefix">Detectat %1$s</string>
+    <string name="shizuku_status_prefix">Estat: %1$s</string>
+    <string name="shizuku_open_button">Obre Shizuku</string>
+    <string name="settings_section_flashlight">Llanterna</string>
+    <string name="flashlight_options_title">Opcions de llanterna</string>
+    <string name="flashlight_options_desc">Ajusteu l\'esvaïment i altres paràmetres</string>
+    <string name="setting_pitch_black_theme_title">Tema negre del to</string>
+    <string name="setting_pitch_black_theme_desc">Utilitzeu fons negre pur en mode fosc</string>
+    <string name="settings_section_haptic">Feedback hàptic</string>
+    <string name="button_remap_section_long_press">Remapejar Premsa llarga</string>
+    <string name="screen_off">Pantalla apagada</string>
+    <string name="screen_on">Pantalla activada</string>
+    <string name="volume_up">Puja el volum</string>
+    <string name="volume_down">Baixa el volum</string>
+    <string name="action_toggle_flashlight">Commuta la llanterna</string>
+    <string name="action_media_play_pause">Reproducció/pausa multimèdia</string>
+    <string name="action_media_next">Mitjans a continuació</string>
+    <string name="action_media_previous">Mitjans anteriors</string>
+    <string name="action_toggle_vibrate">Commuta la vibració</string>
+    <string name="action_toggle_mute">Activa o desactiva el silenci</string>
+    <string name="action_ai_assistant">Assistent d\'IA</string>
+    <string name="action_take_screenshot">Fes una captura de pantalla</string>
+    <string name="action_cycle_sound_modes">Cicle els modes de so</string>
+    <string name="action_like_song">Com la cançó actual</string>
+    <string name="like_song_settings_title">Com la configuració de cançons</string>
+    <string name="like_song_settings_desc">Aquesta funció requereix accés a notificacions per detectar els mitjans que es reprodueixen actualment i activar l\'acció semblant. Si us plau, activeu-lo a continuació.</string>
+    <string name="like_song_toast_enabled">Mostra el missatge de brindis</string>
+    <string name="like_song_aod_overlay_title">Mostra la superposició a l\'AOD</string>
+    <string name="feat_ambient_music_glance_title">Mirada de la música ambiental</string>
+    <string name="feat_ambient_music_glance_desc">Un cop d\'ull als mitjans de comunicació sobre AOD</string>
+    <string name="ambient_glance_docked_mode_title">Mode acoblat</string>
+    <string name="ambient_glance_docked_mode_desc">Manteniu la superposició visible indefinidament mentre es reprodueix música a AOD</string>
+    <string name="feat_notification_glance_title">Vista de notificació</string>
+    <string name="feat_notification_glance_desc">Manteniu l\'AOD activat mentre les notificacions estiguin pendents</string>
+    <string name="notification_glance_same_as_lighting_title">Les mateixes aplicacions que la il·luminació de notificacions</string>
+    <string name="notification_glance_desc">Aquesta funció activarà de forma dinàmica Sempre a la pantalla quan arribi una notificació d\'una aplicació seleccionada i la desactivarà un cop s\'hagin descartat totes les notificacions coincidents. Trieu aplicacions o utilitzeu la mateixa selecció que la il·luminació de notificacions.</string>
+    <string name="grant_notification_access">Concedeix accés a les notificacions</string>
+    <string name="action_toggle_media_volume">Canvia el volum dels mitjans</string>
+    <string name="button_remap_screen_off_hint">Quan la pantalla estigui apagada, premeu llargament el botó seleccionat per activar l\'acció assignada. Als dispositius Pixel, aquesta acció només s\'activa si l\'AOD està activat a causa de les limitacions del sistema.</string>
+    <string name="button_remap_screen_on_hint">Quan la pantalla estigui encesa, premeu llargament el botó seleccionat per activar l\'acció assignada.</string>
+    <string name="flashlight_intensity_title">Intensitat de la llanterna</string>
+    <string name="flashlight_fade_title">Esvaeix i surt</string>
+    <string name="flashlight_fade_desc">Commuta suaument la llanterna</string>
+    <string name="flashlight_global_title">Controls globals</string>
+    <string name="flashlight_global_desc">Llanterna esvaïda a nivell mundial</string>
+    <string name="flashlight_adjust_intensity_title">Ajustar la intensitat</string>
+    <string name="flashlight_adjust_intensity_desc">Volum + - ajusta la intensitat de la llanterna</string>
+    <string name="flashlight_live_update_title">Actualització en directe</string>
+    <string name="flashlight_live_update_desc">Mostra la brillantor a la barra d\'estat</string>
+    <string name="settings_section_other">Altres</string>
+    <string name="flashlight_always_off_title">Apagueu sempre la llanterna</string>
+    <string name="flashlight_always_off_desc">Fins i tot mentre la pantalla està activada</string>
+    <string name="content_desc_settings">Configuració</string>
     <!-- Caffeinate / Permissions -->
-    <string name="permission_show_notification_title">Show Notification</string>
-    <string name="permission_post_notifications_title">Post Notifications</string>
-    <string name="permission_post_notifications_desc">Allows the app to show notifications</string>
-    <string name="permission_grant_action">Grant Permission</string>
-    <string name="caffeinate_notification_title">Caffeinate Active</string>
-    <string name="caffeinate_active">Active</string>
-    <string name="caffeinate_notification_desc">Screen is being kept awake</string>
-    <string name="caffeinate_battery_optimization_title">Ignore battery optimization</string>
-    <string name="caffeinate_abort_screen_off_title">Abort with screen off</string>
-    <string name="caffeinate_skip_countdown_title">Skip countdown</string>
-    <string name="caffeinate_skip_countdown_desc">Start Caffeinate immediately.</string>
-    <string name="caffeinate_timeout_presets_title">Timeout Presets</string>
-    <string name="caffeinate_timeout_presets_desc">Select available durations for QS tile</string>
+    <string name="permission_show_notification_title">Mostra la notificació</string>
+    <string name="permission_post_notifications_title">Publicar notificacions</string>
+    <string name="permission_post_notifications_desc">Permet que l\'aplicació mostri notificacions</string>
+    <string name="permission_grant_action">Concedir el permís</string>
+    <string name="caffeinate_notification_title">Cafeïnat actiu</string>
+    <string name="caffeinate_active">Actius</string>
+    <string name="caffeinate_notification_desc">La pantalla es manté desperta</string>
+    <string name="caffeinate_battery_optimization_title">Ignora l\'optimització de la bateria</string>
+    <string name="caffeinate_abort_screen_off_title">Avorta amb la pantalla apagada</string>
+    <string name="caffeinate_skip_countdown_title">Omet el compte enrere</string>
+    <string name="caffeinate_skip_countdown_desc">Comença a cafeïna immediatament.</string>
+    <string name="caffeinate_timeout_presets_title">Temps d\'espera predefinits</string>
+    <string name="caffeinate_timeout_presets_desc">Seleccioneu les durades disponibles per a la fitxa QS</string>
     <string name="caffeinate_timeout_5m">5m</string>
-    <string name="caffeinate_timeout_10m">10m</string>
-    <string name="caffeinate_timeout_30m">30m</string>
-    <string name="perm_notif_policy_title">Do Not Disturb access</string>
-    <string name="perm_notif_policy_desc">Required to cycle between sound, vibrate and mute modes</string>
+    <string name="caffeinate_timeout_10m">10 m</string>
+    <string name="caffeinate_timeout_30m">30 m</string>
+    <string name="perm_notif_policy_title">No molesteu l\'accés</string>
+    <string name="perm_notif_policy_desc">Necessari per alternar entre els modes de so, vibració i silenci</string>
     <string name="caffeinate_timeout_1h">1h</string>
     <string name="caffeinate_timeout_infinity">∞</string>
-    <string name="caffeinate_starting_in">Starting in %1$ds…</string>
-    <string name="caffeinate_remaining">%1$s remaining</string>
-    <string name="caffeinate_live_channel_desc">Persistent notification for Caffeinate</string>
+    <string name="caffeinate_starting_in">Començant en %1$ds...</string>
+    <string name="caffeinate_remaining">%1$s restant</string>
+    <string name="caffeinate_live_channel_desc">Notificació persistent de cafeïnat</string>
     <!-- Dynamic Night Light -->
-    <string name="dynamic_night_light_enable_title">Enable Dynamic Night Light</string>
-    <string name="dynamic_night_light_apps_section">Apps that toggle off night light</string>
-    <string name="action_select_apps">Select apps</string>
+    <string name="dynamic_night_light_enable_title">Activa la llum nocturna dinàmica</string>
+    <string name="dynamic_night_light_apps_section">Aplicacions que apaguen la llum nocturna</string>
+    <string name="action_select_apps">Seleccioneu aplicacions</string>
     <!-- App Freezing -->
-    <string name="settings_section_app_control">App Control</string>
-    <string name="action_freeze">Freeze</string>
-    <string name="action_unfreeze">Unfreeze</string>
-    <string name="content_desc_more_options">More options</string>
-    <string name="action_freeze_all">Freeze all apps</string>
-    <string name="action_unfreeze_all">Unfreeze all apps</string>
-    <string name="action_export_freeze">Export frozen apps list</string>
-    <string name="action_import_freeze">Import frozen apps list</string>
-    <string name="freeze_pick_apps_title">Pick apps to freeze</string>
-    <string name="freeze_pick_apps_desc">Choose which apps can be frozen</string>
-    <string name="settings_section_automation">Automation</string>
-    <string name="freeze_when_locked_title">Freeze when locked</string>
-    <string name="freeze_delay_title">Freeze delay</string>
-    <string name="delay_immediate">Immediate</string>
-    <string name="delay_1m">1m</string>
+    <string name="settings_section_app_control">Control d\'aplicacions</string>
+    <string name="action_freeze">Congelar</string>
+    <string name="action_unfreeze">Descongelar</string>
+    <string name="content_desc_more_options">Més opcions</string>
+    <string name="action_freeze_all">Congela totes les aplicacions</string>
+    <string name="action_unfreeze_all">Descongela totes les aplicacions</string>
+    <string name="action_export_freeze">Exporta la llista d\'aplicacions congelades</string>
+    <string name="action_import_freeze">Importa la llista d\'aplicacions congelades</string>
+    <string name="freeze_pick_apps_title">Trieu aplicacions per congelar</string>
+    <string name="freeze_pick_apps_desc">Trieu quines aplicacions es poden congelar</string>
+    <string name="settings_section_automation">Automatització</string>
+    <string name="freeze_when_locked_title">Congela quan està bloquejat</string>
+    <string name="freeze_delay_title">Retard de congelació</string>
+    <string name="delay_immediate">Immediatament</string>
+    <string name="delay_1m">1 m</string>
     <string name="delay_5m">5m</string>
-    <string name="delay_15m">15m</string>
+    <string name="delay_15m">15 m</string>
     <string name="delay_manual">Manual</string>
-    <string name="freeze_auto_freeze_section">Auto freeze apps</string>
-    <string name="freeze_automation_hint">Freeze selected apps when the device locks. Choose a delay to avoid freezing apps if you unlock the screen shortly after turning it off.</string>
-    <string name="freeze_warning">Freezing system apps might be dangerous and may cause unexpected behavior.</string>
-    <string name="action_enable_in_settings">Enable in Settings</string>
-    <string name="freeze_dont_freeze_active_apps_title">Don\'t freeze active apps</string>
-    <string name="perm_usage_stats_title">Usage Stats</string>
-    <string name="perm_usage_stats_desc">Required to detect which apps are currently in the foreground to avoid freezing them</string>
-    <string name="perm_notif_listener_desc_freeze">Required to detect playing media and active notifications to avoid freezing them</string>
+    <string name="freeze_auto_freeze_section">Congela automàticament les aplicacions</string>
+    <string name="freeze_automation_hint">Congela les aplicacions seleccionades quan el dispositiu es bloqueja. Trieu un retard per evitar congelar les aplicacions si desbloquegeu la pantalla poc després d\'apagar-la.</string>
+    <string name="freeze_warning">Congelar les aplicacions del sistema pot ser perillós i provocar un comportament inesperat.</string>
+    <string name="action_enable_in_settings">Activa a Configuració</string>
+    <string name="freeze_dont_freeze_active_apps_title">Don\'t congela les aplicacions actives</string>
+    <string name="perm_usage_stats_title">Estadístiques d\'ús</string>
+    <string name="perm_usage_stats_desc">Necessari per detectar quines aplicacions es troben actualment en primer pla per evitar congelar-les</string>
+    <string name="perm_notif_listener_desc_freeze">Necessari per detectar contingut multimèdia en reproducció i notificacions actives per evitar congelar-los</string>
     <!-- Notification Lighting -->
-    <string name="notification_lighting_screen_off_title">Only show when screen off</string>
-    <string name="notification_lighting_skip_silent_title">Skip silent notifications</string>
-    <string name="notification_lighting_skip_persistent_title">Skip persistent notifications</string>
-    <string name="settings_section_flashlight_pulse">Flashlight Pulse</string>
-    <string name="flashlight_pulse_title">Flashlight pulse</string>
-    <string name="flashlight_pulse_facedown_title">Only while facing down</string>
-    <string name="flashlight_pulse_same_as_lighting_title">Same apps as notification lighting</string>
-    <string name="settings_section_style">Style</string>
-    <string name="notification_lighting_stroke_adjustment_section">Stroke adjustment</string>
-    <string name="notification_lighting_corner_radius_title">Corner radius</string>
-    <string name="notification_lighting_stroke_thickness_title">Stroke thickness</string>
-    <string name="notification_lighting_glow_adjustment_section">Glow adjustment</string>
-    <string name="notification_lighting_glow_spread_title">Glow spread</string>
-    <string name="notification_lighting_placement_section">Placement</string>
-    <string name="notification_lighting_h_pos_title">Horizontal position</string>
-    <string name="notification_lighting_v_pos_title">Vertical position</string>
-    <string name="notification_lighting_indicator_adjustment_section">Indicator adjustment</string>
-    <string name="notification_lighting_scale_title">Scale</string>
-    <string name="notification_lighting_duration_title">Duration</string>
-    <string name="settings_section_animation">Animation</string>
-    <string name="notification_lighting_pulse_count_title">Pulse count</string>
-    <string name="notification_lighting_pulse_duration_title">Pulse duration</string>
-    <string name="settings_section_color_mode">Color Mode</string>
-    <string name="settings_section_ambient_display">Ambient display</string>
-    <string name="ambient_display_title">Ambient display</string>
-    <string name="ambient_display_hint">Suitable if you are not using AOD.</string>
-    <string name="ambient_display_desc">Wake screen and show lighting</string>
-    <string name="ambient_show_lock_screen_title">Show lock screen</string>
-    <string name="ambient_show_lock_screen_desc">No black overlay</string>
+    <string name="notification_lighting_screen_off_title">Mostra només quan la pantalla està apagada</string>
+    <string name="notification_lighting_skip_silent_title">Omet les notificacions silencioses</string>
+    <string name="notification_lighting_skip_persistent_title">Omet les notificacions persistents</string>
+    <string name="settings_section_flashlight_pulse">Pols de llanterna</string>
+    <string name="flashlight_pulse_title">Pols de llanterna</string>
+    <string name="flashlight_pulse_facedown_title">Només mirant cap avall</string>
+    <string name="flashlight_pulse_same_as_lighting_title">Les mateixes aplicacions que la il·luminació de notificacions</string>
+    <string name="settings_section_style">Estil</string>
+    <string name="notification_lighting_stroke_adjustment_section">Ajust de carrera</string>
+    <string name="notification_lighting_corner_radius_title">Radi de cantonada</string>
+    <string name="notification_lighting_stroke_thickness_title">Gruix del traç</string>
+    <string name="notification_lighting_glow_adjustment_section">Ajust de brillantor</string>
+    <string name="notification_lighting_glow_spread_title">Propagació de resplendor</string>
+    <string name="notification_lighting_placement_section">Col·locació</string>
+    <string name="notification_lighting_h_pos_title">Posició horitzontal</string>
+    <string name="notification_lighting_v_pos_title">Posició vertical</string>
+    <string name="notification_lighting_indicator_adjustment_section">Ajust de l\'indicador</string>
+    <string name="notification_lighting_scale_title">Escala</string>
+    <string name="notification_lighting_duration_title">Durada</string>
+    <string name="settings_section_animation">Animació</string>
+    <string name="notification_lighting_pulse_count_title">Recompte de polsos</string>
+    <string name="notification_lighting_pulse_duration_title">Durada del pols</string>
+    <string name="settings_section_color_mode">Mode de color</string>
+    <string name="settings_section_ambient_display">Visualització ambiental</string>
+    <string name="ambient_display_title">Visualització ambiental</string>
+    <string name="ambient_display_hint">Adequat si no feu servir AOD.</string>
+    <string name="ambient_display_desc">Activa la pantalla i mostra la il·luminació</string>
+    <string name="ambient_show_lock_screen_title">Mostra la pantalla de bloqueig</string>
+    <string name="ambient_show_lock_screen_desc">Sense superposició negra</string>
     <!-- Tiles -->
-    <string name="action_add">Add</string>
-    <string name="qs_tile_already_added">Already added</string>
-    <string name="qs_tile_requires_android_13">Requires Android 13+</string>
-    <string name="tile_ui_blur">UI Blur</string>
-    <string name="tile_bubbles">Bubbles</string>
-    <string name="tile_sensitive_content">Sensitive Content</string>
-    <string name="tile_tap_to_wake">Tap to Wake</string>
+    <string name="action_add">Afegeix</string>
+    <string name="qs_tile_already_added">Ja s\'ha afegit</string>
+    <string name="qs_tile_requires_android_13">Requereix Android 13+</string>
+    <string name="tile_ui_blur">Desenfocament de la interfície d\'usuari</string>
+    <string name="tile_bubbles">Bombolles</string>
+    <string name="tile_sensitive_content">Contingut sensible</string>
+    <string name="tile_tap_to_wake">Toqueu per activar</string>
     <string name="tile_aod">AOD</string>
-    <string name="tile_caffeinate">Caffeinate</string>
-    <string name="tile_sound_mode">Sound Mode</string>
-    <string name="tile_notification_lighting">Notification Lighting</string>
-    <string name="tile_dynamic_night_light">Dynamic Night Light</string>
-    <string name="tile_locked_security">Locked Security</string>
-    <string name="tile_app_lock">App Lock</string>
-    <string name="tile_mono_audio">Mono Audio</string>
-    <string name="tile_flashlight">Flashlight</string>
-    <string name="tile_app_freezing">App Freezing</string>
-    <string name="tile_flashlight_pulse">Flashlight Pulse</string>
-    <string name="tile_stay_awake">Stay awake</string>
-    <string name="input_method_label">Essentials Keyboard</string>
-    <string name="subtype_en_us">English (US)</string>
-    <string name="tile_active">Active</string>
-    <string name="tile_inactive">Inactive</string>
-    <string name="tile_developer_options">Developer Options</string>
-    <string name="about_desc_developer_options">Toggle system Developer Options from a QS tile easily. This may reset some of the developer settings you have modified.</string>
+    <string name="tile_caffeinate">Cafeïna</string>
+    <string name="tile_sound_mode">Mode de so</string>
+    <string name="tile_notification_lighting">Il·luminació de notificació</string>
+    <string name="tile_dynamic_night_light">Llum nocturna dinàmica</string>
+    <string name="tile_locked_security">Seguretat bloquejada</string>
+    <string name="tile_app_lock">Bloqueig d\'aplicacions</string>
+    <string name="tile_mono_audio">Àudio mono</string>
+    <string name="tile_flashlight">Llanterna</string>
+    <string name="tile_app_freezing">Congelació d\'aplicacions</string>
+    <string name="tile_flashlight_pulse">Pols de llanterna</string>
+    <string name="tile_stay_awake">Mantingueu-vos despert</string>
+    <string name="input_method_label">Teclat bàsic</string>
+    <string name="subtype_en_us">Anglès (EUA)</string>
+    <string name="tile_active">Actius</string>
+    <string name="tile_inactive">Inactiu</string>
+    <string name="tile_developer_options">Opcions de desenvolupador</string>
+    <string name="about_desc_developer_options">Commuta fàcilment les opcions de desenvolupador del sistema des d\'una fitxa QS. Això pot restablir part de la configuració del desenvolupador que heu modificat.</string>
     <string name="nfc_tile_label">NFC</string>
-    <string name="tile_private_dns">Private DNS</string>
-    <string name="tile_private_dns_auto">Auto</string>
-    <string name="tile_private_dns_off">Off</string>
-    <string name="tile_usb_debugging">USB Debugging</string>
-    <string name="tile_color_picker">Color Picker</string>
-    <string name="toast_eyedropper_failed">Are you sure you\'re on Android 17? (╯°_°）╯</string>
-    <string name="subtitle_eye_dropper">Eye Dropper</string>
-    <string name="on">On</string>
-    <string name="off">Off</string>
-    <string name="private_dns_custom_title">Custom Private DNS</string>
-    <string name="private_dns_presets_title">Common DNS Presets</string>
-    <string name="private_dns_hostname_label">Provider hostname</string>
+    <string name="tile_private_dns">DNS privat</string>
+    <string name="tile_private_dns_auto">Automàtic</string>
+    <string name="tile_private_dns_off">Apagat</string>
+    <string name="tile_usb_debugging">Depuració USB</string>
+    <string name="tile_color_picker">Selector de colors</string>
+    <string name="toast_eyedropper_failed">Segur que\'Estàs a Android 17? (╯°_°）╯</string>
+    <string name="subtitle_eye_dropper">Gotero d\'ulls</string>
+    <string name="on">Encès</string>
+    <string name="off">Apagat</string>
+    <string name="private_dns_custom_title">DNS privat personalitzat</string>
+    <string name="private_dns_presets_title">Valors predefinits de DNS comuns</string>
+    <string name="private_dns_hostname_label">Nom d\'amfitrió del proveïdor</string>
     <string name="dns_preset_adguard">AdGuard DNS</string>
     <string name="dns_preset_adguard_hostname">dns.adguard.com</string>
-    <string name="dns_preset_google">Google Public DNS</string>
+    <string name="dns_preset_google">DNS públic de Google</string>
     <string name="dns_preset_google_hostname">dns.google</string>
-    <string name="dns_preset_cloudflare">Cloudflare DNS</string>
+    <string name="dns_preset_cloudflare">DNS de Cloudflare</string>
     <string name="dns_preset_cloudflare_hostname">1dot1dot1dot1.cloudflare-dns.com</string>
     <string name="dns_preset_quad9">Quad9 DNS</string>
     <string name="dns_preset_quad9_hostname">dns.quad9.net</string>
-    <string name="dns_preset_cleanbrowsing">CleanBrowsing</string>
+    <string name="dns_preset_cleanbrowsing">Navegació neta</string>
     <string name="dns_preset_cleanbrowsing_hostname">adult-filter-dns.cleanbrowsing.org</string>
-    <string name="tile_charge_optimization">Charging</string>
-    <string name="limit_to_80">Limit to 80%</string>
-    <string name="adaptive_charging">Adaptive</string>
-    <string name="deactivated">Not optimized</string>
-    <string name="permission_missing">Permission missing</string>
+    <string name="tile_charge_optimization">Carregant</string>
+    <string name="limit_to_80">Límit al 80%</string>
+    <string name="adaptive_charging">Adaptatiu</string>
+    <string name="deactivated">No optimitzat</string>
+    <string name="permission_missing">Falta el permís</string>
     <!-- Screen Locked Security -->
-    <string name="screen_locked_security_title">Screen locked security</string>
-    <string name="screen_locked_security_dialog_title">Screen Locked Security</string>
-    <string name="screen_locked_security_auth_enable">Authenticate to enable screen locked security</string>
-    <string name="screen_locked_security_auth_disable">Authenticate to disable screen locked security</string>
-    <string name="warning_title">⚠️ WARNING</string>
-    <string name="screen_locked_security_warning_text">This feature is not foolproof. There may be edge cases where someone still being able to interact with the tile. \nAlso keep in mind that Android will always allow to do a forced reboot and Pixels will always allow the device to be turned off from the lock screen as well.</string>
-    <string name="screen_locked_security_airplane_warning">Make sure to remove the airplane mode tile from quick settings as that is not preventable because it does not open a dialog window.</string>
-    <string name="screen_locked_security_description">When enabled, the Quick Settings panel will be immediately closed and the device will be locked down if someone attempt to interact with Internet tiles while the device is locked. \n\nThis will also disable biometric unlock to prevent further unauthorized access. Animation scale will be reduced to 0.1x while locked to make it even harder to interact with.</string>
+    <string name="screen_locked_security_title">Seguretat amb pantalla bloquejada</string>
+    <string name="screen_locked_security_dialog_title">Seguretat amb pantalla bloquejada</string>
+    <string name="screen_locked_security_auth_enable">Autentiqueu-vos per activar la seguretat de bloqueig de pantalla</string>
+    <string name="screen_locked_security_auth_disable">Autentiqueu-vos per desactivar la seguretat de bloqueig de pantalla</string>
+    <string name="warning_title">⚠️ ADVERTIMENT</string>
+    <string name="screen_locked_security_warning_text">Aquesta característica no és infal·lible. Hi pot haver casos extrems en què algú encara pugui interactuar amb la fitxa. \nTingues en compte que Android sempre permetrà fer un reinici forçat i Pixels sempre permetrà apagar el dispositiu des de la pantalla de bloqueig.</string>
+    <string name="screen_locked_security_airplane_warning">Assegureu-vos d\'eliminar la fitxa del mode avió de la configuració ràpida, ja que això no es pot evitar perquè no obre una finestra de diàleg.</string>
+    <string name="screen_locked_security_description">Quan estigui activat, el tauler de configuració ràpida es tancarà immediatament i el dispositiu es bloquejarà si algú intenta interactuar amb les fitxes d\'Internet mentre el dispositiu està bloquejat. \n\nAixò també desactivarà el desbloqueig biomètric per evitar més accés no autoritzat. l\'escala d\'animació es reduirà a 0,1x mentre estigui bloquejada per fer-hi encara més difícil interactuar.</string>
     <!-- Sound Mode -->
-    <string name="sound_mode_reorder_title">Re-order modes</string>
-    <string name="sound_mode_long_press_hint">Long press to toggle</string>
-    <string name="content_desc_drag_reorder">Drag to reorder</string>
-    <string name="sound_mode_sound">Sound</string>
-    <string name="sound_mode_vibrate">Vibrate</string>
-    <string name="sound_mode_silent">Silent</string>
+    <string name="sound_mode_reorder_title">Reordena els modes</string>
+    <string name="sound_mode_long_press_hint">Premeu llargament per alternar</string>
+    <string name="content_desc_drag_reorder">Arrossegueu per reordenar</string>
+    <string name="sound_mode_sound">So</string>
+    <string name="sound_mode_vibrate">Vibrar</string>
+    <string name="sound_mode_silent">En silenci</string>
     <!-- Status Bar Categories -->
-    <string name="status_bar_category_connectivity">Connectivity</string>
-    <string name="status_bar_category_phone_network">Phone &amp; Network</string>
-    <string name="status_bar_category_audio_media">Audio &amp; Media</string>
-    <string name="status_bar_category_system_status">System Status</string>
-    <string name="status_bar_category_oem_specific">OEM Specific</string>
+    <string name="status_bar_category_connectivity">Connectivitat</string>
+    <string name="status_bar_category_phone_network">Telèfon i xarxa</string>
+    <string name="status_bar_category_audio_media">Àudio i mitjans</string>
+    <string name="status_bar_category_system_status">Estat del sistema</string>
+    <string name="status_bar_category_oem_specific">OEM específic</string>
     <!-- Status Bar Icons -->
     <string name="icon_wifi">WiFi</string>
     <string name="icon_bluetooth">Bluetooth</string>
     <string name="icon_nfc">NFC / Felica</string>
     <string name="icon_vpn">VPN</string>
-    <string name="icon_airplane_mode">Airplane Mode</string>
+    <string name="icon_airplane_mode">Mode avió</string>
     <string name="icon_hotspot">Hotspot</string>
     <string name="icon_cast">Cast</string>
-    <string name="icon_mobile_data">Mobile Data</string>
-    <string name="icon_phone_signal">Phone Signal</string>
+    <string name="icon_mobile_data">Dades mòbils</string>
+    <string name="icon_phone_signal">Senyal del telèfon</string>
     <string name="icon_volte">VoLTE / VoNR</string>
-    <string name="icon_wifi_calling">WiFi Calling / VoWiFi</string>
-    <string name="icon_call_status">Call Status / Sync</string>
+    <string name="icon_wifi_calling">Trucades WiFi / VoWiFi</string>
+    <string name="icon_call_status">Estat de trucada/sincronització</string>
     <string name="icon_tty">TTY</string>
-    <string name="icon_volume">Volume</string>
-    <string name="icon_headset">Headset</string>
-    <string name="icon_speakerphone">Speakerphone</string>
+    <string name="icon_volume">Volum</string>
+    <string name="icon_headset">Auriculars</string>
+    <string name="icon_speakerphone">Altaveu</string>
     <string name="icon_dmb">DMB</string>
-    <string name="icon_clock">Clock</string>
-    <string name="icon_ime">Input Method (IME)</string>
-    <string name="icon_alarm">Alarm</string>
-    <string name="icon_battery">Battery</string>
-    <string name="icon_power_saving">Power Saving</string>
-    <string name="icon_data_saver">Data Saver</string>
-    <string name="icon_rotation_lock">Rotation Lock</string>
-    <string name="icon_location">Location / GPS</string>
-    <string name="icon_sync">Sync</string>
-    <string name="icon_managed_profile">Managed Profile</string>
-    <string name="icon_dnd">Do Not Disturb</string>
-    <string name="icon_privacy">Privacy &amp; Secure Folder</string>
-    <string name="icon_security_status">Security Status (SU)</string>
-    <string name="icon_otg">OTG Mouse / Keyboard</string>
-    <string name="icon_samsung_smart">Samsung Smart Features</string>
-    <string name="icon_samsung_services">Samsung Services</string>
+    <string name="icon_clock">Rellotge</string>
+    <string name="icon_ime">Mètode d\'entrada (IME)</string>
+    <string name="icon_alarm">Alarma</string>
+    <string name="icon_battery">Bateria</string>
+    <string name="icon_power_saving">Estalvi d\'energia</string>
+    <string name="icon_data_saver">Estalviador de dades</string>
+    <string name="icon_rotation_lock">Bloqueig de rotació</string>
+    <string name="icon_location">Localització / GPS</string>
+    <string name="icon_sync">Sincronització</string>
+    <string name="icon_managed_profile">Perfil gestionat</string>
+    <string name="icon_dnd">No Molestis</string>
+    <string name="icon_privacy">Privadesa i carpeta segura</string>
+    <string name="icon_security_status">Estat de seguretat (SU)</string>
+    <string name="icon_otg">Ratolí/teclat OTG</string>
+    <string name="icon_samsung_smart">Funcions intel·ligents de Samsung</string>
+    <string name="icon_samsung_services">Serveis de Samsung</string>
     <string name="icon_ethernet">Ethernet</string>
     <!-- Status Bar Settings -->
-    <string name="stb_clock_seconds">Show Seconds in Clock</string>
-    <string name="stb_battery_percentage">Battery Percentage</string>
-    <string name="stb_battery_percentage_always">Always</string>
-    <string name="stb_battery_percentage_charging">Charging</string>
-    <string name="stb_battery_percentage_never">Never</string>
-    <string name="stb_privacy_chip">Camera and Microphone use chips</string>
-    <string name="smart_data_title">Smart Data</string>
-    <string name="permission_read_phone_state_title">Read Phone State</string>
-    <string name="permission_read_phone_state_desc">Required to detect network type for Smart Data feature</string>
-    <string name="permission_read_phone_state_desc_call_vibrations">Required to detect call status changes to trigger haptic feedback.</string>
-    <string name="settings_section_smart_visibility">Smart Visibility</string>
-    <string name="smart_wifi_title">Smart WiFi</string>
-    <string name="smart_wifi_desc">Hide mobile data when WiFi is connected</string>
-    <string name="smart_data_desc">Hide mobile data in certain modes</string>
-    <string name="action_reset_all_icons">Reset All Icons</string>
-    <string name="status_bar_section_advanced">More Settings</string>
-    <string name="status_bar_icons_disclaimer">Please note that the implementation of these options may depend on the OEM and some may not be functional at all.</string>
+    <string name="stb_clock_seconds">Mostra els segons al rellotge</string>
+    <string name="stb_battery_percentage">Percentatge de bateria</string>
+    <string name="stb_battery_percentage_always">Sempre</string>
+    <string name="stb_battery_percentage_charging">Carregant</string>
+    <string name="stb_battery_percentage_never">Mai</string>
+    <string name="stb_privacy_chip">La càmera i el micròfon utilitzen xips</string>
+    <string name="smart_data_title">Dades intel·ligents</string>
+    <string name="permission_read_phone_state_title">Llegeix l\'estat del telèfon</string>
+    <string name="permission_read_phone_state_desc">Necessari per detectar el tipus de xarxa per a la funció Smart Data</string>
+    <string name="permission_read_phone_state_desc_call_vibrations">Necessari per detectar canvis en l\'estat de la trucada per activar un feedback hàptic.</string>
+    <string name="settings_section_smart_visibility">Visibilitat intel·ligent</string>
+    <string name="smart_wifi_title">WiFi intel·ligent</string>
+    <string name="smart_wifi_desc">Amaga les dades mòbils quan hi hagi connexió WiFi</string>
+    <string name="smart_data_desc">Amaga les dades mòbils en determinats modes</string>
+    <string name="action_reset_all_icons">Restableix totes les icones</string>
+    <string name="status_bar_section_advanced">Més configuració</string>
+    <string name="status_bar_icons_disclaimer">Tingueu en compte que la implementació d\'aquestes opcions pot dependre de l\'OEM i algunes poden no ser funcionals en absolut.</string>
     <!-- Network Type Picker -->
-    <string name="network_type_other">Other</string>
+    <string name="network_type_other">Altres</string>
     <!-- Search -->
-    <string name="search_clock_seconds_title">Clock Seconds</string>
-    <string name="search_clock_seconds_desc">Show seconds in status bar clock</string>
-    <string name="search_battery_percentage_title">Battery Percentage</string>
-    <string name="search_battery_percentage_desc">Configure battery percentage visibility</string>
-    <string name="search_privacy_chip_title">Privacy Chips</string>
-    <string name="search_privacy_chip_desc">Show indicator when camera or mic is in use</string>
-    <string name="search_desc_toggle_visibility">Toggle visibility for %1$s</string>
-    <string name="action_pin">Pin to Favorites</string>
-    <string name="action_unpin">Unpin from Favorites</string>
+    <string name="search_clock_seconds_title">Rellotge segons</string>
+    <string name="search_clock_seconds_desc">Mostra els segons al rellotge de la barra d\'estat</string>
+    <string name="search_battery_percentage_title">Percentatge de bateria</string>
+    <string name="search_battery_percentage_desc">Configura la visibilitat del percentatge de la bateria</string>
+    <string name="search_privacy_chip_title">Xips de privadesa</string>
+    <string name="search_privacy_chip_desc">Mostra l\'indicador quan s\'utilitza la càmera o el micròfon</string>
+    <string name="search_desc_toggle_visibility">Commuta la visibilitat per %1$s</string>
+    <string name="action_pin">Fixeu-vos a Preferits</string>
+    <string name="action_unpin">Desenganxa de Preferits</string>
     <!-- Extraction Batch 1 -->
     <!-- Categories -->
-    <string name="cat_tools">Tools</string>
+    <string name="cat_tools">Eines</string>
     <string name="cat_visuals">Visuals</string>
-    <string name="cat_system">System</string>
+    <string name="cat_system">Sistema</string>
     <!-- UI Elements -->
-    <string name="search_placeholder">Search Essentials</string>
-    <string name="search_no_results">No results for \"%1$s\"</string>
-    <string name="search_results_title">Search Results</string>
-    <string name="requires_following_permissions">%1$s requires following permissions</string>
+    <string name="search_placeholder">Cerca bàsics</string>
+    <string name="search_no_results">No hi ha resultats per a \"%1$s\"</string>
+    <string name="search_results_title">Resultats de la cerca</string>
+    <string name="requires_following_permissions">%1$s requereix els següents permisos</string>
     <!-- Features -->
-    <string name="feat_screen_off_widget_title">Screen off widget</string>
-    <string name="feat_screen_off_widget_desc">Invisible widget to turn the screen off</string>
-    <string name="feat_statusbar_icons_title">Statusbar icons</string>
-    <string name="feat_statusbar_icons_desc">Control statusbar icons visibility</string>
-    <string name="feat_caffeinate_title">Caffeinate</string>
-    <string name="feat_caffeinate_desc">Keep the screen awake</string>
-    <string name="feat_maps_power_saving_title">Maps power saving mode</string>
-    <string name="feat_maps_power_saving_desc">For any Android device</string>
-    <string name="feat_notification_lighting_title">Notification lighting</string>
-    <string name="feat_notification_lighting_desc">Light up for notifications</string>
-    <string name="feat_flashlight_pulse_desc">Pulse the flashlight for notifications</string>
-    <string name="feat_sound_mode_tile_title">Sound mode tile</string>
-    <string name="feat_call_vibrations_title">Call vibrations</string>
-    <string name="feat_call_vibrations_desc">Vibrate for call actions</string>
-    <string name="show_bluetooth_devices">Show Bluetooth devices</string>
-    <string name="show_bluetooth_devices_summary">Display battery level of connected Bluetooth devices</string>
-    <string name="limit_max_devices">Limit max devices</string>
-    <string name="limit_max_devices_summary">Adjust max devices visible in widget</string>
-    <string name="widget_background_title">Widget background</string>
-    <string name="widget_background_summary">Show widget background</string>
+    <string name="feat_screen_off_widget_title">Giny apagat de la pantalla</string>
+    <string name="feat_screen_off_widget_desc">Giny invisible per apagar la pantalla</string>
+    <string name="feat_statusbar_icons_title">Icones de la barra d\'estat</string>
+    <string name="feat_statusbar_icons_desc">Controla la visibilitat de les icones de la barra d\'estat</string>
+    <string name="feat_caffeinate_title">Cafeïna</string>
+    <string name="feat_caffeinate_desc">Manteniu la pantalla desperta</string>
+    <string name="feat_maps_power_saving_title">Mode d\'estalvi d\'energia de Maps</string>
+    <string name="feat_maps_power_saving_desc">Per a qualsevol dispositiu Android</string>
+    <string name="feat_notification_lighting_title">Il·luminació de notificació</string>
+    <string name="feat_notification_lighting_desc">Encén per a les notificacions</string>
+    <string name="feat_flashlight_pulse_desc">Premeu la llanterna per rebre notificacions</string>
+    <string name="feat_sound_mode_tile_title">Peça del mode de so</string>
+    <string name="feat_call_vibrations_title">Vibracions de trucada</string>
+    <string name="feat_call_vibrations_desc">Vibra per a accions de trucada</string>
+    <string name="show_bluetooth_devices">Mostra els dispositius Bluetooth</string>
+    <string name="show_bluetooth_devices_summary">Mostra el nivell de bateria dels dispositius Bluetooth connectats</string>
+    <string name="limit_max_devices">Limiteu el màxim de dispositius</string>
+    <string name="limit_max_devices_summary">Ajusta el màxim de dispositius visibles al giny</string>
+    <string name="widget_background_title">Fons del widget</string>
+    <string name="widget_background_summary">Mostra el fons del widget</string>
     <!-- DIY Automation -->
-    <string name="diy_create_trigger_title">Trigger Automation</string>
-    <string name="diy_create_trigger_desc">Schedule an action to trigger on an observation</string>
-    <string name="diy_create_state_title">State Automation</string>
-    <string name="diy_create_state_desc">Schedule an action to execute based on the state of a condition in and out</string>
-    <string name="diy_editor_new_title">New Automation</string>
-    <string name="diy_editor_edit_title">Edit Automation</string>
-    <string name="feat_link_actions_title">Link actions</string>
-    <string name="feat_link_actions_desc">Handle links with multiple apps</string>
-    <string name="feat_snooze_notifications_title">Snooze system notifications</string>
-    <string name="feat_snooze_notifications_desc">Snooze persistent notifications</string>
-    <string name="feat_qs_tiles_title">Quick settings tiles</string>
-    <string name="feat_qs_tiles_desc">View all</string>
-    <string name="feat_button_remap_title">Button remap</string>
-    <string name="feat_button_remap_desc">Remap hardware button actions</string>
-    <string name="feat_dynamic_night_light_title">Dynamic night light</string>
-    <string name="feat_dynamic_night_light_desc">Toggle night light based on app</string>
-    <string name="feat_screen_locked_security_title">Screen locked security</string>
-    <string name="feat_screen_locked_security_desc">Prevent network controls</string>
-    <string name="feat_app_lock_title">App lock</string>
-    <string name="feat_app_lock_desc">Secure apps with biometrics</string>
-    <string name="feat_freeze_title">Freeze</string>
-    <string name="feat_freeze_desc">Disable rarely used apps</string>
-    <string name="feat_watermark_title">Watermark</string>
-    <string name="feat_watermark_desc">Add EXIF data and logos to photos</string>
-    <string name="feat_always_on_display_title">Always on Display</string>
-    <string name="feat_always_on_display_desc">Show time and info while screen off</string>
-    <string name="feat_calendar_sync_title">Calendar Sync</string>
-    <string name="feat_calendar_sync_desc">Sync events to your watch</string>
-    <string name="watermark_style_overlay">Overlay</string>
-    <string name="watermark_style_frame">Frame</string>
-    <string name="watermark_show_brand">Device Brand</string>
-    <string name="watermark_show_exif">EXIF Data</string>
-    <string name="watermark_pick_image">Pick Image</string>
-    <string name="watermark_save_success">Image saved to gallery</string>
-    <string name="action_share">Share</string>
-    <string name="watermark_exif_settings">EXIF Settings</string>
-    <string name="watermark_exif_focal_length">Focal Length</string>
-    <string name="watermark_exif_aperture">Aperture</string>
+    <string name="diy_create_trigger_title">Automatització del disparador</string>
+    <string name="diy_create_trigger_desc">Programar una acció per activar una observació</string>
+    <string name="diy_create_state_title">Automatització estatal</string>
+    <string name="diy_create_state_desc">Programar una acció per executar-se en funció de l\'estat d\'una condició d\'entrada i sortida</string>
+    <string name="diy_editor_new_title">Nova automatització</string>
+    <string name="diy_editor_edit_title">Edita Automatització</string>
+    <string name="feat_link_actions_title">Accions d\'enllaç</string>
+    <string name="feat_link_actions_desc">Gestioneu enllaços amb diverses aplicacions</string>
+    <string name="feat_snooze_notifications_title">Posposa les notificacions del sistema</string>
+    <string name="feat_snooze_notifications_desc">Posposa les notificacions persistents</string>
+    <string name="feat_qs_tiles_title">Rajoles de configuració ràpida</string>
+    <string name="feat_qs_tiles_desc">Veure-ho tot</string>
+    <string name="feat_button_remap_title">Remapa de botons</string>
+    <string name="feat_button_remap_desc">Remapeja les accions del botó de maquinari</string>
+    <string name="feat_dynamic_night_light_title">Llum nocturna dinàmica</string>
+    <string name="feat_dynamic_night_light_desc">Commuta la llum nocturna segons l\'aplicació</string>
+    <string name="feat_screen_locked_security_title">Seguretat amb pantalla bloquejada</string>
+    <string name="feat_screen_locked_security_desc">Evita els controls de xarxa</string>
+    <string name="feat_app_lock_title">Bloqueig de l\'aplicació</string>
+    <string name="feat_app_lock_desc">Aplicacions segures amb biometria</string>
+    <string name="feat_freeze_title">Congelar</string>
+    <string name="feat_freeze_desc">Desactiva les aplicacions que s\'utilitzen poques vegades</string>
+    <string name="feat_watermark_title">Filigrana</string>
+    <string name="feat_watermark_desc">Afegeix dades EXIF ​​i logotips a les fotos</string>
+    <string name="feat_always_on_display_title">Sempre a la pantalla</string>
+    <string name="feat_always_on_display_desc">Mostra l\'hora i la informació amb la pantalla apagada</string>
+    <string name="feat_calendar_sync_title">Sincronització del calendari</string>
+    <string name="feat_calendar_sync_desc">Sincronitza esdeveniments amb el teu rellotge</string>
+    <string name="watermark_style_overlay">Superposició</string>
+    <string name="watermark_style_frame">Marc</string>
+    <string name="watermark_show_brand">Marca del dispositiu</string>
+    <string name="watermark_show_exif">Dades EXIF</string>
+    <string name="watermark_pick_image">Trieu la imatge</string>
+    <string name="watermark_save_success">Imatge desada a la galeria</string>
+    <string name="action_share">Comparteix</string>
+    <string name="watermark_exif_settings">Configuració EXIF</string>
+    <string name="watermark_exif_focal_length">Distància focal</string>
+    <string name="watermark_exif_aperture">Abertura</string>
     <string name="watermark_exif_iso">ISO</string>
-    <string name="watermark_exif_shutter_speed">Shutter Speed</string>
-    <string name="watermark_exif_date">Date &amp; Time</string>
-    <string name="watermark_move_to_top">Move to Top</string>
-    <string name="watermark_left_align">Align Left</string>
-    <string name="watermark_text_size_brand">Brand Size</string>
-    <string name="watermark_text_size_data">Data Size</string>
-    <string name="watermark_text_size_custom">Text Size</string>
-    <string name="watermark_font_options">Font Size</string>
-    <string name="watermark_custom_text">Custom Text</string>
-    <string name="watermark_custom_text_hint">Enter your text...</string>
-    <string name="watermark_spacing">Spacing</string>
-    <string name="watermark_border_width">Border Width</string>
-    <string name="watermark_border_corners">Round Corners</string>
+    <string name="watermark_exif_shutter_speed">Velocitat d\'obturació</string>
+    <string name="watermark_exif_date">Data i hora</string>
+    <string name="watermark_move_to_top">Mou a dalt</string>
+    <string name="watermark_left_align">Alinea a l\'esquerra</string>
+    <string name="watermark_text_size_brand">Mida de la marca</string>
+    <string name="watermark_text_size_data">Mida de les dades</string>
+    <string name="watermark_text_size_custom">Mida del text</string>
+    <string name="watermark_font_options">Mida de la lletra</string>
+    <string name="watermark_custom_text">Text personalitzat</string>
+    <string name="watermark_custom_text_hint">Introdueix el teu text...</string>
+    <string name="watermark_spacing">Espaiat</string>
+    <string name="watermark_border_width">Amplada de la vora</string>
+    <string name="watermark_border_corners">Cantonades rodones</string>
     <string name="watermark_color_section">Color</string>
-    <string name="watermark_logo_section">Logo</string>
-    <string name="watermark_logo_show">Show Logo</string>
-    <string name="watermark_logo_size">Logo Size</string>
-    <string name="watermark_edit_texts">Edit Watermark Texts</string>
-    <string name="watermark_device_brand">Device brand</string>
-    <string name="watermark_date_time">Date &amp; Time</string>
-    <string name="watermark_no_date">No date information</string>
-    <string name="watermark_rotate_left">Rotate left</string>
-    <string name="watermark_rotate_right">Rotate right</string>
-    <string name="action_next">Next</string>
-    <string name="action_ok">OK</string>
-    <string name="action_save_changes">Save Changes</string>
-    <string name="calendar_sync_settings_title">Calendar Sync Settings</string>
-    <string name="calendar_sync_select_calendars">Sync specific calendars</string>
-    <string name="calendar_sync_periodic_title">Periodic Sync</string>
-    <string name="calendar_sync_periodic_desc">Sync every 15 minutes if changes found</string>
-    <string name="calendar_sync_sync_now">Sync Now</string>
-    <string name="calendar_sync_manual_sync_desc">Trigger immediate sync to watch</string>
-    <string name="calendar_sync_no_calendars">No local calendars found</string>
-    <string name="calendar_sync_sync_started">Calendar sync started</string>
+    <string name="watermark_logo_section">Logotip</string>
+    <string name="watermark_logo_show">Mostra el logotip</string>
+    <string name="watermark_logo_size">Mida del logotip</string>
+    <string name="watermark_edit_texts">Edita textos de filigrana</string>
+    <string name="watermark_device_brand">Marca del dispositiu</string>
+    <string name="watermark_date_time">Data i hora</string>
+    <string name="watermark_no_date">Sense informació de data</string>
+    <string name="watermark_rotate_left">Gira a l\'esquerra</string>
+    <string name="watermark_rotate_right">Gira a la dreta</string>
+    <string name="action_next">A continuació</string>
+    <string name="action_ok">d\'acord</string>
+    <string name="action_save_changes">Desa els canvis</string>
+    <string name="calendar_sync_settings_title">Configuració de sincronització del calendari</string>
+    <string name="calendar_sync_select_calendars">Sincronitza calendaris específics</string>
+    <string name="calendar_sync_periodic_title">Sincronització periòdica</string>
+    <string name="calendar_sync_periodic_desc">Sincronitza cada 15 minuts si es troben canvis</string>
+    <string name="calendar_sync_sync_now">Sincronitza ara</string>
+    <string name="calendar_sync_manual_sync_desc">Activa la sincronització immediata per veure\'l</string>
+    <string name="calendar_sync_no_calendars">No s\'han trobat calendaris locals</string>
+    <string name="calendar_sync_sync_started">s\'ha iniciat la sincronització del calendari</string>
     <!-- Search Settings -->
-    <string name="search_haptic_title">Widget Haptic feedback</string>
-    <string name="search_haptic_desc">Pick haptic feedback for widget taps</string>
-    <string name="search_smart_wifi_title">Smart WiFi</string>
-    <string name="search_smart_wifi_desc">Hide mobile data when WiFi is connected</string>
-    <string name="search_smart_data_title">Smart Data</string>
-    <string name="search_smart_data_desc">Hide mobile data in certain modes</string>
-    <string name="search_reset_icons_title">Reset All Icons</string>
-    <string name="search_reset_icons_desc">Reset status bar icon visibility to default</string>
-    <string name="search_caffeinate_abort_screen_off_title">Abort Caffeinate with screen off</string>
-    <string name="search_caffeinate_abort_screen_off_desc">Automatically turn off Caffeinate when manually locking the device</string>
-    <string name="search_lighting_style_title">Lighting Style</string>
-    <string name="search_lighting_style_desc">Choose between Stroke, Glow, Spinner, and more</string>
-    <string name="search_corner_radius_title">Corner radius</string>
-    <string name="search_corner_radius_desc">Adjust the corner radius of the notification lighting</string>
-    <string name="search_skip_silent_title">Skip silent notifications</string>
-    <string name="search_skip_silent_desc">Do not show lighting for silent notifications</string>
-    <string name="search_flashlight_pulse_title">Flashlight pulse</string>
-    <string name="search_flashlight_pulse_desc">Slowly pulse flashlight for new notifications</string>
-    <string name="search_only_facing_down_title">Only while facing down</string>
-    <string name="search_only_facing_down_desc">Pulse flashlight only when device is face down</string>
-    <string name="snooze_no_channels_discovered">No system channels discovered yet. They will appear here once detected.</string>
-    <string name="search_qs_blur_title">UI Blur</string>
-    <string name="search_qs_blur_desc">Toggle system-wide UI blur</string>
-    <string name="search_qs_bubbles_title">Bubbles</string>
-    <string name="search_qs_bubbles_desc">Enable floating window bubbles</string>
-    <string name="search_qs_sensitive_title">Sensitive Content</string>
-    <string name="search_qs_sensitive_desc">Hide notification details on lockscreen</string>
-    <string name="search_qs_wake_title">Tap to Wake</string>
-    <string name="search_qs_wake_desc">Double tap to wake control</string>
+    <string name="search_haptic_title">Comentaris hàptics del widget</string>
+    <string name="search_haptic_desc">Trieu comentaris hàptics per als tocs de widgets</string>
+    <string name="search_smart_wifi_title">WiFi intel·ligent</string>
+    <string name="search_smart_wifi_desc">Amaga les dades mòbils quan hi hagi connexió WiFi</string>
+    <string name="search_smart_data_title">Dades intel·ligents</string>
+    <string name="search_smart_data_desc">Amaga les dades mòbils en determinats modes</string>
+    <string name="search_reset_icons_title">Restableix totes les icones</string>
+    <string name="search_reset_icons_desc">Restableix la visibilitat de la icona de la barra d\'estat al valor predeterminat</string>
+    <string name="search_caffeinate_abort_screen_off_title">Avorta la cafeïna amb la pantalla apagada</string>
+    <string name="search_caffeinate_abort_screen_off_desc">Apagueu automàticament el cafeïnat quan bloquegeu el dispositiu manualment</string>
+    <string name="search_lighting_style_title">Estil d\'il·luminació</string>
+    <string name="search_lighting_style_desc">Trieu entre Stroke, Glow, Spinner i molt més</string>
+    <string name="search_corner_radius_title">Radi de cantonada</string>
+    <string name="search_corner_radius_desc">Ajusteu el radi de la cantonada de la il·luminació de notificació</string>
+    <string name="search_skip_silent_title">Omet les notificacions silencioses</string>
+    <string name="search_skip_silent_desc">No mostris il·luminació per a notificacions silencioses</string>
+    <string name="search_flashlight_pulse_title">Pols de llanterna</string>
+    <string name="search_flashlight_pulse_desc">Pulsa lentament la llanterna per rebre notificacions noves</string>
+    <string name="search_only_facing_down_title">Només mirant cap avall</string>
+    <string name="search_only_facing_down_desc">Llanterna de pols només quan el dispositiu està boca avall</string>
+    <string name="snooze_no_channels_discovered">Encara no s\'ha descobert cap canal del sistema. Apareixeran aquí un cop detectats.</string>
+    <string name="search_qs_blur_title">Desenfocament de la interfície d\'usuari</string>
+    <string name="search_qs_blur_desc">Commuta el desenfocament de la interfície d\'usuari a tot el sistema</string>
+    <string name="search_qs_bubbles_title">Bombolles</string>
+    <string name="search_qs_bubbles_desc">Activa les bombolles de finestres flotants</string>
+    <string name="search_qs_sensitive_title">Contingut sensible</string>
+    <string name="search_qs_sensitive_desc">Amaga els detalls de la notificació a la pantalla de bloqueig</string>
+    <string name="search_qs_wake_title">Toqueu per activar</string>
+    <string name="search_qs_wake_desc">Fes doble toc per activar el control</string>
     <string name="search_qs_aod_title">AOD</string>
-    <string name="search_qs_aod_desc">Always On Display toggle</string>
-    <string name="search_qs_caffeinate_title">Caffeinate</string>
-    <string name="search_qs_caffeinate_desc">Keep screen awake toggle</string>
-    <string name="search_qs_sound_title">Sound Mode</string>
-    <string name="search_qs_sound_desc">Cycle sound modes (Ring/Vibrate/Silent)</string>
-    <string name="search_qs_lighting_title">Notification Lighting</string>
-    <string name="search_qs_lighting_desc">Toggle notification lighting service</string>
-    <string name="search_qs_night_light_title">Dynamic Night Light</string>
-    <string name="search_qs_night_light_desc">Night light automation toggle</string>
-    <string name="search_qs_locked_sec_title">Locked Security</string>
-    <string name="search_qs_locked_sec_desc">Network security on lockscreen toggle</string>
-    <string name="search_qs_mono_title">Mono Audio</string>
-    <string name="search_qs_mono_desc">Force mono audio output toggle</string>
-    <string name="search_qs_flashlight_title">Flashlight</string>
-    <string name="search_qs_flashlight_desc">Dedicated flashlight toggle</string>
-    <string name="search_qs_freeze_title">App Freezing</string>
-    <string name="search_qs_freeze_desc">Launch app freezing grid</string>
-    <string name="search_qs_pulse_title">Flashlight Pulse</string>
-    <string name="search_qs_pulse_desc">Toggle notification flashlight pulse</string>
-    <string name="search_qs_stay_awake_desc">Toggle stay awake developer option</string>
-    <string name="search_qs_private_dns_title">Private DNS</string>
-    <string name="search_qs_private_dns_desc">Cycle Private DNS modes (Off/Auto/Hostname)</string>
-    <string name="search_qs_usb_debugging_title">USB Debugging</string>
-    <string name="search_qs_usb_debugging_desc">Toggle USB Debugging developer option</string>
-    <string name="search_remap_enable_title">Enable Button Remap</string>
-    <string name="search_remap_enable_desc">Master toggle for volume button remapping</string>
-    <string name="search_remap_haptic_title">Remap Haptic Feedback</string>
-    <string name="search_remap_haptic_desc">Vibration feedback when remapped button is pressed</string>
-    <string name="search_remap_flashlight_title">Flashlight toggle</string>
-    <string name="search_remap_flashlight_desc">Toggle flashlight with volume buttons</string>
-    <string name="search_night_light_enable_title">Enable Dynamic Night Light</string>
-    <string name="search_night_light_enable_desc">Master switch for dynamic night light</string>
-    <string name="search_app_lock_enable_title">Enable app lock</string>
-    <string name="search_app_lock_enable_desc">Master toggle for app locking</string>
-    <string name="search_app_lock_pick_title">Select locked apps</string>
-    <string name="search_app_lock_pick_desc">Choose which apps require authentication</string>
-    <string name="search_freeze_pick_title">Pick apps to freeze</string>
-    <string name="search_freeze_pick_desc">Choose which apps can be frozen</string>
-    <string name="search_freeze_all_title">Freeze all apps</string>
-    <string name="search_freeze_all_desc">Immediately freeze all picked apps</string>
-    <string name="search_freeze_locked_title">Freeze when locked</string>
-    <string name="search_freeze_locked_desc">Freeze selected apps when device locks</string>
-    <string name="search_freeze_delay_title">Freeze delay</string>
-    <string name="search_freeze_delay_desc">Delay before freezing after locking</string>
+    <string name="search_qs_aod_desc">Commutador Sempre a la pantalla</string>
+    <string name="search_qs_caffeinate_title">Cafeïna</string>
+    <string name="search_qs_caffeinate_desc">Mantén la pantalla activa</string>
+    <string name="search_qs_sound_title">Mode de so</string>
+    <string name="search_qs_sound_desc">Cicle els modes de so (Talla/Vibració/Silenci)</string>
+    <string name="search_qs_lighting_title">Il·luminació de notificació</string>
+    <string name="search_qs_lighting_desc">Commuta el servei d\'il·luminació de notificacions</string>
+    <string name="search_qs_night_light_title">Llum nocturna dinàmica</string>
+    <string name="search_qs_night_light_desc">Commutador d\'automatització de la llum nocturna</string>
+    <string name="search_qs_locked_sec_title">Seguretat bloquejada</string>
+    <string name="search_qs_locked_sec_desc">Seguretat de la xarxa a la pantalla de bloqueig</string>
+    <string name="search_qs_mono_title">Àudio mono</string>
+    <string name="search_qs_mono_desc">Força la commutació de sortida d\'àudio mono</string>
+    <string name="search_qs_flashlight_title">Llanterna</string>
+    <string name="search_qs_flashlight_desc">Canvi de llanterna dedicat</string>
+    <string name="search_qs_freeze_title">Congelació d\'aplicacions</string>
+    <string name="search_qs_freeze_desc">Inicieu la graella de congelació de l\'aplicació</string>
+    <string name="search_qs_pulse_title">Pols de llanterna</string>
+    <string name="search_qs_pulse_desc">Commuta el pols de la llanterna de notificació</string>
+    <string name="search_qs_stay_awake_desc">Commuta l\'opció de desenvolupador de mantenir-se despert</string>
+    <string name="search_qs_private_dns_title">DNS privat</string>
+    <string name="search_qs_private_dns_desc">Cicle als modes DNS privats (Desactivat/Automàtic/Nom d\'amfitrió)</string>
+    <string name="search_qs_usb_debugging_title">Depuració USB</string>
+    <string name="search_qs_usb_debugging_desc">Commuta l\'opció de desenvolupador de depuració USB</string>
+    <string name="search_remap_enable_title">Activa la reasignació de botons</string>
+    <string name="search_remap_enable_desc">Commutador mestre per a la reasignació de botons de volum</string>
+    <string name="search_remap_haptic_title">Remapeja els comentaris hàptics</string>
+    <string name="search_remap_haptic_desc">Comentari de vibració quan es prem el botó de reasignació</string>
+    <string name="search_remap_flashlight_title">Canvi de llanterna</string>
+    <string name="search_remap_flashlight_desc">Commuta la llanterna amb els botons de volum</string>
+    <string name="search_night_light_enable_title">Activa la llum nocturna dinàmica</string>
+    <string name="search_night_light_enable_desc">Interruptor principal per a llum nocturna dinàmica</string>
+    <string name="search_app_lock_enable_title">Activa el bloqueig de l\'aplicació</string>
+    <string name="search_app_lock_enable_desc">Commutador mestre per al bloqueig d\'aplicacions</string>
+    <string name="search_app_lock_pick_title">Seleccioneu aplicacions bloquejades</string>
+    <string name="search_app_lock_pick_desc">Trieu quines aplicacions requereixen autenticació</string>
+    <string name="search_freeze_pick_title">Trieu aplicacions per congelar</string>
+    <string name="search_freeze_pick_desc">Trieu quines aplicacions es poden congelar</string>
+    <string name="search_freeze_all_title">Congela totes les aplicacions</string>
+    <string name="search_freeze_all_desc">Congela immediatament totes les aplicacions escollides</string>
+    <string name="search_freeze_locked_title">Congela quan està bloquejat</string>
+    <string name="search_freeze_locked_desc">Congela les aplicacions seleccionades quan el dispositiu es bloqueja</string>
+    <string name="search_freeze_delay_title">Retard de congelació</string>
+    <string name="search_freeze_delay_desc">Retard abans de congelar-se després del bloqueig</string>
     <!-- Permissions metadata -->
     <string name="perm_shizuku_title">Shizuku</string>
-    <string name="perm_shizuku_desc">Required for advanced commands. Install Shizuku from the Play Store.</string>
-    <string name="perm_shizuku_install_action">Install Shizuku</string>
-    <string name="perm_shizuku_grant_title">Shizuku permission</string>
-    <string name="perm_shizuku_grant_desc">Required to run power-saving commands while maps is navigating.</string>
-    <string name="req_shizuku">Requires Shizuku or Root</string>
-    <string name="perm_root_title">Root Access</string>
-    <string name="perm_root_desc">Permissions required for system actions using Root privileges.</string>
-    <string name="perm_notif_listener_title">Notification Listener</string>
-    <string name="perm_notif_listener_desc_maps">Required to detect when Maps is navigating.</string>
-    <string name="perm_notif_listener_desc_lighting">Required to detect new notifications</string>
-    <string name="perm_notif_listener_desc_snooze">Required to detect and snooze notifications</string>
-    <string name="perm_accessibility_title">Accessibility Service</string>
-    <string name="perm_accessibility_desc_common">Required for App Lock, Screen off widget and other features to detect interactions</string>
-    <string name="perm_accessibility_desc_lighting">Required to trigger notification lighting on new notifications</string>
-    <string name="perm_default_browser_title">Default Browser</string>
-    <string name="perm_default_browser_desc">Required to handle links efficiently</string>
-    <string name="perm_accessibility_desc_remap">Required to intercept hardware button events</string>
-    <string name="perm_accessibility_desc_ambient_music_glance">Required to intercept volume key events while the screen is off to trigger the Ambient Glance overlay.</string>
-    <string name="perm_accessibility_desc_night_light">Needed to monitor foreground applications.</string>
-    <string name="perm_write_secure_title">Write Secure Settings</string>
-    <string name="perm_write_secure_desc_common">Required for Statusbar icons and Screen Locked Security</string>
-    <string name="perm_write_secure_desc_night_light">Needed to toggle Night Light. Grant via ADB or root.</string>
-    <string name="perm_write_settings_title">Modify System Settings</string>
-    <string name="perm_write_settings_desc">Required to toggle Adaptive Brightness and other system settings</string>
-    <string name="perm_overlay_title">Overlay Permission</string>
-    <string name="perm_overlay_desc">Required to display the notification lighting overlay on the screen</string>
-    <string name="perm_device_admin_title">Device Administrator</string>
-    <string name="perm_device_admin_desc">Required to hard-lock the device (disabling biometrics) on unauthorized access attempts</string>
-    <string name="perm_action_grant">Grant Permission</string>
-    <string name="perm_action_copy_adb">Copy ADB</string>
-    <string name="perm_action_check">Check</string>
-    <string name="perm_action_enable">Enable in Settings</string>
-    <string name="perm_action_how_to">How to grant</string>
-    <string name="perm_battery_optimization_title">Battery Optimization</string>
-    <string name="perm_battery_optimization_desc">Ensure the service is not killed by the system to save power.</string>
+    <string name="perm_shizuku_desc">Necessari per a ordres avançades. Instal·leu Shizuku des de Play Store.</string>
+    <string name="perm_shizuku_install_action">Instal·leu Shizuku</string>
+    <string name="perm_shizuku_grant_title">Concedir el permís</string>
+    <string name="perm_shizuku_grant_desc">Necessari per executar ordres d\'estalvi d\'energia mentre navega pels mapes.</string>
+    <string name="req_shizuku">Requereix Shizuku o Root</string>
+    <string name="perm_root_title">Accés arrel</string>
+    <string name="perm_root_desc">Permisos necessaris per a les accions del sistema amb privilegis d\'arrel.</string>
+    <string name="perm_notif_listener_title">Oient de notificacions</string>
+    <string name="perm_notif_listener_desc_maps">Requereix l\'accés de l\'oient de notificacions per controlar l\'estat de navegació de Google Maps i activar l\'estalvi d\'energia quan no es navega.</string>
+    <string name="perm_notif_listener_desc_lighting">Requereix l\'accés de l\'oient de notificacions per detectar noves notificacions i activar la il·luminació de vora.</string>
+    <string name="perm_notif_listener_desc_snooze">Requereix l\'accés de l\'oient de notificacions per supervisar i posposar les notificacions del sistema no desitjades.</string>
+    <string name="perm_accessibility_title">Servei d\'accessibilitat</string>
+    <string name="perm_accessibility_desc_common">Necessari per al bloqueig d\'aplicacions, el giny de desactivació de la pantalla i altres funcions per detectar interaccions</string>
+    <string name="perm_accessibility_desc_lighting">Necessari per activar la il·luminació de notificacions en notificacions noves</string>
+    <string name="perm_default_browser_title">Navegador predeterminat</string>
+    <string name="perm_default_browser_desc">Necessari per gestionar els enllaços de manera eficient</string>
+    <string name="perm_accessibility_desc_remap">Necessari per interceptar esdeveniments de botons de maquinari</string>
+    <string name="perm_accessibility_desc_ambient_music_glance">Necessari per interceptar els esdeveniments de la tecla de volum mentre la pantalla està apagada per activar la superposició Ambient Glance.</string>
+    <string name="perm_accessibility_desc_night_light">Necessàries per supervisar les aplicacions en primer pla.</string>
+    <string name="perm_write_secure_title">Escriu la configuració segura</string>
+    <string name="perm_write_secure_desc_common">Necessari per a les icones de la barra d\'estat i la seguretat de pantalla bloquejada</string>
+    <string name="perm_write_secure_desc_night_light">Necessita activar la llum nocturna. Subvenció mitjançant ADB o root.</string>
+    <string name="perm_write_settings_title">Modificar la configuració del sistema</string>
+    <string name="perm_write_settings_desc">Necessari per canviar la brillantor adaptativa i altres paràmetres del sistema</string>
+    <string name="perm_overlay_title">Permís de superposició</string>
+    <string name="perm_overlay_desc">Necessari per mostrar la superposició d\'il·luminació de notificació a la pantalla</string>
+    <string name="perm_device_admin_title">Administrador de dispositius</string>
+    <string name="perm_device_admin_desc">Necessari per bloquejar el dispositiu (desactivant la biometria) en intents d\'accés no autoritzats</string>
+    <string name="perm_action_grant">Concedir el permís</string>
+    <string name="perm_action_copy_adb">Còpia ADB</string>
+    <string name="perm_action_check">Comproveu</string>
+    <string name="perm_action_enable">Activa a Configuració</string>
+    <string name="perm_action_how_to">Com concedir</string>
+    <string name="perm_battery_optimization_title">Optimització de la bateria</string>
+    <string name="perm_battery_optimization_desc">Assegureu-vos que el sistema no destrueixi el servei per estalviar energia.</string>
     <!-- Tabs -->
-    <string name="tab_essentials">Essentials</string>
-    <string name="tab_freeze">Freeze</string>
-    <string name="tab_freeze_title">Frozen</string>
+    <string name="tab_essentials">Essencials</string>
+    <string name="tab_freeze">Congelar</string>
+    <string name="tab_freeze_title">Congelat</string>
     <string name="tab_diy">DIY</string>
-    <string name="tab_apps">Apps</string>
-    <string name="tab_freeze_subtitle">Disabled apps</string>
-    <string name="tab_diy_subtitle">Do It Yourself</string>
-    <string name="tab_apps_subtitle">Find and manage apps</string>
-    <string name="feat_app_updates_title">App Updates</string>
-    <string name="tab_app_updates_title">App Updates</string>
-    <string name="action_add_repo">Add Repository</string>
-    <string name="action_edit_repo">Edit Repository</string>
-    <string name="prompt_enter_repo_url">Enter GitHub Repository URL or owner/repo</string>
-    <string name="action_track">Track</string>
-    <string name="error_no_apk_found">No APK found in the latest release</string>
-    <string name="error_repo_not_found">Repository not found</string>
-    <string name="label_latest_release">Latest Release</string>
-    <string name="action_view_readme">View README</string>
-    <string name="label_stars">%d Stars</string>
-    <string name="label_installed_app">Installed app</string>
-    <string name="label_not_installed">Not installed</string>
-    <string name="action_pick_app">Pick app</string>
-    <string name="action_select_app">Select app</string>
-    <string name="action_untrack">Untrack</string>
-    <string name="label_pending">Pending</string>
-    <string name="label_up_to_date">Up-to-date</string>
-    <string name="feat_app_updates_desc">Track and download the latest releases for your favorite apps directly from GitHub.</string>
-    <string name="error_invalid_repo_format">Invalid format. Use owner/repo or GitHub URL</string>
-    <string name="error_generic_search">An error occurred during search</string>
-    <string name="label_auto">Auto</string>
-    <string name="label_options">Options</string>
-    <string name="option_allow_prereleases">Check for pre-releases</string>
-    <string name="option_notifications">Notifications</string>
-    <string name="error_rate_limited">GitHub rate limit exceeded. Please try again later.</string>
+    <string name="tab_apps">Aplicacions</string>
+    <string name="tab_freeze_subtitle">Aplicacions desactivades</string>
+    <string name="tab_diy_subtitle">Fes-ho tu mateix</string>
+    <string name="tab_apps_subtitle">Cerca i gestiona aplicacions</string>
+    <string name="feat_app_updates_title">Actualitzacions d\'aplicacions</string>
+    <string name="tab_app_updates_title">Actualitzacions d\'aplicacions</string>
+    <string name="action_add_repo">Afegeix un repositori</string>
+    <string name="action_edit_repo">Edita el repositori</string>
+    <string name="prompt_enter_repo_url">Introduïu l\'URL del dipòsit de GitHub o el propietari/repositori</string>
+    <string name="action_track">Pista</string>
+    <string name="error_no_apk_found">No s\'ha trobat cap APK a l\'última versió</string>
+    <string name="error_repo_not_found">No s\'ha trobat el repositori</string>
+    <string name="label_latest_release">Últim llançament</string>
+    <string name="action_view_readme">Veure README</string>
+    <string name="label_stars">%d Estrelles</string>
+    <string name="label_installed_app">Aplicació instal·lada</string>
+    <string name="label_not_installed">No instal·lat</string>
+    <string name="action_pick_app">Tria l\'aplicació</string>
+    <string name="action_select_app">Seleccioneu l\'aplicació</string>
+    <string name="action_untrack">Despista</string>
+    <string name="label_pending">Pendent</string>
+    <string name="label_up_to_date">Actualitzat</string>
+    <string name="feat_app_updates_desc">Feu un seguiment i descarregueu les darreres versions de les vostres aplicacions preferides directament des de GitHub.</string>
+    <string name="error_invalid_repo_format">Format no vàlid. Utilitzeu el propietari/repositori o l\'URL de GitHub</string>
+    <string name="error_generic_search">s\'ha produït un error durant la cerca</string>
+    <string name="label_auto">Automàtic</string>
+    <string name="label_options">Opcions</string>
+    <string name="option_allow_prereleases">Comproveu les versions prèvies</string>
+    <string name="option_notifications">Notificacions</string>
+    <string name="error_rate_limited">s\'ha superat el límit de velocitat de GitHub. Si us plau, torna-ho a provar més tard.</string>
     <!-- Keyboard Setup -->
-    <string name="label_keyboard_setup">Keyboard Setup</string>
-    <string name="btn_enable_keyboard">Enable in settings</string>
-    <string name="btn_select_keyboard">Switch to Essentials</string>
-    <string name="label_enabled">Enabled</string>
-    <string name="label_disabled">Disabled</string>
-    <string name="tile_adaptive_brightness">Adaptive Brightness</string>
-    <string name="tile_maps_power_saving">Maps Power Saving</string>
-    <string name="action_search">Search</string>
-    <string name="action_stop">Stop</string>
-    <string name="label_search">Search</string>
+    <string name="label_keyboard_setup">Configuració del teclat</string>
+    <string name="btn_enable_keyboard">Activa a la configuració</string>
+    <string name="btn_select_keyboard">Canvia a Essencials</string>
+    <string name="label_enabled">Habilitat</string>
+    <string name="label_disabled">Inhabilitat</string>
+    <string name="tile_adaptive_brightness">Brillantor adaptatiu</string>
+    <string name="tile_maps_power_saving">Estalvi d\'energia de Maps</string>
+    <string name="action_search">Cerca</string>
+    <string name="action_stop">Atureu-vos</string>
+    <string name="label_search">Cerca</string>
     <!-- UI Components General -->
-    <string name="action_back">Back</string>
-    <string name="content_desc_back">Back</string>
-    <string name="label_settings">Settings</string>
-    <string name="action_report_bug">Report a Bug</string>
-    <string name="action_done">Done</string>
-    <string name="action_preview">Preview</string>
-    <string name="action_help_guide">Help Guide</string>
-    <string name="action_what_is_this">What is this?</string>
-    <string name="update_available_title">Update Available</string>
-    <string name="about_desc_ambient_music_glance">Ambient Music Glance shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
-    <string name="about_desc_notification_lighting">Notification Lighting adds a beautiful edge lighting effect when you receive notifications.\n\nYou can customize the animation style, colors, and behavior. It works even when the screen is off (OEM dependent) or on top of your current app. Pick apps, notification priority or what behavior it should be triggering on from given controls. If your OEM does not support overlays above AOD, sue the Ambient display option found below.</string>
-    <string name="about_desc_screen_off_widget">Easily turn the screen off with a tap on a transparent resizable widget that does not add icons or any clutter to your home screen.</string>
-    <string name="about_desc_statusbar_icons">Take full control over your status bar icons.\n\nHide specific icons like WiFi, Bluetooth, or cellular data to keep your status bar clean. You can also customize the clock format and battery indicator with some smart controls as well. These are the list of available AOSP controls so your device OS might not respect all the controls.</string>
-    <string name="about_desc_caffeinate">Caffeinate prevents your screen from turning off automatically.\n\nKeep your screen awake for a specific duration or indefinitely. Useful when reading long articles or referencing a recipe.</string>
-    <string name="about_desc_maps_power_saving">Get the Pixel 10 series exclusive Google Maps Power Saving mode with the minimal pitch black background to display over your lock screen on any Android device. Start a navigation session, turn the screen off and back on. </string>
-    <string name="about_desc_flashlight_pulse">Pulse the flashlight when you receive a notification.\n\nWith devices have hardware support for flashlight dimming, the pulse will be smoothly animated.</string>
-    <string name="about_desc_snooze_notifications">Snooze annoying persistent system notifications which can not be modified by default. \n\nPlease wait until the notification arrives and then go into this feature where it\'s notification channel will be listed. Select that to snooze from next time.\n\nAny snoozed notification can still be accessed from your notification history in Android.</string>
-    <string name="about_desc_quick_settings_tiles">Add custom tiles to your Quick Settings panel.\n\nLong press any of them to learn what they do.</string>
-    <string name="about_desc_button_remap">Remap your hardware buttons to perform different actions and shortcuts.\n\nCustomize what happens when you long press volume buttons with certain conditions. \n\nSome behavior such as screen off trigger or flashlight controls might be OEM dependent on their implementation and may not work on all devices as expected. Some scenarios could be worked around using Shizuku permissions but may not give the same experience due to the implementations.</string>
-    <string name="about_desc_dynamic_night_light">Automatically toggle your screen blue light filter based on the foreground app.</string>
-    <string name="about_desc_screen_locked_security">Enhance security when your device is locked.\n\nRestrict access to some sensitive QS tiles preventing unauthorized network modifications and further preventing them re-attempting to do so by increasing the animation speed to prevent touch spam.\n\nThis feature is not robust and may have flaws such as some tiles which allow toggling directly such as bluetooth or flight mode not being able to be prevented.</string>
-    <string name="about_desc_app_lock">Secure your apps with a secondary authentication layer.\n\nYour device lock screen authentication method will be used as long as it meets the class 3 biometric security level by Android standards.</string>
-    <string name="about_desc_location_reached">Get notified when you get closer to your destination to ensure you never miss the stop.\n\nGo to Google Maps, long press a pin nearby to your destination and make sure it says \"Dropped pin\" (Otherwise the distance calculation might not be accurate), And then share the location to the Essentials app and start tracking.</string>
-    <string name="about_desc_freeze">Freeze apps to stop them from running in the background.\n\nPrevent battery drain and data usage by completely freezing apps when you are not using them. They will be unfrozen instantly when you launch them. The apps will not show up in the app drawer and also will not show up for app updates in Play Store while frozen.</string>
-    <string name="about_desc_system_keyboard">A custom input method no-one asked for.\n\nIt is just an experiment. Multiple languages may not get support as it is a very complex and time consuming implementation.</string>
-    <string name="about_desc_batteries">Monitor battery levels of all your connected devices.\n\nSee the battery status of your Bluetooth headphones, watch, and other accessories in one place. Connect with AirSync application to display your mac battery level as well.</string>
-    <string name="about_desc_watermark">Add a custom caption/ watermark to your photos with EXIF data and device information.\n\nShare an image directly from other app to Essentials to easily add a watermark.</string>
-    <string name="about_desc_calendar_sync">Sync all your upcoming calendar schedule not matter the restrictions on Google accounts not letting to be added to wearOS devices due to work or school policies. \n\nMake sure to install the wearOS Essentials companion app to display the schedule in the app as well as in a tile or a complication.</string>
-    <string name="about_desc_app_updates">Keep track of updates for your installed apps.\n\nGet notified about available updates, view changelogs and install them easily with a tap.</string>
-    <string name="about_desc_call_vibrations">Add haptic feedback to your calls.\n\nVibrate when a call is connected, disconnected, or accepted, giving you tactile confirmation without looking at the screen.</string>
-    <string name="about_desc_sound_mode_tile">Quickly toggle between Sound, Vibrate, and Silent modes.\n\nA convenient tile to change your ringer mode without using the volume buttons or settings. You can re-order the modes or disable any if not needed to customize the tile toggle to cycle behavior.</string>
-    <string name="about_desc_ui_blur">Easily toggle the system level blur depth effect across the OS.</string>
-    <string name="about_desc_bubbles">Enable or disable floating notification bubbles.\n\nQuickly toggle the system-wide setting for conversation bubbles.</string>
-    <string name="about_desc_sensitive_content">Hide sensitive content on the lock screen.\n\nToggle whether notification content is shown or hidden when your device is locked.</string>
-    <string name="about_desc_tap_to_wake">Toggle tap to wake functionality.\n\nEnable or disable the ability to wake your screen with a tap.</string>
-    <string name="about_desc_aod">Toggle Always On Display.\n\nQuickly enable or disable the always-on display to view info at a glance.</string>
-    <string name="about_desc_notification_glance">Automatically control your Always On Display based on your notifications. When a message or alert arrives from a selected app, AOD will stay on until you dismiss the notification, ensuring you never miss important info without wasting battery when no alerts are present.</string>
-    <string name="about_desc_mono_audio">Combine audio channels into mono.\n\nUseful when using a single earbud or for accessibility purposes.</string>
-    <string name="about_desc_flashlight_tile">Toggle the flashlight.\n\nA Long pressing opens the controls for intensity adjustment which might need hardware implementation which some devices may lack.</string>
-    <string name="about_desc_stay_awake">Keep the screen awake while charging.\n\nPrevents the screen from sleeping as long as the device is connected to a power source which is suitable for developers during debugging.</string>
-    <string name="about_desc_nfc">Toggle NFC.\n\nQuickly enable or disable Near Field Communication for payments and pairing.</string>
-    <string name="about_desc_adaptive_brightness">Toggle adaptive brightness.\n\nEnable or disable automatic screen brightness adjustment based on ambient light.</string>
-    <string name="about_desc_private_dns">Toggle Private DNS.\n\nCycle through Off, Automatic, and Private DNS provider modes.</string>
-    <string name="about_desc_usb_debugging">Toggle USB Debugging.\n\nEnable or disable ADB debugging access directly from the quick settings.</string>
-    <string name="about_desc_color_picker">Launch the eye dropper tool to pick colors introduced in Android 17 BETA 2</string>
-    <string name="about_desc_charge_optimization">Optimize your battery life by limiting the maximum charge or using adaptive charging. This is specially designed for Pixel devices to ensure longevity and healthy charging cycles.\n\nCredits: TebbeUbben/ChargeQuickTile</string>
-    <string name="action_download">Download</string>
+    <string name="action_back">Enrere</string>
+    <string name="content_desc_back">Enrere</string>
+    <string name="label_settings">Configuració</string>
+    <string name="action_report_bug">Informar d\'un error</string>
+    <string name="action_done">Fet</string>
+    <string name="action_preview">Vista prèvia</string>
+    <string name="action_help_guide">Guia d\'ajuda</string>
+    <string name="action_what_is_this">Què és això?</string>
+    <string name="update_available_title">Actualització disponible</string>
+    <string name="about_desc_ambient_music_glance">Ambient Music Glance mostra una superposició Now Playing a la pantalla de bloqueig quan es reprodueix música i canvia la reproducció. \n\nSi el vostre dispositiu no admet superposicions sobre AOD, podeu optar per l\'estalvi de pantalla Ambience afegit a la configuració d\'android com a alternativa durant la càrrega.</string>
+    <string name="about_desc_notification_lighting">La il·luminació de notificació afegeix un bell efecte d\'il·luminació de vora quan rebeu notificacions.\n\nPodeu personalitzar l\'estil, els colors i el comportament de l\'animació. Funciona fins i tot quan la pantalla està apagada (depenent de l\'OEM) o a sobre de l\'aplicació actual. Trieu aplicacions, prioritat de notificació o quin comportament s\'hauria d\'activar des dels controls donats. Si el vostre OEM no admet superposicions per sobre de l\'AOD, demaneu l\'opció de visualització ambiental que trobareu a continuació.</string>
+    <string name="about_desc_screen_off_widget">Apagueu la pantalla fàcilment amb un toc en un giny transparent redimensionable que no afegeix icones ni cap desordre a la vostra pantalla d\'inici.</string>
+    <string name="about_desc_statusbar_icons">Preneu el control total de les icones de la vostra barra d\'estat.\n\nAmaga icones específiques com ara WiFi, Bluetooth o dades mòbils per mantenir neta la barra d\'estat. També podeu personalitzar el format del rellotge i l\'indicador de bateria amb alguns controls intel·ligents. Aquesta és la llista de controls AOSP disponibles, de manera que el sistema operatiu del vostre dispositiu pot no respectar tots els controls.</string>
+    <string name="about_desc_caffeinate">La cafeïna evita que la pantalla s\'apagui automàticament.\n\nMantingueu la pantalla desperta durant un temps determinat o indefinidament. Útil per llegir articles llargs o fer referència a una recepta.</string>
+    <string name="about_desc_maps_power_saving">Aconsegueix el mode exclusiu d\'estalvi d\'energia de Google Maps de la sèrie Pixel 10 amb un fons negre mínim per mostrar-lo a la pantalla de bloqueig a qualsevol dispositiu Android. Inicieu una sessió de navegació, apagueu i torneu a encendre la pantalla.</string>
+    <string name="about_desc_flashlight_pulse">Premeu la llanterna quan rebeu una notificació.\n\nAmb els dispositius que tenen suport de maquinari per atenuar la llanterna, el pols s\'animarà sense problemes.</string>
+    <string name="about_desc_snooze_notifications">Posposa les molestes notificacions persistents del sistema que no es poden modificar de manera predeterminada. \n\nSi us plau, espereu fins que arribi la notificació i, a continuació, aneu a aquesta funció on es mostrarà el canal de notificació⟐\'. Seleccioneu-lo per posposar-lo a la propera vegada.\n\nEs pot accedir a qualsevol notificació posposada des del vostre historial de notificacions a Android.</string>
+    <string name="about_desc_quick_settings_tiles">Afegiu fitxes personalitzades al vostre tauler de configuració ràpida.\n\nPremeu llargament qualsevol d\'ells per aprendre què fan.</string>
+    <string name="about_desc_button_remap">Torneu a assignar els botons del vostre maquinari per dur a terme diferents accions i dreceres.\n\nPersonalitza el que passa quan premeu llargament els botons de volum amb determinades condicions. \n\nAlgun comportament, com ara l\'activació de la pantalla o els controls de la llanterna, pot ser que no depengui de la implementació de tots els dispositius i dels controls de l\'OEM. Alguns escenaris es podrien solucionar amb permisos Shizuku, però és possible que no donin la mateixa experiència a causa de les implementacions.</string>
+    <string name="about_desc_dynamic_night_light">Commuta automàticament el filtre de llum blava de la pantalla en funció de l\'aplicació de primer pla.</string>
+    <string name="about_desc_screen_locked_security">Milloreu la seguretat quan el vostre dispositiu estigui bloquejat.\n\nRestringeix l\'accés a algunes fitxes QS sensibles evitant modificacions no autoritzades a la xarxa i evitant encara més que tornin a intentar-ho augmentant la velocitat de l\'animació per evitar el correu brossa tàctil.\n\nSPLIT⟐⟐⟐This característiques no són robustes i poden tenir algunes defectes. que permeten canviar directament com ara el bluetooth o el mode de vol que no es poden evitar.</string>
+    <string name="about_desc_app_lock">Protegiu les vostres aplicacions amb una capa d\'autenticació secundària.\n\nEl mètode d\'autenticació de la pantalla de bloqueig del vostre dispositiu s\'utilitzarà sempre que compleixi el nivell de seguretat biomètrica de classe 3 dels estàndards d\'android.</string>
+    <string name="about_desc_location_reached">Rebeu una notificació quan us acosteu a la vostra destinació per assegurar-vos que no us perdeu mai la parada.\n\nVés a Google Maps, premeu llargament un marcador a prop de la vostra destinació i assegureu-vos que digui \"Pintura caiguda\" (en cas contrari, el càlcul de la distància pot ser que no sigui precís), i després compartiu la ubicació a l\'aplicació Essentials i comenceu el seguiment.</string>
+    <string name="about_desc_freeze">Congela les aplicacions per evitar que s\'executin en segon pla.\n\nEvita l\'esgotament de la bateria i l\'ús de dades congelant completament les aplicacions quan no les fas servir. Es descongelaran a l\'instant quan els inicieu. Les aplicacions no es mostraran al calaix d\'aplicacions i tampoc es mostraran per a les actualitzacions d\'aplicacions a Play Store mentre estiguin congelades.</string>
+    <string name="about_desc_system_keyboard">Un mètode d\'entrada personalitzat que ningú va demanar.\n\nÉs només un experiment. És possible que diversos idiomes no tinguin suport, ja que és una implementació molt complexa i que requereix molt de temps.</string>
+    <string name="about_desc_batteries">Monitoritza els nivells de bateria de tots els teus dispositius connectats.\n\nConsulta l\'estat de la bateria dels teus auriculars, rellotge i altres accessoris Bluetooth en un sol lloc. Connecteu-vos amb l\'aplicació AirSync per mostrar també el nivell de bateria del vostre Mac.</string>
+    <string name="about_desc_watermark">Afegeix un subtítol/filigrana personalitzat a les teves fotos amb dades EXIF ​​i informació del dispositiu.\n\nComparteix una imatge directament des d\'una altra aplicació a Essentials per afegir fàcilment una marca d\'aigua.</string>
+    <string name="about_desc_calendar_sync">Sincronitza tota la teva propera programació de calendari, sense importar les restriccions dels comptes de Google que no permetin afegir-los als dispositius wearOS a causa de les polítiques de la feina o de l\'escola. \n\nAssegura\'t d\'instal·lar l\'aplicació complementària wearOS Essentials per mostrar la programació a l\'aplicació, així com en una fitxa o una complicació.</string>
+    <string name="about_desc_app_updates">Feu un seguiment de les actualitzacions de les vostres aplicacions instal·lades.\n\nRebeu notificacions sobre les actualitzacions disponibles, visualitzeu els registres de canvis i instal·leu-los fàcilment amb un toc.</string>
+    <string name="about_desc_call_vibrations">Afegiu comentaris hàptics a les vostres trucades.\n\nVibreu quan una trucada estigui connectada, desconnectada o acceptada, donant-vos una confirmació tàctil sense mirar la pantalla.</string>
+    <string name="about_desc_sound_mode_tile">Canvia ràpidament entre els modes de so, vibració i silenci.\n\nUna fitxa convenient per canviar el mode de timbre sense utilitzar els botons de volum o la configuració. Podeu tornar a ordenar els modes o desactivar-ne qualsevol si no és necessari per personalitzar el commutador de rajoles per al comportament del cicle.</string>
+    <string name="about_desc_ui_blur">Commuteu fàcilment l\'efecte de profunditat de desenfocament a nivell del sistema al sistema operatiu.</string>
+    <string name="about_desc_bubbles">Activa o desactiva les bombolles de notificació flotants.\n\nCanvia ràpidament la configuració de tot el sistema per a les bombolles de conversa.</string>
+    <string name="about_desc_sensitive_content">Amaga el contingut sensible a la pantalla de bloqueig.\n\nCommuta si es mostra o s\'amaga el contingut de la notificació quan el dispositiu està bloquejat.</string>
+    <string name="about_desc_tap_to_wake">Commuta el toc per activar la funcionalitat.\n\nActiva o desactiva la possibilitat d\'activar la pantalla amb un toc.</string>
+    <string name="about_desc_aod">Activa o desactiva la pantalla sempre activa.\n\nActiva o desactiva la pantalla sempre activa per veure la informació d\'un cop d\'ull.</string>
+    <string name="about_desc_notification_glance">Controla automàticament el teu Always On Display en funció de les teves notificacions. Quan arribi un missatge o una alerta des d\'una aplicació seleccionada, l\'AOD es mantindrà activat fins que ignoreu la notificació, assegurant-vos que mai us perdeu informació important sense perdre bateria quan no hi hagi cap alerta.</string>
+    <string name="about_desc_mono_audio">Combina canals d\'àudio en mono.\n\nÚtil quan s\'utilitza un sol auricular o amb finalitats d\'accessibilitat.</string>
+    <string name="about_desc_flashlight_tile">Activa o desactiva la llanterna.\n\nUna pressió llarga obre els controls per a l\'ajust d\'intensitat que pot necessitar una implementació de maquinari del qual alguns dispositius poden faltar.</string>
+    <string name="about_desc_stay_awake">Manteniu la pantalla desperta mentre es carrega.\n\nEvita que la pantalla s\'adormi sempre que el dispositiu estigui connectat a una font d\'alimentació adequada per als desenvolupadors durant la depuració.</string>
+    <string name="about_desc_nfc">Activa o desactiva NFC.\n\nActiva o desactiva ràpidament la comunicació de camp proper per als pagaments i l\'aparellament.</string>
+    <string name="about_desc_adaptive_brightness">Commuta la brillantor adaptativa.\n\nActiva o desactiva l\'ajust automàtic de la brillantor de la pantalla en funció de la llum ambiental.</string>
+    <string name="about_desc_private_dns">Activa o desactiva el DNS privat.\n\nCicla pels modes de proveïdor de DNS desactivat, automàtic i privat.</string>
+    <string name="about_desc_usb_debugging">Commuta la depuració USB.\n\nActiveu o desactiveu l\'accés a la depuració d\'aDB directament des de la configuració ràpida.</string>
+    <string name="about_desc_color_picker">Inicieu l\'eina comptagotes per triar els colors introduïts a Android 17 BETA 2</string>
+    <string name="about_desc_charge_optimization">Optimitzeu la durada de la bateria limitant la càrrega màxima o utilitzant la càrrega adaptativa. Està especialment dissenyat per als dispositius Pixel per garantir la longevitat i els cicles de càrrega saludables.\n\nCrèdits: TebbeUbben/ChargeQuickTile</string>
+    <string name="action_download">Descarregar</string>
     <!-- DIY Section -->
-    <string name="diy_trigger_screen_off">Screen Off</string>
-    <string name="diy_trigger_screen_on">Screen On</string>
-    <string name="diy_trigger_device_unlock">Device Unlock</string>
-    <string name="diy_trigger_charger_connected">Charger Connected</string>
-    <string name="diy_trigger_charger_disconnected">Charger Disconnected</string>
-    <string name="diy_state_charging">Charging</string>
-    <string name="diy_state_screen_on">Screen On</string>
-    <string name="diy_action_haptic">Vibrate</string>
-    <string name="diy_action_notification">Show Notification</string>
-    <string name="diy_action_remove_notification">Remove Notification</string>
-    <string name="diy_action_flashlight_on">Turn On Flashlight</string>
-    <string name="diy_action_flashlight_off">Turn Off Flashlight</string>
-    <string name="diy_action_flashlight_toggle">Toggle Flashlight</string>
-    <string name="diy_action_dim_wallpaper">Dim Wallpaper</string>
-    <string name="diy_dim_wallpaper_desc">This action requires Shizuku or Root to adjust system wallpaper dimming.</string>
-    <string name="diy_select_trigger">Select Trigger</string>
+    <string name="diy_trigger_screen_off">Pantalla apagada</string>
+    <string name="diy_trigger_screen_on">Pantalla activada</string>
+    <string name="diy_trigger_device_unlock">Desbloqueig del dispositiu</string>
+    <string name="diy_trigger_charger_connected">Carregador connectat</string>
+    <string name="diy_trigger_charger_disconnected">Carregador desconnectat</string>
+    <string name="diy_state_charging">Carregant</string>
+    <string name="diy_state_screen_on">Pantalla activada</string>
+    <string name="diy_action_haptic">Vibrar</string>
+    <string name="diy_action_notification">Mostra la notificació</string>
+    <string name="diy_action_remove_notification">Elimina la notificació</string>
+    <string name="diy_action_flashlight_on">Enceneu la llanterna</string>
+    <string name="diy_action_flashlight_off">Apagueu la llanterna</string>
+    <string name="diy_action_flashlight_toggle">Commuta la llanterna</string>
+    <string name="diy_action_dim_wallpaper">Fons de pantalla enfosquit</string>
+    <string name="diy_dim_wallpaper_desc">Aquesta acció requereix Shizuku o Root per ajustar l\'atenuació del fons de pantalla del sistema.</string>
+    <string name="diy_select_trigger">Seleccioneu Activador</string>
     <string name="diy_create_app_title">App</string>
-    <string name="diy_create_app_desc">Automate based on open app</string>
-    <string name="diy_select_state">Select State</string>
-    <string name="diy_select_action">Select Action</string>
-    <string name="diy_in_action_label">In Action</string>
-    <string name="diy_out_action_label">Out Action</string>
-    <string name="action_cancel">Cancel</string>
-    <string name="action_save">Save</string>
-    <string name="action_edit">Edit</string>
-    <string name="action_delete">Delete</string>
-    <string name="action_enable">Enable</string>
-    <string name="action_disable">Disable</string>
-    <string name="automation_service_channel_name">Automation Service</string>
-    <string name="automation_service_running_title">Automations Active</string>
-    <string name="automation_service_running_desc">Monitoring system events for your automations</string>
-    <string name="diy_action_device_effects">Device Effects</string>
-    <string name="diy_device_effects_desc">Control system-level effects like grayscale, AOD suppression, wallpaper dimming, and night mode.</string>
-    <string name="diy_effect_grayscale">Grayscale</string>
-    <string name="diy_effect_suppress_ambient">Suppress Ambient Display</string>
-    <string name="diy_effect_dim_wallpaper">Dim Wallpaper</string>
-    <string name="diy_effect_night_mode">Night Mode</string>
-    <string name="diy_device_effects_android_15_warning">This feature requires Android 15 or higher.</string>
-    <string name="diy_device_effects_enabled">Enabled</string>
-    <string name="diy_device_effects_disabled">Disabled</string>
-    <string name="diy_action_sound_mode">Sound Mode</string>
-    <string name="diy_sound_mode_desc">This action allows switching between Sound, Vibrate, and Silent modes based on triggers. It requires Do Not Disturb access.</string>
+    <string name="diy_create_app_desc">Automatització basada en una aplicació oberta</string>
+    <string name="diy_select_state">Seleccioneu Estat</string>
+    <string name="diy_select_action">Seleccioneu Acció</string>
+    <string name="diy_in_action_label">En Acció</string>
+    <string name="diy_out_action_label">Acció fora</string>
+    <string name="action_cancel">Cancel·la</string>
+    <string name="action_save">Desa</string>
+    <string name="action_edit">Edita</string>
+    <string name="action_delete">Suprimeix</string>
+    <string name="action_enable">Activa</string>
+    <string name="action_disable">Desactivar</string>
+    <string name="automation_service_channel_name">Servei d\'automatització</string>
+    <string name="automation_service_running_title">Automatitzacions actives</string>
+    <string name="automation_service_running_desc">Monitorització d\'esdeveniments del sistema per a les vostres automatitzacions</string>
+    <string name="diy_action_device_effects">Efectes del dispositiu</string>
+    <string name="diy_device_effects_desc">Controla els efectes a nivell del sistema com l\'escala de grisos, la supressió d\'aOD, l\'enfosquiment del fons de pantalla i el mode nocturn.</string>
+    <string name="diy_effect_grayscale">Escala de grisos</string>
+    <string name="diy_effect_suppress_ambient">Suprimeix la visualització ambiental</string>
+    <string name="diy_effect_dim_wallpaper">Fons de pantalla enfosquit</string>
+    <string name="diy_effect_night_mode">Mode nocturn</string>
+    <string name="diy_device_effects_android_15_warning">Aquesta funció requereix Android 15 o superior.</string>
+    <string name="diy_device_effects_enabled">Habilitat</string>
+    <string name="diy_device_effects_disabled">Inhabilitat</string>
+    <string name="diy_action_sound_mode">Mode de so</string>
+    <string name="diy_sound_mode_desc">Aquesta acció permet canviar entre els modes de so, vibració i silenci en funció dels activadors. Requereix l\'accés No Molestis.</string>
     <!-- About Section -->
     <string name="app_developer_name">Sameera Wijerathna</string>
-    <string name="app_description">The all-in-one toolbox for your Pixel and Androids</string>
+    <string name="app_description">La caixa d\'eines tot en un per al vostre Pixel i Android</string>
     <!-- Edge Lighting -->
-    <string name="color_mode_system">System</string>
-    <string name="color_mode_custom">Custom</string>
-    <string name="color_mode_app_specific">App specific</string>
+    <string name="color_mode_system">Sistema</string>
+    <string name="color_mode_custom">Personalitzat</string>
+    <string name="color_mode_app_specific">Aplicació específica</string>
     <!-- Biometric & Security -->
-    <string name="error_auth_failed">Authentication failed</string>
-    <string name="shortcut_creation_hint_toast">Long press an app in the grid to add a shortcut</string>
-    <string name="error_app_uninstalled">App not found or uninstalled</string>
+    <string name="error_auth_failed">l\'autenticació ha fallat</string>
+    <string name="shortcut_creation_hint_toast">Premeu llargament una aplicació a la graella per afegir una drecera</string>
+    <string name="error_app_uninstalled">No s\'ha trobat l\'aplicació ni s\'ha desinstal·lat</string>
     <!-- Notifications -->
-    <string name="update_channel_name">App Updates</string>
-    <string name="update_channel_desc">Notifications for new app updates</string>
-    <string name="notification_update_available">Update available</string>
-    <string name="battery_notification_no_devices">No devices connected</string>
-    <string name="label_unknown">Unknown</string>
+    <string name="update_channel_name">Actualitzacions d\'aplicacions</string>
+    <string name="update_channel_desc">Notificacions de noves actualitzacions d\'aplicacions</string>
+    <string name="notification_update_available">Actualització disponible</string>
+    <string name="battery_notification_no_devices">No hi ha cap dispositiu connectat</string>
+    <string name="label_unknown">Desconegut</string>
     <string name="network_type_5g">5G</string>
     <string name="network_type_4g">4G</string>
     <string name="network_type_3g">3G</string>
     <string name="label_shizuku_ritaka">Shizuku (Rikka)</string>
     <string name="label_shizuku_tuozi">Shizuku (TuoZi)</string>
-    <string name="label_search_content_description">Search</string>
-    <string name="perm_device_admin_explanation">Required to hard-lock the device when unauthorized network changes are attempted on lock screen.</string>
-    <string name="biometric_subtitle_access_settings">Authenticate to access settings</string>
-    <string name="biometric_title_settings_format">%1$s Settings</string>
-    <string name="keyword_feature">feature</string>
-    <string name="keyword_settings">settings</string>
-    <string name="keyword_hide">hide</string>
-    <string name="keyword_show">show</string>
-    <string name="keyword_visibility">visibility</string>
-    <string name="error_loading_apps">Error loading apps: %1$s</string>
+    <string name="label_search_content_description">Cerca</string>
+    <string name="perm_device_admin_explanation">Necessari per bloquejar el dispositiu quan s\'intenten canvis de xarxa no autoritzats a la pantalla de bloqueig.</string>
+    <string name="biometric_subtitle_access_settings">Autenticar-se per accedir a la configuració</string>
+    <string name="biometric_title_settings_format">%1$s Configuració</string>
+    <string name="keyword_feature">característica</string>
+    <string name="keyword_settings">configuracions</string>
+    <string name="keyword_hide">amagar</string>
+    <string name="keyword_show">espectacle</string>
+    <string name="keyword_visibility">visibilitat</string>
+    <string name="error_loading_apps">Error en carregar les aplicacions: %1$s</string>
     <string-array name="keywords_haptic">
-        <item>vibration</item>
-        <item>touch</item>
-        <item>feel</item>
+        <item>vibració</item>
+        <item>tocar</item>
+        <item>sentir</item>
     </string-array>
     <string-array name="keywords_network_visibility">
-        <item>network</item>
-        <item>visibility</item>
-        <item>auto</item>
-        <item>hide</item>
+        <item>xarxa</item>
+        <item>visibilitat</item>
+        <item>automàtic</item>
+        <item>amagar</item>
     </string-array>
     <string-array name="keywords_restore_default">
-        <item>restore</item>
-        <item>default</item>
-        <item>icon</item>
+        <item>restaurar</item>
+        <item>per defecte</item>
+        <item>icona</item>
     </string-array>
     <string-array name="keywords_keyboard">
-        <item>keyboard</item>
-        <item>height</item>
-        <item>padding</item>
-        <item>haptic</item>
-        <item>input</item>
+        <item>teclat</item>
+        <item>alçada</item>
+        <item>farciment</item>
+        <item>hàptic</item>
+        <item>entrada</item>
     </string-array>
     <string-array name="keywords_flashlight">
-        <item>light</item>
-        <item>torch</item>
+        <item>llum</item>
+        <item>torxa</item>
     </string-array>
     <string-array name="keywords_flashlight_pulse">
-        <item>light</item>
-        <item>torch</item>
-        <item>pulse</item>
-        <item>notification</item>
+        <item>llum</item>
+        <item>torxa</item>
+        <item>pols</item>
+        <item>notificació</item>
     </string-array>
     <string-array name="keywords_qs_stay_awake">
-        <item>awake</item>
-        <item>developer</item>
-        <item>power</item>
-        <item>charge</item>
+        <item>despert</item>
+        <item>desenvolupador</item>
+        <item>poder</item>
+        <item>carregar</item>
     </string-array>
     <string-array name="keywords_notification_lighting">
-        <item>glow</item>
-        <item>notification</item>
-        <item>led</item>
+        <item>resplendor</item>
+        <item>notificació</item>
+        <item>conduït</item>
     </string-array>
     <string-array name="keywords_round_shape">
-        <item>round</item>
-        <item>shape</item>
-        <item>edge</item>
+        <item>rodó</item>
+        <item>forma</item>
+        <item>vora</item>
     </string-array>
     <string-array name="keywords_privacy">
-        <item>secure</item>
-        <item>privacy</item>
-        <item>biometric</item>
-        <item>face</item>
-        <item>fingerprint</item>
+        <item>segur</item>
+        <item>privadesa</item>
+        <item>biomètric</item>
+        <item>cara</item>
+        <item>empremta digital</item>
     </string-array>
     <string-array name="keywords_sound_accessibility">
-        <item>sound</item>
-        <item>accessibility</item>
-        <item>hear</item>
+        <item>so</item>
+        <item>accessibilitat</item>
+        <item>escoltar</item>
     </string-array>
     <string-array name="keywords_timeout">
-        <item>stay</item>
-        <item>on</item>
-        <item>timeout</item>
+        <item>quedar-se</item>
+        <item>activat</item>
+        <item>temps d\'espera</item>
     </string-array>
     <string-array name="keywords_wake_display">
-        <item>touch</item>
-        <item>wake</item>
-        <item>display</item>
+        <item>tocar</item>
+        <item>despertar</item>
+        <item>visualització</item>
     </string-array>
     <string-array name="keywords_timer">
-        <item>timer</item>
-        <item>wait</item>
-        <item>timeout</item>
+        <item>temporitzador</item>
+        <item>espera</item>
+        <item>temps d\'espera</item>
     </string-array>
-    <string name="label_keyboard_always_dark">Always dark theme</string>
-    <string name="label_keyboard_pitch_black">Pitch black theme</string>
-    <string name="label_keyboard_clipboard_enabled">Clipboard History</string>
+    <string name="label_keyboard_always_dark">Tema sempre fosc</string>
+    <string name="label_keyboard_pitch_black">Tema negre del to</string>
+    <string name="label_keyboard_clipboard_enabled">Historial del porta-retalls</string>
     <string-array name="keywords_selection">
-        <item>list</item>
-        <item>picker</item>
-        <item>selection</item>
+        <item>llista</item>
+        <item>selector</item>
+        <item>selecció</item>
     </string-array>
     <string-array name="keywords_visual_style">
-        <item>animation</item>
+        <item>animació</item>
         <item>visual</item>
-        <item>look</item>
+        <item>mira</item>
     </string-array>
     <string-array name="keywords_quiet_filter">
-        <item>quiet</item>
-        <item>ignore</item>
-        <item>filter</item>
+        <item>tranquil</item>
+        <item>ignorar</item>
+        <item>filtre</item>
     </string-array>
     <string-array name="keywords_automation_lock">
-        <item>automation</item>
-        <item>auto</item>
-        <item>lock</item>
+        <item>automatització</item>
+        <item>automàtic</item>
+        <item>pany</item>
     </string-array>
     <string-array name="keywords_adb_debug">
         <item>adb</item>
         <item>usb</item>
-        <item>debug</item>
+        <item>depurar</item>
     </string-array>
     <string-array name="keywords_blur_glass">
-        <item>blur</item>
-        <item>glass</item>
-        <item>vignette</item>
+        <item>borrós</item>
+        <item>vidre</item>
+        <item>vinyeta</item>
     </string-array>
     <string-array name="keywords_float_window">
-        <item>float</item>
-        <item>window</item>
-        <item>overlay</item>
+        <item>flotar</item>
+        <item>finestra</item>
+        <item>superposició</item>
     </string-array>
     <string-array name="keywords_always_display">
-        <item>always</item>
-        <item>display</item>
-        <item>clock</item>
+        <item>sempre</item>
+        <item>visualització</item>
+        <item>rellotge</item>
     </string-array>
     <string-array name="keywords_audio_mute">
-        <item>audio</item>
-        <item>mute</item>
-        <item>volume</item>
+        <item>àudio</item>
+        <item>mut</item>
+        <item>volum</item>
     </string-array>
     <string-array name="keywords_blue_filter">
-        <item>blue</item>
-        <item>filter</item>
-        <item>auto</item>
+        <item>blau</item>
+        <item>filtre</item>
+        <item>automàtic</item>
     </string-array>
     <string-array name="keywords_app_freezing">
-        <item>freeze</item>
+        <item>congelar</item>
         <item>shizuku</item>
     </string-array>
     <string-array name="keywords_manual_now">
         <item>manual</item>
-        <item>now</item>
+        <item>ara</item>
         <item>shizuku</item>
     </string-array>
     <string-array name="keywords_proximity_sensor">
-        <item>proximity</item>
+        <item>proximitat</item>
         <item>sensor</item>
-        <item>face</item>
-        <item>down</item>
+        <item>cara</item>
+        <item>cap avall</item>
     </string-array>
     <string-array name="keywords_switch_master">
-        <item>switch</item>
-        <item>master</item>
+        <item>interruptor</item>
+        <item>mestre</item>
     </string-array>
     <string-array name="keywords_vibration">
-        <item>vibration</item>
-        <item>feel</item>
+        <item>vibració</item>
+        <item>sentir</item>
     </string-array>
     <string-array name="keywords_battery">
-        <item>battery</item>
-        <item>charge</item>
-        <item>optimization</item>
-        <item>pixel</item>
+        <item>bateria</item>
+        <item>carregar</item>
+        <item>optimització</item>
+        <item>píxel</item>
     </string-array>
     <!-- App Selection Extra -->
-    <string name="action_invert_selection">Invert selection</string>
-    <string name="toggle_show_system_apps">Show system apps</string>
+    <string name="action_invert_selection">Inverteix la selecció</string>
+    <string name="toggle_show_system_apps">Mostra les aplicacions del sistema</string>
     <!-- Updates -->
-    <string name="status_up_to_date">You are up to date</string>
-    <string name="warning_pre_release">This is a pre-release version and might be unstable.</string>
-    <string name="release_notes_format">Release Notes v%1$s</string>
-    <string name="action_view_on_github">View on GitHub</string>
-    <string name="action_download_apk">Download APK</string>
+    <string name="status_up_to_date">Estàs al dia</string>
+    <string name="warning_pre_release">Aquesta és una versió prèvia al llançament i pot ser inestable.</string>
+    <string name="release_notes_format">Notes de la versió %1$s</string>
+    <string name="action_view_on_github">Veure a GitHub</string>
+    <string name="action_download_apk">Descarrega l\'APK</string>
     <!-- Haptic Types -->
-    <string name="haptic_none">None</string>
-    <string name="haptic_subtle">Subtle</string>
-    <string name="haptic_double">Double</string>
-    <string name="haptic_click">Click</string>
+    <string name="haptic_none">Cap</string>
+    <string name="haptic_subtle">Subtil</string>
+    <string name="haptic_double">Doble</string>
+    <string name="haptic_click">Feu clic</string>
     <string name="haptic_tick">Tick</string>
     <!-- Flashlight Intensity Overlay -->
-    <string name="action_turn_off">Turn Off</string>
-    <string name="feature_flashlight_brightness_title">Flashlight Brightness</string>
+    <string name="action_turn_off">Apagueu</string>
+    <string name="feature_flashlight_brightness_title">Brillantor de la llanterna</string>
     <!-- QS / Activities -->
-    <string name="error_unlock_network_settings">Unlock phone to change network settings</string>
+    <string name="error_unlock_network_settings">Desbloqueja el telèfon per canviar la configuració de la xarxa</string>
     <!-- About Section -->
-    <string name="developed_by_format">Developed by %1$s\nwith ❤\uFE0F from \uD83C\uDDF1\uD83C\uDDF0</string>
-    <string name="action_website">Website</string>
-    <string name="action_contact">Contact</string>
-    <string name="action_telegram">Telegram</string>
-    <string name="action_support">Support</string>
-    <string name="label_other_apps">Other Apps</string>
+    <string name="developed_by_format">Desenvolupat per %1$s\namb ❤\uFE0F de \uD83C\uDDF1\uD83C\uDDF0</string>
+    <string name="action_website">Lloc web</string>
+    <string name="action_contact">Contacte</string>
+    <string name="action_telegram">Telegrama</string>
+    <string name="action_support">Suport</string>
+    <string name="label_other_apps">Altres aplicacions</string>
     <string name="app_airsync">AirSync</string>
     <string name="app_zenzero">ZenZero</string>
-    <string name="app_canvas">Canvas</string>
-    <string name="app_tasks">Tasks</string>
+    <string name="app_canvas">Tela</string>
+    <string name="app_tasks">Tasques</string>
     <string name="app_zero">Zero</string>
     <!-- Help & Guides -->
-    <string name="help_guides_title">Help &amp; Guides</string>
-    <string name="need_more_support_reach_out">Need more support? Reach out,</string>
-    <string name="action_collapse">Collapse</string>
-    <string name="action_expand">Expand</string>
-    <string name="support_group_label">Support Group</string>
-    <string name="email_label">Email</string>
-    <string name="send_email_chooser_title">Send email</string>
-    <string name="error_no_email_app">No email app available</string>
-    <string name="instruction_step_image_description">Step %1$d Image</string>
+    <string name="help_guides_title">Ajuda i guies</string>
+    <string name="need_more_support_reach_out">Necessites més suport? Arriba,</string>
+    <string name="action_collapse">Col·lapse</string>
+    <string name="action_expand">Ampliar</string>
+    <string name="support_group_label">Grup de suport</string>
+    <string name="email_label">Correu electrònic</string>
+    <string name="send_email_chooser_title">Enviar correu electrònic</string>
+    <string name="error_no_email_app">No hi ha cap aplicació de correu electrònic disponible</string>
+    <string name="instruction_step_image_description">Pas %1$d Imatge</string>
     <!-- Instructions Content -->
-    <string name="instruction_section_perms_title">Accessibility, Notification and Overlay permissions</string>
-    <string name="instruction_step_perms_1">You may get this access denied message if you try to grant sensitive permissions such as accessibility, notification listener or overlay permissions. To grant it, check the steps below.</string>
-    <string name="instruction_step_perms_2">1. Go to app info page of Essentials.</string>
-    <string name="instruction_step_perms_3">2. Open the 3-dot menu and select \'Allow restricted settings\'. You may have to authenticate with biometrics. Once done, Try to grant the permission again.</string>
+    <string name="instruction_section_perms_title">Permisos d\'accessibilitat, notificació i superposició</string>
+    <string name="instruction_step_perms_1">És possible que rebeu aquest missatge d\'accés denegat si proveu d\'atorgar permisos sensibles com ara permisos d\'accessibilitat, d\'escolta de notificacions o de superposició. Per concedir-ho, consulteu els passos següents.</string>
+    <string name="instruction_step_perms_2">1. Aneu a la pàgina d\'informació de l\'aplicació d\'Essentials.</string>
+    <string name="instruction_step_perms_3">2. Obriu el menú de 3 punts i seleccioneu \'Permet la configuració restringida\'. És possible que hàgiu d\'autenticar-vos amb la biometria. Un cop fet, proveu de tornar a concedir el permís.</string>
     <string name="instruction_section_shizuku_title">Shizuku</string>
-    <string name="instruction_section_shizuku_desc">Shizuku is a powerful tool that allows apps to use system APIs directly with ADB or root permissions. It is required for features like Maps min mode, App Freezer. And willa ssist granting some permissions such as WRITE_SECURE_SETTINGS. \n\nBut the Play Store version of Shizuku might be outdated and will probably be unusable on recent Android versions so in that case, please get the latest version from the github or an up-to-date fork of it.</string>
-    <string name="instruction_section_maps_title">Maps power saving mode</string>
-    <string name="instruction_section_maps_desc">This feature automatically triggers Google Maps power saving mode which is currently exclusive to the Pixel 10 series. A community member discovered that it is still usable on any Android device by launching the maps minMode activity with root privileges. \n\nAnd then, I had it automated with Tasker to automatically trigger when the screen turns off during a navigation session and then was able to achieve the same with just runtime Shizuku permissions. \n\nIt is intended to be shown over the AOD of Pixel 10 series so because of that, you may see an occasional message popping up on the display that it does not support landscape mode. That is not avoidable by the app and you can ignore.</string>
-    <string name="instruction_section_silent_title">Silent sound mode</string>
-    <string name="instruction_section_silent_desc">You may have noticed that the silent mode also triggers DND. \n\nThis is due to how the Android implemented it as even if we use the same API to switch to vibrate mode, it for some reason turns on DND along with the silent mode and this is not avoidable at this moment. :(</string>
-    <string name="instruction_section_freeze_title">What is freeze?</string>
-    <string name="instruction_section_freeze_desc">Pause and stay away from app distractions while saving a little bit of power preventing apps running in the background. Suitable for rarely used apps. \n\nNot recommended for any communication services as they will not notify you in an emergency unless you unfreeze them. \n\nHighly advised to not freeze system apps as they can lead to system instability. Proceed with caution, You were warned. \n\nInspired by Hail &lt;3</string>
-    <string name="instruction_section_security_title">Are app lock and screen locked security actually secure?</string>
-    <string name="instruction_section_security_desc">Absolutely not. \n\nAny 3rd party application can not 100% interfere with regular device interactions and even the app lock is only an overlay above selected apps to prevent interacting with them. There are workarounds and it is not foolproof. \n\nSame goes with the screen locked security feature which detects someone trying to interact with the network tiles which for some reason are still accessible for anyone on Pixels. So if they try hard enough they might still be able to change them and especially if you have a flight mode QS tile added, this app can not prevent interactions with it. \n\nThese features are made just as experiments for light usage and would never recommend as strong security and privacy solutions. \n\nSecure alternatives:\n - App lock: Private Space and Secure folder on Pixels and Samsung\n - Preventing mobile networks access: Make sure your theft protection and offline/ power off find my device settings are on. You may look into Graphene OS as well.</string>
-    <string name="instruction_section_statusbar_title">Statusbar icons</string>
-    <string name="instruction_section_statusbar_desc">You may notice that even after resetting the statusbar icons, Some icons such as device rotation, wired headphone icons may stay visible. This is due to how the statubar blacklist is implemented in Android and how your OEM may have customized them. \nYou may need further adjustments. \n\nAlso not all icon visibility options may work as they depend on the OEM implementations and availability.</string>
-    <string name="instruction_section_lighting_title">Notification lighting does not work</string>
-    <string name="instruction_section_lighting_desc">It depends on the OEM. Some like OneUI does not seem to allow overlays above the AOD preventing the lighting effects being shown. In this case, try the ambient display as a workaround. </string>
-    <string name="instruction_section_button_title">Button remap does not work while display is off</string>
-    <string name="instruction_section_button_desc">Some OEMs limit the accessibility service reporting once the display is actually off but they may still work while the AOD is on. \nIn this case, you may able to use button remaps with AOD on but not with off. \n\nAs a workaround, you will need to use Shizuku permissions and turn on the \'Use Shizuku\' toggle in button remap settings which identifies and listen to hardware input events.\nThis is not guaranteed to work on all devices and needs testing.\n\nAnd even if it\'s on, Shizuku method only will be used when it\'s needed. Otherwise it will always fallback to Accessibility which also handles the blocking of the actual input during long press.</string>
-    <string name="instruction_section_flashlight_title">Flashlight brightness does not work</string>
-    <string name="instruction_section_flashlight_desc">Only a limited number of devices got hardware and software support adjusting the flashlight intensity. \n\n\'The minimum version of Android is 13 (SDK33).\nFlashlight brightness control only supports HAL version 3.8 and higher, so among the supported devices, the latest ones (For example, Pixel 6/7, Samsung S23, etc.)\'\npolodarb/Flashlight-Tiramisu</string>
-    <string name="instruction_section_about_title">What the hell is this app?</string>
-    <string name="instruction_section_about_desc">Good question,\n\nI always wanted to extract the most out of my devices as I\'ve been a rooted user for ever since I got my first Project Treble device. And I\'ve been loving the Tasker app which is like the god when comes automation and utilizing every possible API and internal features of Android.\n\nSo I am not unrooted and back on stock Android beta experience and wanted to get the most out from what is possible with given privileges. Might as well share them. So with my beginner knowledge in Kotlin Jetpack and with the support of many research and assist tools and also the great community, I built an all-in-one app containing everything I wanted to be in my Android with given permissions. And here it is.\n\nFeature requests are welcome, I will consider and see if they are achievable with available permissions and my skills. Nowadays what is not possible. :)\n\nWhy not on Play Store?\nI don\'t wanna risk getting my Developer account banned due to the highly sensitive and internal permissions and APIs being used in the app. But with the way Android sideloading is headed, let\'s see what we have to do. I do understand the concerns of sideloaded apps being malicious.\nWhile we are at the topic, Checkout my other app AirSync if you are a mac + Android user. *shameless plug*\n\nEnjoy, Keep building! (っ◕‿◕)っ</string>
+    <string name="instruction_section_shizuku_desc">Shizuku és una eina potent que permet a les aplicacions utilitzar les API del sistema directament amb permisos ADB o root. És necessari per a funcions com ara el mode mínim de Maps, App Freezer. I ajudarà a concedir alguns permisos com WRITE_SECURE_SETTINGS. \n\nPerò la versió de Play Store de Shizuku pot estar obsoleta i probablement no es podrà utilitzar en les versions recents d\'android, així que en aquest cas, si us plau, obteniu la darrera versió del github o per obtenir-ne una actualització.</string>
+    <string name="instruction_section_maps_title">Mode d\'estalvi d\'energia de Maps</string>
+    <string name="instruction_section_maps_desc">Aquesta funció activa automàticament el mode d\'estalvi d\'energia de Google Maps, que actualment és exclusiu de la sèrie Pixel 10. Un membre de la comunitat va descobrir que encara es pot utilitzar en qualsevol dispositiu Android llançant l\'activitat de mapes minMode amb privilegis d\'arrel. \n\nI aleshores, ho vaig automatitzar amb Tasker per activar-se automàticament quan la pantalla s\'apaga durant una sessió de navegació i després vaig poder aconseguir el mateix només amb Shizuku en temps d\'execució. permisos. \n\ns\'ha pensat per mostrar-se a l\'AOD de la sèrie Pixel 10, per això, és possible que vegeu un missatge ocasional que apareix a la pantalla que no admet el mode horitzontal. Això no és evitable per l\'aplicació i podeu ignorar-ho.</string>
+    <string name="instruction_section_silent_title">Mode de so silenciós</string>
+    <string name="instruction_section_silent_desc">És possible que hàgiu notat que el mode silenciós també activa el DND. \n\nAixò es deu a com l\'ha implementat Android, ja que encara que utilitzem la mateixa API per canviar al mode de vibració, per algun motiu activa el DND juntament amb el mode silenciós i això no es pot evitar en aquest moment. :(</string>
+    <string name="instruction_section_freeze_title">Què és la congelació?</string>
+    <string name="instruction_section_freeze_desc">Feu una pausa i allunyeu-vos de les distraccions de les aplicacions mentre estalvieu una mica d\'energia evitant que les aplicacions s\'executin en segon pla. Adequat per a aplicacions que s\'utilitzen poc. \n\nNo es recomana per a cap servei de comunicació, ja que no us notificaran en cas d\'emergència tret que les descongeleu. \n\nEs recomana no congelar les aplicacions del sistema, ja que poden provocar inestabilitat del sistema. Seguiu amb precaució, us van avisar. \n\nInspirat per Hail &lt;3</string>
+    <string name="instruction_section_security_title">El bloqueig d\'aplicacions i la seguretat del bloqueig de pantalla són realment segurs?</string>
+    <string name="instruction_section_security_desc">Absolutament no. \n\nQualsevol aplicació de tercers no pot interferir al 100% amb les interaccions habituals del dispositiu i fins i tot el bloqueig d\'aplicacions és només una superposició a sobre de les aplicacions seleccionades per evitar interactuar amb elles. Hi ha solucions i no és infal·lible. \n\nEl mateix passa amb la funció de seguretat de bloqueig de pantalla que detecta algú que intenta interactuar amb les fitxes de xarxa que, per algun motiu, encara són accessibles per a qualsevol persona a Pixels. Així que si s\'esforcen prou, potser encara podran canviar-los i, sobretot, si s\'afegeix una fitxa QS en mode vol, aquesta aplicació no pot evitar les interaccions amb ella. \n\nAquestes funcions es fan com a experiments per a un ús lleuger i mai recomanarien com a solucions fortes de seguretat i privadesa. \n\nAlternatives segures:\n - Bloqueig d\'aplicacions: espai privat i carpeta segura a Pixels i Samsung\n - Prevenció de l\'accés a les xarxes mòbils: assegureu-vos que la protecció contra robatori i la configuració fora de línia/apagada del meu dispositiu estiguin activades. També podeu mirar Graphene OS.</string>
+    <string name="instruction_section_statusbar_title">Icones de la barra d\'estat</string>
+    <string name="instruction_section_statusbar_desc">És possible que observeu que, fins i tot després de restablir les icones de la barra d\'estat, algunes icones, com ara la rotació del dispositiu, les icones dels auriculars amb cable poden romandre visibles. Això es deu a com s\'implementa la llista negra de la barra d\'estats a Android i a com el vostre OEM l\'hagi personalitzat. \nPotser necessiteu més ajustos. \n\nA més, és possible que no funcionin totes les opcions de visibilitat de les icones, ja que depenen de les implementacions i la disponibilitat del OEM.</string>
+    <string name="instruction_section_lighting_title">La il·luminació de notificació no funciona</string>
+    <string name="instruction_section_lighting_desc">Depèn de l\'OEM. Alguns com OneUI no semblen permetre superposicions per sobre de l\'AOD que impedeixin que es mostrin els efectes d\'il·luminació. En aquest cas, proveu la pantalla ambiental com a solució alternativa.</string>
+    <string name="instruction_section_button_title">La reasignació de botons no funciona mentre la pantalla està apagada</string>
+    <string name="instruction_section_button_desc">Alguns fabricants OEM limiten els informes del servei d\'accessibilitat una vegada que la pantalla està realment apagada, però és possible que encara funcionin mentre l\'AOD està encès. \nEn aquest cas, podeu utilitzar reasignacions de botons amb AOD activat però no amb apagat. \n\nSPLIT \'SPLIT⟐⟐⟐⟐⟐⟐⟐⟐⟐⟐ el\' Utilitza Shizuku o Root\nactiva la configuració de reasignació de botons que identifica i escolta els esdeveniments d\'entrada del maquinari. prova.\n\nI fins i tot si\'s activat, el mètode Shizuku només s\'utilitzarà quan sigui necessari\'. En cas contrari, sempre tornarà a l\'accessibilitat, que també gestiona el bloqueig de l\'entrada real durant la pressió llarga.</string>
+    <string name="instruction_section_flashlight_title">La brillantor de la llanterna no funciona</string>
+    <string name="instruction_section_flashlight_desc">Només un nombre limitat de dispositius té suport de maquinari i programari per ajustar la intensitat de la llanterna. \n\n\'La versió mínima d\'android és 13 (SDK33).\nEl control de la brillantor de la llanterna només admet la versió 3.8 de HAL i els dispositius compatibles (per exemple, per als últims dispositius compatibles, 6/7, Samsung S23, etc.)\'\npolodarb/Flashlight-Tiramisú</string>
+    <string name="instruction_section_about_title">Què dimonis és aquesta aplicació?</string>
+    <string name="instruction_section_about_desc">Bona pregunta,\n\nSempre he volgut treure el màxim profit dels meus dispositius com jo\'He estat un usuari arrelat des de que vaig tenir el meu primer dispositiu Project Treble. I jo\'He estat estimant l\'aplicació Tasker, que és com el déu quan arriba l\'automatització i utilitza totes les API i funcions internes possibles d\'android.\n\nPer tant, no estic sense root ni tinc l\'experiència beta d\'android en estoc i volia treure el màxim profit del que és possible amb els privilegis donats. També podria compartir-los. Així que amb els meus coneixements per a principiants en Kotlin Jetpack i amb el suport de moltes eines d\'investigació i assistència i també de la gran comunitat, vaig crear una aplicació tot en un que conté tot el que volia estar al meu Android amb els permisos donats. I aquí està.\n\nLes sol·licituds de funcions són benvingudes, les consideraré i veurem si es poden aconseguir amb els permisos disponibles i les meves habilitats. Avui en dia el que no és possible. :)\n\nPer què no a Play Store?\nJo jo\'No vull arriscar-me a prohibir el meu compte de desenvolupador a causa dels permisos i API interns i molt sensibles que s\'utilitzen a l\'aplicació. Però amb la manera com es dirigeix ​​la càrrega lateral d\'android, deixem\'a veure què hem de fer. Entenc la preocupació que les aplicacions de càrrega lateral siguin malicioses.\nMentre estem al tema, consulteu la meva altra aplicació AirSync si sou un usuari de Mac + Android. *endoll descarat*\n\nGaudeix, segueix construint! (っ◕‿◕)っ</string>
     <!-- Bug Reporting -->
-    <string name="toast_bug_report_copied">Bug report copied to clipboard</string>
-    <string name="bug_report_title">Bug report</string>
-    <string name="bug_report_option_share_logs">Share logs</string>
-    <string name="bug_report_option_share_logs_desc">Include logs and details</string>
-    <string name="bug_report_device_info">Device Info</string>
-    <string name="bug_report_raw_json">Raw Report</string>
-    <string name="action_report_github">Open GitHub Issue</string>
-    <string name="action_report_email">Email Report</string>
-    <string name="action_copy_clipboard">Copy to Clipboard</string>
-    <string name="bug_report_email_subject">Essentials Bug Report</string>
-    <string name="bug_report_send_via">Send via</string>
+    <string name="toast_bug_report_copied">s\'ha copiat l\'informe d\'error al porta-retalls</string>
+    <string name="bug_report_title">Informe d\'error</string>
+    <string name="bug_report_option_share_logs">Comparteix registres</string>
+    <string name="bug_report_option_share_logs_desc">Inclou registres i detalls</string>
+    <string name="bug_report_device_info">Informació del dispositiu</string>
+    <string name="bug_report_raw_json">Informe en brut</string>
+    <string name="action_report_github">Obre el problema de GitHub</string>
+    <string name="action_report_email">Informe per correu electrònic</string>
+    <string name="action_copy_clipboard">Copia al porta-retalls</string>
+    <string name="bug_report_email_subject">Informe d\'errors essencials</string>
+    <string name="bug_report_send_via">Enviar via</string>
     <!-- Location Reached -->
-    <string name="feat_location_reached_title">Are We There Yet?</string>
-    <string name="feat_location_reached_desc">Prepare for your destination.</string>
-    <string name="location_reached_how_to">Open your map app, pick a location, and share it to Essentials.</string>
-    <string name="location_reached_radius_title">Radius: %d m</string>
-    <string name="perm_location_title">Location</string>
-    <string name="perm_location_desc">Used to detect arrival at your destination.</string>
-    <string name="perm_bg_location_title">Background Location</string>
-    <string name="perm_bg_location_desc">Required to monitor your arrival while the app is closed or the screen is off.</string>
-    <string name="location_reached_notification_title">Destination Reached!</string>
-    <string name="location_reached_notification_desc">You have arrived at your destination.</string>
-    <string name="location_reached_processing">Processing location…</string>
-    <string name="location_reached_dist_remaining">DISTANCE REMAINING</string>
-    <string name="location_reached_calculating">Calculating…</string>
-    <string name="location_reached_stop_tracking">Stop Tracking</string>
-    <string name="location_reached_dest_ready">Destination Ready</string>
-    <string name="location_reached_start_tracking">Start Tracking</string>
-    <string name="location_reached_view_map">View Map</string>
-    <string name="location_reached_clear">Clear</string>
-    <string name="location_reached_no_dest">No Destination</string>
-    <string name="location_reached_open_maps">Open Maps</string>
-    <string name="location_reached_fsi_title">Full-Screen Alarm Permission</string>
-    <string name="location_reached_fsi_desc">Required to wake your device upon arrival. Tap to grant.</string>
+    <string name="feat_location_reached_title">Ja hi som?</string>
+    <string name="feat_location_reached_desc">Alertes de destinació propera</string>
+    <string name="location_reached_how_to">Obre Google Maps, tria una ubicació i comparteix-la amb Essentials.</string>
+    <string name="location_reached_radius_title">Radi d\'alerta: %d m</string>
+    <string name="perm_location_title">Ubicació</string>
+    <string name="perm_location_desc">s\'utilitza per detectar l\'arribada a la vostra destinació.</string>
+    <string name="perm_bg_location_title">Ubicació de fons</string>
+    <string name="perm_bg_location_desc">Necessari per controlar la teva arribada mentre l\'aplicació està tancada o la pantalla està apagada.</string>
+    <string name="location_reached_notification_title">Destinació aconseguida!</string>
+    <string name="location_reached_notification_desc">Has arribat al teu destí.</string>
+    <string name="location_reached_processing">s\'està processant la ubicació...</string>
+    <string name="location_reached_dist_remaining">DISTANCIA QUE RESTAN</string>
+    <string name="location_reached_calculating">s\'està calculant...</string>
+    <string name="location_reached_stop_tracking">Atura el seguiment</string>
+    <string name="location_reached_dest_ready">Destinació a punt</string>
+    <string name="location_reached_start_tracking">Inicieu el seguiment</string>
+    <string name="location_reached_view_map">Veure mapa</string>
+    <string name="location_reached_clear">Clar</string>
+    <string name="location_reached_no_dest">Sense destinació</string>
+    <string name="location_reached_open_maps">Obriu Maps</string>
+    <string name="location_reached_fsi_title">Permís d\'alarma de pantalla completa</string>
+    <string name="location_reached_fsi_desc">Necessari per activar el dispositiu en arribar. Toca per concedir.</string>
     <string name="location_reached_dist_m">%1$d m</string>
-    <string name="location_reached_dist_km">%1$.1f km</string>
-    <string name="location_reached_service_title">Travel Alarm active</string>
-    <string name="location_reached_service_remaining">%1$s remaining (%2$d%%)</string>
-    <string name="location_reached_channel_name">Travel Progress</string>
-    <string name="location_reached_channel_desc">Shows real-time distance to destination</string>
-    <string name="location_reached_alarm_title">Destination Nearby</string>
-    <string name="location_reached_alarm_subtitle">Prepare to get off</string>
-    <string name="location_reached_dismiss">Dismiss</string>
-    <string name="location_reached_toast_set">Destination set: %1$.4f, %2$.4f</string>
-    <string name="setting_use_root_title">Use Root</string>
-    <string name="setting_use_root_desc">Instead of Shizuku</string>
-    <string name="root_not_available_toast">Root access not available. Please check your root manager.</string>
+    <string name="location_reached_dist_km">%1$,1f km</string>
+    <string name="location_reached_service_title">Alarma de viatge activa</string>
+    <string name="location_reached_service_remaining">%1$s restant (%2$d%%)</string>
+    <string name="location_reached_channel_name">Progrés de viatge</string>
+    <string name="location_reached_channel_desc">Mostra la distància en temps real fins a la destinació</string>
+    <string name="location_reached_alarm_title">Destinació a prop</string>
+    <string name="location_reached_alarm_subtitle">Prepareu-vos per baixar</string>
+    <string name="location_reached_dismiss">Descartar</string>
+    <string name="location_reached_toast_set">Conjunt de destinació: %1$.4f, %2$.4f</string>
+    <string name="setting_use_root_title">Utilitzeu l\'arrel</string>
+    <string name="setting_use_root_desc">En lloc de Shizuku</string>
+    <string name="root_not_available_toast">Accés arrel no disponible. Comproveu el vostre gestor arrel.</string>
     <!-- System Keyboard -->
-    <string name="feat_system_keyboard_title">Keyboard</string>
-    <string name="feat_system_keys">Keys</string>
-    <string name="feat_system_keyboard_desc">Customize layout and behavior</string>
-    <string name="search_keyboard_height_title">Keyboard Height</string>
-    <string name="search_keyboard_height_desc">Adjust the total vertical size of the keyboard</string>
-    <string name="search_keyboard_padding_title">Bottom Padding</string>
-    <string name="search_keyboard_padding_desc">Add space below the keyboard</string>
-    <string name="search_keyboard_haptics_title">Haptic Feedback</string>
-    <string name="search_keyboard_haptics_desc">Vibrate on key press</string>
-    <string name="test_keyboard_hint">Test the keyboard</string>
-    <string name="label_keyboard_height">Keyboard Height</string>
-    <string name="label_keyboard_bottom_padding">Bottom Padding</string>
-    <string name="label_keyboard_haptics">Haptic Feedback</string>
-    <string name="label_keyboard_roundness">Key Roundness</string>
-    <string name="label_keyboard_functions_bottom">Move functions to bottom</string>
-    <string name="label_keyboard_functions_padding">Functions side padding</string>
-    <string name="label_keyboard_haptic_strength">Haptic feedback strength</string>
-    <string name="label_keyboard_shape">Keyboard shape</string>
-    <string name="shape_round">Round</string>
-    <string name="shape_flat">Flat</string>
-    <string name="shape_inverse">Inverse</string>
-    <string name="feat_batteries_title">Batteries</string>
-    <string name="feat_batteries_desc">Monitor your device battery levels</string>
-    <string name="batteries_widget_label">Battery Status</string>
-    <string name="connect_to_airsync">Connect to AirSync</string>
-    <string name="connect_to_airsync_summary">Display battery from your connected mac device in AirSync</string>
-    <string name="download_airsync">Download AirSync App</string>
-    <string name="download_airsync_summary">Required for Mac battery sync</string>
-    <string name="feat_battery_notification_title">Battery notification</string>
-    <string name="feat_battery_notification_desc">Persistent battery status notification</string>
-    <string name="about_desc_battery_notification">Replicate the battery widget experience in your notification shade. It will show the battery levels of all your connected devices in a single persistent notification, updated in real-time. This includes your Mac (via AirSync) and Bluetooth accessories.</string>
-    <string name="battery_notification_channel_name">Battery Status Notification</string>
-    <string name="battery_notification_channel_desc">Persistent notification showing connected devices battery levels</string>
-    <string name="perm_nearby_devices_title">Nearby Devices</string>
-    <string name="perm_nearby_devices_desc">Required to detect and retrieve battery information from Bluetooth accessories</string>
+    <string name="feat_system_keyboard_title">Teclat</string>
+    <string name="feat_system_keys">Les claus</string>
+    <string name="feat_system_keyboard_desc">Personalitza el disseny i el comportament</string>
+    <string name="search_keyboard_height_title">Alçada del teclat</string>
+    <string name="search_keyboard_height_desc">Ajusteu la mida vertical total del teclat</string>
+    <string name="search_keyboard_padding_title">Encoixinat inferior</string>
+    <string name="search_keyboard_padding_desc">Afegiu espai a sota del teclat</string>
+    <string name="search_keyboard_haptics_title">Feedback hàptic</string>
+    <string name="search_keyboard_haptics_desc">Vibra en prémer la tecla</string>
+    <string name="test_keyboard_hint">Prova el teclat</string>
+    <string name="label_keyboard_height">Alçada del teclat</string>
+    <string name="label_keyboard_bottom_padding">Encoixinat inferior</string>
+    <string name="label_keyboard_haptics">Feedback hàptic</string>
+    <string name="label_keyboard_roundness">Rodona clau</string>
+    <string name="label_keyboard_functions_bottom">Mou les funcions cap avall</string>
+    <string name="label_keyboard_functions_padding">Funcions encoixinat lateral</string>
+    <string name="label_keyboard_haptic_strength">Força de retroalimentació hàptica</string>
+    <string name="label_keyboard_shape">Forma del teclat</string>
+    <string name="shape_round">Ronda</string>
+    <string name="shape_flat">Pis</string>
+    <string name="shape_inverse">Inversa</string>
+    <string name="feat_batteries_title">Bateries</string>
+    <string name="feat_batteries_desc">Superviseu els nivells de bateria del vostre dispositiu</string>
+    <string name="batteries_widget_label">Estat de la bateria</string>
+    <string name="connect_to_airsync">Connecteu-vos a AirSync</string>
+    <string name="connect_to_airsync_summary">Mostra la bateria del dispositiu Mac connectat a AirSync</string>
+    <string name="download_airsync">Descarrega l\'aplicació AirSync</string>
+    <string name="download_airsync_summary">Necessari per a la sincronització de la bateria del Mac</string>
+    <string name="feat_battery_notification_title">Notificació de bateria</string>
+    <string name="feat_battery_notification_desc">Notificació persistent de l\'estat de la bateria</string>
+    <string name="about_desc_battery_notification">Replica l\'experiència del giny de la bateria a la teva ombra de notificació. Mostrarà els nivells de bateria de tots els vostres dispositius connectats en una única notificació persistent, actualitzada en temps real. Això inclou el vostre Mac (mitjançant AirSync) i accessoris Bluetooth.</string>
+    <string name="battery_notification_channel_name">Notificació d\'estat de la bateria</string>
+    <string name="battery_notification_channel_desc">Notificació persistent que mostra els nivells de bateria dels dispositius connectats</string>
+    <string name="perm_nearby_devices_title">Dispositius propers</string>
+    <string name="perm_nearby_devices_desc">Necessari per detectar i recuperar informació de la bateria dels accessoris Bluetooth</string>
     <!-- GitHub Auth -->
-    <string name="auth_copy_code">Copy code</string>
-    <string name="auth_open_login_page">Open login page</string>
-    <string name="auth_sign_in_rationale">Sign in to extend API call limits</string>
-    <string name="auth_waiting_for_authorization">Waiting for authorization...</string>
-    <string name="action_sign_in_github">Sign in with GitHub</string>
-    <string name="action_sign_out">Sign out</string>
-    <string name="action_profile">Profile</string>
+    <string name="auth_copy_code">Copia el codi</string>
+    <string name="auth_open_login_page">Obre la pàgina d\'inici de sessió</string>
+    <string name="auth_sign_in_rationale">Inicieu la sessió per ampliar els límits de trucades de l\'API</string>
+    <string name="auth_waiting_for_authorization">Esperant l\'autorització...</string>
+    <string name="action_sign_in_github">Inicieu la sessió amb GitHub</string>
+    <string name="action_sign_out">Tanca la sessió</string>
+    <string name="action_profile">Perfil</string>
     <!-- App Updates / Repos -->
-    <string name="label_release_notes">Release Notes</string>
-    <string name="msg_no_repos_tracked">No repositories tracked yet</string>
-    <string name="label_no_app_linked">No app linked</string>
-    <string name="format_updated_relative">Updated %1$s</string>
+    <string name="label_release_notes">Notes de la versió</string>
+    <string name="msg_no_repos_tracked">Encara no s\'ha fet un seguiment de repositoris</string>
+    <string name="label_no_app_linked">No hi ha cap aplicació enllaçada</string>
+    <string name="format_updated_relative">Actualitzat %1$s</string>
     <!-- Relative Time -->
-    <string name="time_just_now">just now</string>
-    <string name="time_min_ago">%1$dm ago</string>
-    <string name="time_hour_ago">%1$dh ago</string>
-    <string name="time_day_ago">%1$dd ago</string>
-    <string name="time_month_ago">%1$dmo ago</string>
-    <string name="time_year_ago">%1$dy ago</string>
-    <string name="action_retry">Retry</string>
-    <string name="action_start_sign_in">Start Sign In</string>
-    <string name="auth_requesting_code">Requesting device code...</string>
-    <string name="auth_copy_code_instruction">1. Copy your code:</string>
-    <string name="auth_paste_code_instruction">2. Paste the code on GitHub:</string>
-    <string name="label_found_apks">Found APKs</string>
-    <string name="label_readme">README</string>
-    <string name="action_refresh">Refresh</string>
+    <string name="time_just_now">just ara</string>
+    <string name="time_min_ago">%1$dfa m</string>
+    <string name="time_hour_ago">%1$dfa h</string>
+    <string name="time_day_ago">%1$dfa d</string>
+    <string name="time_month_ago">%1$dfa un mes</string>
+    <string name="time_year_ago">%1$dfa y</string>
+    <string name="action_retry">Torna-ho a provar</string>
+    <string name="action_start_sign_in">Inicieu la sessió</string>
+    <string name="auth_requesting_code">s\'està sol·licitant el codi del dispositiu...</string>
+    <string name="auth_copy_code_instruction">1. Copia el teu codi:</string>
+    <string name="auth_paste_code_instruction">2. Enganxeu el codi a GitHub:</string>
+    <string name="label_found_apks">s\'han trobat APK</string>
+    <string name="label_readme">LLEGIUME</string>
+    <string name="action_refresh">Actualitzar</string>
     <!-- Added Missing Group Strings -->
-    <string name="feat_sound_modes_title">Sound mode tile</string>
-    <string name="feat_sound_modes_desc">QS tile to toggle sound mode</string>
-    <string name="search_sound_mode_show_slider_title">Show slider</string>
-    <string name="search_sound_mode_show_slider_desc">Show volume slider in tile</string>
-    <string name="search_sound_mode_behavior_title">Cycle Behavior</string>
-    <string name="search_sound_mode_behavior_desc">Choose modes to cycle through</string>
-    <string name="feat_ambient_music_title">Ambient music glance</string>
-    <string name="feat_ambient_music_desc">Glance at media on AOD</string>
-    <string name="feat_sound_haptics_title">Sound and Haptics</string>
-    <string name="feat_sound_haptics_desc">Volume and haptic features</string>
-    <string name="feat_security_privacy_title">Security and Privacy</string>
-    <string name="feat_security_privacy_desc">Protect and secure your device</string>
-    <string name="feat_notifications_alerts_title">Notifications and Alerts</string>
-    <string name="feat_notifications_alerts_desc">Never miss your priorities</string>
-    <string name="feat_input_actions_title">Input and Actions</string>
-    <string name="feat_input_actions_desc">Control your device with ease</string>
-    <string name="feat_widgets_title">Widgets</string>
-    <string name="feat_widgets_desc">At a glance on your home screen</string>
-    <string name="feat_display_visuals_title">Display</string>
-    <string name="feat_display_visuals_desc">Visuals to enhance your experience</string>
-    <string name="feat_watch_title">Watch</string>
-    <string name="feat_watch_desc">Integrations with WearOS</string>
-    <string name="watch_no_companion_title">No Watch detected</string>
-    <string name="watch_no_companion_desc">It looks like you do not have the Essentials Wear companion app installed on your watch.</string>
-    <string name="watch_install_companion_action">Install Companion</string>
-    <string name="cat_interaction">Interaction</string>
-    <string name="cat_interface">Interface</string>
-    <string name="cat_display">Display</string>
-    <string name="cat_protection">Protection</string>
+    <string name="feat_sound_modes_title">Peça del mode de so</string>
+    <string name="feat_sound_modes_desc">Peça QS per canviar el mode de so</string>
+    <string name="search_sound_mode_show_slider_title">Mostra el control lliscant</string>
+    <string name="search_sound_mode_show_slider_desc">Mostra el control lliscant de volum al mosaic</string>
+    <string name="search_sound_mode_behavior_title">Comportament del cicle</string>
+    <string name="search_sound_mode_behavior_desc">Trieu els modes per circular</string>
+    <string name="feat_ambient_music_title">Mirada de la música ambiental</string>
+    <string name="feat_ambient_music_desc">Un cop d\'ull als mitjans de comunicació sobre AOD</string>
+    <string name="feat_sound_haptics_title">So i Hàptica</string>
+    <string name="feat_sound_haptics_desc">Característiques de volum i hàptic</string>
+    <string name="feat_security_privacy_title">Seguretat i Privacitat</string>
+    <string name="feat_security_privacy_desc">Protegeix i protegeix el teu dispositiu</string>
+    <string name="feat_notifications_alerts_title">Notificacions i alertes</string>
+    <string name="feat_notifications_alerts_desc">No et perdis mai les teves prioritats</string>
+    <string name="feat_input_actions_title">Entrada i accions</string>
+    <string name="feat_input_actions_desc">Controla el teu dispositiu amb facilitat</string>
+    <string name="feat_widgets_title">Ginys</string>
+    <string name="feat_widgets_desc">d\'un cop d\'ull a la pantalla d\'inici</string>
+    <string name="feat_display_visuals_title">Mostra</string>
+    <string name="feat_display_visuals_desc">Visuals per millorar la teva experiència</string>
+    <string name="feat_watch_title">Mira</string>
+    <string name="feat_watch_desc">Integracions amb WearOS</string>
+    <string name="watch_no_companion_title">No s\'ha detectat cap rellotge</string>
+    <string name="watch_no_companion_desc">Sembla que no tens l\'aplicació complementària Essentials Wear instal·lada al rellotge.</string>
+    <string name="watch_install_companion_action">Instal·leu Companion</string>
+    <string name="cat_interaction">Interacció</string>
+    <string name="cat_interface">Interfície</string>
+    <string name="cat_display">Mostra</string>
+    <string name="cat_protection">Protecció</string>
     <string name="label_kbd_abc">ABC</string>
     <string name="label_kbd_symbols">\?#/</string>
-    <string name="msg_restrict_own_app_repo">Oi! You can check updates in app settings, No need to add here XD</string>
-    <string name="action_export">Export</string>
-    <string name="action_import">Import</string>
-    <string name="msg_export_success">Repositories exported successfully</string>
-    <string name="msg_export_failed">Failed to export repositories</string>
-    <string name="msg_import_success">Repositories imported successfully</string>
-    <string name="msg_import_failed">Failed to import repositories</string>
-    <string name="label_apps">Apps</string>
-    <string name="feat_text_animations_title">Scale and Animations</string>
-    <string name="feat_text_animations_desc">Adjust system scale and animations</string>
+    <string name="msg_restrict_own_app_repo">Oi! Podeu comprovar les actualitzacions a la configuració de l\'aplicació, no cal afegir-hi aquí XD</string>
+    <string name="action_export">Exporta</string>
+    <string name="action_import">Importar</string>
+    <string name="msg_export_success">Els repositoris s\'han exportat correctament</string>
+    <string name="msg_export_failed">No s\'han pogut exportar els repositoris</string>
+    <string name="msg_import_success">Els repositoris s\'han importat correctament</string>
+    <string name="msg_import_failed">No s\'han pogut importar els repositoris</string>
+    <string name="label_apps">Aplicacions</string>
+    <string name="feat_text_animations_title">Escala i animacions</string>
+    <string name="feat_text_animations_desc">Ajustar l\'escala i les animacions del sistema</string>
     <string name="settings_section_text">Text</string>
-    <string name="label_font_scale">Font Scale</string>
-    <string name="label_font_weight">Font Weight</string>
-    <string name="label_reset_default">Reset</string>
-    <string name="settings_section_scale">Scale</string>
-    <string name="label_smallest_width">Smallest Width</string>
-    <string name="msg_shizuku_permission_required">Shizuku permission required to adjust scale</string>
-    <string name="label_grant_permission">Grant Permission</string>
-    <string name="settings_section_animations">Animations</string>
-    <string name="label_animator_duration_scale">Animator duration scale</string>
-    <string name="label_transition_animation_scale">Transition animation scale</string>
-    <string name="label_window_animation_scale">Window animation scale</string>
-    <string name="about_desc_text_animations">Adjust system-wide font scale, weight, and animation speeds. Note that some settings may require advanced permissions or a device reboot for certain apps to reflect changes. \n\nAdditional shizuku or root permission may be necessary for scale adjustments</string>
-    <string name="feat_aod_force_turn_off_title">Force turn off AOD</string>
-    <string name="feat_aod_force_turn_off_desc">Force turn off the AOD when no notifications. Requires accessibility permission.</string>
-    <string name="feat_auto_accessibility_title">Auto accessibility</string>
-    <string name="feat_auto_accessibility_desc">Automatically grants the accessibility permission on app launch if missing using WRITE_SECURE_SETTINGS.</string>
-    <string name="label_help_guide">Help and Guides</string>
-    <string name="tab_your_android">Your Android</string>
-    <string name="label_device_storage">Storage</string>
-    <string name="label_device_ram">Memory</string>
-    <string name="label_use_blur">Use blur</string>
-    <string name="desc_use_blur">Enable progressive blur elements across the UI</string>
-    <string name="msg_blur_compatibility_error">Blur is disabled on this device to prevent a known display bug on Samsung devices with Android 15 or below.</string>
+    <string name="label_font_scale">Escala de lletra</string>
+    <string name="label_font_weight">Pes de la lletra</string>
+    <string name="label_reset_default">Restableix</string>
+    <string name="settings_section_scale">Escala</string>
+    <string name="label_smallest_width">Amplada mínima</string>
+    <string name="msg_shizuku_permission_required">Es requereix permís de Shizuku per ajustar l\'escala</string>
+    <string name="label_grant_permission">Concedir el permís</string>
+    <string name="settings_section_animations">Animacions</string>
+    <string name="label_animator_duration_scale">Escala de durada de l\'animador</string>
+    <string name="label_transition_animation_scale">Escala d\'animació de transició</string>
+    <string name="label_window_animation_scale">Escala d\'animació de finestra</string>
+    <string name="about_desc_text_animations">Ajusteu l\'escala de tipus de lletra, el pes i les velocitats d\'animació a tot el sistema. Tingueu en compte que algunes configuracions poden requerir permisos avançats o un reinici del dispositiu per a determinades aplicacions per reflectir els canvis. \n\nPotser calgui un permís addicional de shizuku o root per als ajustaments d\'escala</string>
+    <string name="feat_aod_force_turn_off_title">Força la desactivació de l\'AOD</string>
+    <string name="feat_aod_force_turn_off_desc">Força desactivar l\'AOD quan no hi hagi notificacions. Requereix permís d\'accessibilitat.</string>
+    <string name="feat_auto_accessibility_title">Accessibilitat automàtica</string>
+    <string name="feat_auto_accessibility_desc">Atorga automàticament el permís d\'accessibilitat a l\'inici de l\'aplicació si no es troba utilitzant WRITE_SECURE_SETTINGS.</string>
+    <string name="label_help_guide">Ajuda i Guies</string>
+    <string name="tab_your_android">El teu Android</string>
+    <string name="label_device_storage">Emmagatzematge</string>
+    <string name="label_device_ram">Memòria</string>
+    <string name="label_use_blur">Utilitzeu el desenfocament</string>
+    <string name="desc_use_blur">Activa els elements de desenfocament progressiu a la interfície d\'usuari</string>
+    <string name="msg_blur_compatibility_error">El desenfocament està desactivat en aquest dispositiu per evitar un error de visualització conegut als dispositius Samsung amb Android 15 o inferior.</string>
 </resources>
