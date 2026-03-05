@@ -544,7 +544,7 @@ class MainViewModel : ViewModel() {
                     }
                 }
             }
-            context.registerReceiver(
+            context.applicationContext.registerReceiver(
                 powerSaveReceiver,
                 IntentFilter(PowerManager.ACTION_POWER_SAVE_MODE_CHANGED)
             )
@@ -2285,8 +2285,16 @@ class MainViewModel : ViewModel() {
     override fun onCleared() {
         super.onCleared()
         appContext?.let { context ->
-            context.contentResolver.unregisterContentObserver(contentObserver)
-            powerSaveReceiver?.let { context.unregisterReceiver(it) }
+            try {
+                context.contentResolver.unregisterContentObserver(contentObserver)
+            } catch (e: Exception) {
+                
+            }
+            try {
+                powerSaveReceiver?.let { context.unregisterReceiver(it) }
+            } catch (e: Exception) {
+
+            }
         }
         if (::settingsRepository.isInitialized) {
             settingsRepository.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener)

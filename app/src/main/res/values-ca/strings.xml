@@ -1036,13 +1036,13 @@
     <string name="feat_system_keys">Les claus</string>
     <string name="feat_system_keyboard_desc">Personalitza el disseny i el comportament</string>
     <string name="search_keyboard_height_title">Alçada del teclat</string>
-    <string name="search_keyboard_height_desc">Ajusteu la mida vertical total del teclat</string>&gt;
+    <string name="search_keyboard_height_desc">Ajusteu la mida vertical total del teclat</string>
     <string name="search_keyboard_padding_title">Encoixinat inferior</string>
     <string name="search_keyboard_padding_desc">Afegiu espai a sota del teclat</string>
     <string name="search_keyboard_haptics_title">Feedback hàptic</string>
     <string name="search_keyboard_haptics_desc">Vibra en prémer la tecla</string>
     <string name="test_keyboard_hint">Prova el teclat</string>
-    <string name="label_keyboard_height">Alçada del teclat</string>&gt;
+    <string name="label_keyboard_height">Alçada del teclat</string>
     <string name="label_keyboard_bottom_padding">Encoixinat inferior</string>
     <string name="label_keyboard_haptics">Feedback hàptic</string>
     <string name="label_keyboard_roundness">Rodona clau</string>
