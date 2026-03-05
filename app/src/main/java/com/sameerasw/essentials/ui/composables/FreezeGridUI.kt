@@ -72,7 +72,8 @@ import kotlinx.coroutines.withContext
 fun FreezeGridUI(
     viewModel: MainViewModel,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp)
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+    onGetStartedClick: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
     val view = LocalView.current
@@ -129,11 +130,22 @@ fun FreezeGridUI(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "No apps selected to freeze.\nGo to settings to pick apps.",
+                    text = stringResource(R.string.msg_no_apps_frozen),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+                if (onGetStartedClick != null) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            onGetStartedClick()
+                        }
+                    ) {
+                        Text(stringResource(R.string.action_get_started))
+                    }
+                }
             }
         } else {
             val isShizukuAvailable by viewModel.isShizukuAvailable

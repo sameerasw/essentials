@@ -640,7 +640,12 @@ class MainActivity : FragmentActivity() {
                                             FreezeGridUI(
                                                 viewModel = viewModel,
                                                 modifier = Modifier.fillMaxSize(),
-                                                contentPadding = contentPadding
+                                                contentPadding = contentPadding,
+                                                onGetStartedClick = {
+                                                    startActivity(Intent(context, FeatureSettingsActivity::class.java).apply {
+                                                        putExtra("feature", "Freeze")
+                                                    })
+                                                }
                                             )
                                         }
 
@@ -649,7 +654,8 @@ class MainActivity : FragmentActivity() {
                                                 modifier = Modifier.fillMaxSize(),
                                                 contentPadding = contentPadding,
                                                 showNewAutomationSheet = showNewAutomationSheet,
-                                                onDismissNewAutomationSheet = { showNewAutomationSheet = false }
+                                                onDismissNewAutomationSheet = { showNewAutomationSheet = false },
+                                                onNewAutomationClick = { showNewAutomationSheet = true }
                                             )
                                         }
 
@@ -681,6 +687,17 @@ class MainActivity : FragmentActivity() {
                                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                                     )
 
+                                                    Spacer(modifier = Modifier.height(16.dp))
+
+                                                    Button(
+                                                        onClick = {
+                                                            HapticUtil.performVirtualKeyHaptic(view)
+                                                            showAddRepoSheet = true
+                                                        }
+                                                    ) {
+                                                        Text(stringResource(R.string.action_add_repository))
+                                                    }
+
                                                     Spacer(modifier = Modifier.height(32.dp))
 
                                                     Text(
@@ -693,7 +710,8 @@ class MainActivity : FragmentActivity() {
                                                     ImportExportButtons(
                                                         view = view,
                                                         exportLauncher = exportLauncher,
-                                                        importLauncher = importLauncher
+                                                        importLauncher = importLauncher,
+                                                        showExport = false
                                                     )
                                                 }
                                             } else {
@@ -1049,7 +1067,8 @@ private fun AppsActionButtons(
 private fun ImportExportButtons(
     view: android.view.View,
     exportLauncher: androidx.activity.result.ActivityResultLauncher<String>,
-    importLauncher: androidx.activity.result.ActivityResultLauncher<Array<String>>
+    importLauncher: androidx.activity.result.ActivityResultLauncher<Array<String>>,
+    showExport: Boolean = true
 ) {
     Row(
         modifier = Modifier
@@ -1057,28 +1076,30 @@ private fun ImportExportButtons(
             .padding(horizontal = 4.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Button(
-            onClick = {
-                HapticUtil.performUIHaptic(view)
-                val timeStamp = SimpleDateFormat(
-                    "yyyyMMdd_HHmmss",
-                    Locale.getDefault()
-                ).format(Date())
-                exportLauncher.launch("essentials_updates_$timeStamp.json")
-            },
-            modifier = Modifier.weight(1f),
-            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                contentColor = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.rounded_arrow_warm_up_24),
-                contentDescription = null,
-                modifier = Modifier.size(18.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(stringResource(R.string.action_export))
+        if (showExport) {
+            Button(
+                onClick = {
+                    HapticUtil.performUIHaptic(view)
+                    val timeStamp = SimpleDateFormat(
+                        "yyyyMMdd_HHmmss",
+                        Locale.getDefault()
+                    ).format(Date())
+                    exportLauncher.launch("essentials_updates_$timeStamp.json")
+                },
+                modifier = Modifier.weight(1f),
+                colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.rounded_arrow_warm_up_24),
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(stringResource(R.string.action_export))
+            }
         }
 
         Button(
