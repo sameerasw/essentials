@@ -1,1097 +1,1182 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Essentials</string>
-    <string name="label_beta">Deneme</string>
-    <string name="accessibility_service_description"><b>Essentials Erişilebilirlik Servisi</b>\n\nBu servis bazı gelişmiş özellikler için gereklidir:\n\n<b>Fiziksel Tuş Atama:</b>\nEkran kapalıyken bile ses tuşlarını algılayıp Fener gibi özellikleri aktif etmeyi sağlar.\n\n<b>Uygulama Başına Ayarlar:</b>\nDinamik Gece Işığı, Bildirim Aydınlatma Renkleri ve Uygulama Kilitleme gibi özelliklere spesifik profiller ayarlamak için şu anda kullanılan uygulamayı gözetler.\n\n<b>Ekran Kontrolu:</b>\nUygulamaların ekranı kapatmasına ve ekran durumunu değiştirmesine olanak sağlar (Ekrana Çift Tıklama veya bir Widget gibi)\n\n<b>Güvenlik:</b>\nEkran kapalıyken açık olan uygulamayı tespit ederek izin verilmeyen değişiklikleri engeller.\n\n<small>Yazılı olan bilgiler veya kullanıcı bilgileri toplanmaz veya aktarılmaz.</small></string>
+    <string name="app_name">Temeller</string>
+    <string name="label_beta">BETA</string>
+    <string name="accessibility_service_description"><b>Essentials Accessibility Service</b>\n\nThis service is required for the following advanced features:\n\n<b>• Physical Button Remapping:</b>\nDetects volume button presses even when the screen is off to trigger actions like the Flashlight.\n\n<b>• Per-App Settings:</b>\nMonitors the currently active app to apply specific profiles for Dynamic Night Light, Notification Lighting Colors, and App Lock.\n\n<b>• Screen Control:</b>\nAllows the app to lock the screen (e.g. via Double Tap or Widgets) and detect screen state changes.\n\n<b>• Security:</b>\nPrevents unauthorized changes by detecting window content when the device is locked.\n\n<small>No input text or sensitive user data is collected or transmitted.</small></string>
     <string name="freeze_activity_title">Uygulama Dondurma</string>
-    <string name="freeze_activity_subtitle">Nadir olarak kullanılan uygulamaları dondur</string>
+    <string name="freeze_activity_subtitle">Nadiren kullanılan uygulamaları devre dışı bırakın</string>
     <string name="freeze_shortcut_short_label">Uygulama Dondurma</string>
     <string name="freeze_shortcut_long_label">Uygulama Dondurmayı Aç</string>
     <string name="frozen_app_shortcut_label">Dondurulmuş Uygulama</string>
-    <string name="screen_off_widget_label">Empty screen off widget</string>
-    <string name="app_freezing_tile_label">Uygulama Dondur</string>
-    <string name="flashlight_pulse_tile_label">Flashlight Pulse</string>
-    <string name="check_pre_releases_label">Check for pre-releases</string>
-    <string name="check_pre_releases_desc">Stabil olmayabilir</string>
-    <!-- App Lock -->
+    <string name="screen_off_widget_label">Boş ekran kapatma widget\'ı</string>
+    <string name="app_freezing_tile_label">Uygulama Dondurma</string>
+    <string name="flashlight_pulse_tile_label">El Feneri Darbesi</string>
+    <string name="check_pre_releases_label">Ön sürümleri kontrol edin</string>
+    <string name="check_pre_releases_desc">Kararsız olabilir</string>
+
+    
     <string name="settings_section_security">Güvenlik</string>
-    <string name="app_lock_enable_title">Uygulama kilitlemeyi etkinleştir</string>
+    <string name="app_lock_enable_title">Uygulama kilidini etkinleştir</string>
     <string name="app_lock_auth_title">Uygulama Kilidi Güvenliği</string>
     <string name="app_lock_enable_auth_subtitle">Uygulama kilidini etkinleştirmek için kimlik doğrulaması yapın</string>
-    <string name="app_lock_disable_auth_subtitle"></string>
+    <string name="app_lock_disable_auth_subtitle">Uygulama kilidini devre dışı bırakmak için kimlik doğrulaması yapın</string>
     <string name="app_lock_select_apps_title">Kilitli uygulamaları seçin</string>
-    <string name="app_lock_select_apps_desc">Choose which apps require authentication</string>
-    <string name="app_lock_description">Uygulamalarınızı biyometrik kimlik doğrulama ile güvence altına alın. Kilitli uygulamalar başlatıldığında kimlik doğrulaması gerektirir ve ekran kapanana</string>
-    <string name="app_lock_warning">Dikkat edin, bu yalnızca üçüncü taraf bir uygulama olduğu için sağlam bir çözüm değildir. Güçlü bir güvenliğe ihtiyacınız varsa, Private Space veya benzeri özellikleri kullanmayı düşünün.</string>
-    <string name="app_lock_biometric_note">Bir diğer önemli nokta ise, biyometrik kimlik doğrulama isteminin yalnızca GÜÇLÜ güvenlik sınıfı yöntemlerini kullanmanıza izin vermesidir. Pixel 7 gibi cihazlardaki ZAYIF güvenlik sınıfındaki yüz kilidi açma yöntemleri, yalnızca parmak izi veya PIN gibi mevcut diğer GÜÇLÜ kimlik doğrulama yöntemlerini kullanabilecektir</string>
-    <!-- Button Remap -->
-    <string name="button_remap_enable_title">Enable Button Remap</string>
-    <string name="button_remap_use_shizuku_title">Shizuku\'yu Kullan</string>
-    <string name="button_remap_use_shizuku_desc">Works with screen off (Recommended)</string>
-    <string name="shizuku_not_running_toast">Shizuku çalışmıyor </string>
-    <string name="shizuku_detected_prefix">Algılandı</string>
-    <string name="shizuku_status_prefix">Durum</string>
+    <string name="app_lock_select_apps_desc">Hangi uygulamaların kimlik doğrulaması gerektirdiğini seçin</string>
+    <string name="app_lock_description">Uygulamalarınızı biyometrik kimlik doğrulamayla koruyun. Kilitli uygulamalar başlatılırken kimlik doğrulama gerektirir. Ekran kapanana kadar kilit açık kalır.</string>
+    <string name="app_lock_warning">Bu yalnızca 3. taraf bir uygulama olduğundan bunun sağlam bir çözüm olmadığını unutmayın. Güçlü bir güvenliğe ihtiyacınız varsa Özel Alan\'ı veya benzeri diğer özellikleri kullanmayı düşünün.</string>
+    <string name="app_lock_biometric_note">Başka bir not, biyometrik kimlik doğrulama istemi yalnızca GÜÇLÜ güvenli sınıf yöntemlerini kullanmanıza izin verir. Pixel 7 gibi cihazlarda ZAYIF sınıfındaki yüz kilidi açma güvenlik yöntemleri yalnızca parmak izi veya pin gibi mevcut diğer GÜÇLÜ kimlik doğrulama yöntemlerinden yararlanabilecektir.</string>
+
+    
+    <string name="button_remap_enable_title">Düğme Yeniden Eşlemesini Etkinleştir</string>
+    <string name="button_remap_use_shizuku_title">Shizuku veya Kök veya Kök kullanın</string>
+    <string name="button_remap_use_shizuku_desc">Ekran kapalıyken çalışır (Önerilen)</string>
+    <string name="shizuku_not_running_toast">Shizuku koşmuyor</string>
+    <string name="shizuku_detected_prefix">Saptanmış %1$s</string>
+    <string name="shizuku_status_prefix">Durum: %1$s</string>
     <string name="shizuku_open_button">Shizuku\'yu aç</string>
-    <string name="settings_section_flashlight">Flaş </string>
-    <string name="flashlight_options_title">Flaş Ayarları </string>
-    <string name="flashlight_options_desc">Adjust fading and other settings</string>
-    <string name="setting_pitch_black_theme_title">Pitch black theme</string>
-    <string name="setting_pitch_black_theme_desc">Saf siyah arka plan kullan</string>
+    <string name="settings_section_flashlight">El feneri</string>
+    <string name="flashlight_options_title">El feneri seçenekleri</string>
+    <string name="flashlight_options_desc">Solmayı ve diğer ayarları yapın</string>
+    <string name="setting_pitch_black_theme_title">Zifiri siyah tema</string>
+    <string name="setting_pitch_black_theme_desc">Karanlık modda saf siyah arka plan kullanın</string>
     <string name="settings_section_haptic">Dokunsal Geribildirim</string>
-    <string name="button_remap_section_long_press">Remap Long Press</string>
-    <string name="screen_off">Ekran kapalı </string>
-    <string name="screen_on">Ekran açık </string>
-    <string name="volume_up">Sesi aç</string>
-    <string name="volume_down">Sesi kıs</string>
-    <string name="action_toggle_flashlight">El feneri aç / kapat</string>
-    <string name="action_media_play_pause">Medya Oynat / Durdur</string>
+    <string name="button_remap_section_long_press">Uzun Basmayı Yeniden Eşle</string>
+    <string name="screen_off">Ekran Kapalı</string>
+    <string name="screen_on">Ekran Açık</string>
+    <string name="volume_up">Sesi Artırma</string>
+    <string name="volume_down">Sesi Kısma</string>
+    <string name="action_toggle_flashlight">El fenerini aç/kapat</string>
+    <string name="action_media_play_pause">Medya oynatma/duraklatma</string>
     <string name="action_media_next">Sonraki medya</string>
-    <string name="action_media_previous">Önceki medya</string>
-    <string name="action_toggle_vibrate">Titreşim aç / kapat</string>
+    <string name="action_media_previous">Medya önceki</string>
+    <string name="action_toggle_vibrate">Titreşimi aç/kapat</string>
     <string name="action_toggle_mute">Sesi kapat</string>
-    <string name="action_ai_assistant">Ai Asistan</string>
+    <string name="action_ai_assistant">Yapay zeka asistanı</string>
     <string name="action_take_screenshot">Ekran görüntüsü al</string>
-    <string name="action_cycle_sound_modes">Cycle sound modes</string>
+    <string name="action_cycle_sound_modes">Ses modlarını değiştir</string>
     <string name="action_like_song">Şu anki şarkıyı beğen</string>
-    <string name="like_song_settings_title">Like song settings</string>
-    <string name="like_song_settings_desc">Bu özellik, oynatılan medyayı algılamak ve beğenme işlemini tetiklemek için bildirim erişimi gerektirir. Lütfen aşağıdan etkinleştirin.</string>
-    <string name="like_song_toast_enabled">Show toast message</string>
-    <string name="like_song_aod_overlay_title">Show overlay on AOD</string>
-    <string name="feat_ambient_music_glance_title">Ambient music glance</string>
-    <string name="feat_ambient_music_glance_desc">Glance at media on AOD</string>
-    <string name="ambient_glance_docked_mode_title">Docked mode</string>
-    <string name="ambient_glance_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
-    <string name="feat_notification_glance_title">Notification glance</string>
-    <string name="feat_notification_glance_desc">Keep AOD on while notifications are pending</string>
-    <string name="notification_glance_same_as_lighting_title">Same apps as notification lighting</string>
-    <string name="notification_glance_desc">This feature will dynamically enable Always on Display when a notification arrives from a selected app, and disable it once all matching notifications are dismissed. Pick apps or use the same selection as notification lighting.</string>
-    <string name="grant_notification_access">Grant notification access</string>
-    <string name="action_toggle_media_volume">Toggle media volume</string>
-    <string name="button_remap_screen_off_hint">When the screen is off, long-press the selected button to trigger its assigned action. On Pixel devices, this action only gets triggered if the AOD is on due to system limitations.</string>
-    <string name="button_remap_screen_on_hint">When the screen is on, long-press the selected button to trigger its assigned action.</string>
-    <string name="flashlight_intensity_title">Flashlight Intensity</string>
-    <string name="flashlight_fade_title">Fade in and out</string>
-    <string name="flashlight_fade_desc">Smoothly toggle flashlight</string>
-    <string name="flashlight_global_title">Global controls</string>
-    <string name="flashlight_global_desc">Fade-in flashlight globally</string>
-    <string name="flashlight_adjust_intensity_title">Adjust intensity</string>
-    <string name="flashlight_adjust_intensity_desc">Volume + - adjusts flashlight intensity</string>
-    <string name="flashlight_live_update_title">Live update</string>
-    <string name="flashlight_live_update_desc">Show brightness in status bar</string>
-    <string name="settings_section_other">Other</string>
-    <string name="flashlight_always_off_title">Always turn off flashlight</string>
-    <string name="flashlight_always_off_desc">Even while display is on</string>
-    <string name="content_desc_settings">Settings</string>
-    <!-- Caffeinate / Permissions -->
-    <string name="permission_show_notification_title">Show Notification</string>
-    <string name="permission_post_notifications_title">Post Notifications</string>
-    <string name="permission_post_notifications_desc">Allows the app to show notifications</string>
-    <string name="permission_grant_action">Grant Permission</string>
-    <string name="caffeinate_notification_title">Caffeinate Active</string>
-    <string name="caffeinate_active">Active</string>
-    <string name="caffeinate_notification_desc">Screen is being kept awake</string>
-    <string name="caffeinate_battery_optimization_title">Ignore battery optimization</string>
-    <string name="caffeinate_abort_screen_off_title">Abort with screen off</string>
-    <string name="caffeinate_skip_countdown_title">Skip countdown</string>
-    <string name="caffeinate_skip_countdown_desc">Start Caffeinate immediately.</string>
-    <string name="caffeinate_timeout_presets_title">Timeout Presets</string>
-    <string name="caffeinate_timeout_presets_desc">Select available durations for QS tile</string>
+    <string name="like_song_settings_title">Şarkı ayarları gibi</string>
+    <string name="like_song_settings_desc">Bu özellik, o anda oynatılan medyayı algılamak ve benzer eylemi tetiklemek için bildirim erişimi gerektirir. Lütfen aşağıdan etkinleştirin.</string>
+    <string name="like_song_toast_enabled">Tost mesajını göster</string>
+    <string name="like_song_aod_overlay_title">AOd\'da kaplamayı göster</string>
+    <string name="feat_ambient_music_glance_title">Ortam müziği bakışı</string>
+    <string name="feat_ambient_music_glance_desc">AOd\'daki medyaya genel bakış</string>
+    <string name="ambient_glance_docked_mode_title">Yerleşik mod</string>
+    <string name="ambient_glance_docked_mode_desc">AOd\'da müzik çalarken kaplamayı süresiz olarak görünür tutun</string>
+    <string name="feat_notification_glance_title">Bildirim bakışı</string>
+    <string name="feat_notification_glance_desc">Bildirimler beklerken AOd\'yi açık tutun</string>
+    <string name="notification_glance_same_as_lighting_title">Bildirim aydınlatmasıyla aynı uygulamalar</string>
+    <string name="notification_glance_desc">Bu özellik, seçilen bir uygulamadan bir bildirim geldiğinde Daima Açık Ekran\'ı dinamik olarak etkinleştirecek ve eşleşen tüm bildirimler kapatıldığında bu özelliği devre dışı bırakacaktır. Uygulamaları seçin veya bildirim aydınlatmasıyla aynı seçimi kullanın.</string>
+    <string name="grant_notification_access">Bildirim erişimi ver</string>
+    <string name="action_toggle_media_volume">Medya ses düzeyini değiştir</string>
+    <string name="button_remap_screen_off_hint">Ekran kapalıyken, atanan eylemi tetiklemek için seçilen düğmeye uzun basın. Pixel cihazlarda bu işlem yalnızca sistem sınırlamaları nedeniyle AOD açıksa tetiklenir.</string>
+    <string name="button_remap_screen_on_hint">Ekran açıkken, atanan eylemi tetiklemek için seçilen düğmeye uzun basın.</string>
+    <string name="flashlight_intensity_title">El Feneri Yoğunluğu</string>
+    <string name="flashlight_fade_title">İçeri ve dışarı solma</string>
+    <string name="flashlight_fade_desc">El fenerini sorunsuzca değiştir</string>
+    <string name="flashlight_global_title">Küresel kontroller</string>
+    <string name="flashlight_global_desc">Küresel çapta kademeli el feneri</string>
+    <string name="flashlight_adjust_intensity_title">Yoğunluğu ayarlayın</string>
+    <string name="flashlight_adjust_intensity_desc">Ses + - el feneri yoğunluğunu ayarlar</string>
+    <string name="flashlight_live_update_title">Canlı güncelleme</string>
+    <string name="flashlight_live_update_desc">Durum çubuğunda parlaklığı göster</string>
+    <string name="settings_section_other">Diğer</string>
+    <string name="flashlight_always_off_title">El fenerini her zaman kapat</string>
+    <string name="flashlight_always_off_desc">Ekran açıkken bile</string>
+    <string name="content_desc_settings">Ayarlar</string>
+
+    
+    <string name="permission_show_notification_title">Bildirimi Göster</string>
+    <string name="permission_post_notifications_title">Bildirim Gönder</string>
+    <string name="permission_post_notifications_desc">Uygulamanın bildirim göstermesine izin verir</string>
+    <string name="permission_grant_action">İzin Ver</string>
+    <string name="caffeinate_notification_title">Kafein Aktif</string>
+    <string name="caffeinate_active">Aktif</string>
+    <string name="caffeinate_notification_desc">Ekran uyanık tutuluyor</string>
+    <string name="caffeinate_battery_optimization_title">Pil optimizasyonunu göz ardı edin</string>
+    <string name="caffeinate_abort_screen_off_title">Ekran kapalıyken iptal et</string>
+    <string name="caffeinate_skip_countdown_title">Geri sayımı atla</string>
+    <string name="caffeinate_skip_countdown_desc">Hemen Kafein almaya başlayın.</string>
+    <string name="caffeinate_timeout_presets_title">Zaman Aşımı Ön Ayarları</string>
+    <string name="caffeinate_timeout_presets_desc">QS kutucuğu için mevcut süreleri seçin</string>
     <string name="caffeinate_timeout_5m">5m</string>
     <string name="caffeinate_timeout_10m">10m</string>
-    <string name="caffeinate_timeout_30m">30m</string>
-    <string name="perm_notif_policy_title">Do Not Disturb access</string>
-    <string name="perm_notif_policy_desc">Required to cycle between sound, vibrate and mute modes</string>
-    <string name="caffeinate_timeout_1h">1h</string>
+    <string name="caffeinate_timeout_30m">30 dakika</string>
+    <string name="perm_notif_policy_title">Erişimi Rahatsız Etmeyin</string>
+    <string name="perm_notif_policy_desc">Ses, titreşim ve sessiz modları arasında geçiş yapmak için gereklidir</string>
+    <string name="caffeinate_timeout_1h">1 saat</string>
     <string name="caffeinate_timeout_infinity">∞</string>
-    <string name="caffeinate_starting_in">Starting in %1$ds…</string>
-    <string name="caffeinate_remaining">%1$s remaining</string>
-    <string name="caffeinate_live_channel_desc">Persistent notification for Caffeinate</string>
-    <!-- Dynamic Night Light -->
-    <string name="dynamic_night_light_enable_title">Enable Dynamic Night Light</string>
-    <string name="dynamic_night_light_apps_section">Apps that toggle off night light</string>
-    <string name="action_select_apps">Select apps</string>
-    <!-- App Freezing -->
-    <string name="settings_section_app_control">App Control</string>
-    <string name="action_freeze">Freeze</string>
-    <string name="action_unfreeze">Unfreeze</string>
-    <string name="content_desc_more_options">More options</string>
-    <string name="action_freeze_all">Freeze all apps</string>
-    <string name="action_unfreeze_all">Unfreeze all apps</string>
-    <string name="action_export_freeze">Export frozen apps list</string>
-    <string name="action_import_freeze">Import frozen apps list</string>
-    <string name="freeze_pick_apps_title">Pick apps to freeze</string>
-    <string name="freeze_pick_apps_desc">Choose which apps can be frozen</string>
-    <string name="settings_section_automation">Automation</string>
-    <string name="freeze_when_locked_title">Freeze when locked</string>
-    <string name="freeze_delay_title">Freeze delay</string>
-    <string name="delay_immediate">Immediate</string>
+    <string name="caffeinate_starting_in"> %1$ds\'de başlıyor…</string>
+    <string name="caffeinate_remaining">%1$s geriye kalan</string>
+    <string name="caffeinate_live_channel_desc">Kafein için kalıcı bildirim</string>
+
+    
+    <string name="dynamic_night_light_enable_title">Dinamik Gece Işığını Etkinleştir</string>
+    <string name="dynamic_night_light_apps_section">Gece ışığını kapatan uygulamalar</string>
+    <string name="action_select_apps">Uygulamaları seçin</string>
+
+    
+    <string name="settings_section_app_control">Uygulama Kontrolü</string>
+    <string name="action_freeze">Dondur</string>
+    <string name="action_unfreeze">Çöz</string>
+    <string name="content_desc_more_options">Daha fazla seçenek</string>
+    <string name="action_freeze_all">Tüm uygulamaları dondur</string>
+    <string name="action_unfreeze_all">Tüm uygulamaları çöz</string>
+    <string name="action_export_freeze">Dondurulmuş uygulamalar listesini dışa aktar</string>
+    <string name="action_import_freeze">Dondurulmuş uygulamalar listesini içe aktar</string>
+    <string name="freeze_pick_apps_title">Dondurulacak uygulamaları seçin</string>
+    <string name="freeze_pick_apps_desc">Hangi uygulamaların dondurulabileceğini seçin</string>
+    <string name="settings_section_automation">Otomasyon</string>
+    <string name="freeze_when_locked_title">Kilitlendiğinde don</string>
+    <string name="freeze_delay_title">Donma gecikmesi</string>
+    <string name="delay_immediate">Hemen</string>
     <string name="delay_1m">1m</string>
     <string name="delay_5m">5m</string>
     <string name="delay_15m">15m</string>
-    <string name="delay_manual">Manual</string>
-    <string name="freeze_auto_freeze_section">Auto freeze apps</string>
-    <string name="freeze_automation_hint">Freeze selected apps when the device locks. Choose a delay to avoid freezing apps if you unlock the screen shortly after turning it off.</string>
-    <string name="freeze_warning">Freezing system apps might be dangerous and may cause unexpected behavior.</string>
-    <string name="action_enable_in_settings">Enable in Settings</string>
-    <string name="freeze_dont_freeze_active_apps_title">Don\'t freeze active apps</string>
-    <string name="perm_usage_stats_title">Usage Stats</string>
-    <string name="perm_usage_stats_desc">Required to detect which apps are currently in the foreground to avoid freezing them</string>
-    <string name="perm_notif_listener_desc_freeze">Required to detect playing media and active notifications to avoid freezing them</string>
-    <!-- Notification Lighting -->
-    <string name="notification_lighting_screen_off_title">Only show when screen off</string>
-    <string name="notification_lighting_skip_silent_title">Skip silent notifications</string>
-    <string name="notification_lighting_skip_persistent_title">Skip persistent notifications</string>
-    <string name="settings_section_flashlight_pulse">Flashlight Pulse</string>
-    <string name="flashlight_pulse_title">Flashlight pulse</string>
-    <string name="flashlight_pulse_facedown_title">Only while facing down</string>
-    <string name="flashlight_pulse_same_as_lighting_title">Same apps as notification lighting</string>
-    <string name="settings_section_style">Style</string>
-    <string name="notification_lighting_stroke_adjustment_section">Stroke adjustment</string>
-    <string name="notification_lighting_corner_radius_title">Corner radius</string>
-    <string name="notification_lighting_stroke_thickness_title">Stroke thickness</string>
-    <string name="notification_lighting_glow_adjustment_section">Glow adjustment</string>
-    <string name="notification_lighting_glow_spread_title">Glow spread</string>
-    <string name="notification_lighting_placement_section">Placement</string>
-    <string name="notification_lighting_h_pos_title">Horizontal position</string>
-    <string name="notification_lighting_v_pos_title">Vertical position</string>
-    <string name="notification_lighting_indicator_adjustment_section">Indicator adjustment</string>
-    <string name="notification_lighting_scale_title">Scale</string>
-    <string name="notification_lighting_duration_title">Duration</string>
-    <string name="settings_section_animation">Animation</string>
-    <string name="notification_lighting_pulse_count_title">Pulse count</string>
-    <string name="notification_lighting_pulse_duration_title">Pulse duration</string>
-    <string name="settings_section_color_mode">Color Mode</string>
-    <string name="settings_section_ambient_display">Ambient display</string>
-    <string name="ambient_display_title">Ambient display</string>
-    <string name="ambient_display_hint">Suitable if you are not using AOD.</string>
-    <string name="ambient_display_desc">Wake screen and show lighting</string>
-    <string name="ambient_show_lock_screen_title">Show lock screen</string>
-    <string name="ambient_show_lock_screen_desc">No black overlay</string>
-    <!-- Tiles -->
-    <string name="action_add">Add</string>
-    <string name="qs_tile_already_added">Already added</string>
-    <string name="qs_tile_requires_android_13">Requires Android 13+</string>
-    <string name="tile_ui_blur">UI Blur</string>
-    <string name="tile_bubbles">Bubbles</string>
-    <string name="tile_sensitive_content">Sensitive Content</string>
-    <string name="tile_tap_to_wake">Tap to Wake</string>
+    <string name="delay_manual">Manuel</string>
+    <string name="freeze_auto_freeze_section">Uygulamaları otomatik dondurma</string>
+    <string name="freeze_automation_hint">Cihaz kilitlendiğinde seçilen uygulamaları dondurun. Ekranı kapattıktan kısa bir süre sonra kilidini açarsanız uygulamaların donmasını önlemek için bir gecikme seçin.</string>
+    <string name="freeze_warning">Sistem uygulamalarının dondurulması tehlikeli olabilir ve beklenmeyen davranışlara neden olabilir.</string>
+    <string name="action_enable_in_settings">Ayarlar\'da etkinleştirin</string>
+    <string name="freeze_dont_freeze_active_apps_title">Giymek\'etkin uygulamaları dondurma</string>
+    <string name="perm_usage_stats_title">Kullanım İstatistikleri</string>
+    <string name="perm_usage_stats_desc">Donmasını önlemek amacıyla hangi uygulamaların ön planda olduğunu tespit etmek için gereklidir</string>
+    <string name="perm_notif_listener_desc_freeze">Dondurulmalarını önlemek amacıyla oynatılan medyayı ve aktif bildirimleri tespit etmek için gereklidir</string>
+
+    
+    <string name="notification_lighting_screen_off_title">Yalnızca ekran kapalıyken göster</string>
+    <string name="notification_lighting_skip_silent_title">Sessiz bildirimleri atla</string>
+    <string name="notification_lighting_skip_persistent_title">Kalıcı bildirimleri atla</string>
+    <string name="settings_section_flashlight_pulse">El Feneri Darbesi</string>
+    <string name="flashlight_pulse_title">El feneri darbesi</string>
+    <string name="flashlight_pulse_facedown_title">Sadece aşağıya doğru bakarken</string>
+    <string name="flashlight_pulse_same_as_lighting_title">Bildirim aydınlatmasıyla aynı uygulamalar</string>
+    <string name="settings_section_style">Stil</string>
+    <string name="notification_lighting_stroke_adjustment_section">Strok ayarı</string>
+    <string name="notification_lighting_corner_radius_title">Köşe yarıçapı</string>
+    <string name="notification_lighting_stroke_thickness_title">Kontur kalınlığı</string>
+    <string name="notification_lighting_glow_adjustment_section">Işıma ayarı</string>
+    <string name="notification_lighting_glow_spread_title">Parıltı yayılması</string>
+    <string name="notification_lighting_placement_section">Atama</string>
+    <string name="notification_lighting_h_pos_title">Yatay konum</string>
+    <string name="notification_lighting_v_pos_title">Dikey konum</string>
+    <string name="notification_lighting_indicator_adjustment_section">Gösterge ayarı</string>
+    <string name="notification_lighting_scale_title">Ölçek</string>
+    <string name="notification_lighting_duration_title">Süre</string>
+    <string name="settings_section_animation">Animasyon</string>
+    <string name="notification_lighting_pulse_count_title">Nabız sayısı</string>
+    <string name="notification_lighting_pulse_duration_title">Darbe süresi</string>
+    <string name="settings_section_color_mode">Renk Modu</string>
+    <string name="settings_section_ambient_display">Ortam ekranı</string>
+    <string name="ambient_display_title">Ortam ekranı</string>
+    <string name="ambient_display_hint">AOD kullanmıyorsanız uygundur.</string>
+    <string name="ambient_display_desc">Ekranı uyandırma ve aydınlatmayı gösterme</string>
+    <string name="ambient_show_lock_screen_title">Kilit ekranını göster</string>
+    <string name="ambient_show_lock_screen_desc">Siyah kaplama yok</string>
+
+    
+    <string name="action_add">Eklemek</string>
+    <string name="qs_tile_already_added">Zaten eklendi</string>
+    <string name="qs_tile_requires_android_13">Android 13+ gerektirir</string>
+    <string name="tile_ui_blur">Kullanıcı Arayüzü Bulanıklığı</string>
+    <string name="tile_bubbles">Kabarcıklar</string>
+    <string name="tile_sensitive_content">Hassas İçerik</string>
+    <string name="tile_tap_to_wake">Uyandırmak için dokunun</string>
     <string name="tile_aod">AOD</string>
-    <string name="tile_caffeinate">Caffeinate</string>
-    <string name="tile_sound_mode">Sound Mode</string>
-    <string name="tile_notification_lighting">Notification Lighting</string>
-    <string name="tile_dynamic_night_light">Dynamic Night Light</string>
-    <string name="tile_locked_security">Locked Security</string>
-    <string name="tile_app_lock">App Lock</string>
-    <string name="tile_mono_audio">Mono Audio</string>
-    <string name="tile_flashlight">Flashlight</string>
-    <string name="tile_app_freezing">App Freezing</string>
-    <string name="tile_flashlight_pulse">Flashlight Pulse</string>
-    <string name="tile_stay_awake">Stay awake</string>
-    <string name="input_method_label">Essentials Keyboard</string>
-    <string name="subtype_en_us">English (US)</string>
-    <string name="tile_active">Active</string>
-    <string name="tile_inactive">Inactive</string>
-    <string name="tile_developer_options">Developer Options</string>
-    <string name="about_desc_developer_options">Toggle system Developer Options from a QS tile easily. This may reset some of the developer settings you have modified.</string>
+    <string name="tile_caffeinate">Kafeinat</string>
+    <string name="tile_sound_mode">Ses Modu</string>
+    <string name="tile_notification_lighting">Bildirim Aydınlatması</string>
+    <string name="tile_dynamic_night_light">Dinamik Gece Lambası</string>
+    <string name="tile_locked_security">Kilitli Güvenlik</string>
+    <string name="tile_app_lock">Uygulama Kilidi</string>
+    <string name="tile_mono_audio">Mono Ses</string>
+    <string name="tile_flashlight">El feneri</string>
+    <string name="tile_app_freezing">Uygulama Dondurma</string>
+    <string name="tile_flashlight_pulse">El Feneri Darbesi</string>
+    <string name="tile_stay_awake">Uyanık kal</string>
+    <string name="input_method_label">Temel Klavye</string>
+    <string name="subtype_en_us">İngilizce (ABD)</string>
+    <string name="tile_active">Aktif</string>
+    <string name="tile_inactive">Etkin değil</string>
+    <string name="tile_developer_options">Geliştirici Seçenekleri</string>
+    <string name="about_desc_developer_options">Sistem Geliştirici Seçeneklerini QS kutucuğundan kolayca değiştirin. Bu, değiştirdiğiniz geliştirici ayarlarından bazılarını sıfırlayabilir.</string>
     <string name="nfc_tile_label">NFC</string>
-    <string name="tile_private_dns">Private DNS</string>
-    <string name="tile_private_dns_auto">Auto</string>
-    <string name="tile_private_dns_off">Off</string>
-    <string name="tile_usb_debugging">USB Debugging</string>
-    <string name="tile_color_picker">Color Picker</string>
-    <string name="toast_eyedropper_failed">Are you sure you\'re on Android 17? (╯°_°）╯</string>
-    <string name="subtitle_eye_dropper">Eye Dropper</string>
-    <string name="on">On</string>
-    <string name="off">Off</string>
-    <string name="private_dns_custom_title">Custom Private DNS</string>
-    <string name="private_dns_presets_title">Common DNS Presets</string>
-    <string name="private_dns_hostname_label">Provider hostname</string>
-    <string name="dns_preset_adguard">AdGuard DNS</string>
+    <string name="tile_private_dns">Özel DNS</string>
+    <string name="tile_private_dns_auto">Otomatik</string>
+    <string name="tile_private_dns_off">Kapalı</string>
+    <string name="tile_usb_debugging">USB Hata Ayıklama</string>
+    <string name="tile_color_picker">Renk Seçici</string>
+    <string name="toast_eyedropper_failed">Android\'Android 17\'de olduğunuzdan emin misiniz? (╯°_°）╯</string>
+    <string name="subtitle_eye_dropper">Göz Damlalığı</string>
+    <string name="on">Açık</string>
+    <string name="off">Kapalı</string>
+    <string name="private_dns_custom_title">Özel Özel DNS</string>
+    <string name="private_dns_presets_title">Ortak DNS Ön Ayarları</string>
+    <string name="private_dns_hostname_label">Sağlayıcı ana bilgisayar adı</string>
+    <string name="dns_preset_adguard">AdGuard DNs\'i</string>
     <string name="dns_preset_adguard_hostname">dns.adguard.com</string>
-    <string name="dns_preset_google">Google Public DNS</string>
+    <string name="dns_preset_google">Google Genel DNS</string>
     <string name="dns_preset_google_hostname">dns.google</string>
-    <string name="dns_preset_cloudflare">Cloudflare DNS</string>
+    <string name="dns_preset_cloudflare">Cloudflare DNs\'si</string>
     <string name="dns_preset_cloudflare_hostname">1dot1dot1dot1.cloudflare-dns.com</string>
     <string name="dns_preset_quad9">Quad9 DNS</string>
     <string name="dns_preset_quad9_hostname">dns.quad9.net</string>
-    <string name="dns_preset_cleanbrowsing">CleanBrowsing</string>
-    <string name="dns_preset_cleanbrowsing_hostname">adult-filter-dns.cleanbrowsing.org</string>
-    <string name="tile_charge_optimization">Charging</string>
-    <string name="limit_to_80">Limit to 80%</string>
-    <string name="adaptive_charging">Adaptive</string>
-    <string name="deactivated">Not optimized</string>
-    <string name="permission_missing">Permission missing</string>
-    <!-- Screen Locked Security -->
-    <string name="screen_locked_security_title">Screen locked security</string>
-    <string name="screen_locked_security_dialog_title">Screen Locked Security</string>
-    <string name="screen_locked_security_auth_enable">Authenticate to enable screen locked security</string>
-    <string name="screen_locked_security_auth_disable">Authenticate to disable screen locked security</string>
-    <string name="warning_title">⚠️ WARNING</string>
-    <string name="screen_locked_security_warning_text">This feature is not foolproof. There may be edge cases where someone still being able to interact with the tile. \nAlso keep in mind that Android will always allow to do a forced reboot and Pixels will always allow the device to be turned off from the lock screen as well.</string>
-    <string name="screen_locked_security_airplane_warning">Make sure to remove the airplane mode tile from quick settings as that is not preventable because it does not open a dialog window.</string>
-    <string name="screen_locked_security_description">When enabled, the Quick Settings panel will be immediately closed and the device will be locked down if someone attempt to interact with Internet tiles while the device is locked. \n\nThis will also disable biometric unlock to prevent further unauthorized access. Animation scale will be reduced to 0.1x while locked to make it even harder to interact with.</string>
-    <!-- Sound Mode -->
-    <string name="sound_mode_reorder_title">Re-order modes</string>
-    <string name="sound_mode_long_press_hint">Long press to toggle</string>
-    <string name="content_desc_drag_reorder">Drag to reorder</string>
-    <string name="sound_mode_sound">Sound</string>
-    <string name="sound_mode_vibrate">Vibrate</string>
-    <string name="sound_mode_silent">Silent</string>
-    <!-- Status Bar Categories -->
-    <string name="status_bar_category_connectivity">Connectivity</string>
-    <string name="status_bar_category_phone_network">Phone &amp; Network</string>
-    <string name="status_bar_category_audio_media">Audio &amp; Media</string>
-    <string name="status_bar_category_system_status">System Status</string>
-    <string name="status_bar_category_oem_specific">OEM Specific</string>
-    <!-- Status Bar Icons -->
-    <string name="icon_wifi">WiFi</string>
+    <string name="dns_preset_cleanbrowsing">Temiz Tarama</string>
+    <string name="dns_preset_cleanbrowsing_hostname">yetişkin-filtre-dns.cleanbrowsing.org</string>
+    <string name="tile_charge_optimization">Şarj etme</string>
+    <string name="limit_to_80">%%80 ile sınırla</string>
+    <string name="adaptive_charging">Uyarlanabilir</string>
+    <string name="deactivated">Optimize edilmemiş</string>
+    <string name="permission_missing">İzin eksik</string>
+
+
+    
+    <string name="screen_locked_security_title">Ekran kilitli güvenlik</string>
+    <string name="screen_locked_security_dialog_title">Ekran Kilitli Güvenlik</string>
+    <string name="screen_locked_security_auth_enable">Ekran kilitli güvenliği etkinleştirmek için kimlik doğrulaması yapın</string>
+    <string name="screen_locked_security_auth_disable">Ekran kilitli güvenliği devre dışı bırakmak için kimlik doğrulaması yapın</string>
+    <string name="warning_title">⚠️ UYARI</string>
+    <string name="screen_locked_security_warning_text">Bu özellik kusursuz değildir. Birisinin hâlâ kutucukla etkileşim kurabildiği uç durumlar olabilir. \nAyrıca Android\'in her zaman zorunlu yeniden başlatmaya izin vereceğini ve Pixels\'in de cihazın kilit ekranından kapatılmasına her zaman izin vereceğini unutmayın.</string>
+    <string name="screen_locked_security_airplane_warning">Bir iletişim penceresi açmadığından bu durum önlenemeyeceği için uçak modu kutucuğunu hızlı ayarlardan çıkardığınızdan emin olun.</string>
+    <string name="screen_locked_security_description">Etkinleştirildiğinde, Hızlı Ayarlar paneli hemen kapatılacak ve cihaz kilitliyken birisi İnternet döşemeleriyle etkileşime girmeye çalışırsa cihaz kilitlenecektir. \n\nBu aynı zamanda daha fazla yetkisiz erişimi önlemek için biyometrik kilit açmayı da devre dışı bırakacaktır. Etkileşimi daha da zorlaştırmak için animasyon ölçeği kilitliyken 0,1x\'e düşürülecek.</string>
+
+    
+    <string name="sound_mode_reorder_title">Modları yeniden sıralama</string>
+    <string name="sound_mode_long_press_hint">Geçiş yapmak için uzun basın</string>
+    <string name="content_desc_drag_reorder">Yeniden sıralamak için sürükleyin</string>
+    <string name="sound_mode_sound">Ses</string>
+    <string name="sound_mode_vibrate">Titreşim</string>
+    <string name="sound_mode_silent">Sessiz</string>
+
+    
+    <string name="status_bar_category_connectivity">Bağlantı</string>
+    <string name="status_bar_category_phone_network">Telefon ve Ağ</string>
+    <string name="status_bar_category_audio_media">Ses ve Medya</string>
+    <string name="status_bar_category_system_status">Sistem Durumu</string>
+    <string name="status_bar_category_oem_specific">OEm\'e Özel</string>
+
+    
+    <string name="icon_wifi">Wifi</string>
     <string name="icon_bluetooth">Bluetooth</string>
     <string name="icon_nfc">NFC / Felica</string>
     <string name="icon_vpn">VPN</string>
-    <string name="icon_airplane_mode">Airplane Mode</string>
-    <string name="icon_hotspot">Hotspot</string>
-    <string name="icon_cast">Cast</string>
-    <string name="icon_mobile_data">Mobile Data</string>
-    <string name="icon_phone_signal">Phone Signal</string>
+    <string name="icon_airplane_mode">Uçak Modu</string>
+    <string name="icon_hotspot">Sıcak nokta</string>
+    <string name="icon_cast">Döküm</string>
+    <string name="icon_mobile_data">Mobil Veri</string>
+    <string name="icon_phone_signal">Telefon Sinyali</string>
     <string name="icon_volte">VoLTE / VoNR</string>
-    <string name="icon_wifi_calling">WiFi Calling / VoWiFi</string>
-    <string name="icon_call_status">Call Status / Sync</string>
+    <string name="icon_wifi_calling">WiFi Arama / VoWiFi</string>
+    <string name="icon_call_status">Çağrı Durumu / Senkronizasyon</string>
     <string name="icon_tty">TTY</string>
-    <string name="icon_volume">Volume</string>
-    <string name="icon_headset">Headset</string>
-    <string name="icon_speakerphone">Speakerphone</string>
+    <string name="icon_volume">Hacim</string>
+    <string name="icon_headset">Kulaklık</string>
+    <string name="icon_speakerphone">Hoparlör</string>
     <string name="icon_dmb">DMB</string>
-    <string name="icon_clock">Clock</string>
-    <string name="icon_ime">Input Method (IME)</string>
+    <string name="icon_clock">Saat</string>
+    <string name="icon_ime">Giriş Yöntemi (IME)</string>
     <string name="icon_alarm">Alarm</string>
-    <string name="icon_battery">Battery</string>
-    <string name="icon_power_saving">Power Saving</string>
-    <string name="icon_data_saver">Data Saver</string>
-    <string name="icon_rotation_lock">Rotation Lock</string>
-    <string name="icon_location">Location / GPS</string>
-    <string name="icon_sync">Sync</string>
-    <string name="icon_managed_profile">Managed Profile</string>
-    <string name="icon_dnd">Do Not Disturb</string>
-    <string name="icon_privacy">Privacy &amp; Secure Folder</string>
-    <string name="icon_security_status">Security Status (SU)</string>
-    <string name="icon_otg">OTG Mouse / Keyboard</string>
-    <string name="icon_samsung_smart">Samsung Smart Features</string>
-    <string name="icon_samsung_services">Samsung Services</string>
-    <string name="icon_ethernet">Ethernet</string>
-    <!-- Status Bar Settings -->
-    <string name="stb_clock_seconds">Show Seconds in Clock</string>
-    <string name="stb_battery_percentage">Battery Percentage</string>
-    <string name="stb_battery_percentage_always">Always</string>
-    <string name="stb_battery_percentage_charging">Charging</string>
-    <string name="stb_battery_percentage_never">Never</string>
-    <string name="stb_privacy_chip">Camera and Microphone use chips</string>
-    <string name="smart_data_title">Smart Data</string>
-    <string name="permission_read_phone_state_title">Read Phone State</string>
-    <string name="permission_read_phone_state_desc">Required to detect network type for Smart Data feature</string>
-    <string name="permission_read_phone_state_desc_call_vibrations">Required to detect call status changes to trigger haptic feedback.</string>
-    <string name="settings_section_smart_visibility">Smart Visibility</string>
-    <string name="smart_wifi_title">Smart WiFi</string>
-    <string name="smart_wifi_desc">Hide mobile data when WiFi is connected</string>
-    <string name="smart_data_desc">Hide mobile data in certain modes</string>
-    <string name="action_reset_all_icons">Reset All Icons</string>
-    <string name="status_bar_section_advanced">More Settings</string>
-    <string name="status_bar_icons_disclaimer">Please note that the implementation of these options may depend on the OEM and some may not be functional at all.</string>
-    <!-- Network Type Picker -->
-    <string name="network_type_other">Other</string>
-    <!-- Search -->
-    <string name="search_clock_seconds_title">Clock Seconds</string>
-    <string name="search_clock_seconds_desc">Show seconds in status bar clock</string>
-    <string name="search_battery_percentage_title">Battery Percentage</string>
-    <string name="search_battery_percentage_desc">Configure battery percentage visibility</string>
-    <string name="search_privacy_chip_title">Privacy Chips</string>
-    <string name="search_privacy_chip_desc">Show indicator when camera or mic is in use</string>
-    <string name="search_desc_toggle_visibility">Toggle visibility for %1$s</string>
-    <string name="action_pin">Pin to Favorites</string>
-    <string name="action_unpin">Unpin from Favorites</string>
-    <!-- Extraction Batch 1 -->
-    <!-- Categories -->
-    <string name="cat_tools">Tools</string>
-    <string name="cat_visuals">Visuals</string>
-    <string name="cat_system">System</string>
-    <!-- UI Elements -->
-    <string name="search_placeholder">Search Essentials</string>
-    <string name="search_no_results">No results for \"%1$s\"</string>
-    <string name="search_results_title">Search Results</string>
-    <string name="requires_following_permissions">%1$s requires following permissions</string>
-    <!-- Features -->
-    <string name="feat_screen_off_widget_title">Screen off widget</string>
-    <string name="feat_screen_off_widget_desc">Invisible widget to turn the screen off</string>
-    <string name="feat_statusbar_icons_title">Statusbar icons</string>
-    <string name="feat_statusbar_icons_desc">Control statusbar icons visibility</string>
-    <string name="feat_caffeinate_title">Caffeinate</string>
-    <string name="feat_caffeinate_desc">Keep the screen awake</string>
-    <string name="feat_maps_power_saving_title">Maps power saving mode</string>
-    <string name="feat_maps_power_saving_desc">For any Android device</string>
-    <string name="feat_notification_lighting_title">Notification lighting</string>
-    <string name="feat_notification_lighting_desc">Light up for notifications</string>
-    <string name="feat_flashlight_pulse_desc">Pulse the flashlight for notifications</string>
-    <string name="feat_sound_mode_tile_title">Sound mode tile</string>
-    <string name="feat_call_vibrations_title">Call vibrations</string>
-    <string name="feat_call_vibrations_desc">Vibrate for call actions</string>
-    <string name="show_bluetooth_devices">Show Bluetooth devices</string>
-    <string name="show_bluetooth_devices_summary">Display battery level of connected Bluetooth devices</string>
-    <string name="limit_max_devices">Limit max devices</string>
-    <string name="limit_max_devices_summary">Adjust max devices visible in widget</string>
-    <string name="widget_background_title">Widget background</string>
-    <string name="widget_background_summary">Show widget background</string>
-    <!-- DIY Automation -->
-    <string name="diy_create_trigger_title">Trigger Automation</string>
-    <string name="diy_create_trigger_desc">Schedule an action to trigger on an observation</string>
-    <string name="diy_create_state_title">State Automation</string>
-    <string name="diy_create_state_desc">Schedule an action to execute based on the state of a condition in and out</string>
-    <string name="diy_editor_new_title">New Automation</string>
-    <string name="diy_editor_edit_title">Edit Automation</string>
-    <string name="feat_link_actions_title">Link actions</string>
-    <string name="feat_link_actions_desc">Handle links with multiple apps</string>
-    <string name="feat_snooze_notifications_title">Snooze system notifications</string>
-    <string name="feat_snooze_notifications_desc">Snooze persistent notifications</string>
-    <string name="feat_qs_tiles_title">Quick settings tiles</string>
-    <string name="feat_qs_tiles_desc">View all</string>
-    <string name="feat_button_remap_title">Button remap</string>
-    <string name="feat_button_remap_desc">Remap hardware button actions</string>
-    <string name="feat_dynamic_night_light_title">Dynamic night light</string>
-    <string name="feat_dynamic_night_light_desc">Toggle night light based on app</string>
-    <string name="feat_screen_locked_security_title">Screen locked security</string>
-    <string name="feat_screen_locked_security_desc">Prevent network controls</string>
-    <string name="feat_app_lock_title">App lock</string>
-    <string name="feat_app_lock_desc">Secure apps with biometrics</string>
-    <string name="feat_freeze_title">Freeze</string>
-    <string name="feat_freeze_desc">Disable rarely used apps</string>
-    <string name="feat_watermark_title">Watermark</string>
-    <string name="feat_watermark_desc">Add EXIF data and logos to photos</string>
-    <string name="feat_always_on_display_title">Always on Display</string>
-    <string name="feat_always_on_display_desc">Show time and info while screen off</string>
-    <string name="feat_calendar_sync_title">Calendar Sync</string>
-    <string name="feat_calendar_sync_desc">Sync events to your watch</string>
-    <string name="watermark_style_overlay">Overlay</string>
-    <string name="watermark_style_frame">Frame</string>
-    <string name="watermark_show_brand">Device Brand</string>
-    <string name="watermark_show_exif">EXIF Data</string>
-    <string name="watermark_pick_image">Pick Image</string>
-    <string name="watermark_save_success">Image saved to gallery</string>
-    <string name="action_share">Share</string>
-    <string name="watermark_exif_settings">EXIF Settings</string>
-    <string name="watermark_exif_focal_length">Focal Length</string>
-    <string name="watermark_exif_aperture">Aperture</string>
+    <string name="icon_battery">Pil</string>
+    <string name="icon_power_saving">Güç Tasarrufu</string>
+    <string name="icon_data_saver">Veri Tasarrufu</string>
+    <string name="icon_rotation_lock">Döndürme Kilidi</string>
+    <string name="icon_location">Konum / GPS</string>
+    <string name="icon_sync">Senkronizasyon</string>
+    <string name="icon_managed_profile">Yönetilen Profil</string>
+    <string name="icon_dnd">Rahatsız etmeyin</string>
+    <string name="icon_privacy">Gizlilik ve Güvenli Klasör</string>
+    <string name="icon_security_status">Güvenlik Durumu (SU)</string>
+    <string name="icon_otg">OTG Fare / Klavye</string>
+    <string name="icon_samsung_smart">Samsung Akıllı Özellikler</string>
+    <string name="icon_samsung_services">Samsung Hizmetleri</string>
+    <string name="icon_ethernet">ethernet</string>
+    
+    
+    <string name="stb_clock_seconds">Saatte Saniyeleri Göster</string>
+    <string name="stb_battery_percentage">Pil Yüzdesi</string>
+    <string name="stb_battery_percentage_always">Her zaman</string>
+    <string name="stb_battery_percentage_charging">Şarj etme</string>
+    <string name="stb_battery_percentage_never">Asla</string>
+    <string name="stb_privacy_chip">Kamera ve Mikrofon çip kullanıyor</string>
+    <string name="smart_data_title">Akıllı Veriler</string>
+    <string name="permission_read_phone_state_title">Telefon Durumunu Oku</string>
+    <string name="permission_read_phone_state_desc">Akıllı Veri özelliği için ağ türünü algılamak için gereklidir</string>
+    <string name="permission_read_phone_state_desc_call_vibrations">Dokunsal geri bildirimi tetiklemek amacıyla çağrı durumu değişikliklerini tespit etmek için gereklidir.</string>
+    <string name="settings_section_smart_visibility">Akıllı Görünürlük</string>
+    <string name="smart_wifi_title">Akıllı Wi-Fi</string>
+    <string name="smart_wifi_desc">WiFi bağlandığında mobil verileri gizle</string>
+    <string name="smart_data_desc">Belirli modlarda mobil verileri gizle</string>
+    <string name="action_reset_all_icons">Tüm Simgeleri Sıfırla</string>
+    <string name="status_bar_section_advanced">Diğer Ayarlar</string>
+    <string name="status_bar_icons_disclaimer">Bu seçeneklerin uygulanmasının OEm\'e bağlı olabileceğini ve bazılarının hiç işlevsel olmayabileceğini lütfen unutmayın.</string>
+
+    
+    <string name="network_type_other">Diğer</string>
+
+    
+    <string name="search_clock_seconds_title">Saat Saniyesi</string>
+    <string name="search_clock_seconds_desc">Durum çubuğu saatinde saniyeleri göster</string>
+    <string name="search_battery_percentage_title">Pil Yüzdesi</string>
+    <string name="search_battery_percentage_desc">Pil yüzdesi görünürlüğünü yapılandırma</string>
+    <string name="search_privacy_chip_title">Gizlilik Çipleri</string>
+    <string name="search_privacy_chip_desc">Kamera veya mikrofon kullanımdayken göstergeyi göster</string>
+    <string name="search_desc_toggle_visibility">Şunun için görünürlüğü değiştir: %1$s</string>
+    <string name="action_pin">Favorilere Sabitle</string>
+    <string name="action_unpin">Favorilerden sabitlemeyi kaldır</string>
+
+    
+    
+    <string name="cat_tools">Aletler</string>
+    <string name="cat_visuals">Görseller</string>
+    <string name="cat_system">Sistem</string>
+
+    
+    <string name="search_placeholder">Arama Temelleri</string>
+    <string name="search_no_results">için sonuç yok \"%1$s\"</string>
+    <string name="search_results_title">Arama Sonuçları</string>
+    <string name="requires_following_permissions">%1$s aşağıdaki izinleri gerektirir</string>
+
+    
+    <string name="feat_screen_off_widget_title">Ekran kapatma widget\'ı</string>
+    <string name="feat_screen_off_widget_desc">Ekranı kapatmak için görünmez widget</string>
+    <string name="feat_statusbar_icons_title">Durum çubuğu simgeleri</string>
+    <string name="feat_statusbar_icons_desc">Durum çubuğu simgelerinin görünürlüğünü kontrol etme</string>
+    <string name="feat_caffeinate_title">Kafeinat</string>
+    <string name="feat_caffeinate_desc">Ekranı uyanık tutun</string>
+    <string name="feat_maps_power_saving_title">Haritalar güç tasarrufu modunu</string>
+    <string name="feat_maps_power_saving_desc">Herhangi bir Android cihaz için</string>
+    <string name="feat_notification_lighting_title">Bildirim aydınlatması</string>
+    <string name="feat_notification_lighting_desc">Bildirimler için ışığı açın</string>
+    <string name="feat_flashlight_pulse_desc">Bildirimler için el fenerini açın</string>
+    <string name="feat_sound_mode_tile_title">Ses modu kutucuğu</string>
+    <string name="feat_call_vibrations_title">Çağrı titreşimleri</string>
+    <string name="feat_call_vibrations_desc">Çağrı işlemleri için titret</string>
+    <string name="show_bluetooth_devices">Bluetooth cihazlarını göster</string>
+    <string name="show_bluetooth_devices_summary">Bağlı Bluetooth cihazlarının pil seviyesini görüntüleyin</string>
+    <string name="limit_max_devices">Maksimum cihazları sınırla</string>
+    <string name="limit_max_devices_summary">Widget\'ta görünen maksimum cihazları ayarlayın</string>
+    <string name="widget_background_title">Widget arka planı</string>
+    <string name="widget_background_summary">Widget arka planını göster</string>
+
+    
+    <string name="diy_create_trigger_title">Tetikleme Otomasyonu</string>
+    <string name="diy_create_trigger_desc">Bir gözlemde tetiklenecek bir eylem planlayın</string>
+    <string name="diy_create_state_title">Devlet Otomasyonu</string>
+    <string name="diy_create_state_desc">Bir koşulun giriş ve çıkış durumuna göre yürütülecek bir eylem zamanlayın</string>
+    <string name="diy_editor_new_title">Yeni Otomasyon</string>
+    <string name="diy_editor_edit_title">Otomasyonu Düzenle</string>
+    <string name="feat_link_actions_title">Bağlantı eylemleri</string>
+    <string name="feat_link_actions_desc">Birden fazla uygulamayla bağlantıları yönetin</string>
+    <string name="feat_snooze_notifications_title">Sistem bildirimlerini erteleyin</string>
+    <string name="feat_snooze_notifications_desc">Kalıcı bildirimleri ertele</string>
+    <string name="feat_qs_tiles_title">Hızlı ayarlar kutucukları</string>
+    <string name="feat_qs_tiles_desc">Tümünü görüntüle</string>
+    <string name="feat_button_remap_title">Düğme yeniden eşlemesi</string>
+    <string name="feat_button_remap_desc">Donanım düğmesi eylemlerini yeniden eşleyin</string>
+    <string name="feat_dynamic_night_light_title">Dinamik gece lambası</string>
+    <string name="feat_dynamic_night_light_desc">Uygulamaya göre gece ışığını değiştir</string>
+    <string name="feat_screen_locked_security_title">Ekran kilitli güvenlik</string>
+    <string name="feat_screen_locked_security_desc">Ağ kontrollerini önleyin</string>
+    <string name="feat_app_lock_title">Uygulama kilidi</string>
+    <string name="feat_app_lock_desc">Biyometri ile uygulamaları güvenli hale getirin</string>
+    <string name="feat_freeze_title">Dondur</string>
+    <string name="feat_freeze_desc">Nadiren kullanılan uygulamaları devre dışı bırakın</string>
+    <string name="feat_watermark_title">Filigran</string>
+    <string name="feat_watermark_desc">Fotoğraflara EXIF ​​verileri ve logolar ekleme</string>
+    <string name="feat_always_on_display_title">Her Zaman Ekranda</string>
+    <string name="feat_always_on_display_desc">Ekran kapalıyken saati ve bilgileri göster</string>
+    <string name="feat_calendar_sync_title">Takvim Senkronizasyonu</string>
+    <string name="feat_calendar_sync_desc">Etkinlikleri saatinize senkronize edin</string>
+    <string name="watermark_style_overlay">Kaplama</string>
+    <string name="watermark_style_frame">Çerçeve</string>
+    <string name="watermark_show_brand">Cihaz Markası</string>
+    <string name="watermark_show_exif">EXIF Verileri</string>
+    <string name="watermark_pick_image">Resim Seç</string>
+    <string name="watermark_save_success">Resim galeriye kaydedildi</string>
+    <string name="action_share">Paylaşmak</string>
+    <string name="watermark_exif_settings">EXIF Ayarları</string>
+    <string name="watermark_exif_focal_length">Odak Uzunluğu</string>
+    <string name="watermark_exif_aperture">Diyafram</string>
     <string name="watermark_exif_iso">ISO</string>
-    <string name="watermark_exif_shutter_speed">Shutter Speed</string>
-    <string name="watermark_exif_date">Date &amp; Time</string>
-    <string name="watermark_move_to_top">Move to Top</string>
-    <string name="watermark_left_align">Align Left</string>
-    <string name="watermark_text_size_brand">Brand Size</string>
-    <string name="watermark_text_size_data">Data Size</string>
-    <string name="watermark_text_size_custom">Text Size</string>
-    <string name="watermark_font_options">Font Size</string>
-    <string name="watermark_custom_text">Custom Text</string>
-    <string name="watermark_custom_text_hint">Enter your text...</string>
-    <string name="watermark_spacing">Spacing</string>
-    <string name="watermark_border_width">Border Width</string>
-    <string name="watermark_border_corners">Round Corners</string>
-    <string name="watermark_color_section">Color</string>
+    <string name="watermark_exif_shutter_speed">Enstantane Hızı</string>
+    <string name="watermark_exif_date">Tarih ve Saat</string>
+    <string name="watermark_move_to_top">Yukarıya Taşı</string>
+    <string name="watermark_left_align">Sola Hizala</string>
+    <string name="watermark_text_size_brand">Marka Boyutu</string>
+    <string name="watermark_text_size_data">Veri Boyutu</string>
+    <string name="watermark_text_size_custom">Metin Boyutu</string>
+    <string name="watermark_font_options">Yazı Tipi Boyutu</string>
+    <string name="watermark_custom_text">Özel Metin</string>
+    <string name="watermark_custom_text_hint">Metninizi girin...</string>
+    <string name="watermark_spacing">Aralık</string>
+    <string name="watermark_border_width">Kenar Genişliği</string>
+    <string name="watermark_border_corners">Yuvarlak Köşeler</string>
+    <string name="watermark_color_section">Renk</string>
     <string name="watermark_logo_section">Logo</string>
-    <string name="watermark_logo_show">Show Logo</string>
-    <string name="watermark_logo_size">Logo Size</string>
-    <string name="watermark_edit_texts">Edit Watermark Texts</string>
-    <string name="watermark_device_brand">Device brand</string>
-    <string name="watermark_date_time">Date &amp; Time</string>
-    <string name="watermark_no_date">No date information</string>
-    <string name="watermark_rotate_left">Rotate left</string>
-    <string name="watermark_rotate_right">Rotate right</string>
-    <string name="action_next">Next</string>
-    <string name="action_ok">OK</string>
-    <string name="action_save_changes">Save Changes</string>
-    <string name="calendar_sync_settings_title">Calendar Sync Settings</string>
-    <string name="calendar_sync_select_calendars">Sync specific calendars</string>
-    <string name="calendar_sync_periodic_title">Periodic Sync</string>
-    <string name="calendar_sync_periodic_desc">Sync every 15 minutes if changes found</string>
-    <string name="calendar_sync_sync_now">Sync Now</string>
-    <string name="calendar_sync_manual_sync_desc">Trigger immediate sync to watch</string>
-    <string name="calendar_sync_no_calendars">No local calendars found</string>
-    <string name="calendar_sync_sync_started">Calendar sync started</string>
-    <!-- Search Settings -->
-    <string name="search_haptic_title">Widget Haptic feedback</string>
-    <string name="search_haptic_desc">Pick haptic feedback for widget taps</string>
-    <string name="search_smart_wifi_title">Smart WiFi</string>
-    <string name="search_smart_wifi_desc">Hide mobile data when WiFi is connected</string>
-    <string name="search_smart_data_title">Smart Data</string>
-    <string name="search_smart_data_desc">Hide mobile data in certain modes</string>
-    <string name="search_reset_icons_title">Reset All Icons</string>
-    <string name="search_reset_icons_desc">Reset status bar icon visibility to default</string>
-    <string name="search_caffeinate_abort_screen_off_title">Abort Caffeinate with screen off</string>
-    <string name="search_caffeinate_abort_screen_off_desc">Automatically turn off Caffeinate when manually locking the device</string>
-    <string name="search_lighting_style_title">Lighting Style</string>
-    <string name="search_lighting_style_desc">Choose between Stroke, Glow, Spinner, and more</string>
-    <string name="search_corner_radius_title">Corner radius</string>
-    <string name="search_corner_radius_desc">Adjust the corner radius of the notification lighting</string>
-    <string name="search_skip_silent_title">Skip silent notifications</string>
-    <string name="search_skip_silent_desc">Do not show lighting for silent notifications</string>
-    <string name="search_flashlight_pulse_title">Flashlight pulse</string>
-    <string name="search_flashlight_pulse_desc">Slowly pulse flashlight for new notifications</string>
-    <string name="search_only_facing_down_title">Only while facing down</string>
-    <string name="search_only_facing_down_desc">Pulse flashlight only when device is face down</string>
-    <string name="snooze_no_channels_discovered">No system channels discovered yet. They will appear here once detected.</string>
-    <string name="search_qs_blur_title">UI Blur</string>
-    <string name="search_qs_blur_desc">Toggle system-wide UI blur</string>
-    <string name="search_qs_bubbles_title">Bubbles</string>
-    <string name="search_qs_bubbles_desc">Enable floating window bubbles</string>
-    <string name="search_qs_sensitive_title">Sensitive Content</string>
-    <string name="search_qs_sensitive_desc">Hide notification details on lockscreen</string>
-    <string name="search_qs_wake_title">Tap to Wake</string>
-    <string name="search_qs_wake_desc">Double tap to wake control</string>
+    <string name="watermark_logo_show">Logoyu Göster</string>
+    <string name="watermark_logo_size">Logo Boyutu</string>
+    <string name="watermark_edit_texts">Filigran Metinlerini Düzenle</string>
+    <string name="watermark_device_brand">Cihaz markası</string>
+    <string name="watermark_date_time">Tarih ve Saat</string>
+    <string name="watermark_no_date">Tarih bilgisi yok</string>
+    <string name="watermark_rotate_left">Sola döndür</string>
+    <string name="watermark_rotate_right">Sağa döndür</string>
+    <string name="action_next">Sonraki</string>
+    <string name="action_ok">TAMAM</string>
+    <string name="action_save_changes">Değişiklikleri Kaydet</string>
+    <string name="calendar_sync_settings_title">Takvim Senkronizasyon Ayarları</string>
+    <string name="calendar_sync_select_calendars">Belirli takvimleri senkronize edin</string>
+    <string name="calendar_sync_periodic_title">Periyodik Senkronizasyon</string>
+    <string name="calendar_sync_periodic_desc">Değişiklik bulunursa her 15 dakikada bir senkronize edin</string>
+    <string name="calendar_sync_sync_now">Şimdi Senkronize Et</string>
+    <string name="calendar_sync_manual_sync_desc">İzlemek için anında senkronizasyonu tetikleyin</string>
+    <string name="calendar_sync_no_calendars">Yerel takvim bulunamadı</string>
+    <string name="calendar_sync_sync_started">Takvim senkronizasyonu başladı</string>
+
+    
+    <string name="search_haptic_title">Widget Dokunsal geribildirimi</string>
+    <string name="search_haptic_desc">Widget dokunuşları için dokunsal geri bildirimi seçin</string>
+    <string name="search_smart_wifi_title">Akıllı Wi-Fi</string>
+    <string name="search_smart_wifi_desc">WiFi bağlandığında mobil verileri gizle</string>
+    <string name="search_smart_data_title">Akıllı Veriler</string>
+    <string name="search_smart_data_desc">Belirli modlarda mobil verileri gizle</string>
+    <string name="search_reset_icons_title">Tüm Simgeleri Sıfırla</string>
+    <string name="search_reset_icons_desc">Durum çubuğu simgesi görünürlüğünü varsayılana sıfırla</string>
+    <string name="search_caffeinate_abort_screen_off_title">Ekran kapalıyken Kafein almayı bırakın</string>
+    <string name="search_caffeinate_abort_screen_off_desc">Cihazı manuel olarak kilitlerken Kafein\'i otomatik olarak kapatın</string>
+    <string name="search_lighting_style_title">Aydınlatma Stili</string>
+    <string name="search_lighting_style_desc">Stroke, Glow, Spinner ve daha fazlası arasından seçim yapın</string>
+    <string name="search_corner_radius_title">Köşe yarıçapı</string>
+    <string name="search_corner_radius_desc">Bildirim aydınlatmasının köşe yarıçapını ayarlayın</string>
+    <string name="search_skip_silent_title">Sessiz bildirimleri atla</string>
+    <string name="search_skip_silent_desc">Sessiz bildirimler için aydınlatmayı gösterme</string>
+    <string name="search_flashlight_pulse_title">El feneri darbesi</string>
+    <string name="search_flashlight_pulse_desc">Yeni bildirimler için el fenerini yavaşça yanıp sönün</string>
+    <string name="search_only_facing_down_title">Sadece aşağıya doğru bakarken</string>
+    <string name="search_only_facing_down_desc">El fenerini yalnızca cihaz aşağı dönükken titretin</string>
+    <string name="snooze_no_channels_discovered">Henüz hiçbir sistem kanalı keşfedilmedi. Tespit edildikten sonra burada görünecekler.</string>
+    <string name="search_qs_blur_title">Kullanıcı Arayüzü Bulanıklığı</string>
+    <string name="search_qs_blur_desc">Sistem genelinde kullanıcı arayüzü bulanıklığını değiştir</string>
+    <string name="search_qs_bubbles_title">Kabarcıklar</string>
+    <string name="search_qs_bubbles_desc">Kayan pencere kabarcıklarını etkinleştir</string>
+    <string name="search_qs_sensitive_title">Hassas İçerik</string>
+    <string name="search_qs_sensitive_desc">Kilit ekranında bildirim ayrıntılarını gizle</string>
+    <string name="search_qs_wake_title">Uyandırmak için dokunun</string>
+    <string name="search_qs_wake_desc">Kontrolü uyandırmak için iki kez dokunun</string>
     <string name="search_qs_aod_title">AOD</string>
-    <string name="search_qs_aod_desc">Always On Display toggle</string>
-    <string name="search_qs_caffeinate_title">Caffeinate</string>
-    <string name="search_qs_caffeinate_desc">Keep screen awake toggle</string>
-    <string name="search_qs_sound_title">Sound Mode</string>
-    <string name="search_qs_sound_desc">Cycle sound modes (Ring/Vibrate/Silent)</string>
-    <string name="search_qs_lighting_title">Notification Lighting</string>
-    <string name="search_qs_lighting_desc">Toggle notification lighting service</string>
-    <string name="search_qs_night_light_title">Dynamic Night Light</string>
-    <string name="search_qs_night_light_desc">Night light automation toggle</string>
-    <string name="search_qs_locked_sec_title">Locked Security</string>
-    <string name="search_qs_locked_sec_desc">Network security on lockscreen toggle</string>
-    <string name="search_qs_mono_title">Mono Audio</string>
-    <string name="search_qs_mono_desc">Force mono audio output toggle</string>
-    <string name="search_qs_flashlight_title">Flashlight</string>
-    <string name="search_qs_flashlight_desc">Dedicated flashlight toggle</string>
-    <string name="search_qs_freeze_title">App Freezing</string>
-    <string name="search_qs_freeze_desc">Launch app freezing grid</string>
-    <string name="search_qs_pulse_title">Flashlight Pulse</string>
-    <string name="search_qs_pulse_desc">Toggle notification flashlight pulse</string>
-    <string name="search_qs_stay_awake_desc">Toggle stay awake developer option</string>
-    <string name="search_qs_private_dns_title">Private DNS</string>
-    <string name="search_qs_private_dns_desc">Cycle Private DNS modes (Off/Auto/Hostname)</string>
-    <string name="search_qs_usb_debugging_title">USB Debugging</string>
-    <string name="search_qs_usb_debugging_desc">Toggle USB Debugging developer option</string>
-    <string name="search_remap_enable_title">Enable Button Remap</string>
-    <string name="search_remap_enable_desc">Master toggle for volume button remapping</string>
-    <string name="search_remap_haptic_title">Remap Haptic Feedback</string>
-    <string name="search_remap_haptic_desc">Vibration feedback when remapped button is pressed</string>
-    <string name="search_remap_flashlight_title">Flashlight toggle</string>
-    <string name="search_remap_flashlight_desc">Toggle flashlight with volume buttons</string>
-    <string name="search_night_light_enable_title">Enable Dynamic Night Light</string>
-    <string name="search_night_light_enable_desc">Master switch for dynamic night light</string>
-    <string name="search_app_lock_enable_title">Enable app lock</string>
-    <string name="search_app_lock_enable_desc">Master toggle for app locking</string>
-    <string name="search_app_lock_pick_title">Select locked apps</string>
-    <string name="search_app_lock_pick_desc">Choose which apps require authentication</string>
-    <string name="search_freeze_pick_title">Pick apps to freeze</string>
-    <string name="search_freeze_pick_desc">Choose which apps can be frozen</string>
-    <string name="search_freeze_all_title">Freeze all apps</string>
-    <string name="search_freeze_all_desc">Immediately freeze all picked apps</string>
-    <string name="search_freeze_locked_title">Freeze when locked</string>
-    <string name="search_freeze_locked_desc">Freeze selected apps when device locks</string>
-    <string name="search_freeze_delay_title">Freeze delay</string>
-    <string name="search_freeze_delay_desc">Delay before freezing after locking</string>
-    <!-- Permissions metadata -->
-    <string name="perm_shizuku_title">Shizuku</string>
-    <string name="perm_shizuku_desc">Required for advanced commands. Install Shizuku from the Play Store.</string>
-    <string name="perm_shizuku_install_action">Install Shizuku</string>
-    <string name="perm_shizuku_grant_title">Shizuku permission</string>
-    <string name="perm_shizuku_grant_desc">Required to run power-saving commands while maps is navigating.</string>
-    <string name="req_shizuku">Requires Shizuku or Root</string>
-    <string name="perm_root_title">Root Access</string>
-    <string name="perm_root_desc">Permissions required for system actions using Root privileges.</string>
-    <string name="perm_notif_listener_title">Notification Listener</string>
-    <string name="perm_notif_listener_desc_maps">Required to detect when Maps is navigating.</string>
-    <string name="perm_notif_listener_desc_lighting">Required to detect new notifications</string>
-    <string name="perm_notif_listener_desc_snooze">Required to detect and snooze notifications</string>
-    <string name="perm_accessibility_title">Accessibility Service</string>
-    <string name="perm_accessibility_desc_common">Required for App Lock, Screen off widget and other features to detect interactions</string>
-    <string name="perm_accessibility_desc_lighting">Required to trigger notification lighting on new notifications</string>
-    <string name="perm_default_browser_title">Default Browser</string>
-    <string name="perm_default_browser_desc">Required to handle links efficiently</string>
-    <string name="perm_accessibility_desc_remap">Required to intercept hardware button events</string>
-    <string name="perm_accessibility_desc_ambient_music_glance">Required to intercept volume key events while the screen is off to trigger the Ambient Glance overlay.</string>
-    <string name="perm_accessibility_desc_night_light">Needed to monitor foreground applications.</string>
-    <string name="perm_write_secure_title">Write Secure Settings</string>
-    <string name="perm_write_secure_desc_common">Required for Statusbar icons and Screen Locked Security</string>
-    <string name="perm_write_secure_desc_night_light">Needed to toggle Night Light. Grant via ADB or root.</string>
-    <string name="perm_write_settings_title">Modify System Settings</string>
-    <string name="perm_write_settings_desc">Required to toggle Adaptive Brightness and other system settings</string>
-    <string name="perm_overlay_title">Overlay Permission</string>
-    <string name="perm_overlay_desc">Required to display the notification lighting overlay on the screen</string>
-    <string name="perm_device_admin_title">Device Administrator</string>
-    <string name="perm_device_admin_desc">Required to hard-lock the device (disabling biometrics) on unauthorized access attempts</string>
-    <string name="perm_action_grant">Grant Permission</string>
-    <string name="perm_action_copy_adb">Copy ADB</string>
-    <string name="perm_action_check">Check</string>
-    <string name="perm_action_enable">Enable in Settings</string>
-    <string name="perm_action_how_to">How to grant</string>
-    <string name="perm_battery_optimization_title">Battery Optimization</string>
-    <string name="perm_battery_optimization_desc">Ensure the service is not killed by the system to save power.</string>
-    <!-- Tabs -->
-    <string name="tab_essentials">Essentials</string>
-    <string name="tab_freeze">Freeze</string>
-    <string name="tab_freeze_title">Frozen</string>
-    <string name="tab_diy">DIY</string>
-    <string name="tab_apps">Apps</string>
-    <string name="tab_freeze_subtitle">Disabled apps</string>
-    <string name="tab_diy_subtitle">Do It Yourself</string>
-    <string name="tab_apps_subtitle">Find and manage apps</string>
-    <string name="feat_app_updates_title">App Updates</string>
-    <string name="tab_app_updates_title">App Updates</string>
-    <string name="action_add_repo">Add Repository</string>
-    <string name="action_edit_repo">Edit Repository</string>
-    <string name="prompt_enter_repo_url">Enter GitHub Repository URL or owner/repo</string>
-    <string name="action_track">Track</string>
-    <string name="error_no_apk_found">No APK found in the latest release</string>
-    <string name="error_repo_not_found">Repository not found</string>
-    <string name="label_latest_release">Latest Release</string>
-    <string name="action_view_readme">View README</string>
-    <string name="label_stars">%d Stars</string>
-    <string name="label_installed_app">Installed app</string>
-    <string name="label_not_installed">Not installed</string>
-    <string name="action_pick_app">Pick app</string>
-    <string name="action_select_app">Select app</string>
-    <string name="action_untrack">Untrack</string>
-    <string name="label_pending">Pending</string>
-    <string name="label_up_to_date">Up-to-date</string>
-    <string name="feat_app_updates_desc">Track and download the latest releases for your favorite apps directly from GitHub.</string>
-    <string name="error_invalid_repo_format">Invalid format. Use owner/repo or GitHub URL</string>
-    <string name="error_generic_search">An error occurred during search</string>
-    <string name="label_auto">Auto</string>
-    <string name="label_options">Options</string>
-    <string name="option_allow_prereleases">Check for pre-releases</string>
-    <string name="option_notifications">Notifications</string>
-    <string name="error_rate_limited">GitHub rate limit exceeded. Please try again later.</string>
-    <!-- Keyboard Setup -->
-    <string name="label_keyboard_setup">Keyboard Setup</string>
-    <string name="btn_enable_keyboard">Enable in settings</string>
-    <string name="btn_select_keyboard">Switch to Essentials</string>
-    <string name="label_enabled">Enabled</string>
-    <string name="label_disabled">Disabled</string>
-    <string name="tile_adaptive_brightness">Adaptive Brightness</string>
-    <string name="tile_maps_power_saving">Maps Power Saving</string>
-    <string name="action_search">Search</string>
-    <string name="action_stop">Stop</string>
-    <string name="label_search">Search</string>
-    <!-- UI Components General -->
-    <string name="action_back">Back</string>
-    <string name="content_desc_back">Back</string>
-    <string name="label_settings">Settings</string>
-    <string name="action_report_bug">Report a Bug</string>
-    <string name="action_done">Done</string>
-    <string name="action_preview">Preview</string>
-    <string name="action_help_guide">Help Guide</string>
-    <string name="action_what_is_this">What is this?</string>
-    <string name="update_available_title">Update Available</string>
-    <string name="about_desc_ambient_music_glance">Ambient Music Glance shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
-    <string name="about_desc_notification_lighting">Notification Lighting adds a beautiful edge lighting effect when you receive notifications.\n\nYou can customize the animation style, colors, and behavior. It works even when the screen is off (OEM dependent) or on top of your current app. Pick apps, notification priority or what behavior it should be triggering on from given controls. If your OEM does not support overlays above AOD, sue the Ambient display option found below.</string>
-    <string name="about_desc_screen_off_widget">Easily turn the screen off with a tap on a transparent resizable widget that does not add icons or any clutter to your home screen.</string>
-    <string name="about_desc_statusbar_icons">Take full control over your status bar icons.\n\nHide specific icons like WiFi, Bluetooth, or cellular data to keep your status bar clean. You can also customize the clock format and battery indicator with some smart controls as well. These are the list of available AOSP controls so your device OS might not respect all the controls.</string>
-    <string name="about_desc_caffeinate">Caffeinate prevents your screen from turning off automatically.\n\nKeep your screen awake for a specific duration or indefinitely. Useful when reading long articles or referencing a recipe.</string>
-    <string name="about_desc_maps_power_saving">Get the Pixel 10 series exclusive Google Maps Power Saving mode with the minimal pitch black background to display over your lock screen on any Android device. Start a navigation session, turn the screen off and back on. </string>
-    <string name="about_desc_flashlight_pulse">Pulse the flashlight when you receive a notification.\n\nWith devices have hardware support for flashlight dimming, the pulse will be smoothly animated.</string>
-    <string name="about_desc_snooze_notifications">Snooze annoying persistent system notifications which can not be modified by default. \n\nPlease wait until the notification arrives and then go into this feature where it\'s notification channel will be listed. Select that to snooze from next time.\n\nAny snoozed notification can still be accessed from your notification history in Android.</string>
-    <string name="about_desc_quick_settings_tiles">Add custom tiles to your Quick Settings panel.\n\nLong press any of them to learn what they do.</string>
-    <string name="about_desc_button_remap">Remap your hardware buttons to perform different actions and shortcuts.\n\nCustomize what happens when you long press volume buttons with certain conditions. \n\nSome behavior such as screen off trigger or flashlight controls might be OEM dependent on their implementation and may not work on all devices as expected. Some scenarios could be worked around using Shizuku permissions but may not give the same experience due to the implementations.</string>
-    <string name="about_desc_dynamic_night_light">Automatically toggle your screen blue light filter based on the foreground app.</string>
-    <string name="about_desc_screen_locked_security">Enhance security when your device is locked.\n\nRestrict access to some sensitive QS tiles preventing unauthorized network modifications and further preventing them re-attempting to do so by increasing the animation speed to prevent touch spam.\n\nThis feature is not robust and may have flaws such as some tiles which allow toggling directly such as bluetooth or flight mode not being able to be prevented.</string>
-    <string name="about_desc_app_lock">Secure your apps with a secondary authentication layer.\n\nYour device lock screen authentication method will be used as long as it meets the class 3 biometric security level by Android standards.</string>
-    <string name="about_desc_location_reached">Get notified when you get closer to your destination to ensure you never miss the stop.\n\nGo to Google Maps, long press a pin nearby to your destination and make sure it says \"Dropped pin\" (Otherwise the distance calculation might not be accurate), And then share the location to the Essentials app and start tracking.</string>
-    <string name="about_desc_freeze">Freeze apps to stop them from running in the background.\n\nPrevent battery drain and data usage by completely freezing apps when you are not using them. They will be unfrozen instantly when you launch them. The apps will not show up in the app drawer and also will not show up for app updates in Play Store while frozen.</string>
-    <string name="about_desc_system_keyboard">A custom input method no-one asked for.\n\nIt is just an experiment. Multiple languages may not get support as it is a very complex and time consuming implementation.</string>
-    <string name="about_desc_batteries">Monitor battery levels of all your connected devices.\n\nSee the battery status of your Bluetooth headphones, watch, and other accessories in one place. Connect with AirSync application to display your mac battery level as well.</string>
-    <string name="about_desc_watermark">Add a custom caption/ watermark to your photos with EXIF data and device information.\n\nShare an image directly from other app to Essentials to easily add a watermark.</string>
-    <string name="about_desc_calendar_sync">Sync all your upcoming calendar schedule not matter the restrictions on Google accounts not letting to be added to wearOS devices due to work or school policies. \n\nMake sure to install the wearOS Essentials companion app to display the schedule in the app as well as in a tile or a complication.</string>
-    <string name="about_desc_app_updates">Keep track of updates for your installed apps.\n\nGet notified about available updates, view changelogs and install them easily with a tap.</string>
-    <string name="about_desc_call_vibrations">Add haptic feedback to your calls.\n\nVibrate when a call is connected, disconnected, or accepted, giving you tactile confirmation without looking at the screen.</string>
-    <string name="about_desc_sound_mode_tile">Quickly toggle between Sound, Vibrate, and Silent modes.\n\nA convenient tile to change your ringer mode without using the volume buttons or settings. You can re-order the modes or disable any if not needed to customize the tile toggle to cycle behavior.</string>
-    <string name="about_desc_ui_blur">Easily toggle the system level blur depth effect across the OS.</string>
-    <string name="about_desc_bubbles">Enable or disable floating notification bubbles.\n\nQuickly toggle the system-wide setting for conversation bubbles.</string>
-    <string name="about_desc_sensitive_content">Hide sensitive content on the lock screen.\n\nToggle whether notification content is shown or hidden when your device is locked.</string>
-    <string name="about_desc_tap_to_wake">Toggle tap to wake functionality.\n\nEnable or disable the ability to wake your screen with a tap.</string>
-    <string name="about_desc_aod">Toggle Always On Display.\n\nQuickly enable or disable the always-on display to view info at a glance.</string>
-    <string name="about_desc_notification_glance">Automatically control your Always On Display based on your notifications. When a message or alert arrives from a selected app, AOD will stay on until you dismiss the notification, ensuring you never miss important info without wasting battery when no alerts are present.</string>
-    <string name="about_desc_mono_audio">Combine audio channels into mono.\n\nUseful when using a single earbud or for accessibility purposes.</string>
-    <string name="about_desc_flashlight_tile">Toggle the flashlight.\n\nA Long pressing opens the controls for intensity adjustment which might need hardware implementation which some devices may lack.</string>
-    <string name="about_desc_stay_awake">Keep the screen awake while charging.\n\nPrevents the screen from sleeping as long as the device is connected to a power source which is suitable for developers during debugging.</string>
-    <string name="about_desc_nfc">Toggle NFC.\n\nQuickly enable or disable Near Field Communication for payments and pairing.</string>
-    <string name="about_desc_adaptive_brightness">Toggle adaptive brightness.\n\nEnable or disable automatic screen brightness adjustment based on ambient light.</string>
-    <string name="about_desc_private_dns">Toggle Private DNS.\n\nCycle through Off, Automatic, and Private DNS provider modes.</string>
-    <string name="about_desc_usb_debugging">Toggle USB Debugging.\n\nEnable or disable ADB debugging access directly from the quick settings.</string>
-    <string name="about_desc_color_picker">Launch the eye dropper tool to pick colors introduced in Android 17 BETA 2</string>
-    <string name="about_desc_charge_optimization">Optimize your battery life by limiting the maximum charge or using adaptive charging. This is specially designed for Pixel devices to ensure longevity and healthy charging cycles.\n\nCredits: TebbeUbben/ChargeQuickTile</string>
-    <string name="action_download">Download</string>
-    <!-- DIY Section -->
-    <string name="diy_trigger_screen_off">Screen Off</string>
-    <string name="diy_trigger_screen_on">Screen On</string>
-    <string name="diy_trigger_device_unlock">Device Unlock</string>
-    <string name="diy_trigger_charger_connected">Charger Connected</string>
-    <string name="diy_trigger_charger_disconnected">Charger Disconnected</string>
-    <string name="diy_state_charging">Charging</string>
-    <string name="diy_state_screen_on">Screen On</string>
-    <string name="diy_action_haptic">Vibrate</string>
-    <string name="diy_action_notification">Show Notification</string>
-    <string name="diy_action_remove_notification">Remove Notification</string>
-    <string name="diy_action_flashlight_on">Turn On Flashlight</string>
-    <string name="diy_action_flashlight_off">Turn Off Flashlight</string>
-    <string name="diy_action_flashlight_toggle">Toggle Flashlight</string>
-    <string name="diy_action_dim_wallpaper">Dim Wallpaper</string>
-    <string name="diy_dim_wallpaper_desc">This action requires Shizuku or Root to adjust system wallpaper dimming.</string>
-    <string name="diy_select_trigger">Select Trigger</string>
-    <string name="diy_create_app_title">App</string>
-    <string name="diy_create_app_desc">Automate based on open app</string>
-    <string name="diy_select_state">Select State</string>
-    <string name="diy_select_action">Select Action</string>
-    <string name="diy_in_action_label">In Action</string>
-    <string name="diy_out_action_label">Out Action</string>
-    <string name="action_cancel">Cancel</string>
-    <string name="action_save">Save</string>
-    <string name="action_edit">Edit</string>
-    <string name="action_delete">Delete</string>
-    <string name="action_enable">Enable</string>
-    <string name="action_disable">Disable</string>
-    <string name="automation_service_channel_name">Automation Service</string>
-    <string name="automation_service_running_title">Automations Active</string>
-    <string name="automation_service_running_desc">Monitoring system events for your automations</string>
-    <string name="diy_action_device_effects">Device Effects</string>
-    <string name="diy_device_effects_desc">Control system-level effects like grayscale, AOD suppression, wallpaper dimming, and night mode.</string>
-    <string name="diy_effect_grayscale">Grayscale</string>
-    <string name="diy_effect_suppress_ambient">Suppress Ambient Display</string>
-    <string name="diy_effect_dim_wallpaper">Dim Wallpaper</string>
-    <string name="diy_effect_night_mode">Night Mode</string>
-    <string name="diy_device_effects_android_15_warning">This feature requires Android 15 or higher.</string>
-    <string name="diy_device_effects_enabled">Enabled</string>
-    <string name="diy_device_effects_disabled">Disabled</string>
-    <string name="diy_action_sound_mode">Sound Mode</string>
-    <string name="diy_sound_mode_desc">This action allows switching between Sound, Vibrate, and Silent modes based on triggers. It requires Do Not Disturb access.</string>
-    <!-- About Section -->
+    <string name="search_qs_aod_desc">Daima Açık Ekranda geçiş</string>
+    <string name="search_qs_caffeinate_title">Kafeinat</string>
+    <string name="search_qs_caffeinate_desc">Ekranı uyanık tutma geçişi</string>
+    <string name="search_qs_sound_title">Ses Modu</string>
+    <string name="search_qs_sound_desc">Ses modları arasında geçiş yapma (Zil/Titreşim/Sessiz)</string>
+    <string name="search_qs_lighting_title">Bildirim Aydınlatması</string>
+    <string name="search_qs_lighting_desc">Bildirim aydınlatma hizmetini değiştir</string>
+    <string name="search_qs_night_light_title">Dinamik Gece Lambası</string>
+    <string name="search_qs_night_light_desc">Gece lambası otomasyonu geçişi</string>
+    <string name="search_qs_locked_sec_title">Kilitli Güvenlik</string>
+    <string name="search_qs_locked_sec_desc">Kilit ekranı geçişinde ağ güvenliği</string>
+    <string name="search_qs_mono_title">Mono Ses</string>
+    <string name="search_qs_mono_desc">Mono ses çıkışı geçişini zorla</string>
+    <string name="search_qs_flashlight_title">El feneri</string>
+    <string name="search_qs_flashlight_desc">Özel el feneri geçişi</string>
+    <string name="search_qs_freeze_title">Uygulama Dondurma</string>
+    <string name="search_qs_freeze_desc">Uygulama dondurma ızgarasını başlat</string>
+    <string name="search_qs_pulse_title">El Feneri Darbesi</string>
+    <string name="search_qs_pulse_desc">Bildirim el feneri darbesini değiştir</string>
+    <string name="search_qs_stay_awake_desc">Uyanık kalma geliştirici seçeneğini aç/kapat</string>
+    <string name="search_qs_private_dns_title">Özel DNS</string>
+    <string name="search_qs_private_dns_desc">Özel DNS modlarını değiştir (Kapalı/Otomatik/Ana Bilgisayar Adı)</string>
+    <string name="search_qs_usb_debugging_title">USB Hata Ayıklama</string>
+    <string name="search_qs_usb_debugging_desc">USB Hata Ayıklama geliştirici seçeneğini aç/kapat</string>
+    <string name="search_remap_enable_title">Düğme Yeniden Eşlemesini Etkinleştir</string>
+    <string name="search_remap_enable_desc">Ses düğmesinin yeniden eşlenmesi için ana geçiş</string>
+    <string name="search_remap_haptic_title">Dokunsal Geribildirimi Yeniden Eşle</string>
+    <string name="search_remap_haptic_desc">Yeniden eşlenen düğmeye basıldığında titreşim geri bildirimi</string>
+    <string name="search_remap_flashlight_title">El feneri geçişi</string>
+    <string name="search_remap_flashlight_desc">El fenerini ses düğmeleriyle değiştir</string>
+    <string name="search_night_light_enable_title">Dinamik Gece Işığını Etkinleştir</string>
+    <string name="search_night_light_enable_desc">Dinamik gece lambası için ana anahtar</string>
+    <string name="search_app_lock_enable_title">Uygulama kilidini etkinleştir</string>
+    <string name="search_app_lock_enable_desc">Uygulama kilitleme için ana geçiş</string>
+    <string name="search_app_lock_pick_title">Kilitli uygulamaları seçin</string>
+    <string name="search_app_lock_pick_desc">Hangi uygulamaların kimlik doğrulaması gerektirdiğini seçin</string>
+    <string name="search_freeze_pick_title">Dondurulacak uygulamaları seçin</string>
+    <string name="search_freeze_pick_desc">Hangi uygulamaların dondurulabileceğini seçin</string>
+    <string name="search_freeze_all_title">Tüm uygulamaları dondur</string>
+    <string name="search_freeze_all_desc">Seçilen tüm uygulamaları anında dondurun</string>
+    <string name="search_freeze_locked_title">Kilitlendiğinde don</string>
+    <string name="search_freeze_locked_desc">Cihaz kilitlendiğinde seçilen uygulamaları dondur</string>
+    <string name="search_freeze_delay_title">Donma gecikmesi</string>
+    <string name="search_freeze_delay_desc">Kilitlemeden sonra donmadan önceki gecikme</string>
+
+    
+    <string name="perm_shizuku_title">Şizuku</string>
+    <string name="perm_shizuku_desc">Gelişmiş komutlar için gereklidir. Shizuku\'yu Play Store\'dan yükleyin.</string>
+    <string name="perm_shizuku_install_action">Shizuku\'yu yükleyin</string>
+    <string name="perm_shizuku_grant_title">İzin Ver</string>
+    <string name="perm_shizuku_grant_desc">Haritalarda gezinirken güç tasarrufu komutlarını çalıştırmak için gereklidir.</string>
+    <string name="req_shizuku">Shizuku veya Root gerektirir</string>
+    <string name="perm_root_title">Kök Erişimi</string>
+    <string name="perm_root_desc">Kök ayrıcalıklarını kullanan sistem eylemleri için gereken izinler.</string>
+    <string name="perm_notif_listener_title">Bildirim Dinleyicisi</string>
+    <string name="perm_notif_listener_desc_maps">Google Haritalar navigasyon durumunu izlemek ve navigasyon yapılmadığında güç tasarrufunu etkinleştirmek için bildirim dinleyicisi erişimi gerektirir.</string>
+    <string name="perm_notif_listener_desc_lighting">Yeni bildirimleri algılamak ve uç aydınlatmayı tetiklemek için bildirim dinleyicisi erişimi gerektirir.</string>
+    <string name="perm_notif_listener_desc_snooze">İstenmeyen sistem bildirimlerini izlemek ve ertelemek için bildirim dinleyicisi erişimi gerektirir.</string>
+    <string name="perm_accessibility_title">Erişilebilirlik Hizmeti</string>
+    <string name="perm_accessibility_desc_common">Etkileşimleri tespit etmek amacıyla Uygulama Kilidi, Ekran kapatma widget\'ı ve diğer özellikler için gereklidir</string>
+    <string name="perm_accessibility_desc_lighting">Yeni bildirimlerde bildirim aydınlatmasını tetiklemek için gereklidir</string>
+    <string name="perm_default_browser_title">Varsayılan Tarayıcı</string>
+    <string name="perm_default_browser_desc">Bağlantıları verimli bir şekilde yönetmek için gereklidir</string>
+    <string name="perm_accessibility_desc_remap">Donanım düğmesi olaylarını engellemek için gereklidir</string>
+    <string name="perm_accessibility_desc_ambient_music_glance">Ortam Bakışı katmanını tetiklemek amacıyla ekran kapalıyken ses seviyesi tuşu olaylarını engellemek için gereklidir.</string>
+    <string name="perm_accessibility_desc_night_light">Ön plan uygulamalarını izlemek için gereklidir.</string>
+    <string name="perm_write_secure_title">Güvenli Ayarları Yaz</string>
+    <string name="perm_write_secure_desc_common">Durum Çubuğu simgeleri ve Ekran Kilitli Güvenlik için gereklidir</string>
+    <string name="perm_write_secure_desc_night_light">Gece Işığını açmak için gerekli. ADB veya root yoluyla verin.</string>
+    <string name="perm_write_settings_title">Sistem Ayarlarını Değiştirin</string>
+    <string name="perm_write_settings_desc">Uyarlanabilir Parlaklık ve diğer sistem ayarlarını değiştirmek için gereklidir</string>
+    <string name="perm_overlay_title">Yer Paylaşımı İzni</string>
+    <string name="perm_overlay_desc">Ekranda bildirim aydınlatması kaplamasını görüntülemek için gereklidir</string>
+    <string name="perm_device_admin_title">Cihaz Yöneticisi</string>
+    <string name="perm_device_admin_desc">Yetkisiz erişim girişimlerinde cihazı donanımsal olarak kilitlemek (biyometriyi devre dışı bırakarak) gereklidir</string>
+    <string name="perm_action_grant">İzin Ver</string>
+    <string name="perm_action_copy_adb">ADb\'yi kopyala</string>
+    <string name="perm_action_check">Kontrol etmek</string>
+    <string name="perm_action_enable">Ayarlar\'da etkinleştirin</string>
+    <string name="perm_action_how_to">Nasıl hibe edilir</string>
+    <string name="perm_battery_optimization_title">Pil Optimizasyonu</string>
+    <string name="perm_battery_optimization_desc">Güç tasarrufu sağlamak için hizmetin sistem tarafından sonlandırılmadığından emin olun.</string>
+
+    
+    <string name="tab_essentials">Temeller</string>
+    <string name="tab_freeze">Dondur</string>
+    <string name="tab_freeze_title">Dondurulmuş</string>
+    <string name="tab_diy">Kendin Yap</string>
+    <string name="tab_apps">Uygulamalar</string>
+    <string name="tab_freeze_subtitle">Devre dışı bırakılan uygulamalar</string>
+    <string name="tab_diy_subtitle">Kendin yap</string>
+    <string name="tab_apps_subtitle">Uygulamaları bulun ve yönetin</string>
+    <string name="feat_app_updates_title">Uygulama Güncellemeleri</string>
+    <string name="tab_app_updates_title">Uygulama Güncellemeleri</string>
+    <string name="action_add_repo">Depo Ekle</string>
+    <string name="action_edit_repo">Depoyu Düzenle</string>
+    <string name="prompt_enter_repo_url">GitHub Deposu URl\'sini veya sahibi/repo\'yu girin</string>
+    <string name="action_track">İzlemek</string>
+    <string name="error_no_apk_found">En son sürümde APK bulunamadı</string>
+    <string name="error_repo_not_found">Depo bulunamadı</string>
+    <string name="label_latest_release">Son Sürüm</string>
+    <string name="action_view_readme">BENİOKu\'yu görüntüle</string>
+    <string name="label_stars">%1$d Yıldızlar</string>
+    <string name="label_installed_app">Yüklü uygulama</string>
+    <string name="label_not_installed">Kurulu değil</string>
+    <string name="action_pick_app">Uygulama seç</string>
+    <string name="action_select_app">Uygulamayı seçin</string>
+    <string name="action_untrack">Takibi kaldır</string>
+    <string name="label_pending">Askıda olması</string>
+    <string name="label_up_to_date">Güncel</string>
+    <string name="feat_app_updates_desc">Favori uygulamalarınızın en son sürümlerini doğrudan GitHub\'dan takip edin ve indirin.</string>
+    <string name="error_invalid_repo_format">Geçersiz biçim. Sahip/depo veya GitHub URl\'sini kullanın</string>
+    <string name="error_generic_search">Arama sırasında bir hata oluştu</string>
+    <string name="label_auto">Otomatik</string>
+    <string name="label_options">Seçenekler</string>
+    <string name="option_allow_prereleases">Ön sürümleri kontrol edin</string>
+    <string name="option_notifications">Bildirimler</string>
+    <string name="error_rate_limited">GitHub hız limiti aşıldı. Lütfen daha sonra tekrar deneyin.</string>
+
+    
+    <string name="label_keyboard_setup">Klavye Kurulumu</string>
+    <string name="btn_enable_keyboard">Ayarlarda etkinleştir</string>
+    <string name="btn_select_keyboard">Essentials\'a geç</string>
+
+    <string name="label_enabled">Etkinleştirilmiş</string>
+    <string name="label_disabled">Engelli</string>
+
+    <string name="tile_adaptive_brightness">Uyarlanabilir Parlaklık</string>
+
+    <string name="tile_maps_power_saving">Haritalar Güç Tasarrufu</string>
+
+    <string name="action_search">Aramak</string>
+    <string name="action_stop">Durmak</string>
+    <string name="label_search">Aramak</string>
+
+    
+    <string name="action_back">Geri</string>
+    <string name="content_desc_back">Geri</string>
+    <string name="label_settings">Ayarlar</string>
+    <string name="action_report_bug">Hata Bildir</string>
+    <string name="action_done">Tamamlamak</string>
+    <string name="action_preview">Önizleme</string>
+    <string name="action_help_guide">Yardım Kılavuzu</string>
+    <string name="action_what_is_this">Bu nedir?</string>
+    <string name="update_available_title">Güncelleme Mevcut</string>
+    <string name="about_desc_ambient_music_glance">Ambient Music Glance, müzik çalarken ve oynatma değiştiğinde kilit ekranınızda Şu An Çalınan katmanını gösterir. \n\nCihazınız AOD üzerinden katmanları desteklemiyorsa, şarj sırasında alternatif olarak Android ayarlarınıza eklenen Ambiyans ekran koruyucusunu tercih edebilirsiniz.</string>
+    <string name="about_desc_notification_lighting">Bildirim Aydınlatması, bildirim aldığınızda güzel bir kenar aydınlatma efekti ekler.\n\nAnimasyon stilini, renklerini ve davranışını özelleştirebilirsiniz. Ekran kapalıyken (OEm\'e bağlı) veya mevcut uygulamanızın üstündeyken bile çalışır. Verilen kontrollerden uygulamaları, bildirim önceliğini veya hangi davranışı tetiklemesi gerektiğini seçin. OEm\'iniz AOD üzerindeki kaplamaları desteklemiyorsa aşağıda bulunan Ortam ekranı seçeneğini dava edin.</string>
+    <string name="about_desc_screen_off_widget">Ana ekranınıza simge veya herhangi bir karışıklık eklemeyen, şeffaf, yeniden boyutlandırılabilir bir widget\'a dokunarak ekranı kolayca kapatın.</string>
+    <string name="about_desc_statusbar_icons">Durum çubuğu simgeleriniz üzerinde tam kontrole sahip olun.\n\nDurum çubuğunuzu temiz tutmak için WiFi, Bluetooth veya hücresel veri gibi belirli simgeleri gizleyin. Ayrıca bazı akıllı kontrollerle saat formatını ve pil göstergesini de özelleştirebilirsiniz. Bunlar mevcut AOSP kontrollerinin listesidir; dolayısıyla cihazınızın işletim sistemi tüm kontrollere uymayabilir.</string>
+    <string name="about_desc_caffeinate">Kafein, ekranınızın otomatik olarak kapanmasını engeller.\n\nEkranınızı belirli bir süre veya süresiz olarak uyanık tutun. Uzun makaleleri okurken veya bir tarife atıfta bulunurken kullanışlıdır.</string>
+    <string name="about_desc_maps_power_saving">Herhangi bir Android cihazda kilit ekranınızda görüntülenecek minimum zifiri siyah arka plana sahip Pixel 10 serisine özel Google Haritalar Güç Tasarrufu modunu edinin. Bir navigasyon oturumu başlatın, ekranı kapatıp tekrar açın.</string>
+    <string name="about_desc_flashlight_pulse">Bir bildirim aldığınızda el fenerini çalıştırın.\n\nCihazların el feneri karartması için donanım desteği varsa, darbe sorunsuz bir şekilde canlandırılacaktır.</string>
+    <string name="about_desc_snooze_notifications">Varsayılan olarak değiştirilemeyen can sıkıcı kalıcı sistem bildirimlerini erteleyin. \n\nLütfen bildirim gelene kadar bekleyin ve ardından bu özelliğe gidin.\'bildirim kanalı listelenecektir. Bir sonraki sefere ertelemek için bunu seçin.\n\nErtelenen herhangi bir bildirime Android\'deki bildirim geçmişinizden hâlâ erişebilirsiniz.</string>
+    <string name="about_desc_quick_settings_tiles">Hızlı Ayarlar panelinize özel döşemeler ekleyin.\n\nNe yaptıklarını öğrenmek için bunlardan herhangi birine uzun basın.</string>
+    <string name="about_desc_button_remap">Farklı eylemler ve kısayollar gerçekleştirmek için donanım düğmelerinizi yeniden eşleyin.\n\nSes düğmelerine belirli koşullar altında uzun bastığınızda ne olacağını özelleştirin. \n\nEkran kapatma tetikleyicisi veya el feneri kontrolleri gibi bazı davranışlar, bunların OEM uygulamasına bağlı olabilir ve beklendiği gibi tüm cihazlarda çalışmayabilir. Bazı senaryolar Shizuku izinleri kullanılarak çözülebilir ancak uygulamalar nedeniyle aynı deneyimi vermeyebilir.</string>
+    <string name="about_desc_dynamic_night_light">Ön plandaki uygulamaya göre ekranınızın mavi ışık filtresini otomatik olarak değiştirin.</string>
+    <string name="about_desc_screen_locked_security">Cihazınız kilitliyken güvenliği artırın.\n\nBazı hassas QS döşemelerine erişimi kısıtlayın, yetkisiz ağ değişikliklerini önleyin ve dokunma spam\'ını önlemek için animasyon hızını artırarak yeniden denemelerini önleyin.\n\nBu özellik sağlam değildir ve bluetooth veya uçuş modunun kullanılamaması gibi doğrudan geçişe izin veren bazı döşemeler gibi kusurlara sahip olabilir engellendi.</string>
+    <string name="about_desc_app_lock">Uygulamalarınızı ikincil bir kimlik doğrulama katmanıyla koruyun.\n\nCihazınızın kilit ekranı kimlik doğrulama yöntemi, Android standartlarına göre sınıf 3 biyometrik güvenlik düzeyini karşıladığı sürece kullanılacaktır.</string>
+    <string name="about_desc_location_reached">Durağı asla kaçırmadığınızdan emin olmak için varış noktanıza yaklaştığınızda bildirim alın.\n\nGoogle Haritalar\'a gidin, hedefinizin yakınındaki bir raptiyeye uzun basın ve "Bırakılan raptiye" yazdığından emin olun (Aksi takdirde mesafe hesaplaması doğru olmayabilir) Ve ardından konumu Essentials uygulamasıyla paylaşın ve izlemeye başlayın.</string>
+    <string name="about_desc_freeze">Arka planda çalışmasını durdurmak için uygulamaları dondurun.\n\nUygulamaları kullanmadığınız zamanlarda tamamen dondurarak pil tüketimini ve veri kullanımını önleyin. Başlattığınızda anında donmuş olacaklar. Uygulamalar uygulama çekmecesinde görünmeyecek ve dondurulduğunda Play Store\'daki uygulama güncellemeleri için de görünmeyecek.</string>
+    <string name="about_desc_system_keyboard">Kimsenin istemediği özel bir giriş yöntemi.\n\nBu sadece bir deney. Çok karmaşık ve zaman alıcı bir uygulama olduğundan birden fazla dil destek alamayabilir.</string>
+    <string name="about_desc_batteries">Bağlı tüm cihazlarınızın pil seviyelerini izleyin.\n\nBluetooth kulaklığınızın, saatinizin ve diğer aksesuarlarınızın pil durumunu tek bir yerden görün. Mac pil seviyenizi de görüntülemek için AirSync uygulamasına bağlanın.</string>
+    <string name="about_desc_watermark">EXIF verileri ve cihaz bilgileriyle fotoğraflarınıza özel bir başlık/filigran ekleyin.\n\nKolayca filigran eklemek için bir görüntüyü doğrudan diğer uygulamadan Essentials\'a paylaşın.</string>
+    <string name="about_desc_calendar_sync">İş veya okul politikaları nedeniyle WearOS cihazlarına eklenmesine izin vermeyen Google hesaplarındaki kısıtlamalar ne olursa olsun, yaklaşan tüm takvim programınızı senkronize edin. \n\nPlanlamayı uygulamada, bir kutucukta veya komplikasyonda görüntülemek için WearOS Essentials yardımcı uygulamasını yüklediğinizden emin olun.</string>
+    <string name="about_desc_app_updates">Yüklü uygulamalarınız için güncellemeleri takip edin.\n\nMevcut güncellemeler hakkında bildirim alın, değişiklik günlüklerini görüntüleyin ve bunları tek bir dokunuşla kolayca yükleyin.</string>
+    <string name="about_desc_call_vibrations">Çağrılarınıza dokunsal geri bildirim ekleyin.\n\nBir çağrı bağlandığında, bağlantısı kesildiğinde veya kabul edildiğinde titreşerek ekrana bakmadan dokunsal onay verin.</string>
+    <string name="about_desc_sound_mode_tile">Ses, Titreşim ve Sessiz modları arasında hızlıca geçiş yapın.\n\nSes seviyesi düğmelerini veya ayarları kullanmadan zil sesi modunuzu değiştirmenizi sağlayan kullanışlı bir döşeme. Kutucuk geçişini döngü davranışına göre özelleştirmek için modları yeniden sıralayabilir veya gerekmiyorsa herhangi birini devre dışı bırakabilirsiniz.</string>
+    <string name="about_desc_ui_blur">İşletim sistemi genelinde sistem düzeyindeki bulanıklık derinliği efektini kolayca değiştirin.</string>
+    <string name="about_desc_bubbles">Kayan bildirim balonlarını etkinleştirin veya devre dışı bırakın.\n\nKonuşma balonları için sistem genelindeki ayara hızla geçiş yapın.</string>
+    <string name="about_desc_sensitive_content">Kilit ekranında hassas içeriği gizleyin.\n\nCihazınız kilitliyken bildirim içeriğinin gösterilmesini veya gizlenmesini seçin.</string>
+    <string name="about_desc_tap_to_wake">Dokunarak uyandırma işlevine geçiş yapın.\n\nEkranınızı bir dokunuşla uyandırma özelliğini etkinleştirin veya devre dışı bırakın.</string>
+    <string name="about_desc_aod">Her Zaman Açık Ekran\'a geçiş yapın.\n\nBilgileri bir bakışta görüntülemek için her zaman açık ekranı hızlı bir şekilde etkinleştirin veya devre dışı bırakın.</string>
+    <string name="about_desc_notification_glance">Daima Açık Ekranınızı bildirimlerinize göre otomatik olarak kontrol edin. Seçilen bir uygulamadan bir mesaj veya uyarı geldiğinde, siz bildirimi kapatana kadar AOD açık kalacak ve hiçbir uyarı olmadığında pilinizi boşa harcamadan önemli bilgileri asla kaçırmamanızı sağlayacak.</string>
+    <string name="about_desc_mono_audio">Ses kanallarını mono olarak birleştirin.\n\nTek bir kulaklık kullanıldığında veya erişilebilirlik amacıyla kullanışlıdır.</string>
+    <string name="about_desc_flashlight_tile">El fenerini açın/kapatın.\n\nA Uzun basıldığında, bazı cihazlarda eksik olabilecek donanım uygulaması gerektirebilecek yoğunluk ayarı kontrolleri açılır.</string>
+    <string name="about_desc_stay_awake">Şarj olurken ekranı uyanık tutun.\n\nHata ayıklama sırasında geliştiricilere uygun bir güç kaynağına bağlı olduğu sürece ekranın uyku moduna geçmesini engeller.</string>
+    <string name="about_desc_nfc">NFc\'yi açın/kapatın.\n\nÖdemeler ve eşleştirme için Yakın Alan İletişimini hızla etkinleştirin veya devre dışı bırakın.</string>
+    <string name="about_desc_adaptive_brightness">Uyarlanabilir parlaklığı açın/kapatın.\n\nOrtam ışığına göre otomatik ekran parlaklığı ayarını etkinleştirin veya devre dışı bırakın.</string>
+    <string name="about_desc_private_dns">Özel DNs\'yi değiştirin.\n\nKapalı, Otomatik ve Özel DNS sağlayıcı modları arasında geçiş yapın.</string>
+    <string name="about_desc_usb_debugging">USB Hata Ayıklamayı açın/kapatın.\n\nADB hata ayıklama erişimini doğrudan hızlı ayarlardan etkinleştirin veya devre dışı bırakın.</string>
+    <string name="about_desc_color_picker">Android 17 BETA 2\'de sunulan renkleri seçmek için göz damlası aracını başlatın</string>
+    <string name="about_desc_charge_optimization">Maksimum şarjı sınırlayarak veya uyarlanabilir şarjı kullanarak pil ömrünüzü optimize edin. Bu, uzun ömür ve sağlıklı şarj döngüleri sağlamak amacıyla Pixel cihazları için özel olarak tasarlanmıştır.\n\nKrediler: TebbeUbben/ChargeQuickTile</string>
+    <string name="action_download">İndirmek</string>
+
+    
+    <string name="diy_trigger_screen_off">Ekran Kapalı</string>
+    <string name="diy_trigger_screen_on">Ekran Açık</string>
+    <string name="diy_trigger_device_unlock">Cihaz Kilidini Açma</string>
+    <string name="diy_trigger_charger_connected">Şarj Cihazı Bağlı</string>
+    <string name="diy_trigger_charger_disconnected">Şarj Cihazı Bağlantısı Kesildi</string>
+    
+    <string name="diy_state_charging">Şarj etme</string>
+    <string name="diy_state_screen_on">Ekran Açık</string>
+
+    <string name="diy_action_haptic">Titreşim</string>
+    <string name="diy_action_notification">Bildirimi Göster</string>
+    <string name="diy_action_remove_notification">Bildirimi Kaldır</string>
+    <string name="diy_action_flashlight_on">El Fenerini Aç</string>
+    <string name="diy_action_flashlight_off">El Fenerini Kapat</string>
+    <string name="diy_action_flashlight_toggle">El Fenerini Aç/Kapat</string>
+    <string name="diy_action_dim_wallpaper">Loş Duvar Kağıdı</string>
+    <string name="diy_dim_wallpaper_desc">Bu eylem, sistem duvar kağıdı karartmasını ayarlamak için Shizuku veya Root\'u gerektirir.</string>
+    <string name="diy_select_trigger">Tetikleyiciyi Seçin</string>
+    <string name="diy_create_app_title">Uygulama</string>
+    <string name="diy_create_app_desc">Açık uygulamaya göre otomatikleştirin</string>
+    <string name="diy_select_state">Eyalet Seçin</string>
+    <string name="diy_select_action">Eylem Seç</string>
+    <string name="diy_in_action_label">Eylemde</string>
+    <string name="diy_out_action_label">Çıkış Eylemi</string>
+    <string name="action_cancel">İptal etmek</string>
+    <string name="action_save">Kaydetmek</string>
+    <string name="action_edit">Düzenlemek</string>
+    <string name="action_delete">Silmek</string>
+    <string name="action_enable">Olanak vermek</string>
+    <string name="action_disable">Devre dışı bırakmak</string>
+    
+    <string name="automation_service_channel_name">Otomasyon Hizmeti</string>
+    <string name="automation_service_running_title">Otomasyonlar Aktif</string>
+    <string name="automation_service_running_desc">Otomasyonlarınız için sistem olaylarını izleme</string>
+
+    <string name="diy_action_device_effects">Cihaz Efektleri</string>
+    <string name="diy_device_effects_desc">Gri tonlama, AOD bastırma, duvar kağıdı karartma ve gece modu gibi sistem düzeyindeki efektleri kontrol edin.</string>
+    <string name="diy_effect_grayscale">Gri tonlamalı</string>
+    <string name="diy_effect_suppress_ambient">Ortam Görüntüsünü Bastır</string>
+    <string name="diy_effect_dim_wallpaper">Loş Duvar Kağıdı</string>
+    <string name="diy_effect_night_mode">Gece Modu</string>
+    <string name="diy_device_effects_android_15_warning">Bu özellik Android 15 veya üzerini gerektirir.</string>
+    <string name="diy_device_effects_enabled">Etkinleştirilmiş</string>
+    <string name="diy_device_effects_disabled">Engelli</string>
+    <string name="diy_action_sound_mode">Ses Modu</string>
+    <string name="diy_sound_mode_desc">Bu eylem, tetikleyicilere bağlı olarak Ses, Titreşim ve Sessiz modları arasında geçiş yapılmasına olanak tanır. Rahatsız Etmeyin erişimi gerektirir.</string>
+
+    
     <string name="app_developer_name">Sameera Wijerathna</string>
-    <string name="app_description">The all-in-one toolbox for your Pixel and Androids</string>
-    <!-- Edge Lighting -->
-    <string name="color_mode_system">System</string>
-    <string name="color_mode_custom">Custom</string>
-    <string name="color_mode_app_specific">App specific</string>
-    <!-- Biometric & Security -->
-    <string name="error_auth_failed">Authentication failed</string>
-    <string name="shortcut_creation_hint_toast">Long press an app in the grid to add a shortcut</string>
-    <string name="error_app_uninstalled">App not found or uninstalled</string>
-    <!-- Notifications -->
-    <string name="update_channel_name">App Updates</string>
-    <string name="update_channel_desc">Notifications for new app updates</string>
-    <string name="notification_update_available">Update available</string>
-    <string name="battery_notification_no_devices">No devices connected</string>
-    <string name="label_unknown">Unknown</string>
+    <string name="app_description">Pixel ve Android\'leriniz için hepsi bir arada araç kutusu</string>
+
+    
+    <string name="color_mode_system">Sistem</string>
+    <string name="color_mode_custom">Gelenek</string>
+    <string name="color_mode_app_specific">Uygulamaya özel</string>
+
+    
+    <string name="error_auth_failed">Kimlik doğrulama başarısız oldu</string>
+    <string name="shortcut_creation_hint_toast">Kısayol eklemek için ızgaradaki bir uygulamaya uzun basın</string>
+    <string name="error_app_uninstalled">Uygulama bulunamadı veya kaldırılmadı</string>
+
+    
+    <string name="update_channel_name">Uygulama Güncellemeleri</string>
+    <string name="update_channel_desc">Yeni uygulama güncellemeleri için bildirimler</string>
+    <string name="notification_update_available">Güncelleme mevcut</string>
+    <string name="battery_notification_no_devices">Bağlı cihaz yok</string>
+
+    <string name="label_unknown">Bilinmiyor</string>
     <string name="network_type_5g">5G</string>
     <string name="network_type_4g">4G</string>
     <string name="network_type_3g">3G</string>
     <string name="label_shizuku_ritaka">Shizuku (Rikka)</string>
     <string name="label_shizuku_tuozi">Shizuku (TuoZi)</string>
-    <string name="label_search_content_description">Search</string>
-    <string name="perm_device_admin_explanation">Required to hard-lock the device when unauthorized network changes are attempted on lock screen.</string>
-    <string name="biometric_subtitle_access_settings">Authenticate to access settings</string>
-    <string name="biometric_title_settings_format">%1$s Settings</string>
-    <string name="keyword_feature">feature</string>
-    <string name="keyword_settings">settings</string>
-    <string name="keyword_hide">hide</string>
-    <string name="keyword_show">show</string>
-    <string name="keyword_visibility">visibility</string>
-    <string name="error_loading_apps">Error loading apps: %1$s</string>
+
+    <string name="label_search_content_description">Aramak</string>
+    <string name="perm_device_admin_explanation">Kilit ekranında yetkisiz ağ değişiklikleri yapılmaya çalışıldığında cihazın sabit olarak kilitlenmesi gerekir.</string>
+    <string name="biometric_subtitle_access_settings">Ayarlara erişmek için kimlik doğrulaması yapın</string>
+    <string name="biometric_title_settings_format">%1$s Ayarlar</string>
+
+    <string name="keyword_feature">özellik</string>
+    <string name="keyword_settings">ayarlar</string>
+    <string name="keyword_hide">saklamak</string>
+    <string name="keyword_show">göstermek</string>
+    <string name="keyword_visibility">görünürlük</string>
+
+    <string name="error_loading_apps">Uygulamalar yüklenirken hata oluştu: %1$s</string>
+
     <string-array name="keywords_haptic">
-        <item>vibration</item>
-        <item>touch</item>
-        <item>feel</item>
+        <item>titreşim</item>
+        <item>dokunmak</item>
+        <item>hissetmek</item>
     </string-array>
     <string-array name="keywords_network_visibility">
-        <item>network</item>
-        <item>visibility</item>
-        <item>auto</item>
-        <item>hide</item>
+        <item>ağ</item>
+        <item>görünürlük</item>
+        <item>oto</item>
+        <item>saklamak</item>
     </string-array>
     <string-array name="keywords_restore_default">
-        <item>restore</item>
-        <item>default</item>
-        <item>icon</item>
+        <item>eski haline getirmek</item>
+        <item>varsayılan</item>
+        <item>simge</item>
     </string-array>
     <string-array name="keywords_keyboard">
-        <item>keyboard</item>
-        <item>height</item>
-        <item>padding</item>
-        <item>haptic</item>
-        <item>input</item>
+        <item>klavye</item>
+        <item>yükseklik</item>
+        <item>dolgu</item>
+        <item>dokunsal</item>
+        <item>giriş</item>
     </string-array>
     <string-array name="keywords_flashlight">
-        <item>light</item>
-        <item>torch</item>
+        <item>ışık</item>
+        <item>meşale</item>
     </string-array>
     <string-array name="keywords_flashlight_pulse">
-        <item>light</item>
-        <item>torch</item>
-        <item>pulse</item>
-        <item>notification</item>
+        <item>ışık</item>
+        <item>meşale</item>
+        <item>nabız</item>
+        <item>bildiri</item>
     </string-array>
     <string-array name="keywords_qs_stay_awake">
-        <item>awake</item>
-        <item>developer</item>
-        <item>power</item>
-        <item>charge</item>
+        <item>uyanmak</item>
+        <item>geliştirici</item>
+        <item>güç</item>
+        <item>şarj</item>
     </string-array>
     <string-array name="keywords_notification_lighting">
-        <item>glow</item>
-        <item>notification</item>
-        <item>led</item>
+        <item>parıltı</item>
+        <item>bildiri</item>
+        <item>neden olmuş</item>
     </string-array>
     <string-array name="keywords_round_shape">
-        <item>round</item>
-        <item>shape</item>
-        <item>edge</item>
+        <item>yuvarlak</item>
+        <item>şekil</item>
+        <item>kenar</item>
     </string-array>
     <string-array name="keywords_privacy">
-        <item>secure</item>
-        <item>privacy</item>
-        <item>biometric</item>
-        <item>face</item>
-        <item>fingerprint</item>
+        <item>güvenli</item>
+        <item>mahremiyet</item>
+        <item>biyometrik</item>
+        <item>yüz</item>
+        <item>parmak izi</item>
     </string-array>
     <string-array name="keywords_sound_accessibility">
-        <item>sound</item>
-        <item>accessibility</item>
-        <item>hear</item>
+        <item>ses</item>
+        <item>erişilebilirlik</item>
+        <item>duymak</item>
     </string-array>
     <string-array name="keywords_timeout">
-        <item>stay</item>
-        <item>on</item>
-        <item>timeout</item>
+        <item>kalmak</item>
+        <item>Açık</item>
+        <item>zaman aşımı</item>
     </string-array>
     <string-array name="keywords_wake_display">
-        <item>touch</item>
-        <item>wake</item>
-        <item>display</item>
+        <item>dokunmak</item>
+        <item>uyanmak</item>
+        <item>görüntülemek</item>
     </string-array>
     <string-array name="keywords_timer">
-        <item>timer</item>
-        <item>wait</item>
-        <item>timeout</item>
+        <item>zamanlayıcı</item>
+        <item>Beklemek</item>
+        <item>zaman aşımı</item>
     </string-array>
-    <string name="label_keyboard_always_dark">Always dark theme</string>
-    <string name="label_keyboard_pitch_black">Pitch black theme</string>
-    <string name="label_keyboard_clipboard_enabled">Clipboard History</string>
+
+    <string name="label_keyboard_always_dark">Her zaman karanlık tema</string>
+    <string name="label_keyboard_pitch_black">Zifiri siyah tema</string>
+    <string name="label_keyboard_clipboard_enabled">Pano Geçmişi</string>
+
     <string-array name="keywords_selection">
-        <item>list</item>
-        <item>picker</item>
-        <item>selection</item>
+        <item>liste</item>
+        <item>seçici</item>
+        <item>seçim</item>
     </string-array>
     <string-array name="keywords_visual_style">
-        <item>animation</item>
-        <item>visual</item>
-        <item>look</item>
+        <item>animasyon</item>
+        <item>görsel</item>
+        <item>Bakmak</item>
     </string-array>
     <string-array name="keywords_quiet_filter">
-        <item>quiet</item>
-        <item>ignore</item>
-        <item>filter</item>
+        <item>sessizlik</item>
+        <item>görmezden gelmek</item>
+        <item>filtre</item>
     </string-array>
     <string-array name="keywords_automation_lock">
-        <item>automation</item>
-        <item>auto</item>
-        <item>lock</item>
+        <item>otomasyon</item>
+        <item>oto</item>
+        <item>kilit</item>
     </string-array>
     <string-array name="keywords_adb_debug">
         <item>adb</item>
-        <item>usb</item>
-        <item>debug</item>
+        <item>USB</item>
+        <item>hata ayıklama</item>
     </string-array>
     <string-array name="keywords_blur_glass">
-        <item>blur</item>
-        <item>glass</item>
-        <item>vignette</item>
+        <item>bulanıklık</item>
+        <item>bardak</item>
+        <item>kısa hikaye</item>
     </string-array>
     <string-array name="keywords_float_window">
-        <item>float</item>
-        <item>window</item>
-        <item>overlay</item>
+        <item>batmadan yüzmek</item>
+        <item>pencere</item>
+        <item>kaplama</item>
     </string-array>
     <string-array name="keywords_always_display">
-        <item>always</item>
-        <item>display</item>
-        <item>clock</item>
+        <item>Her zaman</item>
+        <item>görüntülemek</item>
+        <item>saat</item>
     </string-array>
     <string-array name="keywords_audio_mute">
-        <item>audio</item>
-        <item>mute</item>
-        <item>volume</item>
+        <item>ses</item>
+        <item>sesini kapatmak</item>
+        <item>hacim</item>
     </string-array>
     <string-array name="keywords_blue_filter">
-        <item>blue</item>
-        <item>filter</item>
-        <item>auto</item>
+        <item>mavi</item>
+        <item>filtre</item>
+        <item>oto</item>
     </string-array>
     <string-array name="keywords_app_freezing">
-        <item>freeze</item>
-        <item>shizuku</item>
+        <item>dondurmak</item>
+        <item>Şizuku</item>
     </string-array>
     <string-array name="keywords_manual_now">
-        <item>manual</item>
-        <item>now</item>
-        <item>shizuku</item>
+        <item>manuel</item>
+        <item>Şimdi</item>
+        <item>Şizuku</item>
     </string-array>
     <string-array name="keywords_proximity_sensor">
-        <item>proximity</item>
-        <item>sensor</item>
-        <item>face</item>
-        <item>down</item>
+        <item>yakınlık</item>
+        <item>sensör</item>
+        <item>yüz</item>
+        <item>aşağı</item>
     </string-array>
     <string-array name="keywords_switch_master">
-        <item>switch</item>
-        <item>master</item>
+        <item>anahtar</item>
+        <item>usta</item>
     </string-array>
     <string-array name="keywords_vibration">
-        <item>vibration</item>
-        <item>feel</item>
+        <item>titreşim</item>
+        <item>hissetmek</item>
     </string-array>
     <string-array name="keywords_battery">
-        <item>battery</item>
-        <item>charge</item>
-        <item>optimization</item>
-        <item>pixel</item>
+        <item>pil</item>
+        <item>şarj</item>
+        <item>optimizasyon</item>
+        <item>piksel</item>
     </string-array>
-    <!-- App Selection Extra -->
-    <string name="action_invert_selection">Invert selection</string>
-    <string name="toggle_show_system_apps">Show system apps</string>
-    <!-- Updates -->
-    <string name="status_up_to_date">You are up to date</string>
-    <string name="warning_pre_release">This is a pre-release version and might be unstable.</string>
-    <string name="release_notes_format">Release Notes v%1$s</string>
-    <string name="action_view_on_github">View on GitHub</string>
-    <string name="action_download_apk">Download APK</string>
-    <!-- Haptic Types -->
-    <string name="haptic_none">None</string>
-    <string name="haptic_subtle">Subtle</string>
-    <string name="haptic_double">Double</string>
-    <string name="haptic_click">Click</string>
-    <string name="haptic_tick">Tick</string>
-    <!-- Flashlight Intensity Overlay -->
-    <string name="action_turn_off">Turn Off</string>
-    <string name="feature_flashlight_brightness_title">Flashlight Brightness</string>
-    <!-- QS / Activities -->
-    <string name="error_unlock_network_settings">Unlock phone to change network settings</string>
-    <!-- About Section -->
-    <string name="developed_by_format">Developed by %1$s\nwith ❤\uFE0F from \uD83C\uDDF1\uD83C\uDDF0</string>
-    <string name="action_website">Website</string>
-    <string name="action_contact">Contact</string>
-    <string name="action_telegram">Telegram</string>
-    <string name="action_support">Support</string>
-    <string name="label_other_apps">Other Apps</string>
+
+    
+    <string name="action_invert_selection">Seçimi tersine çevir</string>
+    <string name="toggle_show_system_apps">Sistem uygulamalarını göster</string>
+
+    
+    <string name="status_up_to_date">Güncelsiniz</string>
+    <string name="warning_pre_release">Bu, yayın öncesi bir sürümdür ve kararsız olabilir.</string>
+    <string name="release_notes_format">Sürüm Notları %1$s</string>
+    <string name="action_view_on_github">GitHub\'da görüntüle</string>
+    <string name="action_download_apk">APk\'yı indir</string>
+
+    
+    <string name="haptic_none">Hiçbiri</string>
+    <string name="haptic_subtle">Hemen göze çarpmayan</string>
+    <string name="haptic_double">Çift</string>
+    <string name="haptic_click">Tıklamak</string>
+    <string name="haptic_tick">Kene</string>
+
+    
+    <string name="action_turn_off">Kapamak</string>
+    <string name="feature_flashlight_brightness_title">El Feneri Parlaklığı</string>
+
+    
+    <string name="error_unlock_network_settings">Ağ ayarlarını değiştirmek için telefonun kilidini açın</string>
+
+    
+    <string name="developed_by_format"> %1$s\nile ❤\uFE0F  tarafından geliştirildi \uD83C\uDDF1\uD83C\uDDF0</string>
+    <string name="action_website">Web sitesi</string>
+    <string name="action_contact">Temas etmek</string>
+    <string name="action_telegram">Telgraf</string>
+    <string name="action_support">Destek</string>
+    <string name="label_other_apps">Diğer Uygulamalar</string>
     <string name="app_airsync">AirSync</string>
     <string name="app_zenzero">ZenZero</string>
-    <string name="app_canvas">Canvas</string>
-    <string name="app_tasks">Tasks</string>
-    <string name="app_zero">Zero</string>
-    <!-- Help & Guides -->
-    <string name="help_guides_title">Help &amp; Guides</string>
-    <string name="need_more_support_reach_out">Need more support? Reach out,</string>
-    <string name="action_collapse">Collapse</string>
-    <string name="action_expand">Expand</string>
-    <string name="support_group_label">Support Group</string>
-    <string name="email_label">Email</string>
-    <string name="send_email_chooser_title">Send email</string>
-    <string name="error_no_email_app">No email app available</string>
-    <string name="instruction_step_image_description">Step %1$d Image</string>
-    <!-- Instructions Content -->
-    <string name="instruction_section_perms_title">Accessibility, Notification and Overlay permissions</string>
-    <string name="instruction_step_perms_1">You may get this access denied message if you try to grant sensitive permissions such as accessibility, notification listener or overlay permissions. To grant it, check the steps below.</string>
-    <string name="instruction_step_perms_2">1. Go to app info page of Essentials.</string>
-    <string name="instruction_step_perms_3">2. Open the 3-dot menu and select \'Allow restricted settings\'. You may have to authenticate with biometrics. Once done, Try to grant the permission again.</string>
-    <string name="instruction_section_shizuku_title">Shizuku</string>
-    <string name="instruction_section_shizuku_desc">Shizuku is a powerful tool that allows apps to use system APIs directly with ADB or root permissions. It is required for features like Maps min mode, App Freezer. And willa ssist granting some permissions such as WRITE_SECURE_SETTINGS. \n\nBut the Play Store version of Shizuku might be outdated and will probably be unusable on recent Android versions so in that case, please get the latest version from the github or an up-to-date fork of it.</string>
-    <string name="instruction_section_maps_title">Maps power saving mode</string>
-    <string name="instruction_section_maps_desc">This feature automatically triggers Google Maps power saving mode which is currently exclusive to the Pixel 10 series. A community member discovered that it is still usable on any Android device by launching the maps minMode activity with root privileges. \n\nAnd then, I had it automated with Tasker to automatically trigger when the screen turns off during a navigation session and then was able to achieve the same with just runtime Shizuku permissions. \n\nIt is intended to be shown over the AOD of Pixel 10 series so because of that, you may see an occasional message popping up on the display that it does not support landscape mode. That is not avoidable by the app and you can ignore.</string>
-    <string name="instruction_section_silent_title">Silent sound mode</string>
-    <string name="instruction_section_silent_desc">You may have noticed that the silent mode also triggers DND. \n\nThis is due to how the Android implemented it as even if we use the same API to switch to vibrate mode, it for some reason turns on DND along with the silent mode and this is not avoidable at this moment. :(</string>
-    <string name="instruction_section_freeze_title">What is freeze?</string>
-    <string name="instruction_section_freeze_desc">Pause and stay away from app distractions while saving a little bit of power preventing apps running in the background. Suitable for rarely used apps. \n\nNot recommended for any communication services as they will not notify you in an emergency unless you unfreeze them. \n\nHighly advised to not freeze system apps as they can lead to system instability. Proceed with caution, You were warned. \n\nInspired by Hail &lt;3</string>
-    <string name="instruction_section_security_title">Are app lock and screen locked security actually secure?</string>
-    <string name="instruction_section_security_desc">Absolutely not. \n\nAny 3rd party application can not 100% interfere with regular device interactions and even the app lock is only an overlay above selected apps to prevent interacting with them. There are workarounds and it is not foolproof. \n\nSame goes with the screen locked security feature which detects someone trying to interact with the network tiles which for some reason are still accessible for anyone on Pixels. So if they try hard enough they might still be able to change them and especially if you have a flight mode QS tile added, this app can not prevent interactions with it. \n\nThese features are made just as experiments for light usage and would never recommend as strong security and privacy solutions. \n\nSecure alternatives:\n - App lock: Private Space and Secure folder on Pixels and Samsung\n - Preventing mobile networks access: Make sure your theft protection and offline/ power off find my device settings are on. You may look into Graphene OS as well.</string>
-    <string name="instruction_section_statusbar_title">Statusbar icons</string>
-    <string name="instruction_section_statusbar_desc">You may notice that even after resetting the statusbar icons, Some icons such as device rotation, wired headphone icons may stay visible. This is due to how the statubar blacklist is implemented in Android and how your OEM may have customized them. \nYou may need further adjustments. \n\nAlso not all icon visibility options may work as they depend on the OEM implementations and availability.</string>
-    <string name="instruction_section_lighting_title">Notification lighting does not work</string>
-    <string name="instruction_section_lighting_desc">It depends on the OEM. Some like OneUI does not seem to allow overlays above the AOD preventing the lighting effects being shown. In this case, try the ambient display as a workaround. </string>
-    <string name="instruction_section_button_title">Button remap does not work while display is off</string>
-    <string name="instruction_section_button_desc">Some OEMs limit the accessibility service reporting once the display is actually off but they may still work while the AOD is on. \nIn this case, you may able to use button remaps with AOD on but not with off. \n\nAs a workaround, you will need to use Shizuku permissions and turn on the \'Use Shizuku\' toggle in button remap settings which identifies and listen to hardware input events.\nThis is not guaranteed to work on all devices and needs testing.\n\nAnd even if it\'s on, Shizuku method only will be used when it\'s needed. Otherwise it will always fallback to Accessibility which also handles the blocking of the actual input during long press.</string>
-    <string name="instruction_section_flashlight_title">Flashlight brightness does not work</string>
-    <string name="instruction_section_flashlight_desc">Only a limited number of devices got hardware and software support adjusting the flashlight intensity. \n\n\'The minimum version of Android is 13 (SDK33).\nFlashlight brightness control only supports HAL version 3.8 and higher, so among the supported devices, the latest ones (For example, Pixel 6/7, Samsung S23, etc.)\'\npolodarb/Flashlight-Tiramisu</string>
-    <string name="instruction_section_about_title">What the hell is this app?</string>
-    <string name="instruction_section_about_desc">Good question,\n\nI always wanted to extract the most out of my devices as I\'ve been a rooted user for ever since I got my first Project Treble device. And I\'ve been loving the Tasker app which is like the god when comes automation and utilizing every possible API and internal features of Android.\n\nSo I am not unrooted and back on stock Android beta experience and wanted to get the most out from what is possible with given privileges. Might as well share them. So with my beginner knowledge in Kotlin Jetpack and with the support of many research and assist tools and also the great community, I built an all-in-one app containing everything I wanted to be in my Android with given permissions. And here it is.\n\nFeature requests are welcome, I will consider and see if they are achievable with available permissions and my skills. Nowadays what is not possible. :)\n\nWhy not on Play Store?\nI don\'t wanna risk getting my Developer account banned due to the highly sensitive and internal permissions and APIs being used in the app. But with the way Android sideloading is headed, let\'s see what we have to do. I do understand the concerns of sideloaded apps being malicious.\nWhile we are at the topic, Checkout my other app AirSync if you are a mac + Android user. *shameless plug*\n\nEnjoy, Keep building! (っ◕‿◕)っ</string>
-    <!-- Bug Reporting -->
-    <string name="toast_bug_report_copied">Bug report copied to clipboard</string>
-    <string name="bug_report_title">Bug report</string>
-    <string name="bug_report_option_share_logs">Share logs</string>
-    <string name="bug_report_option_share_logs_desc">Include logs and details</string>
-    <string name="bug_report_device_info">Device Info</string>
-    <string name="bug_report_raw_json">Raw Report</string>
-    <string name="action_report_github">Open GitHub Issue</string>
-    <string name="action_report_email">Email Report</string>
-    <string name="action_copy_clipboard">Copy to Clipboard</string>
-    <string name="bug_report_email_subject">Essentials Bug Report</string>
-    <string name="bug_report_send_via">Send via</string>
-    <!-- Location Reached -->
-    <string name="feat_location_reached_title">Are We There Yet?</string>
-    <string name="feat_location_reached_desc">Prepare for your destination.</string>
-    <string name="location_reached_how_to">Open your map app, pick a location, and share it to Essentials.</string>
-    <string name="location_reached_radius_title">Radius: %d m</string>
-    <string name="perm_location_title">Location</string>
-    <string name="perm_location_desc">Used to detect arrival at your destination.</string>
-    <string name="perm_bg_location_title">Background Location</string>
-    <string name="perm_bg_location_desc">Required to monitor your arrival while the app is closed or the screen is off.</string>
-    <string name="location_reached_notification_title">Destination Reached!</string>
-    <string name="location_reached_notification_desc">You have arrived at your destination.</string>
-    <string name="location_reached_processing">Processing location…</string>
-    <string name="location_reached_dist_remaining">DISTANCE REMAINING</string>
-    <string name="location_reached_calculating">Calculating…</string>
-    <string name="location_reached_stop_tracking">Stop Tracking</string>
-    <string name="location_reached_dest_ready">Destination Ready</string>
-    <string name="location_reached_start_tracking">Start Tracking</string>
-    <string name="location_reached_view_map">View Map</string>
-    <string name="location_reached_clear">Clear</string>
-    <string name="location_reached_no_dest">No Destination</string>
-    <string name="location_reached_open_maps">Open Maps</string>
-    <string name="location_reached_fsi_title">Full-Screen Alarm Permission</string>
-    <string name="location_reached_fsi_desc">Required to wake your device upon arrival. Tap to grant.</string>
-    <string name="location_reached_dist_m">%1$d m</string>
+    <string name="app_canvas">Tuval</string>
+    <string name="app_tasks">Görevler</string>
+    <string name="app_zero">Sıfır</string>
+
+    
+    <string name="help_guides_title">Yardım ve Kılavuzlar</string>
+    <string name="need_more_support_reach_out">Daha fazla desteğe mi ihtiyacınız var? Ulaş,</string>
+    <string name="action_collapse">Yıkılmak</string>
+    <string name="action_expand">Genişletmek</string>
+    <string name="support_group_label">Destek Grubu</string>
+    <string name="email_label">E-posta</string>
+    <string name="send_email_chooser_title">E-posta gönder</string>
+    <string name="error_no_email_app">E-posta uygulaması yok</string>
+    <string name="instruction_step_image_description">Adım %1$d Resim</string>
+
+    
+    <string name="instruction_section_perms_title">Erişilebilirlik, Bildirim ve Yer Paylaşımı izinleri</string>
+    <string name="instruction_step_perms_1">Erişilebilirlik, bildirim dinleyicisi veya yer paylaşımı izinleri gibi hassas izinler vermeye çalışırsanız bu erişim reddedildi mesajını alabilirsiniz. Bunu vermek için aşağıdaki adımları kontrol edin.</string>
+    <string name="instruction_step_perms_2">1. Essentials\'ın uygulama bilgileri sayfasına gidin.</string>
+    <string name="instruction_step_perms_3">2. 3 noktalı menüyü açın ve  \'Kısıtlı ayarlara izin ver\' öğesini seçin. Biyometri ile kimlik doğrulaması yapmanız gerekebilir. İşiniz bittiğinde, izni tekrar vermeyi deneyin.</string>
+
+    <string name="instruction_section_shizuku_title">Şizuku</string>
+    <string name="instruction_section_shizuku_desc">Shizuku, uygulamaların sistem APi\'lerini doğrudan ADB veya kök izinleriyle kullanmasına olanak tanıyan güçlü bir araçtır. Harita min modu, Uygulama Dondurucu gibi özellikler için gereklidir. Ve WRITE_SECURE_SETTINGS gibi bazı izinlerin verilmesine yardımcı olacağız. \n\nAncak Shizuku\'nun Play Store sürümü eski olabilir ve muhtemelen son Android sürümlerinde kullanılamayacaktır, bu durumda lütfen github\'dan en son sürümü veya bunun güncel bir çatalını edinin.</string>
+
+    <string name="instruction_section_maps_title">Haritalar güç tasarrufu modunu</string>
+    <string name="instruction_section_maps_desc">Bu özellik, şu anda Pixel 10 serisine özel olan Google Haritalar güç tasarrufu modunu otomatik olarak tetikler. Bir topluluk üyesi, haritaların minMode etkinliğini kök ayrıcalıklarıyla başlatarak herhangi bir Android cihazda hala kullanılabilir olduğunu keşfetti. \n\nVe ardından, bir gezinme oturumu sırasında ekran kapandığında otomatik olarak tetiklenecek şekilde Tasker ile otomatik hale getirdim ve ardından sadece çalışma zamanı Shizuku izinleriyle aynı şeyi başarabildim. \n\nÜzerinde gösterilmesi amaçlanıyor Pixel 10 serisinin AOd\'si bu nedenle ekranda ara sıra yatay modu desteklemediğini belirten bir mesaj görebilirsiniz. Bu, uygulama tarafından önlenemez ve göz ardı edebilirsiniz.</string>
+
+    <string name="instruction_section_silent_title">Sessiz ses modu</string>
+    <string name="instruction_section_silent_desc">Sessiz modun aynı zamanda DNd\'yi de tetiklediğini fark etmiş olabilirsiniz. \n\nBu, Android\'in bunu nasıl uyguladığından kaynaklanmaktadır; titreşim moduna geçmek için aynı APi\'yi kullansak bile, bazı nedenlerden dolayı sessiz modla birlikte DNd\'yi de açar ve bu şu anda önlenebilir değildir. :(</string>
+
+    <string name="instruction_section_freeze_title">Dondurmak nedir?</string>
+    <string name="instruction_section_freeze_desc">Uygulamaları duraklatın ve dikkatinizi dağıtacak şeylerden uzak durun, aynı zamanda arka planda çalışan uygulamaları önleyerek biraz güç tasarrufu yapın. Nadiren kullanılan uygulamalar için uygundur. \n\nSiz dondurmayı çözmediğiniz sürece acil bir durumda sizi bilgilendirmeyecekleri için herhangi bir iletişim hizmeti için önerilmez. \n\nSistem kararsızlığına yol açabileceğinden sistem uygulamalarını dondurmamanız önemle tavsiye edilir. Dikkatli ilerleyin, Uyarıldınız. \n\nDolu\'dan İlham Alındı ​​&lt;3</string>
+
+    <string name="instruction_section_security_title">Uygulama kilidi ve ekran kilitli güvenlik gerçekten güvenli midir?</string>
+    <string name="instruction_section_security_desc">Kesinlikle hayır. \n\nHerhangi bir 3. parti uygulama, normal cihaz etkileşimlerine %%100 müdahale edemez ve hatta uygulama kilidi bile, onlarla etkileşimi önlemek için yalnızca seçilen uygulamaların üzerinde bir kaplamadır. Geçici çözümler var ve kusursuz değil. \n\nAynı şey, herhangi bir nedenle Pixels\'teki herkes için hala erişilebilir olan ağ döşemeleriyle etkileşime girmeye çalışan birini algılayan ekran kilitli güvenlik özelliği için de geçerlidir. Yani yeterince uğraşırlarsa yine de onları değiştirebilirler ve özellikle de uçuş modu QS kutucuğu eklediyseniz, bu uygulama onunla etkileşimi engelleyemez. \n\nBu özellikler hafif kullanım için yapılan deneylerdir ve hiçbir zaman güçlü güvenlik ve gizlilik çözümleri olarak önerilmez. \n\nGüvenli alternatifler:\n - Uygulama kilidi: Pixels ve Samsung\'da Özel Alan ve Güvenli klasör\n - Mobil ağ erişimini engelleme: Hırsızlığa karşı koruma ve çevrimdışı/kapat cihazımı bul ayarlarınızın açık olduğundan emin olun. Graphene Os\'ye de bakabilirsiniz.</string>
+
+    <string name="instruction_section_statusbar_title">Durum çubuğu simgeleri</string>
+    <string name="instruction_section_statusbar_desc">Durum çubuğu simgelerini sıfırladıktan sonra bile cihaz döndürme, kablolu kulaklık simgeleri gibi bazı simgelerin görünür kalabileceğini fark edebilirsiniz. Bunun nedeni, durum çubuğu kara listesinin Android\'de nasıl uygulandığı ve OEm\'inizin bunları nasıl özelleştirmiş olabileceğidir. \nDaha fazla ayarlamaya ihtiyacınız olabilir. \n\nAyrıca, OEM uygulamalarına ve kullanılabilirliğine bağlı olduklarından tüm simge görünürlük seçenekleri çalışmayabilir.</string>
+
+    <string name="instruction_section_lighting_title">Bildirim aydınlatması çalışmıyor</string>
+    <string name="instruction_section_lighting_desc">OEm\'e bağlıdır. OneUI gibi bazıları, AOd\'un üzerinde aydınlatma efektlerinin gösterilmesini engelleyen kaplamalara izin vermiyor gibi görünüyor. Bu durumda geçici çözüm olarak ortam görüntüsünü deneyin.</string>
+
+    <string name="instruction_section_button_title">Düğme yeniden eşlemesi ekran kapalıyken çalışmıyor</string>
+    <string name="instruction_section_button_desc">Bazı OEm\'ler, ekran gerçekten kapalıyken erişilebilirlik hizmeti raporlamasını sınırlar ancak AOD açıkken hala çalışabilirler. \nBu durumda, düğme yeniden eşlemelerini AOD açıkken kullanabilirsiniz ancak kapalıyken kullanamazsınız. \n\nGeçici bir çözüm olarak Shizuku izinlerini kullanmanız ve açmanız gerekecektir. Donanım giriş olaylarını tanımlayan ve dinleyen düğme yeniden eşleme ayarlarında \'Shizuku veya Root\'  geçişini kullanın.\nBunun tüm cihazlarda ve ihtiyaçlarda çalışacağı garanti edilmez test ediliyor.\n\nVe\'açık olsa bile, Shizuku yöntemi yalnızca\' ihtiyaç duyulduğunda kullanılacaktır. Aksi takdirde, uzun basış sırasında gerçek girişin engellenmesini de sağlayan Erişilebilirlik\'e her zaman geri dönülecektir.</string>
+
+    <string name="instruction_section_flashlight_title">El feneri parlaklığı çalışmıyor</string>
+    <string name="instruction_section_flashlight_desc">Yalnızca sınırlı sayıda cihaz, el feneri yoğunluğunu ayarlayan donanım ve yazılım desteğine sahiptir. \n\n\'Android\'in minimum sürümü 13\'tür (SDK33).\nEl feneri parlaklık kontrolü yalnızca HAL sürüm 3.8 ve üzerini destekler, yani desteklenen cihazlar arasında en yeni olanlar (Örneğin, Pixel 6/7, Samsung S23, vb.)\'\npolodarb/El Feneri-Tiramisu</string>
+
+    <string name="instruction_section_about_title">Bu uygulama da neyin nesi?</string>
+    <string name="instruction_section_about_desc">Güzel soru,\n\nHer zaman cihazlarımdan en iyi şekilde yararlanmak istedim.\'İlk Project Treble cihazımı aldığımdan beri rootlu bir kullanıcıyım. ve ben\'Otomasyon söz konusu olduğunda tanrı gibi olan ve Android\'in tüm olası APi\'lerini ve dahili özelliklerini kullanan Tasker uygulamasını seviyorum.\n\nBu yüzden köksüz değilim ve stok Android beta deneyimine geri döndüm ve verilen ayrıcalıklarla mümkün olandan en iyi şekilde yararlanmak istedim. Bunları da paylaşabilir. Böylece, başlangıç ​​seviyesindeki Kotlin Jetpack bilgim ve birçok araştırma ve yardım aracının yanı sıra harika topluluğun desteğiyle, verilen izinlerle Android\'imde olmasını istediğim her şeyi içeren hepsi bir arada bir uygulama geliştirdim. Ve işte burada.\n\nÖzellik istekleri memnuniyetle karşılanır; mevcut izinler ve becerilerim ile bunların gerçekleştirilebilir olup olmadığını değerlendireceğim ve göreceğim. Günümüzde ne mümkün değil. :)\n\nNeden Play Store\'da olmasın?\nbilmiyorum\'Uygulamada kullanılan son derece hassas ve dahili izinler ve APi\'ler nedeniyle Geliştirici hesabımın yasaklanması riskini almak istemiyorum. Ancak Android\'in yan yüklemeye gidiş yönü göz önüne alındığında,\'Bakalım ne yapmamız gerekiyor. Yandan yüklenen uygulamaların kötü amaçlı olduğu endişelerini anlıyorum.\nKonuya gelmişken, Mac + Android kullanıcısıysanız diğer uygulamam AirSync\'e göz atın. *utanmaz fiş*\n\nKeyfini çıkarın, inşa etmeye devam edin! (っ◕‿◕)っ</string>
+    
+    
+    <string name="toast_bug_report_copied">Hata raporu panoya kopyalandı</string>
+    <string name="bug_report_title">Hata raporu</string>
+    <string name="bug_report_option_share_logs">Günlükleri paylaş</string>
+    <string name="bug_report_option_share_logs_desc">Günlükleri ve ayrıntıları ekleyin</string>
+    <string name="bug_report_device_info">Cihaz Bilgisi</string>
+    <string name="bug_report_raw_json">Ham Rapor</string>
+    <string name="action_report_github">GitHub Sayısını Aç</string>
+    <string name="action_report_email">E-posta Raporu</string>
+    <string name="action_copy_clipboard">Panoya kopyala</string>
+    <string name="bug_report_email_subject">Temel Hata Raporu</string>
+    <string name="bug_report_send_via">Şununla gönder:</string>
+
+    
+    <string name="feat_location_reached_title">Henüz orada mıyız?</string>
+    <string name="feat_location_reached_desc">Yakındaki hedef uyarıları</string>
+    <string name="location_reached_how_to">Google Haritalar\'ı açın, bir konum seçin ve onu Essentials\'la paylaşın.</string>
+    <string name="location_reached_radius_title">Uyarı Yarıçapı: %1$d m</string>
+    <string name="perm_location_title">Konum</string>
+    <string name="perm_location_desc">Hedefinize varışınızı tespit etmek için kullanılır.</string>
+    <string name="perm_bg_location_title">Arka Plan Konumu</string>
+    <string name="perm_bg_location_desc">Uygulama kapalıyken veya ekran kapalıyken varışınızı izlemek için gereklidir.</string>
+    <string name="location_reached_notification_title">Hedefe Ulaşıldı!</string>
+    <string name="location_reached_notification_desc">Hedefinize ulaştınız.</string>
+    <string name="location_reached_processing">Konum işleniyor…</string>
+    <string name="location_reached_dist_remaining">KALAN MESAFE</string>
+    <string name="location_reached_calculating">Hesaplanıyor…</string>
+    <string name="location_reached_stop_tracking">Takibi Durdur</string>
+    <string name="location_reached_dest_ready">Hedef Hazır</string>
+    <string name="location_reached_start_tracking">Takibi Başlat</string>
+    <string name="location_reached_view_map">Haritayı Görüntüle</string>
+    <string name="location_reached_clear">Temizlemek</string>
+    <string name="location_reached_no_dest">Hedef Yok</string>
+    <string name="location_reached_open_maps">Haritalar\'ı aç</string>
+    <string name="location_reached_fsi_title">Tam Ekran Alarm İzni</string>
+    <string name="location_reached_fsi_desc">Varışta cihazınızı uyandırmak için gereklidir. Vermek için dokunun.</string>
+    <string name="location_reached_dist_m">%1$d M</string>
     <string name="location_reached_dist_km">%1$.1f km</string>
-    <string name="location_reached_service_title">Travel Alarm active</string>
-    <string name="location_reached_service_remaining">%1$s remaining (%2$d%%)</string>
-    <string name="location_reached_channel_name">Travel Progress</string>
-    <string name="location_reached_channel_desc">Shows real-time distance to destination</string>
-    <string name="location_reached_alarm_title">Destination Nearby</string>
-    <string name="location_reached_alarm_subtitle">Prepare to get off</string>
-    <string name="location_reached_dismiss">Dismiss</string>
-    <string name="location_reached_toast_set">Destination set: %1$.4f, %2$.4f</string>
-    <string name="setting_use_root_title">Use Root</string>
-    <string name="setting_use_root_desc">Instead of Shizuku</string>
-    <string name="root_not_available_toast">Root access not available. Please check your root manager.</string>
-    <!-- System Keyboard -->
-    <string name="feat_system_keyboard_title">Keyboard</string>
-    <string name="feat_system_keys">Keys</string>
-    <string name="feat_system_keyboard_desc">Customize layout and behavior</string>
-    <string name="search_keyboard_height_title">Keyboard Height</string>
-    <string name="search_keyboard_height_desc">Adjust the total vertical size of the keyboard</string>
-    <string name="search_keyboard_padding_title">Bottom Padding</string>
-    <string name="search_keyboard_padding_desc">Add space below the keyboard</string>
-    <string name="search_keyboard_haptics_title">Haptic Feedback</string>
-    <string name="search_keyboard_haptics_desc">Vibrate on key press</string>
-    <string name="test_keyboard_hint">Test the keyboard</string>
-    <string name="label_keyboard_height">Keyboard Height</string>
-    <string name="label_keyboard_bottom_padding">Bottom Padding</string>
-    <string name="label_keyboard_haptics">Haptic Feedback</string>
-    <string name="label_keyboard_roundness">Key Roundness</string>
-    <string name="label_keyboard_functions_bottom">Move functions to bottom</string>
-    <string name="label_keyboard_functions_padding">Functions side padding</string>
-    <string name="label_keyboard_haptic_strength">Haptic feedback strength</string>
-    <string name="label_keyboard_shape">Keyboard shape</string>
-    <string name="shape_round">Round</string>
-    <string name="shape_flat">Flat</string>
-    <string name="shape_inverse">Inverse</string>
-    <string name="feat_batteries_title">Batteries</string>
-    <string name="feat_batteries_desc">Monitor your device battery levels</string>
-    <string name="batteries_widget_label">Battery Status</string>
-    <string name="connect_to_airsync">Connect to AirSync</string>
-    <string name="connect_to_airsync_summary">Display battery from your connected mac device in AirSync</string>
-    <string name="download_airsync">Download AirSync App</string>
-    <string name="download_airsync_summary">Required for Mac battery sync</string>
-    <string name="feat_battery_notification_title">Battery notification</string>
-    <string name="feat_battery_notification_desc">Persistent battery status notification</string>
-    <string name="about_desc_battery_notification">Replicate the battery widget experience in your notification shade. It will show the battery levels of all your connected devices in a single persistent notification, updated in real-time. This includes your Mac (via AirSync) and Bluetooth accessories.</string>
-    <string name="battery_notification_channel_name">Battery Status Notification</string>
-    <string name="battery_notification_channel_desc">Persistent notification showing connected devices battery levels</string>
-    <string name="perm_nearby_devices_title">Nearby Devices</string>
-    <string name="perm_nearby_devices_desc">Required to detect and retrieve battery information from Bluetooth accessories</string>
-    <!-- GitHub Auth -->
-    <string name="auth_copy_code">Copy code</string>
-    <string name="auth_open_login_page">Open login page</string>
-    <string name="auth_sign_in_rationale">Sign in to extend API call limits</string>
-    <string name="auth_waiting_for_authorization">Waiting for authorization...</string>
-    <string name="action_sign_in_github">Sign in with GitHub</string>
-    <string name="action_sign_out">Sign out</string>
-    <string name="action_profile">Profile</string>
-    <!-- App Updates / Repos -->
-    <string name="label_release_notes">Release Notes</string>
-    <string name="msg_no_repos_tracked">No repositories tracked yet</string>
-    <string name="label_no_app_linked">No app linked</string>
-    <string name="format_updated_relative">Updated %1$s</string>
-    <!-- Relative Time -->
-    <string name="time_just_now">just now</string>
-    <string name="time_min_ago">%1$dm ago</string>
-    <string name="time_hour_ago">%1$dh ago</string>
-    <string name="time_day_ago">%1$dd ago</string>
-    <string name="time_month_ago">%1$dmo ago</string>
-    <string name="time_year_ago">%1$dy ago</string>
-    <string name="action_retry">Retry</string>
-    <string name="action_start_sign_in">Start Sign In</string>
-    <string name="auth_requesting_code">Requesting device code...</string>
-    <string name="auth_copy_code_instruction">1. Copy your code:</string>
-    <string name="auth_paste_code_instruction">2. Paste the code on GitHub:</string>
-    <string name="label_found_apks">Found APKs</string>
-    <string name="label_readme">README</string>
-    <string name="action_refresh">Refresh</string>
-    <!-- Added Missing Group Strings -->
-    <string name="feat_sound_modes_title">Sound mode tile</string>
-    <string name="feat_sound_modes_desc">QS tile to toggle sound mode</string>
-    <string name="search_sound_mode_show_slider_title">Show slider</string>
-    <string name="search_sound_mode_show_slider_desc">Show volume slider in tile</string>
-    <string name="search_sound_mode_behavior_title">Cycle Behavior</string>
-    <string name="search_sound_mode_behavior_desc">Choose modes to cycle through</string>
-    <string name="feat_ambient_music_title">Ambient music glance</string>
-    <string name="feat_ambient_music_desc">Glance at media on AOD</string>
-    <string name="feat_sound_haptics_title">Sound and Haptics</string>
-    <string name="feat_sound_haptics_desc">Volume and haptic features</string>
-    <string name="feat_security_privacy_title">Security and Privacy</string>
-    <string name="feat_security_privacy_desc">Protect and secure your device</string>
-    <string name="feat_notifications_alerts_title">Notifications and Alerts</string>
-    <string name="feat_notifications_alerts_desc">Never miss your priorities</string>
-    <string name="feat_input_actions_title">Input and Actions</string>
-    <string name="feat_input_actions_desc">Control your device with ease</string>
-    <string name="feat_widgets_title">Widgets</string>
-    <string name="feat_widgets_desc">At a glance on your home screen</string>
-    <string name="feat_display_visuals_title">Display</string>
-    <string name="feat_display_visuals_desc">Visuals to enhance your experience</string>
-    <string name="feat_watch_title">Watch</string>
-    <string name="feat_watch_desc">Integrations with WearOS</string>
-    <string name="watch_no_companion_title">No Watch detected</string>
-    <string name="watch_no_companion_desc">It looks like you do not have the Essentials Wear companion app installed on your watch.</string>
-    <string name="watch_install_companion_action">Install Companion</string>
-    <string name="cat_interaction">Interaction</string>
-    <string name="cat_interface">Interface</string>
-    <string name="cat_display">Display</string>
-    <string name="cat_protection">Protection</string>
+    <string name="location_reached_service_title">Seyahat alarmı etkin</string>
+    <string name="location_reached_service_remaining">%1$s kalan (%2$d%%)</string>
+    <string name="location_reached_channel_name">Seyahat İlerlemesi</string>
+    <string name="location_reached_channel_desc">Hedefe olan gerçek zamanlı mesafeyi gösterir</string>
+    <string name="location_reached_alarm_title">Yakındaki Hedef</string>
+    <string name="location_reached_alarm_subtitle">İnmeye hazırlanın</string>
+    <string name="location_reached_dismiss">Azletmek</string>
+    <string name="location_reached_toast_set">Hedef seti: %1$.4f, %2$.4f</string>
+    <string name="setting_use_root_title">Kök Kullan</string>
+    <string name="setting_use_root_desc">Shizuku\'nun yerine</string>
+    <string name="root_not_available_toast">Kök erişimi mevcut değil. Lütfen kök yöneticinizi kontrol edin.</string>
+    
+    <string name="feat_system_keyboard_title">Klavye</string>
+    <string name="feat_system_keys">Anahtarlar</string>
+    <string name="feat_system_keyboard_desc">Düzeni ve davranışı özelleştirin</string>
+    <string name="search_keyboard_height_title">Klavye Yüksekliği</string>
+    <string name="search_keyboard_height_desc">Klavyenin toplam dikey boyutunu ayarlayın</string>
+    <string name="search_keyboard_padding_title">Alt Dolgu</string>
+    <string name="search_keyboard_padding_desc">Klavyenin altına boşluk ekleyin</string>
+    <string name="search_keyboard_haptics_title">Dokunsal Geribildirim</string>
+    <string name="search_keyboard_haptics_desc">Tuşa basıldığında titreşim</string>
+    <string name="test_keyboard_hint">Klavyeyi test edin</string>
+    <string name="label_keyboard_height">Klavye Yüksekliği</string>
+    <string name="label_keyboard_bottom_padding">Alt Dolgu</string>
+    <string name="label_keyboard_haptics">Dokunsal Geribildirim</string>
+    <string name="label_keyboard_roundness">Anahtar Yuvarlaklığı</string>
+    <string name="label_keyboard_functions_bottom">İşlevleri aşağıya taşı</string>
+    <string name="label_keyboard_functions_padding">Yan dolgu fonksiyonları</string>
+    <string name="label_keyboard_haptic_strength">Dokunsal geri bildirim gücü</string>
+
+    <string name="label_keyboard_shape">Klavye şekli</string>
+    <string name="shape_round">Yuvarlak</string>
+    <string name="shape_flat">Düz</string>
+    <string name="shape_inverse">Ters</string>
+    <string name="feat_batteries_title">Piller</string>
+    <string name="feat_batteries_desc">Cihazınızın pil seviyelerini izleyin</string>
+    <string name="batteries_widget_label">Pil Durumu</string>
+    <string name="connect_to_airsync">AirSync\'e bağlanın</string>
+    <string name="connect_to_airsync_summary">Bağlı Mac cihazınızın pilini AirSync\'te görüntüleyin</string>
+    <string name="download_airsync">AirSync Uygulamasını İndirin</string>
+    <string name="download_airsync_summary">Mac pil senkronizasyonu için gereklidir</string>
+
+    <string name="feat_battery_notification_title">Pil bildirimi</string>
+    <string name="feat_battery_notification_desc">Kalıcı pil durumu bildirimi</string>
+    <string name="about_desc_battery_notification">Pil widget\'ı deneyimini bildirim gölgenizde çoğaltın. Bağlı tüm cihazlarınızın pil seviyelerini gerçek zamanlı olarak güncellenen tek bir kalıcı bildirimde gösterecektir. Buna Mac\'iniz (AirSync aracılığıyla) ve Bluetooth aksesuarları da dahildir.</string>
+    <string name="battery_notification_channel_name">Pil Durumu Bildirimi</string>
+    <string name="battery_notification_channel_desc">Bağlı cihazların pil seviyelerini gösteren kalıcı bildirim</string>
+    <string name="perm_nearby_devices_title">Yakındaki Cihazlar</string>
+    <string name="perm_nearby_devices_desc">Bluetooth aksesuarlarından pil bilgilerini tespit etmek ve almak için gereklidir</string>
+
+    
+    <string name="auth_copy_code">Kodu kopyala</string>
+    <string name="auth_open_login_page">Giriş sayfasını aç</string>
+    <string name="auth_sign_in_rationale">API çağrısı sınırlarını genişletmek için oturum açın</string>
+    <string name="auth_waiting_for_authorization">Yetki bekleniyor...</string>
+    <string name="action_sign_in_github">GitHub\'la oturum açın</string>
+    <string name="action_sign_out">oturumu Kapat</string>
+    <string name="action_profile">Profil</string>
+
+    
+    <string name="label_release_notes">Sürüm Notları</string>
+    <string name="msg_no_repos_tracked">Henüz takip edilen depo yok</string>
+    <string name="label_no_app_linked">Bağlı uygulama yok</string>
+    <string name="format_updated_relative">Güncellendi %1$s</string>
+
+    
+    <string name="time_just_now">Şu anda</string>
+    <string name="time_min_ago">%1$dm önce</string>
+    <string name="time_hour_ago">%1$dsaat önce</string>
+    <string name="time_day_ago">%1$dgün önce</string>
+    <string name="time_month_ago">%1$day önce</string>
+    <string name="time_year_ago">%1$dsen önce</string>
+
+    <string name="action_retry">Yeniden dene</string>
+    <string name="action_start_sign_in">Oturum Açmayı Başlat</string>
+    <string name="auth_requesting_code">Cihaz kodu isteniyor...</string>
+    <string name="auth_copy_code_instruction">1. Kodunuzu kopyalayın:</string>
+    <string name="auth_paste_code_instruction">2. Kodu GitHub\'a yapıştırın:</string>
+
+    <string name="label_found_apks">Bulunan APk\'lar</string>
+    <string name="label_readme">BENİOKU</string>
+    <string name="action_refresh">Yenile</string>
+
+    
+    <string name="feat_sound_modes_title">Ses modu kutucuğu</string>
+    <string name="feat_sound_modes_desc">Ses modunu değiştirmek için QS döşemesi</string>
+    <string name="search_sound_mode_show_slider_title">Kaydırıcıyı göster</string>
+    <string name="search_sound_mode_show_slider_desc">Kutucukta ses düzeyi kaydırıcısını göster</string>
+    <string name="search_sound_mode_behavior_title">Döngü Davranışı</string>
+    <string name="search_sound_mode_behavior_desc">Geçiş yapılacak modları seçin</string>
+    
+    <string name="feat_ambient_music_title">Ortam müziği bakışı</string>
+    <string name="feat_ambient_music_desc">AOd\'daki medyaya genel bakış</string>
+    
+    <string name="feat_sound_haptics_title">Ses ve Dokunma</string>
+    <string name="feat_sound_haptics_desc">Hacim ve dokunsal özellikler</string>
+    
+    <string name="feat_security_privacy_title">Güvenlik ve Gizlilik</string>
+    <string name="feat_security_privacy_desc">Cihazınızı koruyun ve güvenliğini sağlayın</string>
+    
+    <string name="feat_notifications_alerts_title">Bildirimler ve Uyarılar</string>
+    <string name="feat_notifications_alerts_desc">Önceliklerinizi asla kaçırmayın</string>
+    
+    <string name="feat_input_actions_title">Giriş ve Eylemler</string>
+    <string name="feat_input_actions_desc">Cihazınızı kolaylıkla kontrol edin</string>
+    
+    <string name="feat_widgets_title">Widget\'lar</string>
+    <string name="feat_widgets_desc">Ana ekranınıza bir bakışta</string>
+    
+    <string name="feat_display_visuals_title">Görüntülemek</string>
+    <string name="feat_display_visuals_desc">Deneyiminizi geliştirecek görseller</string>
+    
+    <string name="feat_watch_title">Kol saati</string>
+    <string name="feat_watch_desc">WearOS ile entegrasyonlar</string>
+    <string name="watch_no_companion_title">İzleme algılanmadı</string>
+    <string name="watch_no_companion_desc">Saatinizde Essentials Wear yardımcı uygulamasının yüklü olmadığı anlaşılıyor.</string>
+    <string name="watch_install_companion_action">Tamamlayıcıyı Yükle</string>
+
+
+    <string name="cat_interaction">Etkileşim</string>
+    <string name="cat_interface">Arayüz</string>
+    <string name="cat_display">Görüntülemek</string>
+    <string name="cat_protection">Koruma</string>
     <string name="label_kbd_abc">ABC</string>
     <string name="label_kbd_symbols">?#/</string>
-    <string name="msg_restrict_own_app_repo">Oi! You can check updates in app settings, No need to add here XD</string>
-    <string name="action_export">Export</string>
-    <string name="action_import">Import</string>
-    <string name="msg_export_success">Repositories exported successfully</string>
-    <string name="msg_export_failed">Failed to export repositories</string>
-    <string name="msg_import_success">Repositories imported successfully</string>
-    <string name="msg_import_failed">Failed to import repositories</string>
-    <string name="label_apps">Apps</string>
-    <string name="feat_text_animations_title">Scale and Animations</string>
-    <string name="feat_text_animations_desc">Adjust system scale and animations</string>
-    <string name="settings_section_text">Text</string>
-    <string name="label_font_scale">Font Scale</string>
-    <string name="label_font_weight">Font Weight</string>
-    <string name="label_reset_default">Reset</string>
-    <string name="settings_section_scale">Scale</string>
-    <string name="label_smallest_width">Smallest Width</string>
-    <string name="msg_shizuku_permission_required">Shizuku permission required to adjust scale</string>
-    <string name="label_grant_permission">Grant Permission</string>
-    <string name="settings_section_animations">Animations</string>
-    <string name="label_animator_duration_scale">Animator duration scale</string>
-    <string name="label_transition_animation_scale">Transition animation scale</string>
-    <string name="label_window_animation_scale">Window animation scale</string>
-    <string name="about_desc_text_animations">Adjust system-wide font scale, weight, and animation speeds. Note that some settings may require advanced permissions or a device reboot for certain apps to reflect changes. \n\nAdditional shizuku or root permission may be necessary for scale adjustments</string>
-    <string name="feat_aod_force_turn_off_title">Force turn off AOD</string>
-    <string name="feat_aod_force_turn_off_desc">Force turn off the AOD when no notifications. Requires accessibility permission.</string>
-    <string name="feat_auto_accessibility_title">Auto accessibility</string>
-    <string name="feat_auto_accessibility_desc">Automatically grants the accessibility permission on app launch if missing using WRITE_SECURE_SETTINGS.</string>
-    <string name="label_help_guide">Help and Guides</string>
-    <string name="tab_your_android">Your Android</string>
-    <string name="label_device_storage">Storage</string>
-    <string name="label_device_ram">Memory</string>
+    <string name="msg_restrict_own_app_repo">Hey! Güncellemeleri uygulama ayarlarından kontrol edebilirsiniz, buraya eklemenize gerek yok XD</string>
+    <string name="action_export">İhracat</string>
+    <string name="action_import">İçe aktarmak</string>
+    <string name="msg_export_success">Kod depoları başarıyla dışa aktarıldı</string>
+    <string name="msg_export_failed">Kod depoları dışa aktarılamadı</string>
+    <string name="msg_import_success">Kod depoları başarıyla içe aktarıldı</string>
+    <string name="msg_import_failed">Kod depoları içe aktarılamadı</string>
+    <string name="label_apps">Uygulamalar</string>
+    <string name="feat_text_animations_title">Ölçek ve Animasyonlar</string>
+    <string name="feat_text_animations_desc">Sistem ölçeğini ve animasyonları ayarlayın</string>
+    <string name="settings_section_text">Metin</string>
+    <string name="label_font_scale">Yazı Tipi Ölçeği</string>
+    <string name="label_font_weight">Yazı Tipi Ağırlığı</string>
+    <string name="label_reset_default">Sıfırla</string>
+    <string name="settings_section_scale">Ölçek</string>
+    <string name="label_smallest_width">En Küçük Genişlik</string>
+    <string name="msg_shizuku_permission_required">Ölçeği ayarlamak için Shizuku izni gerekiyor</string>
+    <string name="label_grant_permission">İzin Ver</string>
+    <string name="settings_section_animations">Animasyonlar</string>
+    <string name="label_animator_duration_scale">Animatör süre ölçeği</string>
+    <string name="label_transition_animation_scale">Geçiş animasyonu ölçeği</string>
+    <string name="label_window_animation_scale">Pencere animasyon ölçeği</string>
+    <string name="about_desc_text_animations">Sistem genelinde yazı tipi ölçeğini, ağırlığını ve animasyon hızlarını ayarlayın. Bazı ayarların, belirli uygulamaların değişiklikleri yansıtması için gelişmiş izinler veya cihazın yeniden başlatılması gerektirebileceğini unutmayın. \n\nÖlçek ayarlamaları için ek shizuku veya root izni gerekli olabilir</string>
+    <string name="feat_aod_force_turn_off_title">AOd\'yi kapatmaya zorla</string>
+    <string name="feat_aod_force_turn_off_desc">Bildirim olmadığında AOd\'u kapatmaya zorlayın. Erişilebilirlik izni gerektirir.</string>
+    <string name="feat_auto_accessibility_title">Otomatik erişilebilirlik</string>
+    <string name="feat_auto_accessibility_desc">WRITE_SECURE_SETTINGS kullanılarak eksikse, uygulama başlatıldığında erişilebilirlik iznini otomatik olarak verir.</string>
+    <string name="label_help_guide">Yardım ve Kılavuzlar</string>
+    <string name="tab_your_android">Android\'in</string>
+    <string name="label_device_storage">Depolamak</string>
+    <string name="label_device_ram">Hafıza</string>
+    <string name="label_use_blur">Bulanıklaştırmayı kullan</string>
+    <string name="desc_use_blur">Kullanıcı arayüzünde aşamalı bulanıklaştırma öğelerini etkinleştirin</string>
+    <string name="msg_blur_compatibility_error">Android 15 veya daha eski sürümlere sahip Samsung cihazlarda bilinen bir ekran hatasını önlemek için bu cihazda bulanıklık devre dışı bırakıldı.</string>
 </resources>
