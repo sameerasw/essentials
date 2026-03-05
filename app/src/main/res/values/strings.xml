@@ -1175,4 +1175,7 @@
     <string name="tab_your_android">Your Android</string>
     <string name="label_device_storage">Storage</string>
     <string name="label_device_ram">Memory</string>
+    <string name="label_use_blur">Use blur</string>
+    <string name="desc_use_blur">Enable progressive blur elements across the UI</string>
+    <string name="msg_blur_compatibility_error">Blur is disabled on this device to prevent a known display bug on Samsung devices with Android 15 or below.</string>
 </resources>
