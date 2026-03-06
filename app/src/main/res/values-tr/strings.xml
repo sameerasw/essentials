@@ -608,6 +608,7 @@
     <string name="action_help_guide">Yardım Kılavuzu</string>
     <string name="action_what_is_this">Bu nedir?</string>
     <string name="update_available_title">Güncelleme Mevcut</string>
+    <string name="about_desc_your_android">Glance at your device\'s hardware and software specifications in detail. This information is fetched from GSMArena and system properties to provide a comprehensive overview of your Android device.</string>
     <string name="about_desc_ambient_music_glance">Ambient Music Glance, müzik çalarken ve oynatma değiştiğinde kilit ekranınızda Şu An Çalınan katmanını gösterir. \n\nCihazınız AOD üzerinden katmanları desteklemiyorsa, şarj sırasında alternatif olarak Android ayarlarınıza eklenen Ambiyans ekran koruyucusunu tercih edebilirsiniz.</string>
     <string name="about_desc_notification_lighting">Bildirim Aydınlatması, bildirim aldığınızda güzel bir kenar aydınlatma efekti ekler.\n\nAnimasyon stilini, renklerini ve davranışını özelleştirebilirsiniz. Ekran kapalıyken (OEm\'e bağlı) veya mevcut uygulamanızın üstündeyken bile çalışır. Verilen kontrollerden uygulamaları, bildirim önceliğini veya hangi davranışı tetiklemesi gerektiğini seçin. OEm\'iniz AOD üzerindeki kaplamaları desteklemiyorsa aşağıda bulunan Ortam ekranı seçeneğini dava edin.</string>
     <string name="about_desc_screen_off_widget">Ana ekranınıza simge veya herhangi bir karışıklık eklemeyen, şeffaf, yeniden boyutlandırılabilir bir widget\'a dokunarak ekranı kolayca kapatın.</string>
@@ -1025,6 +1026,7 @@
     <string name="download_airsync_summary">Mac pil senkronizasyonu için gereklidir</string>
     <string name="feat_battery_notification_title">Pil bildirimi</string>
     <string name="feat_battery_notification_desc">Kalıcı pil durumu bildirimi</string>
+    <string name="battery_notification_hint">This notification displays battery levels for your connected Mac and Bluetooth devices. You can configure which devices to show in the Battery Widget settings.</string>
     <string name="about_desc_battery_notification">Pil widget\'ı deneyimini bildirim gölgenizde çoğaltın. Bağlı tüm cihazlarınızın pil seviyelerini gerçek zamanlı olarak güncellenen tek bir kalıcı bildirimde gösterecektir. Buna Mac\'iniz (AirSync aracılığıyla) ve Bluetooth aksesuarları da dahildir.</string>
     <string name="battery_notification_channel_name">Pil Durumu Bildirimi</string>
     <string name="battery_notification_channel_desc">Bağlı cihazların pil seviyelerini gösteren kalıcı bildirim</string>
