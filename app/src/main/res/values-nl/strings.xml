@@ -576,11 +576,39 @@
     <string name="content_desc_back">Back</string>
     <string name="label_settings">Settings</string>
     <string name="action_report_bug">Report a Bug</string>
+    <!-- Sentry Crash Reporting -->
+    <string name="sentry_report_mode_title">Crash reporting</string>
+    <string name="sentry_mode_off">Off</string>
+    <string name="sentry_mode_auto">Auto</string>
+    <string name="sentry_crash_toast">Essentials crashed, Report sent</string>
+    <string name="simulate_crash">Simulate crash</string>
+    <string name="welcome_title">Welcome to Essentials</string>
+    <string name="welcome_subtitle">A Toolbox for Android Nerds</string>
+    <string name="welcome_developer_attribution">by sameerasw.com</string>
+    <string name="action_lets_begin">Let\'s Begin</string>
+    <string name="acknowledgement_title">Acknowledgement</string>
+    <string name="acknowledgement_desc">This app is a collection of utilities that can interact deeply with your device system. Using some features might modify system settings or behavior in unexpected ways. \n\nYou only need to grant necessary permissions which are required for selected features you are using giving you full control over the app\'s behavior. \n\nFurther more, the app does not track or store any of your personal data, I don\'t need them... Keep to yourself safe. You can refer to the source code for more information. \n\nThis app is fully open source and is and always will be free to use. Do not pay or install from unknown sources.</string>
+    <string name="acknowledgement_warning">WARNING: Proceed with caution. The developer takes no responsibility for any system instability, data loss, or other issues caused by the use of this app. By proceeding, you acknowledge these risks.</string>
+    <string name="acknowledgement_footer">I know you didn\'t even read this carefully but, in case you need any help, feel free to reach out the developer or the community.</string>
+    <string name="action_i_understand">I Understand</string>
+    <string name="feature_intro_desc">Anytime you are clueless on a feature or a Quick Settings Tile on what it does and what permissions may necessary for it, just long press it and pick \'What is this?\' to learn more.</string>
+    <string name="feature_intro_footer">You can report bugs or find helpful guides anytime in the app settings.</string>
+    <string name="action_let_me_in">Let Me in Already</string>
+    <string name="preferences_title">Preferences</string>
+    <string name="preferences_desc">Configure some basic settings to get started.</string>
+    <string name="label_app_settings">App Settings</string>
+    <string name="label_haptic_feedback">Haptic Feedback</string>
+    <string name="label_updates">Updates</string>
+    <string name="label_auto_check_updates">Auto check for updates</string>
+    <string name="desc_auto_check_updates">Check for updates at app launch</string>
+    <string name="action_all_set">All Set</string>
+    <string name="action_check_whats_new">Check What\'s New?</string>
     <string name="action_done">Klaar</string>
     <string name="action_preview">Voorbeeld</string>
     <string name="action_help_guide">Hulpgids</string>
     <string name="action_what_is_this">Wat is dit?</string>
     <string name="update_available_title">Update beschikbaar</string>
+    <string name="about_desc_your_android">Glance at your device\'s hardware and software specifications in detail. This information is fetched from GSMArena and system properties to provide a comprehensive overview of your Android device.</string>
     <string name="about_desc_ambient_music_glance">Muziek bekijken in één blik laat een overlay met nu afspelende media zien op het vergrendelscherm wanneer muziek wordt afgespeeld en afspelen veranderd. \n\nAls je apparaat geen overlays ondersteund op het Always-On Display kun je er voor kiezen om het te gebruiken als screensaver tijdens het opladen, te vinden in de systeeminstellingen.</string>
     <string name="about_desc_notification_lighting">Meldingsverlichting voegt mooie randverlichting toe wanneer je een melding krijgt.\n\nJe kan de animatiestijl, kleuren en het gedrag ervan aanpassen. Het werkt zelfs als het scherm uit is (verschilt per OEM) of boven op je huidige app. Kies apps, meldingsprioriteit en welk gedrag het zou moeten veroorzaken bij gegeven opties. Als je apparaat geen overlays ondersteunt, gebruik dan de Ambient display optie hieronder.</string>
     <string name="about_desc_screen_off_widget">Makkelijk het scherm uitzetten door te klikken op een transparante verkleinbare widget die geen iconen of rommel toevoegt aan het startscherm.</string>
@@ -930,7 +958,7 @@
     <string name="action_report_email">Per email verzenden</string>
     <string name="action_copy_clipboard">Naar het klembord kopiëren</string>
     <string name="bug_report_email_subject">Essentials foutrapport</string>
-    <string name="bug_report_send_via">Sturen via</string>
+    <string name="bug_report_send_via">Please enable crash reporting as it will automatically report details that would help resolving issues.</string>
     <!-- Location Reached -->
     <string name="feat_location_reached_title">Are We There Yet?</string>
     <string name="feat_location_reached_desc">Prepare for your destination.</string>
@@ -998,6 +1026,7 @@
     <string name="download_airsync_summary">Vereist voor de Mac-batterijsynchronisatie</string>
     <string name="feat_battery_notification_title">Batterijmelding</string>
     <string name="feat_battery_notification_desc">Blijvende melding met de batterijstatus</string>
+    <string name="battery_notification_hint">This notification displays battery levels for your connected Mac and Bluetooth devices. You can configure which devices to show in the Battery Widget settings.</string>
     <string name="about_desc_battery_notification">Maakt de ervaring van de batterijwidget na in je meldingenscherm. Het zal de batterijniveaus van al je verbonden apparaten laten zien in één blijvende melding, die meteen wordt bijgewerkt. Dit omvat je Mac (via AirSync) en Bluetooth-accessoires.</string>
     <string name="battery_notification_channel_name">Melding van de batterijstatus</string>
     <string name="battery_notification_channel_desc">Blijvende melding die het batterijniveau van je verbonden apparaten laat zien</string>
@@ -1094,4 +1123,12 @@
     <string name="tab_your_android">Your Android</string>
     <string name="label_device_storage">Storage</string>
     <string name="label_device_ram">Memory</string>
+    <string name="label_use_blur">Use blur</string>
+    <string name="desc_use_blur">Enable progressive blur elements across the UI</string>
+    <string name="msg_blur_compatibility_error">Blur is disabled on this device to prevent a known display bug on Samsung devices with Android 15 or below.</string>
+    <!-- Empty State Actions -->
+    <string name="msg_no_apps_frozen">No apps selected to freeze.</string>
+    <string name="action_get_started">Get Started</string>
+    <string name="action_new_automation">New Automation</string>
+    <string name="action_add_repository">Add Repository</string>
 </resources>
