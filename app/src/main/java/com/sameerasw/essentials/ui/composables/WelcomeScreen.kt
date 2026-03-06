@@ -2,6 +2,8 @@ package com.sameerasw.essentials.ui.composables
 
 import android.content.Intent
 import android.os.Build
+import android.view.View
+import android.content.res.Configuration
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
@@ -19,6 +21,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
@@ -138,7 +141,8 @@ fun WelcomeStepContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(32.dp),
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 32.dp, vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -321,7 +325,7 @@ fun AcknowledgementStepContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         Text(
             text = "Acknowledgement",
@@ -332,7 +336,7 @@ fun AcknowledgementStepContent(
             textAlign = TextAlign.Center
         )
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         Surface(
             modifier = Modifier.weight(1f),
@@ -360,18 +364,17 @@ fun AcknowledgementStepContent(
 
                 Spacer(modifier = Modifier.height(32.dp))
 
+
+                Text(
+                    text = "I know you didn't even read this carefully but, in case you need any help, feel free to reach out the developer or the community.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = "I know you didn't even read this carefully but, in case you need any help, feel free to reach out the developer or the community.",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
 
         RoundedCardContainer {
             CrashReportingPicker(
@@ -418,7 +421,7 @@ fun FeatureIntroStepContent(onFinish: () -> Unit) {
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         Text(
             text = "What is this?",
@@ -448,22 +451,46 @@ fun FeatureIntroStepContent(onFinish: () -> Unit) {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            GifItem(
-                modifier = Modifier.weight(1f),
-                imageLoader = imageLoader,
-                gifResId = R.drawable.feature_help
-            )
-            GifItem(
-                modifier = Modifier.weight(1f),
-                imageLoader = imageLoader,
-                gifResId = R.drawable.tile_help
-            )
+        val configuration = LocalConfiguration.current
+        val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        val isLargeScreen = configuration.screenWidthDp >= 600
+
+        if (isLandscape || isLargeScreen) {
+            Row(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                GifItem(
+                    modifier = Modifier.weight(1f),
+                    imageLoader = imageLoader,
+                    gifResId = R.drawable.feature_help
+                )
+                GifItem(
+                    modifier = Modifier.weight(1f),
+                    imageLoader = imageLoader,
+                    gifResId = R.drawable.tile_help
+                )
+            }
+        } else {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                GifItem(
+                    modifier = Modifier.weight(1f),
+                    imageLoader = imageLoader,
+                    gifResId = R.drawable.feature_help
+                )
+                GifItem(
+                    modifier = Modifier.weight(1f),
+                    imageLoader = imageLoader,
+                    gifResId = R.drawable.tile_help
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(24.dp))

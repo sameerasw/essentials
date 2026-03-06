@@ -1000,7 +1000,7 @@
     <string name="action_report_email">Email Report</string>
     <string name="action_copy_clipboard">Copy to Clipboard</string>
     <string name="bug_report_email_subject">Essentials Bug Report</string>
-    <string name="bug_report_send_via">Send via</string>
+    <string name="bug_report_send_via">Please enable crash reporting as it will automatically report details that would help resolving issues.</string>
 
     <!-- Location Reached -->
     <string name="feat_location_reached_title">Are we there yet?</string>

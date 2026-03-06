@@ -993,7 +993,7 @@
     <string name="action_report_email">E-mail rapport</string>
     <string name="action_copy_clipboard">Kopiér til udklipsholder</string>
     <string name="bug_report_email_subject">Essentials fejlrapport</string>
-    <string name="bug_report_send_via">Send via</string>
+    <string name="bug_report_send_via">Please enable crash reporting as it will automatically report details that would help resolving issues.</string>
 
     
     <string name="feat_location_reached_title">Er vi der endnu?</string>
