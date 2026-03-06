@@ -1,211 +1,211 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Essentials</string>
-    <string name="label_beta">BETA</string>
+    <string name="app_name">Βασικά</string>
+    <string name="label_beta">ΒΗΤΑ</string>
     <string name="accessibility_service_description"><b>Essentials Accessibility Service</b>\n\nThis service is required for the following advanced features:\n\n<b>• Physical Button Remapping:</b>\nDetects volume button presses even when the screen is off to trigger actions like the Flashlight.\n\n<b>• Per-App Settings:</b>\nMonitors the currently active app to apply specific profiles for Dynamic Night Light, Notification Lighting Colors, and App Lock.\n\n<b>• Screen Control:</b>\nAllows the app to lock the screen (e.g. via Double Tap or Widgets) and detect screen state changes.\n\n<b>• Security:</b>\nPrevents unauthorized changes by detecting window content when the device is locked.\n\n<small>No input text or sensitive user data is collected or transmitted.</small></string>
-    <string name="freeze_activity_title">App Freezing</string>
-    <string name="freeze_activity_subtitle">Disable apps that are rarely used</string>
-    <string name="freeze_shortcut_short_label">App Freezing</string>
-    <string name="freeze_shortcut_long_label">Open App Freezing</string>
+    <string name="freeze_activity_title">Πάγωμα εφαρμογής</string>
+    <string name="freeze_activity_subtitle">Απενεργοποιήστε εφαρμογές που χρησιμοποιούνται σπάνια</string>
+    <string name="freeze_shortcut_short_label">Πάγωμα εφαρμογής</string>
+    <string name="freeze_shortcut_long_label">Ανοίξτε το App Freezing</string>
     <string name="frozen_app_shortcut_label">Frozen App</string>
-    <string name="screen_off_widget_label">Empty screen off widget</string>
-    <string name="app_freezing_tile_label">App Freezing</string>
-    <string name="flashlight_pulse_tile_label">Flashlight Pulse</string>
-    <string name="check_pre_releases_label">Check for pre-releases</string>
-    <string name="check_pre_releases_desc">Might be unstable</string>
+    <string name="screen_off_widget_label">Κενή οθόνη εκτός widget</string>
+    <string name="app_freezing_tile_label">Πάγωμα εφαρμογής</string>
+    <string name="flashlight_pulse_tile_label">Παλμός φακού</string>
+    <string name="check_pre_releases_label">Ελέγξτε για προ-κυκλοφορίες</string>
+    <string name="check_pre_releases_desc">Μπορεί να είναι ασταθής</string>
     <!-- App Lock -->
-    <string name="settings_section_security">Security</string>
-    <string name="app_lock_enable_title">Enable app lock</string>
-    <string name="app_lock_auth_title">App Lock Security</string>
-    <string name="app_lock_enable_auth_subtitle">Authenticate to enable app lock</string>
-    <string name="app_lock_disable_auth_subtitle">Authenticate to disable app lock</string>
-    <string name="app_lock_select_apps_title">Select locked apps</string>
-    <string name="app_lock_select_apps_desc">Choose which apps require authentication</string>
-    <string name="app_lock_description">Secure your apps with biometric authentication. Locked apps will require authentication when launching, Stays unlocked until the screen turns off.</string>
-    <string name="app_lock_warning">Beware that this is not a robust solution as this is only a 3rd party application. If you need strong security, consider using Private Space or other such features.</string>
-    <string name="app_lock_biometric_note">Another note, the biometric authentication prompt only lets you use STRONG secure class methods. Face unlock security methods in WEAK class in devices such as Pixel 7 will only be able to utilize the available other STRONG auth methods such as fingerprint or pin.</string>
+    <string name="settings_section_security">Ασφάλεια</string>
+    <string name="app_lock_enable_title">Ενεργοποίηση κλειδώματος εφαρμογής</string>
+    <string name="app_lock_auth_title">Ασφάλεια κλειδώματος εφαρμογής</string>
+    <string name="app_lock_enable_auth_subtitle">Πραγματοποιήστε έλεγχο ταυτότητας για να ενεργοποιήσετε το κλείδωμα εφαρμογής</string>
+    <string name="app_lock_disable_auth_subtitle">Πραγματοποιήστε έλεγχο ταυτότητας για να απενεργοποιήσετε το κλείδωμα εφαρμογής</string>
+    <string name="app_lock_select_apps_title">Επιλέξτε κλειδωμένες εφαρμογές</string>
+    <string name="app_lock_select_apps_desc">Επιλέξτε ποιες εφαρμογές απαιτούν έλεγχο ταυτότητας</string>
+    <string name="app_lock_description">Ασφαλίστε τις εφαρμογές σας με βιομετρικό έλεγχο ταυτότητας. Οι κλειδωμένες εφαρμογές θα απαιτούν έλεγχο ταυτότητας κατά την εκκίνηση. Παραμένει ξεκλείδωτη μέχρι να απενεργοποιηθεί η οθόνη.</string>
+    <string name="app_lock_warning">Προσέξτε ότι αυτή δεν είναι μια ισχυρή λύση, καθώς πρόκειται μόνο για μια εφαρμογή τρίτου κατασκευαστή. Εάν χρειάζεστε ισχυρή ασφάλεια, σκεφτείτε να χρησιμοποιήσετε τον ιδιωτικό χώρο ή άλλες τέτοιες λειτουργίες.</string>
+    <string name="app_lock_biometric_note">Μια άλλη σημείωση, η προτροπή βιομετρικού ελέγχου ταυτότητας σάς επιτρέπει να χρησιμοποιείτε μόνο μεθόδους STRONG ασφαλούς κλάσης. Οι μέθοδοι ασφαλείας με το Face Unlock στην κατηγορία WEAK σε συσκευές όπως το Pixel 7 θα μπορούν να χρησιμοποιούν μόνο τις διαθέσιμες άλλες μεθόδους STRONG auth, όπως το δακτυλικό αποτύπωμα ή η καρφίτσα.</string>
     <!-- Button Remap -->
-    <string name="button_remap_enable_title">Enable Button Remap</string>
-    <string name="button_remap_use_shizuku_title">Use Shizuku</string>
-    <string name="button_remap_use_shizuku_desc">Works with screen off (Recommended)</string>
-    <string name="shizuku_not_running_toast">Shizuku is not running</string>
-    <string name="shizuku_detected_prefix">Detected %1$s</string>
-    <string name="shizuku_status_prefix">Status: %1$s</string>
-    <string name="shizuku_open_button">Open Shizuku</string>
-    <string name="settings_section_flashlight">Flashlight</string>
-    <string name="flashlight_options_title">Flashlight options</string>
-    <string name="flashlight_options_desc">Adjust fading and other settings</string>
-    <string name="setting_pitch_black_theme_title">Pitch black theme</string>
-    <string name="setting_pitch_black_theme_desc">Use pure black background in dark mode</string>
-    <string name="settings_section_haptic">Haptic Feedback</string>
+    <string name="button_remap_enable_title">Ενεργοποίηση επαναχάρτωσης κουμπιών</string>
+    <string name="button_remap_use_shizuku_title">Χρησιμοποιήστε Shizuku ή Root ή Root</string>
+    <string name="button_remap_use_shizuku_desc">Λειτουργεί με απενεργοποιημένη οθόνη (Συνιστάται)</string>
+    <string name="shizuku_not_running_toast">Το Shizuku δεν τρέχει</string>
+    <string name="shizuku_detected_prefix">Εντοπίστηκε %1$s</string>
+    <string name="shizuku_status_prefix">Κατάσταση: %1$s</string>
+    <string name="shizuku_open_button">Ανοίξτε το Shizuku</string>
+    <string name="settings_section_flashlight">Φακός</string>
+    <string name="flashlight_options_title">Επιλογές φακού</string>
+    <string name="flashlight_options_desc">Προσαρμόστε το ξεθώριασμα και άλλες ρυθμίσεις</string>
+    <string name="setting_pitch_black_theme_title">Μαύρο θέμα</string>
+    <string name="setting_pitch_black_theme_desc">Χρησιμοποιήστε καθαρό μαύρο φόντο σε σκοτεινή λειτουργία</string>
+    <string name="settings_section_haptic">Απτική Ανάδραση</string>
     <string name="button_remap_section_long_press">Remap Long Press</string>
-    <string name="screen_off">Screen Off</string>
-    <string name="screen_on">Screen On</string>
-    <string name="volume_up">Volume Up</string>
-    <string name="volume_down">Volume Down</string>
-    <string name="action_toggle_flashlight">Toggle flashlight</string>
-    <string name="action_media_play_pause">Media play/pause</string>
-    <string name="action_media_next">Media next</string>
-    <string name="action_media_previous">Media previous</string>
-    <string name="action_toggle_vibrate">Toggle vibrate</string>
-    <string name="action_toggle_mute">Toggle mute</string>
-    <string name="action_ai_assistant">AI assistant</string>
-    <string name="action_take_screenshot">Take screenshot</string>
-    <string name="action_cycle_sound_modes">Cycle sound modes</string>
-    <string name="action_like_song">Like current song</string>
-    <string name="like_song_settings_title">Like song settings</string>
-    <string name="like_song_settings_desc">This feature requires notification access to detect the currently playing media and trigger the like action. Please enable it below.</string>
-    <string name="like_song_toast_enabled">Show toast message</string>
-    <string name="like_song_aod_overlay_title">Show overlay on AOD</string>
-    <string name="feat_ambient_music_glance_title">Ambient music glance</string>
-    <string name="feat_ambient_music_glance_desc">Glance at media on AOD</string>
-    <string name="ambient_glance_docked_mode_title">Docked mode</string>
-    <string name="ambient_glance_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
-    <string name="feat_notification_glance_title">Notification glance</string>
-    <string name="feat_notification_glance_desc">Keep AOD on while notifications are pending</string>
-    <string name="notification_glance_same_as_lighting_title">Same apps as notification lighting</string>
-    <string name="notification_glance_desc">This feature will dynamically enable Always on Display when a notification arrives from a selected app, and disable it once all matching notifications are dismissed. Pick apps or use the same selection as notification lighting.</string>
-    <string name="grant_notification_access">Grant notification access</string>
-    <string name="action_toggle_media_volume">Toggle media volume</string>
-    <string name="button_remap_screen_off_hint">When the screen is off, long-press the selected button to trigger its assigned action. On Pixel devices, this action only gets triggered if the AOD is on due to system limitations.</string>
-    <string name="button_remap_screen_on_hint">When the screen is on, long-press the selected button to trigger its assigned action.</string>
-    <string name="flashlight_intensity_title">Flashlight Intensity</string>
-    <string name="flashlight_fade_title">Fade in and out</string>
-    <string name="flashlight_fade_desc">Smoothly toggle flashlight</string>
-    <string name="flashlight_global_title">Global controls</string>
-    <string name="flashlight_global_desc">Fade-in flashlight globally</string>
-    <string name="flashlight_adjust_intensity_title">Adjust intensity</string>
-    <string name="flashlight_adjust_intensity_desc">Volume + - adjusts flashlight intensity</string>
-    <string name="flashlight_live_update_title">Live update</string>
-    <string name="flashlight_live_update_desc">Show brightness in status bar</string>
-    <string name="settings_section_other">Other</string>
-    <string name="flashlight_always_off_title">Always turn off flashlight</string>
-    <string name="flashlight_always_off_desc">Even while display is on</string>
-    <string name="content_desc_settings">Settings</string>
+    <string name="screen_off">Απενεργοποίηση οθόνης</string>
+    <string name="screen_on">Ενεργοποιημένη οθόνη</string>
+    <string name="volume_up">Ένταση έντασης</string>
+    <string name="volume_down">Μείωση έντασης</string>
+    <string name="action_toggle_flashlight">Εναλλαγή φακού</string>
+    <string name="action_media_play_pause">Αναπαραγωγή/παύση πολυμέσων</string>
+    <string name="action_media_next">Επόμενο ΜΜΕ</string>
+    <string name="action_media_previous">Προηγούμενα μέσα ενημέρωσης</string>
+    <string name="action_toggle_vibrate">Εναλλαγή δόνησης</string>
+    <string name="action_toggle_mute">Εναλλαγή σίγασης</string>
+    <string name="action_ai_assistant">Βοηθός AI</string>
+    <string name="action_take_screenshot">Λήψη στιγμιότυπου οθόνης</string>
+    <string name="action_cycle_sound_modes">Λειτουργίες ήχου κύκλου</string>
+    <string name="action_like_song">Όπως το τρέχον τραγούδι</string>
+    <string name="like_song_settings_title">Όπως ρυθμίσεις τραγουδιού</string>
+    <string name="like_song_settings_desc">Αυτή η λειτουργία απαιτεί πρόσβαση στις ειδοποιήσεις για τον εντοπισμό των μέσων που αναπαράγονται αυτήν τη στιγμή και την ενεργοποίηση της παρόμοιας ενέργειας. Ενεργοποιήστε το παρακάτω.</string>
+    <string name="like_song_toast_enabled">Εμφάνιση μηνύματος τοστ</string>
+    <string name="like_song_aod_overlay_title">Εμφάνιση επικάλυψης στο AOD</string>
+    <string name="feat_ambient_music_glance_title">Περιβαλλοντική μουσική ματιά</string>
+    <string name="feat_ambient_music_glance_desc">Ρίξτε μια ματιά στα μέσα ενημέρωσης στο AOD</string>
+    <string name="ambient_glance_docked_mode_title">Λειτουργία σύνδεσης</string>
+    <string name="ambient_glance_docked_mode_desc">Διατηρήστε την επικάλυψη ορατή επ\' αόριστον κατά την αναπαραγωγή μουσικής στο AOD</string>
+    <string name="feat_notification_glance_title">Ειδοποιητική ματιά</string>
+    <string name="feat_notification_glance_desc">Διατηρήστε το AOD ενεργοποιημένο όσο οι ειδοποιήσεις είναι σε εκκρεμότητα</string>
+    <string name="notification_glance_same_as_lighting_title">Ίδιες εφαρμογές με το φωτισμό ειδοποιήσεων</string>
+    <string name="notification_glance_desc">Αυτή η λειτουργία θα ενεργοποιήσει δυναμικά το Always on Display όταν λαμβάνεται μια ειδοποίηση από μια επιλεγμένη εφαρμογή και θα την απενεργοποιήσει μόλις παραβλεφθούν όλες οι ειδοποιήσεις που αντιστοιχούν. Επιλέξτε εφαρμογές ή χρησιμοποιήστε την ίδια επιλογή με το φωτισμό ειδοποιήσεων.</string>
+    <string name="grant_notification_access">Παραχωρήστε πρόσβαση στην ειδοποίηση</string>
+    <string name="action_toggle_media_volume">Εναλλαγή έντασης πολυμέσων</string>
+    <string name="button_remap_screen_off_hint">Όταν η οθόνη είναι απενεργοποιημένη, πατήστε παρατεταμένα το επιλεγμένο κουμπί για να ενεργοποιήσετε την αντιστοιχισμένη ενέργεια. Σε συσκευές Pixel, αυτή η ενέργεια ενεργοποιείται μόνο εάν το AOD είναι ενεργοποιημένο λόγω περιορισμών του συστήματος.</string>
+    <string name="button_remap_screen_on_hint">Όταν η οθόνη είναι ενεργοποιημένη, πατήστε παρατεταμένα το επιλεγμένο κουμπί για να ενεργοποιήσετε την αντιστοιχισμένη ενέργεια.</string>
+    <string name="flashlight_intensity_title">Ένταση φακού</string>
+    <string name="flashlight_fade_title">Ξεθωριάζουν μέσα και έξω</string>
+    <string name="flashlight_fade_desc">Ενεργοποιήστε ομαλά τον φακό</string>
+    <string name="flashlight_global_title">Παγκόσμιοι έλεγχοι</string>
+    <string name="flashlight_global_desc">Fade-in φακός παγκοσμίως</string>
+    <string name="flashlight_adjust_intensity_title">Ρυθμίστε την ένταση</string>
+    <string name="flashlight_adjust_intensity_desc">Ένταση + - ρυθμίζει την ένταση του φακού</string>
+    <string name="flashlight_live_update_title">Ζωντανή ενημέρωση</string>
+    <string name="flashlight_live_update_desc">Εμφάνιση φωτεινότητας στη γραμμή κατάστασης</string>
+    <string name="settings_section_other">Αλλος</string>
+    <string name="flashlight_always_off_title">Να σβήνετε πάντα τον φακό</string>
+    <string name="flashlight_always_off_desc">Ακόμη και όταν η οθόνη είναι ενεργοποιημένη</string>
+    <string name="content_desc_settings">Ρυθμίσεις</string>
     <!-- Caffeinate / Permissions -->
-    <string name="permission_show_notification_title">Show Notification</string>
-    <string name="permission_post_notifications_title">Post Notifications</string>
-    <string name="permission_post_notifications_desc">Allows the app to show notifications</string>
-    <string name="permission_grant_action">Grant Permission</string>
+    <string name="permission_show_notification_title">Εμφάνιση ειδοποίησης</string>
+    <string name="permission_post_notifications_title">Δημοσίευση ειδοποιήσεων</string>
+    <string name="permission_post_notifications_desc">Επιτρέπει στην εφαρμογή να εμφανίζει ειδοποιήσεις</string>
+    <string name="permission_grant_action">Χορήγηση άδειας</string>
     <string name="caffeinate_notification_title">Caffeinate Active</string>
-    <string name="caffeinate_active">Active</string>
-    <string name="caffeinate_notification_desc">Screen is being kept awake</string>
-    <string name="caffeinate_battery_optimization_title">Ignore battery optimization</string>
-    <string name="caffeinate_abort_screen_off_title">Abort with screen off</string>
-    <string name="caffeinate_skip_countdown_title">Skip countdown</string>
-    <string name="caffeinate_skip_countdown_desc">Start Caffeinate immediately.</string>
-    <string name="caffeinate_timeout_presets_title">Timeout Presets</string>
-    <string name="caffeinate_timeout_presets_desc">Select available durations for QS tile</string>
-    <string name="caffeinate_timeout_5m">5m</string>
-    <string name="caffeinate_timeout_10m">10m</string>
-    <string name="caffeinate_timeout_30m">30m</string>
-    <string name="perm_notif_policy_title">Do Not Disturb access</string>
-    <string name="perm_notif_policy_desc">Required to cycle between sound, vibrate and mute modes</string>
-    <string name="caffeinate_timeout_1h">1h</string>
+    <string name="caffeinate_active">Ενεργός</string>
+    <string name="caffeinate_notification_desc">Η οθόνη διατηρείται σε λειτουργία</string>
+    <string name="caffeinate_battery_optimization_title">Αγνοήστε τη βελτιστοποίηση της μπαταρίας</string>
+    <string name="caffeinate_abort_screen_off_title">Ακύρωση με απενεργοποιημένη οθόνη</string>
+    <string name="caffeinate_skip_countdown_title">Παράλειψη αντίστροφης μέτρησης</string>
+    <string name="caffeinate_skip_countdown_desc">Ξεκινήστε αμέσως την καφεΐνη.</string>
+    <string name="caffeinate_timeout_presets_title">Προεπιλογές χρονικού ορίου</string>
+    <string name="caffeinate_timeout_presets_desc">Επιλέξτε τις διαθέσιμες διάρκειες για το πλακίδιο QS</string>
+    <string name="caffeinate_timeout_5m">5μ</string>
+    <string name="caffeinate_timeout_10m">10μ</string>
+    <string name="caffeinate_timeout_30m">30μ</string>
+    <string name="perm_notif_policy_title">Πρόσβαση στο Do Not Disturb</string>
+    <string name="perm_notif_policy_desc">Απαιτείται για εναλλαγή μεταξύ των λειτουργιών ήχου, δόνησης και σίγασης</string>
+    <string name="caffeinate_timeout_1h">1 ώρα</string>
     <string name="caffeinate_timeout_infinity">∞</string>
-    <string name="caffeinate_starting_in">Starting in %1$ds…</string>
-    <string name="caffeinate_remaining">%1$s remaining</string>
-    <string name="caffeinate_live_channel_desc">Persistent notification for Caffeinate</string>
+    <string name="caffeinate_starting_in">Έναρξη σε %1$ds…</string>
+    <string name="caffeinate_remaining">%1$s παραμένων</string>
+    <string name="caffeinate_live_channel_desc">Επίμονη ειδοποίηση για καφεΐνη</string>
     <!-- Dynamic Night Light -->
-    <string name="dynamic_night_light_enable_title">Enable Dynamic Night Light</string>
-    <string name="dynamic_night_light_apps_section">Apps that toggle off night light</string>
-    <string name="action_select_apps">Select apps</string>
+    <string name="dynamic_night_light_enable_title">Ενεργοποιήστε το Dynamic Night Light</string>
+    <string name="dynamic_night_light_apps_section">Εφαρμογές που απενεργοποιούν το νυχτερινό φως</string>
+    <string name="action_select_apps">Επιλέξτε εφαρμογές</string>
     <!-- App Freezing -->
-    <string name="settings_section_app_control">App Control</string>
-    <string name="action_freeze">Freeze</string>
-    <string name="action_unfreeze">Unfreeze</string>
-    <string name="content_desc_more_options">More options</string>
-    <string name="action_freeze_all">Freeze all apps</string>
-    <string name="action_unfreeze_all">Unfreeze all apps</string>
-    <string name="action_export_freeze">Export frozen apps list</string>
-    <string name="action_import_freeze">Import frozen apps list</string>
-    <string name="freeze_pick_apps_title">Pick apps to freeze</string>
-    <string name="freeze_pick_apps_desc">Choose which apps can be frozen</string>
-    <string name="settings_section_automation">Automation</string>
-    <string name="freeze_when_locked_title">Freeze when locked</string>
-    <string name="freeze_delay_title">Freeze delay</string>
-    <string name="delay_immediate">Immediate</string>
-    <string name="delay_1m">1m</string>
-    <string name="delay_5m">5m</string>
-    <string name="delay_15m">15m</string>
-    <string name="delay_manual">Manual</string>
-    <string name="freeze_auto_freeze_section">Auto freeze apps</string>
-    <string name="freeze_automation_hint">Freeze selected apps when the device locks. Choose a delay to avoid freezing apps if you unlock the screen shortly after turning it off.</string>
-    <string name="freeze_warning">Freezing system apps might be dangerous and may cause unexpected behavior.</string>
-    <string name="action_enable_in_settings">Enable in Settings</string>
-    <string name="freeze_dont_freeze_active_apps_title">Don\'t freeze active apps</string>
-    <string name="perm_usage_stats_title">Usage Stats</string>
-    <string name="perm_usage_stats_desc">Required to detect which apps are currently in the foreground to avoid freezing them</string>
-    <string name="perm_notif_listener_desc_freeze">Required to detect playing media and active notifications to avoid freezing them</string>
+    <string name="settings_section_app_control">Έλεγχος εφαρμογής</string>
+    <string name="action_freeze">Πάγωμα</string>
+    <string name="action_unfreeze">Ξεπαγώστε</string>
+    <string name="content_desc_more_options">Περισσότερες επιλογές</string>
+    <string name="action_freeze_all">Παγώστε όλες τις εφαρμογές</string>
+    <string name="action_unfreeze_all">Ξεπαγώστε όλες τις εφαρμογές</string>
+    <string name="action_export_freeze">Εξαγωγή λίστας παγωμένων εφαρμογών</string>
+    <string name="action_import_freeze">Εισαγωγή λίστας παγωμένων εφαρμογών</string>
+    <string name="freeze_pick_apps_title">Επιλέξτε εφαρμογές για πάγωμα</string>
+    <string name="freeze_pick_apps_desc">Επιλέξτε ποιες εφαρμογές μπορούν να παγώσουν</string>
+    <string name="settings_section_automation">Αυτοματοποίηση</string>
+    <string name="freeze_when_locked_title">Παγώστε όταν είναι κλειδωμένο</string>
+    <string name="freeze_delay_title">Καθυστέρηση παγώματος</string>
+    <string name="delay_immediate">Αμεσος</string>
+    <string name="delay_1m">1μ</string>
+    <string name="delay_5m">5μ</string>
+    <string name="delay_15m">15μ</string>
+    <string name="delay_manual">Εγχειρίδιο</string>
+    <string name="freeze_auto_freeze_section">Αυτόματο πάγωμα εφαρμογών</string>
+    <string name="freeze_automation_hint">Παγώστε επιλεγμένες εφαρμογές όταν η συσκευή κλειδώσει. Επιλέξτε μια καθυστέρηση για να αποφύγετε το πάγωμα των εφαρμογών εάν ξεκλειδώσετε την οθόνη λίγο μετά την απενεργοποίησή της.</string>
+    <string name="freeze_warning">Το πάγωμα των εφαρμογών συστήματος μπορεί να είναι επικίνδυνο και μπορεί να προκαλέσει απροσδόκητη συμπεριφορά.</string>
+    <string name="action_enable_in_settings">Ενεργοποίηση στις Ρυθμίσεις</string>
+    <string name="freeze_dont_freeze_active_apps_title">Κύριος\'t παγώσει τις ενεργές εφαρμογές</string>
+    <string name="perm_usage_stats_title">Στατιστικά χρήσης</string>
+    <string name="perm_usage_stats_desc">Απαιτείται για τον εντοπισμό των εφαρμογών που βρίσκονται αυτήν τη στιγμή στο προσκήνιο για την αποφυγή παγώματος</string>
+    <string name="perm_notif_listener_desc_freeze">Απαιτείται για την ανίχνευση πολυμέσων αναπαραγωγής και ενεργών ειδοποιήσεων για την αποφυγή παγώματος</string>
     <!-- Notification Lighting -->
-    <string name="notification_lighting_screen_off_title">Only show when screen off</string>
-    <string name="notification_lighting_skip_silent_title">Skip silent notifications</string>
-    <string name="notification_lighting_skip_persistent_title">Skip persistent notifications</string>
-    <string name="settings_section_flashlight_pulse">Flashlight Pulse</string>
-    <string name="flashlight_pulse_title">Flashlight pulse</string>
-    <string name="flashlight_pulse_facedown_title">Only while facing down</string>
-    <string name="flashlight_pulse_same_as_lighting_title">Same apps as notification lighting</string>
-    <string name="settings_section_style">Style</string>
-    <string name="notification_lighting_stroke_adjustment_section">Stroke adjustment</string>
-    <string name="notification_lighting_corner_radius_title">Corner radius</string>
-    <string name="notification_lighting_stroke_thickness_title">Stroke thickness</string>
-    <string name="notification_lighting_glow_adjustment_section">Glow adjustment</string>
-    <string name="notification_lighting_glow_spread_title">Glow spread</string>
-    <string name="notification_lighting_placement_section">Placement</string>
-    <string name="notification_lighting_h_pos_title">Horizontal position</string>
-    <string name="notification_lighting_v_pos_title">Vertical position</string>
-    <string name="notification_lighting_indicator_adjustment_section">Indicator adjustment</string>
-    <string name="notification_lighting_scale_title">Scale</string>
-    <string name="notification_lighting_duration_title">Duration</string>
-    <string name="settings_section_animation">Animation</string>
-    <string name="notification_lighting_pulse_count_title">Pulse count</string>
-    <string name="notification_lighting_pulse_duration_title">Pulse duration</string>
-    <string name="settings_section_color_mode">Color Mode</string>
-    <string name="settings_section_ambient_display">Ambient display</string>
-    <string name="ambient_display_title">Ambient display</string>
-    <string name="ambient_display_hint">Suitable if you are not using AOD.</string>
-    <string name="ambient_display_desc">Wake screen and show lighting</string>
-    <string name="ambient_show_lock_screen_title">Show lock screen</string>
-    <string name="ambient_show_lock_screen_desc">No black overlay</string>
+    <string name="notification_lighting_screen_off_title">Εμφανίζεται μόνο όταν η οθόνη είναι απενεργοποιημένη</string>
+    <string name="notification_lighting_skip_silent_title">Παράλειψη σιωπηλών ειδοποιήσεων</string>
+    <string name="notification_lighting_skip_persistent_title">Παράβλεψη επίμονων ειδοποιήσεων</string>
+    <string name="settings_section_flashlight_pulse">Παλμός φακού</string>
+    <string name="flashlight_pulse_title">Παλμός φακού</string>
+    <string name="flashlight_pulse_facedown_title">Μόνο με το πρόσωπο προς τα κάτω</string>
+    <string name="flashlight_pulse_same_as_lighting_title">Ίδιες εφαρμογές με το φωτισμό ειδοποιήσεων</string>
+    <string name="settings_section_style">Στυλ</string>
+    <string name="notification_lighting_stroke_adjustment_section">Ρύθμιση εγκεφαλικού επεισοδίου</string>
+    <string name="notification_lighting_corner_radius_title">Γωνιακή ακτίνα</string>
+    <string name="notification_lighting_stroke_thickness_title">Πάχος διαδρομής</string>
+    <string name="notification_lighting_glow_adjustment_section">Ρύθμιση λάμψης</string>
+    <string name="notification_lighting_glow_spread_title">Άπλωσε λάμψη</string>
+    <string name="notification_lighting_placement_section">Τοποθέτηση</string>
+    <string name="notification_lighting_h_pos_title">Οριζόντια θέση</string>
+    <string name="notification_lighting_v_pos_title">Κάθετη θέση</string>
+    <string name="notification_lighting_indicator_adjustment_section">Ρύθμιση ένδειξης</string>
+    <string name="notification_lighting_scale_title">Κλίμακα</string>
+    <string name="notification_lighting_duration_title">Διάρκεια</string>
+    <string name="settings_section_animation">Εμψύχωση</string>
+    <string name="notification_lighting_pulse_count_title">Αριθμός παλμών</string>
+    <string name="notification_lighting_pulse_duration_title">Διάρκεια παλμού</string>
+    <string name="settings_section_color_mode">Λειτουργία χρώματος</string>
+    <string name="settings_section_ambient_display">Εμφάνιση περιβάλλοντος</string>
+    <string name="ambient_display_title">Εμφάνιση περιβάλλοντος</string>
+    <string name="ambient_display_hint">Κατάλληλο εάν δεν χρησιμοποιείτε AOD.</string>
+    <string name="ambient_display_desc">Αφύπνιση οθόνης και εμφάνιση φωτισμού</string>
+    <string name="ambient_show_lock_screen_title">Εμφάνιση οθόνης κλειδώματος</string>
+    <string name="ambient_show_lock_screen_desc">Χωρίς μαύρη επικάλυψη</string>
     <!-- Tiles -->
-    <string name="action_add">Add</string>
-    <string name="qs_tile_already_added">Already added</string>
-    <string name="qs_tile_requires_android_13">Requires Android 13+</string>
-    <string name="tile_ui_blur">UI Blur</string>
-    <string name="tile_bubbles">Bubbles</string>
-    <string name="tile_sensitive_content">Sensitive Content</string>
-    <string name="tile_tap_to_wake">Tap to Wake</string>
+    <string name="action_add">Προσθέτω</string>
+    <string name="qs_tile_already_added">Προστέθηκε ήδη</string>
+    <string name="qs_tile_requires_android_13">Απαιτεί Android 13+</string>
+    <string name="tile_ui_blur">Θάμπωμα διεπαφής χρήστη</string>
+    <string name="tile_bubbles">Φυσαλίδες</string>
+    <string name="tile_sensitive_content">Ευαίσθητο περιεχόμενο</string>
+    <string name="tile_tap_to_wake">Πατήστε για αφύπνιση</string>
     <string name="tile_aod">AOD</string>
-    <string name="tile_caffeinate">Caffeinate</string>
-    <string name="tile_sound_mode">Sound Mode</string>
-    <string name="tile_notification_lighting">Notification Lighting</string>
-    <string name="tile_dynamic_night_light">Dynamic Night Light</string>
-    <string name="tile_locked_security">Locked Security</string>
-    <string name="tile_app_lock">App Lock</string>
-    <string name="tile_mono_audio">Mono Audio</string>
-    <string name="tile_flashlight">Flashlight</string>
-    <string name="tile_app_freezing">App Freezing</string>
-    <string name="tile_flashlight_pulse">Flashlight Pulse</string>
-    <string name="tile_stay_awake">Stay awake</string>
-    <string name="input_method_label">Essentials Keyboard</string>
-    <string name="subtype_en_us">English (US)</string>
-    <string name="tile_active">Active</string>
-    <string name="tile_inactive">Inactive</string>
-    <string name="tile_developer_options">Developer Options</string>
-    <string name="about_desc_developer_options">Toggle system Developer Options from a QS tile easily. This may reset some of the developer settings you have modified.</string>
+    <string name="tile_caffeinate">Καφεΐνη</string>
+    <string name="tile_sound_mode">Λειτουργία ήχου</string>
+    <string name="tile_notification_lighting">Φωτισμός ειδοποίησης</string>
+    <string name="tile_dynamic_night_light">Δυναμικό Νυχτερινό Φως</string>
+    <string name="tile_locked_security">Κλειδωμένη ασφάλεια</string>
+    <string name="tile_app_lock">Κλείδωμα εφαρμογής</string>
+    <string name="tile_mono_audio">Μονοφωνικός ήχος</string>
+    <string name="tile_flashlight">Φακός</string>
+    <string name="tile_app_freezing">Πάγωμα εφαρμογής</string>
+    <string name="tile_flashlight_pulse">Παλμός φακού</string>
+    <string name="tile_stay_awake">Μείνε ξύπνιος</string>
+    <string name="input_method_label">Πληκτρολόγιο βασικών στοιχείων</string>
+    <string name="subtype_en_us">Αγγλικά (ΗΠΑ)</string>
+    <string name="tile_active">Ενεργός</string>
+    <string name="tile_inactive">Αδρανής</string>
+    <string name="tile_developer_options">Επιλογές προγραμματιστή</string>
+    <string name="about_desc_developer_options">Εναλλάξτε εύκολα τις επιλογές προγραμματιστή συστήματος από ένα πλακίδιο QS. Αυτό μπορεί να επαναφέρει ορισμένες από τις ρυθμίσεις προγραμματιστή που έχετε τροποποιήσει.</string>
     <string name="nfc_tile_label">NFC</string>
-    <string name="tile_private_dns">Private DNS</string>
-    <string name="tile_private_dns_auto">Auto</string>
-    <string name="tile_private_dns_off">Off</string>
-    <string name="tile_usb_debugging">USB Debugging</string>
-    <string name="tile_color_picker">Color Picker</string>
-    <string name="toast_eyedropper_failed">Are you sure you\'re on Android 17? (╯°_°）╯</string>
-    <string name="subtitle_eye_dropper">Eye Dropper</string>
-    <string name="on">On</string>
-    <string name="off">Off</string>
-    <string name="private_dns_custom_title">Custom Private DNS</string>
-    <string name="private_dns_presets_title">Common DNS Presets</string>
-    <string name="private_dns_hostname_label">Provider hostname</string>
+    <string name="tile_private_dns">Ιδιωτικό DNS</string>
+    <string name="tile_private_dns_auto">Αυτο</string>
+    <string name="tile_private_dns_off">Μακριά από</string>
+    <string name="tile_usb_debugging">Εντοπισμός σφαλμάτων USB</string>
+    <string name="tile_color_picker">Επιλογέας χρώματος</string>
+    <string name="toast_eyedropper_failed">Είστε σίγουροι ότι \' βρίσκεστε σε Android 17; (╯°_°）╯</string>
+    <string name="subtitle_eye_dropper">Σταγονόμετρο ματιών</string>
+    <string name="on">Επί</string>
+    <string name="off">Μακριά από</string>
+    <string name="private_dns_custom_title">Προσαρμοσμένο ιδιωτικό DNS</string>
+    <string name="private_dns_presets_title">Κοινές προεπιλογές DNS</string>
+    <string name="private_dns_hostname_label">Όνομα κεντρικού υπολογιστή παρόχου</string>
     <string name="dns_preset_adguard">AdGuard DNS</string>
     <string name="dns_preset_adguard_hostname">dns.adguard.com</string>
     <string name="dns_preset_google">Google Public DNS</string>
@@ -214,887 +214,892 @@
     <string name="dns_preset_cloudflare_hostname">1dot1dot1dot1.cloudflare-dns.com</string>
     <string name="dns_preset_quad9">Quad9 DNS</string>
     <string name="dns_preset_quad9_hostname">dns.quad9.net</string>
-    <string name="dns_preset_cleanbrowsing">CleanBrowsing</string>
+    <string name="dns_preset_cleanbrowsing">Καθαρή περιήγηση</string>
     <string name="dns_preset_cleanbrowsing_hostname">adult-filter-dns.cleanbrowsing.org</string>
-    <string name="tile_charge_optimization">Charging</string>
-    <string name="limit_to_80">Limit to 80%</string>
-    <string name="adaptive_charging">Adaptive</string>
-    <string name="deactivated">Not optimized</string>
-    <string name="permission_missing">Permission missing</string>
+    <string name="tile_charge_optimization">Φόρτιση</string>
+    <string name="limit_to_80">Όριο στο 80%</string>
+    <string name="adaptive_charging">Προσαρμοστικό</string>
+    <string name="deactivated">Δεν έχει βελτιστοποιηθεί</string>
+    <string name="permission_missing">Λείπει η άδεια</string>
     <!-- Screen Locked Security -->
-    <string name="screen_locked_security_title">Screen locked security</string>
-    <string name="screen_locked_security_dialog_title">Screen Locked Security</string>
-    <string name="screen_locked_security_auth_enable">Authenticate to enable screen locked security</string>
-    <string name="screen_locked_security_auth_disable">Authenticate to disable screen locked security</string>
-    <string name="warning_title">⚠️ WARNING</string>
-    <string name="screen_locked_security_warning_text">This feature is not foolproof. There may be edge cases where someone still being able to interact with the tile. \nAlso keep in mind that Android will always allow to do a forced reboot and Pixels will always allow the device to be turned off from the lock screen as well.</string>
-    <string name="screen_locked_security_airplane_warning">Make sure to remove the airplane mode tile from quick settings as that is not preventable because it does not open a dialog window.</string>
-    <string name="screen_locked_security_description">When enabled, the Quick Settings panel will be immediately closed and the device will be locked down if someone attempt to interact with Internet tiles while the device is locked. \n\nThis will also disable biometric unlock to prevent further unauthorized access. Animation scale will be reduced to 0.1x while locked to make it even harder to interact with.</string>
+    <string name="screen_locked_security_title">Ασφάλεια κλειδωμένης οθόνης</string>
+    <string name="screen_locked_security_dialog_title">Ασφάλεια κλειδωμένης οθόνης</string>
+    <string name="screen_locked_security_auth_enable">Πραγματοποιήστε έλεγχο ταυτότητας για να ενεργοποιήσετε την ασφάλεια κλειδωμένης οθόνης</string>
+    <string name="screen_locked_security_auth_disable">Πραγματοποιήστε έλεγχο ταυτότητας για να απενεργοποιήσετε την ασφάλεια κλειδωμένης οθόνης</string>
+    <string name="warning_title">⚠️ ΠΡΟΕΙΔΟΠΟΙΗΣΗ</string>
+    <string name="screen_locked_security_warning_text">Αυτή η δυνατότητα δεν είναι αλάνθαστη. Μπορεί να υπάρχουν περιπτώσεις αιχμής όπου κάποιος εξακολουθεί να μπορεί να αλληλεπιδράσει με το πλακίδιο. \nΈχετε επίσης υπόψη ότι το Android θα επιτρέπει πάντα την αναγκαστική επανεκκίνηση και τα Pixel θα επιτρέπουν πάντα την απενεργοποίηση της συσκευής και από την οθόνη κλειδώματος.</string>
+    <string name="screen_locked_security_airplane_warning">Βεβαιωθείτε ότι έχετε αφαιρέσει το πλακίδιο λειτουργίας πτήσης από τις γρήγορες ρυθμίσεις, καθώς αυτό δεν μπορεί να αποφευχθεί επειδή δεν ανοίγει παράθυρο διαλόγου.</string>
+    <string name="screen_locked_security_description">Όταν ενεργοποιηθεί, ο πίνακας Γρήγορων ρυθμίσεων θα κλείσει αμέσως και η συσκευή θα κλειδωθεί εάν κάποιος επιχειρήσει να αλληλεπιδράσει με πλακίδια Διαδικτύου ενώ η συσκευή είναι κλειδωμένη. \n\nΑυτό θα απενεργοποιήσει επίσης το βιομετρικό ξεκλείδωμα για να αποτρέψει περαιτέρω μη εξουσιοδοτημένη πρόσβαση. Η κλίμακα κινούμενων εικόνων θα μειωθεί στο 0,1x ενώ θα είναι κλειδωμένη για να γίνει ακόμα πιο δύσκολη η αλληλεπίδραση.</string>
     <!-- Sound Mode -->
-    <string name="sound_mode_reorder_title">Re-order modes</string>
-    <string name="sound_mode_long_press_hint">Long press to toggle</string>
-    <string name="content_desc_drag_reorder">Drag to reorder</string>
-    <string name="sound_mode_sound">Sound</string>
-    <string name="sound_mode_vibrate">Vibrate</string>
-    <string name="sound_mode_silent">Silent</string>
+    <string name="sound_mode_reorder_title">Επαναπαραγγελία τρόπων λειτουργίας</string>
+    <string name="sound_mode_long_press_hint">Πατήστε παρατεταμένα για εναλλαγή</string>
+    <string name="content_desc_drag_reorder">Σύρετε για αναδιάταξη</string>
+    <string name="sound_mode_sound">Ήχος</string>
+    <string name="sound_mode_vibrate">Δονούμαι</string>
+    <string name="sound_mode_silent">Σιωπηλός</string>
     <!-- Status Bar Categories -->
-    <string name="status_bar_category_connectivity">Connectivity</string>
-    <string name="status_bar_category_phone_network">Phone &amp; Network</string>
-    <string name="status_bar_category_audio_media">Audio &amp; Media</string>
-    <string name="status_bar_category_system_status">System Status</string>
-    <string name="status_bar_category_oem_specific">OEM Specific</string>
+    <string name="status_bar_category_connectivity">Συνδεσιμότητα</string>
+    <string name="status_bar_category_phone_network">Τηλέφωνο &amp; Δίκτυο</string>
+    <string name="status_bar_category_audio_media">Ήχος &amp; Μέσα</string>
+    <string name="status_bar_category_system_status">Κατάσταση συστήματος</string>
+    <string name="status_bar_category_oem_specific">Ειδικό OEM</string>
     <!-- Status Bar Icons -->
     <string name="icon_wifi">WiFi</string>
     <string name="icon_bluetooth">Bluetooth</string>
     <string name="icon_nfc">NFC / Felica</string>
     <string name="icon_vpn">VPN</string>
-    <string name="icon_airplane_mode">Airplane Mode</string>
+    <string name="icon_airplane_mode">Λειτουργία αεροπλάνου</string>
     <string name="icon_hotspot">Hotspot</string>
-    <string name="icon_cast">Cast</string>
-    <string name="icon_mobile_data">Mobile Data</string>
-    <string name="icon_phone_signal">Phone Signal</string>
+    <string name="icon_cast">Εκμαγείο</string>
+    <string name="icon_mobile_data">Δεδομένα κινητής τηλεφωνίας</string>
+    <string name="icon_phone_signal">Τηλεφωνικό σήμα</string>
     <string name="icon_volte">VoLTE / VoNR</string>
-    <string name="icon_wifi_calling">WiFi Calling / VoWiFi</string>
-    <string name="icon_call_status">Call Status / Sync</string>
+    <string name="icon_wifi_calling">Κλήση WiFi / VoWiFi</string>
+    <string name="icon_call_status">Κατάσταση κλήσης / Συγχρονισμός</string>
     <string name="icon_tty">TTY</string>
-    <string name="icon_volume">Volume</string>
-    <string name="icon_headset">Headset</string>
-    <string name="icon_speakerphone">Speakerphone</string>
+    <string name="icon_volume">Τόμος</string>
+    <string name="icon_headset">Ακουστικό</string>
+    <string name="icon_speakerphone">Μεγάφωνο</string>
     <string name="icon_dmb">DMB</string>
-    <string name="icon_clock">Clock</string>
-    <string name="icon_ime">Input Method (IME)</string>
-    <string name="icon_alarm">Alarm</string>
-    <string name="icon_battery">Battery</string>
-    <string name="icon_power_saving">Power Saving</string>
-    <string name="icon_data_saver">Data Saver</string>
-    <string name="icon_rotation_lock">Rotation Lock</string>
-    <string name="icon_location">Location / GPS</string>
-    <string name="icon_sync">Sync</string>
-    <string name="icon_managed_profile">Managed Profile</string>
-    <string name="icon_dnd">Do Not Disturb</string>
-    <string name="icon_privacy">Privacy &amp; Secure Folder</string>
-    <string name="icon_security_status">Security Status (SU)</string>
-    <string name="icon_otg">OTG Mouse / Keyboard</string>
-    <string name="icon_samsung_smart">Samsung Smart Features</string>
-    <string name="icon_samsung_services">Samsung Services</string>
+    <string name="icon_clock">Ρολόι</string>
+    <string name="icon_ime">Μέθοδος εισαγωγής (IME)</string>
+    <string name="icon_alarm">Τρομάζω</string>
+    <string name="icon_battery">Μπαταρία</string>
+    <string name="icon_power_saving">Εξοικονόμηση ενέργειας</string>
+    <string name="icon_data_saver">Εξοικονόμηση δεδομένων</string>
+    <string name="icon_rotation_lock">Κλείδωμα περιστροφής</string>
+    <string name="icon_location">Τοποθεσία / GPS</string>
+    <string name="icon_sync">Συγχρονισμός</string>
+    <string name="icon_managed_profile">Διαχειριζόμενο προφίλ</string>
+    <string name="icon_dnd">Μην ενοχλείτε</string>
+    <string name="icon_privacy">Απόρρητο και ασφαλής φάκελος</string>
+    <string name="icon_security_status">Κατάσταση ασφαλείας (SU)</string>
+    <string name="icon_otg">Ποντίκι / Πληκτρολόγιο OTG</string>
+    <string name="icon_samsung_smart">Smart Χαρακτηριστικά Samsung</string>
+    <string name="icon_samsung_services">Υπηρεσίες Samsung</string>
     <string name="icon_ethernet">Ethernet</string>
     <!-- Status Bar Settings -->
-    <string name="stb_clock_seconds">Show Seconds in Clock</string>
-    <string name="stb_battery_percentage">Battery Percentage</string>
-    <string name="stb_battery_percentage_always">Always</string>
-    <string name="stb_battery_percentage_charging">Charging</string>
-    <string name="stb_battery_percentage_never">Never</string>
-    <string name="stb_privacy_chip">Camera and Microphone use chips</string>
-    <string name="smart_data_title">Smart Data</string>
-    <string name="permission_read_phone_state_title">Read Phone State</string>
-    <string name="permission_read_phone_state_desc">Required to detect network type for Smart Data feature</string>
-    <string name="permission_read_phone_state_desc_call_vibrations">Required to detect call status changes to trigger haptic feedback.</string>
-    <string name="settings_section_smart_visibility">Smart Visibility</string>
-    <string name="smart_wifi_title">Smart WiFi</string>
-    <string name="smart_wifi_desc">Hide mobile data when WiFi is connected</string>
-    <string name="smart_data_desc">Hide mobile data in certain modes</string>
-    <string name="action_reset_all_icons">Reset All Icons</string>
-    <string name="status_bar_section_advanced">More Settings</string>
-    <string name="status_bar_icons_disclaimer">Please note that the implementation of these options may depend on the OEM and some may not be functional at all.</string>
+    <string name="stb_clock_seconds">Εμφάνιση δευτερολέπτων στο ρολόι</string>
+    <string name="stb_battery_percentage">Ποσοστό μπαταρίας</string>
+    <string name="stb_battery_percentage_always">Πάντοτε</string>
+    <string name="stb_battery_percentage_charging">Φόρτιση</string>
+    <string name="stb_battery_percentage_never">Ποτέ</string>
+    <string name="stb_privacy_chip">Κάμερα και μικρόφωνο χρησιμοποιούν τσιπ</string>
+    <string name="smart_data_title">Έξυπνα δεδομένα</string>
+    <string name="permission_read_phone_state_title">Διαβάστε την κατάσταση τηλεφώνου</string>
+    <string name="permission_read_phone_state_desc">Απαιτείται για την ανίχνευση του τύπου δικτύου για τη λειτουργία Smart Data</string>
+    <string name="permission_read_phone_state_desc_call_vibrations">Απαιτείται για τον εντοπισμό αλλαγών κατάστασης κλήσης για την ενεργοποίηση απτικής ανάδρασης.</string>
+    <string name="settings_section_smart_visibility">Έξυπνη ορατότητα</string>
+    <string name="smart_wifi_title">Έξυπνο WiFi</string>
+    <string name="smart_wifi_desc">Απόκρυψη δεδομένων κινητής τηλεφωνίας όταν είναι συνδεδεμένο το WiFi</string>
+    <string name="smart_data_desc">Απόκρυψη δεδομένων κινητής τηλεφωνίας σε ορισμένες λειτουργίες</string>
+    <string name="action_reset_all_icons">Επαναφορά όλων των εικονιδίων</string>
+    <string name="status_bar_section_advanced">Περισσότερες Ρυθμίσεις</string>
+    <string name="status_bar_icons_disclaimer">Λάβετε υπόψη ότι η υλοποίηση αυτών των επιλογών μπορεί να εξαρτάται από τον OEM και ορισμένες μπορεί να μην είναι καθόλου λειτουργικές.</string>
     <!-- Network Type Picker -->
-    <string name="network_type_other">Other</string>
+    <string name="network_type_other">Αλλος</string>
     <!-- Search -->
-    <string name="search_clock_seconds_title">Clock Seconds</string>
-    <string name="search_clock_seconds_desc">Show seconds in status bar clock</string>
-    <string name="search_battery_percentage_title">Battery Percentage</string>
-    <string name="search_battery_percentage_desc">Configure battery percentage visibility</string>
-    <string name="search_privacy_chip_title">Privacy Chips</string>
-    <string name="search_privacy_chip_desc">Show indicator when camera or mic is in use</string>
-    <string name="search_desc_toggle_visibility">Toggle visibility for %1$s</string>
-    <string name="action_pin">Pin to Favorites</string>
-    <string name="action_unpin">Unpin from Favorites</string>
+    <string name="search_clock_seconds_title">Ρολόι Δευτερόλεπτα</string>
+    <string name="search_clock_seconds_desc">Εμφάνιση δευτερολέπτων στο ρολόι της γραμμής κατάστασης</string>
+    <string name="search_battery_percentage_title">Ποσοστό μπαταρίας</string>
+    <string name="search_battery_percentage_desc">Διαμορφώστε την ορατότητα ποσοστού μπαταρίας</string>
+    <string name="search_privacy_chip_title">Τσιπ απορρήτου</string>
+    <string name="search_privacy_chip_desc">Εμφάνιση ένδειξης όταν χρησιμοποιείται η κάμερα ή το μικρόφωνο</string>
+    <string name="search_desc_toggle_visibility">Εναλλαγή ορατότητας για %1$s</string>
+    <string name="action_pin">Καρφίτσωμα στα Αγαπημένα</string>
+    <string name="action_unpin">Ξεκαρφιτσώστε από τα Αγαπημένα</string>
     <!-- Extraction Batch 1 -->
     <!-- Categories -->
-    <string name="cat_tools">Tools</string>
-    <string name="cat_visuals">Visuals</string>
-    <string name="cat_system">System</string>
+    <string name="cat_tools">Εργαλεία</string>
+    <string name="cat_visuals">Οπτικά</string>
+    <string name="cat_system">Σύστημα</string>
     <!-- UI Elements -->
-    <string name="search_placeholder">Search Essentials</string>
-    <string name="search_no_results">No results for \"%1$s\"</string>
-    <string name="search_results_title">Search Results</string>
-    <string name="requires_following_permissions">%1$s requires following permissions</string>
+    <string name="search_placeholder">Αναζήτηση βασικών στοιχείων</string>
+    <string name="search_no_results">Δεν υπάρχουν αποτελέσματα για \"%1$s\"</string>
+    <string name="search_results_title">Αποτελέσματα αναζήτησης</string>
+    <string name="requires_following_permissions">%1$s απαιτεί τα ακόλουθα δικαιώματα</string>
     <!-- Features -->
-    <string name="feat_screen_off_widget_title">Screen off widget</string>
-    <string name="feat_screen_off_widget_desc">Invisible widget to turn the screen off</string>
-    <string name="feat_statusbar_icons_title">Statusbar icons</string>
-    <string name="feat_statusbar_icons_desc">Control statusbar icons visibility</string>
-    <string name="feat_caffeinate_title">Caffeinate</string>
-    <string name="feat_caffeinate_desc">Keep the screen awake</string>
-    <string name="feat_maps_power_saving_title">Maps power saving mode</string>
-    <string name="feat_maps_power_saving_desc">For any Android device</string>
-    <string name="feat_notification_lighting_title">Notification lighting</string>
-    <string name="feat_notification_lighting_desc">Light up for notifications</string>
-    <string name="feat_flashlight_pulse_desc">Pulse the flashlight for notifications</string>
-    <string name="feat_sound_mode_tile_title">Sound mode tile</string>
-    <string name="feat_call_vibrations_title">Call vibrations</string>
-    <string name="feat_call_vibrations_desc">Vibrate for call actions</string>
-    <string name="show_bluetooth_devices">Show Bluetooth devices</string>
-    <string name="show_bluetooth_devices_summary">Display battery level of connected Bluetooth devices</string>
-    <string name="limit_max_devices">Limit max devices</string>
-    <string name="limit_max_devices_summary">Adjust max devices visible in widget</string>
-    <string name="widget_background_title">Widget background</string>
-    <string name="widget_background_summary">Show widget background</string>
+    <string name="feat_screen_off_widget_title">Γραφικό στοιχείο απενεργοποίησης οθόνης</string>
+    <string name="feat_screen_off_widget_desc">Αόρατο γραφικό στοιχείο για απενεργοποίηση της οθόνης</string>
+    <string name="feat_statusbar_icons_title">Εικονίδια γραμμής κατάστασης</string>
+    <string name="feat_statusbar_icons_desc">Ελέγξτε την ορατότητα των εικονιδίων της γραμμής κατάστασης</string>
+    <string name="feat_caffeinate_title">Καφεΐνη</string>
+    <string name="feat_caffeinate_desc">Κρατήστε την οθόνη ανοιχτή</string>
+    <string name="feat_maps_power_saving_title">Λειτουργία εξοικονόμησης ενέργειας χαρτών</string>
+    <string name="feat_maps_power_saving_desc">Για οποιαδήποτε συσκευή Android</string>
+    <string name="feat_notification_lighting_title">Φωτισμός ειδοποίησης</string>
+    <string name="feat_notification_lighting_desc">Ανάβει για ειδοποιήσεις</string>
+    <string name="feat_flashlight_pulse_desc">Πατήστε τον φακό για ειδοποιήσεις</string>
+    <string name="feat_sound_mode_tile_title">Πλακίδιο λειτουργίας ήχου</string>
+    <string name="feat_call_vibrations_title">Δονήσεις κλήσης</string>
+    <string name="feat_call_vibrations_desc">Δόνηση για ενέργειες κλήσης</string>
+    <string name="show_bluetooth_devices">Εμφάνιση συσκευών Bluetooth</string>
+    <string name="show_bluetooth_devices_summary">Εμφάνιση στάθμης μπαταρίας συνδεδεμένων συσκευών Bluetooth</string>
+    <string name="limit_max_devices">Όριο μέγιστων συσκευών</string>
+    <string name="limit_max_devices_summary">Προσαρμόστε τις μέγιστες συσκευές που είναι ορατές στο widget</string>
+    <string name="widget_background_title">Φόντο widget</string>
+    <string name="widget_background_summary">Εμφάνιση φόντου widget</string>
     <!-- DIY Automation -->
-    <string name="diy_create_trigger_title">Trigger Automation</string>
-    <string name="diy_create_trigger_desc">Schedule an action to trigger on an observation</string>
-    <string name="diy_create_state_title">State Automation</string>
-    <string name="diy_create_state_desc">Schedule an action to execute based on the state of a condition in and out</string>
-    <string name="diy_editor_new_title">New Automation</string>
-    <string name="diy_editor_edit_title">Edit Automation</string>
-    <string name="feat_link_actions_title">Link actions</string>
-    <string name="feat_link_actions_desc">Handle links with multiple apps</string>
-    <string name="feat_snooze_notifications_title">Snooze system notifications</string>
-    <string name="feat_snooze_notifications_desc">Snooze persistent notifications</string>
-    <string name="feat_qs_tiles_title">Quick settings tiles</string>
-    <string name="feat_qs_tiles_desc">View all</string>
-    <string name="feat_button_remap_title">Button remap</string>
-    <string name="feat_button_remap_desc">Remap hardware button actions</string>
-    <string name="feat_dynamic_night_light_title">Dynamic night light</string>
-    <string name="feat_dynamic_night_light_desc">Toggle night light based on app</string>
-    <string name="feat_screen_locked_security_title">Screen locked security</string>
-    <string name="feat_screen_locked_security_desc">Prevent network controls</string>
-    <string name="feat_app_lock_title">App lock</string>
-    <string name="feat_app_lock_desc">Secure apps with biometrics</string>
-    <string name="feat_freeze_title">Freeze</string>
-    <string name="feat_freeze_desc">Disable rarely used apps</string>
-    <string name="feat_watermark_title">Watermark</string>
-    <string name="feat_watermark_desc">Add EXIF data and logos to photos</string>
-    <string name="feat_always_on_display_title">Always on Display</string>
-    <string name="feat_always_on_display_desc">Show time and info while screen off</string>
-    <string name="feat_calendar_sync_title">Calendar Sync</string>
-    <string name="feat_calendar_sync_desc">Sync events to your watch</string>
-    <string name="watermark_style_overlay">Overlay</string>
-    <string name="watermark_style_frame">Frame</string>
-    <string name="watermark_show_brand">Device Brand</string>
-    <string name="watermark_show_exif">EXIF Data</string>
-    <string name="watermark_pick_image">Pick Image</string>
-    <string name="watermark_save_success">Image saved to gallery</string>
-    <string name="action_share">Share</string>
-    <string name="watermark_exif_settings">EXIF Settings</string>
-    <string name="watermark_exif_focal_length">Focal Length</string>
-    <string name="watermark_exif_aperture">Aperture</string>
+    <string name="diy_create_trigger_title">Αυτοματισμός ενεργοποίησης</string>
+    <string name="diy_create_trigger_desc">Προγραμματίστε μια ενέργεια που θα ενεργοποιηθεί σε μια παρατήρηση</string>
+    <string name="diy_create_state_title">Κρατικός Αυτοματισμός</string>
+    <string name="diy_create_state_desc">Προγραμματίστε μια ενέργεια προς εκτέλεση με βάση την κατάσταση μιας συνθήκης μέσα και έξω</string>
+    <string name="diy_editor_new_title">Νέος Αυτοματισμός</string>
+    <string name="diy_editor_edit_title">Επεξεργασία Αυτοματισμού</string>
+    <string name="feat_link_actions_title">Συνδέστε ενέργειες</string>
+    <string name="feat_link_actions_desc">Χειριστείτε συνδέσμους με πολλές εφαρμογές</string>
+    <string name="feat_snooze_notifications_title">Αναβολή ειδοποιήσεων συστήματος</string>
+    <string name="feat_snooze_notifications_desc">Αναβολή επίμονων ειδοποιήσεων</string>
+    <string name="feat_qs_tiles_title">Πλακάκια γρήγορων ρυθμίσεων</string>
+    <string name="feat_qs_tiles_desc">Προβολή όλων</string>
+    <string name="feat_button_remap_title">Επαναχάρτης κουμπιών</string>
+    <string name="feat_button_remap_desc">Αντιστοιχίστε ξανά τις ενέργειες του κουμπιού υλικού</string>
+    <string name="feat_dynamic_night_light_title">Δυναμικό φως νύχτας</string>
+    <string name="feat_dynamic_night_light_desc">Εναλλαγή νυχτερινού φωτός με βάση την εφαρμογή</string>
+    <string name="feat_screen_locked_security_title">Ασφάλεια κλειδωμένης οθόνης</string>
+    <string name="feat_screen_locked_security_desc">Αποτρέψτε τους ελέγχους δικτύου</string>
+    <string name="feat_app_lock_title">Κλείδωμα εφαρμογής</string>
+    <string name="feat_app_lock_desc">Ασφαλίστε εφαρμογές με βιομετρικά στοιχεία</string>
+    <string name="feat_freeze_title">Πάγωμα</string>
+    <string name="feat_freeze_desc">Απενεργοποιήστε τις εφαρμογές που χρησιμοποιούνται σπάνια</string>
+    <string name="feat_watermark_title">Αφανής σφραγίδα χάρτου</string>
+    <string name="feat_watermark_desc">Προσθέστε δεδομένα και λογότυπα EXIF ​​στις φωτογραφίες</string>
+    <string name="feat_always_on_display_title">Πάντα στην οθόνη</string>
+    <string name="feat_always_on_display_desc">Εμφάνιση ώρας και πληροφοριών ενώ η οθόνη είναι απενεργοποιημένη</string>
+    <string name="feat_calendar_sync_title">Συγχρονισμός Ημερολογίου</string>
+    <string name="feat_calendar_sync_desc">Συγχρονίστε συμβάντα με το ρολόι σας</string>
+    <string name="watermark_style_overlay">Επικάλυμμα</string>
+    <string name="watermark_style_frame">Πλαίσιο</string>
+    <string name="watermark_show_brand">Μάρκα συσκευής</string>
+    <string name="watermark_show_exif">Δεδομένα EXIF</string>
+    <string name="watermark_pick_image">Επιλέξτε εικόνα</string>
+    <string name="watermark_save_success">Η εικόνα αποθηκεύτηκε στη συλλογή</string>
+    <string name="action_share">Μερίδιο</string>
+    <string name="watermark_exif_settings">Ρυθμίσεις EXIF</string>
+    <string name="watermark_exif_focal_length">Εστιακό μήκος</string>
+    <string name="watermark_exif_aperture">Ανοιγμα</string>
     <string name="watermark_exif_iso">ISO</string>
-    <string name="watermark_exif_shutter_speed">Shutter Speed</string>
-    <string name="watermark_exif_date">Date &amp; Time</string>
-    <string name="watermark_move_to_top">Move to Top</string>
-    <string name="watermark_left_align">Align Left</string>
-    <string name="watermark_text_size_brand">Brand Size</string>
-    <string name="watermark_text_size_data">Data Size</string>
-    <string name="watermark_text_size_custom">Text Size</string>
-    <string name="watermark_font_options">Font Size</string>
-    <string name="watermark_custom_text">Custom Text</string>
-    <string name="watermark_custom_text_hint">Enter your text...</string>
-    <string name="watermark_spacing">Spacing</string>
-    <string name="watermark_border_width">Border Width</string>
-    <string name="watermark_border_corners">Round Corners</string>
-    <string name="watermark_color_section">Color</string>
-    <string name="watermark_logo_section">Logo</string>
-    <string name="watermark_logo_show">Show Logo</string>
-    <string name="watermark_logo_size">Logo Size</string>
-    <string name="watermark_edit_texts">Edit Watermark Texts</string>
-    <string name="watermark_device_brand">Device brand</string>
-    <string name="watermark_date_time">Date &amp; Time</string>
-    <string name="watermark_no_date">No date information</string>
-    <string name="watermark_rotate_left">Rotate left</string>
-    <string name="watermark_rotate_right">Rotate right</string>
-    <string name="action_next">Next</string>
-    <string name="action_ok">OK</string>
-    <string name="action_save_changes">Save Changes</string>
-    <string name="calendar_sync_settings_title">Calendar Sync Settings</string>
-    <string name="calendar_sync_select_calendars">Sync specific calendars</string>
-    <string name="calendar_sync_periodic_title">Periodic Sync</string>
-    <string name="calendar_sync_periodic_desc">Sync every 15 minutes if changes found</string>
-    <string name="calendar_sync_sync_now">Sync Now</string>
-    <string name="calendar_sync_manual_sync_desc">Trigger immediate sync to watch</string>
-    <string name="calendar_sync_no_calendars">No local calendars found</string>
-    <string name="calendar_sync_sync_started">Calendar sync started</string>
+    <string name="watermark_exif_shutter_speed">Ταχύτητα κλείστρου</string>
+    <string name="watermark_exif_date">Ημερομηνία &amp; Ώρα</string>
+    <string name="watermark_move_to_top">Μετακίνηση στην κορυφή</string>
+    <string name="watermark_left_align">Στοίχιση αριστερά</string>
+    <string name="watermark_text_size_brand">Μέγεθος επωνυμίας</string>
+    <string name="watermark_text_size_data">Μέγεθος Δεδομένων</string>
+    <string name="watermark_text_size_custom">Μέγεθος κειμένου</string>
+    <string name="watermark_font_options">Μέγεθος γραμματοσειράς</string>
+    <string name="watermark_custom_text">Προσαρμοσμένο κείμενο</string>
+    <string name="watermark_custom_text_hint">Εισάγετε το κείμενό σας...</string>
+    <string name="watermark_spacing">Διάστημα</string>
+    <string name="watermark_border_width">Πλάτος περιγράμματος</string>
+    <string name="watermark_border_corners">Στρογγυλές γωνίες</string>
+    <string name="watermark_color_section">Χρώμα</string>
+    <string name="watermark_logo_section">Λογότυπο</string>
+    <string name="watermark_logo_show">Εμφάνιση λογότυπου</string>
+    <string name="watermark_logo_size">Μέγεθος λογότυπου</string>
+    <string name="watermark_edit_texts">Επεξεργασία κειμένων υδατογραφήματος</string>
+    <string name="watermark_device_brand">Μάρκα συσκευής</string>
+    <string name="watermark_date_time">Ημερομηνία &amp; Ώρα</string>
+    <string name="watermark_no_date">Δεν υπάρχουν πληροφορίες ημερομηνίας</string>
+    <string name="watermark_rotate_left">Περιστροφή αριστερά</string>
+    <string name="watermark_rotate_right">Περιστροφή δεξιά</string>
+    <string name="action_next">Επόμενος</string>
+    <string name="action_ok">ΕΝΤΑΞΕΙ</string>
+    <string name="action_save_changes">Αποθήκευση αλλαγών</string>
+    <string name="calendar_sync_settings_title">Ρυθμίσεις συγχρονισμού ημερολογίου</string>
+    <string name="calendar_sync_select_calendars">Συγχρονίστε συγκεκριμένα ημερολόγια</string>
+    <string name="calendar_sync_periodic_title">Περιοδικός Συγχρονισμός</string>
+    <string name="calendar_sync_periodic_desc">Συγχρονισμός κάθε 15 λεπτά εάν βρεθούν αλλαγές</string>
+    <string name="calendar_sync_sync_now">Συγχρονισμός τώρα</string>
+    <string name="calendar_sync_manual_sync_desc">Ενεργοποίηση άμεσου συγχρονισμού για παρακολούθηση</string>
+    <string name="calendar_sync_no_calendars">Δεν βρέθηκαν τοπικά ημερολόγια</string>
+    <string name="calendar_sync_sync_started">Ο συγχρονισμός ημερολογίου ξεκίνησε</string>
     <!-- Search Settings -->
-    <string name="search_haptic_title">Widget Haptic feedback</string>
-    <string name="search_haptic_desc">Pick haptic feedback for widget taps</string>
-    <string name="search_smart_wifi_title">Smart WiFi</string>
-    <string name="search_smart_wifi_desc">Hide mobile data when WiFi is connected</string>
-    <string name="search_smart_data_title">Smart Data</string>
-    <string name="search_smart_data_desc">Hide mobile data in certain modes</string>
-    <string name="search_reset_icons_title">Reset All Icons</string>
-    <string name="search_reset_icons_desc">Reset status bar icon visibility to default</string>
-    <string name="search_caffeinate_abort_screen_off_title">Abort Caffeinate with screen off</string>
-    <string name="search_caffeinate_abort_screen_off_desc">Automatically turn off Caffeinate when manually locking the device</string>
-    <string name="search_lighting_style_title">Lighting Style</string>
-    <string name="search_lighting_style_desc">Choose between Stroke, Glow, Spinner, and more</string>
-    <string name="search_corner_radius_title">Corner radius</string>
-    <string name="search_corner_radius_desc">Adjust the corner radius of the notification lighting</string>
-    <string name="search_skip_silent_title">Skip silent notifications</string>
-    <string name="search_skip_silent_desc">Do not show lighting for silent notifications</string>
-    <string name="search_flashlight_pulse_title">Flashlight pulse</string>
-    <string name="search_flashlight_pulse_desc">Slowly pulse flashlight for new notifications</string>
-    <string name="search_only_facing_down_title">Only while facing down</string>
-    <string name="search_only_facing_down_desc">Pulse flashlight only when device is face down</string>
-    <string name="snooze_no_channels_discovered">No system channels discovered yet. They will appear here once detected.</string>
-    <string name="search_qs_blur_title">UI Blur</string>
-    <string name="search_qs_blur_desc">Toggle system-wide UI blur</string>
-    <string name="search_qs_bubbles_title">Bubbles</string>
-    <string name="search_qs_bubbles_desc">Enable floating window bubbles</string>
-    <string name="search_qs_sensitive_title">Sensitive Content</string>
-    <string name="search_qs_sensitive_desc">Hide notification details on lockscreen</string>
-    <string name="search_qs_wake_title">Tap to Wake</string>
-    <string name="search_qs_wake_desc">Double tap to wake control</string>
+    <string name="search_haptic_title">Widget Απτική ανατροφοδότηση</string>
+    <string name="search_haptic_desc">Επιλέξτε απτική ανάδραση για πατήματα widget</string>
+    <string name="search_smart_wifi_title">Έξυπνο WiFi</string>
+    <string name="search_smart_wifi_desc">Απόκρυψη δεδομένων κινητής τηλεφωνίας όταν είναι συνδεδεμένο το WiFi</string>
+    <string name="search_smart_data_title">Έξυπνα δεδομένα</string>
+    <string name="search_smart_data_desc">Απόκρυψη δεδομένων κινητής τηλεφωνίας σε ορισμένες λειτουργίες</string>
+    <string name="search_reset_icons_title">Επαναφορά όλων των εικονιδίων</string>
+    <string name="search_reset_icons_desc">Επαναφορά της ορατότητας του εικονιδίου της γραμμής κατάστασης στην προεπιλογή</string>
+    <string name="search_caffeinate_abort_screen_off_title">Διακόψτε την καφεΐνη με απενεργοποιημένη οθόνη</string>
+    <string name="search_caffeinate_abort_screen_off_desc">Απενεργοποιήστε αυτόματα το Caffeinate όταν κλειδώνετε χειροκίνητα τη συσκευή</string>
+    <string name="search_lighting_style_title">Στυλ φωτισμού</string>
+    <string name="search_lighting_style_desc">Επιλέξτε μεταξύ Stroke, Glow, Spinner και πολλά άλλα</string>
+    <string name="search_corner_radius_title">Γωνιακή ακτίνα</string>
+    <string name="search_corner_radius_desc">Προσαρμόστε τη γωνιακή ακτίνα του φωτισμού ειδοποιήσεων</string>
+    <string name="search_skip_silent_title">Παράλειψη σιωπηλών ειδοποιήσεων</string>
+    <string name="search_skip_silent_desc">Να μην εμφανίζεται φωτισμός για σιωπηλές ειδοποιήσεις</string>
+    <string name="search_flashlight_pulse_title">Παλμός φακού</string>
+    <string name="search_flashlight_pulse_desc">Παλλήστε αργά τον φακό για νέες ειδοποιήσεις</string>
+    <string name="search_only_facing_down_title">Μόνο με το πρόσωπο προς τα κάτω</string>
+    <string name="search_only_facing_down_desc">Παλμικός φακός μόνο όταν η συσκευή είναι στραμμένη προς τα κάτω</string>
+    <string name="snooze_no_channels_discovered">Δεν έχουν ανακαλυφθεί ακόμη κανάλια συστήματος. Θα εμφανιστούν εδώ μόλις εντοπιστούν.</string>
+    <string name="search_qs_blur_title">Θάμπωμα διεπαφής χρήστη</string>
+    <string name="search_qs_blur_desc">Εναλλαγή θαμπώματος διεπαφής χρήστη σε όλο το σύστημα</string>
+    <string name="search_qs_bubbles_title">Φυσαλίδες</string>
+    <string name="search_qs_bubbles_desc">Ενεργοποίηση αιωρούμενων φυσαλίδων παραθύρων</string>
+    <string name="search_qs_sensitive_title">Ευαίσθητο περιεχόμενο</string>
+    <string name="search_qs_sensitive_desc">Απόκρυψη στοιχείων ειδοποίησης στην οθόνη κλειδώματος</string>
+    <string name="search_qs_wake_title">Πατήστε για αφύπνιση</string>
+    <string name="search_qs_wake_desc">Πατήστε δύο φορές για να ενεργοποιήσετε τον έλεγχο</string>
     <string name="search_qs_aod_title">AOD</string>
-    <string name="search_qs_aod_desc">Always On Display toggle</string>
-    <string name="search_qs_caffeinate_title">Caffeinate</string>
-    <string name="search_qs_caffeinate_desc">Keep screen awake toggle</string>
-    <string name="search_qs_sound_title">Sound Mode</string>
-    <string name="search_qs_sound_desc">Cycle sound modes (Ring/Vibrate/Silent)</string>
-    <string name="search_qs_lighting_title">Notification Lighting</string>
-    <string name="search_qs_lighting_desc">Toggle notification lighting service</string>
-    <string name="search_qs_night_light_title">Dynamic Night Light</string>
-    <string name="search_qs_night_light_desc">Night light automation toggle</string>
-    <string name="search_qs_locked_sec_title">Locked Security</string>
-    <string name="search_qs_locked_sec_desc">Network security on lockscreen toggle</string>
-    <string name="search_qs_mono_title">Mono Audio</string>
-    <string name="search_qs_mono_desc">Force mono audio output toggle</string>
-    <string name="search_qs_flashlight_title">Flashlight</string>
-    <string name="search_qs_flashlight_desc">Dedicated flashlight toggle</string>
-    <string name="search_qs_freeze_title">App Freezing</string>
-    <string name="search_qs_freeze_desc">Launch app freezing grid</string>
-    <string name="search_qs_pulse_title">Flashlight Pulse</string>
-    <string name="search_qs_pulse_desc">Toggle notification flashlight pulse</string>
-    <string name="search_qs_stay_awake_desc">Toggle stay awake developer option</string>
-    <string name="search_qs_private_dns_title">Private DNS</string>
-    <string name="search_qs_private_dns_desc">Cycle Private DNS modes (Off/Auto/Hostname)</string>
-    <string name="search_qs_usb_debugging_title">USB Debugging</string>
-    <string name="search_qs_usb_debugging_desc">Toggle USB Debugging developer option</string>
-    <string name="search_remap_enable_title">Enable Button Remap</string>
-    <string name="search_remap_enable_desc">Master toggle for volume button remapping</string>
-    <string name="search_remap_haptic_title">Remap Haptic Feedback</string>
-    <string name="search_remap_haptic_desc">Vibration feedback when remapped button is pressed</string>
-    <string name="search_remap_flashlight_title">Flashlight toggle</string>
-    <string name="search_remap_flashlight_desc">Toggle flashlight with volume buttons</string>
-    <string name="search_night_light_enable_title">Enable Dynamic Night Light</string>
-    <string name="search_night_light_enable_desc">Master switch for dynamic night light</string>
-    <string name="search_app_lock_enable_title">Enable app lock</string>
-    <string name="search_app_lock_enable_desc">Master toggle for app locking</string>
-    <string name="search_app_lock_pick_title">Select locked apps</string>
-    <string name="search_app_lock_pick_desc">Choose which apps require authentication</string>
-    <string name="search_freeze_pick_title">Pick apps to freeze</string>
-    <string name="search_freeze_pick_desc">Choose which apps can be frozen</string>
-    <string name="search_freeze_all_title">Freeze all apps</string>
-    <string name="search_freeze_all_desc">Immediately freeze all picked apps</string>
-    <string name="search_freeze_locked_title">Freeze when locked</string>
-    <string name="search_freeze_locked_desc">Freeze selected apps when device locks</string>
-    <string name="search_freeze_delay_title">Freeze delay</string>
-    <string name="search_freeze_delay_desc">Delay before freezing after locking</string>
+    <string name="search_qs_aod_desc">Εναλλαγή Always On Display</string>
+    <string name="search_qs_caffeinate_title">Καφεΐνη</string>
+    <string name="search_qs_caffeinate_desc">Εναλλαγή διατήρησης της οθόνης σε λειτουργία</string>
+    <string name="search_qs_sound_title">Λειτουργία ήχου</string>
+    <string name="search_qs_sound_desc">Λειτουργίες ήχου κύκλου (Κουδουνισμός/Δόνηση/Αθόρυβο)</string>
+    <string name="search_qs_lighting_title">Φωτισμός ειδοποίησης</string>
+    <string name="search_qs_lighting_desc">Εναλλαγή υπηρεσίας φωτισμού ειδοποιήσεων</string>
+    <string name="search_qs_night_light_title">Δυναμικό Νυχτερινό Φως</string>
+    <string name="search_qs_night_light_desc">Εναλλαγή αυτοματισμού νυχτερινού φωτός</string>
+    <string name="search_qs_locked_sec_title">Κλειδωμένη ασφάλεια</string>
+    <string name="search_qs_locked_sec_desc">Ασφάλεια δικτύου στην εναλλαγή οθόνης κλειδώματος</string>
+    <string name="search_qs_mono_title">Μονοφωνικός ήχος</string>
+    <string name="search_qs_mono_desc">Αναγκαστική εναλλαγή εξόδου μονοφωνικού ήχου</string>
+    <string name="search_qs_flashlight_title">Φακός</string>
+    <string name="search_qs_flashlight_desc">Αποκλειστική εναλλαγή φακού</string>
+    <string name="search_qs_freeze_title">Πάγωμα εφαρμογής</string>
+    <string name="search_qs_freeze_desc">Εκκινήστε το πλέγμα παγώματος εφαρμογής</string>
+    <string name="search_qs_pulse_title">Παλμός φακού</string>
+    <string name="search_qs_pulse_desc">Εναλλαγή του παλμού του φακού ειδοποίησης</string>
+    <string name="search_qs_stay_awake_desc">Ενεργοποιήστε την επιλογή προγραμματιστή μείνετε ξύπνιοι</string>
+    <string name="search_qs_private_dns_title">Ιδιωτικό DNS</string>
+    <string name="search_qs_private_dns_desc">Κύκλος ιδιωτικών λειτουργιών DNS (Απενεργοποίηση/Αυτόματη/Όνομα κεντρικού υπολογιστή)</string>
+    <string name="search_qs_usb_debugging_title">Εντοπισμός σφαλμάτων USB</string>
+    <string name="search_qs_usb_debugging_desc">Εναλλαγή της επιλογής προγραμματιστή USB Debugging</string>
+    <string name="search_remap_enable_title">Ενεργοποίηση επαναχάρτωσης κουμπιών</string>
+    <string name="search_remap_enable_desc">Κύρια εναλλαγή για επαναχαρτογράφηση του κουμπιού έντασης ήχου</string>
+    <string name="search_remap_haptic_title">Remap απτική ανάδραση</string>
+    <string name="search_remap_haptic_desc">Ανατροφοδότηση κραδασμών όταν πατηθεί το κουμπί επανασχεδιασμού</string>
+    <string name="search_remap_flashlight_title">Εναλλαγή φακού</string>
+    <string name="search_remap_flashlight_desc">Εναλλαγή φακού με κουμπιά έντασης ήχου</string>
+    <string name="search_night_light_enable_title">Ενεργοποιήστε το Dynamic Night Light</string>
+    <string name="search_night_light_enable_desc">Κύριος διακόπτης για δυναμικό νυχτερινό φως</string>
+    <string name="search_app_lock_enable_title">Ενεργοποίηση κλειδώματος εφαρμογής</string>
+    <string name="search_app_lock_enable_desc">Κύρια εναλλαγή για κλείδωμα εφαρμογών</string>
+    <string name="search_app_lock_pick_title">Επιλέξτε κλειδωμένες εφαρμογές</string>
+    <string name="search_app_lock_pick_desc">Επιλέξτε ποιες εφαρμογές απαιτούν έλεγχο ταυτότητας</string>
+    <string name="search_freeze_pick_title">Επιλέξτε εφαρμογές για πάγωμα</string>
+    <string name="search_freeze_pick_desc">Επιλέξτε ποιες εφαρμογές μπορούν να παγώσουν</string>
+    <string name="search_freeze_all_title">Παγώστε όλες τις εφαρμογές</string>
+    <string name="search_freeze_all_desc">Παγώστε αμέσως όλες τις επιλεγμένες εφαρμογές</string>
+    <string name="search_freeze_locked_title">Παγώστε όταν είναι κλειδωμένο</string>
+    <string name="search_freeze_locked_desc">Παγώστε επιλεγμένες εφαρμογές όταν η συσκευή κλειδώνει</string>
+    <string name="search_freeze_delay_title">Καθυστέρηση παγώματος</string>
+    <string name="search_freeze_delay_desc">Καθυστέρηση πριν από την κατάψυξη μετά το κλείδωμα</string>
     <!-- Permissions metadata -->
-    <string name="perm_shizuku_title">Shizuku</string>
-    <string name="perm_shizuku_desc">Required for advanced commands. Install Shizuku from the Play Store.</string>
-    <string name="perm_shizuku_install_action">Install Shizuku</string>
-    <string name="perm_shizuku_grant_title">Shizuku permission</string>
-    <string name="perm_shizuku_grant_desc">Required to run power-saving commands while maps is navigating.</string>
-    <string name="req_shizuku">Requires Shizuku or Root</string>
+    <string name="perm_shizuku_title">Σιζούκου</string>
+    <string name="perm_shizuku_desc">Απαιτείται για προχωρημένες εντολές. Εγκαταστήστε το Shizuku από το Play Store.</string>
+    <string name="perm_shizuku_install_action">Εγκαταστήστε το Shizuku</string>
+    <string name="perm_shizuku_grant_title">Χορήγηση άδειας</string>
+    <string name="perm_shizuku_grant_desc">Απαιτείται για την εκτέλεση εντολών εξοικονόμησης ενέργειας κατά την πλοήγηση στους χάρτες.</string>
+    <string name="req_shizuku">Απαιτεί Shizuku ή Root</string>
     <string name="perm_root_title">Root Access</string>
-    <string name="perm_root_desc">Permissions required for system actions using Root privileges.</string>
-    <string name="perm_notif_listener_title">Notification Listener</string>
-    <string name="perm_notif_listener_desc_maps">Required to detect when Maps is navigating.</string>
-    <string name="perm_notif_listener_desc_lighting">Required to detect new notifications</string>
-    <string name="perm_notif_listener_desc_snooze">Required to detect and snooze notifications</string>
-    <string name="perm_accessibility_title">Accessibility Service</string>
-    <string name="perm_accessibility_desc_common">Required for App Lock, Screen off widget and other features to detect interactions</string>
-    <string name="perm_accessibility_desc_lighting">Required to trigger notification lighting on new notifications</string>
-    <string name="perm_default_browser_title">Default Browser</string>
-    <string name="perm_default_browser_desc">Required to handle links efficiently</string>
-    <string name="perm_accessibility_desc_remap">Required to intercept hardware button events</string>
-    <string name="perm_accessibility_desc_ambient_music_glance">Required to intercept volume key events while the screen is off to trigger the Ambient Glance overlay.</string>
-    <string name="perm_accessibility_desc_night_light">Needed to monitor foreground applications.</string>
-    <string name="perm_write_secure_title">Write Secure Settings</string>
-    <string name="perm_write_secure_desc_common">Required for Statusbar icons and Screen Locked Security</string>
-    <string name="perm_write_secure_desc_night_light">Needed to toggle Night Light. Grant via ADB or root.</string>
-    <string name="perm_write_settings_title">Modify System Settings</string>
-    <string name="perm_write_settings_desc">Required to toggle Adaptive Brightness and other system settings</string>
-    <string name="perm_overlay_title">Overlay Permission</string>
-    <string name="perm_overlay_desc">Required to display the notification lighting overlay on the screen</string>
-    <string name="perm_device_admin_title">Device Administrator</string>
-    <string name="perm_device_admin_desc">Required to hard-lock the device (disabling biometrics) on unauthorized access attempts</string>
-    <string name="perm_action_grant">Grant Permission</string>
-    <string name="perm_action_copy_adb">Copy ADB</string>
-    <string name="perm_action_check">Check</string>
-    <string name="perm_action_enable">Enable in Settings</string>
-    <string name="perm_action_how_to">How to grant</string>
-    <string name="perm_battery_optimization_title">Battery Optimization</string>
-    <string name="perm_battery_optimization_desc">Ensure the service is not killed by the system to save power.</string>
+    <string name="perm_root_desc">Απαιτούνται δικαιώματα για ενέργειες συστήματος που χρησιμοποιούν δικαιώματα Root.</string>
+    <string name="perm_notif_listener_title">Ακρόαση ειδοποιήσεων</string>
+    <string name="perm_notif_listener_desc_maps">Απαιτεί πρόσβαση του ακροατή ειδοποιήσεων για την παρακολούθηση της κατάστασης πλοήγησης στους Χάρτες Google και την ενεργοποίηση της εξοικονόμησης ενέργειας όταν δεν πλοηγείται.</string>
+    <string name="perm_notif_listener_desc_lighting">Απαιτεί πρόσβαση του ακροατή ειδοποιήσεων για τον εντοπισμό νέων ειδοποιήσεων και την ενεργοποίηση του φωτισμού άκρης.</string>
+    <string name="perm_notif_listener_desc_snooze">Απαιτεί πρόσβαση του ακροατή ειδοποιήσεων για παρακολούθηση και αναβολή ανεπιθύμητων ειδοποιήσεων συστήματος.</string>
+    <string name="perm_accessibility_title">Υπηρεσία Προσβασιμότητας</string>
+    <string name="perm_accessibility_desc_common">Απαιτείται για το κλείδωμα εφαρμογής, το γραφικό στοιχείο απενεργοποίησης οθόνης και άλλες λειτουργίες για τον εντοπισμό αλληλεπιδράσεων</string>
+    <string name="perm_accessibility_desc_lighting">Απαιτείται για την ενεργοποίηση του φωτισμού ειδοποιήσεων σε νέες ειδοποιήσεις</string>
+    <string name="perm_default_browser_title">Προεπιλεγμένο πρόγραμμα περιήγησης</string>
+    <string name="perm_default_browser_desc">Απαιτείται για τον αποτελεσματικό χειρισμό συνδέσμων</string>
+    <string name="perm_accessibility_desc_remap">Απαιτείται για την παρακολούθηση συμβάντων κουμπιών υλικού</string>
+    <string name="perm_accessibility_desc_ambient_music_glance">Απαιτείται για την παρεμπόδιση συμβάντων πλήκτρων έντασης ενώ η οθόνη είναι απενεργοποιημένη για την ενεργοποίηση της επικάλυψης Ambient Glance.</string>
+    <string name="perm_accessibility_desc_night_light">Απαιτείται για την παρακολούθηση εφαρμογών στο προσκήνιο.</string>
+    <string name="perm_write_secure_title">Γράψτε Secure Settings</string>
+    <string name="perm_write_secure_desc_common">Απαιτείται για τα εικονίδια της γραμμής κατάστασης και την ασφάλεια κλειδωμένης οθόνης</string>
+    <string name="perm_write_secure_desc_night_light">Απαιτείται για εναλλαγή του Night Light. Επιχορήγηση μέσω ADB ή root.</string>
+    <string name="perm_write_settings_title">Τροποποίηση ρυθμίσεων συστήματος</string>
+    <string name="perm_write_settings_desc">Απαιτείται για την εναλλαγή της προσαρμοστικής φωτεινότητας και άλλων ρυθμίσεων συστήματος</string>
+    <string name="perm_overlay_title">Άδεια επικάλυψης</string>
+    <string name="perm_overlay_desc">Απαιτείται για την εμφάνιση της επικάλυψης φωτισμού ειδοποιήσεων στην οθόνη</string>
+    <string name="perm_device_admin_title">Διαχειριστής συσκευής</string>
+    <string name="perm_device_admin_desc">Απαιτείται για σκληρό κλείδωμα της συσκευής (απενεργοποίηση βιομετρικών στοιχείων) σε προσπάθειες μη εξουσιοδοτημένης πρόσβασης</string>
+    <string name="perm_action_grant">Χορήγηση άδειας</string>
+    <string name="perm_action_copy_adb">Αντιγράψτε το ADB</string>
+    <string name="perm_action_check">Ελεγχος</string>
+    <string name="perm_action_enable">Ενεργοποίηση στις Ρυθμίσεις</string>
+    <string name="perm_action_how_to">Πώς να χορηγήσετε</string>
+    <string name="perm_battery_optimization_title">Βελτιστοποίηση μπαταρίας</string>
+    <string name="perm_battery_optimization_desc">Βεβαιωθείτε ότι η υπηρεσία δεν σκοτώνεται από το σύστημα για εξοικονόμηση ενέργειας.</string>
     <!-- Tabs -->
-    <string name="tab_essentials">Essentials</string>
-    <string name="tab_freeze">Freeze</string>
-    <string name="tab_freeze_title">Frozen</string>
+    <string name="tab_essentials">Βασικά</string>
+    <string name="tab_freeze">Πάγωμα</string>
+    <string name="tab_freeze_title">Παγωμένος</string>
     <string name="tab_diy">DIY</string>
-    <string name="tab_apps">Apps</string>
-    <string name="tab_freeze_subtitle">Disabled apps</string>
-    <string name="tab_diy_subtitle">Do It Yourself</string>
-    <string name="tab_apps_subtitle">Find and manage apps</string>
-    <string name="feat_app_updates_title">App Updates</string>
-    <string name="tab_app_updates_title">App Updates</string>
-    <string name="action_add_repo">Add Repository</string>
-    <string name="action_edit_repo">Edit Repository</string>
-    <string name="prompt_enter_repo_url">Enter GitHub Repository URL or owner/repo</string>
-    <string name="action_track">Track</string>
-    <string name="error_no_apk_found">No APK found in the latest release</string>
-    <string name="error_repo_not_found">Repository not found</string>
-    <string name="label_latest_release">Latest Release</string>
-    <string name="action_view_readme">View README</string>
-    <string name="label_stars">%d Stars</string>
-    <string name="label_installed_app">Installed app</string>
-    <string name="label_not_installed">Not installed</string>
-    <string name="action_pick_app">Pick app</string>
-    <string name="action_select_app">Select app</string>
-    <string name="action_untrack">Untrack</string>
-    <string name="label_pending">Pending</string>
-    <string name="label_up_to_date">Up-to-date</string>
-    <string name="feat_app_updates_desc">Track and download the latest releases for your favorite apps directly from GitHub.</string>
-    <string name="error_invalid_repo_format">Invalid format. Use owner/repo or GitHub URL</string>
-    <string name="error_generic_search">An error occurred during search</string>
-    <string name="label_auto">Auto</string>
-    <string name="label_options">Options</string>
-    <string name="option_allow_prereleases">Check for pre-releases</string>
-    <string name="option_notifications">Notifications</string>
-    <string name="error_rate_limited">GitHub rate limit exceeded. Please try again later.</string>
+    <string name="tab_apps">Εφαρμογές</string>
+    <string name="tab_freeze_subtitle">Απενεργοποιημένες εφαρμογές</string>
+    <string name="tab_diy_subtitle">Κάντο μόνος σου</string>
+    <string name="tab_apps_subtitle">Εύρεση και διαχείριση εφαρμογών</string>
+    <string name="feat_app_updates_title">Ενημερώσεις εφαρμογών</string>
+    <string name="tab_app_updates_title">Ενημερώσεις εφαρμογών</string>
+    <string name="action_add_repo">Προσθήκη αποθετηρίου</string>
+    <string name="action_edit_repo">Επεξεργασία αποθετηρίου</string>
+    <string name="prompt_enter_repo_url">Εισαγάγετε τη διεύθυνση URL του αποθετηρίου GitHub ή τον κάτοχο/αποθήκη</string>
+    <string name="action_track">Τροχιά</string>
+    <string name="error_no_apk_found">Δεν βρέθηκε APK στην τελευταία έκδοση</string>
+    <string name="error_repo_not_found">Το αποθετήριο δεν βρέθηκε</string>
+    <string name="label_latest_release">Τελευταία Έκδοση</string>
+    <string name="action_view_readme">Προβολή README</string>
+    <string name="label_stars">%d αστέρια</string>
+    <string name="label_installed_app">Εγκατεστημένη εφαρμογή</string>
+    <string name="label_not_installed">Δεν έχει εγκατασταθεί</string>
+    <string name="action_pick_app">Επιλέξτε εφαρμογή</string>
+    <string name="action_select_app">Επιλέξτε εφαρμογή</string>
+    <string name="action_untrack">Ξεδιπλώστε</string>
+    <string name="label_pending">Εκκρεμής</string>
+    <string name="label_up_to_date">Επίκαιρο</string>
+    <string name="feat_app_updates_desc">Παρακολουθήστε και κατεβάστε τις πιο πρόσφατες εκδόσεις για τις αγαπημένες σας εφαρμογές απευθείας από το GitHub.</string>
+    <string name="error_invalid_repo_format">Μη έγκυρη μορφή. Χρησιμοποιήστε τη διεύθυνση URL κατόχου/repo ή GitHub</string>
+    <string name="error_generic_search">Παρουσιάστηκε σφάλμα κατά την αναζήτηση</string>
+    <string name="label_auto">Αυτο</string>
+    <string name="label_options">Επιλογές</string>
+    <string name="option_allow_prereleases">Ελέγξτε για προ-κυκλοφορίες</string>
+    <string name="option_notifications">Ειδοποιήσεις</string>
+    <string name="error_rate_limited">Υπέρβαση του ορίου ρυθμού GitHub. Δοκιμάστε ξανά αργότερα.</string>
     <!-- Keyboard Setup -->
-    <string name="label_keyboard_setup">Keyboard Setup</string>
-    <string name="btn_enable_keyboard">Enable in settings</string>
-    <string name="btn_select_keyboard">Switch to Essentials</string>
-    <string name="label_enabled">Enabled</string>
-    <string name="label_disabled">Disabled</string>
-    <string name="tile_adaptive_brightness">Adaptive Brightness</string>
-    <string name="tile_maps_power_saving">Maps Power Saving</string>
-    <string name="action_search">Search</string>
-    <string name="action_stop">Stop</string>
-    <string name="label_search">Search</string>
+    <string name="label_keyboard_setup">Ρύθμιση πληκτρολογίου</string>
+    <string name="btn_enable_keyboard">Ενεργοποίηση στις ρυθμίσεις</string>
+    <string name="btn_select_keyboard">Μετάβαση στα Essentials</string>
+    <string name="label_enabled">Ενεργοποιήθηκε</string>
+    <string name="label_disabled">Ανάπηρος</string>
+    <string name="tile_adaptive_brightness">Προσαρμοστική φωτεινότητα</string>
+    <string name="tile_maps_power_saving">Εξοικονόμηση ενέργειας Χαρτών</string>
+    <string name="action_search">Ερευνα</string>
+    <string name="action_stop">Στάση</string>
+    <string name="label_search">Ερευνα</string>
     <!-- UI Components General -->
-    <string name="action_back">Back</string>
-    <string name="content_desc_back">Back</string>
-    <string name="label_settings">Settings</string>
-    <string name="action_report_bug">Report a Bug</string>
-    <string name="action_done">Done</string>
-    <string name="action_preview">Preview</string>
-    <string name="action_help_guide">Help Guide</string>
-    <string name="action_what_is_this">What is this?</string>
-    <string name="update_available_title">Update Available</string>
-    <string name="about_desc_ambient_music_glance">Ambient Music Glance shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
-    <string name="about_desc_notification_lighting">Notification Lighting adds a beautiful edge lighting effect when you receive notifications.\n\nYou can customize the animation style, colors, and behavior. It works even when the screen is off (OEM dependent) or on top of your current app. Pick apps, notification priority or what behavior it should be triggering on from given controls. If your OEM does not support overlays above AOD, sue the Ambient display option found below.</string>
-    <string name="about_desc_screen_off_widget">Easily turn the screen off with a tap on a transparent resizable widget that does not add icons or any clutter to your home screen.</string>
-    <string name="about_desc_statusbar_icons">Take full control over your status bar icons.\n\nHide specific icons like WiFi, Bluetooth, or cellular data to keep your status bar clean. You can also customize the clock format and battery indicator with some smart controls as well. These are the list of available AOSP controls so your device OS might not respect all the controls.</string>
-    <string name="about_desc_caffeinate">Caffeinate prevents your screen from turning off automatically.\n\nKeep your screen awake for a specific duration or indefinitely. Useful when reading long articles or referencing a recipe.</string>
-    <string name="about_desc_maps_power_saving">Get the Pixel 10 series exclusive Google Maps Power Saving mode with the minimal pitch black background to display over your lock screen on any Android device. Start a navigation session, turn the screen off and back on. </string>
-    <string name="about_desc_flashlight_pulse">Pulse the flashlight when you receive a notification.\n\nWith devices have hardware support for flashlight dimming, the pulse will be smoothly animated.</string>
-    <string name="about_desc_snooze_notifications">Snooze annoying persistent system notifications which can not be modified by default. \n\nPlease wait until the notification arrives and then go into this feature where it\'s notification channel will be listed. Select that to snooze from next time.\n\nAny snoozed notification can still be accessed from your notification history in Android.</string>
-    <string name="about_desc_quick_settings_tiles">Add custom tiles to your Quick Settings panel.\n\nLong press any of them to learn what they do.</string>
-    <string name="about_desc_button_remap">Remap your hardware buttons to perform different actions and shortcuts.\n\nCustomize what happens when you long press volume buttons with certain conditions. \n\nSome behavior such as screen off trigger or flashlight controls might be OEM dependent on their implementation and may not work on all devices as expected. Some scenarios could be worked around using Shizuku permissions but may not give the same experience due to the implementations.</string>
-    <string name="about_desc_dynamic_night_light">Automatically toggle your screen blue light filter based on the foreground app.</string>
-    <string name="about_desc_screen_locked_security">Enhance security when your device is locked.\n\nRestrict access to some sensitive QS tiles preventing unauthorized network modifications and further preventing them re-attempting to do so by increasing the animation speed to prevent touch spam.\n\nThis feature is not robust and may have flaws such as some tiles which allow toggling directly such as bluetooth or flight mode not being able to be prevented.</string>
-    <string name="about_desc_app_lock">Secure your apps with a secondary authentication layer.\n\nYour device lock screen authentication method will be used as long as it meets the class 3 biometric security level by Android standards.</string>
-    <string name="about_desc_location_reached">Get notified when you get closer to your destination to ensure you never miss the stop.\n\nGo to Google Maps, long press a pin nearby to your destination and make sure it says \"Dropped pin\" (Otherwise the distance calculation might not be accurate), And then share the location to the Essentials app and start tracking.</string>
-    <string name="about_desc_freeze">Freeze apps to stop them from running in the background.\n\nPrevent battery drain and data usage by completely freezing apps when you are not using them. They will be unfrozen instantly when you launch them. The apps will not show up in the app drawer and also will not show up for app updates in Play Store while frozen.</string>
-    <string name="about_desc_system_keyboard">A custom input method no-one asked for.\n\nIt is just an experiment. Multiple languages may not get support as it is a very complex and time consuming implementation.</string>
-    <string name="about_desc_batteries">Monitor battery levels of all your connected devices.\n\nSee the battery status of your Bluetooth headphones, watch, and other accessories in one place. Connect with AirSync application to display your mac battery level as well.</string>
-    <string name="about_desc_watermark">Add a custom caption/ watermark to your photos with EXIF data and device information.\n\nShare an image directly from other app to Essentials to easily add a watermark.</string>
-    <string name="about_desc_calendar_sync">Sync all your upcoming calendar schedule not matter the restrictions on Google accounts not letting to be added to wearOS devices due to work or school policies. \n\nMake sure to install the wearOS Essentials companion app to display the schedule in the app as well as in a tile or a complication.</string>
-    <string name="about_desc_app_updates">Keep track of updates for your installed apps.\n\nGet notified about available updates, view changelogs and install them easily with a tap.</string>
-    <string name="about_desc_call_vibrations">Add haptic feedback to your calls.\n\nVibrate when a call is connected, disconnected, or accepted, giving you tactile confirmation without looking at the screen.</string>
-    <string name="about_desc_sound_mode_tile">Quickly toggle between Sound, Vibrate, and Silent modes.\n\nA convenient tile to change your ringer mode without using the volume buttons or settings. You can re-order the modes or disable any if not needed to customize the tile toggle to cycle behavior.</string>
-    <string name="about_desc_ui_blur">Easily toggle the system level blur depth effect across the OS.</string>
-    <string name="about_desc_bubbles">Enable or disable floating notification bubbles.\n\nQuickly toggle the system-wide setting for conversation bubbles.</string>
-    <string name="about_desc_sensitive_content">Hide sensitive content on the lock screen.\n\nToggle whether notification content is shown or hidden when your device is locked.</string>
-    <string name="about_desc_tap_to_wake">Toggle tap to wake functionality.\n\nEnable or disable the ability to wake your screen with a tap.</string>
-    <string name="about_desc_aod">Toggle Always On Display.\n\nQuickly enable or disable the always-on display to view info at a glance.</string>
-    <string name="about_desc_notification_glance">Automatically control your Always On Display based on your notifications. When a message or alert arrives from a selected app, AOD will stay on until you dismiss the notification, ensuring you never miss important info without wasting battery when no alerts are present.</string>
-    <string name="about_desc_mono_audio">Combine audio channels into mono.\n\nUseful when using a single earbud or for accessibility purposes.</string>
-    <string name="about_desc_flashlight_tile">Toggle the flashlight.\n\nA Long pressing opens the controls for intensity adjustment which might need hardware implementation which some devices may lack.</string>
-    <string name="about_desc_stay_awake">Keep the screen awake while charging.\n\nPrevents the screen from sleeping as long as the device is connected to a power source which is suitable for developers during debugging.</string>
-    <string name="about_desc_nfc">Toggle NFC.\n\nQuickly enable or disable Near Field Communication for payments and pairing.</string>
-    <string name="about_desc_adaptive_brightness">Toggle adaptive brightness.\n\nEnable or disable automatic screen brightness adjustment based on ambient light.</string>
-    <string name="about_desc_private_dns">Toggle Private DNS.\n\nCycle through Off, Automatic, and Private DNS provider modes.</string>
-    <string name="about_desc_usb_debugging">Toggle USB Debugging.\n\nEnable or disable ADB debugging access directly from the quick settings.</string>
-    <string name="about_desc_color_picker">Launch the eye dropper tool to pick colors introduced in Android 17 BETA 2</string>
-    <string name="about_desc_charge_optimization">Optimize your battery life by limiting the maximum charge or using adaptive charging. This is specially designed for Pixel devices to ensure longevity and healthy charging cycles.\n\nCredits: TebbeUbben/ChargeQuickTile</string>
-    <string name="action_download">Download</string>
+    <string name="action_back">Πίσω</string>
+    <string name="content_desc_back">Πίσω</string>
+    <string name="label_settings">Ρυθμίσεις</string>
+    <string name="action_report_bug">Αναφορά σφάλματος</string>
+    <string name="action_done">Γινώμενος</string>
+    <string name="action_preview">Πρεμιέρα</string>
+    <string name="action_help_guide">Οδηγός βοήθειας</string>
+    <string name="action_what_is_this">Τι είναι αυτό;</string>
+    <string name="update_available_title">Διαθέσιμη ενημέρωση</string>
+    <string name="about_desc_ambient_music_glance">Το Ambient Music Glance εμφανίζει μια επικάλυψη Now Playing στην οθόνη κλειδώματος σας κατά την αναπαραγωγή μουσικής και την αναπαραγωγή αλλάζει. \n\nΑν η συσκευή σας δεν υποστηρίζει επικαλύψεις μέσω AOD, μπορείτε να επιλέξετε την προφύλαξη οθόνης Ambience που προστίθεται στις ρυθμίσεις Android σας ως εναλλακτική κατά τη φόρτιση.</string>
+    <string name="about_desc_notification_lighting">Το Notification Lighting προσθέτει ένα όμορφο εφέ φωτισμού άκρων όταν λαμβάνετε ειδοποιήσεις.\n\nΜπορείτε να προσαρμόσετε το στυλ, τα χρώματα και τη συμπεριφορά κινούμενων εικόνων. Λειτουργεί ακόμα και όταν η οθόνη είναι απενεργοποιημένη (εξαρτάται από OEM) ή πάνω από την τρέχουσα εφαρμογή σας. Επιλέξτε εφαρμογές, προτεραιότητα ειδοποίησης ή ποια συμπεριφορά θα πρέπει να ενεργοποιεί από τα δεδομένα ελέγχου. Εάν ο OEM σας δεν υποστηρίζει επικαλύψεις πάνω από το AOD, μηνύστε την επιλογή Εμφάνιση περιβάλλοντος που βρίσκεται παρακάτω.</string>
+    <string name="about_desc_screen_off_widget">Απενεργοποιήστε εύκολα την οθόνη με ένα πάτημα σε ένα διαφανές γραφικό στοιχείο με δυνατότητα αλλαγής μεγέθους που δεν προσθέτει εικονίδια ή ακαταστασία στην αρχική οθόνη σας.</string>
+    <string name="about_desc_statusbar_icons">Πάρτε τον πλήρη έλεγχο των εικονιδίων της γραμμής κατάστασής σας.\n\nΑποκρύψτε συγκεκριμένα εικονίδια όπως WiFi, Bluetooth ή δεδομένα κινητής τηλεφωνίας για να διατηρήσετε τη γραμμή κατάστασης καθαρή. Μπορείτε επίσης να προσαρμόσετε τη μορφή του ρολογιού και την ένδειξη μπαταρίας με μερικά έξυπνα χειριστήρια επίσης. Αυτά είναι η λίστα με τα διαθέσιμα στοιχεία ελέγχου AOSP, ώστε το λειτουργικό σύστημα της συσκευής σας να μην σέβεται όλα τα στοιχεία ελέγχου.</string>
+    <string name="about_desc_caffeinate">Η καφεΐνη εμποδίζει την αυτόματη απενεργοποίηση της οθόνης σας.\n\nΔιατηρήστε την οθόνη σας ξύπνια για συγκεκριμένη διάρκεια ή επ\' αόριστον. Χρήσιμο όταν διαβάζετε μεγάλα άρθρα ή αναφέρεστε σε μια συνταγή.</string>
+    <string name="about_desc_maps_power_saving">Αποκτήστε την αποκλειστική λειτουργία εξοικονόμησης ενέργειας των Χαρτών Google της σειράς Pixel 10 με το ελάχιστο μαύρο φόντο για εμφάνιση στην οθόνη κλειδώματος σε οποιαδήποτε συσκευή Android. Ξεκινήστε μια περίοδο λειτουργίας πλοήγησης, απενεργοποιήστε και ενεργοποιήστε ξανά την οθόνη.</string>
+    <string name="about_desc_flashlight_pulse">Παλεύετε τον φακό όταν λαμβάνετε μια ειδοποίηση.\n\nΜε συσκευές που διαθέτουν υποστήριξη υλικού για μείωση της έντασης του φακού, ο παλμός θα κινείται ομαλά.</string>
+    <string name="about_desc_snooze_notifications">Αναβολή ενοχλητικών επίμονων ειδοποιήσεων συστήματος που δεν μπορούν να τροποποιηθούν από προεπιλογή. \n\nΠαρακαλούμε περιμένετε μέχρι να φτάσει η ειδοποίηση και, στη συνέχεια, μεταβείτε σε αυτήν τη λειτουργία όπου θα εμφανιστεί το κανάλι ειδοποιήσεων\'. Επιλέξτε το για αναβολή από την επόμενη φορά.\n\nΟποιαδήποτε ειδοποίηση σε αναβολή μπορεί να εξακολουθήσει να είναι προσβάσιμη από το ιστορικό ειδοποιήσεών σας στο Android.</string>
+    <string name="about_desc_quick_settings_tiles">Προσθέστε προσαρμοσμένα πλακίδια στον πίνακα Γρήγορων ρυθμίσεων.\n\nΠατήστε παρατεταμένα οποιοδήποτε από αυτά για να μάθετε τι κάνουν.</string>
+    <string name="about_desc_button_remap">Αντιστοιχίστε ξανά τα κουμπιά του υλικού σας για να εκτελέσετε διαφορετικές ενέργειες και συντομεύσεις.\n\nΠροσαρμόστε τι συμβαίνει όταν πατάτε παρατεταμένα τα κουμπιά έντασης ήχου υπό ορισμένες συνθήκες. \n\nΟρισμένες συμπεριφορές, όπως η σκανδάλη απενεργοποίησης οθόνης ή τα χειριστήρια του φακού ενδέχεται να εξαρτώνται από το OEM από την εφαρμογή τους και ενδέχεται να μην λειτουργούν σε όλες τις συσκευές όπως αναμένεται. Ορισμένα σενάρια θα μπορούσαν να επιλυθούν χρησιμοποιώντας δικαιώματα Shizuku, αλλά ενδέχεται να μην προσφέρουν την ίδια εμπειρία λόγω των υλοποιήσεων.</string>
+    <string name="about_desc_dynamic_night_light">Εναλλάξτε αυτόματα το φίλτρο μπλε φωτός της οθόνης σας με βάση την εφαρμογή προσκηνίου.</string>
+    <string name="about_desc_screen_locked_security">Βελτιώστε την ασφάλεια όταν η συσκευή σας είναι κλειδωμένη.\n\nΠεριορίστε την πρόσβαση σε ορισμένα ευαίσθητα πλακίδια QS αποτρέποντας μη εξουσιοδοτημένες τροποποιήσεις δικτύου και αποτρέποντας περαιτέρω την εκ νέου απόπειρά τους να το κάνουν αυξάνοντας την ταχύτητα κίνησης για να αποτρέψετε ανεπιθύμητα μηνύματα αφής.\n\nΑυτή η λειτουργία δεν είναι ισχυρή και μπορεί να έχει ελαττώματα, όπως ορισμένα πλακίδια που επιτρέπουν την άμεση εναλλαγή, όπως το bluetooth ή η λειτουργία πτήσης που δεν μπορεί να αποτραπεί.</string>
+    <string name="about_desc_app_lock">Ασφαλίστε τις εφαρμογές σας με ένα δευτερεύον επίπεδο ελέγχου ταυτότητας.\n\nΗ μέθοδος ελέγχου ταυτότητας της οθόνης κλειδώματος της συσκευής σας θα χρησιμοποιείται εφόσον πληροί το επίπεδο βιομετρικής ασφάλειας κλάσης 3 σύμφωνα με τα πρότυπα Android.</string>
+    <string name="about_desc_location_reached">Λάβετε ειδοποιήσεις όταν πλησιάζετε πιο κοντά στον προορισμό σας για να βεβαιωθείτε ότι δεν θα χάσετε ποτέ τη στάση.\n\nΜεταβείτε στους Χάρτες Google, πατήστε παρατεταμένα μια καρφίτσα κοντά στον προορισμό σας και βεβαιωθείτε ότι λέει \"Dropped pin\" (Διαφορετικά, ο υπολογισμός της απόστασης μπορεί να μην είναι ακριβής) και, στη συνέχεια, μοιραστείτε την τοποθεσία στην εφαρμογή Essentials και ξεκινήστε.</string>
+    <string name="about_desc_freeze">Παγώστε τις εφαρμογές για να μην εκτελούνται στο παρασκήνιο.\n\nΑποτρέψτε την εξάντληση της μπαταρίας και τη χρήση δεδομένων παγώνοντας εντελώς τις εφαρμογές όταν δεν τις χρησιμοποιείτε. Θα ξεπαγώσουν αμέσως όταν τα εκκινήσετε. Οι εφαρμογές δεν θα εμφανίζονται στο συρτάρι εφαρμογών και επίσης δεν θα εμφανίζονται για ενημερώσεις εφαρμογών στο Play Store ενώ είναι παγωμένες.</string>
+    <string name="about_desc_system_keyboard">Μια προσαρμοσμένη μέθοδος εισαγωγής που κανείς δεν ζήτησε.\n\nΕίναι απλώς ένα πείραμα. Πολλές γλώσσες ενδέχεται να μην λαμβάνουν υποστήριξη, καθώς είναι μια πολύ περίπλοκη και χρονοβόρα υλοποίηση.</string>
+    <string name="about_desc_batteries">Παρακολουθήστε τα επίπεδα της μπαταρίας όλων των συνδεδεμένων συσκευών σας.\n\nΔείτε την κατάσταση της μπαταρίας των ακουστικών Bluetooth, του ρολογιού και άλλων αξεσουάρ σε ένα μέρος. Συνδεθείτε με την εφαρμογή AirSync για να εμφανίσετε και το επίπεδο της μπαταρίας Mac σας.</string>
+    <string name="about_desc_watermark">Προσθέστε μια προσαρμοσμένη λεζάντα/υδατογράφημα στις φωτογραφίες σας με δεδομένα EXIF ​​και πληροφορίες συσκευής.\n\nΜοιραστείτε μια εικόνα απευθείας από άλλη εφαρμογή στο Essentials για να προσθέσετε εύκολα ένα υδατογράφημα.</string>
+    <string name="about_desc_calendar_sync">Συγχρονίστε όλο το επερχόμενο πρόγραμμα ημερολογίου σας, ανεξάρτητα από τους περιορισμούς στους λογαριασμούς Google που δεν επιτρέπουν την προσθήκη σε συσκευές wearOS λόγω εργασιακών ή σχολικών πολιτικών. \n\nΒεβαιωθείτε ότι έχετε εγκαταστήσει τη συνοδευτική εφαρμογή wearOS Essentials για να εμφανίζεται το χρονοδιάγραμμα στην εφαρμογή καθώς και σε πλακίδιο ή επιπλοκή.</string>
+    <string name="about_desc_app_updates">Παρακολουθήστε τις ενημερώσεις για τις εγκατεστημένες εφαρμογές σας.\n\nΛάβετε ειδοποιήσεις για τις διαθέσιμες ενημερώσεις, δείτε τα αρχεία καταγραφής αλλαγών και εγκαταστήστε τα εύκολα με ένα πάτημα.</string>
+    <string name="about_desc_call_vibrations">Προσθέστε απτική ανάδραση στις κλήσεις σας.\n\nΔονηθείτε όταν μια κλήση συνδέεται, αποσυνδέεται ή γίνεται αποδεκτή, δίνοντάς σας απτική επιβεβαίωση χωρίς να κοιτάτε την οθόνη.</string>
+    <string name="about_desc_sound_mode_tile">Γρήγορη εναλλαγή μεταξύ των λειτουργιών Ήχος, Δόνηση και Αθόρυβη.\n\nΈνα βολικό πλακίδιο για να αλλάξετε τη λειτουργία κουδουνίσματος χωρίς να χρησιμοποιείτε τα κουμπιά ή τις ρυθμίσεις έντασης ήχου. Μπορείτε να αναδιατάξετε τις λειτουργίες ή να απενεργοποιήσετε οποιεσδήποτε εάν δεν χρειάζονται για να προσαρμόσετε τη συμπεριφορά εναλλαγής πλακιδίων σε κύκλο.</string>
+    <string name="about_desc_ui_blur">Εναλλάξτε εύκολα το εφέ βάθους θολώματος σε επίπεδο συστήματος σε όλο το λειτουργικό σύστημα.</string>
+    <string name="about_desc_bubbles">Ενεργοποιήστε ή απενεργοποιήστε τα κυμαινόμενα συννεφάκια ειδοποιήσεων.\n\nΓρήγορη εναλλαγή της ρύθμισης σε όλο το σύστημα για τα συννεφάκια συνομιλίας.</string>
+    <string name="about_desc_sensitive_content">Απόκρυψη ευαίσθητου περιεχομένου στην οθόνη κλειδώματος.\n\nΕναλλάξτε εάν το περιεχόμενο ειδοποιήσεων εμφανίζεται ή κρύβεται όταν η συσκευή σας είναι κλειδωμένη.</string>
+    <string name="about_desc_tap_to_wake">Ενεργοποιήστε τη λειτουργία \"Πατήστε για αφύπνιση\".\n\nΕνεργοποιήστε ή απενεργοποιήστε τη δυνατότητα αφύπνισης της οθόνης σας με ένα πάτημα.</string>
+    <string name="about_desc_aod">Εναλλαγή Always On Display.\n\nΕνεργοποιήστε ή απενεργοποιήστε γρήγορα την πάντα ενεργή οθόνη για να δείτε πληροφορίες με μια ματιά.</string>
+    <string name="about_desc_notification_glance">Ελέγξτε αυτόματα την οθόνη Always On με βάση τις ειδοποιήσεις σας. Όταν φθάνει ένα μήνυμα ή μια ειδοποίηση από μια επιλεγμένη εφαρμογή, το AOD θα παραμείνει ενεργοποιημένο έως ότου απορρίψετε την ειδοποίηση, διασφαλίζοντας ότι δεν θα χάσετε ποτέ σημαντικές πληροφορίες χωρίς να χάσετε μπαταρία όταν δεν υπάρχουν ειδοποιήσεις.</string>
+    <string name="about_desc_mono_audio">Συνδυάστε κανάλια ήχου σε μονοφωνικά.\n\nΧρήσιμο όταν χρησιμοποιείτε ένα μόνο ακουστικό ή για λόγους προσβασιμότητας.</string>
+    <string name="about_desc_flashlight_tile">Εναλλαγή του φακού.\n\nΈνα παρατεταμένο πάτημα ανοίγει τα χειριστήρια για τη ρύθμιση της έντασης που μπορεί να χρειαστεί εφαρμογή υλικού που ενδέχεται να μην έχουν ορισμένες συσκευές.</string>
+    <string name="about_desc_stay_awake">Διατηρήστε την οθόνη ξύπνια κατά τη φόρτιση.\n\nΑποτρέπει την αδράνεια της οθόνης, εφόσον η συσκευή είναι συνδεδεμένη σε μια πηγή τροφοδοσίας που είναι κατάλληλη για προγραμματιστές κατά τον εντοπισμό σφαλμάτων.</string>
+    <string name="about_desc_nfc">Εναλλαγή NFC.\n\nΓρήγορη ενεργοποίηση ή απενεργοποίηση Near Field Communication για πληρωμές και σύζευξη.</string>
+    <string name="about_desc_adaptive_brightness">Εναλλαγή προσαρμοστικής φωτεινότητας.\n\nΕνεργοποιήστε ή απενεργοποιήστε την αυτόματη ρύθμιση φωτεινότητας οθόνης με βάση το φως του περιβάλλοντος.</string>
+    <string name="about_desc_private_dns">Εναλλαγή Private DNS.\n\nΚύκλος μέσω των λειτουργιών Off, Automatic και Private provider DNS.</string>
+    <string name="about_desc_usb_debugging">Εναλλαγή USB Debugging.\n\nΕνεργοποιήστε ή απενεργοποιήστε την πρόσβαση εντοπισμού σφαλμάτων ADB απευθείας από τις γρήγορες ρυθμίσεις.</string>
+    <string name="about_desc_color_picker">Εκκινήστε το εργαλείο σταγονόμετρου για να επιλέξετε χρώματα που εισάγονται στο Android 17 BETA 2</string>
+    <string name="about_desc_charge_optimization">Βελτιστοποιήστε τη διάρκεια ζωής της μπαταρίας σας περιορίζοντας τη μέγιστη φόρτιση ή χρησιμοποιώντας προσαρμοστική φόρτιση. Αυτό είναι ειδικά σχεδιασμένο για συσκευές Pixel για να εξασφαλίζει μακροζωία και υγιείς κύκλους φόρτισης.\n\nΠιστώσεις: TebbeUbben/ChargeQuickTile</string>
+    <string name="action_download">Λήψη</string>
     <!-- DIY Section -->
-    <string name="diy_trigger_screen_off">Screen Off</string>
-    <string name="diy_trigger_screen_on">Screen On</string>
-    <string name="diy_trigger_device_unlock">Device Unlock</string>
-    <string name="diy_trigger_charger_connected">Charger Connected</string>
-    <string name="diy_trigger_charger_disconnected">Charger Disconnected</string>
-    <string name="diy_state_charging">Charging</string>
-    <string name="diy_state_screen_on">Screen On</string>
-    <string name="diy_action_haptic">Vibrate</string>
-    <string name="diy_action_notification">Show Notification</string>
-    <string name="diy_action_remove_notification">Remove Notification</string>
-    <string name="diy_action_flashlight_on">Turn On Flashlight</string>
-    <string name="diy_action_flashlight_off">Turn Off Flashlight</string>
-    <string name="diy_action_flashlight_toggle">Toggle Flashlight</string>
-    <string name="diy_action_dim_wallpaper">Dim Wallpaper</string>
-    <string name="diy_dim_wallpaper_desc">This action requires Shizuku or Root to adjust system wallpaper dimming.</string>
-    <string name="diy_select_trigger">Select Trigger</string>
+    <string name="diy_trigger_screen_off">Απενεργοποίηση οθόνης</string>
+    <string name="diy_trigger_screen_on">Ενεργοποιημένη οθόνη</string>
+    <string name="diy_trigger_device_unlock">Ξεκλείδωμα συσκευής</string>
+    <string name="diy_trigger_charger_connected">Συνδέθηκε φορτιστής</string>
+    <string name="diy_trigger_charger_disconnected">Ο φορτιστής αποσυνδέθηκε</string>
+    <string name="diy_state_charging">Φόρτιση</string>
+    <string name="diy_state_screen_on">Ενεργοποιημένη οθόνη</string>
+    <string name="diy_action_haptic">Δονούμαι</string>
+    <string name="diy_action_notification">Εμφάνιση ειδοποίησης</string>
+    <string name="diy_action_remove_notification">Κατάργηση ειδοποίησης</string>
+    <string name="diy_action_flashlight_on">Ενεργοποιήστε τον φακό</string>
+    <string name="diy_action_flashlight_off">Απενεργοποιήστε τον φακό</string>
+    <string name="diy_action_flashlight_toggle">Εναλλαγή φακού</string>
+    <string name="diy_action_dim_wallpaper">Θαμπή ταπετσαρία</string>
+    <string name="diy_dim_wallpaper_desc">Αυτή η ενέργεια απαιτεί το Shizuku ή το Root για να προσαρμόσουν τη μείωση της φωτεινότητας της ταπετσαρίας του συστήματος.</string>
+    <string name="diy_select_trigger">Επιλέξτε Trigger</string>
     <string name="diy_create_app_title">App</string>
-    <string name="diy_create_app_desc">Automate based on open app</string>
-    <string name="diy_select_state">Select State</string>
-    <string name="diy_select_action">Select Action</string>
-    <string name="diy_in_action_label">In Action</string>
+    <string name="diy_create_app_desc">Αυτοματοποίηση με βάση την ανοιχτή εφαρμογή</string>
+    <string name="diy_select_state">Επιλέξτε κατάσταση</string>
+    <string name="diy_select_action">Επιλέξτε Ενέργεια</string>
+    <string name="diy_in_action_label">Εν Δράση</string>
     <string name="diy_out_action_label">Out Action</string>
-    <string name="action_cancel">Cancel</string>
-    <string name="action_save">Save</string>
-    <string name="action_edit">Edit</string>
-    <string name="action_delete">Delete</string>
-    <string name="action_enable">Enable</string>
-    <string name="action_disable">Disable</string>
-    <string name="automation_service_channel_name">Automation Service</string>
-    <string name="automation_service_running_title">Automations Active</string>
-    <string name="automation_service_running_desc">Monitoring system events for your automations</string>
-    <string name="diy_action_device_effects">Device Effects</string>
-    <string name="diy_device_effects_desc">Control system-level effects like grayscale, AOD suppression, wallpaper dimming, and night mode.</string>
-    <string name="diy_effect_grayscale">Grayscale</string>
-    <string name="diy_effect_suppress_ambient">Suppress Ambient Display</string>
-    <string name="diy_effect_dim_wallpaper">Dim Wallpaper</string>
-    <string name="diy_effect_night_mode">Night Mode</string>
-    <string name="diy_device_effects_android_15_warning">This feature requires Android 15 or higher.</string>
-    <string name="diy_device_effects_enabled">Enabled</string>
-    <string name="diy_device_effects_disabled">Disabled</string>
-    <string name="diy_action_sound_mode">Sound Mode</string>
-    <string name="diy_sound_mode_desc">This action allows switching between Sound, Vibrate, and Silent modes based on triggers. It requires Do Not Disturb access.</string>
+    <string name="action_cancel">Ματαίωση</string>
+    <string name="action_save">Εκτός</string>
+    <string name="action_edit">Εκδίδω</string>
+    <string name="action_delete">Διαγράφω</string>
+    <string name="action_enable">Καθιστώ ικανό</string>
+    <string name="action_disable">Καθιστώ ανίκανο</string>
+    <string name="automation_service_channel_name">Υπηρεσία Αυτοματισμού</string>
+    <string name="automation_service_running_title">Αυτοματισμοί Ενεργοί</string>
+    <string name="automation_service_running_desc">Παρακολούθηση συμβάντων συστήματος για τους αυτοματισμούς σας</string>
+    <string name="diy_action_device_effects">Εφέ συσκευής</string>
+    <string name="diy_device_effects_desc">Ελέγξτε τα εφέ σε επίπεδο συστήματος, όπως κλίμακα του γκρι, καταστολή AOD, μείωση φωτισμού ταπετσαρίας και νυχτερινή λειτουργία.</string>
+    <string name="diy_effect_grayscale">Κλίμακα του γκρι</string>
+    <string name="diy_effect_suppress_ambient">Καταργήστε την οθόνη περιβάλλοντος</string>
+    <string name="diy_effect_dim_wallpaper">Θαμπή ταπετσαρία</string>
+    <string name="diy_effect_night_mode">Νυχτερινή λειτουργία</string>
+    <string name="diy_device_effects_android_15_warning">Αυτή η λειτουργία απαιτεί Android 15 ή νεότερη έκδοση.</string>
+    <string name="diy_device_effects_enabled">Ενεργοποιήθηκε</string>
+    <string name="diy_device_effects_disabled">Ανάπηρος</string>
+    <string name="diy_action_sound_mode">Λειτουργία ήχου</string>
+    <string name="diy_sound_mode_desc">Αυτή η ενέργεια επιτρέπει την εναλλαγή μεταξύ των λειτουργιών ήχου, δόνησης και αθόρυβης λειτουργίας με βάση τους κανόνες ενεργοποίησης. Απαιτεί πρόσβαση στο Do Not Disturb.</string>
     <!-- About Section -->
     <string name="app_developer_name">Sameera Wijerathna</string>
-    <string name="app_description">The all-in-one toolbox for your Pixel and Androids</string>
+    <string name="app_description">Η εργαλειοθήκη all-in-one για τα Pixel και τα Android σας</string>
     <!-- Edge Lighting -->
-    <string name="color_mode_system">System</string>
-    <string name="color_mode_custom">Custom</string>
-    <string name="color_mode_app_specific">App specific</string>
+    <string name="color_mode_system">Σύστημα</string>
+    <string name="color_mode_custom">Εθιμο</string>
+    <string name="color_mode_app_specific">Ειδική εφαρμογή</string>
     <!-- Biometric & Security -->
-    <string name="error_auth_failed">Authentication failed</string>
-    <string name="shortcut_creation_hint_toast">Long press an app in the grid to add a shortcut</string>
-    <string name="error_app_uninstalled">App not found or uninstalled</string>
+    <string name="error_auth_failed">Ο έλεγχος ταυτότητας απέτυχε</string>
+    <string name="shortcut_creation_hint_toast">Πατήστε παρατεταμένα μια εφαρμογή στο πλέγμα για να προσθέσετε μια συντόμευση</string>
+    <string name="error_app_uninstalled">Η εφαρμογή δεν βρέθηκε ή απεγκαταστάθηκε</string>
     <!-- Notifications -->
-    <string name="update_channel_name">App Updates</string>
-    <string name="update_channel_desc">Notifications for new app updates</string>
-    <string name="notification_update_available">Update available</string>
-    <string name="battery_notification_no_devices">No devices connected</string>
-    <string name="label_unknown">Unknown</string>
+    <string name="update_channel_name">Ενημερώσεις εφαρμογών</string>
+    <string name="update_channel_desc">Ειδοποιήσεις για νέες ενημερώσεις εφαρμογών</string>
+    <string name="notification_update_available">Διαθέσιμη ενημέρωση</string>
+    <string name="battery_notification_no_devices">Δεν υπάρχουν συνδεδεμένες συσκευές</string>
+    <string name="label_unknown">Αγνωστος</string>
     <string name="network_type_5g">5G</string>
     <string name="network_type_4g">4G</string>
     <string name="network_type_3g">3G</string>
     <string name="label_shizuku_ritaka">Shizuku (Rikka)</string>
     <string name="label_shizuku_tuozi">Shizuku (TuoZi)</string>
-    <string name="label_search_content_description">Search</string>
-    <string name="perm_device_admin_explanation">Required to hard-lock the device when unauthorized network changes are attempted on lock screen.</string>
-    <string name="biometric_subtitle_access_settings">Authenticate to access settings</string>
-    <string name="biometric_title_settings_format">%1$s Settings</string>
-    <string name="keyword_feature">feature</string>
-    <string name="keyword_settings">settings</string>
-    <string name="keyword_hide">hide</string>
-    <string name="keyword_show">show</string>
-    <string name="keyword_visibility">visibility</string>
-    <string name="error_loading_apps">Error loading apps: %1$s</string>
+    <string name="label_search_content_description">Ερευνα</string>
+    <string name="perm_device_admin_explanation">Απαιτείται για σκληρό κλείδωμα της συσκευής όταν επιχειρούνται μη εξουσιοδοτημένες αλλαγές δικτύου στην οθόνη κλειδώματος.</string>
+    <string name="biometric_subtitle_access_settings">Πραγματοποιήστε έλεγχο ταυτότητας για πρόσβαση στις ρυθμίσεις</string>
+    <string name="biometric_title_settings_format">%1$s Ρυθμίσεις</string>
+    <string name="keyword_feature">χαρακτηριστικό</string>
+    <string name="keyword_settings">ρυθμίσεις</string>
+    <string name="keyword_hide">κρύβω</string>
+    <string name="keyword_show">επίδειξη</string>
+    <string name="keyword_visibility">ορατότητα</string>
+    <string name="error_loading_apps">Σφάλμα κατά τη φόρτωση εφαρμογών: %1$s</string>
     <string-array name="keywords_haptic">
-        <item>vibration</item>
-        <item>touch</item>
-        <item>feel</item>
+        <item>δόνηση</item>
+        <item>επαφή</item>
+        <item>αφή</item>
     </string-array>
     <string-array name="keywords_network_visibility">
-        <item>network</item>
-        <item>visibility</item>
-        <item>auto</item>
-        <item>hide</item>
+        <item>δίκτυο</item>
+        <item>ορατότητα</item>
+        <item>αυτο</item>
+        <item>κρύβω</item>
     </string-array>
     <string-array name="keywords_restore_default">
-        <item>restore</item>
-        <item>default</item>
-        <item>icon</item>
+        <item>επαναφέρω</item>
+        <item>αθέτηση</item>
+        <item>εικόνισμα</item>
     </string-array>
     <string-array name="keywords_keyboard">
-        <item>keyboard</item>
-        <item>height</item>
-        <item>padding</item>
-        <item>haptic</item>
-        <item>input</item>
+        <item>πληκτρολόγιο</item>
+        <item>ύψος</item>
+        <item>υλικό παραγεμίσματος</item>
+        <item>απτική</item>
+        <item>εισαγωγή</item>
     </string-array>
     <string-array name="keywords_flashlight">
-        <item>light</item>
-        <item>torch</item>
+        <item>φως</item>
+        <item>δάδα</item>
     </string-array>
     <string-array name="keywords_flashlight_pulse">
-        <item>light</item>
-        <item>torch</item>
-        <item>pulse</item>
-        <item>notification</item>
+        <item>φως</item>
+        <item>δάδα</item>
+        <item>σφυγμός</item>
+        <item>κοινοποίηση</item>
     </string-array>
     <string-array name="keywords_qs_stay_awake">
-        <item>awake</item>
-        <item>developer</item>
-        <item>power</item>
-        <item>charge</item>
+        <item>άγρυπνος</item>
+        <item>προγραμματιστής</item>
+        <item>εξουσία</item>
+        <item>χρέωση</item>
     </string-array>
     <string-array name="keywords_notification_lighting">
-        <item>glow</item>
-        <item>notification</item>
-        <item>led</item>
+        <item>λάμψη</item>
+        <item>κοινοποίηση</item>
+        <item>οδήγησε</item>
     </string-array>
     <string-array name="keywords_round_shape">
-        <item>round</item>
-        <item>shape</item>
-        <item>edge</item>
+        <item>γύρω</item>
+        <item>σχήμα</item>
+        <item>άκρη</item>
     </string-array>
     <string-array name="keywords_privacy">
-        <item>secure</item>
-        <item>privacy</item>
-        <item>biometric</item>
-        <item>face</item>
-        <item>fingerprint</item>
+        <item>ασφαλής</item>
+        <item>μυστικότητα</item>
+        <item>βιομετρική</item>
+        <item>πρόσωπο</item>
+        <item>δακτυλικό αποτύπωμα</item>
     </string-array>
     <string-array name="keywords_sound_accessibility">
-        <item>sound</item>
-        <item>accessibility</item>
-        <item>hear</item>
+        <item>ήχος</item>
+        <item>προσιτότητα</item>
+        <item>ακούω</item>
     </string-array>
     <string-array name="keywords_timeout">
-        <item>stay</item>
-        <item>on</item>
+        <item>διαμονή</item>
+        <item>επί</item>
         <item>timeout</item>
     </string-array>
     <string-array name="keywords_wake_display">
-        <item>touch</item>
-        <item>wake</item>
-        <item>display</item>
+        <item>επαφή</item>
+        <item>ίχνη</item>
+        <item>επίδειξη</item>
     </string-array>
     <string-array name="keywords_timer">
-        <item>timer</item>
-        <item>wait</item>
+        <item>μετρών την ώραν</item>
+        <item>Περιμένετε</item>
         <item>timeout</item>
     </string-array>
-    <string name="label_keyboard_always_dark">Always dark theme</string>
-    <string name="label_keyboard_pitch_black">Pitch black theme</string>
-    <string name="label_keyboard_clipboard_enabled">Clipboard History</string>
+    <string name="label_keyboard_always_dark">Πάντα σκοτεινό θέμα</string>
+    <string name="label_keyboard_pitch_black">Μαύρο θέμα</string>
+    <string name="label_keyboard_clipboard_enabled">Ιστορικό πρόχειρου</string>
     <string-array name="keywords_selection">
-        <item>list</item>
-        <item>picker</item>
-        <item>selection</item>
+        <item>λίστα</item>
+        <item>συλλέκτης</item>
+        <item>επιλογή</item>
     </string-array>
     <string-array name="keywords_visual_style">
-        <item>animation</item>
-        <item>visual</item>
-        <item>look</item>
+        <item>εμψύχωση</item>
+        <item>οπτικός</item>
+        <item>ματιά</item>
     </string-array>
     <string-array name="keywords_quiet_filter">
-        <item>quiet</item>
-        <item>ignore</item>
-        <item>filter</item>
+        <item>ησυχία</item>
+        <item>αγνοώ</item>
+        <item>φίλτρο</item>
     </string-array>
     <string-array name="keywords_automation_lock">
-        <item>automation</item>
-        <item>auto</item>
-        <item>lock</item>
+        <item>αυτοματοποίηση</item>
+        <item>αυτο</item>
+        <item>κλειδαριά</item>
     </string-array>
     <string-array name="keywords_adb_debug">
         <item>adb</item>
         <item>usb</item>
-        <item>debug</item>
+        <item>εντοπισμός σφαλμάτων</item>
     </string-array>
     <string-array name="keywords_blur_glass">
-        <item>blur</item>
-        <item>glass</item>
-        <item>vignette</item>
+        <item>θολούρα</item>
+        <item>ποτήρι</item>
+        <item>βινιέτα</item>
     </string-array>
     <string-array name="keywords_float_window">
-        <item>float</item>
-        <item>window</item>
-        <item>overlay</item>
+        <item>φλοτέρ</item>
+        <item>παράθυρο</item>
+        <item>επικάλυμμα</item>
     </string-array>
     <string-array name="keywords_always_display">
-        <item>always</item>
-        <item>display</item>
-        <item>clock</item>
+        <item>πάντοτε</item>
+        <item>επίδειξη</item>
+        <item>ρολόι</item>
     </string-array>
     <string-array name="keywords_audio_mute">
-        <item>audio</item>
-        <item>mute</item>
-        <item>volume</item>
+        <item>ήχου</item>
+        <item>βουβός</item>
+        <item>τόμος</item>
     </string-array>
     <string-array name="keywords_blue_filter">
-        <item>blue</item>
-        <item>filter</item>
-        <item>auto</item>
+        <item>μπλε</item>
+        <item>φίλτρο</item>
+        <item>αυτο</item>
     </string-array>
     <string-array name="keywords_app_freezing">
-        <item>freeze</item>
+        <item>πάγωμα</item>
         <item>shizuku</item>
     </string-array>
     <string-array name="keywords_manual_now">
-        <item>manual</item>
-        <item>now</item>
+        <item>εγχειρίδιο</item>
+        <item>τώρα</item>
         <item>shizuku</item>
     </string-array>
     <string-array name="keywords_proximity_sensor">
-        <item>proximity</item>
-        <item>sensor</item>
-        <item>face</item>
-        <item>down</item>
+        <item>εγγύτητα</item>
+        <item>αισθητήρας</item>
+        <item>πρόσωπο</item>
+        <item>κάτω</item>
     </string-array>
     <string-array name="keywords_switch_master">
-        <item>switch</item>
-        <item>master</item>
+        <item>διακόπτης</item>
+        <item>κύριος</item>
     </string-array>
     <string-array name="keywords_vibration">
-        <item>vibration</item>
-        <item>feel</item>
+        <item>δόνηση</item>
+        <item>αφή</item>
     </string-array>
     <string-array name="keywords_battery">
-        <item>battery</item>
-        <item>charge</item>
-        <item>optimization</item>
-        <item>pixel</item>
+        <item>μπαταρία</item>
+        <item>χρέωση</item>
+        <item>βελτιστοποίηση</item>
+        <item>εικονοκύτταρο</item>
     </string-array>
     <!-- App Selection Extra -->
-    <string name="action_invert_selection">Invert selection</string>
-    <string name="toggle_show_system_apps">Show system apps</string>
+    <string name="action_invert_selection">Αντιστροφή επιλογής</string>
+    <string name="toggle_show_system_apps">Εμφάνιση εφαρμογών συστήματος</string>
     <!-- Updates -->
-    <string name="status_up_to_date">You are up to date</string>
-    <string name="warning_pre_release">This is a pre-release version and might be unstable.</string>
-    <string name="release_notes_format">Release Notes v%1$s</string>
-    <string name="action_view_on_github">View on GitHub</string>
-    <string name="action_download_apk">Download APK</string>
+    <string name="status_up_to_date">Είστε ενημερωμένοι</string>
+    <string name="warning_pre_release">Αυτή είναι μια έκδοση πριν από την κυκλοφορία και ενδέχεται να είναι ασταθής.</string>
+    <string name="release_notes_format">Σημειώσεις Έκδοσης %1$s</string>
+    <string name="action_view_on_github">Προβολή στο GitHub</string>
+    <string name="action_download_apk">Λήψη APK</string>
     <!-- Haptic Types -->
-    <string name="haptic_none">None</string>
-    <string name="haptic_subtle">Subtle</string>
-    <string name="haptic_double">Double</string>
-    <string name="haptic_click">Click</string>
-    <string name="haptic_tick">Tick</string>
+    <string name="haptic_none">Κανένας</string>
+    <string name="haptic_subtle">Λεπτός</string>
+    <string name="haptic_double">Διπλό</string>
+    <string name="haptic_click">Κλικ</string>
+    <string name="haptic_tick">Τσιμπούρι</string>
     <!-- Flashlight Intensity Overlay -->
-    <string name="action_turn_off">Turn Off</string>
-    <string name="feature_flashlight_brightness_title">Flashlight Brightness</string>
+    <string name="action_turn_off">Κλείνω</string>
+    <string name="feature_flashlight_brightness_title">Φωτεινότητα φακού</string>
     <!-- QS / Activities -->
-    <string name="error_unlock_network_settings">Unlock phone to change network settings</string>
+    <string name="error_unlock_network_settings">Ξεκλειδώστε το τηλέφωνο για να αλλάξετε τις ρυθμίσεις δικτύου</string>
     <!-- About Section -->
-    <string name="developed_by_format">Developed by %1$s\nwith ❤\uFE0F from \uD83C\uDDF1\uD83C\uDDF0</string>
-    <string name="action_website">Website</string>
-    <string name="action_contact">Contact</string>
-    <string name="action_telegram">Telegram</string>
-    <string name="action_support">Support</string>
-    <string name="label_other_apps">Other Apps</string>
+    <string name="developed_by_format">Αναπτύχθηκε από %1$s\nμε ❤\uFE0F από \uD83C\uDDF1\uD83C\uDDF0</string>
+    <string name="action_website">Δικτυακός τόπος</string>
+    <string name="action_contact">Επαφή</string>
+    <string name="action_telegram">Τηλεγράφημα</string>
+    <string name="action_support">Υποστήριξη</string>
+    <string name="label_other_apps">Άλλες εφαρμογές</string>
     <string name="app_airsync">AirSync</string>
     <string name="app_zenzero">ZenZero</string>
-    <string name="app_canvas">Canvas</string>
-    <string name="app_tasks">Tasks</string>
-    <string name="app_zero">Zero</string>
+    <string name="app_canvas">Καμβάς</string>
+    <string name="app_tasks">Καθήκοντα</string>
+    <string name="app_zero">Μηδέν</string>
     <!-- Help & Guides -->
-    <string name="help_guides_title">Help &amp; Guides</string>
-    <string name="need_more_support_reach_out">Need more support? Reach out,</string>
-    <string name="action_collapse">Collapse</string>
-    <string name="action_expand">Expand</string>
-    <string name="support_group_label">Support Group</string>
-    <string name="email_label">Email</string>
-    <string name="send_email_chooser_title">Send email</string>
-    <string name="error_no_email_app">No email app available</string>
-    <string name="instruction_step_image_description">Step %1$d Image</string>
+    <string name="help_guides_title">Βοήθεια &amp; Οδηγοί</string>
+    <string name="need_more_support_reach_out">Χρειάζεστε περισσότερη υποστήριξη; Απλώνω,</string>
+    <string name="action_collapse">Κατάρρευση</string>
+    <string name="action_expand">Διαστέλλω</string>
+    <string name="support_group_label">Ομάδα υποστήριξης</string>
+    <string name="email_label">E-mail</string>
+    <string name="send_email_chooser_title">Αποστολή email</string>
+    <string name="error_no_email_app">Δεν υπάρχει διαθέσιμη εφαρμογή email</string>
+    <string name="instruction_step_image_description">Βήμα %1$d Εικόνα</string>
     <!-- Instructions Content -->
-    <string name="instruction_section_perms_title">Accessibility, Notification and Overlay permissions</string>
-    <string name="instruction_step_perms_1">You may get this access denied message if you try to grant sensitive permissions such as accessibility, notification listener or overlay permissions. To grant it, check the steps below.</string>
-    <string name="instruction_step_perms_2">1. Go to app info page of Essentials.</string>
-    <string name="instruction_step_perms_3">2. Open the 3-dot menu and select \'Allow restricted settings\'. You may have to authenticate with biometrics. Once done, Try to grant the permission again.</string>
-    <string name="instruction_section_shizuku_title">Shizuku</string>
-    <string name="instruction_section_shizuku_desc">Shizuku is a powerful tool that allows apps to use system APIs directly with ADB or root permissions. It is required for features like Maps min mode, App Freezer. And willa ssist granting some permissions such as WRITE_SECURE_SETTINGS. \n\nBut the Play Store version of Shizuku might be outdated and will probably be unusable on recent Android versions so in that case, please get the latest version from the github or an up-to-date fork of it.</string>
-    <string name="instruction_section_maps_title">Maps power saving mode</string>
-    <string name="instruction_section_maps_desc">This feature automatically triggers Google Maps power saving mode which is currently exclusive to the Pixel 10 series. A community member discovered that it is still usable on any Android device by launching the maps minMode activity with root privileges. \n\nAnd then, I had it automated with Tasker to automatically trigger when the screen turns off during a navigation session and then was able to achieve the same with just runtime Shizuku permissions. \n\nIt is intended to be shown over the AOD of Pixel 10 series so because of that, you may see an occasional message popping up on the display that it does not support landscape mode. That is not avoidable by the app and you can ignore.</string>
-    <string name="instruction_section_silent_title">Silent sound mode</string>
-    <string name="instruction_section_silent_desc">You may have noticed that the silent mode also triggers DND. \n\nThis is due to how the Android implemented it as even if we use the same API to switch to vibrate mode, it for some reason turns on DND along with the silent mode and this is not avoidable at this moment. :(</string>
-    <string name="instruction_section_freeze_title">What is freeze?</string>
-    <string name="instruction_section_freeze_desc">Pause and stay away from app distractions while saving a little bit of power preventing apps running in the background. Suitable for rarely used apps. \n\nNot recommended for any communication services as they will not notify you in an emergency unless you unfreeze them. \n\nHighly advised to not freeze system apps as they can lead to system instability. Proceed with caution, You were warned. \n\nInspired by Hail &lt;3</string>
-    <string name="instruction_section_security_title">Are app lock and screen locked security actually secure?</string>
-    <string name="instruction_section_security_desc">Absolutely not. \n\nAny 3rd party application can not 100% interfere with regular device interactions and even the app lock is only an overlay above selected apps to prevent interacting with them. There are workarounds and it is not foolproof. \n\nSame goes with the screen locked security feature which detects someone trying to interact with the network tiles which for some reason are still accessible for anyone on Pixels. So if they try hard enough they might still be able to change them and especially if you have a flight mode QS tile added, this app can not prevent interactions with it. \n\nThese features are made just as experiments for light usage and would never recommend as strong security and privacy solutions. \n\nSecure alternatives:\n - App lock: Private Space and Secure folder on Pixels and Samsung\n - Preventing mobile networks access: Make sure your theft protection and offline/ power off find my device settings are on. You may look into Graphene OS as well.</string>
-    <string name="instruction_section_statusbar_title">Statusbar icons</string>
-    <string name="instruction_section_statusbar_desc">You may notice that even after resetting the statusbar icons, Some icons such as device rotation, wired headphone icons may stay visible. This is due to how the statubar blacklist is implemented in Android and how your OEM may have customized them. \nYou may need further adjustments. \n\nAlso not all icon visibility options may work as they depend on the OEM implementations and availability.</string>
-    <string name="instruction_section_lighting_title">Notification lighting does not work</string>
-    <string name="instruction_section_lighting_desc">It depends on the OEM. Some like OneUI does not seem to allow overlays above the AOD preventing the lighting effects being shown. In this case, try the ambient display as a workaround. </string>
-    <string name="instruction_section_button_title">Button remap does not work while display is off</string>
-    <string name="instruction_section_button_desc">Some OEMs limit the accessibility service reporting once the display is actually off but they may still work while the AOD is on. \nIn this case, you may able to use button remaps with AOD on but not with off. \n\nAs a workaround, you will need to use Shizuku permissions and turn on the \'Use Shizuku\' toggle in button remap settings which identifies and listen to hardware input events.\nThis is not guaranteed to work on all devices and needs testing.\n\nAnd even if it\'s on, Shizuku method only will be used when it\'s needed. Otherwise it will always fallback to Accessibility which also handles the blocking of the actual input during long press.</string>
-    <string name="instruction_section_flashlight_title">Flashlight brightness does not work</string>
-    <string name="instruction_section_flashlight_desc">Only a limited number of devices got hardware and software support adjusting the flashlight intensity. \n\n\'The minimum version of Android is 13 (SDK33).\nFlashlight brightness control only supports HAL version 3.8 and higher, so among the supported devices, the latest ones (For example, Pixel 6/7, Samsung S23, etc.)\'\npolodarb/Flashlight-Tiramisu</string>
-    <string name="instruction_section_about_title">What the hell is this app?</string>
-    <string name="instruction_section_about_desc">Good question,\n\nI always wanted to extract the most out of my devices as I\'ve been a rooted user for ever since I got my first Project Treble device. And I\'ve been loving the Tasker app which is like the god when comes automation and utilizing every possible API and internal features of Android.\n\nSo I am not unrooted and back on stock Android beta experience and wanted to get the most out from what is possible with given privileges. Might as well share them. So with my beginner knowledge in Kotlin Jetpack and with the support of many research and assist tools and also the great community, I built an all-in-one app containing everything I wanted to be in my Android with given permissions. And here it is.\n\nFeature requests are welcome, I will consider and see if they are achievable with available permissions and my skills. Nowadays what is not possible. :)\n\nWhy not on Play Store?\nI don\'t wanna risk getting my Developer account banned due to the highly sensitive and internal permissions and APIs being used in the app. But with the way Android sideloading is headed, let\'s see what we have to do. I do understand the concerns of sideloaded apps being malicious.\nWhile we are at the topic, Checkout my other app AirSync if you are a mac + Android user. *shameless plug*\n\nEnjoy, Keep building! (っ◕‿◕)っ</string>
+    <string name="instruction_section_perms_title">Δικαιώματα προσβασιμότητας, ειδοποίησης και επικάλυψης</string>
+    <string name="instruction_step_perms_1">Μπορεί να λάβετε αυτό το μήνυμα απαγόρευσης πρόσβασης εάν προσπαθήσετε να εκχωρήσετε ευαίσθητα δικαιώματα, όπως δικαιώματα προσβασιμότητας, ακρόασης ειδοποιήσεων ή επικάλυψης. Για να το χορηγήσετε, ελέγξτε τα παρακάτω βήματα.</string>
+    <string name="instruction_step_perms_2">1. Μεταβείτε στη σελίδα πληροφοριών εφαρμογής του Essentials.</string>
+    <string name="instruction_step_perms_3">2. Ανοίξτε το μενού με τις 3 κουκκίδες και επιλέξτε \'Να επιτρέπονται οι περιορισμένες ρυθμίσεις\'. Ίσως χρειαστεί να κάνετε έλεγχο ταυτότητας με βιομετρικά στοιχεία. Μόλις τελειώσετε, προσπαθήστε να εκχωρήσετε ξανά την άδεια.</string>
+    <string name="instruction_section_shizuku_title">Σιζούκου</string>
+    <string name="instruction_section_shizuku_desc">Το Shizuku είναι ένα ισχυρό εργαλείο που επιτρέπει στις εφαρμογές να χρησιμοποιούν API συστήματος απευθείας με δικαιώματα ADB ή root. Απαιτείται για λειτουργίες όπως η λειτουργία Mins Maps, App Freezer. Και θα επιμείνουμε στη χορήγηση ορισμένων αδειών όπως WRITE_SECURE_SETTINGS. \n\nΑλλά η έκδοση του Shizuku στο Play Store μπορεί να είναι ξεπερασμένη και πιθανότατα να μην μπορεί να χρησιμοποιηθεί σε πρόσφατες εκδόσεις Android, οπότε σε αυτήν την περίπτωση, παρακαλούμε λάβετε την πιο πρόσφατη έκδοση από το github ή λίγη από αυτήν.</string>
+    <string name="instruction_section_maps_title">Λειτουργία εξοικονόμησης ενέργειας χαρτών</string>
+    <string name="instruction_section_maps_desc">Αυτή η λειτουργία ενεργοποιεί αυτόματα τη λειτουργία εξοικονόμησης ενέργειας στους Χάρτες Google, η οποία αυτή τη στιγμή είναι αποκλειστική για τη σειρά Pixel 10. Ένα μέλος της κοινότητας ανακάλυψε ότι εξακολουθεί να μπορεί να χρησιμοποιηθεί σε οποιαδήποτε συσκευή Android εκκινώντας τη δραστηριότητα minMode χαρτών με δικαιώματα root. \n\nΚαι στη συνέχεια, το έβαλα αυτοματοποιημένο με το Tasker ώστε να ενεργοποιείται αυτόματα όταν η οθόνη απενεργοποιείται κατά τη διάρκεια μιας περιόδου λειτουργίας πλοήγησης και, στη συνέχεια, μπόρεσα να επιτύχω το ίδιο με τον χρόνο εκτέλεσης Shizuku δικαιώματα. \n\nΠροορίζεται να εμφανίζεται μέσω του AOD της σειράς Pixel 10, επομένως, λόγω αυτού, μπορεί να δείτε περιστασιακά ένα μήνυμα να εμφανίζεται στην οθόνη ότι δεν υποστηρίζει λειτουργία οριζόντιου προσανατολισμού. Αυτό δεν μπορεί να αποφευχθεί από την εφαρμογή και μπορείτε να το αγνοήσετε.</string>
+    <string name="instruction_section_silent_title">Λειτουργία αθόρυβου ήχου</string>
+    <string name="instruction_section_silent_desc">Ίσως έχετε παρατηρήσει ότι η αθόρυβη λειτουργία ενεργοποιεί επίσης το DND. \n\nΑυτό οφείλεται στο πώς το υλοποίησε το Android, καθώς ακόμα κι αν χρησιμοποιούμε το ίδιο API για να μεταβούμε σε λειτουργία δόνησης, για κάποιο λόγο ενεργοποιεί το DND μαζί με τη σιωπηλή λειτουργία και αυτό δεν μπορεί να αποφευχθεί αυτή τη στιγμή. :(</string>
+    <string name="instruction_section_freeze_title">Τι είναι το πάγωμα;</string>
+    <string name="instruction_section_freeze_desc">Κάντε παύση και μείνετε μακριά από περισπασμούς εφαρμογών, ενώ εξοικονομείτε λίγη ενέργεια αποτρέποντας την εκτέλεση εφαρμογών στο παρασκήνιο. Κατάλληλο για εφαρμογές που χρησιμοποιούνται σπάνια. \n\nΔεν συνιστάται για καμία υπηρεσία επικοινωνίας, καθώς δεν θα σας ειδοποιήσουν σε περίπτωση έκτακτης ανάγκης, εκτός εάν τις ξεπαγώσετε. \n\nΣυνιστάται ιδιαίτερα να μην παγώνετε τις εφαρμογές του συστήματος, καθώς μπορεί να οδηγήσουν σε αστάθεια του συστήματος. Προχωρήστε με προσοχή, είχατε προειδοποιηθεί. \n\nΕμπνευσμένο από το Hail &lt;3</string>
+    <string name="instruction_section_security_title">Είναι πράγματι ασφαλές το κλείδωμα εφαρμογής και η ασφάλεια κλειδώματος οθόνης;</string>
+    <string name="instruction_section_security_desc">Απολύτως όχι. \n\nΟποιαδήποτε εφαρμογή τρίτου μέρους δεν μπορεί να παρέμβει 100% στις τακτικές αλληλεπιδράσεις της συσκευής και ακόμη και το κλείδωμα της εφαρμογής είναι απλώς μια επικάλυψη πάνω από επιλεγμένες εφαρμογές για να αποτρέψει την αλληλεπίδραση μαζί τους. Υπάρχουν λύσεις και δεν είναι αλάνθαστο. \n\nΤο ίδιο συμβαίνει και με τη λειτουργία ασφαλείας κλειδωμένης οθόνης που εντοπίζει κάποιον που προσπαθεί να αλληλεπιδράσει με τα πλακίδια δικτύου, τα οποία για κάποιο λόγο εξακολουθούν να είναι προσβάσιμα για οποιονδήποτε στα Pixels. Έτσι, αν προσπαθήσουν αρκετά, μπορεί και πάλι να είναι σε θέση να τα αλλάξουν και ειδικά αν έχετε προσθέσει ένα πλακίδιο QS σε λειτουργία πτήσης, αυτή η εφαρμογή δεν μπορεί να αποτρέψει τις αλληλεπιδράσεις με αυτό. \n\nΑυτές οι λειτουργίες γίνονται ακριβώς ως πειράματα για ελαφριά χρήση και δεν θα συνιστούσαν ποτέ ως ισχυρές λύσεις ασφάλειας και απορρήτου. \n\nΑσφαλείς εναλλακτικές:\n - Κλείδωμα εφαρμογής: Ιδιωτικός χώρος και Ασφαλής φάκελος σε Pixels και Samsung\n - Αποτροπή πρόσβασης σε δίκτυα κινητής τηλεφωνίας: Βεβαιωθείτε ότι η προστασία κλοπής και οι ρυθμίσεις εκτός σύνδεσης/απενεργοποίησης εύρεσης της συσκευής μου είναι ενεργοποιημένες. Μπορείτε επίσης να εξετάσετε το Graphene OS.</string>
+    <string name="instruction_section_statusbar_title">Εικονίδια γραμμής κατάστασης</string>
+    <string name="instruction_section_statusbar_desc">Μπορεί να παρατηρήσετε ότι ακόμη και μετά την επαναφορά των εικονιδίων της γραμμής κατάστασης, ορισμένα εικονίδια, όπως η περιστροφή της συσκευής, τα εικονίδια των ενσύρματων ακουστικών ενδέχεται να παραμείνουν ορατά. Αυτό οφείλεται στον τρόπο υλοποίησης της μαύρης λίστας statusbar στο Android και στον τρόπο με τον οποίο ο OEM σας μπορεί να τις έχει προσαρμόσει. \nΜπορεί να χρειαστείτε περαιτέρω προσαρμογές. \n\nΕπίσης, μπορεί να μην λειτουργούν όλες οι επιλογές ορατότητας εικονιδίων, καθώς εξαρτώνται από την εφαρμογή OEM και τη διαθεσιμότητα.</string>
+    <string name="instruction_section_lighting_title">Ο φωτισμός ειδοποιήσεων δεν λειτουργεί</string>
+    <string name="instruction_section_lighting_desc">Εξαρτάται από τον ΚΑΕ. Ορισμένα όπως το OneUI δεν φαίνεται να επιτρέπουν επικαλύψεις πάνω από το AOD που εμποδίζουν την εμφάνιση των εφέ φωτισμού. Σε αυτήν την περίπτωση, δοκιμάστε την οθόνη περιβάλλοντος ως λύση.</string>
+    <string name="instruction_section_button_title">Η επαναχάραξη του κουμπιού δεν λειτουργεί όταν η οθόνη είναι απενεργοποιημένη</string>
+    <string name="instruction_section_button_desc">Ορισμένοι OEM περιορίζουν την αναφορά της υπηρεσίας προσβασιμότητας όταν η οθόνη είναι πραγματικά απενεργοποιημένη, αλλά ενδέχεται να εξακολουθούν να λειτουργούν όσο είναι ενεργοποιημένο το AOD. \nΣε αυτήν την περίπτωση, μπορείτε να χρησιμοποιήσετε επανασχεδιασμούς κουμπιών με ενεργοποιημένο το AOD αλλά όχι με απενεργοποιημένο. \n\nΩς λύση, θα χρειαστεί να χρησιμοποιήσετε τα δικαιώματα Shizuku και να ενεργοποιήσετε το \'Χρησιμοποιήστε Shizuku ή Root\' εναλλάξτε τις ρυθμίσεις επαναχαρτογράφησης κουμπιών που προσδιορίζουν και ακούτε συμβάντα εισαγωγής υλικού.\nΑυτό δεν είναι εγγυημένο ότι λειτουργεί σε όλες τις συσκευές και χρειάζεται δοκιμή.\n\nΚαι ακόμα κι αν είναι\'s on, η μέθοδος Shizuku θα χρησιμοποιηθεί μόνο όταν αυτό\'χρειάζεται. Διαφορετικά, θα επιστρέφει πάντα στην Προσβασιμότητα, η οποία χειρίζεται επίσης τον αποκλεισμό της πραγματικής εισαγωγής κατά τη διάρκεια παρατεταμένου πάτημας.</string>
+    <string name="instruction_section_flashlight_title">Η φωτεινότητα του φακού δεν λειτουργεί</string>
+    <string name="instruction_section_flashlight_desc">Μόνο ένας περιορισμένος αριθμός συσκευών έλαβε υποστήριξη υλικού και λογισμικού προσαρμογής της έντασης του φακού. \n\n\'Η ελάχιστη έκδοση του Android είναι 13 (SDK33).\nΟ έλεγχος φωτεινότητας φακού υποστηρίζει μόνο HAL έκδοση, η τελευταία έκδοση 3.8 και υψηλότερη υποστηρίζει μόνο συσκευές HAL. 6/7, Samsung S23, κ.λπ.)\'\npolodarb/Flashlight-Tiramisu</string>
+    <string name="instruction_section_about_title">Τι στο διάολο είναι αυτή η εφαρμογή;</string>
+    <string name="instruction_section_about_desc">Καλή ερώτηση,\n\nΠάντα ήθελα να αντλήσω το μέγιστο από τις συσκευές μου όπως εγώ\'Είμαι χρήστης με root για πάντα από τότε που απέκτησα την πρώτη μου συσκευή Project Treble. Και εγώ\'Λατρεύουμε την εφαρμογή Tasker που είναι σαν τον θεό όταν έρχεται ο αυτοματισμός και χρησιμοποιώντας κάθε πιθανό API και εσωτερικές δυνατότητες του Android.\n\nΕπομένως, δεν είμαι unrooted και έχω επιστρέψει στην απόθεμα Android beta εμπειρία και ήθελα να αξιοποιήσω στο έπακρο ό,τι είναι δυνατό με δεδομένα προνόμια. Μπορεί επίσης να τα μοιραστείτε. Έτσι, με τις αρχάριες γνώσεις μου στο Kotlin Jetpack και με την υποστήριξη πολλών εργαλείων έρευνας και βοήθειας, καθώς και της μεγάλης κοινότητας, έφτιαξα μια εφαρμογή all-in-one που περιέχει όλα όσα ήθελα να είμαι στο Android μου με δεδομένες άδειες. Και εδώ είναι.\n\nΤα αιτήματα για δυνατότητες είναι ευπρόσδεκτα, θα εξετάσω και θα δω εάν είναι εφικτά με τα διαθέσιμα δικαιώματα και τις δεξιότητές μου. Στις μέρες μας τι δεν γίνεται. :)\n\nΓιατί όχι στο Play Store;\nδεν κάνω\'Δεν θέλω να διακινδυνεύσω να αποκλειστεί ο λογαριασμός προγραμματιστή μου λόγω των εξαιρετικά ευαίσθητων και εσωτερικών αδειών και των API που χρησιμοποιούνται στην εφαρμογή. Αλλά με τον τρόπο που οδηγεί το Android sideloading, ας\'να δούμε τι πρέπει να κάνουμε. Κατανοώ τις ανησυχίες ότι οι πλευρικές εφαρμογές είναι κακόβουλες.\nΕνώ βρισκόμαστε στο θέμα, ελέγξτε την άλλη μου εφαρμογή AirSync εάν είστε χρήστης Mac + Android. *αδιάντροπη βύσμα*\n\nΑπολαύστε, συνεχίστε να χτίζετε! (っ◕‿◕)っ</string>
     <!-- Bug Reporting -->
-    <string name="toast_bug_report_copied">Bug report copied to clipboard</string>
-    <string name="bug_report_title">Bug report</string>
-    <string name="bug_report_option_share_logs">Share logs</string>
-    <string name="bug_report_option_share_logs_desc">Include logs and details</string>
-    <string name="bug_report_device_info">Device Info</string>
-    <string name="bug_report_raw_json">Raw Report</string>
-    <string name="action_report_github">Open GitHub Issue</string>
-    <string name="action_report_email">Email Report</string>
-    <string name="action_copy_clipboard">Copy to Clipboard</string>
-    <string name="bug_report_email_subject">Essentials Bug Report</string>
-    <string name="bug_report_send_via">Send via</string>
+    <string name="toast_bug_report_copied">Η αναφορά σφάλματος αντιγράφηκε στο πρόχειρο</string>
+    <string name="bug_report_title">Αναφορά σφάλματος</string>
+    <string name="bug_report_option_share_logs">Κοινή χρήση αρχείων καταγραφής</string>
+    <string name="bug_report_option_share_logs_desc">Συμπεριλάβετε αρχεία καταγραφής και λεπτομέρειες</string>
+    <string name="bug_report_device_info">Πληροφορίες συσκευής</string>
+    <string name="bug_report_raw_json">Ακατέργαστη αναφορά</string>
+    <string name="action_report_github">Ανοίξτε το ζήτημα του GitHub</string>
+    <string name="action_report_email">Αναφορά ηλεκτρονικού ταχυδρομείου</string>
+    <string name="action_copy_clipboard">Αντιγραφή στο Πρόχειρο</string>
+    <string name="bug_report_email_subject">Αναφορά βασικών σφαλμάτων</string>
+    <string name="bug_report_send_via">Αποστολή μέσω</string>
     <!-- Location Reached -->
-    <string name="feat_location_reached_title">Are We There Yet?</string>
-    <string name="feat_location_reached_desc">Prepare for your destination.</string>
-    <string name="location_reached_how_to">Open your map app, pick a location, and share it to Essentials.</string>
-    <string name="location_reached_radius_title">Radius: %d m</string>
-    <string name="perm_location_title">Location</string>
-    <string name="perm_location_desc">Used to detect arrival at your destination.</string>
-    <string name="perm_bg_location_title">Background Location</string>
-    <string name="perm_bg_location_desc">Required to monitor your arrival while the app is closed or the screen is off.</string>
-    <string name="location_reached_notification_title">Destination Reached!</string>
-    <string name="location_reached_notification_desc">You have arrived at your destination.</string>
-    <string name="location_reached_processing">Processing location…</string>
-    <string name="location_reached_dist_remaining">DISTANCE REMAINING</string>
-    <string name="location_reached_calculating">Calculating…</string>
-    <string name="location_reached_stop_tracking">Stop Tracking</string>
-    <string name="location_reached_dest_ready">Destination Ready</string>
-    <string name="location_reached_start_tracking">Start Tracking</string>
-    <string name="location_reached_view_map">View Map</string>
-    <string name="location_reached_clear">Clear</string>
-    <string name="location_reached_no_dest">No Destination</string>
-    <string name="location_reached_open_maps">Open Maps</string>
-    <string name="location_reached_fsi_title">Full-Screen Alarm Permission</string>
-    <string name="location_reached_fsi_desc">Required to wake your device upon arrival. Tap to grant.</string>
+    <string name="feat_location_reached_title">Είμαστε ακόμα εκεί;</string>
+    <string name="feat_location_reached_desc">Ειδοποιήσεις κοντινού προορισμού</string>
+    <string name="location_reached_how_to">Ανοίξτε τους Χάρτες Google, επιλέξτε μια τοποθεσία και μοιραστείτε την στο Essentials.</string>
+    <string name="location_reached_radius_title">Ακτίνα ειδοποίησης: %d m</string>
+    <string name="perm_location_title">Τοποθεσία</string>
+    <string name="perm_location_desc">Χρησιμοποιείται για την ανίχνευση της άφιξης στον προορισμό σας.</string>
+    <string name="perm_bg_location_title">Τοποθεσία στο παρασκήνιο</string>
+    <string name="perm_bg_location_desc">Απαιτείται για την παρακολούθηση της άφιξής σας ενώ η εφαρμογή είναι κλειστή ή η οθόνη είναι απενεργοποιημένη.</string>
+    <string name="location_reached_notification_title">Ο προορισμός έφτασε!</string>
+    <string name="location_reached_notification_desc">Έχετε φτάσει στον προορισμό σας.</string>
+    <string name="location_reached_processing">Τοποθεσία επεξεργασίας…</string>
+    <string name="location_reached_dist_remaining">ΥΠΟΜΕΝΕΙ ΑΠΟΣΤΑΣΗ</string>
+    <string name="location_reached_calculating">Υπολογιστικός…</string>
+    <string name="location_reached_stop_tracking">Διακοπή παρακολούθησης</string>
+    <string name="location_reached_dest_ready">Έτοιμος προορισμός</string>
+    <string name="location_reached_start_tracking">Ξεκινήστε την παρακολούθηση</string>
+    <string name="location_reached_view_map">Προβολή χάρτη</string>
+    <string name="location_reached_clear">Σαφής</string>
+    <string name="location_reached_no_dest">Χωρίς Προορισμό</string>
+    <string name="location_reached_open_maps">Ανοίξτε τους Χάρτες</string>
+    <string name="location_reached_fsi_title">Άδεια συναγερμού πλήρους οθόνης</string>
+    <string name="location_reached_fsi_desc">Απαιτείται η αφύπνιση της συσκευής σας κατά την άφιξη. Πατήστε για παραχώρηση.</string>
     <string name="location_reached_dist_m">%1$d m</string>
-    <string name="location_reached_dist_km">%1$.1f km</string>
-    <string name="location_reached_service_title">Travel Alarm active</string>
-    <string name="location_reached_service_remaining">%1$s remaining (%2$d%%)</string>
-    <string name="location_reached_channel_name">Travel Progress</string>
-    <string name="location_reached_channel_desc">Shows real-time distance to destination</string>
-    <string name="location_reached_alarm_title">Destination Nearby</string>
-    <string name="location_reached_alarm_subtitle">Prepare to get off</string>
-    <string name="location_reached_dismiss">Dismiss</string>
-    <string name="location_reached_toast_set">Destination set: %1$.4f, %2$.4f</string>
-    <string name="setting_use_root_title">Use Root</string>
-    <string name="setting_use_root_desc">Instead of Shizuku</string>
-    <string name="root_not_available_toast">Root access not available. Please check your root manager.</string>
+    <string name="location_reached_dist_km">%1$.1f χλμ</string>
+    <string name="location_reached_service_title">Ενεργός συναγερμός ταξιδιού</string>
+    <string name="location_reached_service_remaining">%1$s υπόλοιπο (%2$d%%)</string>
+    <string name="location_reached_channel_name">Ταξιδιωτική Πρόοδος</string>
+    <string name="location_reached_channel_desc">Εμφανίζει την απόσταση από τον προορισμό σε πραγματικό χρόνο</string>
+    <string name="location_reached_alarm_title">Προορισμός σε κοντινή απόσταση</string>
+    <string name="location_reached_alarm_subtitle">Ετοιμαστείτε να κατεβείτε</string>
+    <string name="location_reached_dismiss">Απολύω</string>
+    <string name="location_reached_toast_set">Σύνολο προορισμού: %1$.4f, %2$.4f</string>
+    <string name="setting_use_root_title">Χρησιμοποιήστε το Root</string>
+    <string name="setting_use_root_desc">Αντί για Σιζούκου</string>
+    <string name="root_not_available_toast">Η πρόσβαση ρίζας δεν είναι διαθέσιμη. Ελέγξτε τον διαχειριστή ρίζας σας.</string>
     <!-- System Keyboard -->
-    <string name="feat_system_keyboard_title">Keyboard</string>
-    <string name="feat_system_keys">Keys</string>
-    <string name="feat_system_keyboard_desc">Customize layout and behavior</string>
-    <string name="search_keyboard_height_title">Keyboard Height</string>
-    <string name="search_keyboard_height_desc">Adjust the total vertical size of the keyboard</string>
-    <string name="search_keyboard_padding_title">Bottom Padding</string>
-    <string name="search_keyboard_padding_desc">Add space below the keyboard</string>
-    <string name="search_keyboard_haptics_title">Haptic Feedback</string>
-    <string name="search_keyboard_haptics_desc">Vibrate on key press</string>
-    <string name="test_keyboard_hint">Test the keyboard</string>
-    <string name="label_keyboard_height">Keyboard Height</string>
-    <string name="label_keyboard_bottom_padding">Bottom Padding</string>
-    <string name="label_keyboard_haptics">Haptic Feedback</string>
-    <string name="label_keyboard_roundness">Key Roundness</string>
-    <string name="label_keyboard_functions_bottom">Move functions to bottom</string>
-    <string name="label_keyboard_functions_padding">Functions side padding</string>
-    <string name="label_keyboard_haptic_strength">Haptic feedback strength</string>
-    <string name="label_keyboard_shape">Keyboard shape</string>
-    <string name="shape_round">Round</string>
-    <string name="shape_flat">Flat</string>
-    <string name="shape_inverse">Inverse</string>
-    <string name="feat_batteries_title">Batteries</string>
-    <string name="feat_batteries_desc">Monitor your device battery levels</string>
-    <string name="batteries_widget_label">Battery Status</string>
-    <string name="connect_to_airsync">Connect to AirSync</string>
-    <string name="connect_to_airsync_summary">Display battery from your connected mac device in AirSync</string>
-    <string name="download_airsync">Download AirSync App</string>
-    <string name="download_airsync_summary">Required for Mac battery sync</string>
-    <string name="feat_battery_notification_title">Battery notification</string>
-    <string name="feat_battery_notification_desc">Persistent battery status notification</string>
-    <string name="about_desc_battery_notification">Replicate the battery widget experience in your notification shade. It will show the battery levels of all your connected devices in a single persistent notification, updated in real-time. This includes your Mac (via AirSync) and Bluetooth accessories.</string>
-    <string name="battery_notification_channel_name">Battery Status Notification</string>
-    <string name="battery_notification_channel_desc">Persistent notification showing connected devices battery levels</string>
-    <string name="perm_nearby_devices_title">Nearby Devices</string>
-    <string name="perm_nearby_devices_desc">Required to detect and retrieve battery information from Bluetooth accessories</string>
+    <string name="feat_system_keyboard_title">Πληκτρολόγιο</string>
+    <string name="feat_system_keys">Κλειδιά</string>
+    <string name="feat_system_keyboard_desc">Προσαρμόστε τη διάταξη και τη συμπεριφορά</string>
+    <string name="search_keyboard_height_title">Ύψος πληκτρολογίου</string>
+    <string name="search_keyboard_height_desc">Προσαρμόστε το συνολικό κατακόρυφο μέγεθος του πληκτρολογίου</string>
+    <string name="search_keyboard_padding_title">Κάτω επένδυση</string>
+    <string name="search_keyboard_padding_desc">Προσθέστε χώρο κάτω από το πληκτρολόγιο</string>
+    <string name="search_keyboard_haptics_title">Απτική Ανάδραση</string>
+    <string name="search_keyboard_haptics_desc">Δόνηση με το πάτημα του πλήκτρου</string>
+    <string name="test_keyboard_hint">Δοκιμάστε το πληκτρολόγιο</string>
+    <string name="label_keyboard_height">Ύψος πληκτρολογίου</string>
+    <string name="label_keyboard_bottom_padding">Κάτω επένδυση</string>
+    <string name="label_keyboard_haptics">Απτική Ανάδραση</string>
+    <string name="label_keyboard_roundness">Στρογγυλότητα κλειδιού</string>
+    <string name="label_keyboard_functions_bottom">Μετακινήστε τις λειτουργίες προς τα κάτω</string>
+    <string name="label_keyboard_functions_padding">Λειτουργεί πλαϊνή επένδυση</string>
+    <string name="label_keyboard_haptic_strength">Ισχύς απτικής ανάδρασης</string>
+    <string name="label_keyboard_shape">Σχήμα πληκτρολογίου</string>
+    <string name="shape_round">Γύρω</string>
+    <string name="shape_flat">Επίπεδα</string>
+    <string name="shape_inverse">Αντίστροφος</string>
+    <string name="feat_batteries_title">Μπαταρίες</string>
+    <string name="feat_batteries_desc">Παρακολουθήστε τα επίπεδα μπαταρίας της συσκευής σας</string>
+    <string name="batteries_widget_label">Κατάσταση μπαταρίας</string>
+    <string name="connect_to_airsync">Συνδεθείτε στο AirSync</string>
+    <string name="connect_to_airsync_summary">Εμφάνιση μπαταρίας από τη συνδεδεμένη συσκευή Mac στο AirSync</string>
+    <string name="download_airsync">Κατεβάστε την εφαρμογή AirSync</string>
+    <string name="download_airsync_summary">Απαιτείται για συγχρονισμό μπαταρίας Mac</string>
+    <string name="feat_battery_notification_title">Ειδοποίηση μπαταρίας</string>
+    <string name="feat_battery_notification_desc">Μόνιμη ειδοποίηση κατάστασης μπαταρίας</string>
+    <string name="about_desc_battery_notification">Επαναλάβετε την εμπειρία γραφικού στοιχείου μπαταρίας στο σκίαστρο ειδοποιήσεων. Θα εμφανίζει τα επίπεδα της μπαταρίας όλων των συνδεδεμένων συσκευών σας σε μια μόνιμη ειδοποίηση, η οποία ενημερώνεται σε πραγματικό χρόνο. Αυτό περιλαμβάνει τα αξεσουάρ Mac (μέσω AirSync) και Bluetooth.</string>
+    <string name="battery_notification_channel_name">Ειδοποίηση κατάστασης μπαταρίας</string>
+    <string name="battery_notification_channel_desc">Μόνιμη ειδοποίηση που δείχνει τα επίπεδα μπαταρίας των συνδεδεμένων συσκευών</string>
+    <string name="perm_nearby_devices_title">Κοντινές συσκευές</string>
+    <string name="perm_nearby_devices_desc">Απαιτείται για τον εντοπισμό και την ανάκτηση πληροφοριών μπαταρίας από αξεσουάρ Bluetooth</string>
     <!-- GitHub Auth -->
-    <string name="auth_copy_code">Copy code</string>
-    <string name="auth_open_login_page">Open login page</string>
-    <string name="auth_sign_in_rationale">Sign in to extend API call limits</string>
-    <string name="auth_waiting_for_authorization">Waiting for authorization...</string>
-    <string name="action_sign_in_github">Sign in with GitHub</string>
-    <string name="action_sign_out">Sign out</string>
-    <string name="action_profile">Profile</string>
+    <string name="auth_copy_code">Αντιγραφή κωδικού</string>
+    <string name="auth_open_login_page">Ανοίξτε τη σελίδα σύνδεσης</string>
+    <string name="auth_sign_in_rationale">Συνδεθείτε για να επεκτείνετε τα όρια κλήσεων API</string>
+    <string name="auth_waiting_for_authorization">Αναμονή για εξουσιοδότηση...</string>
+    <string name="action_sign_in_github">Συνδεθείτε με το GitHub</string>
+    <string name="action_sign_out">Αποσυνδεθείτε</string>
+    <string name="action_profile">Προφίλ</string>
     <!-- App Updates / Repos -->
-    <string name="label_release_notes">Release Notes</string>
-    <string name="msg_no_repos_tracked">No repositories tracked yet</string>
-    <string name="label_no_app_linked">No app linked</string>
-    <string name="format_updated_relative">Updated %1$s</string>
+    <string name="label_release_notes">Σημειώσεις Έκδοσης</string>
+    <string name="msg_no_repos_tracked">Δεν έχουν εντοπιστεί ακόμη αποθετήρια</string>
+    <string name="label_no_app_linked">Δεν υπάρχει συνδεδεμένη εφαρμογή</string>
+    <string name="format_updated_relative">Ενημερώθηκε %1$s</string>
     <!-- Relative Time -->
-    <string name="time_just_now">just now</string>
-    <string name="time_min_ago">%1$dm ago</string>
-    <string name="time_hour_ago">%1$dh ago</string>
-    <string name="time_day_ago">%1$dd ago</string>
-    <string name="time_month_ago">%1$dmo ago</string>
-    <string name="time_year_ago">%1$dy ago</string>
-    <string name="action_retry">Retry</string>
-    <string name="action_start_sign_in">Start Sign In</string>
-    <string name="auth_requesting_code">Requesting device code...</string>
-    <string name="auth_copy_code_instruction">1. Copy your code:</string>
-    <string name="auth_paste_code_instruction">2. Paste the code on GitHub:</string>
-    <string name="label_found_apks">Found APKs</string>
-    <string name="label_readme">README</string>
-    <string name="action_refresh">Refresh</string>
+    <string name="time_just_now">μόλις τώρα</string>
+    <string name="time_min_ago">%1$dμ πριν</string>
+    <string name="time_hour_ago">%1$dπριν h</string>
+    <string name="time_day_ago">%1$dd πριν</string>
+    <string name="time_month_ago">%1$dπριν μηνα</string>
+    <string name="time_year_ago">%1$dπριν από y</string>
+    <string name="action_retry">Δοκιμάζω πάλι</string>
+    <string name="action_start_sign_in">Έναρξη Είσοδος</string>
+    <string name="auth_requesting_code">Αίτημα κωδικού συσκευής...</string>
+    <string name="auth_copy_code_instruction">1. Αντιγράψτε τον κωδικό σας:</string>
+    <string name="auth_paste_code_instruction">2. Επικολλήστε τον κώδικα στο GitHub:</string>
+    <string name="label_found_apks">Βρέθηκαν APK</string>
+    <string name="label_readme">ΔΙΑΒΑΣΤΕ</string>
+    <string name="action_refresh">Φρεσκάρω</string>
     <!-- Added Missing Group Strings -->
-    <string name="feat_sound_modes_title">Sound mode tile</string>
-    <string name="feat_sound_modes_desc">QS tile to toggle sound mode</string>
-    <string name="search_sound_mode_show_slider_title">Show slider</string>
-    <string name="search_sound_mode_show_slider_desc">Show volume slider in tile</string>
-    <string name="search_sound_mode_behavior_title">Cycle Behavior</string>
-    <string name="search_sound_mode_behavior_desc">Choose modes to cycle through</string>
-    <string name="feat_ambient_music_title">Ambient music glance</string>
-    <string name="feat_ambient_music_desc">Glance at media on AOD</string>
-    <string name="feat_sound_haptics_title">Sound and Haptics</string>
-    <string name="feat_sound_haptics_desc">Volume and haptic features</string>
-    <string name="feat_security_privacy_title">Security and Privacy</string>
-    <string name="feat_security_privacy_desc">Protect and secure your device</string>
-    <string name="feat_notifications_alerts_title">Notifications and Alerts</string>
-    <string name="feat_notifications_alerts_desc">Never miss your priorities</string>
-    <string name="feat_input_actions_title">Input and Actions</string>
-    <string name="feat_input_actions_desc">Control your device with ease</string>
+    <string name="feat_sound_modes_title">Πλακίδιο λειτουργίας ήχου</string>
+    <string name="feat_sound_modes_desc">Πλακίδιο QS για εναλλαγή της λειτουργίας ήχου</string>
+    <string name="search_sound_mode_show_slider_title">Εμφάνιση ρυθμιστικού</string>
+    <string name="search_sound_mode_show_slider_desc">Εμφάνιση ρυθμιστικού έντασης στο πλακίδιο</string>
+    <string name="search_sound_mode_behavior_title">Συμπεριφορά κύκλου</string>
+    <string name="search_sound_mode_behavior_desc">Επιλέξτε τρόπους μετάβασης</string>
+    <string name="feat_ambient_music_title">Περιβαλλοντική μουσική ματιά</string>
+    <string name="feat_ambient_music_desc">Ρίξτε μια ματιά στα μέσα ενημέρωσης στο AOD</string>
+    <string name="feat_sound_haptics_title">Ήχος και Απτικά</string>
+    <string name="feat_sound_haptics_desc">Όγκος και απτικά χαρακτηριστικά</string>
+    <string name="feat_security_privacy_title">Ασφάλεια και Απόρρητο</string>
+    <string name="feat_security_privacy_desc">Προστατέψτε και ασφαλίστε τη συσκευή σας</string>
+    <string name="feat_notifications_alerts_title">Ειδοποιήσεις και ειδοποιήσεις</string>
+    <string name="feat_notifications_alerts_desc">Μην χάνετε ποτέ τις προτεραιότητές σας</string>
+    <string name="feat_input_actions_title">Εισαγωγή και Ενέργειες</string>
+    <string name="feat_input_actions_desc">Ελέγξτε τη συσκευή σας με ευκολία</string>
     <string name="feat_widgets_title">Widgets</string>
-    <string name="feat_widgets_desc">At a glance on your home screen</string>
-    <string name="feat_display_visuals_title">Display</string>
-    <string name="feat_display_visuals_desc">Visuals to enhance your experience</string>
-    <string name="feat_watch_title">Watch</string>
-    <string name="feat_watch_desc">Integrations with WearOS</string>
-    <string name="watch_no_companion_title">No Watch detected</string>
-    <string name="watch_no_companion_desc">It looks like you do not have the Essentials Wear companion app installed on your watch.</string>
-    <string name="watch_install_companion_action">Install Companion</string>
-    <string name="cat_interaction">Interaction</string>
-    <string name="cat_interface">Interface</string>
-    <string name="cat_display">Display</string>
-    <string name="cat_protection">Protection</string>
-    <string name="label_kbd_abc">ABC</string>
+    <string name="feat_widgets_desc">Με μια ματιά στην αρχική σας οθόνη</string>
+    <string name="feat_display_visuals_title">Επίδειξη</string>
+    <string name="feat_display_visuals_desc">Οπτικά για να βελτιώσετε την εμπειρία σας</string>
+    <string name="feat_watch_title">Ρολόι</string>
+    <string name="feat_watch_desc">Ενσωματώσεις με το WearOS</string>
+    <string name="watch_no_companion_title">Δεν εντοπίστηκε ρολόι</string>
+    <string name="watch_no_companion_desc">Φαίνεται ότι δεν έχετε εγκατεστημένη τη συνοδευτική εφαρμογή Essentials Wear στο ρολόι σας.</string>
+    <string name="watch_install_companion_action">Εγκαταστήστε το Companion</string>
+    <string name="cat_interaction">Αλληλεπίδραση</string>
+    <string name="cat_interface">Διασύνδεση</string>
+    <string name="cat_display">Επίδειξη</string>
+    <string name="cat_protection">Προστασία</string>
+    <string name="label_kbd_abc">αλφάβητο</string>
     <string name="label_kbd_symbols">\?#/</string>
-    <string name="msg_restrict_own_app_repo">Oi! You can check updates in app settings, No need to add here XD</string>
-    <string name="action_export">Export</string>
-    <string name="action_import">Import</string>
-    <string name="msg_export_success">Repositories exported successfully</string>
-    <string name="msg_export_failed">Failed to export repositories</string>
-    <string name="msg_import_success">Repositories imported successfully</string>
-    <string name="msg_import_failed">Failed to import repositories</string>
-    <string name="label_apps">Apps</string>
-    <string name="feat_text_animations_title">Scale and Animations</string>
-    <string name="feat_text_animations_desc">Adjust system scale and animations</string>
-    <string name="settings_section_text">Text</string>
-    <string name="label_font_scale">Font Scale</string>
-    <string name="label_font_weight">Font Weight</string>
-    <string name="label_reset_default">Reset</string>
-    <string name="settings_section_scale">Scale</string>
-    <string name="label_smallest_width">Smallest Width</string>
-    <string name="msg_shizuku_permission_required">Shizuku permission required to adjust scale</string>
-    <string name="label_grant_permission">Grant Permission</string>
-    <string name="settings_section_animations">Animations</string>
-    <string name="label_animator_duration_scale">Animator duration scale</string>
-    <string name="label_transition_animation_scale">Transition animation scale</string>
-    <string name="label_window_animation_scale">Window animation scale</string>
-    <string name="about_desc_text_animations">Adjust system-wide font scale, weight, and animation speeds. Note that some settings may require advanced permissions or a device reboot for certain apps to reflect changes. \n\nAdditional shizuku or root permission may be necessary for scale adjustments</string>
-    <string name="feat_aod_force_turn_off_title">Force turn off AOD</string>
-    <string name="feat_aod_force_turn_off_desc">Force turn off the AOD when no notifications. Requires accessibility permission.</string>
-    <string name="feat_auto_accessibility_title">Auto accessibility</string>
-    <string name="feat_auto_accessibility_desc">Automatically grants the accessibility permission on app launch if missing using WRITE_SECURE_SETTINGS.</string>
-    <string name="label_help_guide">Help and Guides</string>
-    <string name="tab_your_android">Your Android</string>
-    <string name="label_device_storage">Storage</string>
-    <string name="label_device_ram">Memory</string>
-    <string name="label_use_blur">Use blur</string>
-    <string name="desc_use_blur">Enable progressive blur elements across the UI</string>
-    <string name="msg_blur_compatibility_error">Blur is disabled on this device to prevent a known display bug on Samsung devices with Android 15 or below.</string>
+    <string name="msg_restrict_own_app_repo">Ωχ! Μπορείτε να ελέγξετε τις ενημερώσεις στις ρυθμίσεις της εφαρμογής, Δεν χρειάζεται να προσθέσετε εδώ XD</string>
+    <string name="action_export">Εξαγωγή</string>
+    <string name="action_import">Εισαγωγή</string>
+    <string name="msg_export_success">Η εξαγωγή των αποθετηρίων έγινε με επιτυχία</string>
+    <string name="msg_export_failed">Αποτυχία εξαγωγής αποθετηρίων</string>
+    <string name="msg_import_success">Τα αποθετήρια εισήχθησαν με επιτυχία</string>
+    <string name="msg_import_failed">Αποτυχία εισαγωγής αποθετηρίων</string>
+    <string name="label_apps">Εφαρμογές</string>
+    <string name="feat_text_animations_title">Κλίμακα και κινούμενα σχέδια</string>
+    <string name="feat_text_animations_desc">Προσαρμόστε την κλίμακα συστήματος και τα κινούμενα σχέδια</string>
+    <string name="settings_section_text">Κείμενο</string>
+    <string name="label_font_scale">Κλίμακα γραμματοσειράς</string>
+    <string name="label_font_weight">Βάρος γραμματοσειράς</string>
+    <string name="label_reset_default">Επαναφορά</string>
+    <string name="settings_section_scale">Κλίμακα</string>
+    <string name="label_smallest_width">Μικρότερο Πλάτος</string>
+    <string name="msg_shizuku_permission_required">Απαιτείται άδεια Shizuku για την προσαρμογή της κλίμακας</string>
+    <string name="label_grant_permission">Χορήγηση άδειας</string>
+    <string name="settings_section_animations">Κινούμενα σχέδια</string>
+    <string name="label_animator_duration_scale">Κλίμακα διάρκειας εμψυχωτή</string>
+    <string name="label_transition_animation_scale">Κλίμακα κινουμένων σχεδίων μετάβασης</string>
+    <string name="label_window_animation_scale">Κλίμακα κινούμενων σχεδίων παραθύρων</string>
+    <string name="about_desc_text_animations">Προσαρμόστε την κλίμακα γραμματοσειράς, το βάρος και τις ταχύτητες κινούμενων εικόνων σε όλο το σύστημα. Λάβετε υπόψη ότι ορισμένες ρυθμίσεις ενδέχεται να απαιτούν προηγμένες άδειες ή επανεκκίνηση συσκευής για ορισμένες εφαρμογές ώστε να αντικατοπτρίζουν τις αλλαγές. \n\nΜπορεί να απαιτούνται επιπλέον δικαιώματα shizuku ή root για προσαρμογές κλίμακας</string>
+    <string name="feat_aod_force_turn_off_title">Αναγκαστική απενεργοποίηση AOD</string>
+    <string name="feat_aod_force_turn_off_desc">Αναγκαστική απενεργοποίηση του AOD όταν δεν υπάρχουν ειδοποιήσεις. Απαιτεί άδεια προσβασιμότητας.</string>
+    <string name="feat_auto_accessibility_title">Αυτόματη προσβασιμότητα</string>
+    <string name="feat_auto_accessibility_desc">Εκχωρεί αυτόματα την άδεια προσβασιμότητας κατά την εκκίνηση της εφαρμογής εάν λείπει χρησιμοποιώντας WRITE_SECURE_SETTINGS.</string>
+    <string name="label_help_guide">Βοήθεια και Οδηγοί</string>
+    <string name="tab_your_android">Το Android σας</string>
+    <string name="label_device_storage">Αποθήκευση</string>
+    <string name="label_device_ram">Μνήμη</string>
+    <string name="label_use_blur">Χρησιμοποιήστε θαμπάδα</string>
+    <string name="desc_use_blur">Ενεργοποιήστε τα στοιχεία προοδευτικού θαμπώματος σε όλη τη διεπαφή χρήστη</string>
+    <string name="msg_blur_compatibility_error">Το Blur είναι απενεργοποιημένο σε αυτήν τη συσκευή για να αποτρέψει ένα γνωστό σφάλμα οθόνης σε συσκευές Samsung με Android 15 ή νεότερη έκδοση.</string>
+    <!-- Empty State Actions -->
+    <string name="msg_no_apps_frozen">Δεν έχουν επιλεγεί εφαρμογές για πάγωμα.</string>
+    <string name="action_get_started">Ξεκινήστε</string>
+    <string name="action_new_automation">Νέος Αυτοματισμός</string>
+    <string name="action_add_repository">Προσθήκη αποθετηρίου</string>
 </resources>
