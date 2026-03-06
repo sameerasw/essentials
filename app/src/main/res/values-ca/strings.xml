@@ -1097,4 +1097,9 @@
     <string name="label_use_blur">Utilitzeu el desenfocament</string>
     <string name="desc_use_blur">Activa els elements de desenfocament progressiu a la interfície d\'usuari</string>
     <string name="msg_blur_compatibility_error">El desenfocament està desactivat en aquest dispositiu per evitar un error de visualització conegut als dispositius Samsung amb Android 15 o inferior.</string>
+    <!-- Empty State Actions -->
+    <string name="msg_no_apps_frozen">No apps selected to freeze.</string>
+    <string name="action_get_started">Get Started</string>
+    <string name="action_new_automation">New Automation</string>
+    <string name="action_add_repository">Add Repository</string>
 </resources>
