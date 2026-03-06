@@ -608,6 +608,7 @@
     <string name="action_help_guide">Przewodnik pomocniczy</string>
     <string name="action_what_is_this">Co to jest?</string>
     <string name="update_available_title">Dostępna aktualizacja</string>
+    <string name="about_desc_your_android">Glance at your device\'s hardware and software specifications in detail. This information is fetched from GSMArena and system properties to provide a comprehensive overview of your Android device.</string>
     <string name="about_desc_ambient_music_glance">Ambient Music Glance wyświetla na ekranie blokady nakładkę Teraz odtwarzane, gdy muzyka jest odtwarzana i jej odtwarzanie się zmienia. \n\nJeśli Twoje urządzenie nie obsługuje nakładek przez AOD, możesz wybrać wygaszacz ekranu Ambience dodany w ustawieniach Androida jako alternatywę podczas ładowania.</string>
     <string name="about_desc_notification_lighting">Funkcja Notification Lighting dodaje piękny efekt podświetlenia krawędzi po otrzymaniu powiadomień.\n\nMożesz dostosować styl animacji, kolory i zachowanie. Działa nawet wtedy, gdy ekran jest wyłączony (w zależności od OEM) lub na bieżącej aplikacji. Wybierz aplikacje, priorytet powiadomień lub zachowanie, które ma wywoływać, z podanych elementów sterujących. Jeśli Twój producent OEM nie obsługuje nakładek powyżej AOD, skorzystaj z opcji wyświetlania otoczenia znajdującej się poniżej.</string>
     <string name="about_desc_screen_off_widget">Z łatwością wyłącz ekran, dotykając przezroczystego widżetu o zmiennym rozmiarze, który nie dodaje ikon ani nie bałagani na ekranie głównym.</string>
@@ -1025,6 +1026,7 @@
     <string name="download_airsync_summary">Wymagane do synchronizacji baterii komputera Mac</string>
     <string name="feat_battery_notification_title">Powiadomienie o baterii</string>
     <string name="feat_battery_notification_desc">Stałe powiadomienie o stanie baterii</string>
+    <string name="battery_notification_hint">This notification displays battery levels for your connected Mac and Bluetooth devices. You can configure which devices to show in the Battery Widget settings.</string>
     <string name="about_desc_battery_notification">Odtwórz widżet baterii w obszarze powiadomień. Pokazuje poziom naładowania baterii wszystkich podłączonych urządzeń w jednym, trwałym powiadomieniu, aktualizowanym w czasie rzeczywistym. Dotyczy to komputera Mac (przez AirSync) i akcesoriów Bluetooth.</string>
     <string name="battery_notification_channel_name">Powiadomienie o stanie baterii</string>
     <string name="battery_notification_channel_desc">Stałe powiadomienie pokazujące poziom naładowania baterii podłączonych urządzeń</string>
