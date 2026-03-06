@@ -88,7 +88,8 @@ import java.util.Date
 import java.util.Locale
 import com.sameerasw.essentials.domain.DIYTabs
 import com.sameerasw.essentials.domain.registry.initPermissionRegistry
-import com.sameerasw.essentials.ui.components.DIYFloatingToolbar
+import com.sameerasw.essentials.ui.components.EssentialsFloatingToolbar
+import com.sameerasw.essentials.ui.components.ToolbarItem
 import com.sameerasw.essentials.ui.components.cards.TrackedRepoCard
 import androidx.compose.foundation.layout.statusBarsPadding
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
@@ -463,18 +464,23 @@ class MainActivity : FragmentActivity() {
                                     tabs.getOrNull(currentPage) ?: tabs.firstOrNull() ?: DIYTabs.ESSENTIALS
                                 }
 
-                                DIYFloatingToolbar(
+                                EssentialsFloatingToolbar(
                                     modifier = Modifier
                                         .align(Alignment.BottomCenter)
                                         .zIndex(1f),
-                                    currentPage = currentPage,
-                                    tabs = tabs,
-                                    onTabSelected = { index ->
-                                        HapticUtil.performUIHaptic(view)
-                                        currentPage = index
+                                    selectedIndex = currentPage,
+                                    items = tabs.mapIndexed { index, tab ->
+                                        ToolbarItem(
+                                            iconRes = tab.iconRes,
+                                            labelRes = tab.title,
+                                            onClick = {
+                                                HapticUtil.performUIHaptic(view)
+                                                currentPage = index
+                                            },
+                                            hasBadge = (tab == DIYTabs.APPS && viewModel.hasPendingUpdates.value)
+                                        )
                                     },
                                     scrollBehavior = exitAlwaysScrollBehavior,
-                                    badges = mapOf(DIYTabs.APPS to viewModel.hasPendingUpdates.value),
                                     floatingActionButton = {
                                         Box { // Menu anchor
                                             FloatingActionButton(

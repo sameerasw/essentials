@@ -69,7 +69,7 @@ import androidx.compose.ui.zIndex
 import androidx.core.app.ActivityCompat
 import com.sameerasw.essentials.domain.DIYTabs
 import com.sameerasw.essentials.domain.registry.PermissionRegistry
-import com.sameerasw.essentials.ui.components.SettingsFloatingToolbar
+import com.sameerasw.essentials.ui.components.EssentialsFloatingToolbar
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.ui.components.cards.PermissionCard
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
@@ -177,7 +177,7 @@ class SettingsActivity : ComponentActivity() {
                             )
                     )
 
-                    SettingsFloatingToolbar(
+                    EssentialsFloatingToolbar(
                         title = stringResource(R.string.label_settings),
                         onBackClick = { finish() },
                         modifier = Modifier
