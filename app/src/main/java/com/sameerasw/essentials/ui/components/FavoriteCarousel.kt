@@ -108,10 +108,15 @@ fun FavoriteCarousel(
             var showMenu by remember { mutableStateOf(false) }
 
             val menuState = com.sameerasw.essentials.ui.state.LocalMenuStateManager.current
-            LaunchedEffect(showMenu) {
+            androidx.compose.runtime.DisposableEffect(showMenu) {
                 if (showMenu) {
                     menuState.activeId = feature.id
                 } else {
+                    if (menuState.activeId == feature.id) {
+                        menuState.activeId = null
+                    }
+                }
+                onDispose {
                     if (menuState.activeId == feature.id) {
                         menuState.activeId = null
                     }

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">Essentials</string>
     <string name="label_beta">BETA</string>
@@ -13,7 +13,8 @@
     <string name="flashlight_pulse_tile_label">Puls svítilny</string>
     <string name="check_pre_releases_label">Zkontrolujte předběžná vydání</string>
     <string name="check_pre_releases_desc">Může být nestabilní</string>
-    <!-- App Lock -->
+
+    
     <string name="settings_section_security">Zabezpečení</string>
     <string name="app_lock_enable_title">Povolit zámek aplikace</string>
     <string name="app_lock_auth_title">Zabezpečení zámku aplikace</string>
@@ -24,7 +25,8 @@
     <string name="app_lock_description">Zabezpečte své aplikace pomocí biometrického ověřování. Uzamčené aplikace budou při spouštění vyžadovat ověření. Zůstanou odemčené, dokud se obrazovka nevypne.</string>
     <string name="app_lock_warning">Pozor, toto není robustní řešení, protože se jedná pouze o aplikaci třetí strany. Pokud potřebujete silné zabezpečení, zvažte použití soukromého prostoru nebo jiných podobných funkcí.</string>
     <string name="app_lock_biometric_note">Další poznámka, výzva k biometrickému ověření vám umožňuje používat pouze metody zabezpečené třídy STRONG. Bezpečnostní metody odemykání obličejem ve třídě WEAK v zařízeních, jako je Pixel 7, budou moci využívat pouze dostupné jiné STRONG metody ověření, jako je otisk prstu nebo PIN.</string>
-    <!-- Button Remap -->
+
+    
     <string name="button_remap_enable_title">Povolit přemapování tlačítek</string>
     <string name="button_remap_use_shizuku_title">Použijte Shizuku nebo Root nebo Root</string>
     <string name="button_remap_use_shizuku_desc">Funguje s vypnutou obrazovkou (doporučeno)</string>
@@ -82,7 +84,8 @@
     <string name="flashlight_always_off_title">Vždy vypněte baterku</string>
     <string name="flashlight_always_off_desc">I když je displej zapnutý</string>
     <string name="content_desc_settings">Nastavení</string>
-    <!-- Caffeinate / Permissions -->
+
+    
     <string name="permission_show_notification_title">Zobrazit oznámení</string>
     <string name="permission_post_notifications_title">Odeslat oznámení</string>
     <string name="permission_post_notifications_desc">Umožňuje aplikaci zobrazovat oznámení</string>
@@ -106,11 +109,13 @@
     <string name="caffeinate_starting_in">Začíná za %1$ds…</string>
     <string name="caffeinate_remaining">%1$s zbývající</string>
     <string name="caffeinate_live_channel_desc">Trvalé upozornění na kofeinát</string>
-    <!-- Dynamic Night Light -->
+
+    
     <string name="dynamic_night_light_enable_title">Povolit dynamické noční osvětlení</string>
     <string name="dynamic_night_light_apps_section">Aplikace, které vypínají noční světlo</string>
     <string name="action_select_apps">Vyberte aplikace</string>
-    <!-- App Freezing -->
+
+    
     <string name="settings_section_app_control">Ovládání aplikací</string>
     <string name="action_freeze">Zmrazit</string>
     <string name="action_unfreeze">Uvolnit</string>
@@ -137,7 +142,8 @@
     <string name="perm_usage_stats_title">Statistiky použití</string>
     <string name="perm_usage_stats_desc">Vyžadováno ke zjištění, které aplikace jsou aktuálně v popředí, aby nedošlo k jejich zamrznutí</string>
     <string name="perm_notif_listener_desc_freeze">Vyžadováno k detekci přehrávaných médií a aktivních oznámení, aby nedošlo k jejich zamrznutí</string>
-    <!-- Notification Lighting -->
+
+    
     <string name="notification_lighting_screen_off_title">Zobrazit pouze při vypnuté obrazovce</string>
     <string name="notification_lighting_skip_silent_title">Přeskočit tichá oznámení</string>
     <string name="notification_lighting_skip_persistent_title">Přeskočit trvalá oznámení</string>
@@ -167,7 +173,8 @@
     <string name="ambient_display_desc">Probudit obrazovku a zobrazit osvětlení</string>
     <string name="ambient_show_lock_screen_title">Zobrazit zamykací obrazovku</string>
     <string name="ambient_show_lock_screen_desc">Žádné černé překrytí</string>
-    <!-- Tiles -->
+
+    
     <string name="action_add">Přidat</string>
     <string name="qs_tile_already_added">Již přidáno</string>
     <string name="qs_tile_requires_android_13">Vyžaduje Android 13+</string>
@@ -221,7 +228,9 @@
     <string name="adaptive_charging">Adaptivní</string>
     <string name="deactivated">Neoptimalizováno</string>
     <string name="permission_missing">Chybí oprávnění</string>
-    <!-- Screen Locked Security -->
+
+
+    
     <string name="screen_locked_security_title">Zabezpečení uzamčené obrazovky</string>
     <string name="screen_locked_security_dialog_title">Zabezpečení uzamčené obrazovky</string>
     <string name="screen_locked_security_auth_enable">Ověřením povolíte zabezpečení uzamčené obrazovky</string>
@@ -230,20 +239,23 @@
     <string name="screen_locked_security_warning_text">Tato funkce není spolehlivá. Mohou se vyskytnout okrajové případy, kdy někdo bude stále schopen pracovat s dlaždicí. \nMějte také na paměti, že Android vždy umožní provést vynucený restart a Pixely také vždy umožní vypnout zařízení ze zamykací obrazovky.</string>
     <string name="screen_locked_security_airplane_warning">Ujistěte se, že jste z rychlých nastavení odstranili dlaždici režimu v letadle, protože tomu nelze zabránit, protože neotevře dialogové okno.</string>
     <string name="screen_locked_security_description">Pokud je tato možnost povolena, panel Rychlé nastavení se okamžitě zavře a zařízení se uzamkne, pokud se někdo pokusí o interakci s internetovými dlaždicemi, když je zařízení uzamčeno. \n\nTo také zakáže biometrické odemykání, aby se zabránilo dalšímu neoprávněnému přístupu. Měřítko animace se při uzamčení zmenší na 0,1x, aby bylo ještě obtížnější s ní pracovat.</string>
-    <!-- Sound Mode -->
+
+    
     <string name="sound_mode_reorder_title">Režimy opětovného pořadí</string>
     <string name="sound_mode_long_press_hint">Dlouhým stisknutím přepnete</string>
     <string name="content_desc_drag_reorder">Přetažením změníte pořadí</string>
     <string name="sound_mode_sound">Zvuk</string>
     <string name="sound_mode_vibrate">Vibrovat</string>
     <string name="sound_mode_silent">Tichý</string>
-    <!-- Status Bar Categories -->
+
+    
     <string name="status_bar_category_connectivity">Konektivita</string>
     <string name="status_bar_category_phone_network">Telefon a síť</string>
     <string name="status_bar_category_audio_media">Zvuk a média</string>
     <string name="status_bar_category_system_status">Stav systému</string>
     <string name="status_bar_category_oem_specific">Specifické pro OEM</string>
-    <!-- Status Bar Icons -->
+
+    
     <string name="icon_wifi">WiFi</string>
     <string name="icon_bluetooth">Bluetooth</string>
     <string name="icon_nfc">NFC / Felica</string>
@@ -278,7 +290,8 @@
     <string name="icon_samsung_smart">Chytré funkce Samsung</string>
     <string name="icon_samsung_services">Služby Samsung</string>
     <string name="icon_ethernet">Ethernet</string>
-    <!-- Status Bar Settings -->
+    
+    
     <string name="stb_clock_seconds">Zobrazit sekundy v hodin</string>
     <string name="stb_battery_percentage">Procento baterie</string>
     <string name="stb_battery_percentage_always">Vždy</string>
@@ -296,9 +309,11 @@
     <string name="action_reset_all_icons">Obnovit všechny ikony</string>
     <string name="status_bar_section_advanced">Další nastavení</string>
     <string name="status_bar_icons_disclaimer">Upozorňujeme, že implementace těchto možností může záviset na OEM a některé nemusí být funkční vůbec.</string>
-    <!-- Network Type Picker -->
+
+    
     <string name="network_type_other">Ostatní</string>
-    <!-- Search -->
+
+    
     <string name="search_clock_seconds_title">Hodinové sekundy</string>
     <string name="search_clock_seconds_desc">Zobrazit sekundy v hodinách stavového řádku</string>
     <string name="search_battery_percentage_title">Procento baterie</string>
@@ -308,17 +323,20 @@
     <string name="search_desc_toggle_visibility">Přepnout viditelnost pro %1$s</string>
     <string name="action_pin">Připnout do oblíbených</string>
     <string name="action_unpin">Odepnout z oblíbených</string>
-    <!-- Extraction Batch 1 -->
-    <!-- Categories -->
+
+    
+    
     <string name="cat_tools">Nástroje</string>
     <string name="cat_visuals">Vizuály</string>
     <string name="cat_system">Systém</string>
-    <!-- UI Elements -->
+
+    
     <string name="search_placeholder">Základy vyhledávání</string>
     <string name="search_no_results">Žádné výsledky pro \"%1$s\"</string>
     <string name="search_results_title">Výsledky vyhledávání</string>
     <string name="requires_following_permissions">%1$s vyžaduje následující oprávnění</string>
-    <!-- Features -->
+
+    
     <string name="feat_screen_off_widget_title">Widget pro vypnutí obrazovky</string>
     <string name="feat_screen_off_widget_desc">Neviditelný widget pro vypnutí obrazovky</string>
     <string name="feat_statusbar_icons_title">Ikony stavového řádku</string>
@@ -339,7 +357,8 @@
     <string name="limit_max_devices_summary">Upravte maximální počet zařízení viditelných ve widgetu</string>
     <string name="widget_background_title">Widget pozadí</string>
     <string name="widget_background_summary">Zobrazit pozadí widgetu</string>
-    <!-- DIY Automation -->
+
+    
     <string name="diy_create_trigger_title">Spouštěcí automatizace</string>
     <string name="diy_create_trigger_desc">Naplánujte akci, která se spustí při pozorování</string>
     <string name="diy_create_state_title">Automatizace státu</string>
@@ -413,7 +432,8 @@
     <string name="calendar_sync_manual_sync_desc">Chcete-li sledovat, spusťte okamžitou synchronizaci</string>
     <string name="calendar_sync_no_calendars">Nebyly nalezeny žádné místní kalendáře</string>
     <string name="calendar_sync_sync_started">Synchronizace kalendáře byla zahájena</string>
-    <!-- Search Settings -->
+
+    
     <string name="search_haptic_title">Widget Hmatová zpětná vazba</string>
     <string name="search_haptic_desc">Vyberte hmatovou zpětnou vazbu pro klepnutí na widget</string>
     <string name="search_smart_wifi_title">Inteligentní WiFi</string>
@@ -488,7 +508,8 @@
     <string name="search_freeze_locked_desc">Zmrazit vybrané aplikace, když se zařízení uzamkne</string>
     <string name="search_freeze_delay_title">Zpoždění zmrazení</string>
     <string name="search_freeze_delay_desc">Zpoždění před zmrazením po uzamčení</string>
-    <!-- Permissions metadata -->
+
+    
     <string name="perm_shizuku_title">Shizuku</string>
     <string name="perm_shizuku_desc">Vyžadováno pro pokročilé příkazy. Nainstalujte Shizuku z Obchodu Play.</string>
     <string name="perm_shizuku_install_action">Nainstalujte Shizuku</string>
@@ -525,7 +546,8 @@
     <string name="perm_action_how_to">Jak udělit</string>
     <string name="perm_battery_optimization_title">Optimalizace baterie</string>
     <string name="perm_battery_optimization_desc">Zajistěte, aby služba nebyla ukončena systémem, abyste ušetřili energii.</string>
-    <!-- Tabs -->
+
+    
     <string name="tab_essentials">Essentials</string>
     <string name="tab_freeze">Zmrazit</string>
     <string name="tab_freeze_title">Zmrazené</string>
@@ -560,55 +582,33 @@
     <string name="option_allow_prereleases">Zkontrolujte předběžná vydání</string>
     <string name="option_notifications">Oznámení</string>
     <string name="error_rate_limited">Byl překročen limit rychlosti GitHub. Zkuste to znovu později.</string>
-    <!-- Keyboard Setup -->
+
+    
     <string name="label_keyboard_setup">Nastavení klávesnice</string>
     <string name="btn_enable_keyboard">Povolit v nastavení</string>
     <string name="btn_select_keyboard">Přepněte na Essentials</string>
+
     <string name="label_enabled">Povoleno</string>
     <string name="label_disabled">Zakázáno</string>
+
     <string name="tile_adaptive_brightness">Adaptivní jas</string>
+
     <string name="tile_maps_power_saving">Mapy Úspora energie</string>
+
     <string name="action_search">Vyhledávání</string>
     <string name="action_stop">Zastávka</string>
     <string name="label_search">Vyhledávání</string>
-    <!-- UI Components General -->
+
+    
     <string name="action_back">Zadní</string>
     <string name="content_desc_back">Zadní</string>
     <string name="label_settings">Nastavení</string>
     <string name="action_report_bug">Nahlásit chybu</string>
-    <!-- Sentry Crash Reporting -->
-    <string name="sentry_report_mode_title">Crash reporting</string>
-    <string name="sentry_mode_off">Off</string>
-    <string name="sentry_mode_auto">Auto</string>
-    <string name="sentry_crash_toast">Essentials crashed, Report sent</string>
-    <string name="simulate_crash">Simulate crash</string>
-    <string name="welcome_title">Welcome to Essentials</string>
-    <string name="welcome_subtitle">A Toolbox for Android Nerds</string>
-    <string name="welcome_developer_attribution">by sameerasw.com</string>
-    <string name="action_lets_begin">Let\'s Begin</string>
-    <string name="acknowledgement_title">Acknowledgement</string>
-    <string name="acknowledgement_desc">This app is a collection of utilities that can interact deeply with your device system. Using some features might modify system settings or behavior in unexpected ways. \n\nYou only need to grant necessary permissions which are required for selected features you are using giving you full control over the app\'s behavior. \n\nFurther more, the app does not track or store any of your personal data, I don\'t need them... Keep to yourself safe. You can refer to the source code for more information. \n\nThis app is fully open source and is and always will be free to use. Do not pay or install from unknown sources.</string>
-    <string name="acknowledgement_warning">WARNING: Proceed with caution. The developer takes no responsibility for any system instability, data loss, or other issues caused by the use of this app. By proceeding, you acknowledge these risks.</string>
-    <string name="acknowledgement_footer">I know you didn\'t even read this carefully but, in case you need any help, feel free to reach out the developer or the community.</string>
-    <string name="action_i_understand">I Understand</string>
-    <string name="feature_intro_desc">Anytime you are clueless on a feature or a Quick Settings Tile on what it does and what permissions may necessary for it, just long press it and pick \'What is this?\' to learn more.</string>
-    <string name="feature_intro_footer">You can report bugs or find helpful guides anytime in the app settings.</string>
-    <string name="action_let_me_in">Let Me in Already</string>
-    <string name="preferences_title">Preferences</string>
-    <string name="preferences_desc">Configure some basic settings to get started.</string>
-    <string name="label_app_settings">App Settings</string>
-    <string name="label_haptic_feedback">Haptic Feedback</string>
-    <string name="label_updates">Updates</string>
-    <string name="label_auto_check_updates">Auto check for updates</string>
-    <string name="desc_auto_check_updates">Check for updates at app launch</string>
-    <string name="action_all_set">All Set</string>
-    <string name="action_check_whats_new">Check What\'s New?</string>
     <string name="action_done">Hotovo</string>
     <string name="action_preview">Náhled</string>
     <string name="action_help_guide">Průvodce nápovědou</string>
     <string name="action_what_is_this">co to je?</string>
     <string name="update_available_title">Aktualizace k dispozici</string>
-    <string name="about_desc_your_android">Glance at your device\'s hardware and software specifications in detail. This information is fetched from GSMArena and system properties to provide a comprehensive overview of your Android device.</string>
     <string name="about_desc_ambient_music_glance">Ambient Music Glance zobrazuje na obrazovce uzamčení překryvnou vrstvu Právě se přehrává, když se přehrává hudba a přehrávání se mění. \n\nPokud vaše zařízení nepodporuje překryvy přes AOD, můžete se rozhodnout pro spořič obrazovky Ambience přidaný do nastavení Androidu jako alternativu během nabíjení.</string>
     <string name="about_desc_notification_lighting">Osvětlení oznámení přidává krásný efekt okrajového osvětlení, když obdržíte oznámení.\n\n Styl animace, barvy a chování si můžete přizpůsobit. Funguje to, i když je obrazovka vypnutá (závisí na OEM) nebo na vaší aktuální aplikaci. Vyberte aplikace, prioritu oznámení nebo jaké chování by se mělo spouštět z daných ovládacích prvků. Pokud váš OEM nepodporuje překryvy nad AOD, zažalujte možnost Ambient display níže.</string>
     <string name="about_desc_screen_off_widget">Obrazovku snadno vypněte klepnutím na průhledný widget s měnitelnou velikostí, který na vaši domovskou obrazovku nepřidává ikony ani žádný nepořádek.</string>
@@ -647,14 +647,17 @@
     <string name="about_desc_color_picker">Spusťte nástroj kapátko pro výběr barev představený v systému Android 17 BETA 2</string>
     <string name="about_desc_charge_optimization">Optimalizujte životnost baterie omezením maximálního nabití nebo pomocí adaptivního nabíjení. Toto je speciálně navrženo pro zařízení Pixel, aby byla zajištěna dlouhá životnost a zdravé nabíjecí cykly.\n\nCredits: TebbeUbben/ChargeQuickTile</string>
     <string name="action_download">Stáhnout</string>
-    <!-- DIY Section -->
+
+    
     <string name="diy_trigger_screen_off">Obrazovka vypnuta</string>
     <string name="diy_trigger_screen_on">Obrazovka zapnuta</string>
     <string name="diy_trigger_device_unlock">Odemknutí zařízení</string>
     <string name="diy_trigger_charger_connected">Nabíječka připojena</string>
     <string name="diy_trigger_charger_disconnected">Nabíječka odpojena</string>
+    
     <string name="diy_state_charging">Nabíjení</string>
     <string name="diy_state_screen_on">Obrazovka zapnuta</string>
+
     <string name="diy_action_haptic">Vibrovat</string>
     <string name="diy_action_notification">Zobrazit oznámení</string>
     <string name="diy_action_remove_notification">Odebrat oznámení</string>
@@ -676,9 +679,11 @@
     <string name="action_delete">Vymazat</string>
     <string name="action_enable">Umožnit</string>
     <string name="action_disable">Zakázat</string>
+    
     <string name="automation_service_channel_name">Automatizační servis</string>
     <string name="automation_service_running_title">Automatizace aktivní</string>
     <string name="automation_service_running_desc">Monitorování systémových událostí pro vaše automatizace</string>
+
     <string name="diy_action_device_effects">Efekty zařízení</string>
     <string name="diy_device_effects_desc">Ovládejte efekty na úrovni systému, jako jsou stupně šedi, potlačení AOD, stmívání tapety a noční režim.</string>
     <string name="diy_effect_grayscale">Stupně šedi</string>
@@ -690,38 +695,47 @@
     <string name="diy_device_effects_disabled">Zakázáno</string>
     <string name="diy_action_sound_mode">Režim zvuku</string>
     <string name="diy_sound_mode_desc">Tato akce umožňuje přepínání mezi režimy Zvuk, Vibrace a Tichý na základě spouštění. Vyžaduje přístup Nerušit.</string>
-    <!-- About Section -->
+
+    
     <string name="app_developer_name">Sameera Wijerathna</string>
     <string name="app_description">Sada nástrojů vše v jednom pro váš Pixel a Android</string>
-    <!-- Edge Lighting -->
+
+    
     <string name="color_mode_system">Systém</string>
     <string name="color_mode_custom">Zvyk</string>
     <string name="color_mode_app_specific">Specifické pro aplikaci</string>
-    <!-- Biometric & Security -->
+
+    
     <string name="error_auth_failed">Ověření se nezdařilo</string>
     <string name="shortcut_creation_hint_toast">Chcete-li přidat zkratku, dlouze stiskněte aplikaci v mřížce</string>
     <string name="error_app_uninstalled">Aplikace nebyla nalezena nebo byla odinstalována</string>
-    <!-- Notifications -->
+
+    
     <string name="update_channel_name">Aktualizace aplikací</string>
     <string name="update_channel_desc">Upozornění na nové aktualizace aplikací</string>
     <string name="notification_update_available">Aktualizace k dispozici</string>
     <string name="battery_notification_no_devices">Nejsou připojena žádná zařízení</string>
+
     <string name="label_unknown">Neznámý</string>
     <string name="network_type_5g">5G</string>
     <string name="network_type_4g">4G</string>
     <string name="network_type_3g">3G</string>
     <string name="label_shizuku_ritaka">Shizuku (Rikka)</string>
     <string name="label_shizuku_tuozi">Shizuku (TuoZi)</string>
+
     <string name="label_search_content_description">Vyhledávání</string>
     <string name="perm_device_admin_explanation">Vyžaduje se k pevnému uzamčení zařízení při pokusu o neoprávněné změny sítě na obrazovce uzamčení.</string>
     <string name="biometric_subtitle_access_settings">Pro přístup k nastavení se ověřte</string>
     <string name="biometric_title_settings_format">%1$s Nastavení</string>
+
     <string name="keyword_feature">funkce</string>
     <string name="keyword_settings">nastavení</string>
     <string name="keyword_hide">skrýt</string>
     <string name="keyword_show">show</string>
     <string name="keyword_visibility">viditelnost</string>
+
     <string name="error_loading_apps">Chyba při načítání aplikací: %1$s</string>
+
     <string-array name="keywords_haptic">
         <item>vibrace</item>
         <item>dotek</item>
@@ -798,9 +812,11 @@
         <item>Počkejte</item>
         <item>časový limit</item>
     </string-array>
+
     <string name="label_keyboard_always_dark">Vždy temné téma</string>
     <string name="label_keyboard_pitch_black">Černý motiv</string>
     <string name="label_keyboard_clipboard_enabled">Historie schránky</string>
+
     <string-array name="keywords_selection">
         <item>seznam</item>
         <item>sběrač</item>
@@ -880,27 +896,33 @@
         <item>optimalizace</item>
         <item>pixel</item>
     </string-array>
-    <!-- App Selection Extra -->
+
+    
     <string name="action_invert_selection">Invertovat výběr</string>
     <string name="toggle_show_system_apps">Zobrazit systémové aplikace</string>
-    <!-- Updates -->
+
+    
     <string name="status_up_to_date">Jste aktuální</string>
     <string name="warning_pre_release">Toto je předběžná verze a může být nestabilní.</string>
     <string name="release_notes_format">Poznámky k vydání %1$s</string>
     <string name="action_view_on_github">Zobrazit na GitHubu</string>
     <string name="action_download_apk">Stáhnout APK</string>
-    <!-- Haptic Types -->
+
+    
     <string name="haptic_none">Žádný</string>
     <string name="haptic_subtle">Jemný</string>
     <string name="haptic_double">Dvojnásobek</string>
     <string name="haptic_click">Klikněte</string>
     <string name="haptic_tick">Klíště</string>
-    <!-- Flashlight Intensity Overlay -->
+
+    
     <string name="action_turn_off">Vypnout</string>
     <string name="feature_flashlight_brightness_title">Jas svítilny</string>
-    <!-- QS / Activities -->
+
+    
     <string name="error_unlock_network_settings">Chcete-li změnit nastavení sítě, odemkněte telefon</string>
-    <!-- About Section -->
+
+    
     <string name="developed_by_format">Vyvinuto společností %1$s\ns ❤\uFE0F  od \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="action_website">webové stránky</string>
     <string name="action_contact">Kontakt</string>
@@ -912,7 +934,8 @@
     <string name="app_canvas">Plátno</string>
     <string name="app_tasks">Úkoly</string>
     <string name="app_zero">Nula</string>
-    <!-- Help & Guides -->
+
+    
     <string name="help_guides_title">Nápověda a průvodce</string>
     <string name="need_more_support_reach_out">Potřebujete další podporu? natáhnout ruku,</string>
     <string name="action_collapse">Kolaps</string>
@@ -922,32 +945,44 @@
     <string name="send_email_chooser_title">Odeslat email</string>
     <string name="error_no_email_app">Není k dispozici žádná e-mailová aplikace</string>
     <string name="instruction_step_image_description">Krok %1$d  Obrázek</string>
-    <!-- Instructions Content -->
+
+    
     <string name="instruction_section_perms_title">Přístupnost, oznámení a oprávnění k překrytí</string>
     <string name="instruction_step_perms_1">Pokud se pokusíte udělit citlivá oprávnění, jako je přístupnost, naslouchání upozornění nebo překryvná oprávnění, můžete obdržet tuto zprávu o zamítnutí přístupu. Chcete-li jej udělit, zkontrolujte níže uvedené kroky.</string>
     <string name="instruction_step_perms_2">1. Přejděte na stránku s informacemi o aplikaci Essentials.</string>
     <string name="instruction_step_perms_3">2. Otevřete nabídku se 3 tečkami a vyberte \'Povolit omezená nastavení\'. Možná se budete muset ověřit pomocí biometrických údajů. Po dokončení zkuste znovu udělit oprávnění.</string>
+
     <string name="instruction_section_shizuku_title">Shizuku</string>
     <string name="instruction_section_shizuku_desc">Shizuku je výkonný nástroj, který aplikacím umožňuje používat systémová rozhraní API přímo s oprávněními ADB nebo root. Je vyžadován pro funkce, jako je minimální režim Map, App Freezer. A bude udělovat některá oprávnění, jako je WRITE_SECURE_SETTINGS. \n\n Verze Shizuku v Obchodě Play však může být zastaralá a pravděpodobně nebude použitelná na nejnovějších verzích Androidu, takže v takovém případě si stáhněte nejnovější verzi z githubu nebo z jeho aktuální větve.</string>
+
     <string name="instruction_section_maps_title">Mapy úsporný režim</string>
     <string name="instruction_section_maps_desc">Tato funkce automaticky spouští režim úspory energie Map Google, který je aktuálně exkluzivní pro řadu Pixel 10. Člen komunity zjistil, že je stále použitelný na jakémkoli zařízení Android spuštěním aktivity maps minMode s oprávněními root. \n\nA pak jsem to nechal zautomatizovat pomocí Taskeru, aby se automaticky spustil, když se obrazovka během relace navigace vypne, a pak jsem byl schopen dosáhnout stejného s pouhými oprávněními Shizuku za běhu. \n\nMá se zobrazovat přes AOD řady Pixel 10, takže kvůli tomu se na displeji může občas objevit zpráva, že nepodporuje režim na šířku. Tomu se aplikace nevyhne a můžete to ignorovat.</string>
+
     <string name="instruction_section_silent_title">Režim tichého zvuku</string>
     <string name="instruction_section_silent_desc">Možná jste si všimli, že tichý režim také spouští DND. \n\nTo je způsobeno tím, jak to Android implementoval, protože i když použijeme stejné API pro přepnutí do vibračního režimu, z nějakého důvodu zapne DND spolu s tichým režimem a tomu se v tuto chvíli nelze vyhnout. :(</string>
+
     <string name="instruction_section_freeze_title">Co je zmrazení?</string>
     <string name="instruction_section_freeze_desc">Pozastavte se a držte se dál od rozptylování aplikací a zároveň ušetříte trochu energie a zabráníte aplikacím spuštěným na pozadí. Vhodné pro zřídka používané aplikace. \n\nNedoporučuje se pro žádné komunikační služby, protože vás v případě nouze neupozorní, dokud je neuvolníte. \n\nDůrazně doporučujeme nezmrazovat systémové aplikace, protože mohou vést k nestabilitě systému. Pokračujte opatrně, byli jste varováni. \n\nInspirováno Hail &lt;3</string>
+
     <string name="instruction_section_security_title">Jsou zámek aplikace a zabezpečení obrazovky skutečně bezpečné?</string>
     <string name="instruction_section_security_desc">Absolutně ne. \n\nŽádná aplikace třetí strany nemůže 100% zasahovat do běžných interakcí se zařízením a dokonce i zámek aplikace je pouze překrytím nad vybranými aplikacemi, aby se zabránilo interakci s nimi. Existují zástupná řešení a není to spolehlivé. \n\nTotéž platí s bezpečnostní funkcí uzamčení obrazovky, která detekuje někoho, kdo se pokouší interagovat se síťovými dlaždicemi, které jsou z nějakého důvodu stále dostupné pro kohokoli na Pixelech. Pokud se tedy budou dostatečně snažit, možná je stále budou schopni změnit, a zvláště pokud máte přidanou dlaždici QS režimu letu, tato aplikace nemůže zabránit interakcím s ní. \n\n Tyto funkce jsou vytvořeny jako experimenty pro nenáročné použití a nikdy by se nedoporučovaly jako silná řešení zabezpečení a ochrany soukromí. \n\n⟐SPLIT⟐ alternatives:\n - App lock: Private Space and Secure folder on Pixels and Samsung\n - Preventing mobile networks access: Make sure your theft protection and offline/ power off find my device settings are on. Můžete se také podívat na Graphene OS.</string>
+
     <string name="instruction_section_statusbar_title">Ikony stavového řádku</string>
     <string name="instruction_section_statusbar_desc">Můžete si všimnout, že i po resetování ikon stavového řádku mohou některé ikony, jako je rotace zařízení, ikony drátových sluchátek zůstat viditelné. To je způsobeno tím, jak je v Androidu implementována černá listina statubarů a jak je váš OEM možná upravil. \nMožná budete potřebovat další úpravy. \n\nTaké nemusí fungovat všechny možnosti viditelnosti ikon, protože závisí na implementacích a dostupnosti OEM.</string>
+
     <string name="instruction_section_lighting_title">Osvětlení upozornění nefunguje</string>
     <string name="instruction_section_lighting_desc">Záleží na OEM. Zdá se, že některé jako OneUI neumožňují překrytí nad AOD, aby se zabránilo zobrazení světelných efektů. V takovém případě zkuste jako řešení okolní displej.</string>
+
     <string name="instruction_section_button_title">Přemapování tlačítek nefunguje, když je displej vypnutý</string>
     <string name="instruction_section_button_desc">Někteří výrobci OEM omezují hlášení služby usnadnění, jakmile je displej skutečně vypnutý, ale mohou stále fungovat, když je AOD zapnutý. \nV tomto případě můžete použít přemapování tlačítek se zapnutým AOD, ale ne s vypnutým. \n\nJako řešení budete muset použít oprávnění Shizuku a zapnout \'Použijte Shizuku nebo Root\' přepnout v nastavení přemapování tlačítek, které identifikuje a naslouchá událostem vstupu hardwaru.\nNení zaručeno, že to bude fungovat na všech zařízeních a vyžaduje testování.\n\nA i kdyby\'Pokud je zapnuto, použije se pouze metoda Shizuku\'je potřeba. V opačném případě se vždy vrátí k Accessibility, která také řeší blokování skutečného vstupu během dlouhého stisknutí.</string>
+
     <string name="instruction_section_flashlight_title">Nefunguje jas svítilny</string>
     <string name="instruction_section_flashlight_desc">Pouze omezený počet zařízení má hardwarovou a softwarovou podporu upravující intenzitu svítilny. \n\n\'Minimální verze Androidu je 13 (SDK33).\nOvládání jasu svítilny podporuje pouze HAL verze 3.8 a vyšší, například Samsung S3, nejnovější, tedy S3, Pixel/zařízení atd.)\'\npolodarb/Flashlight-Tiramisu</string>
+
     <string name="instruction_section_about_title">Co je to sakra za aplikaci?</string>
     <string name="instruction_section_about_desc">dobrá otázka,\n\nVždy jsem chtěl ze svých zařízení vytěžit maximum jako já\'Od té doby, co jsem dostal své první zařízení Project Treble, jsem uživatelem root. a já\'Miloval jsem aplikaci Tasker, která je jako bůh, když přijde automatizace a využívá všechny možné API a interní funkce Androidu.\n\nTakže nejsem unrooted a zpět na skladě Android beta zkušenosti a chtěl získat co nejvíce z toho, co je možné s danými oprávněními. Možná je také sdílet. Takže s mými začátečnickými znalostmi v Kotlin Jetpack as podporou mnoha výzkumných a asistenčních nástrojů a také skvělé komunity jsem vytvořil all-in-one aplikaci obsahující vše, co jsem chtěl mít ve svém Androidu s danými oprávněními. A je to tady.\n\nPožadavky na funkce jsou vítány, zvážím a uvidím, zda jsou dosažitelné s dostupnými oprávněními a mými schopnostmi. V dnešní době co není možné. :)\n\nProč ne v Obchodě Play?\njá ne\'Nechci riskovat, že můj vývojářský účet bude zakázán kvůli vysoce citlivým a interním oprávněním a rozhraním API používaným v aplikaci. Ale s tím, jak Android sideloading směřuje, nechme\'uvidíme, co musíme udělat. Chápu obavy, že aplikace s bočním zatížením jsou škodlivé.\nKdyž už jsme u tématu, podívejte se na mou další aplikaci AirSync, pokud jste uživatelem systému Mac + Android. *bezostyšná zástrčka*\n\nUžijte si to, pokračujte v budování! (っ◕‿◕)っ</string>
-    <!-- Bug Reporting -->
+    
+    
     <string name="toast_bug_report_copied">Zpráva o chybě zkopírována do schránky</string>
     <string name="bug_report_title">Hlášení chyby</string>
     <string name="bug_report_option_share_logs">Sdílejte protokoly</string>
@@ -958,8 +993,9 @@
     <string name="action_report_email">E-mailová zpráva</string>
     <string name="action_copy_clipboard">Kopírovat do schránky</string>
     <string name="bug_report_email_subject">Zpráva o chybě Essentials</string>
-    <string name="bug_report_send_via">Please enable crash reporting as it will automatically report details that would help resolving issues.</string>
-    <!-- Location Reached -->
+    <string name="bug_report_send_via">Odeslat přes</string>
+
+    
     <string name="feat_location_reached_title">Už jsme tam?</string>
     <string name="feat_location_reached_desc">Upozornění na cíl v okolí</string>
     <string name="location_reached_how_to">Otevřete Mapy Google, vyberte místo a sdílejte ho se službou Essentials.</string>
@@ -995,24 +1031,25 @@
     <string name="setting_use_root_title">Použijte Root</string>
     <string name="setting_use_root_desc">Místo Shizuku</string>
     <string name="root_not_available_toast">Kořenový přístup není k dispozici. Zkontrolujte prosím svého root managera.</string>
-    <!-- System Keyboard -->
+    
     <string name="feat_system_keyboard_title">Klávesnice</string>
     <string name="feat_system_keys">Klíče</string>
     <string name="feat_system_keyboard_desc">Přizpůsobte si rozvržení a chování</string>
     <string name="search_keyboard_height_title">Výška klávesnice</string>
-    <string name="search_keyboard_height_desc">Upravte celkovou vertikální velikost klávesnice</string>
+    <string name="search_keyboard_height_desc">Upravte celkovou vertikální velikost klávesnice</string>&gt;
     <string name="search_keyboard_padding_title">Spodní polstrování</string>
     <string name="search_keyboard_padding_desc">Přidejte prostor pod klávesnici</string>
     <string name="search_keyboard_haptics_title">Haptická zpětná vazba</string>
     <string name="search_keyboard_haptics_desc">Vibrace při stisknutí tlačítka</string>
     <string name="test_keyboard_hint">Otestujte klávesnici</string>
-    <string name="label_keyboard_height">Výška klávesnice</string>
+    <string name="label_keyboard_height">Výška klávesnice</string>&gt;
     <string name="label_keyboard_bottom_padding">Spodní polstrování</string>
     <string name="label_keyboard_haptics">Haptická zpětná vazba</string>
     <string name="label_keyboard_roundness">Kulatost klíče</string>
     <string name="label_keyboard_functions_bottom">Přesunout funkce dolů</string>
     <string name="label_keyboard_functions_padding">Funkce boční polstrování</string>
     <string name="label_keyboard_haptic_strength">Síla haptické zpětné vazby</string>
+
     <string name="label_keyboard_shape">Tvar klávesnice</string>
     <string name="shape_round">Kolo</string>
     <string name="shape_flat">Byt</string>
@@ -1024,15 +1061,16 @@
     <string name="connect_to_airsync_summary">Zobrazte baterii z připojeného zařízení Mac v AirSync</string>
     <string name="download_airsync">Stáhněte si aplikaci AirSync</string>
     <string name="download_airsync_summary">Vyžadováno pro synchronizaci baterie Mac</string>
+
     <string name="feat_battery_notification_title">Upozornění na baterii</string>
     <string name="feat_battery_notification_desc">Trvalé upozornění na stav baterie</string>
-    <string name="battery_notification_hint">This notification displays battery levels for your connected Mac and Bluetooth devices. You can configure which devices to show in the Battery Widget settings.</string>
     <string name="about_desc_battery_notification">Replikujte prostředí widgetu baterie na panelu oznámení. Ukáže úrovně nabití baterie všech vašich připojených zařízení v jediném trvalém upozornění, aktualizovaném v reálném čase. To zahrnuje váš Mac (přes AirSync) a příslušenství Bluetooth.</string>
     <string name="battery_notification_channel_name">Upozornění na stav baterie</string>
     <string name="battery_notification_channel_desc">Trvalé upozornění zobrazující stav baterie připojených zařízení</string>
     <string name="perm_nearby_devices_title">Zařízení v okolí</string>
     <string name="perm_nearby_devices_desc">Vyžadováno k detekci a načtení informací o baterii z příslušenství Bluetooth</string>
-    <!-- GitHub Auth -->
+
+    
     <string name="auth_copy_code">Kopírovat kód</string>
     <string name="auth_open_login_page">Otevřete přihlašovací stránku</string>
     <string name="auth_sign_in_rationale">Chcete-li rozšířit limity volání API, přihlaste se</string>
@@ -1040,58 +1078,73 @@
     <string name="action_sign_in_github">Přihlaste se pomocí GitHubu</string>
     <string name="action_sign_out">Odhlaste se</string>
     <string name="action_profile">Profil</string>
-    <!-- App Updates / Repos -->
+
+    
     <string name="label_release_notes">Poznámky k vydání</string>
     <string name="msg_no_repos_tracked">Zatím nejsou sledována žádná úložiště</string>
     <string name="label_no_app_linked">Není připojena žádná aplikace</string>
     <string name="format_updated_relative">Aktualizováno %1$s</string>
-    <!-- Relative Time -->
+
+    
     <string name="time_just_now">právě teď</string>
     <string name="time_min_ago">%1$dpřed m</string>
     <string name="time_hour_ago">%1$dpřed h</string>
     <string name="time_day_ago">%1$dpřed d</string>
     <string name="time_month_ago">%1$dpřed měsícem</string>
     <string name="time_year_ago">%1$dpřed y</string>
+
     <string name="action_retry">Zkuste to znovu</string>
     <string name="action_start_sign_in">Začněte se přihlašovat</string>
     <string name="auth_requesting_code">Vyžadování kódu zařízení...</string>
     <string name="auth_copy_code_instruction">1. Zkopírujte svůj kód:</string>
     <string name="auth_paste_code_instruction">2. Vložte kód na GitHub:</string>
+
     <string name="label_found_apks">Nalezené soubory APK</string>
     <string name="label_readme">README</string>
     <string name="action_refresh">Obnovit</string>
-    <!-- Added Missing Group Strings -->
+
+    
     <string name="feat_sound_modes_title">Dlaždice režimu zvuku</string>
     <string name="feat_sound_modes_desc">Dlaždice QS pro přepínání režimu zvuku</string>
     <string name="search_sound_mode_show_slider_title">Zobrazit posuvník</string>
     <string name="search_sound_mode_show_slider_desc">Zobrazit posuvník hlasitosti v dlaždici</string>
     <string name="search_sound_mode_behavior_title">Cyklické chování</string>
     <string name="search_sound_mode_behavior_desc">Vyberte režimy, které chcete procházet</string>
+    
     <string name="feat_ambient_music_title">Pohled na ambientní hudbu</string>
     <string name="feat_ambient_music_desc">Podívejte se na média na AOD</string>
+    
     <string name="feat_sound_haptics_title">Zvuk a haptika</string>
     <string name="feat_sound_haptics_desc">Objem a haptické vlastnosti</string>
+    
     <string name="feat_security_privacy_title">Zabezpečení a soukromí</string>
     <string name="feat_security_privacy_desc">Chraňte a zabezpečte své zařízení</string>
+    
     <string name="feat_notifications_alerts_title">Oznámení a upozornění</string>
     <string name="feat_notifications_alerts_desc">Nikdy nepropásněte své priority</string>
+    
     <string name="feat_input_actions_title">Vstup a akce</string>
     <string name="feat_input_actions_desc">Ovládejte své zařízení snadno</string>
+    
     <string name="feat_widgets_title">Widgety</string>
     <string name="feat_widgets_desc">Jedním pohledem na domovskou obrazovku</string>
+    
     <string name="feat_display_visuals_title">Zobrazit</string>
     <string name="feat_display_visuals_desc">Vizuály pro vylepšení vašeho zážitku</string>
+    
     <string name="feat_watch_title">Hodinky</string>
     <string name="feat_watch_desc">Integrace s WearOS</string>
     <string name="watch_no_companion_title">Nebyly zjištěny žádné hodinky</string>
     <string name="watch_no_companion_desc">Zdá se, že v hodinkách nemáte nainstalovanou doprovodnou aplikaci Essentials Wear.</string>
     <string name="watch_install_companion_action">Nainstalujte Companion</string>
+
+
     <string name="cat_interaction">Interakce</string>
     <string name="cat_interface">Rozhraní</string>
     <string name="cat_display">Zobrazit</string>
     <string name="cat_protection">Ochrana</string>
     <string name="label_kbd_abc">ABC</string>
-    <string name="label_kbd_symbols">\?#/</string>
+    <string name="label_kbd_symbols">?#/</string>
     <string name="msg_restrict_own_app_repo">Oi! Aktualizace můžete zkontrolovat v nastavení aplikace, zde není třeba přidávat XD</string>
     <string name="action_export">Vývozní</string>
     <string name="action_import">Importovat</string>
@@ -1126,9 +1179,4 @@
     <string name="label_use_blur">Použijte rozostření</string>
     <string name="desc_use_blur">Povolit prvky progresivního rozostření v celém uživatelském rozhraní</string>
     <string name="msg_blur_compatibility_error">Rozmazání je na tomto zařízení zakázáno, aby se předešlo známé chybě zobrazení na zařízeních Samsung se systémem Android 15 nebo starším.</string>
-    <!-- Empty State Actions -->
-    <string name="msg_no_apps_frozen">No apps selected to freeze.</string>
-    <string name="action_get_started">Get Started</string>
-    <string name="action_new_automation">New Automation</string>
-    <string name="action_add_repository">Add Repository</string>
 </resources>

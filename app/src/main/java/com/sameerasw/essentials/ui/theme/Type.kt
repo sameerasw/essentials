@@ -1,9 +1,11 @@
 package com.sameerasw.essentials.ui.theme
 
 import androidx.compose.material3.Typography
+import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.sameerasw.essentials.R
@@ -11,6 +13,16 @@ import com.sameerasw.essentials.R
 // Create a FontFamily backed by the google_sans_flex font in res/font
 val GoogleSansFlex = FontFamily(
     Font(R.font.google_sans_flex, weight = FontWeight.Normal)
+)
+
+@OptIn(ExperimentalTextApi::class)
+val GoogleSansFlexRounded = FontFamily(
+    Font(
+        R.font.google_sans_flex,
+        variationSettings = FontVariation.Settings(
+            FontVariation.Setting("ROND", 100f)
+        )
+    )
 )
 
 // Set of Material typography styles to start with, using GoogleSansFlex throughout

@@ -52,6 +52,10 @@
         android:supportsRtl="true"
         android:enableOnBackInvokedCallback="true"
         android:theme="@style/Theme.Essentials">
+
+        <!-- Disable Sentry auto-init as it's handled manually in EssentialsApp -->
+        <meta-data android:name="io.sentry.auto-init" android:value="false" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -691,6 +695,7 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+        
 
         <service
             android:name=".services.dreams.AmbientDreamService"

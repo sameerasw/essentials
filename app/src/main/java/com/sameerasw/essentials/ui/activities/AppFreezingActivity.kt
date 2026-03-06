@@ -64,6 +64,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
@@ -208,11 +209,23 @@ class AppFreezingActivity : ComponentActivity() {
                                 )
                                 Spacer(modifier = Modifier.height(16.dp))
                                 Text(
-                                    text = "No apps selected to freeze.\nGo to settings to pick apps.",
+                                    text = stringResource(R.string.msg_no_apps_frozen),
                                     textAlign = TextAlign.Center,
                                     style = MaterialTheme.typography.bodyLarge,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
+                                Spacer(modifier = Modifier.height(16.dp))
+                                androidx.compose.material3.Button(
+                                    onClick = {
+                                        HapticUtil.performVirtualKeyHaptic(view)
+                                        val intent = Intent(context, FeatureSettingsActivity::class.java).apply {
+                                            putExtra("feature", "Freeze")
+                                        }
+                                        context.startActivity(intent)
+                                    }
+                                ) {
+                                    Text(stringResource(R.string.action_get_started))
+                                }
                             }
                         } else {
                             RoundedCardContainer(

@@ -1091,7 +1091,7 @@
     <string name="cat_display">Scherm</string>
     <string name="cat_protection">Bescherming</string>
     <string name="label_kbd_abc">ABC</string>
-    <string name="label_kbd_symbols">\?#/</string>
+    <string name="label_kbd_symbols">?#/</string>
     <string name="msg_restrict_own_app_repo">Hé! Je kan voor updates checken in de instellingen,  er is geen reden om het hier toe te voegen XD</string>
     <string name="action_export">Exporteren</string>
     <string name="action_import">Importeren</string>

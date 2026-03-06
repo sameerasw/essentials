@@ -26,6 +26,7 @@ import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -57,7 +58,7 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.model.DeviceSpecs
 import com.sameerasw.essentials.ui.components.DeviceHeroCard
 import com.sameerasw.essentials.ui.components.DeviceSpecsCard
-import com.sameerasw.essentials.ui.components.SettingsFloatingToolbar
+import com.sameerasw.essentials.ui.components.EssentialsFloatingToolbar
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
@@ -133,7 +134,7 @@ class YourAndroidViewModel : ViewModel() {
 }
 
 class YourAndroidActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3Api::class)
+    @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -151,6 +152,23 @@ class YourAndroidActivity : ComponentActivity() {
             val isSpecsLoading by viewModel.isSpecsLoading.collectAsState()
             val context = androidx.compose.ui.platform.LocalContext.current
             val deviceInfo = remember { DeviceUtils.getDeviceInfo(context) }
+            var showHelpSheet by remember { mutableStateOf(false) }
+
+            val yourAndroidFeature = remember {
+                object : com.sameerasw.essentials.domain.model.Feature(
+                    id = "Your Android",
+                    title = R.string.tab_your_android,
+                    iconRes = R.drawable.rounded_android_24,
+                    category = R.string.cat_system,
+                    description = R.string.about_desc_your_android,
+                    aboutDescription = R.string.about_desc_your_android,
+                    showToggle = false,
+                    hasMoreSettings = false
+                ) {
+                    override fun isEnabled(viewModel: com.sameerasw.essentials.viewmodels.MainViewModel) = true
+                    override fun onToggle(viewModel: com.sameerasw.essentials.viewmodels.MainViewModel, context: android.content.Context, enabled: Boolean) {}
+                }
+            }
 
             LaunchedEffect(Unit) {
                 mainViewModel.check(context)
@@ -185,13 +203,21 @@ class YourAndroidActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxSize()
                     )
 
-                    SettingsFloatingToolbar(
+                    EssentialsFloatingToolbar(
                         title = stringResource(R.string.tab_your_android),
                         onBackClick = { finish() },
+                        onHelpClick = { showHelpSheet = true },
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
                             .zIndex(1f)
                     )
+
+                    if (showHelpSheet) {
+                        com.sameerasw.essentials.ui.components.sheets.FeatureHelpBottomSheet(
+                            onDismissRequest = { showHelpSheet = false },
+                            feature = yourAndroidFeature
+                        )
+                    }
                 }
             }
         }

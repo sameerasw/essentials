@@ -21,8 +21,8 @@ android {
         applicationId = "com.sameerasw.essentials"
         minSdk = 26
         targetSdk = 36
-        versionCode = 32
-        versionName = "12.1"
+        versionCode = 33
+        versionName = "12.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -89,6 +89,7 @@ dependencies {
     implementation("androidx.biometric:biometric:1.2.0-alpha05")
 
     implementation("io.coil-kt:coil-compose:2.5.0")
+    implementation("io.coil-kt:coil-gif:2.5.0")
     implementation(libs.androidx.compose.foundation.layout)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.compose.foundation)
@@ -142,4 +143,5 @@ dependencies {
 
     // GSMArena Parsing
     implementation("org.jsoup:jsoup:1.15.3")
+    implementation(libs.sentry.android)
 }

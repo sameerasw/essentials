@@ -30,6 +30,7 @@ import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.diy.AutomationItem
 import com.sameerasw.essentials.ui.components.sheets.NewAutomationSheet
 import com.sameerasw.essentials.viewmodels.DIYViewModel
+import com.sameerasw.essentials.utils.HapticUtil
 
 @Composable
 fun DIYScreen(
@@ -37,7 +38,8 @@ fun DIYScreen(
     viewModel: DIYViewModel = viewModel(),
     contentPadding: PaddingValues = PaddingValues(0.dp),
     showNewAutomationSheet: Boolean = false,
-    onDismissNewAutomationSheet: () -> Unit = {}
+    onDismissNewAutomationSheet: () -> Unit = {},
+    onNewAutomationClick: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
     val automations by viewModel.automations.collectAsState()
@@ -54,13 +56,29 @@ fun DIYScreen(
             horizontalAlignment = Alignment.Start
         ) {
             if (automations.isEmpty()) {
+                val view = androidx.compose.ui.platform.LocalView.current
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = "No automations yet"
-                    )
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "No automations yet"
+                        )
+                        if (onNewAutomationClick != null) {
+                            Spacer(modifier = Modifier.height(16.dp))
+                            androidx.compose.material3.Button(
+                                onClick = {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    onNewAutomationClick()
+                                }
+                            ) {
+                                Text(stringResource(R.string.action_new_automation))
+                            }
+                        }
+                    }
                 }
             } else {
                 val (enabledAutomations, disabledAutomations) = remember(automations) {

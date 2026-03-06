@@ -4,14 +4,17 @@ import android.Manifest
 import android.app.Activity
 import android.app.ActivityManager
 import android.app.admin.DevicePolicyManager
+import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.database.ContentObserver
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
+import android.os.PowerManager
 import android.provider.CalendarContract
 import android.provider.Settings
 import android.view.inputmethod.InputMethodManager
@@ -43,6 +46,7 @@ import com.sameerasw.essentials.services.NotificationLightingService
 import com.sameerasw.essentials.services.receivers.SecurityDeviceAdminReceiver
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.utils.AppUtil
+import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.utils.RootUtils
 import com.sameerasw.essentials.utils.ShizukuUtils
@@ -113,6 +117,7 @@ class MainViewModel : ViewModel() {
     val isAodForceTurnOffEnabled = mutableStateOf(false)
     val isAutoAccessibilityEnabled = mutableStateOf(false)
     val isNotificationGlanceSameAsLightingEnabled = mutableStateOf(true)
+    val isOnboardingCompleted = mutableStateOf(true) // Default to true so it doesn't flash on first check if not loaded
 
 
     data class CalendarAccount(
@@ -169,6 +174,10 @@ class MainViewModel : ViewModel() {
 
     val isPitchBlackThemeEnabled = mutableStateOf(false)
     val isBlurEnabled = mutableStateOf(true)
+    val isBlurSettingEnabled = mutableStateOf(true)
+    val sentryReportMode = mutableStateOf("auto")
+    val isPowerSaveModeEnabled = mutableStateOf(false)
+    private var powerSaveReceiver: BroadcastReceiver? = null
 
     // Keyboard Customization
     val keyboardHeight = mutableFloatStateOf(54f)
@@ -394,6 +403,10 @@ class MainViewModel : ViewModel() {
                         isCalendarSyncEnabled.value = settingsRepository.getBoolean(key)
                     }
 
+                    SettingsRepository.KEY_ONBOARDING_COMPLETED -> {
+                        isOnboardingCompleted.value = settingsRepository.getBoolean(key, false)
+                    }
+
                     SettingsRepository.KEY_TRACKED_REPOS -> {
                         appContext?.let { refreshTrackedUpdates(it) }
                     }
@@ -409,10 +422,17 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING -> isNotificationGlanceSameAsLightingEnabled.value = settingsRepository.getBoolean(key, true)
                     SettingsRepository.KEY_AUTO_ACCESSIBILITY_ENABLED -> isAutoAccessibilityEnabled.value = settingsRepository.getBoolean(key)
 
-                    SettingsRepository.KEY_USE_BLUR -> isBlurEnabled.value = settingsRepository.getBoolean(key, true)
+                    SettingsRepository.KEY_USE_BLUR -> {
+                        appContext?.let { updateBlurState(it) }
+                    }
                 }
             }
         }
+
+    fun setSentryReportMode(mode: String, context: Context) {
+        sentryReportMode.value = mode
+        settingsRepository.putString(SettingsRepository.KEY_SENTRY_REPORT_MODE, mode)
+    }
 
     fun check(context: Context) {
         appContext = context.applicationContext
@@ -522,6 +542,26 @@ class MainViewModel : ViewModel() {
             contentObserver
         )
 
+        isPowerSaveModeEnabled.value = DeviceUtils.isPowerSaveMode(context)
+        updateBlurState(context)
+
+        if (powerSaveReceiver == null) {
+            powerSaveReceiver = object : BroadcastReceiver() {
+                override fun onReceive(context: Context?, intent: Intent?) {
+                    if (intent?.action == PowerManager.ACTION_POWER_SAVE_MODE_CHANGED) {
+                        context?.let {
+                            isPowerSaveModeEnabled.value = DeviceUtils.isPowerSaveMode(it)
+                            updateBlurState(it)
+                        }
+                    }
+                }
+            }
+            context.applicationContext.registerReceiver(
+                powerSaveReceiver,
+                IntentFilter(PowerManager.ACTION_POWER_SAVE_MODE_CHANGED)
+            )
+        }
+
         settingsRepository.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
 
         viewModelScope.launch {
@@ -561,6 +601,7 @@ class MainViewModel : ViewModel() {
 
         notificationLightingStyle.value = settingsRepository.getNotificationLightingStyle()
         notificationLightingColorMode.value = settingsRepository.getNotificationLightingColorMode()
+        isOnboardingCompleted.value = settingsRepository.getBoolean(SettingsRepository.KEY_ONBOARDING_COMPLETED, false)
         notificationLightingCustomColor.intValue = settingsRepository.getInt(
             SettingsRepository.KEY_EDGE_LIGHTING_CUSTOM_COLOR,
             0xFF6200EE.toInt()
@@ -593,6 +634,7 @@ class MainViewModel : ViewModel() {
         MapsState.isEnabled = isMapsPowerSavingEnabled.value
         hapticFeedbackType.value = settingsRepository.getHapticFeedbackType()
         defaultTab.value = settingsRepository.getDIYTab()
+        sentryReportMode.value = settingsRepository.getString(SettingsRepository.KEY_SENTRY_REPORT_MODE, "auto") ?: "auto"
         checkCaffeinateActive(context)
 
         // Button Remap & Migration
@@ -781,7 +823,8 @@ class MainViewModel : ViewModel() {
         isNotificationGlanceEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_ENABLED)
         isAodForceTurnOffEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_AOD_FORCE_TURN_OFF_ENABLED)
         isNotificationGlanceSameAsLightingEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING, true)
-        isBlurEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_USE_BLUR, true)
+        isPowerSaveModeEnabled.value = DeviceUtils.isPowerSaveMode(context)
+        updateBlurState(context)
 
         refreshTrackedUpdates(context)
         if (isBatteryNotificationEnabled.value) {
@@ -929,8 +972,17 @@ class MainViewModel : ViewModel() {
     }
 
     fun setBlurEnabled(enabled: Boolean, context: Context) {
-        isBlurEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_USE_BLUR, enabled)
+        updateBlurState(context)
+    }
+
+    private fun updateBlurState(context: Context) {
+        val useBlurSetting = settingsRepository.getBoolean(SettingsRepository.KEY_USE_BLUR, true)
+        val isProblematic = DeviceUtils.isBlurProblematicDevice()
+        val isPowerSave = DeviceUtils.isPowerSaveMode(context)
+        
+        isBlurSettingEnabled.value = useBlurSetting
+        isBlurEnabled.value = useBlurSetting && !isProblematic && !isPowerSave
     }
 
     fun checkForUpdates(context: Context, manual: Boolean = false) {
@@ -2246,11 +2298,32 @@ class MainViewModel : ViewModel() {
     }
 
     override fun onCleared() {
-
         super.onCleared()
-        appContext?.contentResolver?.unregisterContentObserver(contentObserver)
+        appContext?.let { context ->
+            try {
+                context.contentResolver.unregisterContentObserver(contentObserver)
+            } catch (e: Exception) {
+                
+            }
+            try {
+                powerSaveReceiver?.let { context.unregisterReceiver(it) }
+            } catch (e: Exception) {
+
+            }
+        }
         if (::settingsRepository.isInitialized) {
             settingsRepository.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener)
         }
+    }
+
+    fun setOnboardingCompleted(completed: Boolean, context: Context) {
+        settingsRepository.putBoolean(SettingsRepository.KEY_ONBOARDING_COMPLETED, completed)
+        isOnboardingCompleted.value = completed
+    }
+
+    fun resetOnboarding(context: Context) {
+        setOnboardingCompleted(false, context)
+        // Reset tab to ESSENTIALS
+        setDefaultTab(com.sameerasw.essentials.domain.DIYTabs.ESSENTIALS, context)
     }
 }

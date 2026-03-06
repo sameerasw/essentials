@@ -22,6 +22,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,8 +40,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -58,16 +63,18 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.core.app.ActivityCompat
 import com.sameerasw.essentials.domain.DIYTabs
 import com.sameerasw.essentials.domain.registry.PermissionRegistry
-import com.sameerasw.essentials.ui.components.SettingsFloatingToolbar
+import com.sameerasw.essentials.ui.components.EssentialsFloatingToolbar
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.ui.components.cards.PermissionCard
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.dialogs.AboutSection
+import com.sameerasw.essentials.ui.components.pickers.CrashReportingPicker
 import com.sameerasw.essentials.ui.components.pickers.DefaultTabPicker
 import com.sameerasw.essentials.ui.components.sheets.InstructionsBottomSheet
 import com.sameerasw.essentials.ui.components.sheets.UpdateBottomSheet
@@ -75,6 +82,7 @@ import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import rikka.shizuku.Shizuku
@@ -94,7 +102,7 @@ class SettingsActivity : ComponentActivity() {
             }
         }
 
-    @OptIn(ExperimentalMaterial3Api::class)
+    @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -169,24 +177,15 @@ class SettingsActivity : ComponentActivity() {
                             )
                     )
 
-                    SettingsFloatingToolbar(
+                    EssentialsFloatingToolbar(
                         title = stringResource(R.string.label_settings),
                         onBackClick = { finish() },
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
                             .zIndex(1f),
-                        menuContent = {
-                            MenuItem(
-                                text = { Text(stringResource(R.string.action_report_bug)) },
-                                onClick = { showBugReportSheet = true },
-                                leadingIcon = {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.rounded_bug_report_24),
-                                        contentDescription = null
-                                    )
-                                }
-                            )
-                        }
+                        fabAction = { showBugReportSheet = true },
+                        fabIconRes = R.drawable.rounded_bug_report_24,
+                        fabContentDescription = stringResource(R.string.action_report_bug)
                     )
                 }
             }
@@ -216,6 +215,7 @@ class SettingsActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SettingsContent(
     viewModel: MainViewModel,
@@ -303,6 +303,9 @@ fun SettingsContent(
         )
     }
 
+
+    val sentryMode by viewModel.sentryReportMode
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -352,12 +355,18 @@ fun SettingsContent(
                 isChecked = viewModel.isPitchBlackThemeEnabled.value,
                 onCheckedChange = { viewModel.setPitchBlackThemeEnabled(it, context) }
             )
+            val isBlurProblematic = remember { DeviceUtils.isBlurProblematicDevice() }
             IconToggleItem(
                 iconRes = R.drawable.rounded_blur_on_24,
-                title = "Use blur",
-                description = "Enable progressive blur elements across the UI",
-                isChecked = viewModel.isBlurEnabled.value,
-                onCheckedChange = { viewModel.setBlurEnabled(it, context) }
+                title = stringResource(R.string.label_use_blur),
+                description = if (isBlurProblematic) {
+                    stringResource(R.string.msg_blur_compatibility_error)
+                } else {
+                    stringResource(R.string.desc_use_blur)
+                },
+                isChecked = viewModel.isBlurSettingEnabled.value,
+                onCheckedChange = { viewModel.setBlurEnabled(it, context) },
+                enabled = !isBlurProblematic
             )
             IconToggleItem(
                 iconRes = R.drawable.rounded_numbers_24,
@@ -366,7 +375,13 @@ fun SettingsContent(
                 isChecked = viewModel.isRootEnabled.value,
                 onCheckedChange = { viewModel.setRootEnabled(it, context) }
             )
+
+            CrashReportingPicker(
+                selectedMode = sentryMode,
+                onModeSelected = { viewModel.setSentryReportMode(it, context) }
+            )
         }
+
 
         Text(
             text = "Default tab",
@@ -744,10 +759,9 @@ fun SettingsContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(
-                            color = MaterialTheme.colorScheme.surfaceBright,
-                            shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd)
+                            color = MaterialTheme.colorScheme.surfaceBright
                         )
-                        .padding(12.dp),
+                        .padding(start = 12.dp, end = 12.dp, top = 12.dp, bottom = 4.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Button(
@@ -769,6 +783,59 @@ fun SettingsContent(
                         modifier = Modifier.weight(1f)
                     ) {
                         Text("Import Config")
+                    }
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            color = MaterialTheme.colorScheme.surfaceBright
+                        )
+                        .padding(start = 12.dp, end = 12.dp, top = 4.dp, bottom = 12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Button(
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.resetOnboarding(context)
+                            // Navigate back to main screen
+                            (context as? ComponentActivity)?.finish()
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Reset onboarding")
+                    }
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            color = MaterialTheme.colorScheme.surfaceBright
+                        )
+                        .padding(start = 12.dp, end = 12.dp, top = 4.dp, bottom = 12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Button(
+                        onClick = {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            throw RuntimeException("Simulated crash from Developer Options")
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(40.dp),
+                        shape = ButtonDefaults.shape,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        ),
+                        contentPadding = PaddingValues(0.dp)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.simulate_crash),
+                            style = MaterialTheme.typography.labelLarge
+                        )
                     }
                 }
 

@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -48,7 +49,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.registry.FeatureRegistry
-import com.sameerasw.essentials.ui.components.SettingsFloatingToolbar
+import com.sameerasw.essentials.ui.components.EssentialsFloatingToolbar
 import com.sameerasw.essentials.ui.components.cards.FeatureCard
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.linkActions.LinkPickerScreen
@@ -88,6 +89,7 @@ import kotlinx.coroutines.delay
 @OptIn(ExperimentalMaterial3Api::class)
 class FeatureSettingsActivity : FragmentActivity() {
 
+    @OptIn(ExperimentalMaterial3ExpressiveApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge(
@@ -217,6 +219,7 @@ class FeatureSettingsActivity : FragmentActivity() {
 
                     // Help Sheet State
                     var showHelpSheet by remember { mutableStateOf(false) }
+                    var showInstructionsSheet by remember { mutableStateOf(false) }
                     var selectedHelpFeature by remember {
                         mutableStateOf<com.sameerasw.essentials.domain.model.Feature?>(
                             null
@@ -305,6 +308,12 @@ class FeatureSettingsActivity : FragmentActivity() {
                                 selectedHelpFeature = null
                             },
                             feature = selectedHelpFeature!!
+                        )
+                    }
+
+                    if (showInstructionsSheet) {
+                        com.sameerasw.essentials.ui.components.sheets.InstructionsBottomSheet(
+                            onDismissRequest = { showInstructionsSheet = false }
                         )
                     }
 
@@ -641,29 +650,20 @@ class FeatureSettingsActivity : FragmentActivity() {
                             }
                         }
 
-                        SettingsFloatingToolbar(
+                        EssentialsFloatingToolbar(
                             title = pageTitle,
                             onBackClick = { finish() },
                             modifier = Modifier
                                 .align(Alignment.BottomCenter)
                                 .zIndex(1f),
-                            menuContent = if (hasMenu) {
-                                {
-                                    MenuItem(
-                                        text = { Text(stringResource(R.string.action_what_is_this)) },
-                                        onClick = {
-                                            selectedHelpFeature = featureObj
-                                            showHelpSheet = true
-                                        },
-                                        leadingIcon = {
-                                            Icon(
-                                                painter = painterResource(id = R.drawable.rounded_help_24),
-                                                contentDescription = null
-                                            )
-                                        }
-                                    )
+                            onHelpClick = {
+                                if (hasMenu) {
+                                    selectedHelpFeature = featureObj
+                                    showHelpSheet = true
+                                } else {
+                                    showInstructionsSheet = true
                                 }
-                            } else null
+                            }
                         )
                     }
                 }

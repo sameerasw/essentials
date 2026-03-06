@@ -985,7 +985,7 @@
     <string name="location_reached_dist_m">%1$d m</string>
     <string name="location_reached_dist_km">%1$.1f km</string>
     <string name="location_reached_service_title">Alarme de trajet active</string>
-    <string name="location_reached_service_remaining">%1$s restant (%2$d%)</string>
+    <string name="location_reached_service_remaining">%1$s restant (%2$d%%)</string>
     <string name="location_reached_channel_name">Progrès du trajet</string>
     <string name="location_reached_channel_desc">Affiche la distance de la destination en temps réel</string>
     <string name="location_reached_alarm_title">Destination à proximité</string>
@@ -1091,7 +1091,7 @@
     <string name="cat_display">Affichage</string>
     <string name="cat_protection">Protection</string>
     <string name="label_kbd_abc">ABC</string>
-    <string name="label_kbd_symbols">\?#/</string>
+    <string name="label_kbd_symbols">?#/</string>
     <string name="msg_restrict_own_app_repo">Hé ! Vous pouvez vérifier les mises à jour dans les paramètres de l\'appli, pas besoin de l\'ajouter ici xD</string>
     <string name="action_export">Exporter</string>
     <string name="action_import">Importer</string>

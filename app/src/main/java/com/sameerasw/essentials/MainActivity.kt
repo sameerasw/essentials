@@ -88,7 +88,8 @@ import java.util.Date
 import java.util.Locale
 import com.sameerasw.essentials.domain.DIYTabs
 import com.sameerasw.essentials.domain.registry.initPermissionRegistry
-import com.sameerasw.essentials.ui.components.DIYFloatingToolbar
+import com.sameerasw.essentials.ui.components.EssentialsFloatingToolbar
+import com.sameerasw.essentials.ui.components.ToolbarItem
 import com.sameerasw.essentials.ui.components.cards.TrackedRepoCard
 import androidx.compose.foundation.layout.statusBarsPadding
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
@@ -98,6 +99,7 @@ import com.sameerasw.essentials.ui.components.sheets.InstructionsBottomSheet
 import com.sameerasw.essentials.ui.components.sheets.UpdateBottomSheet
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
+import com.sameerasw.essentials.ui.composables.WelcomeScreen
 import com.sameerasw.essentials.ui.composables.DIYScreen
 import com.sameerasw.essentials.ui.composables.FreezeGridUI
 import com.sameerasw.essentials.ui.composables.SetupFeatures
@@ -264,6 +266,7 @@ class MainActivity : FragmentActivity() {
                     var showFabProfileMenu by remember { mutableStateOf(false) }
                     val gitHubToken by viewModel.gitHubToken
                     val gitHubUser by gitHubAuthViewModel.currentUser
+                    val isOnboardingCompleted by viewModel.isOnboardingCompleted
 
                     LaunchedEffect(Unit) {
                         gitHubAuthViewModel.loadCachedUser(context)
@@ -434,197 +437,191 @@ class MainActivity : FragmentActivity() {
                             repoToShowReleaseNotesFullName = null
                         }
                     }
-                    Scaffold(
-                        contentWindowInsets = androidx.compose.foundation.layout.WindowInsets(
-                            0,
-                            0,
-                            0,
-                            0
-                        ),
-                        modifier = Modifier,
-                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                        topBar = {}
-                    ) { innerPadding ->
-                        val statusBarHeightPx = with(androidx.compose.ui.platform.LocalDensity.current) {
-                            WindowInsets.statusBars.asPaddingValues().calculateTopPadding().toPx()
-                        }
-                        
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .then(
-                                    if (isBlurEnabled) {
-                                        Modifier.progressiveBlur(
-                                            blurRadius = 40f,
-                                            height = statusBarHeightPx * 1.15f,
-                                            direction = BlurDirection.TOP
-                                        )
-                                    } else Modifier
-                                )
-                        ) {
-                            val currentTab = remember(tabs, currentPage) {
-                                tabs.getOrNull(currentPage) ?: tabs.firstOrNull() ?: DIYTabs.ESSENTIALS
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        Scaffold(
+                            contentWindowInsets = androidx.compose.foundation.layout.WindowInsets(0, 0, 0, 0),
+                            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                            topBar = {}
+                        ) { innerPadding ->
+                            val statusBarHeightPx = with(androidx.compose.ui.platform.LocalDensity.current) {
+                                WindowInsets.statusBars.asPaddingValues().calculateTopPadding().toPx()
                             }
 
-
-                            DIYFloatingToolbar(
+                            Box(
                                 modifier = Modifier
-                                    .align(Alignment.BottomCenter)
-                                    // .offset(y = -ScreenOffset)
-                                    .zIndex(1f),
-                                currentPage = currentPage,
-                                tabs = tabs,
-                                onTabSelected = { index ->
-                                    HapticUtil.performUIHaptic(view)
-                                    currentPage = index
-                                },
-                                scrollBehavior = exitAlwaysScrollBehavior,
-                                badges = mapOf(DIYTabs.APPS to viewModel.hasPendingUpdates.value),
-                                floatingActionButton = {
-                                    Box { // Menu anchor
-                                        FloatingActionButton(
-                                            onClick = {
-                                                HapticUtil.performVirtualKeyHaptic(view)
-                                                when (currentTab) {
-                                                    DIYTabs.ESSENTIALS -> {
-                                                        startActivity(Intent(context, SettingsActivity::class.java))
-                                                    }
-                                                    DIYTabs.FREEZE -> {
-                                                        startActivity(
-                                                            Intent(
-                                                                context,
-                                                                FeatureSettingsActivity::class.java
-                                                            ).apply {
-                                                                putExtra("feature", "Freeze")
-                                                            })
-                                                    }
-                                                    DIYTabs.DIY -> {
-                                                        showNewAutomationSheet = true
-                                                    }
-                                                    DIYTabs.APPS -> {
-                                                        val user = gitHubUser
-                                                        if (user != null) {
-                                                            showFabProfileMenu = true
-                                                        } else {
-                                                            showGitHubAuthSheet = true
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                                            shape = MaterialTheme.shapes.large,
-                                            elevation = androidx.compose.material3.FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp)
-                                        ) {
-                                            when (currentTab) {
-                                                DIYTabs.ESSENTIALS -> {
-                                                    Icon(
-                                                        painter = painterResource(id = R.drawable.rounded_settings_heart_24),
-                                                        contentDescription = stringResource(R.string.content_desc_settings)
-                                                    )
-                                                }
-                                                DIYTabs.FREEZE -> {
-                                                    Icon(
-                                                        painter = painterResource(id = R.drawable.rounded_settings_heart_24),
-                                                        contentDescription = stringResource(R.string.content_desc_settings)
-                                                    )
-                                                }
-                                                DIYTabs.DIY -> {
-                                                    Icon(
-                                                        painter = painterResource(id = R.drawable.rounded_add_24),
-                                                        contentDescription = stringResource(R.string.diy_editor_new_title)
-                                                    )
-                                                }
-                                                DIYTabs.APPS -> {
-                                                    val user = gitHubUser
-                                                    if (user != null) {
-                                                        AsyncImage(
-                                                            model = user.avatarUrl,
-                                                            contentDescription = stringResource(R.string.action_profile),
-                                                            contentScale = ContentScale.Crop,
-                                                            modifier = Modifier
-                                                                .size(24.dp)
-                                                                .clip(CircleShape),
-                                                            placeholder = painterResource(id = R.drawable.brand_github),
-                                                            error = painterResource(id = R.drawable.brand_github)
-                                                        )
-                                                    } else {
-                                                        Icon(
-                                                            painter = painterResource(id = R.drawable.brand_github),
-                                                            contentDescription = stringResource(R.string.action_sign_in_github)
-                                                        )
-                                                    }
-                                                }
-                                            }
-                                        }
-
-                                        if (currentTab == DIYTabs.APPS) {
-                                            val user = gitHubUser
-                                            if (user != null) {
-                                                SegmentedDropdownMenu(
-                                                    expanded = showFabProfileMenu,
-                                                    onDismissRequest = { showFabProfileMenu = false }
-                                                ) {
-                                                    SegmentedDropdownMenuItem(
-                                                        text = { Text(user.name ?: user.login) },
-                                                        onClick = { showFabProfileMenu = false },
-                                                        leadingIcon = {
-                                                            Icon(
-                                                                painter = painterResource(id = R.drawable.brand_github),
-                                                                contentDescription = null
-                                                            )
-                                                        }
-                                                    )
-                                                    SegmentedDropdownMenuItem(
-                                                        text = { Text(stringResource(R.string.action_sign_out)) },
-                                                        onClick = {
-                                                            gitHubAuthViewModel.signOut(context)
-                                                            showFabProfileMenu = false
-                                                        },
-                                                        leadingIcon = {
-                                                            Icon(
-                                                                painter = painterResource(id = R.drawable.rounded_logout_24),
-                                                                contentDescription = null
-                                                            )
-                                                        }
-                                                    )
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            )
-
-                            AnimatedContent(
-                                targetState = currentPage,
-                                transitionSpec = {
-                                    val animationSpec = tween<Float>(durationMillis = 400)
-                                    val slideOffset = 150
-
-                                    (fadeIn(animationSpec = animationSpec) + slideInVertically(
-                                        animationSpec = tween(durationMillis = 400),
-                                        initialOffsetY = { slideOffset }
-                                    )).togetherWith(
-                                        fadeOut(animationSpec = animationSpec) + slideOutVertically(
-                                            animationSpec = tween(durationMillis = 400),
-                                            targetOffsetY = { slideOffset }
-                                        )
-                                    )
-                                },
-                                modifier = Modifier
-                                    .scale(1f - (backProgress.value * 0.05f))
-                                    .alpha(1f - (backProgress.value * 0.3f))
+                                    .fillMaxSize()
                                     .then(
                                         if (isBlurEnabled) {
                                             Modifier.progressiveBlur(
                                                 blurRadius = 40f,
-                                                height = with(androidx.compose.ui.platform.LocalDensity.current) { 130.dp.toPx() },
-                                                direction = BlurDirection.BOTTOM
+                                                height = statusBarHeightPx * 1.15f,
+                                                direction = BlurDirection.TOP
                                             )
                                         } else Modifier
-                                    ),
-                                label = "Tab Transition"
-                            ) { targetPage ->
+                                    )
+                            ) {
+                                val currentTab = remember(tabs, currentPage) {
+                                    tabs.getOrNull(currentPage) ?: tabs.firstOrNull() ?: DIYTabs.ESSENTIALS
+                                }
+
+                                EssentialsFloatingToolbar(
+                                    modifier = Modifier
+                                        .align(Alignment.BottomCenter)
+                                        .zIndex(1f),
+                                    selectedIndex = currentPage,
+                                    items = tabs.mapIndexed { index, tab ->
+                                        ToolbarItem(
+                                            iconRes = tab.iconRes,
+                                            labelRes = tab.title,
+                                            onClick = {
+                                                HapticUtil.performUIHaptic(view)
+                                                currentPage = index
+                                            },
+                                            hasBadge = (tab == DIYTabs.APPS && viewModel.hasPendingUpdates.value)
+                                        )
+                                    },
+                                    scrollBehavior = exitAlwaysScrollBehavior,
+                                    floatingActionButton = {
+                                        Box { // Menu anchor
+                                            FloatingActionButton(
+                                                onClick = {
+                                                    HapticUtil.performVirtualKeyHaptic(view)
+                                                    when (currentTab) {
+                                                        DIYTabs.ESSENTIALS -> {
+                                                            startActivity(Intent(context, SettingsActivity::class.java))
+                                                        }
+                                                        DIYTabs.FREEZE -> {
+                                                            startActivity(Intent(context, FeatureSettingsActivity::class.java).apply {
+                                                                putExtra("feature", "Freeze")
+                                                            })
+                                                        }
+                                                        DIYTabs.DIY -> {
+                                                            showNewAutomationSheet = true
+                                                        }
+                                                        DIYTabs.APPS -> {
+                                                            val user = gitHubUser
+                                                            if (user != null) {
+                                                                showFabProfileMenu = true
+                                                            } else {
+                                                                showGitHubAuthSheet = true
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                                shape = MaterialTheme.shapes.large,
+                                                elevation = androidx.compose.material3.FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp)
+                                            ) {
+                                                when (currentTab) {
+                                                    DIYTabs.ESSENTIALS -> {
+                                                        Icon(
+                                                            painter = painterResource(id = R.drawable.rounded_settings_heart_24),
+                                                            contentDescription = stringResource(R.string.content_desc_settings)
+                                                        )
+                                                    }
+                                                    DIYTabs.FREEZE -> {
+                                                        Icon(
+                                                            painter = painterResource(id = R.drawable.rounded_settings_heart_24),
+                                                            contentDescription = stringResource(R.string.content_desc_settings)
+                                                        )
+                                                    }
+                                                    DIYTabs.DIY -> {
+                                                        Icon(
+                                                            painter = painterResource(id = R.drawable.rounded_add_24),
+                                                            contentDescription = stringResource(R.string.diy_editor_new_title)
+                                                        )
+                                                    }
+                                                    DIYTabs.APPS -> {
+                                                        val user = gitHubUser
+                                                        if (user != null) {
+                                                            AsyncImage(
+                                                                model = user.avatarUrl,
+                                                                contentDescription = stringResource(R.string.action_profile),
+                                                                contentScale = ContentScale.Crop,
+                                                                modifier = Modifier
+                                                                    .size(24.dp)
+                                                                    .clip(CircleShape),
+                                                                placeholder = painterResource(id = R.drawable.brand_github),
+                                                                error = painterResource(id = R.drawable.brand_github)
+                                                            )
+                                                        } else {
+                                                            Icon(
+                                                                painter = painterResource(id = R.drawable.brand_github),
+                                                                contentDescription = stringResource(R.string.action_sign_in_github)
+                                                            )
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                            if (currentTab == DIYTabs.APPS) {
+                                                val user = gitHubUser
+                                                if (user != null) {
+                                                    SegmentedDropdownMenu(
+                                                        expanded = showFabProfileMenu,
+                                                        onDismissRequest = { showFabProfileMenu = false }
+                                                    ) {
+                                                        SegmentedDropdownMenuItem(
+                                                            text = { Text(user.name ?: user.login) },
+                                                            onClick = { showFabProfileMenu = false },
+                                                            leadingIcon = {
+                                                                Icon(
+                                                                    painter = painterResource(id = R.drawable.brand_github),
+                                                                    contentDescription = null
+                                                                )
+                                                            }
+                                                        )
+                                                        SegmentedDropdownMenuItem(
+                                                            text = { Text(stringResource(R.string.action_sign_out)) },
+                                                            onClick = {
+                                                                gitHubAuthViewModel.signOut(context)
+                                                                showFabProfileMenu = false
+                                                            },
+                                                            leadingIcon = {
+                                                                Icon(
+                                                                    painter = painterResource(id = R.drawable.rounded_logout_24),
+                                                                    contentDescription = null
+                                                                )
+                                                            }
+                                                        )
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                )
+
+                                AnimatedContent(
+                                    targetState = currentPage,
+                                    transitionSpec = {
+                                        val animationSpec = tween<Float>(durationMillis = 400)
+                                        val slideOffset = 150
+
+                                        (fadeIn(animationSpec = animationSpec) + slideInVertically(
+                                            animationSpec = tween(durationMillis = 400),
+                                            initialOffsetY = { slideOffset }
+                                        )).togetherWith(
+                                            fadeOut(animationSpec = animationSpec) + slideOutVertically(
+                                                animationSpec = tween(durationMillis = 400),
+                                                targetOffsetY = { slideOffset }
+                                            )
+                                        )
+                                    },
+                                    modifier = Modifier
+                                        .scale(1f - (backProgress.value * 0.05f))
+                                        .alpha(1f - (backProgress.value * 0.3f))
+                                        .then(
+                                            if (isBlurEnabled) {
+                                                Modifier.progressiveBlur(
+                                                    blurRadius = 40f,
+                                                    height = with(androidx.compose.ui.platform.LocalDensity.current) { 130.dp.toPx() },
+                                                    direction = BlurDirection.BOTTOM
+                                                )
+                                            } else Modifier
+                                        ),
+                                    label = "Tab Transition"
+                                ) { targetPage ->
                                     val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
                                     val topContentPadding = statusBarHeight
                                     val bottomToolbarPadding = 150.dp
@@ -649,7 +646,12 @@ class MainActivity : FragmentActivity() {
                                             FreezeGridUI(
                                                 viewModel = viewModel,
                                                 modifier = Modifier.fillMaxSize(),
-                                                contentPadding = contentPadding
+                                                contentPadding = contentPadding,
+                                                onGetStartedClick = {
+                                                    startActivity(Intent(context, FeatureSettingsActivity::class.java).apply {
+                                                        putExtra("feature", "Freeze")
+                                                    })
+                                                }
                                             )
                                         }
 
@@ -658,7 +660,8 @@ class MainActivity : FragmentActivity() {
                                                 modifier = Modifier.fillMaxSize(),
                                                 contentPadding = contentPadding,
                                                 showNewAutomationSheet = showNewAutomationSheet,
-                                                onDismissNewAutomationSheet = { showNewAutomationSheet = false }
+                                                onDismissNewAutomationSheet = { showNewAutomationSheet = false },
+                                                onNewAutomationClick = { showNewAutomationSheet = true }
                                             )
                                         }
 
@@ -690,6 +693,17 @@ class MainActivity : FragmentActivity() {
                                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                                     )
 
+                                                    Spacer(modifier = Modifier.height(16.dp))
+
+                                                    Button(
+                                                        onClick = {
+                                                            HapticUtil.performVirtualKeyHaptic(view)
+                                                            showAddRepoSheet = true
+                                                        }
+                                                    ) {
+                                                        Text(stringResource(R.string.action_add_repository))
+                                                    }
+
                                                     Spacer(modifier = Modifier.height(32.dp))
 
                                                     Text(
@@ -702,7 +716,8 @@ class MainActivity : FragmentActivity() {
                                                     ImportExportButtons(
                                                         view = view,
                                                         exportLauncher = exportLauncher,
-                                                        importLauncher = importLauncher
+                                                        importLauncher = importLauncher,
+                                                        showExport = false
                                                     )
                                                 }
                                             } else {
@@ -952,10 +967,23 @@ class MainActivity : FragmentActivity() {
                                             }
                                         }
                                     }
+                                }
                             }
                         }
-                    }
 
+                        androidx.compose.animation.AnimatedVisibility(
+                            visible = !isOnboardingCompleted,
+                            enter = androidx.compose.animation.fadeIn() + androidx.compose.animation.slideInVertically { it },
+                            exit = androidx.compose.animation.fadeOut() + androidx.compose.animation.slideOutVertically { it }
+                        ) {
+                            WelcomeScreen(
+                                viewModel = viewModel,
+                                onBeginClick = {
+                                    viewModel.setOnboardingCompleted(true, context)
+                                }
+                            )
+                        }
+                    }
                     // Mark app as ready after a short delay to ensure first frame is painted
                     LaunchedEffect(Unit) {
                         kotlinx.coroutines.delay(100)
@@ -1046,7 +1074,8 @@ private fun AppsActionButtons(
 private fun ImportExportButtons(
     view: android.view.View,
     exportLauncher: androidx.activity.result.ActivityResultLauncher<String>,
-    importLauncher: androidx.activity.result.ActivityResultLauncher<Array<String>>
+    importLauncher: androidx.activity.result.ActivityResultLauncher<Array<String>>,
+    showExport: Boolean = true
 ) {
     Row(
         modifier = Modifier
@@ -1054,28 +1083,30 @@ private fun ImportExportButtons(
             .padding(horizontal = 4.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Button(
-            onClick = {
-                HapticUtil.performUIHaptic(view)
-                val timeStamp = SimpleDateFormat(
-                    "yyyyMMdd_HHmmss",
-                    Locale.getDefault()
-                ).format(Date())
-                exportLauncher.launch("essentials_updates_$timeStamp.json")
-            },
-            modifier = Modifier.weight(1f),
-            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                contentColor = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.rounded_arrow_warm_up_24),
-                contentDescription = null,
-                modifier = Modifier.size(18.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(stringResource(R.string.action_export))
+        if (showExport) {
+            Button(
+                onClick = {
+                    HapticUtil.performUIHaptic(view)
+                    val timeStamp = SimpleDateFormat(
+                        "yyyyMMdd_HHmmss",
+                        Locale.getDefault()
+                    ).format(Date())
+                    exportLauncher.launch("essentials_updates_$timeStamp.json")
+                },
+                modifier = Modifier.weight(1f),
+                colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.rounded_arrow_warm_up_24),
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(stringResource(R.string.action_export))
+            }
         }
 
         Button(

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">Noodsaaklikhede</string>
     <string name="label_beta">BETA</string>
@@ -13,7 +13,8 @@
     <string name="flashlight_pulse_tile_label">Flitslig Pols</string>
     <string name="check_pre_releases_label">Kyk vir voorafvrystellings</string>
     <string name="check_pre_releases_desc">Kan onstabiel wees</string>
-    <!-- App Lock -->
+
+    
     <string name="settings_section_security">Sekuriteit</string>
     <string name="app_lock_enable_title">Aktiveer toepassingslot</string>
     <string name="app_lock_auth_title">Toepassingslot sekuriteit</string>
@@ -24,7 +25,8 @@
     <string name="app_lock_description">Beveilig jou programme met biometriese verifikasie. Geslote programme sal stawing vereis wanneer hulle begin, Bly ontsluit totdat die skerm afskakel.</string>
     <string name="app_lock_warning">Pasop dat dit nie \'n robuuste oplossing is nie, aangesien dit slegs \'n derdeparty-toepassing is. As jy sterk sekuriteit benodig, oorweeg dit om Private Space of ander sulke kenmerke te gebruik.</string>
     <string name="app_lock_biometric_note">Nog \'n opmerking, die biometriese verifikasie-aanwysing laat jou net STERK veilige klasmetodes gebruik. Gesigslot-sekuriteitsmetodes in SWAK klas in toestelle soos Pixel 7 sal slegs die beskikbare ander STERK-verifikasiemetodes soos vingerafdruk of pen kan gebruik.</string>
-    <!-- Button Remap -->
+
+    
     <string name="button_remap_enable_title">Aktiveer Knoppie Remap</string>
     <string name="button_remap_use_shizuku_title">Gebruik Shizuku of Root of Root</string>
     <string name="button_remap_use_shizuku_desc">Werk met skerm af (aanbeveel)</string>
@@ -82,7 +84,8 @@
     <string name="flashlight_always_off_title">Skakel altyd die flitslig af</string>
     <string name="flashlight_always_off_desc">Selfs terwyl vertoning aan is</string>
     <string name="content_desc_settings">Instellings</string>
-    <!-- Caffeinate / Permissions -->
+
+    
     <string name="permission_show_notification_title">Wys kennisgewing</string>
     <string name="permission_post_notifications_title">Plaas kennisgewings</string>
     <string name="permission_post_notifications_desc">Laat die program toe om kennisgewings te wys</string>
@@ -106,11 +109,13 @@
     <string name="caffeinate_starting_in">Begin in %1$ds …</string>
     <string name="caffeinate_remaining">%1$s oorblywende</string>
     <string name="caffeinate_live_channel_desc">Aanhoudende kennisgewing vir kafeïen</string>
-    <!-- Dynamic Night Light -->
+
+    
     <string name="dynamic_night_light_enable_title">Aktiveer dinamiese naglig</string>
     <string name="dynamic_night_light_apps_section">Programme wat naglig afskakel</string>
     <string name="action_select_apps">Kies toepassings</string>
-    <!-- App Freezing -->
+
+    
     <string name="settings_section_app_control">Programbeheer</string>
     <string name="action_freeze">Vries</string>
     <string name="action_unfreeze">Ontvries</string>
@@ -137,7 +142,8 @@
     <string name="perm_usage_stats_title">Gebruik Statistiek</string>
     <string name="perm_usage_stats_desc">Vereis om te bespeur watter programme tans op die voorgrond is om te verhoed dat hulle vries</string>
     <string name="perm_notif_listener_desc_freeze">Vereis om speelmedia en aktiewe kennisgewings op te spoor om te verhoed dat dit vries</string>
-    <!-- Notification Lighting -->
+
+    
     <string name="notification_lighting_screen_off_title">Wys net wanneer die skerm af is</string>
     <string name="notification_lighting_skip_silent_title">Slaan stil kennisgewings oor</string>
     <string name="notification_lighting_skip_persistent_title">Slaan aanhoudende kennisgewings oor</string>
@@ -167,7 +173,8 @@
     <string name="ambient_display_desc">Maak skerm wakker en wys beligting</string>
     <string name="ambient_show_lock_screen_title">Wys sluitskerm</string>
     <string name="ambient_show_lock_screen_desc">Geen swart oorleg nie</string>
-    <!-- Tiles -->
+
+    
     <string name="action_add">Voeg by</string>
     <string name="qs_tile_already_added">Reeds bygevoeg</string>
     <string name="qs_tile_requires_android_13">Vereis Android 13+</string>
@@ -221,7 +228,9 @@
     <string name="adaptive_charging">Aanpasbaar</string>
     <string name="deactivated">Nie geoptimaliseer nie</string>
     <string name="permission_missing">Toestemming ontbreek</string>
-    <!-- Screen Locked Security -->
+
+
+    
     <string name="screen_locked_security_title">Skerm geslote sekuriteit</string>
     <string name="screen_locked_security_dialog_title">Skerm Geslote Sekuriteit</string>
     <string name="screen_locked_security_auth_enable">Staaf om skermgeslote sekuriteit te aktiveer</string>
@@ -230,20 +239,23 @@
     <string name="screen_locked_security_warning_text">Hierdie kenmerk is nie onfeilbaar nie. Daar kan randgevalle wees waar iemand steeds met die teël kan kommunikeer. \nHou ook in gedagte dat Android altyd sal toelaat om \'n gedwonge herlaai te doen en Pixels sal altyd toelaat dat die toestel ook vanaf die sluitskerm afgeskakel word.</string>
     <string name="screen_locked_security_airplane_warning">Maak seker dat u die vliegtuigmodusteël van vinnige instellings verwyder, aangesien dit nie voorkombaar is nie, want dit maak nie \'n dialoogvenster oop nie.</string>
     <string name="screen_locked_security_description">Wanneer dit geaktiveer is, sal die Vinnige instellings-paneel onmiddellik gesluit word en die toestel sal gesluit word as iemand probeer om met internetteëls te kommunikeer terwyl die toestel gesluit is. \n\nDit sal ook biometriese ontsluiting deaktiveer om verdere ongemagtigde toegang te voorkom. Animasieskaal sal tot 0.1x verminder word terwyl dit gesluit is om dit nog moeiliker te maak om mee te kommunikeer.</string>
-    <!-- Sound Mode -->
+
+    
     <string name="sound_mode_reorder_title">Herbestel modusse</string>
     <string name="sound_mode_long_press_hint">Druk lank om te wissel</string>
     <string name="content_desc_drag_reorder">Sleep om te herrangskik</string>
     <string name="sound_mode_sound">Klank</string>
     <string name="sound_mode_vibrate">Vibreer</string>
     <string name="sound_mode_silent">Stil</string>
-    <!-- Status Bar Categories -->
+
+    
     <string name="status_bar_category_connectivity">Konnektiwiteit</string>
     <string name="status_bar_category_phone_network">Telefoon en netwerk</string>
     <string name="status_bar_category_audio_media">Oudio en media</string>
     <string name="status_bar_category_system_status">Stelsel Status</string>
     <string name="status_bar_category_oem_specific">OEM Spesifiek</string>
-    <!-- Status Bar Icons -->
+
+    
     <string name="icon_wifi">WiFi</string>
     <string name="icon_bluetooth">Bluetooth</string>
     <string name="icon_nfc">NFC / Felica</string>
@@ -278,7 +290,8 @@
     <string name="icon_samsung_smart">Samsung slim kenmerke</string>
     <string name="icon_samsung_services">Samsung Dienste</string>
     <string name="icon_ethernet">Ethernet</string>
-    <!-- Status Bar Settings -->
+    
+    
     <string name="stb_clock_seconds">Wys sekondes in klok</string>
     <string name="stb_battery_percentage">Battery persentasie</string>
     <string name="stb_battery_percentage_always">Altyd</string>
@@ -296,9 +309,11 @@
     <string name="action_reset_all_icons">Stel alle ikone terug</string>
     <string name="status_bar_section_advanced">Meer instellings</string>
     <string name="status_bar_icons_disclaimer">Neem asseblief kennis dat die implementering van hierdie opsies van die OEM kan afhang en dat sommige glad nie funksioneel sal wees nie.</string>
-    <!-- Network Type Picker -->
+
+    
     <string name="network_type_other">Ander</string>
-    <!-- Search -->
+
+    
     <string name="search_clock_seconds_title">Klok Sekondes</string>
     <string name="search_clock_seconds_desc">Wys sekondes in statusbalkklok</string>
     <string name="search_battery_percentage_title">Battery persentasie</string>
@@ -308,17 +323,20 @@
     <string name="search_desc_toggle_visibility">Wissel sigbaarheid vir %1$s</string>
     <string name="action_pin">Speld by gunstelinge vas</string>
     <string name="action_unpin">Ontspeld van gunstelinge</string>
-    <!-- Extraction Batch 1 -->
-    <!-- Categories -->
+
+    
+    
     <string name="cat_tools">Gereedskap</string>
     <string name="cat_visuals">Beeldmateriaal</string>
     <string name="cat_system">Stelsel</string>
-    <!-- UI Elements -->
+
+    
     <string name="search_placeholder">Soek Essentials</string>
     <string name="search_no_results">Geen resultate vir \"%1$s\"</string>
     <string name="search_results_title">Soekresultate</string>
     <string name="requires_following_permissions">%1$s vereis volgende toestemmings</string>
-    <!-- Features -->
+
+    
     <string name="feat_screen_off_widget_title">Skerm af widget</string>
     <string name="feat_screen_off_widget_desc">Onsigbare legstuk om die skerm af te skakel</string>
     <string name="feat_statusbar_icons_title">Statusbalk ikone</string>
@@ -339,7 +357,8 @@
     <string name="limit_max_devices_summary">Pas maksimum toestelle sigbaar in legstuk aan</string>
     <string name="widget_background_title">Widget agtergrond</string>
     <string name="widget_background_summary">Wys legstuk agtergrond</string>
-    <!-- DIY Automation -->
+
+    
     <string name="diy_create_trigger_title">Sneller outomatisering</string>
     <string name="diy_create_trigger_desc">Skeduleer \'n aksie om op \'n waarneming te aktiveer</string>
     <string name="diy_create_state_title">Staatsoutomatisering</string>
@@ -413,7 +432,8 @@
     <string name="calendar_sync_manual_sync_desc">Aktiveer onmiddellike sinkronisering om te kyk</string>
     <string name="calendar_sync_no_calendars">Geen plaaslike kalenders gevind nie</string>
     <string name="calendar_sync_sync_started">Kalendersinkronisering het begin</string>
-    <!-- Search Settings -->
+
+    
     <string name="search_haptic_title">Widget Haptiese terugvoer</string>
     <string name="search_haptic_desc">Kies haptiese terugvoer vir widget-krane</string>
     <string name="search_smart_wifi_title">Slim WiFi</string>
@@ -488,7 +508,8 @@
     <string name="search_freeze_locked_desc">Vries geselekteerde programme wanneer toestel sluit</string>
     <string name="search_freeze_delay_title">Vries vertraging</string>
     <string name="search_freeze_delay_desc">Vertraag voor vries na sluiting</string>
-    <!-- Permissions metadata -->
+
+    
     <string name="perm_shizuku_title">Shizuku</string>
     <string name="perm_shizuku_desc">Vereis vir gevorderde opdragte. Installeer Shizuku vanaf die Play Winkel.</string>
     <string name="perm_shizuku_install_action">Installeer Shizuku</string>
@@ -525,7 +546,8 @@
     <string name="perm_action_how_to">Hoe om toe te ken</string>
     <string name="perm_battery_optimization_title">Battery optimering</string>
     <string name="perm_battery_optimization_desc">Maak seker dat die diens nie deur die stelsel doodgemaak word nie om krag te bespaar.</string>
-    <!-- Tabs -->
+
+    
     <string name="tab_essentials">Noodsaaklikhede</string>
     <string name="tab_freeze">Vries</string>
     <string name="tab_freeze_title">Gevries</string>
@@ -560,55 +582,33 @@
     <string name="option_allow_prereleases">Kyk vir voorafvrystellings</string>
     <string name="option_notifications">Kennisgewings</string>
     <string name="error_rate_limited">GitHub-tempolimiet oorskry. Probeer asseblief later weer.</string>
-    <!-- Keyboard Setup -->
+
+    
     <string name="label_keyboard_setup">Sleutelbordopstelling</string>
     <string name="btn_enable_keyboard">Aktiveer in instellings</string>
     <string name="btn_select_keyboard">Skakel oor na Essentials</string>
+
     <string name="label_enabled">Geaktiveer</string>
     <string name="label_disabled">Gestrem</string>
+
     <string name="tile_adaptive_brightness">Aanpasbare helderheid</string>
+
     <string name="tile_maps_power_saving">Kaarte Kragbesparing</string>
+
     <string name="action_search">Soek</string>
     <string name="action_stop">Stop</string>
     <string name="label_search">Soek</string>
-    <!-- UI Components General -->
+
+    
     <string name="action_back">Terug</string>
     <string name="content_desc_back">Terug</string>
     <string name="label_settings">Instellings</string>
     <string name="action_report_bug">Rapporteer \'n fout</string>
-    <!-- Sentry Crash Reporting -->
-    <string name="sentry_report_mode_title">Crash reporting</string>
-    <string name="sentry_mode_off">Off</string>
-    <string name="sentry_mode_auto">Auto</string>
-    <string name="sentry_crash_toast">Essentials crashed, Report sent</string>
-    <string name="simulate_crash">Simulate crash</string>
-    <string name="welcome_title">Welcome to Essentials</string>
-    <string name="welcome_subtitle">A Toolbox for Android Nerds</string>
-    <string name="welcome_developer_attribution">by sameerasw.com</string>
-    <string name="action_lets_begin">Let\'s Begin</string>
-    <string name="acknowledgement_title">Acknowledgement</string>
-    <string name="acknowledgement_desc">This app is a collection of utilities that can interact deeply with your device system. Using some features might modify system settings or behavior in unexpected ways. \n\nYou only need to grant necessary permissions which are required for selected features you are using giving you full control over the app\'s behavior. \n\nFurther more, the app does not track or store any of your personal data, I don\'t need them... Keep to yourself safe. You can refer to the source code for more information. \n\nThis app is fully open source and is and always will be free to use. Do not pay or install from unknown sources.</string>
-    <string name="acknowledgement_warning">WARNING: Proceed with caution. The developer takes no responsibility for any system instability, data loss, or other issues caused by the use of this app. By proceeding, you acknowledge these risks.</string>
-    <string name="acknowledgement_footer">I know you didn\'t even read this carefully but, in case you need any help, feel free to reach out the developer or the community.</string>
-    <string name="action_i_understand">I Understand</string>
-    <string name="feature_intro_desc">Anytime you are clueless on a feature or a Quick Settings Tile on what it does and what permissions may necessary for it, just long press it and pick \'What is this?\' to learn more.</string>
-    <string name="feature_intro_footer">You can report bugs or find helpful guides anytime in the app settings.</string>
-    <string name="action_let_me_in">Let Me in Already</string>
-    <string name="preferences_title">Preferences</string>
-    <string name="preferences_desc">Configure some basic settings to get started.</string>
-    <string name="label_app_settings">App Settings</string>
-    <string name="label_haptic_feedback">Haptic Feedback</string>
-    <string name="label_updates">Updates</string>
-    <string name="label_auto_check_updates">Auto check for updates</string>
-    <string name="desc_auto_check_updates">Check for updates at app launch</string>
-    <string name="action_all_set">All Set</string>
-    <string name="action_check_whats_new">Check What\'s New?</string>
     <string name="action_done">Klaar</string>
     <string name="action_preview">Voorskou</string>
     <string name="action_help_guide">Hulpgids</string>
     <string name="action_what_is_this">Wat is dit?</string>
     <string name="update_available_title">Opdatering beskikbaar</string>
-    <string name="about_desc_your_android">Glance at your device\'s hardware and software specifications in detail. This information is fetched from GSMArena and system properties to provide a comprehensive overview of your Android device.</string>
     <string name="about_desc_ambient_music_glance">Ambient Music Glance wys \'n Speel nou-oorleg op jou sluitskerm wanneer musiek speel en terugspeel verander. \n\nAs jou toestel nie oorleggings oor AOD ondersteun nie, kan jy kies vir die Ambience-skermbewaarder wat in jou Android-instellings bygevoeg word as \'n alternatief terwyl dit laai.</string>
     <string name="about_desc_notification_lighting">Kennisgewingbeligting voeg \'n pragtige randbeligtingseffek by wanneer jy kennisgewings ontvang.\n\nJy kan die animasiestyl, kleure en gedrag pasmaak. Dit werk selfs wanneer die skerm af is (OEM-afhanklik) of bo-op jou huidige toepassing. Kies programme, kennisgewingsprioriteit of watter gedrag dit moet aktiveer vanaf gegewe kontroles. As jou OEM nie oorlegsels bo AOD ondersteun nie, dagvaar die Ambient Display-opsie wat hieronder gevind word.</string>
     <string name="about_desc_screen_off_widget">Skakel die skerm maklik af met \'n tik op \'n deursigtige legstuk wat verander kan word wat nie ikone of enige rommel by jou tuisskerm voeg nie.</string>
@@ -622,7 +622,7 @@
     <string name="about_desc_dynamic_night_light">Wissel outomaties jou skerm blou lig filter gebaseer op die voorgrond app.</string>
     <string name="about_desc_screen_locked_security">Verbeter sekuriteit wanneer jou toestel gesluit is.\n\nBeperk toegang tot sommige sensitiewe QS-teëls wat ongemagtigde netwerkwysigings voorkom en verder verhoed dat hulle weer probeer om dit te doen deur die animasiespoed te verhoog om raakstrooipos te voorkom.\n\nHierdie kenmerk is nie robuust nie en kan foute hê, soos sommige teëls wat dit moontlik maak om direk te wissel soos Bluetooth of vlugmodus wat nie voorkom kan word nie.</string>
     <string name="about_desc_app_lock">Beveilig jou programme met \'n sekondêre stawinglaag.\n\nJou toestelslotskermstawingmetode sal gebruik word solank dit aan die klas 3-biometriese sekuriteitsvlak volgens Android-standaarde voldoen.</string>
-    <string name="about_desc_location_reached">Word in kennis gestel wanneer jy nader aan jou bestemming kom om te verseker dat jy nooit die stilhouplek mis nie.\n\nGaan na Google Maps, druk lank \'n speld naby jou bestemming en maak seker dit sê \"Dropted pen\" (Anders is die afstandberekening dalk nie akkuraat nie), En deel dan die ligging na die Essentials-toepassing en begin dop.</string>
+    <string name="about_desc_location_reached">Word in kennis gestel wanneer jy nader aan jou bestemming kom om te verseker dat jy nooit die stilhouplek mis nie.\n\nGaan na Google Maps, druk lank \'n speld naby jou bestemming en maak seker dit sê "Dropted pen" (Anders is die afstandberekening dalk nie akkuraat nie), En deel dan die ligging na die Essentials-toepassing en begin dop.</string>
     <string name="about_desc_freeze">Vries programme om te keer dat hulle in die agtergrond loop.\n\nVoorkom batteryafvoer en datagebruik deur programme heeltemal te vries wanneer jy dit nie gebruik nie. Hulle sal onmiddellik ontvries word wanneer jy hulle begin. Die toepassings sal nie in die toepassingslaai verskyn nie en sal ook nie vir toepassingopdaterings in Play Winkel verskyn terwyl dit gevries is nie.</string>
     <string name="about_desc_system_keyboard">\'n Gepasmaakte invoermetode waarvoor niemand gevra het nie.\n\nDit is net \'n eksperiment. Veelvuldige tale sal dalk nie ondersteuning kry nie, aangesien dit \'n baie komplekse en tydrowende implementering is.</string>
     <string name="about_desc_batteries">Monitor batteryvlakke van al jou gekoppelde toestelle.\n\nSien die batterystatus van jou Bluetooth-oorfone, horlosie en ander bykomstighede op een plek. Koppel met AirSync-toepassing om jou Mac-batteryvlak ook te vertoon.</string>
@@ -647,14 +647,17 @@
     <string name="about_desc_color_picker">Begin die oogdrupper-nutsding om kleure te kies wat in Android 17 BETA 2 bekendgestel is</string>
     <string name="about_desc_charge_optimization">Optimaliseer jou batterylewe deur die maksimum lading te beperk of aanpasbare laai te gebruik. Dit is spesiaal ontwerp vir Pixel-toestelle om lang lewe en gesonde laaisiklusse te verseker.\n\nKrediet: TebbeUbben/ChargeQuickTile</string>
     <string name="action_download">Laai af</string>
-    <!-- DIY Section -->
+
+    
     <string name="diy_trigger_screen_off">Skerm af</string>
     <string name="diy_trigger_screen_on">Skerm aan</string>
     <string name="diy_trigger_device_unlock">Toestel ontsluit</string>
     <string name="diy_trigger_charger_connected">Laaier gekoppel</string>
     <string name="diy_trigger_charger_disconnected">Laaier ontkoppel</string>
+    
     <string name="diy_state_charging">Laai</string>
     <string name="diy_state_screen_on">Skerm aan</string>
+
     <string name="diy_action_haptic">Vibreer</string>
     <string name="diy_action_notification">Wys kennisgewing</string>
     <string name="diy_action_remove_notification">Verwyder kennisgewing</string>
@@ -676,9 +679,11 @@
     <string name="action_delete">Vee uit</string>
     <string name="action_enable">Aktiveer</string>
     <string name="action_disable">Deaktiveer</string>
+    
     <string name="automation_service_channel_name">Outomatiseringsdiens</string>
     <string name="automation_service_running_title">Outomatisering aktief</string>
     <string name="automation_service_running_desc">Monitering van stelselgebeure vir u outomatisering</string>
+
     <string name="diy_action_device_effects">Toestel effekte</string>
     <string name="diy_device_effects_desc">Beheer stelselvlak-effekte soos grysskaal, AOD-onderdrukking, agtergrondverduistering en nagmodus.</string>
     <string name="diy_effect_grayscale">Grysskaal</string>
@@ -690,38 +695,47 @@
     <string name="diy_device_effects_disabled">Gestrem</string>
     <string name="diy_action_sound_mode">Klankmodus</string>
     <string name="diy_sound_mode_desc">Hierdie aksie laat oorskakel tussen Klank-, Vibreer- en Stil-modusse gebaseer op snellers. Dit vereis Moenie Steur Nie-toegang.</string>
-    <!-- About Section -->
+
+    
     <string name="app_developer_name">Sameera Wijerathna</string>
     <string name="app_description">Die alles-in-een-nutsdingskis vir jou Pixel en Androids</string>
-    <!-- Edge Lighting -->
+
+    
     <string name="color_mode_system">Stelsel</string>
     <string name="color_mode_custom">Pasgemaak</string>
     <string name="color_mode_app_specific">Toepassing spesifiek</string>
-    <!-- Biometric & Security -->
+
+    
     <string name="error_auth_failed">Kon nie stawing nie</string>
     <string name="shortcut_creation_hint_toast">Druk lank op \'n toepassing in die rooster om \'n kortpad by te voeg</string>
     <string name="error_app_uninstalled">Program nie gevind of gedeïnstalleer nie</string>
-    <!-- Notifications -->
+
+    
     <string name="update_channel_name">Programopdaterings</string>
     <string name="update_channel_desc">Kennisgewings vir nuwe toepassingopdaterings</string>
     <string name="notification_update_available">Opdatering beskikbaar</string>
     <string name="battery_notification_no_devices">Geen toestelle gekoppel nie</string>
+
     <string name="label_unknown">Onbekend</string>
     <string name="network_type_5g">5G</string>
     <string name="network_type_4g">4G</string>
     <string name="network_type_3g">3G</string>
     <string name="label_shizuku_ritaka">Shizuku (Rikka)</string>
     <string name="label_shizuku_tuozi">Shizuku (TuoZi)</string>
+
     <string name="label_search_content_description">Soek</string>
     <string name="perm_device_admin_explanation">Vereis om die toestel hard te sluit wanneer ongemagtigde netwerkveranderinge op die sluitskerm gepoog word.</string>
     <string name="biometric_subtitle_access_settings">Verifieer om toegang te verkry tot instellings</string>
     <string name="biometric_title_settings_format">%1$s Instellings</string>
+
     <string name="keyword_feature">kenmerk</string>
     <string name="keyword_settings">instellings</string>
     <string name="keyword_hide">wegsteek</string>
     <string name="keyword_show">wys</string>
     <string name="keyword_visibility">sigbaarheid</string>
+
     <string name="error_loading_apps">Kon nie programme laai nie: %1$s</string>
+
     <string-array name="keywords_haptic">
         <item>vibrasie</item>
         <item>raak</item>
@@ -798,9 +812,11 @@
         <item>wag</item>
         <item>tydsverloop</item>
     </string-array>
+
     <string name="label_keyboard_always_dark">Altyd donker tema</string>
     <string name="label_keyboard_pitch_black">Pikswart tema</string>
     <string name="label_keyboard_clipboard_enabled">Knipbord Geskiedenis</string>
+
     <string-array name="keywords_selection">
         <item>lys</item>
         <item>plukker</item>
@@ -880,27 +896,33 @@
         <item>optimalisering</item>
         <item>pixel</item>
     </string-array>
-    <!-- App Selection Extra -->
+
+    
     <string name="action_invert_selection">Keer seleksie om</string>
     <string name="toggle_show_system_apps">Wys stelseltoepassings</string>
-    <!-- Updates -->
+
+    
     <string name="status_up_to_date">Jy is op datum</string>
     <string name="warning_pre_release">Dit is \'n voorvrystelling weergawe en kan onstabiel wees.</string>
     <string name="release_notes_format">Vrystellingsaantekeninge %1$s</string>
     <string name="action_view_on_github">Kyk op GitHub</string>
     <string name="action_download_apk">Laai APK af</string>
-    <!-- Haptic Types -->
+
+    
     <string name="haptic_none">Geen</string>
     <string name="haptic_subtle">Subtiel</string>
     <string name="haptic_double">Dubbel</string>
     <string name="haptic_click">Klik</string>
     <string name="haptic_tick">Merk</string>
-    <!-- Flashlight Intensity Overlay -->
+
+    
     <string name="action_turn_off">Skakel Af</string>
     <string name="feature_flashlight_brightness_title">Flitslig Helderheid</string>
-    <!-- QS / Activities -->
+
+    
     <string name="error_unlock_network_settings">Ontsluit foon om netwerkinstellings te verander</string>
-    <!-- About Section -->
+
+    
     <string name="developed_by_format">Ontwikkel deur %1$s\nmet ❤\uFE0F van \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="action_website">Webwerf</string>
     <string name="action_contact">Kontak</string>
@@ -912,7 +934,8 @@
     <string name="app_canvas">Canvas</string>
     <string name="app_tasks">Take</string>
     <string name="app_zero">Nul</string>
-    <!-- Help & Guides -->
+
+    
     <string name="help_guides_title">Hulp en gidse</string>
     <string name="need_more_support_reach_out">Het jy meer ondersteuning nodig? Reik uit,</string>
     <string name="action_collapse">Ineenstort</string>
@@ -922,32 +945,44 @@
     <string name="send_email_chooser_title">Stuur e-pos</string>
     <string name="error_no_email_app">Geen e-postoepassing beskikbaar nie</string>
     <string name="instruction_step_image_description">Stap %1$d Beeld</string>
-    <!-- Instructions Content -->
+
+    
     <string name="instruction_section_perms_title">Toeganklikheid, kennisgewing en oorleg toestemmings</string>
     <string name="instruction_step_perms_1">Jy kan hierdie toegang geweier boodskap kry as jy probeer om sensitiewe toestemmings soos toeganklikheid, kennisgewing luisteraar of oorleg toestemmings te gee. Gaan die stappe hieronder na om dit toe te staan.</string>
     <string name="instruction_step_perms_2">1. Gaan na die programinligtingbladsy van Essentials.</string>
     <string name="instruction_step_perms_3">2. Maak die 3-kol kieslys oop en kies \'Laat beperkte instellings toe\'. Jy sal dalk met biometrie moet verifieer. Sodra dit klaar is, probeer om die toestemming weer te gee.</string>
+
     <string name="instruction_section_shizuku_title">Shizuku</string>
     <string name="instruction_section_shizuku_desc">Shizuku is \'n kragtige instrument waarmee toepassings stelsel-API\'s direk met ADB- of worteltoestemmings kan gebruik. Dit word vereis vir kenmerke soos Maps min-modus, App Freezer. En sal aanhou om sekere toestemmings toe te staan, soos WRITE_SECURE_SETTINGS. \n\nMaar die Play Winkel-weergawe van Shizuku is dalk verouderd en sal waarskynlik onbruikbaar wees op onlangse Android-weergawes, so in daardie geval, kry asseblief die nuutste weergawe van die github of \'n bygewerkte weergawe daarvan.</string>
+
     <string name="instruction_section_maps_title">Kaarte se kragbesparingsmodus</string>
     <string name="instruction_section_maps_desc">Hierdie kenmerk aktiveer outomaties Google Maps-kragbesparingsmodus wat tans eksklusief vir die Pixel 10-reeks is. \'n Gemeenskapslid het ontdek dat dit steeds op enige Android-toestel bruikbaar is deur die kaarte se minMode-aktiwiteit met wortelvoorregte te begin. \n\nEn toe het ek dit met Tasker geoutomatiseer om outomaties te aktiveer wanneer die skerm afskakel tydens \'n navigasiesessie en kon toe dieselfde bereik met net hardlooptyd Shizuku toestemmings. \n\nDit is bedoel om oor die AOD van Pixel 10-reeks gewys te word, so daarom sal jy dalk \'n boodskap op die skerm sien verskyn dat dit nie landskapmodus ondersteun nie. Dit is nie vermybaar deur die toepassing nie en jy kan dit ignoreer.</string>
+
     <string name="instruction_section_silent_title">Stille klankmodus</string>
     <string name="instruction_section_silent_desc">Jy het dalk opgemerk dat die stil modus ook DND aktiveer. \n\nDit is as gevolg van hoe die Android dit geïmplementeer het, want selfs al gebruik ons ​​dieselfde API om na vibreermodus oor te skakel, skakel dit om een ​​of ander rede DND aan tesame met die stilmodus en dit is nie op hierdie oomblik vermybaar nie. :(</string>
+
     <string name="instruction_section_freeze_title">Wat is vries?</string>
     <string name="instruction_section_freeze_desc">Onderbreek en bly weg van toepassingafleidings terwyl u \'n bietjie krag bespaar wat voorkom dat toepassings in die agtergrond loop. Geskik vir toepassings wat selde gebruik word. \n\nNie aanbeveel vir enige kommunikasiedienste nie, aangesien hulle jou nie in \'n noodgeval in kennis stel nie, tensy jy dit ontvries. \n\nHoogs aangeraai om nie stelseltoepassings te vries nie, aangesien dit tot stelselonstabiliteit kan lei. Gaan met omsigtigheid voort, Jy is gewaarsku. \n\nGeïnspireer deur Hail &lt;3</string>
+
     <string name="instruction_section_security_title">Is toepassingslot en skermgeslote sekuriteit werklik veilig?</string>
     <string name="instruction_section_security_desc">Absoluut nie. \n\nEnige derdeparty-toepassing kan nie 100% inmeng met gereelde toestelinteraksies nie en selfs die toepassingslot is slegs \'n oorleg bo geselekteerde toepassings om te verhoed dat daar interaksie met hulle is. Daar is oplossings en dit is nie onfeilbaar nie. \n\nDieselfde geld met die skermgeslote sekuriteitsfunksie wat iemand opspoor wat probeer om met die netwerkteëls te kommunikeer wat om een ​​of ander rede steeds toeganklik is vir enigiemand op Pixels. So as hulle hard genoeg probeer, sal hulle hulle dalk nog kan verander en veral as jy \'n vlugmodus QS-teël bygevoeg het, kan hierdie toepassing nie interaksies daarmee verhoed nie. \n\nHierdie kenmerke word net as eksperimente vir ligte gebruik gemaak en sal nooit so sterk sekuriteit- en privaatheidsoplossings aanbeveel nie. \n\nVeilige alternatiewe:\n - Toepassingslot: privaat ruimte en veilige vouer op Pixels en Samsung\n - Voorkom toegang tot mobiele netwerke: Maak seker dat jou diefstalbeskerming en vanlyn/afskakel vind my toestelinstellings aan is. U kan ook na Graphene OS kyk.</string>
+
     <string name="instruction_section_statusbar_title">Statusbalk ikone</string>
     <string name="instruction_section_statusbar_desc">Jy sal dalk agterkom dat selfs nadat jy die statusbalk-ikone teruggestel het, sommige ikone soos toestelrotasie, bedrade koptelefoon-ikone sigbaar kan bly. Dit is as gevolg van hoe die statubalk-swartlys in Android geïmplementeer word en hoe jou OEM dit moontlik aangepas het. \nJy sal dalk verdere aanpassings nodig hê. \n\nOok nie alle ikoonsigbaarheidsopsies werk dalk nie, aangesien dit afhang van die OEM-implementerings en beskikbaarheid.</string>
+
     <string name="instruction_section_lighting_title">Kennisgewingbeligting werk nie</string>
     <string name="instruction_section_lighting_desc">Dit hang af van die OEM. Sommige soos OneUI laat blykbaar nie oorleggings bo die AOD toe nie, wat verhoed dat die beligtingseffekte gewys word. In hierdie geval, probeer die omgewingsvertoning as \'n oplossing.</string>
+
     <string name="instruction_section_button_title">Knoppie herkaart werk nie terwyl vertoon af is nie</string>
     <string name="instruction_section_button_desc">Sommige OEM\'s beperk die toeganklikheiddiensverslaggewing sodra die skerm eintlik af is, maar hulle kan steeds werk terwyl die AOD aan is. \nIn hierdie geval kan jy knoppie-herkaarte gebruik met AOD aan, maar nie met af nie. \n\nAs \'n oplossing sal jy Shizuku-toestemmings moet gebruik en die \'Gebruik Shizuku of Root\' skakel knoppie-herkaartinstellings in wat hardeware-invoergebeure identifiseer en luister.\nDit word nie gewaarborg om op alle toestelle te werk nie en moet getoets word.\n\nEn selfs al is dit\'s aan, sal Shizuku-metode slegs gebruik word wanneer dit\'is nodig. Andersins sal dit altyd terugval na Toeganklikheid wat ook die blokkering van die werklike invoer hanteer tydens lang druk.</string>
+
     <string name="instruction_section_flashlight_title">Die helderheid van die flitslig werk nie</string>
     <string name="instruction_section_flashlight_desc">Slegs \'n beperkte aantal toestelle het hardeware- en sagteware-ondersteuning gekry om die flitsligintensiteit aan te pas. \n\n\'Die minimum weergawe van Android is 13 (SDK33).\nFlitslighelderheidbeheer ondersteun net HAL weergawe 3.8 en hoër, so byvoorbeeld onder die nuutste ondersteunde toestelle (vir Pixel-weergawes 3.8 en hoër). 6/7, Samsung S23, ens.)\'\npolodarb/Flashlight-Tiramisu</string>
+
     <string name="instruction_section_about_title">Wat de hel is hierdie app?</string>
     <string name="instruction_section_about_desc">Goeie vraag,\n\nEk wou nog altyd die meeste uit my toestelle haal aangesien ek\'n gewortelde gebruiker is sedert ek my eerste Project Treble-toestel gekry het. En ek\' is mal oor die Tasker-toepassing, wat soos die god is wanneer outomatisering kom en elke moontlike API en interne kenmerke van Android gebruik.\n\nSo ek is nie ontwortel nie en is terug op voorraad Android beta-ervaring en wou die meeste moontlike voorregte kry. Kan hulle net sowel deel. So met my beginnerskennis in Kotlin Jetpack en met die ondersteuning van baie navorsings- en hulpinstrumente en ook die wonderlike gemeenskap, het ek \'n alles-in-een-toepassing gebou wat alles bevat wat ek in my Android wou hê met gegewe toestemmings. En hier is dit.\n\nKenmerkversoeke is welkom, ek sal dit oorweeg en kyk of dit haalbaar is met beskikbare toestemmings en my vaardighede. Deesdae wat nie moontlik is nie. :)\n\nHoekom nie op Play Winkel nie?\nEk wil\' nie die risiko loop om my ontwikkelaarrekening verban te kry nie as gevolg van die hoogs inmissie wat die toepassings en interne gebruik word. Maar met die manier waarop Android-sideloading op pad is, laat\'s kyk wat ons moet doen. Ek verstaan ​​wel die bekommernisse dat sylaaide toepassings kwaadwillig is.\nTerwyl ons by die onderwerp is, kyk na my ander toepassing AirSync as jy \'n Mac + Android-gebruiker is. *skaamtelose prop*\n\nGeniet, hou aan bou! (っ◕‿◕)っ</string>
-    <!-- Bug Reporting -->
+    
+    
     <string name="toast_bug_report_copied">Foutverslag is na knipbord gekopieer</string>
     <string name="bug_report_title">Foutverslag</string>
     <string name="bug_report_option_share_logs">Deel logs</string>
@@ -958,8 +993,9 @@
     <string name="action_report_email">E-pos verslag</string>
     <string name="action_copy_clipboard">Kopieer na knipbord</string>
     <string name="bug_report_email_subject">Noodsaaklike foutverslag</string>
-    <string name="bug_report_send_via">Please enable crash reporting as it will automatically report details that would help resolving issues.</string>
-    <!-- Location Reached -->
+    <string name="bug_report_send_via">Stuur via</string>
+
+    
     <string name="feat_location_reached_title">Is ons al daar?</string>
     <string name="feat_location_reached_desc">Bestemming naby waarskuwings</string>
     <string name="location_reached_how_to">Maak Google Maps oop, kies \'n ligging en deel dit met Essentials.</string>
@@ -995,24 +1031,25 @@
     <string name="setting_use_root_title">Gebruik Root</string>
     <string name="setting_use_root_desc">In plaas van Shizuku</string>
     <string name="root_not_available_toast">Worteltoegang nie beskikbaar nie. Gaan asseblief jou wortelbestuurder na.</string>
-    <!-- System Keyboard -->
+    
     <string name="feat_system_keyboard_title">Sleutelbord</string>
     <string name="feat_system_keys">Sleutels</string>
     <string name="feat_system_keyboard_desc">Pas uitleg en gedrag aan</string>
     <string name="search_keyboard_height_title">Sleutelbord Hoogte</string>
-    <string name="search_keyboard_height_desc">Pas die totale vertikale grootte van die sleutelbord aan</string>
+    <string name="search_keyboard_height_desc">Pas die totale vertikale grootte van die sleutelbord aan</string>&gt;
     <string name="search_keyboard_padding_title">Onderste vulling</string>
     <string name="search_keyboard_padding_desc">Voeg spasie onder die sleutelbord by</string>
     <string name="search_keyboard_haptics_title">Haptiese terugvoer</string>
     <string name="search_keyboard_haptics_desc">Vibreer met sleuteldruk</string>
     <string name="test_keyboard_hint">Toets die sleutelbord</string>
-    <string name="label_keyboard_height">Sleutelbord Hoogte</string>
+    <string name="label_keyboard_height">Sleutelbord Hoogte</string>&gt;
     <string name="label_keyboard_bottom_padding">Onderste vulling</string>
     <string name="label_keyboard_haptics">Haptiese terugvoer</string>
     <string name="label_keyboard_roundness">Sleutel Rondheid</string>
     <string name="label_keyboard_functions_bottom">Skuif funksies na onder</string>
     <string name="label_keyboard_functions_padding">Funksies kant vulling</string>
     <string name="label_keyboard_haptic_strength">Haptiese terugvoersterkte</string>
+
     <string name="label_keyboard_shape">Sleutelbord vorm</string>
     <string name="shape_round">Ronde</string>
     <string name="shape_flat">Plat</string>
@@ -1024,15 +1061,16 @@
     <string name="connect_to_airsync_summary">Vertoon battery vanaf jou gekoppelde Mac-toestel in AirSync</string>
     <string name="download_airsync">Laai AirSync-toepassing af</string>
     <string name="download_airsync_summary">Vereis vir Mac-battery-sinkronisering</string>
+
     <string name="feat_battery_notification_title">Battery kennisgewing</string>
     <string name="feat_battery_notification_desc">Aanhoudende batterystatuskennisgewing</string>
-    <string name="battery_notification_hint">This notification displays battery levels for your connected Mac and Bluetooth devices. You can configure which devices to show in the Battery Widget settings.</string>
     <string name="about_desc_battery_notification">Herhaal die battery-legstuk-ervaring in jou kennisgewingskerm. Dit sal die batteryvlakke van al jou gekoppelde toestelle in \'n enkele aanhoudende kennisgewing wys, intyds opgedateer. Dit sluit jou Mac (via AirSync) en Bluetooth-bykomstighede in.</string>
     <string name="battery_notification_channel_name">Batterystatuskennisgewing</string>
     <string name="battery_notification_channel_desc">Aanhoudende kennisgewing wat gekoppelde toestelle se batteryvlakke wys</string>
     <string name="perm_nearby_devices_title">Nabygeleë toestelle</string>
     <string name="perm_nearby_devices_desc">Vereis om batteryinligting van Bluetooth-bykomstighede op te spoor en te haal</string>
-    <!-- GitHub Auth -->
+
+    
     <string name="auth_copy_code">Kopieer kode</string>
     <string name="auth_open_login_page">Maak aanmeldbladsy oop</string>
     <string name="auth_sign_in_rationale">Meld aan om API-oproeplimiete uit te brei</string>
@@ -1040,58 +1078,73 @@
     <string name="action_sign_in_github">Meld aan met GitHub</string>
     <string name="action_sign_out">Meld af</string>
     <string name="action_profile">Profiel</string>
-    <!-- App Updates / Repos -->
+
+    
     <string name="label_release_notes">Vrystellingsaantekeninge</string>
     <string name="msg_no_repos_tracked">Geen bewaarplekke is nog nagespoor nie</string>
     <string name="label_no_app_linked">Geen toepassing gekoppel nie</string>
     <string name="format_updated_relative">Opgedateer %1$s</string>
-    <!-- Relative Time -->
+
+    
     <string name="time_just_now">net nou</string>
     <string name="time_min_ago">%1$dm gelede</string>
     <string name="time_hour_ago">%1$dh gelede</string>
     <string name="time_day_ago">%1$dd gelede</string>
     <string name="time_month_ago">%1$dma gelede</string>
     <string name="time_year_ago">%1$dy gelede</string>
+
     <string name="action_retry">Probeer weer</string>
     <string name="action_start_sign_in">Begin Teken In</string>
     <string name="auth_requesting_code">Versoek tans toestelkode …</string>
     <string name="auth_copy_code_instruction">1. Kopieer jou kode:</string>
     <string name="auth_paste_code_instruction">2. Plak die kode op GitHub:</string>
+
     <string name="label_found_apks">APK\'s gevind</string>
     <string name="label_readme">LEES MY</string>
     <string name="action_refresh">Verfris</string>
-    <!-- Added Missing Group Strings -->
+
+    
     <string name="feat_sound_modes_title">Klankmodus-teël</string>
     <string name="feat_sound_modes_desc">QS-teël om klankmodus te wissel</string>
     <string name="search_sound_mode_show_slider_title">Wys skuifbalk</string>
     <string name="search_sound_mode_show_slider_desc">Wys volume-skuifbalk in teël</string>
     <string name="search_sound_mode_behavior_title">Siklusgedrag</string>
     <string name="search_sound_mode_behavior_desc">Kies modusse om deur te fiets</string>
+    
     <string name="feat_ambient_music_title">Omgewende musiek blik</string>
     <string name="feat_ambient_music_desc">Kyk na die media op AOD</string>
+    
     <string name="feat_sound_haptics_title">Klank en Haptics</string>
     <string name="feat_sound_haptics_desc">Volume en haptiese kenmerke</string>
+    
     <string name="feat_security_privacy_title">Sekuriteit en privaatheid</string>
     <string name="feat_security_privacy_desc">Beskerm en beveilig jou toestel</string>
+    
     <string name="feat_notifications_alerts_title">Kennisgewings en waarskuwings</string>
     <string name="feat_notifications_alerts_desc">Moet nooit jou prioriteite mis nie</string>
+    
     <string name="feat_input_actions_title">Insette en aksies</string>
     <string name="feat_input_actions_desc">Beheer jou toestel met gemak</string>
+    
     <string name="feat_widgets_title">Widgets</string>
     <string name="feat_widgets_desc">Met \'n oogopslag op jou tuisskerm</string>
+    
     <string name="feat_display_visuals_title">Vertoon</string>
     <string name="feat_display_visuals_desc">Beeldmateriaal om jou ervaring te verbeter</string>
+    
     <string name="feat_watch_title">Kyk</string>
     <string name="feat_watch_desc">Integrasies met WearOS</string>
     <string name="watch_no_companion_title">Geen horlosie bespeur nie</string>
     <string name="watch_no_companion_desc">Dit lyk of jy nie die Essentials Wear-metgeselprogram op jou horlosie geïnstalleer het nie.</string>
     <string name="watch_install_companion_action">Installeer Companion</string>
+
+
     <string name="cat_interaction">Interaksie</string>
     <string name="cat_interface">Koppelvlak</string>
     <string name="cat_display">Vertoon</string>
     <string name="cat_protection">Beskerming</string>
     <string name="label_kbd_abc">ABC</string>
-    <string name="label_kbd_symbols">\?#/</string>
+    <string name="label_kbd_symbols">?#/</string>
     <string name="msg_restrict_own_app_repo">Oi! Jy kan opdaterings in programinstellings nagaan, hoef nie hier by te voeg nie XD</string>
     <string name="action_export">Uitvoer</string>
     <string name="action_import">Invoer</string>
@@ -1126,9 +1179,4 @@
     <string name="label_use_blur">Gebruik vervaag</string>
     <string name="desc_use_blur">Aktiveer progressiewe vervaag-elemente oor die UI</string>
     <string name="msg_blur_compatibility_error">Vervaag is op hierdie toestel gedeaktiveer om \'n bekende vertoonfout op Samsung-toestelle met Android 15 of onder te voorkom.</string>
-    <!-- Empty State Actions -->
-    <string name="msg_no_apps_frozen">No apps selected to freeze.</string>
-    <string name="action_get_started">Get Started</string>
-    <string name="action_new_automation">New Automation</string>
-    <string name="action_add_repository">Add Repository</string>
 </resources>

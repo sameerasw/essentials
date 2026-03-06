@@ -448,10 +448,15 @@ fun QSTileCard(
     var showMenu by remember { mutableStateOf(false) }
 
     val menuState = com.sameerasw.essentials.ui.state.LocalMenuStateManager.current
-    LaunchedEffect(showMenu) {
+    androidx.compose.runtime.DisposableEffect(showMenu) {
         if (showMenu) {
             menuState.activeId = tile.titleRes
         } else {
+            if (menuState.activeId == tile.titleRes) {
+                menuState.activeId = null
+            }
+        }
+        onDispose {
             if (menuState.activeId == tile.titleRes) {
                 menuState.activeId = null
             }

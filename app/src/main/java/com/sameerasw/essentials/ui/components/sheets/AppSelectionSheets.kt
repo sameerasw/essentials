@@ -376,7 +376,8 @@ fun SingleAppSelectionSheet(
                                     Text(
                                         text = app.appName,
                                         style = MaterialTheme.typography.bodyLarge,
-                                        fontWeight = FontWeight.Bold
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.onSurface
                                     )
                                     Text(
                                         text = app.packageName,

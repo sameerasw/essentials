@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">Jami ma pirgi tek</string>
     <string name="label_beta">BETA</string>
@@ -13,7 +13,8 @@
     <string name="flashlight_pulse_tile_label">Lweny pa mac ma ki lwongo ni Flashlight</string>
     <string name="check_pre_releases_label">Nen pi jami ma ki cwalo ma peya ki cwalo gi</string>
     <string name="check_pre_releases_desc">Twero bedo ni pe ocung matek</string>
-    <!-- App Lock -->
+
+    
     <string name="settings_section_security">Gwoko kuc</string>
     <string name="app_lock_enable_title">Yab app lock</string>
     <string name="app_lock_auth_title">Gwok pa App Lock</string>
@@ -24,7 +25,8 @@
     <string name="app_lock_description">Gwok apps ni ki jami ma ki lwongo ni biometric authentication. App ma ki juku obi miito ni ki lok iye ka ki yabo, obi bedo ma ki juku nio ka gin ma ki neno ni otum.</string>
     <string name="app_lock_warning">Bed ki ngec ni man pe obedo yoo maber pien man obedo yub pa ngat mukene keken. Ka imiito gwok matek, tam me tic ki kabedo ma piri keni onyo jami mukene ma kit meno.</string>
     <string name="app_lock_biometric_note">Gin mukene ma ki ngeyo, lok ma ki lwongo ni biometric authentication prompt ni weko in itiyo ki yoo me STRONG secure class methods keken. Yoo me yabo wang ma ki lwongo ni WEAK class i jami ma calo Pixel 7 obi twero tic ki yoo mukene ma tye ma calo fingerprint onyo pin.</string>
-    <!-- Button Remap -->
+
+    
     <string name="button_remap_enable_title">Yab bute ma ki lwongo ni Remap</string>
     <string name="button_remap_use_shizuku_title">Tii ki Shizuku onyo Root onyo Root</string>
     <string name="button_remap_use_shizuku_desc">Tiiyo ki wang gin ma ki neno iye (ki miiyo tam iye)</string>
@@ -82,7 +84,8 @@
     <string name="flashlight_always_off_title">Neko lameny kare weny</string>
     <string name="flashlight_always_off_desc">Kadi bed ni gin ma ki nyutu tye ka tic</string>
     <string name="content_desc_settings">Kit ma ki keto kwede</string>
-    <!-- Caffeinate / Permissions -->
+
+    
     <string name="permission_show_notification_title">Nyut ngec</string>
     <string name="permission_post_notifications_title">cwalo ngec</string>
     <string name="permission_post_notifications_desc">Yee ni app ni onyutu ngec</string>
@@ -106,11 +109,13 @@
     <string name="caffeinate_starting_in">Cake i %1$ds...</string>
     <string name="caffeinate_remaining">%1$s m\'odong</string>
     <string name="caffeinate_live_channel_desc">Ngec ma bino kare ki kare pi Caffeinate</string>
-    <!-- Dynamic Night Light -->
+
+    
     <string name="dynamic_night_light_enable_title">Yab mac me dyewor ma tiyo</string>
     <string name="dynamic_night_light_apps_section">Jami ma ki tiyo kwede me neko mac me dyewor</string>
     <string name="action_select_apps">Yer apps</string>
-    <!-- App Freezing -->
+
+    
     <string name="settings_section_app_control">Kit me tic ki jami ma ki lwongo ni App</string>
     <string name="action_freeze">Miyu doko ngic</string>
     <string name="action_unfreeze">Yab ma ngiic</string>
@@ -137,7 +142,8 @@
     <string name="perm_usage_stats_title">Wel ma ki tiyo kwede</string>
     <string name="perm_usage_stats_desc">Mitte me ngeyo app mene ma tye i nyim me gengo juku gi</string>
     <string name="perm_notif_listener_desc_freeze">Mitte me neno jami ma tye ka tuko ki ngec ma tye ka tic me gengo juku gi</string>
-    <!-- Notification Lighting -->
+
+    
     <string name="notification_lighting_screen_off_title">Nyut keken ka gin ma ki neno ni tye ka tic</string>
     <string name="notification_lighting_skip_silent_title">Wek lok ma ki cwalo ma pe ki lok</string>
     <string name="notification_lighting_skip_persistent_title">Wek ngec ma bino kare ki kare</string>
@@ -167,7 +173,8 @@
     <string name="ambient_display_desc">Yab gin ma ki neno ki nyuti mac</string>
     <string name="ambient_show_lock_screen_title">Nyut gin ma ki lwongo ni lock screen</string>
     <string name="ambient_show_lock_screen_desc">Pe ki keto gin macol i kom</string>
-    <!-- Tiles -->
+
+    
     <string name="action_add">Med</string>
     <string name="qs_tile_already_added">dong ki medo</string>
     <string name="qs_tile_requires_android_13">mito Android 13+</string>
@@ -221,7 +228,9 @@
     <string name="adaptive_charging">Lok ma rwate</string>
     <string name="deactivated">Pe ki yubu maber</string>
     <string name="permission_missing">twero pe</string>
-    <!-- Screen Locked Security -->
+
+
+    
     <string name="screen_locked_security_title">Gwok ma ki umu ki cim</string>
     <string name="screen_locked_security_dialog_title">Gwok ma ki umu ki wang cim</string>
     <string name="screen_locked_security_auth_enable">Mok me weko gin ma ki lwongo ni screen locked security</string>
@@ -230,20 +239,23 @@
     <string name="screen_locked_security_warning_text">Gin eni pe ki twero timo ne. Twero bedo ni tye kare mogo ma ngat mo pud twero tic ki tile. \nDok i wiiyi ni Android obi ye me timo gin ma ki lwongo ni forced reboot ki Pixels obi ye ni ki juku gin ni ki i lock screen bene.</string>
     <string name="screen_locked_security_airplane_warning">Nen ni i kwanyo gin ma ki lwongo ni airplane mode tile ki i kit ma ki keto kwede oyot pien meno pe kitwero gengo pien pe yabo wang dirica me lok.</string>
     <string name="screen_locked_security_description">Ka ki yabo, gin ma ki lwongo ni Quick Settings panel ni obi cego cut cut ki jami ni obi bedo ma ki juku ka ngat mo otemo tic ki tiles me intanet ma nongo jami ni ki juku. \n\nMan bene obi juku yabo biometric me gengo dano ma pe ki twero me donyo iye. Kit ma ki nyutu kwede ki bi dwoko piny me 0.1x nongo ki juku me miyo bedo tek me tic kwede.</string>
-    <!-- Sound Mode -->
+
+    
     <string name="sound_mode_reorder_title">Lok kit me tic</string>
     <string name="sound_mode_long_press_hint">Dii pi kare malac me loko</string>
     <string name="content_desc_drag_reorder">Yer me dwoko rwom piny</string>
     <string name="sound_mode_sound">Dwon ma winye</string>
     <string name="sound_mode_vibrate">Yeny</string>
     <string name="sound_mode_silent">Ling</string>
-    <!-- Status Bar Categories -->
+
+    
     <string name="status_bar_category_connectivity">Kubbe</string>
     <string name="status_bar_category_phone_network">Cim cim ki kubbe</string>
     <string name="status_bar_category_audio_media">Dwon ki lok angeya</string>
     <string name="status_bar_category_system_status">Kit ma jami tye kwede</string>
     <string name="status_bar_category_oem_specific">OEM ma pat pat</string>
-    <!-- Status Bar Icons -->
+
+    
     <string name="icon_wifi">WiFi</string>
     <string name="icon_bluetooth">Bluetooth</string>
     <string name="icon_nfc">NFC / Felica</string>
@@ -278,7 +290,8 @@
     <string name="icon_samsung_smart">Jami ma ki lwongo ni Samsung Smart Features</string>
     <string name="icon_samsung_services">Tic pa Samsung</string>
     <string name="icon_ethernet">Ethernet</string>
-    <!-- Status Bar Settings -->
+    
+    
     <string name="stb_clock_seconds">Nyut ceken i cawa</string>
     <string name="stb_battery_percentage">Pek pa batri</string>
     <string name="stb_battery_percentage_always">Jui</string>
@@ -296,9 +309,11 @@
     <string name="action_reset_all_icons">Lok cal weng</string>
     <string name="status_bar_section_advanced">Jami mukene ma ki keto</string>
     <string name="status_bar_icons_disclaimer">Nen ni keto i tic jami eni twero cung i kom OEM ki mogo twero bedo ni pe tiyo.</string>
-    <!-- Network Type Picker -->
+
+    
     <string name="network_type_other">Mukene</string>
-    <!-- Search -->
+
+    
     <string name="search_clock_seconds_title">Cawa me ceken</string>
     <string name="search_clock_seconds_desc">Nyut ceken i cawa me rwom</string>
     <string name="search_battery_percentage_title">Pek pa batri</string>
@@ -308,17 +323,20 @@
     <string name="search_desc_toggle_visibility">Lok kit ma ineno kwede %1$s</string>
     <string name="action_pin">Ket i kom jami ma imaro</string>
     <string name="action_unpin">Kwanyo gin ma imaro</string>
-    <!-- Extraction Batch 1 -->
-    <!-- Categories -->
+
+    
+    
     <string name="cat_tools">Jami</string>
     <string name="cat_visuals">Jami ma ki neno</string>
     <string name="cat_system">Cictim</string>
-    <!-- UI Elements -->
+
+    
     <string name="search_placeholder">Yeny jami ma pire tek</string>
     <string name="search_no_results">Pe tye adwogi mo pi \"%1$s\"</string>
     <string name="search_results_title">Adwogi me yenyo</string>
     <string name="requires_following_permissions">%1$s mito twero ma lubo ni</string>
-    <!-- Features -->
+
+    
     <string name="feat_screen_off_widget_title">Gin ma ki lwongo ni screen off widget</string>
     <string name="feat_screen_off_widget_desc">Gin ma pe nen me juku gin ma ki neno ni</string>
     <string name="feat_statusbar_icons_title">cal me Statusbar</string>
@@ -339,7 +357,8 @@
     <string name="limit_max_devices_summary">Lok wel jami ma nen i widget</string>
     <string name="widget_background_title">Lok ma mako gin ma ki lwongo ni Widget</string>
     <string name="widget_background_summary">Nyut gin ma ki lwongo ni widget</string>
-    <!-- DIY Automation -->
+
+    
     <string name="diy_create_trigger_title">Tic ma otiime piire kene</string>
     <string name="diy_create_trigger_desc">Yub gin mo ma ibi timo me cako neno ne</string>
     <string name="diy_create_state_title">State Automation</string>
@@ -413,7 +432,8 @@
     <string name="calendar_sync_manual_sync_desc">Yab rwate cut cut me neno</string>
     <string name="calendar_sync_no_calendars">Pe ki nongo kalenda me kabedo ni</string>
     <string name="calendar_sync_sync_started">Calendar sync ocake</string>
-    <!-- Search Settings -->
+
+    
     <string name="search_haptic_title">Widget Haptic feedback</string>
     <string name="search_haptic_desc">Yer lagam ma mako gin ma ki lwongo ni haptic pi tic ki jami ma ki lwongo ni widget</string>
     <string name="search_smart_wifi_title">WiFi ma ryek</string>
@@ -488,7 +508,8 @@
     <string name="search_freeze_locked_desc">Juk jami ma ki yero ka jami ni ki juku</string>
     <string name="search_freeze_delay_title">Juko juku</string>
     <string name="search_freeze_delay_desc">Gwok ma pwod pi ki juku inge loro</string>
-    <!-- Permissions metadata -->
+
+    
     <string name="perm_shizuku_title">Shizuku</string>
     <string name="perm_shizuku_desc">Mite pi cik ma malo. Ket Shizuku ki i Play Store.</string>
     <string name="perm_shizuku_install_action">Ket Shizuku</string>
@@ -525,7 +546,8 @@
     <string name="perm_action_how_to">Kit me miiyo</string>
     <string name="perm_battery_optimization_title">Yubu batri maber</string>
     <string name="perm_battery_optimization_desc">Nen ni tic ni pe ki neko ki jami ni me gwoko teko.</string>
-    <!-- Tabs -->
+
+    
     <string name="tab_essentials">Jami ma pirgi tek</string>
     <string name="tab_freeze">Miyu doko ngic</string>
     <string name="tab_freeze_title">Ngic m\'omake</string>
@@ -560,55 +582,33 @@
     <string name="option_allow_prereleases">Nen pi jami ma ki cwalo ma peya ki cwalo gi</string>
     <string name="option_notifications">Ngec</string>
     <string name="error_rate_limited">wel ma ki keto i GitHub okato. Tim ber item doki lacen.</string>
-    <!-- Keyboard Setup -->
+
+    
     <string name="label_keyboard_setup">Kit me yubu keyboard</string>
     <string name="btn_enable_keyboard">Yab i yub</string>
     <string name="btn_select_keyboard">Lok i kom gin ma pire tek</string>
+
     <string name="label_enabled">Ki yabo</string>
     <string name="label_disabled">Ngwalo</string>
+
     <string name="tile_adaptive_brightness">Lero ma rwate</string>
+
     <string name="tile_maps_power_saving">Maps ma gwoko teko</string>
+
     <string name="action_search">Moyo</string>
     <string name="action_stop">Jiko</string>
     <string name="label_search">Moyo</string>
-    <!-- UI Components General -->
+
+    
     <string name="action_back">Cen</string>
     <string name="content_desc_back">Cen</string>
     <string name="label_settings">Kit ma ki keto kwede</string>
     <string name="action_report_bug">Tit bal mo</string>
-    <!-- Sentry Crash Reporting -->
-    <string name="sentry_report_mode_title">Crash reporting</string>
-    <string name="sentry_mode_off">Off</string>
-    <string name="sentry_mode_auto">Auto</string>
-    <string name="sentry_crash_toast">Essentials crashed, Report sent</string>
-    <string name="simulate_crash">Simulate crash</string>
-    <string name="welcome_title">Welcome to Essentials</string>
-    <string name="welcome_subtitle">A Toolbox for Android Nerds</string>
-    <string name="welcome_developer_attribution">by sameerasw.com</string>
-    <string name="action_lets_begin">Let\'s Begin</string>
-    <string name="acknowledgement_title">Acknowledgement</string>
-    <string name="acknowledgement_desc">This app is a collection of utilities that can interact deeply with your device system. Using some features might modify system settings or behavior in unexpected ways. \n\nYou only need to grant necessary permissions which are required for selected features you are using giving you full control over the app\'s behavior. \n\nFurther more, the app does not track or store any of your personal data, I don\'t need them... Keep to yourself safe. You can refer to the source code for more information. \n\nThis app is fully open source and is and always will be free to use. Do not pay or install from unknown sources.</string>
-    <string name="acknowledgement_warning">WARNING: Proceed with caution. The developer takes no responsibility for any system instability, data loss, or other issues caused by the use of this app. By proceeding, you acknowledge these risks.</string>
-    <string name="acknowledgement_footer">I know you didn\'t even read this carefully but, in case you need any help, feel free to reach out the developer or the community.</string>
-    <string name="action_i_understand">I Understand</string>
-    <string name="feature_intro_desc">Anytime you are clueless on a feature or a Quick Settings Tile on what it does and what permissions may necessary for it, just long press it and pick \'What is this?\' to learn more.</string>
-    <string name="feature_intro_footer">You can report bugs or find helpful guides anytime in the app settings.</string>
-    <string name="action_let_me_in">Let Me in Already</string>
-    <string name="preferences_title">Preferences</string>
-    <string name="preferences_desc">Configure some basic settings to get started.</string>
-    <string name="label_app_settings">App Settings</string>
-    <string name="label_haptic_feedback">Haptic Feedback</string>
-    <string name="label_updates">Updates</string>
-    <string name="label_auto_check_updates">Auto check for updates</string>
-    <string name="desc_auto_check_updates">Check for updates at app launch</string>
-    <string name="action_all_set">All Set</string>
-    <string name="action_check_whats_new">Check What\'s New?</string>
     <string name="action_done">Otime</string>
     <string name="action_preview">Nen ma okwongo</string>
     <string name="action_help_guide">Kony</string>
     <string name="action_what_is_this">Eni ngo?</string>
     <string name="update_available_title">Lok manyen tye</string>
-    <string name="about_desc_your_android">Glance at your device\'s hardware and software specifications in detail. This information is fetched from GSMArena and system properties to provide a comprehensive overview of your Android device.</string>
     <string name="about_desc_ambient_music_glance">Ambient Music Glance nyutu Now Playing ma ki keto i kom gin ma ki lwongo ni lock screen ka wer tye ka winye ki ka wer tye ka loko. \n\nKa cim ni pe twero tic ki jami ma ki keto i kom AOD, ki in itwero yero Ambience screensaver ma ki medo i yub me Android ni ma calo gin mukene ka itye ka cwalo mac.</string>
     <string name="about_desc_notification_lighting">Mac ma nyutu ngec medo mac ma ryeny maber ka inongo ngec.\n\nItwero loko kit ma cal ni nen kwede, kala ne, ki kit ma en nen kwede. Tiiyo kede ka gin ma ki neno ni tye ka tic (ma jenge i kom OEM) onyo i kom gin ma itye ka tic kwede. Yer jami ma ki tiyo kwede, ngec ma pire tek onyo kit ma omyera obed ka kelo ki i kom jami ma kimiyo. Ka OEM ni pe miiyo kony me keto jami ma malo ma kato AOD, peny Ambient display option ma nonge piny kany.</string>
     <string name="about_desc_screen_off_widget">Wek wang gin ma ki neno ni oyot ki dii i kom gin ma ki twero loko dit ne ma pe medo cal onyo gin mo kiken i wang gin ma ki neno ni.</string>
@@ -622,7 +622,7 @@
     <string name="about_desc_dynamic_night_light">Lok jami ma ryeny ma nen calo blue ma lubu app ma tye i nyimi.</string>
     <string name="about_desc_screen_locked_security">Medo gwok ka cim ni ki juku.\n\nGengo donyo i QS tiles mogo ma gengo alokaloka ma pe ki miiyo twero bot gi ki medo gengo gi me temo timo ne kun imedo rwom me tic me gengo spam.\n\nGin ni pe tek ki twero bedo ki goro ma calo jami mogo ma weko loko jami calo bluetooth onyo flight mode ma pe kitwero gengo ne.</string>
     <string name="about_desc_app_lock">Gwok apps ni ki layer me aryo me moko ni jami tye kakare.\n\nKit me moko ni jami ni tye kakare ki bi tiyo kwede ka ce rwate ki rwom me gwoko kuc me kilaci 3 ma lubu rwom me Android.</string>
-    <string name="about_desc_location_reached">Nwong ngec ka i oo cok ki kama i tye ka cito iye me neno ni pi i rwenyo kama icung iye.\n\nCit i Google Maps, dii pi kare malac i kom pin ma tye cok ki kama i tye ka cito iye ki nen ni waco ni \"Dropped pin\" (Ka kumeno, wel bor piny ni twero bedo ma pe tye kakare), ki dong poko kabedo ni me cako lubo kor jami ma miite.</string>
+    <string name="about_desc_location_reached">Nwong ngec ka i oo cok ki kama i tye ka cito iye me neno ni pi i rwenyo kama icung iye.\n\nCit i Google Maps, dii pi kare malac i kom pin ma tye cok ki kama i tye ka cito iye ki nen ni waco ni "Dropped pin" (Ka kumeno, wel bor piny ni twero bedo ma pe tye kakare), ki dong poko kabedo ni me cako lubo kor jami ma miite.</string>
     <string name="about_desc_freeze">Juk jami ma ki tiyo kwede me juku gi me tic i ngeye.\n\nGengo rweny pa batri ki tic ki ngec kun i juku jami ma itiyo kwede ka pe itye ka tic kwede. Gin obi bedo ma pe ki juku cut cut ka i yabo gi. Jami ma ki tiyo kwede ni pe obi nyute i kama ki keto iye jami ni ki bene pe obi nyute pi medo jami ma ki tiyo kwede i Play Store nongo ki juku.</string>
     <string name="about_desc_system_keyboard">Kit me keto gin mo ma ngat mo pe openyo pire.\n\nMan obedo temo keken. Leb mapol pe twero nongo kony pien obedo gin ma tek ki tero kare malac.</string>
     <string name="about_desc_batteries">Nen rwom pa mac pa jami ma itiyo kwede weny.\n\nNen kit ma batri tye kwede i cim me it, cawa, ki jami mukene i kabedo acel. Kube ki AirSync me nyutu rwom pa batri pa mac ni bene.</string>
@@ -647,14 +647,17 @@
     <string name="about_desc_color_picker">Yab gin ma ki lwongo ni eye dropper tool me yero kala ma ki kelo i Android 17 BETA 2</string>
     <string name="about_desc_charge_optimization">Yub kwo pa batri ni maber kun i juku kero me cwalo mac onyo tic ki cwalo mac ma rwate. Man ki yubu pi jami ma ki lwongo ni Pixel me neno ni kwo pi kare malac ki kare me charging maber.\n\nCredits: TebbeUbben/ChargeQuickTile</string>
     <string name="action_download">Dawunlod</string>
-    <!-- DIY Section -->
+
+    
     <string name="diy_trigger_screen_off">Gin ma ki neno ni</string>
     <string name="diy_trigger_screen_on">Gin ma ki neno i cim</string>
     <string name="diy_trigger_device_unlock">Yabo jami tic</string>
     <string name="diy_trigger_charger_connected">Charger ki kubu</string>
     <string name="diy_trigger_charger_disconnected">Charger ki kwanyo woko</string>
+    
     <string name="diy_state_charging">Charge</string>
     <string name="diy_state_screen_on">Gin ma ki neno i cim</string>
+
     <string name="diy_action_haptic">Yeny</string>
     <string name="diy_action_notification">Nyut ngec</string>
     <string name="diy_action_remove_notification">Kwanyo ngec</string>
@@ -676,9 +679,11 @@
     <string name="action_delete">Weyo</string>
     <string name="action_enable">Miyu ye</string>
     <string name="action_disable">Neko</string>
+    
     <string name="automation_service_channel_name">Tic me tic piire kene</string>
     <string name="automation_service_running_title">Automations Active</string>
     <string name="automation_service_running_desc">Neno jami ma tye ka time i yub ni pi tic ni</string>
+
     <string name="diy_action_device_effects">Adwogi pa jami tic</string>
     <string name="diy_device_effects_desc">Gwok jami ma tye i rwom me tic ma calo grayscale, AOD suppression, wallpaper dimming, ki night mode.</string>
     <string name="diy_effect_grayscale">Grayscale</string>
@@ -690,38 +695,47 @@
     <string name="diy_device_effects_disabled">Ngwalo</string>
     <string name="diy_action_sound_mode">Kit me winyo dwan</string>
     <string name="diy_sound_mode_desc">Tic man miyo twero me loko i kin dwan, yengo, ki ling ma lubu gin ma okelo. mito ni pe ibed ki twero me balo.</string>
-    <!-- About Section -->
+
+    
     <string name="app_developer_name">Sameera Wijerathna</string>
     <string name="app_description">Gin ma ki lwongo ni jami tic ma tye i acel pi Pixel ki Androids ni</string>
-    <!-- Edge Lighting -->
+
+    
     <string name="color_mode_system">Cictim</string>
     <string name="color_mode_custom">Kit me tekwaro</string>
     <string name="color_mode_app_specific">App ma pat pat</string>
-    <!-- Biometric & Security -->
+
+    
     <string name="error_auth_failed">moko ni lok adaa ni obale</string>
     <string name="shortcut_creation_hint_toast">Dii pi kare malac i app mo i grid me medo yoo macek</string>
     <string name="error_app_uninstalled">App pe ki nongo onyo ki kwanyo woko</string>
-    <!-- Notifications -->
+
+    
     <string name="update_channel_name">Medo jami manyen i app</string>
     <string name="update_channel_desc">Ngec pi jami manyen ma ki medo i app</string>
     <string name="notification_update_available">Lok manyen tye</string>
     <string name="battery_notification_no_devices">Pe tye jami ma ki keto</string>
+
     <string name="label_unknown">Ngeye ku</string>
     <string name="network_type_5g">5G</string>
     <string name="network_type_4g">4G</string>
     <string name="network_type_3g">3G</string>
     <string name="label_shizuku_ritaka">Shizuku (Rikka)</string>
     <string name="label_shizuku_tuozi">Shizuku (TuoZi)</string>
+
     <string name="label_search_content_description">Moyo</string>
     <string name="perm_device_admin_explanation">Mite me juku jami ni ka ki temo loko jami ma pe ki yer i kom gin ma ki lwongo ni lock screen.</string>
     <string name="biometric_subtitle_access_settings">Moko tam me donyo i jami ma ki keto</string>
     <string name="biometric_title_settings_format">%1$s Kit ma ki keto kwede</string>
+
     <string name="keyword_feature">kit gi ma nyutu</string>
     <string name="keyword_settings">kit ma ki keto kwede</string>
     <string name="keyword_hide">kan</string>
     <string name="keyword_show">nyutu</string>
     <string name="keyword_visibility">neno</string>
+
     <string name="error_loading_apps">Peko me keto app: %1$s</string>
+
     <string-array name="keywords_haptic">
         <item>yeng yeng</item>
         <item>gudu</item>
@@ -798,9 +812,11 @@
         <item>kur kong</item>
         <item>kare okato</item>
     </string-array>
+
     <string name="label_keyboard_always_dark">Kare ducu lok macol</string>
     <string name="label_keyboard_pitch_black">Wi lok macol</string>
     <string name="label_keyboard_clipboard_enabled">Lok macon me Clipboard</string>
+
     <string-array name="keywords_selection">
         <item>lis</item>
         <item>lakwany</item>
@@ -880,27 +896,33 @@
         <item>yubu jami maber</item>
         <item>pixel</item>
     </string-array>
-    <!-- App Selection Extra -->
+
+    
     <string name="action_invert_selection">Lok gin ma iyero</string>
     <string name="toggle_show_system_apps">Nyut jami ma ki tiyo kwede i cim</string>
-    <!-- Updates -->
+
+    
     <string name="status_up_to_date">Itye ka ngeyo jami manyen</string>
     <string name="warning_pre_release">Man obedo gin ma peya ki gonyo ki twero bedo ma pe ocung matek.</string>
     <string name="release_notes_format">Lok me gonyo %1$s</string>
     <string name="action_view_on_github">Nen i GitHub</string>
     <string name="action_download_apk">Kwany APK</string>
-    <!-- Haptic Types -->
+
+    
     <string name="haptic_none">Peke</string>
     <string name="haptic_subtle">Nying mukene ma tidi</string>
     <string name="haptic_double">Ma dwong</string>
     <string name="haptic_click">Dii</string>
     <string name="haptic_tick">Gwet</string>
-    <!-- Flashlight Intensity Overlay -->
+
+    
     <string name="action_turn_off">Neko</string>
     <string name="feature_flashlight_brightness_title">Lero pa mac ma ki lwongo ni Flashlight</string>
-    <!-- QS / Activities -->
+
+    
     <string name="error_unlock_network_settings">Yab cim me loko kit ma ki keto kwede cim</string>
-    <!-- About Section -->
+
+    
     <string name="developed_by_format">Ki yubu ki %1$s\nki ❤\uFE0F ki \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="action_website">Kabedo me wilobo</string>
     <string name="action_contact">Rwate</string>
@@ -912,7 +934,8 @@
     <string name="app_canvas">Canvas</string>
     <string name="app_tasks">Tic</string>
     <string name="app_zero">Jero</string>
-    <!-- Help & Guides -->
+
+    
     <string name="help_guides_title">Kony ki lanyut</string>
     <string name="need_more_support_reach_out">Mito kony mukene? lok kwedwa,</string>
     <string name="action_collapse">Poto</string>
@@ -922,32 +945,44 @@
     <string name="send_email_chooser_title">Cwal email</string>
     <string name="error_no_email_app">Pe tye app me email ma tye</string>
     <string name="instruction_step_image_description">Tyelo %1$d Cal</string>
-    <!-- Instructions Content -->
+
+    
     <string name="instruction_section_perms_title">Donyo, ngec ki twero me keto gin mo</string>
     <string name="instruction_step_perms_1">Iromo nongo kwena me kwero donyo ni ka itemo miiyo twero ma pire tek calo twero me donyo, winyo ngec onyo twero me keto jami i kom gin moni. Me miini, nen yoo ma piny kany.</string>
     <string name="instruction_step_perms_2">1. Cet i pot karatac me ngec i kom jami ma pire tek.</string>
     <string name="instruction_step_perms_3">2. Yab menu ma tye ki 3-dot ki iyero \'Ye ni jami ma ki gengo\'. Iromo bedo ki miti me moko ni in itye ki jami ma kwako kwo pa dano. Ka dong ityeko, Tem miyo twero ni odoco.</string>
+
     <string name="instruction_section_shizuku_title">Shizuku</string>
     <string name="instruction_section_shizuku_desc">Shizuku obedo gin tic matek ma miyo twero bot apps me tic ki system APIs ki twero pa ADB onyo root. Mite pi jami ma calo Maps min mode, App Freezer. Ki wa bi konyo me miiyo twero mogo calo WRITE_SECURE_SETTINGS. \n\nEnto gin ma ki lwongo ni Play Store ma ki lwongo ni Shizuku twero bedo ni dong okato kare ne ki twero bedo ni pe kitwero tic kwede i kom Android manyen pi meno ka tye kit meno, tim ber i nong gin manyen ki i github onyo apwoyi.</string>
+
     <string name="instruction_section_maps_title">Maps kit me gwoko teko</string>
     <string name="instruction_section_maps_desc">Gin ni weko Google Maps tiyo ki yoo me gwoko teko ma tye i Pixel 10 series keken. Ngat mo ma i kin lwak onongo ni pud kitwero tic kwede i kom cim Android mo keken kun oyabo tic me maps minMode ki twero me root. \n\nKi dong, onwongo atye ka tic ki Tasker me cako tic kene ka gin ma ki neno ni otum i kare me wot ki dong onwongo atwero timo gin acel-lu ki twero pa Shizuku. \n\nKi yubu me nyute i kom AOD pa Pixel 10 series pi meno, ki in ibi neno kwena ma tye ka nen i kom gin ma ki nyutu ni en pe miiyo kony i kom kit me neno piny. Man pe kitwero gengo ki app ni ki in itwero kwero.</string>
+
     <string name="instruction_section_silent_title">Kit me winyo dwan ma oling mot</string>
     <string name="instruction_section_silent_desc">Iromo bedo ni ineno ni kit me ling bene kelo DND. \n\nMan tye pi kit ma Android oketo kwede kit ma kadi bed ni watiyo ki API acel-lu me loko kit me vibrate, en pi tyen lok mo weko DND kacel ki kit me ling ki man pe kitwero gengo ne i kare ni. :(</string>
+
     <string name="instruction_section_freeze_title">Ngo ma obedo ngiico?</string>
     <string name="instruction_section_freeze_desc">Cung ki bed cen ki jami ma balo tam pa app kun i gwoko teko manok ma gengo app me tic i ngeye. Ber pi jami ma pe kitiyo kwede kare ki kare. \n\nPe ki miiyo tam ni pi tic me lok mo keken pien pe gibi miini ngec i kare me peko ka pe i yabo gi. \n\nKi miiyo tam maber ni pi i juku jami ma ki tiyo kwede pien twero kelo peko i kom jami ma ki tiyo kwede. Medo anyim ki gwok, ki ciko in. \n\nKi cuko cwiny ki Hail &lt;3</string>
+
     <string name="instruction_section_security_title">Tika app lock ki screen locked gwok tye maber?</string>
     <string name="instruction_section_security_desc">Pe kumeno. \n\nGin mo keken ma ki tiyo kwede i kin dano mukene pe twero 100% balo tic pa jami ma ki tiyo kwede kare ki kare ki bene lock me app ni tye i kom jami ma ki yero me gengo tic kwed gi. Tye yoo me cobo peko ni ki en pe twero time. \n\nKit meno bene tye ki gin ma ki lwongo ni screen locked security ma nongo ngat mo tye ka temo tic ki network tiles ma pi tyen lok mo pud twero bedo tye pi ngat mo keken ma tye i Pixels. Pi meno ka gutemo matek romo loko gi ki tutwale ka itye ki Flight mode QS tile ma ki medo, app man pe twero gengo tic kwede. \n\nJami eni ki tiimo calo gin ma ki temo me tic kwede ki lero ki pi ki bi miini tam ni calo yoo me gwoko kuc ki gwoko ngec ma mako ngat moni. \n\nGwoko yoo mukene:\n - Cwalo jami ma ki keto i cim: Kabedo ma pi ki ngeyo ki ka gwoko jami ma ki gwoko maber i kom Pixels ki Samsung\n - Gengo donyo i cim cing: nen ni jami ma i gwoko ki jami ma ki kwalo ki jami ma ki keto i cim ni tye ka tic. Iromo neno Graphene OS bene.</string>
+
     <string name="instruction_section_statusbar_title">cal me Statusbar</string>
     <string name="instruction_section_statusbar_desc">Iromo neno ni kede i nge dwoko rwom me jami ma ki nyutu ni, jami mogo calo loko jami, jami ma ki keto i it ma ki keto i wic twero bedo ma nen. Man tye pi kit ma statubar blacklist ni ki keto kwede i Android ki kit ma OEM ni twero bedo ni oloko kwede. \nIromo mito alokaloka mukene. \n\nDok bene pe jami weny ma nyutu cal twero tic pien twero bedo ni OEM tye ki tic kwede.</string>
+
     <string name="instruction_section_lighting_title">Mac ma miyo ngec pe tiyo</string>
     <string name="instruction_section_lighting_desc">cung i kom OEM. Mogo calo OneUI pe nen calo ye ni ki ket jami ma malo i kom AOD ma gengo dero ma ki nyutu. I kom lok man, tem nyutu jami ma tye i kin piny calo yoo me cobo peko ni.</string>
+
     <string name="instruction_section_button_title">Remap me bute pe tiyo ka gin ma ki nyutu ni tye ka tic</string>
     <string name="instruction_section_button_desc">OEM mogo gi gengo tic me donyo i kare ma gin ma ki nyutu ni tye ka tic ento gi twero tic ka AOD tye ka tic. \nI kom lok man, ki in ibi twero tic ki bute ma ki lwongo ni button remaps ki AOD on ento pe ki off. \n\nMe cobo peko ni, ibi miito tic ki twero pa Shizuku ki i yabo \'Tii ki Shizuku onyo Root\' lok i kom bute ma nyutu ki winyo jami ma ki keto i cim.\nMan pe ki gen ni obi tic i kom jami weny ki mito temo.\n\nki kadi bed ni\'s on, yoo pa Shizuku keken aye ki bi tiyo kwede ka\'mitte. Ka kumeno ku, en obi dwogo cen i Accessibility ma bene tiyo ki gengo gin ma ki keto i kare me dii pi kare malac.</string>
+
     <string name="instruction_section_flashlight_title">Lero pa lameny pe tiyo</string>
     <string name="instruction_section_flashlight_desc">Jami manok keken aye onongo kony me tic ki jami ma ki tiyo kwede me loko teko pa lameny. \n\n\'Labol pa Android ma nok loyo tye 13 (SDK33).\nLagwok mac ma ki lwongo ni Flashlight control dul 38 keken, ki i kin jami mukene ma ki miiyo kony iye. acel (me labolle, Pixel 6/7, Samsung S23, ki mukene)\'\npolodarb/Flashlight-Tiramisu</string>
+
     <string name="instruction_section_about_title">Gin ango ma tye i app eni?</string>
     <string name="instruction_section_about_desc">Lapeny maber,\n\nKare ducu onongo amito kwanyo jami mapol ki i jami ma atye kwede ma calo\'abedo latic ma ki keto i tic pi kare malac nicako i kare ma anongo jami tic na mukwongo me Project Treble. Ki an\'abedo ka maro app me Tasker ma tye calo lubanga ka odok i kom tic ma tiime piire kene ki tic ki API weny ki jami ma tye i Android.\n\nPi meno an pe atye ka tic ki jami ma ki lwongo ni Android beta ki onongo amito ni anong gin ma twero time ki twero ma kimiyo. Ki twero poko gi. Pi meno ki ngec ma atye kwede i Kotlin Jetpack ki kony pa jami mapol me kwedo ngec ki kony ki bene lwak dano, a yubu app ma tye ki jami weng ma amito ni obed i Android na ki twero ma kimiyo. Ki kany tye.\n\nPeny pi jami ma ki miini ki jolo, an abi neno ki neno ka ki twero cobo ne ki twero ma tye ki diro na. I kare ni ngo ma pe twere. :)\n\nPingo pe i Play Store?\npe\'pe amito ni ki juk akaunt na me Developer pi twero ma ki tiyo kwede i app ni. Ento ki kit ma Android sideloading tye ka wot kwede, wek\'nen ngo ma omyera watim. An aniang lok ma mako jami ma ki keto i cing dano ma tye ki jami maraco.\nI kare ma wa tye i lok man, nen app na mukene ma ki lwongo ni AirSync ka in itye ngat ma tiyo ki mac + Android. *labongo lewic*\n\nBed ki yomcwiny, mede ki gedo! (っ◕‿◕)っ</string>
-    <!-- Bug Reporting -->
+    
+    
     <string name="toast_bug_report_copied">Ripot pa peko ma ki coyo i clipboard</string>
     <string name="bug_report_title">Ripot pa peko</string>
     <string name="bug_report_option_share_logs">Pok jami ma ki coyo</string>
@@ -958,12 +993,13 @@
     <string name="action_report_email">Lok ma ki cwalo i email</string>
     <string name="action_copy_clipboard">Coy i Clipboard</string>
     <string name="bug_report_email_subject">Ripot pa jami ma pirgi tek</string>
-    <string name="bug_report_send_via">Please enable crash reporting as it will automatically report details that would help resolving issues.</string>
-    <!-- Location Reached -->
+    <string name="bug_report_send_via">Cwal ki</string>
+
+    
     <string name="feat_location_reached_title">Wa tye kunu kono?</string>
     <string name="feat_location_reached_desc">Lok me poyo wic i kom kabedo macok</string>
     <string name="location_reached_how_to">Yab Google Maps, yero kabedo, ki poko ne bot Essentials.</string>
-    <string name="location_reached_radius_title">Radius: %d m</string>
+    <string name="location_reached_radius_title">Alert Radius: %d m</string>
     <string name="perm_location_title">Ka ma nonge iye</string>
     <string name="perm_location_desc">Ki tiiyo kwede me ngeyo oo i kama i tye ka cito iye.</string>
     <string name="perm_bg_location_title">Kabedo ma tye angec</string>
@@ -995,24 +1031,25 @@
     <string name="setting_use_root_title">Tii ki tyen lok</string>
     <string name="setting_use_root_desc">Ma ka Shizuku</string>
     <string name="root_not_available_toast">Root twero pe tye. Tim ber inen ladit tic ni.</string>
-    <!-- System Keyboard -->
+    
     <string name="feat_system_keyboard_title">Keyboard</string>
     <string name="feat_system_keys">Lagony</string>
     <string name="feat_system_keyboard_desc">Lok kit ma ki yubu kwede ki kit ma en tiimo kwede</string>
     <string name="search_keyboard_height_title">Bor pa keyboard</string>
-    <string name="search_keyboard_height_desc">Lok dit pa gin ma ki lwongo ni keyboard ni</string>
+    <string name="search_keyboard_height_desc">Lok dit pa gin ma ki lwongo ni keyboard ni</string>&gt;
     <string name="search_keyboard_padding_title">Gin ma ki keto piny</string>
     <string name="search_keyboard_padding_desc">Med kabedo piny i te keyboard</string>
     <string name="search_keyboard_haptics_title">Lagam ma ki lwongo ni Haptic</string>
     <string name="search_keyboard_haptics_desc">Yeny ka idiyo lagony</string>
     <string name="test_keyboard_hint">Tem gin ma ki lwongo ni keyboard</string>
-    <string name="label_keyboard_height">Bor pa keyboard</string>
+    <string name="label_keyboard_height">Bor pa keyboard</string>&gt;
     <string name="label_keyboard_bottom_padding">Gin ma ki keto piny</string>
     <string name="label_keyboard_haptics">Lagam ma ki lwongo ni Haptic</string>
     <string name="label_keyboard_roundness">Key Roundness</string>
     <string name="label_keyboard_functions_bottom">Cwal tic ni piny</string>
     <string name="label_keyboard_functions_padding">Tic me keto jami i ngete</string>
     <string name="label_keyboard_haptic_strength">Teko pa dwoko cen ma ki lwongo ni Haptic</string>
+
     <string name="label_keyboard_shape">Kit ma ki yubu kwede kibod</string>
     <string name="shape_round">Olunge</string>
     <string name="shape_flat">Obutu tir</string>
@@ -1024,15 +1061,16 @@
     <string name="connect_to_airsync_summary">Nyut batri ki i cim mac ma i keto i AirSync</string>
     <string name="download_airsync">Kwany AirSync App</string>
     <string name="download_airsync_summary">Mite pi rwate pa batri pa Mac</string>
+
     <string name="feat_battery_notification_title">Ngec i kom batri</string>
     <string name="feat_battery_notification_desc">Ngec ma mako kit ma batri ni tye kwede</string>
-    <string name="battery_notification_hint">This notification displays battery levels for your connected Mac and Bluetooth devices. You can configure which devices to show in the Battery Widget settings.</string>
     <string name="about_desc_battery_notification">Nyut kit ma jami ma ki lwongo ni battery ni tiyo kwede i rwom me ngec ni. Obi nyutu rwom pa batri pa jami ni weng ma ki keto i cim ni i ngec acel ma rii, ma ki medo i kare kikome. Man medo ki Mac ni (ki AirSync) ki jami ma ki lwongo ni Bluetooth.</string>
     <string name="battery_notification_channel_name">Ngeyo kit ma mac tye kwede</string>
     <string name="battery_notification_channel_desc">Ngec ma bino kare ki kare ma nyutu rwom me batri pa jami ma ki keto i cim</string>
     <string name="perm_nearby_devices_title">Jami macok</string>
     <string name="perm_nearby_devices_desc">Mitte me nongo ki kwanyo ngec ma mako batri ki i jami ma ki lwongo ni Bluetooth</string>
-    <!-- GitHub Auth -->
+
+    
     <string name="auth_copy_code">Coy namba ni</string>
     <string name="auth_open_login_page">Yab pot karatac me donyo</string>
     <string name="auth_sign_in_rationale">Dony me medo wel lwongo me API</string>
@@ -1040,58 +1078,73 @@
     <string name="action_sign_in_github">Dony ki GitHub</string>
     <string name="action_sign_out">Coye woko</string>
     <string name="action_profile">Titu wiye ki wiye</string>
-    <!-- App Updates / Repos -->
+
+    
     <string name="label_release_notes">Lok me gonyo</string>
     <string name="msg_no_repos_tracked">Pe ki lubo ka gwoko jami mo keken</string>
     <string name="label_no_app_linked">Pe tye app mo ma ki keto</string>
     <string name="format_updated_relative">Ki medo %1$s</string>
-    <!-- Relative Time -->
+
+    
     <string name="time_just_now">kombedi ni</string>
     <string name="time_min_ago">%1$dm mukato angec</string>
     <string name="time_hour_ago">%1$dh mukato angec</string>
     <string name="time_day_ago">%1$dd mukato angec</string>
     <string name="time_month_ago">%1$ddwe mukato angec</string>
     <string name="time_year_ago">%1$dy ma okato</string>
+
     <string name="action_retry">Tem doki</string>
     <string name="action_start_sign_in">Yab donyo</string>
     <string name="auth_requesting_code">Penyo namba me cim...</string>
     <string name="auth_copy_code_instruction">1. Kwany namba ni:</string>
     <string name="auth_paste_code_instruction">2. Ket coc ni i GitHub:</string>
+
     <string name="label_found_apks">APKs ma ki nongo</string>
     <string name="label_readme">Kwan an</string>
     <string name="action_refresh">dwoko cen</string>
-    <!-- Added Missing Group Strings -->
+
+    
     <string name="feat_sound_modes_title">Kit me dwan</string>
     <string name="feat_sound_modes_desc">QS tile me loko kit me dwan</string>
     <string name="search_sound_mode_show_slider_title">Nyut gin ma cito piny</string>
     <string name="search_sound_mode_show_slider_desc">Nyut gin ma ki lwongo ni slider i tile</string>
     <string name="search_sound_mode_behavior_title">Kit me ngwec</string>
     <string name="search_sound_mode_behavior_desc">Yer kit ma ibi wot kwede</string>
+    
     <string name="feat_ambient_music_title">Neno wer ma mako kabedo ni</string>
     <string name="feat_ambient_music_desc">Nen i kom jami ma ki cwalo i AOD</string>
+    
     <string name="feat_sound_haptics_title">Dwon ki Haptics</string>
     <string name="feat_sound_haptics_desc">Dwon ki kit ma mako kwede</string>
+    
     <string name="feat_security_privacy_title">Gwoko kuc ki bedo piri keni</string>
     <string name="feat_security_privacy_desc">Gwok ki gwoko jami ni maber</string>
+    
     <string name="feat_notifications_alerts_title">Ngec ki poyo wic</string>
     <string name="feat_notifications_alerts_desc">Pe iwek jami ma pire tek boti</string>
+    
     <string name="feat_input_actions_title">Keto ki tic</string>
     <string name="feat_input_actions_desc">Gwok jami ni ki yot</string>
+    
     <string name="feat_widgets_title">Widget</string>
     <string name="feat_widgets_desc">I kare ma ineno i cim ni me gang</string>
+    
     <string name="feat_display_visuals_title">Nyutu</string>
     <string name="feat_display_visuals_desc">Jami ma ki neno me medo ngec ni</string>
+    
     <string name="feat_watch_title">Nen</string>
     <string name="feat_watch_desc">Ribbe ki WearOS</string>
     <string name="watch_no_companion_title">Pe ki nongo cawa mo</string>
     <string name="watch_no_companion_desc">Nen calo in pe itye ki gin ma ki lwongo ni Essentials Wear companion app ma ki keto i cawa ni.</string>
     <string name="watch_install_companion_action">Ket Companion</string>
+
+
     <string name="cat_interaction">Lok</string>
     <string name="cat_interface">Kit me tic kwede</string>
     <string name="cat_display">Nyutu</string>
     <string name="cat_protection">Gwok</string>
     <string name="label_kbd_abc">ABC</string>
-    <string name="label_kbd_symbols">\?#/</string>
+    <string name="label_kbd_symbols">?#/</string>
     <string name="msg_restrict_own_app_repo">Oi! Itwero neno jami manyen i yub me app, pe mitte ni i med kany XD</string>
     <string name="action_export">Cato woko</string>
     <string name="action_import">Gi m\'acata ma aa ki woko</string>
@@ -1126,9 +1179,11 @@
     <string name="label_use_blur">Tii ki blur</string>
     <string name="desc_use_blur">Wek jami ma nen maber i UI ni</string>
     <string name="msg_blur_compatibility_error">Blur ki juku i kom jami ni me gengo peko ma ki ngeyo i kom jami ma ki lwongo ni Samsung ma tye ki Android 15 onyo ma piny.</string>
-    <!-- Empty State Actions -->
+
+    
     <string name="msg_no_apps_frozen">Pe tye app mo ma ki yero me juku.</string>
     <string name="action_get_started">Yab</string>
     <string name="action_new_automation">Tic manyen ma tiyo piire kene</string>
     <string name="action_add_repository">Med ka gwoko jami</string>
+
 </resources>

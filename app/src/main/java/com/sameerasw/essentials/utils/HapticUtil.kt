@@ -32,6 +32,13 @@ object HapticUtil {
     }
 
     /**
+     * Perform an extra light micro tick haptic feedback
+     */
+    fun performMicroHaptic(view: View) {
+        performCustomHaptic(view, 0.02f)
+    }
+
+    /**
      * Perform a medium impact haptic feedback
      */
     fun performMediumHaptic(view: View) {
