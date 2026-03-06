@@ -608,6 +608,7 @@
     <string name="action_help_guide">دليل المساعدة</string>
     <string name="action_what_is_this">ما هذا؟</string>
     <string name="update_available_title">التحديث متاح</string>
+    <string name="about_desc_your_android">Glance at your device\'s hardware and software specifications in detail. This information is fetched from GSMArena and system properties to provide a comprehensive overview of your Android device.</string>
     <string name="about_desc_ambient_music_glance">يعرض Ambient Music Glance تراكب \"التشغيل الآن\" على شاشة القفل لديك أثناء تشغيل الموسيقى وتغيير التشغيل.  \n\n إذا كان جهازك لا يدعم التراكبات عبر AOD، فيمكنك اختيار شاشة توقف Ambience المضافة في إعدادات Android كبديل أثناء الشحن.</string>
     <string name="about_desc_notification_lighting">تضيف إضاءة الإشعارات تأثيرًا جميلاً لإضاءة الحافة عندما تتلقى الإشعارات. \n\n يمكنك تخصيص نمط الرسوم المتحركة والألوان والسلوك. إنه يعمل حتى عندما تكون الشاشة مغلقة (تعتمد على OEM) أو أعلى تطبيقك الحالي. اختر التطبيقات أو أولوية الإشعارات أو السلوك الذي يجب تشغيله من عناصر التحكم المحددة. إذا كان OEM الخاص بك لا يدعم التراكبات أعلى من AOD، فالجأ إلى خيار العرض المحيطي الموجود أدناه.</string>
     <string name="about_desc_screen_off_widget">قم بإيقاف تشغيل الشاشة بسهولة بنقرة على أداة شفافة يمكن تغيير حجمها ولا تضيف أيقونات أو أي فوضى إلى شاشتك الرئيسية.</string>
@@ -1025,6 +1026,7 @@
     <string name="download_airsync_summary">مطلوب لمزامنة بطارية Mac</string>
     <string name="feat_battery_notification_title">إشعار البطارية</string>
     <string name="feat_battery_notification_desc">إشعار حالة البطارية المستمرة</string>
+    <string name="battery_notification_hint">This notification displays battery levels for your connected Mac and Bluetooth devices. You can configure which devices to show in the Battery Widget settings.</string>
     <string name="about_desc_battery_notification">قم بتكرار تجربة أداة البطارية في مركز الإشعارات الخاص بك. سيعرض مستويات البطارية لجميع أجهزتك المتصلة في إشعار واحد مستمر، ويتم تحديثه في الوقت الفعلي. يتضمن ذلك جهاز Mac الخاص بك (عبر AirSync) وملحقات Bluetooth.</string>
     <string name="battery_notification_channel_name">إشعار حالة البطارية</string>
     <string name="battery_notification_channel_desc">إشعار مستمر يوضح مستويات بطارية الأجهزة المتصلة</string>
