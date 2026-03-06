@@ -1097,4 +1097,9 @@
     <string name="label_use_blur">استخدم التمويه</string>
     <string name="desc_use_blur">تمكين عناصر التمويه التقدمية عبر واجهة المستخدم</string>
     <string name="msg_blur_compatibility_error">تم تعطيل Blur على هذا الجهاز لمنع حدوث خطأ معروف في العرض على أجهزة Samsung التي تعمل بنظام التشغيل Android 15 أو الإصدارات الأقدم.</string>
+    <!-- Empty State Actions -->
+    <string name="msg_no_apps_frozen">No apps selected to freeze.</string>
+    <string name="action_get_started">Get Started</string>
+    <string name="action_new_automation">New Automation</string>
+    <string name="action_add_repository">Add Repository</string>
 </resources>
