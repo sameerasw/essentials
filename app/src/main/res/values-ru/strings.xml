@@ -608,6 +608,7 @@
     <string name="action_help_guide">Справочное руководство</string>
     <string name="action_what_is_this">Что это?</string>
     <string name="update_available_title">Доступно обновление</string>
+    <string name="about_desc_your_android">Glance at your device\'s hardware and software specifications in detail. This information is fetched from GSMArena and system properties to provide a comprehensive overview of your Android device.</string>
     <string name="about_desc_ambient_music_glance">Ambient Music Glance отображает наложение «Сейчас исполняется» на экране блокировки, когда воспроизводится музыка и изменяется воспроизведение. \n\nЕсли ваше устройство не поддерживает наложение поверх AOD, вы можете выбрать заставку Ambience, добавленную в настройки Android, в качестве альтернативы во время зарядки.</string>
     <string name="about_desc_notification_lighting">Подсветка уведомлений добавляет красивый эффект боковой подсветки при получении уведомлений.\n\nВы можете настроить стиль, цвета и поведение анимации. Он работает, даже когда экран выключен (зависит от OEM) или находится поверх текущего приложения. Выберите приложения, приоритет уведомлений или поведение, при котором оно должно запускаться, с помощью заданных элементов управления. Если ваш OEM-производитель не поддерживает наложения выше AOD, подайте в суд на опцию Ambient display, указанную ниже.</string>
     <string name="about_desc_screen_off_widget">Легко выключите экран, коснувшись прозрачного виджета с изменяемым размером, который не добавляет значков или беспорядка на главный экран.</string>
@@ -1025,6 +1026,7 @@
     <string name="download_airsync_summary">Требуется для синхронизации батареи Mac</string>
     <string name="feat_battery_notification_title">Уведомление о батарее</string>
     <string name="feat_battery_notification_desc">Постоянное уведомление о состоянии батареи</string>
+    <string name="battery_notification_hint">This notification displays battery levels for your connected Mac and Bluetooth devices. You can configure which devices to show in the Battery Widget settings.</string>
     <string name="about_desc_battery_notification">Воспроизведите виджет батареи в панели уведомлений. Он покажет уровень заряда батареи всех ваших подключенных устройств в одном постоянном уведомлении, обновляемом в режиме реального времени. Сюда входит ваш Mac (через AirSync) и аксессуары Bluetooth.</string>
     <string name="battery_notification_channel_name">Уведомление о состоянии батареи</string>
     <string name="battery_notification_channel_desc">Постоянное уведомление, показывающее уровень заряда батареи подключенных устройств.</string>
