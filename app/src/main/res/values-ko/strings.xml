@@ -1097,4 +1097,9 @@
     <string name="label_use_blur">흐림 사용</string>
     <string name="desc_use_blur">UI 전반에 걸쳐 점진적인 흐림 요소를 활성화합니다.</string>
     <string name="msg_blur_compatibility_error">Android 15 이하를 실행하는 삼성 기기에서 알려진 디스플레이 버그를 방지하기 위해 이 기기에서는 흐림 기능이 비활성화되어 있습니다.</string>
+    <!-- Empty State Actions -->
+    <string name="msg_no_apps_frozen">No apps selected to freeze.</string>
+    <string name="action_get_started">Get Started</string>
+    <string name="action_new_automation">New Automation</string>
+    <string name="action_add_repository">Add Repository</string>
 </resources>
