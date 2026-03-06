@@ -608,6 +608,7 @@
     <string name="action_help_guide">Průvodce nápovědou</string>
     <string name="action_what_is_this">co to je?</string>
     <string name="update_available_title">Aktualizace k dispozici</string>
+    <string name="about_desc_your_android">Glance at your device\'s hardware and software specifications in detail. This information is fetched from GSMArena and system properties to provide a comprehensive overview of your Android device.</string>
     <string name="about_desc_ambient_music_glance">Ambient Music Glance zobrazuje na obrazovce uzamčení překryvnou vrstvu Právě se přehrává, když se přehrává hudba a přehrávání se mění. \n\nPokud vaše zařízení nepodporuje překryvy přes AOD, můžete se rozhodnout pro spořič obrazovky Ambience přidaný do nastavení Androidu jako alternativu během nabíjení.</string>
     <string name="about_desc_notification_lighting">Osvětlení oznámení přidává krásný efekt okrajového osvětlení, když obdržíte oznámení.\n\n Styl animace, barvy a chování si můžete přizpůsobit. Funguje to, i když je obrazovka vypnutá (závisí na OEM) nebo na vaší aktuální aplikaci. Vyberte aplikace, prioritu oznámení nebo jaké chování by se mělo spouštět z daných ovládacích prvků. Pokud váš OEM nepodporuje překryvy nad AOD, zažalujte možnost Ambient display níže.</string>
     <string name="about_desc_screen_off_widget">Obrazovku snadno vypněte klepnutím na průhledný widget s měnitelnou velikostí, který na vaši domovskou obrazovku nepřidává ikony ani žádný nepořádek.</string>
@@ -1025,6 +1026,7 @@
     <string name="download_airsync_summary">Vyžadováno pro synchronizaci baterie Mac</string>
     <string name="feat_battery_notification_title">Upozornění na baterii</string>
     <string name="feat_battery_notification_desc">Trvalé upozornění na stav baterie</string>
+    <string name="battery_notification_hint">This notification displays battery levels for your connected Mac and Bluetooth devices. You can configure which devices to show in the Battery Widget settings.</string>
     <string name="about_desc_battery_notification">Replikujte prostředí widgetu baterie na panelu oznámení. Ukáže úrovně nabití baterie všech vašich připojených zařízení v jediném trvalém upozornění, aktualizovaném v reálném čase. To zahrnuje váš Mac (přes AirSync) a příslušenství Bluetooth.</string>
     <string name="battery_notification_channel_name">Upozornění na stav baterie</string>
     <string name="battery_notification_channel_desc">Trvalé upozornění zobrazující stav baterie připojených zařízení</string>
