@@ -38,10 +38,14 @@ import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.theme.GoogleSansFlexRounded
-import com.sameerasw.essentials.ui.components.pickers.CrashReportingPicker
+import com.sameerasw.essentials.ui.components.cards.IconToggleItem
+import com.sameerasw.essentials.ui.components.sheets.UpdateBottomSheet
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.utils.DeviceUtils
+import androidx.compose.ui.unit.sp
+import com.sameerasw.essentials.ui.components.pickers.CrashReportingPicker
 import kotlinx.coroutines.launch
 import kotlin.math.PI
 import kotlin.math.atan2
@@ -49,6 +53,7 @@ import kotlin.math.atan2
 enum class OnboardingStep {
     WELCOME,
     ACKNOWLEDGEMENT,
+    PREFERENCES,
     FEATURE_INTRODUCTION
 }
 
@@ -69,14 +74,18 @@ fun WelcomeScreen(
 
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
+        color = MaterialTheme.colorScheme.surfaceContainer
     ) {
         AnimatedContent(
             targetState = currentStep,
             transitionSpec = {
-                // Professional right-to-left push animation
-                (slideInHorizontally { it } + fadeIn(tween(400)))
-                    .togetherWith(slideOutHorizontally { -it } + fadeOut(tween(400)))
+                if (targetState.ordinal > initialState.ordinal) {
+                    (slideInHorizontally { it } + fadeIn(tween(400)))
+                        .togetherWith(slideOutHorizontally { -it } + fadeOut(tween(400)))
+                } else {
+                    (slideInHorizontally { -it } + fadeIn(tween(400)))
+                        .togetherWith(slideOutHorizontally { it } + fadeOut(tween(400)))
+                }
             },
             label = "OnboardingTransition"
         ) { step ->
@@ -104,6 +113,24 @@ fun WelcomeScreen(
                         AcknowledgementStepContent(
                             sentryMode = sentryMode,
                             onSentryModeSelected = { viewModel.setSentryReportMode(it, context) },
+                            onBack = {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                currentStep = OnboardingStep.WELCOME
+                            },
+                            onNext = {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                currentStep = OnboardingStep.PREFERENCES
+                            }
+                        )
+                    }
+
+                    OnboardingStep.PREFERENCES -> {
+                        PreferencesStepContent(
+                            viewModel = viewModel,
+                            onBack = {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                currentStep = OnboardingStep.ACKNOWLEDGEMENT
+                            },
                             onNext = {
                                 HapticUtil.performVirtualKeyHaptic(view)
                                 currentStep = OnboardingStep.FEATURE_INTRODUCTION
@@ -113,6 +140,10 @@ fun WelcomeScreen(
 
                     OnboardingStep.FEATURE_INTRODUCTION -> {
                         FeatureIntroStepContent(
+                            onBack = {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                currentStep = OnboardingStep.PREFERENCES
+                            },
                             onFinish = {
                                 HapticUtil.performVirtualKeyHaptic(view)
                                 onBeginClick()
@@ -244,7 +275,7 @@ fun WelcomeStepContent(
             Spacer(modifier = Modifier.height(18.dp))
 
             Text(
-                text = "Welcome to Essentials",
+                text = stringResource(R.string.welcome_title),
                 style = MaterialTheme.typography.headlineMedium.copy(
                     fontFamily = GoogleSansFlexRounded,
                     fontWeight = FontWeight.SemiBold
@@ -253,7 +284,7 @@ fun WelcomeStepContent(
             )
 
             Text(
-                text = "A Toolbox for Android Nerds",
+                text = stringResource(R.string.welcome_subtitle),
                 textAlign = TextAlign.Center,
             )
 
@@ -285,7 +316,7 @@ fun WelcomeStepContent(
                 Spacer(modifier = Modifier.width(8.dp))
 
                 Text(
-                    text = "by sameerasw.com",
+                    text = stringResource(R.string.welcome_developer_attribution),
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                     modifier = Modifier.padding(end = 4.dp)
@@ -304,7 +335,7 @@ fun WelcomeStepContent(
                 .height(56.dp)
         ) {
             Text(
-                text = "Let's Begin",
+                text = stringResource(R.string.action_lets_begin),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
@@ -324,8 +355,11 @@ fun WelcomeStepContent(
 fun AcknowledgementStepContent(
     sentryMode: String,
     onSentryModeSelected: (String) -> Unit,
+    onBack: () -> Unit,
     onNext: () -> Unit
 ) {
+    val view = LocalView.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -338,7 +372,7 @@ fun AcknowledgementStepContent(
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "Acknowledgement",
+            text = stringResource(R.string.acknowledgement_title),
             style = MaterialTheme.typography.headlineLarge.copy(
                 fontFamily = GoogleSansFlexRounded,
                 fontWeight = FontWeight.Bold
@@ -362,14 +396,14 @@ fun AcknowledgementStepContent(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    text = "This app is a collection of utilities that can interact deeply with your device system. Using some features might modify system settings or behavior in unexpected ways. \n\nYou only need to grant necessary permissions which are required for selected features you are using giving you full control over the app's behavior. \n\nFurther more, the app does not track or store any of your personal data, I don't need them... Keep to yourself safe. You can refer to the source code for more information. \n\nThis app is fully open source and is and always will be free to use. Do not pay or install from unknown sources.",
+                    text = stringResource(R.string.acknowledgement_desc),
                     style = MaterialTheme.typography.bodyLarge
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Text(
-                    text = "WARNING: Proceed with caution. The developer takes no responsibility for any system instability, data loss, or other issues caused by the use of this app. By proceeding, you acknowledge these risks.",
+                    text = stringResource(R.string.acknowledgement_warning),
                     color = MaterialTheme.colorScheme.error,
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.bodyLarge
@@ -379,7 +413,7 @@ fun AcknowledgementStepContent(
 
 
                 Text(
-                    text = "I know you didn't even read this carefully but, in case you need any help, feel free to reach out the developer or the community.",
+                    text = stringResource(R.string.acknowledgement_footer),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -397,35 +431,62 @@ fun AcknowledgementStepContent(
             )
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-        Button(
-            onClick = onNext,
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .navigationBarsPadding()
-                .height(56.dp)
+                .navigationBarsPadding(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(
-                text = "I Understand",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
+            OutlinedButton(
+                onClick = {
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    onBack()
+                },
+                modifier = Modifier.size(56.dp),
+                shape = RoundedCornerShape(16.dp),
+                contentPadding = PaddingValues(0.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.rounded_arrow_back_24),
+                    contentDescription = stringResource(R.string.action_back),
+                    modifier = Modifier.size(24.dp)
+                )
+            }
 
-            Spacer(modifier = Modifier.weight(1f))
+            Button(
+                onClick = onNext,
+                modifier = Modifier
+                    .weight(1f)
+                    .height(56.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.action_i_understand),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
 
-            Icon(
-                painter = painterResource(id = R.drawable.rounded_check_24),
-                contentDescription = null,
-                modifier = Modifier.size(24.dp)
-            )
+                Spacer(modifier = Modifier.weight(1f))
+
+                Icon(
+                    painter = painterResource(id = R.drawable.rounded_check_24),
+                    contentDescription = null,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
         }
     }
 }
 
 @Composable
-fun FeatureIntroStepContent(onFinish: () -> Unit) {
+fun FeatureIntroStepContent(
+    onBack: () -> Unit,
+    onFinish: () -> Unit
+) {
     val context = LocalContext.current
+    val view = LocalView.current
     val imageLoader = remember {
         ImageLoader.Builder(context)
             .components {
@@ -454,7 +515,7 @@ fun FeatureIntroStepContent(onFinish: () -> Unit) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "What is this?",
+                text = stringResource(R.string.action_what_is_this),
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontFamily = GoogleSansFlexRounded,
                     fontWeight = FontWeight.Bold
@@ -465,7 +526,7 @@ fun FeatureIntroStepContent(onFinish: () -> Unit) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Anytime you are clueless on a feature or a Quick Settings Tile on what it does and what permissions may necessary for it, just long press it and pick 'What is this?' to learn more.",
+                text = stringResource(R.string.feature_intro_desc),
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Start
             )
@@ -534,7 +595,7 @@ fun FeatureIntroStepContent(onFinish: () -> Unit) {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "You can report bugs or find helpful guides anytime in the app settings.",
+                text = stringResource(R.string.feature_intro_footer),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Start
@@ -543,27 +604,50 @@ fun FeatureIntroStepContent(onFinish: () -> Unit) {
             Spacer(modifier = Modifier.height(24.dp))
         }
 
-        Button(
-            onClick = onFinish,
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .navigationBarsPadding()
-                .padding(16.dp)
-                .height(56.dp)
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(
-                text = "Let Me in Already",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
+            OutlinedButton(
+                onClick = {
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    onBack()
+                },
+                modifier = Modifier.size(56.dp),
+                shape = RoundedCornerShape(16.dp),
+                contentPadding = PaddingValues(0.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.rounded_arrow_back_24),
+                    contentDescription = stringResource(R.string.action_back),
+                    modifier = Modifier.size(24.dp)
+                )
+            }
 
-            Spacer(modifier = Modifier.weight(1f))
+            Button(
+                onClick = onFinish,
+                modifier = Modifier
+                    .weight(1f)
+                    .height(56.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.action_let_me_in),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
 
-            Icon(
-                painter = painterResource(id = R.drawable.rounded_mobile_check_24),
-                contentDescription = null,
-                modifier = Modifier.size(24.dp)
-            )
+                Spacer(modifier = Modifier.weight(1f))
+
+                Icon(
+                    painter = painterResource(id = R.drawable.rounded_mobile_check_24),
+                    contentDescription = null,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
         }
     }
 }
@@ -589,5 +673,207 @@ fun GifItem(
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Fit
         )
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+fun PreferencesStepContent(
+    viewModel: MainViewModel,
+    onBack: () -> Unit,
+    onNext: () -> Unit
+) {
+    val context = LocalContext.current
+    val view = LocalView.current
+    val isAppHapticsEnabled = remember { mutableStateOf(HapticUtil.loadAppHapticsEnabled(context)) }
+    val isPitchBlackThemeEnabled by viewModel.isPitchBlackThemeEnabled
+    val isBlurSettingEnabled by viewModel.isBlurSettingEnabled
+    val isRootEnabled by viewModel.isRootEnabled
+    val isAutoUpdateEnabled by viewModel.isAutoUpdateEnabled
+    val updateInfo by viewModel.updateInfo
+    val isCheckingUpdate by viewModel.isCheckingUpdate
+    var showUpdateSheet by remember { mutableStateOf(false) }
+
+    if (showUpdateSheet) {
+        UpdateBottomSheet(
+            updateInfo = updateInfo,
+            isChecking = isCheckingUpdate,
+            onDismissRequest = { showUpdateSheet = false }
+        )
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 24.dp)
+            .padding(bottom = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier = Modifier.statusBarsPadding())
+
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Text(
+                text = stringResource(R.string.preferences_title),
+                style = MaterialTheme.typography.headlineLarge.copy(
+                    fontFamily = GoogleSansFlexRounded,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 36.sp
+                ),
+                color = MaterialTheme.colorScheme.onSurface,
+                textAlign = TextAlign.Center
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = stringResource(R.string.preferences_desc),
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center
+            )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // App Settings Section
+            Text(
+                text = stringResource(R.string.label_app_settings),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(start = 12.dp, bottom = 8.dp).fillMaxWidth(),
+                color = MaterialTheme.colorScheme.primary,
+                textAlign = TextAlign.Start
+            )
+
+            RoundedCardContainer {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_mobile_vibrate_24,
+                    title = stringResource(R.string.label_haptic_feedback),
+                    isChecked = isAppHapticsEnabled.value,
+                    onCheckedChange = { isChecked ->
+                        isAppHapticsEnabled.value = isChecked
+                        HapticUtil.saveAppHapticsEnabled(context, isChecked)
+                    }
+                )
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_invert_colors_24,
+                    title = stringResource(R.string.setting_pitch_black_theme_title),
+                    description = stringResource(R.string.setting_pitch_black_theme_desc),
+                    isChecked = isPitchBlackThemeEnabled,
+                    onCheckedChange = { viewModel.setPitchBlackThemeEnabled(it, context) }
+                )
+                val isBlurProblematic = remember { DeviceUtils.isBlurProblematicDevice() }
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_blur_on_24,
+                    title = stringResource(R.string.label_use_blur),
+                    description = if (isBlurProblematic) {
+                        stringResource(R.string.msg_blur_compatibility_error)
+                    } else {
+                        stringResource(R.string.desc_use_blur)
+                    },
+                    isChecked = isBlurSettingEnabled,
+                    onCheckedChange = { viewModel.setBlurEnabled(it, context) },
+                    enabled = !isBlurProblematic
+                )
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_numbers_24,
+                    title = stringResource(R.string.setting_use_root_title),
+                    description = stringResource(R.string.setting_use_root_desc),
+                    isChecked = isRootEnabled,
+                    onCheckedChange = { viewModel.setRootEnabled(it, context) }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Updates Section
+            Text(
+                text = stringResource(R.string.label_updates),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(start = 12.dp, bottom = 8.dp).fillMaxWidth(),
+                color = MaterialTheme.colorScheme.primary,
+                textAlign = TextAlign.Start
+            )
+
+            RoundedCardContainer {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_mobile_check_24,
+                    title = stringResource(R.string.label_auto_check_updates),
+                    description = stringResource(R.string.desc_auto_check_updates),
+                    isChecked = isAutoUpdateEnabled,
+                    onCheckedChange = { viewModel.setAutoUpdateEnabled(it, context) }
+                )
+
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_check_24,
+                    title = stringResource(R.string.action_check_whats_new),
+                    isChecked = false,
+                    showToggle = false,
+                    onCheckedChange = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.checkForUpdates(context, manual = true)
+                        showUpdateSheet = true
+                    }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .navigationBarsPadding(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            OutlinedButton(
+                onClick = {
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    onBack()
+                },
+                modifier = Modifier.size(56.dp),
+                shape = RoundedCornerShape(16.dp),
+                contentPadding = PaddingValues(0.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.rounded_arrow_back_24),
+                    contentDescription = stringResource(R.string.action_back),
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+
+            Button(
+                onClick = {
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    onNext()
+                },
+                modifier = Modifier
+                    .weight(1f)
+                    .height(56.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.action_all_set),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                Icon(
+                    painter = painterResource(id = R.drawable.rounded_check_24),
+                    contentDescription = null,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+        }
     }
 }
