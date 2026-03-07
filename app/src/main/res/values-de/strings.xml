@@ -364,8 +364,8 @@
     <string name="feat_freeze_desc">Selten verwendete Apps deaktivieren</string>
     <string name="feat_watermark_title">Wasserzeichen</string>
     <string name="feat_watermark_desc">Fotos mit EXIF-Daten und Logos versehen</string>
-    <string name="feat_always_on_display_title">Always on Display</string>
-    <string name="feat_always_on_display_desc">Show time and info while screen off</string>
+    <string name="feat_always_on_display_title">Always-on-Display</string>
+    <string name="feat_always_on_display_desc">Zeige Uhrzeit und Infos, während der Bildschirm ausgeschaltet ist</string>
     <string name="feat_calendar_sync_title">Kalender-Synchronisierung</string>
     <string name="feat_calendar_sync_desc">Synchronisiere deine Ereignisse mit deiner Uhr</string>
     <string name="watermark_style_overlay">Overlay</string>
@@ -398,16 +398,16 @@
     <string name="watermark_logo_size">Logo Size</string>
     <string name="watermark_edit_texts">Edit Watermark Texts</string>
     <string name="watermark_device_brand">Gerätemarke</string>
-    <string name="watermark_date_time">Date &amp; Time</string>
-    <string name="watermark_no_date">No date information</string>
-    <string name="watermark_rotate_left">Rotate left</string>
+    <string name="watermark_date_time">Datum &amp; Zeit</string>
+    <string name="watermark_no_date">Keine Datumsangaben</string>
+    <string name="watermark_rotate_left">Nach links drehen</string>
     <string name="watermark_rotate_right">Rotate right</string>
     <string name="action_next">Next</string>
     <string name="action_ok">OK</string>
     <string name="action_save_changes">Änderungen Speichern</string>
-    <string name="calendar_sync_settings_title">Calendar Sync Settings</string>
-    <string name="calendar_sync_select_calendars">Sync specific calendars</string>
-    <string name="calendar_sync_periodic_title">Periodic Sync</string>
+    <string name="calendar_sync_settings_title">Kalendersynchronisierungseinstellungen</string>
+    <string name="calendar_sync_select_calendars">Spezifische Kalender synchronisieren</string>
+    <string name="calendar_sync_periodic_title">Periodische Synchronisierung</string>
     <string name="calendar_sync_periodic_desc">Alle 15 Minuten synchronisieren, wenn Änderungen gefunden werden</string>
     <string name="calendar_sync_sync_now">Jetzt synchronisieren</string>
     <string name="calendar_sync_manual_sync_desc">Sofortige Synchronisierung zur Smartwatch auslösen</string>
@@ -434,7 +434,7 @@
     <string name="search_flashlight_pulse_desc">Langsames Blinken der Taschenlampe bei neuen Benachrichtigungen</string>
     <string name="search_only_facing_down_title">Nur, wenn das Handy umgedreht ist</string>
     <string name="search_only_facing_down_desc">Die Taschenlampe blinkt nur, wenn das Gerät mit der Vorderseite nach unten liegt</string>
-    <string name="snooze_no_channels_discovered">No system channels discovered yet. They will appear here once detected.</string>
+    <string name="snooze_no_channels_discovered">Es wurden noch keine Systemkanäle gefunden. Sie werden hier angezeigt, sobald sie erkannt werden.</string>
     <string name="search_qs_blur_title">UI-Unschärfe</string>
     <string name="search_qs_blur_desc">Systemweite UI-Unschärfe umschalten</string>
     <string name="search_qs_bubbles_title">Bubbles</string>
@@ -573,12 +573,12 @@
     <string name="label_search">Suche</string>
     <!-- UI Components General -->
     <string name="action_back">Zurück</string>
-    <string name="content_desc_back">Back</string>
-    <string name="label_settings">Settings</string>
-    <string name="action_report_bug">Report a Bug</string>
+    <string name="content_desc_back">Zurück</string>
+    <string name="label_settings">Einstellungen</string>
+    <string name="action_report_bug">Melde einen Fehler</string>
     <!-- Sentry Crash Reporting -->
-    <string name="sentry_report_mode_title">Crash reporting</string>
-    <string name="sentry_mode_off">Off</string>
+    <string name="sentry_report_mode_title">Abstürze melden</string>
+    <string name="sentry_mode_off">Aus</string>
     <string name="sentry_mode_auto">Auto</string>
     <string name="sentry_crash_toast">Essentials crashed, Report sent</string>
     <string name="simulate_crash">Simulate crash</string>
@@ -688,7 +688,7 @@
     <string name="diy_device_effects_android_15_warning">Für diese Funktion ist Android 15 oder höher erforderlich.</string>
     <string name="diy_device_effects_enabled">Aktiviert</string>
     <string name="diy_device_effects_disabled">Deaktiviert</string>
-    <string name="diy_action_sound_mode">Sound Mode</string>
+    <string name="diy_action_sound_mode">Tonmodus</string>
     <string name="diy_sound_mode_desc">This action allows switching between Sound, Vibrate, and Silent modes based on triggers. It requires Do Not Disturb access.</string>
     <!-- About Section -->
     <string name="app_developer_name">Sameera Wijerathna</string>
@@ -705,7 +705,7 @@
     <string name="update_channel_name">App-Aktualisierungen</string>
     <string name="update_channel_desc">Benachrichtigungen über neue App-Aktualisierungen</string>
     <string name="notification_update_available">Aktualisierung verfügbar</string>
-    <string name="battery_notification_no_devices">No devices connected</string>
+    <string name="battery_notification_no_devices">Keine Geräte verbunden</string>
     <string name="label_unknown">Unbekannt</string>
     <string name="network_type_5g">5G</string>
     <string name="network_type_4g">4G</string>
@@ -875,9 +875,9 @@
         <item>gefühl</item>
     </string-array>
     <string-array name="keywords_battery">
-        <item>battery</item>
-        <item>charge</item>
-        <item>optimization</item>
+        <item>batterie</item>
+        <item>laden</item>
+        <item>optimieren</item>
         <item>pixel</item>
     </string-array>
     <!-- App Selection Extra -->
@@ -960,7 +960,7 @@
     <string name="bug_report_email_subject">Essentials Fehlerbericht</string>
     <string name="bug_report_send_via">Senden über</string>
     <!-- Location Reached -->
-    <string name="feat_location_reached_title">Are We There Yet?</string>
+    <string name="feat_location_reached_title">Sind wir schon da?</string>
     <string name="feat_location_reached_desc">Bereite dich auf dein Ziel vor.</string>
     <string name="location_reached_how_to">Öffne deine Karten-App, wähle einen Ort und teile ihn mit Essentials.</string>
     <string name="location_reached_radius_title">Radius: %d m</string>
@@ -1038,12 +1038,12 @@
     <string name="auth_sign_in_rationale">Sign in to extend API call limits</string>
     <string name="auth_waiting_for_authorization">Waiting for authorization...</string>
     <string name="action_sign_in_github">Mit GitHub anmelden</string>
-    <string name="action_sign_out">Sign out</string>
-    <string name="action_profile">Profile</string>
+    <string name="action_sign_out">Abmelden</string>
+    <string name="action_profile">Profil</string>
     <!-- App Updates / Repos -->
-    <string name="label_release_notes">Release Notes</string>
+    <string name="label_release_notes">Versionshinweise</string>
     <string name="msg_no_repos_tracked">Es werden noch keine Repositorys verfolgt</string>
-    <string name="label_no_app_linked">No app linked</string>
+    <string name="label_no_app_linked">Keine App verlinkt</string>
     <string name="format_updated_relative">Updated %1$s</string>
     <!-- Relative Time -->
     <string name="time_just_now">just now</string>
