@@ -1026,7 +1026,7 @@
     <string name="download_airsync_summary">Macのバッテリー同期に必要</string>
     <string name="feat_battery_notification_title">バッテリー通知</string>
     <string name="feat_battery_notification_desc">バッテリーステータスの持続通知</string>
-    <string name="battery_notification_hint">This notification displays battery levels for your connected Mac and Bluetooth devices. You can configure which devices to show in the Battery Widget settings.</string>
+    <string name="battery_notification_hint">この通知は、接続されたMacとBluetoothデバイスのバッテリー残量を表示します。バッテリーウィジェットの設定で、表示するデバイスを選択できます。</string>
     <string name="about_desc_battery_notification">通知シェードにバッテリーウィジェットの機能を再現します。接続された全デバイスのバッテリー残量を、リアルタイムで更新される常時表示の通知で一元表示します。これにはMac（AirSync経由）とBluetoothアクセサリが含まれます。</string>
     <string name="battery_notification_channel_name">バッテリーステータス通知</string>
     <string name="battery_notification_channel_desc">接続されたデバイスのバッテリー残量を表示する常時通知</string>
@@ -1119,7 +1119,7 @@
     <string name="feat_aod_force_turn_off_desc">通知がない場合にAODを強制的にオフにします。アクセシビリティ権限が必要です。</string>
     <string name="feat_auto_accessibility_title">Auto accessibility</string>
     <string name="feat_auto_accessibility_desc">Automatically grants the accessibility permission on app launch if missing using WRITE_SECURE_SETTINGS.</string>
-    <string name="label_help_guide">ヘルプ＆ガイド</string>
+    <string name="label_help_guide">ヘルプとガイド</string>
     <string name="tab_your_android">あなたのAndroid</string>
     <string name="label_device_storage">ストレージ</string>
     <string name="label_device_ram">メモリ</string>
@@ -1128,7 +1128,7 @@
     <string name="msg_blur_compatibility_error">Blur is disabled on this device to prevent a known display bug on Samsung devices with Android 15 or below.</string>
     <!-- Empty State Actions -->
     <string name="msg_no_apps_frozen">フリーズするアプリが選択されていません。</string>
-    <string name="action_get_started">Get Started</string>
+    <string name="action_get_started">はじめる</string>
     <string name="action_new_automation">新しいオートメーション</string>
     <string name="action_add_repository">レポジトリを追加</string>
 </resources>
