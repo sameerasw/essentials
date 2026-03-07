@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Essentials</string>
     <string name="label_beta">BÉTA</string>
@@ -13,8 +13,7 @@
     <string name="flashlight_pulse_tile_label">Zseblámpa pulzus</string>
     <string name="check_pre_releases_label">Ellenőrizze az előzetes kiadásokat</string>
     <string name="check_pre_releases_desc">Lehet, hogy instabil</string>
-
-    
+    <!-- App Lock -->
     <string name="settings_section_security">Biztonság</string>
     <string name="app_lock_enable_title">Alkalmazászár engedélyezése</string>
     <string name="app_lock_auth_title">App Lock Security</string>
@@ -25,8 +24,7 @@
     <string name="app_lock_description">Biztosítsa alkalmazásait biometrikus hitelesítéssel. A zárolt alkalmazások indításakor hitelesítésre van szükség. Feloldva marad, amíg a képernyő ki nem kapcsol.</string>
     <string name="app_lock_warning">Ügyeljen arra, hogy ez nem egy robusztus megoldás, mivel ez csak egy harmadik féltől származó alkalmazás. Ha erős biztonságra van szüksége, fontolja meg a Private Space vagy más hasonló funkciók használatát.</string>
     <string name="app_lock_biometric_note">Egy másik megjegyzés, a biometrikus hitelesítési prompt csak ERŐS biztonságos osztályú módszerek használatát teszi lehetővé. Az olyan eszközökben, mint a Pixel 7, a WEAK osztályba tartozó arcfeloldási biztonsági módszerek csak a rendelkezésre álló egyéb ERŐS hitelesítési módszereket, például ujjlenyomat- vagy PIN-kódot fogják tudni használni.</string>
-
-    
+    <!-- Button Remap -->
     <string name="button_remap_enable_title">Gomb-visszatérképezés engedélyezése</string>
     <string name="button_remap_use_shizuku_title">Használja Shizuku vagy Root vagy Root</string>
     <string name="button_remap_use_shizuku_desc">Kikapcsolt képernyővel működik (ajánlott)</string>
@@ -84,8 +82,7 @@
     <string name="flashlight_always_off_title">Mindig kapcsolja ki a zseblámpát</string>
     <string name="flashlight_always_off_desc">Még akkor is, ha a kijelző be van kapcsolva</string>
     <string name="content_desc_settings">Beállítások elemre</string>
-
-    
+    <!-- Caffeinate / Permissions -->
     <string name="permission_show_notification_title">Értesítés megjelenítése</string>
     <string name="permission_post_notifications_title">Értesítések közzététele</string>
     <string name="permission_post_notifications_desc">Lehetővé teszi az alkalmazás számára, hogy értesítéseket jelenítsen meg</string>
@@ -109,13 +106,11 @@
     <string name="caffeinate_starting_in">Kezdés: %1$ds…</string>
     <string name="caffeinate_remaining">%1$s többi</string>
     <string name="caffeinate_live_channel_desc">Folyamatos értesítés a koffeinsavról</string>
-
-    
+    <!-- Dynamic Night Light -->
     <string name="dynamic_night_light_enable_title">Dinamikus éjszakai fény engedélyezése</string>
     <string name="dynamic_night_light_apps_section">Alkalmazások, amelyek kikapcsolják az éjszakai fényt</string>
     <string name="action_select_apps">Válasszon alkalmazásokat</string>
-
-    
+    <!-- App Freezing -->
     <string name="settings_section_app_control">Alkalmazásvezérlés</string>
     <string name="action_freeze">Fagy</string>
     <string name="action_unfreeze">Kiolvaszt</string>
@@ -142,8 +137,7 @@
     <string name="perm_usage_stats_title">Használati statisztika</string>
     <string name="perm_usage_stats_desc">Szükséges annak észleléséhez, hogy mely alkalmazások vannak jelenleg az előtérben, hogy elkerüljék azok lefagyását</string>
     <string name="perm_notif_listener_desc_freeze">Szükséges a lejátszott média és az aktív értesítések észleléséhez, hogy elkerülje azok lefagyását</string>
-
-    
+    <!-- Notification Lighting -->
     <string name="notification_lighting_screen_off_title">Csak kikapcsolt képernyő esetén jelenik meg</string>
     <string name="notification_lighting_skip_silent_title">A néma értesítések kihagyása</string>
     <string name="notification_lighting_skip_persistent_title">Az állandó értesítések kihagyása</string>
@@ -173,8 +167,7 @@
     <string name="ambient_display_desc">Ébressze fel a képernyőt és mutassa meg a világítást</string>
     <string name="ambient_show_lock_screen_title">Zárolási képernyő megjelenítése</string>
     <string name="ambient_show_lock_screen_desc">Nincs fekete fedőréteg</string>
-
-    
+    <!-- Tiles -->
     <string name="action_add">Hozzáadás</string>
     <string name="qs_tile_already_added">Már hozzáadva</string>
     <string name="qs_tile_requires_android_13">Android 13+ szükséges</string>
@@ -228,9 +221,7 @@
     <string name="adaptive_charging">Adaptív</string>
     <string name="deactivated">Nincs optimalizálva</string>
     <string name="permission_missing">Engedély hiányzik</string>
-
-
-    
+    <!-- Screen Locked Security -->
     <string name="screen_locked_security_title">Képernyőzárolt biztonság</string>
     <string name="screen_locked_security_dialog_title">Képernyőzárolt biztonság</string>
     <string name="screen_locked_security_auth_enable">Hitelesítés a képernyőzárolt biztonság engedélyezéséhez</string>
@@ -239,23 +230,20 @@
     <string name="screen_locked_security_warning_text">Ez a funkció nem bolondbiztos. Előfordulhatnak olyan szélsőséges esetek, amikor valaki még mindig képes kommunikálni a csempével. \nNe feledje, hogy az Android mindig engedélyezi a kényszerített újraindítást, a Pixels pedig mindig lehetővé teszi az eszköz kikapcsolását a lezárási képernyőről is.</string>
     <string name="screen_locked_security_airplane_warning">Ügyeljen arra, hogy eltávolítsa a repülőgép üzemmód csempét a gyorsbeállításokból, mivel ez nem akadályozható meg, mivel nem nyit meg párbeszédablakot.</string>
     <string name="screen_locked_security_description">Ha engedélyezve van, a Gyorsbeállítások panel azonnal bezárul, és az eszköz zárolva lesz, ha valaki internetes csempékkel próbál kommunikálni, miközben az eszköz zárolva van. \n\nEz a biometrikus feloldást is letiltja, hogy megakadályozza a további jogosulatlan hozzáférést. Az animáció skálája 0,1-szeresére csökken, miközben zárolva van, hogy még nehezebb legyen vele kommunikálni.</string>
-
-    
+    <!-- Sound Mode -->
     <string name="sound_mode_reorder_title">Újrarendelési módok</string>
     <string name="sound_mode_long_press_hint">Nyomja meg hosszan a váltáshoz</string>
     <string name="content_desc_drag_reorder">Húzza át az átrendezéshez</string>
     <string name="sound_mode_sound">Hang</string>
     <string name="sound_mode_vibrate">Rezeg</string>
     <string name="sound_mode_silent">Csendes</string>
-
-    
+    <!-- Status Bar Categories -->
     <string name="status_bar_category_connectivity">Kapcsolódás</string>
     <string name="status_bar_category_phone_network">Telefon és hálózat</string>
     <string name="status_bar_category_audio_media">Hang és média</string>
     <string name="status_bar_category_system_status">Rendszer állapota</string>
     <string name="status_bar_category_oem_specific">OEM specifikus</string>
-
-    
+    <!-- Status Bar Icons -->
     <string name="icon_wifi">WiFi</string>
     <string name="icon_bluetooth">Bluetooth</string>
     <string name="icon_nfc">NFC / Felica</string>
@@ -290,8 +278,7 @@
     <string name="icon_samsung_smart">Samsung intelligens funkciók</string>
     <string name="icon_samsung_services">Samsung szolgáltatások</string>
     <string name="icon_ethernet">Ethernet</string>
-    
-    
+    <!-- Status Bar Settings -->
     <string name="stb_clock_seconds">Show Seconds in Clock</string>
     <string name="stb_battery_percentage">Akkumulátor százalék</string>
     <string name="stb_battery_percentage_always">Mindig</string>
@@ -309,11 +296,9 @@
     <string name="action_reset_all_icons">Állítsa vissza az összes ikont</string>
     <string name="status_bar_section_advanced">További beállítások</string>
     <string name="status_bar_icons_disclaimer">Kérjük, vegye figyelembe, hogy ezen opciók megvalósítása az OEM-től függhet, és előfordulhat, hogy egyes opciók egyáltalán nem működnek.</string>
-
-    
+    <!-- Network Type Picker -->
     <string name="network_type_other">Más</string>
-
-    
+    <!-- Search -->
     <string name="search_clock_seconds_title">Óra másodperc</string>
     <string name="search_clock_seconds_desc">Másodpercek megjelenítése az állapotsor órájában</string>
     <string name="search_battery_percentage_title">Akkumulátor százalék</string>
@@ -323,20 +308,17 @@
     <string name="search_desc_toggle_visibility">A láthatóság be- és kikapcsolása %1$s</string>
     <string name="action_pin">Rögzítés a Kedvencekhez</string>
     <string name="action_unpin">Rögzítés feloldása a Kedvencek közül</string>
-
-    
-    
+    <!-- Extraction Batch 1 -->
+    <!-- Categories -->
     <string name="cat_tools">Eszközök</string>
     <string name="cat_visuals">Vizuális</string>
     <string name="cat_system">Rendszer</string>
-
-    
+    <!-- UI Elements -->
     <string name="search_placeholder">Search Essentials</string>
     <string name="search_no_results">Nincs találat a következőre \"%1$s\"</string>
     <string name="search_results_title">Keresési eredmények</string>
     <string name="requires_following_permissions">%1$s következő engedélyeket igényel</string>
-
-    
+    <!-- Features -->
     <string name="feat_screen_off_widget_title">Képernyő kikapcsolása widget</string>
     <string name="feat_screen_off_widget_desc">Láthatatlan widget a képernyő kikapcsolásához</string>
     <string name="feat_statusbar_icons_title">Állapotsor ikonok</string>
@@ -357,8 +339,7 @@
     <string name="limit_max_devices_summary">Állítsa be a widgetben látható maximális eszközök számát</string>
     <string name="widget_background_title">Widget háttér</string>
     <string name="widget_background_summary">A widget hátterének megjelenítése</string>
-
-    
+    <!-- DIY Automation -->
     <string name="diy_create_trigger_title">Trigger automatizálás</string>
     <string name="diy_create_trigger_desc">Ütemezzen be egy műveletet a megfigyelés elindításához</string>
     <string name="diy_create_state_title">Állami automatizálás</string>
@@ -432,8 +413,7 @@
     <string name="calendar_sync_manual_sync_desc">Azonnali szinkronizálás elindítása a nézéshez</string>
     <string name="calendar_sync_no_calendars">Nem található helyi naptár</string>
     <string name="calendar_sync_sync_started">A naptár szinkronizálása megkezdődött</string>
-
-    
+    <!-- Search Settings -->
     <string name="search_haptic_title">Widget Haptic visszajelzés</string>
     <string name="search_haptic_desc">Válasszon tapintható visszajelzést a widget-érintésekhez</string>
     <string name="search_smart_wifi_title">Intelligens WiFi</string>
@@ -508,8 +488,7 @@
     <string name="search_freeze_locked_desc">Lefagyasztja a kiválasztott alkalmazásokat, amikor az eszköz zárol</string>
     <string name="search_freeze_delay_title">Lefagyási késleltetés</string>
     <string name="search_freeze_delay_desc">Lefagyás előtti késleltetés a lezárás után</string>
-
-    
+    <!-- Permissions metadata -->
     <string name="perm_shizuku_title">Shizuku</string>
     <string name="perm_shizuku_desc">Speciális parancsokhoz szükséges. Telepítse a Shizuku-t a Play Áruházból.</string>
     <string name="perm_shizuku_install_action">Telepítse a Shizuku-t</string>
@@ -546,8 +525,7 @@
     <string name="perm_action_how_to">Hogyan kell megadni</string>
     <string name="perm_battery_optimization_title">Akkumulátor optimalizálás</string>
     <string name="perm_battery_optimization_desc">Győződjön meg arról, hogy a szolgáltatást nem ölte meg a rendszer az energiatakarékosság érdekében.</string>
-
-    
+    <!-- Tabs -->
     <string name="tab_essentials">Essentials</string>
     <string name="tab_freeze">Fagy</string>
     <string name="tab_freeze_title">Fagyott</string>
@@ -582,33 +560,55 @@
     <string name="option_allow_prereleases">Ellenőrizze az előzetes kiadásokat</string>
     <string name="option_notifications">Értesítések</string>
     <string name="error_rate_limited">A GitHub sebességkorlátja túllépve. Kérjük, próbálja újra később.</string>
-
-    
+    <!-- Keyboard Setup -->
     <string name="label_keyboard_setup">Billentyűzet beállítása</string>
     <string name="btn_enable_keyboard">Engedélyezze a beállításokban</string>
     <string name="btn_select_keyboard">Váltson az Essentials-re</string>
-
     <string name="label_enabled">Engedélyezve</string>
     <string name="label_disabled">Letiltva</string>
-
     <string name="tile_adaptive_brightness">Adaptív fényerő</string>
-
     <string name="tile_maps_power_saving">Maps energiatakarékosság</string>
-
     <string name="action_search">Keresés</string>
     <string name="action_stop">Stop</string>
     <string name="label_search">Keresés</string>
-
-    
+    <!-- UI Components General -->
     <string name="action_back">Vissza</string>
     <string name="content_desc_back">Vissza</string>
     <string name="label_settings">Beállítások elemre</string>
     <string name="action_report_bug">Hiba bejelentése</string>
+    <!-- Sentry Crash Reporting -->
+    <string name="sentry_report_mode_title">Crash reporting</string>
+    <string name="sentry_mode_off">Off</string>
+    <string name="sentry_mode_auto">Auto</string>
+    <string name="sentry_crash_toast">Essentials crashed, Report sent</string>
+    <string name="simulate_crash">Simulate crash</string>
+    <string name="welcome_title">Welcome to Essentials</string>
+    <string name="welcome_subtitle">A Toolbox for Android Nerds</string>
+    <string name="welcome_developer_attribution">by sameerasw.com</string>
+    <string name="action_lets_begin">Let\'s Begin</string>
+    <string name="acknowledgement_title">Acknowledgement</string>
+    <string name="acknowledgement_desc">This app is a collection of utilities that can interact deeply with your device system. Using some features might modify system settings or behavior in unexpected ways. \n\nYou only need to grant necessary permissions which are required for selected features you are using giving you full control over the app\'s behavior. \n\nFurther more, the app does not track or store any of your personal data, I don\'t need them... Keep to yourself safe. You can refer to the source code for more information. \n\nThis app is fully open source and is and always will be free to use. Do not pay or install from unknown sources.</string>
+    <string name="acknowledgement_warning">WARNING: Proceed with caution. The developer takes no responsibility for any system instability, data loss, or other issues caused by the use of this app. By proceeding, you acknowledge these risks.</string>
+    <string name="acknowledgement_footer">I know you didn\'t even read this carefully but, in case you need any help, feel free to reach out the developer or the community.</string>
+    <string name="action_i_understand">I Understand</string>
+    <string name="feature_intro_desc">Anytime you are clueless on a feature or a Quick Settings Tile on what it does and what permissions may necessary for it, just long press it and pick \'What is this?\' to learn more.</string>
+    <string name="feature_intro_footer">You can report bugs or find helpful guides anytime in the app settings.</string>
+    <string name="action_let_me_in">Let Me in Already</string>
+    <string name="preferences_title">Preferences</string>
+    <string name="preferences_desc">Configure some basic settings to get started.</string>
+    <string name="label_app_settings">App Settings</string>
+    <string name="label_haptic_feedback">Haptic Feedback</string>
+    <string name="label_updates">Updates</string>
+    <string name="label_auto_check_updates">Auto check for updates</string>
+    <string name="desc_auto_check_updates">Check for updates at app launch</string>
+    <string name="action_all_set">All Set</string>
+    <string name="action_check_whats_new">Check What\'s New?</string>
     <string name="action_done">Kész</string>
     <string name="action_preview">Előnézet</string>
     <string name="action_help_guide">Súgó útmutató</string>
     <string name="action_what_is_this">Mi ez?</string>
     <string name="update_available_title">Frissítés elérhető</string>
+    <string name="about_desc_your_android">Glance at your device\'s hardware and software specifications in detail. This information is fetched from GSMArena and system properties to provide a comprehensive overview of your Android device.</string>
     <string name="about_desc_ambient_music_glance">Az Ambient Music Glance egy Most játszott fedvényt jelenít meg a lezárási képernyőn, amikor zenét játszik le, és a lejátszás módosul. \n\nHa eszköze nem támogatja az AOD-n keresztüli átfedéseket, választhatja az Android beállításaihoz hozzáadott Ambience képernyővédőt alternatívaként töltés közben.</string>
     <string name="about_desc_notification_lighting">Az értesítési világítás gyönyörű szélvilágítási effektust ad, amikor értesítéseket kap.\n\nTestreszabhatja az animáció stílusát, színeit és viselkedését. Akkor is működik, ha a képernyő ki van kapcsolva (OEM-függő), vagy az aktuális alkalmazás tetején van. Válassza ki az alkalmazásokat, az értesítési prioritást vagy azt, hogy milyen viselkedést kell kiváltania az adott vezérlőkből. Ha az Ön OEM-je nem támogatja az AOD feletti átfedéseket, perelje be az alább található környezeti megjelenítési lehetőséget.</string>
     <string name="about_desc_screen_off_widget">Könnyen kikapcsolhatja a képernyőt egy átlátszó, átméretezhető widget megérintésével, amely nem hoz létre ikonokat vagy zűrzavart a kezdőképernyőn.</string>
@@ -647,17 +647,14 @@
     <string name="about_desc_color_picker">Indítsa el a szemcseppentő eszközt az Android 17 BETA 2-ben bemutatott színek kiválasztásához</string>
     <string name="about_desc_charge_optimization">Optimalizálja az akkumulátor élettartamát a maximális töltés korlátozásával vagy az adaptív töltés használatával. Ezt kifejezetten a Pixel eszközökhöz tervezték a hosszú élettartam és az egészséges töltési ciklusok biztosítása érdekében.\n\nKiadó: TebbeUbben/ChargeQuickTile</string>
     <string name="action_download">Letöltés</string>
-
-    
+    <!-- DIY Section -->
     <string name="diy_trigger_screen_off">Képernyő kikapcsolva</string>
     <string name="diy_trigger_screen_on">Képernyő bekapcsolva</string>
     <string name="diy_trigger_device_unlock">Eszköz feloldása</string>
     <string name="diy_trigger_charger_connected">Töltő csatlakoztatva</string>
     <string name="diy_trigger_charger_disconnected">Töltő lekapcsolva</string>
-    
     <string name="diy_state_charging">Töltés</string>
     <string name="diy_state_screen_on">Képernyő bekapcsolva</string>
-
     <string name="diy_action_haptic">Rezeg</string>
     <string name="diy_action_notification">Értesítés megjelenítése</string>
     <string name="diy_action_remove_notification">Értesítés eltávolítása</string>
@@ -679,11 +676,9 @@
     <string name="action_delete">Töröl</string>
     <string name="action_enable">Engedélyezés</string>
     <string name="action_disable">Letiltás</string>
-    
     <string name="automation_service_channel_name">Automatizálási szolgáltatás</string>
     <string name="automation_service_running_title">Automatizálás aktív</string>
     <string name="automation_service_running_desc">Rendszeresemények figyelése az automatizálásokhoz</string>
-
     <string name="diy_action_device_effects">Eszközeffektusok</string>
     <string name="diy_device_effects_desc">Vezérelje a rendszerszintű effektusokat, például a szürkeárnyalatot, az AOD-elnyomást, a háttérkép elsötétítését és az éjszakai módot.</string>
     <string name="diy_effect_grayscale">Szürkeárnyalatos</string>
@@ -695,47 +690,38 @@
     <string name="diy_device_effects_disabled">Letiltva</string>
     <string name="diy_action_sound_mode">Hang mód</string>
     <string name="diy_sound_mode_desc">Ez a művelet lehetővé teszi a Hang, Rezgés és Néma üzemmódok közötti váltást triggerek alapján. Ne zavarjanak hozzáférést igényel.</string>
-
-    
+    <!-- About Section -->
     <string name="app_developer_name">Sameera Wijerathna</string>
     <string name="app_description">A többfunkciós eszköztár Pixel és Android készülékekhez</string>
-
-    
+    <!-- Edge Lighting -->
     <string name="color_mode_system">Rendszer</string>
     <string name="color_mode_custom">Szokás</string>
     <string name="color_mode_app_specific">Alkalmazásspecifikus</string>
-
-    
+    <!-- Biometric & Security -->
     <string name="error_auth_failed">A hitelesítés nem sikerült</string>
     <string name="shortcut_creation_hint_toast">Parancsikon hozzáadásához nyomja meg hosszan az alkalmazást a rácsban</string>
     <string name="error_app_uninstalled">Az alkalmazás nem található vagy eltávolítva</string>
-
-    
+    <!-- Notifications -->
     <string name="update_channel_name">Alkalmazásfrissítések</string>
     <string name="update_channel_desc">Értesítések az új alkalmazásfrissítésekről</string>
     <string name="notification_update_available">Frissítés elérhető</string>
     <string name="battery_notification_no_devices">Nincsenek csatlakoztatott eszközök</string>
-
     <string name="label_unknown">Ismeretlen</string>
     <string name="network_type_5g">5G</string>
     <string name="network_type_4g">4G</string>
     <string name="network_type_3g">3G</string>
     <string name="label_shizuku_ritaka">Shizuku (Rikka)</string>
     <string name="label_shizuku_tuozi">Shizuku (TuoZi)</string>
-
     <string name="label_search_content_description">Keresés</string>
     <string name="perm_device_admin_explanation">Szükséges az eszköz merev zárolásához, ha a lezárási képernyőn jogosulatlan hálózatmódosítást kísérelnek meg.</string>
     <string name="biometric_subtitle_access_settings">Hitelesítés a beállítások eléréséhez</string>
     <string name="biometric_title_settings_format">%1$s Beállítások elemre</string>
-
     <string name="keyword_feature">jellemzője</string>
     <string name="keyword_settings">beállításokat</string>
     <string name="keyword_hide">elrejt</string>
     <string name="keyword_show">megmutat</string>
     <string name="keyword_visibility">láthatóság</string>
-
     <string name="error_loading_apps">Hiba az alkalmazások betöltésekor: %1$s</string>
-
     <string-array name="keywords_haptic">
         <item>rezgés</item>
         <item>érintés</item>
@@ -812,11 +798,9 @@
         <item>Várjon</item>
         <item>időtúllépés</item>
     </string-array>
-
     <string name="label_keyboard_always_dark">Mindig sötét téma</string>
     <string name="label_keyboard_pitch_black">Koromsötét téma</string>
     <string name="label_keyboard_clipboard_enabled">Vágólap előzmények</string>
-
     <string-array name="keywords_selection">
         <item>lista</item>
         <item>válogató</item>
@@ -896,33 +880,27 @@
         <item>optimalizálás</item>
         <item>pixel</item>
     </string-array>
-
-    
+    <!-- App Selection Extra -->
     <string name="action_invert_selection">Kiválasztás megfordítása</string>
     <string name="toggle_show_system_apps">Rendszeralkalmazások megjelenítése</string>
-
-    
+    <!-- Updates -->
     <string name="status_up_to_date">Ön naprakész</string>
     <string name="warning_pre_release">Ez egy kiadás előtti verzió, és instabil lehet.</string>
     <string name="release_notes_format">Kiadási megjegyzések %1$s</string>
     <string name="action_view_on_github">Megtekintés a GitHubon</string>
     <string name="action_download_apk">Töltse le az APK-t</string>
-
-    
+    <!-- Haptic Types -->
     <string name="haptic_none">Egyik sem</string>
     <string name="haptic_subtle">Apró</string>
     <string name="haptic_double">Kettős</string>
     <string name="haptic_click">Kattintson</string>
     <string name="haptic_tick">Tick</string>
-
-    
+    <!-- Flashlight Intensity Overlay -->
     <string name="action_turn_off">Kapcsolja ki</string>
     <string name="feature_flashlight_brightness_title">Zseblámpa fényereje</string>
-
-    
+    <!-- QS / Activities -->
     <string name="error_unlock_network_settings">Oldja fel a telefon zárolását a hálózati beállítások módosításához</string>
-
-    
+    <!-- About Section -->
     <string name="developed_by_format">Fejlesztője: %1$s\na ❤\uFE0F feladó \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="action_website">Weboldal</string>
     <string name="action_contact">Érintkezés</string>
@@ -934,8 +912,7 @@
     <string name="app_canvas">Vászon</string>
     <string name="app_tasks">Feladatok</string>
     <string name="app_zero">Nulla</string>
-
-    
+    <!-- Help & Guides -->
     <string name="help_guides_title">Súgó és útmutatók</string>
     <string name="need_more_support_reach_out">További támogatásra van szüksége? Nyújtsa ki a kezét,</string>
     <string name="action_collapse">Összeomlás</string>
@@ -945,44 +922,32 @@
     <string name="send_email_chooser_title">E-mail küldése</string>
     <string name="error_no_email_app">Nem érhető el e-mail alkalmazás</string>
     <string name="instruction_step_image_description">Lépés %1$d Kép</string>
-
-    
+    <!-- Instructions Content -->
     <string name="instruction_section_perms_title">Kisegítő lehetőségek, értesítési és fedvényengedélyek</string>
     <string name="instruction_step_perms_1">A hozzáférés megtagadva üzenetet akkor kaphatja meg, ha bizalmas engedélyeket, például kisegítő lehetőségeket, értesítésfigyelő- vagy fedvényengedélyeket próbál megadni. Az engedélyezéshez ellenőrizze az alábbi lépéseket.</string>
     <string name="instruction_step_perms_2">1. Nyissa meg az Essentials alkalmazás információs oldalát.</string>
     <string name="instruction_step_perms_3">2. Nyissa meg a hárompontos menüt, és válassza a \'Korlátozott beállítások engedélyezése\' lehetőséget. Lehetséges, hogy biometrikus adatokkal kell hitelesítenie. Ha elkészült, próbálja meg újra megadni az engedélyt.</string>
-
     <string name="instruction_section_shizuku_title">Shizuku</string>
     <string name="instruction_section_shizuku_desc">A Shizuku egy hatékony eszköz, amely lehetővé teszi az alkalmazások számára, hogy ADB vagy root jogosultságokkal közvetlenül használják a rendszer API-kat. Szükséges olyan funkciókhoz, mint a Maps min mód, App Freezer. És adjon bizonyos engedélyeket, például WRITE_SECURE_SETTINGS. \n\nDe a Shizuku Play Áruház verziója elavult, és valószínűleg használhatatlan lesz a legújabb Android-verziókon, ezért ebben az esetben szerezze be a legújabb verziót a githubból vagy annak frissítéséhez.</string>
-
     <string name="instruction_section_maps_title">Maps energiatakarékos mód</string>
     <string name="instruction_section_maps_desc">Ez a funkció automatikusan aktiválja a Google Térkép energiatakarékos üzemmódját, amely jelenleg kizárólag a Pixel 10 sorozatra vonatkozik. A közösség egyik tagja felfedezte, hogy továbbra is használható bármilyen Android-eszközön azáltal, hogy elindította a maps minMode tevékenységét root jogosultságokkal. \n\nÉs aztán a Taskerrel automatizáltam, hogy automatikusan aktiválódjon, amikor a képernyő kikapcsol egy navigációs munkamenet során, majd ugyanezt elértem a Shizuku futásidejű használatával. engedélyek. \n\nA Pixel 10 sorozat AOD-ján való megjelenítésre szánták, ezért előfordulhat, hogy időnként megjelenik egy üzenet a kijelzőn, hogy nem támogatja a fekvő módot. Ezt az alkalmazás nem tudja elkerülni, és figyelmen kívül hagyhatja.</string>
-
     <string name="instruction_section_silent_title">Csendes hang mód</string>
     <string name="instruction_section_silent_desc">Lehet, hogy észrevetted, hogy a néma mód a DND-t is kiváltja. \n\nEz annak köszönhető, hogy az Android implementálta, hiszen még ha ugyanazt az API-t használjuk is a rezgő módra váltáshoz, valamiért bekapcsolja a DND-t a néma móddal együtt, és ez jelenleg nem elkerülhető. :(</string>
-
     <string name="instruction_section_freeze_title">Mi az a fagyasztás?</string>
     <string name="instruction_section_freeze_desc">Szüneteltesse meg, és maradjon távol az alkalmazások zavaró tényezőitől, miközben egy kis energiát takarít meg, megakadályozva, hogy az alkalmazások a háttérben futjanak. Ritkán használt alkalmazásokhoz alkalmas. \n\nNem ajánlott semmilyen kommunikációs szolgáltatáshoz, mivel nem értesítik Önt vészhelyzetben, hacsak fel nem oldja őket. \n\nNagyon tanácsos, hogy ne fagyassza le a rendszeralkalmazásokat, mivel ezek rendszerinstabilitáshoz vezethetnek. Óvatosan járjon el, figyelmeztetést kapott. \n\nJelégeső ihlette &lt;3</string>
-
     <string name="instruction_section_security_title">Valóban biztonságos az alkalmazászár és a képernyőzárolás?</string>
     <string name="instruction_section_security_desc">Egyáltalán nem. \n\nEgyetlen harmadik féltől származó alkalmazás sem zavarhatja 100%-ban az eszköz szokásos interakcióit, és még az alkalmazászár is csak egy fedvény a kiválasztott alkalmazások felett, hogy megakadályozza az interakciót velük. Vannak megkerülő megoldások, és ez nem bolondbiztos. \n\nUgyanez vonatkozik a képernyőzárolt biztonsági funkcióra, amely észleli, hogy valaki megpróbál kapcsolatba lépni a hálózati csempékkel, amelyek valamilyen okból továbbra is elérhetők a Pixels felhasználók számára. Tehát ha elég keményen próbálkoznak, még mindig meg tudják változtatni őket, és különösen, ha repülési mód QS csempét adtak hozzá, ez az alkalmazás nem tudja megakadályozni a vele való interakciót. \n\nEzeket a funkciókat csak kísérletként hozták létre a könnyű használathoz, és soha nem javasolnák erős biztonsági és adatvédelmi megoldásokat. \n\nBiztonságos alternatívák:\n - Alkalmazászár: Privát hely és biztonságos mappa Pixels és Samsung készülékeken\n - A mobilhálózatokhoz való hozzáférés megakadályozása: Győződjön meg arról, hogy be van kapcsolva a lopás elleni védelem és az offline/kikapcsolt készülékem beállításai. Megnézheti a Graphene OS-t is.</string>
-
     <string name="instruction_section_statusbar_title">Állapotsor ikonok</string>
     <string name="instruction_section_statusbar_desc">Észreveheti, hogy még az állapotsor ikonjainak visszaállítása után is láthatók maradhatnak egyes ikonok, például az eszköz elforgatása vagy a vezetékes fejhallgató ikonjai. Ez annak köszönhető, hogy a statubar feketelistát hogyan implementálták az Android rendszerben, és hogyan szabhatta személyre az OEM. \nTovábbi módosításokra lehet szükség. \n\nSzintén nem minden ikon láthatósági beállítás működik, mivel az OEM-megvalósítástól és elérhetőségtől függ.</string>
-
     <string name="instruction_section_lighting_title">Az értesítő világítás nem működik</string>
     <string name="instruction_section_lighting_desc">Az OEM-től függ. Úgy tűnik, hogy egyesek, mint például a OneUI, nem engedélyezik az AOD feletti átfedéseket, amelyek megakadályozzák a fényeffektusok megjelenítését. Ebben az esetben próbálja meg a környezeti kijelzőt megoldásként.</string>
-
     <string name="instruction_section_button_title">A gombok újratervezése nem működik, ha a kijelző ki van kapcsolva</string>
     <string name="instruction_section_button_desc">Egyes OEM-ek korlátozzák az akadálymentesítési szolgáltatás jelentését, ha a kijelző ténylegesen ki van kapcsolva, de továbbra is működhetnek, amíg az AOD be van kapcsolva. \nEbben az esetben előfordulhat, hogy a gombok újrakiosztását bekapcsolt AOD mellett használhatja, de kikapcsolt állapotban nem. \n\nMegkerülő megoldásként Shizuku engedélyeket kell használnia, és be kell kapcsolnia a \'Használj Shizukut vagy Root-ot\' kapcsolja be a gombok újratervezési beállításait, amelyek azonosítják és meghallgatják a hardveres bemeneti eseményeket.\nEz nem garantált, hogy minden eszközön működik, és tesztelést igényel.\n\nÉs még ha az is\'s bekapcsolva, a Shizuku-módszer csak akkor kerül felhasználásra, ha az\'s szükséges. Ellenkező esetben mindig vissza fog térni az Accessibility-re, amely az aktuális bemenet blokkolását is kezeli hosszan tartó megnyomáskor.</string>
-
     <string name="instruction_section_flashlight_title">A zseblámpa fényereje nem működik</string>
     <string name="instruction_section_flashlight_desc">Csak korlátozott számú eszköz kapott hardveres és szoftveres támogatást a zseblámpa intenzitásának beállításához. \n\n\'Az Android minimális verziója 13 (SDK33).\nA zseblámpa fényerejének vezérlése csak a HAL verziót támogatja, például a Pixel 3.8-as és újabb készülékeken. 6/7, Samsung S23 stb.)\'\npolodarb/Flashlight-Tiramisu</string>
-
     <string name="instruction_section_about_title">Mi a fene ez az alkalmazás?</string>
     <string name="instruction_section_about_desc">Jó kérdés,\n\nMindig is a legtöbbet akartam kihozni az eszközeimből, mint én\'Rootolt felhasználó vagyok, amióta megkaptam az első Project Treble eszközt. És én\'Imádtam a Tasker alkalmazást, amely olyan, mint az isten, amikor jön az automatizálás, és az Android minden lehetséges API-ja és belső funkciója.\n\nTehát nem vagyok teljesen gyökértelen, és visszatértem az Android béta tapasztalataihoz, és szerettem volna a legtöbbet kihozni abból, ami adott jogosultságokkal lehetséges. Akár megoszthatja őket. Tehát kezdő tudásommal a Kotlin Jetpackben, valamint számos kutató- és segédeszköz, valamint a nagyszerű közösség támogatásával létrehoztam egy all-in-one alkalmazást, amely mindent tartalmaz, amiben az Android-eszközömön lenni akartam, adott engedélyekkel. És itt van.\n\nSzívesen fogadjuk a funkciókra vonatkozó kéréseket, megfontolom és megnézem, hogy elérhető-e a rendelkezésre álló engedélyekkel és a képességemmel. Ami manapság nem lehetséges. :)\n\nMiért nem a Play Áruházban?\nén nem\'Nem akarom kockáztatni a fejlesztői fiókom kitiltását az alkalmazásban használt rendkívül érzékeny és belső engedélyek és API-k miatt. De az Android oldalbetöltésének irányával, hagyjuk\'s lássuk, mit kell tennünk. Megértem az oldalt letöltött alkalmazások rosszindulatúságával kapcsolatos aggodalmakat.\nHa már a témánál tartunk, nézze meg a másik AirSync alkalmazásomat, ha Ön Mac + Android felhasználó. *szégyentelen dugó*\n\nÉrezd jól magad, építs tovább! (っ◕‿◕)っ</string>
-    
-    
+    <!-- Bug Reporting -->
     <string name="toast_bug_report_copied">A hibajelentés a vágólapra másolva</string>
     <string name="bug_report_title">Hibajelentés</string>
     <string name="bug_report_option_share_logs">Naplók megosztása</string>
@@ -994,8 +959,7 @@
     <string name="action_copy_clipboard">Másolás a vágólapra</string>
     <string name="bug_report_email_subject">Essentials hibajelentés</string>
     <string name="bug_report_send_via">Küldés ezen keresztül</string>
-
-    
+    <!-- Location Reached -->
     <string name="feat_location_reached_title">ott vagyunk már?</string>
     <string name="feat_location_reached_desc">Figyelmeztetések a közeli úti célról</string>
     <string name="location_reached_how_to">Nyissa meg a Google Térképet, válasszon egy helyet, és ossza meg az Essentials szolgáltatással.</string>
@@ -1031,25 +995,24 @@
     <string name="setting_use_root_title">Root használata</string>
     <string name="setting_use_root_desc">Shizuku helyett</string>
     <string name="root_not_available_toast">Root hozzáférés nem érhető el. Kérjük, ellenőrizze a gyökérkezelőt.</string>
-    
+    <!-- System Keyboard -->
     <string name="feat_system_keyboard_title">Billentyűzet</string>
     <string name="feat_system_keys">Kulcsok</string>
     <string name="feat_system_keyboard_desc">Az elrendezés és a viselkedés testreszabása</string>
     <string name="search_keyboard_height_title">Billentyűzet magassága</string>
-    <string name="search_keyboard_height_desc">Állítsa be a billentyűzet teljes függőleges méretét</string>&gt;
+    <string name="search_keyboard_height_desc">Állítsa be a billentyűzet teljes függőleges méretét</string>
     <string name="search_keyboard_padding_title">Alsó párnázás</string>
     <string name="search_keyboard_padding_desc">Helyezzen helyet a billentyűzet alatt</string>
     <string name="search_keyboard_haptics_title">Haptikus visszajelzés</string>
     <string name="search_keyboard_haptics_desc">Rezgés gombnyomásra</string>
     <string name="test_keyboard_hint">Tesztelje a billentyűzetet</string>
-    <string name="label_keyboard_height">Billentyűzet magassága</string>&gt;
+    <string name="label_keyboard_height">Billentyűzet magassága</string>
     <string name="label_keyboard_bottom_padding">Alsó párnázás</string>
     <string name="label_keyboard_haptics">Haptikus visszajelzés</string>
     <string name="label_keyboard_roundness">Kulcs kereksége</string>
     <string name="label_keyboard_functions_bottom">Funkciók mozgatása lefelé</string>
     <string name="label_keyboard_functions_padding">Funkciók oldalsó párnázás</string>
     <string name="label_keyboard_haptic_strength">Haptikus visszacsatolás erőssége</string>
-
     <string name="label_keyboard_shape">Billentyűzet alakja</string>
     <string name="shape_round">Kerek</string>
     <string name="shape_flat">Lakás</string>
@@ -1061,16 +1024,15 @@
     <string name="connect_to_airsync_summary">A csatlakoztatott Mac-eszköz akkumulátorának megjelenítése az AirSync alkalmazásban</string>
     <string name="download_airsync">Töltse le az AirSync alkalmazást</string>
     <string name="download_airsync_summary">Szükséges a Mac akkumulátor szinkronizálásához</string>
-
     <string name="feat_battery_notification_title">Akkumulátor értesítés</string>
     <string name="feat_battery_notification_desc">Állandó akkumulátor állapotértesítés</string>
+    <string name="battery_notification_hint">This notification displays battery levels for your connected Mac and Bluetooth devices. You can configure which devices to show in the Battery Widget settings.</string>
     <string name="about_desc_battery_notification">Ismételje meg az akkumulátor widget élményét az értesítési területen. Megjeleníti az összes csatlakoztatott eszköz akkumulátor töltöttségi szintjét egyetlen állandó értesítésben, amely valós időben frissül. Ide tartozik a Mac (AirSync-en keresztül) és a Bluetooth kiegészítők.</string>
     <string name="battery_notification_channel_name">Az akkumulátor állapotáról szóló értesítés</string>
     <string name="battery_notification_channel_desc">Állandó értesítés a csatlakoztatott eszközök akkumulátorának szintjéről</string>
     <string name="perm_nearby_devices_title">Közeli eszközök</string>
     <string name="perm_nearby_devices_desc">Szükséges az akkumulátor információinak észleléséhez és lekéréséhez a Bluetooth-tartozékokból</string>
-
-    
+    <!-- GitHub Auth -->
     <string name="auth_copy_code">Kód másolása</string>
     <string name="auth_open_login_page">Nyissa meg a bejelentkezési oldalt</string>
     <string name="auth_sign_in_rationale">Jelentkezzen be az API-hívási korlátok kiterjesztéséhez</string>
@@ -1078,73 +1040,58 @@
     <string name="action_sign_in_github">Jelentkezzen be a GitHub segítségével</string>
     <string name="action_sign_out">Jelentkezzen ki</string>
     <string name="action_profile">Profil</string>
-
-    
+    <!-- App Updates / Repos -->
     <string name="label_release_notes">Kiadási megjegyzések</string>
     <string name="msg_no_repos_tracked">Még nincs nyomon követett adattár</string>
     <string name="label_no_app_linked">Nincs összekapcsolva alkalmazás</string>
     <string name="format_updated_relative">Frissítve %1$s</string>
-
-    
+    <!-- Relative Time -->
     <string name="time_just_now">éppen most</string>
     <string name="time_min_ago">%1$dm ezelőtt</string>
     <string name="time_hour_ago">%1$dh ezelőtt</string>
     <string name="time_day_ago">%1$dd ezelőtt</string>
     <string name="time_month_ago">%1$dmo ezelőtt</string>
     <string name="time_year_ago">%1$dy ezelőtt</string>
-
     <string name="action_retry">Próbálja újra</string>
     <string name="action_start_sign_in">Indítsa el a Bejelentkezést</string>
     <string name="auth_requesting_code">Eszközkód kérése...</string>
     <string name="auth_copy_code_instruction">1. Másolja ki a kódot:</string>
     <string name="auth_paste_code_instruction">2. Illessze be a kódot a GitHubra:</string>
-
     <string name="label_found_apks">Talált APK-kat</string>
     <string name="label_readme">README</string>
     <string name="action_refresh">Frissítés</string>
-
-    
+    <!-- Added Missing Group Strings -->
     <string name="feat_sound_modes_title">Hangmód csempe</string>
     <string name="feat_sound_modes_desc">QS csempe a hangmód váltásához</string>
     <string name="search_sound_mode_show_slider_title">Csúszka megjelenítése</string>
     <string name="search_sound_mode_show_slider_desc">Hangerő-csúszka megjelenítése a csempében</string>
     <string name="search_sound_mode_behavior_title">Ciklus viselkedése</string>
     <string name="search_sound_mode_behavior_desc">Válasszon módokat a váltáshoz</string>
-    
     <string name="feat_ambient_music_title">Ambient zenei pillantás</string>
     <string name="feat_ambient_music_desc">Vessen egy pillantást az AOD médiájára</string>
-    
     <string name="feat_sound_haptics_title">Hang és Haptika</string>
     <string name="feat_sound_haptics_desc">Hangerő és tapintási jellemzők</string>
-    
     <string name="feat_security_privacy_title">Biztonság és adatvédelem</string>
     <string name="feat_security_privacy_desc">Védje és biztosítsa készülékét</string>
-    
     <string name="feat_notifications_alerts_title">Értesítések és riasztások</string>
     <string name="feat_notifications_alerts_desc">Soha ne hagyd ki a prioritásaidat</string>
-    
     <string name="feat_input_actions_title">Bemenet és műveletek</string>
     <string name="feat_input_actions_desc">Könnyedén irányíthatja készülékét</string>
-    
     <string name="feat_widgets_title">Widgetek</string>
     <string name="feat_widgets_desc">Egy pillantással a kezdőképernyőre</string>
-    
     <string name="feat_display_visuals_title">Kijelző</string>
     <string name="feat_display_visuals_desc">Látványok az élmény fokozása érdekében</string>
-    
     <string name="feat_watch_title">Óra</string>
     <string name="feat_watch_desc">Integráció a WearOS rendszerrel</string>
     <string name="watch_no_companion_title">Nem észlelhető óra</string>
     <string name="watch_no_companion_desc">Úgy tűnik, nincs telepítve az Essentials Wear kiegészítő alkalmazás az órájára.</string>
     <string name="watch_install_companion_action">Telepítse a Companiont</string>
-
-
     <string name="cat_interaction">Kölcsönhatás</string>
     <string name="cat_interface">Felület</string>
     <string name="cat_display">Kijelző</string>
     <string name="cat_protection">Védelem</string>
     <string name="label_kbd_abc">ABC</string>
-    <string name="label_kbd_symbols">?#/</string>
+    <string name="label_kbd_symbols">\?#/</string>
     <string name="msg_restrict_own_app_repo">Ó! Az alkalmazás beállításaiban ellenőrizheti a frissítéseket, itt nem kell hozzáadni XD</string>
     <string name="action_export">Export</string>
     <string name="action_import">Importálás</string>
@@ -1179,4 +1126,9 @@
     <string name="label_use_blur">Használja az elmosódást</string>
     <string name="desc_use_blur">Progresszív elmosódási elemek engedélyezése a felhasználói felületen</string>
     <string name="msg_blur_compatibility_error">Az elmosódás ezen az eszközön le van tiltva, hogy megelőzze az Android 15 vagy régebbi rendszert futtató Samsung-eszközök ismert megjelenítési hibáját.</string>
+    <!-- Empty State Actions -->
+    <string name="msg_no_apps_frozen">No apps selected to freeze.</string>
+    <string name="action_get_started">Get Started</string>
+    <string name="action_new_automation">New Automation</string>
+    <string name="action_add_repository">Add Repository</string>
 </resources>

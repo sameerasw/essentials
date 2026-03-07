@@ -61,10 +61,10 @@
     <string name="feat_ambient_music_glance_desc">Media bekijken in één blik op het Always-On Display</string>
     <string name="ambient_glance_docked_mode_title">Gedockte modus</string>
     <string name="ambient_glance_docked_mode_desc">Houd de overlay zichtbaar terwijl muziek aan het afspelen is op de Always-On Display</string>
-    <string name="feat_notification_glance_title">Notification glance</string>
-    <string name="feat_notification_glance_desc">Keep AOD on while notifications are pending</string>
-    <string name="notification_glance_same_as_lighting_title">Same apps as notification lighting</string>
-    <string name="notification_glance_desc">This feature will dynamically enable Always on Display when a notification arrives from a selected app, and disable it once all matching notifications are dismissed. Pick apps or use the same selection as notification lighting.</string>
+    <string name="feat_notification_glance_title">Meldingen in één blik</string>
+    <string name="feat_notification_glance_desc">Houd het Always-On Display terwijl er meldingen zijn</string>
+    <string name="notification_glance_same_as_lighting_title">Dezelfde apps als de meldingsverlichting</string>
+    <string name="notification_glance_desc">Deze functie zal dynamisch het Always-On Display inschakelen wanneer je een melding krijgt van een geselecteerde app en het uitschakelen wanneer alle overeenkomende meldingen zijn gesloten. Kies de apps of gebruik dezelfde als bij de meldingsverlichting.</string>
     <string name="grant_notification_access">Meldingstoegang geven</string>
     <string name="action_toggle_media_volume">Mediavolume in-/uitschakelen</string>
     <string name="button_remap_screen_off_hint">Wanneer het scherm uit is, kan door de geselecteerde knop lang in te drukken de bijbehorende actie uitgevoerd worden. Op Pixel-apparaten kan dankzij systeembeperkingen deze actie alleen uitgevoerd worden als de Always-On Display aan is.</string>
@@ -117,8 +117,8 @@
     <string name="content_desc_more_options">Meer opties</string>
     <string name="action_freeze_all">Bevries alle apps</string>
     <string name="action_unfreeze_all">Ontdooi alle apps</string>
-    <string name="action_export_freeze">Export frozen apps list</string>
-    <string name="action_import_freeze">Import frozen apps list</string>
+    <string name="action_export_freeze">Exporteer de lijst met bevroren apps</string>
+    <string name="action_import_freeze">Exporteer de lijst met bevroren apps</string>
     <string name="freeze_pick_apps_title">Kies apps om te bevriezen</string>
     <string name="freeze_pick_apps_desc">Kies welke apps bevroren kunnen worden</string>
     <string name="settings_section_automation">Automatisatie</string>
@@ -199,7 +199,7 @@
     <string name="tile_private_dns_off">Uit</string>
     <string name="tile_usb_debugging">USB-foutopsporing</string>
     <string name="tile_color_picker">Kleurenkiezer</string>
-    <string name="toast_eyedropper_failed">Are you sure you\'re on Android 17? (╯°_°）╯</string>
+    <string name="toast_eyedropper_failed">Weet je zeker dat je op Android 17 bent? (╯°_°）╯</string>
     <string name="subtitle_eye_dropper">Pipet</string>
     <string name="on">Aan</string>
     <string name="off">Uit</string>
@@ -216,11 +216,11 @@
     <string name="dns_preset_quad9_hostname">dns.quad9.net</string>
     <string name="dns_preset_cleanbrowsing">CleanBrowsing</string>
     <string name="dns_preset_cleanbrowsing_hostname">adult-filter-dns.cleanbrowsing.org</string>
-    <string name="tile_charge_optimization">Charging</string>
-    <string name="limit_to_80">Limit to 80%</string>
-    <string name="adaptive_charging">Adaptive</string>
-    <string name="deactivated">Not optimized</string>
-    <string name="permission_missing">Permission missing</string>
+    <string name="tile_charge_optimization">Opladen</string>
+    <string name="limit_to_80">Begrenzen tot 80%</string>
+    <string name="adaptive_charging">Aanpasbaar</string>
+    <string name="deactivated">Niet geoptimaliseerd</string>
+    <string name="permission_missing">Missende toestemming</string>
     <!-- Screen Locked Security -->
     <string name="screen_locked_security_title">Beveiliging bij vergrendeling</string>
     <string name="screen_locked_security_dialog_title">Beveiliging bij vergrendeling</string>
@@ -314,7 +314,7 @@
     <string name="cat_visuals">Beelden</string>
     <string name="cat_system">Systeem</string>
     <!-- UI Elements -->
-    <string name="search_placeholder">Search Essentials</string>
+    <string name="search_placeholder">Zoeken in Essentials</string>
     <string name="search_no_results">Geen resultaten voor \"%1$s\"</string>
     <string name="search_results_title">Zoekresultaten</string>
     <string name="requires_following_permissions">%1$s vereist de volgende machtiging:</string>
@@ -364,8 +364,8 @@
     <string name="feat_freeze_desc">Schakel weinig gebruikte apps uit</string>
     <string name="feat_watermark_title">Watermerk</string>
     <string name="feat_watermark_desc">EXIF-data en logo\'s toevoegen aan foto\'s</string>
-    <string name="feat_always_on_display_title">Always on Display</string>
-    <string name="feat_always_on_display_desc">Show time and info while screen off</string>
+    <string name="feat_always_on_display_title">Always-On Display</string>
+    <string name="feat_always_on_display_desc">Laat tijd en informatie zien wanneer het scherm uit is</string>
     <string name="feat_calendar_sync_title">Kalenders synchroniseren</string>
     <string name="feat_calendar_sync_desc">Gebeurtenissen synchroniseren naar je horloge</string>
     <string name="watermark_style_overlay">Overlay</string>
@@ -573,14 +573,14 @@
     <string name="label_search">Zoeken</string>
     <!-- UI Components General -->
     <string name="action_back">Terug</string>
-    <string name="content_desc_back">Back</string>
-    <string name="label_settings">Settings</string>
-    <string name="action_report_bug">Report a Bug</string>
+    <string name="content_desc_back">Terug</string>
+    <string name="label_settings">Instellingen</string>
+    <string name="action_report_bug">Rapporteer een bug</string>
     <!-- Sentry Crash Reporting -->
-    <string name="sentry_report_mode_title">Crash reporting</string>
-    <string name="sentry_mode_off">Off</string>
-    <string name="sentry_mode_auto">Auto</string>
-    <string name="sentry_crash_toast">Essentials crashed, Report sent</string>
+    <string name="sentry_report_mode_title">Rapporteren van crashes</string>
+    <string name="sentry_mode_off">Uit</string>
+    <string name="sentry_mode_auto">Automatisch</string>
+    <string name="sentry_crash_toast">Essentials is gecrasht, rapport verstuurd</string>
     <string name="simulate_crash">Simulate crash</string>
     <string name="welcome_title">Welcome to Essentials</string>
     <string name="welcome_subtitle">A Toolbox for Android Nerds</string>
@@ -608,7 +608,7 @@
     <string name="action_help_guide">Hulpgids</string>
     <string name="action_what_is_this">Wat is dit?</string>
     <string name="update_available_title">Update beschikbaar</string>
-    <string name="about_desc_your_android">Glance at your device\'s hardware and software specifications in detail. This information is fetched from GSMArena and system properties to provide a comprehensive overview of your Android device.</string>
+    <string name="about_desc_your_android">Bekijk de hardware- en softwarespecificaties van je apparaat in detail. Deze informatie wordt opgehaald van GSMArena en de systeemeigenschappen om een begrijpelijk overzicht van je Android-apparaat te geven.</string>
     <string name="about_desc_ambient_music_glance">Muziek bekijken in één blik laat een overlay met nu afspelende media zien op het vergrendelscherm wanneer muziek wordt afgespeeld en afspelen veranderd. \n\nAls je apparaat geen overlays ondersteund op het Always-On Display kun je er voor kiezen om het te gebruiken als screensaver tijdens het opladen, te vinden in de systeeminstellingen.</string>
     <string name="about_desc_notification_lighting">Meldingsverlichting voegt mooie randverlichting toe wanneer je een melding krijgt.\n\nJe kan de animatiestijl, kleuren en het gedrag ervan aanpassen. Het werkt zelfs als het scherm uit is (verschilt per OEM) of boven op je huidige app. Kies apps, meldingsprioriteit en welk gedrag het zou moeten veroorzaken bij gegeven opties. Als je apparaat geen overlays ondersteunt, gebruik dan de Ambient display optie hieronder.</string>
     <string name="about_desc_screen_off_widget">Makkelijk het scherm uitzetten door te klikken op een transparante verkleinbare widget die geen iconen of rommel toevoegt aan het startscherm.</string>
@@ -958,7 +958,7 @@
     <string name="action_report_email">Per email verzenden</string>
     <string name="action_copy_clipboard">Naar het klembord kopiëren</string>
     <string name="bug_report_email_subject">Essentials foutrapport</string>
-    <string name="bug_report_send_via">Please enable crash reporting as it will automatically report details that would help resolving issues.</string>
+    <string name="bug_report_send_via">Sturen via</string>
     <!-- Location Reached -->
     <string name="feat_location_reached_title">Are We There Yet?</string>
     <string name="feat_location_reached_desc">Prepare for your destination.</string>
@@ -1091,7 +1091,7 @@
     <string name="cat_display">Scherm</string>
     <string name="cat_protection">Bescherming</string>
     <string name="label_kbd_abc">ABC</string>
-    <string name="label_kbd_symbols">?#/</string>
+    <string name="label_kbd_symbols">\?#/</string>
     <string name="msg_restrict_own_app_repo">Hé! Je kan voor updates checken in de instellingen,  er is geen reden om het hier toe te voegen XD</string>
     <string name="action_export">Exporteren</string>
     <string name="action_import">Importeren</string>

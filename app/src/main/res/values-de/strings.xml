@@ -958,7 +958,7 @@
     <string name="action_report_email">Per E-Mail melden</string>
     <string name="action_copy_clipboard">In die Zwischenablage kopieren</string>
     <string name="bug_report_email_subject">Essentials Fehlerbericht</string>
-    <string name="bug_report_send_via">Please enable crash reporting as it will automatically report details that would help resolving issues.</string>
+    <string name="bug_report_send_via">Senden über</string>
     <!-- Location Reached -->
     <string name="feat_location_reached_title">Are We There Yet?</string>
     <string name="feat_location_reached_desc">Bereite dich auf dein Ziel vor.</string>
@@ -1091,7 +1091,7 @@
     <string name="cat_display">Display</string>
     <string name="cat_protection">Protection</string>
     <string name="label_kbd_abc">ABC</string>
-    <string name="label_kbd_symbols">?#/</string>
+    <string name="label_kbd_symbols">\?#/</string>
     <string name="msg_restrict_own_app_repo">Oi! You can check updates in app settings, No need to add here XD</string>
     <string name="action_export">Export</string>
     <string name="action_import">Importieren</string>

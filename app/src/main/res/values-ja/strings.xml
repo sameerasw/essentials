@@ -577,38 +577,38 @@
     <string name="label_settings">設定</string>
     <string name="action_report_bug">バグを報告</string>
     <!-- Sentry Crash Reporting -->
-    <string name="sentry_report_mode_title">Crash reporting</string>
-    <string name="sentry_mode_off">Off</string>
-    <string name="sentry_mode_auto">Auto</string>
+    <string name="sentry_report_mode_title">クラッシュレポート</string>
+    <string name="sentry_mode_off">OFF</string>
+    <string name="sentry_mode_auto">自動</string>
     <string name="sentry_crash_toast">Essentials crashed, Report sent</string>
     <string name="simulate_crash">Simulate crash</string>
-    <string name="welcome_title">Welcome to Essentials</string>
-    <string name="welcome_subtitle">A Toolbox for Android Nerds</string>
+    <string name="welcome_title">Essentialsへようこそ</string>
+    <string name="welcome_subtitle">Androidマニアのためのツールボックス</string>
     <string name="welcome_developer_attribution">by sameerasw.com</string>
-    <string name="action_lets_begin">Let\'s Begin</string>
-    <string name="acknowledgement_title">Acknowledgement</string>
-    <string name="acknowledgement_desc">This app is a collection of utilities that can interact deeply with your device system. Using some features might modify system settings or behavior in unexpected ways. \n\nYou only need to grant necessary permissions which are required for selected features you are using giving you full control over the app\'s behavior. \n\nFurther more, the app does not track or store any of your personal data, I don\'t need them... Keep to yourself safe. You can refer to the source code for more information. \n\nThis app is fully open source and is and always will be free to use. Do not pay or install from unknown sources.</string>
-    <string name="acknowledgement_warning">WARNING: Proceed with caution. The developer takes no responsibility for any system instability, data loss, or other issues caused by the use of this app. By proceeding, you acknowledge these risks.</string>
-    <string name="acknowledgement_footer">I know you didn\'t even read this carefully but, in case you need any help, feel free to reach out the developer or the community.</string>
-    <string name="action_i_understand">I Understand</string>
-    <string name="feature_intro_desc">Anytime you are clueless on a feature or a Quick Settings Tile on what it does and what permissions may necessary for it, just long press it and pick \'What is this?\' to learn more.</string>
-    <string name="feature_intro_footer">You can report bugs or find helpful guides anytime in the app settings.</string>
-    <string name="action_let_me_in">Let Me in Already</string>
-    <string name="preferences_title">Preferences</string>
-    <string name="preferences_desc">Configure some basic settings to get started.</string>
-    <string name="label_app_settings">App Settings</string>
-    <string name="label_haptic_feedback">Haptic Feedback</string>
-    <string name="label_updates">Updates</string>
-    <string name="label_auto_check_updates">Auto check for updates</string>
-    <string name="desc_auto_check_updates">Check for updates at app launch</string>
-    <string name="action_all_set">All Set</string>
-    <string name="action_check_whats_new">Check What\'s New?</string>
+    <string name="action_lets_begin">はじめる</string>
+    <string name="acknowledgement_title">注意事項</string>
+    <string name="acknowledgement_desc">このアプリは、お使いのデバイスシステムと深く連携できるユーティリティのコレクションです。一部の機能を使用すると、システム設定や動作が予期せぬ方法で変更される可能性があります。\n\n必要な権限のみを付与すればよく、これは使用中の選択した機能にのみ要求されるものです。これにより、アプリの動作を完全に制御できます。\n\nさらに、このアプリはあなたの個人データを一切追跡・保存しません。必要ありません…ご自身で安全を確保してください。詳細はソースコードを参照してください。\n\nこのアプリは完全にオープンソースであり、今後も無料でご利用いただけます。不明なソースからの支払いまたはインストールは行わないでください。</string>
+    <string name="acknowledgement_warning">警告：注意して進めてください。本アプリの使用により生じたシステムの不安定化、データ損失、その他の問題について、開発者は一切の責任を負いません。続行することにより、これらのリスクを承知したものとみなされます。</string>
+    <string name="acknowledgement_footer">あなたがこれすらきちんと読んでいないのは承知していますが、もし何か助けが必要なら、開発者やコミュニティに遠慮なく連絡してください。</string>
+    <string name="action_i_understand">理解した</string>
+    <string name="feature_intro_desc">機能やクイック設定タイルについて、その動作や必要な権限がわからない場合は、長押しして「これは何？」を選択すると詳細を確認できます。</string>
+    <string name="feature_intro_footer">アプリの設定画面から、いつでもバグを報告したり役立つガイドを見ることができます。</string>
+    <string name="action_let_me_in">早く使わせてよ</string>
+    <string name="preferences_title">設定</string>
+    <string name="preferences_desc">基本的な設定を行って開始してください。</string>
+    <string name="label_app_settings">アプリ設定</string>
+    <string name="label_haptic_feedback">触覚フィードバック</string>
+    <string name="label_updates">アップデート</string>
+    <string name="label_auto_check_updates">自動でアップデートを確認</string>
+    <string name="desc_auto_check_updates">アプリを起動したときにアップデートを確認します</string>
+    <string name="action_all_set">完了</string>
+    <string name="action_check_whats_new">更新内容を見る</string>
     <string name="action_done">完了</string>
     <string name="action_preview">プレビュー</string>
     <string name="action_help_guide">ヘルプガイド</string>
     <string name="action_what_is_this">これは何？</string>
     <string name="update_available_title">アップデートがあります</string>
-    <string name="about_desc_your_android">Glance at your device\'s hardware and software specifications in detail. This information is fetched from GSMArena and system properties to provide a comprehensive overview of your Android device.</string>
+    <string name="about_desc_your_android">お使いのデバイスのハードウェアおよびソフトウェア仕様を詳細に確認することができます。この情報はGSMArenaおよびシステムプロパティから取得され、Androidデバイスの包括的な概要を提供します。</string>
     <string name="about_desc_ambient_music_glance">アンビエントミュージックは、音楽の再生中や再生内容が変更されたときに、ロック画面に再生中のオーバーレイを表示します。\n\nデバイスがAOD経由のオーバーレイをサポートしていない場合は、充電中に Android 設定で追加されたアンビエンス スクリーンセーバーを代替手段として選択できます。</string>
     <string name="about_desc_notification_lighting">通知ライトは、通知を受け取った際に美しいエッジライティング効果を追加します。\n\nアニメーションのスタイル、色、動作をカスタマイズできます。画面がオフの場合でも、または現在使用しているアプリの画面上に表示されている場合でも機能します(OEMによって異なります)。アプリ、通知の優先度、またはトリガーする動作を、指定されたコントロールから選択してください。お使いのOEMがAOD上のオーバーレイをサポートしていない場合は、下記のアンビエントディスプレイオプションをご利用ください。</string>
     <string name="about_desc_screen_off_widget">ホーム画面にアイコンや雑然としたものを追加しない、透明でサイズ変更可能なウィジェットをタップするだけで、簡単に画面をオフにできます。</string>
@@ -958,7 +958,7 @@
     <string name="action_report_email">メールで報告</string>
     <string name="action_copy_clipboard">クリップボードにコピー</string>
     <string name="bug_report_email_subject">Essentials Bug Report (バグレポート)</string>
-    <string name="bug_report_send_via">Please enable crash reporting as it will automatically report details that would help resolving issues.</string>
+    <string name="bug_report_send_via">送信方法</string>
     <!-- Location Reached -->
     <string name="feat_location_reached_title">Are We There Yet?</string>
     <string name="feat_location_reached_desc">Prepare for your destination.</string>
@@ -1026,7 +1026,7 @@
     <string name="download_airsync_summary">Macのバッテリー同期に必要</string>
     <string name="feat_battery_notification_title">バッテリー通知</string>
     <string name="feat_battery_notification_desc">バッテリーステータスの持続通知</string>
-    <string name="battery_notification_hint">This notification displays battery levels for your connected Mac and Bluetooth devices. You can configure which devices to show in the Battery Widget settings.</string>
+    <string name="battery_notification_hint">この通知は、接続されたMacとBluetoothデバイスのバッテリー残量を表示します。バッテリーウィジェットの設定で、表示するデバイスを選択できます。</string>
     <string name="about_desc_battery_notification">通知シェードにバッテリーウィジェットの機能を再現します。接続された全デバイスのバッテリー残量を、リアルタイムで更新される常時表示の通知で一元表示します。これにはMac（AirSync経由）とBluetoothアクセサリが含まれます。</string>
     <string name="battery_notification_channel_name">バッテリーステータス通知</string>
     <string name="battery_notification_channel_desc">接続されたデバイスのバッテリー残量を表示する常時通知</string>
@@ -1091,7 +1091,7 @@
     <string name="cat_display">ディスプレイ</string>
     <string name="cat_protection">Protection</string>
     <string name="label_kbd_abc">ABC</string>
-    <string name="label_kbd_symbols">?#/</string>
+    <string name="label_kbd_symbols">\?#/</string>
     <string name="msg_restrict_own_app_repo">Oi! You can check updates in app settings, No need to add here XD</string>
     <string name="action_export">エクスポート</string>
     <string name="action_import">インポート</string>
@@ -1119,7 +1119,7 @@
     <string name="feat_aod_force_turn_off_desc">通知がない場合にAODを強制的にオフにします。アクセシビリティ権限が必要です。</string>
     <string name="feat_auto_accessibility_title">Auto accessibility</string>
     <string name="feat_auto_accessibility_desc">Automatically grants the accessibility permission on app launch if missing using WRITE_SECURE_SETTINGS.</string>
-    <string name="label_help_guide">ヘルプ＆ガイド</string>
+    <string name="label_help_guide">ヘルプとガイド</string>
     <string name="tab_your_android">あなたのAndroid</string>
     <string name="label_device_storage">ストレージ</string>
     <string name="label_device_ram">メモリ</string>
@@ -1128,7 +1128,7 @@
     <string name="msg_blur_compatibility_error">Blur is disabled on this device to prevent a known display bug on Samsung devices with Android 15 or below.</string>
     <!-- Empty State Actions -->
     <string name="msg_no_apps_frozen">フリーズするアプリが選択されていません。</string>
-    <string name="action_get_started">Get Started</string>
+    <string name="action_get_started">はじめる</string>
     <string name="action_new_automation">新しいオートメーション</string>
     <string name="action_add_repository">レポジトリを追加</string>
 </resources>
