@@ -7,8 +7,8 @@
     <string name="freeze_activity_subtitle">Disattiva le app utilizzate raramente</string>
     <string name="freeze_shortcut_short_label">Blocco dell\'app</string>
     <string name="freeze_shortcut_long_label">Apri Blocco app</string>
-    <string name="frozen_app_shortcut_label">Applicazione congelata</string>
-    <string name="screen_off_widget_label">Widget di spegnimento dello schermo vuoto</string>
+    <string name="frozen_app_shortcut_label">App bloccate</string>
+    <string name="screen_off_widget_label">Widget Spegni-scherno</string>
     <string name="app_freezing_tile_label">Blocco dell\'app</string>
     <string name="flashlight_pulse_tile_label">Impulso della torcia</string>
     <string name="check_pre_releases_label">Controlla le pre-release</string>
@@ -21,8 +21,8 @@
     <string name="app_lock_disable_auth_subtitle">Autenticarsi per disattivare il blocco dell\'app</string>
     <string name="app_lock_select_apps_title">Seleziona le app bloccate</string>
     <string name="app_lock_select_apps_desc">Scegli quali app richiedono l\'autenticazione</string>
-    <string name="app_lock_description">Proteggi le tue app con l\'autenticazione biometrica. Le app bloccate richiedono l\'autenticazione all\'avvio, rimangono sbloccate fino allo spegnimento dello schermo.</string>
-    <string name="app_lock_warning">Tieni presente che questa non è una soluzione solida poiché è solo un\'applicazione di terze parti. Se hai bisogno di una sicurezza elevata, considera l\'utilizzo dello Spazio privato o altre funzionalità simili.</string>
+    <string name="app_lock_description">Proteggi le tue app con l\'autenticazione biometrica. Le app bloccate richiedono l\'autenticazione all\'avvio e rimangono sbloccate fino allo spegnimento dello schermo.</string>
+    <string name="app_lock_warning">Tieni presente che questa non è una soluzione definitiva poiché è solo un\'app di terze parti. Se hai bisogno di una sicurezza elevata, considera l\'utilizzo di Spazio Privato o altre funzionalità simili.</string>
     <string name="app_lock_biometric_note">Un\'altra nota: la richiesta di autenticazione biometrica ti consente solo di utilizzare metodi di classe sicura STRONG. I metodi di sicurezza di sblocco facciale nella classe WEAK in dispositivi come Pixel 7 saranno in grado di utilizzare solo gli altri metodi di autenticazione STRONG disponibili come l\'impronta digitale o il PIN.</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Abilita rimappatura pulsanti</string>
@@ -608,7 +608,7 @@
     <string name="action_help_guide">Guida di aiuto</string>
     <string name="action_what_is_this">Cos\'è questo?</string>
     <string name="update_available_title">Aggiornamento disponibile</string>
-    <string name="about_desc_your_android">Glance at your device\'s hardware and software specifications in detail. This information is fetched from GSMArena and system properties to provide a comprehensive overview of your Android device.</string>
+    <string name="about_desc_your_android">Dai un\'occhiata alle specifiche hardware e software del tuo dispositivo. Le informazioni provengono da GSMArena e dalle proprietà del sistema per garantirti una giusta panoramica del tuo dispositivo.</string>
     <string name="about_desc_ambient_music_glance">Ambient Music Glance mostra un overlay Now Playing sulla schermata di blocco quando la musica è in riproduzione e la riproduzione cambia. \n\nSe il tuo dispositivo non supporta gli overlay su AOD, puoi optare per lo screensaver Ambience aggiunto nelle impostazioni Android come alternativa durante la ricarica.</string>
     <string name="about_desc_notification_lighting">L\'illuminazione delle notifiche aggiunge un bellissimo effetto di illuminazione dei bordi quando ricevi notifiche.\n\nPuoi personalizzare lo stile, i colori e il comportamento dell\'animazione. Funziona anche quando lo schermo è spento (a seconda dell\'OEM) o sopra l\'app corrente. Scegli le app, la priorità delle notifiche o il comportamento su cui dovrebbe attivarsi da determinati controlli. Se il tuo OEM non supporta gli overlay sopra AOD, utilizza l\'opzione di visualizzazione Ambient che trovi di seguito.</string>
     <string name="about_desc_screen_off_widget">Spegni facilmente lo schermo con un tocco su un widget ridimensionabile trasparente che non aggiunge icone o elementi inutili alla schermata iniziale.</string>
