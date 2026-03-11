@@ -1125,7 +1125,7 @@
     <string name="label_device_ram">メモリ</string>
     <string name="label_use_blur">ぼかしを使う</string>
     <string name="desc_use_blur">UI全体でブラー要素を有効にする</string>
-    <string name="msg_blur_compatibility_error">Blur is disabled on this device to prevent a known display bug on Samsung devices with Android 15 or below.</string>
+    <string name="msg_blur_compatibility_error">このデバイスでは、Android 15 以下の Samsung デバイスで発生する既知の表示不具合を防ぐため、ぼかし機能が無効化されています。</string>
     <!-- Empty State Actions -->
     <string name="msg_no_apps_frozen">フリーズするアプリが選択されていません。</string>
     <string name="action_get_started">はじめる</string>
