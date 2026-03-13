@@ -57,7 +57,7 @@
     <string name="like_song_settings_desc">Для этой функции требуется доступ к уведомлениям для обнаружения воспроизводимого в данный момент мультимедиа и запуска аналогичного действия. Пожалуйста, включите его ниже.</string>
     <string name="like_song_toast_enabled">Показать всплывающее сообщение</string>
     <string name="like_song_aod_overlay_title">Показать наложение на AOD</string>
-    <string name="feat_ambient_music_glance_title">Эмбиентный музыкальный взгляд</string>
+    <string name="feat_ambient_music_glance_title">I dont know, pls help</string>
     <string name="feat_ambient_music_glance_desc">Взгляните на СМИ на AOD</string>
     <string name="ambient_glance_docked_mode_title">Закрепленный режим</string>
     <string name="ambient_glance_docked_mode_desc">Сохраняйте наложение видимым на неопределенный срок во время воспроизведения музыки на AOD.</string>
@@ -587,7 +587,7 @@
     <string name="welcome_developer_attribution">сделано sameerasw.com</string>
     <string name="action_lets_begin">Давайте начнём</string>
     <string name="acknowledgement_title">Acknowledgement</string>
-    <string name="acknowledgement_desc">This app is a collection of utilities that can interact deeply with your device system. Using some features might modify system settings or behavior in unexpected ways. \n\nYou only need to grant necessary permissions which are required for selected features you are using giving you full control over the app\'s behavior. \n\nFurther more, the app does not track or store any of your personal data, I don\'t need them... Keep to yourself safe. You can refer to the source code for more information. \n\nThis app is fully open source and is and always will be free to use. Do not pay or install from unknown sources.</string>
+    <string name="acknowledgement_desc">Это приложение представляет собой набор утилит, которые могут глубоко взаимодействовать с системой вашего устройства. Использование некоторых функций может привести к неожиданным результатам. \n\nВам нужно предоставить приложению только необходимые разрешения для выбранных функций, которые вы используете, это обеспечит наибольшую стабильность и полный контроль над приложением. \n\nБолее того, приложение не отслеживает и не хранит ваши личные данные, они мне не нужны... Берегите себя. Вы можете обратиться к исходному коду для получения дополнительной информации. \n\nЭто приложение имеет полностью открытый исходный код и всегда будет бесплатным. Не покупайте и не устанавливайте его из неизвестных источников.</string>
     <string name="acknowledgement_warning">WARNING: Proceed with caution. The developer takes no responsibility for any system instability, data loss, or other issues caused by the use of this app. By proceeding, you acknowledge these risks.</string>
     <string name="acknowledgement_footer">Я знаю что ты даже не вчитывался, но в случае если тебе нужна помощь, не стесняйся обратиться к разработчику и сообществу.</string>
     <string name="action_i_understand">Я понимаю</string>
