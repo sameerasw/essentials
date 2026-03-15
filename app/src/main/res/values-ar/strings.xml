@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">أساسيات</string>
     <string name="label_beta">بيتا</string>
-    <string name="accessibility_service_description"><b>Essentials Accessibility Service</b>\n\nThis service is required for the following advanced features:\n\n<b>• Physical Button Remapping:</b>\nDetects volume button presses even when the screen is off to trigger actions like the Flashlight.\n\n<b>• Per-App Settings:</b>\nMonitors the currently active app to apply specific profiles for Dynamic Night Light, Notification Lighting Colors, and App Lock.\n\n<b>• Screen Control:</b>\nAllows the app to lock the screen (e.g. via Double Tap or Widgets) and detect screen state changes.\n\n<b>• Security:</b>\nPrevents unauthorized changes by detecting window content when the device is locked.\n\n<small>No input text or sensitive user data is collected or transmitted.</small></string>
+    <string name="accessibility_service_description"><b>إمكانية الوصول لأساسيات</b>\n\nتعد هذه الخدمة ضرورية للميزات المتقدمة التالية:\n\n<b>• إعادة تعيين أزرار الجهاز:</b>\nإكتشاف ضغطات أزرار الصوت حتى عندما تكون الشاشة مطفأة لتفعيل إجرائات مثل الكشاف\n\n<b>• إعدادات لكل تطبيق:</b>\nيراقب التطبيق النشط حالياً لتطبيق ملفات تعريف محددة للإضاءة الليلية الديناميكية وإضاءة الإشعارات الملونة وخاصية قفل التطبيقات\n\n<b>• Screen Control:</b>\nAllows the app to lock the screen (e.g. via Double Tap or Widgets) and detect screen state changes.\n\n<b>• Security:</b>\nPrevents unauthorized changes by detecting window content when the device is locked.\n\n<small>No input text or sensitive user data is collected or transmitted.</small></string>
     <string name="freeze_activity_title">تجميد التطبيق</string>
     <string name="freeze_activity_subtitle">قم بتعطيل التطبيقات التي نادراً ما تستخدمها</string>
     <string name="freeze_shortcut_short_label">تجميد التطبيق</string>
@@ -175,7 +175,7 @@
     <string name="tile_bubbles">فقاعات</string>
     <string name="tile_sensitive_content">المحتوى الحساس</string>
     <string name="tile_tap_to_wake">انقر للاستيقاظ</string>
-    <string name="tile_aod">AOD</string>
+    <string name="tile_aod"></string>
     <string name="tile_caffeinate">الكافيين</string>
     <string name="tile_sound_mode">وضع الصوت</string>
     <string name="tile_notification_lighting">إضاءة الإخطار</string>
