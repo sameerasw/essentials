@@ -1097,7 +1097,7 @@
     <string name="action_import">Importieren</string>
     <string name="msg_export_success">Repositorys erfolgreich exportiert</string>
     <string name="msg_export_failed">Exportieren von Repositorys fehlgeschlagen</string>
-    <string name="msg_import_success">Repositories imported successfully</string>
+    <string name="msg_import_success">Repositorys erfolgreich importiert</string>
     <string name="msg_import_failed">Import von Repositorys fehlgeschlagen</string>
     <string name="label_apps">Apps</string>
     <string name="feat_text_animations_title">Skalierung und Animationen</string>
