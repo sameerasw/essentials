@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">අත්යවශ්ය දේවල්</string>
     <string name="label_beta">බීටා</string>
@@ -13,8 +13,7 @@
     <string name="flashlight_pulse_tile_label">ෆ්ලෑෂ් ලයිට් ස්පන්දනය</string>
     <string name="check_pre_releases_label">පූර්ව නිකුතු සඳහා පරීක්ෂා කරන්න</string>
     <string name="check_pre_releases_desc">අස්ථායී විය හැක</string>
-
-    
+    <!-- App Lock -->
     <string name="settings_section_security">ආරක්ෂාව</string>
     <string name="app_lock_enable_title">යෙදුම් අගුල සබල කරන්න</string>
     <string name="app_lock_auth_title">යෙදුම් අගුළු ආරක්ෂාව</string>
@@ -25,8 +24,7 @@
     <string name="app_lock_description">ජෛවමිතික සත්‍යාපනය සමඟින් ඔබගේ යෙදුම් සුරක්ෂිත කරන්න. අගුලු දැමූ යෙදුම් දියත් කරන විට සත්‍යාපනය අවශ්‍ය වනු ඇත, තිරය ක්‍රියා විරහිත වන තෙක් අගුලු දමා ඇත.</string>
     <string name="app_lock_warning">මෙය තුන්වන පාර්ශවීය යෙදුමක් පමණක් බැවින් මෙය ශක්තිමත් විසඳුමක් නොවන බව පරෙස්සම් වන්න. ඔබට ශක්තිමත් ආරක්ෂාවක් අවශ්‍ය නම්, පුද්ගලික අවකාශය හෝ වෙනත් එවැනි විශේෂාංග භාවිතා කිරීම සලකා බලන්න.</string>
     <string name="app_lock_biometric_note">තවත් සටහනක්, ජෛවමිතික සත්‍යාපන විමසුම මඟින් ඔබට ශක්තිමත් ආරක්ෂිත පන්ති ක්‍රම භාවිතා කිරීමට පමණක් ඉඩ ලබා දේ. Pixel 7 වැනි උපාංගවල WEAK පන්තියේ මුහුණෙන් අගුළු හැරීමේ ආරක්‍ෂක ක්‍රම භාවිත කිරීමට හැකි වනුයේ ඇඟිලි සලකුණු හෝ පින් වැනි පවතින අනෙකුත් ප්‍රබල සත්‍යාපන ක්‍රම පමණි.</string>
-
-    
+    <!-- Button Remap -->
     <string name="button_remap_enable_title">බොත්තම නැවත සකස් කිරීම සබල කරන්න</string>
     <string name="button_remap_use_shizuku_title">Shizuku හෝ Root හෝ Root භාවිතා කරන්න</string>
     <string name="button_remap_use_shizuku_desc">තිරය ​​අක්‍රියව ක්‍රියා කරයි (නිර්දේශිත)</string>
@@ -84,8 +82,7 @@
     <string name="flashlight_always_off_title">සෑම විටම ෆ්ලෑෂ් ලයිට් නිවා දමන්න</string>
     <string name="flashlight_always_off_desc">සංදර්ශකය ක්‍රියාත්මකව තිබියදී පවා</string>
     <string name="content_desc_settings">සැකසීම්</string>
-
-    
+    <!-- Caffeinate / Permissions -->
     <string name="permission_show_notification_title">දැනුම්දීම පෙන්වන්න</string>
     <string name="permission_post_notifications_title">දැනුම්දීම් පළ කරන්න</string>
     <string name="permission_post_notifications_desc">දැනුම්දීම් පෙන්වීමට යෙදුමට අවසර දෙන්න</string>
@@ -109,13 +106,11 @@
     <string name="caffeinate_starting_in"> %1$ds තුළ ආරම්භ වේ…</string>
     <string name="caffeinate_remaining">%1$s ඉතිරි</string>
     <string name="caffeinate_live_channel_desc">කැෆේන් සඳහා නිරන්තර දැනුම්දීම</string>
-
-    
+    <!-- Dynamic Night Light -->
     <string name="dynamic_night_light_enable_title">ගතික රාත්‍රී ආලෝකය සක්‍රීය කරන්න</string>
     <string name="dynamic_night_light_apps_section">රාත්‍රී ආලෝකය අක්‍රිය කරන යෙදුම්</string>
     <string name="action_select_apps">යෙදුම් තෝරන්න</string>
-
-    
+    <!-- App Freezing -->
     <string name="settings_section_app_control">යෙදුම් පාලනය</string>
     <string name="action_freeze">කැටි කරන්න</string>
     <string name="action_unfreeze">කැටි කිරීම ඉවත් කරන්න</string>
@@ -142,8 +137,7 @@
     <string name="perm_usage_stats_title">භාවිත සංඛ්යාලේඛන</string>
     <string name="perm_usage_stats_desc">ඒවා කැටි කිරීම වළක්වා ගැනීම සඳහා දැනට පෙරබිමෙහි ඇති යෙදුම් හඳුනා ගැනීමට අවශ්‍ය වේ</string>
     <string name="perm_notif_listener_desc_freeze">වාදනය කරන මාධ්‍ය සහ සක්‍රිය දැනුම්දීම් කැටි කිරීම වළක්වා ගැනීම සඳහා අනාවරණය කර ගැනීමට අවශ්‍ය වේ</string>
-
-    
+    <!-- Notification Lighting -->
     <string name="notification_lighting_screen_off_title">තිරය ​​අක්‍රිය වූ විට පමණක් පෙන්වන්න</string>
     <string name="notification_lighting_skip_silent_title">නිහඬ දැනුම්දීම් මඟ හරින්න</string>
     <string name="notification_lighting_skip_persistent_title">ස්ථීර දැනුම්දීම් මඟ හරින්න</string>
@@ -173,8 +167,7 @@
     <string name="ambient_display_desc">අවදි තිරය සහ ආලෝකය පෙන්වන්න</string>
     <string name="ambient_show_lock_screen_title">අගුළු තිරය පෙන්වන්න</string>
     <string name="ambient_show_lock_screen_desc">කළු ආවරණයක් නැත</string>
-
-    
+    <!-- Tiles -->
     <string name="action_add">එකතු කරන්න</string>
     <string name="qs_tile_already_added">දැනටමත් එකතු කර ඇත</string>
     <string name="qs_tile_requires_android_13">Android 13+ අවශ්‍යයි</string>
@@ -228,9 +221,7 @@
     <string name="adaptive_charging">අනුවර්තනය</string>
     <string name="deactivated">ප්‍රශස්ත නොවේ</string>
     <string name="permission_missing">අවසරය අතුරුදහන්</string>
-
-
-    
+    <!-- Screen Locked Security -->
     <string name="screen_locked_security_title">තිරය ​​අගුලු දැමූ ආරක්ෂාව</string>
     <string name="screen_locked_security_dialog_title">තිර අගුලු දැමූ ආරක්ෂාව</string>
     <string name="screen_locked_security_auth_enable">තිර අගුලු දැමූ ආරක්ෂාව සබල කිරීමට සත්‍යාපනය කරන්න</string>
@@ -239,23 +230,20 @@
     <string name="screen_locked_security_warning_text">මෙම විශේෂාංගය විකාරරූපී නොවේ. යමෙකුට තවමත් ටයිල් එක සමඟ අන්තර් ක්‍රියා කිරීමට හැකි වන අවස්ථා තිබිය හැක. \nඑමෙන්ම Android සෑම විටම බලහත්කාරයෙන් නැවත පණගැන්වීමට ඉඩ දෙන බවත් Pixels සෑම විටම උපාංගය අගුළු තිරයෙන් අක්‍රිය කිරීමට ඉඩ දෙන බවත් මතක තබා ගන්න.</string>
     <string name="screen_locked_security_airplane_warning">එය සංවාද කවුළුවක් විවෘත නොකරන නිසා එය වැළැක්විය නොහැකි බැවින් ගුවන් යානා මාදිලියේ ටයිල් එක ඉක්මන් සිටුවම්වලින් ඉවත් කිරීමට වග බලා ගන්න.</string>
     <string name="screen_locked_security_description">සබල කළ විට, ක්ෂණික සැකසුම් පැනලය වහා වසා දමනු ඇති අතර, උපාංගය අගුලු දමා තිබියදී යමෙකු අන්තර්ජාල ටයිල් සමඟ අන්තර් ක්‍රියා කිරීමට උත්සාහ කළහොත් උපාංගය අගුලු දමනු ඇත. \n\nමෙය තවදුරටත් අනවසර ප්‍රවේශය වැලැක්වීමට ජෛවමිතික අගුලු හැරීම ද අබල කරනු ඇත. සජීවිකරණ පරිමාණය අගුලු දමා ඇති අතරතුර 0.1x දක්වා අඩු කරනු ලබන අතර එය සමඟ අන්තර් ක්‍රියා කිරීම වඩාත් අපහසු වේ.</string>
-
-    
+    <!-- Sound Mode -->
     <string name="sound_mode_reorder_title">නැවත ඇණවුම් මාදිලි</string>
     <string name="sound_mode_long_press_hint">ටොගල් කිරීමට දිගු ඔබන්න</string>
     <string name="content_desc_drag_reorder">නැවත ඇණවුම් කිරීමට අදින්න</string>
     <string name="sound_mode_sound">ශබ්දය</string>
     <string name="sound_mode_vibrate">කම්පනය කරන්න</string>
     <string name="sound_mode_silent">නිහඬයි</string>
-
-    
+    <!-- Status Bar Categories -->
     <string name="status_bar_category_connectivity">සම්බන්ධතාවය</string>
     <string name="status_bar_category_phone_network">දුරකථන සහ ජාලය</string>
     <string name="status_bar_category_audio_media">ශ්‍රව්‍ය සහ මාධ්‍ය</string>
     <string name="status_bar_category_system_status">පද්ධති තත්ත්වය</string>
     <string name="status_bar_category_oem_specific">OEM විශේෂිත</string>
-
-    
+    <!-- Status Bar Icons -->
     <string name="icon_wifi">Wifi</string>
     <string name="icon_bluetooth">බ්ලූටූත්</string>
     <string name="icon_nfc">NFC / ෆෙලිකා</string>
@@ -290,8 +278,7 @@
     <string name="icon_samsung_smart">Samsung ස්මාර්ට් විශේෂාංග</string>
     <string name="icon_samsung_services">Samsung සේවා</string>
     <string name="icon_ethernet">ඊතර්නෙට්</string>
-    
-    
+    <!-- Status Bar Settings -->
     <string name="stb_clock_seconds">ඔරලෝසුවේ තත්පර පෙන්වන්න</string>
     <string name="stb_battery_percentage">බැටරි ප්රතිශතය</string>
     <string name="stb_battery_percentage_always">සෑම විටම</string>
@@ -309,11 +296,9 @@
     <string name="action_reset_all_icons">සියලුම අයිකන නැවත සකසන්න</string>
     <string name="status_bar_section_advanced">තවත් සැකසුම්</string>
     <string name="status_bar_icons_disclaimer">මෙම විකල්පයන් ක්‍රියාත්මක කිරීම OEM මත රඳා පවතින අතර සමහර ඒවා කිසිසේත්ම ක්‍රියාකාරී නොවිය හැකි බව කරුණාවෙන් සලකන්න.</string>
-
-    
+    <!-- Network Type Picker -->
     <string name="network_type_other">වෙනත්</string>
-
-    
+    <!-- Search -->
     <string name="search_clock_seconds_title">ඔරලෝසු තත්පර</string>
     <string name="search_clock_seconds_desc">තත්ව තීරු ඔරලෝසුවේ තත්පර පෙන්වන්න</string>
     <string name="search_battery_percentage_title">බැටරි ප්රතිශතය</string>
@@ -323,20 +308,17 @@
     <string name="search_desc_toggle_visibility">සඳහා දෘශ්‍යතාව ටොගල් කරන්න %1$s</string>
     <string name="action_pin">ප්‍රියතමයන් වෙත අමුණන්න</string>
     <string name="action_unpin">ප්‍රියතමයන් වෙතින් ඉවත් කරන්න</string>
-
-    
-    
+    <!-- Extraction Batch 1 -->
+    <!-- Categories -->
     <string name="cat_tools">මෙවලම්</string>
     <string name="cat_visuals">දර්ශන</string>
     <string name="cat_system">පද්ධතිය</string>
-
-    
+    <!-- UI Elements -->
     <string name="search_placeholder">අත්‍යවශ්‍ය දේ සොයන්න</string>
     <string name="search_no_results">සඳහා ප්‍රතිඵල නැත \"%1$s\"</string>
     <string name="search_results_title">සෙවුම් ප්‍රතිඵල</string>
     <string name="requires_following_permissions">%1$s පහත අවසර අවශ්‍ය වේ</string>
-
-    
+    <!-- Features -->
     <string name="feat_screen_off_widget_title">විජට් තිරය ක්‍රියාවිරහිත කරන්න</string>
     <string name="feat_screen_off_widget_desc">තිරය ​​නිවා දැමීමට නොපෙනෙන විජට්</string>
     <string name="feat_statusbar_icons_title">තත්ව තීරු අයිකන</string>
@@ -357,8 +339,7 @@
     <string name="limit_max_devices_summary">විජට් තුළ පෙනෙන උපරිම උපාංග සීරුමාරු කරන්න</string>
     <string name="widget_background_title">විජට් පසුබිම</string>
     <string name="widget_background_summary">විජට් පසුබිම පෙන්වන්න</string>
-
-    
+    <!-- DIY Automation -->
     <string name="diy_create_trigger_title">ප්‍රේරක ස්වයංක්‍රීයකරණය</string>
     <string name="diy_create_trigger_desc">නිරීක්‍ෂණයක් ආරම්භ කිරීමට ක්‍රියාවක් උපලේඛනගත කරන්න</string>
     <string name="diy_create_state_title">රාජ්ය ස්වයංක්රීයකරණය</string>
@@ -432,8 +413,7 @@
     <string name="calendar_sync_manual_sync_desc">නැරඹීමට ක්ෂණික සමමුහුර්ත කිරීම ක්‍රියාරම්භ කරන්න</string>
     <string name="calendar_sync_no_calendars">දේශීය දින දර්ශන හමු නොවිණි</string>
     <string name="calendar_sync_sync_started">දින දර්ශන සමමුහුර්ත කිරීම ආරම්භ විය</string>
-
-    
+    <!-- Search Settings -->
     <string name="search_haptic_title">Widget Haptic ප්‍රතිපෝෂණ</string>
     <string name="search_haptic_desc">විජට් ටැප් සඳහා හප්ටික් ප්‍රතිපෝෂණ තෝරන්න</string>
     <string name="search_smart_wifi_title">ස්මාර්ට් WiFi</string>
@@ -508,8 +488,7 @@
     <string name="search_freeze_locked_desc">උපාංගය අගුලු දැමූ විට තෝරාගත් යෙදුම් නිශ්චල කරන්න</string>
     <string name="search_freeze_delay_title">කැටි කිරීම ප්‍රමාදය</string>
     <string name="search_freeze_delay_desc">අගුලු දැමීමෙන් පසු කැටි කිරීමට පෙර ප්රමාද කරන්න</string>
-
-    
+    <!-- Permissions metadata -->
     <string name="perm_shizuku_title">ෂිසුකු</string>
     <string name="perm_shizuku_desc">උසස් විධාන සඳහා අවශ්ය වේ. Play Store වෙතින් Shizuku ස්ථාපනය කරන්න.</string>
     <string name="perm_shizuku_install_action">Shizuku ස්ථාපනය කරන්න</string>
@@ -546,8 +525,7 @@
     <string name="perm_action_how_to">ලබා දෙන ආකාරය</string>
     <string name="perm_battery_optimization_title">බැටරි ප්රශස්තකරණය</string>
     <string name="perm_battery_optimization_desc">බලය ඉතිරි කර ගැනීම සඳහා පද්ධතිය මඟින් සේවාව විනාශ නොවන බවට සහතික වන්න.</string>
-
-    
+    <!-- Tabs -->
     <string name="tab_essentials">අත්යවශ්ය දේවල්</string>
     <string name="tab_freeze">කැටි කරන්න</string>
     <string name="tab_freeze_title">ශීත කළ</string>
@@ -582,33 +560,55 @@
     <string name="option_allow_prereleases">පූර්ව නිකුතු සඳහා පරීක්ෂා කරන්න</string>
     <string name="option_notifications">දැනුම්දීම්</string>
     <string name="error_rate_limited">GitHub ගාස්තු සීමාව ඉක්මවා ඇත. කරුණාකර පසුව නැවත උත්සාහ කරන්න.</string>
-
-    
+    <!-- Keyboard Setup -->
     <string name="label_keyboard_setup">යතුරුපුවරු සැකසුම</string>
     <string name="btn_enable_keyboard">සැකසීම් තුළ සබල කරන්න</string>
     <string name="btn_select_keyboard">Essentials වෙත මාරු වන්න</string>
-
     <string name="label_enabled">සබල කර ඇත</string>
     <string name="label_disabled">ආබාධිතයි</string>
-
     <string name="tile_adaptive_brightness">අනුවර්තන දීප්තිය</string>
-
     <string name="tile_maps_power_saving">සිතියම් බලශක්ති ඉතිරිකිරීම</string>
-
     <string name="action_search">සොයන්න</string>
     <string name="action_stop">නවත්වන්න</string>
     <string name="label_search">සොයන්න</string>
-
-    
+    <!-- UI Components General -->
     <string name="action_back">ආපසු</string>
     <string name="content_desc_back">ආපසු</string>
     <string name="label_settings">සැකසීම්</string>
     <string name="action_report_bug">දෝෂයක් වාර්තා කරන්න</string>
+    <!-- Sentry Crash Reporting -->
+    <string name="sentry_report_mode_title">Crash reporting</string>
+    <string name="sentry_mode_off">Off</string>
+    <string name="sentry_mode_auto">Auto</string>
+    <string name="sentry_crash_toast">Essentials crashed, Report sent</string>
+    <string name="simulate_crash">Simulate crash</string>
+    <string name="welcome_title">Welcome to Essentials</string>
+    <string name="welcome_subtitle">A Toolbox for Android Nerds</string>
+    <string name="welcome_developer_attribution">by sameerasw.com</string>
+    <string name="action_lets_begin">Let\'s Begin</string>
+    <string name="acknowledgement_title">Acknowledgement</string>
+    <string name="acknowledgement_desc">This app is a collection of utilities that can interact deeply with your device system. Using some features might modify system settings or behavior in unexpected ways. \n\nYou only need to grant necessary permissions which are required for selected features you are using giving you full control over the app\'s behavior. \n\nFurther more, the app does not track or store any of your personal data, I don\'t need them... Keep to yourself safe. You can refer to the source code for more information. \n\nThis app is fully open source and is and always will be free to use. Do not pay or install from unknown sources.</string>
+    <string name="acknowledgement_warning">WARNING: Proceed with caution. The developer takes no responsibility for any system instability, data loss, or other issues caused by the use of this app. By proceeding, you acknowledge these risks.</string>
+    <string name="acknowledgement_footer">I know you didn\'t even read this carefully but, in case you need any help, feel free to reach out the developer or the community.</string>
+    <string name="action_i_understand">I Understand</string>
+    <string name="feature_intro_desc">Anytime you are clueless on a feature or a Quick Settings Tile on what it does and what permissions may necessary for it, just long press it and pick \'What is this?\' to learn more.</string>
+    <string name="feature_intro_footer">You can report bugs or find helpful guides anytime in the app settings.</string>
+    <string name="action_let_me_in">Let Me in Already</string>
+    <string name="preferences_title">Preferences</string>
+    <string name="preferences_desc">Configure some basic settings to get started.</string>
+    <string name="label_app_settings">App Settings</string>
+    <string name="label_haptic_feedback">Haptic Feedback</string>
+    <string name="label_updates">Updates</string>
+    <string name="label_auto_check_updates">Auto check for updates</string>
+    <string name="desc_auto_check_updates">Check for updates at app launch</string>
+    <string name="action_all_set">All Set</string>
+    <string name="action_check_whats_new">Check What\'s New?</string>
     <string name="action_done">කළා</string>
     <string name="action_preview">පෙරදසුන</string>
     <string name="action_help_guide">උපකාරක මාර්ගෝපදේශය</string>
     <string name="action_what_is_this">මේ කුමක් ද?</string>
     <string name="update_available_title">යාවත්කාලීන ලබා ගත හැක</string>
+    <string name="about_desc_your_android">Glance at your device\'s hardware and software specifications in detail. This information is fetched from GSMArena and system properties to provide a comprehensive overview of your Android device.</string>
     <string name="about_desc_ambient_music_glance">Ambient Music Glance සංගීතය වාදනය වන විට සහ පසුධාවනය වෙනස් වන විට ඔබගේ අගුළු තිරයේ Now Playing overlay එකක් පෙන්වයි. \n\nඔබගේ උපාංගය AOD හරහා උඩැතිරිවලට සහය නොදක්වන්නේ නම්, ඔබට ආරෝපණය කරන අතරතුර විකල්පයක් ලෙස ඔබේ Android සැකසීම් තුළ එකතු කරන ලද Ambience screensaver තෝරාගත හැක.</string>
     <string name="about_desc_notification_lighting">දැනුම්දීම් ආලෝකය ඔබට දැනුම්දීම් ලැබුණු විට අලංකාර දාර ආලෝකකරණ බලපෑමක් එක් කරයි.\n\nඔබට සජීවිකරණ විලාසය, වර්ණ සහ හැසිරීම අභිරුචිකරණය කළ හැකිය. එය තිරය ක්‍රියා විරහිත වූ විට (OEM මත යැපෙන) හෝ ඔබගේ වත්මන් යෙදුමට ඉහළින් ඇති විට පවා ක්‍රියා කරයි. යෙදුම්, දැනුම්දීම් ප්‍රමුඛතාව හෝ ලබා දී ඇති පාලනවලින් එය ක්‍රියාත්මක කළ යුතු හැසිරීම තෝරන්න. ඔබේ OEM AODට ඉහළින් ඇති ආවරණ සඳහා සහය නොදක්වන්නේ නම්, පහත ඇති සංසරණ සංදර්ශක විකල්පයට එරෙහිව නඩු පවරන්න.</string>
     <string name="about_desc_screen_off_widget">ඔබේ මුල් තිරයට අයිකන හෝ කිසිදු අවුල් සහගත බවක් එක් නොකරන විනිවිද පෙනෙන ප්‍රමාණය වෙනස් කළ හැකි විජට් එකක් මත තට්ටු කිරීමෙන් තිරය පහසුවෙන් ක්‍රියා විරහිත කරන්න.</string>
@@ -622,7 +622,7 @@
     <string name="about_desc_dynamic_night_light">පෙරබිම් යෙදුම මත පදනම්ව ඔබගේ තිරය නිල් ආලෝක පෙරහන ස්වයංක්‍රීයව ටොගල් කරන්න.</string>
     <string name="about_desc_screen_locked_security">ඔබගේ උපාංගය අගුලු දමා ඇති විට ආරක්ෂාව වැඩි දියුණු කරන්න.\n\nඅනවසර ජාල වෙනස් කිරීම් වලක්වන සමහර සංවේදී QS ටයිල් වෙත ප්‍රවේශය සීමා කරන්න සහ ස්පර්ශ ස්පෑම් වලක්වා ගැනීම සඳහා සජීවිකරණ වේගය වැඩි කිරීමෙන් ඒවා නැවත කිරීමට උත්සාහ කිරීම තවදුරටත් වලක්වන්න.\n\nමෙම විශේෂාංගය ශක්තිමත් නොවන අතර බ්ලූටූත් හෝ පියාසර ප්‍රකාරය වැළැක්විය නොහැකි වීම වැනි සෘජුව ටොගල් කිරීමට ඉඩ සලසන සමහර ටයිල් වැනි දෝෂ තිබිය හැක.</string>
     <string name="about_desc_app_lock">ද්විතියික සත්‍යාපන ස්ථරයක් සමඟින් ඔබගේ යෙදුම් සුරක්ෂිත කරන්න.\n\nඔබගේ උපාංග අගුළු තිර සත්‍යාපන ක්‍රමය එය Android ප්‍රමිතීන්ට අනුව 3 පන්තියේ ජෛවමිතික ආරක්ෂණ මට්ටම සපුරාලන තාක් භාවිතා කරනු ඇත.</string>
-    <string name="about_desc_location_reached">ඔබට කිසිදා නැවතුම අතපසු නොවන බව සහතික කර ගැනීමට ඔබ ඔබේ ගමනාන්තයට ළං වූ විට දැනුම් දෙන්න.\n\nGoogle සිතියම් වෙත ගොස්, ඔබේ ගමනාන්තය අසල ඇති පින් එකක් දිගු වේලාවක් ඔබා එහි "Dropped pin" (නොඑසේ නම් දුර ගණනය කිරීම නිවැරදි නොවිය හැක) බව සහතික කර ගන්න.</string>
+    <string name="about_desc_location_reached">ඔබට කිසිදා නැවතුම අතපසු නොවන බව සහතික කර ගැනීමට ඔබ ඔබේ ගමනාන්තයට ළං වූ විට දැනුම් දෙන්න.\n\nGoogle සිතියම් වෙත ගොස්, ඔබේ ගමනාන්තය අසල ඇති පින් එකක් දිගු වේලාවක් ඔබා එහි \"Dropped pin\" (නොඑසේ නම් දුර ගණනය කිරීම නිවැරදි නොවිය හැක) බව සහතික කර ගන්න.</string>
     <string name="about_desc_freeze">යෙදුම් පසුබිමේ ධාවනය වීම නැවැත්වීමට ඒවා කැටි කරන්න.\n\nඔබ ඒවා භාවිතා නොකරන විට යෙදුම් සම්පූර්ණයෙන්ම කැටි කිරීමෙන් බැටරි බැසයාම සහ දත්ත භාවිතය වළක්වන්න. ඔබ ඒවා දියත් කළ විට ඒවා ක්ෂණිකව නොනැසී පවතිනු ඇත. යෙදුම් යෙදුම් ලාච්චුවේ නොපෙන්වන අතර ශීත කළ විට Play Store හි යෙදුම් යාවත්කාලීන සඳහා ද නොපෙන්වයි.</string>
     <string name="about_desc_system_keyboard">කිසිවෙකු ඉල්ලා නොසිටි අභිරුචි ආදාන ක්‍රමයක්.\n\nඑය අත්හදා බැලීමක් පමණි. එය ඉතා සංකීර්ණ හා කාලය ගතවන ක්‍රියාවට නැංවීමක් බැවින් බහු භාෂාවලට සහය නොලැබිය හැක.</string>
     <string name="about_desc_batteries">ඔබගේ සියලුම සම්බන්ධිත උපාංගවල බැටරි මට්ටම් නිරීක්ෂණය කරන්න.\n\nඔබගේ බ්ලූටූත් හෙඩ්ෆෝන්, ඔරලෝසුව, සහ අනෙකුත් උපාංගවල බැටරි තත්ත්වය එක තැනක බලන්න. ඔබගේ මැක් බැටරි මට්ටම ද ප්‍රදර්ශනය කිරීමට AirSync යෙදුම සමඟ සම්බන්ධ වන්න.</string>
@@ -647,17 +647,14 @@
     <string name="about_desc_color_picker">Android 17 BETA 2 හි හඳුන්වා දුන් වර්ණ තෝරා ගැනීමට අයි ඩ්‍රොපර් මෙවලම දියත් කරන්න</string>
     <string name="about_desc_charge_optimization">උපරිම ආරෝපණය සීමා කිරීමෙන් හෝ අනුවර්තන ආරෝපණය භාවිතයෙන් ඔබේ බැටරි ආයු කාලය ප්‍රශස්ත කරන්න. මෙය දීර්ඝායුෂ සහ සෞඛ්‍ය සම්පන්න ආරෝපණ චක්‍ර සහතික කිරීම සඳහා Pixel උපාංග සඳහා විශේෂයෙන් නිර්මාණය කර ඇත.\n\nණය: TebbeUbben/ChargeQuickTile</string>
     <string name="action_download">බාගන්න</string>
-
-    
+    <!-- DIY Section -->
     <string name="diy_trigger_screen_off">තිරය ​​ක්‍රියාවිරහිතයි</string>
     <string name="diy_trigger_screen_on">තිරය ​​ක්‍රියාත්මකයි</string>
     <string name="diy_trigger_device_unlock">උපාංගය අගුළු හැරීම</string>
     <string name="diy_trigger_charger_connected">චාජර් සම්බන්ධ කර ඇත</string>
     <string name="diy_trigger_charger_disconnected">ආරෝපණය විසන්ධි විය</string>
-    
     <string name="diy_state_charging">අයකිරීම</string>
     <string name="diy_state_screen_on">තිරය ​​ක්‍රියාත්මකයි</string>
-
     <string name="diy_action_haptic">කම්පනය කරන්න</string>
     <string name="diy_action_notification">දැනුම්දීම පෙන්වන්න</string>
     <string name="diy_action_remove_notification">දැනුම්දීම ඉවත් කරන්න</string>
@@ -679,11 +676,9 @@
     <string name="action_delete">මකන්න</string>
     <string name="action_enable">සබල කරන්න</string>
     <string name="action_disable">අක්රිය කරන්න</string>
-    
     <string name="automation_service_channel_name">ස්වයංක්‍රීයකරණ සේවාව</string>
     <string name="automation_service_running_title">ස්වයංක්‍රීය ක්‍රියාකාරී</string>
     <string name="automation_service_running_desc">ඔබගේ ස්වයංක්‍රීයකරණය සඳහා පද්ධති සිදුවීම් නිරීක්ෂණය කිරීම</string>
-
     <string name="diy_action_device_effects">උපාංග බලපෑම්</string>
     <string name="diy_device_effects_desc">අළු පරිමාණ, AOD මර්දනය, බිතුපත අඳුරු කිරීම සහ රාත්‍රී මාදිලිය වැනි පද්ධති මට්ටමේ බලපෑම් පාලනය කරන්න.</string>
     <string name="diy_effect_grayscale">අළු පරිමාණ</string>
@@ -695,47 +690,38 @@
     <string name="diy_device_effects_disabled">ආබාධිතයි</string>
     <string name="diy_action_sound_mode">ශබ්ද මාදිලිය</string>
     <string name="diy_sound_mode_desc">මෙම ක්‍රියාව ප්‍රේරක මත පදනම්ව ශබ්දය, කම්පනය සහ නිහඬ මාතයන් අතර මාරු වීමට ඉඩ සලසයි. එයට බාධා නොකරන්න ප්‍රවේශය අවශ්‍ය වේ.</string>
-
-    
+    <!-- About Section -->
     <string name="app_developer_name">සමීර විජේරත්න</string>
     <string name="app_description">ඔබගේ Pixel සහ Androids සඳහා සියල්ල තුළ-එක් මෙවලම් පෙට්ටිය</string>
-
-    
+    <!-- Edge Lighting -->
     <string name="color_mode_system">පද්ධතිය</string>
     <string name="color_mode_custom">අභිරුචි</string>
     <string name="color_mode_app_specific">යෙදුම විශේෂිත</string>
-
-    
+    <!-- Biometric & Security -->
     <string name="error_auth_failed">සත්‍යාපනය අසාර්ථක විය</string>
     <string name="shortcut_creation_hint_toast">කෙටිමඟක් එක් කිරීමට ජාලකයේ යෙදුමක් දිගු ඔබන්න</string>
     <string name="error_app_uninstalled">යෙදුම හමු නොවීය හෝ අස්ථාපනය කර ඇත</string>
-
-    
+    <!-- Notifications -->
     <string name="update_channel_name">යෙදුම් යාවත්කාලීන</string>
     <string name="update_channel_desc">නව යෙදුම් යාවත්කාලීන සඳහා දැනුම්දීම්</string>
     <string name="notification_update_available">යාවත්කාලීන ලබා ගත හැක</string>
     <string name="battery_notification_no_devices">උපාංග සම්බන්ධ නැත</string>
-
     <string name="label_unknown">නොදන්නා</string>
     <string name="network_type_5g">5G</string>
     <string name="network_type_4g">4G</string>
     <string name="network_type_3g">3G</string>
     <string name="label_shizuku_ritaka">ෂිසුකු (රික්කා)</string>
     <string name="label_shizuku_tuozi">Shizuku (TuoZi)</string>
-
     <string name="label_search_content_description">සොයන්න</string>
     <string name="perm_device_admin_explanation">අගුළු තිරය මත අනවසර ජාල වෙනස් කිරීමට උත්සාහ කරන විට උපාංගය තදින් අගුලු දැමීම අවශ්‍ය වේ.</string>
     <string name="biometric_subtitle_access_settings">ප්‍රවේශ සැකසීම් සඳහා සත්‍යාපනය කරන්න</string>
     <string name="biometric_title_settings_format">%1$s සැකසීම්</string>
-
     <string name="keyword_feature">ලක්ෂණය</string>
     <string name="keyword_settings">සැකසුම්</string>
     <string name="keyword_hide">සඟවන්න</string>
     <string name="keyword_show">පෙන්වන්න</string>
     <string name="keyword_visibility">දෘශ්යතාව</string>
-
     <string name="error_loading_apps">යෙදුම් පූරණය කිරීමේ දෝෂයකි: %1$s</string>
-
     <string-array name="keywords_haptic">
         <item>කම්පනය</item>
         <item>ස්පර්ශ කරන්න</item>
@@ -812,11 +798,9 @@
         <item>ඉන්න</item>
         <item>කාලය හමාරයි</item>
     </string-array>
-
     <string name="label_keyboard_always_dark">සෑම විටම අඳුරු තේමාව</string>
     <string name="label_keyboard_pitch_black">තාර කළු තේමාව</string>
     <string name="label_keyboard_clipboard_enabled">ක්ලිප්බෝඩ් ඉතිහාසය</string>
-
     <string-array name="keywords_selection">
         <item>ලැයිස්තුව</item>
         <item>පිකර්</item>
@@ -896,33 +880,27 @@
         <item>ප්රශස්තකරණය</item>
         <item>පික්සල</item>
     </string-array>
-
-    
+    <!-- App Selection Extra -->
     <string name="action_invert_selection">තේරීම ප්‍රතිලෝම කරන්න</string>
     <string name="toggle_show_system_apps">පද්ධති යෙදුම් පෙන්වන්න</string>
-
-    
+    <!-- Updates -->
     <string name="status_up_to_date">ඔබ යාවත්කාලීනයි</string>
     <string name="warning_pre_release">මෙය පූර්ව නිකුතුවක් වන අතර අස්ථායී විය හැක.</string>
     <string name="release_notes_format">නිකුත් කිරීමේ සටහන් %1$s</string>
     <string name="action_view_on_github">GitHub මත බලන්න</string>
     <string name="action_download_apk">APK බාගන්න</string>
-
-    
+    <!-- Haptic Types -->
     <string name="haptic_none">කිසිවක් නැත</string>
     <string name="haptic_subtle">සියුම්</string>
     <string name="haptic_double">ද්විත්ව</string>
     <string name="haptic_click">ක්ලික් කරන්න</string>
     <string name="haptic_tick">ටික් කරන්න</string>
-
-    
+    <!-- Flashlight Intensity Overlay -->
     <string name="action_turn_off">නිවා දමන්න</string>
     <string name="feature_flashlight_brightness_title">ෆ්ලෑෂ් ලයිට් දීප්තිය</string>
-
-    
+    <!-- QS / Activities -->
     <string name="error_unlock_network_settings">ජාල සැකසුම් වෙනස් කිරීමට දුරකථනය අගුළු හරින්න</string>
-
-    
+    <!-- About Section -->
     <string name="developed_by_format"> %1$s\n සමගින් ❤\uFE0F  වෙතින් සංවර්ධිත \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="action_website">වෙබ් අඩවිය</string>
     <string name="action_contact">අමතන්න</string>
@@ -934,8 +912,7 @@
     <string name="app_canvas">කැන්වසය</string>
     <string name="app_tasks">කාර්යයන්</string>
     <string name="app_zero">ශුන්ය</string>
-
-    
+    <!-- Help & Guides -->
     <string name="help_guides_title">උදව් සහ මාර්ගෝපදේශ</string>
     <string name="need_more_support_reach_out">තවත් සහාය අවශ්‍යද? ළඟා වන්න,</string>
     <string name="action_collapse">හකුළන්න</string>
@@ -945,44 +922,32 @@
     <string name="send_email_chooser_title">ඊමේල් යවන්න</string>
     <string name="error_no_email_app">ඊමේල් යෙදුමක් නොමැත</string>
     <string name="instruction_step_image_description">පියවර %1$d රූපය</string>
-
-    
+    <!-- Instructions Content -->
     <string name="instruction_section_perms_title">ප්‍රවේශ්‍යතාව, දැනුම්දීම් සහ උඩැතිරි අවසර</string>
     <string name="instruction_step_perms_1">ඔබ ප්‍රවේශ්‍යතාව, දැනුම්දීම් සවන්දීම හෝ උඩැතිරි අවසරය වැනි සංවේදී අවසර ලබා දීමට උත්සාහ කරන්නේ නම් ඔබට මෙම ප්‍රවේශය ප්‍රතික්ෂේප කළ පණිවිඩය ලැබිය හැක. එය ලබා දීමට, පහත පියවර පරීක්ෂා කරන්න.</string>
     <string name="instruction_step_perms_2">1. Essentials හි යෙදුම් තොරතුරු පිටුවට යන්න.</string>
     <string name="instruction_step_perms_3">2. තිත් 3 මෙනුව විවෘත කර  \'සීමා කළ සැකසුම් වලට ඉඩ දෙන්න\' තෝරන්න. ඔබට ජෛවමිතික සමඟ සත්‍යාපනය කිරීමට සිදු විය හැක. අවසන් වූ පසු, නැවත අවසරය ලබා දීමට උත්සාහ කරන්න.</string>
-
     <string name="instruction_section_shizuku_title">ෂිසුකු</string>
     <string name="instruction_section_shizuku_desc">Shizuku යනු ADB හෝ root අවසරයන් සමඟ සෘජුවම පද්ධති API භාවිතා කිරීමට යෙදුම් වලට ඉඩ සලසන බලවත් මෙවලමකි. එය Maps min mode, App Freezer වැනි විශේෂාංග සඳහා අවශ්‍ය වේ. WRITE_SECURE_SETTINGS වැනි සමහර අවසර ලබා දීමට විල්ලා සහාය වේ. \n\nනමුත් Shizuku හි Play Store අනුවාදය යල් පැන ගිය ඒවා විය හැකි අතර බොහෝ විට මෑත ඇන්ඩ්‍රොයිඩ් අනුවාදවල භාවිත කළ නොහැකි වනු ඇත, එම අවස්ථාවේ දී, කරුණාකර github වෙතින් නවතම අනුවාදය හෝ එහි යාවත්කාලීන ගෑරුප්පුවක් ලබා ගන්න.</string>
-
     <string name="instruction_section_maps_title">සිතියම් බලශක්ති ඉතිරිකිරීමේ මාදිලිය</string>
     <string name="instruction_section_maps_desc">මෙම විශේෂාංගය දැනට Pixel 10 ශ්‍රේණියට පමණක් සීමා වූ Google Maps බල ඉතිරි කිරීමේ මාදිලිය ස්වයංක්‍රීයව ක්‍රියාරම්භ කරයි. ප්‍රජා සාමාජිකයෙකු එය තවමත් ඕනෑම ඇන්ඩ්‍රොයිඩ් උපාංගයක භාවිත කළ හැකි බව සොයා ගත්තේ root වරප්‍රසාද සහිත සිතියම් minMode ක්‍රියාකාරකම් දියත් කිරීමෙනි. \n\nපසුව, සංචාලන සැසියක් අතරතුර තිරය ක්‍රියා විරහිත වූ විට ස්වයංක්‍රීයව ක්‍රියා විරහිත කිරීමට මම එය Tasker සමඟ ස්වයංක්‍රීය කර ඇති අතර පසුව ධාවන කාල Shizuku අවසරයන් සමඟ එයම සාක්ෂාත් කර ගැනීමට හැකි විය. \n\nඑය Pixel 10 ශ්‍රේණියේ AOD හරහා පෙන්වීමට අදහස් කර ඇති නිසා, එය භූ දර්ශන ප්‍රකාරයට සහය නොදක්වන බවට සංදර්ශකයේ ඉඳහිට පණිවිඩයක් දිස්වනු ඔබට දැකගත හැකිය. එය යෙදුම මගින් වළක්වා ගත නොහැකි අතර ඔබට නොසලකා හැරිය හැක.</string>
-
     <string name="instruction_section_silent_title">නිහඬ ශබ්ද මාදිලිය</string>
     <string name="instruction_section_silent_desc">නිහඬ මාදිලිය DND ද අවුලුවන බව ඔබ දැක ඇති. \n\nමෙයට හේතුව ඇන්ඩ්‍රොයිඩ් එය ක්‍රියාත්මක කළ ආකාරය නිසා අපි කම්පන ප්‍රකාරයට මාරු වීමට එකම API භාවිතා කළත්, එය කිසියම් හේතුවක් නිසා නිහඬ මාදිලිය සමඟ DND ක්‍රියාත්මක වන අතර මෙය මේ මොහොතේ වළක්වා ගත නොහැක. :(</string>
-
     <string name="instruction_section_freeze_title">කැටි කිරීම යනු කුමක්ද?</string>
     <string name="instruction_section_freeze_desc">පසුබිමේ ධාවනය වන යෙදුම් වලක්වන බලය ස්වල්පයක් ඉතිරි කර ගනිමින් යෙදුම් බාධා කිරීම් වලින් විරාමයක් තබා ඈත් වන්න. කලාතුරකින් භාවිතා කරන යෙදුම් සඳහා සුදුසු වේ. \n\nඔබ ඒවා නිශ්චල කරන්නේ නම් මිස හදිසි අවස්ථාවකදී ඔවුන් ඔබට දැනුම් නොදෙන බැවින් කිසිදු සන්නිවේදන සේවාවක් සඳහා නිර්දේශ නොකරයි. \n\nපද්ධති යෙදුම් පද්ධති අස්ථාවරත්වයට හේතු විය හැකි බැවින් ඒවා කැටි නොකිරීමට බෙහෙවින් උපදෙස් දෙනු ලැබේ. ප්‍රවේශමෙන් ඉදිරියට යන්න, ඔබට අවවාද කරන ලදී. \n\nHail &lt;3 විසින් දේවානුභාවයෙන්</string>
-
     <string name="instruction_section_security_title">යෙදුම් අගුල සහ තිරය අගුළු දැමූ ආරක්ෂාව ඇත්ත වශයෙන්ම ආරක්ෂිතද?</string>
     <string name="instruction_section_security_desc">කොහෙත්ම නැහැ. \n\nඕනෑම තුන්වන පාර්ශ්ව යෙදුමකට 100%ක් සාමාන්‍ය උපාංග අන්තර්ක්‍රියාවලට බාධා කළ නොහැකි අතර යෙදුම් අගුල පවා තෝරාගත් යෙදුම් සමඟ අන්තර් ක්‍රියා කිරීම වැළැක්වීමට ඉහළින් ඇති ආවරණයක් පමණි. විසඳුම් ඇති අතර එය විකාරයක් නොවේ. \n\nකිසියම් හේතුවක් නිසා තවමත් Pixels මත ඕනෑම කෙනෙකුට ප්‍රවේශ විය හැකි ජාල ටයිල් සමඟ අන්තර්ක්‍රියා කිරීමට උත්සාහ කරන කෙනෙකු හඳුනා ගන්නා තිර අගුළු දැමූ ආරක්ෂක විශේෂාංගය සමඟද එය එසේම වේ. එබැවින් ඔවුන් ප්‍රමාණවත් තරම් උත්සාහ කළහොත් ඔවුන්ට තවමත් ඒවා වෙනස් කිරීමට හැකි විය හැකි අතර විශේෂයෙන් ඔබ පියාසර මාදිලියේ QS ටයිල් එකක් එකතු කර ඇත්නම්, මෙම යෙදුමට එය සමඟ අන්තර්ක්‍රියා වැළැක්විය නොහැක. \n\nමෙම විශේෂාංග සැහැල්ලු භාවිතය සඳහා අත්හදා බැලීම් ලෙස සිදු කර ඇති අතර ශක්තිමත් ආරක්‍ෂාව සහ රහස්‍යතා විසඳුම් ලෙස කිසිදා නිර්දේශ නොකරනු ඇත. \n\nආරක්ෂිත විකල්ප:\n - යෙදුම් අගුල: Pixels සහ Samsung මත පුද්ගලික අවකාශය සහ ආරක්ෂිත ෆෝල්ඩරය\n - ජංගම ජාල ප්‍රවේශය වැලැක්වීම: ඔබගේ සොරකම් ආරක්ෂාව සහ නොබැඳි/බලය ක්‍රියාවිරහිත කිරීම සොයන්න මගේ උපාංග සැකසීම් ක්‍රියාත්මක බව සහතික කර ගන්න. ඔබට Graphene OS ගැනද සොයා බැලිය හැක.</string>
-
     <string name="instruction_section_statusbar_title">තත්ව තීරු අයිකන</string>
     <string name="instruction_section_statusbar_desc">තත්ව තීරු අයිකන නැවත සැකසීමෙන් පසුව පවා, උපාංග භ්‍රමණය, රැහැන්ගත හෙඩ්ෆෝන් අයිකන වැනි සමහර අයිකන දෘශ්‍යමානව පැවතිය හැකි බව ඔබට පෙනෙනු ඇත. මෙයට හේතුව ඇන්ඩ්‍රොයිඩ් හි statubar අසාදු ලේඛනය ක්‍රියාත්මක වන ආකාරය සහ ඔබේ OEM ඒවා අභිරුචිකරණය කර ඇති ආකාරයයි. \nඔබට තවදුරටත් ගැලපීම් අවශ්‍ය විය හැකිය. \n\nOEM ක්‍රියාත්මක කිරීම් සහ ලබා ගත හැකි බව මත රඳා පවතින බැවින් සියලුම අයිකන දෘශ්‍යතා විකල්ප ක්‍රියා නොකරයි.</string>
-
     <string name="instruction_section_lighting_title">දැනුම්දීම් ආලෝකය ක්රියා නොකරයි</string>
     <string name="instruction_section_lighting_desc">එය OEM මත රඳා පවතී. OneUI වැනි සමහරක් AOD ට ඉහලින් ඇතිරිලි වලට ඉඩ නොදෙන බව පෙනේ. මෙම අවස්ථාවේදී, විසඳුමක් ලෙස සංසරණ සංදර්ශකය උත්සාහ කරන්න.</string>
-
     <string name="instruction_section_button_title">සංදර්ශකය ක්‍රියාවිරහිතව තිබියදී බොත්තම් නැවත සකස් කිරීම ක්‍රියා නොකරයි</string>
     <string name="instruction_section_button_desc">සංදර්ශකය ක්‍රියා විරහිත වූ පසු සමහර OEMs ප්‍රවේශ්‍යතා සේවා වාර්තා කිරීම සීමා කරන නමුත් AOD ක්‍රියාත්මකව තිබියදී ඒවා ක්‍රියා කළ හැක. \nමෙම අවස්ථාවේදී, ඔබට AOD සක්‍රියව ඇති නමුත් අක්‍රියව සමඟ බොත්තම් නැවත සකස් කිරීම් භාවිතා කළ හැක. \n\nවිසඳුමක් ලෙස, ඔබට Shizuku අවසර භාවිතා කර එය ක්‍රියාත්මක කිරීමට අවශ්‍ය වනු ඇත \'Shizuku හෝ Root භාවිතා කරන්න\' දෘඪාංග ආදාන සිදුවීම් හඳුනාගෙන ඒවාට සවන් දෙන බොත්තම් නැවත සකස් කිරීමේ සැකසුම් තුළ ටොගල් කරන්න.\nමෙය සියලුම උපාංගවල ක්‍රියා කරන බවට සහතික නොවන අතර පරීක්ෂණ අවශ්‍ය වේ.\n\nසහ එය වුවද\'s on, Shizuku ක්‍රමය එය භාවිතා කරන විට පමණක් භාවිතා වේ\'s අවශ්ය වේ. එසේ නොමැතිනම් එය සැමවිටම ප්‍රවේශ්‍යතාව වෙත ආපසු හැරෙනු ඇති අතර එය දිගු එබීමේදී සත්‍ය ආදානය අවහිර කිරීම හසුරුවයි.</string>
-
     <string name="instruction_section_flashlight_title">ෆ්ලෑෂ් ලයිට් දීප්තිය ක්රියා නොකරයි</string>
     <string name="instruction_section_flashlight_desc">ෆ්ලෑෂ් ලයිට් තීව්‍රතාවය සීරුමාරු කිරීමට දෘඪාංග සහ මෘදුකාංග සහාය ලැබුණේ සීමිත උපාංග ගණනකට පමණි. \n\n\'Android හි අවම අනුවාදය 13 (SDK33) වේ.\nෆ්ලෑෂ් ලයිට් දීප්තිය පාලනය සහාය දක්වන්නේ HAL අනුවාදය 3.8 සහ ඉහළ අනුවාදයට පමණි, එබැවින් සහය දක්වන උපාංග අතර නවතම ඒවා (උදාහරණයක් ලෙස, Pixel 6/7, Samsung S23, ආදිය)\'\npolodarb/Flashlight-Tiramisu</string>
-
     <string name="instruction_section_about_title">මොකක්ද මේ ඇප් එක?</string>
     <string name="instruction_section_about_desc">හොඳ ප්‍රශ්නයක්,\n\nමට හැම විටම මා ලෙස මගේ උපාංගවලින් උපරිමය ලබා ගැනීමට අවශ්‍ය විය\'මම මගේ පළමු Project Treble උපාංගය ලබා ගත් දා සිට මම මුල් බැසගත් පරිශීලකයෙක්. සහ මම\'මම ස්වයංක්‍රීයකරණය පැමිණෙන විට දෙවියන් හා සමාන වන Tasker යෙදුමට ආදරය කර ඇති අතර හැකි සෑම API සහ Android හි අභ්‍යන්තර විශේෂාංග භාවිතා කරයි.\n\nඑබැවින් මම මුල් බැස නොගත් අතර නැවත කොටස් ඇන්ඩ්‍රොයිඩ් බීටා අත්දැකීම ලබාගෙන ඇති අතර ලබා දී ඇති වරප්‍රසාද සමඟ කළ හැකි දේවලින් උපරිම ප්‍රයෝජන ගැනීමට අවශ්‍ය විය. ඒවා බෙදාගන්නත් පුළුවන්. එබැවින් Kotlin Jetpack හි මගේ ආරම්භක දැනුමෙන් සහ බොහෝ පර්යේෂණ සහ සහායක මෙවලම්වල සහ විශිෂ්ට ප්‍රජාවේ සහය ඇතිව, ලබා දී ඇති අවසරයන් සමඟ මම මගේ Android හි සිටීමට අවශ්‍ය සියල්ල අඩංගු සියලුම-එක් යෙදුමක් ගොඩනඟා ගත්තෙමි. මෙන්න එයයි.\n\nවිශේෂාංග ඉල්ලීම් සාදරයෙන් පිළිගනිමු, පවතින අවසරයන් සහ මගේ කුසලතා සමඟ ඒවා සාක්ෂාත් කරගත හැකිදැයි මම සලකා බලමි. වර්තමානයේ කළ නොහැකි දේ. :)\n\nPlay Store හි නැත්තේ ඇයි?\nමම නැහැ\'යෙදුමේ භාවිතා වන ඉතා සංවේදී සහ අභ්‍යන්තර අවසර සහ API නිසා මගේ සංවර්ධක ගිණුම තහනම් කිරීමේ අවදානමක් ගැනීමට මට අවශ්‍ය වේ. නමුත් ඇන්ඩ්‍රොයිඩ් පැත්ත පැටවීම යන ආකාරය සමඟ, ඉඩ දෙන්න\'අපි කළ යුතු දේ බලන්න. පැති පැටවූ යෙදුම් ද්වේශ සහගත බව මට වැටහෙනවා.\nඅපි මාතෘකාවේ සිටින අතරතුර, ඔබ mac + Android පරිශීලකයෙක් නම් මගේ අනෙක් යෙදුම AirSync පරීක්ෂා කරන්න. *ලැජ්ජ නැති ප්ලග්*\n\nභුක්ති විඳින්න, ගොඩනඟන්න! (っ◕‿◕)っ</string>
-    
-    
+    <!-- Bug Reporting -->
     <string name="toast_bug_report_copied">දෝෂ වාර්තාව පසුරු පුවරුවට පිටපත් කරන ලදී</string>
     <string name="bug_report_title">දෝෂ වාර්තාව</string>
     <string name="bug_report_option_share_logs">ලඝු-සටහන් බෙදා ගන්න</string>
@@ -994,8 +959,7 @@
     <string name="action_copy_clipboard">පසුරු පුවරුවට පිටපත් කරන්න</string>
     <string name="bug_report_email_subject">අත්‍යවශ්‍ය දෝෂ වාර්තාව</string>
     <string name="bug_report_send_via">හරහා යවන්න</string>
-
-    
+    <!-- Location Reached -->
     <string name="feat_location_reached_title">අපි තාම එතනද?</string>
     <string name="feat_location_reached_desc">ගමනාන්තය අවට ඇඟවීම්</string>
     <string name="location_reached_how_to">Google සිතියම් විවෘත කරන්න, ස්ථානයක් තෝරා, එය Essentials වෙත බෙදා ගන්න.</string>
@@ -1031,25 +995,24 @@
     <string name="setting_use_root_title">Root භාවිතා කරන්න</string>
     <string name="setting_use_root_desc">ෂිසුකු වෙනුවට</string>
     <string name="root_not_available_toast">මූල ප්‍රවේශය නොමැත. කරුණාකර ඔබේ මූල කළමනාකරු පරීක්ෂා කරන්න.</string>
-    
+    <!-- System Keyboard -->
     <string name="feat_system_keyboard_title">යතුරු පුවරුව</string>
     <string name="feat_system_keys">යතුරු</string>
     <string name="feat_system_keyboard_desc">පිරිසැලසුම සහ හැසිරීම අභිරුචිකරණය කරන්න</string>
     <string name="search_keyboard_height_title">යතුරු පුවරුව උස</string>
-    <string name="search_keyboard_height_desc">යතුරුපුවරුවේ සම්පූර්ණ සිරස් ප්‍රමාණය සකසන්න</string>&gt;
+    <string name="search_keyboard_height_desc">යතුරුපුවරුවේ සම්පූර්ණ සිරස් ප්‍රමාණය සකසන්න</string>
     <string name="search_keyboard_padding_title">පහළ පිරවුම</string>
     <string name="search_keyboard_padding_desc">යතුරු පුවරුවට පහළින් ඉඩ එක් කරන්න</string>
     <string name="search_keyboard_haptics_title">හප්ටික් ප්‍රතිපෝෂණ</string>
     <string name="search_keyboard_haptics_desc">යතුරු එබීමේදී කම්පනය කරන්න</string>
     <string name="test_keyboard_hint">යතුරු පුවරුව පරීක්ෂා කරන්න</string>
-    <string name="label_keyboard_height">යතුරු පුවරුව උස</string>&gt;
+    <string name="label_keyboard_height">යතුරු පුවරුව උස</string>
     <string name="label_keyboard_bottom_padding">පහළ පිරවුම</string>
     <string name="label_keyboard_haptics">හප්ටික් ප්‍රතිපෝෂණ</string>
     <string name="label_keyboard_roundness">ප්රධාන රවුම් බව</string>
     <string name="label_keyboard_functions_bottom">කාර්යයන් පහළට ගෙන යන්න</string>
     <string name="label_keyboard_functions_padding">ක්‍රියාකාරී පැති පෑඩිං</string>
     <string name="label_keyboard_haptic_strength">හප්ටික් ප්‍රතිපෝෂණ ශක්තිය</string>
-
     <string name="label_keyboard_shape">යතුරුපුවරු හැඩය</string>
     <string name="shape_round">රවුම්</string>
     <string name="shape_flat">පැතලි</string>
@@ -1061,16 +1024,15 @@
     <string name="connect_to_airsync_summary">AirSync හි ඔබගේ සම්බන්ධිත මැක් උපාංගයෙන් බැටරිය පෙන්වන්න</string>
     <string name="download_airsync">AirSync යෙදුම බාගන්න</string>
     <string name="download_airsync_summary">Mac බැටරි සමමුහුර්ත කිරීම සඳහා අවශ්‍ය වේ</string>
-
     <string name="feat_battery_notification_title">බැටරි දැනුම්දීම</string>
     <string name="feat_battery_notification_desc">ස්ථාවර බැටරි තත්ත්‍ව දැනුම්දීම</string>
+    <string name="battery_notification_hint">This notification displays battery levels for your connected Mac and Bluetooth devices. You can configure which devices to show in the Battery Widget settings.</string>
     <string name="about_desc_battery_notification">ඔබගේ දැනුම්දීම් සෙවනෙහි බැටරි විජට් අත්දැකීම අනුකරණය කරන්න. එය ඔබගේ සියලු සම්බන්ධිත උපාංගවල බැටරි මට්ටම් තථ්‍ය කාලීනව යාවත්කාලීන කරන ලද තනි ස්ථිර දැනුම්දීමකින් පෙන්වනු ඇත. මෙයට ඔබගේ Mac (AirSync හරහා) සහ Bluetooth උපාංග ඇතුළත් වේ.</string>
     <string name="battery_notification_channel_name">බැටරි තත්ත්වය දැනුම්දීම</string>
     <string name="battery_notification_channel_desc">සම්බන්ධිත උපාංග බැටරි මට්ටම් පෙන්වන නිරන්තර දැනුම්දීම</string>
     <string name="perm_nearby_devices_title">ආසන්න උපාංග</string>
     <string name="perm_nearby_devices_desc">බ්ලූටූත් උපාංගවලින් බැටරි තොරතුරු අනාවරණය කර ගැනීමට අවශ්‍ය වේ</string>
-
-    
+    <!-- GitHub Auth -->
     <string name="auth_copy_code">කේතය පිටපත් කරන්න</string>
     <string name="auth_open_login_page">පිවිසුම් පිටුව විවෘත කරන්න</string>
     <string name="auth_sign_in_rationale">API ඇමතුම් සීමාවන් දීර්ඝ කිරීමට පුරන්න</string>
@@ -1078,73 +1040,58 @@
     <string name="action_sign_in_github">GitHub සමඟින් පුරනය වන්න</string>
     <string name="action_sign_out">වරන්න</string>
     <string name="action_profile">පැතිකඩ</string>
-
-    
+    <!-- App Updates / Repos -->
     <string name="label_release_notes">නිකුත් කිරීමේ සටහන්</string>
     <string name="msg_no_repos_tracked">තවමත් කිසිදු ගබඩාවක් හඹා ගොස් නැත</string>
     <string name="label_no_app_linked">කිසිදු යෙදුමක් සම්බන්ධ කර නැත</string>
     <string name="format_updated_relative">යාවත්කාලීන කරන ලදී %1$s</string>
-
-    
+    <!-- Relative Time -->
     <string name="time_just_now">මේ දැන්</string>
     <string name="time_min_ago">%1$dමීට පෙර</string>
     <string name="time_hour_ago">%1$dh පෙර</string>
     <string name="time_day_ago">%1$dd පෙර</string>
     <string name="time_month_ago">%1$dමීට පෙර</string>
     <string name="time_year_ago">%1$dy පෙර</string>
-
     <string name="action_retry">නැවත උත්සාහ කරන්න</string>
     <string name="action_start_sign_in">පුරනය වීම ආරම්භ කරන්න</string>
     <string name="auth_requesting_code">උපාංග කේතය ඉල්ලමින්...</string>
     <string name="auth_copy_code_instruction">1. ඔබේ කේතය පිටපත් කරන්න:</string>
     <string name="auth_paste_code_instruction">2. GitHub මත කේතය අලවන්න:</string>
-
     <string name="label_found_apks">APKs හමු විය</string>
     <string name="label_readme">කියවන්න</string>
     <string name="action_refresh">නැවුම් කරන්න</string>
-
-    
+    <!-- Added Missing Group Strings -->
     <string name="feat_sound_modes_title">ශබ්ද මාදිලි ටයිල්</string>
     <string name="feat_sound_modes_desc">ශබ්ද මාදිලිය ටොගල් කිරීමට QS ටයිල්</string>
     <string name="search_sound_mode_show_slider_title">ස්ලයිඩරය පෙන්වන්න</string>
     <string name="search_sound_mode_show_slider_desc">ටයිල් එකේ වෙළුම් ස්ලයිඩරය පෙන්වන්න</string>
     <string name="search_sound_mode_behavior_title">චක්‍ර හැසිරීම</string>
     <string name="search_sound_mode_behavior_desc">චක්‍රීය කිරීමට මාතයන් තෝරන්න</string>
-    
     <string name="feat_ambient_music_title">අවට සංගීත බැල්ම</string>
     <string name="feat_ambient_music_desc">AOD හි මාධ්‍ය දෙස බලන්න</string>
-    
     <string name="feat_sound_haptics_title">ශබ්දය සහ හප්ටික්ස්</string>
     <string name="feat_sound_haptics_desc">පරිමාව සහ හප්ටික් ලක්ෂණ</string>
-    
     <string name="feat_security_privacy_title">ආරක්ෂාව සහ පෞද්ගලිකත්වය</string>
     <string name="feat_security_privacy_desc">ඔබගේ උපාංගය ආරක්ෂා කර සුරක්ෂිත කරන්න</string>
-    
     <string name="feat_notifications_alerts_title">දැනුම්දීම් සහ ඇඟවීම්</string>
     <string name="feat_notifications_alerts_desc">ඔබේ ප්‍රමුඛතා කිසිවිටෙක අතපසු නොකරන්න</string>
-    
     <string name="feat_input_actions_title">ආදාන සහ ක්රියා</string>
     <string name="feat_input_actions_desc">ඔබගේ උපාංගය පහසුවෙන් පාලනය කරන්න</string>
-    
     <string name="feat_widgets_title">විජට්</string>
     <string name="feat_widgets_desc">ඔබගේ මුල් තිරය මත බැලූ බැල්මට</string>
-    
     <string name="feat_display_visuals_title">ප්රදර්ශනය කරන්න</string>
     <string name="feat_display_visuals_desc">ඔබේ අත්දැකීම් වැඩි දියුණු කිරීමට දර්ශන</string>
-    
     <string name="feat_watch_title">නරඹන්න</string>
     <string name="feat_watch_desc">WearOS සමඟ ඒකාබද්ධ කිරීම්</string>
     <string name="watch_no_companion_title">ඔරලෝසුවක් අනාවරණය නොවීය</string>
     <string name="watch_no_companion_desc">ඔබේ ඔරලෝසුවේ Essentials Wear companion යෙදුම ස්ථාපනය කර නොමැති බව පෙනේ.</string>
     <string name="watch_install_companion_action">Companion ස්ථාපනය කරන්න</string>
-
-
     <string name="cat_interaction">අන්තර්ක්රියා</string>
     <string name="cat_interface">අතුරු මුහුණත</string>
     <string name="cat_display">ප්රදර්ශනය කරන්න</string>
     <string name="cat_protection">ආරක්ෂාව</string>
     <string name="label_kbd_abc">ABC</string>
-    <string name="label_kbd_symbols">?#/</string>
+    <string name="label_kbd_symbols">\?#/</string>
     <string name="msg_restrict_own_app_repo">ඔයි! ඔබට යෙදුම් සැකසීම් තුළ යාවත්කාලීන පරීක්ෂා කළ හැක, XD මෙහි එක් කිරීමට අවශ්‍ය නැත</string>
     <string name="action_export">අපනයනය කරන්න</string>
     <string name="action_import">ආනයනය කරන්න</string>
@@ -1179,4 +1126,9 @@
     <string name="label_use_blur">බොඳ කිරීම භාවිතා කරන්න</string>
     <string name="desc_use_blur">UI හරහා ප්‍රගතිශීලී බොඳ මූලද්‍රව්‍ය සබල කරන්න</string>
     <string name="msg_blur_compatibility_error">Android 15 හෝ ඊට අඩු Samsung උපාංගවල දන්නා සංදර්ශක දෝෂයක් වැළැක්වීමට මෙම උපාංගයේ Blur අබල කර ඇත.</string>
+    <!-- Empty State Actions -->
+    <string name="msg_no_apps_frozen">No apps selected to freeze.</string>
+    <string name="action_get_started">Get Started</string>
+    <string name="action_new_automation">New Automation</string>
+    <string name="action_add_repository">Add Repository</string>
 </resources>
