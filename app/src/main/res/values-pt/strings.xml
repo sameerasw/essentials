@@ -133,7 +133,7 @@
     <string name="freeze_automation_hint">Congele aplicativos selecionados quando o dispositivo for bloqueado. Escolha um atraso para evitar o congelamento de aplicativos se você desbloquear a tela logo após desligá-la.</string>
     <string name="freeze_warning">O congelamento de aplicativos do sistema pode ser perigoso e causar comportamento inesperado.</string>
     <string name="action_enable_in_settings">Ativar nas configurações</string>
-    <string name="freeze_dont_freeze_active_apps_title">Não\'t congele aplicativos ativos</string>
+    <string name="freeze_dont_freeze_active_apps_title">Não congele aplicativos ativos</string>
     <string name="perm_usage_stats_title">Estatísticas de uso</string>
     <string name="perm_usage_stats_desc">Necessário para detectar quais aplicativos estão atualmente em primeiro plano para evitar congelá-los</string>
     <string name="perm_notif_listener_desc_freeze">Necessário para detectar mídia em reprodução e notificações ativas para evitar congelá-las</string>
