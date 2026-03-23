@@ -673,6 +673,8 @@
     <string name="diy_action_flashlight_on">Kapcsolja be a zseblámpát</string>
     <string name="diy_action_flashlight_off">Kapcsolja ki a zseblámpát</string>
     <string name="diy_action_flashlight_toggle">Zseblámpa váltása</string>
+    <string name="diy_action_low_power_on">Turn On Low Power Mode</string>
+    <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
     <string name="diy_action_dim_wallpaper">Dim Háttérkép</string>
     <string name="diy_dim_wallpaper_desc">Ehhez a művelethez Shizuku vagy Root szükséges a rendszer háttérképének elsötétítésének beállításához.</string>
     <string name="diy_select_trigger">Válassza a Trigger lehetőséget</string>
