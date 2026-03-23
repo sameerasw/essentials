@@ -8,8 +8,9 @@ import com.sameerasw.essentials.domain.diy.Action
 
 object CombinedActionExecutor {
 
-    suspend fun execute(context: Context, action: Action) {
-        when (action) {
+    suspend fun execute(context: Context, action: com.sameerasw.essentials.domain.diy.Action) {
+        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+            when (action) {
             is Action.HapticVibration -> {
                 val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                     val manager =
@@ -90,7 +91,7 @@ object CombinedActionExecutor {
                                     } catch (refE: Exception) {
                                         null
                                     }
-                                } ?: return
+                                } ?: return@withContext
 
                                 effectsBuilder.setShouldDisplayGrayscale(action.grayscale)
                                     .setShouldSuppressAmbientDisplay(action.suppressAmbient)
@@ -188,6 +189,7 @@ object CombinedActionExecutor {
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
+            }
             }
         }
     }

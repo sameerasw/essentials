@@ -688,6 +688,13 @@
     <string name="diy_trigger_device_unlock">Device Unlock</string>
     <string name="diy_trigger_charger_connected">Charger Connected</string>
     <string name="diy_trigger_charger_disconnected">Charger Disconnected</string>
+    <string name="diy_trigger_schedule">Schedule</string>
+    <string name="diy_state_time_period">Time Period</string>
+    <string name="diy_time_selection_title">Select Time</string>
+    <string name="diy_time_range_selection_title">Select Time Range</string>
+    <string name="diy_start_time_label">Start Time</string>
+    <string name="diy_end_time_label">End Time</string>
+    <string name="diy_repeat_days_label">Repeat on</string>
     
     <string name="diy_state_charging">Charging</string>
     <string name="diy_state_screen_on">Screen On</string>

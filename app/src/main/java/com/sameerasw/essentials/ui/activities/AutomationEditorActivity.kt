@@ -226,6 +226,7 @@ class AutomationEditorActivity : ComponentActivity() {
                 var showDimSettings by remember { mutableStateOf(false) }
                 var showDeviceEffectsSettings by remember { mutableStateOf(false) }
                 var showSoundModeSettings by remember { mutableStateOf(false) }
+                var showTimeSettings by remember { mutableStateOf(false) }
                 var configAction by remember { mutableStateOf<Action?>(null) } // Generic config action
 
                 // Validation
@@ -456,7 +457,12 @@ class AutomationEditorActivity : ComponentActivity() {
                                                         Trigger.ScreenOn,
                                                         Trigger.DeviceUnlock,
                                                         Trigger.ChargerConnected,
-                                                        Trigger.ChargerDisconnected
+                                                        Trigger.ChargerDisconnected,
+                                                        Trigger.Schedule(
+                                                            hour = (selectedTrigger as? Trigger.Schedule)?.hour ?: 0,
+                                                            minute = (selectedTrigger as? Trigger.Schedule)?.minute ?: 0,
+                                                            days = (selectedTrigger as? Trigger.Schedule)?.days ?: emptySet()
+                                                        )
                                                     )
                                                     triggers.forEach { trigger ->
                                                         EditorActionItem(
@@ -466,21 +472,36 @@ class AutomationEditorActivity : ComponentActivity() {
                                                             isConfigurable = trigger.isConfigurable,
                                                             onClick = { selectedTrigger = trigger },
                                                             onSettingsClick = {
-                                                                // Handle trigger settings if needed later
+                                                                if (trigger is Trigger.Schedule) {
+                                                                    showTimeSettings = true
+                                                                }
                                                             }
                                                         )
                                                     }
                                                 } else {
                                                     val states = listOf(
                                                         DIYState.Charging,
-                                                        DIYState.ScreenOn
+                                                        DIYState.ScreenOn,
+                                                        DIYState.TimePeriod(
+                                                            startHour = (selectedState as? DIYState.TimePeriod)?.startHour ?: 0,
+                                                            startMinute = (selectedState as? DIYState.TimePeriod)?.startMinute ?: 0,
+                                                            endHour = (selectedState as? DIYState.TimePeriod)?.endHour ?: 0,
+                                                            endMinute = (selectedState as? DIYState.TimePeriod)?.endMinute ?: 0,
+                                                            days = (selectedState as? DIYState.TimePeriod)?.days ?: emptySet()
+                                                        )
                                                     )
                                                     states.forEach { state ->
                                                         EditorActionItem(
                                                             title = stringResource(state.title),
                                                             iconRes = state.icon,
                                                             isSelected = selectedState == state,
-                                                            onClick = { selectedState = state }
+                                                            onClick = { selectedState = state },
+                                                            isConfigurable = state is DIYState.TimePeriod,
+                                                            onSettingsClick = {
+                                                                if (state is DIYState.TimePeriod) {
+                                                                    showTimeSettings = true
+                                                                }
+                                                            }
                                                         )
                                                     }
                                                 }
@@ -613,6 +634,22 @@ class AutomationEditorActivity : ComponentActivity() {
                                     }
                                 }
                             }
+                        }
+
+                        if (showTimeSettings) {
+                            com.sameerasw.essentials.ui.components.sheets.TimeSelectionSheet(
+                                initialTrigger = selectedTrigger as? Trigger.Schedule,
+                                initialState = selectedState as? DIYState.TimePeriod,
+                                onDismiss = { showTimeSettings = false },
+                                onSaveTrigger = {
+                                    selectedTrigger = it
+                                    showTimeSettings = false
+                                },
+                                onSaveState = {
+                                    selectedState = it
+                                    showTimeSettings = false
+                                }
+                            )
                         }
 
                         if (showDimSettings && configAction is Action.DimWallpaper) {

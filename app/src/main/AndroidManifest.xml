@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-feature android:name="android.hardware.camera.flashlight" android:required="false" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
 
     <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -693,6 +695,14 @@
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".services.automation.receivers.TimeAutomationReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.sameerasw.essentials.ACTION_TIME_AUTOMATION_TRIGGER" />
             </intent-filter>
         </receiver>
         
