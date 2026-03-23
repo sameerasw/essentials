@@ -815,6 +815,8 @@
     <string name="label_keyboard_always_dark">Temă mereu întunecată</string>
     <string name="label_keyboard_pitch_black">Tema pitch black</string>
     <string name="label_keyboard_clipboard_enabled">Istoricul clipboard-ului</string>
+    <string name="label_keyboard_long_press_symbols">Long press for symbols</string>
+    <string name="label_keyboard_accented_characters">Accented characters</string>
     <string-array name="keywords_selection">
         <item>listă</item>
         <item>culegător</item>
