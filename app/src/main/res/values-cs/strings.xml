@@ -815,6 +815,8 @@
     <string name="label_keyboard_always_dark">Vždy temné téma</string>
     <string name="label_keyboard_pitch_black">Černý motiv</string>
     <string name="label_keyboard_clipboard_enabled">Historie schránky</string>
+    <string name="label_keyboard_long_press_symbols">Long press for symbols</string>
+    <string name="label_keyboard_accented_characters">Accented characters</string>
     <string-array name="keywords_selection">
         <item>seznam</item>
         <item>sběrač</item>
