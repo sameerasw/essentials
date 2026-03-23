@@ -673,6 +673,8 @@
     <string name="diy_action_flashlight_on">El Fenerini Aç</string>
     <string name="diy_action_flashlight_off">El Fenerini Kapat</string>
     <string name="diy_action_flashlight_toggle">El Fenerini Aç/Kapat</string>
+    <string name="diy_action_low_power_on">Turn On Low Power Mode</string>
+    <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
     <string name="diy_action_dim_wallpaper">Loş Duvar Kağıdı</string>
     <string name="diy_dim_wallpaper_desc">Bu eylem, sistem duvar kağıdı karartmasını ayarlamak için Shizuku veya Root\'u gerektirir.</string>
     <string name="diy_select_trigger">Tetikleyiciyi Seçin</string>
