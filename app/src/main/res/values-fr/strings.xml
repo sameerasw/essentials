@@ -137,6 +137,10 @@
     <string name="perm_usage_stats_title">Statistiques d\'utilisation</string>
     <string name="perm_usage_stats_desc">Requises pour détecter quelles applis sont actuellement en avant-plan pour ne pas les geler</string>
     <string name="perm_notif_listener_desc_freeze">Requis pour détecter le média joué et les notifications actives pour ne pas les geler</string>
+    <string name="freeze_mode_title">Freeze mode</string>
+    <string name="freeze_mode_freeze">Freezing</string>
+    <string name="freeze_mode_suspend">App suspension</string>
+    <string name="freeze_mode_warning_desc">Can not switch mode while apps are frozen. Please unfreeze all and try again.</string>
     <!-- Notification Lighting -->
     <string name="notification_lighting_screen_off_title">Afficher seulement quand l\'écran est éteint</string>
     <string name="notification_lighting_skip_silent_title">Ignorer les notifications silencieuses</string>
