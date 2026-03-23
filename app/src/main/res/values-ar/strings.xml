@@ -815,6 +815,8 @@
     <string name="label_keyboard_always_dark">دائما موضوع مظلم</string>
     <string name="label_keyboard_pitch_black">موضوع الملعب الأسود</string>
     <string name="label_keyboard_clipboard_enabled">تاريخ الحافظة</string>
+    <string name="label_keyboard_long_press_symbols">Long press for symbols</string>
+    <string name="label_keyboard_accented_characters">Accented characters</string>
     <string-array name="keywords_selection">
         <item>قائمة</item>
         <item>منقار</item>
