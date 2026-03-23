@@ -673,6 +673,8 @@
     <string name="diy_action_flashlight_on">손전등 켜기</string>
     <string name="diy_action_flashlight_off">손전등 끄기</string>
     <string name="diy_action_flashlight_toggle">손전등 전환</string>
+    <string name="diy_action_low_power_on">Turn On Low Power Mode</string>
+    <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
     <string name="diy_action_dim_wallpaper">희미한 벽지</string>
     <string name="diy_dim_wallpaper_desc">이 작업을 수행하려면 시스템 배경화면 밝기 조절을 조정하기 위해 Shizuku 또는 Root가 필요합니다.</string>
     <string name="diy_select_trigger">트리거 선택</string>
