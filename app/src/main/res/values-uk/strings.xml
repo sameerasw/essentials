@@ -673,6 +673,8 @@
     <string name="diy_action_flashlight_on">Увімкніть ліхтарик</string>
     <string name="diy_action_flashlight_off">Вимкніть ліхтарик</string>
     <string name="diy_action_flashlight_toggle">Перемкнути ліхтарик</string>
+    <string name="diy_action_low_power_on">Turn On Low Power Mode</string>
+    <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
     <string name="diy_action_dim_wallpaper">Тьмяні шпалери</string>
     <string name="diy_dim_wallpaper_desc">Для виконання цієї дії потрібен Shizuku або Root, щоб відрегулювати затемнення шпалер системи.</string>
     <string name="diy_select_trigger">Виберіть Тригер</string>
