@@ -673,6 +673,8 @@
     <string name="diy_action_flashlight_on">Укључите лампу</string>
     <string name="diy_action_flashlight_off">Искључите лампу</string>
     <string name="diy_action_flashlight_toggle">Укључи батеријску лампу</string>
+    <string name="diy_action_low_power_on">Turn On Low Power Mode</string>
+    <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
     <string name="diy_action_dim_wallpaper">Дим Валлпапер</string>
     <string name="diy_dim_wallpaper_desc">Ова радња захтева Шизуку или Роот да подесе затамњење системске позадине.</string>
     <string name="diy_select_trigger">Изаберите Триггер</string>
