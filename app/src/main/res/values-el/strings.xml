@@ -137,6 +137,10 @@
     <string name="perm_usage_stats_title">Στατιστικά χρήσης</string>
     <string name="perm_usage_stats_desc">Απαιτείται για τον εντοπισμό των εφαρμογών που βρίσκονται αυτήν τη στιγμή στο προσκήνιο για την αποφυγή παγώματος</string>
     <string name="perm_notif_listener_desc_freeze">Απαιτείται για την ανίχνευση πολυμέσων αναπαραγωγής και ενεργών ειδοποιήσεων για την αποφυγή παγώματος</string>
+    <string name="freeze_mode_title">Freeze mode</string>
+    <string name="freeze_mode_freeze">Freezing</string>
+    <string name="freeze_mode_suspend">App suspension</string>
+    <string name="freeze_mode_warning_desc">Can not switch mode while apps are frozen. Please unfreeze all and try again.</string>
     <!-- Notification Lighting -->
     <string name="notification_lighting_screen_off_title">Εμφανίζεται μόνο όταν η οθόνη είναι απενεργοποιημένη</string>
     <string name="notification_lighting_skip_silent_title">Παράλειψη σιωπηλών ειδοποιήσεων</string>
