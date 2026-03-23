@@ -94,8 +94,8 @@
     <string name="caffeinate_abort_screen_off_title">Прервать, если экран выключен</string>
     <string name="caffeinate_skip_countdown_title">Пропустить обратный отсчет</string>
     <string name="caffeinate_skip_countdown_desc">Запустить Caffeinate прямо сейчас.</string>
-    <string name="caffeinate_timeout_presets_title">Предустановки тайм-аута</string>
-    <string name="caffeinate_timeout_presets_desc">Выберите доступную продолжительность для плитки QS</string>
+    <string name="caffeinate_timeout_presets_title">Пресеты ожидания</string>
+    <string name="caffeinate_timeout_presets_desc">Выберите доступные интервалы для плитки быстрого доступа</string>
     <string name="caffeinate_timeout_5m">5м</string>
     <string name="caffeinate_timeout_10m">10м</string>
     <string name="caffeinate_timeout_30m">30м</string>
@@ -190,7 +190,7 @@
     <string name="tile_flashlight">Фонарик</string>
     <string name="tile_app_freezing">Заморозка приложений</string>
     <string name="tile_flashlight_pulse">Фонарик Импульс</string>
-    <string name="tile_stay_awake">Бодрствуйте</string>
+    <string name="tile_stay_awake">Оставаться включенным</string>
     <string name="input_method_label">Клавиатура Essentials</string>
     <string name="subtype_en_us">Английский (США)</string>
     <string name="tile_active">Активный</string>
