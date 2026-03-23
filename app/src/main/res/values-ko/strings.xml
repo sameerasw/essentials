@@ -137,6 +137,10 @@
     <string name="perm_usage_stats_title">사용 통계</string>
     <string name="perm_usage_stats_desc">정지를 방지하기 위해 현재 포그라운드에 있는 앱을 감지하는 데 필요합니다.</string>
     <string name="perm_notif_listener_desc_freeze">정지를 방지하기 위해 재생 중인 미디어 및 활성 알림을 감지하는 데 필요합니다.</string>
+    <string name="freeze_mode_title">Freeze mode</string>
+    <string name="freeze_mode_freeze">Freezing</string>
+    <string name="freeze_mode_suspend">App suspension</string>
+    <string name="freeze_mode_warning_desc">Can not switch mode while apps are frozen. Please unfreeze all and try again.</string>
     <!-- Notification Lighting -->
     <string name="notification_lighting_screen_off_title">화면이 꺼진 경우에만 표시</string>
     <string name="notification_lighting_skip_silent_title">자동 알림 건너뛰기</string>
