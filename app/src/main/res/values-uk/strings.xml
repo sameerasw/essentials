@@ -815,6 +815,8 @@
     <string name="label_keyboard_always_dark">Завжди темна тема</string>
     <string name="label_keyboard_pitch_black">Безпросвітна темна тема</string>
     <string name="label_keyboard_clipboard_enabled">Історія буфера обміну</string>
+    <string name="label_keyboard_long_press_symbols">Long press for symbols</string>
+    <string name="label_keyboard_accented_characters">Accented characters</string>
     <string-array name="keywords_selection">
         <item>список</item>
         <item>збирач</item>
