@@ -673,6 +673,8 @@
     <string name="diy_action_flashlight_on">Accendi la torcia</string>
     <string name="diy_action_flashlight_off">Spegni la torcia</string>
     <string name="diy_action_flashlight_toggle">Attiva/disattiva la torcia</string>
+    <string name="diy_action_low_power_on">Turn On Low Power Mode</string>
+    <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
     <string name="diy_action_dim_wallpaper">Sfondo scuro</string>
     <string name="diy_dim_wallpaper_desc">Questa azione richiede che Shizuku o Root regolino l\'oscuramento dello sfondo del sistema.</string>
     <string name="diy_select_trigger">Seleziona Attiva</string>
