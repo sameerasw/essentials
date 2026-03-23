@@ -673,6 +673,8 @@
     <string name="diy_action_flashlight_on">Bật đèn pin</string>
     <string name="diy_action_flashlight_off">Tắt đèn pin</string>
     <string name="diy_action_flashlight_toggle">Chuyển đổi đèn pin</string>
+    <string name="diy_action_low_power_on">Turn On Low Power Mode</string>
+    <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
     <string name="diy_action_dim_wallpaper">Hình nền mờ</string>
     <string name="diy_dim_wallpaper_desc">Hành động này yêu cầu Shizuku hoặc Root điều chỉnh độ mờ của hình nền hệ thống.</string>
     <string name="diy_select_trigger">Chọn kích hoạt</string>
