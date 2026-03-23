@@ -26,14 +26,14 @@
     <string name="app_lock_biometric_note">Обратите внимание, что запрос на биометрическую аутентификацию позволяет использовать только методы класса STRONG secure. Методы разблокировки по лицу, относящиеся к классу WEAK, на устройствах, таких как Pixel 7, смогут использовать только другие доступные методы надежной аутентификации, такие как отпечаток пальца или PIN-код.</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Включить переназначение кнопок</string>
-    <string name="button_remap_use_shizuku_title">Используйте Shizuku или Root</string>
+    <string name="button_remap_use_shizuku_title">Использовать Shizuku или Root</string>
     <string name="button_remap_use_shizuku_desc">Работает с выключенным экраном (рекомендуется)</string>
     <string name="shizuku_not_running_toast">Shizuku не запущен</string>
     <string name="shizuku_detected_prefix">Обнаружено %1$s</string>
     <string name="shizuku_status_prefix">Статус: %1$s</string>
     <string name="shizuku_open_button">Открыть Shizuku</string>
     <string name="settings_section_flashlight">Фонарик</string>
-    <string name="flashlight_options_title">Варианты фонарика</string>
+    <string name="flashlight_options_title">Настройки фонарика</string>
     <string name="flashlight_options_desc">Отрегулируйте затухание и другие настройки</string>
     <string name="setting_pitch_black_theme_title">Темная тема</string>
     <string name="setting_pitch_black_theme_desc">Использовать черный фон в темном режиме</string>
@@ -44,29 +44,29 @@
     <string name="volume_up">Увеличение громкости</string>
     <string name="volume_down">Уменьшить громкость</string>
     <string name="action_toggle_flashlight">Переключить фонарик</string>
-    <string name="action_media_play_pause">Медиа-воспроизведение/пауза</string>
-    <string name="action_media_next">СМИ дальше</string>
+    <string name="action_media_play_pause">Воспроизведение/пауза</string>
+    <string name="action_media_next">Следующее медиа</string>
     <string name="action_media_previous">Предыдущее медиа</string>
-    <string name="action_toggle_vibrate">Переключить вибрацию</string>
-    <string name="action_toggle_mute">Отключить звук</string>
-    <string name="action_ai_assistant">ИИ-помощник</string>
-    <string name="action_take_screenshot">Сделать скриншот</string>
-    <string name="action_cycle_sound_modes">Циклически переключать звуковые режимы</string>
-    <string name="action_like_song">Нравится текущая песня</string>
-    <string name="like_song_settings_title">Нравятся настройки песни</string>
+    <string name="action_toggle_vibrate">Вибрация</string>
+    <string name="action_toggle_mute">Без звука</string>
+    <string name="action_ai_assistant">AI ассистент</string>
+    <string name="action_take_screenshot">Сделать снимок экрана</string>
+    <string name="action_cycle_sound_modes">Переключение звуковых режимов</string>
+    <string name="action_like_song">Лайкнуть песню</string>
+    <string name="like_song_settings_title">Лайкнуть настройки песни</string>
     <string name="like_song_settings_desc">Для этой функции требуется доступ к уведомлениям для обнаружения воспроизводимого в данный момент мультимедиа и запуска аналогичного действия. Пожалуйста, включите его ниже.</string>
     <string name="like_song_toast_enabled">Показать всплывающее сообщение</string>
-    <string name="like_song_aod_overlay_title">Показать наложение на AOD</string>
-    <string name="feat_ambient_music_glance_title">I dont know, pls help</string>
-    <string name="feat_ambient_music_glance_desc">Взгляните на СМИ на AOD</string>
+    <string name="like_song_aod_overlay_title">Показывать наложение на AOD</string>
+    <string name="feat_ambient_music_glance_title">Фоновый обзор музыки</string>
+    <string name="feat_ambient_music_glance_desc">Обзор медиа в режиме AOD</string>
     <string name="ambient_glance_docked_mode_title">Закрепленный режим</string>
-    <string name="ambient_glance_docked_mode_desc">Сохраняйте наложение видимым на неопределенный срок во время воспроизведения музыки на AOD.</string>
-    <string name="feat_notification_glance_title">Уведомление</string>
-    <string name="feat_notification_glance_desc">Не отключать AOD, пока ожидаются уведомления.</string>
+    <string name="ambient_glance_docked_mode_desc">Сохраняйте наложение видимым на неопределенный срок во время воспроизведения музыки на AOD</string>
+    <string name="feat_notification_glance_title">Обзор уведомлений</string>
+    <string name="feat_notification_glance_desc">Не отключать AOD, пока ожидаются уведомления</string>
     <string name="notification_glance_same_as_lighting_title">Те же приложения, что и подсветка уведомлений</string>
     <string name="notification_glance_desc">Эта функция будет динамически включать функцию «Всегда на дисплее» при поступлении уведомления от выбранного приложения и отключать ее после закрытия всех соответствующих уведомлений. Выбирайте приложения или используйте тот же выбор, что и для подсветки уведомлений.</string>
     <string name="grant_notification_access">Предоставить доступ к уведомлениям</string>
-    <string name="action_toggle_media_volume">Переключить громкость мультимедиа</string>
+    <string name="action_toggle_media_volume">Переключить громкость медиа</string>
     <string name="button_remap_screen_off_hint">Когда экран выключен, нажмите и удерживайте выбранную кнопку, чтобы активировать назначенное действие. На устройствах Pixel это действие запускается только при включенном AOD из-за системных ограничений.</string>
     <string name="button_remap_screen_on_hint">Когда экран включен, нажмите и удерживайте выбранную кнопку, чтобы активировать назначенное ей действие.</string>
     <string name="flashlight_intensity_title">Яркость фонарика</string>
@@ -137,10 +137,10 @@
     <string name="perm_usage_stats_title">Статистика использования</string>
     <string name="perm_usage_stats_desc">Требуется для определения того, какие приложения в данный момент находятся на переднем плане, чтобы избежать их зависания.</string>
     <string name="perm_notif_listener_desc_freeze">Требуется для обнаружения воспроизводимого мультимедиа и активных уведомлений, чтобы избежать их зависания.</string>
-    <string name="freeze_mode_title">Freeze mode</string>
-    <string name="freeze_mode_freeze">Freezing</string>
-    <string name="freeze_mode_suspend">App suspension</string>
-    <string name="freeze_mode_warning_desc">Can not switch mode while apps are frozen. Please unfreeze all and try again.</string>
+    <string name="freeze_mode_title">Режим заморозки</string>
+    <string name="freeze_mode_freeze">Заморожено</string>
+    <string name="freeze_mode_suspend">Приложение приостановлено</string>
+    <string name="freeze_mode_warning_desc">Невозможно переключить режим, пока приложения заморожены. Пожалуйста, разморозьте их и повторите попытку.</string>
     <!-- Notification Lighting -->
     <string name="notification_lighting_screen_off_title">Показывать только при выключенном экране</string>
     <string name="notification_lighting_skip_silent_title">Пропустить беззвучные уведомления</string>
@@ -228,24 +228,24 @@
     <string name="tile_charge_optimization">Зарядка</string>
     <string name="limit_to_80">Ограничить до 80%</string>
     <string name="adaptive_charging">Адаптивная</string>
-    <string name="deactivated">Не оптимизировано</string>
+    <string name="deactivated">Без оптимизации</string>
     <string name="permission_missing">Разрешение отсутствует</string>
     <!-- Screen Locked Security -->
     <string name="screen_locked_security_title">Безопасность при заблокированном экране</string>
-    <string name="screen_locked_security_dialog_title">Безопасность с заблокированным экраном</string>
+    <string name="screen_locked_security_dialog_title">Безопасность при заблокированном экране</string>
     <string name="screen_locked_security_auth_enable">Аутентификация для включения блокировки экрана</string>
     <string name="screen_locked_security_auth_disable">Аутентификация для отключения блокировки экрана</string>
-    <string name="warning_title">⚠️ ПРЕДУПРЕЖДЕНИЕ</string>
-    <string name="screen_locked_security_warning_text">Эта функция не является надежной. Могут быть крайние случаи, когда кто-то все еще сможет взаимодействовать с плиткой. \nТакже имейте в виду, что Android всегда позволяет выполнить принудительную перезагрузку, а Pixels также всегда позволяет выключать устройство с экрана блокировки.</string>
-    <string name="screen_locked_security_airplane_warning">Обязательно удалите плитку режима полета из быстрых настроек, поскольку это невозможно предотвратить, поскольку при этом не открывается диалоговое окно.</string>
-    <string name="screen_locked_security_description">Если этот параметр включен, панель быстрых настроек будет немедленно закрыта, а устройство будет заблокировано, если кто-то попытается взаимодействовать с плитками Интернета, пока устройство заблокировано. \n\nЭто также отключит биометрическую разблокировку, чтобы предотвратить дальнейший несанкционированный доступ. Масштаб анимации будет уменьшен до 0,1x при блокировке, чтобы с ней было еще труднее взаимодействовать.</string>
+    <string name="warning_title">⚠️ ВНИМАНИЕ</string>
+    <string name="screen_locked_security_warning_text">Эта функция не является надежной. В некоторых случаях пользователь все еще может взаимодействовать с плиткой. \nТакже имейте в виду, что Android всегда разрешает принудительную перезагрузку, а телефоны Pixel всегда позволяют отключить устройство с экрана блокировки.</string>
+    <string name="screen_locked_security_airplane_warning">Обязательно удалите плитку \"Режим полета\" из \"быстрых настроек\", так как это невозможно предотвратить, поскольку она не открывает диалоговое окно.</string>
+    <string name="screen_locked_security_description">Когда включено, панель быстрых настроек будет немедленно закрываться, а устройство будет блокироваться, если кто-то попытается взаимодействовать с интернет-плитками, пока устройство заблокировано. \n\nПри этом будет отключена биометрическая разблокировка, чтобы предотвратить дальнейший несанкционированный доступ. Масштаб анимации при блокировке будет уменьшен до 0,1x, чтобы сделать взаимодействие с устройством еще более затруднительным.</string>
     <!-- Sound Mode -->
-    <string name="sound_mode_reorder_title">Изменение порядка режимов</string>
-    <string name="sound_mode_long_press_hint">Длительное нажатие для переключения</string>
-    <string name="content_desc_drag_reorder">Перетащите, чтобы изменить порядок</string>
+    <string name="sound_mode_reorder_title">Изменить порядок режимов</string>
+    <string name="sound_mode_long_press_hint">Долгое нажатие для переключения</string>
+    <string name="content_desc_drag_reorder">Перетащите для изменения порядка</string>
     <string name="sound_mode_sound">Звук</string>
     <string name="sound_mode_vibrate">Вибрация</string>
-    <string name="sound_mode_silent">Тихий</string>
+    <string name="sound_mode_silent">Без звука</string>
     <!-- Status Bar Categories -->
     <string name="status_bar_category_connectivity">Возможности подключения</string>
     <string name="status_bar_category_phone_network">Телефон и сеть</string>
@@ -819,8 +819,8 @@
     <string name="label_keyboard_always_dark">Всегда темная тема</string>
     <string name="label_keyboard_pitch_black">Темная тема</string>
     <string name="label_keyboard_clipboard_enabled">История буфера обмена</string>
-    <string name="label_keyboard_long_press_symbols">Long press for symbols</string>
-    <string name="label_keyboard_accented_characters">Accented characters</string>
+    <string name="label_keyboard_long_press_symbols">Длительное нажатие на символы</string>
+    <string name="label_keyboard_accented_characters">Символы с ударением</string>
     <string-array name="keywords_selection">
         <item>список</item>
         <item>сборщик</item>
