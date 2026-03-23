@@ -2,6 +2,7 @@ package com.sameerasw.essentials.viewmodels
 
 import android.Manifest
 import android.app.Activity
+import com.sameerasw.essentials.domain.model.DnsPreset
 import android.app.ActivityManager
 import android.app.admin.DevicePolicyManager
 import android.content.BroadcastReceiver
@@ -118,6 +119,7 @@ class MainViewModel : ViewModel() {
     val isAutoAccessibilityEnabled = mutableStateOf(false)
     val isNotificationGlanceSameAsLightingEnabled = mutableStateOf(true)
     val isOnboardingCompleted = mutableStateOf(true) // Default to true so it doesn't flash on first check if not loaded
+    val dnsPresets = mutableStateListOf<DnsPreset>()
 
 
     data class CalendarAccount(
@@ -424,6 +426,11 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_USE_BLUR -> {
                         appContext?.let { updateBlurState(it) }
+                    }
+
+                    SettingsRepository.KEY_PRIVATE_DNS_PRESETS -> {
+                        dnsPresets.clear()
+                        dnsPresets.addAll(settingsRepository.getPrivateDnsPresets())
                     }
                 }
             }
@@ -798,6 +805,10 @@ class MainViewModel : ViewModel() {
         freezeAutoExcludedApps.value = settingsRepository.getFreezeAutoExcludedApps()
         isDeveloperModeEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_DEVELOPER_MODE_ENABLED)
+
+        dnsPresets.clear()
+        dnsPresets.addAll(settingsRepository.getPrivateDnsPresets())
+
         isPreReleaseCheckEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_CHECK_PRE_RELEASES_ENABLED)
         pinnedFeatureKeys.value = settingsRepository.getPinnedFeatures()
@@ -2325,5 +2336,21 @@ class MainViewModel : ViewModel() {
         setOnboardingCompleted(false, context)
         // Reset tab to ESSENTIALS
         setDefaultTab(com.sameerasw.essentials.domain.DIYTabs.ESSENTIALS, context)
+    }
+
+    fun resetDnsPresets() {
+        settingsRepository.resetPrivateDnsPresets()
+    }
+
+    fun addDnsPreset(name: String, hostname: String) {
+        val current = settingsRepository.getPrivateDnsPresets().toMutableList()
+        current.add(DnsPreset(name = name, hostname = hostname))
+        settingsRepository.savePrivateDnsPresets(current)
+    }
+
+    fun removeDnsPreset(preset: DnsPreset) {
+        val current = settingsRepository.getPrivateDnsPresets().toMutableList()
+        current.removeAll { it.id == preset.id }
+        settingsRepository.savePrivateDnsPresets(current)
     }
 }

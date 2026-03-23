@@ -52,6 +52,11 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.HapticUtil
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.AlertDialog
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
+import com.sameerasw.essentials.domain.model.DnsPreset
 
 class PrivateDnsSettingsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,10 +82,13 @@ class PrivateDnsSettingsActivity : ComponentActivity() {
 fun PrivateDnsSettingsOverlay(onDismiss: () -> Unit) {
     val context = LocalContext.current
     val view = LocalView.current
+    val viewModel: com.sameerasw.essentials.viewmodels.MainViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     val PRIVATE_DNS_MODE = "private_dns_mode"
     val PRIVATE_DNS_SPECIFIER = "private_dns_specifier"
+
+    var showAddDialog by remember { mutableStateOf(false) }
 
     val currentMode = remember {
         Settings.Global.getString(context.contentResolver, PRIVATE_DNS_MODE) ?: "off"
@@ -177,30 +185,81 @@ fun PrivateDnsSettingsOverlay(onDismiss: () -> Unit) {
                         )
                     }
 
-                    Text(
-                        text = stringResource(R.string.private_dns_presets_title),
-                        style = MaterialTheme.typography.labelLarge,
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        color = MaterialTheme.colorScheme.primary
-                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(R.string.private_dns_presets_title),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            OutlinedButton(
+                                onClick = {
+                                    (viewModel as? com.sameerasw.essentials.viewmodels.MainViewModel)?.resetDnsPresets()
+                                    HapticUtil.performUIHaptic(view)
+                                },
+                                modifier = Modifier.height(32.dp),
+                                contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 12.dp, vertical = 0.dp),
+                                shape = RoundedCornerShape(16.dp)
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.dns_preset_reset_action),
+                                    style = MaterialTheme.typography.labelMedium
+                                )
+                            }
+                            Button(
+                                onClick = {
+                                    showAddDialog = true
+                                    HapticUtil.performUIHaptic(view)
+                                },
+                                modifier = Modifier.height(32.dp),
+                                contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 12.dp, vertical = 0.dp),
+                                shape = RoundedCornerShape(16.dp)
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.rounded_add_24),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = stringResource(R.string.action_add),
+                                    style = MaterialTheme.typography.labelMedium
+                                )
+                            }
+                        }
+                    }
+
+                    if (showAddDialog) {
+                        AddDnsPresetDialog(
+                            onDismiss = { showAddDialog = false },
+                            onConfirm = { name, host ->
+                                (viewModel as? com.sameerasw.essentials.viewmodels.MainViewModel)?.addDnsPreset(name, host)
+                                showAddDialog = false
+                                HapticUtil.performUIHaptic(view)
+                            }
+                        )
+                    }
 
                     RoundedCardContainer {
-                        val presets = listOf(
-                            Pair(R.string.dns_preset_adguard, R.string.dns_preset_adguard_hostname),
-                            Pair(R.string.dns_preset_google, R.string.dns_preset_google_hostname),
-                            Pair(R.string.dns_preset_cloudflare, R.string.dns_preset_cloudflare_hostname),
-                            Pair(R.string.dns_preset_quad9, R.string.dns_preset_quad9_hostname),
-                            Pair(R.string.dns_preset_cleanbrowsing, R.string.dns_preset_cleanbrowsing_hostname)
-                        )
+                        val presets = (viewModel as? com.sameerasw.essentials.viewmodels.MainViewModel)?.dnsPresets ?: emptyList<DnsPreset>()
 
-                        presets.forEach { (nameRes, hostRes) ->
-                            val host = stringResource(hostRes)
+                        presets.forEach { preset ->
                             DnsPresetItem(
-                                name = stringResource(nameRes),
-                                hostname = host,
-                                isSelected = customHostname == host,
+                                name = preset.name,
+                                hostname = preset.hostname,
+                                isSelected = customHostname == preset.hostname,
                                 onClick = {
-                                    customHostname = host
+                                    customHostname = preset.hostname
+                                    HapticUtil.performUIHaptic(view)
+                                },
+                                onDelete = {
+                                    (viewModel as? com.sameerasw.essentials.viewmodels.MainViewModel)?.removeDnsPreset(preset)
                                     HapticUtil.performUIHaptic(view)
                                 }
                             )
@@ -291,30 +350,104 @@ fun DnsPresetItem(
     name: String,
     hostname: String,
     isSelected: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onDelete: () -> Unit
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth().clickable { onClick() },
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
         shape = MaterialTheme.shapes.extraSmall,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceBright
         )
     ) {
-        Column(
+        Row(
             modifier = Modifier
-                .padding(16.dp)
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = name,
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Medium,
-                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
-            )
-            Text(
-                text = hostname,
-                style = MaterialTheme.typography.bodySmall,
-                color = if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.8f) else MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = name,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Medium,
+                    color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = hostname,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.8f) else MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (isSelected) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_check_24),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                }
+                Icon(
+                    painter = painterResource(id = R.drawable.rounded_delete_24),
+                    contentDescription = stringResource(R.string.dns_preset_delete_content_description),
+                    tint = MaterialTheme.colorScheme.error.copy(alpha = 0.6f),
+                    modifier = Modifier
+                        .size(20.dp)
+                        .clickable { onDelete() }
+                )
+            }
         }
     }
+}
+
+@Composable
+fun AddDnsPresetDialog(
+    onDismiss: () -> Unit,
+    onConfirm: (String, String) -> Unit
+) {
+    var name by remember { mutableStateOf("") }
+    var hostname by remember { mutableStateOf("") }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.dns_preset_add_title)) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                OutlinedTextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    label = { Text(stringResource(R.string.dns_preset_name_label)) },
+                    singleLine = true,
+                    shape = RoundedCornerShape(12.dp)
+                )
+                OutlinedTextField(
+                    value = hostname,
+                    onValueChange = { hostname = it },
+                    label = { Text(stringResource(R.string.private_dns_hostname_label)) },
+                    singleLine = true,
+                    shape = RoundedCornerShape(12.dp)
+                )
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = { if (name.isNotBlank() && hostname.isNotBlank()) onConfirm(name, hostname) },
+                enabled = name.isNotBlank() && hostname.isNotBlank()
+            ) {
+                Text(stringResource(R.string.action_add))
+            }
+        },
+        dismissButton = {
+            OutlinedButton(onClick = onDismiss) {
+                Text(stringResource(R.string.action_cancel))
+            }
+        },
+        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+        shape = RoundedCornerShape(28.dp)
+    )
 }
