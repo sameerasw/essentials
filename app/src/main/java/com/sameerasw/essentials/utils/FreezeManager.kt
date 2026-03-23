@@ -13,23 +13,37 @@ object FreezeManager {
     private const val COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED = 4
 
     /**
-     * Freeze an application using Shizuku.
-     * Sets state to COMPONENT_ENABLED_STATE_DISABLED_USER (3).
+     * Freeze an application using Shizuku or Root.
+     * Uses either 'pm disable-user' or 'pm suspend' based on configuration.
      */
     fun freezeApp(context: Context, packageName: String): Boolean {
-        return setApplicationEnabledSetting(
-            context,
-            packageName,
-            COMPONENT_ENABLED_STATE_DISABLED_USER
-        )
+        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+        val mode = prefs.getInt("freeze_mode", 0) // 0: FREEZE, 1: SUSPEND
+
+        return if (mode == 1) {
+            suspendApp(context, packageName)
+        } else {
+            setApplicationEnabledSetting(
+                context,
+                packageName,
+                COMPONENT_ENABLED_STATE_DISABLED_USER
+            )
+        }
     }
 
     /**
-     * Unfreeze an application using Shizuku.
-     * Sets state to COMPONENT_ENABLED_STATE_ENABLED (1).
+     * Unfreeze an application using Shizuku or Root.
+     * Uses either 'pm enable' or 'pm unsuspend' based on configuration.
      */
     fun unfreezeApp(context: Context, packageName: String): Boolean {
-        return setApplicationEnabledSetting(context, packageName, COMPONENT_ENABLED_STATE_ENABLED)
+        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+        val mode = prefs.getInt("freeze_mode", 0)
+
+        return if (mode == 1) {
+            unsuspendApp(context, packageName)
+        } else {
+            setApplicationEnabledSetting(context, packageName, COMPONENT_ENABLED_STATE_ENABLED)
+        }
     }
 
     /**
@@ -45,7 +59,10 @@ object FreezeManager {
             val gson = com.google.gson.Gson()
             try {
                 val apps: List<com.sameerasw.essentials.domain.model.AppSelection> =
-                    gson.fromJson(json, Array<com.sameerasw.essentials.domain.model.AppSelection>::class.java).toList()
+                    gson.fromJson(
+                        json,
+                        Array<com.sameerasw.essentials.domain.model.AppSelection>::class.java
+                    ).toList()
                 val excludedSet: Set<String> = if (excludedJson != null) {
                     gson.fromJson(excludedJson, Array<String>::class.java).toSet()
                 } else emptySet()
@@ -144,7 +161,10 @@ object FreezeManager {
             val gson = com.google.gson.Gson()
             try {
                 val apps: List<com.sameerasw.essentials.domain.model.AppSelection> =
-                    gson.fromJson(json, Array<com.sameerasw.essentials.domain.model.AppSelection>::class.java).toList()
+                    gson.fromJson(
+                        json,
+                        Array<com.sameerasw.essentials.domain.model.AppSelection>::class.java
+                    ).toList()
                 apps.forEach { app ->
                     freezeApp(context, app.packageName)
                 }
@@ -166,7 +186,10 @@ object FreezeManager {
             val gson = com.google.gson.Gson()
             try {
                 val apps: List<com.sameerasw.essentials.domain.model.AppSelection> =
-                    gson.fromJson(json, Array<com.sameerasw.essentials.domain.model.AppSelection>::class.java).toList()
+                    gson.fromJson(
+                        json,
+                        Array<com.sameerasw.essentials.domain.model.AppSelection>::class.java
+                    ).toList()
                 val excludedSet: Set<String> = if (excludedJson != null) {
                     gson.fromJson(excludedJson, Array<String>::class.java).toSet()
                 } else emptySet()
@@ -192,7 +215,10 @@ object FreezeManager {
             val gson = com.google.gson.Gson()
             try {
                 val apps: List<com.sameerasw.essentials.domain.model.AppSelection> =
-                    gson.fromJson(json, Array<com.sameerasw.essentials.domain.model.AppSelection>::class.java).toList()
+                    gson.fromJson(
+                        json,
+                        Array<com.sameerasw.essentials.domain.model.AppSelection>::class.java
+                    ).toList()
                 apps.forEach { app ->
                     unfreezeApp(context, app.packageName)
                 }
@@ -203,13 +229,36 @@ object FreezeManager {
     }
 
     /**
-     * Check if an application is currently frozen/disabled.
+     * Check if an application is currently frozen/disabled/suspended.
      */
     fun isAppFrozen(context: Context, packageName: String): Boolean {
         return try {
             val state = context.packageManager.getApplicationEnabledSetting(packageName)
-            state == COMPONENT_ENABLED_STATE_DISABLED_USER || state == COMPONENT_ENABLED_STATE_DISABLED
+            val isSuspended = context.packageManager.isPackageSuspended(packageName)
+            state == COMPONENT_ENABLED_STATE_DISABLED_USER || state == COMPONENT_ENABLED_STATE_DISABLED || isSuspended
         } catch (e: Exception) {
+            false
+        }
+    }
+
+    private fun suspendApp(context: Context, packageName: String): Boolean {
+        if (!ShellUtils.hasPermission(context)) return false
+        return try {
+            ShellUtils.runCommand(context, "pm suspend --user 0 $packageName")
+            true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
+    }
+
+    private fun unsuspendApp(context: Context, packageName: String): Boolean {
+        if (!ShellUtils.hasPermission(context)) return false
+        return try {
+            ShellUtils.runCommand(context, "pm unsuspend --user 0 $packageName")
+            true
+        } catch (e: Exception) {
+            e.printStackTrace()
             false
         }
     }

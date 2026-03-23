@@ -156,6 +156,7 @@ class MainViewModel : ViewModel() {
     val isFreezePickedAppsLoading = mutableStateOf(false)
     val freezeAutoExcludedApps = mutableStateOf<Set<String>>(emptySet())
     val isFreezeDontFreezeActiveAppsEnabled = mutableStateOf(false)
+    val freezeMode = mutableIntStateOf(0)
 
     // Search state
     val searchQuery = mutableStateOf("")
@@ -297,6 +298,10 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_FREEZE_AUTO_EXCLUDED_APPS -> {
                         freezeAutoExcludedApps.value = settingsRepository.getFreezeAutoExcludedApps()
+                    }
+
+                    SettingsRepository.KEY_FREEZE_MODE -> {
+                        freezeMode.intValue = settingsRepository.getFreezeMode()
                     }
 
                     SettingsRepository.KEY_USE_ROOT -> isRootEnabled.value =
@@ -798,6 +803,7 @@ class MainViewModel : ViewModel() {
             settingsRepository.getBoolean(SettingsRepository.KEY_AUTO_UPDATE_ENABLED, true)
         isUpdateNotificationEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_UPDATE_NOTIFICATION_ENABLED, true)
+        freezeMode.intValue = settingsRepository.getFreezeMode()
         lastUpdateCheckTime =
             settingsRepository.getLong(SettingsRepository.KEY_LAST_UPDATE_CHECK_TIME)
         isAppLockEnabled.value =
@@ -2097,6 +2103,16 @@ class MainViewModel : ViewModel() {
             com.sameerasw.essentials.utils.FreezeManager.freezeAll(context)
             refreshFreezePickedApps(context)
         }
+    }
+
+    fun anyAppsCurrentlyFrozen(context: Context): Boolean {
+        val picked = freezePickedApps.value
+        return picked.any { com.sameerasw.essentials.utils.FreezeManager.isAppFrozen(context, it.packageName) }
+    }
+
+    fun setFreezeMode(mode: Int, context: Context) {
+        freezeMode.intValue = mode
+        settingsRepository.putInt(SettingsRepository.KEY_FREEZE_MODE, mode)
     }
 
     fun loadSnoozeChannels(context: Context) {
