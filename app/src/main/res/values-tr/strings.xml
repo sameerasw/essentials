@@ -137,6 +137,10 @@
     <string name="perm_usage_stats_title">Kullanım İstatistikleri</string>
     <string name="perm_usage_stats_desc">Donmasını önlemek amacıyla hangi uygulamaların ön planda olduğunu tespit etmek için gereklidir</string>
     <string name="perm_notif_listener_desc_freeze">Dondurulmalarını önlemek amacıyla oynatılan medyayı ve aktif bildirimleri tespit etmek için gereklidir</string>
+    <string name="freeze_mode_title">Freeze mode</string>
+    <string name="freeze_mode_freeze">Freezing</string>
+    <string name="freeze_mode_suspend">App suspension</string>
+    <string name="freeze_mode_warning_desc">Can not switch mode while apps are frozen. Please unfreeze all and try again.</string>
     <!-- Notification Lighting -->
     <string name="notification_lighting_screen_off_title">Yalnızca ekran kapalıyken göster</string>
     <string name="notification_lighting_skip_silent_title">Sessiz bildirimleri atla</string>
