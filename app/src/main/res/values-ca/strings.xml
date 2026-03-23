@@ -673,6 +673,8 @@
     <string name="diy_action_flashlight_on">Enceneu la llanterna</string>
     <string name="diy_action_flashlight_off">Apagueu la llanterna</string>
     <string name="diy_action_flashlight_toggle">Commuta la llanterna</string>
+    <string name="diy_action_low_power_on">Turn On Low Power Mode</string>
+    <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
     <string name="diy_action_dim_wallpaper">Fons de pantalla enfosquit</string>
     <string name="diy_dim_wallpaper_desc">Aquesta acció requereix Shizuku o Root per ajustar l\'atenuació del fons de pantalla del sistema.</string>
     <string name="diy_select_trigger">Seleccioneu Activador</string>
