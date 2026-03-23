@@ -673,6 +673,8 @@
     <string name="diy_action_flashlight_on">قم بتشغيل المصباح</string>
     <string name="diy_action_flashlight_off">قم بإيقاف تشغيل المصباح</string>
     <string name="diy_action_flashlight_toggle">تبديل المصباح</string>
+    <string name="diy_action_low_power_on">Turn On Low Power Mode</string>
+    <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
     <string name="diy_action_dim_wallpaper">خلفية خافتة</string>
     <string name="diy_dim_wallpaper_desc">يتطلب هذا الإجراء Shizuku أو Root لضبط تعتيم خلفية النظام.</string>
     <string name="diy_select_trigger">حدد المشغل</string>
