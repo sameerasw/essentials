@@ -201,6 +201,7 @@ class MainViewModel : ViewModel() {
     val userDictionaryWords = mutableStateOf<Map<String, Long>>(emptyMap())
     val isUserDictionarySheetVisible = mutableStateOf(false)
     val isLongPressSymbolsEnabled = mutableStateOf(false)
+    val isAccentedCharactersEnabled = mutableStateOf(false)
 
     // AirSync Bridge
     val isAirSyncConnectionEnabled = mutableStateOf(false)
@@ -345,6 +346,9 @@ class MainViewModel : ViewModel() {
                         settingsRepository.getBoolean(key, true)
 
                     SettingsRepository.KEY_KEYBOARD_LONG_PRESS_SYMBOLS -> isLongPressSymbolsEnabled.value =
+                        settingsRepository.getBoolean(key, false)
+
+                    SettingsRepository.KEY_KEYBOARD_ACCENTED_CHARACTERS -> isAccentedCharactersEnabled.value =
                         settingsRepository.getBoolean(key, false)
 
                     SettingsRepository.KEY_AIRSYNC_CONNECTION_ENABLED -> isAirSyncConnectionEnabled.value =
@@ -762,6 +766,8 @@ class MainViewModel : ViewModel() {
             settingsRepository.getBoolean(SettingsRepository.KEY_USER_DICTIONARY_ENABLED, false)
         isLongPressSymbolsEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_KEYBOARD_LONG_PRESS_SYMBOLS, false)
+        isAccentedCharactersEnabled.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_KEYBOARD_ACCENTED_CHARACTERS, false)
 
         isAirSyncConnectionEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_AIRSYNC_CONNECTION_ENABLED)
@@ -925,6 +931,11 @@ class MainViewModel : ViewModel() {
     fun setLongPressSymbolsEnabled(enabled: Boolean, context: Context) {
         isLongPressSymbolsEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_KEYBOARD_LONG_PRESS_SYMBOLS, enabled)
+    }
+
+    fun setAccentedCharactersEnabled(enabled: Boolean, context: Context) {
+        isAccentedCharactersEnabled.value = enabled
+        settingsRepository.setAccentedCharactersEnabled(enabled)
     }
     
     fun loadUserDictionaryWords(context: Context) {

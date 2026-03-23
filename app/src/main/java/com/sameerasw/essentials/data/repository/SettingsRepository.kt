@@ -121,6 +121,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_KEYBOARD_PITCH_BLACK = "keyboard_pitch_black"
         const val KEY_KEYBOARD_CLIPBOARD_ENABLED = "keyboard_clipboard_enabled"
         const val KEY_KEYBOARD_LONG_PRESS_SYMBOLS = "keyboard_long_press_symbols"
+        const val KEY_KEYBOARD_ACCENTED_CHARACTERS = "keyboard_accented_characters"
 
         // Essentials-AirSync Bridge
         const val KEY_AIRSYNC_CONNECTION_ENABLED = "airsync_connection_enabled"
@@ -718,6 +719,9 @@ class SettingsRepository(private val context: Context) {
 
     fun isUserDictionaryEnabled(): Boolean = getBoolean(KEY_USER_DICTIONARY_ENABLED, false)
     fun setUserDictionaryEnabled(enabled: Boolean) = putBoolean(KEY_USER_DICTIONARY_ENABLED, enabled)
+
+    fun isAccentedCharactersEnabled(): Boolean = getBoolean(KEY_KEYBOARD_ACCENTED_CHARACTERS, false)
+    fun setAccentedCharactersEnabled(enabled: Boolean) = putBoolean(KEY_KEYBOARD_ACCENTED_CHARACTERS, enabled)
 
     fun isBatteryNotificationEnabled(): Boolean = getBoolean(KEY_BATTERY_NOTIFICATION_ENABLED, false)
     fun setBatteryNotificationEnabled(enabled: Boolean) = putBoolean(KEY_BATTERY_NOTIFICATION_ENABLED, enabled)
