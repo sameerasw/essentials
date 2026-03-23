@@ -815,6 +815,8 @@
     <string name="label_keyboard_always_dark">Tema sempre fosc</string>
     <string name="label_keyboard_pitch_black">Tema negre del to</string>
     <string name="label_keyboard_clipboard_enabled">Historial del porta-retalls</string>
+    <string name="label_keyboard_long_press_symbols">Long press for symbols</string>
+    <string name="label_keyboard_accented_characters">Accented characters</string>
     <string-array name="keywords_selection">
         <item>llista</item>
         <item>selector</item>
