@@ -137,6 +137,10 @@
     <string name="perm_usage_stats_title">Gebruik Statistiek</string>
     <string name="perm_usage_stats_desc">Vereis om te bespeur watter programme tans op die voorgrond is om te verhoed dat hulle vries</string>
     <string name="perm_notif_listener_desc_freeze">Vereis om speelmedia en aktiewe kennisgewings op te spoor om te verhoed dat dit vries</string>
+    <string name="freeze_mode_title">Freeze mode</string>
+    <string name="freeze_mode_freeze">Freezing</string>
+    <string name="freeze_mode_suspend">App suspension</string>
+    <string name="freeze_mode_warning_desc">Can not switch mode while apps are frozen. Please unfreeze all and try again.</string>
     <!-- Notification Lighting -->
     <string name="notification_lighting_screen_off_title">Wys net wanneer die skerm af is</string>
     <string name="notification_lighting_skip_silent_title">Slaan stil kennisgewings oor</string>
