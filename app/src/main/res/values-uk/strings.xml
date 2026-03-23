@@ -137,6 +137,10 @@
     <string name="perm_usage_stats_title">Статистика використання</string>
     <string name="perm_usage_stats_desc">Потрібен для виявлення програм, які зараз працюють на передньому плані, щоб уникнути їх зависання</string>
     <string name="perm_notif_listener_desc_freeze">Необхідний для виявлення відтворюваних медіафайлів і активних сповіщень, щоб уникнути їх зависання</string>
+    <string name="freeze_mode_title">Freeze mode</string>
+    <string name="freeze_mode_freeze">Freezing</string>
+    <string name="freeze_mode_suspend">App suspension</string>
+    <string name="freeze_mode_warning_desc">Can not switch mode while apps are frozen. Please unfreeze all and try again.</string>
     <!-- Notification Lighting -->
     <string name="notification_lighting_screen_off_title">Показувати, лише коли екран вимкнено</string>
     <string name="notification_lighting_skip_silent_title">Пропустити тихі сповіщення</string>
