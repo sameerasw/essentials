@@ -158,11 +158,22 @@ object AutomationManager {
 
     private fun startService(context: Context) {
         if (!AutomationService.isRunning) {
-            val intent = Intent(context, AutomationService::class.java)
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                context.startForegroundService(intent)
-            } else {
-                context.startService(intent)
+            val intent = Intent(context, AutomationService::class.java).apply {
+                putExtra("is_foreground_start", true)
+            }
+            try {
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    context.startForegroundService(intent)
+                } else {
+                    context.startService(intent)
+                }
+            } catch (e: Exception) {
+                // On Android 14+, startForegroundService() might be disallowed from background.
+                try {
+                    context.startService(intent.apply { putExtra("is_foreground_start", false) })
+                } catch (e2: Exception) {
+                    e2.printStackTrace()
+                }
             }
         }
     }
