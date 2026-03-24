@@ -183,9 +183,7 @@ class NotificationListener : NotificationListenerService() {
         try {
             val mediaSessionManager =
                 getSystemService(MEDIA_SESSION_SERVICE) as android.media.session.MediaSessionManager
-            val componentName =
-                android.content.ComponentName(this, NotificationListener::class.java)
-            val sessions = mediaSessionManager.getActiveSessions(componentName)
+            val sessions = getMediaSessions(mediaSessionManager)
 
             val activeSession = sessions.firstOrNull {
                 it.playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING
@@ -200,9 +198,7 @@ class NotificationListener : NotificationListenerService() {
         try {
             val mediaSessionManager =
                 getSystemService(MEDIA_SESSION_SERVICE) as android.media.session.MediaSessionManager
-            val componentName =
-                android.content.ComponentName(this, NotificationListener::class.java)
-            val sessions = mediaSessionManager.getActiveSessions(componentName)
+            val sessions = getMediaSessions(mediaSessionManager)
 
             // Check if toast is enabled
             val prefs = getSharedPreferences(
@@ -1037,6 +1033,38 @@ class NotificationListener : NotificationListenerService() {
         } catch (_: Exception) {
             // If there's an error, default to allowing all apps
             return true
+        }
+    }
+
+    private fun getMediaSessions(manager: android.media.session.MediaSessionManager): List<android.media.session.MediaController> {
+        val componentName = android.content.ComponentName(this, NotificationListener::class.java)
+        return try {
+            manager.getActiveSessions(componentName)
+        } catch (e: SecurityException) {
+            // Fallback for Android 16+ or restricted environments
+            try {
+                val sessions = mutableListOf<android.media.session.MediaController>()
+                val notifications = getActiveNotifications() ?: emptyArray()
+                for (sbn in notifications) {
+                    val token = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        sbn.notification.extras.getParcelable(
+                            android.app.Notification.EXTRA_MEDIA_SESSION,
+                            android.media.session.MediaSession.Token::class.java
+                        )
+                    } else {
+                        @Suppress("DEPRECATION")
+                        sbn.notification.extras.getParcelable(android.app.Notification.EXTRA_MEDIA_SESSION)
+                    }
+                    if (token != null) {
+                        sessions.add(android.media.session.MediaController(this, token))
+                    }
+                }
+                sessions
+            } catch (_: Exception) {
+                emptyList()
+            }
+        } catch (e: Exception) {
+            emptyList()
         }
     }
 }
