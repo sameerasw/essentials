@@ -76,9 +76,9 @@
     <string name="flashlight_global_desc">Глобальное затухание фонарика</string>
     <string name="flashlight_adjust_intensity_title">Отрегулируйте интенсивность</string>
     <string name="flashlight_adjust_intensity_desc">Громкость + - регулирует интенсивность фонаря</string>
-    <string name="flashlight_live_update_title">Живое обновление</string>
+    <string name="flashlight_live_update_title">Моментально обновление</string>
     <string name="flashlight_live_update_desc">Показывать яркость в строке состояния</string>
-    <string name="settings_section_other">Другой</string>
+    <string name="settings_section_other">Другое</string>
     <string name="flashlight_always_off_title">Всегда выключать фонарик</string>
     <string name="flashlight_always_off_desc">Даже при включенном экране</string>
     <string name="content_desc_settings">Настройки</string>
