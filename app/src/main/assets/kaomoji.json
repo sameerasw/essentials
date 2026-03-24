@@ -1,0 +1,3032 @@
+{
+    "kaomoji": [
+        {
+            "category": "joy",
+            "value": "(* ^ ω ^)"
+        },
+        {
+            "category": "joy",
+            "value": "(´ ∀ ` *)"
+        },
+        {
+            "category": "joy",
+            "value": "٩(◕‿◕｡)۶"
+        },
+        {
+            "category": "joy",
+            "value": "☆*:.｡.o(≧▽≦)o.｡.:*☆"
+        },
+        {
+            "category": "joy",
+            "value": "(o^▽^o)"
+        },
+        {
+            "category": "joy",
+            "value": "(⌒▽⌒)☆"
+        },
+        {
+            "category": "joy",
+            "value": "<(￣︶￣)>"
+        },
+        {
+            "category": "joy",
+            "value": "。.:☆*:･'(*⌒―⌒*)))"
+        },
+        {
+            "category": "joy",
+            "value": "ヽ(・∀・)ﾉ"
+        },
+        {
+            "category": "joy",
+            "value": "(´｡• ω •｡`)"
+        },
+        {
+            "category": "joy",
+            "value": "(￣ω￣)"
+        },
+        {
+            "category": "joy",
+            "value": "｀;:゛;｀;･(°ε° )"
+        },
+        {
+            "category": "joy",
+            "value": "(o･ω･o)"
+        },
+        {
+            "category": "joy",
+            "value": "(＠＾◡＾)"
+        },
+        {
+            "category": "joy",
+            "value": "ヽ(*・ω・)ﾉ"
+        },
+        {
+            "category": "joy",
+            "value": "(o_ _)ﾉ彡☆"
+        },
+        {
+            "category": "joy",
+            "value": "(^人^)"
+        },
+        {
+            "category": "joy",
+            "value": "(o´▽`o)"
+        },
+        {
+            "category": "joy",
+            "value": "(*´▽`*)"
+        },
+        {
+            "category": "joy",
+            "value": "｡ﾟ( ﾟ^∀^ﾟ)ﾟ｡"
+        },
+        {
+            "category": "joy",
+            "value": "( ´ ω ` )"
+        },
+        {
+            "category": "joy",
+            "value": "(((o(*°▽°*)o)))"
+        },
+        {
+            "category": "joy",
+            "value": "(≧◡≦)"
+        },
+        {
+            "category": "joy",
+            "value": "(o´∀`o)"
+        },
+        {
+            "category": "joy",
+            "value": "(´• ω •`)"
+        },
+        {
+            "category": "joy",
+            "value": "(＾▽＾)"
+        },
+        {
+            "category": "joy",
+            "value": "(⌒ω⌒)"
+        },
+        {
+            "category": "joy",
+            "value": "∑d(°∀°d)"
+        },
+        {
+            "category": "joy",
+            "value": "╰(▔∀▔)╯"
+        },
+        {
+            "category": "joy",
+            "value": "(─‿‿─)"
+        },
+        {
+            "category": "joy",
+            "value": "(*^‿^*)"
+        },
+        {
+            "category": "joy",
+            "value": "ヽ(o^ ^o)ﾉ"
+        },
+        {
+            "category": "joy",
+            "value": "(✯◡✯)"
+        },
+        {
+            "category": "joy",
+            "value": "(◕‿◕)"
+        },
+        {
+            "category": "joy",
+            "value": "(*≧ω≦*)"
+        },
+        {
+            "category": "joy",
+            "value": "(☆▽☆)"
+        },
+        {
+            "category": "joy",
+            "value": "(⌒‿⌒)"
+        },
+        {
+            "category": "joy",
+            "value": "＼(≧▽≦)／"
+        },
+        {
+            "category": "joy",
+            "value": "ヽ(o＾▽＾o)ノ"
+        },
+        {
+            "category": "joy",
+            "value": "☆ ～('▽^人)"
+        },
+        {
+            "category": "joy",
+            "value": "(*°▽°*)"
+        },
+        {
+            "category": "joy",
+            "value": "٩(｡•́‿•̀｡)۶"
+        },
+        {
+            "category": "joy",
+            "value": "(✧ω✧)"
+        },
+        {
+            "category": "joy",
+            "value": "ヽ(*⌒▽⌒*)ﾉ"
+        },
+        {
+            "category": "joy",
+            "value": "(´｡• ᵕ •｡`)"
+        },
+        {
+            "category": "joy",
+            "value": "( ´ ▽ ` )"
+        },
+        {
+            "category": "joy",
+            "value": "(￣▽￣)"
+        },
+        {
+            "category": "joy",
+            "value": "╰(*´︶`*)╯"
+        },
+        {
+            "category": "joy",
+            "value": "ヽ(>∀<☆)ノ"
+        },
+        {
+            "category": "joy",
+            "value": "o(≧▽≦)o"
+        },
+        {
+            "category": "joy",
+            "value": "(☆ω☆)"
+        },
+        {
+            "category": "joy",
+            "value": "(っ˘ω˘ς )"
+        },
+        {
+            "category": "joy",
+            "value": "＼(￣▽￣)／"
+        },
+        {
+            "category": "joy",
+            "value": "(*¯︶¯*)"
+        },
+        {
+            "category": "joy",
+            "value": "＼(＾▽＾)／"
+        },
+        {
+            "category": "joy",
+            "value": "٩(◕‿◕)۶"
+        },
+        {
+            "category": "joy",
+            "value": "(o˘◡˘o)"
+        },
+        {
+            "category": "joy",
+            "value": "(★ω★)/"
+        },
+        {
+            "category": "joy",
+            "value": "(^ヮ^)/"
+        },
+        {
+            "category": "joy",
+            "value": "(〃＾▽＾〃)"
+        },
+        {
+            "category": "joy",
+            "value": "(╯✧▽✧)╯"
+        },
+        {
+            "category": "joy",
+            "value": "o(>ω<)o"
+        },
+        {
+            "category": "joy",
+            "value": "o( ❛ᴗ❛ )o"
+        },
+        {
+            "category": "joy",
+            "value": "｡ﾟ(TヮT)ﾟ｡"
+        },
+        {
+            "category": "joy",
+            "value": "( ‾́ ◡ ‾́ )"
+        },
+        {
+            "category": "joy",
+            "value": "(ﾉ´ヮ`)ﾉ*: ･ﾟ"
+        },
+        {
+            "category": "joy",
+            "value": "(b ᵔ▽ᵔ)b"
+        },
+        {
+            "category": "joy",
+            "value": "(๑˃ᴗ˂)ﻭ"
+        },
+        {
+            "category": "joy",
+            "value": "(๑˘︶˘๑)"
+        },
+        {
+            "category": "joy",
+            "value": "( ˙꒳​˙ )"
+        },
+        {
+            "category": "joy",
+            "value": "(*꒦ິ꒳꒦ີ)"
+        },
+        {
+            "category": "joy",
+            "value": "°˖✧◝(⁰▿⁰)◜✧˖°"
+        },
+        {
+            "category": "joy",
+            "value": "(´･ᴗ･ ` )"
+        },
+        {
+            "category": "joy",
+            "value": "(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧"
+        },
+        {
+            "category": "joy",
+            "value": "(„• ֊ •„)"
+        },
+        {
+            "category": "joy",
+            "value": "(.❛ ᴗ ❛.)"
+        },
+        {
+            "category": "joy",
+            "value": "(⁀ᗢ⁀)"
+        },
+        {
+            "category": "joy",
+            "value": "(￢‿￢ )"
+        },
+        {
+            "category": "joy",
+            "value": "(¬‿¬ )"
+        },
+        {
+            "category": "joy",
+            "value": "(*￣▽￣)b"
+        },
+        {
+            "category": "joy",
+            "value": "( ˙▿˙ )"
+        },
+        {
+            "category": "joy",
+            "value": "(¯▿¯)"
+        },
+        {
+            "category": "joy",
+            "value": "( ◕▿◕ )"
+        },
+        {
+            "category": "joy",
+            "value": "＼(٥⁀▽⁀ )／"
+        },
+        {
+            "category": "joy",
+            "value": "(„• ᴗ •„)"
+        },
+        {
+            "category": "joy",
+            "value": "(ᵔ◡ᵔ)"
+        },
+        {
+            "category": "joy",
+            "value": "( ´ ▿ ` )"
+        },
+        {
+            "category": "love",
+            "value": "(ﾉ´ з `)ノ"
+        },
+        {
+            "category": "love",
+            "value": "(♡μ_μ)"
+        },
+        {
+            "category": "love",
+            "value": "(*^^*)♡"
+        },
+        {
+            "category": "love",
+            "value": "☆⌒ヽ(*'､^*)chu"
+        },
+        {
+            "category": "love",
+            "value": "(♡-_-♡)"
+        },
+        {
+            "category": "love",
+            "value": "(￣ε￣＠)"
+        },
+        {
+            "category": "love",
+            "value": "ヽ(♡‿♡)ノ"
+        },
+        {
+            "category": "love",
+            "value": "( ´ ∀ `)ノ～ ♡"
+        },
+        {
+            "category": "love",
+            "value": "(─‿‿─)♡"
+        },
+        {
+            "category": "love",
+            "value": "(´｡• ᵕ •｡`) ♡"
+        },
+        {
+            "category": "love",
+            "value": "(*♡∀♡)"
+        },
+        {
+            "category": "love",
+            "value": "(｡・//ε//・｡)"
+        },
+        {
+            "category": "love",
+            "value": "(´ ω `♡)"
+        },
+        {
+            "category": "love",
+            "value": "♡( ◡‿◡ )"
+        },
+        {
+            "category": "love",
+            "value": "(◕‿◕)♡"
+        },
+        {
+            "category": "love",
+            "value": "(/▽＼*)｡o○♡"
+        },
+        {
+            "category": "love",
+            "value": "(ღ˘⌣˘ღ)"
+        },
+        {
+            "category": "love",
+            "value": "(♡°▽°♡)"
+        },
+        {
+            "category": "love",
+            "value": "♡(｡- ω -)"
+        },
+        {
+            "category": "love",
+            "value": "♡ ～('▽^人)"
+        },
+        {
+            "category": "love",
+            "value": "(´• ω •`) ♡"
+        },
+        {
+            "category": "love",
+            "value": "(´ ε ` )♡"
+        },
+        {
+            "category": "love",
+            "value": "(´｡• ω •｡`) ♡"
+        },
+        {
+            "category": "love",
+            "value": "( ´ ▽ ` ).｡ｏ♡"
+        },
+        {
+            "category": "love",
+            "value": "╰(*´︶`*)╯♡"
+        },
+        {
+            "category": "love",
+            "value": "(*˘︶˘*).｡.:*♡"
+        },
+        {
+            "category": "love",
+            "value": "(♡˙︶˙♡)"
+        },
+        {
+            "category": "love",
+            "value": "♡＼(￣▽￣)／♡"
+        },
+        {
+            "category": "love",
+            "value": "(≧◡≦) ♡"
+        },
+        {
+            "category": "love",
+            "value": "(⌒▽⌒)♡"
+        },
+        {
+            "category": "love",
+            "value": "(*¯ ³¯*)♡"
+        },
+        {
+            "category": "love",
+            "value": "(っ˘з(˘⌣˘ ) ♡"
+        },
+        {
+            "category": "love",
+            "value": "♡ (˘▽˘>ԅ( ˘⌣˘)"
+        },
+        {
+            "category": "love",
+            "value": "( ˘⌣˘)♡(˘⌣˘ )"
+        },
+        {
+            "category": "love",
+            "value": "(/^-^(^ ^*)/ ♡"
+        },
+        {
+            "category": "love",
+            "value": "٩(♡ε♡)۶"
+        },
+        {
+            "category": "love",
+            "value": "σ(≧ε≦σ) ♡"
+        },
+        {
+            "category": "love",
+            "value": "♡ (⇀ 3 ↼)"
+        },
+        {
+            "category": "love",
+            "value": "♡ (￣З￣)"
+        },
+        {
+            "category": "love",
+            "value": "(❤ω❤)"
+        },
+        {
+            "category": "love",
+            "value": "(˘∀˘)/(μ‿μ) ❤"
+        },
+        {
+            "category": "love",
+            "value": "❤ (ɔˆз(ˆ⌣ˆc)"
+        },
+        {
+            "category": "love",
+            "value": "(´♡‿♡`)"
+        },
+        {
+            "category": "love",
+            "value": "(°◡°♡)"
+        },
+        {
+            "category": "love",
+            "value": "Σ>―(〃°ω°〃)♡→"
+        },
+        {
+            "category": "love",
+            "value": "(´,,•ω•,,)♡"
+        },
+        {
+            "category": "love",
+            "value": "(´꒳`)♡"
+        },
+        {
+            "category": "embarassment",
+            "value": "(⌒_⌒;)"
+        },
+        {
+            "category": "embarassment",
+            "value": "(o^ ^o)"
+        },
+        {
+            "category": "embarassment",
+            "value": "(*/ω＼)"
+        },
+        {
+            "category": "embarassment",
+            "value": "(*/。＼)"
+        },
+        {
+            "category": "embarassment",
+            "value": "(*/_＼)"
+        },
+        {
+            "category": "embarassment",
+            "value": "(*ﾉωﾉ)"
+        },
+        {
+            "category": "embarassment",
+            "value": "(o-_-o)"
+        },
+        {
+            "category": "embarassment",
+            "value": "(*μ_μ)"
+        },
+        {
+            "category": "embarassment",
+            "value": "( ◡‿◡ *)"
+        },
+        {
+            "category": "embarassment",
+            "value": "(ᵔ.ᵔ)"
+        },
+        {
+            "category": "embarassment",
+            "value": "(*ﾉ∀`*)"
+        },
+        {
+            "category": "embarassment",
+            "value": "(//▽//)"
+        },
+        {
+            "category": "embarassment",
+            "value": "(//ω//)"
+        },
+        {
+            "category": "embarassment",
+            "value": "(ノ*°▽°*)"
+        },
+        {
+            "category": "embarassment",
+            "value": "(*^.^*)"
+        },
+        {
+            "category": "embarassment",
+            "value": "(*ﾉ▽ﾉ)"
+        },
+        {
+            "category": "embarassment",
+            "value": "(￣▽￣*)ゞ"
+        },
+        {
+            "category": "embarassment",
+            "value": "(⁄ ⁄•⁄ω⁄•⁄ ⁄)"
+        },
+        {
+            "category": "embarassment",
+            "value": "(*/▽＼*)"
+        },
+        {
+            "category": "embarassment",
+            "value": "(⁄ ⁄>⁄ ▽ ⁄<⁄ ⁄)"
+        },
+        {
+            "category": "embarassment",
+            "value": "(„ಡωಡ„)"
+        },
+        {
+            "category": "embarassment",
+            "value": "(ง ื▿ ื)ว"
+        },
+        {
+            "category": "embarassment",
+            "value": "( 〃▽〃)"
+        },
+        {
+            "category": "embarassment",
+            "value": "(/▿＼ )"
+        },
+        {
+            "category": "embarassment",
+            "value": "(///￣ ￣///)"
+        },
+        {
+            "category": "sympathy",
+            "value": "(ノ_<。)ヾ(´ ▽ ` )"
+        },
+        {
+            "category": "sympathy",
+            "value": "｡･ﾟ･(ﾉД`)ヽ(￣ω￣ )"
+        },
+        {
+            "category": "sympathy",
+            "value": "ρ(- ω -、)ヾ(￣ω￣; )"
+        },
+        {
+            "category": "sympathy",
+            "value": "ヽ(￣ω￣(。。 )ゝ"
+        },
+        {
+            "category": "sympathy",
+            "value": "(*´ I `)ﾉﾟ(ﾉД｀ﾟ)ﾟ｡"
+        },
+        {
+            "category": "sympathy",
+            "value": "ヽ(~_~(・_・ )ゝ"
+        },
+        {
+            "category": "sympathy",
+            "value": "(ﾉ_；)ヾ(´ ∀ ` )"
+        },
+        {
+            "category": "sympathy",
+            "value": "(; ω ; )ヾ(´∀`* )"
+        },
+        {
+            "category": "sympathy",
+            "value": "(*´ー)ﾉ(ノд`)"
+        },
+        {
+            "category": "sympathy",
+            "value": "(´-ω-`( _ _ )"
+        },
+        {
+            "category": "sympathy",
+            "value": "(っ´ω`)ﾉ(╥ω╥)"
+        },
+        {
+            "category": "sympathy",
+            "value": "(ｏ・_・)ノ”(ノ_<、)"
+        },
+        {
+            "category": "dissatisfaction",
+            "value": "(＃＞＜)"
+        },
+        {
+            "category": "dissatisfaction",
+            "value": "(；⌣̀_⌣́)"
+        },
+        {
+            "category": "dissatisfaction",
+            "value": "☆ｏ(＞＜；)○"
+        },
+        {
+            "category": "dissatisfaction",
+            "value": "(￣ ￣|||)"
+        },
+        {
+            "category": "dissatisfaction",
+            "value": "(；￣Д￣)"
+        },
+        {
+            "category": "dissatisfaction",
+            "value": "(￣□￣」)"
+        },
+        {
+            "category": "dissatisfaction",
+            "value": "(＃￣0￣)"
+        },
+        {
+            "category": "dissatisfaction",
+            "value": "(＃￣ω￣)"
+        },
+        {
+            "category": "dissatisfaction",
+            "value": "(￢_￢;)"
+        },
+        {
+            "category": "dissatisfaction",
+            "value": "(＞ｍ＜)"
+        },
+        {
+            "category": "dissatisfaction",
+            "value": "(」°ロ°)」"
+        },
+        {
+            "category": "dissatisfaction",
+            "value": "(〃＞＿＜;〃)"
+        },
+        {
+            "category": "dissatisfaction",
+            "value": "(＾＾＃)"
+        },
+        {
+            "category": "dissatisfaction",
+            "value": "(︶︹︺)"
+        },
+        {
+            "category": "dissatisfaction",
+            "value": "(￣ヘ￣)"
+        },
+        {
+            "category": "dissatisfaction",
+            "value": "<(￣ ﹌ ￣)>"
+        },
+        {
+            "category": "dissatisfaction",
+            "value": "(￣︿￣)"
+        },
+        {
+            "category": "dissatisfaction",
+            "value": "(＞﹏＜)"
+        },
+        {
+            "category": "dissatisfaction",
+            "value": "(--_--)"
+        },
+        {
+            "category": "dissatisfaction",
+            "value": "凸(￣ヘ￣)"
+        },
+        {
+            "category": "dissatisfaction",
+            "value": "ヾ( ￣O￣)ツ"
+        },
+        {
+            "category": "dissatisfaction",
+            "value": "(⇀‸↼‶)"
+        },
+        {
+            "category": "dissatisfaction",
+            "value": "o(>< )o"
+        },
+        {
+            "category": "dissatisfaction",
+            "value": "(」＞＜)」"
+        },
+        {
+            "category": "dissatisfaction",
+            "value": "(ᗒᗣᗕ)՞"
+        },
+        {
+            "category": "dissatisfaction",
+            "value": "(눈_눈)"
+        },
+        {
+            "category": "anger",
+            "value": "(＃`Д´)"
+        },
+        {
+            "category": "anger",
+            "value": "(`皿´＃)"
+        },
+        {
+            "category": "anger",
+            "value": "( ` ω ´ )"
+        },
+        {
+            "category": "anger",
+            "value": "ヽ( `д´*)ノ"
+        },
+        {
+            "category": "anger",
+            "value": "(・`ω´・)"
+        },
+        {
+            "category": "anger",
+            "value": "(`ー´)"
+        },
+        {
+            "category": "anger",
+            "value": "ヽ(`⌒´メ)ノ"
+        },
+        {
+            "category": "anger",
+            "value": "凸(`△´＃)"
+        },
+        {
+            "category": "anger",
+            "value": "( `ε´ )"
+        },
+        {
+            "category": "anger",
+            "value": "ψ( ` ∇ ´ )ψ"
+        },
+        {
+            "category": "anger",
+            "value": "ヾ(`ヘ´)ﾉﾞ"
+        },
+        {
+            "category": "anger",
+            "value": "ヽ(‵﹏´)ノ"
+        },
+        {
+            "category": "anger",
+            "value": "(ﾒ` ﾛ ´)"
+        },
+        {
+            "category": "anger",
+            "value": "(╬`益´)"
+        },
+        {
+            "category": "anger",
+            "value": "┌∩┐(◣_◢)┌∩┐"
+        },
+        {
+            "category": "anger",
+            "value": "凸( ` ﾛ ´ )凸"
+        },
+        {
+            "category": "anger",
+            "value": "Σ(▼□▼メ)"
+        },
+        {
+            "category": "anger",
+            "value": "(°ㅂ°╬)"
+        },
+        {
+            "category": "anger",
+            "value": "ψ(▼へ▼メ)～→"
+        },
+        {
+            "category": "anger",
+            "value": "(ノ°益°)ノ"
+        },
+        {
+            "category": "anger",
+            "value": "(҂ `з´ )"
+        },
+        {
+            "category": "anger",
+            "value": "(‡▼益▼)"
+        },
+        {
+            "category": "anger",
+            "value": "(҂` ﾛ ´)凸"
+        },
+        {
+            "category": "anger",
+            "value": "((╬◣﹏◢))"
+        },
+        {
+            "category": "anger",
+            "value": "٩(╬ʘ益ʘ╬)۶"
+        },
+        {
+            "category": "anger",
+            "value": "(╬ Ò﹏Ó)"
+        },
+        {
+            "category": "anger",
+            "value": "＼＼٩(๑`^´๑)۶／／"
+        },
+        {
+            "category": "anger",
+            "value": "(凸ಠ益ಠ)凸"
+        },
+        {
+            "category": "anger",
+            "value": "↑_(ΦwΦ)Ψ"
+        },
+        {
+            "category": "anger",
+            "value": "←~(Ψ▼ｰ▼)∈"
+        },
+        {
+            "category": "anger",
+            "value": "୧((#Φ益Φ#))୨"
+        },
+        {
+            "category": "anger",
+            "value": "٩(ఠ益ఠ)۶"
+        },
+        {
+            "category": "anger",
+            "value": "(ﾉಥ益ಥ)ﾉ"
+        },
+        {
+            "category": "sadness",
+            "value": "(ノ_<。)"
+        },
+        {
+            "category": "sadness",
+            "value": "(-_-)"
+        },
+        {
+            "category": "sadness",
+            "value": "(´-ω-`)"
+        },
+        {
+            "category": "sadness",
+            "value": ".･ﾟﾟ･(／ω＼)･ﾟﾟ･."
+        },
+        {
+            "category": "sadness",
+            "value": "(μ_μ)"
+        },
+        {
+            "category": "sadness",
+            "value": "(ﾉД`)"
+        },
+        {
+            "category": "sadness",
+            "value": "(-ω-、)"
+        },
+        {
+            "category": "sadness",
+            "value": "。゜゜(´Ｏ`) ゜゜。"
+        },
+        {
+            "category": "sadness",
+            "value": "o(TヘTo)"
+        },
+        {
+            "category": "sadness",
+            "value": "( ; ω ; )"
+        },
+        {
+            "category": "sadness",
+            "value": "(｡╯︵╰｡)"
+        },
+        {
+            "category": "sadness",
+            "value": "｡･ﾟﾟ*(>д<)*ﾟﾟ･｡"
+        },
+        {
+            "category": "sadness",
+            "value": "( ﾟ，_ゝ｀)"
+        },
+        {
+            "category": "sadness",
+            "value": "(个_个)"
+        },
+        {
+            "category": "sadness",
+            "value": "(╯︵╰,)"
+        },
+        {
+            "category": "sadness",
+            "value": "｡･ﾟ(ﾟ><ﾟ)ﾟ･｡"
+        },
+        {
+            "category": "sadness",
+            "value": "( ╥ω╥ )"
+        },
+        {
+            "category": "sadness",
+            "value": "(╯_╰)"
+        },
+        {
+            "category": "sadness",
+            "value": "(╥_╥)"
+        },
+        {
+            "category": "sadness",
+            "value": ".｡･ﾟﾟ･(＞_＜)･ﾟﾟ･｡."
+        },
+        {
+            "category": "sadness",
+            "value": "(／ˍ・、)"
+        },
+        {
+            "category": "sadness",
+            "value": "(ノ_<、)"
+        },
+        {
+            "category": "sadness",
+            "value": "(╥﹏╥)"
+        },
+        {
+            "category": "sadness",
+            "value": "｡ﾟ(｡ﾉωヽ｡)ﾟ｡"
+        },
+        {
+            "category": "sadness",
+            "value": "(つω`｡)"
+        },
+        {
+            "category": "sadness",
+            "value": "(｡T ω T｡)"
+        },
+        {
+            "category": "sadness",
+            "value": "(ﾉω･､)"
+        },
+        {
+            "category": "sadness",
+            "value": "･ﾟ･(｡>ω<｡)･ﾟ･"
+        },
+        {
+            "category": "sadness",
+            "value": "(T_T)"
+        },
+        {
+            "category": "sadness",
+            "value": "(>_<)"
+        },
+        {
+            "category": "sadness",
+            "value": "(っ˘̩╭╮˘̩)っ"
+        },
+        {
+            "category": "sadness",
+            "value": "｡ﾟ･ (>﹏<) ･ﾟ｡"
+        },
+        {
+            "category": "sadness",
+            "value": "o(〒﹏〒)o"
+        },
+        {
+            "category": "sadness",
+            "value": "(｡•́︿•̀｡)"
+        },
+        {
+            "category": "sadness",
+            "value": "(ಥ﹏ಥ)"
+        },
+        {
+            "category": "sadness",
+            "value": "(ಡ‸ಡ)"
+        },
+        {
+            "category": "pain",
+            "value": "~(>_<~)"
+        },
+        {
+            "category": "pain",
+            "value": "☆⌒(> _ <)"
+        },
+        {
+            "category": "pain",
+            "value": "☆⌒(>。<)"
+        },
+        {
+            "category": "pain",
+            "value": "(☆_@)"
+        },
+        {
+            "category": "pain",
+            "value": "(×_×)"
+        },
+        {
+            "category": "pain",
+            "value": "(x_x)"
+        },
+        {
+            "category": "pain",
+            "value": "(×_×)⌒☆"
+        },
+        {
+            "category": "pain",
+            "value": "(x_x)⌒☆"
+        },
+        {
+            "category": "pain",
+            "value": "(×﹏×)"
+        },
+        {
+            "category": "pain",
+            "value": "☆(＃××)"
+        },
+        {
+            "category": "pain",
+            "value": "(＋_＋)"
+        },
+        {
+            "category": "pain",
+            "value": "[ ± _ ± ]"
+        },
+        {
+            "category": "pain",
+            "value": "٩(× ×)۶"
+        },
+        {
+            "category": "pain",
+            "value": "_:(´ཀ`」 ∠):_"
+        },
+        {
+            "category": "pain",
+            "value": "(ﾒ﹏ﾒ)"
+        },
+        {
+            "category": "fear",
+            "value": "(ノωヽ)"
+        },
+        {
+            "category": "fear",
+            "value": "(／。＼)"
+        },
+        {
+            "category": "fear",
+            "value": "(ﾉ_ヽ)"
+        },
+        {
+            "category": "fear",
+            "value": "..・ヾ(。＞＜)シ"
+        },
+        {
+            "category": "fear",
+            "value": "(″ロ゛)"
+        },
+        {
+            "category": "fear",
+            "value": "(;;;*_*)"
+        },
+        {
+            "category": "fear",
+            "value": "(・人・)"
+        },
+        {
+            "category": "fear",
+            "value": "＼(〇_ｏ)／"
+        },
+        {
+            "category": "fear",
+            "value": "(/ω＼)"
+        },
+        {
+            "category": "fear",
+            "value": "(/_＼)"
+        },
+        {
+            "category": "fear",
+            "value": "〜(＞＜)〜"
+        },
+        {
+            "category": "fear",
+            "value": "Σ(°△°|||)︴"
+        },
+        {
+            "category": "fear",
+            "value": "(((＞＜)))"
+        },
+        {
+            "category": "fear",
+            "value": "{{ (>_<) }}"
+        },
+        {
+            "category": "fear",
+            "value": "＼(º □ º l|l)/"
+        },
+        {
+            "category": "fear",
+            "value": "〣( ºΔº )〣"
+        },
+        {
+            "category": "fear",
+            "value": "▓▒░(°◡°)░▒▓"
+        },
+        {
+            "category": "indifference",
+            "value": "ヽ(ー_ー )ノ"
+        },
+        {
+            "category": "indifference",
+            "value": "ヽ(´ー` )┌"
+        },
+        {
+            "category": "indifference",
+            "value": "┐(‘～` )┌"
+        },
+        {
+            "category": "indifference",
+            "value": "ヽ(　￣д￣)ノ"
+        },
+        {
+            "category": "indifference",
+            "value": "┐(￣ヘ￣)┌"
+        },
+        {
+            "category": "indifference",
+            "value": "ヽ(￣～￣　)ノ"
+        },
+        {
+            "category": "indifference",
+            "value": "╮(￣_￣)╭"
+        },
+        {
+            "category": "indifference",
+            "value": "ヽ(ˇヘˇ)ノ"
+        },
+        {
+            "category": "indifference",
+            "value": "┐(￣～￣)┌"
+        },
+        {
+            "category": "indifference",
+            "value": "┐(︶▽︶)┌"
+        },
+        {
+            "category": "indifference",
+            "value": "╮(￣～￣)╭"
+        },
+        {
+            "category": "indifference",
+            "value": "¯_(ツ)_/¯"
+        },
+        {
+            "category": "indifference",
+            "value": "┐( ´ д ` )┌"
+        },
+        {
+            "category": "indifference",
+            "value": "╮(︶︿︶)╭"
+        },
+        {
+            "category": "indifference",
+            "value": "┐(￣∀￣)┌"
+        },
+        {
+            "category": "indifference",
+            "value": "┐( ˘ ､ ˘ )┌"
+        },
+        {
+            "category": "indifference",
+            "value": "╮(︶▽︶)╭"
+        },
+        {
+            "category": "indifference",
+            "value": "╮( ˘ ､ ˘ )╭"
+        },
+        {
+            "category": "indifference",
+            "value": "┐( ˘_˘ )┌"
+        },
+        {
+            "category": "indifference",
+            "value": "╮( ˘_˘ )╭"
+        },
+        {
+            "category": "indifference",
+            "value": "┐(￣ヮ￣)┌"
+        },
+        {
+            "category": "indifference",
+            "value": "ᕕ( ᐛ )ᕗ"
+        },
+        {
+            "category": "indifference",
+            "value": "┐(シ)┌"
+        },
+        {
+            "category": "confusion",
+            "value": "(￣ω￣;)"
+        },
+        {
+            "category": "confusion",
+            "value": "σ(￣、￣〃)"
+        },
+        {
+            "category": "confusion",
+            "value": "(￣～￣;)"
+        },
+        {
+            "category": "confusion",
+            "value": "(-_-;)・・・"
+        },
+        {
+            "category": "confusion",
+            "value": "┐('～`;)┌"
+        },
+        {
+            "category": "confusion",
+            "value": "(・_・ヾ"
+        },
+        {
+            "category": "confusion",
+            "value": "(〃￣ω￣〃ゞ"
+        },
+        {
+            "category": "confusion",
+            "value": "┐(￣ヘ￣;)┌"
+        },
+        {
+            "category": "confusion",
+            "value": "(・_・;)"
+        },
+        {
+            "category": "confusion",
+            "value": "(￣_￣)・・・"
+        },
+        {
+            "category": "confusion",
+            "value": "╮(￣ω￣;)╭"
+        },
+        {
+            "category": "confusion",
+            "value": "(¯ . ¯;)"
+        },
+        {
+            "category": "confusion",
+            "value": "(＠_＠)"
+        },
+        {
+            "category": "confusion",
+            "value": "(・・;)ゞ"
+        },
+        {
+            "category": "confusion",
+            "value": "Σ(￣。￣ﾉ)"
+        },
+        {
+            "category": "confusion",
+            "value": "(・・ ) ?"
+        },
+        {
+            "category": "confusion",
+            "value": "(•ิ_•ิ)?"
+        },
+        {
+            "category": "confusion",
+            "value": "(◎ ◎)ゞ"
+        },
+        {
+            "category": "confusion",
+            "value": "(ーー;)"
+        },
+        {
+            "category": "confusion",
+            "value": "ლ(ಠ_ಠ ლ)"
+        },
+        {
+            "category": "confusion",
+            "value": "ლ(¯ロ¯\"ლ)"
+        },
+        {
+            "category": "confusion",
+            "value": "(¯ . ¯٥)"
+        },
+        {
+            "category": "confusion",
+            "value": "(¯ ¯٥)"
+        },
+        {
+            "category": "doubt",
+            "value": "(￢_￢)"
+        },
+        {
+            "category": "doubt",
+            "value": "(→_→)"
+        },
+        {
+            "category": "doubt",
+            "value": "(￢ ￢)"
+        },
+        {
+            "category": "doubt",
+            "value": "(￢‿￢ )"
+        },
+        {
+            "category": "doubt",
+            "value": "(¬_¬ )"
+        },
+        {
+            "category": "doubt",
+            "value": "(←_←)"
+        },
+        {
+            "category": "doubt",
+            "value": "(¬ ¬ )"
+        },
+        {
+            "category": "doubt",
+            "value": "(¬‿¬ )"
+        },
+        {
+            "category": "doubt",
+            "value": "(↼_↼)"
+        },
+        {
+            "category": "doubt",
+            "value": "(⇀_⇀)"
+        },
+        {
+            "category": "doubt",
+            "value": "(ᓀ ᓀ)"
+        },
+        {
+            "category": "surprise",
+            "value": "w(°ｏ°)w"
+        },
+        {
+            "category": "surprise",
+            "value": "ヽ(°〇°)ﾉ"
+        },
+        {
+            "category": "surprise",
+            "value": "Σ(O_O)"
+        },
+        {
+            "category": "surprise",
+            "value": "Σ(°ロ°)"
+        },
+        {
+            "category": "surprise",
+            "value": "(⊙_⊙)"
+        },
+        {
+            "category": "surprise",
+            "value": "(o_O)"
+        },
+        {
+            "category": "surprise",
+            "value": "(O_O;)"
+        },
+        {
+            "category": "surprise",
+            "value": "(O.O)"
+        },
+        {
+            "category": "surprise",
+            "value": "(°ロ°) !"
+        },
+        {
+            "category": "surprise",
+            "value": "(o_O) !"
+        },
+        {
+            "category": "surprise",
+            "value": "(□_□)"
+        },
+        {
+            "category": "surprise",
+            "value": "Σ(□_□)"
+        },
+        {
+            "category": "surprise",
+            "value": "∑(O_O;)"
+        },
+        {
+            "category": "surprise",
+            "value": "( : ౦ ‸ ౦ : )"
+        },
+        {
+            "category": "greeting",
+            "value": "(*・ω・)ﾉ"
+        },
+        {
+            "category": "greeting",
+            "value": "(￣▽￣)ノ"
+        },
+        {
+            "category": "greeting",
+            "value": "(°▽°)/"
+        },
+        {
+            "category": "greeting",
+            "value": "( ´ ∀ ` )ﾉ"
+        },
+        {
+            "category": "greeting",
+            "value": "(^-^*)/"
+        },
+        {
+            "category": "greeting",
+            "value": "(＠´ー`)ﾉﾞ"
+        },
+        {
+            "category": "greeting",
+            "value": "(´• ω •`)ﾉ"
+        },
+        {
+            "category": "greeting",
+            "value": "( ° ∀ ° )ﾉﾞ"
+        },
+        {
+            "category": "greeting",
+            "value": "ヾ(*'▽'*)"
+        },
+        {
+            "category": "greeting",
+            "value": "＼(⌒▽⌒)"
+        },
+        {
+            "category": "greeting",
+            "value": "ヾ(☆▽☆)"
+        },
+        {
+            "category": "greeting",
+            "value": "( ´ ▽ ` )ﾉ"
+        },
+        {
+            "category": "greeting",
+            "value": "(^０^)ノ"
+        },
+        {
+            "category": "greeting",
+            "value": "~ヾ(・ω・)"
+        },
+        {
+            "category": "greeting",
+            "value": "(・∀・)ノ"
+        },
+        {
+            "category": "greeting",
+            "value": "ヾ(・ω・*)"
+        },
+        {
+            "category": "greeting",
+            "value": "(*°ｰ°)ﾉ"
+        },
+        {
+            "category": "greeting",
+            "value": "(・_・)ノ"
+        },
+        {
+            "category": "greeting",
+            "value": "(o´ω`o)ﾉ"
+        },
+        {
+            "category": "greeting",
+            "value": "( ´ ▽ ` )/"
+        },
+        {
+            "category": "greeting",
+            "value": "(￣ω￣)/"
+        },
+        {
+            "category": "greeting",
+            "value": "( ´ ω ` )ノﾞ"
+        },
+        {
+            "category": "greeting",
+            "value": "(⌒ω⌒)ﾉ"
+        },
+        {
+            "category": "greeting",
+            "value": "(o^ ^o)/"
+        },
+        {
+            "category": "greeting",
+            "value": "(≧▽≦)/"
+        },
+        {
+            "category": "greeting",
+            "value": "(✧∀✧)/"
+        },
+        {
+            "category": "greeting",
+            "value": "(o´▽`o)ﾉ"
+        },
+        {
+            "category": "greeting",
+            "value": "(￣▽￣)/"
+        },
+        {
+            "category": "hugging",
+            "value": "(づ￣ ³￣)づ"
+        },
+        {
+            "category": "hugging",
+            "value": "(つ≧▽≦)つ"
+        },
+        {
+            "category": "hugging",
+            "value": "(つ✧ω✧)つ"
+        },
+        {
+            "category": "hugging",
+            "value": "(づ ◕‿◕ )づ"
+        },
+        {
+            "category": "hugging",
+            "value": "(⊃｡•́‿•̀｡)⊃"
+        },
+        {
+            "category": "hugging",
+            "value": "(つ . •́ _ʖ •̀ .)つ"
+        },
+        {
+            "category": "hugging",
+            "value": "(っಠ‿ಠ)っ"
+        },
+        {
+            "category": "hugging",
+            "value": "(づ◡﹏◡)づ"
+        },
+        {
+            "category": "hugging",
+            "value": "⊂(´• ω •`⊂)"
+        },
+        {
+            "category": "hugging",
+            "value": "⊂(･ω･*⊂)"
+        },
+        {
+            "category": "hugging",
+            "value": "⊂(￣▽￣)⊃"
+        },
+        {
+            "category": "hugging",
+            "value": "⊂( ´ ▽ ` )⊃"
+        },
+        {
+            "category": "hugging",
+            "value": "( ~*-*)~"
+        },
+        {
+            "category": "hugging",
+            "value": "(｡•̀ᴗ-)✧"
+        },
+        {
+            "category": "winking",
+            "value": "(^_~)"
+        },
+        {
+            "category": "winking",
+            "value": "( ﾟｏ⌒)"
+        },
+        {
+            "category": "winking",
+            "value": "(^_-)≡☆"
+        },
+        {
+            "category": "winking",
+            "value": "(^ω~)"
+        },
+        {
+            "category": "winking",
+            "value": "(>ω^)"
+        },
+        {
+            "category": "winking",
+            "value": "(~人^)"
+        },
+        {
+            "category": "winking",
+            "value": "(^_-)"
+        },
+        {
+            "category": "winking",
+            "value": "( -_・)"
+        },
+        {
+            "category": "winking",
+            "value": "(^_<)〜☆"
+        },
+        {
+            "category": "winking",
+            "value": "(^人<)〜☆"
+        },
+        {
+            "category": "winking",
+            "value": "☆⌒(≧▽​° )"
+        },
+        {
+            "category": "winking",
+            "value": "☆⌒(ゝ。∂)"
+        },
+        {
+            "category": "winking",
+            "value": "(^_<)"
+        },
+        {
+            "category": "winking",
+            "value": "(^_−)☆"
+        },
+        {
+            "category": "winking",
+            "value": "(･ω<)☆"
+        },
+        {
+            "category": "winking",
+            "value": "(^.~)☆"
+        },
+        {
+            "category": "winking",
+            "value": "(^.~)"
+        },
+        {
+            "category": "apologizing",
+            "value": "m(_ _)m"
+        },
+        {
+            "category": "apologizing",
+            "value": "(シ_ _)シ"
+        },
+        {
+            "category": "apologizing",
+            "value": "m(. .)m"
+        },
+        {
+            "category": "apologizing",
+            "value": "<(_ _)>"
+        },
+        {
+            "category": "apologizing",
+            "value": "人(_ _*)"
+        },
+        {
+            "category": "apologizing",
+            "value": "(*_ _)人"
+        },
+        {
+            "category": "apologizing",
+            "value": "m(_ _;m)"
+        },
+        {
+            "category": "apologizing",
+            "value": "(m;_ _)m"
+        },
+        {
+            "category": "apologizing",
+            "value": "(シ. .)シ"
+        },
+        {
+            "category": "nosebleeding",
+            "value": "(*￣ii￣)"
+        },
+        {
+            "category": "nosebleeding",
+            "value": "(￣ﾊ￣*)"
+        },
+        {
+            "category": "nosebleeding",
+            "value": "(￣ﾊ￣)"
+        },
+        {
+            "category": "nosebleeding",
+            "value": "(＾་།＾)"
+        },
+        {
+            "category": "nosebleeding",
+            "value": "(＾〃＾)"
+        },
+        {
+            "category": "nosebleeding",
+            "value": "(￣ ¨ヽ￣)"
+        },
+        {
+            "category": "nosebleeding",
+            "value": "(￣ ;￣)"
+        },
+        {
+            "category": "nosebleeding",
+            "value": "(￣ ;;￣)"
+        },
+        {
+            "category": "hiding",
+            "value": "|･ω･)"
+        },
+        {
+            "category": "hiding",
+            "value": "ﾍ(･_|"
+        },
+        {
+            "category": "hiding",
+            "value": "|ω･)ﾉ"
+        },
+        {
+            "category": "hiding",
+            "value": "ヾ(･|"
+        },
+        {
+            "category": "hiding",
+            "value": "|д･)"
+        },
+        {
+            "category": "hiding",
+            "value": "|_￣))"
+        },
+        {
+            "category": "hiding",
+            "value": "|▽//)"
+        },
+        {
+            "category": "hiding",
+            "value": "┬┴┬┴┤(･_├┬┴┬┴"
+        },
+        {
+            "category": "hiding",
+            "value": "┬┴┬┴┤･ω･)ﾉ"
+        },
+        {
+            "category": "hiding",
+            "value": "┬┴┬┴┤( ͡° ͜ʖ├┬┴┬┴"
+        },
+        {
+            "category": "hiding",
+            "value": "┬┴┬┴┤(･_├┬┴┬┴"
+        },
+        {
+            "category": "hiding",
+            "value": "|_・)"
+        },
+        {
+            "category": "hiding",
+            "value": "|･д･)ﾉ"
+        },
+        {
+            "category": "hiding",
+            "value": "|ʘ‿ʘ)╯"
+        },
+        {
+            "category": "writing",
+            "value": "__φ(．．)"
+        },
+        {
+            "category": "writing",
+            "value": "( ￣ー￣)φ__"
+        },
+        {
+            "category": "writing",
+            "value": "__φ(。。)"
+        },
+        {
+            "category": "writing",
+            "value": "__φ(．．;)"
+        },
+        {
+            "category": "writing",
+            "value": "ヾ( `ー´)シφ__"
+        },
+        {
+            "category": "writing",
+            "value": "__〆(￣ー￣ )"
+        },
+        {
+            "category": "writing",
+            "value": "....φ(・∀・*)"
+        },
+        {
+            "category": "writing",
+            "value": "___〆(・∀・)"
+        },
+        {
+            "category": "writing",
+            "value": "( ^▽^)ψ__"
+        },
+        {
+            "category": "writing",
+            "value": "....φ(︶▽︶)φ...."
+        },
+        {
+            "category": "writing",
+            "value": "( . .)φ__"
+        },
+        {
+            "category": "writing",
+            "value": "__φ(◎◎ヘ)"
+        },
+        {
+            "category": "running",
+            "value": "☆ﾐ(o*･ω･)ﾉ"
+        },
+        {
+            "category": "running",
+            "value": "C= C= C= C= C=┌(;・ω・)┘"
+        },
+        {
+            "category": "running",
+            "value": "─=≡Σ((( つ＞＜)つ"
+        },
+        {
+            "category": "running",
+            "value": "ε=ε=ε=ε=┌(;￣▽￣)┘"
+        },
+        {
+            "category": "running",
+            "value": "ε=ε=┌( >_<)┘"
+        },
+        {
+            "category": "running",
+            "value": "C= C= C= C=┌( `ー´)┘"
+        },
+        {
+            "category": "running",
+            "value": "ε===(っ≧ω≦)っ"
+        },
+        {
+            "category": "running",
+            "value": "ヽ(￣д￣;)ノ=3=3=3"
+        },
+        {
+            "category": "running",
+            "value": "。。。ミヽ(。＞＜)ノ"
+        },
+        {
+            "category": "sleeping",
+            "value": "[(－－)]..zzZ"
+        },
+        {
+            "category": "sleeping",
+            "value": "(－_－) zzZ"
+        },
+        {
+            "category": "sleeping",
+            "value": "(∪｡∪)｡｡｡zzZ"
+        },
+        {
+            "category": "sleeping",
+            "value": "(－ω－) zzZ"
+        },
+        {
+            "category": "sleeping",
+            "value": "(￣o￣) zzZZzzZZ"
+        },
+        {
+            "category": "sleeping",
+            "value": "(( _ _ ))..zzzZZ"
+        },
+        {
+            "category": "sleeping",
+            "value": "(￣ρ￣)..zzZZ"
+        },
+        {
+            "category": "sleeping",
+            "value": "(－.－)...zzz"
+        },
+        {
+            "category": "sleeping",
+            "value": "(＿ ＿*) Z z z"
+        },
+        {
+            "category": "cat",
+            "value": "(=^･ω･^=)"
+        },
+        {
+            "category": "cat",
+            "value": "(=^･ｪ･^=)"
+        },
+        {
+            "category": "cat",
+            "value": "(=①ω①=)"
+        },
+        {
+            "category": "cat",
+            "value": "( =ω=)..nyaa"
+        },
+        {
+            "category": "cat",
+            "value": "(= ; ｪ ; =)"
+        },
+        {
+            "category": "cat",
+            "value": "(=`ω´=)"
+        },
+        {
+            "category": "cat",
+            "value": "(=^‥^=)"
+        },
+        {
+            "category": "cat",
+            "value": "( =ノωヽ=)"
+        },
+        {
+            "category": "cat",
+            "value": "(=⌒‿‿⌒=)"
+        },
+        {
+            "category": "cat",
+            "value": "(=^ ◡ ^=)"
+        },
+        {
+            "category": "cat",
+            "value": "(=^-ω-^=)"
+        },
+        {
+            "category": "cat",
+            "value": "ヾ(=`ω´=)ノ”"
+        },
+        {
+            "category": "cat",
+            "value": "(＾• ω •＾)"
+        },
+        {
+            "category": "cat",
+            "value": "(/ =ω=)/"
+        },
+        {
+            "category": "cat",
+            "value": "ฅ(•ㅅ•❀)ฅ"
+        },
+        {
+            "category": "cat",
+            "value": "ฅ(• ɪ •)ฅ"
+        },
+        {
+            "category": "cat",
+            "value": "ଲ(ⓛ ω ⓛ)ଲ"
+        },
+        {
+            "category": "cat",
+            "value": "(^=◕ᴥ◕=^)"
+        },
+        {
+            "category": "cat",
+            "value": "( =ω= )"
+        },
+        {
+            "category": "cat",
+            "value": "(^˵◕ω◕˵^)"
+        },
+        {
+            "category": "cat",
+            "value": "(^◔ᴥ◔^)"
+        },
+        {
+            "category": "cat",
+            "value": "(^◕ᴥ◕^)"
+        },
+        {
+            "category": "cat",
+            "value": "ต(=ω=)ต"
+        },
+        {
+            "category": "cat",
+            "value": "( Φ ω Φ )"
+        },
+        {
+            "category": "cat",
+            "value": "ฅ(^◕ᴥ◕^)ฅ"
+        },
+        {
+            "category": "bear",
+            "value": "( ´(ｴ)ˋ )"
+        },
+        {
+            "category": "bear",
+            "value": "(*￣(ｴ)￣*)"
+        },
+        {
+            "category": "bear",
+            "value": "ヽ(￣(ｴ)￣)ﾉ"
+        },
+        {
+            "category": "bear",
+            "value": "(／￣(ｴ)￣)／"
+        },
+        {
+            "category": "bear",
+            "value": "(￣(ｴ)￣)"
+        },
+        {
+            "category": "bear",
+            "value": "ヽ( ˋ(ｴ)´ )ﾉ"
+        },
+        {
+            "category": "bear",
+            "value": "⊂(￣(ｴ)￣)⊃"
+        },
+        {
+            "category": "bear",
+            "value": "(／(ｴ)＼)"
+        },
+        {
+            "category": "bear",
+            "value": "⊂(´(ェ)ˋ)⊃"
+        },
+        {
+            "category": "bear",
+            "value": "(/-(ｴ)-＼)"
+        },
+        {
+            "category": "bear",
+            "value": "(/°(ｴ)°)/"
+        },
+        {
+            "category": "bear",
+            "value": "ʕ ᵔᴥᵔ ʔ"
+        },
+        {
+            "category": "bear",
+            "value": "ʕ •ᴥ• ʔ"
+        },
+        {
+            "category": "bear",
+            "value": "ʕ •̀ ω •́ ʔ"
+        },
+        {
+            "category": "bear",
+            "value": "ʕ •̀ o •́ ʔ"
+        },
+        {
+            "category": "bear",
+            "value": "ʕಠᴥಠʔ"
+        },
+        {
+            "category": "dog",
+            "value": "∪＾ェ＾∪"
+        },
+        {
+            "category": "dog",
+            "value": "∪･ω･∪"
+        },
+        {
+            "category": "dog",
+            "value": "∪￣-￣∪"
+        },
+        {
+            "category": "dog",
+            "value": "∪･ｪ･∪"
+        },
+        {
+            "category": "dog",
+            "value": "Ｕ^皿^Ｕ"
+        },
+        {
+            "category": "dog",
+            "value": "ＵＴｪＴＵ"
+        },
+        {
+            "category": "dog",
+            "value": "U^ｪ^U"
+        },
+        {
+            "category": "dog",
+            "value": "V●ᴥ●V"
+        },
+        {
+            "category": "dog",
+            "value": "U・ᴥ・U"
+        },
+        {
+            "category": "rabbit",
+            "value": "／(≧ x ≦)＼"
+        },
+        {
+            "category": "rabbit",
+            "value": "／(･ × ･)＼"
+        },
+        {
+            "category": "rabbit",
+            "value": "／(=´x`=)＼"
+        },
+        {
+            "category": "rabbit",
+            "value": "／(^ x ^)＼"
+        },
+        {
+            "category": "rabbit",
+            "value": "／(=･ x ･=)＼"
+        },
+        {
+            "category": "rabbit",
+            "value": "／(^ × ^)＼"
+        },
+        {
+            "category": "rabbit",
+            "value": "／(＞×＜)＼"
+        },
+        {
+            "category": "rabbit",
+            "value": "／(˃ᆺ˂)＼"
+        },
+        {
+            "category": "pig",
+            "value": "( ´(00)ˋ )"
+        },
+        {
+            "category": "pig",
+            "value": "(￣(ω)￣)"
+        },
+        {
+            "category": "pig",
+            "value": "ヽ( ˋ(00)´ )ノ"
+        },
+        {
+            "category": "pig",
+            "value": "( ´(oo)ˋ )"
+        },
+        {
+            "category": "pig",
+            "value": "＼(￣(oo)￣)／"
+        },
+        {
+            "category": "pig",
+            "value": "｡ﾟ(ﾟ´(00)`ﾟ)ﾟ｡"
+        },
+        {
+            "category": "pig",
+            "value": "(￣(00)￣)"
+        },
+        {
+            "category": "pig",
+            "value": "(ˆ(oo)ˆ)"
+        },
+        {
+            "category": "bird",
+            "value": "(￣Θ￣)"
+        },
+        {
+            "category": "bird",
+            "value": "(`･Θ･´)"
+        },
+        {
+            "category": "bird",
+            "value": "( ˋ Θ ´ )"
+        },
+        {
+            "category": "bird",
+            "value": "(◉Θ◉)"
+        },
+        {
+            "category": "bird",
+            "value": "＼( ˋ Θ ´ )／"
+        },
+        {
+            "category": "bird",
+            "value": "(･θ･)"
+        },
+        {
+            "category": "bird",
+            "value": "(・Θ・)"
+        },
+        {
+            "category": "bird",
+            "value": "ヾ(￣◇￣)ノ〃"
+        },
+        {
+            "category": "bird",
+            "value": "(･Θ･)"
+        },
+        {
+            "category": "fish",
+            "value": "(°)#))<<"
+        },
+        {
+            "category": "fish",
+            "value": "<・ )))><<"
+        },
+        {
+            "category": "fish",
+            "value": "ζ°)))彡"
+        },
+        {
+            "category": "fish",
+            "value": ">°))))彡"
+        },
+        {
+            "category": "fish",
+            "value": "(°))<<"
+        },
+        {
+            "category": "fish",
+            "value": ">^)))<～～"
+        },
+        {
+            "category": "fish",
+            "value": "≧( ° ° )≦"
+        },
+        {
+            "category": "spider",
+            "value": "/╲/╭(ఠఠ益ఠఠ)╮/╱"
+        },
+        {
+            "category": "spider",
+            "value": "/╲/╭(ರರ⌓ರರ)╮/╱"
+        },
+        {
+            "category": "spider",
+            "value": "/╲/╭༼ ººل͟ºº ༽╮/╱"
+        },
+        {
+            "category": "spider",
+            "value": "/╲/╭( ͡°͡° ͜ʖ ͡°͡°)╮/╱"
+        },
+        {
+            "category": "spider",
+            "value": "/╲/╭[ ᴼᴼ ౪ ᴼᴼ]╮/╱"
+        },
+        {
+            "category": "spider",
+            "value": "/╲/( •̀ ω •́ )/╱"
+        },
+        {
+            "category": "spider",
+            "value": "/╲/╭[☉﹏☉]╮/╱"
+        },
+        {
+            "category": "friends",
+            "value": "ヾ(・ω・)メ(・ω・)ノ"
+        },
+        {
+            "category": "friends",
+            "value": "ヽ(∀° )人( °∀)ノ"
+        },
+        {
+            "category": "friends",
+            "value": "ヽ( ⌒o⌒)人(⌒-⌒ )ﾉ"
+        },
+        {
+            "category": "friends",
+            "value": "(*^ω^)八(⌒▽⌒)八(-‿‿- )ヽ"
+        },
+        {
+            "category": "friends",
+            "value": "＼(＾∀＾)メ(＾∀＾)ノ"
+        },
+        {
+            "category": "friends",
+            "value": "ヾ(￣ー￣(≧ω≦*)ゝ"
+        },
+        {
+            "category": "friends",
+            "value": "ヽ( ⌒ω⌒)人(=^‥^= )ﾉ"
+        },
+        {
+            "category": "friends",
+            "value": "ヽ(≧◡≦)八(o^ ^o)ノ"
+        },
+        {
+            "category": "friends",
+            "value": "(*・∀・)爻(・∀・*)"
+        },
+        {
+            "category": "friends",
+            "value": "｡*:☆(・ω・人・ω・)｡:゜☆｡"
+        },
+        {
+            "category": "friends",
+            "value": "o(^^o)(o^^o)(o^^o)(o^^)o"
+        },
+        {
+            "category": "friends",
+            "value": "(((￣(￣(￣▽￣)￣)￣)))"
+        },
+        {
+            "category": "friends",
+            "value": "(°(°ω(°ω°(☆ω☆)°ω°)ω°)°)"
+        },
+        {
+            "category": "friends",
+            "value": "ヾ(・ω・`)ノヾ(´・ω・)ノ゛"
+        },
+        {
+            "category": "friends",
+            "value": "Ψ( `∀)(∀´ )Ψ"
+        },
+        {
+            "category": "friends",
+            "value": "(っ˘▽˘)(˘▽˘)˘▽˘ς)"
+        },
+        {
+            "category": "friends",
+            "value": "(((*°▽°*)八(*°▽°*)))"
+        },
+        {
+            "category": "friends",
+            "value": "☆ヾ(*´・∀・)ﾉヾ(・∀・`*)ﾉ☆"
+        },
+        {
+            "category": "friends",
+            "value": "(*＾ω＾)人(＾ω＾*)"
+        },
+        {
+            "category": "friends",
+            "value": "٩(๑･ิᴗ･ิ)۶٩(･ิᴗ･ิ๑)۶"
+        },
+        {
+            "category": "friends",
+            "value": "(☞°ヮ°)☞ ☜(°ヮ°☜)"
+        },
+        {
+            "category": "friends",
+            "value": "＼(▽￣  (￣▽￣) / ￣▽)／"
+        },
+        {
+            "category": "friends",
+            "value": "( ˙▿˙ )/( ˙▿˙ )/"
+        },
+        {
+            "category": "enemies",
+            "value": "ヽ( ･∀･)ﾉ_θ彡☆Σ(ノ `Д´)ノ"
+        },
+        {
+            "category": "enemies",
+            "value": "(*´∇`)┌θ☆(ﾉ>_<)ﾉ"
+        },
+        {
+            "category": "enemies",
+            "value": "( ￣ω￣)ノﾞ⌒☆ﾐ(o _ _)o"
+        },
+        {
+            "category": "enemies",
+            "value": "(*`0´)θ☆(メ°皿°)ﾉ"
+        },
+        {
+            "category": "enemies",
+            "value": "(o¬‿¬o )...☆ﾐ(*x_x)"
+        },
+        {
+            "category": "enemies",
+            "value": "(╬￣皿￣)=○＃(￣#)３￣)"
+        },
+        {
+            "category": "enemies",
+            "value": "(; -_-)――――――C<―_-)"
+        },
+        {
+            "category": "enemies",
+            "value": "＜( ￣︿￣)︵θ︵θ︵☆(＞口＜－)"
+        },
+        {
+            "category": "enemies",
+            "value": "(￣ε(#￣)☆╰╮o(￣▽￣///)"
+        },
+        {
+            "category": "enemies",
+            "value": "ヽ(>_<ヽ) ―⊂|=0ヘ(^‿^ )"
+        },
+        {
+            "category": "enemies",
+            "value": "ヘ(>_<ヘ) ￢o(￣‿￣ﾒ)"
+        },
+        {
+            "category": "enemies",
+            "value": ",,((( ￣□)_／ ＼_(○￣ ))),,"
+        },
+        {
+            "category": "enemies",
+            "value": "(҂` ﾛ ´)︻デ═一 ＼(º □ º l|l)/"
+        },
+        {
+            "category": "enemies",
+            "value": "(╯°Д°)╯︵ /(.□ . ＼)"
+        },
+        {
+            "category": "enemies",
+            "value": "(¬_¬'')ԅ(￣ε￣ԅ)"
+        },
+        {
+            "category": "enemies",
+            "value": "/( .□.)＼ ︵╰(°益°)╯︵ /(.□. /)"
+        },
+        {
+            "category": "enemies",
+            "value": "(ﾉ-.-)ﾉ….((((((((((((●~* ( >_<)"
+        },
+        {
+            "category": "enemies",
+            "value": "!!(ﾒ￣ ￣)_θ☆°0°)/"
+        },
+        {
+            "category": "enemies",
+            "value": "(`⌒*)O-(`⌒´Q)"
+        },
+        {
+            "category": "enemies",
+            "value": "(((ง’ω’)و三 ง’ω’)ڡ≡　☆⌒ﾐ((x_x)"
+        },
+        {
+            "category": "enemies",
+            "value": "(งಠ_ಠ)ง　σ( •̀ ω •́ σ)"
+        },
+        {
+            "category": "enemies",
+            "value": "(っ•﹏•)っ ✴==≡눈٩(`皿´҂)ง"
+        },
+        {
+            "category": "enemies",
+            "value": "(｢• ω •)｢ (⌒ω⌒`)"
+        },
+        {
+            "category": "enemies",
+            "value": "( °ᴗ°)~ð (/❛o❛)"
+        },
+        {
+            "category": "weapons",
+            "value": "( ・∀・)・・・--------☆"
+        },
+        {
+            "category": "weapons",
+            "value": "(/-_・)/D・・・・・------ →"
+        },
+        {
+            "category": "weapons",
+            "value": "(^ω^)ノﾞ(((((((((●～*"
+        },
+        {
+            "category": "weapons",
+            "value": "( -ω-)／占~~~~~"
+        },
+        {
+            "category": "weapons",
+            "value": "(/・・)ノ　　 (( く ((へ"
+        },
+        {
+            "category": "weapons",
+            "value": "―⊂|=0ヘ(^^ )"
+        },
+        {
+            "category": "weapons",
+            "value": "○∞∞∞∞ヽ(^ー^ )"
+        },
+        {
+            "category": "weapons",
+            "value": "(; ・_・)――――C"
+        },
+        {
+            "category": "weapons",
+            "value": "(ಠ o ಠ)¤=[]:::::>"
+        },
+        {
+            "category": "weapons",
+            "value": "(*＾＾)/~~~~~~~~~~◎"
+        },
+        {
+            "category": "weapons",
+            "value": "￢o(￣-￣ﾒ)"
+        },
+        {
+            "category": "weapons",
+            "value": "―(T_T)→"
+        },
+        {
+            "category": "weapons",
+            "value": "((( ￣□)_／"
+        },
+        {
+            "category": "weapons",
+            "value": "(ﾒ` ﾛ ´)︻デ═一"
+        },
+        {
+            "category": "weapons",
+            "value": "( ´-ω･)︻┻┳══━一"
+        },
+        {
+            "category": "weapons",
+            "value": "(ﾒ￣▽￣)︻┳═一"
+        },
+        {
+            "category": "weapons",
+            "value": "✴==≡눈٩(`皿´҂)ง"
+        },
+        {
+            "category": "weapons",
+            "value": "Q(`⌒´Q)"
+        },
+        {
+            "category": "magic",
+            "value": "(ノ ˘_˘)ノ　ζ|||ζ　ζ|||ζ　ζ|||ζ"
+        },
+        {
+            "category": "magic",
+            "value": "(ﾉ≧∀≦)ﾉ ‥…━━━★"
+        },
+        {
+            "category": "magic",
+            "value": "(ﾉ>ω<)ﾉ :｡･:*:･ﾟ’★,｡･:*:･ﾟ’☆"
+        },
+        {
+            "category": "magic",
+            "value": "(ノ°∀°)ノ⌒･*:.｡. .｡.:*･゜ﾟ･*☆"
+        },
+        {
+            "category": "magic",
+            "value": "╰( ͡° ͜ʖ ͡° )つ──☆*:・ﾟ"
+        },
+        {
+            "category": "magic",
+            "value": "(＃￣□￣)o━∈・・━━━━☆"
+        },
+        {
+            "category": "magic",
+            "value": "(⊃｡•́‿•̀｡)⊃━✿✿✿✿✿✿"
+        },
+        {
+            "category": "magic",
+            "value": "(∩ᄑ_ᄑ)⊃━☆ﾟ*･｡*･:≡( ε:)"
+        },
+        {
+            "category": "magic",
+            "value": "(/￣ー￣)/~~☆’.･.･:★’.･.･:☆"
+        },
+        {
+            "category": "magic",
+            "value": "(∩` ﾛ ´)⊃━炎炎炎炎炎"
+        },
+        {
+            "category": "food",
+            "value": "(っ˘ڡ˘ς)"
+        },
+        {
+            "category": "food",
+            "value": "( o˘◡˘o) ┌iii┐"
+        },
+        {
+            "category": "food",
+            "value": "(　’ω’)旦~~"
+        },
+        {
+            "category": "food",
+            "value": "( ˘▽˘)っ♨"
+        },
+        {
+            "category": "food",
+            "value": "♨o(>_<)o♨"
+        },
+        {
+            "category": "food",
+            "value": "( ・ω・)o-{{[〃]}}"
+        },
+        {
+            "category": "food",
+            "value": "(　・ω・)⊃-[二二]"
+        },
+        {
+            "category": "food",
+            "value": "( ・・)つ―{}@{}@{}-"
+        },
+        {
+            "category": "food",
+            "value": "( ・・)つ-●●●"
+        },
+        {
+            "category": "food",
+            "value": "(*´ー`)旦 旦(￣ω￣*)"
+        },
+        {
+            "category": "food",
+            "value": "(*´з`)口ﾟ｡ﾟ口(・∀・ )"
+        },
+        {
+            "category": "food",
+            "value": "( o^ ^o)且 且(´ω`*)"
+        },
+        {
+            "category": "food",
+            "value": "( ￣▽￣)[] [](≧▽≦ )"
+        },
+        {
+            "category": "food",
+            "value": "( *^^)o∀*∀o(^^* )"
+        },
+        {
+            "category": "food",
+            "value": "( ^^)_旦~~　 ~~U_(^^ )"
+        },
+        {
+            "category": "food",
+            "value": "(*￣▽￣)旦 且(´∀`*)"
+        },
+        {
+            "category": "food",
+            "value": "-●●●-ｃ(・・ )"
+        },
+        {
+            "category": "food",
+            "value": "( ・・)つ―●○◎-"
+        },
+        {
+            "category": "music",
+            "value": "ヾ(´〇`)ﾉ♪♪♪"
+        },
+        {
+            "category": "music",
+            "value": "ヘ(￣ω￣ヘ)"
+        },
+        {
+            "category": "music",
+            "value": "(〜￣▽￣)〜"
+        },
+        {
+            "category": "music",
+            "value": "〜(￣▽￣〜)"
+        },
+        {
+            "category": "music",
+            "value": "ヽ(o´∀`)ﾉ♪♬"
+        },
+        {
+            "category": "music",
+            "value": "(ﾉ≧∀≦)ﾉ"
+        },
+        {
+            "category": "music",
+            "value": "♪ヽ(^^ヽ)♪"
+        },
+        {
+            "category": "music",
+            "value": "♪(/_ _ )/♪"
+        },
+        {
+            "category": "music",
+            "value": "♪♬((d⌒ω⌒b))♬♪"
+        },
+        {
+            "category": "music",
+            "value": "└(￣-￣└))"
+        },
+        {
+            "category": "music",
+            "value": "((┘￣ω￣)┘"
+        },
+        {
+            "category": "music",
+            "value": "√(￣‥￣√)"
+        },
+        {
+            "category": "music",
+            "value": "└(＾＾)┐"
+        },
+        {
+            "category": "music",
+            "value": "┌(＾＾)┘"
+        },
+        {
+            "category": "music",
+            "value": "＼(￣▽￣)＼"
+        },
+        {
+            "category": "music",
+            "value": "／(￣▽￣)／"
+        },
+        {
+            "category": "music",
+            "value": "(￣▽￣)/♫•*¨*•.¸¸♪"
+        },
+        {
+            "category": "music",
+            "value": "(^_^♪)"
+        },
+        {
+            "category": "music",
+            "value": "(~˘▽˘)~"
+        },
+        {
+            "category": "music",
+            "value": "~(˘▽˘~)"
+        },
+        {
+            "category": "music",
+            "value": "ヾ(⌐■_■)ノ♪"
+        },
+        {
+            "category": "music",
+            "value": "(〜￣△￣)〜"
+        },
+        {
+            "category": "music",
+            "value": "(~‾▽‾)~"
+        },
+        {
+            "category": "music",
+            "value": "~(˘▽˘)~"
+        },
+        {
+            "category": "music",
+            "value": "乁( • ω •乁)"
+        },
+        {
+            "category": "music",
+            "value": "(｢• ω •)｢"
+        },
+        {
+            "category": "music",
+            "value": "⁽⁽◝( • ω • )◜⁾⁾"
+        },
+        {
+            "category": "music",
+            "value": "✺◟( • ω • )◞✺"
+        },
+        {
+            "category": "music",
+            "value": "♬♫♪◖(● o ●)◗♪♫♬"
+        },
+        {
+            "category": "music",
+            "value": "( ˘ ɜ˘) ♬♪♫"
+        },
+        {
+            "category": "music",
+            "value": "♪♪♪ ヽ(ˇ∀ˇ )ゞ"
+        },
+        {
+            "category": "music",
+            "value": "(ˇ▽ˇ)ノ♪♬♫"
+        },
+        {
+            "category": "games",
+            "value": "( ^^)p_____|_o____q(^^ )"
+        },
+        {
+            "category": "games",
+            "value": "(／o^)/ °⊥ ＼(^o＼)"
+        },
+        {
+            "category": "games",
+            "value": "!(;ﾟoﾟ)o/￣￣￣￣￣￣￣~ >ﾟ))))彡"
+        },
+        {
+            "category": "games",
+            "value": "ヽ(^o^)ρ┳┻┳°σ(^o^)ノ"
+        },
+        {
+            "category": "games",
+            "value": "(／_^)／　　●　＼(^_＼)"
+        },
+        {
+            "category": "games",
+            "value": "( (≡|≡))_／ ＼_((≡|≡) )"
+        },
+        {
+            "category": "games",
+            "value": "( ノ-_-)ノﾞ_□ VS □_ヾ(^-^ヽ)"
+        },
+        {
+            "category": "games",
+            "value": "ヽ(；^ ^)ノﾞ ．．．...___〇"
+        },
+        {
+            "category": "games",
+            "value": "(=O*_*)=O Q(*_*Q)"
+        },
+        {
+            "category": "games",
+            "value": "Ю　○三　＼(￣^￣＼)"
+        },
+        {
+            "category": "faces",
+            "value": "( ͡° ͜ʖ ͡°)"
+        },
+        {
+            "category": "faces",
+            "value": "( ͡° ʖ̯ ͡°)"
+        },
+        {
+            "category": "faces",
+            "value": "( ͠° ͟ʖ ͡°)"
+        },
+        {
+            "category": "faces",
+            "value": "( ͡ᵔ ͜ʖ ͡ᵔ)"
+        },
+        {
+            "category": "faces",
+            "value": "( . •́ _ʖ •̀ .)"
+        },
+        {
+            "category": "faces",
+            "value": "( ఠ ͟ʖ ఠ)"
+        },
+        {
+            "category": "faces",
+            "value": "( ͡ಠ ʖ̯ ͡ಠ)"
+        },
+        {
+            "category": "faces",
+            "value": "( ಠ ʖ̯ ಠ)"
+        },
+        {
+            "category": "faces",
+            "value": "( ಠ ͜ʖ ಠ)"
+        },
+        {
+            "category": "faces",
+            "value": "( ಥ ʖ̯ ಥ)"
+        },
+        {
+            "category": "faces",
+            "value": "( ͡• ͜ʖ ͡• )"
+        },
+        {
+            "category": "faces",
+            "value": "( ･ิ ͜ʖ ･ิ)"
+        },
+        {
+            "category": "faces",
+            "value": "( ͡ ͜ʖ ͡ )"
+        },
+        {
+            "category": "faces",
+            "value": "(≖ ͜ʖ≖)"
+        },
+        {
+            "category": "faces",
+            "value": "(ʘ ʖ̯ ʘ)"
+        },
+        {
+            "category": "faces",
+            "value": "(ʘ ͟ʖ ʘ)"
+        },
+        {
+            "category": "faces",
+            "value": "(ʘ ͜ʖ ʘ)"
+        },
+        {
+            "category": "faces",
+            "value": "(;´༎ຶٹ༎ຶ`)"
+        },
+        {
+            "category": "special",
+            "value": "٩(ˊ〇ˋ*)و"
+        },
+        {
+            "category": "special",
+            "value": "(￣^￣)ゞ"
+        },
+        {
+            "category": "special",
+            "value": "(－‸ლ)"
+        },
+        {
+            "category": "special",
+            "value": "(╯°益°)╯彡┻━┻"
+        },
+        {
+            "category": "special",
+            "value": "(╮°-°)╮┳━━┳ ( ╯°□°)╯ ┻━━┻"
+        },
+        {
+            "category": "special",
+            "value": "┬─┬ノ( º _ ºノ)"
+        },
+        {
+            "category": "special",
+            "value": "(oT-T)尸"
+        },
+        {
+            "category": "special",
+            "value": "( ͡° ͜ʖ ͡°)"
+        },
+        {
+            "category": "special",
+            "value": "[̲̅$̲̅(̲̅ ͡° ͜ʖ ͡°̲̅)̲̅$̲̅]"
+        },
+        {
+            "category": "special",
+            "value": "(ಠ_ಠ)"
+        },
+        {
+            "category": "special",
+            "value": "౦０o ｡ (‾́。‾́ )y~~"
+        },
+        {
+            "category": "special",
+            "value": "(￣﹃￣)"
+        },
+        {
+            "category": "special",
+            "value": "(x(x_(x_x(O_o)x_x)_x)x)"
+        },
+        {
+            "category": "special",
+            "value": "(　･ω･)☞"
+        },
+        {
+            "category": "special",
+            "value": "(⌐■_■)"
+        },
+        {
+            "category": "special",
+            "value": "(◕‿◕✿)"
+        },
+        {
+            "category": "special",
+            "value": "(　￣.)o-　　【　TV　】"
+        },
+        {
+            "category": "special",
+            "value": "｀、ヽ｀ヽ｀、ヽ(ノ＞＜)ノ ｀、ヽ｀☂ヽ｀、ヽ"
+        },
+        {
+            "category": "special",
+            "value": "‿︵‿︵‿︵‿ヽ(°□° )ノ︵‿︵‿︵‿︵"
+        },
+        {
+            "category": "special",
+            "value": "( • )( • )ԅ(≖‿≖ԅ)"
+        },
+        {
+            "category": "special",
+            "value": "( ＾▽＾)っ✂╰⋃╯"
+        },
+        {
+            "category": "special",
+            "value": "〜〜(／￣▽)／　〜ф"
+        },
+        {
+            "category": "special",
+            "value": "ଘ(੭ˊᵕˋ)੭* ੈ✩‧₊˚"
+        },
+        {
+            "category": "special",
+            "value": "ଘ(੭ˊ꒳​ˋ)੭✧"
+        },
+        {
+            "category": "special",
+            "value": "_(:3 」∠)_"
+        },
+        {
+            "category": "special",
+            "value": "∠( ᐛ 」∠)_"
+        }
+    ]
+}
