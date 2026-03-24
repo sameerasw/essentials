@@ -20,7 +20,12 @@ object BluetoothBatteryUtils {
             context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
         val adapter = bluetoothManager?.adapter ?: return emptyList()
 
-        if (!adapter.isEnabled) return emptyList()
+        val isEnabled = try {
+            adapter.isEnabled
+        } catch (e: SecurityException) {
+            false
+        }
+        if (!isEnabled) return emptyList()
 
         val devices = try {
             adapter.bondedDevices

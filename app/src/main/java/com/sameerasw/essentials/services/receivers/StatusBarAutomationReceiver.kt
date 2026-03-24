@@ -41,10 +41,15 @@ class StatusBarAutomationReceiver : BroadcastReceiver() {
             }
         }
 
+        // Get current value safely
+        val currentValue = try {
+            Settings.System.getInt(context.contentResolver, key, -1)
+        } catch (e: Exception) {
+            -1
+        }
+
         // Background Shizuku/Root fallback
-        if (!success || !Settings.System.getInt(context.contentResolver, key, -1)
-                .let { it == value }
-        ) {
+        if (!success || currentValue != value) {
             if (com.sameerasw.essentials.utils.ShizukuUtils.hasPermission()) {
                 com.sameerasw.essentials.utils.ShizukuUtils.runCommand("settings put system $key $value")
                 com.sameerasw.essentials.utils.ShizukuUtils.runCommand("settings put secure $key $value")

@@ -383,6 +383,7 @@ fun KeyboardInputView(
     var shiftState by remember { mutableStateOf(ShiftState.OFF) }
     var isClipboardMode by remember { mutableStateOf(false) }
     var isEmojiMode by remember { mutableStateOf(false) }
+    var isKaomojiMode by remember { mutableStateOf(false) }
     var isSuggestionsCollapsed by remember { mutableStateOf(false) }
     var currentWord by remember { mutableStateOf("") }
 
@@ -448,7 +449,7 @@ fun KeyboardInputView(
 
     // Total Height animation
     val animatedTotalHeight by animateDpAsState(
-        targetValue = if (isEmojiMode) keyboardHeight + 120.dp else keyboardHeight,
+        targetValue = if (isEmojiMode || isKaomojiMode) keyboardHeight + 120.dp else keyboardHeight,
         animationSpec = spring(
             dampingRatio = Spring.DampingRatioLowBouncy,
             stiffness = Spring.StiffnessMedium
@@ -462,15 +463,17 @@ fun KeyboardInputView(
         label = "blur"
     )
 
-    // Pre-load Emoji data on startup (Background thread)
+    // Pre-load Emoji & Kaomoji data on startup (Background thread)
     LaunchedEffect(Unit) {
         EmojiData.load(view.context, scope)
+        KaomojiData.load(view.context, scope)
     }
 
     LaunchedEffect(onOpened) {
         if (onOpened > 0) {
             isSymbols = false
             isEmojiMode = false
+            isKaomojiMode = false
             isClipboardMode = false
             isSuggestionsCollapsed = false
             shiftState = ShiftState.OFF
@@ -786,7 +789,10 @@ fun KeyboardInputView(
                                                 onUndoClick()
                                             } else if (desc == "Emoji") {
                                                 isEmojiMode = !isEmojiMode
-                                                if (isEmojiMode) isClipboardMode = false
+                                                if (isEmojiMode) {
+                                                    isClipboardMode = false
+                                                    isKaomojiMode = false
+                                                }
                                             } else if (desc == "Backspace") {
                                                 onKeyPress(android.view.KeyEvent.KEYCODE_DEL)
                                             } else if (desc == "Expand") {
@@ -803,9 +809,17 @@ fun KeyboardInputView(
                                             if (desc == "Backspace") canDelete() else true
                                         },
                                         onPress = { performLightHaptic() },
+                                        onLongClick = if (desc == "Emoji") {
+                                            {
+                                                isKaomojiMode = true
+                                                isEmojiMode = false
+                                                isClipboardMode = false
+                                                performHeavyHaptic()
+                                            }
+                                        } else null,
                                         interactionSource = fnInteraction,
-                                        containerColor = if ((desc == "Clipboard" && isClipboardMode) || (desc == "Emoji" && isEmojiMode)) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHighest,
-                                        contentColor = if ((desc == "Clipboard" && isClipboardMode) || (desc == "Emoji" && isEmojiMode)) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface,
+                                        containerColor = if ((desc == "Clipboard" && isClipboardMode) || (desc == "Emoji" && (isEmojiMode || isKaomojiMode))) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHighest,
+                                        contentColor = if ((desc == "Clipboard" && isClipboardMode) || (desc == "Emoji" && (isEmojiMode || isKaomojiMode))) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface,
                                         shape = RoundedCornerShape(animatedRadius),
                                         modifier = if (desc == "Expand") {
                                             Modifier.width(50.dp).fillMaxHeight()
@@ -847,6 +861,7 @@ fun KeyboardInputView(
             val currentMode = when {
                 isEmojiMode -> 1
                 isClipboardMode && isClipboardEnabled -> 2
+                isKaomojiMode -> 3
                 else -> 0
             }
 
@@ -951,6 +966,25 @@ fun KeyboardInputView(
                             onSwipeDownToExit = {
                                 if (isEmojiMode) {
                                     isEmojiMode = false
+                                    performHeavyHaptic()
+                                }
+                            },
+                            bottomContentPadding = bottomPadding
+                        )
+                    }
+
+                    3 -> {
+                        KaomojiPicker(
+                            modifier = Modifier.fillMaxSize(),
+                            keyRoundness = keyRoundness,
+                            isHapticsEnabled = isHapticsEnabled,
+                            hapticStrength = hapticStrength,
+                            onKaomojiSelected = { kaomoji ->
+                                handleType(kaomoji)
+                            },
+                            onSwipeDownToExit = {
+                                if (isKaomojiMode) {
+                                    isKaomojiMode = false
                                     performHeavyHaptic()
                                 }
                             },

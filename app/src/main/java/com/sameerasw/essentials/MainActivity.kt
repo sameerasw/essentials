@@ -70,7 +70,7 @@ import androidx.activity.compose.PredictiveBackHandler
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
-import androidx.fragment.app.FragmentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import android.widget.Toast
@@ -114,7 +114,7 @@ import com.sameerasw.essentials.viewmodels.MainViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
-class MainActivity : FragmentActivity() {
+class MainActivity : AppCompatActivity() {
     val viewModel: MainViewModel by viewModels()
     val updatesViewModel: AppUpdatesViewModel by viewModels()
     val locationViewModel: LocationReachedViewModel by viewModels()

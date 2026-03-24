@@ -33,12 +33,16 @@ data class DeviceInfo(
 
 object DeviceUtils {
     fun getDeviceInfo(context: Context): DeviceInfo {
-        val deviceName = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-            Settings.Global.getString(context.contentResolver, Settings.Global.DEVICE_NAME)
-                ?: Settings.Secure.getString(context.contentResolver, "bluetooth_name")
-                ?: Build.MODEL
-        } else {
-            Settings.Secure.getString(context.contentResolver, "bluetooth_name") ?: Build.MODEL
+        val deviceName = try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+                Settings.Global.getString(context.contentResolver, Settings.Global.DEVICE_NAME)
+                    ?: Settings.Secure.getString(context.contentResolver, "bluetooth_name")
+                    ?: Build.MODEL
+            } else {
+                Settings.Secure.getString(context.contentResolver, "bluetooth_name") ?: Build.MODEL
+            }
+        } catch (e: Exception) {
+            Build.MODEL
         }
 
         val stat = StatFs(Environment.getDataDirectory().path)

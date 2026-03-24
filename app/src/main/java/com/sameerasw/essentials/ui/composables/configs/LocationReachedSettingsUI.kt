@@ -215,7 +215,16 @@ fun LocationReachedSettingsUI(
                                     Uri.parse("geo:${alarm.latitude},${alarm.longitude}")
                                 val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
                                 mapIntent.setPackage("com.google.android.apps.maps")
-                                context.startActivity(mapIntent)
+                                try {
+                                    context.startActivity(mapIntent)
+                                } catch (e: android.content.ActivityNotFoundException) {
+                                    try {
+                                        mapIntent.setPackage(null)
+                                        context.startActivity(mapIntent)
+                                    } catch (ex: android.content.ActivityNotFoundException) {
+                                        android.widget.Toast.makeText(context, R.string.error_app_uninstalled, android.widget.Toast.LENGTH_SHORT).show()
+                                    }
+                                }
                             },
                             modifier = Modifier.weight(1f),
                             shape = androidx.compose.foundation.shape.CircleShape,
@@ -284,7 +293,16 @@ fun LocationReachedSettingsUI(
                             val gmmIntentUri = Uri.parse("geo:0,0?q=")
                             val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
                             mapIntent.setPackage("com.google.android.apps.maps")
-                            context.startActivity(mapIntent)
+                            try {
+                                context.startActivity(mapIntent)
+                            } catch (e: android.content.ActivityNotFoundException) {
+                                try {
+                                    mapIntent.setPackage(null)
+                                    context.startActivity(mapIntent)
+                                } catch (ex: android.content.ActivityNotFoundException) {
+                                    android.widget.Toast.makeText(context, R.string.error_app_uninstalled, android.widget.Toast.LENGTH_SHORT).show()
+                                }
+                            }
                         },
                         shape = androidx.compose.foundation.shape.CircleShape,
                         colors = ButtonDefaults.filledTonalButtonColors()

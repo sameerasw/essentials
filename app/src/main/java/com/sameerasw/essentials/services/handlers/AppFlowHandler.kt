@@ -111,6 +111,10 @@ class AppFlowHandler(
     }
 
     private fun checkHighlightNightLight(packageName: String) {
+        val prefs = service.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+        val isEnabled = prefs.getBoolean("dynamic_night_light_enabled", false)
+        if (!isEnabled) return
+
         pendingNLRunnable?.let { handler.removeCallbacks(it) }
 
         if (ignoredSystemPackages.contains(packageName)) {
@@ -127,8 +131,6 @@ class AppFlowHandler(
 
     private fun processNightLightChange(packageName: String) {
         val prefs = service.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-        val isEnabled = prefs.getBoolean("dynamic_night_light_enabled", false)
-        if (!isEnabled) return
 
         val json = prefs.getString("dynamic_night_light_selected_apps", null)
         val selectedApps: List<AppSelection> = if (json != null) {

@@ -19,11 +19,13 @@ import android.os.PowerManager
 import android.provider.CalendarContract
 import android.provider.Settings
 import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
+import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -107,6 +109,7 @@ class MainViewModel : ViewModel() {
     val isFullScreenIntentPermissionGranted = mutableStateOf(false)
     val isBluetoothPermissionGranted = mutableStateOf(false)
     val isUsageStatsPermissionGranted = mutableStateOf(false)
+    val appLanguage = mutableStateOf("en")
 
     val isBluetoothDevicesEnabled = mutableStateOf(false)
     val isCallVibrationsEnabled = mutableStateOf(false)
@@ -450,10 +453,24 @@ class MainViewModel : ViewModel() {
         settingsRepository.putString(SettingsRepository.KEY_SENTRY_REPORT_MODE, mode)
     }
 
+    fun setAppLanguage(languageCode: String) {
+        appLanguage.value = languageCode
+        val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(languageCode)
+        AppCompatDelegate.setApplicationLocales(appLocale)
+    }
+
     fun check(context: Context) {
         appContext = context.applicationContext
         settingsRepository = SettingsRepository(context)
         updateRepository = UpdateRepository()
+
+        // Sync with system per-app language settings
+        val currentLocales = AppCompatDelegate.getApplicationLocales()
+        if (!currentLocales.isEmpty) {
+            appLanguage.value = currentLocales.get(0)?.language ?: "en"
+        } else {
+            appLanguage.value = "en"
+        }
 
         isAccessibilityEnabled.value = PermissionUtils.isAccessibilityServiceEnabled(context)
         isWriteSecureSettingsEnabled.value = PermissionUtils.canWriteSecureSettings(context)

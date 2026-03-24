@@ -907,5 +907,6 @@ class SettingsRepository(private val context: Context) {
     fun resetPrivateDnsPresets() {
         savePrivateDnsPresets(getDefaultDnsPresets())
     }
+
 }
 

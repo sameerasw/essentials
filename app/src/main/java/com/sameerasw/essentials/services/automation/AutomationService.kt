@@ -21,14 +21,26 @@ class AutomationService : Service() {
 
     override fun onBind(intent: Intent?): IBinder? = null
 
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        val isForegroundStart = intent?.getBooleanExtra("is_foreground_start", false) ?: false
+        if (isForegroundStart) {
+            try {
+                startForeground(
+                    NOTIFICATION_ID, createNotification(),
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE else 0
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+                // If it fails, it will continue as a background service if allowed
+            }
+        }
+        return START_STICKY
+    }
+
     override fun onCreate() {
         super.onCreate()
         isRunning = true
         createNotificationChannel()
-        startForeground(
-            NOTIFICATION_ID, createNotification(),
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE else 0
-        )
 
         // Modules will be started by AutomationManager calling onServiceCreated/Updated
         AutomationManager.onServiceConnected(this)

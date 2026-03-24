@@ -103,9 +103,12 @@ class AmbientGlanceHandler(
                 }
             }
 
+            if (overlayView == null || isDetached) return
             handler.postDelayed(this, 1000L)
         }
     }
+
+    private var isDetached = false
 
     private val revertToMusicRunnable = Runnable {
         if (overlayView != null && isDockedMode) {
@@ -283,7 +286,15 @@ class AmbientGlanceHandler(
         }
 
         // 1. Clock at top
-        clockView = TextClock(context).apply {
+        clockView = object : TextClock(context) {
+            override fun onDetachedFromWindow() {
+                try {
+                    super.onDetachedFromWindow()
+                } catch (e: IllegalArgumentException) {
+                    e.printStackTrace()
+                }
+            }
+        }.apply {
             format12Hour = "hh:mm"
             format24Hour = "HH:mm"
             textSize = 25f
@@ -321,8 +332,6 @@ class AmbientGlanceHandler(
             outlineProvider = object : android.view.ViewOutlineProvider() {
                 override fun getOutline(view: View, outline: android.graphics.Outline) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                        outline.setPath(petalPath)
-                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                         outline.setPath(petalPath)
                     } else {
                         outline.setOval(0, 0, view.width, view.height)
@@ -649,6 +658,7 @@ class AmbientGlanceHandler(
         handler.removeCallbacks(revertToMusicRunnable)
         handler.removeCallbacks(burnInProtectionRunnable)
         if (overlayView != null && windowManager != null) {
+            isDetached = true
             try {
                 service.unregisterReceiver(volumeReceiver)
                 volumeReceiver = null
@@ -656,6 +666,12 @@ class AmbientGlanceHandler(
             } catch (e: Exception) {
                 // ignore
             }
+            // Cancel all animators
+            clockView?.animate()?.cancel()
+            centerContainer?.animate()?.cancel()
+            textContainer?.animate()?.cancel()
+            volumeStrokeView?.cleanup()
+
             overlayView = null
             volumeStrokeView = null
             volumeIconView = null
@@ -699,6 +715,12 @@ class AmbientGlanceHandler(
         }
         private val pathMeasure = PathMeasure(petalPath, false)
         private val progressPath = Path()
+        private var isDetached = false
+
+        fun cleanup() {
+            isDetached = true
+            animator?.cancel()
+        }
 
         fun updatePercentage(newPercentage: Int) {
             animator?.cancel()
@@ -728,6 +750,7 @@ class AmbientGlanceHandler(
         }
 
         override fun onDraw(canvas: Canvas) {
+            if (isDetached) return
             super.onDraw(canvas)
             val length = pathMeasure.length
             val end = length * (currentPercentage / 100f)

@@ -26,12 +26,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import java.util.concurrent.Executor
 
-class AppLockActivity : FragmentActivity() {
+class AppLockActivity : AppCompatActivity() {
 
     private lateinit var executor: Executor
     private lateinit var biometricPrompt: BiometricPrompt

@@ -37,6 +37,22 @@ class AmbientDreamService : DreamService() {
 
     companion object {
         var isDreaming = false
+        private var googleSansFlexStatic: Typeface? = null
+        private var googleSansStatic: Typeface? = null
+
+        fun getFontFlex(context: Context): Typeface? {
+            if (googleSansFlexStatic == null) {
+                googleSansFlexStatic = ResourcesCompat.getFont(context, R.font.google_sans_flex)
+            }
+            return googleSansFlexStatic
+        }
+
+        fun getFont(context: Context): Typeface? {
+            if (googleSansStatic == null) {
+                googleSansStatic = ResourcesCompat.getFont(context, R.font.google_sans_flex)
+            }
+            return googleSansStatic
+        }
     }
 
     // UI Elements
@@ -82,11 +98,7 @@ class AmbientDreamService : DreamService() {
             try {
                 val mediaSessionManager =
                     getSystemService(MEDIA_SESSION_SERVICE) as MediaSessionManager
-                val componentName = android.content.ComponentName(
-                    this@AmbientDreamService,
-                    com.sameerasw.essentials.services.NotificationListener::class.java
-                )
-                val sessions = mediaSessionManager.getActiveSessions(componentName)
+                val sessions = getMediaSessions(mediaSessionManager)
 
                 // Find playing session matching target package if possible
                 val activeSession = sessions.firstOrNull { session ->
@@ -159,12 +171,16 @@ class AmbientDreamService : DreamService() {
                 e.printStackTrace()
             }
 
+            if (isDetached) return
             handler.postDelayed(this, 1000L)
         }
     }
 
+    private var isDetached = false
+
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
+            if (isDetached) return
             if (intent?.action == "SHOW_AMBIENT_GLANCE") {
                 handleIntent(intent)
             }
@@ -179,8 +195,8 @@ class AmbientDreamService : DreamService() {
         isInteractive = false
         isFullscreen = true
 
-        googleSansFlex = ResourcesCompat.getFont(this, R.font.google_sans_flex)
-        googleSans = ResourcesCompat.getFont(this, R.font.google_sans_flex)
+        googleSansFlex = getFontFlex(this)
+        googleSans = getFont(this)
 
         isDreaming = true
         setupUI()
@@ -218,7 +234,15 @@ class AmbientDreamService : DreamService() {
 
     private fun setupContentUI(parentInfo: FrameLayout) {
         // 1. Clock at top
-        clockView = TextClock(this).apply {
+        clockView = object : TextClock(this) {
+            override fun onDetachedFromWindow() {
+                try {
+                    super.onDetachedFromWindow()
+                } catch (e: IllegalArgumentException) {
+                    e.printStackTrace()
+                }
+            }
+        }.apply {
             format12Hour = "hh\nmm"
             format24Hour = "HH\nmm"
             textSize = 80f
@@ -255,8 +279,6 @@ class AmbientDreamService : DreamService() {
             outlineProvider = object : android.view.ViewOutlineProvider() {
                 override fun getOutline(view: View, outline: android.graphics.Outline) {
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-                        outline.setPath(petalPath)
-                    } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
                         outline.setPath(petalPath)
                     } else {
                         outline.setOval(0, 0, view.width, view.height)
@@ -366,6 +388,7 @@ class AmbientDreamService : DreamService() {
         if (volumeReceiver == null) {
             volumeReceiver = object : BroadcastReceiver() {
                 override fun onReceive(context: Context?, intent: Intent?) {
+                    if (isDetached) return
                     if (intent?.action == "android.media.VOLUME_CHANGED_ACTION") {
                         val audioManager =
                             context?.getSystemService(AUDIO_SERVICE) as? android.media.AudioManager
@@ -407,13 +430,21 @@ class AmbientDreamService : DreamService() {
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
+        isDetached = true
         isDreaming = false
         unregisterReceiver(receiver)
         if (volumeReceiver != null) unregisterReceiver(volumeReceiver)
         handler.removeCallbacksAndMessages(null)
+
+        // Cancel all View animators
+        clockView?.animate()?.cancel()
+        centerContainer?.animate()?.cancel()
+        textContainer?.animate()?.cancel()
+        volumeStrokeView?.cleanup()
     }
 
     private fun handleIntent(intent: Intent) {
+        if (isDetached) return
         eventType = intent.getStringExtra("event_type")
         targetPackage = intent.getStringExtra("package_name")
         val newTitle = intent.getStringExtra("track_title")
@@ -452,14 +483,11 @@ class AmbientDreamService : DreamService() {
     }
 
     private fun checkDirectly() {
+        if (isDetached) return
         try {
             val mediaSessionManager =
                 getSystemService(MEDIA_SESSION_SERVICE) as MediaSessionManager
-            val componentName = android.content.ComponentName(
-                this,
-                com.sameerasw.essentials.services.NotificationListener::class.java
-            )
-            val sessions = mediaSessionManager.getActiveSessions(componentName)
+            val sessions = getMediaSessions(mediaSessionManager)
             val playingSession =
                 sessions.firstOrNull { it.playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING }
 
@@ -474,6 +502,30 @@ class AmbientDreamService : DreamService() {
             }
         } catch (_: Exception) {
             switchToClockMode()
+        }
+    }
+
+    private fun getMediaSessions(manager: MediaSessionManager): List<android.media.session.MediaController> {
+        val componentName = android.content.ComponentName(
+            this,
+            com.sameerasw.essentials.services.NotificationListener::class.java
+        )
+        return try {
+            manager.getActiveSessions(componentName)
+        } catch (e: SecurityException) {
+            // Fallback for Android 16+ or restricted environments
+            try {
+                val sessions = mutableListOf<android.media.session.MediaController>()
+                val notifications =
+                    (getSystemService(android.app.NotificationManager::class.java))?.activeNotifications
+                        ?: emptyArray()
+
+                emptyList()
+            } catch (_: Exception) {
+                emptyList()
+            }
+        } catch (e: Exception) {
+            emptyList()
         }
     }
 
@@ -640,6 +692,12 @@ class AmbientDreamService : DreamService() {
         }
         private val pathMeasure = PathMeasure(petalPath, false)
         private val progressPath = Path()
+        private var isDetached = false
+
+        fun cleanup() {
+            isDetached = true
+            animator?.cancel()
+        }
 
         fun updatePercentage(newPercentage: Int) {
             animator?.cancel()
@@ -669,6 +727,7 @@ class AmbientDreamService : DreamService() {
         }
 
         override fun onDraw(canvas: Canvas) {
+            if (isDetached) return
             super.onDraw(canvas)
             val length = pathMeasure.length
             val end = length * (currentPercentage / 100f)

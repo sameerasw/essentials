@@ -39,7 +39,12 @@ class SoundModeHandler(private val context: Context) {
             else -> AudioManager.RINGER_MODE_NORMAL
         }
 
-        audioManager.ringerMode = nextRingerMode
+        try {
+            audioManager.ringerMode = nextRingerMode
+        } catch (e: Exception) {
+            // OEM-specific restrictions or race conditions
+        }
+        
         return nextRingerMode
     }
 }

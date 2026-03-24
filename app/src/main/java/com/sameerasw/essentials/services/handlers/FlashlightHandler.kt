@@ -396,7 +396,6 @@ class FlashlightHandler(
                     cameraManager.setTorchMode(cameraId, false)
                     kotlinx.coroutines.delay(200L)
                 } catch (e: Exception) {
-                    Log.e("Flashlight", "Fallback pulse failed for cameraId: $cameraId", e)
                 } finally {
                     isInternalToggle = false
                 }
@@ -434,7 +433,6 @@ class FlashlightHandler(
             }
 
             currentIntensityLevel = targetLevel
-            updateFlashlightNotification(targetLevel)
 
             val prefs = service.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
             if (prefs.getBoolean("flashlight_global_enabled", false)) {
@@ -443,7 +441,7 @@ class FlashlightHandler(
 
             flashlightJob?.cancel()
             flashlightJob = scope.launch {
-                FlashlightUtil.fadeFlashlight(
+                val success = FlashlightUtil.fadeFlashlight(
                     service,
                     cameraId,
                     fromLevel = currentSystemLevel,
@@ -451,6 +449,9 @@ class FlashlightHandler(
                     durationMs = 150L,
                     steps = 5
                 )
+                if (success) {
+                    updateFlashlightNotification(targetLevel)
+                }
             }
 
             if (targetLevel == maxLevel || targetLevel == 1) {
@@ -510,35 +511,51 @@ class FlashlightHandler(
                     isInternalToggle = true
                     flashlightJob?.cancel()
                     flashlightJob = scope.launch {
-                        FlashlightUtil.fadeFlashlight(
+                        val success = FlashlightUtil.fadeFlashlight(
                             service,
                             finalCameraId,
                             targetState,
                             maxLevel = currentIntensityLevel
                         )
-                    }
-                    if (targetState) {
-                        updateFlashlightNotification(currentIntensityLevel)
-                    } else {
-                        cancelFlashlightNotification()
+                        if (success) {
+                            if (targetState) {
+                                updateFlashlightNotification(currentIntensityLevel)
+                            } else {
+                                cancelFlashlightNotification()
+                            }
+                        } else {
+                            // Hardware failed (camera in use), reset toggle
+                            isInternalToggle = false
+                        }
                     }
                 } else {
                     isInternalToggle = true
                     flashlightJob?.cancel()
-                    cameraManager.setTorchMode(finalCameraId, !isTorchOn)
-                    currentIntensityLevel = overrideIntensity ?: if (prefs.getBoolean(
-                            "flashlight_global_enabled",
-                            false
-                        )
-                    ) {
-                        prefs.getInt("flashlight_last_intensity", defaultLevel)
-                    } else {
-                        defaultLevel
+                    var success = false
+                    try {
+                        cameraManager.setTorchMode(finalCameraId, !isTorchOn)
+                        success = true
+                    } catch (e: Exception) {
+                        // SILENT: Handle silently as per user request
                     }
-                    if (!isTorchOn) {
-                        updateFlashlightNotification(currentIntensityLevel)
+                    
+                    if (success) {
+                        currentIntensityLevel = overrideIntensity ?: if (prefs.getBoolean(
+                                "flashlight_global_enabled",
+                                false
+                            )
+                        ) {
+                            prefs.getInt("flashlight_last_intensity", defaultLevel)
+                        } else {
+                            defaultLevel
+                        }
+                        if (!isTorchOn) {
+                            updateFlashlightNotification(currentIntensityLevel)
+                        } else {
+                            cancelFlashlightNotification()
+                        }
                     } else {
-                        cancelFlashlightNotification()
+                        isInternalToggle = false
                     }
                 }
                 triggerHapticFeedback()

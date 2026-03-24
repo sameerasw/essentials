@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -76,6 +77,7 @@ import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.dialogs.AboutSection
 import com.sameerasw.essentials.ui.components.pickers.CrashReportingPicker
 import com.sameerasw.essentials.ui.components.pickers.DefaultTabPicker
+import com.sameerasw.essentials.ui.components.pickers.LanguagePicker
 import com.sameerasw.essentials.ui.components.sheets.InstructionsBottomSheet
 import com.sameerasw.essentials.ui.components.sheets.UpdateBottomSheet
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
@@ -91,7 +93,7 @@ import java.util.Date
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
-class SettingsActivity : ComponentActivity() {
+class SettingsActivity : AppCompatActivity() {
 
     private val viewModel: MainViewModel by viewModels()
 
@@ -339,6 +341,11 @@ fun SettingsContent(
         )
 
         RoundedCardContainer {
+            val appLanguage by viewModel.appLanguage
+            LanguagePicker(
+                selectedLanguageCode = appLanguage,
+                onLanguageSelected = { viewModel.setAppLanguage(it) }
+            )
             IconToggleItem(
                 iconRes = R.drawable.rounded_mobile_vibrate_24,
                 title = "Haptic Feedback",

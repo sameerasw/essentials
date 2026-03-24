@@ -46,6 +46,7 @@ import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.DeviceUtils
 import androidx.compose.ui.unit.sp
 import com.sameerasw.essentials.ui.components.pickers.CrashReportingPicker
+import com.sameerasw.essentials.ui.components.pickers.LanguagePicker
 import kotlinx.coroutines.launch
 import kotlin.math.PI
 import kotlin.math.atan2
@@ -96,6 +97,7 @@ fun WelcomeScreen(
                 when (step) {
                     OnboardingStep.WELCOME -> {
                         WelcomeStepContent(
+                            viewModel = viewModel,
                             rotationAnimatable = rotationAnimatable,
                             center = center,
                             onCenterChanged = { center = it },
@@ -158,6 +160,7 @@ fun WelcomeScreen(
 
 @Composable
 fun WelcomeStepContent(
+    viewModel: MainViewModel,
     rotationAnimatable: Animatable<Float, *>,
     center: Offset,
     onCenterChanged: (Offset) -> Unit,
@@ -323,7 +326,17 @@ fun WelcomeStepContent(
                 )
             }
 
-            Spacer(modifier = Modifier.weight(0.3f))
+            Spacer(modifier = Modifier.height(16.dp))
+            
+            val appLanguage by viewModel.appLanguage
+            RoundedCardContainer(modifier = Modifier.padding(horizontal = 16.dp)) {
+                LanguagePicker(
+                    selectedLanguageCode = appLanguage,
+                    onLanguageSelected = { viewModel.setAppLanguage(it) }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(2.dp))
         }
 
         Button(

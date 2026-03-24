@@ -158,7 +158,10 @@ object PermissionUtils {
                         android.Manifest.permission.BLUETOOTH_SCAN
                     ) == android.content.pm.PackageManager.PERMISSION_GRANTED
         } else {
-            true
+            androidx.core.content.ContextCompat.checkSelfPermission(
+                context,
+                android.Manifest.permission.BLUETOOTH
+            ) == android.content.pm.PackageManager.PERMISSION_GRANTED
         }
     }
 

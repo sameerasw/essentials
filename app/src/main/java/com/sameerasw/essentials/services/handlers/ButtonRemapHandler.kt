@@ -247,14 +247,24 @@ class ButtonRemapHandler(
     }
 
     private fun toggleRingerMode(targetMode: Int) {
+        val notificationManager = service.getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
+        if (!notificationManager.isNotificationPolicyAccessGranted) {
+            return
+        }
+
         val am = service.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         val currentMode = am.ringerMode
-        if (currentMode == targetMode) {
-            am.ringerMode = AudioManager.RINGER_MODE_NORMAL
-        } else {
-            am.ringerMode = targetMode
+        
+        try {
+            if (currentMode == targetMode) {
+                am.ringerMode = AudioManager.RINGER_MODE_NORMAL
+            } else {
+                am.ringerMode = targetMode
+            }
+            triggerHapticFeedback()
+        } catch (e: Exception) {
+            Log.e("ButtonRemap", "Error toggling ringer mode", e)
         }
-        triggerHapticFeedback()
     }
 
     private fun launchAssistant() {

@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -30,6 +31,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,11 +46,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.viewmodels.MainViewModel
+import io.sentry.Sentry
+import io.sentry.protocol.Feedback
 import org.json.JSONObject
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,6 +64,8 @@ fun BugReportBottomSheet(
 ) {
     val context = LocalContext.current
     var deviceInfoString by remember { mutableStateOf("") }
+    var feedbackMessage by remember { mutableStateOf("") }
+    var contactEmail by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         val jsonString = viewModel.generateBugReport(context)
@@ -120,18 +128,62 @@ fun BugReportBottomSheet(
                 }
             }
 
-            Text(
-                text = stringResource(R.string.bug_report_send_via),
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+            // Feedback Input
+            OutlinedTextField(
+                value = feedbackMessage,
+                onValueChange = { feedbackMessage = it },
+                label = { Text(stringResource(R.string.bug_report_feedback_placeholder)) },
+                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                shape = MaterialTheme.shapes.large,
+                minLines = 3
             )
 
+            // Contact Email Input
+            OutlinedTextField(
+                value = contactEmail,
+                onValueChange = { contactEmail = it },
+                label = { Text(stringResource(R.string.bug_report_contact_email_label)) },
+                modifier = Modifier.fillMaxWidth(),
+                shape = MaterialTheme.shapes.large,
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+            )
             // Actions
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                // GitHub
+                // Sentry Feedback
                 Button(
                     onClick = {
-                        val body = "Device Info:\n$deviceInfoString\n\nIssue Description:\n"
+                        val feedback = Feedback(feedbackMessage)
+                        if (contactEmail.isNotBlank()) {
+                            feedback.contactEmail = contactEmail
+                        }
+                        Sentry.captureFeedback(feedback)
+                        Toast.makeText(context, R.string.msg_feedback_sent, Toast.LENGTH_SHORT).show()
+                        onDismissRequest()
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = feedbackMessage.isNotBlank()
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.rounded_send_24),
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(stringResource(R.string.action_send_feedback))
+                }
+
+                Text(
+                    text = stringResource(R.string.label_alternatively),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.outline,
+                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(vertical = 4.dp)
+                )
+
+                // GitHub
+                OutlinedButton(
+                    onClick = {
+                        val body = "Feedback:\n$feedbackMessage\n\nDevice Info:\n$deviceInfoString\n\n"
                         val encodedBody = Uri.encode(body)
                         val intent = Intent(
                             Intent.ACTION_VIEW,
@@ -151,9 +203,10 @@ fun BugReportBottomSheet(
                 }
 
                 // Email
-                Button(
+                OutlinedButton(
                     onClick = {
-                        val body = "Device Info:\n$deviceInfoString\n\nIssue Description:\n"
+                        val contactLine = if (contactEmail.isNotBlank()) "Contact Email: $contactEmail\n" else ""
+                        val body = "${contactLine}Feedback:\n$feedbackMessage\n\nDevice Info:\n$deviceInfoString\n\n"
                         val intent = Intent(Intent.ACTION_SENDTO).apply {
                             data = Uri.parse("mailto:")
                             putExtra(Intent.EXTRA_EMAIL, arrayOf("mail@sameerasw.com"))
