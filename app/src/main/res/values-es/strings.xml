@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Esenciales</string>
     <string name="label_beta">Beta </string>
     <string name="accessibility_service_description"><b>Servicio de Accesibilidad Esencial</b>\n\nEste servicio es necesario para las siguientes funciones avanzadas:\n\n<b>• Reasignación de Botones Físicos:</b>\nDetecta las pulsaciones de los botones de volumen incluso con la pantalla apagada para activar acciones como la Linterna.\n\n<b>• Ajustes por App:</b>\nSupervisa la app activa para aplicar perfiles específicos de Luz Nocturna Dinámica, Colores de Iluminación de Notificaciones y Bloqueo de Apps.\n\n<b>• Control de Pantalla:</b>\nPermite que la app bloquee la pantalla (p. ej., mediante Doble Toque o Widgets) y detecte cambios de estado.\n\n<b>• Seguridad:</b>\nEvita cambios no autorizados al detectar el contenido de la ventana cuando el dispositivo está bloqueado.\n\n<small>No se recopila ni transmite texto de entrada ni datos confidenciales del usuario.</small></string>
     <string name="freeze_activity_title">Congelar aplicación</string>
