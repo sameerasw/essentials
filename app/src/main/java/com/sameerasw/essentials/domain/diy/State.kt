@@ -28,7 +28,7 @@ sealed interface State {
         val endMinute: Int = 0,
         val days: Set<Int> = emptySet()
     ) : State {
-        override val title: Int = R.string.diy_state_time_period
-        override val icon: Int = R.drawable.rounded_timelapse_24
+        override val title: Int get() = R.string.diy_state_time_period
+        override val icon: Int get() = R.drawable.rounded_timelapse_24
     }
 }

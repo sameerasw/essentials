@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Essentials</string>
     <string name="label_beta">베타</string>
     <string name="accessibility_service_description"><b>Essentials 접근성 서비스</b>\n\n이 서비스는 다음 고급기능을 사용하기 위해 필요합니다:\n\n<b>• 물리 버튼 매핑:</b>\n화면이 꺼져있을 때도 음량 버튼 입력을 감지하여 손전등 실행 등의 동작을 실행합니다.\n\n<b>• 앱별 개별 설정:</b>\n현재 실행중인 앱을 감지하여 다이나믹 야간모드, 알림 조명 색상, 앱 잠금 등의 전용 프로필을 적용합니다.\n\n<b>• 화면 제어:</b>\n화면을 두 번 두드리거나 위젯을 통한 화면 잠금을 지원하고, 화면 상태의 변화를 감지합니다.\n\n<b>• 보안:</b>\n기기가 잠겨 있을 때 화면 컨텐츠를 감지하여 승인되지 않은 변경을 방지합니다.\n\n<small>입력 텍스트나 민감한 사용자 데이터는 수집하거나 전송하지 않습니다.</small></string>
     <string name="freeze_activity_title">앱 정지하기</string>
@@ -606,6 +605,7 @@
     <string name="preferences_title">Preferences</string>
     <string name="preferences_desc">Configure some basic settings to get started.</string>
     <string name="label_app_settings">App Settings</string>
+    <string name="label_app_language">Language</string>
     <string name="label_haptic_feedback">Haptic Feedback</string>
     <string name="label_updates">Updates</string>
     <string name="label_auto_check_updates">Auto check for updates</string>
@@ -1112,6 +1112,46 @@
     <string name="cat_protection">보호</string>
     <string name="label_kbd_abc">알파벳</string>
     <string name="label_kbd_symbols">\?#/</string>
+    <string name="label_kaomoji">Kaomoji</string>
+    <string name="kaomoji_cat_joy">Joy</string>
+    <string name="kaomoji_cat_love">Love</string>
+    <string name="kaomoji_cat_embarassment">Embarassment</string>
+    <string name="kaomoji_cat_sympathy">Sympathy</string>
+    <string name="kaomoji_cat_dissatisfaction">Dissatisfaction</string>
+    <string name="kaomoji_cat_anger">Anger</string>
+    <string name="kaomoji_cat_apologizing">Apologizing</string>
+    <string name="kaomoji_cat_bear">Bear</string>
+    <string name="kaomoji_cat_bird">Bird</string>
+    <string name="kaomoji_cat_cat">Cat</string>
+    <string name="kaomoji_cat_confusion">Confusion</string>
+    <string name="kaomoji_cat_dog">Dog</string>
+    <string name="kaomoji_cat_doubt">Doubt</string>
+    <string name="kaomoji_cat_enemies">Enemies</string>
+    <string name="kaomoji_cat_faces">Faces</string>
+    <string name="kaomoji_cat_fear">Fear</string>
+    <string name="kaomoji_cat_fish">Fish</string>
+    <string name="kaomoji_cat_food">Food</string>
+    <string name="kaomoji_cat_friends">Friends</string>
+    <string name="kaomoji_cat_games">Games</string>
+    <string name="kaomoji_cat_greeting">Greeting</string>
+    <string name="kaomoji_cat_hiding">Hiding</string>
+    <string name="kaomoji_cat_hugging">Hugging</string>
+    <string name="kaomoji_cat_indifference">Indifference</string>
+    <string name="kaomoji_cat_magic">Magic</string>
+    <string name="kaomoji_cat_music">Music</string>
+    <string name="kaomoji_cat_nosebleeding">Nosebleeding</string>
+    <string name="kaomoji_cat_pain">Pain</string>
+    <string name="kaomoji_cat_pig">Pig</string>
+    <string name="kaomoji_cat_rabbit">Rabbit</string>
+    <string name="kaomoji_cat_running">Running</string>
+    <string name="kaomoji_cat_sadness">Sadness</string>
+    <string name="kaomoji_cat_sleeping">Sleeping</string>
+    <string name="kaomoji_cat_special">Special</string>
+    <string name="kaomoji_cat_spider">Spider</string>
+    <string name="kaomoji_cat_surprise">Surprise</string>
+    <string name="kaomoji_cat_weapons">Weapons</string>
+    <string name="kaomoji_cat_winking">Winking</string>
+    <string name="kaomoji_cat_writing">Writing</string>
     <string name="msg_restrict_own_app_repo">어이! 앱 설정에서 업데이트를 확인할 수 있습니다. 여기에 추가할 필요가 없습니다 XD</string>
     <string name="action_export">내보내다</string>
     <string name="action_import">수입</string>
@@ -1151,4 +1191,10 @@
     <string name="action_get_started">시작하기</string>
     <string name="action_new_automation">새 자동화</string>
     <string name="action_add_repository">레포지토리 추가</string>
+    <!-- Bug Report Enhancement -->
+    <string name="bug_report_feedback_placeholder">Describe the issue or provide feedback…</string>
+    <string name="bug_report_contact_email_label">Contact email</string>
+    <string name="action_send_feedback">Send Feedback</string>
+    <string name="msg_feedback_sent">Feedback sent successfully! Thanks for helping us improve the app.</string>
+    <string name="label_alternatively">Alternatively</string>
 </resources>

@@ -40,7 +40,7 @@ import com.sameerasw.essentials.R
 @OptIn(ExperimentalFoundationApi::class)
 fun AboutSection(
     modifier: Modifier = Modifier,
-    appName: String = stringResource(R.string.app_name),
+    appName: String = "Essentials",
     developerName: String = stringResource(R.string.app_developer_name),
     description: String = stringResource(R.string.app_description),
     onAvatarLongClick: () -> Unit = {}

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Essentials</string>
     <string name="label_beta">BETA</string>
     <string name="accessibility_service_description"><b>Essentials Barrierefreiheitsdienst</b>\n\nDieser Dienst ist für die folgenden erweiterten Funktionen erforderlich:\n\n<b>• Neuzuordnung physischer Tasten:</b>\nErkennt das Drücken der Lautstärketasten auch bei ausgeschaltetem Display, um Aktionen wie die Taschenlampe auszulösen.\n\n<b>• Einstellungen pro App:</b>\nÜberwacht die aktuell aktive App, um bestimmte Profile für dynamisches Nachtlicht, Benachrichtigungsfarben und App-Sperre anzuwenden.\n\n<b>• Displaysteuerung:</b>\nErmöglicht es der App, das Display zu sperren (z. B. durch Doppeltippen oder Widgets) und Änderungen des Bildschirmstatus zu erkennen.\n\n<b>• Sicherheit:</b>\nVerhindert unbefugte Änderungen, indem der Fensterinhalt erkennt wird, wenn das Gerät gesperrt ist.\n\n<small>Es werden keine eingegebenen Texte oder sensiblen Benutzerdaten erfasst oder übertragen.</small></string>
     <string name="freeze_activity_title">Apps einfrieren</string>
@@ -606,6 +605,7 @@
     <string name="preferences_title">Einstellungen</string>
     <string name="preferences_desc">Lege einige Grundeinstellungen fest, um loszulegen.</string>
     <string name="label_app_settings">App-Einstellungen</string>
+    <string name="label_app_language">Language</string>
     <string name="label_haptic_feedback">Haptisches Feedback</string>
     <string name="label_updates">Updates</string>
     <string name="label_auto_check_updates">Automatische Suche nach Updates</string>
@@ -1112,6 +1112,46 @@
     <string name="cat_protection">Schutz</string>
     <string name="label_kbd_abc">ABC</string>
     <string name="label_kbd_symbols">\?#/</string>
+    <string name="label_kaomoji">Kaomoji</string>
+    <string name="kaomoji_cat_joy">Joy</string>
+    <string name="kaomoji_cat_love">Love</string>
+    <string name="kaomoji_cat_embarassment">Embarassment</string>
+    <string name="kaomoji_cat_sympathy">Sympathy</string>
+    <string name="kaomoji_cat_dissatisfaction">Dissatisfaction</string>
+    <string name="kaomoji_cat_anger">Anger</string>
+    <string name="kaomoji_cat_apologizing">Apologizing</string>
+    <string name="kaomoji_cat_bear">Bear</string>
+    <string name="kaomoji_cat_bird">Bird</string>
+    <string name="kaomoji_cat_cat">Cat</string>
+    <string name="kaomoji_cat_confusion">Confusion</string>
+    <string name="kaomoji_cat_dog">Dog</string>
+    <string name="kaomoji_cat_doubt">Doubt</string>
+    <string name="kaomoji_cat_enemies">Enemies</string>
+    <string name="kaomoji_cat_faces">Faces</string>
+    <string name="kaomoji_cat_fear">Fear</string>
+    <string name="kaomoji_cat_fish">Fish</string>
+    <string name="kaomoji_cat_food">Food</string>
+    <string name="kaomoji_cat_friends">Friends</string>
+    <string name="kaomoji_cat_games">Games</string>
+    <string name="kaomoji_cat_greeting">Greeting</string>
+    <string name="kaomoji_cat_hiding">Hiding</string>
+    <string name="kaomoji_cat_hugging">Hugging</string>
+    <string name="kaomoji_cat_indifference">Indifference</string>
+    <string name="kaomoji_cat_magic">Magic</string>
+    <string name="kaomoji_cat_music">Music</string>
+    <string name="kaomoji_cat_nosebleeding">Nosebleeding</string>
+    <string name="kaomoji_cat_pain">Pain</string>
+    <string name="kaomoji_cat_pig">Pig</string>
+    <string name="kaomoji_cat_rabbit">Rabbit</string>
+    <string name="kaomoji_cat_running">Running</string>
+    <string name="kaomoji_cat_sadness">Sadness</string>
+    <string name="kaomoji_cat_sleeping">Sleeping</string>
+    <string name="kaomoji_cat_special">Special</string>
+    <string name="kaomoji_cat_spider">Spider</string>
+    <string name="kaomoji_cat_surprise">Surprise</string>
+    <string name="kaomoji_cat_weapons">Weapons</string>
+    <string name="kaomoji_cat_winking">Winking</string>
+    <string name="kaomoji_cat_writing">Writing</string>
     <string name="msg_restrict_own_app_repo">Hey! Du kannst Updates in den App-Einstellungen überprüfen, musst sie hier nicht hinzufügen XD</string>
     <string name="action_export">Exportieren</string>
     <string name="action_import">Importieren</string>
@@ -1151,4 +1191,10 @@
     <string name="action_get_started">Loslegen</string>
     <string name="action_new_automation">Neue Automatisierung</string>
     <string name="action_add_repository">Repository hinzufügen</string>
+    <!-- Bug Report Enhancement -->
+    <string name="bug_report_feedback_placeholder">Describe the issue or provide feedback…</string>
+    <string name="bug_report_contact_email_label">Contact email</string>
+    <string name="action_send_feedback">Send Feedback</string>
+    <string name="msg_feedback_sent">Feedback sent successfully! Thanks for helping us improve the app.</string>
+    <string name="label_alternatively">Alternatively</string>
 </resources>

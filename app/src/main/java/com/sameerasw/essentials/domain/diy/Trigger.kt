@@ -40,8 +40,8 @@ sealed interface Trigger {
         val minute: Int = 0,
         val days: Set<Int> = emptySet()
     ) : Trigger {
-        override val title: Int = R.string.diy_trigger_schedule
-        override val icon: Int = R.drawable.rounded_nest_clock_farsight_analog_24
-        override val isConfigurable: Boolean = true
+        override val title: Int get() = R.string.diy_trigger_schedule
+        override val icon: Int get() = R.drawable.rounded_nest_clock_farsight_analog_24
+        override val isConfigurable: Boolean get() = true
     }
 }
