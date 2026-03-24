@@ -14,9 +14,12 @@ class BatteriesWidgetReceiver : GlanceAppWidgetReceiver() {
 
         // Always update widget on configuration changes (including theme changes)
         if (intent.action == Intent.ACTION_CONFIGURATION_CHANGED) {
-            val glanceAppWidgetManager = androidx.glance.appwidget.GlanceAppWidgetManager(context)
+            val appWidgetManager = context.getSystemService(Context.APPWIDGET_SERVICE) as? android.appwidget.AppWidgetManager
+            if (appWidgetManager == null) return
+
             kotlinx.coroutines.MainScope().launch {
                 try {
+                    val glanceAppWidgetManager = androidx.glance.appwidget.GlanceAppWidgetManager(context)
                     // Add a small delay to allow system theme colors to propagate
                     kotlinx.coroutines.delay(500)
 
@@ -56,8 +59,12 @@ class BatteriesWidgetReceiver : GlanceAppWidgetReceiver() {
         ) {
 
             // Trigger update
-            val glanceAppWidgetManager = androidx.glance.appwidget.GlanceAppWidgetManager(context)
+            val appWidgetManager = context.getSystemService(Context.APPWIDGET_SERVICE) as? android.appwidget.AppWidgetManager
+            if (appWidgetManager == null) return
+
             kotlinx.coroutines.MainScope().launch {
+                try {
+                    val glanceAppWidgetManager = androidx.glance.appwidget.GlanceAppWidgetManager(context)
                 // Check permissions first
                 val repository =
                     com.sameerasw.essentials.data.repository.SettingsRepository(context)
@@ -103,7 +110,10 @@ class BatteriesWidgetReceiver : GlanceAppWidgetReceiver() {
                     }
                     glanceAppWidget.update(context, glanceId)
                 }
+            } catch (e: Exception) {
+                android.util.Log.e("BatteriesWidget", "Error updating widget", e)
             }
+        }
 
             try {
                 val requestIntent =

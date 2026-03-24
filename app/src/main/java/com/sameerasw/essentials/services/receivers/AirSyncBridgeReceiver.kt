@@ -35,11 +35,17 @@ class AirSyncBridgeReceiver : BroadcastReceiver() {
                 repository.putBoolean(SettingsRepository.KEY_AIRSYNC_MAC_CONNECTED, isConnected)
 
                 // Trigger widget update directly
-                val glanceAppWidgetManager =
-                    androidx.glance.appwidget.GlanceAppWidgetManager(context)
+                val appWidgetManager = context.getSystemService(Context.APPWIDGET_SERVICE) as? android.appwidget.AppWidgetManager
+                if (appWidgetManager == null) {
+                    pendingResult.finish()
+                    return
+                }
+
                 // Use IO dispatcher to avoid main thread jank/timeouts
                 kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
                     try {
+                        val glanceAppWidgetManager =
+                            androidx.glance.appwidget.GlanceAppWidgetManager(context)
                         // Define keys matching BatteriesWidget
                         val KEY_AIRSYNC_ENABLED =
                             androidx.datastore.preferences.core.booleanPreferencesKey(
