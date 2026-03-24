@@ -9,7 +9,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import android.view.View
@@ -55,14 +57,6 @@ class NotificationLightingService : Service() {
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            try {
-                startForeground(NOTIF_ID, buildNotification())
-            } catch (_: Exception) {
-                // ignore foreground start failures on certain OEMs
-            }
-        }
 
         // Register screen on/off receiver to attempt to re-show overlay when screen state changes
         screenReceiver = object : BroadcastReceiver() {
@@ -177,6 +171,15 @@ class NotificationLightingService : Service() {
         }
 
 
+        val isForegroundStart = intent?.getBooleanExtra("is_foreground_start", false) ?: false
+        if (isForegroundStart && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            try {
+                startForeground(NOTIF_ID, buildNotification())
+            } catch (_: Exception) {
+                // ignore foreground start failures
+            }
+        }
+
         // If accessibility service is enabled, delegate showing to it for higher elevation
         if (isAccessibilityServiceEnabled()) {
             try {
@@ -215,22 +218,35 @@ class NotificationLightingService : Service() {
                 applicationContext.startService(ai)
             } catch (_: Exception) {
                 // If delegation fails, stop - don't fall back
+                if (isForegroundStart && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    stopForeground(STOP_FOREGROUND_REMOVE)
+                }
                 stopSelf()
                 return START_NOT_STICKY
             }
 
-            // We delegated to the accessibility service; stop foreground and finish quickly.
-            try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) stopForeground(
-                    STOP_FOREGROUND_REMOVE
-                )
-            } catch (_: Exception) {
+            // We delegated to the accessibility service; stop foreground and finish.
+            if (isForegroundStart && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    try {
+                        stopForeground(STOP_FOREGROUND_REMOVE)
+                        stopSelf()
+                    } catch (_: Exception) {
+                    }
+                }, 500)
+            } else {
+                stopSelf()
             }
-
-            // stop this service; accessibility service will show overlay
-            stopSelf()
             return START_NOT_STICKY
         }
+
+        if (!isForegroundStart && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            try {
+                startForeground(NOTIF_ID, buildNotification())
+            } catch (_: Exception) {
+            }
+        }
+
         showOverlay()
         return START_NOT_STICKY
     }

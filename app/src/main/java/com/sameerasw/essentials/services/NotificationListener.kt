@@ -19,6 +19,7 @@ import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.utils.PermissionUtils
 
 class NotificationListener : NotificationListenerService() {
 
@@ -725,7 +726,11 @@ class NotificationListener : NotificationListenerService() {
                                     )
                                 )
                             }
-                            applicationContext.startForegroundService(intent)
+                            if (PermissionUtils.isAccessibilityServiceEnabled(applicationContext)) {
+                                applicationContext.startService(intent)
+                            } else {
+                                applicationContext.startForegroundService(intent)
+                            }
                         }
 
                         if (colorMode == NotificationLightingColorMode.APP_SPECIFIC) {
