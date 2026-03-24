@@ -137,6 +137,10 @@
     <string name="perm_usage_stats_title">사용 통계</string>
     <string name="perm_usage_stats_desc">정지를 방지하기 위해 현재 포그라운드에 있는 앱을 감지하는 데 필요합니다.</string>
     <string name="perm_notif_listener_desc_freeze">정지를 방지하기 위해 재생 중인 미디어 및 활성 알림을 감지하는 데 필요합니다.</string>
+    <string name="freeze_mode_title">Freeze mode</string>
+    <string name="freeze_mode_freeze">Freezing</string>
+    <string name="freeze_mode_suspend">App suspension</string>
+    <string name="freeze_mode_warning_desc">Can not switch mode while apps are frozen. Please unfreeze all and try again.</string>
     <!-- Notification Lighting -->
     <string name="notification_lighting_screen_off_title">화면이 꺼진 경우에만 표시</string>
     <string name="notification_lighting_skip_silent_title">자동 알림 건너뛰기</string>
@@ -204,7 +208,12 @@
     <string name="on">~에</string>
     <string name="off">끄다</string>
     <string name="private_dns_custom_title">맞춤형 프라이빗 DNS</string>
-    <string name="private_dns_presets_title">일반적인 DNS 사전 설정</string>
+    <string name="private_dns_presets_title">DNS Presets</string>
+    <string name="dns_preset_add_title">Add DNS Preset</string>
+    <string name="dns_preset_name_label">Preset name</string>
+    <string name="dns_preset_reset_action">Reset</string>
+    <string name="dns_preset_delete_content_description">Delete preset</string>
+    <string name="dns_preset_reset_confirm">Are you sure you want to reset all DNS presets to defaults? This will remove all your custom presets.</string>
     <string name="private_dns_hostname_label">공급자 호스트 이름</string>
     <string name="dns_preset_adguard">AdGuard DNS</string>
     <string name="dns_preset_adguard_hostname">dns.adguard.com</string>
@@ -653,6 +662,13 @@
     <string name="diy_trigger_device_unlock">장치 잠금 해제</string>
     <string name="diy_trigger_charger_connected">충전기 연결됨</string>
     <string name="diy_trigger_charger_disconnected">충전기 연결 끊김</string>
+    <string name="diy_trigger_schedule">Schedule</string>
+    <string name="diy_state_time_period">Time Period</string>
+    <string name="diy_time_selection_title">Select Time</string>
+    <string name="diy_time_range_selection_title">Select Time Range</string>
+    <string name="diy_start_time_label">Start Time</string>
+    <string name="diy_end_time_label">End Time</string>
+    <string name="diy_repeat_days_label">Repeat on</string>
     <string name="diy_state_charging">충전 중</string>
     <string name="diy_state_screen_on">화면 켜짐</string>
     <string name="diy_action_haptic">떨리다</string>
@@ -661,6 +677,8 @@
     <string name="diy_action_flashlight_on">손전등 켜기</string>
     <string name="diy_action_flashlight_off">손전등 끄기</string>
     <string name="diy_action_flashlight_toggle">손전등 전환</string>
+    <string name="diy_action_low_power_on">Turn On Low Power Mode</string>
+    <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
     <string name="diy_action_dim_wallpaper">희미한 벽지</string>
     <string name="diy_dim_wallpaper_desc">이 작업을 수행하려면 시스템 배경화면 밝기 조절을 조정하기 위해 Shizuku 또는 Root가 필요합니다.</string>
     <string name="diy_select_trigger">트리거 선택</string>
@@ -801,6 +819,8 @@
     <string name="label_keyboard_always_dark">항상 어두운 테마</string>
     <string name="label_keyboard_pitch_black">피치 블랙 테마</string>
     <string name="label_keyboard_clipboard_enabled">클립보드 기록</string>
+    <string name="label_keyboard_long_press_symbols">Long press for symbols</string>
+    <string name="label_keyboard_accented_characters">Accented characters</string>
     <string-array name="keywords_selection">
         <item>목록</item>
         <item>소매치기</item>

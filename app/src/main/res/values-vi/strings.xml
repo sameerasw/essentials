@@ -137,6 +137,10 @@
     <string name="perm_usage_stats_title">Thống kê sử dụng</string>
     <string name="perm_usage_stats_desc">Cần thiết để phát hiện ứng dụng nào hiện đang ở nền trước để tránh đóng băng chúng</string>
     <string name="perm_notif_listener_desc_freeze">Cần thiết để phát hiện phương tiện đang phát và thông báo đang hoạt động để tránh đóng băng chúng</string>
+    <string name="freeze_mode_title">Freeze mode</string>
+    <string name="freeze_mode_freeze">Freezing</string>
+    <string name="freeze_mode_suspend">App suspension</string>
+    <string name="freeze_mode_warning_desc">Can not switch mode while apps are frozen. Please unfreeze all and try again.</string>
     <!-- Notification Lighting -->
     <string name="notification_lighting_screen_off_title">Chỉ hiển thị khi tắt màn hình</string>
     <string name="notification_lighting_skip_silent_title">Bỏ qua thông báo im lặng</string>
@@ -204,7 +208,12 @@
     <string name="on">TRÊN</string>
     <string name="off">Tắt</string>
     <string name="private_dns_custom_title">DNS riêng tùy chỉnh</string>
-    <string name="private_dns_presets_title">Cài đặt trước DNS phổ biến</string>
+    <string name="private_dns_presets_title">DNS Presets</string>
+    <string name="dns_preset_add_title">Add DNS Preset</string>
+    <string name="dns_preset_name_label">Preset name</string>
+    <string name="dns_preset_reset_action">Reset</string>
+    <string name="dns_preset_delete_content_description">Delete preset</string>
+    <string name="dns_preset_reset_confirm">Are you sure you want to reset all DNS presets to defaults? This will remove all your custom presets.</string>
     <string name="private_dns_hostname_label">Tên máy chủ của nhà cung cấp</string>
     <string name="dns_preset_adguard">DNS AdGuard</string>
     <string name="dns_preset_adguard_hostname">dns.adguard.com</string>
@@ -653,6 +662,13 @@
     <string name="diy_trigger_device_unlock">Mở khóa thiết bị</string>
     <string name="diy_trigger_charger_connected">Đã kết nối bộ sạc</string>
     <string name="diy_trigger_charger_disconnected">Đã ngắt kết nối bộ sạc</string>
+    <string name="diy_trigger_schedule">Schedule</string>
+    <string name="diy_state_time_period">Time Period</string>
+    <string name="diy_time_selection_title">Select Time</string>
+    <string name="diy_time_range_selection_title">Select Time Range</string>
+    <string name="diy_start_time_label">Start Time</string>
+    <string name="diy_end_time_label">End Time</string>
+    <string name="diy_repeat_days_label">Repeat on</string>
     <string name="diy_state_charging">Sạc</string>
     <string name="diy_state_screen_on">Bật màn hình</string>
     <string name="diy_action_haptic">Rung</string>
@@ -661,6 +677,8 @@
     <string name="diy_action_flashlight_on">Bật đèn pin</string>
     <string name="diy_action_flashlight_off">Tắt đèn pin</string>
     <string name="diy_action_flashlight_toggle">Chuyển đổi đèn pin</string>
+    <string name="diy_action_low_power_on">Turn On Low Power Mode</string>
+    <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
     <string name="diy_action_dim_wallpaper">Hình nền mờ</string>
     <string name="diy_dim_wallpaper_desc">Hành động này yêu cầu Shizuku hoặc Root điều chỉnh độ mờ của hình nền hệ thống.</string>
     <string name="diy_select_trigger">Chọn kích hoạt</string>
@@ -801,6 +819,8 @@
     <string name="label_keyboard_always_dark">Chủ đề luôn tối</string>
     <string name="label_keyboard_pitch_black">Chủ đề đen tuyền</string>
     <string name="label_keyboard_clipboard_enabled">Lịch sử bảng nhớ tạm</string>
+    <string name="label_keyboard_long_press_symbols">Long press for symbols</string>
+    <string name="label_keyboard_accented_characters">Accented characters</string>
     <string-array name="keywords_selection">
         <item>danh sách</item>
         <item>người nhặt đồ</item>

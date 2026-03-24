@@ -137,6 +137,10 @@
     <string name="perm_usage_stats_title">Wel ma ki tiyo kwede</string>
     <string name="perm_usage_stats_desc">Mitte me ngeyo app mene ma tye i nyim me gengo juku gi</string>
     <string name="perm_notif_listener_desc_freeze">Mitte me neno jami ma tye ka tuko ki ngec ma tye ka tic me gengo juku gi</string>
+    <string name="freeze_mode_title">Freeze mode</string>
+    <string name="freeze_mode_freeze">Freezing</string>
+    <string name="freeze_mode_suspend">App suspension</string>
+    <string name="freeze_mode_warning_desc">Can not switch mode while apps are frozen. Please unfreeze all and try again.</string>
     <!-- Notification Lighting -->
     <string name="notification_lighting_screen_off_title">Nyut keken ka gin ma ki neno ni tye ka tic</string>
     <string name="notification_lighting_skip_silent_title">Wek lok ma ki cwalo ma pe ki lok</string>
@@ -204,7 +208,12 @@
     <string name="on">I</string>
     <string name="off">Pe tye</string>
     <string name="private_dns_custom_title">Custom Private DNS</string>
-    <string name="private_dns_presets_title">DNS ma ki keto con</string>
+    <string name="private_dns_presets_title">DNS Presets</string>
+    <string name="dns_preset_add_title">Add DNS Preset</string>
+    <string name="dns_preset_name_label">Preset name</string>
+    <string name="dns_preset_reset_action">Reset</string>
+    <string name="dns_preset_delete_content_description">Delete preset</string>
+    <string name="dns_preset_reset_confirm">Are you sure you want to reset all DNS presets to defaults? This will remove all your custom presets.</string>
     <string name="private_dns_hostname_label">Nying latic</string>
     <string name="dns_preset_adguard">AdGuard DNS</string>
     <string name="dns_preset_adguard_hostname">dns.adguard.com</string>
@@ -653,6 +662,13 @@
     <string name="diy_trigger_device_unlock">Yabo jami tic</string>
     <string name="diy_trigger_charger_connected">Charger ki kubu</string>
     <string name="diy_trigger_charger_disconnected">Charger ki kwanyo woko</string>
+    <string name="diy_trigger_schedule">Schedule</string>
+    <string name="diy_state_time_period">Time Period</string>
+    <string name="diy_time_selection_title">Select Time</string>
+    <string name="diy_time_range_selection_title">Select Time Range</string>
+    <string name="diy_start_time_label">Start Time</string>
+    <string name="diy_end_time_label">End Time</string>
+    <string name="diy_repeat_days_label">Repeat on</string>
     <string name="diy_state_charging">Charge</string>
     <string name="diy_state_screen_on">Gin ma ki neno i cim</string>
     <string name="diy_action_haptic">Yeny</string>
@@ -661,6 +677,8 @@
     <string name="diy_action_flashlight_on">Yab mac ma ki lwongo ni Flashlight</string>
     <string name="diy_action_flashlight_off">Neko mac ma ki lwongo ni Flashlight</string>
     <string name="diy_action_flashlight_toggle">Lok mac ma ki lwongo ni Flashlight</string>
+    <string name="diy_action_low_power_on">Turn On Low Power Mode</string>
+    <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
     <string name="diy_action_dim_wallpaper">Karatac me cel ma nen maber</string>
     <string name="diy_dim_wallpaper_desc">Tic man mito Shizuku onyo Root me loko rangi pa cal ma ki keto i cim.</string>
     <string name="diy_select_trigger">Yer Trigger</string>
@@ -801,6 +819,8 @@
     <string name="label_keyboard_always_dark">Kare ducu lok macol</string>
     <string name="label_keyboard_pitch_black">Wi lok macol</string>
     <string name="label_keyboard_clipboard_enabled">Lok macon me Clipboard</string>
+    <string name="label_keyboard_long_press_symbols">Long press for symbols</string>
+    <string name="label_keyboard_accented_characters">Accented characters</string>
     <string-array name="keywords_selection">
         <item>lis</item>
         <item>lakwany</item>

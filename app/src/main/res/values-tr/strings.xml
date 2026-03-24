@@ -137,6 +137,10 @@
     <string name="perm_usage_stats_title">Kullanım İstatistikleri</string>
     <string name="perm_usage_stats_desc">Donmasını önlemek amacıyla hangi uygulamaların ön planda olduğunu tespit etmek için gereklidir</string>
     <string name="perm_notif_listener_desc_freeze">Dondurulmalarını önlemek amacıyla oynatılan medyayı ve aktif bildirimleri tespit etmek için gereklidir</string>
+    <string name="freeze_mode_title">Freeze mode</string>
+    <string name="freeze_mode_freeze">Freezing</string>
+    <string name="freeze_mode_suspend">App suspension</string>
+    <string name="freeze_mode_warning_desc">Can not switch mode while apps are frozen. Please unfreeze all and try again.</string>
     <!-- Notification Lighting -->
     <string name="notification_lighting_screen_off_title">Yalnızca ekran kapalıyken göster</string>
     <string name="notification_lighting_skip_silent_title">Sessiz bildirimleri atla</string>
@@ -204,7 +208,12 @@
     <string name="on">Açık</string>
     <string name="off">Kapalı</string>
     <string name="private_dns_custom_title">Özel Özel DNS</string>
-    <string name="private_dns_presets_title">Ortak DNS Ön Ayarları</string>
+    <string name="private_dns_presets_title">DNS Presets</string>
+    <string name="dns_preset_add_title">Add DNS Preset</string>
+    <string name="dns_preset_name_label">Preset name</string>
+    <string name="dns_preset_reset_action">Reset</string>
+    <string name="dns_preset_delete_content_description">Delete preset</string>
+    <string name="dns_preset_reset_confirm">Are you sure you want to reset all DNS presets to defaults? This will remove all your custom presets.</string>
     <string name="private_dns_hostname_label">Sağlayıcı ana bilgisayar adı</string>
     <string name="dns_preset_adguard">AdGuard DNs\'i</string>
     <string name="dns_preset_adguard_hostname">dns.adguard.com</string>
@@ -653,6 +662,13 @@
     <string name="diy_trigger_device_unlock">Cihaz Kilidini Açma</string>
     <string name="diy_trigger_charger_connected">Şarj Cihazı Bağlı</string>
     <string name="diy_trigger_charger_disconnected">Şarj Cihazı Bağlantısı Kesildi</string>
+    <string name="diy_trigger_schedule">Schedule</string>
+    <string name="diy_state_time_period">Time Period</string>
+    <string name="diy_time_selection_title">Select Time</string>
+    <string name="diy_time_range_selection_title">Select Time Range</string>
+    <string name="diy_start_time_label">Start Time</string>
+    <string name="diy_end_time_label">End Time</string>
+    <string name="diy_repeat_days_label">Repeat on</string>
     <string name="diy_state_charging">Şarj etme</string>
     <string name="diy_state_screen_on">Ekran Açık</string>
     <string name="diy_action_haptic">Titreşim</string>
@@ -661,6 +677,8 @@
     <string name="diy_action_flashlight_on">El Fenerini Aç</string>
     <string name="diy_action_flashlight_off">El Fenerini Kapat</string>
     <string name="diy_action_flashlight_toggle">El Fenerini Aç/Kapat</string>
+    <string name="diy_action_low_power_on">Turn On Low Power Mode</string>
+    <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
     <string name="diy_action_dim_wallpaper">Loş Duvar Kağıdı</string>
     <string name="diy_dim_wallpaper_desc">Bu eylem, sistem duvar kağıdı karartmasını ayarlamak için Shizuku veya Root\'u gerektirir.</string>
     <string name="diy_select_trigger">Tetikleyiciyi Seçin</string>
@@ -801,6 +819,8 @@
     <string name="label_keyboard_always_dark">Her zaman karanlık tema</string>
     <string name="label_keyboard_pitch_black">Zifiri siyah tema</string>
     <string name="label_keyboard_clipboard_enabled">Pano Geçmişi</string>
+    <string name="label_keyboard_long_press_symbols">Long press for symbols</string>
+    <string name="label_keyboard_accented_characters">Accented characters</string>
     <string-array name="keywords_selection">
         <item>liste</item>
         <item>seçici</item>

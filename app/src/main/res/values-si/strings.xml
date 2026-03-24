@@ -137,6 +137,10 @@
     <string name="perm_usage_stats_title">භාවිත සංඛ්යාලේඛන</string>
     <string name="perm_usage_stats_desc">ඒවා කැටි කිරීම වළක්වා ගැනීම සඳහා දැනට පෙරබිමෙහි ඇති යෙදුම් හඳුනා ගැනීමට අවශ්‍ය වේ</string>
     <string name="perm_notif_listener_desc_freeze">වාදනය කරන මාධ්‍ය සහ සක්‍රිය දැනුම්දීම් කැටි කිරීම වළක්වා ගැනීම සඳහා අනාවරණය කර ගැනීමට අවශ්‍ය වේ</string>
+    <string name="freeze_mode_title">Freeze mode</string>
+    <string name="freeze_mode_freeze">Freezing</string>
+    <string name="freeze_mode_suspend">App suspension</string>
+    <string name="freeze_mode_warning_desc">Can not switch mode while apps are frozen. Please unfreeze all and try again.</string>
     <!-- Notification Lighting -->
     <string name="notification_lighting_screen_off_title">තිරය ​​අක්‍රිය වූ විට පමණක් පෙන්වන්න</string>
     <string name="notification_lighting_skip_silent_title">නිහඬ දැනුම්දීම් මඟ හරින්න</string>
@@ -204,7 +208,12 @@
     <string name="on">ක්‍රියාත්මකයි</string>
     <string name="off">අක්රියයි</string>
     <string name="private_dns_custom_title">අභිරුචි පුද්ගලික DNS</string>
-    <string name="private_dns_presets_title">පොදු DNS පෙරසිටුවීම්</string>
+    <string name="private_dns_presets_title">DNS Presets</string>
+    <string name="dns_preset_add_title">Add DNS Preset</string>
+    <string name="dns_preset_name_label">Preset name</string>
+    <string name="dns_preset_reset_action">Reset</string>
+    <string name="dns_preset_delete_content_description">Delete preset</string>
+    <string name="dns_preset_reset_confirm">Are you sure you want to reset all DNS presets to defaults? This will remove all your custom presets.</string>
     <string name="private_dns_hostname_label">සපයන්නාගේ සත්කාරක නාමය</string>
     <string name="dns_preset_adguard">AdGuard DNS</string>
     <string name="dns_preset_adguard_hostname">dns.adguard.com</string>
@@ -653,6 +662,13 @@
     <string name="diy_trigger_device_unlock">උපාංගය අගුළු හැරීම</string>
     <string name="diy_trigger_charger_connected">චාජර් සම්බන්ධ කර ඇත</string>
     <string name="diy_trigger_charger_disconnected">ආරෝපණය විසන්ධි විය</string>
+    <string name="diy_trigger_schedule">Schedule</string>
+    <string name="diy_state_time_period">Time Period</string>
+    <string name="diy_time_selection_title">Select Time</string>
+    <string name="diy_time_range_selection_title">Select Time Range</string>
+    <string name="diy_start_time_label">Start Time</string>
+    <string name="diy_end_time_label">End Time</string>
+    <string name="diy_repeat_days_label">Repeat on</string>
     <string name="diy_state_charging">අයකිරීම</string>
     <string name="diy_state_screen_on">තිරය ​​ක්‍රියාත්මකයි</string>
     <string name="diy_action_haptic">කම්පනය කරන්න</string>
@@ -661,6 +677,8 @@
     <string name="diy_action_flashlight_on">ෆ්ලෑෂ් ලයිට් සක්රිය කරන්න</string>
     <string name="diy_action_flashlight_off">ෆ්ලෑෂ් ලයිට් අක්රිය කරන්න</string>
     <string name="diy_action_flashlight_toggle">ෆ්ලෑෂ් ලයිට් ටොගල් කරන්න</string>
+    <string name="diy_action_low_power_on">Turn On Low Power Mode</string>
+    <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
     <string name="diy_action_dim_wallpaper">අඳුරු බිතුපත</string>
     <string name="diy_dim_wallpaper_desc">මෙම ක්‍රියාවට පද්ධති බිතුපත අඳුරු වීම සීරුමාරු කිරීමට Shizuku හෝ Root අවශ්‍ය වේ.</string>
     <string name="diy_select_trigger">Trigger තෝරන්න</string>
@@ -801,6 +819,8 @@
     <string name="label_keyboard_always_dark">සෑම විටම අඳුරු තේමාව</string>
     <string name="label_keyboard_pitch_black">තාර කළු තේමාව</string>
     <string name="label_keyboard_clipboard_enabled">ක්ලිප්බෝඩ් ඉතිහාසය</string>
+    <string name="label_keyboard_long_press_symbols">Long press for symbols</string>
+    <string name="label_keyboard_accented_characters">Accented characters</string>
     <string-array name="keywords_selection">
         <item>ලැයිස්තුව</item>
         <item>පිකර්</item>
