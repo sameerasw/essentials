@@ -234,7 +234,15 @@ class AmbientDreamService : DreamService() {
 
     private fun setupContentUI(parentInfo: FrameLayout) {
         // 1. Clock at top
-        clockView = TextClock(this).apply {
+        clockView = object : TextClock(this) {
+            override fun onDetachedFromWindow() {
+                try {
+                    super.onDetachedFromWindow()
+                } catch (e: IllegalArgumentException) {
+                    e.printStackTrace()
+                }
+            }
+        }.apply {
             format12Hour = "hh\nmm"
             format24Hour = "HH\nmm"
             textSize = 80f

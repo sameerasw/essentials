@@ -286,7 +286,15 @@ class AmbientGlanceHandler(
         }
 
         // 1. Clock at top
-        clockView = TextClock(context).apply {
+        clockView = object : TextClock(context) {
+            override fun onDetachedFromWindow() {
+                try {
+                    super.onDetachedFromWindow()
+                } catch (e: IllegalArgumentException) {
+                    e.printStackTrace()
+                }
+            }
+        }.apply {
             format12Hour = "hh:mm"
             format24Hour = "HH:mm"
             textSize = 25f
