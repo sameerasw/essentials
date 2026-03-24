@@ -40,10 +40,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.domain.model.FreezeMode
 import com.sameerasw.essentials.ui.components.cards.AppToggleItem
 import com.sameerasw.essentials.ui.components.cards.FeatureCard
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.components.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.components.sheets.AppSelectionSheet
 import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
@@ -63,6 +65,7 @@ fun FreezeSettingsUI(
     val view = LocalView.current
     var isAppSelectionSheetOpen by remember { mutableStateOf(false) }
     var showPermissionSheet by remember { mutableStateOf(false) }
+    var showModeWarningResult by remember { mutableStateOf(false) }
     var permissionsToRequest by remember { mutableStateOf<List<String>>(emptyList()) }
 
     val isShizukuAvailable by viewModel.isShizukuAvailable
@@ -278,6 +281,48 @@ fun FreezeSettingsUI(
         }
 
         Text(
+            text = stringResource(R.string.freeze_mode_title),
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(start = 16.dp, top = 24.dp, bottom = 8.dp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        RoundedCardContainer{
+        SegmentedPicker(
+            items = FreezeMode.entries,
+            selectedItem = FreezeMode.fromInt(viewModel.freezeMode.intValue),
+            onItemSelected = { mode ->
+                if (viewModel.freezeMode.intValue != mode.value) {
+                    if (viewModel.anyAppsCurrentlyFrozen(context)) {
+                        showModeWarningResult = true
+                    } else {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setFreezeMode(mode.value, context)
+                    }
+                }
+            },
+            labelProvider = { mode ->
+                when (mode) {
+                    FreezeMode.FREEZE -> context.getString(R.string.freeze_mode_freeze)
+                    FreezeMode.SUSPEND -> context.getString(R.string.freeze_mode_suspend)
+                }
+            },
+            iconProvider = { mode ->
+                Icon(
+                    painter = painterResource(
+                        id = when (mode) {
+                            FreezeMode.FREEZE -> R.drawable.rounded_mode_cool_24
+                            FreezeMode.SUSPEND -> R.drawable.rounded_pause_24
+                        }
+                    ),
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+            },
+        )
+    }
+
+        Text(
             text = stringResource(R.string.settings_section_automation),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(start = 16.dp, top = 24.dp, bottom = 8.dp),
@@ -483,6 +528,19 @@ fun FreezeSettingsUI(
             } else {
                 showPermissionSheet = false
             }
+        }
+
+        if (showModeWarningResult) {
+            androidx.compose.material3.AlertDialog(
+                onDismissRequest = { showModeWarningResult = false },
+                confirmButton = {
+                    androidx.compose.material3.TextButton(onClick = { showModeWarningResult = false }) {
+                        Text(stringResource(id = R.string.action_ok))
+                    }
+                },
+                title = { Text(stringResource(id = R.string.warning_title)) },
+                text = { Text(stringResource(id = R.string.freeze_mode_warning_desc)) }
+            )
         }
     }
 }

@@ -8,6 +8,7 @@ import com.sameerasw.essentials.domain.diy.Trigger
 import com.sameerasw.essentials.services.automation.modules.AutomationModule
 import com.sameerasw.essentials.services.automation.modules.DisplayModule
 import com.sameerasw.essentials.services.automation.modules.PowerModule
+import com.sameerasw.essentials.services.automation.modules.TimeModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -61,6 +62,7 @@ object AutomationManager {
         val requiredModuleIds = mutableSetOf<String>()
         val powerAutomations = mutableListOf<Automation>()
         val displayAutomations = mutableListOf<Automation>()
+        val timeAutomations = mutableListOf<Automation>()
 
         enabledAutomations.forEach { automation ->
             when (automation.type) {
@@ -74,6 +76,11 @@ object AutomationManager {
                         is Trigger.ScreenOn, is Trigger.ScreenOff, is Trigger.DeviceUnlock -> {
                             requiredModuleIds.add(DisplayModule.ID)
                             displayAutomations.add(automation)
+                        }
+
+                        is Trigger.Schedule -> {
+                            requiredModuleIds.add(TimeModule.ID)
+                            timeAutomations.add(automation)
                         }
 
                         else -> {}
@@ -90,6 +97,11 @@ object AutomationManager {
                         is DIYState.ScreenOn -> {
                             requiredModuleIds.add(DisplayModule.ID)
                             displayAutomations.add(automation)
+                        }
+
+                        is DIYState.TimePeriod -> {
+                            requiredModuleIds.add(TimeModule.ID)
+                            timeAutomations.add(automation)
                         }
 
                         else -> {}
@@ -131,6 +143,16 @@ object AutomationManager {
             module.updateAutomations(displayAutomations)
         } else {
             activeModules.remove(DisplayModule.ID)?.stop(context)
+        }
+
+        // Time Module
+        if (requiredModuleIds.contains(TimeModule.ID)) {
+            val module = activeModules.getOrPut(TimeModule.ID) {
+                TimeModule().also { it.start(context) }
+            }
+            module.updateAutomations(timeAutomations)
+        } else {
+            activeModules.remove(TimeModule.ID)?.stop(context)
         }
     }
 

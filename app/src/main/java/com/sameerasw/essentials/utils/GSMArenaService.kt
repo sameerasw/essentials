@@ -30,12 +30,23 @@ object GSMArenaService {
             val formattedQuery = query.replace(" ", "+")
             val searchUrl = "$BASE_URL/results.php3?sQuickSearch=yes&sName=$formattedQuery"
 
-            val searchDoc: Document = Jsoup.connect(searchUrl)
+            var searchDoc: Document = Jsoup.connect(searchUrl)
                 .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
                 .timeout(30000)
                 .get()
 
-            val results = searchDoc.select(".makers li")
+            var results = searchDoc.select(".makers li")
+            
+            // Fallback for model numbers (SM-G990B etc) which often don't show up in quick search
+            if (results.isEmpty()) {
+                val freeSearchUrl = "$BASE_URL/results.php3?sFreeSearch=yes&sFreeText=$formattedQuery"
+                searchDoc = Jsoup.connect(freeSearchUrl)
+                    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+                    .timeout(30000)
+                    .get()
+                results = searchDoc.select(".makers li")
+            }
+            
             if (results.isEmpty()) return null
 
             val bestMatchingElement = results.firstOrNull { element ->
@@ -138,7 +149,7 @@ object GSMArenaService {
         val prefName = preferredName.lowercase()
         val prefModel = preferredModel.lowercase()
 
-        val variants = listOf("pro", "max", "plus", "xl", "ultra", "fold", "flip", "power", "neo", "gt", "lite", "ace", "prime", "edge")
+        val variants = listOf("pro", "max", "plus", "xl", "ultra", "fold", "flip", "power", "neo", "gt", "lite", "ace", "prime", "edge", "fe")
         for (variant in variants) {
             if (found.contains(variant) && !prefName.contains(variant) && !prefModel.contains(variant)) {
                 return false

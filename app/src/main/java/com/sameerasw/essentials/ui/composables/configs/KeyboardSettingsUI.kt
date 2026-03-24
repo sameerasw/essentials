@@ -284,10 +284,19 @@ fun KeyboardSettingsUI(
 
             IconToggleItem(
                 iconRes = R.drawable.rounded_keyboard_24,
-                title = "Long press for symbols",
+                title = stringResource(R.string.label_keyboard_long_press_symbols),
                 isChecked = viewModel.isLongPressSymbolsEnabled.value,
                 onCheckedChange = { viewModel.setLongPressSymbolsEnabled(it, context) },
                 modifier = Modifier.highlight(highlightSetting == "keyboard_long_press_symbols")
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_keyboard_24,
+                title = stringResource(R.string.label_keyboard_accented_characters),
+                isChecked = viewModel.isAccentedCharactersEnabled.value,
+                onCheckedChange = { viewModel.setAccentedCharactersEnabled(it, context) },
+                enabled = viewModel.isLongPressSymbolsEnabled.value,
+                modifier = Modifier.highlight(highlightSetting == "keyboard_accented_characters")
             )
 
             IconToggleItem(

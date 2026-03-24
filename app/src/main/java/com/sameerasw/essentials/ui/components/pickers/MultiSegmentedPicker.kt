@@ -26,7 +26,9 @@ fun <T> MultiSegmentedPicker(
     selectedItems: Set<T>,
     onItemsSelected: (Set<T>) -> Unit,
     labelProvider: (T) -> String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    shape: androidx.compose.ui.graphics.Shape = RoundedCornerShape(24.dp),
+    allowEmpty: Boolean = true
 ) {
     val view = LocalView.current
 
@@ -34,7 +36,7 @@ fun <T> MultiSegmentedPicker(
         modifier = modifier
             .background(
                 color = MaterialTheme.colorScheme.surfaceBright,
-                shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd)
+                shape = shape
             )
             .padding(10.dp),
         horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
@@ -51,7 +53,7 @@ fun <T> MultiSegmentedPicker(
                     val newSelection = if (checked) {
                         selectedItems + item
                     } else {
-                        if (selectedItems.size > 1) selectedItems - item else selectedItems
+                        if (allowEmpty || selectedItems.size > 1) selectedItems - item else selectedItems
                     }
                     onItemsSelected(newSelection)
                 },

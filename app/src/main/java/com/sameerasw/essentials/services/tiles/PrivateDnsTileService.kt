@@ -37,9 +37,19 @@ class PrivateDnsTileService : BaseTileService() {
     override fun getTileLabel(): String = getString(R.string.tile_private_dns)
 
     override fun getTileSubtitle(): String {
-        return when (getPrivateDnsMode()) {
+        val mode = getPrivateDnsMode()
+        return when (mode) {
             MODE_AUTO -> getString(R.string.tile_private_dns_auto)
-            MODE_HOSTNAME -> getPrivateDnsHostname() ?: getString(R.string.feat_qs_tiles_title)
+            MODE_HOSTNAME -> {
+                val hostname = getPrivateDnsHostname()
+                if (!hostname.isNullOrEmpty()) {
+                    val settingsRepository = com.sameerasw.essentials.data.repository.SettingsRepository(this)
+                    val preset = settingsRepository.getPrivateDnsPresets().find { it.hostname == hostname }
+                    preset?.name ?: hostname
+                } else {
+                    getString(R.string.feat_qs_tiles_title)
+                }
+            }
             else -> getString(R.string.tile_private_dns_off)
         }
     }

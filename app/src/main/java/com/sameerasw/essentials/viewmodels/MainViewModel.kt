@@ -2,6 +2,7 @@ package com.sameerasw.essentials.viewmodels
 
 import android.Manifest
 import android.app.Activity
+import com.sameerasw.essentials.domain.model.DnsPreset
 import android.app.ActivityManager
 import android.app.admin.DevicePolicyManager
 import android.content.BroadcastReceiver
@@ -118,6 +119,7 @@ class MainViewModel : ViewModel() {
     val isAutoAccessibilityEnabled = mutableStateOf(false)
     val isNotificationGlanceSameAsLightingEnabled = mutableStateOf(true)
     val isOnboardingCompleted = mutableStateOf(true) // Default to true so it doesn't flash on first check if not loaded
+    val dnsPresets = mutableStateListOf<DnsPreset>()
 
 
     data class CalendarAccount(
@@ -154,6 +156,7 @@ class MainViewModel : ViewModel() {
     val isFreezePickedAppsLoading = mutableStateOf(false)
     val freezeAutoExcludedApps = mutableStateOf<Set<String>>(emptySet())
     val isFreezeDontFreezeActiveAppsEnabled = mutableStateOf(false)
+    val freezeMode = mutableIntStateOf(0)
 
     // Search state
     val searchQuery = mutableStateOf("")
@@ -199,6 +202,7 @@ class MainViewModel : ViewModel() {
     val userDictionaryWords = mutableStateOf<Map<String, Long>>(emptyMap())
     val isUserDictionarySheetVisible = mutableStateOf(false)
     val isLongPressSymbolsEnabled = mutableStateOf(false)
+    val isAccentedCharactersEnabled = mutableStateOf(false)
 
     // AirSync Bridge
     val isAirSyncConnectionEnabled = mutableStateOf(false)
@@ -296,6 +300,10 @@ class MainViewModel : ViewModel() {
                         freezeAutoExcludedApps.value = settingsRepository.getFreezeAutoExcludedApps()
                     }
 
+                    SettingsRepository.KEY_FREEZE_MODE -> {
+                        freezeMode.intValue = settingsRepository.getFreezeMode()
+                    }
+
                     SettingsRepository.KEY_USE_ROOT -> isRootEnabled.value =
                         settingsRepository.getBoolean(key)
 
@@ -343,6 +351,9 @@ class MainViewModel : ViewModel() {
                         settingsRepository.getBoolean(key, true)
 
                     SettingsRepository.KEY_KEYBOARD_LONG_PRESS_SYMBOLS -> isLongPressSymbolsEnabled.value =
+                        settingsRepository.getBoolean(key, false)
+
+                    SettingsRepository.KEY_KEYBOARD_ACCENTED_CHARACTERS -> isAccentedCharactersEnabled.value =
                         settingsRepository.getBoolean(key, false)
 
                     SettingsRepository.KEY_AIRSYNC_CONNECTION_ENABLED -> isAirSyncConnectionEnabled.value =
@@ -424,6 +435,11 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_USE_BLUR -> {
                         appContext?.let { updateBlurState(it) }
+                    }
+
+                    SettingsRepository.KEY_PRIVATE_DNS_PRESETS -> {
+                        dnsPresets.clear()
+                        dnsPresets.addAll(settingsRepository.getPrivateDnsPresets())
                     }
                 }
             }
@@ -755,6 +771,8 @@ class MainViewModel : ViewModel() {
             settingsRepository.getBoolean(SettingsRepository.KEY_USER_DICTIONARY_ENABLED, false)
         isLongPressSymbolsEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_KEYBOARD_LONG_PRESS_SYMBOLS, false)
+        isAccentedCharactersEnabled.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_KEYBOARD_ACCENTED_CHARACTERS, false)
 
         isAirSyncConnectionEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_AIRSYNC_CONNECTION_ENABLED)
@@ -785,6 +803,7 @@ class MainViewModel : ViewModel() {
             settingsRepository.getBoolean(SettingsRepository.KEY_AUTO_UPDATE_ENABLED, true)
         isUpdateNotificationEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_UPDATE_NOTIFICATION_ENABLED, true)
+        freezeMode.intValue = settingsRepository.getFreezeMode()
         lastUpdateCheckTime =
             settingsRepository.getLong(SettingsRepository.KEY_LAST_UPDATE_CHECK_TIME)
         isAppLockEnabled.value =
@@ -798,6 +817,10 @@ class MainViewModel : ViewModel() {
         freezeAutoExcludedApps.value = settingsRepository.getFreezeAutoExcludedApps()
         isDeveloperModeEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_DEVELOPER_MODE_ENABLED)
+
+        dnsPresets.clear()
+        dnsPresets.addAll(settingsRepository.getPrivateDnsPresets())
+
         isPreReleaseCheckEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_CHECK_PRE_RELEASES_ENABLED)
         pinnedFeatureKeys.value = settingsRepository.getPinnedFeatures()
@@ -914,6 +937,11 @@ class MainViewModel : ViewModel() {
     fun setLongPressSymbolsEnabled(enabled: Boolean, context: Context) {
         isLongPressSymbolsEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_KEYBOARD_LONG_PRESS_SYMBOLS, enabled)
+    }
+
+    fun setAccentedCharactersEnabled(enabled: Boolean, context: Context) {
+        isAccentedCharactersEnabled.value = enabled
+        settingsRepository.setAccentedCharactersEnabled(enabled)
     }
     
     fun loadUserDictionaryWords(context: Context) {
@@ -2077,6 +2105,16 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    fun anyAppsCurrentlyFrozen(context: Context): Boolean {
+        val picked = freezePickedApps.value
+        return picked.any { com.sameerasw.essentials.utils.FreezeManager.isAppFrozen(context, it.packageName) }
+    }
+
+    fun setFreezeMode(mode: Int, context: Context) {
+        freezeMode.intValue = mode
+        settingsRepository.putInt(SettingsRepository.KEY_FREEZE_MODE, mode)
+    }
+
     fun loadSnoozeChannels(context: Context) {
         val discovered = settingsRepository.loadSnoozeDiscoveredChannels()
         val blocked = settingsRepository.loadSnoozeBlockedChannels()
@@ -2325,5 +2363,21 @@ class MainViewModel : ViewModel() {
         setOnboardingCompleted(false, context)
         // Reset tab to ESSENTIALS
         setDefaultTab(com.sameerasw.essentials.domain.DIYTabs.ESSENTIALS, context)
+    }
+
+    fun resetDnsPresets() {
+        settingsRepository.resetPrivateDnsPresets()
+    }
+
+    fun addDnsPreset(name: String, hostname: String) {
+        val current = settingsRepository.getPrivateDnsPresets().toMutableList()
+        current.add(DnsPreset(name = name, hostname = hostname))
+        settingsRepository.savePrivateDnsPresets(current)
+    }
+
+    fun removeDnsPreset(preset: DnsPreset) {
+        val current = settingsRepository.getPrivateDnsPresets().toMutableList()
+        current.removeAll { it.id == preset.id }
+        settingsRepository.savePrivateDnsPresets(current)
     }
 }

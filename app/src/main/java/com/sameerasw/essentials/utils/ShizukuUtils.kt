@@ -77,4 +77,28 @@ object ShizukuUtils {
             false
         }
     }
+
+    fun getSystemBinder(name: String): IBinder? {
+        if (!hasPermission() || !isBinderAlive) return null
+
+        val service = moe.shizuku.server.IShizukuService.Stub.asInterface(binder)
+        return try {
+            // Try known method names for Shizuku v13
+            val method = service.javaClass.methods.find { it.name == "getSystemBinder" || it.name == "getService" }
+            if (method != null) {
+                if (method.parameterCount == 1) {
+                    method.invoke(service, name) as? IBinder
+                } else if (method.parameterCount == 2) {
+                    method.invoke(service, name, null) as? IBinder
+                } else {
+                    null
+                }
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
 }

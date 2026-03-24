@@ -13,5 +13,7 @@ data class DeviceSpecCategory(
 data class DeviceSpecs(
     val deviceName: String,
     val detailSpec: List<DeviceSpecCategory>,
-    val imageUrls: List<String> = emptyList()
+    val imageUrls: List<String> = emptyList(),
+    val localImagePaths: List<String> = emptyList(),
+    val lastUpdated: Long = System.currentTimeMillis()
 )

@@ -79,4 +79,14 @@ sealed interface Action {
         override val permissions: List<String> = listOf("notification_policy")
         override val isConfigurable: Boolean = true
     }
+
+    data object TurnOnLowPower : Action {
+        override val title: Int = R.string.diy_action_low_power_on
+        override val icon: Int = R.drawable.rounded_battery_android_frame_shield_24
+    }
+
+    data object TurnOffLowPower : Action {
+        override val title: Int = R.string.diy_action_low_power_off
+        override val icon: Int = R.drawable.rounded_battery_android_frame_shield_24
+    }
 }

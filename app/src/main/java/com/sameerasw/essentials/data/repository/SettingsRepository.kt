@@ -8,6 +8,7 @@ import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
+import com.sameerasw.essentials.domain.model.DnsPreset
 import com.sameerasw.essentials.domain.model.TrackedRepo
 import com.sameerasw.essentials.domain.model.github.GitHubUser
 import com.sameerasw.essentials.utils.RootUtils
@@ -100,6 +101,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_FREEZE_AUTO_EXCLUDED_APPS = "freeze_auto_excluded_apps"
         const val KEY_FREEZE_SELECTED_APPS = "freeze_selected_apps"
         const val KEY_FREEZE_DONT_FREEZE_ACTIVE_APPS = "freeze_dont_freeze_active_apps"
+        const val KEY_FREEZE_MODE = "freeze_mode"
 
         const val KEY_DEVELOPER_MODE_ENABLED = "developer_mode_enabled"
         const val KEY_HAPTIC_FEEDBACK_TYPE = "haptic_feedback_type"
@@ -120,6 +122,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_KEYBOARD_PITCH_BLACK = "keyboard_pitch_black"
         const val KEY_KEYBOARD_CLIPBOARD_ENABLED = "keyboard_clipboard_enabled"
         const val KEY_KEYBOARD_LONG_PRESS_SYMBOLS = "keyboard_long_press_symbols"
+        const val KEY_KEYBOARD_ACCENTED_CHARACTERS = "keyboard_accented_characters"
 
         // Essentials-AirSync Bridge
         const val KEY_AIRSYNC_CONNECTION_ENABLED = "airsync_connection_enabled"
@@ -166,6 +169,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_USE_BLUR = "use_blur"
         const val KEY_SENTRY_REPORT_MODE = "sentry_report_mode"
         const val KEY_ONBOARDING_COMPLETED = "onboarding_completed"
+        const val KEY_PRIVATE_DNS_PRESETS = "private_dns_presets"
     }
 
     // Observe changes
@@ -284,6 +288,8 @@ class SettingsRepository(private val context: Context) {
         val json = gson.toJson(apps)
         putString(KEY_FREEZE_AUTO_EXCLUDED_APPS, json)
     }
+
+    fun getFreezeMode(): Int = getInt(KEY_FREEZE_MODE, 0)
 
     fun getHapticFeedbackType(): HapticFeedbackType {
         val typeName = prefs.getString(KEY_HAPTIC_FEEDBACK_TYPE, HapticFeedbackType.SUBTLE.name)
@@ -717,6 +723,9 @@ class SettingsRepository(private val context: Context) {
     fun isUserDictionaryEnabled(): Boolean = getBoolean(KEY_USER_DICTIONARY_ENABLED, false)
     fun setUserDictionaryEnabled(enabled: Boolean) = putBoolean(KEY_USER_DICTIONARY_ENABLED, enabled)
 
+    fun isAccentedCharactersEnabled(): Boolean = getBoolean(KEY_KEYBOARD_ACCENTED_CHARACTERS, false)
+    fun setAccentedCharactersEnabled(enabled: Boolean) = putBoolean(KEY_KEYBOARD_ACCENTED_CHARACTERS, enabled)
+
     fun isBatteryNotificationEnabled(): Boolean = getBoolean(KEY_BATTERY_NOTIFICATION_ENABLED, false)
     fun setBatteryNotificationEnabled(enabled: Boolean) = putBoolean(KEY_BATTERY_NOTIFICATION_ENABLED, enabled)
 
@@ -865,6 +874,38 @@ class SettingsRepository(private val context: Context) {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    fun getPrivateDnsPresets(): List<DnsPreset> {
+        val json = prefs.getString(KEY_PRIVATE_DNS_PRESETS, null)
+        return if (json != null) {
+            try {
+                gson.fromJson(json, Array<DnsPreset>::class.java).toList()
+            } catch (e: Exception) {
+                getDefaultDnsPresets()
+            }
+        } else {
+            getDefaultDnsPresets().also { savePrivateDnsPresets(it) }
+        }
+    }
+
+    private fun getDefaultDnsPresets(): List<DnsPreset> {
+        return listOf(
+            DnsPreset(name = context.getString(com.sameerasw.essentials.R.string.dns_preset_adguard), hostname = "dns.adguard.com", isDefault = true),
+            DnsPreset(name = context.getString(com.sameerasw.essentials.R.string.dns_preset_google), hostname = "dns.google", isDefault = true),
+            DnsPreset(name = context.getString(com.sameerasw.essentials.R.string.dns_preset_cloudflare), hostname = "1dot1dot1dot1.cloudflare-dns.com", isDefault = true),
+            DnsPreset(name = context.getString(com.sameerasw.essentials.R.string.dns_preset_quad9), hostname = "dns.quad9.net", isDefault = true),
+            DnsPreset(name = context.getString(com.sameerasw.essentials.R.string.dns_preset_cleanbrowsing), hostname = "adult-filter-dns.cleanbrowsing.org", isDefault = true)
+        )
+    }
+
+    fun savePrivateDnsPresets(presets: List<DnsPreset>) {
+        val json = gson.toJson(presets)
+        putString(KEY_PRIVATE_DNS_PRESETS, json)
+    }
+
+    fun resetPrivateDnsPresets() {
+        savePrivateDnsPresets(getDefaultDnsPresets())
     }
 }
 

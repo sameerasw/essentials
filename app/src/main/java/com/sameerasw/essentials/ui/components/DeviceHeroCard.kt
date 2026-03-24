@@ -95,10 +95,17 @@ fun DeviceHeroCard(
                                     .fillMaxWidth(0.85f)
                             )
                         } else {
-                            // real image from gsmarena
+                            // real image from gsmarena (or local cache)
                             val imageIndex = if (showIllustration) page - 1 else page
+                            val imageModel = if (deviceSpecs?.localImagePaths?.isNotEmpty() == true && 
+                                deviceSpecs.localImagePaths.size > imageIndex) {
+                                deviceSpecs.localImagePaths[imageIndex]
+                            } else {
+                                imageUrls[imageIndex]
+                            }
+                            
                             AsyncImage(
-                                model = imageUrls[imageIndex],
+                                model = imageModel,
                                 contentDescription = "Device Image",
                                 contentScale = ContentScale.Fit,
                                 modifier = Modifier

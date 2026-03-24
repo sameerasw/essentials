@@ -34,4 +34,14 @@ sealed interface Trigger {
         override val title: Int = R.string.diy_trigger_charger_disconnected
         override val icon: Int = R.drawable.rounded_battery_android_frame_3_24
     }
+ 
+    data class Schedule(
+        val hour: Int = 0,
+        val minute: Int = 0,
+        val days: Set<Int> = emptySet()
+    ) : Trigger {
+        override val title: Int = R.string.diy_trigger_schedule
+        override val icon: Int = R.drawable.rounded_nest_clock_farsight_analog_24
+        override val isConfigurable: Boolean = true
+    }
 }

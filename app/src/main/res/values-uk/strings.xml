@@ -137,6 +137,10 @@
     <string name="perm_usage_stats_title">Статистика використання</string>
     <string name="perm_usage_stats_desc">Потрібен для виявлення програм, які зараз працюють на передньому плані, щоб уникнути їх зависання</string>
     <string name="perm_notif_listener_desc_freeze">Необхідний для виявлення відтворюваних медіафайлів і активних сповіщень, щоб уникнути їх зависання</string>
+    <string name="freeze_mode_title">Freeze mode</string>
+    <string name="freeze_mode_freeze">Freezing</string>
+    <string name="freeze_mode_suspend">App suspension</string>
+    <string name="freeze_mode_warning_desc">Can not switch mode while apps are frozen. Please unfreeze all and try again.</string>
     <!-- Notification Lighting -->
     <string name="notification_lighting_screen_off_title">Показувати, лише коли екран вимкнено</string>
     <string name="notification_lighting_skip_silent_title">Пропустити тихі сповіщення</string>
@@ -204,7 +208,12 @@
     <string name="on">Увімкнено</string>
     <string name="off">Вимкнено</string>
     <string name="private_dns_custom_title">Спеціальний приватний DNS</string>
-    <string name="private_dns_presets_title">Загальні налаштування DNS</string>
+    <string name="private_dns_presets_title">DNS Presets</string>
+    <string name="dns_preset_add_title">Add DNS Preset</string>
+    <string name="dns_preset_name_label">Preset name</string>
+    <string name="dns_preset_reset_action">Reset</string>
+    <string name="dns_preset_delete_content_description">Delete preset</string>
+    <string name="dns_preset_reset_confirm">Are you sure you want to reset all DNS presets to defaults? This will remove all your custom presets.</string>
     <string name="private_dns_hostname_label">Ім\'я хоста постачальника</string>
     <string name="dns_preset_adguard">DNS AdGuard</string>
     <string name="dns_preset_adguard_hostname">dns.adguard.com</string>
@@ -653,6 +662,13 @@
     <string name="diy_trigger_device_unlock">Розблокування пристрою</string>
     <string name="diy_trigger_charger_connected">Зарядний пристрій підключено</string>
     <string name="diy_trigger_charger_disconnected">Зарядний пристрій відключено</string>
+    <string name="diy_trigger_schedule">Schedule</string>
+    <string name="diy_state_time_period">Time Period</string>
+    <string name="diy_time_selection_title">Select Time</string>
+    <string name="diy_time_range_selection_title">Select Time Range</string>
+    <string name="diy_start_time_label">Start Time</string>
+    <string name="diy_end_time_label">End Time</string>
+    <string name="diy_repeat_days_label">Repeat on</string>
     <string name="diy_state_charging">Зарядка</string>
     <string name="diy_state_screen_on">Екран увімкнено</string>
     <string name="diy_action_haptic">Вібрувати</string>
@@ -661,6 +677,8 @@
     <string name="diy_action_flashlight_on">Увімкніть ліхтарик</string>
     <string name="diy_action_flashlight_off">Вимкніть ліхтарик</string>
     <string name="diy_action_flashlight_toggle">Перемкнути ліхтарик</string>
+    <string name="diy_action_low_power_on">Turn On Low Power Mode</string>
+    <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
     <string name="diy_action_dim_wallpaper">Тьмяні шпалери</string>
     <string name="diy_dim_wallpaper_desc">Для виконання цієї дії потрібен Shizuku або Root, щоб відрегулювати затемнення шпалер системи.</string>
     <string name="diy_select_trigger">Виберіть Тригер</string>
@@ -801,6 +819,8 @@
     <string name="label_keyboard_always_dark">Завжди темна тема</string>
     <string name="label_keyboard_pitch_black">Безпросвітна темна тема</string>
     <string name="label_keyboard_clipboard_enabled">Історія буфера обміну</string>
+    <string name="label_keyboard_long_press_symbols">Long press for symbols</string>
+    <string name="label_keyboard_accented_characters">Accented characters</string>
     <string-array name="keywords_selection">
         <item>список</item>
         <item>збирач</item>

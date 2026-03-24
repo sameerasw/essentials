@@ -137,6 +137,10 @@
     <string name="perm_usage_stats_title">Användningsstatistik</string>
     <string name="perm_usage_stats_desc">Krävs för att upptäcka vilka appar som för närvarande är i förgrunden för att undvika att frysa dem</string>
     <string name="perm_notif_listener_desc_freeze">Krävs för att upptäcka spelande media och aktiva aviseringar för att undvika att frysa dem</string>
+    <string name="freeze_mode_title">Freeze mode</string>
+    <string name="freeze_mode_freeze">Freezing</string>
+    <string name="freeze_mode_suspend">App suspension</string>
+    <string name="freeze_mode_warning_desc">Can not switch mode while apps are frozen. Please unfreeze all and try again.</string>
     <!-- Notification Lighting -->
     <string name="notification_lighting_screen_off_title">Visas endast när skärmen är avstängd</string>
     <string name="notification_lighting_skip_silent_title">Hoppa över tysta aviseringar</string>
@@ -204,7 +208,12 @@
     <string name="on">På</string>
     <string name="off">Av</string>
     <string name="private_dns_custom_title">Anpassad privat DNS</string>
-    <string name="private_dns_presets_title">Vanliga DNS-förinställningar</string>
+    <string name="private_dns_presets_title">DNS Presets</string>
+    <string name="dns_preset_add_title">Add DNS Preset</string>
+    <string name="dns_preset_name_label">Preset name</string>
+    <string name="dns_preset_reset_action">Reset</string>
+    <string name="dns_preset_delete_content_description">Delete preset</string>
+    <string name="dns_preset_reset_confirm">Are you sure you want to reset all DNS presets to defaults? This will remove all your custom presets.</string>
     <string name="private_dns_hostname_label">Leverantörens värdnamn</string>
     <string name="dns_preset_adguard">AdGuard DNS</string>
     <string name="dns_preset_adguard_hostname">dns.adguard.com</string>
@@ -653,6 +662,13 @@
     <string name="diy_trigger_device_unlock">Lås upp enheten</string>
     <string name="diy_trigger_charger_connected">Laddare ansluten</string>
     <string name="diy_trigger_charger_disconnected">Laddare frånkopplad</string>
+    <string name="diy_trigger_schedule">Schedule</string>
+    <string name="diy_state_time_period">Time Period</string>
+    <string name="diy_time_selection_title">Select Time</string>
+    <string name="diy_time_range_selection_title">Select Time Range</string>
+    <string name="diy_start_time_label">Start Time</string>
+    <string name="diy_end_time_label">End Time</string>
+    <string name="diy_repeat_days_label">Repeat on</string>
     <string name="diy_state_charging">Laddar</string>
     <string name="diy_state_screen_on">Skärm på</string>
     <string name="diy_action_haptic">Vibrera</string>
@@ -661,6 +677,8 @@
     <string name="diy_action_flashlight_on">Slå på ficklampan</string>
     <string name="diy_action_flashlight_off">Stäng av ficklampan</string>
     <string name="diy_action_flashlight_toggle">Växla ficklampa</string>
+    <string name="diy_action_low_power_on">Turn On Low Power Mode</string>
+    <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
     <string name="diy_action_dim_wallpaper">Dimmig tapet</string>
     <string name="diy_dim_wallpaper_desc">Den här åtgärden kräver Shizuku eller Root för att justera systemets tapetdämpning.</string>
     <string name="diy_select_trigger">Välj Trigger</string>
@@ -801,6 +819,8 @@
     <string name="label_keyboard_always_dark">Alltid mörkt tema</string>
     <string name="label_keyboard_pitch_black">Kolsvart tema</string>
     <string name="label_keyboard_clipboard_enabled">Urklippshistorik</string>
+    <string name="label_keyboard_long_press_symbols">Long press for symbols</string>
+    <string name="label_keyboard_accented_characters">Accented characters</string>
     <string-array name="keywords_selection">
         <item>lista</item>
         <item>plockare</item>

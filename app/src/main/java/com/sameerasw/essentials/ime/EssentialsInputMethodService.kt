@@ -267,6 +267,15 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                     )
                 }
 
+                var isAccentedCharactersEnabled by remember {
+                    mutableStateOf(
+                        prefs.getBoolean(
+                            SettingsRepository.KEY_KEYBOARD_ACCENTED_CHARACTERS,
+                            false
+                        )
+                    )
+                }
+
                 // Observe SharedPreferences changes
                 DisposableEffect(prefs) {
                     val listener =
@@ -377,6 +386,12 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                                         false
                                     )
                                 }
+                                SettingsRepository.KEY_KEYBOARD_ACCENTED_CHARACTERS -> {
+                                    isAccentedCharactersEnabled = sharedPreferences.getBoolean(
+                                        SettingsRepository.KEY_KEYBOARD_ACCENTED_CHARACTERS,
+                                        false
+                                    )
+                                }
                             }
                         }
                     prefs.registerOnSharedPreferenceChangeListener(listener)
@@ -404,6 +419,7 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                         functionsPadding = functionsPadding.dp,
                         isClipboardEnabled = isKeyboardClipboardEnabled,
                         isLongPressSymbolsEnabled = isLongPressSymbolsEnabled,
+                        isAccentedCharactersEnabled = isAccentedCharactersEnabled,
                         suggestions = suggestions,
                         clipboardHistory = _clipboardHistory.collectAsState().value,
                         onOpened = resetTrigger,
