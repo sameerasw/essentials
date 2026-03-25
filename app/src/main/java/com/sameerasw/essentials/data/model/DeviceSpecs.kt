@@ -1,19 +1,25 @@
 package com.sameerasw.essentials.data.model
 
+import androidx.annotation.Keep
+import com.google.gson.annotations.SerializedName
+
+@Keep
 data class DeviceSpecItem(
-    val name: String,
-    val value: String
+    @SerializedName("name") val name: String,
+    @SerializedName("value") val value: String
 )
 
+@Keep
 data class DeviceSpecCategory(
-    val category: String,
-    val specifications: List<DeviceSpecItem>
+    @SerializedName("category") val category: String,
+    @SerializedName("specifications") val specifications: List<DeviceSpecItem>
 )
 
+@Keep
 data class DeviceSpecs(
-    val deviceName: String,
-    val detailSpec: List<DeviceSpecCategory>,
-    val imageUrls: List<String> = emptyList(),
-    val localImagePaths: List<String> = emptyList(),
-    val lastUpdated: Long = System.currentTimeMillis()
+    @SerializedName("deviceName") val deviceName: String,
+    @SerializedName("detailSpec") val detailSpec: List<DeviceSpecCategory>,
+    @SerializedName("imageUrls") val imageUrls: List<String> = emptyList(),
+    @SerializedName("localImagePaths") val localImagePaths: List<String> = emptyList(),
+    @SerializedName("lastUpdated") val lastUpdated: Long = System.currentTimeMillis()
 )

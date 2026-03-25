@@ -1,11 +1,13 @@
 package com.sameerasw.essentials.domain.model.github
 
+import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 
+@Keep
 data class GitHubUser(
-    val login: String,
-    val id: Long,
+    @SerializedName("login") val login: String,
+    @SerializedName("id") val id: Long,
     @SerializedName("avatar_url") val avatarUrl: String,
-    val name: String?,
-    val bio: String?
+    @SerializedName("name") val name: String?,
+    @SerializedName("bio") val bio: String?
 )
