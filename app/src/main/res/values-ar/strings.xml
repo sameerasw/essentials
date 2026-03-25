@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="label_beta">بيتا</string>
-    <string name="accessibility_service_description"><b>إمكانية الوصول لأساسيات</b>\n\nتعد هذه الخدمة ضرورية للميزات المتقدمة التالية:\n\n<b>• إعادة تعيين أزرار الجهاز:</b>\nإكتشاف ضغطات أزرار الصوت حتى عندما تكون الشاشة مطفأة لتفعيل إجرائات مثل الكشاف\n\n<b>• إعدادات لكل تطبيق:</b>\nيراقب التطبيق النشط حالياً لتطبيق ملفات تعريف محددة للإضاءة الليلية الديناميكية وإضاءة الإشعارات الملونة وخاصية قفل التطبيقات\n\n<b>• التحكم في الشاشة:</b>\nيسمح للتطبيق بقفل الشاشة (مثلا عبر النقر المزدوج أو الويدجيت) واكتشاف تغيرات حالة االشاشة.\n\n<b>• الأمان:</b>\nيمنع التغييرات غير المصرح بها عن طريق اكتشاف محتوى النافذة عندما يكون الجهاز مقفلا.\n\n<small>لا يتم جمع أو إرسال أي نص مدخل أو بيانات حساسة الخاصّة بالمستخدم.</small></string>
+    <string name="accessibility_service_description"><b>إمكانية الوصول لـ Essentials</b>\n\nتعد هذه الخدمة ضرورية للميزات المتقدمة التالية:\n\n<b>• إعادة تعيين أزرار الجهاز:</b>\nإكتشاف ضغطات أزرار الصوت حتى عندما تكون الشاشة مطفأة لتفعيل إجرائات مثل الكشاف\n\n<b>• إعدادات لكل تطبيق:</b>\nيراقب التطبيق النشط حالياً لتطبيق ملفات تعريف محددة للإضاءة الليلية الديناميكية وإضاءة الإشعارات الملونة وخاصية قفل التطبيقات\n\n<b>• التحكم في الشاشة:</b>\nيسمح للتطبيق بقفل الشاشة (مثلا عبر النقر المزدوج أو الويدجيت) واكتشاف تغيرات حالة االشاشة.\n\n<b>• الأمان:</b>\nيمنع التغييرات غير المصرح بها عن طريق اكتشاف محتوى النافذة عندما يكون الجهاز مقفلا.\n\n<small>لا يتم جمع أو إرسال أي نص مدخل أو بيانات حساسة الخاصّة بالمستخدم.</small></string>
     <string name="freeze_activity_title">تجميد التطبيق</string>
     <string name="freeze_activity_subtitle">قم بتعطيل التطبيقات التي نادراً ما تستخدمها</string>
     <string name="freeze_shortcut_short_label">تجميد التطبيق</string>
@@ -10,10 +10,10 @@
     <string name="screen_off_widget_label">غلق الشاشة ويدجيت فارغ</string>
     <string name="app_freezing_tile_label">تجميد التطبيق</string>
     <string name="flashlight_pulse_tile_label">نبض المصباح</string>
-    <string name="check_pre_releases_label">التحقق من وجود الإصدارات المسبقة</string>
+    <string name="check_pre_releases_label">التحقق من أحدث إصدار بيتا</string>
     <string name="check_pre_releases_desc">قد تكون غير مستقرة</string>
     <!-- App Lock -->
-    <string name="settings_section_security">حماية</string>
+    <string name="settings_section_security">الحماية</string>
     <string name="app_lock_enable_title">تمكين قفل التطبيق</string>
     <string name="app_lock_auth_title">أمان قفل التطبيقات</string>
     <string name="app_lock_enable_auth_subtitle">قم بالمصادقة لتمكين قفل التطبيق</string>
@@ -26,51 +26,51 @@
     <!-- Button Remap -->
     <string name="button_remap_enable_title">تمكين زر إعادة التعيين</string>
     <string name="button_remap_use_shizuku_title">استخدم Shizuku أو Root أو Root</string>
-    <string name="button_remap_use_shizuku_desc">يعمل مع إيقاف تشغيل الشاشة (مستحسن)</string>
-    <string name="shizuku_not_running_toast">شيزوكو لا يعمل</string>
+    <string name="button_remap_use_shizuku_desc">يعمل مع إيقاف الشاشة (مستحسن)</string>
+    <string name="shizuku_not_running_toast">Shizuku لا يعمل</string>
     <string name="shizuku_detected_prefix">أُكتُشف %1$s</string>
     <string name="shizuku_status_prefix">الحالة: %1$s</string>
     <string name="shizuku_open_button">افتح Shizuku</string>
     <string name="settings_section_flashlight">مصباح يدوي</string>
     <string name="flashlight_options_title">خيارات المصباح</string>
-    <string name="flashlight_options_desc">ضبط الخبو والإعدادات الأخرى</string>
-    <string name="setting_pitch_black_theme_title">موضوع الملعب الأسود</string>
+    <string name="flashlight_options_desc">اضبط التلاشي والإعدادات الأخرى </string>
+    <string name="setting_pitch_black_theme_title">موضوع الثيم الأسود</string>
     <string name="setting_pitch_black_theme_desc">استخدم خلفية سوداء نقية في الوضع المظلم</string>
-    <string name="settings_section_haptic">ردود الفعل اللمسية</string>
-    <string name="button_remap_section_long_press">إعادة رسم خريطة الضغط لفترة طويلة</string>
+    <string name="settings_section_haptic">الاهتزاز</string>
+    <string name="button_remap_section_long_press">إعادة تعيين الضغط المطول </string>
     <string name="screen_off">الشاشة مغلقة</string>
-    <string name="screen_on">تشغيل الشاشة</string>
+    <string name="screen_on">الشاشة تعمل</string>
     <string name="volume_up">رفع مستوى الصوت</string>
     <string name="volume_down">خفض مستوى الصوت</string>
     <string name="action_toggle_flashlight">تبديل المصباح</string>
     <string name="action_media_play_pause">تشغيل/إيقاف الوسائط</string>
-    <string name="action_media_next">وسائل الإعلام المقبل</string>
-    <string name="action_media_previous">وسائل الإعلام السابقة</string>
+    <string name="action_media_next">الملف الصوتي التالي</string>
+    <string name="action_media_previous">الملف الصوتي السابق</string>
     <string name="action_toggle_vibrate">تبديل وضع الاهتزاز</string>
     <string name="action_toggle_mute">تبديل كتم الصوت</string>
     <string name="action_ai_assistant">مساعد الذكاء الاصطناعي</string>
     <string name="action_take_screenshot">خذ لقطة للشاشة</string>
     <string name="action_cycle_sound_modes">أنماط دورة صوت</string>
-    <string name="action_like_song">مثل الأغنية الحالية</string>
-    <string name="like_song_settings_title">مثل إعدادات الأغنية</string>
+    <string name="action_like_song">تفضيل الأغنية الحالية </string>
+    <string name="like_song_settings_title">تفضيل إعدادات الأغنية</string>
     <string name="like_song_settings_desc">تتطلب هذه الميزة الوصول إلى الإشعارات لاكتشاف الوسائط التي يتم تشغيلها حاليًا وتشغيل الإجراء المماثل. يرجى تمكينه أدناه.</string>
     <string name="like_song_toast_enabled">عرض رسالة تنبيه</string>
     <string name="like_song_aod_overlay_title">إظهار التراكب على AOD</string>
-    <string name="feat_ambient_music_glance_title">لمحة الموسيقى المحيطة</string>
+    <string name="feat_ambient_music_glance_title">لمحة عن الموسيقى المحيطة</string>
     <string name="feat_ambient_music_glance_desc">قم بإلقاء نظرة سريعة على الوسائط الموجودة على AOD</string>
     <string name="ambient_glance_docked_mode_title">وضع الإرساء</string>
     <string name="ambient_glance_docked_mode_desc">اجعل التراكب مرئيًا إلى أجل غير مسمى أثناء تشغيل الموسيقى على AOD</string>
-    <string name="feat_notification_glance_title">لمحة الإخطار</string>
+    <string name="feat_notification_glance_title">لمحة الإشعارات </string>
     <string name="feat_notification_glance_desc">احتفظ بـ AOD قيد التشغيل أثناء انتظار الإشعارات</string>
     <string name="notification_glance_same_as_lighting_title">نفس التطبيقات التي تعمل مع إضاءة الإشعارات</string>
     <string name="notification_glance_desc">ستعمل هذه الميزة على تمكين Always on Display ديناميكيًا عند وصول إشعار من تطبيق محدد، وتعطيله بمجرد رفض جميع الإشعارات المطابقة. اختر التطبيقات أو استخدم نفس التحديد مثل إضاءة الإشعارات.</string>
-    <string name="grant_notification_access">منح حق الوصول إلى الإخطار</string>
+    <string name="grant_notification_access">منح حق الوصول إلى الإشعارات</string>
     <string name="action_toggle_media_volume">تغيير مستوى صوت الوسائط</string>
     <string name="button_remap_screen_off_hint">عند إيقاف تشغيل الشاشة، اضغط لفترة طويلة على الزر المحدد لبدء الإجراء المخصص له. على أجهزة Pixel، لا يتم تشغيل هذا الإجراء إلا في حالة تشغيل AOD بسبب قيود النظام.</string>
     <string name="button_remap_screen_on_hint">عندما تكون الشاشة قيد التشغيل، اضغط لفترة طويلة على الزر المحدد لبدء الإجراء المخصص له.</string>
     <string name="flashlight_intensity_title">شدة المصباح</string>
-    <string name="flashlight_fade_title">تتلاشى داخل وخارج</string>
-    <string name="flashlight_fade_desc">تبديل مصباح يدوي بسلاسة</string>
+    <string name="flashlight_fade_title">تلاشى الداخل والخارج</string>
+    <string name="flashlight_fade_desc">تغيير وضع المصباح اليدوي بسلاسة </string>
     <string name="flashlight_global_title">الضوابط العالمية</string>
     <string name="flashlight_global_desc">تتلاشى في مصباح يدوي على مستوى العالم</string>
     <string name="flashlight_adjust_intensity_title">ضبط الشدة</string>
@@ -83,7 +83,7 @@
     <string name="content_desc_settings">إعدادات</string>
     <!-- Caffeinate / Permissions -->
     <string name="permission_show_notification_title">إظهار الإشعارات</string>
-    <string name="permission_post_notifications_title">نشر الإخطارات</string>
+    <string name="permission_post_notifications_title">إشعارات المنشورات </string>
     <string name="permission_post_notifications_desc">السماح للتطبيق بعرض الإشعارات</string>
     <string name="permission_grant_action">إذن المنح</string>
     <string name="caffeinate_notification_title">الكافيين نشط</string>
@@ -136,17 +136,17 @@
     <string name="perm_usage_stats_title">إحصائيات الاستخدام</string>
     <string name="perm_usage_stats_desc">مطلوب لاكتشاف التطبيقات الموجودة حاليًا في المقدمة لتجنب تجميدها</string>
     <string name="perm_notif_listener_desc_freeze">مطلوب لاكتشاف تشغيل الوسائط والإشعارات النشطة لتجنب تجميدها</string>
-    <string name="freeze_mode_title">Freeze mode</string>
-    <string name="freeze_mode_freeze">Freezing</string>
-    <string name="freeze_mode_suspend">App suspension</string>
-    <string name="freeze_mode_warning_desc">Can not switch mode while apps are frozen. Please unfreeze all and try again.</string>
+    <string name="freeze_mode_title">وضع التجميد</string>
+    <string name="freeze_mode_freeze">التجميد </string>
+    <string name="freeze_mode_suspend">تعليق التطبيق</string>
+    <string name="freeze_mode_warning_desc">لا يمكن تغيير الوضع أثناء تجميد التطبيقات. يرجى إلغاء تجميد جميع التطبيقات والمحاولة مرة أخرى.</string>
     <!-- Notification Lighting -->
     <string name="notification_lighting_screen_off_title">تظهر فقط عندما تكون الشاشة مغلقة</string>
     <string name="notification_lighting_skip_silent_title">تخطي الإشعارات الصامتة</string>
-    <string name="notification_lighting_skip_persistent_title">تخطي الإشعارات الصامتة</string>
+    <string name="notification_lighting_skip_persistent_title">تخطي الإشعارات المستمرة</string>
     <string name="settings_section_flashlight_pulse">نبض المصباح</string>
     <string name="flashlight_pulse_title">نبض المصباح</string>
-    <string name="flashlight_pulse_facedown_title">فقط أثناء مواجهة الأسفل</string>
+    <string name="flashlight_pulse_facedown_title">فقط عند مواجهة الأسفل</string>
     <string name="flashlight_pulse_same_as_lighting_title">نفس التطبيقات التي تعمل مع إضاءة الإشعارات</string>
     <string name="settings_section_style">الشكل</string>
     <string name="notification_lighting_stroke_adjustment_section">ضبط الشوط</string>
@@ -190,7 +190,7 @@
     <string name="tile_app_freezing">تجميد التطبيق</string>
     <string name="tile_flashlight_pulse">نبض المصباح</string>
     <string name="tile_stay_awake">ابق مستيقظا</string>
-    <string name="input_method_label">لوحة المفاتيح الأساسية</string>
+    <string name="input_method_label">لوحة مفاتيح Essentials</string>
     <string name="subtype_en_us">الإنجليزية (الولايات المتحدة)</string>
     <string name="tile_active">نشيط</string>
     <string name="tile_inactive">غير نشط</string>
@@ -198,7 +198,7 @@
     <string name="about_desc_developer_options">قم بتبديل خيارات مطور النظام من لوحة QS بسهولة. قد يؤدي هذا إلى إعادة تعيين بعض إعدادات المطور التي قمت بتعديلها.</string>
     <string name="nfc_tile_label">نفك</string>
     <string name="tile_private_dns">DNS الخاص</string>
-    <string name="tile_private_dns_auto">آلي</string>
+    <string name="tile_private_dns_auto">تلقائي</string>
     <string name="tile_private_dns_off">عن</string>
     <string name="tile_usb_debugging">تصحيح أخطاء USB</string>
     <string name="tile_color_picker">منتقي الألوان</string>
@@ -207,12 +207,12 @@
     <string name="on">على</string>
     <string name="off">عن</string>
     <string name="private_dns_custom_title">DNS الخاص المخصص</string>
-    <string name="private_dns_presets_title">DNS Presets</string>
-    <string name="dns_preset_add_title">Add DNS Preset</string>
-    <string name="dns_preset_name_label">Preset name</string>
-    <string name="dns_preset_reset_action">Reset</string>
-    <string name="dns_preset_delete_content_description">Delete preset</string>
-    <string name="dns_preset_reset_confirm">Are you sure you want to reset all DNS presets to defaults? This will remove all your custom presets.</string>
+    <string name="private_dns_presets_title">إعدادات DNS المسبقة</string>
+    <string name="dns_preset_add_title">إضافة إعدادات DNS مسبقة</string>
+    <string name="dns_preset_name_label">اسم الإعداد المسبق</string>
+    <string name="dns_preset_reset_action">إعادة تعيين</string>
+    <string name="dns_preset_delete_content_description">حذف الإعداد المسبق</string>
+    <string name="dns_preset_reset_confirm">هل أنت متأكد من رغبتك في إعادة ضبط جميع إعدادات نظام أسماء النطاقات (DNS) إلى الإعدادات الافتراضية؟ سيؤدي هذا إلى إزالة جميع إعداداتك المخصصة.</string>
     <string name="private_dns_hostname_label">اسم مضيف الموفر</string>
     <string name="dns_preset_adguard">AdGuard DNS</string>
     <string name="dns_preset_adguard_hostname">dns.adguard.com</string>
@@ -296,7 +296,7 @@
     <string name="smart_data_title">البيانات الذكية</string>
     <string name="permission_read_phone_state_title">قراءة حالة الهاتف</string>
     <string name="permission_read_phone_state_desc">مطلوب لاكتشاف نوع الشبكة لميزة البيانات الذكية</string>
-    <string name="permission_read_phone_state_desc_call_vibrations">مطلوب لاكتشاف تغييرات حالة المكالمة لتحفيز ردود الفعل اللمسية.</string>
+    <string name="permission_read_phone_state_desc_call_vibrations">مطلوب لاكتشاف تغييرات حالة المكالمة لتشغيل الاهتزاز.</string>
     <string name="settings_section_smart_visibility">الرؤية الذكية</string>
     <string name="smart_wifi_title">واي فاي ذكي</string>
     <string name="smart_wifi_desc">إخفاء بيانات الجوال عند اتصال WiFi</string>
@@ -322,7 +322,7 @@
     <string name="cat_visuals">مرئيات</string>
     <string name="cat_system">نظام</string>
     <!-- UI Elements -->
-    <string name="search_placeholder">أساسيات البحث</string>
+    <string name="search_placeholder">البحث في Essentials</string>
     <string name="search_no_results">لا توجد نتائج ل \"%1$s\"</string>
     <string name="search_results_title">نتائج البحث</string>
     <string name="requires_following_permissions">%1$s يتطلب الأذونات التالية</string>
@@ -348,17 +348,17 @@
     <string name="widget_background_title">خلفية القطعة</string>
     <string name="widget_background_summary">إظهار خلفية القطعة</string>
     <!-- DIY Automation -->
-    <string name="diy_create_trigger_title">أتمتة الزناد</string>
+    <string name="diy_create_trigger_title">أتمنة الزناد</string>
     <string name="diy_create_trigger_desc">قم بجدولة إجراء ليتم تشغيله في ملاحظة</string>
-    <string name="diy_create_state_title">أتمتة الدولة</string>
+    <string name="diy_create_state_title">أتمنة الدولة</string>
     <string name="diy_create_state_desc">قم بجدولة إجراء ليتم تنفيذه بناءً على حالة الشرط داخل وخارج</string>
-    <string name="diy_editor_new_title">أتمتة جديدة</string>
-    <string name="diy_editor_edit_title">تحرير الأتمتة</string>
+    <string name="diy_editor_new_title">أتمنة جديدة</string>
+    <string name="diy_editor_edit_title">تحرير الأتمنة</string>
     <string name="feat_link_actions_title">إجراءات الارتباط</string>
     <string name="feat_link_actions_desc">التعامل مع الروابط مع تطبيقات متعددة</string>
     <string name="feat_snooze_notifications_title">تأجيل إخطارات النظام</string>
-    <string name="feat_snooze_notifications_desc">تأجيل الإخطارات المستمرة</string>
-    <string name="feat_qs_tiles_title">بلاط الإعدادات السريعة</string>
+    <string name="feat_snooze_notifications_desc">تأجيل الإشعارات المستمرة</string>
+    <string name="feat_qs_tiles_title">بلاط الإعدادات السريعة QS</string>
     <string name="feat_qs_tiles_desc">عرض الكل</string>
     <string name="feat_button_remap_title">إعادة رسم خريطة الزر</string>
     <string name="feat_button_remap_desc">إعادة تعيين إجراءات زر الأجهزة</string>
@@ -422,7 +422,7 @@
     <string name="calendar_sync_no_calendars">لم يتم العثور على أي تقاويم محلية</string>
     <string name="calendar_sync_sync_started">بدأت مزامنة التقويم</string>
     <!-- Search Settings -->
-    <string name="search_haptic_title">القطعة ردود الفعل اللمسية</string>
+    <string name="search_haptic_title">اهتزاز الويدجيت</string>
     <string name="search_haptic_desc">اختر ردود فعل لمسية لنقرات القطعة</string>
     <string name="search_smart_wifi_title">واي فاي ذكي</string>
     <string name="search_smart_wifi_desc">إخفاء بيانات الجوال عند اتصال WiFi</string>
@@ -436,7 +436,7 @@
     <string name="search_lighting_style_desc">اختر بين Stroke وGlow وSpinner والمزيد</string>
     <string name="search_corner_radius_title">شعاع الزاوية</string>
     <string name="search_corner_radius_desc">اضبط نصف قطر زاوية إضاءة الإشعارات</string>
-    <string name="search_skip_silent_title">تخطي الإخطارات الصامتة</string>
+    <string name="search_skip_silent_title">تخطي الإشعارات الصامتة</string>
     <string name="search_skip_silent_desc">لا تظهر الإضاءة للإشعارات الصامتة</string>
     <string name="search_flashlight_pulse_title">نبض المصباح</string>
     <string name="search_flashlight_pulse_desc">نبض المصباح ببطء للحصول على إشعارات جديدة</string>
@@ -460,7 +460,7 @@
     <string name="search_qs_lighting_title">إضاءة الإخطار</string>
     <string name="search_qs_lighting_desc">تبديل خدمة إضاءة الإشعارات</string>
     <string name="search_qs_night_light_title">ضوء الليل الديناميكي</string>
-    <string name="search_qs_night_light_desc">تبديل أتمتة ضوء الليل</string>
+    <string name="search_qs_night_light_desc">تبديل أتمنة ضوء الليل</string>
     <string name="search_qs_locked_sec_title">الأمن المقفل</string>
     <string name="search_qs_locked_sec_desc">أمان الشبكة على تبديل شاشة القفل</string>
     <string name="search_qs_mono_title">صوت أحادي</string>
@@ -478,7 +478,7 @@
     <string name="search_qs_usb_debugging_desc">قم بتبديل خيار مطور تصحيح أخطاء USB</string>
     <string name="search_remap_enable_title">تمكين زر إعادة التعيين</string>
     <string name="search_remap_enable_desc">تبديل رئيسي لإعادة تعيين زر الصوت</string>
-    <string name="search_remap_haptic_title">إعادة رسم خريطة للملاحظات اللمسية</string>
+    <string name="search_remap_haptic_title">إعادة رسم خريطة الاهتزاز</string>
     <string name="search_remap_haptic_desc">ردود فعل الاهتزاز عند الضغط على زر إعادة التعيين</string>
     <string name="search_remap_flashlight_title">تبديل المصباح</string>
     <string name="search_remap_flashlight_desc">تبديل المصباح باستخدام أزرار الصوت</string>
@@ -498,13 +498,13 @@
     <string name="search_freeze_delay_desc">تأخير قبل التجميد بعد القفل</string>
     <!-- Permissions metadata -->
     <string name="perm_shizuku_title">شيزوكو</string>
-    <string name="perm_shizuku_desc">Required for advanced commands. قم بتثبيت Shizuku من متجر Play.</string>
+    <string name="perm_shizuku_desc">مطلوب للأوامر المتقدمة . قم بتثبيت Shizuku من متجر Play.</string>
     <string name="perm_shizuku_install_action">تثبيت شيزوكو</string>
     <string name="perm_shizuku_grant_title">إذن المنح</string>
     <string name="perm_shizuku_grant_desc">مطلوب لتشغيل أوامر توفير الطاقة أثناء التنقل في الخرائط.</string>
-    <string name="req_shizuku">يتطلب شيزوكو أو الجذر</string>
+    <string name="req_shizuku">يتطلب Shizuku أو Root</string>
     <string name="perm_root_title">الوصول إلى الجذر</string>
-    <string name="perm_root_desc">الأذونات المطلوبة لإجراءات النظام باستخدام امتيازات الجذر.</string>
+    <string name="perm_root_desc">الأذونات المطلوبة لإجراءات النظام باستخدام امتيازات الـ Root.</string>
     <string name="perm_notif_listener_title">مستمع الإخطار</string>
     <string name="perm_notif_listener_desc_maps">يتطلب وصول مستمع الإشعارات لمراقبة حالة التنقل في خرائط Google وتمكين توفير الطاقة عند عدم التنقل.</string>
     <string name="perm_notif_listener_desc_lighting">يتطلب وصول مستمع الإشعارات لاكتشاف الإشعارات الجديدة وتشغيل إضاءة الحافة.</string>
@@ -534,7 +534,7 @@
     <string name="perm_battery_optimization_title">تحسين البطارية</string>
     <string name="perm_battery_optimization_desc">تأكد من عدم إيقاف الخدمة من قبل النظام لتوفير الطاقة.</string>
     <!-- Tabs -->
-    <string name="tab_essentials">أساسيات</string>
+    <string name="tab_essentials">Essentials</string>
     <string name="tab_freeze">تجميد</string>
     <string name="tab_freeze_title">المجمدة</string>
     <string name="tab_diy">DIY</string>
@@ -563,7 +563,7 @@
     <string name="feat_app_updates_desc">تتبع وتنزيل أحدث الإصدارات لتطبيقاتك المفضلة مباشرة من GitHub.</string>
     <string name="error_invalid_repo_format">التنسيق غير صالح. استخدم المالك/الريبو أو عنوان URL لـ GitHub</string>
     <string name="error_generic_search">حدث خطأ أثناء البحث</string>
-    <string name="label_auto">آلي</string>
+    <string name="label_auto">تلقائي</string>
     <string name="label_options">خيارات</string>
     <string name="option_allow_prereleases">التحقق من وجود الإصدارات المسبقة</string>
     <string name="option_notifications">إشعارات</string>
@@ -571,7 +571,7 @@
     <!-- Keyboard Setup -->
     <string name="label_keyboard_setup">إعداد لوحة المفاتيح</string>
     <string name="btn_enable_keyboard">تمكين في الإعدادات</string>
-    <string name="btn_select_keyboard">قم بالتبديل إلى الأساسيات</string>
+    <string name="btn_select_keyboard">التبديل إلى Essentials</string>
     <string name="label_enabled">ممكّن</string>
     <string name="label_disabled">عاجز</string>
     <string name="tile_adaptive_brightness">السطوع التكيفي</string>
@@ -587,10 +587,10 @@
     <!-- Sentry Crash Reporting -->
     <string name="sentry_report_mode_title">الإبلاغ عن الأعطال</string>
     <string name="sentry_mode_off">غلق</string>
-    <string name="sentry_mode_auto">Auto</string>
-    <string name="sentry_crash_toast">توقفت أساسيات عن العمل، إرسال التقرير</string>
-    <string name="simulate_crash">محاكاه العطل</string>
-    <string name="welcome_title">مرحباً بك في أساسيات</string>
+    <string name="sentry_mode_auto">تلقائي</string>
+    <string name="sentry_crash_toast">توقفت Essentials عن العمل، إرسال التقرير</string>
+    <string name="simulate_crash">محاكاة العطل</string>
+    <string name="welcome_title">مرحباً بك في Essentials</string>
     <string name="welcome_subtitle">صندوق أدوات لعشاق أندرويد</string>
     <string name="welcome_developer_attribution">بواسطة sameerasw.com</string>
     <string name="action_lets_begin">لنبدأ</string>
@@ -601,15 +601,15 @@
     <string name="action_i_understand">فهمت</string>
     <string name="feature_intro_desc">في أي وقت تكون فيه غير متأكد من ميزة أو لوحة الإعدادات السريعة وما تفعله وما هي الأذونات اللازمة لها، ما عليك سوى الضغط عليها مطولاً واختيار \"ما هذا؟\" لمعرفة المزيد.</string>
     <string name="feature_intro_footer">يمكنك الإبلاغ عن الأخطاء أو العثور على أدلة مفيدة في أي وقت من إعدادات التطبيق.</string>
-    <string name="action_let_me_in">Let Me in Already</string>
-    <string name="preferences_title">Preferences</string>
-    <string name="preferences_desc">Configure some basic settings to get started.</string>
+    <string name="action_let_me_in">دعني أدخل الآن </string>
+    <string name="preferences_title">التفضيلات </string>
+    <string name="preferences_desc">قم بضبط بعض الإعدادات الأساسية للبدء. </string>
     <string name="label_app_settings">إعدادات التطبيق</string>
-    <string name="label_app_language">Language</string>
-    <string name="label_haptic_feedback">Haptic Feedback</string>
-    <string name="label_updates">Updates</string>
+    <string name="label_app_language">اللغة</string>
+    <string name="label_haptic_feedback">الاهتزاز</string>
+    <string name="label_updates">التحديثات</string>
     <string name="label_auto_check_updates">البحث التلقائي عن التحديثات</string>
-    <string name="desc_auto_check_updates">Check for updates at app launch</string>
+    <string name="desc_auto_check_updates">البحث عن التحديثات عند فتح التطبيق</string>
     <string name="action_all_set">جاهز تمامًا</string>
     <string name="action_check_whats_new">تحقق من الجديد؟</string>
     <string name="action_done">منتهي</string>
@@ -638,7 +638,7 @@
     <string name="about_desc_watermark">أضف تسمية توضيحية مخصصة/علامة مائية إلى صورك باستخدام بيانات EXIF ​​ومعلومات الجهاز. \n\nشارك صورة مباشرة من تطبيق آخر إلى Essentials لإضافة علامة مائية بسهولة.</string>
     <string name="about_desc_calendar_sync">قم بمزامنة جميع جداول التقويم القادمة الخاصة بك بغض النظر عن القيود المفروضة على حسابات Google وعدم السماح بإضافتها إلى أجهزة WearOS بسبب سياسات العمل أو المدرسة.  \n\nتأكد من تثبيت التطبيق المصاحب لـ wearOS Essentials لعرض الجدول في التطبيق وكذلك في مربع أو تعقيد.</string>
     <string name="about_desc_app_updates">تتبع تحديثات تطبيقاتك المثبتة. \n\nاحصل على إشعارات بشأن التحديثات المتاحة، واعرض سجلات التغيير وقم بتثبيتها بسهولة بنقرة واحدة.</string>
-    <string name="about_desc_call_vibrations">أضف تعليقات لمسية إلى مكالماتك. \n\n اهتز عند اتصال مكالمة أو قطعها أو قبولها، مما يمنحك تأكيدًا عن طريق اللمس دون النظر إلى الشاشة.</string>
+    <string name="about_desc_call_vibrations">أضف تعليقات اهتزازية إلى مكالماتك. \n\n اهتز عند اتصال مكالمة أو قطعها أو قبولها، مما يمنحك تأكيدًا عن طريق الاهتزاز دون النظر إلى الشاشة.</string>
     <string name="about_desc_sound_mode_tile">قم بالتبديل بسرعة بين أوضاع الصوت والاهتزاز والصمت. \n\n بلاط مناسب لتغيير وضع الرنين الخاص بك دون استخدام أزرار الصوت أو الإعدادات. يمكنك إعادة ترتيب الأوضاع أو تعطيل أي منها إذا لم تكن هناك حاجة إليها لتخصيص تبديل التجانب لسلوك الدورة.</string>
     <string name="about_desc_ui_blur">يمكنك بسهولة تبديل تأثير عمق التمويه على مستوى النظام عبر نظام التشغيل.</string>
     <string name="about_desc_bubbles">تمكين أو تعطيل فقاعات الإشعارات العائمة. \n\n قم بتبديل الإعداد على مستوى النظام لفقاعات المحادثة بسرعة.</string>
@@ -662,13 +662,13 @@
     <string name="diy_trigger_device_unlock">فتح الجهاز</string>
     <string name="diy_trigger_charger_connected">الشاحن متصل</string>
     <string name="diy_trigger_charger_disconnected">تم فصل الشاحن</string>
-    <string name="diy_trigger_schedule">Schedule</string>
-    <string name="diy_state_time_period">Time Period</string>
-    <string name="diy_time_selection_title">Select Time</string>
-    <string name="diy_time_range_selection_title">Select Time Range</string>
-    <string name="diy_start_time_label">Start Time</string>
-    <string name="diy_end_time_label">End Time</string>
-    <string name="diy_repeat_days_label">Repeat on</string>
+    <string name="diy_trigger_schedule">جدول</string>
+    <string name="diy_state_time_period">الفترة الزمنية</string>
+    <string name="diy_time_selection_title">حدد الوقت</string>
+    <string name="diy_time_range_selection_title">حدد النطاق الزمني</string>
+    <string name="diy_start_time_label">وقت البدء </string>
+    <string name="diy_end_time_label">وقت الإتهاء</string>
+    <string name="diy_repeat_days_label">كرر ذلك </string>
     <string name="diy_state_charging">الشحن</string>
     <string name="diy_state_screen_on">تشغيل الشاشة</string>
     <string name="diy_action_haptic">تذبذب</string>
@@ -677,13 +677,13 @@
     <string name="diy_action_flashlight_on">قم بتشغيل المصباح</string>
     <string name="diy_action_flashlight_off">قم بإيقاف تشغيل المصباح</string>
     <string name="diy_action_flashlight_toggle">تبديل المصباح</string>
-    <string name="diy_action_low_power_on">Turn On Low Power Mode</string>
-    <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
+    <string name="diy_action_low_power_on">قم بتشغيل وضع الطاقة المنخفضة </string>
+    <string name="diy_action_low_power_off">قم بإيقاف تشغيل وضع الطاقة المنخفضة </string>
     <string name="diy_action_dim_wallpaper">خلفية خافتة</string>
     <string name="diy_dim_wallpaper_desc">يتطلب هذا الإجراء Shizuku أو Root لضبط تعتيم خلفية النظام.</string>
     <string name="diy_select_trigger">حدد المشغل</string>
     <string name="diy_create_app_title">برنامج</string>
-    <string name="diy_create_app_desc">الأتمتة بناءً على التطبيق المفتوح</string>
+    <string name="diy_create_app_desc">الأتمنة بناءً على التطبيق المفتوح</string>
     <string name="diy_select_state">اختر الدولة</string>
     <string name="diy_select_action">حدد الإجراء</string>
     <string name="diy_in_action_label">في العمل</string>
@@ -694,8 +694,8 @@
     <string name="action_delete">يمسح</string>
     <string name="action_enable">يُمكَِن</string>
     <string name="action_disable">إبطال</string>
-    <string name="automation_service_channel_name">خدمة الأتمتة</string>
-    <string name="automation_service_running_title">الأتمتة نشطة</string>
+    <string name="automation_service_channel_name">خدمة الأتمنة</string>
+    <string name="automation_service_running_title">الأتمنة نشطة</string>
     <string name="automation_service_running_desc">مراقبة أحداث النظام لعمليات التشغيل الآلي الخاصة بك</string>
     <string name="diy_action_device_effects">تأثيرات الجهاز</string>
     <string name="diy_device_effects_desc">تحكم في التأثيرات على مستوى النظام مثل التدرج الرمادي وقمع AOD وتعتيم الخلفية والوضع الليلي.</string>
@@ -728,8 +728,8 @@
     <string name="network_type_5g">5G</string>
     <string name="network_type_4g">4G</string>
     <string name="network_type_3g">3G</string>
-    <string name="label_shizuku_ritaka">شيزوكو (ريكا)</string>
-    <string name="label_shizuku_tuozi">شيزوكو (توزي)</string>
+    <string name="label_shizuku_ritaka">Shizuku (Rikka)</string>
+    <string name="label_shizuku_tuozi">Shizuku (TuoZi)</string>
     <string name="label_search_content_description">يبحث</string>
     <string name="perm_device_admin_explanation">مطلوب لقفل الجهاز بشدة عند محاولة إجراء تغييرات غير مصرح بها على الشبكة على شاشة القفل.</string>
     <string name="biometric_subtitle_access_settings">قم بالمصادقة للوصول إلى الإعدادات</string>
@@ -748,7 +748,7 @@
     <string-array name="keywords_network_visibility">
         <item>شبكة</item>
         <item>الرؤية</item>
-        <item>آلي</item>
+        <item>تلقائب</item>
         <item>يخفي</item>
     </string-array>
     <string-array name="keywords_restore_default">
@@ -809,7 +809,7 @@
     <string-array name="keywords_wake_display">
         <item>يلمس</item>
         <item>استيقظ</item>
-        <item>عرض</item>
+        <item>العرض</item>
     </string-array>
     <string-array name="keywords_timer">
         <item>مؤقت</item>
@@ -817,10 +817,10 @@
         <item>نفذ الوقت</item>
     </string-array>
     <string name="label_keyboard_always_dark">دائما موضوع مظلم</string>
-    <string name="label_keyboard_pitch_black">موضوع الملعب الأسود</string>
+    <string name="label_keyboard_pitch_black">موضوع الثيم الأسود</string>
     <string name="label_keyboard_clipboard_enabled">تاريخ الحافظة</string>
-    <string name="label_keyboard_long_press_symbols">Long press for symbols</string>
-    <string name="label_keyboard_accented_characters">Accented characters</string>
+    <string name="label_keyboard_long_press_symbols">اضغط مطولاً لعرض الرموز</string>
+    <string name="label_keyboard_accented_characters">الأحرف المميزة </string>
     <string-array name="keywords_selection">
         <item>قائمة</item>
         <item>منقار</item>
@@ -837,8 +837,8 @@
         <item>فلتر</item>
     </string-array>
     <string-array name="keywords_automation_lock">
-        <item>الأتمتة</item>
-        <item>آلي</item>
+        <item>الأتمنة</item>
+        <item>تلقائي</item>
         <item>قفل</item>
     </string-array>
     <string-array name="keywords_adb_debug">
@@ -858,7 +858,7 @@
     </string-array>
     <string-array name="keywords_always_display">
         <item>دائماً</item>
-        <item>عرض</item>
+        <item>العرض</item>
         <item>ساعة</item>
     </string-array>
     <string-array name="keywords_audio_mute">
@@ -869,16 +869,16 @@
     <string-array name="keywords_blue_filter">
         <item>أزرق</item>
         <item>فلتر</item>
-        <item>آلي</item>
+        <item>تلقائي</item>
     </string-array>
     <string-array name="keywords_app_freezing">
         <item>تجميد</item>
-        <item>شيزوكو</item>
+        <item>Shizuku</item>
     </string-array>
     <string-array name="keywords_manual_now">
         <item>يدوي</item>
         <item>الآن</item>
-        <item>شيزوكو</item>
+        <item>Shizuku</item>
     </string-array>
     <string-array name="keywords_proximity_sensor">
         <item>القرب</item>
@@ -907,7 +907,7 @@
     <string name="status_up_to_date">أنت على اطلاع</string>
     <string name="warning_pre_release">هذه نسخة تجريبية وقد تكون غير مستقرة.</string>
     <string name="release_notes_format">ملاحظات الإصدار %1$s</string>
-    <string name="action_view_on_github">عرض على جيثب</string>
+    <string name="action_view_on_github">عرض على Github</string>
     <string name="action_download_apk">تنزيل APK</string>
     <!-- Haptic Types -->
     <string name="haptic_none">لا أحد</string>
@@ -922,16 +922,16 @@
     <string name="error_unlock_network_settings">افتح قفل الهاتف لتغيير إعدادات الشبكة</string>
     <!-- About Section -->
     <string name="developed_by_format">تم تطويره بواسطة %1$s\nمع ❤\uFE0F من \uD83C\uDDF1\uD83C\uDDF0</string>
-    <string name="action_website">موقع إلكتروني</string>
+    <string name="action_website">موقعي الإلكتروني</string>
     <string name="action_contact">اتصال</string>
-    <string name="action_telegram">برقية</string>
-    <string name="action_support">يدعم</string>
-    <string name="label_other_apps">تطبيقات أخرى</string>
-    <string name="app_airsync">إيرسينك</string>
-    <string name="app_zenzero">زينزيرو</string>
-    <string name="app_canvas">قماش</string>
-    <string name="app_tasks">المهام</string>
-    <string name="app_zero">صفر</string>
+    <string name="action_telegram">تيليجرام</string>
+    <string name="action_support">ادعمني</string>
+    <string name="label_other_apps">تطبيقاتي الأخرى</string>
+    <string name="app_airsync">AirSync</string>
+    <string name="app_zenzero">ZenZero</string>
+    <string name="app_canvas">Canvas</string>
+    <string name="app_tasks">Tasks</string>
+    <string name="app_zero">Zero</string>
     <!-- Help & Guides -->
     <string name="help_guides_title">مساعدة وأدلة</string>
     <string name="need_more_support_reach_out">هل تحتاج إلى مزيد من الدعم؟ تواصل معنا،</string>
@@ -945,9 +945,9 @@
     <!-- Instructions Content -->
     <string name="instruction_section_perms_title">إمكانية الوصول والإخطار وأذونات التراكب</string>
     <string name="instruction_step_perms_1">قد تتلقى رسالة رفض الوصول هذه إذا حاولت منح أذونات حساسة مثل إمكانية الوصول أو مستمع الإشعارات أو أذونات التراكب. لمنحها، تحقق من الخطوات أدناه.</string>
-    <string name="instruction_step_perms_2">1. انتقل إلى صفحة معلومات التطبيق الخاصة بالأساسيات.</string>
+    <string name="instruction_step_perms_2">1. انتقل إلى صفحة معلومات التطبيق الخاصة بـ Essentials.</string>
     <string name="instruction_step_perms_3">2. افتح قائمة النقاط الثلاث وحدد \'السماح بالإعدادات المقيدة\'. قد تضطر إلى المصادقة باستخدام القياسات الحيوية. بمجرد الانتهاء، حاول منح الإذن مرة أخرى.</string>
-    <string name="instruction_section_shizuku_title">شيزوكو</string>
+    <string name="instruction_section_shizuku_title">Shizuku</string>
     <string name="instruction_section_shizuku_desc">Shizuku هي أداة قوية تسمح للتطبيقات باستخدام واجهات برمجة تطبيقات النظام مباشرة مع ADB أو أذونات الجذر. وهو مطلوب لميزات مثل وضع Maps min وApp Freezer. وسنساعد في منح بعض الأذونات مثل WRITE_SECURE_SETTINGS. \n\n لكن إصدار Play Store من Shizuku قد يكون قديمًا ومن المحتمل أن يكون غير قابل للاستخدام على إصدارات Android الحديثة، لذا في هذه الحالة، يرجى الحصول على أحدث إصدار من github أو نسخة محدثة منه.</string>
     <string name="instruction_section_maps_title">وضع توفير الطاقة للخرائط</string>
     <string name="instruction_section_maps_desc">تعمل هذه الميزة تلقائيًا على تشغيل وضع توفير الطاقة في خرائط Google والذي يقتصر حاليًا على سلسلة Pixel 10. اكتشف أحد أعضاء المجتمع أنه لا يزال قابلاً للاستخدام على أي جهاز يعمل بنظام Android عن طريق تشغيل نشاط minMode للخرائط بامتيازات الجذر.  \n\n وبعد ذلك، قمت بتشغيله تلقائيًا باستخدام Tasker ليتم تشغيله تلقائيًا عند إيقاف تشغيل الشاشة أثناء جلسة التنقل ثم تمكنت من تحقيق نفس الشيء باستخدام أذونات Shizuku في وقت التشغيل فقط. \n\n الغرض منه هو العرض عبر AOD لسلسلة Pixel 10، ولهذا السبب، قد ترى رسالة عرضية تظهر على الشاشة مفادها أنها لا تدعم الوضع الأفقي. هذا لا يمكن تجنبه عن طريق التطبيق ويمكنك تجاهله.</string>
@@ -965,8 +965,8 @@
     <string name="instruction_section_button_desc">تحد بعض الشركات المصنعة الأصلية من تقارير خدمة إمكانية الوصول بمجرد إيقاف تشغيل الشاشة فعليًا ولكنها قد تظل تعمل أثناء تشغيل AOD. \nفي هذه الحالة، قد تتمكن من استخدام إعادة تعيين الأزرار مع تشغيل AOD ولكن ليس مع إيقاف التشغيل. \n\nكحل بديل، ستحتاج إلى استخدام أذونات Shizuku وتشغيلها  \'استخدم Shizuku أو Root\' تبديل إعدادات إعادة تعيين الزر التي تحدد أحداث إدخال الأجهزة وتستمع إليها.\nهذا غير مضمون للعمل على جميع الأجهزة والاحتياجات الاختبار.\n\nوحتى إذا كان\' قيد التشغيل، سيتم استخدام طريقة Shizuku فقط عند الحاجة إلى\'. وإلا فإنه سيعود دائمًا إلى إمكانية الوصول التي تتعامل أيضًا مع حظر الإدخال الفعلي أثناء الضغط لفترة طويلة.</string>
     <string name="instruction_section_flashlight_title">سطوع المصباح لا يعمل</string>
     <string name="instruction_section_flashlight_desc">حصل عدد محدود فقط من الأجهزة على دعم الأجهزة والبرامج لضبط شدة المصباح.  \n\n\' الحد الأدنى لإصدار Android هو 13 (SDK33).\n التحكم في سطوع المصباح يدعم فقط إصدار HAL 3.8 والإصدارات الأحدث، لذلك من بين الأجهزة المدعومة، الأحدث (على سبيل المثال، Pixel 6/7، Samsung S23، إلخ.)\'\npolodarb/Flashlight-Tiramisu</string>
-    <string name="instruction_section_about_title">ما هو هذا التطبيق بحق الجحيم؟</string>
-    <string name="instruction_section_about_desc">سؤال جيد، \n\n كنت أرغب دائمًا في استخراج أقصى استفادة من أجهزتي لأنني\' كنت مستخدمًا متجذرًا منذ أن حصلت على أول جهاز Project Treble الخاص بي. وأنا \' كنت أحب تطبيق Tasker الذي يشبه الإله عندما يأتي التشغيل الآلي واستخدام كل واجهة برمجة التطبيقات الممكنة والميزات الداخلية لنظام Android.\n\n لذلك لم أقم بإزالة الجذر ورجعت إلى تجربة الإصدار التجريبي من Android وأردت تحقيق أقصى استفادة مما هو ممكن مع الامتيازات المعطاة. قد كذلك مشاركتها. لذلك، بفضل معرفتي المبتدئة في Kotlin Jetpack وبدعم من العديد من أدوات البحث والمساعدة وكذلك المجتمع الرائع، قمت بإنشاء تطبيق الكل في واحد يحتوي على كل ما أردت أن أكون عليه في جهاز Android الخاص بي مع أذونات معينة. وها هو.\n\n نرحب بطلبات الميزات، وسأفكر فيها وأرى ما إذا كان من الممكن تحقيقها من خلال الأذونات المتاحة ومهاراتي. في الوقت الحاضر ما هو غير ممكن. :)\n\nلماذا ليس موجودًا في متجر Play؟\nلا\'لا أريد المخاطرة بحظر حساب المطور الخاص بي بسبب الأذونات وواجهات برمجة التطبيقات الداخلية شديدة الحساسية المستخدمة في التطبيق. ولكن مع الطريقة التي يتم بها التحميل الجانبي لنظام Android، دعونا \' نرى ما يتعين علينا القيام به. أنا أتفهم المخاوف المتعلقة بكون التطبيقات التي تم تحميلها على الجانب ضارة. \nبينما نحن في هذا الموضوع، تحقق من تطبيقي الآخر AirSync إذا كنت من مستخدمي Mac + Android. * المكونات وقح * \n\nاستمتع، استمر في البناء! (っ◕‿◕)っ</string>
+    <string name="instruction_section_about_title">ما هو هذا التطبيق؟</string>
+    <string name="instruction_section_about_desc">سؤال جيد، \n\n كنت أرغب دائمًا في استخراج أقصى استفادة من أجهزتي لأنني\' كنت مستخدمًا متجذرًا منذ أن حصلت على أول جهاز Project Treble الخاص بي. وأنا \' كنت أحب تطبيق Tasker الذي يشبه المساعد الالي عندما يأتي التشغيل الآلي واستخدام كل واجهة برمجة التطبيقات الممكنة والميزات الداخلية لنظام Android.\n\n لذلك لم أقم بإزالة الجذر ورجعت إلى تجربة الإصدار التجريبي من Android وأردت تحقيق أقصى استفادة مما هو ممكن مع الامتيازات المعطاة. قد كذلك مشاركتها. لذلك، بفضل معرفتي المبتدئة في Kotlin Jetpack وبدعم من العديد من أدوات البحث والمساعدة وكذلك المجتمع الرائع، قمت بإنشاء تطبيق الكل في واحد يحتوي على كل ما أردت أن أكون عليه في جهاز Android الخاص بي مع أذونات معينة. وها هو.\n\n نرحب بطلبات الميزات، وسأفكر فيها وأرى ما إذا كان من الممكن تحقيقها من خلال الأذونات المتاحة ومهاراتي. في الوقت الحاضر ما هو غير ممكن. :)\n\nلماذا ليس موجودًا في متجر Play؟\nلا\'لا أريد المخاطرة بحظر حساب المطور الخاص بي بسبب الأذونات وواجهات برمجة التطبيقات الداخلية شديدة الحساسية المستخدمة في التطبيق. ولكن مع الطريقة التي يتم بها التحميل الجانبي لنظام Android، دعونا \' نرى ما يتعين علينا القيام به. أنا أتفهم المخاوف المتعلقة بكون التطبيقات التي تم تحميلها على الجانب ضارة. \nبينما نحن في هذا الموضوع، تحقق من تطبيقي الآخر AirSync إذا كنت من مستخدمي Mac + Android. * المكونات وقح * \n\nاستمتع، استمر في البناء! (っ◕‿◕)っ</string>
     <!-- Bug Reporting -->
     <string name="toast_bug_report_copied">تم نسخ تقرير الخطأ إلى الحافظة</string>
     <string name="bug_report_title">تقرير الشوائب</string>
@@ -978,7 +978,7 @@
     <string name="action_report_email">تقرير البريد الإلكتروني</string>
     <string name="action_copy_clipboard">نسخ إلى الحافظة</string>
     <string name="bug_report_email_subject">تقرير الأخطاء الأساسية</string>
-    <string name="bug_report_send_via">أرسل عبر</string>
+    <string name="bug_report_send_via">يرجى تفعيل خاصية الإبلاغ عن الأعطال، حيث ستقوم هذه الخاصية بالإبلاغ تلقائياً عن التفاصيل التي من شأنها المساعدة في حل المشكلات.</string>
     <!-- Location Reached -->
     <string name="feat_location_reached_title">هل نحن هناك بعد؟</string>
     <string name="feat_location_reached_desc">تنبيهات الوجهة القريبة</string>
@@ -1013,7 +1013,7 @@
     <string name="location_reached_dismiss">رفض</string>
     <string name="location_reached_toast_set">مجموعة الوجهة: %1$.4f، %2$.4f</string>
     <string name="setting_use_root_title">استخدم الجذر</string>
-    <string name="setting_use_root_desc">بدلاً من شيزوكو</string>
+    <string name="setting_use_root_desc">بدلاً من Shizuku</string>
     <string name="root_not_available_toast">الوصول إلى الجذر غير متوفر. يرجى التحقق من مدير الجذر الخاص بك.</string>
     <!-- System Keyboard -->
     <string name="feat_system_keyboard_title">لوحة المفاتيح</string>
@@ -1023,20 +1023,20 @@
     <string name="search_keyboard_height_desc">اضبط الحجم الرأسي الإجمالي للوحة المفاتيح</string>
     <string name="search_keyboard_padding_title">الحشو السفلي</string>
     <string name="search_keyboard_padding_desc">أضف مساحة أسفل لوحة المفاتيح</string>
-    <string name="search_keyboard_haptics_title">ردود الفعل اللمسية</string>
+    <string name="search_keyboard_haptics_title">الاهتزاز</string>
     <string name="search_keyboard_haptics_desc">اهتزاز عند الضغط على المفتاح</string>
     <string name="test_keyboard_hint">اختبر لوحة المفاتيح</string>
     <string name="label_keyboard_height">ارتفاع لوحة المفاتيح</string>
     <string name="label_keyboard_bottom_padding">الحشو السفلي</string>
-    <string name="label_keyboard_haptics">ردود الفعل اللمسية</string>
+    <string name="label_keyboard_haptics">الاهتزاز</string>
     <string name="label_keyboard_roundness">استدارة المفتاح</string>
     <string name="label_keyboard_functions_bottom">نقل الوظائف إلى الأسفل</string>
     <string name="label_keyboard_functions_padding">وظائف الحشو الجانبي</string>
-    <string name="label_keyboard_haptic_strength">قوة ردود الفعل اللمسية</string>
+    <string name="label_keyboard_haptic_strength">قوة الاهتزاز</string>
     <string name="label_keyboard_shape">شكل لوحة المفاتيح</string>
     <string name="shape_round">دائري</string>
     <string name="shape_flat">مستوي</string>
-    <string name="shape_inverse">معكوس</string>
+    <string name="shape_inverse">دائري معكوس</string>
     <string name="feat_batteries_title">البطاريات</string>
     <string name="feat_batteries_desc">مراقبة مستويات بطارية جهازك</string>
     <string name="batteries_widget_label">حالة البطارية</string>
@@ -1089,56 +1089,56 @@
     <string name="search_sound_mode_behavior_desc">اختر الأوضاع للتنقل خلالها</string>
     <string name="feat_ambient_music_title">لمحة الموسيقى المحيطة</string>
     <string name="feat_ambient_music_desc">قم بإلقاء نظرة سريعة على الوسائط الموجودة على AOD</string>
-    <string name="feat_sound_haptics_title">الصوت واللمس</string>
-    <string name="feat_sound_haptics_desc">الحجم والميزات اللمسية</string>
+    <string name="feat_sound_haptics_title">الصوت والاهتزاز</string>
+    <string name="feat_sound_haptics_desc">مستويات الصوت و الاهتزاز</string>
     <string name="feat_security_privacy_title">الأمن والخصوصية</string>
     <string name="feat_security_privacy_desc">حماية وتأمين جهازك</string>
-    <string name="feat_notifications_alerts_title">الإخطارات والتنبيهات</string>
+    <string name="feat_notifications_alerts_title">الإشعارات والتنبيهات</string>
     <string name="feat_notifications_alerts_desc">لا تفوت أولوياتك أبدًا</string>
     <string name="feat_input_actions_title">المدخلات والإجراءات</string>
     <string name="feat_input_actions_desc">تحكم في جهازك بكل سهولة</string>
-    <string name="feat_widgets_title">الحاجيات</string>
+    <string name="feat_widgets_title">إعدادات الويدجيت</string>
     <string name="feat_widgets_desc">في لمحة سريعة على شاشتك الرئيسية</string>
-    <string name="feat_display_visuals_title">عرض</string>
-    <string name="feat_display_visuals_desc">صور لتعزيز تجربتك</string>
-    <string name="feat_watch_title">يشاهد</string>
-    <string name="feat_watch_desc">التكامل مع WearOS</string>
+    <string name="feat_display_visuals_title">العرض</string>
+    <string name="feat_display_visuals_desc">عناصر بصرية لتحسين تجربتك</string>
+    <string name="feat_watch_title">الساعة</string>
+    <string name="feat_watch_desc">التكامل مع الساعة التي بنظام WearOS</string>
     <string name="watch_no_companion_title">لم يتم اكتشاف أي ساعة</string>
     <string name="watch_no_companion_desc">يبدو أنه ليس لديك التطبيق المرافق لـ Essentials Wear مثبتًا على ساعتك.</string>
     <string name="watch_install_companion_action">تثبيت رفيق</string>
     <string name="cat_interaction">تفاعل</string>
     <string name="cat_interface">واجهة</string>
-    <string name="cat_display">عرض</string>
+    <string name="cat_display">العرض</string>
     <string name="cat_protection">حماية</string>
     <string name="label_kbd_abc">اي بي سي</string>
     <string name="label_kbd_symbols">\?#/</string>
-    <string name="label_kaomoji">Kaomoji</string>
-    <string name="kaomoji_cat_joy">Joy</string>
-    <string name="kaomoji_cat_love">Love</string>
-    <string name="kaomoji_cat_embarassment">Embarassment</string>
-    <string name="kaomoji_cat_sympathy">Sympathy</string>
-    <string name="kaomoji_cat_dissatisfaction">Dissatisfaction</string>
-    <string name="kaomoji_cat_anger">Anger</string>
-    <string name="kaomoji_cat_apologizing">Apologizing</string>
-    <string name="kaomoji_cat_bear">Bear</string>
-    <string name="kaomoji_cat_bird">Bird</string>
-    <string name="kaomoji_cat_cat">Cat</string>
-    <string name="kaomoji_cat_confusion">Confusion</string>
-    <string name="kaomoji_cat_dog">Dog</string>
-    <string name="kaomoji_cat_doubt">Doubt</string>
-    <string name="kaomoji_cat_enemies">Enemies</string>
-    <string name="kaomoji_cat_faces">Faces</string>
-    <string name="kaomoji_cat_fear">Fear</string>
-    <string name="kaomoji_cat_fish">Fish</string>
-    <string name="kaomoji_cat_food">Food</string>
-    <string name="kaomoji_cat_friends">Friends</string>
-    <string name="kaomoji_cat_games">Games</string>
-    <string name="kaomoji_cat_greeting">Greeting</string>
-    <string name="kaomoji_cat_hiding">Hiding</string>
-    <string name="kaomoji_cat_hugging">Hugging</string>
-    <string name="kaomoji_cat_indifference">Indifference</string>
-    <string name="kaomoji_cat_magic">Magic</string>
-    <string name="kaomoji_cat_music">Music</string>
+    <string name="label_kaomoji">كاوموجي </string>
+    <string name="kaomoji_cat_joy">مرح </string>
+    <string name="kaomoji_cat_love">حب </string>
+    <string name="kaomoji_cat_embarassment">إحراج </string>
+    <string name="kaomoji_cat_sympathy">تعاطف </string>
+    <string name="kaomoji_cat_dissatisfaction">عدم الرضا </string>
+    <string name="kaomoji_cat_anger">الغضب </string>
+    <string name="kaomoji_cat_apologizing">أعتذر </string>
+    <string name="kaomoji_cat_bear">دب</string>
+    <string name="kaomoji_cat_bird">طائر</string>
+    <string name="kaomoji_cat_cat">قطة</string>
+    <string name="kaomoji_cat_confusion">ارتباك </string>
+    <string name="kaomoji_cat_dog">كلب</string>
+    <string name="kaomoji_cat_doubt">شك </string>
+    <string name="kaomoji_cat_enemies">الأعداء </string>
+    <string name="kaomoji_cat_faces">وجوه </string>
+    <string name="kaomoji_cat_fear">يخاف </string>
+    <string name="kaomoji_cat_fish">سمكة</string>
+    <string name="kaomoji_cat_food">طعام</string>
+    <string name="kaomoji_cat_friends">أصدقاء</string>
+    <string name="kaomoji_cat_games">ألعاب</string>
+    <string name="kaomoji_cat_greeting">تحية </string>
+    <string name="kaomoji_cat_hiding">إخفاء </string>
+    <string name="kaomoji_cat_hugging">العناق </string>
+    <string name="kaomoji_cat_indifference">اللامبالاة </string>
+    <string name="kaomoji_cat_magic">سحر </string>
+    <string name="kaomoji_cat_music">موسيقي</string>
     <string name="kaomoji_cat_nosebleeding">Nosebleeding</string>
     <string name="kaomoji_cat_pain">Pain</string>
     <string name="kaomoji_cat_pig">Pig</string>
@@ -1168,7 +1168,7 @@
     <string name="label_reset_default">إعادة ضبط</string>
     <string name="settings_section_scale">حجم</string>
     <string name="label_smallest_width">أصغر عرض</string>
-    <string name="msg_shizuku_permission_required">مطلوب إذن شيزوكو لضبط الحجم</string>
+    <string name="msg_shizuku_permission_required">مطلوب إذن Shizuku لضبط الحجم</string>
     <string name="label_grant_permission">إذن المنح</string>
     <string name="settings_section_animations">الرسوم المتحركة</string>
     <string name="label_animator_duration_scale">مقياس مدة الرسوم المتحركة</string>
@@ -1187,9 +1187,9 @@
     <string name="desc_use_blur">تمكين عناصر التمويه التقدمية عبر واجهة المستخدم</string>
     <string name="msg_blur_compatibility_error">تم تعطيل Blur على هذا الجهاز لمنع حدوث خطأ معروف في العرض على أجهزة Samsung التي تعمل بنظام التشغيل Android 15 أو الإصدارات الأقدم.</string>
     <!-- Empty State Actions -->
-    <string name="msg_no_apps_frozen">No apps selected to freeze.</string>
-    <string name="action_get_started">Get Started</string>
-    <string name="action_new_automation">New Automation</string>
+    <string name="msg_no_apps_frozen">لم يتم تحديد أي تطبيقات للتجميد.</string>
+    <string name="action_get_started">لنبدأ</string>
+    <string name="action_new_automation">أتمنة الجديدة </string>
     <string name="action_add_repository">إضافة مستودع</string>
     <!-- Bug Report Enhancement -->
     <string name="bug_report_feedback_placeholder">Describe the issue or provide feedback…</string>
