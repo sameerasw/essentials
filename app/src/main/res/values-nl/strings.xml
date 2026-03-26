@@ -1192,9 +1192,9 @@
     <string name="action_new_automation">Nieuwe automatie</string>
     <string name="action_add_repository">Repository toevoegen</string>
     <!-- Bug Report Enhancement -->
-    <string name="bug_report_feedback_placeholder">Describe the issue or provide feedback…</string>
-    <string name="bug_report_contact_email_label">Contact email</string>
-    <string name="action_send_feedback">Send Feedback</string>
-    <string name="msg_feedback_sent">Feedback sent successfully! Thanks for helping us improve the app.</string>
-    <string name="label_alternatively">Alternatively</string>
+    <string name="bug_report_feedback_placeholder">Beschrijf het probleem of geef feedback…</string>
+    <string name="bug_report_contact_email_label">E-mail voor contact opnemen</string>
+    <string name="action_send_feedback">Stuur feedback</string>
+    <string name="msg_feedback_sent">Feedback succesvol gestuurd! Bedankt voor het helpen met het verbeteren van de app.</string>
+    <string name="label_alternatively">Als alternatief</string>
 </resources>
