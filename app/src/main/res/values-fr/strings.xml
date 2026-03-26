@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="label_beta">BÊTA</string>
+    <string name="label_beta">BÊTA-</string>
     <string name="accessibility_service_description"><b>Service d\'accessibilité Essentials</b>\n\nCe service est requis pour les fonctionnalités suivantes :\n\n<b>• Réattribution d\'un bouton physique :</b>\nDétecte les appuis sur le bouton volume même si l\'écran est éteint pour déclencher des actions comme allumer la lampe-torche.\n\n<b>• Réglage par appli :</b>\nSurveille les applications actives pour appliquer des profils spécifiques pour le mode éclairage nocturne dynamique, le réglage de couleurs des notifications lumineuses et le verrouillage d\'applis.\n\n<b>• Contrôler l\'écran :</b>\nAutorise l\'application à verrouiller l\'écran (par exemple en utilisant le Double Tap ou les Widgets) et détecter le changement d\'état de l\'écran.\n\n<b>• Sécurité :</b>\nPrévenir les changements non autorisé en détectant le contenu des fenêtres lorsque l\'appareil est verrouillé.\n\n<small>Aucun texte saisi ou de données utilisateur sensibles sont collectées ou transmises.</small></string>
     <string name="freeze_activity_title">Gel d\'applis</string>
     <string name="freeze_activity_subtitle">Désactiver les applis rarement utilisées</string>
@@ -181,7 +181,7 @@
     <string name="tile_aod">Mode Always-on</string>
     <string name="tile_caffeinate">Caffeinate</string>
     <string name="tile_sound_mode">Mode de son</string>
-    <string name="tile_notification_lighting">Éclairage de notifications</string>
+    <string name="tile_notification_lighting">Notifications lumineuses</string>
     <string name="tile_dynamic_night_light">Éclairage nocturne dynamique</string>
     <string name="tile_locked_security">Sécurité de verrouillage</string>
     <string name="tile_app_lock">Verrouillage d\'applis</string>
@@ -335,8 +335,8 @@
     <string name="feat_caffeinate_desc">Maintenir l\'écran allumé</string>
     <string name="feat_maps_power_saving_title">Économie d\'énergie Maps</string>
     <string name="feat_maps_power_saving_desc">Pour tout appareil Android</string>
-    <string name="feat_notification_lighting_title">Éclairage de notifications</string>
-    <string name="feat_notification_lighting_desc">Éclairer pour les notifications</string>
+    <string name="feat_notification_lighting_title">Notifications lumineuses</string>
+    <string name="feat_notification_lighting_desc">Illuminer l\'écran pour les notifications</string>
     <string name="feat_flashlight_pulse_desc">Faire clignoter le flash à la réception de notifications</string>
     <string name="feat_sound_mode_tile_title">Raccourci de mode de sonnerie</string>
     <string name="feat_call_vibrations_title">Vibrations pour les appels</string>
@@ -507,11 +507,11 @@
     <string name="perm_root_desc">Permissions requises pour les actions systèmes en utilisant les privilèges racine (root).</string>
     <string name="perm_notif_listener_title">Accès aux notifications</string>
     <string name="perm_notif_listener_desc_maps">Nécessite l\'accès aux notifications pour surveiller le statut de la navigation Google Maps et activer le mode économie d\'énergie quand aucune navigation n\'est en cours.</string>
-    <string name="perm_notif_listener_desc_lighting">Nécessite l\'accès aux notifications pour détecter les nouvelles notifications et déclencher d\'éclairage des coins.</string>
+    <string name="perm_notif_listener_desc_lighting">Nécessite l\'accès aux notifications pour détecter les nouvelles notifications et déclencher l\'illumination des coins.</string>
     <string name="perm_notif_listener_desc_snooze">Nécessite l\'accès aux notifications pour surveiller et mettre en attente les notifications systèmes indésirées.</string>
     <string name="perm_accessibility_title">Service d\'accessibilité</string>
     <string name="perm_accessibility_desc_common">Requis pour le verrouillage d\'applis, le widget de verrouillage et d\'autres fonctionnalités pour détecter les interactions</string>
-    <string name="perm_accessibility_desc_lighting">Requis pour déclencher l\'éclairage lors de la réception d\'une nouvelle notification</string>
+    <string name="perm_accessibility_desc_lighting">Requis pour déclencher l\'illumination lors de la réception d\'une nouvelle notification</string>
     <string name="perm_default_browser_title">Navigateur par défaut</string>
     <string name="perm_default_browser_desc">Requis pour gérer les liens efficacement</string>
     <string name="perm_accessibility_desc_remap">Requis pour intercepter les appuis sur les boutons physiques</string>
@@ -523,7 +523,7 @@
     <string name="perm_write_settings_title">Modifier les paramètres système</string>
     <string name="perm_write_settings_desc">Requise pour activer/désactiver la luminosité adaptative et d\'autres paramètres système</string>
     <string name="perm_overlay_title">Permission de superposition</string>
-    <string name="perm_overlay_desc">Requise pour afficher la superposition de l\'éclairage des notifications lumineuses sur l\'écran</string>
+    <string name="perm_overlay_desc">Requise pour afficher la superposition de l\'illumination des notifications lumineuses sur l\'écran</string>
     <string name="perm_device_admin_title">Administrateur de l\'appareil</string>
     <string name="perm_device_admin_desc">Requise pour faire un verrouillage forcé de l\'appareil (désactiver la biométrie) lors d\'accès non autorisés</string>
     <string name="perm_action_grant">Accorder la permission</string>
@@ -1013,7 +1013,7 @@
     <string name="location_reached_dismiss">Ignorer</string>
     <string name="location_reached_toast_set">Destination définie : %1$.4f, %2$.4f</string>
     <string name="setting_use_root_title">Utiliser l\'accès racine (root)</string>
-    <string name="setting_use_root_desc">À la place de Shizuku</string>
+    <string name="setting_use_root_desc">Au lieu d\'utiliser Shizuku</string>
     <string name="root_not_available_toast">L\'accès racine (root) n\'est pas disponible. Merci de vérifier votre manager de root.</string>
     <!-- System Keyboard -->
     <string name="feat_system_keyboard_title">Clavier</string>
@@ -1135,23 +1135,23 @@
     <string name="kaomoji_cat_games">Jeux</string>
     <string name="kaomoji_cat_greeting">Remerciement</string>
     <string name="kaomoji_cat_hiding">Cacher</string>
-    <string name="kaomoji_cat_hugging">Hugging</string>
+    <string name="kaomoji_cat_hugging">Câlin</string>
     <string name="kaomoji_cat_indifference">Hugging</string>
     <string name="kaomoji_cat_magic">Magie</string>
     <string name="kaomoji_cat_music">Musique</string>
-    <string name="kaomoji_cat_nosebleeding">Nosebleeding</string>
+    <string name="kaomoji_cat_nosebleeding">Saignement de nez</string>
     <string name="kaomoji_cat_pain">Douleur</string>
     <string name="kaomoji_cat_pig">Cochon</string>
     <string name="kaomoji_cat_rabbit">Lapin</string>
-    <string name="kaomoji_cat_running">Running</string>
+    <string name="kaomoji_cat_running">Courir</string>
     <string name="kaomoji_cat_sadness">Tristesse</string>
-    <string name="kaomoji_cat_sleeping">Sleeping</string>
+    <string name="kaomoji_cat_sleeping">Dormir</string>
     <string name="kaomoji_cat_special">Spécial</string>
     <string name="kaomoji_cat_spider">Araignée</string>
     <string name="kaomoji_cat_surprise">Surpris</string>
     <string name="kaomoji_cat_weapons">Armes</string>
-    <string name="kaomoji_cat_winking">Winking</string>
-    <string name="kaomoji_cat_writing">Writing</string>
+    <string name="kaomoji_cat_winking">Clin d\'œil</string>
+    <string name="kaomoji_cat_writing">Écriture</string>
     <string name="msg_restrict_own_app_repo">Hé ! Vous pouvez vérifier les mises à jour dans les paramètres de l\'appli, pas besoin de l\'ajouter ici xD</string>
     <string name="action_export">Exporter</string>
     <string name="action_import">Importer</string>
