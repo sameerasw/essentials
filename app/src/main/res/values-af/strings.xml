@@ -12,6 +12,7 @@
     <string name="flashlight_pulse_tile_label">Flitslig Pols</string>
     <string name="check_pre_releases_label">Kyk vir voorafvrystellings</string>
     <string name="check_pre_releases_desc">Kan onstabiel wees</string>
+    <string name="label_default_tab">Default tab</string>
     <!-- App Lock -->
     <string name="settings_section_security">Sekuriteit</string>
     <string name="app_lock_enable_title">Aktiveer toepassingslot</string>
