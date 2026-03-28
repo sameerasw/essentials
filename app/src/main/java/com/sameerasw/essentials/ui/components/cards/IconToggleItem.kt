@@ -20,7 +20,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.height
 import com.sameerasw.essentials.utils.HapticUtil
 
 @OptIn(androidx.compose.material3.ExperimentalMaterial3ExpressiveApi::class)
@@ -34,7 +37,8 @@ fun IconToggleItem(
     onCheckedChange: (Boolean) -> Unit,
     enabled: Boolean = true,
     onDisabledClick: (() -> Unit)? = null,
-    showToggle: Boolean = true
+    showToggle: Boolean = true,
+    onClick: (() -> Unit)? = null
 ) {
     val view = LocalView.current
 
@@ -49,59 +53,130 @@ fun IconToggleItem(
     }
 
     if (showToggle) {
-        androidx.compose.material3.ListItem(
-             checked = isChecked && enabled,
-            onCheckedChange = { checked ->
-                if (enabled) {
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    onCheckedChange(checked)
-                } else if (onDisabledClick != null) {
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    onDisabledClick()
-                }
-            },
-            enabled = enabled,
-            modifier = modifier.fillMaxWidth(),
-            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
-            leadingContent = {
-                Icon(
-                    painter = painterResource(id = iconRes),
-                    contentDescription = title,
-                    modifier = Modifier.size(24.dp),
-                    tint = MaterialTheme.colorScheme.primary
-                )
-            },
-            contentPadding = androidx.compose.foundation.layout.PaddingValues(
-                horizontal = 16.dp,
-                vertical = 16.dp
-            ),
-            supportingContent = if (description != null) {
-                {
+        if (onClick != null) {
+            androidx.compose.material3.ListItem(
+                onClick = {
+                    if (enabled) {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        onClick()
+                    } else if (onDisabledClick != null) {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        onDisabledClick()
+                    }
+                },
+                enabled = enabled,
+                modifier = modifier.fillMaxWidth(),
+                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                leadingContent = {
+                    Icon(
+                        painter = painterResource(id = iconRes),
+                        contentDescription = title,
+                        modifier = Modifier.size(24.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                },
+                contentPadding = androidx.compose.foundation.layout.PaddingValues(
+                    horizontal = 16.dp,
+                    vertical = 16.dp
+                ),
+                supportingContent = if (description != null) {
+                    {
+                        Text(
+                            text = description,
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                } else null,
+                trailingContent = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        VerticalDivider(
+                            modifier = Modifier
+                                .height(32.dp)
+                                .width(1.dp),
+                            color = MaterialTheme.colorScheme.outlineVariant
+                        )
+                        Switch(
+                            checked = if (enabled) isChecked else false,
+                            onCheckedChange = { checked ->
+                                if (enabled) {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    onCheckedChange(checked)
+                                }
+                            },
+                            enabled = enabled
+                        )
+                    }
+                },
+                colors = androidx.compose.material3.ListItemDefaults.colors(
+                    containerColor = MaterialTheme.colorScheme.surfaceBright
+                ),
+                content = {
                     Text(
-                        text = description,
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        text = title,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
-            } else null,
-            trailingContent = {
-                Switch(
-                    checked = if (enabled) isChecked else false,
-                    onCheckedChange = null, // Handled by ListItem
-                    enabled = enabled
-                )
-            },
-            colors = androidx.compose.material3.ListItemDefaults.colors(
-                containerColor = MaterialTheme.colorScheme.surfaceBright
-            ),
-            content = {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-            }
-        )
+            )
+        } else {
+            androidx.compose.material3.ListItem(
+                checked = isChecked && enabled,
+                onCheckedChange = { checked ->
+                    if (enabled) {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        onCheckedChange(checked)
+                    } else if (onDisabledClick != null) {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        onDisabledClick()
+                    }
+                },
+                enabled = enabled,
+                modifier = modifier.fillMaxWidth(),
+                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                leadingContent = {
+                    Icon(
+                        painter = painterResource(id = iconRes),
+                        contentDescription = title,
+                        modifier = Modifier.size(24.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                },
+                contentPadding = androidx.compose.foundation.layout.PaddingValues(
+                    horizontal = 16.dp,
+                    vertical = 16.dp
+                ),
+                supportingContent = if (description != null) {
+                    {
+                        Text(
+                            text = description,
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                } else null,
+                trailingContent = {
+                    Switch(
+                        checked = if (enabled) isChecked else false,
+                        onCheckedChange = null, // Handled by ListItem
+                        enabled = enabled
+                    )
+                },
+                colors = androidx.compose.material3.ListItemDefaults.colors(
+                    containerColor = MaterialTheme.colorScheme.surfaceBright
+                ),
+                content = {
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            )
+        }
     } else {
         androidx.compose.material3.ListItem(
             onClick = onClickAction,
