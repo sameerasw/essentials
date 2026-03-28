@@ -12,6 +12,7 @@
     <string name="flashlight_pulse_tile_label">ライト点滅</string>
     <string name="check_pre_releases_label">プレリリースも確認する</string>
     <string name="check_pre_releases_desc">不安定になる可能性があります</string>
+    <string name="label_default_tab">Default tab</string>
     <!-- App Lock -->
     <string name="settings_section_security">セキュリティ</string>
     <string name="app_lock_enable_title">アプリロックを有効にする</string>

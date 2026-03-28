@@ -12,6 +12,7 @@
     <string name="flashlight_pulse_tile_label">闪光灯脉冲</string>
     <string name="check_pre_releases_label">检查预览版更新</string>
     <string name="check_pre_releases_desc">可能不稳定</string>
+    <string name="label_default_tab">Default tab</string>
     <!-- App Lock -->
     <string name="settings_section_security">安全性</string>
     <string name="app_lock_enable_title">启用应用锁</string>

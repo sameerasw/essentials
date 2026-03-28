@@ -12,6 +12,7 @@
     <string name="flashlight_pulse_tile_label">Παλμός φακού</string>
     <string name="check_pre_releases_label">Ελέγξτε για προ-κυκλοφορίες</string>
     <string name="check_pre_releases_desc">Μπορεί να είναι ασταθής</string>
+    <string name="label_default_tab">Default tab</string>
     <!-- App Lock -->
     <string name="settings_section_security">Ασφάλεια</string>
     <string name="app_lock_enable_title">Ενεργοποίηση κλειδώματος εφαρμογής</string>

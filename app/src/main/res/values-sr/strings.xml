@@ -12,6 +12,7 @@
     <string name="flashlight_pulse_tile_label">Пулс лампе</string>
     <string name="check_pre_releases_label">Проверите да ли постоје претходна издања</string>
     <string name="check_pre_releases_desc">Можда је нестабилан</string>
+    <string name="label_default_tab">Default tab</string>
     <!-- App Lock -->
     <string name="settings_section_security">Безбедност</string>
     <string name="app_lock_enable_title">Омогућите закључавање апликације</string>

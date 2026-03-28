@@ -12,6 +12,7 @@
     <string name="flashlight_pulse_tile_label">הבהוב פנס</string>
     <string name="check_pre_releases_label">חפש גרסאות מוקדמות</string>
     <string name="check_pre_releases_desc">יכול להיות בלתי יציב</string>
+    <string name="label_default_tab">Default tab</string>
     <!-- App Lock -->
     <string name="settings_section_security">ביטחון</string>
     <string name="app_lock_enable_title">הפעל נעילת יישומונים</string>

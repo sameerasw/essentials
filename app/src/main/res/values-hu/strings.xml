@@ -12,6 +12,7 @@
     <string name="flashlight_pulse_tile_label">Zseblámpa pulzus</string>
     <string name="check_pre_releases_label">Ellenőrizze az előzetes kiadásokat</string>
     <string name="check_pre_releases_desc">Lehet, hogy instabil</string>
+    <string name="label_default_tab">Default tab</string>
     <!-- App Lock -->
     <string name="settings_section_security">Biztonság</string>
     <string name="app_lock_enable_title">Alkalmazászár engedélyezése</string>

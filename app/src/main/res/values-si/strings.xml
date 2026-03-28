@@ -12,6 +12,7 @@
     <string name="flashlight_pulse_tile_label">ෆ්ලෑෂ් ලයිට් ස්පන්දනය</string>
     <string name="check_pre_releases_label">පූර්ව නිකුතු සඳහා පරීක්ෂා කරන්න</string>
     <string name="check_pre_releases_desc">අස්ථායී විය හැක</string>
+    <string name="label_default_tab">Default tab</string>
     <!-- App Lock -->
     <string name="settings_section_security">ආරක්ෂාව</string>
     <string name="app_lock_enable_title">යෙදුම් අගුල සබල කරන්න</string>

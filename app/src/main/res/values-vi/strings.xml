@@ -12,6 +12,7 @@
     <string name="flashlight_pulse_tile_label">Xung đèn pin</string>
     <string name="check_pre_releases_label">Kiểm tra các bản phát hành trước</string>
     <string name="check_pre_releases_desc">Có thể không ổn định</string>
+    <string name="label_default_tab">Default tab</string>
     <!-- App Lock -->
     <string name="settings_section_security">Bảo vệ</string>
     <string name="app_lock_enable_title">Bật khóa ứng dụng</string>

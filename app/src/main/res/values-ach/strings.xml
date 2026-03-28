@@ -12,6 +12,7 @@
     <string name="flashlight_pulse_tile_label">Lweny pa mac ma ki lwongo ni Flashlight</string>
     <string name="check_pre_releases_label">Nen pi jami ma ki cwalo ma peya ki cwalo gi</string>
     <string name="check_pre_releases_desc">Twero bedo ni pe ocung matek</string>
+    <string name="label_default_tab">Default tab</string>
     <!-- App Lock -->
     <string name="settings_section_security">Gwoko kuc</string>
     <string name="app_lock_enable_title">Yab app lock</string>

@@ -12,6 +12,7 @@
     <string name="flashlight_pulse_tile_label">Impulso della torcia</string>
     <string name="check_pre_releases_label">Controlla le pre-release</string>
     <string name="check_pre_releases_desc">Potrebbe essere instabile</string>
+    <string name="label_default_tab">Default tab</string>
     <!-- App Lock -->
     <string name="settings_section_security">Sicurezza</string>
     <string name="app_lock_enable_title">Abilita il blocco dell\'app</string>

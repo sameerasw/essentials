@@ -12,6 +12,7 @@
     <string name="flashlight_pulse_tile_label">Pols de llanterna</string>
     <string name="check_pre_releases_label">Comproveu les versions prèvies</string>
     <string name="check_pre_releases_desc">Pot ser inestable</string>
+    <string name="label_default_tab">Default tab</string>
     <!-- App Lock -->
     <string name="settings_section_security">Seguretat</string>
     <string name="app_lock_enable_title">Activa el bloqueig de l\'aplicació</string>
