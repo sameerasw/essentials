@@ -12,6 +12,7 @@
     <string name="flashlight_pulse_tile_label">Puls latarki</string>
     <string name="check_pre_releases_label">Sprawdź wersje wstępne</string>
     <string name="check_pre_releases_desc">Może być niestabilny</string>
+    <string name="label_default_tab">Default tab</string>
     <!-- App Lock -->
     <string name="settings_section_security">Bezpieczeństwo</string>
     <string name="app_lock_enable_title">Włącz blokadę aplikacji</string>
