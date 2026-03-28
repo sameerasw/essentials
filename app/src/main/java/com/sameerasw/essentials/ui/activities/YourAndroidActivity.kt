@@ -224,14 +224,10 @@ class YourAndroidActivity : ComponentActivity() {
                     modifier = Modifier
                         .fillMaxSize()
                         .background(MaterialTheme.colorScheme.surfaceContainer)
-                        .then(
-                            if (isBlurEnabled) {
-                                Modifier.progressiveBlur(
-                                    blurRadius = 40f,
-                                    height = statusBarHeightPx * 1.15f,
-                                    direction = BlurDirection.TOP
-                                )
-                            } else Modifier
+                        .progressiveBlur(
+                            blurRadius = if (isBlurEnabled) 40f else 0f,
+                            height = statusBarHeightPx * 1.15f,
+                            direction = BlurDirection.TOP
                         )
                 ) {
                     androidx.compose.material3.pulltorefresh.PullToRefreshBox(
@@ -323,14 +319,10 @@ fun YourAndroidContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .then(
-                if (isBlurEnabled) {
-                    Modifier.progressiveBlur(
-                        blurRadius = 40f,
-                        height = with(LocalDensity.current) { 150.dp.toPx() },
-                        direction = BlurDirection.BOTTOM
-                    )
-                } else Modifier
+            .progressiveBlur(
+                blurRadius = if (isBlurEnabled) 40f else 0f,
+                height = with(LocalDensity.current) { 150.dp.toPx() },
+                direction = BlurDirection.BOTTOM
             )
             .verticalScroll(rememberScrollState())
             .padding(

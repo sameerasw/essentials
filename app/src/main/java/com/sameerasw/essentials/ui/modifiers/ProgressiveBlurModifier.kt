@@ -3,8 +3,12 @@ package com.sameerasw.essentials.ui.modifiers
 import android.graphics.RenderEffect
 import android.graphics.RuntimeShader
 import android.os.Build
-import androidx.annotation.RequiresApi
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asComposeRenderEffect
 import androidx.compose.ui.graphics.graphicsLayer
 import org.intellij.lang.annotations.Language
@@ -75,12 +79,13 @@ private val PROGRESSIVE_BLUR_SKSL = """
 fun Modifier.progressiveBlur(
     blurRadius: Float,
     height: Float,
-    direction: BlurDirection = BlurDirection.TOP
-): Modifier = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-    this.then(
+    direction: BlurDirection = BlurDirection.TOP,
+    showGradientOverlay: Boolean = true
+): Modifier = composed {
+    val overlayColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.65f)
+    
+    val blurModifier = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && blurRadius > 0f) {
         Modifier.graphicsLayer {
-            if (blurRadius <= 0f) return@graphicsLayer
-            
             val shader = RuntimeShader(PROGRESSIVE_BLUR_SKSL)
             shader.setFloatUniform("blurRadius", blurRadius)
             shader.setFloatUniform("height", height)
@@ -90,7 +95,28 @@ fun Modifier.progressiveBlur(
             renderEffect = RenderEffect.createRuntimeShaderEffect(shader, "content")
                 .asComposeRenderEffect()
         }
-    )
-} else {
-    this
+    } else Modifier
+
+    val gradientModifier = if (showGradientOverlay) {
+        Modifier.drawWithContent {
+            drawContent()
+            val (brush, _) = when (direction) {
+                BlurDirection.TOP -> {
+                    Brush.verticalGradient(
+                        colors = listOf(overlayColor, Color.Transparent),
+                        endY = height
+                    ) to height
+                }
+                BlurDirection.BOTTOM -> {
+                    Brush.verticalGradient(
+                        colors = listOf(Color.Transparent, overlayColor),
+                        startY = size.height - height
+                    ) to height
+                }
+            }
+            drawRect(brush = brush)
+        }
+    } else Modifier
+
+    this.then(blurModifier).then(gradientModifier)
 }

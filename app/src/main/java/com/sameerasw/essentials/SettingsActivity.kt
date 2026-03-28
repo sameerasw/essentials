@@ -147,14 +147,10 @@ class SettingsActivity : AppCompatActivity() {
                     modifier = Modifier
                         .fillMaxSize()
                         .background(MaterialTheme.colorScheme.surfaceContainer)
-                        .then(
-                            if (isBlurEnabled) {
-                                Modifier.progressiveBlur(
-                                    blurRadius = 40f,
-                                    height = statusBarHeightPx * 1.15f,
-                                    direction = BlurDirection.TOP
-                                )
-                            } else Modifier
+                        .progressiveBlur(
+                            blurRadius = if (isBlurEnabled) 40f else 0f,
+                            height = statusBarHeightPx * 1.15f,
+                            direction = BlurDirection.TOP
                         )
                 ) {
                     val contentPadding = androidx.compose.foundation.layout.PaddingValues(
@@ -168,14 +164,10 @@ class SettingsActivity : AppCompatActivity() {
                         viewModel = viewModel,
                         contentPadding = contentPadding,
                         modifier = Modifier
-                            .then(
-                                if (isBlurEnabled) {
-                                    Modifier.progressiveBlur(
-                                        blurRadius = 40f,
-                                        height = with(LocalDensity.current) { 150.dp.toPx() },
-                                        direction = BlurDirection.BOTTOM
-                                    )
-                                } else Modifier
+                            .progressiveBlur(
+                                blurRadius = if (isBlurEnabled) 40f else 0f,
+                                height = with(LocalDensity.current) { 150.dp.toPx() },
+                                direction = BlurDirection.BOTTOM
                             )
                     )
 
