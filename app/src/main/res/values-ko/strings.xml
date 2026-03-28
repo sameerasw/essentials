@@ -12,6 +12,7 @@
     <string name="flashlight_pulse_tile_label">손전등 펄스</string>
     <string name="check_pre_releases_label">프리 릴리즈 확인</string>
     <string name="check_pre_releases_desc">불안정할 수도 있음</string>
+    <string name="label_default_tab">Default tab</string>
     <!-- App Lock -->
     <string name="settings_section_security">보안</string>
     <string name="app_lock_enable_title">앱 잠금 활성화</string>
