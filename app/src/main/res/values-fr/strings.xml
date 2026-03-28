@@ -12,6 +12,7 @@
     <string name="flashlight_pulse_tile_label">Clignotement de la de lampe torche</string>
     <string name="check_pre_releases_label">Obtenir les préversions (bêta)</string>
     <string name="check_pre_releases_desc">Peut-être instable</string>
+    <string name="label_default_tab">Default tab</string>
     <!-- App Lock -->
     <string name="settings_section_security">Sécurité</string>
     <string name="app_lock_enable_title">Activer le verrouillage d\'applis</string>
