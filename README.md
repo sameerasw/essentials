@@ -84,6 +84,7 @@ Essential tools, mods and workarounds for Pixels and other Androids
 - Watermark - Add EXIF data and logos to captured photos
 - Flashlight enhancements - With brightness controls and global fade-in-out effect
 - Private DNS - Pick your custom DNS or cycle through them easily
+- Your Android - Everything about your device in one place
 
 #### DIY
 - Automate things yourself and make custom triggers
