@@ -643,6 +643,11 @@ class MainActivity : AppCompatActivity() {
                                                     startActivity(Intent(context, FeatureSettingsActivity::class.java).apply {
                                                         putExtra("feature", "Freeze")
                                                     })
+                                                },
+                                                onSettingsClick = {
+                                                    startActivity(Intent(context, FeatureSettingsActivity::class.java).apply {
+                                                        putExtra("feature", "Freeze")
+                                                    })
                                                 }
                                             )
                                         }

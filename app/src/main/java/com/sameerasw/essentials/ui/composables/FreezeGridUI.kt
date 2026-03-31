@@ -103,7 +103,9 @@ fun FreezeGridUI(
     viewModel: MainViewModel,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
-    onGetStartedClick: (() -> Unit)? = null
+    onGetStartedClick: (() -> Unit)? = null,
+    onAppLaunched: (() -> Unit)? = null,
+    onSettingsClick: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
     val view = LocalView.current
@@ -290,6 +292,7 @@ fun FreezeGridUI(
                             bestMatch?.let { app ->
                                 HapticUtil.performVirtualKeyHaptic(view)
                                 viewModel.launchAndUnfreezeApp(context, app.packageName)
+                                onAppLaunched?.invoke()
                             }
                         }
                     )
@@ -429,6 +432,23 @@ fun FreezeGridUI(
                                         )
                                     }
                                 )
+                                onSettingsClick?.let { onSettings ->
+                                    SegmentedDropdownMenuItem(
+                                        text = { Text(stringResource(R.string.label_settings)) },
+                                        onClick = {
+                                            HapticUtil.performVirtualKeyHaptic(view)
+                                            onSettings()
+                                            isMenuExpanded = false
+                                        },
+                                        leadingIcon = {
+                                            Icon(
+                                                painter = painterResource(id = R.drawable.rounded_settings_heart_24),
+                                                contentDescription = null,
+                                                modifier = Modifier.size(18.dp)
+                                            )
+                                        }
+                                    )
+                                }
                             }
                         }
                     }
@@ -489,6 +509,7 @@ fun FreezeGridUI(
                                                         context,
                                                         app.packageName
                                                     )
+                                                    onAppLaunched?.invoke()
                                                 },
                                                 onToggleFreeze = {
                                                     scope.launch(Dispatchers.IO) {
