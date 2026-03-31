@@ -580,6 +580,7 @@
     <string name="action_search">찾다</string>
     <string name="action_stop">멈추다</string>
     <string name="label_search">찾다</string>
+    <string name="search_frozen_apps_placeholder">Search frozen apps</string>
     <!-- UI Components General -->
     <string name="action_back">뒤쪽에</string>
     <string name="content_desc_back">뒤쪽에</string>
