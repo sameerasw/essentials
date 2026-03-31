@@ -47,6 +47,7 @@ fun LocationReachedSettingsUI(
     val startDistance by locationViewModel.startDistance
     val showBottomSheet by locationViewModel.showBottomSheet
     val isProcessing by locationViewModel.isProcessingCoordinates
+    val remainingTimeMinutes by locationViewModel.remainingTimeMinutes
     val view = androidx.compose.ui.platform.LocalView.current
 
     DisposableEffect(locationViewModel) {
@@ -78,6 +79,7 @@ fun LocationReachedSettingsUI(
                     activeAlarm = activeAlarm,
                     lastTrip = lastTrip,
                     distance = distance,
+                    remainingTimeMinutes = remainingTimeMinutes,
                     startDistance = startDistance,
                     onStop = { locationViewModel.stopTracking() },
                     onStart = { 
@@ -201,6 +203,7 @@ fun TopStatusCard(
     activeAlarm: com.sameerasw.essentials.domain.model.LocationAlarm?,
     lastTrip: com.sameerasw.essentials.domain.model.LocationAlarm?,
     distance: Float?,
+    remainingTimeMinutes: Int?,
     startDistance: Float,
     onStop: () -> Unit,
     onStart: (String) -> Unit
@@ -250,6 +253,27 @@ fun TopStatusCard(
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold
                 )
+
+                remainingTimeMinutes?.let { mins ->
+                    val etaText = if (mins >= 60) {
+                        stringResource(R.string.location_reached_eta_hr_min, mins / 60, mins % 60)
+                    } else {
+                        stringResource(R.string.location_reached_eta_min, mins)
+                    }
+
+                    Text(
+                        text = etaText,
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Text(
+                        text = stringResource(R.string.location_reached_to_go).uppercase(),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                        fontWeight = FontWeight.Bold
+                    )
+                }
 
                 if (distance != null && startDistance > 0) {
                     val progress = (1.0f - (distance / startDistance)).coerceIn(0.0f, 1.0f)

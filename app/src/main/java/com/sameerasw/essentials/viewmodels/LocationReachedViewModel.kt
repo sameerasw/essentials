@@ -53,6 +53,12 @@ class LocationReachedViewModel(application: Application) : AndroidViewModel(appl
     var startDistance = mutableStateOf(repository.getStartDistance())
         private set
 
+    var remainingTimeMinutes = mutableStateOf<Int?>(null)
+        private set
+
+    var startTime = mutableStateOf(repository.getStartTime())
+        private set
+
     init {
         // Observe shared state for real-time updates across activities
         viewModelScope.launch {
@@ -131,6 +137,11 @@ class LocationReachedViewModel(application: Application) : AndroidViewModel(appl
         repository.saveActiveAlarmId(alarmId)
         LocationReachedService.start(getApplication())
 
+        val now = System.currentTimeMillis()
+        repository.saveStartTime(now)
+        startTime.value = now
+        repository.updateLastTravelled(alarmId, now)
+
         // Refreshed start distance logic
         fusedLocationClient.getCurrentLocation(Priority.PRIORITY_BALANCED_POWER_ACCURACY, null)
             .addOnSuccessListener { location ->
@@ -162,8 +173,11 @@ class LocationReachedViewModel(application: Application) : AndroidViewModel(appl
         repository.saveActiveAlarmId(null)
         LocationReachedService.stop(getApplication())
         currentDistance.value = null
+        remainingTimeMinutes.value = null
         startDistance.value = 0f
         repository.saveStartDistance(0f)
+        repository.saveStartTime(0L)
+        startTime.value = 0L
     }
 
     private var distanceTrackingJob: kotlinx.coroutines.Job? = null
@@ -206,8 +220,29 @@ class LocationReachedViewModel(application: Application) : AndroidViewModel(appl
                         activeAlarm.latitude, activeAlarm.longitude
                     )
                     currentDistance.value = distance
+                    calculateEta(distance)
                 }
             }
+    }
+
+    private fun calculateEta(currentDistMeters: Float) {
+        val startDistMeters = startDistance.value
+        val startT = startTime.value
+        if (startDistMeters <= 0 || startT <= 0L) {
+            remainingTimeMinutes.value = null
+            return
+        }
+
+        val elapsedMillis = System.currentTimeMillis() - startT
+        val distanceTravelled = startDistMeters - currentDistMeters
+        
+        if (distanceTravelled <= 0 || elapsedMillis <= 0) {
+            remainingTimeMinutes.value = null
+            return
+        }
+
+        val remainingMillis = (currentDistMeters * elapsedMillis / distanceTravelled).toLong()
+        remainingTimeMinutes.value = (remainingMillis / 60000).toInt().coerceAtLeast(1)
     }
 
     fun calculateDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Float {

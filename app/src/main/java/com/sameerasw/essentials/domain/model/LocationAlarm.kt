@@ -11,5 +11,6 @@ data class LocationAlarm(
     @SerializedName("longitude") val longitude: Double = 0.0,
     @SerializedName("radius") val radius: Int = 1000, // in meters
     @SerializedName("isEnabled") val isEnabled: Boolean = false,
+    @SerializedName("lastTravelled") val lastTravelled: Long? = null,
     @SerializedName("createdAt") val createdAt: Long = System.currentTimeMillis()
 )

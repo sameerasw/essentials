@@ -690,6 +690,12 @@
     <string name="tile_location_reached">Are we there yet?</string>
     <string name="location_reached_radius_label">Radius: %1$d m</string>
     <string name="location_reached_distance_label">Distance to target: %1$s</string>
+    <string name="location_reached_last_travelled">Last: %1$s</string>
+    <string name="location_reached_never">Never</string>
+    <string name="location_reached_to_go">To go</string>
+    <string name="location_reached_eta_min">%1$d min</string>
+    <string name="location_reached_eta_hr_min">%1$d hr %2$d min</string>
+    <string name="location_reached_service_remaining_with_eta">%1$s (%2$d%%) • %3$s to go</string>
     <string name="about_desc_freeze">Freeze apps to stop them from running in the background.\n\nPrevent battery drain and data usage by completely freezing apps when you are not using them. They will be unfrozen instantly when you launch them. The apps will not show up in the app drawer and also will not show up for app updates in Play Store while frozen.</string>
     <string name="about_desc_system_keyboard">A custom input method no-one asked for.\n\nIt is just an experiment. Multiple languages may not get support as it is a very complex and time consuming implementation.</string>
     <string name="about_desc_batteries">Monitor battery levels of all your connected devices.\n\nSee the battery status of your Bluetooth headphones, watch, and other accessories in one place. Connect with AirSync application to display your mac battery level as well.</string>
@@ -1166,10 +1172,15 @@
 
     <!-- Relative Time -->
     <string name="time_just_now">just now</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
     <string name="time_min_ago">%1$dm ago</string>
     <string name="time_hour_ago">%1$dh ago</string>
     <string name="time_day_ago">%1$dd ago</string>
+    <string name="time_days_ago">%1$d days ago</string>
+    <string name="time_weeks_ago">%1$d weeks ago</string>
     <string name="time_month_ago">%1$dmo ago</string>
+    <string name="time_months_ago">%1$d months ago</string>
     <string name="time_year_ago">%1$dy ago</string>
 
     <string name="action_retry">Retry</string>

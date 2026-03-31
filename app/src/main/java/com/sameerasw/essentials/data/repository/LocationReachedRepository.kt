@@ -132,4 +132,21 @@ class LocationReachedRepository(context: Context) {
     fun getStartDistance(): Float {
         return prefs.getFloat("location_reached_start_dist", 0f)
     }
+
+    fun saveStartTime(time: Long) {
+        prefs.edit().putLong("location_reached_start_time", time).apply()
+    }
+
+    fun getStartTime(): Long {
+        return prefs.getLong("location_reached_start_time", 0L)
+    }
+
+    fun updateLastTravelled(alarmId: String, timestamp: Long) {
+        val alarms = getAlarms().toMutableList()
+        val index = alarms.indexOfFirst { it.id == alarmId }
+        if (index != -1) {
+            alarms[index] = alarms[index].copy(lastTravelled = timestamp)
+            saveAlarms(alarms)
+        }
+    }
 }

@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
@@ -43,8 +44,13 @@ fun LocationAlarmCard(
             )
         },
         supportingContent = {
+            val context = androidx.compose.ui.platform.LocalContext.current
+            val lastTravelledText = alarm.lastTravelled?.let {
+                stringResource(R.string.location_reached_last_travelled, com.sameerasw.essentials.utils.TimeUtil.formatRelativeDate(it, context))
+            } ?: stringResource(R.string.location_reached_never)
+            
             Text(
-                text = "Radius: ${alarm.radius}m",
+                text = lastTravelledText,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

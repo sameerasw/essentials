@@ -174,19 +174,39 @@ class LocationReachedService : Service() {
 
     private fun updateNotification(distanceKm: Float) {
         val startDist = repository.getStartDistance()
+        val startTime = repository.getStartTime()
         val progressPercent = if (startDist > 0) {
             ((1.0f - (distanceKm * 1000f / startDist)) * 100).toInt().coerceIn(0, 100)
         } else 0
 
-        val notification = buildOngoingNotification(distanceKm, progressPercent)
+        var etaText: String? = null
+        if (startDist > 0 && startTime > 0) {
+            val elapsed = System.currentTimeMillis() - startTime
+            val currentDistMeters = distanceKm * 1000f
+            val distanceTravelled = startDist - currentDistMeters
+            if (distanceTravelled > 0 && elapsed > 0) {
+                val remainingMillis = (currentDistMeters * elapsed / distanceTravelled).toLong()
+                val remainingMinutes = (remainingMillis / 60000).toInt().coerceAtLeast(1)
+                
+                etaText = if (remainingMinutes >= 60) {
+                    val hrs = remainingMinutes / 60
+                    val mins = remainingMinutes % 60
+                    getString(R.string.location_reached_eta_hr_min, hrs, mins)
+                } else {
+                    getString(R.string.location_reached_eta_min, remainingMinutes)
+                }
+            }
+        }
+
+        val notification = buildOngoingNotification(distanceKm, progressPercent, etaText)
         notificationManager.notify(NOTIFICATION_ID, notification)
     }
 
     private fun buildInitialNotification(): Notification {
-        return buildOngoingNotification(null, 0)
+        return buildOngoingNotification(null, 0, null)
     }
 
-    private fun buildOngoingNotification(distanceKm: Float?, progress: Int): Notification {
+    private fun buildOngoingNotification(distanceKm: Float?, progress: Int, etaText: String?): Notification {
         val stopIntent = Intent(this, LocationReachedService::class.java).apply {
             action = ACTION_STOP
         }
@@ -212,8 +232,11 @@ class LocationReachedService : Service() {
             else getString(R.string.location_reached_dist_km, it)
         } ?: getString(R.string.location_reached_calculating)
 
-        val contentText =
+        val contentText = if (etaText != null) {
+            getString(R.string.location_reached_service_remaining_with_eta, distanceText, progress, etaText)
+        } else {
             getString(R.string.location_reached_service_remaining, distanceText, progress)
+        }
 
         if (Build.VERSION.SDK_INT >= 35) {
             val builder = Notification.Builder(this, CHANNEL_ID)
