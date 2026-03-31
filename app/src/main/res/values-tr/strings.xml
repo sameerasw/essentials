@@ -12,6 +12,7 @@
     <string name="flashlight_pulse_tile_label">El Feneri Darbesi</string>
     <string name="check_pre_releases_label">Ön sürümleri kontrol edin</string>
     <string name="check_pre_releases_desc">Kararsız olabilir</string>
+    <string name="label_default_tab">Default tab</string>
     <!-- App Lock -->
     <string name="settings_section_security">Güvenlik</string>
     <string name="app_lock_enable_title">Uygulama kilidini etkinleştir</string>
@@ -113,6 +114,15 @@
     <string name="settings_section_app_control">Uygulama Kontrolü</string>
     <string name="action_freeze">Dondur</string>
     <string name="action_unfreeze">Çöz</string>
+    <string name="action_remove">Remove</string>
+    <string name="action_create_shortcut">Create shortcut</string>
+    <string name="action_app_info">App info</string>
+    <string name="freeze_mode_description_freeze_title">What is Freeze?</string>
+    <string name="freeze_mode_description_freeze_body">App freezing disables the app\'s launch activity which removes it from the app list and updates. It will prevent the app from starting at all until it\'s unfrozen which saves resources but you will need to unfreeze from here or manually re-enable.</string>
+    <string name="freeze_mode_description_freeze_warning">DO NOT FREEZE COMMUNICATION APPS</string>
+    <string name="freeze_mode_description_suspend_title">What is Suspend?</string>
+    <string name="freeze_mode_description_suspend_body">Suspending an app used to pause the app activity and prevent background executions but with recent Android changes, it only pauses the notifications from appearing and that\'s pretty much it. But does allows you to unpause from the launcher app list as they will be still available as grayscale paused app icons.</string>
+    <string name="freeze_mode_description_suspend_footer">Should work the same as the native app pause/ focus mode features.</string>
     <string name="content_desc_more_options">Daha fazla seçenek</string>
     <string name="action_freeze_all">Tüm uygulamaları dondur</string>
     <string name="action_unfreeze_all">Tüm uygulamaları çöz</string>
@@ -579,6 +589,7 @@
     <string name="action_search">Aramak</string>
     <string name="action_stop">Durmak</string>
     <string name="label_search">Aramak</string>
+    <string name="search_frozen_apps_placeholder">Search frozen apps</string>
     <!-- UI Components General -->
     <string name="action_back">Geri</string>
     <string name="content_desc_back">Geri</string>
@@ -632,6 +643,29 @@
     <string name="about_desc_screen_locked_security">Cihazınız kilitliyken güvenliği artırın.\n\nBazı hassas QS döşemelerine erişimi kısıtlayın, yetkisiz ağ değişikliklerini önleyin ve dokunma spam\'ını önlemek için animasyon hızını artırarak yeniden denemelerini önleyin.\n\nBu özellik sağlam değildir ve bluetooth veya uçuş modunun kullanılamaması gibi doğrudan geçişe izin veren bazı döşemeler gibi kusurlara sahip olabilir engellendi.</string>
     <string name="about_desc_app_lock">Uygulamalarınızı ikincil bir kimlik doğrulama katmanıyla koruyun.\n\nCihazınızın kilit ekranı kimlik doğrulama yöntemi, Android standartlarına göre sınıf 3 biyometrik güvenlik düzeyini karşıladığı sürece kullanılacaktır.</string>
     <string name="about_desc_location_reached">Durağı asla kaçırmadığınızdan emin olmak için varış noktanıza yaklaştığınızda bildirim alın.\n\nGoogle Haritalar\'a gidin, hedefinizin yakınındaki bir raptiyeye uzun basın ve \"Bırakılan raptiye\" yazdığından emin olun (Aksi takdirde mesafe hesaplaması doğru olmayabilir) Ve ardından konumu Essentials uygulamasıyla paylaşın ve izlemeye başlayın.</string>
+    <string name="location_reached_add_title">Add Destination</string>
+    <string name="location_reached_edit_title">Edit Destination</string>
+    <string name="location_reached_name_placeholder">Home, Office, etc.</string>
+    <string name="location_reached_name_label">Name</string>
+    <string name="location_reached_save_btn">Save</string>
+    <string name="location_reached_cancel_btn">Cancel</string>
+    <string name="location_reached_resolving">Resolving location…</string>
+    <string name="location_reached_last_trip">Last Trip</string>
+    <string name="location_reached_saved_destinations">Saved Destinations</string>
+    <string name="location_reached_no_saved_dest">No destinations saved yet.</string>
+    <string name="location_reached_delete">Delete Destination</string>
+    <string name="location_reached_tracking_now">Tracking Now</string>
+    <string name="location_reached_restart_btn">Re-Start</string>
+    <string name="location_reached_instructional_desc">Share coordinates (Dropped pin) from Google Maps to Essentials to save as a destination.\n\nThe distance shown is the direct distance to the destination, not the distance along the roads.\n\nTake all calculations of time and distance with a grain of salt as they are not always accurate.</string>
+    <string name="tile_location_reached">Are we there yet?</string>
+    <string name="location_reached_radius_label">Radius: %1$d m</string>
+    <string name="location_reached_distance_label">Distance to target: %1$s</string>
+    <string name="location_reached_last_travelled">Last: %1$s</string>
+    <string name="location_reached_never">Never</string>
+    <string name="location_reached_to_go">To go</string>
+    <string name="location_reached_eta_min">%1$d min</string>
+    <string name="location_reached_eta_hr_min">%1$d hr %2$d min</string>
+    <string name="location_reached_service_remaining_with_eta">%1$s (%2$d%%) • %3$s to go</string>
     <string name="about_desc_freeze">Arka planda çalışmasını durdurmak için uygulamaları dondurun.\n\nUygulamaları kullanmadığınız zamanlarda tamamen dondurarak pil tüketimini ve veri kullanımını önleyin. Başlattığınızda anında donmuş olacaklar. Uygulamalar uygulama çekmecesinde görünmeyecek ve dondurulduğunda Play Store\'daki uygulama güncellemeleri için de görünmeyecek.</string>
     <string name="about_desc_system_keyboard">Kimsenin istemediği özel bir giriş yöntemi.\n\nBu sadece bir deney. Çok karmaşık ve zaman alıcı bir uygulama olduğundan birden fazla dil destek alamayabilir.</string>
     <string name="about_desc_batteries">Bağlı tüm cihazlarınızın pil seviyelerini izleyin.\n\nBluetooth kulaklığınızın, saatinizin ve diğer aksesuarlarınızın pil durumunu tek bir yerden görün. Mac pil seviyenizi de görüntülemek için AirSync uygulamasına bağlanın.</string>
@@ -1067,10 +1101,15 @@
     <string name="format_updated_relative">Güncellendi %1$s</string>
     <!-- Relative Time -->
     <string name="time_just_now">Şu anda</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
     <string name="time_min_ago">%1$dm önce</string>
     <string name="time_hour_ago">%1$dsaat önce</string>
     <string name="time_day_ago">%1$dgün önce</string>
+    <string name="time_days_ago">%1$d days ago</string>
+    <string name="time_weeks_ago">%1$d weeks ago</string>
     <string name="time_month_ago">%1$day önce</string>
+    <string name="time_months_ago">%1$d months ago</string>
     <string name="time_year_ago">%1$dsen önce</string>
     <string name="action_retry">Yeniden dene</string>
     <string name="action_start_sign_in">Oturum Açmayı Başlat</string>
@@ -1197,4 +1236,10 @@
     <string name="action_send_feedback">Send Feedback</string>
     <string name="msg_feedback_sent">Feedback sent successfully! Thanks for helping us improve the app.</string>
     <string name="label_alternatively">Alternatively</string>
+    <!-- Pixel Diagnostics -->
+    <string name="label_diagnostics">Diagnostics</string>
+    <string name="label_device_check">Device Check</string>
+    <string name="msg_flashbang">Get ready to be flashbanged!</string>
+    <string name="action_abort">Abort</string>
+    <string name="action_continue">Continue</string>
 </resources>

@@ -12,6 +12,7 @@
     <string name="flashlight_pulse_tile_label">ライト点滅</string>
     <string name="check_pre_releases_label">プレリリースも確認する</string>
     <string name="check_pre_releases_desc">不安定になる可能性があります</string>
+    <string name="label_default_tab">Default tab</string>
     <!-- App Lock -->
     <string name="settings_section_security">セキュリティ</string>
     <string name="app_lock_enable_title">アプリロックを有効にする</string>
@@ -113,6 +114,15 @@
     <string name="settings_section_app_control">アプリコントロール</string>
     <string name="action_freeze">フリーズ</string>
     <string name="action_unfreeze">フリーズ解除</string>
+    <string name="action_remove">Remove</string>
+    <string name="action_create_shortcut">Create shortcut</string>
+    <string name="action_app_info">App info</string>
+    <string name="freeze_mode_description_freeze_title">What is Freeze?</string>
+    <string name="freeze_mode_description_freeze_body">App freezing disables the app\'s launch activity which removes it from the app list and updates. It will prevent the app from starting at all until it\'s unfrozen which saves resources but you will need to unfreeze from here or manually re-enable.</string>
+    <string name="freeze_mode_description_freeze_warning">DO NOT FREEZE COMMUNICATION APPS</string>
+    <string name="freeze_mode_description_suspend_title">What is Suspend?</string>
+    <string name="freeze_mode_description_suspend_body">Suspending an app used to pause the app activity and prevent background executions but with recent Android changes, it only pauses the notifications from appearing and that\'s pretty much it. But does allows you to unpause from the launcher app list as they will be still available as grayscale paused app icons.</string>
+    <string name="freeze_mode_description_suspend_footer">Should work the same as the native app pause/ focus mode features.</string>
     <string name="content_desc_more_options">その他のオプション</string>
     <string name="action_freeze_all">すべてのアプリをフリーズ</string>
     <string name="action_unfreeze_all">すべてのアプリのフリーズを解除</string>
@@ -579,6 +589,7 @@
     <string name="action_search">検索</string>
     <string name="action_stop">停止</string>
     <string name="label_search">検索</string>
+    <string name="search_frozen_apps_placeholder">Search frozen apps</string>
     <!-- UI Components General -->
     <string name="action_back">戻る</string>
     <string name="content_desc_back">戻る</string>
@@ -632,6 +643,29 @@
     <string name="about_desc_screen_locked_security">デバイスがロックされている際のセキュリティを強化します。\n\n一部の機密性の高いクイック設定タイルへのアクセスを制限し、不正なネットワーク変更を防止します。さらに、アニメーション速度を上げてタッチ操作の連打を防止することによる再試行も阻止します。\n\nこの機能は完全ではなく、Bluetoothや機内モードなど直接切り替え可能な一部のタイルを防止できないなどの欠陥がある可能性があります。</string>
     <string name="about_desc_app_lock">アプリを二段階認証レイヤーで保護します。\n\nAndroid基準のクラス3生体認証セキュリティレベルを満たす限り、デバイスのロック画面認証方法が使用されます。</string>
     <string name="about_desc_location_reached">目的地が近づいたら通知を受け取り、乗り遅れを防ぐことができます。\n\nGoogleマップを開き、目的地付近のピンを長押しして「ピンをドロップ」と表示されていることを確認してください（表示されていないと距離計算が正確でない場合があります）。その後、その位置情報をEssentialsアプリに共有し、追跡を開始してください。</string>
+    <string name="location_reached_add_title">Add Destination</string>
+    <string name="location_reached_edit_title">Edit Destination</string>
+    <string name="location_reached_name_placeholder">Home, Office, etc.</string>
+    <string name="location_reached_name_label">Name</string>
+    <string name="location_reached_save_btn">Save</string>
+    <string name="location_reached_cancel_btn">Cancel</string>
+    <string name="location_reached_resolving">Resolving location…</string>
+    <string name="location_reached_last_trip">Last Trip</string>
+    <string name="location_reached_saved_destinations">Saved Destinations</string>
+    <string name="location_reached_no_saved_dest">No destinations saved yet.</string>
+    <string name="location_reached_delete">Delete Destination</string>
+    <string name="location_reached_tracking_now">Tracking Now</string>
+    <string name="location_reached_restart_btn">Re-Start</string>
+    <string name="location_reached_instructional_desc">Share coordinates (Dropped pin) from Google Maps to Essentials to save as a destination.\n\nThe distance shown is the direct distance to the destination, not the distance along the roads.\n\nTake all calculations of time and distance with a grain of salt as they are not always accurate.</string>
+    <string name="tile_location_reached">Are we there yet?</string>
+    <string name="location_reached_radius_label">Radius: %1$d m</string>
+    <string name="location_reached_distance_label">Distance to target: %1$s</string>
+    <string name="location_reached_last_travelled">Last: %1$s</string>
+    <string name="location_reached_never">Never</string>
+    <string name="location_reached_to_go">To go</string>
+    <string name="location_reached_eta_min">%1$d min</string>
+    <string name="location_reached_eta_hr_min">%1$d hr %2$d min</string>
+    <string name="location_reached_service_remaining_with_eta">%1$s (%2$d%%) • %3$s to go</string>
     <string name="about_desc_freeze">アプリをフリーズしてバックグラウンドでの実行を停止します。\n\n使用していないアプリを完全にフリーズすることで、バッテリーの消耗とデータ使用量を抑えます。アプリを起動すると即座にフリーズが解除されます。フリーズ中はアプリドロワーに表示されず、Playストアでのアプリ更新も表示されません。</string>
     <string name="about_desc_system_keyboard">誰も求めていないカスタム入力方式。\n\nこれは現在、実験的機能です。複数言語のサポートは、実装が非常に複雑で時間がかかるため、提供されない可能性があります。</string>
     <string name="about_desc_batteries">接続されたすべてのデバイスのバッテリー残量を表示します。\n\nBluetoothヘッドフォン、スマートウォッチ、その他のアクセサリのバッテリー状態を一箇所で確認できます。AirSyncアプリケーションと連携すれば、Macのバッテリー残量も表示可能です。</string>
@@ -1067,10 +1101,15 @@
     <string name="format_updated_relative">%1$s更新済み</string>
     <!-- Relative Time -->
     <string name="time_just_now">たった今</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
     <string name="time_min_ago">%1$d分前</string>
     <string name="time_hour_ago">%1$d時間前</string>
     <string name="time_day_ago">%1$d日前</string>
+    <string name="time_days_ago">%1$d days ago</string>
+    <string name="time_weeks_ago">%1$d weeks ago</string>
     <string name="time_month_ago">%1$dヶ月前</string>
+    <string name="time_months_ago">%1$d months ago</string>
     <string name="time_year_ago">%1$d年前</string>
     <string name="action_retry">再試行</string>
     <string name="action_start_sign_in">サインインする</string>
@@ -1197,4 +1236,10 @@
     <string name="action_send_feedback">フィードバックを送信</string>
     <string name="msg_feedback_sent">フィードバックの送信に成功しました！アプリの改善にご協力いただき、ありがとうございます。</string>
     <string name="label_alternatively">または</string>
+    <!-- Pixel Diagnostics -->
+    <string name="label_diagnostics">Diagnostics</string>
+    <string name="label_device_check">Device Check</string>
+    <string name="msg_flashbang">Get ready to be flashbanged!</string>
+    <string name="action_abort">Abort</string>
+    <string name="action_continue">Continue</string>
 </resources>

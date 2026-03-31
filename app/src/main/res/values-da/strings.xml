@@ -12,6 +12,7 @@
     <string name="flashlight_pulse_tile_label">Lommelygte puls</string>
     <string name="check_pre_releases_label">Tjek for pre-releases</string>
     <string name="check_pre_releases_desc">Kan være ustabil</string>
+    <string name="label_default_tab">Default tab</string>
     <!-- App Lock -->
     <string name="settings_section_security">Sikkerhed</string>
     <string name="app_lock_enable_title">Aktiver applås</string>
@@ -113,6 +114,15 @@
     <string name="settings_section_app_control">App kontrol</string>
     <string name="action_freeze">Fryse</string>
     <string name="action_unfreeze">Frigør op</string>
+    <string name="action_remove">Remove</string>
+    <string name="action_create_shortcut">Create shortcut</string>
+    <string name="action_app_info">App info</string>
+    <string name="freeze_mode_description_freeze_title">What is Freeze?</string>
+    <string name="freeze_mode_description_freeze_body">App freezing disables the app\'s launch activity which removes it from the app list and updates. It will prevent the app from starting at all until it\'s unfrozen which saves resources but you will need to unfreeze from here or manually re-enable.</string>
+    <string name="freeze_mode_description_freeze_warning">DO NOT FREEZE COMMUNICATION APPS</string>
+    <string name="freeze_mode_description_suspend_title">What is Suspend?</string>
+    <string name="freeze_mode_description_suspend_body">Suspending an app used to pause the app activity and prevent background executions but with recent Android changes, it only pauses the notifications from appearing and that\'s pretty much it. But does allows you to unpause from the launcher app list as they will be still available as grayscale paused app icons.</string>
+    <string name="freeze_mode_description_suspend_footer">Should work the same as the native app pause/ focus mode features.</string>
     <string name="content_desc_more_options">Flere muligheder</string>
     <string name="action_freeze_all">Frys alle apps</string>
     <string name="action_unfreeze_all">Frigør alle apps</string>
@@ -579,6 +589,7 @@
     <string name="action_search">Søge</string>
     <string name="action_stop">Stop</string>
     <string name="label_search">Søge</string>
+    <string name="search_frozen_apps_placeholder">Search frozen apps</string>
     <!-- UI Components General -->
     <string name="action_back">Tilbage</string>
     <string name="content_desc_back">Tilbage</string>
@@ -632,6 +643,29 @@
     <string name="about_desc_screen_locked_security">Forbedre sikkerheden, når din enhed er låst.\n\nBegræns adgangen til nogle følsomme QS-felter, hvilket forhindrer uautoriserede netværksændringer og forhindrer yderligere, at de forsøger at gøre det igen ved at øge animationshastigheden for at forhindre berøringsspam.\n\nDenne funktion er ikke robust og kan have mangler, såsom nogle fliser, der tillader skift direkte, såsom bluetooth eller flytilstand, der ikke kan forhindres.</string>
     <string name="about_desc_app_lock">Beskyt dine apps med et sekundært godkendelseslag.\n\nDin enhedslåseskærmgodkendelsesmetode vil blive brugt, så længe den opfylder det biometriske sikkerhedsniveau i klasse 3 ifølge Android-standarder.</string>
     <string name="about_desc_location_reached">Få besked, når du kommer tættere på din destination for at sikre, at du aldrig går glip af stoppestedet.\n\nGå til Google Maps, tryk længe på en nål i nærheden af ​​din destination, og sørg for, at der står \"Fastet nål\" (ellers er afstandsberegningen muligvis ikke nøjagtig), og del derefter placeringen med Essentials-appen og begynd at spore.</string>
+    <string name="location_reached_add_title">Add Destination</string>
+    <string name="location_reached_edit_title">Edit Destination</string>
+    <string name="location_reached_name_placeholder">Home, Office, etc.</string>
+    <string name="location_reached_name_label">Name</string>
+    <string name="location_reached_save_btn">Save</string>
+    <string name="location_reached_cancel_btn">Cancel</string>
+    <string name="location_reached_resolving">Resolving location…</string>
+    <string name="location_reached_last_trip">Last Trip</string>
+    <string name="location_reached_saved_destinations">Saved Destinations</string>
+    <string name="location_reached_no_saved_dest">No destinations saved yet.</string>
+    <string name="location_reached_delete">Delete Destination</string>
+    <string name="location_reached_tracking_now">Tracking Now</string>
+    <string name="location_reached_restart_btn">Re-Start</string>
+    <string name="location_reached_instructional_desc">Share coordinates (Dropped pin) from Google Maps to Essentials to save as a destination.\n\nThe distance shown is the direct distance to the destination, not the distance along the roads.\n\nTake all calculations of time and distance with a grain of salt as they are not always accurate.</string>
+    <string name="tile_location_reached">Are we there yet?</string>
+    <string name="location_reached_radius_label">Radius: %1$d m</string>
+    <string name="location_reached_distance_label">Distance to target: %1$s</string>
+    <string name="location_reached_last_travelled">Last: %1$s</string>
+    <string name="location_reached_never">Never</string>
+    <string name="location_reached_to_go">To go</string>
+    <string name="location_reached_eta_min">%1$d min</string>
+    <string name="location_reached_eta_hr_min">%1$d hr %2$d min</string>
+    <string name="location_reached_service_remaining_with_eta">%1$s (%2$d%%) • %3$s to go</string>
     <string name="about_desc_freeze">Frys apps for at forhindre dem i at køre i baggrunden.\n\nForhindrer batteriafladning og dataforbrug ved at fryse apps fuldstændigt, når du ikke bruger dem. De vil blive frosset op med det samme, når du starter dem. Apps vil ikke dukke op i appskuffen og vil heller ikke dukke op for appopdateringer i Play Butik, mens de er frosset.</string>
     <string name="about_desc_system_keyboard">En tilpasset inputmetode, ingen bad om.\n\nDet er bare et eksperiment. Flere sprog får muligvis ikke support, da det er en meget kompleks og tidskrævende implementering.</string>
     <string name="about_desc_batteries">Overvåg batteriniveauet på alle dine tilsluttede enheder.\n\nSe batteristatus for dine Bluetooth-hovedtelefoner, ur og andet tilbehør på ét sted. Forbind med AirSync-applikationen for også at få vist din Mac-batteriniveau.</string>
@@ -1067,10 +1101,15 @@
     <string name="format_updated_relative">Opdateret %1$s</string>
     <!-- Relative Time -->
     <string name="time_just_now">lige nu</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
     <string name="time_min_ago">%1$dm siden</string>
     <string name="time_hour_ago">%1$dh siden</string>
     <string name="time_day_ago">%1$dd siden</string>
+    <string name="time_days_ago">%1$d days ago</string>
+    <string name="time_weeks_ago">%1$d weeks ago</string>
     <string name="time_month_ago">%1$dmåned siden</string>
+    <string name="time_months_ago">%1$d months ago</string>
     <string name="time_year_ago">%1$dy siden</string>
     <string name="action_retry">Prøv igen</string>
     <string name="action_start_sign_in">Start Log ind</string>
@@ -1197,4 +1236,10 @@
     <string name="action_send_feedback">Send Feedback</string>
     <string name="msg_feedback_sent">Feedback sent successfully! Thanks for helping us improve the app.</string>
     <string name="label_alternatively">Alternatively</string>
+    <!-- Pixel Diagnostics -->
+    <string name="label_diagnostics">Diagnostics</string>
+    <string name="label_device_check">Device Check</string>
+    <string name="msg_flashbang">Get ready to be flashbanged!</string>
+    <string name="action_abort">Abort</string>
+    <string name="action_continue">Continue</string>
 </resources>

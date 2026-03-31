@@ -24,6 +24,14 @@
 -keep class com.google.gson.** { *; }
 -keepattributes Signature
 -keepattributes *Annotation*
+-keepattributes InnerClasses
+-keepattributes EnclosingMethod
+
+# Ensure @Keep annotations are always honored
+-keep @androidx.annotation.Keep class * { *; }
+-keepclassmembers class * {
+    @androidx.annotation.Keep *;
+}
 
 # Shizuku rules
 -keep class rikka.shizuku.** { *; }
@@ -38,10 +46,11 @@
 -keep class com.sameerasw.essentials.data.repository.** { *; }
 -keep class com.sameerasw.essentials.domain.registry.** { *; }
 
-# Emoji data classes for Gson
--keep class com.sameerasw.essentials.ui.ime.EmojiObject { *; }
--keep class com.sameerasw.essentials.ui.ime.EmojiCategory { *; }
 -keep class com.sameerasw.essentials.ui.ime.EmojiDataResponse { *; }
+
+# Data models for Gson
+-keep class com.sameerasw.essentials.data.model.** { *; }
+-keepclassmembers class com.sameerasw.essentials.data.model.** { *; }
 # Keep ViewModel constructors for reflection-based instantiation
 -keepclassmembers class * extends androidx.lifecycle.ViewModel {
     public <init>(...);

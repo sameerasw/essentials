@@ -12,6 +12,7 @@
     <string name="flashlight_pulse_tile_label">Pols de llanterna</string>
     <string name="check_pre_releases_label">Comproveu les versions prèvies</string>
     <string name="check_pre_releases_desc">Pot ser inestable</string>
+    <string name="label_default_tab">Default tab</string>
     <!-- App Lock -->
     <string name="settings_section_security">Seguretat</string>
     <string name="app_lock_enable_title">Activa el bloqueig de l\'aplicació</string>
@@ -113,6 +114,15 @@
     <string name="settings_section_app_control">Control d\'aplicacions</string>
     <string name="action_freeze">Congelar</string>
     <string name="action_unfreeze">Descongelar</string>
+    <string name="action_remove">Remove</string>
+    <string name="action_create_shortcut">Create shortcut</string>
+    <string name="action_app_info">App info</string>
+    <string name="freeze_mode_description_freeze_title">What is Freeze?</string>
+    <string name="freeze_mode_description_freeze_body">App freezing disables the app\'s launch activity which removes it from the app list and updates. It will prevent the app from starting at all until it\'s unfrozen which saves resources but you will need to unfreeze from here or manually re-enable.</string>
+    <string name="freeze_mode_description_freeze_warning">DO NOT FREEZE COMMUNICATION APPS</string>
+    <string name="freeze_mode_description_suspend_title">What is Suspend?</string>
+    <string name="freeze_mode_description_suspend_body">Suspending an app used to pause the app activity and prevent background executions but with recent Android changes, it only pauses the notifications from appearing and that\'s pretty much it. But does allows you to unpause from the launcher app list as they will be still available as grayscale paused app icons.</string>
+    <string name="freeze_mode_description_suspend_footer">Should work the same as the native app pause/ focus mode features.</string>
     <string name="content_desc_more_options">Més opcions</string>
     <string name="action_freeze_all">Congela totes les aplicacions</string>
     <string name="action_unfreeze_all">Descongela totes les aplicacions</string>
@@ -579,6 +589,7 @@
     <string name="action_search">Cerca</string>
     <string name="action_stop">Atureu-vos</string>
     <string name="label_search">Cerca</string>
+    <string name="search_frozen_apps_placeholder">Search frozen apps</string>
     <!-- UI Components General -->
     <string name="action_back">Enrere</string>
     <string name="content_desc_back">Enrere</string>
@@ -632,6 +643,29 @@
     <string name="about_desc_screen_locked_security">Milloreu la seguretat quan el vostre dispositiu estigui bloquejat.\n\nRestringeix l\'accés a algunes fitxes QS sensibles evitant modificacions no autoritzades a la xarxa i evitant encara més que tornin a intentar-ho augmentant la velocitat de l\'animació per evitar el correu brossa tàctil.\n\nSPLIT⟐⟐⟐This característiques no són robustes i poden tenir algunes defectes. que permeten canviar directament com ara el bluetooth o el mode de vol que no es poden evitar.</string>
     <string name="about_desc_app_lock">Protegiu les vostres aplicacions amb una capa d\'autenticació secundària.\n\nEl mètode d\'autenticació de la pantalla de bloqueig del vostre dispositiu s\'utilitzarà sempre que compleixi el nivell de seguretat biomètrica de classe 3 dels estàndards d\'android.</string>
     <string name="about_desc_location_reached">Rebeu una notificació quan us acosteu a la vostra destinació per assegurar-vos que no us perdeu mai la parada.\n\nVés a Google Maps, premeu llargament un marcador a prop de la vostra destinació i assegureu-vos que digui \"Pintura caiguda\" (en cas contrari, el càlcul de la distància pot ser que no sigui precís), i després compartiu la ubicació a l\'aplicació Essentials i comenceu el seguiment.</string>
+    <string name="location_reached_add_title">Add Destination</string>
+    <string name="location_reached_edit_title">Edit Destination</string>
+    <string name="location_reached_name_placeholder">Home, Office, etc.</string>
+    <string name="location_reached_name_label">Name</string>
+    <string name="location_reached_save_btn">Save</string>
+    <string name="location_reached_cancel_btn">Cancel</string>
+    <string name="location_reached_resolving">Resolving location…</string>
+    <string name="location_reached_last_trip">Last Trip</string>
+    <string name="location_reached_saved_destinations">Saved Destinations</string>
+    <string name="location_reached_no_saved_dest">No destinations saved yet.</string>
+    <string name="location_reached_delete">Delete Destination</string>
+    <string name="location_reached_tracking_now">Tracking Now</string>
+    <string name="location_reached_restart_btn">Re-Start</string>
+    <string name="location_reached_instructional_desc">Share coordinates (Dropped pin) from Google Maps to Essentials to save as a destination.\n\nThe distance shown is the direct distance to the destination, not the distance along the roads.\n\nTake all calculations of time and distance with a grain of salt as they are not always accurate.</string>
+    <string name="tile_location_reached">Are we there yet?</string>
+    <string name="location_reached_radius_label">Radius: %1$d m</string>
+    <string name="location_reached_distance_label">Distance to target: %1$s</string>
+    <string name="location_reached_last_travelled">Last: %1$s</string>
+    <string name="location_reached_never">Never</string>
+    <string name="location_reached_to_go">To go</string>
+    <string name="location_reached_eta_min">%1$d min</string>
+    <string name="location_reached_eta_hr_min">%1$d hr %2$d min</string>
+    <string name="location_reached_service_remaining_with_eta">%1$s (%2$d%%) • %3$s to go</string>
     <string name="about_desc_freeze">Congela les aplicacions per evitar que s\'executin en segon pla.\n\nEvita l\'esgotament de la bateria i l\'ús de dades congelant completament les aplicacions quan no les fas servir. Es descongelaran a l\'instant quan els inicieu. Les aplicacions no es mostraran al calaix d\'aplicacions i tampoc es mostraran per a les actualitzacions d\'aplicacions a Play Store mentre estiguin congelades.</string>
     <string name="about_desc_system_keyboard">Un mètode d\'entrada personalitzat que ningú va demanar.\n\nÉs només un experiment. És possible que diversos idiomes no tinguin suport, ja que és una implementació molt complexa i que requereix molt de temps.</string>
     <string name="about_desc_batteries">Monitoritza els nivells de bateria de tots els teus dispositius connectats.\n\nConsulta l\'estat de la bateria dels teus auriculars, rellotge i altres accessoris Bluetooth en un sol lloc. Connecteu-vos amb l\'aplicació AirSync per mostrar també el nivell de bateria del vostre Mac.</string>
@@ -1067,10 +1101,15 @@
     <string name="format_updated_relative">Actualitzat %1$s</string>
     <!-- Relative Time -->
     <string name="time_just_now">just ara</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
     <string name="time_min_ago">%1$dfa m</string>
     <string name="time_hour_ago">%1$dfa h</string>
     <string name="time_day_ago">%1$dfa d</string>
+    <string name="time_days_ago">%1$d days ago</string>
+    <string name="time_weeks_ago">%1$d weeks ago</string>
     <string name="time_month_ago">%1$dfa un mes</string>
+    <string name="time_months_ago">%1$d months ago</string>
     <string name="time_year_ago">%1$dfa y</string>
     <string name="action_retry">Torna-ho a provar</string>
     <string name="action_start_sign_in">Inicieu la sessió</string>
@@ -1197,4 +1236,10 @@
     <string name="action_send_feedback">Send Feedback</string>
     <string name="msg_feedback_sent">Feedback sent successfully! Thanks for helping us improve the app.</string>
     <string name="label_alternatively">Alternatively</string>
+    <!-- Pixel Diagnostics -->
+    <string name="label_diagnostics">Diagnostics</string>
+    <string name="label_device_check">Device Check</string>
+    <string name="msg_flashbang">Get ready to be flashbanged!</string>
+    <string name="action_abort">Abort</string>
+    <string name="action_continue">Continue</string>
 </resources>

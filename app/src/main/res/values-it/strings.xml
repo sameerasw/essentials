@@ -12,6 +12,7 @@
     <string name="flashlight_pulse_tile_label">Impulso della torcia</string>
     <string name="check_pre_releases_label">Controlla le pre-release</string>
     <string name="check_pre_releases_desc">Potrebbe essere instabile</string>
+    <string name="label_default_tab">Default tab</string>
     <!-- App Lock -->
     <string name="settings_section_security">Sicurezza</string>
     <string name="app_lock_enable_title">Abilita il blocco dell\'app</string>
@@ -113,6 +114,15 @@
     <string name="settings_section_app_control">Controllo dell\'app</string>
     <string name="action_freeze">Congela</string>
     <string name="action_unfreeze">Scongela</string>
+    <string name="action_remove">Rimuovi</string>
+    <string name="action_create_shortcut">Crea shortcut</string>
+    <string name="action_app_info">App info</string>
+    <string name="freeze_mode_description_freeze_title">What is Freeze?</string>
+    <string name="freeze_mode_description_freeze_body">App freezing disables the app\'s launch activity which removes it from the app list and updates. It will prevent the app from starting at all until it\'s unfrozen which saves resources but you will need to unfreeze from here or manually re-enable.</string>
+    <string name="freeze_mode_description_freeze_warning">DO NOT FREEZE COMMUNICATION APPS</string>
+    <string name="freeze_mode_description_suspend_title">What is Suspend?</string>
+    <string name="freeze_mode_description_suspend_body">Suspending an app used to pause the app activity and prevent background executions but with recent Android changes, it only pauses the notifications from appearing and that\'s pretty much it. But does allows you to unpause from the launcher app list as they will be still available as grayscale paused app icons.</string>
+    <string name="freeze_mode_description_suspend_footer">Should work the same as the native app pause/ focus mode features.</string>
     <string name="content_desc_more_options">Altre opzioni</string>
     <string name="action_freeze_all">Congela tutte le app</string>
     <string name="action_unfreeze_all">Scongela tutte le app</string>
@@ -207,11 +217,11 @@
     <string name="on">Attivo</string>
     <string name="off">Disattivo</string>
     <string name="private_dns_custom_title">DNS privato personalizzato</string>
-    <string name="private_dns_presets_title">DNS Presets</string>
-    <string name="dns_preset_add_title">Add DNS Preset</string>
-    <string name="dns_preset_name_label">Preset name</string>
+    <string name="private_dns_presets_title">Preset DNS</string>
+    <string name="dns_preset_add_title">Aggiungi Preset DNS</string>
+    <string name="dns_preset_name_label">Nome preset</string>
     <string name="dns_preset_reset_action">Reset</string>
-    <string name="dns_preset_delete_content_description">Delete preset</string>
+    <string name="dns_preset_delete_content_description">Elimina preset</string>
     <string name="dns_preset_reset_confirm">Are you sure you want to reset all DNS presets to defaults? This will remove all your custom presets.</string>
     <string name="private_dns_hostname_label">Nome host del provider</string>
     <string name="dns_preset_adguard">DNS di AdGuard</string>
@@ -579,6 +589,7 @@
     <string name="action_search">Ricerca</string>
     <string name="action_stop">Fermare</string>
     <string name="label_search">Ricerca</string>
+    <string name="search_frozen_apps_placeholder">Search frozen apps</string>
     <!-- UI Components General -->
     <string name="action_back">Indietro</string>
     <string name="content_desc_back">Indietro</string>
@@ -605,7 +616,7 @@
     <string name="preferences_title">Preferenze</string>
     <string name="preferences_desc">Configura alcune opzioni per iniziare.</string>
     <string name="label_app_settings">Impostazioni App</string>
-    <string name="label_app_language">Language</string>
+    <string name="label_app_language">Lingua</string>
     <string name="label_haptic_feedback">Feedback Aptico</string>
     <string name="label_updates">Aggiornamenti</string>
     <string name="label_auto_check_updates">Controllo automatico Aggiornamenti</string>
@@ -632,6 +643,29 @@
     <string name="about_desc_screen_locked_security">Aumenta la sicurezza quando il tuo dispositivo è bloccato.\n\nLimita l\'accesso ad alcuni riquadri QS sensibili impedendo modifiche di rete non autorizzate e impedendo ulteriormente che tentino di farlo aumentando la velocità di animazione per prevenire lo spam touch.\n\nQuesta funzione non è robusta e potrebbe presentare difetti come alcuni riquadri che consentono di attivare/disattivare direttamente la modalità Bluetooth o aereo. essere prevenuto.</string>
     <string name="about_desc_app_lock">Proteggi le tue app con un livello di autenticazione secondario.\n\nIl metodo di autenticazione della schermata di blocco del dispositivo verrà utilizzato purché soddisfi il livello di sicurezza biometrica di classe 3 secondo gli standard Android.</string>
     <string name="about_desc_location_reached">Ricevi una notifica quando ti avvicini alla tua destinazione per assicurarti di non perdere mai la fermata.\n\nVai su Google Maps, premi a lungo un segnaposto vicino alla tua destinazione e assicurati che sia indicato \"Segnaposto caduto\" (altrimenti il ​​calcolo della distanza potrebbe non essere accurato), quindi condividi la posizione con l\'app Essentials e avvia il monitoraggio.</string>
+    <string name="location_reached_add_title">Add Destination</string>
+    <string name="location_reached_edit_title">Edit Destination</string>
+    <string name="location_reached_name_placeholder">Home, Office, etc.</string>
+    <string name="location_reached_name_label">Name</string>
+    <string name="location_reached_save_btn">Save</string>
+    <string name="location_reached_cancel_btn">Cancel</string>
+    <string name="location_reached_resolving">Resolving location…</string>
+    <string name="location_reached_last_trip">Last Trip</string>
+    <string name="location_reached_saved_destinations">Saved Destinations</string>
+    <string name="location_reached_no_saved_dest">No destinations saved yet.</string>
+    <string name="location_reached_delete">Delete Destination</string>
+    <string name="location_reached_tracking_now">Tracking Now</string>
+    <string name="location_reached_restart_btn">Re-Start</string>
+    <string name="location_reached_instructional_desc">Share coordinates (Dropped pin) from Google Maps to Essentials to save as a destination.\n\nThe distance shown is the direct distance to the destination, not the distance along the roads.\n\nTake all calculations of time and distance with a grain of salt as they are not always accurate.</string>
+    <string name="tile_location_reached">Are we there yet?</string>
+    <string name="location_reached_radius_label">Radius: %1$d m</string>
+    <string name="location_reached_distance_label">Distance to target: %1$s</string>
+    <string name="location_reached_last_travelled">Last: %1$s</string>
+    <string name="location_reached_never">Never</string>
+    <string name="location_reached_to_go">To go</string>
+    <string name="location_reached_eta_min">%1$d min</string>
+    <string name="location_reached_eta_hr_min">%1$d hr %2$d min</string>
+    <string name="location_reached_service_remaining_with_eta">%1$s (%2$d%%) • %3$s to go</string>
     <string name="about_desc_freeze">Blocca le app per impedirne l\'esecuzione in background.\n\nPrevieni il consumo della batteria e l\'utilizzo dei dati bloccando completamente le app quando non le usi. Verranno sbloccati immediatamente quando li avvii. Le app non verranno visualizzate nel cassetto delle app e inoltre non verranno visualizzate per gli aggiornamenti delle app nel Play Store mentre sono bloccate.</string>
     <string name="about_desc_system_keyboard">Un metodo di input personalizzato che nessuno ha chiesto.\n\nÈ solo un esperimento. Più lingue potrebbero non ricevere supporto poiché si tratta di un\'implementazione molto complessa e dispendiosa in termini di tempo.</string>
     <string name="about_desc_batteries">Monitora i livelli della batteria di tutti i tuoi dispositivi collegati.\n\nVisualizza lo stato della batteria delle tue cuffie Bluetooth, del tuo orologio e di altri accessori in un unico posto. Connettiti con l\'applicazione AirSync per visualizzare anche il livello della batteria del tuo Mac.</string>
@@ -1067,10 +1101,15 @@
     <string name="format_updated_relative">Aggiornato %1$s</string>
     <!-- Relative Time -->
     <string name="time_just_now">proprio adesso</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
     <string name="time_min_ago">%1$dm fa</string>
     <string name="time_hour_ago">%1$dh fa</string>
     <string name="time_day_ago">%1$dd fa</string>
+    <string name="time_days_ago">%1$d days ago</string>
+    <string name="time_weeks_ago">%1$d weeks ago</string>
     <string name="time_month_ago">%1$dmo fa</string>
+    <string name="time_months_ago">%1$d months ago</string>
     <string name="time_year_ago">%1$dsì fa</string>
     <string name="action_retry">Riprova</string>
     <string name="action_start_sign_in">Inizia ad accedere</string>
@@ -1120,11 +1159,11 @@
     <string name="kaomoji_cat_dissatisfaction">Dissatisfaction</string>
     <string name="kaomoji_cat_anger">Anger</string>
     <string name="kaomoji_cat_apologizing">Apologizing</string>
-    <string name="kaomoji_cat_bear">Bear</string>
-    <string name="kaomoji_cat_bird">Bird</string>
-    <string name="kaomoji_cat_cat">Cat</string>
+    <string name="kaomoji_cat_bear">Orso</string>
+    <string name="kaomoji_cat_bird">Uccello</string>
+    <string name="kaomoji_cat_cat">Gatto</string>
     <string name="kaomoji_cat_confusion">Confusion</string>
-    <string name="kaomoji_cat_dog">Dog</string>
+    <string name="kaomoji_cat_dog">Cane</string>
     <string name="kaomoji_cat_doubt">Doubt</string>
     <string name="kaomoji_cat_enemies">Enemies</string>
     <string name="kaomoji_cat_faces">Faces</string>
@@ -1197,4 +1236,10 @@
     <string name="action_send_feedback">Send Feedback</string>
     <string name="msg_feedback_sent">Feedback sent successfully! Thanks for helping us improve the app.</string>
     <string name="label_alternatively">Alternatively</string>
+    <!-- Pixel Diagnostics -->
+    <string name="label_diagnostics">Diagnostics</string>
+    <string name="label_device_check">Device Check</string>
+    <string name="msg_flashbang">Get ready to be flashbanged!</string>
+    <string name="action_abort">Abort</string>
+    <string name="action_continue">Continue</string>
 </resources>

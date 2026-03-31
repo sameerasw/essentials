@@ -12,6 +12,7 @@
     <string name="flashlight_pulse_tile_label">Puls latarki</string>
     <string name="check_pre_releases_label">Sprawdź wersje wstępne</string>
     <string name="check_pre_releases_desc">Może być niestabilny</string>
+    <string name="label_default_tab">Default tab</string>
     <!-- App Lock -->
     <string name="settings_section_security">Bezpieczeństwo</string>
     <string name="app_lock_enable_title">Włącz blokadę aplikacji</string>
@@ -113,6 +114,15 @@
     <string name="settings_section_app_control">Kontrola aplikacji</string>
     <string name="action_freeze">Zamrażać</string>
     <string name="action_unfreeze">Odmrozić</string>
+    <string name="action_remove">Remove</string>
+    <string name="action_create_shortcut">Create shortcut</string>
+    <string name="action_app_info">App info</string>
+    <string name="freeze_mode_description_freeze_title">What is Freeze?</string>
+    <string name="freeze_mode_description_freeze_body">App freezing disables the app\'s launch activity which removes it from the app list and updates. It will prevent the app from starting at all until it\'s unfrozen which saves resources but you will need to unfreeze from here or manually re-enable.</string>
+    <string name="freeze_mode_description_freeze_warning">DO NOT FREEZE COMMUNICATION APPS</string>
+    <string name="freeze_mode_description_suspend_title">What is Suspend?</string>
+    <string name="freeze_mode_description_suspend_body">Suspending an app used to pause the app activity and prevent background executions but with recent Android changes, it only pauses the notifications from appearing and that\'s pretty much it. But does allows you to unpause from the launcher app list as they will be still available as grayscale paused app icons.</string>
+    <string name="freeze_mode_description_suspend_footer">Should work the same as the native app pause/ focus mode features.</string>
     <string name="content_desc_more_options">Więcej opcji</string>
     <string name="action_freeze_all">Zablokuj wszystkie aplikacje</string>
     <string name="action_unfreeze_all">Odblokuj wszystkie aplikacje</string>
@@ -579,6 +589,7 @@
     <string name="action_search">Szukaj</string>
     <string name="action_stop">Zatrzymywać się</string>
     <string name="label_search">Szukaj</string>
+    <string name="search_frozen_apps_placeholder">Search frozen apps</string>
     <!-- UI Components General -->
     <string name="action_back">Z powrotem</string>
     <string name="content_desc_back">Z powrotem</string>
@@ -632,6 +643,29 @@
     <string name="about_desc_screen_locked_security">Zwiększ bezpieczeństwo, gdy Twoje urządzenie jest zablokowane.\n\nOgranicz dostęp do niektórych wrażliwych kafelków QS, aby zapobiec nieautoryzowanym modyfikacjom sieci i jeszcze bardziej uniemożliwić im ponowne próby zrobienia tego, zwiększając prędkość animacji, aby zapobiec spamowi dotykowemu.\n\nTa funkcja nie jest solidna i może mieć wady, takie jak niektóre kafelki umożliwiające bezpośrednie przełączanie, takie jak brak możliwości Bluetooth lub trybu samolotowego zapobiegać.</string>
     <string name="about_desc_app_lock">Zabezpiecz swoje aplikacje dodatkową warstwą uwierzytelniania.\n\nTwoja metoda uwierzytelniania ekranu blokady urządzenia będzie używana, o ile spełnia poziom bezpieczeństwa biometrycznego klasy 3 według standardów Androida.</string>
     <string name="about_desc_location_reached">Otrzymuj powiadomienia, gdy zbliżysz się do celu, aby mieć pewność, że nigdy nie przegapisz przystanku.\n\nPrzejdź do Map Google, naciśnij i przytrzymaj pinezkę w pobliżu miejsca docelowego i upewnij się, że jest napisane „Upuszczona pinezka” (w przeciwnym razie obliczenie odległości może nie być dokładne), a następnie udostępnij lokalizację w aplikacji Essentials i rozpocznij śledzenie.</string>
+    <string name="location_reached_add_title">Add Destination</string>
+    <string name="location_reached_edit_title">Edit Destination</string>
+    <string name="location_reached_name_placeholder">Home, Office, etc.</string>
+    <string name="location_reached_name_label">Name</string>
+    <string name="location_reached_save_btn">Save</string>
+    <string name="location_reached_cancel_btn">Cancel</string>
+    <string name="location_reached_resolving">Resolving location…</string>
+    <string name="location_reached_last_trip">Last Trip</string>
+    <string name="location_reached_saved_destinations">Saved Destinations</string>
+    <string name="location_reached_no_saved_dest">No destinations saved yet.</string>
+    <string name="location_reached_delete">Delete Destination</string>
+    <string name="location_reached_tracking_now">Tracking Now</string>
+    <string name="location_reached_restart_btn">Re-Start</string>
+    <string name="location_reached_instructional_desc">Share coordinates (Dropped pin) from Google Maps to Essentials to save as a destination.\n\nThe distance shown is the direct distance to the destination, not the distance along the roads.\n\nTake all calculations of time and distance with a grain of salt as they are not always accurate.</string>
+    <string name="tile_location_reached">Are we there yet?</string>
+    <string name="location_reached_radius_label">Radius: %1$d m</string>
+    <string name="location_reached_distance_label">Distance to target: %1$s</string>
+    <string name="location_reached_last_travelled">Last: %1$s</string>
+    <string name="location_reached_never">Never</string>
+    <string name="location_reached_to_go">To go</string>
+    <string name="location_reached_eta_min">%1$d min</string>
+    <string name="location_reached_eta_hr_min">%1$d hr %2$d min</string>
+    <string name="location_reached_service_remaining_with_eta">%1$s (%2$d%%) • %3$s to go</string>
     <string name="about_desc_freeze">Blokuj aplikacje, aby zapobiec ich działaniu w tle.\n\nZapobiegaj rozładowaniu baterii i wykorzystaniu danych, całkowicie zamrażając aplikacje, gdy ich nie używasz. Po uruchomieniu zostaną natychmiast odmrożone. Po zamrożeniu aplikacje nie będą widoczne w szufladzie aplikacji ani w aktualizacjach aplikacji w Sklepie Play.</string>
     <string name="about_desc_system_keyboard">Niestandardowa metoda wprowadzania, o którą nikt nie prosił.\n\nTo tylko eksperyment. Wiele języków może nie uzyskać wsparcia, ponieważ jest to bardzo złożona i czasochłonna implementacja.</string>
     <string name="about_desc_batteries">Monitoruj poziom naładowania baterii wszystkich podłączonych urządzeń.\n\nSprawdź stan baterii swoich słuchawek Bluetooth, zegarka i innych akcesoriów w jednym miejscu. Połącz się z aplikacją AirSync, aby wyświetlić również poziom naładowania baterii komputera Mac.</string>
@@ -1067,10 +1101,15 @@
     <string name="format_updated_relative">Zaktualizowano %1$s</string>
     <!-- Relative Time -->
     <string name="time_just_now">właśnie</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
     <string name="time_min_ago">%1$dtemu</string>
     <string name="time_hour_ago">%1$dgodz. temu</string>
     <string name="time_day_ago">%1$dd temu</string>
+    <string name="time_days_ago">%1$d days ago</string>
+    <string name="time_weeks_ago">%1$d weeks ago</string>
     <string name="time_month_ago">%1$dmiesiąc temu</string>
+    <string name="time_months_ago">%1$d months ago</string>
     <string name="time_year_ago">%1$dtemu</string>
     <string name="action_retry">Spróbować ponownie</string>
     <string name="action_start_sign_in">Rozpocznij logowanie</string>
@@ -1197,4 +1236,10 @@
     <string name="action_send_feedback">Send Feedback</string>
     <string name="msg_feedback_sent">Feedback sent successfully! Thanks for helping us improve the app.</string>
     <string name="label_alternatively">Alternatively</string>
+    <!-- Pixel Diagnostics -->
+    <string name="label_diagnostics">Diagnostics</string>
+    <string name="label_device_check">Device Check</string>
+    <string name="msg_flashbang">Get ready to be flashbanged!</string>
+    <string name="action_abort">Abort</string>
+    <string name="action_continue">Continue</string>
 </resources>

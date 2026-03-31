@@ -12,6 +12,7 @@
     <string name="flashlight_pulse_tile_label">손전등 펄스</string>
     <string name="check_pre_releases_label">프리 릴리즈 확인</string>
     <string name="check_pre_releases_desc">불안정할 수도 있음</string>
+    <string name="label_default_tab">Default tab</string>
     <!-- App Lock -->
     <string name="settings_section_security">보안</string>
     <string name="app_lock_enable_title">앱 잠금 활성화</string>
@@ -113,6 +114,15 @@
     <string name="settings_section_app_control">앱 제어</string>
     <string name="action_freeze">꼭 매달리게 하다</string>
     <string name="action_unfreeze">녹이다</string>
+    <string name="action_remove">Remove</string>
+    <string name="action_create_shortcut">Create shortcut</string>
+    <string name="action_app_info">App info</string>
+    <string name="freeze_mode_description_freeze_title">What is Freeze?</string>
+    <string name="freeze_mode_description_freeze_body">App freezing disables the app\'s launch activity which removes it from the app list and updates. It will prevent the app from starting at all until it\'s unfrozen which saves resources but you will need to unfreeze from here or manually re-enable.</string>
+    <string name="freeze_mode_description_freeze_warning">DO NOT FREEZE COMMUNICATION APPS</string>
+    <string name="freeze_mode_description_suspend_title">What is Suspend?</string>
+    <string name="freeze_mode_description_suspend_body">Suspending an app used to pause the app activity and prevent background executions but with recent Android changes, it only pauses the notifications from appearing and that\'s pretty much it. But does allows you to unpause from the launcher app list as they will be still available as grayscale paused app icons.</string>
+    <string name="freeze_mode_description_suspend_footer">Should work the same as the native app pause/ focus mode features.</string>
     <string name="content_desc_more_options">추가 옵션</string>
     <string name="action_freeze_all">모든 앱 정지</string>
     <string name="action_unfreeze_all">모든 앱 고정 해제</string>
@@ -579,6 +589,7 @@
     <string name="action_search">찾다</string>
     <string name="action_stop">멈추다</string>
     <string name="label_search">찾다</string>
+    <string name="search_frozen_apps_placeholder">Search frozen apps</string>
     <!-- UI Components General -->
     <string name="action_back">뒤쪽에</string>
     <string name="content_desc_back">뒤쪽에</string>
@@ -632,6 +643,29 @@
     <string name="about_desc_screen_locked_security">장치가 잠겨 있을 때 보안을 강화하세요.\n\n일부 중요한 QS 타일에 대한 액세스를 제한하여 승인되지 않은 네트워크 수정을 방지하고 터치 스팸을 방지하기 위해 애니메이션 속도를 높여 재시도를 방지합니다.\n\n이 기능은 강력하지 않으며 블루투스 또는 비행 모드와 같이 직접 전환할 수 있는 일부 타일과 같은 결함이 있을 수 있습니다. 예방할 수 있습니다.</string>
     <string name="about_desc_app_lock">보조 인증 레이어로 앱을 보호하세요.\n\nAndroid 표준의 클래스 3 생체 인식 보안 수준을 충족하는 한 기기 잠금 화면 인증 방법이 사용됩니다.</string>
     <string name="about_desc_location_reached">정류장을 놓치지 않도록 목적지에 가까워지면 알림을 받으세요.\n\nGoogle 지도로 이동하여 목적지 근처의 핀을 길게 누르고 \"핀이 꽂혀 있음\"이라고 표시되는지 확인한 다음(그렇지 않으면 거리 계산이 정확하지 않을 수 있음), 위치를 Essentials 앱에 공유하고 추적을 시작합니다.</string>
+    <string name="location_reached_add_title">Add Destination</string>
+    <string name="location_reached_edit_title">Edit Destination</string>
+    <string name="location_reached_name_placeholder">Home, Office, etc.</string>
+    <string name="location_reached_name_label">Name</string>
+    <string name="location_reached_save_btn">Save</string>
+    <string name="location_reached_cancel_btn">Cancel</string>
+    <string name="location_reached_resolving">Resolving location…</string>
+    <string name="location_reached_last_trip">Last Trip</string>
+    <string name="location_reached_saved_destinations">Saved Destinations</string>
+    <string name="location_reached_no_saved_dest">No destinations saved yet.</string>
+    <string name="location_reached_delete">Delete Destination</string>
+    <string name="location_reached_tracking_now">Tracking Now</string>
+    <string name="location_reached_restart_btn">Re-Start</string>
+    <string name="location_reached_instructional_desc">Share coordinates (Dropped pin) from Google Maps to Essentials to save as a destination.\n\nThe distance shown is the direct distance to the destination, not the distance along the roads.\n\nTake all calculations of time and distance with a grain of salt as they are not always accurate.</string>
+    <string name="tile_location_reached">Are we there yet?</string>
+    <string name="location_reached_radius_label">Radius: %1$d m</string>
+    <string name="location_reached_distance_label">Distance to target: %1$s</string>
+    <string name="location_reached_last_travelled">Last: %1$s</string>
+    <string name="location_reached_never">Never</string>
+    <string name="location_reached_to_go">To go</string>
+    <string name="location_reached_eta_min">%1$d min</string>
+    <string name="location_reached_eta_hr_min">%1$d hr %2$d min</string>
+    <string name="location_reached_service_remaining_with_eta">%1$s (%2$d%%) • %3$s to go</string>
     <string name="about_desc_freeze">백그라운드에서 실행되지 않도록 앱을 정지하세요.\n\n앱을 사용하지 않을 때 앱을 완전히 정지시켜 배터리 소모와 데이터 사용량을 방지하세요. 실행하면 즉시 고정이 해제됩니다. 앱은 앱 서랍에 표시되지 않으며 정지된 동안 Play 스토어의 앱 업데이트에도 표시되지 않습니다.</string>
     <string name="about_desc_system_keyboard">누구도 요구하지 않은 맞춤 입력 방법입니다.\n\n이것은 단지 실험일 뿐입니다. 여러 언어는 매우 복잡하고 시간이 많이 걸리는 구현이므로 지원되지 않을 수 있습니다.</string>
     <string name="about_desc_batteries">연결된 모든 장치의 배터리 수준을 모니터링하세요.\n\nBluetooth 헤드폰, 시계 및 기타 액세서리의 배터리 상태를 한 곳에서 확인하세요. AirSync 응용 프로그램과 연결하여 Mac 배터리 수준도 표시합니다.</string>
@@ -1067,10 +1101,15 @@
     <string name="format_updated_relative">업데이트됨 %1$s</string>
     <!-- Relative Time -->
     <string name="time_just_now">방금</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
     <string name="time_min_ago">%1$d몇 분 전</string>
     <string name="time_hour_ago">%1$d시간 전</string>
     <string name="time_day_ago">%1$d일 전</string>
+    <string name="time_days_ago">%1$d days ago</string>
+    <string name="time_weeks_ago">%1$d weeks ago</string>
     <string name="time_month_ago">%1$d모 전</string>
+    <string name="time_months_ago">%1$d months ago</string>
     <string name="time_year_ago">%1$d얼마 전</string>
     <string name="action_retry">다시 해 보다</string>
     <string name="action_start_sign_in">로그인 시작</string>
@@ -1197,4 +1236,10 @@
     <string name="action_send_feedback">Send Feedback</string>
     <string name="msg_feedback_sent">Feedback sent successfully! Thanks for helping us improve the app.</string>
     <string name="label_alternatively">Alternatively</string>
+    <!-- Pixel Diagnostics -->
+    <string name="label_diagnostics">Diagnostics</string>
+    <string name="label_device_check">Device Check</string>
+    <string name="msg_flashbang">Get ready to be flashbanged!</string>
+    <string name="action_abort">Abort</string>
+    <string name="action_continue">Continue</string>
 </resources>

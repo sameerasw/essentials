@@ -12,6 +12,7 @@
     <string name="flashlight_pulse_tile_label">Flitslig Pols</string>
     <string name="check_pre_releases_label">Kyk vir voorafvrystellings</string>
     <string name="check_pre_releases_desc">Kan onstabiel wees</string>
+    <string name="label_default_tab">Default tab</string>
     <!-- App Lock -->
     <string name="settings_section_security">Sekuriteit</string>
     <string name="app_lock_enable_title">Aktiveer toepassingslot</string>
@@ -113,6 +114,15 @@
     <string name="settings_section_app_control">Programbeheer</string>
     <string name="action_freeze">Vries</string>
     <string name="action_unfreeze">Ontvries</string>
+    <string name="action_remove">Remove</string>
+    <string name="action_create_shortcut">Create shortcut</string>
+    <string name="action_app_info">App info</string>
+    <string name="freeze_mode_description_freeze_title">What is Freeze?</string>
+    <string name="freeze_mode_description_freeze_body">App freezing disables the app\'s launch activity which removes it from the app list and updates. It will prevent the app from starting at all until it\'s unfrozen which saves resources but you will need to unfreeze from here or manually re-enable.</string>
+    <string name="freeze_mode_description_freeze_warning">DO NOT FREEZE COMMUNICATION APPS</string>
+    <string name="freeze_mode_description_suspend_title">What is Suspend?</string>
+    <string name="freeze_mode_description_suspend_body">Suspending an app used to pause the app activity and prevent background executions but with recent Android changes, it only pauses the notifications from appearing and that\'s pretty much it. But does allows you to unpause from the launcher app list as they will be still available as grayscale paused app icons.</string>
+    <string name="freeze_mode_description_suspend_footer">Should work the same as the native app pause/ focus mode features.</string>
     <string name="content_desc_more_options">Meer opsies</string>
     <string name="action_freeze_all">Vries alle toepassings</string>
     <string name="action_unfreeze_all">Ontvries alle toepassings</string>
@@ -579,6 +589,7 @@
     <string name="action_search">Soek</string>
     <string name="action_stop">Stop</string>
     <string name="label_search">Soek</string>
+    <string name="search_frozen_apps_placeholder">Search frozen apps</string>
     <!-- UI Components General -->
     <string name="action_back">Terug</string>
     <string name="content_desc_back">Terug</string>
@@ -632,6 +643,29 @@
     <string name="about_desc_screen_locked_security">Verbeter sekuriteit wanneer jou toestel gesluit is.\n\nBeperk toegang tot sommige sensitiewe QS-teëls wat ongemagtigde netwerkwysigings voorkom en verder verhoed dat hulle weer probeer om dit te doen deur die animasiespoed te verhoog om raakstrooipos te voorkom.\n\nHierdie kenmerk is nie robuust nie en kan foute hê, soos sommige teëls wat dit moontlik maak om direk te wissel soos Bluetooth of vlugmodus wat nie voorkom kan word nie.</string>
     <string name="about_desc_app_lock">Beveilig jou programme met \'n sekondêre stawinglaag.\n\nJou toestelslotskermstawingmetode sal gebruik word solank dit aan die klas 3-biometriese sekuriteitsvlak volgens Android-standaarde voldoen.</string>
     <string name="about_desc_location_reached">Word in kennis gestel wanneer jy nader aan jou bestemming kom om te verseker dat jy nooit die stilhouplek mis nie.\n\nGaan na Google Maps, druk lank \'n speld naby jou bestemming en maak seker dit sê \"Dropted pen\" (Anders is die afstandberekening dalk nie akkuraat nie), En deel dan die ligging na die Essentials-toepassing en begin dop.</string>
+    <string name="location_reached_add_title">Add Destination</string>
+    <string name="location_reached_edit_title">Edit Destination</string>
+    <string name="location_reached_name_placeholder">Home, Office, etc.</string>
+    <string name="location_reached_name_label">Name</string>
+    <string name="location_reached_save_btn">Save</string>
+    <string name="location_reached_cancel_btn">Cancel</string>
+    <string name="location_reached_resolving">Resolving location…</string>
+    <string name="location_reached_last_trip">Last Trip</string>
+    <string name="location_reached_saved_destinations">Saved Destinations</string>
+    <string name="location_reached_no_saved_dest">No destinations saved yet.</string>
+    <string name="location_reached_delete">Delete Destination</string>
+    <string name="location_reached_tracking_now">Tracking Now</string>
+    <string name="location_reached_restart_btn">Re-Start</string>
+    <string name="location_reached_instructional_desc">Share coordinates (Dropped pin) from Google Maps to Essentials to save as a destination.\n\nThe distance shown is the direct distance to the destination, not the distance along the roads.\n\nTake all calculations of time and distance with a grain of salt as they are not always accurate.</string>
+    <string name="tile_location_reached">Are we there yet?</string>
+    <string name="location_reached_radius_label">Radius: %1$d m</string>
+    <string name="location_reached_distance_label">Distance to target: %1$s</string>
+    <string name="location_reached_last_travelled">Last: %1$s</string>
+    <string name="location_reached_never">Never</string>
+    <string name="location_reached_to_go">To go</string>
+    <string name="location_reached_eta_min">%1$d min</string>
+    <string name="location_reached_eta_hr_min">%1$d hr %2$d min</string>
+    <string name="location_reached_service_remaining_with_eta">%1$s (%2$d%%) • %3$s to go</string>
     <string name="about_desc_freeze">Vries programme om te keer dat hulle in die agtergrond loop.\n\nVoorkom batteryafvoer en datagebruik deur programme heeltemal te vries wanneer jy dit nie gebruik nie. Hulle sal onmiddellik ontvries word wanneer jy hulle begin. Die toepassings sal nie in die toepassingslaai verskyn nie en sal ook nie vir toepassingopdaterings in Play Winkel verskyn terwyl dit gevries is nie.</string>
     <string name="about_desc_system_keyboard">\'n Gepasmaakte invoermetode waarvoor niemand gevra het nie.\n\nDit is net \'n eksperiment. Veelvuldige tale sal dalk nie ondersteuning kry nie, aangesien dit \'n baie komplekse en tydrowende implementering is.</string>
     <string name="about_desc_batteries">Monitor batteryvlakke van al jou gekoppelde toestelle.\n\nSien die batterystatus van jou Bluetooth-oorfone, horlosie en ander bykomstighede op een plek. Koppel met AirSync-toepassing om jou Mac-batteryvlak ook te vertoon.</string>
@@ -1067,10 +1101,15 @@
     <string name="format_updated_relative">Opgedateer %1$s</string>
     <!-- Relative Time -->
     <string name="time_just_now">net nou</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
     <string name="time_min_ago">%1$dm gelede</string>
     <string name="time_hour_ago">%1$dh gelede</string>
     <string name="time_day_ago">%1$dd gelede</string>
+    <string name="time_days_ago">%1$d days ago</string>
+    <string name="time_weeks_ago">%1$d weeks ago</string>
     <string name="time_month_ago">%1$dma gelede</string>
+    <string name="time_months_ago">%1$d months ago</string>
     <string name="time_year_ago">%1$dy gelede</string>
     <string name="action_retry">Probeer weer</string>
     <string name="action_start_sign_in">Begin Teken In</string>
@@ -1197,4 +1236,10 @@
     <string name="action_send_feedback">Send Feedback</string>
     <string name="msg_feedback_sent">Feedback sent successfully! Thanks for helping us improve the app.</string>
     <string name="label_alternatively">Alternatively</string>
+    <!-- Pixel Diagnostics -->
+    <string name="label_diagnostics">Diagnostics</string>
+    <string name="label_device_check">Device Check</string>
+    <string name="msg_flashbang">Get ready to be flashbanged!</string>
+    <string name="action_abort">Abort</string>
+    <string name="action_continue">Continue</string>
 </resources>

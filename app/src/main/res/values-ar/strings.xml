@@ -12,6 +12,7 @@
     <string name="flashlight_pulse_tile_label">نبض المصباح</string>
     <string name="check_pre_releases_label">التحقق من أحدث إصدار بيتا</string>
     <string name="check_pre_releases_desc">قد تكون غير مستقرة</string>
+    <string name="label_default_tab">Default tab</string>
     <!-- App Lock -->
     <string name="settings_section_security">الحماية</string>
     <string name="app_lock_enable_title">تمكين قفل التطبيق</string>
@@ -113,6 +114,15 @@
     <string name="settings_section_app_control">التحكم في التطبيق</string>
     <string name="action_freeze">تجميد</string>
     <string name="action_unfreeze">قم بإلغاء التجميد</string>
+    <string name="action_remove">Remove</string>
+    <string name="action_create_shortcut">Create shortcut</string>
+    <string name="action_app_info">App info</string>
+    <string name="freeze_mode_description_freeze_title">What is Freeze?</string>
+    <string name="freeze_mode_description_freeze_body">App freezing disables the app\'s launch activity which removes it from the app list and updates. It will prevent the app from starting at all until it\'s unfrozen which saves resources but you will need to unfreeze from here or manually re-enable.</string>
+    <string name="freeze_mode_description_freeze_warning">DO NOT FREEZE COMMUNICATION APPS</string>
+    <string name="freeze_mode_description_suspend_title">What is Suspend?</string>
+    <string name="freeze_mode_description_suspend_body">Suspending an app used to pause the app activity and prevent background executions but with recent Android changes, it only pauses the notifications from appearing and that\'s pretty much it. But does allows you to unpause from the launcher app list as they will be still available as grayscale paused app icons.</string>
+    <string name="freeze_mode_description_suspend_footer">Should work the same as the native app pause/ focus mode features.</string>
     <string name="content_desc_more_options">المزيد من الخيارات</string>
     <string name="action_freeze_all">تجميد جميع التطبيقات</string>
     <string name="action_unfreeze_all">قم بإلغاء تجميد كافة التطبيقات</string>
@@ -579,6 +589,7 @@
     <string name="action_search">يبحث</string>
     <string name="action_stop">قف</string>
     <string name="label_search">يبحث</string>
+    <string name="search_frozen_apps_placeholder">Search frozen apps</string>
     <!-- UI Components General -->
     <string name="action_back">خلف</string>
     <string name="content_desc_back">خلف</string>
@@ -632,6 +643,29 @@
     <string name="about_desc_screen_locked_security">عزز الأمان عندما يكون جهازك مقفلاً.\n\nتقييد الوصول إلى بعض مربعات QS الحساسة مما يمنع تعديلات الشبكة غير المصرح بها ويمنعهم من إعادة محاولة القيام بذلك عن طريق زيادة سرعة الرسوم المتحركة لمنع البريد العشوائي الذي يعمل باللمس.\n\nهذه الميزة ليست قوية وقد تحتوي على عيوب مثل بعض المربعات التي تسمح بالتبديل مباشرة مثل البلوتوث أو وضع الطيران عدم القدرة على منعها.</string>
     <string name="about_desc_app_lock">قم بتأمين تطبيقاتك باستخدام طبقة مصادقة ثانوية. \n\n سيتم استخدام طريقة مصادقة شاشة قفل جهازك طالما أنها تلبي مستوى الأمان البيومتري من الفئة 3 وفقًا لمعايير Android.</string>
     <string name="about_desc_location_reached">احصل على إشعار عندما تقترب من وجهتك لضمان عدم تفويت المحطة أبدًا. \n\nانتقل إلى خرائط Google، اضغط مطولاً على دبوس قريب من وجهتك وتأكد من أنه مكتوب عليه \"دبوس مسقط\" (وإلا قد لا يكون حساب المسافة دقيقًا)، ثم شارك الموقع في تطبيق Essentials وابدأ التتبع.</string>
+    <string name="location_reached_add_title">Add Destination</string>
+    <string name="location_reached_edit_title">Edit Destination</string>
+    <string name="location_reached_name_placeholder">Home, Office, etc.</string>
+    <string name="location_reached_name_label">Name</string>
+    <string name="location_reached_save_btn">Save</string>
+    <string name="location_reached_cancel_btn">Cancel</string>
+    <string name="location_reached_resolving">Resolving location…</string>
+    <string name="location_reached_last_trip">Last Trip</string>
+    <string name="location_reached_saved_destinations">Saved Destinations</string>
+    <string name="location_reached_no_saved_dest">No destinations saved yet.</string>
+    <string name="location_reached_delete">Delete Destination</string>
+    <string name="location_reached_tracking_now">Tracking Now</string>
+    <string name="location_reached_restart_btn">Re-Start</string>
+    <string name="location_reached_instructional_desc">Share coordinates (Dropped pin) from Google Maps to Essentials to save as a destination.\n\nThe distance shown is the direct distance to the destination, not the distance along the roads.\n\nTake all calculations of time and distance with a grain of salt as they are not always accurate.</string>
+    <string name="tile_location_reached">Are we there yet?</string>
+    <string name="location_reached_radius_label">Radius: %1$d m</string>
+    <string name="location_reached_distance_label">Distance to target: %1$s</string>
+    <string name="location_reached_last_travelled">Last: %1$s</string>
+    <string name="location_reached_never">Never</string>
+    <string name="location_reached_to_go">To go</string>
+    <string name="location_reached_eta_min">%1$d min</string>
+    <string name="location_reached_eta_hr_min">%1$d hr %2$d min</string>
+    <string name="location_reached_service_remaining_with_eta">%1$s (%2$d%%) • %3$s to go</string>
     <string name="about_desc_freeze">قم بتجميد التطبيقات لمنعها من العمل في الخلفية. \n\nمنع استنزاف البطارية واستخدام البيانات عن طريق تجميد التطبيقات تمامًا عند عدم استخدامها. سيتم إلغاء تجميدها على الفور عند إطلاقها. لن تظهر التطبيقات في درج التطبيقات ولن تظهر أيضًا لتحديثات التطبيق في متجر Play أثناء تجميدها.</string>
     <string name="about_desc_system_keyboard">طريقة إدخال مخصصة لم يطلبها أحد. \n\nإنها مجرد تجربة. قد لا تحصل اللغات المتعددة على الدعم نظرًا لأن التنفيذ معقد للغاية ويستغرق وقتًا طويلاً.</string>
     <string name="about_desc_batteries">راقب مستويات البطارية لجميع أجهزتك المتصلة. \n\n اطلع على حالة بطارية سماعات الرأس والساعة والملحقات الأخرى التي تعمل بتقنية Bluetooth في مكان واحد. تواصل مع تطبيق AirSync لعرض مستوى بطارية جهاز Mac أيضًا.</string>
@@ -1067,10 +1101,15 @@
     <string name="format_updated_relative">تم التحديث %1$s</string>
     <!-- Relative Time -->
     <string name="time_just_now">الآن</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
     <string name="time_min_ago">%1$dم منذ</string>
     <string name="time_hour_ago">%1$dح منذ</string>
     <string name="time_day_ago">%1$dد منذ</string>
+    <string name="time_days_ago">%1$d days ago</string>
+    <string name="time_weeks_ago">%1$d weeks ago</string>
     <string name="time_month_ago">%1$dمنذ مو</string>
+    <string name="time_months_ago">%1$d months ago</string>
     <string name="time_year_ago">%1$dمنذ</string>
     <string name="action_retry">أعد المحاولة</string>
     <string name="action_start_sign_in">ابدأ بتسجيل الدخول</string>
@@ -1197,4 +1236,10 @@
     <string name="action_send_feedback">Send Feedback</string>
     <string name="msg_feedback_sent">Feedback sent successfully! Thanks for helping us improve the app.</string>
     <string name="label_alternatively">Alternatively</string>
+    <!-- Pixel Diagnostics -->
+    <string name="label_diagnostics">Diagnostics</string>
+    <string name="label_device_check">Device Check</string>
+    <string name="msg_flashbang">Get ready to be flashbanged!</string>
+    <string name="action_abort">Abort</string>
+    <string name="action_continue">Continue</string>
 </resources>
