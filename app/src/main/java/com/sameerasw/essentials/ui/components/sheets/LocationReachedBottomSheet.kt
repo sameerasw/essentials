@@ -11,6 +11,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.LocationAlarm
+import com.sameerasw.essentials.ui.components.LocationIconPicker
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.viewmodels.LocationReachedViewModel
 
@@ -87,6 +88,13 @@ fun LocationReachedBottomSheet(
                             modifier = Modifier.fillMaxWidth(),
                             singleLine = true,
                             shape = MaterialTheme.shapes.large
+                        )
+
+                        LocationIconPicker(
+                            selectedIconName = currentAlarm.iconResName,
+                            onIconSelected = { 
+                                viewModel.setTempAlarm(currentAlarm.copy(iconResName = it)) 
+                            }
                         )
 
                         // Coordinates Display

@@ -159,7 +159,7 @@ fun LocationReachedSettingsUI(
                     textAlign = androidx.compose.ui.text.style.TextAlign.Start,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 32.dp, vertical = 8.dp)
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
                 )
             }
 
@@ -224,6 +224,17 @@ fun TopStatusCard(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (isTracking) {
+                val context = LocalContext.current
+                val iconResId = context.resources.getIdentifier(displayAlarm?.iconResName ?: "round_navigation_24", "drawable", context.packageName)
+
+                Icon(
+                    painter = painterResource(id = if (iconResId != 0) iconResId else R.drawable.round_navigation_24),
+                    contentDescription = null,
+                    modifier = Modifier.size(56.dp),
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
                 Text(
                     text = stringResource(R.string.location_reached_tracking_now),
                     style = MaterialTheme.typography.labelLarge,
@@ -233,8 +244,9 @@ fun TopStatusCard(
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = displayAlarm?.name?.ifEmpty { "Destination" } ?: "Destination",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onSurface
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(24.dp))
 
@@ -308,9 +320,13 @@ fun TopStatusCard(
                     Text(stringResource(R.string.action_stop))
                 }
             } else if (lastTrip != null) {
+                val context = LocalContext.current
+                val iconResId = context.resources.getIdentifier(lastTrip.iconResName, "drawable", context.packageName)
+
                 Icon(
-                    painter = painterResource(R.drawable.rounded_history_24),
+                    painter = painterResource(id = if (iconResId != 0) iconResId else R.drawable.round_navigation_24),
                     contentDescription = null,
+                    modifier = Modifier.size(40.dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
@@ -338,7 +354,7 @@ fun TopStatusCard(
             } else {
                 // Completely empty state for top card
                 Icon(
-                    painter = painterResource(R.drawable.rounded_navigation_24),
+                    painter = painterResource(R.drawable.round_navigation_24),
                     contentDescription = null,
                     modifier = Modifier.size(48.dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)

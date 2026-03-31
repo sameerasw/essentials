@@ -35,6 +35,16 @@ fun LocationAlarmCard(
                 com.sameerasw.essentials.utils.HapticUtil.performVirtualKeyHaptic(view)
                 onClick()
             },
+        leadingContent = {
+            val context = androidx.compose.ui.platform.LocalContext.current
+            val iconResId = context.resources.getIdentifier(alarm.iconResName, "drawable", context.packageName)
+            Icon(
+                painter = painterResource(id = if (iconResId != 0) iconResId else R.drawable.round_navigation_24),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(24.dp)
+            )
+        },
         headlineContent = {
             Text(
                 text = alarm.name.ifEmpty { "Destination" },

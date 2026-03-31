@@ -239,8 +239,14 @@ class LocationReachedService : Service() {
         }
 
         if (Build.VERSION.SDK_INT >= 35) {
+            val activeId = repository.getActiveAlarmId()
+            val alarm = repository.getAlarms().find { it.id == activeId }
+            val iconResName = alarm?.iconResName ?: "round_navigation_24"
+            val iconResId = resources.getIdentifier(iconResName, "drawable", packageName)
+            val finalIconId = if (iconResId != 0) iconResId else R.drawable.round_navigation_24
+
             val builder = Notification.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.rounded_navigation_24)
+                .setSmallIcon(finalIconId)
                 .setContentTitle(getString(R.string.location_reached_service_title))
                 .setContentText(contentText)
                 .setOngoing(true)
@@ -262,8 +268,8 @@ class LocationReachedService : Service() {
                         .setProgressTrackerIcon(
                             Icon.createWithResource(
                                 this,
-                                R.drawable.rounded_navigation_24
-                            )
+                                R.drawable.round_play_arrow_24
+                            ).setTint(getColor(android.R.color.system_accent1_300))
                         )
                     builder.style = progressStyle
                 } catch (_: Throwable) {
@@ -296,8 +302,14 @@ class LocationReachedService : Service() {
             return builder.build()
         }
 
+        val activeId = repository.getActiveAlarmId()
+        val alarm = repository.getAlarms().find { it.id == activeId }
+        val iconResName = alarm?.iconResName ?: "round_navigation_24"
+        val iconResId = resources.getIdentifier(iconResName, "drawable", packageName)
+        val finalIconId = if (iconResId != 0) iconResId else R.drawable.round_navigation_24
+
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.rounded_navigation_24)
+            .setSmallIcon(finalIconId)
             .setContentTitle(getString(R.string.location_reached_service_title))
             .setContentText(contentText)
             .setOngoing(true)
