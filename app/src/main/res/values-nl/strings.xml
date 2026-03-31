@@ -580,6 +580,7 @@
     <string name="action_search">Zoeken</string>
     <string name="action_stop">Stoppen</string>
     <string name="label_search">Zoeken</string>
+    <string name="search_frozen_apps_placeholder">Search frozen apps</string>
     <!-- UI Components General -->
     <string name="action_back">Terug</string>
     <string name="content_desc_back">Terug</string>
