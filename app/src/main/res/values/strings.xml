@@ -118,6 +118,9 @@
     <string name="settings_section_app_control">App Control</string>
     <string name="action_freeze">Freeze</string>
     <string name="action_unfreeze">Unfreeze</string>
+    <string name="action_remove">Remove</string>
+    <string name="action_create_shortcut">Create shortcut</string>
+    <string name="action_app_info">App info</string>
     <string name="content_desc_more_options">More options</string>
     <string name="action_freeze_all">Freeze all apps</string>
     <string name="action_unfreeze_all">Unfreeze all apps</string>

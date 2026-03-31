@@ -73,6 +73,18 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.blur
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
+import com.sameerasw.essentials.ui.state.LocalMenuStateManager
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.NotificationApp
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
@@ -81,6 +93,8 @@ import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.ShortcutUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -93,6 +107,8 @@ fun FreezeGridUI(
 ) {
     val context = LocalContext.current
     val view = LocalView.current
+    val menuState = LocalMenuStateManager.current
+    val scope = rememberCoroutineScope()
     val pickedApps by viewModel.freezePickedApps
     val isPickedAppsLoading by viewModel.isFreezePickedAppsLoading
 
@@ -466,6 +482,7 @@ fun FreezeGridUI(
                                                 isFrozen = frozenStates[app.packageName] ?: false,
                                                 isAutoFreezeEnabled = app.isEnabled,
                                                 isHighlighted = (app == bestMatch && searchQuery.isNotEmpty()),
+                                                menuState = menuState,
                                                 onClick = {
                                                     HapticUtil.performVirtualKeyHaptic(view)
                                                     viewModel.launchAndUnfreezeApp(
@@ -473,8 +490,21 @@ fun FreezeGridUI(
                                                         app.packageName
                                                     )
                                                 },
-                                                onLongClick = {
-                                                    ShortcutUtil.pinAppShortcut(context, app)
+                                                onToggleFreeze = {
+                                                    scope.launch(Dispatchers.IO) {
+                                                        val isCurrentlyFrozen = frozenStates[app.packageName] ?: false
+                                                        if (isCurrentlyFrozen) {
+                                                            FreezeManager.unfreezeApp(context, app.packageName)
+                                                        } else {
+                                                            FreezeManager.freezeApp(context, app.packageName)
+                                                        }
+                                                        withContext(Dispatchers.Main) {
+                                                            frozenStates[app.packageName] = !isCurrentlyFrozen
+                                                        }
+                                                    }
+                                                },
+                                                onRemove = {
+                                                    viewModel.updateFreezeAppEnabled(context, app.packageName, false)
                                                 }
                                             )
                                         }
@@ -501,10 +531,42 @@ fun AppGridItem(
     isFrozen: Boolean,
     isAutoFreezeEnabled: Boolean,
     isHighlighted: Boolean = false,
+    menuState: com.sameerasw.essentials.ui.state.MenuStateManager,
     onClick: () -> Unit,
-    onLongClick: () -> Unit
+    onToggleFreeze: () -> Unit,
+    onRemove: () -> Unit
 ) {
     val view = LocalView.current
+    val context = LocalContext.current
+    var showMenu by remember { mutableStateOf(false) }
+
+    val isBlurred = menuState.activeId != null && menuState.activeId != app.packageName
+    val blurRadius by animateDpAsState(
+        targetValue = if (isBlurred) 10.dp else 0.dp,
+        animationSpec = tween(durationMillis = 500),
+        label = "blur"
+    )
+    val alpha by animateFloatAsState(
+        targetValue = if (isBlurred) 0.5f else 1f,
+        animationSpec = tween(durationMillis = 500),
+        label = "alpha"
+    )
+
+    DisposableEffect(showMenu) {
+        if (showMenu) {
+            menuState.activeId = app.packageName
+        } else {
+            if (menuState.activeId == app.packageName) {
+                menuState.activeId = null
+            }
+        }
+        onDispose {
+            if (menuState.activeId == app.packageName) {
+                menuState.activeId = null
+            }
+        }
+    }
+
     val grayscaleMatrix = remember { ColorMatrix().apply { setToSaturation(0.4f) } }
     
     val borderColor by animateColorAsState(
@@ -518,6 +580,8 @@ fun AppGridItem(
         border = if (isHighlighted) BorderStroke(2.dp, borderColor) else null,
         modifier = Modifier
             .fillMaxWidth()
+            .alpha(alpha)
+            .blur(blurRadius)
             .combinedClickable(
                 onClick = {
                     HapticUtil.performVirtualKeyHaptic(view)
@@ -525,7 +589,7 @@ fun AppGridItem(
                 },
                 onLongClick = {
                     HapticUtil.performVirtualKeyHaptic(view)
-                    onLongClick()
+                    showMenu = true
                 }
             )
     ) {
@@ -575,16 +639,89 @@ fun AppGridItem(
                 }
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
-
             Text(
                 text = app.appName,
                 style = MaterialTheme.typography.labelSmall,
                 textAlign = TextAlign.Center,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                color = if (isFrozen) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface
+                modifier = Modifier.padding(top = 8.dp),
+                color = MaterialTheme.colorScheme.onSurface
             )
+
+            SegmentedDropdownMenu(
+                expanded = showMenu,
+                onDismissRequest = { showMenu = false }
+            ) {
+                SegmentedDropdownMenuItem(
+                    text = {
+                        Text(if (isFrozen) stringResource(R.string.action_unfreeze) else stringResource(R.string.action_freeze))
+                    },
+                    onClick = {
+                        showMenu = false
+                        onToggleFreeze()
+                    },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = if (isFrozen) R.drawable.rounded_mode_cool_off_24 else R.drawable.rounded_mode_cool_24),
+                            contentDescription = null
+                        )
+                    }
+                )
+
+                SegmentedDropdownMenuItem(
+                    text = {
+                        Text(stringResource(R.string.action_remove))
+                    },
+                    onClick = {
+                        showMenu = false
+                        onRemove()
+                    },
+                    enabled = !isFrozen,
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.rounded_delete_24),
+                            contentDescription = null
+                        )
+                    }
+                )
+
+                SegmentedDropdownMenuItem(
+                    text = {
+                        Text(stringResource(R.string.action_create_shortcut))
+                    },
+                    onClick = {
+                        showMenu = false
+                        ShortcutUtil.pinAppShortcut(context, app)
+                    },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.rounded_home_health_24),
+                            contentDescription = null
+                        )
+                    }
+                )
+
+                SegmentedDropdownMenuItem(
+                    text = {
+                        Text(stringResource(R.string.action_app_info))
+                    },
+                    onClick = {
+                        showMenu = false
+                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                            data = Uri.fromParts("package", app.packageName, null)
+                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        }
+                        context.startActivity(intent)
+                    },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.rounded_info_24),
+                            contentDescription = null
+                        )
+                    }
+                )
+            }
         }
     }
 }
