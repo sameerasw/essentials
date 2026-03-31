@@ -92,10 +92,12 @@ import com.sameerasw.essentials.ui.components.EssentialsFloatingToolbar
 import com.sameerasw.essentials.ui.components.ToolbarItem
 import com.sameerasw.essentials.ui.components.cards.TrackedRepoCard
 import androidx.compose.foundation.layout.statusBarsPadding
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.sheets.AddRepoBottomSheet
 import com.sameerasw.essentials.ui.components.sheets.GitHubAuthSheet
 import com.sameerasw.essentials.ui.components.sheets.InstructionsBottomSheet
+import com.sameerasw.essentials.ui.components.sheets.PrankBottomSheet
 import com.sameerasw.essentials.ui.components.sheets.UpdateBottomSheet
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
@@ -350,6 +352,25 @@ class MainActivity : AppCompatActivity() {
                         GitHubAuthSheet(
                             viewModel = gitHubAuthViewModel,
                             onDismissRequest = { showGitHubAuthSheet = false }
+                        )
+                    }
+
+                    val isAprilFoolsSheetVisible by viewModel.isAprilFoolsSheetVisible
+                    val prankSheetState = androidx.compose.material3.rememberModalBottomSheetState(
+                        skipPartiallyExpanded = true
+                    )
+                    
+                    if (isAprilFoolsSheetVisible) {
+                        PrankBottomSheet(
+                            viewModel = viewModel,
+                            sheetState = prankSheetState,
+                            onDismissRequest = {
+                                viewModel.isAprilFoolsSheetVisible.value = false
+                                viewModel.settingsRepository.putBoolean(
+                                    SettingsRepository.KEY_APRIL_FOOLS_SHOWN,
+                                    true
+                                )
+                            }
                         )
                     }
 

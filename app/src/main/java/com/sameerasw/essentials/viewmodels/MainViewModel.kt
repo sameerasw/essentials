@@ -223,6 +223,8 @@ class MainViewModel : ViewModel() {
     val windowAnimationScale = mutableFloatStateOf(1.0f)
     val smallestWidth = mutableIntStateOf(360)
     val hasShizukuPermission = mutableStateOf(false)
+    val isAprilFoolsSheetVisible = mutableStateOf(false)
+    val isAprilFoolsShown = mutableStateOf(false)
 
     private var lastUpdateCheckTime: Long = 0
     lateinit var settingsRepository: SettingsRepository
@@ -443,6 +445,10 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_PRIVATE_DNS_PRESETS -> {
                         dnsPresets.clear()
                         dnsPresets.addAll(settingsRepository.getPrivateDnsPresets())
+                    }
+
+                    SettingsRepository.KEY_APRIL_FOOLS_SHOWN -> {
+                        isAprilFoolsShown.value = settingsRepository.getBoolean(key)
                     }
                 }
             }
@@ -793,6 +799,18 @@ class MainViewModel : ViewModel() {
 
         isAirSyncConnectionEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_AIRSYNC_CONNECTION_ENABLED)
+        
+        // April Fools Check
+        isAprilFoolsShown.value = settingsRepository.getBoolean(SettingsRepository.KEY_APRIL_FOOLS_SHOWN)
+        if (!isAprilFoolsShown.value) {
+            val calendar = java.util.Calendar.getInstance()
+            val month = calendar.get(java.util.Calendar.MONTH)
+            val day = calendar.get(java.util.Calendar.DAY_OF_MONTH)
+            if (month == java.util.Calendar.APRIL && day == 1) {
+                isAprilFoolsSheetVisible.value = true
+            }
+        }
+
         macBatteryLevel.intValue =
             settingsRepository.getInt(SettingsRepository.KEY_MAC_BATTERY_LEVEL, -1)
         isMacBatteryCharging.value =

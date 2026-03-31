@@ -170,6 +170,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_SENTRY_REPORT_MODE = "sentry_report_mode"
         const val KEY_ONBOARDING_COMPLETED = "onboarding_completed"
         const val KEY_PRIVATE_DNS_PRESETS = "private_dns_presets"
+        const val KEY_APRIL_FOOLS_SHOWN = "april_fools_shown"
     }
 
     // Observe changes
