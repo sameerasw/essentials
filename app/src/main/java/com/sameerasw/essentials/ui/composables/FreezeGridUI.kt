@@ -6,6 +6,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,14 +43,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -56,7 +65,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.BorderStroke
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.NotificationApp
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
@@ -82,6 +98,26 @@ fun FreezeGridUI(
 
     val frozenStates = remember { mutableStateMapOf<String, Boolean>() }
     val lifecycleOwner = LocalLifecycleOwner.current
+
+    var searchQuery by rememberSaveable { mutableStateOf("") }
+    val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
+    var isFocused by remember { mutableStateOf(false) }
+
+    val filteredApps = remember(pickedApps, searchQuery) {
+        if (searchQuery.isBlank()) {
+            pickedApps
+        } else {
+            pickedApps.filter { app ->
+                app.appName.contains(searchQuery, ignoreCase = true) ||
+                        app.packageName.contains(searchQuery, ignoreCase = true)
+            }
+        }
+    }
+
+    val bestMatch = remember(searchQuery, filteredApps) {
+        if (searchQuery.isNotBlank() && filteredApps.isNotEmpty()) filteredApps.first() else null
+    }
 
     // Refresh frozen states when active
     DisposableEffect(lifecycleOwner) {
@@ -185,159 +221,243 @@ fun FreezeGridUI(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(scrollState)
+                    .pointerInput(Unit) {
+                        detectTapGestures(onTap = { focusManager.clearFocus() })
+                    }
             ) {
                 Spacer(modifier = Modifier.height(contentPadding.calculateTopPadding()))
-                Spacer(modifier = Modifier.height(16.dp))
+
+                OutlinedTextField(
+                    value = searchQuery,
+                    onValueChange = { searchQuery = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .focusRequester(focusRequester)
+                        .onFocusChanged { isFocused = it.isFocused },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.rounded_search_24),
+                            contentDescription = stringResource(R.string.label_search_content_description),
+                            modifier = Modifier.size(24.dp)
+                        )
+                    },
+                    trailingIcon = {
+                        if (searchQuery.isNotEmpty()) {
+                            IconButton(onClick = {
+                                searchQuery = ""
+                                HapticUtil.performVirtualKeyHaptic(view)
+                            }) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.rounded_close_24),
+                                    contentDescription = stringResource(R.string.action_stop)
+                                )
+                            }
+                        }
+                    },
+                    placeholder = {
+                        Text(stringResource(R.string.search_frozen_apps_placeholder))
+                    },
+                    shape = MaterialTheme.shapes.extraExtraLarge,
+                    singleLine = true,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        focusedContainerColor = MaterialTheme.colorScheme.surfaceBright
+                    ),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Search,
+                        capitalization = KeyboardCapitalization.Words
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onSearch = {
+                            bestMatch?.let { app ->
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                viewModel.launchAndUnfreezeApp(context, app.packageName)
+                            }
+                        }
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
 
                 RoundedCardContainer(
                     modifier = Modifier
                         .padding(horizontal = 16.dp),
                 ) {
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                color = MaterialTheme.colorScheme.surfaceBright,
+                                shape = MaterialTheme.shapes.extraSmall
+                            )
+                            .padding(12.dp),
+                        horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(
-                                    color = MaterialTheme.colorScheme.surfaceBright,
-                                    shape = MaterialTheme.shapes.extraSmall
-                                )
-                                .padding(12.dp),
-                            horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
-                            verticalAlignment = Alignment.CenterVertically
+                        // Freeze Button
+                        Button(
+                            onClick = {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                viewModel.freezeAllAuto(context)
+                            },
+                            modifier = Modifier.weight(1f),
+                            enabled = isShizukuAvailable && isShizukuPermissionGranted,
+                            shape = ButtonDefaults.shape
                         ) {
-                            // Freeze Button
-                            Button(
-                                onClick = {
-                                    HapticUtil.performVirtualKeyHaptic(view)
-                                    viewModel.freezeAllAuto(context)
-                                },
-                                modifier = Modifier.weight(1f),
-                                enabled = isShizukuAvailable && isShizukuPermissionGranted,
-                                shape = ButtonDefaults.shape
-                            ) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.rounded_mode_cool_24),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                                Spacer(Modifier.size(8.dp))
-                                Text(stringResource(R.string.action_freeze))
-                            }
-
-                            // Unfreeze Button
-                            Button(
-                                onClick = {
-                                    HapticUtil.performVirtualKeyHaptic(view)
-                                    viewModel.unfreezeAllAuto(context)
-                                },
-                                modifier = Modifier.weight(1f),
-                                enabled = isShizukuAvailable && isShizukuPermissionGranted,
-                                shape = ButtonDefaults.shape
-                            ) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.rounded_mode_cool_off_24),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                                Spacer(Modifier.size(8.dp))
-                                Text(stringResource(R.string.action_unfreeze))
-                            }
-
-                            // More Menu Button
-                            IconButton(
-                                onClick = {
-                                    HapticUtil.performVirtualKeyHaptic(view)
-                                    isMenuExpanded = true
-                                },
-                                enabled = isShizukuAvailable && isShizukuPermissionGranted
-                            ) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.rounded_more_vert_24),
-                                    contentDescription = stringResource(R.string.content_desc_more_options)
-                                )
-
-                                DropdownMenu(
-                                    expanded = isMenuExpanded,
-                                    onDismissRequest = { isMenuExpanded = false }
-                                ) {
-                                    DropdownMenuItem(
-                                        text = { Text(stringResource(R.string.action_freeze_all)) },
-                                        onClick = {
-                                            HapticUtil.performVirtualKeyHaptic(view)
-                                            viewModel.freezeAllManual(context)
-                                            isMenuExpanded = false
-                                        },
-                                        leadingIcon = {
-                                            Icon(
-                                                painter = painterResource(id = R.drawable.rounded_mode_cool_24),
-                                                contentDescription = null,
-                                                modifier = Modifier.size(18.dp)
-                                            )
-                                        }
-                                    )
-                                    DropdownMenuItem(
-                                        text = { Text(stringResource(R.string.action_unfreeze_all)) },
-                                        onClick = {
-                                            HapticUtil.performVirtualKeyHaptic(view)
-                                            viewModel.unfreezeAllManual(context)
-                                            isMenuExpanded = false
-                                        },
-                                        leadingIcon = {
-                                            Icon(
-                                                painter = painterResource(id = R.drawable.rounded_mode_cool_off_24),
-                                                contentDescription = null,
-                                                modifier = Modifier.size(18.dp)
-                                            )
-                                        }
-                                    )
-                                    DropdownMenuItem(
-                                        text = { Text(stringResource(R.string.action_export_freeze)) },
-                                        onClick = {
-                                            HapticUtil.performVirtualKeyHaptic(view)
-                                            exportLauncher.launch("freeze_apps_backup.json")
-                                            isMenuExpanded = false
-                                        },
-                                        leadingIcon = {
-                                            Icon(
-                                                painter = painterResource(id = R.drawable.rounded_arrow_warm_up_24),
-                                                contentDescription = null,
-                                                modifier = Modifier.size(18.dp)
-                                            )
-                                        }
-                                    )
-                                    DropdownMenuItem(
-                                        text = { Text(stringResource(R.string.action_import_freeze)) },
-                                        onClick = {
-                                            HapticUtil.performVirtualKeyHaptic(view)
-                                            importLauncher.launch(arrayOf("application/json"))
-                                            isMenuExpanded = false
-                                        },
-                                        leadingIcon = {
-                                            Icon(
-                                                painter = painterResource(id = R.drawable.rounded_arrow_cool_down_24),
-                                                contentDescription = null,
-                                                modifier = Modifier.size(18.dp)
-                                            )
-                                        }
-                                    )
-                                }
-                            }
+                            Icon(
+                                painter = painterResource(id = R.drawable.rounded_mode_cool_24),
+                                contentDescription = null,
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Spacer(Modifier.size(8.dp))
+                            Text(stringResource(R.string.action_freeze))
                         }
 
-                        // App Grid Items
-                        val chunkedApps = pickedApps.chunked(4)
+                        Spacer(Modifier.size(ButtonGroupDefaults.ConnectedSpaceBetween))
+
+                        // Unfreeze Button
+                        Button(
+                            onClick = {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                viewModel.unfreezeAllAuto(context)
+                            },
+                            modifier = Modifier.weight(1f),
+                            enabled = isShizukuAvailable && isShizukuPermissionGranted,
+                            shape = ButtonDefaults.shape
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.rounded_mode_cool_off_24),
+                                contentDescription = null,
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Spacer(Modifier.size(8.dp))
+                            Text(stringResource(R.string.action_unfreeze))
+                        }
+
+                        // More Menu Button
+                        IconButton(
+                            onClick = {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                isMenuExpanded = true
+                            },
+                            enabled = isShizukuAvailable && isShizukuPermissionGranted
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.rounded_more_vert_24),
+                                contentDescription = stringResource(R.string.content_desc_more_options)
+                            )
+
+                            DropdownMenu(
+                                expanded = isMenuExpanded,
+                                onDismissRequest = { isMenuExpanded = false }
+                            ) {
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(R.string.action_freeze_all)) },
+                                    onClick = {
+                                        HapticUtil.performVirtualKeyHaptic(view)
+                                        viewModel.freezeAllManual(context)
+                                        isMenuExpanded = false
+                                    },
+                                    leadingIcon = {
+                                        Icon(
+                                            painter = painterResource(id = R.drawable.rounded_mode_cool_24),
+                                            contentDescription = null,
+                                            modifier = Modifier.size(18.dp)
+                                        )
+                                    }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(R.string.action_unfreeze_all)) },
+                                    onClick = {
+                                        HapticUtil.performVirtualKeyHaptic(view)
+                                        viewModel.unfreezeAllManual(context)
+                                        isMenuExpanded = false
+                                    },
+                                    leadingIcon = {
+                                        Icon(
+                                            painter = painterResource(id = R.drawable.rounded_mode_cool_off_24),
+                                            contentDescription = null,
+                                            modifier = Modifier.size(18.dp)
+                                        )
+                                    }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(R.string.action_export_freeze)) },
+                                    onClick = {
+                                        HapticUtil.performVirtualKeyHaptic(view)
+                                        exportLauncher.launch("freeze_apps_backup.json")
+                                        isMenuExpanded = false
+                                    },
+                                    leadingIcon = {
+                                        Icon(
+                                            painter = painterResource(id = R.drawable.rounded_arrow_warm_up_24),
+                                            contentDescription = null,
+                                            modifier = Modifier.size(18.dp)
+                                        )
+                                    }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(R.string.action_import_freeze)) },
+                                    onClick = {
+                                        HapticUtil.performVirtualKeyHaptic(view)
+                                        importLauncher.launch(arrayOf("application/json"))
+                                        isMenuExpanded = false
+                                    },
+                                    leadingIcon = {
+                                        Icon(
+                                            painter = painterResource(id = R.drawable.rounded_arrow_cool_down_24),
+                                            contentDescription = null,
+                                            modifier = Modifier.size(18.dp)
+                                        )
+                                    }
+                                )
+                            }
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // App Grid Items
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                ) {
+                    if (filteredApps.isEmpty() && searchQuery.isNotEmpty()) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 32.dp),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = "¯\\_(ツ)_/¯",
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Text(
+                                text = stringResource(id = R.string.search_no_results, searchQuery),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.padding(top = 8.dp)
+                            )
+                        }
+                    } else {
+                        val chunkedApps = filteredApps.chunked(4)
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth(),
-                            verticalArrangement = Arrangement.spacedBy(2.dp)
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             chunkedApps.forEach { rowApps ->
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.spacedBy(2.dp)
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
                                 ) {
                                     rowApps.forEach { app ->
                                         Box(modifier = Modifier.weight(1f)) {
@@ -345,6 +465,7 @@ fun FreezeGridUI(
                                                 app = app,
                                                 isFrozen = frozenStates[app.packageName] ?: false,
                                                 isAutoFreezeEnabled = app.isEnabled,
+                                                isHighlighted = (app == bestMatch && searchQuery.isNotEmpty()),
                                                 onClick = {
                                                     HapticUtil.performVirtualKeyHaptic(view)
                                                     viewModel.launchAndUnfreezeApp(
@@ -379,15 +500,22 @@ fun AppGridItem(
     app: NotificationApp,
     isFrozen: Boolean,
     isAutoFreezeEnabled: Boolean,
+    isHighlighted: Boolean = false,
     onClick: () -> Unit,
     onLongClick: () -> Unit
 ) {
     val view = LocalView.current
     val grayscaleMatrix = remember { ColorMatrix().apply { setToSaturation(0.4f) } }
+    
+    val borderColor by animateColorAsState(
+        targetValue = if (isHighlighted) MaterialTheme.colorScheme.primary else Color.Transparent,
+        label = "borderColorAnimation"
+    )
 
     Surface(
-        shape = RoundedCornerShape(4.dp),
+        shape = RoundedCornerShape(16.dp),
         color = MaterialTheme.colorScheme.surfaceBright,
+        border = if (isHighlighted) BorderStroke(2.dp, borderColor) else null,
         modifier = Modifier
             .fillMaxWidth()
             .combinedClickable(
