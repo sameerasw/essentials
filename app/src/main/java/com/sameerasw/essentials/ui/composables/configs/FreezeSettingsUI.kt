@@ -41,6 +41,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.FreezeMode
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.components.cards.AppToggleItem
 import com.sameerasw.essentials.ui.components.cards.FeatureCard
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
@@ -198,11 +200,11 @@ fun FreezeSettingsUI(
                             contentDescription = stringResource(R.string.content_desc_more_options)
                         )
 
-                        DropdownMenu(
+                        SegmentedDropdownMenu(
                             expanded = isMenuExpanded,
                             onDismissRequest = { isMenuExpanded = false }
                         ) {
-                            DropdownMenuItem(
+                            SegmentedDropdownMenuItem(
                                 text = { Text(stringResource(R.string.action_freeze_all)) },
                                 onClick = {
                                     HapticUtil.performVirtualKeyHaptic(view)
@@ -217,7 +219,7 @@ fun FreezeSettingsUI(
                                     )
                                 }
                             )
-                            DropdownMenuItem(
+                            SegmentedDropdownMenuItem(
                                 text = { Text(stringResource(R.string.action_unfreeze_all)) },
                                 onClick = {
                                     HapticUtil.performVirtualKeyHaptic(view)
@@ -232,7 +234,7 @@ fun FreezeSettingsUI(
                                     )
                                 }
                             )
-                            DropdownMenuItem(
+                            SegmentedDropdownMenuItem(
                                 text = { Text(stringResource(R.string.action_export_freeze)) },
                                 onClick = {
                                     HapticUtil.performVirtualKeyHaptic(view)
@@ -247,7 +249,7 @@ fun FreezeSettingsUI(
                                     )
                                 }
                             )
-                            DropdownMenuItem(
+                            SegmentedDropdownMenuItem(
                                 text = { Text(stringResource(R.string.action_import_freeze)) },
                                 onClick = {
                                     HapticUtil.performVirtualKeyHaptic(view)

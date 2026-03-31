@@ -365,11 +365,11 @@ fun FreezeGridUI(
                                 contentDescription = stringResource(R.string.content_desc_more_options)
                             )
 
-                            DropdownMenu(
+                            SegmentedDropdownMenu(
                                 expanded = isMenuExpanded,
                                 onDismissRequest = { isMenuExpanded = false }
                             ) {
-                                DropdownMenuItem(
+                                SegmentedDropdownMenuItem(
                                     text = { Text(stringResource(R.string.action_freeze_all)) },
                                     onClick = {
                                         HapticUtil.performVirtualKeyHaptic(view)
@@ -384,7 +384,7 @@ fun FreezeGridUI(
                                         )
                                     }
                                 )
-                                DropdownMenuItem(
+                                SegmentedDropdownMenuItem(
                                     text = { Text(stringResource(R.string.action_unfreeze_all)) },
                                     onClick = {
                                         HapticUtil.performVirtualKeyHaptic(view)
@@ -399,7 +399,7 @@ fun FreezeGridUI(
                                         )
                                     }
                                 )
-                                DropdownMenuItem(
+                                SegmentedDropdownMenuItem(
                                     text = { Text(stringResource(R.string.action_export_freeze)) },
                                     onClick = {
                                         HapticUtil.performVirtualKeyHaptic(view)
@@ -414,7 +414,7 @@ fun FreezeGridUI(
                                         )
                                     }
                                 )
-                                DropdownMenuItem(
+                                SegmentedDropdownMenuItem(
                                     text = { Text(stringResource(R.string.action_import_freeze)) },
                                     onClick = {
                                         HapticUtil.performVirtualKeyHaptic(view)
