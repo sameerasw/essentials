@@ -580,6 +580,7 @@
     <string name="action_search">Haku</string>
     <string name="action_stop">Stop</string>
     <string name="label_search">Haku</string>
+    <string name="search_frozen_apps_placeholder">Search frozen apps</string>
     <!-- UI Components General -->
     <string name="action_back">Takaisin</string>
     <string name="content_desc_back">Takaisin</string>
