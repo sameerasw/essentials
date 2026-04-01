@@ -212,12 +212,12 @@
     <string name="tile_private_dns_off">Apagado</string>
     <string name="tile_usb_debugging">Depuración USB</string>
     <string name="tile_color_picker">Selector de color</string>
-    <string name="toast_eyedropper_failed">¿Estás seguro de que\'estás en Android 17? (╯°_°）╯</string>
+    <string name="toast_eyedropper_failed">Are you sure you\'re on Androdi 17? (╯°_°）╯</string>
     <string name="subtitle_eye_dropper">Gotero para ojos</string>
     <string name="on">En</string>
     <string name="off">Apagado</string>
     <string name="private_dns_custom_title">DNS privado personalizado</string>
-    <string name="private_dns_presets_title">DNS Presets</string>
+    <string name="private_dns_presets_title">Ajustes preestablecidos de DNS comunes</string>
     <string name="dns_preset_add_title">Add DNS Preset</string>
     <string name="dns_preset_name_label">Preset name</string>
     <string name="dns_preset_reset_action">Reset</string>
@@ -332,7 +332,7 @@
     <string name="cat_visuals">Imágenes</string>
     <string name="cat_system">Sistema</string>
     <!-- UI Elements -->
-    <string name="search_placeholder">Buscar elementos esenciales</string>
+    <string name="search_placeholder">Search for Tools, Mods and Tweaks</string>
     <string name="search_no_results">No hay resultados para \"%1$s\"</string>
     <string name="search_results_title">Resultados de la búsqueda</string>
     <string name="requires_following_permissions">%1$s requiere los siguientes permisos</string>
@@ -1012,7 +1012,7 @@
     <string name="action_report_email">Informe por correo electrónico</string>
     <string name="action_copy_clipboard">Copiar al portapapeles</string>
     <string name="bug_report_email_subject">Informe de errores esenciales</string>
-    <string name="bug_report_send_via">Enviar vía</string>
+    <string name="bug_report_send_via">Send via</string>
     <!-- Location Reached -->
     <string name="feat_location_reached_title">¿Ya llegamos?</string>
     <string name="feat_location_reached_desc">Alertas de destino cercano</string>
