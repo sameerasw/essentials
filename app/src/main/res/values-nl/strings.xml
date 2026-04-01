@@ -12,7 +12,7 @@
     <string name="flashlight_pulse_tile_label">Zaklamppuls</string>
     <string name="check_pre_releases_label">Checken voor vooruitgaven</string>
     <string name="check_pre_releases_desc">Kunnen instabiel zijn</string>
-    <string name="label_default_tab">Default tab</string>
+    <string name="label_default_tab">Standaard tabblad</string>
     <!-- App Lock -->
     <string name="settings_section_security">Beveiliging</string>
     <string name="app_lock_enable_title">Appvergrendeling inschakelen</string>
@@ -114,15 +114,15 @@
     <string name="settings_section_app_control">Appbesturing</string>
     <string name="action_freeze">Bevriezen</string>
     <string name="action_unfreeze">Ontdooien</string>
-    <string name="action_remove">Remove</string>
-    <string name="action_create_shortcut">Create shortcut</string>
-    <string name="action_app_info">App info</string>
-    <string name="freeze_mode_description_freeze_title">What is Freeze?</string>
-    <string name="freeze_mode_description_freeze_body">App freezing disables the app\'s launch activity which removes it from the app list and updates. It will prevent the app from starting at all until it\'s unfrozen which saves resources but you will need to unfreeze from here or manually re-enable.</string>
-    <string name="freeze_mode_description_freeze_warning">DO NOT FREEZE COMMUNICATION APPS</string>
-    <string name="freeze_mode_description_suspend_title">What is Suspend?</string>
-    <string name="freeze_mode_description_suspend_body">Suspending an app used to pause the app activity and prevent background executions but with recent Android changes, it only pauses the notifications from appearing and that\'s pretty much it. But does allows you to unpause from the launcher app list as they will be still available as grayscale paused app icons.</string>
-    <string name="freeze_mode_description_suspend_footer">Should work the same as the native app pause/ focus mode features.</string>
+    <string name="action_remove">Verwijderen</string>
+    <string name="action_create_shortcut">Snelkoppeling aanmaken</string>
+    <string name="action_app_info">App-info</string>
+    <string name="freeze_mode_description_freeze_title">Wat is bevriezen?</string>
+    <string name="freeze_mode_description_freeze_body">Het bevriezen van apps schakelt de startactiviteit van de app uit, wat ervoor zorgt dat het wordt verwijderd uit de lijst van apps en updates. Het zal voorkomen dat de app überhaupt geopend kan worden totdat het ontdooit wordt om bronnen te besparen, maar je moet het wel hier weer inschakelen.</string>
+    <string name="freeze_mode_description_freeze_warning">BEVRIES NIET COMMUNICATIEAPPS</string>
+    <string name="freeze_mode_description_suspend_title">Wat is apps stoppen?</string>
+    <string name="freeze_mode_description_suspend_body">Het stoppen van een app zorgt ervoor dat de appactiviteit wordt gepauzeerd en dat uitvoeren in de achtergrond wordt voorkomen, maar met recente Android-versies, pauzeert het alleen de melding en voor de rest niet echt iets. Ze zullen nog wel beschikbaar zijn op het startscherm als grijze gepauzeerde iconen.</string>
+    <string name="freeze_mode_description_suspend_footer">Zou hetzelfde werken als het ingebouwde apps pauzeren.</string>
     <string name="content_desc_more_options">Meer opties</string>
     <string name="action_freeze_all">Bevries alle apps</string>
     <string name="action_unfreeze_all">Ontdooi alle apps</string>
@@ -212,12 +212,12 @@
     <string name="tile_private_dns_off">Uit</string>
     <string name="tile_usb_debugging">USB-foutopsporing</string>
     <string name="tile_color_picker">Kleurenkiezer</string>
-    <string name="toast_eyedropper_failed">Weet je zeker dat je op Android 17 bent? (╯°_°）╯</string>
+    <string name="toast_eyedropper_failed">Are you sure you\'re on Androdi 17? (╯°_°）╯</string>
     <string name="subtitle_eye_dropper">Pipet</string>
     <string name="on">Aan</string>
     <string name="off">Uit</string>
     <string name="private_dns_custom_title">Aangepaste Privé-DNS</string>
-    <string name="private_dns_presets_title">DNS-voorinstellingen</string>
+    <string name="private_dns_presets_title">Aangepaste DNS-voorinstellingen</string>
     <string name="dns_preset_add_title">DNS-voorinstelling toevoegen</string>
     <string name="dns_preset_name_label">Naam van voorinstelling</string>
     <string name="dns_preset_reset_action">Resetten</string>
@@ -332,7 +332,7 @@
     <string name="cat_visuals">Beelden</string>
     <string name="cat_system">Systeem</string>
     <!-- UI Elements -->
-    <string name="search_placeholder">Zoeken in Essentials</string>
+    <string name="search_placeholder">Zoeken naar hulpmiddelen, modificaties en aanpassingen</string>
     <string name="search_no_results">Geen resultaten voor \"%1$s\"</string>
     <string name="search_results_title">Zoekresultaten</string>
     <string name="requires_following_permissions">%1$s vereist de volgende machtiging:</string>
@@ -589,7 +589,7 @@
     <string name="action_search">Zoeken</string>
     <string name="action_stop">Stoppen</string>
     <string name="label_search">Zoeken</string>
-    <string name="search_frozen_apps_placeholder">Search frozen apps</string>
+    <string name="search_frozen_apps_placeholder">Bevroren apps zoeken</string>
     <!-- UI Components General -->
     <string name="action_back">Terug</string>
     <string name="content_desc_back">Terug</string>
@@ -643,8 +643,8 @@
     <string name="about_desc_screen_locked_security">Verbeter je beveiliging als je apparaat vergrendeld is.\n\nBeperk toegang tot gevoelige tegels in de Snelle instellingen zoals netwerkwijzigingen. Ook wordt de animatiesnelheid verlaagd om aanraak spammen te voorkomen.\n\nDeze functie is niet robuust en heeft mogelijk problemen zoals dat sommige tegels die direct aanpasbaar zijn zoals Bluetooth of de vliegtuigstand niet te voorkomen zijn.</string>
     <string name="about_desc_app_lock">Beveilig je apps met een tweede beveiligingslaag. \n\nJe vergrendelingsmethode zal gebruikt worden als het maar aan de klasse 3 biometrische beveiligingsstandaarden voldoet.</string>
     <string name="about_desc_location_reached">Krijg een melding wanneer je dicht bij een bestemming komt zodat je nooit een stop mist. \n\nGa naar Google Maps, druk een speld lang in dicht bij je bestemming en zorg ervoor dat het \"Geplaatste speld\" zegt (anders is de afstandsberekening mogelijk niet accuraat), deel daarna de locatie met de Essentials-app en start met volgen.</string>
-    <string name="location_reached_add_title">Add Destination</string>
-    <string name="location_reached_edit_title">Edit Destination</string>
+    <string name="location_reached_add_title">Bestemming toevoegen</string>
+    <string name="location_reached_edit_title">Bestemming bewerken</string>
     <string name="location_reached_name_placeholder">Home, Office, etc.</string>
     <string name="location_reached_name_label">Name</string>
     <string name="location_reached_save_btn">Save</string>
@@ -1242,4 +1242,9 @@
     <string name="msg_flashbang">Get ready to be flashbanged!</string>
     <string name="action_abort">Abort</string>
     <string name="action_continue">Continue</string>
+    <string name="prank_trial_expired_title">Your Essentials trial has expired</string>
+    <string name="prank_trial_expired_desc">Your free trial period of Essentials has ended. Access to advanced features like Button Remap, App Freezing, and DIY Automations with Premium.</string>
+    <string name="prank_button_premium">What\'s in Premium?</string>
+    <string name="prank_reveal_title">April Fools!</string>
+    <string name="prank_reveal_desc">Just kidding, Essentials is and will always be free and open source. Enjoy! (っ◕‿◕)っ</string>
 </resources>

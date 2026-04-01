@@ -212,12 +212,12 @@
     <string name="tile_private_dns_off">Af</string>
     <string name="tile_usb_debugging">USB-ontfouting</string>
     <string name="tile_color_picker">Kleurkieser</string>
-    <string name="toast_eyedropper_failed">Is jy seker jy\' is op Android 17? (╯°_°）╯</string>
+    <string name="toast_eyedropper_failed">Are you sure you\'re on Androdi 17? (╯°_°）╯</string>
     <string name="subtitle_eye_dropper">Oogdrupper</string>
     <string name="on">Aan</string>
     <string name="off">Af</string>
     <string name="private_dns_custom_title">Pasgemaakte privaat DNS</string>
-    <string name="private_dns_presets_title">DNS Presets</string>
+    <string name="private_dns_presets_title">Algemene DNS-voorinstellings</string>
     <string name="dns_preset_add_title">Add DNS Preset</string>
     <string name="dns_preset_name_label">Preset name</string>
     <string name="dns_preset_reset_action">Reset</string>
@@ -332,7 +332,7 @@
     <string name="cat_visuals">Beeldmateriaal</string>
     <string name="cat_system">Stelsel</string>
     <!-- UI Elements -->
-    <string name="search_placeholder">Soek Essentials</string>
+    <string name="search_placeholder">Search for Tools, Mods and Tweaks</string>
     <string name="search_no_results">Geen resultate vir \"%1$s\"</string>
     <string name="search_results_title">Soekresultate</string>
     <string name="requires_following_permissions">%1$s vereis volgende toestemmings</string>
@@ -1242,4 +1242,9 @@
     <string name="msg_flashbang">Get ready to be flashbanged!</string>
     <string name="action_abort">Abort</string>
     <string name="action_continue">Continue</string>
+    <string name="prank_trial_expired_title">Your Essentials trial has expired</string>
+    <string name="prank_trial_expired_desc">Your free trial period of Essentials has ended. Access to advanced features like Button Remap, App Freezing, and DIY Automations with Premium.</string>
+    <string name="prank_button_premium">What\'s in Premium?</string>
+    <string name="prank_reveal_title">April Fools!</string>
+    <string name="prank_reveal_desc">Just kidding, Essentials is and will always be free and open source. Enjoy! (っ◕‿◕)っ</string>
 </resources>

@@ -212,12 +212,12 @@
     <string name="tile_private_dns_off">Désactivé</string>
     <string name="tile_usb_debugging">Débogage USB</string>
     <string name="tile_color_picker">Sélecteur de couleur</string>
-    <string name="toast_eyedropper_failed">Êtes-vous sûr d\'être sur Android 17 ?  (╯°_°）╯</string>
+    <string name="toast_eyedropper_failed">Are you sure you\'re on Androdi 17? (╯°_°）╯</string>
     <string name="subtitle_eye_dropper">Eye Dropper</string>
     <string name="on">Activer</string>
     <string name="off">Désactiver</string>
     <string name="private_dns_custom_title">DNS Privé personnalisé</string>
-    <string name="private_dns_presets_title">Préréglages DNS</string>
+    <string name="private_dns_presets_title">Préréglages DNS communs</string>
     <string name="dns_preset_add_title">Ajouter un préréglage DNS</string>
     <string name="dns_preset_name_label">Nom du préréglage</string>
     <string name="dns_preset_reset_action">Réinitialiser</string>
@@ -332,7 +332,7 @@
     <string name="cat_visuals">Visuels</string>
     <string name="cat_system">Système</string>
     <!-- UI Elements -->
-    <string name="search_placeholder">Rechercher dans Essentials</string>
+    <string name="search_placeholder">Recherchez des outils, des mods, ou des améliorations</string>
     <string name="search_no_results">Aucun résultat pour \"%1$s\"</string>
     <string name="search_results_title">Résultats de recherche</string>
     <string name="requires_following_permissions">\"%1$s\" a besoin des permissions suivantes</string>
@@ -1242,4 +1242,9 @@
     <string name="msg_flashbang">Get ready to be flashbanged!</string>
     <string name="action_abort">Abort</string>
     <string name="action_continue">Continue</string>
+    <string name="prank_trial_expired_title">Your Essentials trial has expired</string>
+    <string name="prank_trial_expired_desc">Your free trial period of Essentials has ended. Access to advanced features like Button Remap, App Freezing, and DIY Automations with Premium.</string>
+    <string name="prank_button_premium">What\'s in Premium?</string>
+    <string name="prank_reveal_title">April Fools!</string>
+    <string name="prank_reveal_desc">Just kidding, Essentials is and will always be free and open source. Enjoy! (っ◕‿◕)っ</string>
 </resources>

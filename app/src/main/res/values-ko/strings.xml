@@ -212,12 +212,12 @@
     <string name="tile_private_dns_off">끄다</string>
     <string name="tile_usb_debugging">USB 디버깅</string>
     <string name="tile_color_picker">색상 선택기</string>
-    <string name="toast_eyedropper_failed">Android 17을 사용하고 계시나요?\'를 사용 중이신가요? (╯°_°)╯</string>
+    <string name="toast_eyedropper_failed">Are you sure you\'re on Androdi 17? (╯°_°）╯</string>
     <string name="subtitle_eye_dropper">점안기</string>
     <string name="on">~에</string>
     <string name="off">끄다</string>
     <string name="private_dns_custom_title">맞춤형 프라이빗 DNS</string>
-    <string name="private_dns_presets_title">DNS Presets</string>
+    <string name="private_dns_presets_title">일반적인 DNS 사전 설정</string>
     <string name="dns_preset_add_title">Add DNS Preset</string>
     <string name="dns_preset_name_label">Preset name</string>
     <string name="dns_preset_reset_action">Reset</string>
@@ -332,7 +332,7 @@
     <string name="cat_visuals">비주얼</string>
     <string name="cat_system">체계</string>
     <!-- UI Elements -->
-    <string name="search_placeholder">필수 검색</string>
+    <string name="search_placeholder">Search for Tools, Mods and Tweaks</string>
     <string name="search_no_results">다음에 대한 검색결과가 없습니다. \"%1$s\"</string>
     <string name="search_results_title">검색결과</string>
     <string name="requires_following_permissions">%1$s 다음 권한이 필요합니다</string>
@@ -1242,4 +1242,9 @@
     <string name="msg_flashbang">Get ready to be flashbanged!</string>
     <string name="action_abort">Abort</string>
     <string name="action_continue">Continue</string>
+    <string name="prank_trial_expired_title">Your Essentials trial has expired</string>
+    <string name="prank_trial_expired_desc">Your free trial period of Essentials has ended. Access to advanced features like Button Remap, App Freezing, and DIY Automations with Premium.</string>
+    <string name="prank_button_premium">What\'s in Premium?</string>
+    <string name="prank_reveal_title">April Fools!</string>
+    <string name="prank_reveal_desc">Just kidding, Essentials is and will always be free and open source. Enjoy! (っ◕‿◕)っ</string>
 </resources>
