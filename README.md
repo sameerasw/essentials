@@ -42,35 +42,42 @@ Essential tools, mods and workarounds for Pixels and other Androids
 - [Contributing](#contributing)
 
 ## Extension
+
 - [WearOS Companion app](https://github.com/sameerasw/essentials-wear)
 
 # Features
 
 #### Sound and Haptics
+
 - Sound mode switcher
 - Ambient music glance - Media playback on AOD and screensaver
 - Call vibrations - For call accept, decline and ending
 
 #### Security and Privacy
+
 - Screen locked security - Prevent network tile access when locked
 - App lock
 
 #### Notifications and Alerts
+
 - Notification lighting - Edge lighting and more alerts for notifications
 - Flashlight pulse - Pulse flashlight for notifications
 - Snooze system notifications
 - Battery notification for all your connected devices
 
 #### Input and Actions
+
 - Link actions - Intercept and share links from default apps
 - Button remap
 - Keyboard
 
 #### Widgets
+
 - Screen off empty widget
 - Batteries
 
 #### Display
+
 - Customize statusbar icons
 - Dynamic Always on Display
 - Caffeinate to keep screen awake
@@ -78,9 +85,11 @@ Essential tools, mods and workarounds for Pixels and other Androids
 - Scale and animation adjustments
 
 #### Watch
+
 - Sync all calendars to your WearOS watch periodically
 
 #### Other
+
 - Maps power saving mode - For not just Pixel 10, Any Android device
 - Are we there yet? - Get reminded when your stop is closeby
 - Watermark - Add EXIF data and logos to captured photos
@@ -90,15 +99,19 @@ Essential tools, mods and workarounds for Pixels and other Androids
 - Eye dropper - Android 17 color picker
 
 #### DIY
+
 - Automate things yourself and make custom triggers
 
 #### App Freezing
+
 - Save power and less distractions by freezing away rarely used apps
 
 #### App Updater
+
 - Check for sideloaded app updates directly from GitHub
 
 #### Quick Settings Tiles
+
 - Toggle UI blur
 - Toggle chat bubbles
 - Toggle sensitive content on lock screen
@@ -156,9 +169,7 @@ This is a new restriction on Android with sideloaded apps that can receive sensi
 ![Screenshot_20260304-184451 Large](https://github.com/user-attachments/assets/1402a374-3881-4afc-aff0-269517d0e28f)
 ![Screenshot_20260304-184409 Large](https://github.com/user-attachments/assets/b7bf634a-6ea4-4b22-8ccf-09593bf7bbed)
 
-
 > ### IMPORTANT: Yes, this is very annoying but I understand the need of such prevention to avoid users installing potentially harmful apps from unknown sources. Well I hope you trust me to install my app but anyways, You should always verify the trusted source before installing any APK file from the internet. ʅ(°_°)ʃ
-
 
 # Shell Providers (Shizuku & Root)
 
@@ -189,6 +200,7 @@ We welcome contributions from the community! Whether you're fixing a bug, adding
 Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 # Thanks
+
 - [chalda-pnuzig/emojis.json](https://github.com/chalda-pnuzig/emojis.json) - Keyboard emojis
 - [xav-ie/generate-kaomoji](https://github.com/xav-ie/generate-kaomoji) - Keyboard kaomojis
 - [TebbeUbben/ChargeQuickTile](https://github.com/TebbeUbben/ChargeQuickTile) - Pixel charging QS
@@ -206,6 +218,5 @@ Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of co
 ---
 
 <p align="center">
-  Last updated: 2026-03-01
+  Last updated: 2026-04-06
 </p>
-

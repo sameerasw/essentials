@@ -134,6 +134,7 @@ class BatteriesWidget : GlanceAppWidget() {
                                 device.name.contains("watch", true) -> R.drawable.rounded_watch_24
                                 device.name.contains("bud", true) ||
                                         device.name.contains("pod", true) ||
+                                        device.name.contains("momentum", true) ||
                                         device.name.contains(
                                             "head",
                                             true
