@@ -251,6 +251,10 @@
     <string name="screen_locked_security_warning_text">Deze functie is niet perfect. Er kunnen randgevallen zijn waarbij iemand nog steeds de tegel kan gebruiken. \nBedenk ook dat Android een geforceerde herstart toestaat en Pixels altijd zullen toestaan dat het apparaat vanaf het vergrendelscherm uitgezet kan worden.</string>
     <string name="screen_locked_security_airplane_warning">Zorg ervoor dat je de vliegtuigmodustegel in de snelle instellingen verwijdert omdat dat niet te voorkomen is omdat het niet een dialoogvenster opent.</string>
     <string name="screen_locked_security_description">Wanneer inschakelt, zal het Snelle Instellingenmenu meteen gesloten worden en zal het apparaat uitgeschakeld worden als iemand probeert de internettegels probeert te gebruiken terwijl het apparaat vergrendeld is. \n\nDit zal ook biometrisch ontgrendelen uitschakelen om verdere ongeautoriseerde toegang te voorkomen. Animatieschaal zal verminderd worden tot 0.1x terwijl het apparaat vergrendeld is om interactie moeilijker te maken.</string>
+    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
+    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
+    <string name="search_disable_qs_locked_title">Disable QS Locked</string>
+    <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
     <string name="sound_mode_reorder_title">Modi hersorteren</string>
     <string name="sound_mode_long_press_hint">Lang indrukken om te schakelen</string>
