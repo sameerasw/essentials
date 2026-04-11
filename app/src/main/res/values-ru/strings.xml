@@ -24,6 +24,8 @@
     <string name="app_lock_description">Защитите свои приложения с помощью биометрической аутентификации. Заблокированные приложения требуют аутентификации при запуске и остаются разблокированными до тех пор, пока экран не погаснет.</string>
     <string name="app_lock_warning">Имейте в виду, что это не надежное решение, поскольку это всего лишь стороннее приложение. Если вам нужна надежная защита, рассмотрите возможность использования личного пространства или других подобных функций.</string>
     <string name="app_lock_biometric_note">Обратите внимание, что запрос на биометрическую аутентификацию позволяет использовать только методы класса STRONG secure. Методы разблокировки по лицу, относящиеся к классу WEAK, на устройствах, таких как Pixel 7, смогут использовать только другие доступные методы надежной аутентификации, такие как отпечаток пальца или PIN-код.</string>
+    <string name="app_lock_use_usage_access_title">Use usage access</string>
+    <string name="app_lock_use_usage_access_desc">Instead of accessibility</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Включить переназначение кнопок</string>
     <string name="button_remap_use_shizuku_title">Использовать Shizuku или Root</string>
@@ -145,6 +147,7 @@
     <string name="freeze_dont_freeze_active_apps_title">Не замораживать активные приложения</string>
     <string name="perm_usage_stats_title">Статистика использования</string>
     <string name="perm_usage_stats_desc">Необходимо для определения, какие приложения в данный момент отображаются, чтобы избежать зависания</string>
+    <string name="perm_usage_stats_desc_app_lock">Required to detect foreground apps for App Lock features when accessibility is not used.</string>
     <string name="perm_notif_listener_desc_freeze">Требуется для определения медиа и активных уведомлений, чтобы избежать их зависания</string>
     <string name="freeze_mode_title">Режим заморозки</string>
     <string name="freeze_mode_freeze">Заморожено</string>
@@ -731,6 +734,9 @@
     <string name="automation_service_channel_name">Служба автоматизации</string>
     <string name="automation_service_running_title">Автоматизация активна</string>
     <string name="automation_service_running_desc">Мониторинг системных событий для вашей автоматизации</string>
+    <string name="app_lock_service_channel_name">App Lock Service</string>
+    <string name="app_lock_service_running_title">App Lock Active</string>
+    <string name="app_lock_service_running_desc">Monitoring app activity</string>
     <string name="diy_action_device_effects">Эффекты устройства</string>
     <string name="diy_device_effects_desc">Управляйте эффектами на уровне системы, такими как оттенки серого, подавление AOD, затемнение обоев и ночной режим.</string>
     <string name="diy_effect_grayscale">Оттенки серого</string>
