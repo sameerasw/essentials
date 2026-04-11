@@ -24,6 +24,8 @@
     <string name="app_lock_description">Осигурајте своје апликације биометријском аутентификацијом. Закључане апликације ће захтевати аутентификацију приликом покретања, остају откључане док се екран не искључи.</string>
     <string name="app_lock_warning">Имајте на уму да ово није робусно решење јер је ово само апликација треће стране. Ако вам је потребна јака сигурност, размислите о коришћењу приватног простора или других сличних функција.</string>
     <string name="app_lock_biometric_note">Још једна напомена, промпт за биометријску аутентификацију вам омогућава да користите само методе ЈАКО безбедне класе. Безбедносне методе откључавања лицем у класи ВЕАК на уређајима као што је Пикел 7 моћи ће да користе само доступне друге ЈАКЕ методе аутентификације као што су отисак прста или пин.</string>
+    <string name="app_lock_use_usage_access_title">Use usage access</string>
+    <string name="app_lock_use_usage_access_desc">Instead of accessibility</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Омогући пресликавање дугмета</string>
     <string name="button_remap_use_shizuku_title">Користите Схизуку или Роот или Роот</string>
@@ -145,6 +147,7 @@
     <string name="freeze_dont_freeze_active_apps_title">Дон\'т замрзавање активних апликација</string>
     <string name="perm_usage_stats_title">Усаге Статс</string>
     <string name="perm_usage_stats_desc">Потребно је да открије које су апликације тренутно у првом плану како би се избегло њихово замрзавање</string>
+    <string name="perm_usage_stats_desc_app_lock">Required to detect foreground apps for App Lock features when accessibility is not used.</string>
     <string name="perm_notif_listener_desc_freeze">Потребно за откривање медија који се репродукују и активних обавештења како би се избегло њихово замрзавање</string>
     <string name="freeze_mode_title">Freeze mode</string>
     <string name="freeze_mode_freeze">Freezing</string>
@@ -731,6 +734,9 @@
     <string name="automation_service_channel_name">Аутоматион Сервице</string>
     <string name="automation_service_running_title">Аутоматионс Ацтиве</string>
     <string name="automation_service_running_desc">Надгледање системских догађаја за ваше аутоматизације</string>
+    <string name="app_lock_service_channel_name">App Lock Service</string>
+    <string name="app_lock_service_running_title">App Lock Active</string>
+    <string name="app_lock_service_running_desc">Monitoring app activity</string>
     <string name="diy_action_device_effects">Девице Еффецтс</string>
     <string name="diy_device_effects_desc">Контролишите ефекте на нивоу система попут сивих тонова, потискивања АОД-а, затамњивања позадине и ноћног режима.</string>
     <string name="diy_effect_grayscale">Граисцале</string>
