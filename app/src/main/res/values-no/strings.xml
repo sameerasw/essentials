@@ -24,8 +24,8 @@
     <string name="app_lock_description">Sikre appene dine med biometrisk autentisering. Låste apper vil kreve autentisering ved oppstart, forblir ulåst til skjermen slås av.</string>
     <string name="app_lock_warning">Vær oppmerksom på at dette ikke er en robust løsning da dette kun er en tredjepartsapplikasjon. Hvis du trenger sterk sikkerhet, bør du vurdere å bruke Private Space eller andre slike funksjoner.</string>
     <string name="app_lock_biometric_note">En annen merknad, den biometriske autentiseringsprompten lar deg bare bruke STERKE sikre klassemetoder. Sikkerhetsmetoder for ansiktslås i SVAK klasse i enheter som Pixel 7 vil kun kunne bruke de tilgjengelige andre STERKE autentiseringsmetoder som fingeravtrykk eller pin.</string>
-    <string name="app_lock_use_usage_access_title">Use usage access</string>
-    <string name="app_lock_use_usage_access_desc">Instead of accessibility</string>
+    <string name="setting_use_usage_access_title">Use usage access</string>
+    <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Aktiver knappen Remap</string>
     <string name="button_remap_use_shizuku_title">Bruk Shizuku eller Root eller Root</string>
@@ -734,9 +734,9 @@
     <string name="automation_service_channel_name">Automatiseringstjeneste</string>
     <string name="automation_service_running_title">Automatisering er aktiv</string>
     <string name="automation_service_running_desc">Overvåking av systemhendelser for dine automatiseringer</string>
-    <string name="app_lock_service_channel_name">App Lock Service</string>
-    <string name="app_lock_service_running_title">App Lock Active</string>
-    <string name="app_lock_service_running_desc">Monitoring app activity</string>
+    <string name="app_detection_service_channel_name">App Detection Service</string>
+    <string name="app_detection_service_running_title">App Detection Active</string>
+    <string name="app_detection_service_running_desc">Monitoring app activity</string>
     <string name="diy_action_device_effects">Enhetseffekter</string>
     <string name="diy_device_effects_desc">Kontroller effekter på systemnivå som gråtoner, AOD-undertrykkelse, bakgrunnsdimming og nattmodus.</string>
     <string name="diy_effect_grayscale">Gråtoner</string>
