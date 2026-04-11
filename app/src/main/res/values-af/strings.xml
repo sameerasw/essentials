@@ -251,6 +251,10 @@
     <string name="screen_locked_security_warning_text">Hierdie kenmerk is nie onfeilbaar nie. Daar kan randgevalle wees waar iemand steeds met die teël kan kommunikeer. \nHou ook in gedagte dat Android altyd sal toelaat om \'n gedwonge herlaai te doen en Pixels sal altyd toelaat dat die toestel ook vanaf die sluitskerm afgeskakel word.</string>
     <string name="screen_locked_security_airplane_warning">Maak seker dat u die vliegtuigmodusteël van vinnige instellings verwyder, aangesien dit nie voorkombaar is nie, want dit maak nie \'n dialoogvenster oop nie.</string>
     <string name="screen_locked_security_description">Wanneer dit geaktiveer is, sal die Vinnige instellings-paneel onmiddellik gesluit word en die toestel sal gesluit word as iemand probeer om met internetteëls te kommunikeer terwyl die toestel gesluit is. \n\nDit sal ook biometriese ontsluiting deaktiveer om verdere ongemagtigde toegang te voorkom. Animasieskaal sal tot 0.1x verminder word terwyl dit gesluit is om dit nog moeiliker te maak om mee te kommunikeer.</string>
+    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
+    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
+    <string name="search_disable_qs_locked_title">Disable QS Locked</string>
+    <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
     <string name="sound_mode_reorder_title">Herbestel modusse</string>
     <string name="sound_mode_long_press_hint">Druk lank om te wissel</string>
