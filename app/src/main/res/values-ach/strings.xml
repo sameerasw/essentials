@@ -24,6 +24,8 @@
     <string name="app_lock_description">Gwok apps ni ki jami ma ki lwongo ni biometric authentication. App ma ki juku obi miito ni ki lok iye ka ki yabo, obi bedo ma ki juku nio ka gin ma ki neno ni otum.</string>
     <string name="app_lock_warning">Bed ki ngec ni man pe obedo yoo maber pien man obedo yub pa ngat mukene keken. Ka imiito gwok matek, tam me tic ki kabedo ma piri keni onyo jami mukene ma kit meno.</string>
     <string name="app_lock_biometric_note">Gin mukene ma ki ngeyo, lok ma ki lwongo ni biometric authentication prompt ni weko in itiyo ki yoo me STRONG secure class methods keken. Yoo me yabo wang ma ki lwongo ni WEAK class i jami ma calo Pixel 7 obi twero tic ki yoo mukene ma tye ma calo fingerprint onyo pin.</string>
+    <string name="app_lock_use_usage_access_title">Use usage access</string>
+    <string name="app_lock_use_usage_access_desc">Instead of accessibility</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Yab bute ma ki lwongo ni Remap</string>
     <string name="button_remap_use_shizuku_title">Tii ki Shizuku onyo Root onyo Root</string>
@@ -145,6 +147,7 @@
     <string name="freeze_dont_freeze_active_apps_title">Pe\'Pe juku app ma tye ka tic</string>
     <string name="perm_usage_stats_title">Wel ma ki tiyo kwede</string>
     <string name="perm_usage_stats_desc">Mitte me ngeyo app mene ma tye i nyim me gengo juku gi</string>
+    <string name="perm_usage_stats_desc_app_lock">Required to detect foreground apps for App Lock features when accessibility is not used.</string>
     <string name="perm_notif_listener_desc_freeze">Mitte me neno jami ma tye ka tuko ki ngec ma tye ka tic me gengo juku gi</string>
     <string name="freeze_mode_title">Freeze mode</string>
     <string name="freeze_mode_freeze">Freezing</string>
@@ -731,6 +734,9 @@
     <string name="automation_service_channel_name">Tic me tic piire kene</string>
     <string name="automation_service_running_title">Automations Active</string>
     <string name="automation_service_running_desc">Neno jami ma tye ka time i yub ni pi tic ni</string>
+    <string name="app_lock_service_channel_name">App Lock Service</string>
+    <string name="app_lock_service_running_title">App Lock Active</string>
+    <string name="app_lock_service_running_desc">Monitoring app activity</string>
     <string name="diy_action_device_effects">Adwogi pa jami tic</string>
     <string name="diy_device_effects_desc">Gwok jami ma tye i rwom me tic ma calo grayscale, AOD suppression, wallpaper dimming, ki night mode.</string>
     <string name="diy_effect_grayscale">Grayscale</string>
