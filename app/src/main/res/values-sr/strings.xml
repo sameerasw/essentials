@@ -251,6 +251,10 @@
     <string name="screen_locked_security_warning_text">Ова карактеристика није сигурна. Можда постоје ивични случајеви у којима неко још увек може да комуницира са плочицом. \nТакође имајте на уму да ће Андроид увек дозволити принудно поновно покретање, а Пикелс ће увек дозволити да се уређај искључи и са закључаног екрана.</string>
     <string name="screen_locked_security_airplane_warning">Обавезно уклоните плочицу режима у авиону из брзих подешавања јер се то не може спречити јер не отвара прозор за дијалог.</string>
     <string name="screen_locked_security_description">Када је омогућено, панел Брза подешавања ће се одмах затворити и уређај ће бити закључан ако неко покуша да ступи у интеракцију са интернет плочицама док је уређај закључан. \n\nОво ће такође онемогућити биометријско откључавање како би се спречио даљи неовлашћени приступ. Скала анимације ће бити смањена на 0,1к док је закључана да би била још тежа интеракција са њом.</string>
+    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
+    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
+    <string name="search_disable_qs_locked_title">Disable QS Locked</string>
+    <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
     <string name="sound_mode_reorder_title">Ре-ордер модес</string>
     <string name="sound_mode_long_press_hint">Дуго притисните за пребацивање</string>
