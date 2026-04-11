@@ -251,6 +251,10 @@
     <string name="screen_locked_security_warning_text">Denne funktion er ikke idiotsikker. Der kan være kanttilfælde, hvor nogen stadig er i stand til at interagere med flisen. \nHusk også, at Android altid vil tillade at udføre en tvungen genstart, og Pixels vil altid tillade, at enheden også bliver slukket fra låseskærmen.</string>
     <string name="screen_locked_security_airplane_warning">Sørg for at fjerne flytilstandsfeltet fra hurtige indstillinger, da det ikke kan forhindres, fordi det ikke åbner et dialogvindue.</string>
     <string name="screen_locked_security_description">Når det er aktiveret, lukkes panelet Hurtige indstillinger øjeblikkeligt, og enheden vil blive låst, hvis nogen forsøger at interagere med internetbrikker, mens enheden er låst. \n\nDette vil også deaktivere biometrisk oplåsning for at forhindre yderligere uautoriseret adgang. Animationsskalaen vil blive reduceret til 0,1x, mens den er låst, for at gøre det endnu sværere at interagere med.</string>
+    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
+    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
+    <string name="search_disable_qs_locked_title">Disable QS Locked</string>
+    <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
     <string name="sound_mode_reorder_title">Genbestil tilstande</string>
     <string name="sound_mode_long_press_hint">Langt tryk for at skifte</string>
