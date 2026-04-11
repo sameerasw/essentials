@@ -24,6 +24,8 @@
     <string name="app_lock_description">Säkra dina appar med biometrisk autentisering. Låsta appar kräver autentisering när de startas, förblir olåsta tills skärmen stängs av.</string>
     <string name="app_lock_warning">Tänk på att detta inte är en robust lösning eftersom detta bara är en 3:e parts applikation. Om du behöver stark säkerhet, överväg att använda Private Space eller andra sådana funktioner.</string>
     <string name="app_lock_biometric_note">En annan anmärkning, den biometriska autentiseringsprompten låter dig bara använda STARK säkra klassmetoder. Säkerhetsmetoder för ansiktsupplåsning i SWAG klass i enheter som Pixel 7 kommer bara att kunna använda de tillgängliga andra STARKA autentiseringsmetoderna som fingeravtryck eller nål.</string>
+    <string name="app_lock_use_usage_access_title">Use usage access</string>
+    <string name="app_lock_use_usage_access_desc">Instead of accessibility</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Aktivera ommappning av knapp</string>
     <string name="button_remap_use_shizuku_title">Använd Shizuku eller Root eller Root</string>
@@ -145,6 +147,7 @@
     <string name="freeze_dont_freeze_active_apps_title">Don\'t frysa aktiva appar</string>
     <string name="perm_usage_stats_title">Användningsstatistik</string>
     <string name="perm_usage_stats_desc">Krävs för att upptäcka vilka appar som för närvarande är i förgrunden för att undvika att frysa dem</string>
+    <string name="perm_usage_stats_desc_app_lock">Required to detect foreground apps for App Lock features when accessibility is not used.</string>
     <string name="perm_notif_listener_desc_freeze">Krävs för att upptäcka spelande media och aktiva aviseringar för att undvika att frysa dem</string>
     <string name="freeze_mode_title">Freeze mode</string>
     <string name="freeze_mode_freeze">Freezing</string>
@@ -731,6 +734,9 @@
     <string name="automation_service_channel_name">Automationstjänst</string>
     <string name="automation_service_running_title">Automatiseringar aktiva</string>
     <string name="automation_service_running_desc">Övervakning av systemhändelser för dina automatiseringar</string>
+    <string name="app_lock_service_channel_name">App Lock Service</string>
+    <string name="app_lock_service_running_title">App Lock Active</string>
+    <string name="app_lock_service_running_desc">Monitoring app activity</string>
     <string name="diy_action_device_effects">Enhetseffekter</string>
     <string name="diy_device_effects_desc">Styr effekter på systemnivå som gråskala, AOD-undertryckning, tapetdämpning och nattläge.</string>
     <string name="diy_effect_grayscale">Gråskala</string>
