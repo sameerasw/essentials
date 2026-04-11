@@ -24,6 +24,8 @@
     <string name="app_lock_description">Proteggi le tue app con l\'autenticazione biometrica. Le app bloccate richiedono l\'autenticazione all\'avvio e rimangono sbloccate fino allo spegnimento dello schermo.</string>
     <string name="app_lock_warning">Tieni presente che questa non è una soluzione definitiva poiché è solo un\'app di terze parti. Se hai bisogno di una sicurezza elevata, considera l\'utilizzo di Spazio Privato o altre funzionalità simili.</string>
     <string name="app_lock_biometric_note">Un\'altra nota: la richiesta di autenticazione biometrica ti consente solo di utilizzare metodi di classe sicura STRONG. I metodi di sicurezza di sblocco facciale nella classe WEAK in dispositivi come Pixel 7 saranno in grado di utilizzare solo gli altri metodi di autenticazione STRONG disponibili come l\'impronta digitale o il PIN.</string>
+    <string name="app_lock_use_usage_access_title">Use usage access</string>
+    <string name="app_lock_use_usage_access_desc">Instead of accessibility</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Abilita rimappatura pulsanti</string>
     <string name="button_remap_use_shizuku_title">Usa Shizuku o Root o Root</string>
@@ -145,6 +147,7 @@
     <string name="freeze_dont_freeze_active_apps_title">Non non congelare le app attive</string>
     <string name="perm_usage_stats_title">Statistiche di utilizzo</string>
     <string name="perm_usage_stats_desc">Necessario per rilevare quali app sono attualmente in primo piano per evitare di congelarle</string>
+    <string name="perm_usage_stats_desc_app_lock">Required to detect foreground apps for App Lock features when accessibility is not used.</string>
     <string name="perm_notif_listener_desc_freeze">Necessario per rilevare i contenuti multimediali in riproduzione e le notifiche attive per evitare di congelarli</string>
     <string name="freeze_mode_title">Freeze mode</string>
     <string name="freeze_mode_freeze">Freezing</string>
@@ -731,6 +734,9 @@
     <string name="automation_service_channel_name">Servizio di automazione</string>
     <string name="automation_service_running_title">Automazioni attive</string>
     <string name="automation_service_running_desc">Monitoraggio degli eventi di sistema per le tue automazioni</string>
+    <string name="app_lock_service_channel_name">App Lock Service</string>
+    <string name="app_lock_service_running_title">App Lock Active</string>
+    <string name="app_lock_service_running_desc">Monitoring app activity</string>
     <string name="diy_action_device_effects">Effetti del dispositivo</string>
     <string name="diy_device_effects_desc">Controlla gli effetti a livello di sistema come la scala di grigi, la soppressione dell\'AOD, l\'attenuazione dello sfondo e la modalità notturna.</string>
     <string name="diy_effect_grayscale">Scala di grigi</string>
