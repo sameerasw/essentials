@@ -24,8 +24,8 @@
     <string name="app_lock_description">Biztosítsa alkalmazásait biometrikus hitelesítéssel. A zárolt alkalmazások indításakor hitelesítésre van szükség. Feloldva marad, amíg a képernyő ki nem kapcsol.</string>
     <string name="app_lock_warning">Ügyeljen arra, hogy ez nem egy robusztus megoldás, mivel ez csak egy harmadik féltől származó alkalmazás. Ha erős biztonságra van szüksége, fontolja meg a Private Space vagy más hasonló funkciók használatát.</string>
     <string name="app_lock_biometric_note">Egy másik megjegyzés, a biometrikus hitelesítési prompt csak ERŐS biztonságos osztályú módszerek használatát teszi lehetővé. Az olyan eszközökben, mint a Pixel 7, a WEAK osztályba tartozó arcfeloldási biztonsági módszerek csak a rendelkezésre álló egyéb ERŐS hitelesítési módszereket, például ujjlenyomat- vagy PIN-kódot fogják tudni használni.</string>
-    <string name="app_lock_use_usage_access_title">Use usage access</string>
-    <string name="app_lock_use_usage_access_desc">Instead of accessibility</string>
+    <string name="setting_use_usage_access_title">Use usage access</string>
+    <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Gomb-visszatérképezés engedélyezése</string>
     <string name="button_remap_use_shizuku_title">Használja Shizuku vagy Root vagy Root</string>
@@ -734,9 +734,9 @@
     <string name="automation_service_channel_name">Automatizálási szolgáltatás</string>
     <string name="automation_service_running_title">Automatizálás aktív</string>
     <string name="automation_service_running_desc">Rendszeresemények figyelése az automatizálásokhoz</string>
-    <string name="app_lock_service_channel_name">App Lock Service</string>
-    <string name="app_lock_service_running_title">App Lock Active</string>
-    <string name="app_lock_service_running_desc">Monitoring app activity</string>
+    <string name="app_detection_service_channel_name">App Detection Service</string>
+    <string name="app_detection_service_running_title">App Detection Active</string>
+    <string name="app_detection_service_running_desc">Monitoring app activity</string>
     <string name="diy_action_device_effects">Eszközeffektusok</string>
     <string name="diy_device_effects_desc">Vezérelje a rendszerszintű effektusokat, például a szürkeárnyalatot, az AOD-elnyomást, a háttérkép elsötétítését és az éjszakai módot.</string>
     <string name="diy_effect_grayscale">Szürkeárnyalatos</string>
