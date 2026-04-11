@@ -37,11 +37,11 @@ fun AppLockSettingsUI(
     var isAppSelectionSheetOpen by remember { mutableStateOf(false) }
 
     val isAppLockEnabled by viewModel.isAppLockEnabled
-    val isAppLockUseUsageAccess by viewModel.isAppLockUseUsageAccess
+    val isUseUsageAccess by viewModel.isUseUsageAccess
     val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
     val isUsageStatsPermissionGranted by viewModel.isUsageStatsPermissionGranted
     
-    val canEnableAppLock = if (isAppLockUseUsageAccess) isUsageStatsPermissionGranted else isAccessibilityEnabled
+    val canEnableAppLock = if (isUseUsageAccess) isUsageStatsPermissionGranted else isAccessibilityEnabled
 
     Column(
         modifier = modifier
@@ -82,17 +82,6 @@ fun AppLockSettingsUI(
                 enabled = canEnableAppLock,
                 onDisabledClick = {},
                 modifier = Modifier.highlight(highlightKey == "app_lock_enabled")
-            )
-
-            IconToggleItem(
-                iconRes = R.drawable.rounded_touch_app_24,
-                title = stringResource(R.string.app_lock_use_usage_access_title),
-                isChecked = isAppLockUseUsageAccess,
-                description = stringResource(R.string.app_lock_use_usage_access_desc),
-                onCheckedChange = { enabled ->
-                    viewModel.setAppLockUseUsageAccess(enabled, context)
-                },
-                modifier = Modifier.highlight(highlightKey == "app_lock_use_usage_access")
             )
 
             FeatureCard(

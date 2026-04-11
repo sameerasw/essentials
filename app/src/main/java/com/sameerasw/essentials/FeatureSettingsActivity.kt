@@ -242,10 +242,10 @@ class FeatureSettingsActivity : AppCompatActivity() {
                             "Statusbar icons" -> !isWriteSecureSettingsEnabled
                             "Notification lighting" -> !isOverlayPermissionGranted || !isNotificationLightingAccessibilityEnabled || !isNotificationListenerEnabled
                             "Button remap" -> !isAccessibilityEnabled
-                            "Dynamic night light" -> !isAccessibilityEnabled || !isWriteSecureSettingsEnabled
+                            "Dynamic night light" -> (if (viewModel.isUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else !isAccessibilityEnabled) || !isWriteSecureSettingsEnabled
                             "Snooze system notifications" -> !isNotificationListenerEnabled
                             "Screen locked security" -> !isAccessibilityEnabled || !isWriteSecureSettingsEnabled || !viewModel.isDeviceAdminEnabled.value
-                            "App lock" -> if (viewModel.isAppLockUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else !isAccessibilityEnabled
+                            "App lock" -> if (viewModel.isUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else !isAccessibilityEnabled
                             "Freeze" -> !com.sameerasw.essentials.utils.ShellUtils.hasPermission(
                                 context
                             )
@@ -373,10 +373,10 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                 "Statusbar icons" -> !isWriteSecureSettingsEnabled
                                                 "Notification lighting" -> !isOverlayPermissionGranted || !isNotificationLightingAccessibilityEnabled || !isNotificationListenerEnabled
                                                 "Button remap" -> !isAccessibilityEnabled
-                                                "Dynamic night light" -> !isAccessibilityEnabled || !isWriteSecureSettingsEnabled
+                                                "Dynamic night light" -> (if (viewModel.isUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else !isAccessibilityEnabled) || !isWriteSecureSettingsEnabled
                                                 "Snooze system notifications" -> !isNotificationListenerEnabled
                                                 "Screen locked security" -> !isAccessibilityEnabled || !isWriteSecureSettingsEnabled || !viewModel.isDeviceAdminEnabled.value
-                                                "App lock" -> if (viewModel.isAppLockUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else !isAccessibilityEnabled
+                                                "App lock" -> if (viewModel.isUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else !isAccessibilityEnabled
                                                 "Freeze" -> !com.sameerasw.essentials.utils.ShellUtils.hasPermission(
                                                     context
                                                 )

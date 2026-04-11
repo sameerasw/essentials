@@ -22,6 +22,21 @@ class SettingsRepository(private val context: Context) {
     private val prefs: SharedPreferences =
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     private val gson = Gson()
+    
+    init {
+        migrateUsageAccessKey()
+    }
+
+    private fun migrateUsageAccessKey() {
+        val oldKey = "app_lock_use_usage_access"
+        if (prefs.contains(oldKey)) {
+            val value = prefs.getBoolean(oldKey, false)
+            if (!prefs.contains(KEY_USE_USAGE_ACCESS)) {
+                putBoolean(KEY_USE_USAGE_ACCESS, value)
+            }
+            remove(oldKey)
+        }
+    }
 
     companion object {
         const val PREFS_NAME = "essentials_prefs"
@@ -95,7 +110,7 @@ class SettingsRepository(private val context: Context) {
 
         const val KEY_APP_LOCK_ENABLED = "app_lock_enabled"
         const val KEY_APP_LOCK_SELECTED_APPS = "app_lock_selected_apps"
-        const val KEY_APP_LOCK_USE_USAGE_ACCESS = "app_lock_use_usage_access"
+        const val KEY_USE_USAGE_ACCESS = "use_usage_access"
 
         const val KEY_FREEZE_WHEN_LOCKED_ENABLED = "freeze_when_locked_enabled"
         const val KEY_FREEZE_LOCK_DELAY_INDEX = "freeze_lock_delay_index"

@@ -38,6 +38,7 @@ fun initPermissionRegistry() {
     PermissionRegistry.register("SHIZUKU", R.string.feat_maps_power_saving_title)
     PermissionRegistry.register("USAGE_STATS", R.string.feat_freeze_title)
     PermissionRegistry.register("USAGE_STATS", R.string.feat_app_lock_title)
+    PermissionRegistry.register("USAGE_STATS", R.string.feat_dynamic_night_light_title)
     PermissionRegistry.register("NOTIFICATION_LISTENER", R.string.feat_freeze_title)
 
     // Root permission

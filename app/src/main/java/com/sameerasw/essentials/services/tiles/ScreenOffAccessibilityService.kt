@@ -65,7 +65,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         flashlightHandler = FlashlightHandler(this, serviceScope)
         notificationLightingHandler = NotificationLightingHandler(this)
         buttonRemapHandler = ButtonRemapHandler(this, flashlightHandler)
-        appFlowHandler = AppFlowHandler(this)
+        appFlowHandler = AppFlowHandler(this, this)
         securityHandler = SecurityHandler(this)
         ambientGlanceHandler = AmbientGlanceHandler(this)
         aodForceTurnOffHandler = AodForceTurnOffHandler(this)

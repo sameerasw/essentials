@@ -19,7 +19,7 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.services.handlers.AppFlowHandler
 import java.util.*
 
-class AppLockUsageService : Service() {
+class AppDetectionService : Service() {
 
     private lateinit var appFlowHandler: AppFlowHandler
     private val handler = Handler(Looper.getMainLooper())
@@ -27,7 +27,7 @@ class AppLockUsageService : Service() {
     private var lastPackageName: String? = null
 
     companion object {
-        private const val CHANNEL_ID = "app_lock_service_channel"
+        private const val CHANNEL_ID = "app_detection_service_channel"
         private const val NOTIFICATION_ID = 1001
         private const val POLL_INTERVAL = 500L
         var isRunning = false
@@ -137,10 +137,10 @@ class AppLockUsageService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
-                getString(R.string.app_lock_service_channel_name),
+                getString(R.string.app_detection_service_channel_name),
                 NotificationManager.IMPORTANCE_LOW
             ).apply {
-                description = getString(R.string.app_lock_service_running_desc)
+                description = getString(R.string.app_detection_service_running_desc)
             }
             val manager = getSystemService(NotificationManager::class.java)
             manager.createNotificationChannel(channel)
@@ -149,8 +149,8 @@ class AppLockUsageService : Service() {
 
     private fun createNotification(): Notification {
         return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle(getString(R.string.app_lock_service_running_title))
-            .setContentText(getString(R.string.app_lock_service_running_desc))
+            .setContentTitle(getString(R.string.app_detection_service_running_title))
+            .setContentText(getString(R.string.app_detection_service_running_desc))
             .setSmallIcon(R.drawable.rounded_shield_lock_24)
             .setOngoing(true)
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)

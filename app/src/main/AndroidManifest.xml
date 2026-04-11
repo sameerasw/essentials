@@ -488,12 +488,12 @@
         </service>
 
         <service
-            android:name=".services.AppLockUsageService"
+            android:name=".services.AppDetectionService"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="specialUse">
             <property android:name="android.app.property.FOREGROUND_SERVICE_TYPE_SPECIAL_USE_DESCRIPTION"
-                      android:value="App Lock Service" />
+                      android:value="App Detection Service" />
         </service>
 
         <service

@@ -47,7 +47,7 @@ class AppFlowHandler(
 
     fun onPackageChanged(packageName: String, isFromUsageStats: Boolean = false) {
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-        val useUsageAccess = prefs.getBoolean("app_lock_use_usage_access", false)
+        val useUsageAccess = prefs.getBoolean("use_usage_access", false)
 
         if (packageName != context.packageName && packageName != lockingPackage) {
             lockingPackage = null
@@ -55,13 +55,10 @@ class AppFlowHandler(
 
         if (isFromUsageStats == useUsageAccess) {
             checkAppLock(packageName)
-        }
-
-        // Night light and automations still require Accessibility
-        if (!isFromUsageStats) {
             checkHighlightNightLight(packageName)
             checkAppAutomations(packageName)
         }
+
     }
 
     fun onAuthenticated(packageName: String) {
@@ -123,7 +120,7 @@ class AppFlowHandler(
     private fun checkHighlightNightLight(packageName: String) {
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
         val isEnabled = prefs.getBoolean("dynamic_night_light_enabled", false)
-        if (!isEnabled || service == null) return
+        if (!isEnabled) return
 
         pendingNLRunnable?.let { handler.removeCallbacks(it) }
 
@@ -199,7 +196,6 @@ class AppFlowHandler(
     }
 
     private fun checkAppAutomations(packageName: String) {
-        if (service == null) return
         scope.launch {
             val automations = DIYRepository.automations.value
             val appAutomations =
@@ -214,7 +210,7 @@ class AppFlowHandler(
             exiting.forEach { automation ->
                 activeAppAutomationIds.remove(automation.id)
                 automation.exitAction?.let { action ->
-                    CombinedActionExecutor.execute(service, action)
+                    CombinedActionExecutor.execute(context, action)
                 }
             }
 
@@ -227,7 +223,7 @@ class AppFlowHandler(
             entering.forEach { automation ->
                 activeAppAutomationIds.add(automation.id)
                 automation.entryAction?.let { action ->
-                    CombinedActionExecutor.execute(service, action)
+                    CombinedActionExecutor.execute(context, action)
                 }
             }
         }

@@ -651,7 +651,6 @@ object FeatureRegistry {
             category = R.string.cat_display,
             description = R.string.feat_dynamic_night_light_desc,
             aboutDescription = R.string.about_desc_dynamic_night_light,
-            permissionKeys = listOf("ACCESSIBILITY", "WRITE_SECURE_SETTINGS"),
             searchableSettings = listOf(
                 SearchSetting(
                     R.string.search_night_light_enable_title,
@@ -663,11 +662,19 @@ object FeatureRegistry {
             showToggle = true,
             parentFeatureId = "Display"
         ) {
+            override val permissionKeys: List<String>
+                get() = if (com.sameerasw.essentials.data.repository.SettingsRepository(com.sameerasw.essentials.EssentialsApp.context)
+                        .getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_USE_USAGE_ACCESS))
+                    listOf("USAGE_STATS", "WRITE_SECURE_SETTINGS") else listOf("ACCESSIBILITY", "WRITE_SECURE_SETTINGS")
+
             override fun isEnabled(viewModel: MainViewModel) =
                 viewModel.isDynamicNightLightEnabled.value
 
             override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
-                viewModel.isAccessibilityEnabled.value && viewModel.isWriteSecureSettingsEnabled.value
+                (if (viewModel.isUseUsageAccess.value)
+                    viewModel.isUsageStatsPermissionGranted.value
+                else
+                    viewModel.isAccessibilityEnabled.value) && viewModel.isWriteSecureSettingsEnabled.value
 
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
                 viewModel.setDynamicNightLightEnabled(enabled, context)
@@ -718,12 +725,12 @@ object FeatureRegistry {
         ) {
             override val permissionKeys: List<String>
                 get() = if (com.sameerasw.essentials.data.repository.SettingsRepository(com.sameerasw.essentials.EssentialsApp.context)
-                        .getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_APP_LOCK_USE_USAGE_ACCESS))
+                        .getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_USE_USAGE_ACCESS))
                     listOf("USAGE_STATS") else listOf("ACCESSIBILITY")
 
             override fun isEnabled(viewModel: MainViewModel) = viewModel.isAppLockEnabled.value
             override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
-                if (viewModel.isAppLockUseUsageAccess.value)
+                if (viewModel.isUseUsageAccess.value)
                     viewModel.isUsageStatsPermissionGranted.value
                 else
                     viewModel.isAccessibilityEnabled.value

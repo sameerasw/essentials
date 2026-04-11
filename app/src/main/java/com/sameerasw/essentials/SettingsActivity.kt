@@ -374,6 +374,13 @@ fun SettingsContent(
                 isChecked = viewModel.isRootEnabled.value,
                 onCheckedChange = { viewModel.setRootEnabled(it, context) }
             )
+            IconToggleItem(
+                iconRes = R.drawable.rounded_data_usage_24,
+                title = stringResource(R.string.setting_use_usage_access_title),
+                description = stringResource(R.string.setting_use_usage_access_desc),
+                isChecked = viewModel.isUseUsageAccess.value,
+                onCheckedChange = { viewModel.setUseUsageAccess(it, context) }
+            )
 
             CrashReportingPicker(
                 selectedMode = sentryMode,

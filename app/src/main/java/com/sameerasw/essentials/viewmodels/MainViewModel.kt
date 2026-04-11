@@ -154,7 +154,7 @@ class MainViewModel : ViewModel() {
         mutableStateOf(setOf(NotificationLightingSide.LEFT, NotificationLightingSide.RIGHT))
     val skipPersistentNotifications = mutableStateOf(false)
     val isAppLockEnabled = mutableStateOf(false)
-    val isAppLockUseUsageAccess = mutableStateOf(false)
+    val isUseUsageAccess = mutableStateOf(false)
     val isFreezeWhenLockedEnabled = mutableStateOf(false)
     val freezeLockDelayIndex = mutableIntStateOf(1) // Default: 1 minute
     val freezePickedApps = mutableStateOf<List<NotificationApp>>(emptyList())
@@ -293,12 +293,12 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_APP_LOCK_ENABLED -> {
                         isAppLockEnabled.value = settingsRepository.getBoolean(key)
-                        appContext?.let { updateAppLockService(it) }
+                        appContext?.let { updateAppDetectionService(it) }
                     }
 
-                    SettingsRepository.KEY_APP_LOCK_USE_USAGE_ACCESS -> {
-                        isAppLockUseUsageAccess.value = settingsRepository.getBoolean(key)
-                        appContext?.let { updateAppLockService(it) }
+                    SettingsRepository.KEY_USE_USAGE_ACCESS -> {
+                        isUseUsageAccess.value = settingsRepository.getBoolean(key)
+                        appContext?.let { updateAppDetectionService(it) }
                     }
 
                     SettingsRepository.KEY_FREEZE_WHEN_LOCKED_ENABLED -> isFreezeWhenLockedEnabled.value =
@@ -649,7 +649,7 @@ class MainViewModel : ViewModel() {
 
         notificationLightingStyle.value = settingsRepository.getNotificationLightingStyle()
         notificationLightingColorMode.value = settingsRepository.getNotificationLightingColorMode()
-        isAppLockUseUsageAccess.value = settingsRepository.getBoolean(SettingsRepository.KEY_APP_LOCK_USE_USAGE_ACCESS)
+        isUseUsageAccess.value = settingsRepository.getBoolean(SettingsRepository.KEY_USE_USAGE_ACCESS)
         isOnboardingCompleted.value = settingsRepository.getBoolean(SettingsRepository.KEY_ONBOARDING_COMPLETED, false)
         notificationLightingCustomColor.intValue = settingsRepository.getInt(
             SettingsRepository.KEY_EDGE_LIGHTING_CUSTOM_COLOR,
@@ -1261,23 +1261,26 @@ class MainViewModel : ViewModel() {
     fun setDynamicNightLightEnabled(enabled: Boolean, context: Context) {
         isDynamicNightLightEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_DYNAMIC_NIGHT_LIGHT_ENABLED, enabled)
+        updateAppDetectionService(context)
     }
 
     fun setAppLockEnabled(enabled: Boolean, context: Context) {
         isAppLockEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_APP_LOCK_ENABLED, enabled)
-        updateAppLockService(context)
+        updateAppDetectionService(context)
     }
 
-    fun setAppLockUseUsageAccess(enabled: Boolean, context: Context) {
-        isAppLockUseUsageAccess.value = enabled
-        settingsRepository.putBoolean(SettingsRepository.KEY_APP_LOCK_USE_USAGE_ACCESS, enabled)
-        updateAppLockService(context)
+    fun setUseUsageAccess(enabled: Boolean, context: Context) {
+        isUseUsageAccess.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_USE_USAGE_ACCESS, enabled)
+        updateAppDetectionService(context)
     }
 
-    private fun updateAppLockService(context: Context) {
-        val intent = Intent(context, com.sameerasw.essentials.services.AppLockUsageService::class.java)
-        val shouldRun = isAppLockEnabled.value && isAppLockUseUsageAccess.value
+    private fun updateAppDetectionService(context: Context) {
+        val intent = Intent(context, com.sameerasw.essentials.services.AppDetectionService::class.java)
+        
+        val hasAppAutomations = com.sameerasw.essentials.domain.diy.DIYRepository.automations.value.any { it.isEnabled && it.type == com.sameerasw.essentials.domain.diy.Automation.Type.APP }
+        val shouldRun = isUseUsageAccess.value && (isAppLockEnabled.value || isDynamicNightLightEnabled.value || hasAppAutomations)
         
         if (shouldRun) {
             try {
