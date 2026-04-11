@@ -24,6 +24,8 @@
     <string name="app_lock_description">Assegureu les vostres aplicacions amb l\'autenticació biomètrica. Les aplicacions bloquejades requeriran autenticació quan s\'inicien, romandrà desbloquejada fins que la pantalla s\'apaga.</string>
     <string name="app_lock_warning">Tingueu en compte que aquesta no és una solució robusta, ja que només és una aplicació de tercers. Si necessiteu una seguretat forta, considereu utilitzar l\'espai privat o altres funcions d\'aquest tipus.</string>
     <string name="app_lock_biometric_note">Una altra nota, la sol·licitud d\'autenticació biomètrica només us permet utilitzar mètodes de classe segurs FORTS. Els mètodes de seguretat de desbloqueig facial de la classe WEAK en dispositius com ara Pixel 7 només podran utilitzar els altres mètodes d\'autenticació FORTES disponibles, com ara l\'empremta digital o el pin.</string>
+    <string name="app_lock_use_usage_access_title">Use usage access</string>
+    <string name="app_lock_use_usage_access_desc">Instead of accessibility</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Activa la reasignació de botons</string>
     <string name="button_remap_use_shizuku_title">Utilitzeu Shizuku o Root o Root</string>
@@ -145,6 +147,7 @@
     <string name="freeze_dont_freeze_active_apps_title">Don\'t congela les aplicacions actives</string>
     <string name="perm_usage_stats_title">Estadístiques d\'ús</string>
     <string name="perm_usage_stats_desc">Necessari per detectar quines aplicacions es troben actualment en primer pla per evitar congelar-les</string>
+    <string name="perm_usage_stats_desc_app_lock">Required to detect foreground apps for App Lock features when accessibility is not used.</string>
     <string name="perm_notif_listener_desc_freeze">Necessari per detectar contingut multimèdia en reproducció i notificacions actives per evitar congelar-los</string>
     <string name="freeze_mode_title">Freeze mode</string>
     <string name="freeze_mode_freeze">Freezing</string>
@@ -731,6 +734,9 @@
     <string name="automation_service_channel_name">Servei d\'automatització</string>
     <string name="automation_service_running_title">Automatitzacions actives</string>
     <string name="automation_service_running_desc">Monitorització d\'esdeveniments del sistema per a les vostres automatitzacions</string>
+    <string name="app_lock_service_channel_name">App Lock Service</string>
+    <string name="app_lock_service_running_title">App Lock Active</string>
+    <string name="app_lock_service_running_desc">Monitoring app activity</string>
     <string name="diy_action_device_effects">Efectes del dispositiu</string>
     <string name="diy_device_effects_desc">Controla els efectes a nivell del sistema com l\'escala de grisos, la supressió d\'aOD, l\'enfosquiment del fons de pantalla i el mode nocturn.</string>
     <string name="diy_effect_grayscale">Escala de grisos</string>
