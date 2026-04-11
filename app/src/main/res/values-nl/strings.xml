@@ -24,6 +24,8 @@
     <string name="app_lock_description">Beveilig je apps met biometrische authenticatie. Vergrendelde apps zullen authenticatie vereisen bij openen, blijft ontgrendeld totdat het scherm word uitgezet.</string>
     <string name="app_lock_warning">Wees er van bewust dat dit niet een robuuste oplossing is, omdat dit alleen maar een app van een derde partij is. Als je sterke beveiliging nodig hebt, probeer dan Privéruimte of andere dergelijke functies.</string>
     <string name="app_lock_biometric_note">Nog een opmerking: De biometrische authenticatie laat je alleen STERKE beveiligingsmethoden gebruiken. Gezichtsherkenning wordt als ZWAK gezien bij apparaten zoals de Pixel 7. Zulke apparaten zullen andere STERKE beveiligingsmethoden gebruiken zoals vingerafdruk of pincode.</string>
+    <string name="app_lock_use_usage_access_title">Use usage access</string>
+    <string name="app_lock_use_usage_access_desc">Instead of accessibility</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Opnieuw toewijzen van fysieke knoppen inschakelen</string>
     <string name="button_remap_use_shizuku_title">Use Shizuku</string>
@@ -145,6 +147,7 @@
     <string name="freeze_dont_freeze_active_apps_title">Niet actieve apps bevriezen</string>
     <string name="perm_usage_stats_title">Gebruiksstatistieken</string>
     <string name="perm_usage_stats_desc">Vereist om te detecteren welke apps momenteel in gebruik zijn om te voorkomen dat ze worden bevroren.</string>
+    <string name="perm_usage_stats_desc_app_lock">Required to detect foreground apps for App Lock features when accessibility is not used.</string>
     <string name="perm_notif_listener_desc_freeze">Vereist om afspelende media en actieve meldingen te detecteren om te voorkomen dat ze worden bevroren.</string>
     <string name="freeze_mode_title">Vriesmodus</string>
     <string name="freeze_mode_freeze">Bevriezen</string>
@@ -731,6 +734,9 @@
     <string name="automation_service_channel_name">Automatiseringsdienst</string>
     <string name="automation_service_running_title">Automatiseringen actief</string>
     <string name="automation_service_running_desc">Systeemgebeurtenissen in de gaten houden voor je automatiseringen</string>
+    <string name="app_lock_service_channel_name">App Lock Service</string>
+    <string name="app_lock_service_running_title">App Lock Active</string>
+    <string name="app_lock_service_running_desc">Monitoring app activity</string>
     <string name="diy_action_device_effects">Apparaateffecten</string>
     <string name="diy_device_effects_desc">Bestuur systeemwijde effecten zoals grijstinten, onderdrukking van Always-On Display en nachtmodus.</string>
     <string name="diy_effect_grayscale">Grijstinten</string>
