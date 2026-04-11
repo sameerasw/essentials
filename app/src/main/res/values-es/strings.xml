@@ -251,6 +251,10 @@
     <string name="screen_locked_security_warning_text">Esta característica no es infalible. Puede haber casos extremos en los que alguien aún pueda interactuar con el mosaico. \nTambién tenga en cuenta que Android siempre permitirá realizar un reinicio forzado y Pixels siempre permitirá que el dispositivo se apague desde la pantalla de bloqueo también.</string>
     <string name="screen_locked_security_airplane_warning">Asegúrese de eliminar el mosaico del modo avión de la configuración rápida, ya que eso no se puede evitar porque no abre una ventana de diálogo.</string>
     <string name="screen_locked_security_description">Cuando esté habilitado, el panel de Configuración rápida se cerrará inmediatamente y el dispositivo se bloqueará si alguien intenta interactuar con mosaicos de Internet mientras el dispositivo está bloqueado. \n\nEsto también deshabilitará el desbloqueo biométrico para evitar más accesos no autorizados. La escala de la animación se reducirá a 0,1x mientras esté bloqueada para que sea aún más difícil interactuar con ella.</string>
+    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
+    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
+    <string name="search_disable_qs_locked_title">Disable QS Locked</string>
+    <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
     <string name="sound_mode_reorder_title">Modos de reordenamiento</string>
     <string name="sound_mode_long_press_hint">Mantenga presionado para alternar</string>
