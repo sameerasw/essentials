@@ -1101,15 +1101,15 @@
     <string name="format_updated_relative">Обновлено %1$s</string>
     <!-- Relative Time -->
     <string name="time_just_now">прямо сейчас</string>
-    <string name="today">Today</string>
-    <string name="yesterday">Yesterday</string>
+    <string name="today">Сегодня</string>
+    <string name="yesterday">Вчера</string>
     <string name="time_min_ago">%1$dм назад</string>
     <string name="time_hour_ago">%1$dчас назад</string>
     <string name="time_day_ago">%1$dдень назад</string>
-    <string name="time_days_ago">%1$d days ago</string>
-    <string name="time_weeks_ago">%1$d weeks ago</string>
+    <string name="time_days_ago">%1$d дней назад</string>
+    <string name="time_weeks_ago">%1$d недель назад</string>
     <string name="time_month_ago">%1$dмесяц назад</string>
-    <string name="time_months_ago">%1$d months ago</string>
+    <string name="time_months_ago">%1$d месяцев назад</string>
     <string name="time_year_ago">%1$dгод назад</string>
     <string name="action_retry">Повторить попытку</string>
     <string name="action_start_sign_in">Начать вход</string>
@@ -1237,11 +1237,11 @@
     <string name="msg_feedback_sent">Отзыв отправлен! Спасибо, что помогаете улучшить приложение.</string>
     <string name="label_alternatively">Альтернатива</string>
     <!-- Pixel Diagnostics -->
-    <string name="label_diagnostics">Diagnostics</string>
-    <string name="label_device_check">Device Check</string>
-    <string name="msg_flashbang">Get ready to be flashbanged!</string>
-    <string name="action_abort">Abort</string>
-    <string name="action_continue">Continue</string>
+    <string name="label_diagnostics">Диагностика</string>
+    <string name="label_device_check">Проверка устройства</string>
+    <string name="msg_flashbang">Приготовься к вспышке!</string>
+    <string name="action_abort">Отменить</string>
+    <string name="action_continue">Продолжить</string>
     <string name="prank_trial_expired_title">Your Essentials trial has expired</string>
     <string name="prank_trial_expired_desc">Your free trial period of Essentials has ended. Access to advanced features like Button Remap, App Freezing, and DIY Automations with Premium.</string>
     <string name="prank_button_premium">What\'s in Premium?</string>
