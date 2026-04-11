@@ -251,6 +251,10 @@
     <string name="screen_locked_security_warning_text">この機能は万全ではありません。まれにタイルを操作できる可能性があります。\nまた、Androidは常に強制再起動が可能であり、Pixelではロック画面からデバイスをシャットダウンできることに注意してください。</string>
     <string name="screen_locked_security_airplane_warning">機内モードタイルはダイアログウインドウを開かず、回避できませんので、クイック設定から必ず削除してください。</string>
     <string name="screen_locked_security_description">有効にすると、ロック画面で誰かがインターネットタイルを操作しようとすると、クイック設定パネルがすぐに閉じられ、デバイスがロックダウンされます。\n\nこれにより、生体認証によるロック解除も無効になり、さらなる不正アクセスを防止します。ロック中はアニメーション速度が0.1倍に縮小され、操作が更に困難になります。</string>
+    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
+    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
+    <string name="search_disable_qs_locked_title">Disable QS Locked</string>
+    <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
     <string name="sound_mode_reorder_title">モードの並べ替え</string>
     <string name="sound_mode_long_press_hint">長押しで切り替え</string>
