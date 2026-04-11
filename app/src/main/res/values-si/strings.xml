@@ -24,6 +24,8 @@
     <string name="app_lock_description">ජෛවමිතික සත්‍යාපනය සමඟින් ඔබගේ යෙදුම් සුරක්ෂිත කරන්න. අගුලු දැමූ යෙදුම් දියත් කරන විට සත්‍යාපනය අවශ්‍ය වනු ඇත, තිරය ක්‍රියා විරහිත වන තෙක් අගුලු දමා ඇත.</string>
     <string name="app_lock_warning">මෙය තුන්වන පාර්ශවීය යෙදුමක් පමණක් බැවින් මෙය ශක්තිමත් විසඳුමක් නොවන බව පරෙස්සම් වන්න. ඔබට ශක්තිමත් ආරක්ෂාවක් අවශ්‍ය නම්, පුද්ගලික අවකාශය හෝ වෙනත් එවැනි විශේෂාංග භාවිතා කිරීම සලකා බලන්න.</string>
     <string name="app_lock_biometric_note">තවත් සටහනක්, ජෛවමිතික සත්‍යාපන විමසුම මඟින් ඔබට ශක්තිමත් ආරක්ෂිත පන්ති ක්‍රම භාවිතා කිරීමට පමණක් ඉඩ ලබා දේ. Pixel 7 වැනි උපාංගවල WEAK පන්තියේ මුහුණෙන් අගුළු හැරීමේ ආරක්‍ෂක ක්‍රම භාවිත කිරීමට හැකි වනුයේ ඇඟිලි සලකුණු හෝ පින් වැනි පවතින අනෙකුත් ප්‍රබල සත්‍යාපන ක්‍රම පමණි.</string>
+    <string name="app_lock_use_usage_access_title">Use usage access</string>
+    <string name="app_lock_use_usage_access_desc">Instead of accessibility</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">බොත්තම නැවත සකස් කිරීම සබල කරන්න</string>
     <string name="button_remap_use_shizuku_title">Shizuku හෝ Root හෝ Root භාවිතා කරන්න</string>
@@ -145,6 +147,7 @@
     <string name="freeze_dont_freeze_active_apps_title">සක්‍රිය යෙදුම් කැටි නොකරන්න\'t</string>
     <string name="perm_usage_stats_title">භාවිත සංඛ්යාලේඛන</string>
     <string name="perm_usage_stats_desc">ඒවා කැටි කිරීම වළක්වා ගැනීම සඳහා දැනට පෙරබිමෙහි ඇති යෙදුම් හඳුනා ගැනීමට අවශ්‍ය වේ</string>
+    <string name="perm_usage_stats_desc_app_lock">Required to detect foreground apps for App Lock features when accessibility is not used.</string>
     <string name="perm_notif_listener_desc_freeze">වාදනය කරන මාධ්‍ය සහ සක්‍රිය දැනුම්දීම් කැටි කිරීම වළක්වා ගැනීම සඳහා අනාවරණය කර ගැනීමට අවශ්‍ය වේ</string>
     <string name="freeze_mode_title">Freeze mode</string>
     <string name="freeze_mode_freeze">Freezing</string>
@@ -731,6 +734,9 @@
     <string name="automation_service_channel_name">ස්වයංක්‍රීයකරණ සේවාව</string>
     <string name="automation_service_running_title">ස්වයංක්‍රීය ක්‍රියාකාරී</string>
     <string name="automation_service_running_desc">ඔබගේ ස්වයංක්‍රීයකරණය සඳහා පද්ධති සිදුවීම් නිරීක්ෂණය කිරීම</string>
+    <string name="app_lock_service_channel_name">App Lock Service</string>
+    <string name="app_lock_service_running_title">App Lock Active</string>
+    <string name="app_lock_service_running_desc">Monitoring app activity</string>
     <string name="diy_action_device_effects">උපාංග බලපෑම්</string>
     <string name="diy_device_effects_desc">අළු පරිමාණ, AOD මර්දනය, බිතුපත අඳුරු කිරීම සහ රාත්‍රී මාදිලිය වැනි පද්ධති මට්ටමේ බලපෑම් පාලනය කරන්න.</string>
     <string name="diy_effect_grayscale">අළු පරිමාණ</string>
