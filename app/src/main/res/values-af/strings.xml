@@ -24,6 +24,8 @@
     <string name="app_lock_description">Beveilig jou programme met biometriese verifikasie. Geslote programme sal stawing vereis wanneer hulle begin, Bly ontsluit totdat die skerm afskakel.</string>
     <string name="app_lock_warning">Pasop dat dit nie \'n robuuste oplossing is nie, aangesien dit slegs \'n derdeparty-toepassing is. As jy sterk sekuriteit benodig, oorweeg dit om Private Space of ander sulke kenmerke te gebruik.</string>
     <string name="app_lock_biometric_note">Nog \'n opmerking, die biometriese verifikasie-aanwysing laat jou net STERK veilige klasmetodes gebruik. Gesigslot-sekuriteitsmetodes in SWAK klas in toestelle soos Pixel 7 sal slegs die beskikbare ander STERK-verifikasiemetodes soos vingerafdruk of pen kan gebruik.</string>
+    <string name="app_lock_use_usage_access_title">Use usage access</string>
+    <string name="app_lock_use_usage_access_desc">Instead of accessibility</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Aktiveer Knoppie Remap</string>
     <string name="button_remap_use_shizuku_title">Gebruik Shizuku of Root of Root</string>
@@ -145,6 +147,7 @@
     <string name="freeze_dont_freeze_active_apps_title">Don\'t aktiewe toepassings vries</string>
     <string name="perm_usage_stats_title">Gebruik Statistiek</string>
     <string name="perm_usage_stats_desc">Vereis om te bespeur watter programme tans op die voorgrond is om te verhoed dat hulle vries</string>
+    <string name="perm_usage_stats_desc_app_lock">Required to detect foreground apps for App Lock features when accessibility is not used.</string>
     <string name="perm_notif_listener_desc_freeze">Vereis om speelmedia en aktiewe kennisgewings op te spoor om te verhoed dat dit vries</string>
     <string name="freeze_mode_title">Freeze mode</string>
     <string name="freeze_mode_freeze">Freezing</string>
@@ -731,6 +734,9 @@
     <string name="automation_service_channel_name">Outomatiseringsdiens</string>
     <string name="automation_service_running_title">Outomatisering aktief</string>
     <string name="automation_service_running_desc">Monitering van stelselgebeure vir u outomatisering</string>
+    <string name="app_lock_service_channel_name">App Lock Service</string>
+    <string name="app_lock_service_running_title">App Lock Active</string>
+    <string name="app_lock_service_running_desc">Monitoring app activity</string>
     <string name="diy_action_device_effects">Toestel effekte</string>
     <string name="diy_device_effects_desc">Beheer stelselvlak-effekte soos grysskaal, AOD-onderdrukking, agtergrondverduistering en nagmodus.</string>
     <string name="diy_effect_grayscale">Grysskaal</string>
