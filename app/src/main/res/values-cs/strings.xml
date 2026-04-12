@@ -24,6 +24,8 @@
     <string name="app_lock_description">Zabezpečte své aplikace pomocí biometrického ověřování. Uzamčené aplikace budou při spouštění vyžadovat ověření. Zůstanou odemčené, dokud se obrazovka nevypne.</string>
     <string name="app_lock_warning">Pozor, toto není robustní řešení, protože se jedná pouze o aplikaci třetí strany. Pokud potřebujete silné zabezpečení, zvažte použití soukromého prostoru nebo jiných podobných funkcí.</string>
     <string name="app_lock_biometric_note">Další poznámka, výzva k biometrickému ověření vám umožňuje používat pouze metody zabezpečené třídy STRONG. Bezpečnostní metody odemykání obličejem ve třídě WEAK v zařízeních, jako je Pixel 7, budou moci využívat pouze dostupné jiné STRONG metody ověření, jako je otisk prstu nebo PIN.</string>
+    <string name="setting_use_usage_access_title">Use usage access</string>
+    <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Povolit přemapování tlačítek</string>
     <string name="button_remap_use_shizuku_title">Použijte Shizuku nebo Root nebo Root</string>
@@ -145,6 +147,7 @@
     <string name="freeze_dont_freeze_active_apps_title">Don\'• zmrazit aktivní aplikace</string>
     <string name="perm_usage_stats_title">Statistiky použití</string>
     <string name="perm_usage_stats_desc">Vyžadováno ke zjištění, které aplikace jsou aktuálně v popředí, aby nedošlo k jejich zamrznutí</string>
+    <string name="perm_usage_stats_desc_app_lock">Required to detect foreground apps for App Lock features when accessibility is not used.</string>
     <string name="perm_notif_listener_desc_freeze">Vyžadováno k detekci přehrávaných médií a aktivních oznámení, aby nedošlo k jejich zamrznutí</string>
     <string name="freeze_mode_title">Freeze mode</string>
     <string name="freeze_mode_freeze">Freezing</string>
@@ -170,6 +173,13 @@
     <string name="notification_lighting_indicator_adjustment_section">Nastavení indikátoru</string>
     <string name="notification_lighting_scale_title">Měřítko</string>
     <string name="notification_lighting_duration_title">Trvání</string>
+    <string name="notification_lighting_style_sweep">Sweep</string>
+    <string name="notification_lighting_sweep_position_title">Position</string>
+    <string name="notification_lighting_sweep_random_shapes_title">Random shapes</string>
+    <string name="notification_lighting_sweep_thickness_title">Stroke thickness</string>
+    <string name="notification_lighting_sweep_pos_left">Left</string>
+    <string name="notification_lighting_sweep_pos_center">Center</string>
+    <string name="notification_lighting_sweep_pos_right">Right</string>
     <string name="settings_section_animation">Animace</string>
     <string name="notification_lighting_pulse_count_title">Počet pulsů</string>
     <string name="notification_lighting_pulse_duration_title">Doba trvání pulsu</string>
@@ -182,6 +192,7 @@
     <string name="ambient_show_lock_screen_desc">Žádné černé překrytí</string>
     <!-- Tiles -->
     <string name="action_add">Přidat</string>
+    <string name="action_added">Added</string>
     <string name="qs_tile_already_added">Již přidáno</string>
     <string name="qs_tile_requires_android_13">Vyžaduje Android 13+</string>
     <string name="tile_ui_blur">Rozostření uživatelského rozhraní</string>
@@ -248,6 +259,10 @@
     <string name="screen_locked_security_warning_text">Tato funkce není spolehlivá. Mohou se vyskytnout okrajové případy, kdy někdo bude stále schopen pracovat s dlaždicí. \nMějte také na paměti, že Android vždy umožní provést vynucený restart a Pixely také vždy umožní vypnout zařízení ze zamykací obrazovky.</string>
     <string name="screen_locked_security_airplane_warning">Ujistěte se, že jste z rychlých nastavení odstranili dlaždici režimu v letadle, protože tomu nelze zabránit, protože neotevře dialogové okno.</string>
     <string name="screen_locked_security_description">Pokud je tato možnost povolena, panel Rychlé nastavení se okamžitě zavře a zařízení se uzamkne, pokud se někdo pokusí o interakci s internetovými dlaždicemi, když je zařízení uzamčeno. \n\nTo také zakáže biometrické odemykání, aby se zabránilo dalšímu neoprávněnému přístupu. Měřítko animace se při uzamčení zmenší na 0,1x, aby bylo ještě obtížnější s ní pracovat.</string>
+    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
+    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
+    <string name="search_disable_qs_locked_title">Disable QS Locked</string>
+    <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
     <string name="sound_mode_reorder_title">Režimy opětovného pořadí</string>
     <string name="sound_mode_long_press_hint">Dlouhým stisknutím přepnete</string>
@@ -623,6 +638,10 @@
     <string name="desc_auto_check_updates">Check for updates at app launch</string>
     <string name="action_all_set">All Set</string>
     <string name="action_check_whats_new">Check What\'s New?</string>
+    <string name="welcome_back_title">Welcome back to Essentials</string>
+    <string name="action_see_whats_new">See what\'s new</string>
+    <string name="msg_error_load_release_notes">Couldn\'t load the release note</string>
+    <string name="action_view_on_web">View on web</string>
     <string name="action_done">Hotovo</string>
     <string name="action_preview">Náhled</string>
     <string name="action_help_guide">Průvodce nápovědou</string>
@@ -731,6 +750,9 @@
     <string name="automation_service_channel_name">Automatizační servis</string>
     <string name="automation_service_running_title">Automatizace aktivní</string>
     <string name="automation_service_running_desc">Monitorování systémových událostí pro vaše automatizace</string>
+    <string name="app_detection_service_channel_name">App Detection Service</string>
+    <string name="app_detection_service_running_title">App Detection Active</string>
+    <string name="app_detection_service_running_desc">Monitoring app activity</string>
     <string name="diy_action_device_effects">Efekty zařízení</string>
     <string name="diy_device_effects_desc">Ovládejte efekty na úrovni systému, jako jsou stupně šedi, potlačení AOD, stmívání tapety a noční režim.</string>
     <string name="diy_effect_grayscale">Stupně šedi</string>
@@ -1149,6 +1171,10 @@
     <string name="cat_interface">Rozhraní</string>
     <string name="cat_display">Zobrazit</string>
     <string name="cat_protection">Ochrana</string>
+    <string name="cat_accessibility">Accessibility</string>
+    <string name="cat_connectivity">Connectivity</string>
+    <string name="cat_privacy">Privacy</string>
+    <string name="cat_utils">Utilities</string>
     <string name="label_kbd_abc">ABC</string>
     <string name="label_kbd_symbols">\?#/</string>
     <string name="label_kaomoji">Kaomoji</string>

@@ -24,6 +24,8 @@
     <string name="app_lock_description">Bảo mật ứng dụng của bạn bằng xác thực sinh trắc học. Các ứng dụng bị khóa sẽ yêu cầu xác thực khi khởi chạy, Luôn mở khóa cho đến khi màn hình tắt.</string>
     <string name="app_lock_warning">Xin lưu ý rằng đây không phải là giải pháp mạnh mẽ vì đây chỉ là ứng dụng của bên thứ 3. Nếu bạn cần bảo mật mạnh mẽ, hãy cân nhắc sử dụng Không gian riêng tư hoặc các tính năng tương tự khác.</string>
     <string name="app_lock_biometric_note">Một lưu ý khác, lời nhắc xác thực sinh trắc học chỉ cho phép bạn sử dụng các phương thức lớp bảo mật MẠNH. Các phương thức bảo mật mở khóa bằng khuôn mặt ở lớp YẾU trong các thiết bị như Pixel 7 sẽ chỉ có thể sử dụng các phương thức xác thực MẠNH khác có sẵn khác như dấu vân tay hoặc mã pin.</string>
+    <string name="setting_use_usage_access_title">Use usage access</string>
+    <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Bật bản đồ lại nút</string>
     <string name="button_remap_use_shizuku_title">Sử dụng Shizuku hoặc Root hoặc Root</string>
@@ -145,6 +147,7 @@
     <string name="freeze_dont_freeze_active_apps_title">Không\'không đóng băng các ứng dụng đang hoạt động</string>
     <string name="perm_usage_stats_title">Thống kê sử dụng</string>
     <string name="perm_usage_stats_desc">Cần thiết để phát hiện ứng dụng nào hiện đang ở nền trước để tránh đóng băng chúng</string>
+    <string name="perm_usage_stats_desc_app_lock">Required to detect foreground apps for App Lock features when accessibility is not used.</string>
     <string name="perm_notif_listener_desc_freeze">Cần thiết để phát hiện phương tiện đang phát và thông báo đang hoạt động để tránh đóng băng chúng</string>
     <string name="freeze_mode_title">Freeze mode</string>
     <string name="freeze_mode_freeze">Freezing</string>
@@ -170,6 +173,13 @@
     <string name="notification_lighting_indicator_adjustment_section">Điều chỉnh chỉ báo</string>
     <string name="notification_lighting_scale_title">Tỉ lệ</string>
     <string name="notification_lighting_duration_title">Khoảng thời gian</string>
+    <string name="notification_lighting_style_sweep">Sweep</string>
+    <string name="notification_lighting_sweep_position_title">Position</string>
+    <string name="notification_lighting_sweep_random_shapes_title">Random shapes</string>
+    <string name="notification_lighting_sweep_thickness_title">Stroke thickness</string>
+    <string name="notification_lighting_sweep_pos_left">Left</string>
+    <string name="notification_lighting_sweep_pos_center">Center</string>
+    <string name="notification_lighting_sweep_pos_right">Right</string>
     <string name="settings_section_animation">Hoạt hình</string>
     <string name="notification_lighting_pulse_count_title">Số xung</string>
     <string name="notification_lighting_pulse_duration_title">Thời lượng xung</string>
@@ -182,6 +192,7 @@
     <string name="ambient_show_lock_screen_desc">Không có lớp phủ màu đen</string>
     <!-- Tiles -->
     <string name="action_add">Thêm vào</string>
+    <string name="action_added">Added</string>
     <string name="qs_tile_already_added">Đã thêm</string>
     <string name="qs_tile_requires_android_13">Yêu cầu Android 13+</string>
     <string name="tile_ui_blur">Làm mờ giao diện người dùng</string>
@@ -248,6 +259,10 @@
     <string name="screen_locked_security_warning_text">Tính năng này không phải là dễ dàng. Có thể có những trường hợp đặc biệt khi ai đó vẫn có thể tương tác với ô. \nNgoài ra, hãy nhớ rằng Android sẽ luôn cho phép thực hiện khởi động lại bắt buộc và Pixel cũng sẽ luôn cho phép tắt thiết bị khỏi màn hình khóa.</string>
     <string name="screen_locked_security_airplane_warning">Đảm bảo xóa ô chế độ trên máy bay khỏi cài đặt nhanh vì điều đó không thể ngăn chặn được vì nó không mở cửa sổ hộp thoại.</string>
     <string name="screen_locked_security_description">Khi được bật, bảng Cài đặt nhanh sẽ đóng ngay lập tức và thiết bị sẽ bị khóa nếu ai đó cố gắng tương tác với các ô Internet trong khi thiết bị bị khóa. \n\nĐiều này cũng sẽ vô hiệu hóa mở khóa sinh trắc học để ngăn chặn truy cập trái phép tiếp theo. Tỷ lệ hoạt ảnh sẽ giảm xuống 0,1 lần khi bị khóa để khiến việc tương tác trở nên khó khăn hơn.</string>
+    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
+    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
+    <string name="search_disable_qs_locked_title">Disable QS Locked</string>
+    <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
     <string name="sound_mode_reorder_title">Chế độ đặt hàng lại</string>
     <string name="sound_mode_long_press_hint">Nhấn và giữ để chuyển đổi</string>
@@ -623,6 +638,10 @@
     <string name="desc_auto_check_updates">Check for updates at app launch</string>
     <string name="action_all_set">All Set</string>
     <string name="action_check_whats_new">Check What\'s New?</string>
+    <string name="welcome_back_title">Welcome back to Essentials</string>
+    <string name="action_see_whats_new">See what\'s new</string>
+    <string name="msg_error_load_release_notes">Couldn\'t load the release note</string>
+    <string name="action_view_on_web">View on web</string>
     <string name="action_done">Xong</string>
     <string name="action_preview">Xem trước</string>
     <string name="action_help_guide">Hướng dẫn trợ giúp</string>
@@ -731,6 +750,9 @@
     <string name="automation_service_channel_name">Dịch vụ tự động hóa</string>
     <string name="automation_service_running_title">Tự động hóa đang hoạt động</string>
     <string name="automation_service_running_desc">Giám sát các sự kiện hệ thống cho quá trình tự động hóa của bạn</string>
+    <string name="app_detection_service_channel_name">App Detection Service</string>
+    <string name="app_detection_service_running_title">App Detection Active</string>
+    <string name="app_detection_service_running_desc">Monitoring app activity</string>
     <string name="diy_action_device_effects">Hiệu ứng thiết bị</string>
     <string name="diy_device_effects_desc">Kiểm soát các hiệu ứng cấp hệ thống như thang độ xám, triệt tiêu AOD, làm mờ hình nền và chế độ ban đêm.</string>
     <string name="diy_effect_grayscale">Thang độ xám</string>
@@ -1149,6 +1171,10 @@
     <string name="cat_interface">Giao diện</string>
     <string name="cat_display">Trưng bày</string>
     <string name="cat_protection">Sự bảo vệ</string>
+    <string name="cat_accessibility">Accessibility</string>
+    <string name="cat_connectivity">Connectivity</string>
+    <string name="cat_privacy">Privacy</string>
+    <string name="cat_utils">Utilities</string>
     <string name="label_kbd_abc">ABC</string>
     <string name="label_kbd_symbols">\?#/</string>
     <string name="label_kaomoji">Kaomoji</string>

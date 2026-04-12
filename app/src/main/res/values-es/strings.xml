@@ -24,6 +24,8 @@
     <string name="app_lock_description">Proteja sus aplicaciones con autenticación biométrica. Las aplicaciones bloqueadas requerirán autenticación al iniciarse. Permanecen desbloqueadas hasta que la pantalla se apaga.</string>
     <string name="app_lock_warning">Tenga en cuenta que esta no es una solución sólida, ya que es solo una aplicación de terceros. Si necesita una seguridad sólida, considere utilizar el espacio privado u otras funciones similares.</string>
     <string name="app_lock_biometric_note">Otra nota, el mensaje de autenticación biométrica solo le permite utilizar métodos de clase seguros FUERTES. Los métodos de seguridad de desbloqueo facial de clase DÉBIL en dispositivos como Pixel 7 solo podrán utilizar otros métodos de autenticación FUERTES disponibles, como huella digital o PIN.</string>
+    <string name="setting_use_usage_access_title">Use usage access</string>
+    <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Habilitar reasignación de botones</string>
     <string name="button_remap_use_shizuku_title">Utilice Shizuku o Root o Root</string>
@@ -145,6 +147,7 @@
     <string name="freeze_dont_freeze_active_apps_title">No\'no congele aplicaciones activas</string>
     <string name="perm_usage_stats_title">Estadísticas de uso</string>
     <string name="perm_usage_stats_desc">Requerido para detectar qué aplicaciones están actualmente en primer plano para evitar congelarlas</string>
+    <string name="perm_usage_stats_desc_app_lock">Required to detect foreground apps for App Lock features when accessibility is not used.</string>
     <string name="perm_notif_listener_desc_freeze">Requerido para detectar medios en reproducción y notificaciones activas para evitar congelarlas</string>
     <string name="freeze_mode_title">Freeze mode</string>
     <string name="freeze_mode_freeze">Freezing</string>
@@ -170,6 +173,13 @@
     <string name="notification_lighting_indicator_adjustment_section">Ajuste del indicador</string>
     <string name="notification_lighting_scale_title">Escala</string>
     <string name="notification_lighting_duration_title">Duración</string>
+    <string name="notification_lighting_style_sweep">Sweep</string>
+    <string name="notification_lighting_sweep_position_title">Position</string>
+    <string name="notification_lighting_sweep_random_shapes_title">Random shapes</string>
+    <string name="notification_lighting_sweep_thickness_title">Stroke thickness</string>
+    <string name="notification_lighting_sweep_pos_left">Left</string>
+    <string name="notification_lighting_sweep_pos_center">Center</string>
+    <string name="notification_lighting_sweep_pos_right">Right</string>
     <string name="settings_section_animation">Animación</string>
     <string name="notification_lighting_pulse_count_title">recuento de pulsos</string>
     <string name="notification_lighting_pulse_duration_title">Duración del pulso</string>
@@ -182,6 +192,7 @@
     <string name="ambient_show_lock_screen_desc">Sin superposición negra</string>
     <!-- Tiles -->
     <string name="action_add">Agregar</string>
+    <string name="action_added">Added</string>
     <string name="qs_tile_already_added">Ya agregado</string>
     <string name="qs_tile_requires_android_13">Requiere Android 13+</string>
     <string name="tile_ui_blur">Desenfoque de la interfaz de usuario</string>
@@ -248,6 +259,10 @@
     <string name="screen_locked_security_warning_text">Esta característica no es infalible. Puede haber casos extremos en los que alguien aún pueda interactuar con el mosaico. \nTambién tenga en cuenta que Android siempre permitirá realizar un reinicio forzado y Pixels siempre permitirá que el dispositivo se apague desde la pantalla de bloqueo también.</string>
     <string name="screen_locked_security_airplane_warning">Asegúrese de eliminar el mosaico del modo avión de la configuración rápida, ya que eso no se puede evitar porque no abre una ventana de diálogo.</string>
     <string name="screen_locked_security_description">Cuando esté habilitado, el panel de Configuración rápida se cerrará inmediatamente y el dispositivo se bloqueará si alguien intenta interactuar con mosaicos de Internet mientras el dispositivo está bloqueado. \n\nEsto también deshabilitará el desbloqueo biométrico para evitar más accesos no autorizados. La escala de la animación se reducirá a 0,1x mientras esté bloqueada para que sea aún más difícil interactuar con ella.</string>
+    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
+    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
+    <string name="search_disable_qs_locked_title">Disable QS Locked</string>
+    <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
     <string name="sound_mode_reorder_title">Modos de reordenamiento</string>
     <string name="sound_mode_long_press_hint">Mantenga presionado para alternar</string>
@@ -623,6 +638,10 @@
     <string name="desc_auto_check_updates">Check for updates at app launch</string>
     <string name="action_all_set">All Set</string>
     <string name="action_check_whats_new">Check What\'s New?</string>
+    <string name="welcome_back_title">Welcome back to Essentials</string>
+    <string name="action_see_whats_new">See what\'s new</string>
+    <string name="msg_error_load_release_notes">Couldn\'t load the release note</string>
+    <string name="action_view_on_web">View on web</string>
     <string name="action_done">Hecho</string>
     <string name="action_preview">Avance</string>
     <string name="action_help_guide">Guía de ayuda</string>
@@ -731,6 +750,9 @@
     <string name="automation_service_channel_name">Servicio de automatización</string>
     <string name="automation_service_running_title">Automatizaciones activas</string>
     <string name="automation_service_running_desc">Monitoreo de eventos del sistema para sus automatizaciones</string>
+    <string name="app_detection_service_channel_name">App Detection Service</string>
+    <string name="app_detection_service_running_title">App Detection Active</string>
+    <string name="app_detection_service_running_desc">Monitoring app activity</string>
     <string name="diy_action_device_effects">Efectos del dispositivo</string>
     <string name="diy_device_effects_desc">Controle los efectos a nivel del sistema, como la escala de grises, la supresión de AOD, la atenuación del fondo de pantalla y el modo nocturno.</string>
     <string name="diy_effect_grayscale">Escala de grises</string>
@@ -1149,6 +1171,10 @@
     <string name="cat_interface">Interfaz</string>
     <string name="cat_display">Mostrar</string>
     <string name="cat_protection">Protección</string>
+    <string name="cat_accessibility">Accessibility</string>
+    <string name="cat_connectivity">Connectivity</string>
+    <string name="cat_privacy">Privacy</string>
+    <string name="cat_utils">Utilities</string>
     <string name="label_kbd_abc">abecedario</string>
     <string name="label_kbd_symbols">\?#/</string>
     <string name="label_kaomoji">Kaomoji</string>
