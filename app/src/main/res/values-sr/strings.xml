@@ -173,6 +173,13 @@
     <string name="notification_lighting_indicator_adjustment_section">Подешавање индикатора</string>
     <string name="notification_lighting_scale_title">Сцале</string>
     <string name="notification_lighting_duration_title">Трајање</string>
+    <string name="notification_lighting_style_sweep">Sweep</string>
+    <string name="notification_lighting_sweep_position_title">Position</string>
+    <string name="notification_lighting_sweep_random_shapes_title">Random shapes</string>
+    <string name="notification_lighting_sweep_thickness_title">Stroke thickness</string>
+    <string name="notification_lighting_sweep_pos_left">Left</string>
+    <string name="notification_lighting_sweep_pos_center">Center</string>
+    <string name="notification_lighting_sweep_pos_right">Right</string>
     <string name="settings_section_animation">Анимација</string>
     <string name="notification_lighting_pulse_count_title">Број пулса</string>
     <string name="notification_lighting_pulse_duration_title">Трајање пулса</string>
