@@ -49,7 +49,6 @@ object FeatureRegistry {
             aboutDescription = R.string.about_desc_ambient_music_glance,
             permissionKeys = listOf("ACCESSIBILITY", "NOTIFICATION_LISTENER"),
             showToggle = true,
-            isBeta = true,
             parentFeatureId = "Sound"
         ) {
             override fun isEnabled(viewModel: MainViewModel) =
@@ -854,7 +853,6 @@ object FeatureRegistry {
             permissionKeys = listOf("BLUETOOTH_CONNECT", "BLUETOOTH_SCAN"),
             showToggle = false,
             hasMoreSettings = true,
-            isBeta = true,
             parentFeatureId = "Widgets"
         ) {
             override fun isEnabled(viewModel: MainViewModel) = true
@@ -902,7 +900,6 @@ object FeatureRegistry {
             permissionKeys = listOf("ACCESSIBILITY", "NOTIFICATION_LISTENER"),
             hasMoreSettings = true,
             showToggle = true,
-            isBeta = true,
             isVisibleInMain = false
         ) {
             override fun isEnabled(viewModel: MainViewModel) =

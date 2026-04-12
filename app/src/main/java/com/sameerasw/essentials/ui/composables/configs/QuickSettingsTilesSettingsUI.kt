@@ -290,15 +290,7 @@ fun QuickSettingsTilesSettingsUI(
             ChargeQuickTileService::class.java,
             if (ShellUtils.isRootEnabled(context)) listOf("ROOT") else listOf("SHIZUKU"),
             R.string.about_desc_charge_optimization
-        ),
-        QSTileInfo(
-            R.string.tile_location_reached,
-            R.drawable.rounded_navigation_24,
-            com.sameerasw.essentials.services.tiles.LocationReachedTileService::class.java,
-            listOf("LOCATION", "BACKGROUND_LOCATION", "USE_FULL_SCREEN_INTENT"),
-            R.string.about_desc_location_reached
         )
-
     )
 
     if (showPermissionSheet && selectedTileForPermissions != null) {
