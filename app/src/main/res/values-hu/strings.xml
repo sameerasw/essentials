@@ -192,6 +192,7 @@
     <string name="ambient_show_lock_screen_desc">Nincs fekete fedőréteg</string>
     <!-- Tiles -->
     <string name="action_add">Hozzáadás</string>
+    <string name="action_added">Added</string>
     <string name="qs_tile_already_added">Már hozzáadva</string>
     <string name="qs_tile_requires_android_13">Android 13+ szükséges</string>
     <string name="tile_ui_blur">UI Blur</string>
@@ -1166,6 +1167,10 @@
     <string name="cat_interface">Felület</string>
     <string name="cat_display">Kijelző</string>
     <string name="cat_protection">Védelem</string>
+    <string name="cat_accessibility">Accessibility</string>
+    <string name="cat_connectivity">Connectivity</string>
+    <string name="cat_privacy">Privacy</string>
+    <string name="cat_utils">Utilities</string>
     <string name="label_kbd_abc">ABC</string>
     <string name="label_kbd_symbols">\?#/</string>
     <string name="label_kaomoji">Kaomoji</string>
