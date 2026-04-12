@@ -192,6 +192,7 @@
     <string name="ambient_show_lock_screen_desc">Ingen sort overlejring</string>
     <!-- Tiles -->
     <string name="action_add">Tilføje</string>
+    <string name="action_added">Added</string>
     <string name="qs_tile_already_added">Allerede tilføjet</string>
     <string name="qs_tile_requires_android_13">Kræver Android 13+</string>
     <string name="tile_ui_blur">UI sløring</string>
@@ -1166,6 +1167,10 @@
     <string name="cat_interface">Interface</string>
     <string name="cat_display">Vise</string>
     <string name="cat_protection">Beskyttelse</string>
+    <string name="cat_accessibility">Accessibility</string>
+    <string name="cat_connectivity">Connectivity</string>
+    <string name="cat_privacy">Privacy</string>
+    <string name="cat_utils">Utilities</string>
     <string name="label_kbd_abc">ABC</string>
     <string name="label_kbd_symbols">\?#/</string>
     <string name="label_kaomoji">Kaomoji</string>
