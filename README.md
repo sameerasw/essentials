@@ -7,7 +7,7 @@ Essential tools, mods and workarounds for Pixels and other Androids
 </p>
 
 <p align="center">
-  <a href="https://github.com/sameerasw/essentials/releases/latest"><img  width="99%"  alt=" reddit-banner" src="https://github.com/user-attachments/assets/a5197458-d64a-4c6a-a6a3-9e1f36030205" /></a>
+  <a href="https://www.reddit.com/r/MadebySameerasw"><img  width="99%"  alt=" reddit-banner" src="https://github.com/user-attachments/assets/a5197458-d64a-4c6a-a6a3-9e1f36030205" /></a>
 </p>
 
 <br>
