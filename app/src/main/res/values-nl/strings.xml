@@ -24,6 +24,8 @@
     <string name="app_lock_description">Beveilig je apps met biometrische authenticatie. Vergrendelde apps zullen authenticatie vereisen bij openen, blijft ontgrendeld totdat het scherm word uitgezet.</string>
     <string name="app_lock_warning">Wees er van bewust dat dit niet een robuuste oplossing is, omdat dit alleen maar een app van een derde partij is. Als je sterke beveiliging nodig hebt, probeer dan Privéruimte of andere dergelijke functies.</string>
     <string name="app_lock_biometric_note">Nog een opmerking: De biometrische authenticatie laat je alleen STERKE beveiligingsmethoden gebruiken. Gezichtsherkenning wordt als ZWAK gezien bij apparaten zoals de Pixel 7. Zulke apparaten zullen andere STERKE beveiligingsmethoden gebruiken zoals vingerafdruk of pincode.</string>
+    <string name="setting_use_usage_access_title">Use usage access</string>
+    <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Opnieuw toewijzen van fysieke knoppen inschakelen</string>
     <string name="button_remap_use_shizuku_title">Use Shizuku</string>
@@ -145,6 +147,7 @@
     <string name="freeze_dont_freeze_active_apps_title">Niet actieve apps bevriezen</string>
     <string name="perm_usage_stats_title">Gebruiksstatistieken</string>
     <string name="perm_usage_stats_desc">Vereist om te detecteren welke apps momenteel in gebruik zijn om te voorkomen dat ze worden bevroren.</string>
+    <string name="perm_usage_stats_desc_app_lock">Required to detect foreground apps for App Lock features when accessibility is not used.</string>
     <string name="perm_notif_listener_desc_freeze">Vereist om afspelende media en actieve meldingen te detecteren om te voorkomen dat ze worden bevroren.</string>
     <string name="freeze_mode_title">Vriesmodus</string>
     <string name="freeze_mode_freeze">Bevriezen</string>
@@ -170,6 +173,13 @@
     <string name="notification_lighting_indicator_adjustment_section">Indicator aanpassen</string>
     <string name="notification_lighting_scale_title">Grootte</string>
     <string name="notification_lighting_duration_title">Duur</string>
+    <string name="notification_lighting_style_sweep">Sweep</string>
+    <string name="notification_lighting_sweep_position_title">Position</string>
+    <string name="notification_lighting_sweep_random_shapes_title">Random shapes</string>
+    <string name="notification_lighting_sweep_thickness_title">Stroke thickness</string>
+    <string name="notification_lighting_sweep_pos_left">Left</string>
+    <string name="notification_lighting_sweep_pos_center">Center</string>
+    <string name="notification_lighting_sweep_pos_right">Right</string>
     <string name="settings_section_animation">Animatie</string>
     <string name="notification_lighting_pulse_count_title">Pulshoeveelheid</string>
     <string name="notification_lighting_pulse_duration_title">Pulsduur</string>
@@ -182,6 +192,7 @@
     <string name="ambient_show_lock_screen_desc">Geen zwarte overlay</string>
     <!-- Tiles -->
     <string name="action_add">Toevoegen</string>
+    <string name="action_added">Added</string>
     <string name="qs_tile_already_added">Al toegevoegd</string>
     <string name="qs_tile_requires_android_13">Vereist Android 13+</string>
     <string name="tile_ui_blur">UI-vervaging</string>
@@ -248,6 +259,10 @@
     <string name="screen_locked_security_warning_text">Deze functie is niet perfect. Er kunnen randgevallen zijn waarbij iemand nog steeds de tegel kan gebruiken. \nBedenk ook dat Android een geforceerde herstart toestaat en Pixels altijd zullen toestaan dat het apparaat vanaf het vergrendelscherm uitgezet kan worden.</string>
     <string name="screen_locked_security_airplane_warning">Zorg ervoor dat je de vliegtuigmodustegel in de snelle instellingen verwijdert omdat dat niet te voorkomen is omdat het niet een dialoogvenster opent.</string>
     <string name="screen_locked_security_description">Wanneer inschakelt, zal het Snelle Instellingenmenu meteen gesloten worden en zal het apparaat uitgeschakeld worden als iemand probeert de internettegels probeert te gebruiken terwijl het apparaat vergrendeld is. \n\nDit zal ook biometrisch ontgrendelen uitschakelen om verdere ongeautoriseerde toegang te voorkomen. Animatieschaal zal verminderd worden tot 0.1x terwijl het apparaat vergrendeld is om interactie moeilijker te maken.</string>
+    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
+    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
+    <string name="search_disable_qs_locked_title">Disable QS Locked</string>
+    <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
     <string name="sound_mode_reorder_title">Modi hersorteren</string>
     <string name="sound_mode_long_press_hint">Lang indrukken om te schakelen</string>
@@ -731,6 +746,9 @@
     <string name="automation_service_channel_name">Automatiseringsdienst</string>
     <string name="automation_service_running_title">Automatiseringen actief</string>
     <string name="automation_service_running_desc">Systeemgebeurtenissen in de gaten houden voor je automatiseringen</string>
+    <string name="app_detection_service_channel_name">App Detection Service</string>
+    <string name="app_detection_service_running_title">App Detection Active</string>
+    <string name="app_detection_service_running_desc">Monitoring app activity</string>
     <string name="diy_action_device_effects">Apparaateffecten</string>
     <string name="diy_device_effects_desc">Bestuur systeemwijde effecten zoals grijstinten, onderdrukking van Always-On Display en nachtmodus.</string>
     <string name="diy_effect_grayscale">Grijstinten</string>
@@ -1149,6 +1167,10 @@
     <string name="cat_interface">Interface</string>
     <string name="cat_display">Scherm</string>
     <string name="cat_protection">Bescherming</string>
+    <string name="cat_accessibility">Accessibility</string>
+    <string name="cat_connectivity">Connectivity</string>
+    <string name="cat_privacy">Privacy</string>
+    <string name="cat_utils">Utilities</string>
     <string name="label_kbd_abc">ABC</string>
     <string name="label_kbd_symbols">\?#/</string>
     <string name="label_kaomoji">Kaomoji</string>

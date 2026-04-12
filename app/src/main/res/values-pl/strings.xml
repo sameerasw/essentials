@@ -24,6 +24,8 @@
     <string name="app_lock_description">Zabezpiecz swoje aplikacje za pomocą uwierzytelniania biometrycznego. Zablokowane aplikacje będą wymagały uwierzytelnienia podczas uruchamiania. Pozostaną odblokowane do momentu wyłączenia ekranu.</string>
     <string name="app_lock_warning">Pamiętaj, że nie jest to niezawodne rozwiązanie, ponieważ jest to tylko aplikacja innej firmy. Jeśli potrzebujesz silnego bezpieczeństwa, rozważ skorzystanie z przestrzeni prywatnej lub innych podobnych funkcji.</string>
     <string name="app_lock_biometric_note">Kolejna uwaga: monit o uwierzytelnienie biometryczne pozwala używać tylko metod bezpiecznej klasy STRONG. Metody zabezpieczeń odblokowywania twarzą w klasie SŁABY w urządzeniach takich jak Pixel 7 będą mogły wykorzystywać tylko dostępne inne SILNE metody uwierzytelniania, takie jak odcisk palca lub PIN.</string>
+    <string name="setting_use_usage_access_title">Use usage access</string>
+    <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Włącz ponowne mapowanie przycisków</string>
     <string name="button_remap_use_shizuku_title">Użyj Shizuku lub Root lub Root</string>
@@ -145,6 +147,7 @@
     <string name="freeze_dont_freeze_active_apps_title">Nie \'nie zamrażaj aktywnych aplikacji</string>
     <string name="perm_usage_stats_title">Statystyki użytkowania</string>
     <string name="perm_usage_stats_desc">Wymagane do wykrycia, które aplikacje są aktualnie na pierwszym planie, aby uniknąć ich zablokowania</string>
+    <string name="perm_usage_stats_desc_app_lock">Required to detect foreground apps for App Lock features when accessibility is not used.</string>
     <string name="perm_notif_listener_desc_freeze">Wymagane do wykrywania odtwarzanych multimediów i aktywnych powiadomień, aby uniknąć ich zablokowania</string>
     <string name="freeze_mode_title">Freeze mode</string>
     <string name="freeze_mode_freeze">Freezing</string>
@@ -170,6 +173,13 @@
     <string name="notification_lighting_indicator_adjustment_section">Regulacja wskaźnika</string>
     <string name="notification_lighting_scale_title">Skala</string>
     <string name="notification_lighting_duration_title">Czas trwania</string>
+    <string name="notification_lighting_style_sweep">Sweep</string>
+    <string name="notification_lighting_sweep_position_title">Position</string>
+    <string name="notification_lighting_sweep_random_shapes_title">Random shapes</string>
+    <string name="notification_lighting_sweep_thickness_title">Stroke thickness</string>
+    <string name="notification_lighting_sweep_pos_left">Left</string>
+    <string name="notification_lighting_sweep_pos_center">Center</string>
+    <string name="notification_lighting_sweep_pos_right">Right</string>
     <string name="settings_section_animation">Ożywienie</string>
     <string name="notification_lighting_pulse_count_title">Liczba impulsów</string>
     <string name="notification_lighting_pulse_duration_title">Czas trwania impulsu</string>
@@ -182,6 +192,7 @@
     <string name="ambient_show_lock_screen_desc">Brak czarnej nakładki</string>
     <!-- Tiles -->
     <string name="action_add">Dodać</string>
+    <string name="action_added">Added</string>
     <string name="qs_tile_already_added">Już dodano</string>
     <string name="qs_tile_requires_android_13">Wymaga Androida 13+</string>
     <string name="tile_ui_blur">Rozmycie interfejsu</string>
@@ -248,6 +259,10 @@
     <string name="screen_locked_security_warning_text">Ta funkcja nie jest niezawodna. Mogą wystąpić przypadki Edge, w których ktoś nadal będzie mógł wchodzić w interakcję z kafelkiem. \nPamiętaj też, że Android zawsze pozwoli na wymuszone ponowne uruchomienie, a Pixels zawsze pozwoli na wyłączenie urządzenia również z poziomu ekranu blokady.</string>
     <string name="screen_locked_security_airplane_warning">Pamiętaj, aby usunąć kafelek trybu samolotowego z szybkich ustawień, ponieważ nie można temu zapobiec, ponieważ nie otwiera okna dialogowego.</string>
     <string name="screen_locked_security_description">Po włączeniu panel Szybkich ustawień zostanie natychmiast zamknięty, a urządzenie zostanie zablokowane, jeśli ktoś spróbuje wejść w interakcję z kafelkami internetowymi, gdy urządzenie jest zablokowane. \n\n Spowoduje to również wyłączenie odblokowania biometrycznego, aby zapobiec dalszemu nieautoryzowanemu dostępowi. Po zablokowaniu skala animacji zostanie zmniejszona do 0,1x, aby jeszcze bardziej utrudnić interakcję.</string>
+    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
+    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
+    <string name="search_disable_qs_locked_title">Disable QS Locked</string>
+    <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
     <string name="sound_mode_reorder_title">Tryby ponownego zamówienia</string>
     <string name="sound_mode_long_press_hint">Naciśnij długo, aby przełączyć</string>
@@ -731,6 +746,9 @@
     <string name="automation_service_channel_name">Usługa automatyzacji</string>
     <string name="automation_service_running_title">Automatyka aktywna</string>
     <string name="automation_service_running_desc">Monitorowanie zdarzeń systemowych dla Twoich automatyzacji</string>
+    <string name="app_detection_service_channel_name">App Detection Service</string>
+    <string name="app_detection_service_running_title">App Detection Active</string>
+    <string name="app_detection_service_running_desc">Monitoring app activity</string>
     <string name="diy_action_device_effects">Efekty urządzenia</string>
     <string name="diy_device_effects_desc">Kontroluj efekty na poziomie systemu, takie jak skala szarości, tłumienie AOD, przyciemnianie tapety i tryb nocny.</string>
     <string name="diy_effect_grayscale">Skala szarości</string>
@@ -1149,6 +1167,10 @@
     <string name="cat_interface">Interfejs</string>
     <string name="cat_display">Wyświetlacz</string>
     <string name="cat_protection">Ochrona</string>
+    <string name="cat_accessibility">Accessibility</string>
+    <string name="cat_connectivity">Connectivity</string>
+    <string name="cat_privacy">Privacy</string>
+    <string name="cat_utils">Utilities</string>
     <string name="label_kbd_abc">ABC</string>
     <string name="label_kbd_symbols">\?#/</string>
     <string name="label_kaomoji">Kaomoji</string>

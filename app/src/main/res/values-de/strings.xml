@@ -24,6 +24,8 @@
     <string name="app_lock_description">Schütze deine Apps mit biometrischer Authentifizierung. Gesperrte Apps erfordern beim Öffnen eine Authentifizierung und bleiben entsperrt, bis der Bildschirm ausgeschaltet wird.</string>
     <string name="app_lock_warning">Beachte bitte, dass dies keine zuverlässige Lösung darstellt, da es sich lediglich um eine Drittanbieteranwendung handelt. Für erhöhte Sicherheitsanforderungen sollten Sie das vertrauliche Profil oder ähnliche Funktionen in Betracht ziehen.</string>
     <string name="app_lock_biometric_note">Noch ein Hinweis: Die biometrische Authentifizierungsaufforderung unterstützt ausschließlich sichere Methoden der Klasse STARK. Gesichtserkennungsmethoden der Klasse SCHWACH auf Geräten wie dem Pixel 7 können nur die sonstig verfügbaren STARK-Authentifizierungsmethoden wie Fingerabdruck oder PIN nutzen.</string>
+    <string name="setting_use_usage_access_title">Use usage access</string>
+    <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Aktiviere Tastenneubelegung</string>
     <string name="button_remap_use_shizuku_title">Use Shizuku</string>
@@ -145,6 +147,7 @@
     <string name="freeze_dont_freeze_active_apps_title">Aktive Apps nicht einfrieren</string>
     <string name="perm_usage_stats_title">Nutzungsstatistiken</string>
     <string name="perm_usage_stats_desc">Benötigt, um zu erkennen, welche Apps derzeit im Vordergrund sind, um deren Einfrieren zu vermeiden</string>
+    <string name="perm_usage_stats_desc_app_lock">Required to detect foreground apps for App Lock features when accessibility is not used.</string>
     <string name="perm_notif_listener_desc_freeze">Benötigt, um wiedergegebene Medien und aktive Benachrichtigungen zu erkennen, um deren Einfrieren zu vermeiden</string>
     <string name="freeze_mode_title">Freeze mode</string>
     <string name="freeze_mode_freeze">Freezing</string>
@@ -170,6 +173,13 @@
     <string name="notification_lighting_indicator_adjustment_section">Indikator anpassen</string>
     <string name="notification_lighting_scale_title">Größe</string>
     <string name="notification_lighting_duration_title">Dauer</string>
+    <string name="notification_lighting_style_sweep">Sweep</string>
+    <string name="notification_lighting_sweep_position_title">Position</string>
+    <string name="notification_lighting_sweep_random_shapes_title">Random shapes</string>
+    <string name="notification_lighting_sweep_thickness_title">Stroke thickness</string>
+    <string name="notification_lighting_sweep_pos_left">Left</string>
+    <string name="notification_lighting_sweep_pos_center">Center</string>
+    <string name="notification_lighting_sweep_pos_right">Right</string>
     <string name="settings_section_animation">Animation</string>
     <string name="notification_lighting_pulse_count_title">Impulszahl</string>
     <string name="notification_lighting_pulse_duration_title">Impulsdauer</string>
@@ -182,6 +192,7 @@
     <string name="ambient_show_lock_screen_desc">Kein schwarzes Overlay</string>
     <!-- Tiles -->
     <string name="action_add">Hinzufügen</string>
+    <string name="action_added">Added</string>
     <string name="qs_tile_already_added">Bereits hinzugefügt</string>
     <string name="qs_tile_requires_android_13">Benötigt Android 13+</string>
     <string name="tile_ui_blur">UI-Unschärfe</string>
@@ -248,6 +259,10 @@
     <string name="screen_locked_security_warning_text">Diese Funktion ist nicht absolut sicher. Es kann Ausnahmefälle geben, in denen jemand dennoch mit der Kachel interagieren kann. \nBeachten Sie auch, dass Android immer einen erzwungenen Neustart zulässt und Pixel-Handys immer das Ausschalten des Geräts über den Sperrbildschirm zulassen.</string>
     <string name="screen_locked_security_airplane_warning">Stelle sicher, dass du die Kachel für den Flugmodus aus den Schnelleinstellungen entfernst, da dies nicht verhindert werden kann, da kein Dialogfenster geöffnet wird.</string>
     <string name="screen_locked_security_description">Wenn diese Option aktiviert ist, werden die Schnelleinstellungen sofort geschlossen und das Gerät komplett gesperrt, sobald jemand versucht, mit Internetkacheln zu interagieren, während das Gerät gesperrt ist. \n\nDadurch wird auch die biometrische Entsperrung deaktiviert, um weiteren unbefugten Zugriff zu verhindern. Die Animationsskala wird während der Sperrung auf 0,1x reduziert, um die Interaktion noch weiter zu erschweren.</string>
+    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
+    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
+    <string name="search_disable_qs_locked_title">Disable QS Locked</string>
+    <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
     <string name="sound_mode_reorder_title">Modi neu anordnen</string>
     <string name="sound_mode_long_press_hint">Langes Drücken zum Umschalten</string>
@@ -731,6 +746,9 @@
     <string name="automation_service_channel_name">Automatisierungsdienst</string>
     <string name="automation_service_running_title">Automatisierungen aktiv</string>
     <string name="automation_service_running_desc">Überwachung von Systemereignissen für deine Automatisierungen</string>
+    <string name="app_detection_service_channel_name">App Detection Service</string>
+    <string name="app_detection_service_running_title">App Detection Active</string>
+    <string name="app_detection_service_running_desc">Monitoring app activity</string>
     <string name="diy_action_device_effects">Geräteeffekte</string>
     <string name="diy_device_effects_desc">Steuer Effekte auf Systemebene wie Graustufen, AOD-Unterdrückung, Hintergrundbild-Dimmung und Nachtmodus.</string>
     <string name="diy_effect_grayscale">Graustufen</string>
@@ -1149,6 +1167,10 @@
     <string name="cat_interface">Benutzeroberfläche</string>
     <string name="cat_display">Display</string>
     <string name="cat_protection">Schutz</string>
+    <string name="cat_accessibility">Accessibility</string>
+    <string name="cat_connectivity">Connectivity</string>
+    <string name="cat_privacy">Privacy</string>
+    <string name="cat_utils">Utilities</string>
     <string name="label_kbd_abc">ABC</string>
     <string name="label_kbd_symbols">\?#/</string>
     <string name="label_kaomoji">Kaomoji</string>

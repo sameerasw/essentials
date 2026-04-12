@@ -24,6 +24,8 @@
     <string name="app_lock_description">ජෛවමිතික සත්‍යාපනය සමඟින් ඔබගේ යෙදුම් සුරක්ෂිත කරන්න. අගුලු දැමූ යෙදුම් දියත් කරන විට සත්‍යාපනය අවශ්‍ය වනු ඇත, තිරය ක්‍රියා විරහිත වන තෙක් අගුලු දමා ඇත.</string>
     <string name="app_lock_warning">මෙය තුන්වන පාර්ශවීය යෙදුමක් පමණක් බැවින් මෙය ශක්තිමත් විසඳුමක් නොවන බව පරෙස්සම් වන්න. ඔබට ශක්තිමත් ආරක්ෂාවක් අවශ්‍ය නම්, පුද්ගලික අවකාශය හෝ වෙනත් එවැනි විශේෂාංග භාවිතා කිරීම සලකා බලන්න.</string>
     <string name="app_lock_biometric_note">තවත් සටහනක්, ජෛවමිතික සත්‍යාපන විමසුම මඟින් ඔබට ශක්තිමත් ආරක්ෂිත පන්ති ක්‍රම භාවිතා කිරීමට පමණක් ඉඩ ලබා දේ. Pixel 7 වැනි උපාංගවල WEAK පන්තියේ මුහුණෙන් අගුළු හැරීමේ ආරක්‍ෂක ක්‍රම භාවිත කිරීමට හැකි වනුයේ ඇඟිලි සලකුණු හෝ පින් වැනි පවතින අනෙකුත් ප්‍රබල සත්‍යාපන ක්‍රම පමණි.</string>
+    <string name="setting_use_usage_access_title">Use usage access</string>
+    <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">බොත්තම නැවත සකස් කිරීම සබල කරන්න</string>
     <string name="button_remap_use_shizuku_title">Shizuku හෝ Root හෝ Root භාවිතා කරන්න</string>
@@ -145,6 +147,7 @@
     <string name="freeze_dont_freeze_active_apps_title">සක්‍රිය යෙදුම් කැටි නොකරන්න\'t</string>
     <string name="perm_usage_stats_title">භාවිත සංඛ්යාලේඛන</string>
     <string name="perm_usage_stats_desc">ඒවා කැටි කිරීම වළක්වා ගැනීම සඳහා දැනට පෙරබිමෙහි ඇති යෙදුම් හඳුනා ගැනීමට අවශ්‍ය වේ</string>
+    <string name="perm_usage_stats_desc_app_lock">Required to detect foreground apps for App Lock features when accessibility is not used.</string>
     <string name="perm_notif_listener_desc_freeze">වාදනය කරන මාධ්‍ය සහ සක්‍රිය දැනුම්දීම් කැටි කිරීම වළක්වා ගැනීම සඳහා අනාවරණය කර ගැනීමට අවශ්‍ය වේ</string>
     <string name="freeze_mode_title">Freeze mode</string>
     <string name="freeze_mode_freeze">Freezing</string>
@@ -170,6 +173,13 @@
     <string name="notification_lighting_indicator_adjustment_section">දර්ශක ගැලපීම</string>
     <string name="notification_lighting_scale_title">පරිමාණය</string>
     <string name="notification_lighting_duration_title">කාලසීමාව</string>
+    <string name="notification_lighting_style_sweep">Sweep</string>
+    <string name="notification_lighting_sweep_position_title">Position</string>
+    <string name="notification_lighting_sweep_random_shapes_title">Random shapes</string>
+    <string name="notification_lighting_sweep_thickness_title">Stroke thickness</string>
+    <string name="notification_lighting_sweep_pos_left">Left</string>
+    <string name="notification_lighting_sweep_pos_center">Center</string>
+    <string name="notification_lighting_sweep_pos_right">Right</string>
     <string name="settings_section_animation">සජීවීකරණය</string>
     <string name="notification_lighting_pulse_count_title">ස්පන්දන ගණන</string>
     <string name="notification_lighting_pulse_duration_title">ස්පන්දන කාලය</string>
@@ -182,6 +192,7 @@
     <string name="ambient_show_lock_screen_desc">කළු ආවරණයක් නැත</string>
     <!-- Tiles -->
     <string name="action_add">එකතු කරන්න</string>
+    <string name="action_added">Added</string>
     <string name="qs_tile_already_added">දැනටමත් එකතු කර ඇත</string>
     <string name="qs_tile_requires_android_13">Android 13+ අවශ්‍යයි</string>
     <string name="tile_ui_blur">UI බොඳ කිරීම</string>
@@ -248,6 +259,10 @@
     <string name="screen_locked_security_warning_text">මෙම විශේෂාංගය විකාරරූපී නොවේ. යමෙකුට තවමත් ටයිල් එක සමඟ අන්තර් ක්‍රියා කිරීමට හැකි වන අවස්ථා තිබිය හැක. \nඑමෙන්ම Android සෑම විටම බලහත්කාරයෙන් නැවත පණගැන්වීමට ඉඩ දෙන බවත් Pixels සෑම විටම උපාංගය අගුළු තිරයෙන් අක්‍රිය කිරීමට ඉඩ දෙන බවත් මතක තබා ගන්න.</string>
     <string name="screen_locked_security_airplane_warning">එය සංවාද කවුළුවක් විවෘත නොකරන නිසා එය වැළැක්විය නොහැකි බැවින් ගුවන් යානා මාදිලියේ ටයිල් එක ඉක්මන් සිටුවම්වලින් ඉවත් කිරීමට වග බලා ගන්න.</string>
     <string name="screen_locked_security_description">සබල කළ විට, ක්ෂණික සැකසුම් පැනලය වහා වසා දමනු ඇති අතර, උපාංගය අගුලු දමා තිබියදී යමෙකු අන්තර්ජාල ටයිල් සමඟ අන්තර් ක්‍රියා කිරීමට උත්සාහ කළහොත් උපාංගය අගුලු දමනු ඇත. \n\nමෙය තවදුරටත් අනවසර ප්‍රවේශය වැලැක්වීමට ජෛවමිතික අගුලු හැරීම ද අබල කරනු ඇත. සජීවිකරණ පරිමාණය අගුලු දමා ඇති අතරතුර 0.1x දක්වා අඩු කරනු ලබන අතර එය සමඟ අන්තර් ක්‍රියා කිරීම වඩාත් අපහසු වේ.</string>
+    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
+    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
+    <string name="search_disable_qs_locked_title">Disable QS Locked</string>
+    <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
     <string name="sound_mode_reorder_title">නැවත ඇණවුම් මාදිලි</string>
     <string name="sound_mode_long_press_hint">ටොගල් කිරීමට දිගු ඔබන්න</string>
@@ -731,6 +746,9 @@
     <string name="automation_service_channel_name">ස්වයංක්‍රීයකරණ සේවාව</string>
     <string name="automation_service_running_title">ස්වයංක්‍රීය ක්‍රියාකාරී</string>
     <string name="automation_service_running_desc">ඔබගේ ස්වයංක්‍රීයකරණය සඳහා පද්ධති සිදුවීම් නිරීක්ෂණය කිරීම</string>
+    <string name="app_detection_service_channel_name">App Detection Service</string>
+    <string name="app_detection_service_running_title">App Detection Active</string>
+    <string name="app_detection_service_running_desc">Monitoring app activity</string>
     <string name="diy_action_device_effects">උපාංග බලපෑම්</string>
     <string name="diy_device_effects_desc">අළු පරිමාණ, AOD මර්දනය, බිතුපත අඳුරු කිරීම සහ රාත්‍රී මාදිලිය වැනි පද්ධති මට්ටමේ බලපෑම් පාලනය කරන්න.</string>
     <string name="diy_effect_grayscale">අළු පරිමාණ</string>
@@ -1149,6 +1167,10 @@
     <string name="cat_interface">අතුරු මුහුණත</string>
     <string name="cat_display">ප්රදර්ශනය කරන්න</string>
     <string name="cat_protection">ආරක්ෂාව</string>
+    <string name="cat_accessibility">Accessibility</string>
+    <string name="cat_connectivity">Connectivity</string>
+    <string name="cat_privacy">Privacy</string>
+    <string name="cat_utils">Utilities</string>
     <string name="label_kbd_abc">ABC</string>
     <string name="label_kbd_symbols">\?#/</string>
     <string name="label_kaomoji">Kaomoji</string>

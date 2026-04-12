@@ -24,6 +24,8 @@
     <string name="app_lock_description">Biztosítsa alkalmazásait biometrikus hitelesítéssel. A zárolt alkalmazások indításakor hitelesítésre van szükség. Feloldva marad, amíg a képernyő ki nem kapcsol.</string>
     <string name="app_lock_warning">Ügyeljen arra, hogy ez nem egy robusztus megoldás, mivel ez csak egy harmadik féltől származó alkalmazás. Ha erős biztonságra van szüksége, fontolja meg a Private Space vagy más hasonló funkciók használatát.</string>
     <string name="app_lock_biometric_note">Egy másik megjegyzés, a biometrikus hitelesítési prompt csak ERŐS biztonságos osztályú módszerek használatát teszi lehetővé. Az olyan eszközökben, mint a Pixel 7, a WEAK osztályba tartozó arcfeloldási biztonsági módszerek csak a rendelkezésre álló egyéb ERŐS hitelesítési módszereket, például ujjlenyomat- vagy PIN-kódot fogják tudni használni.</string>
+    <string name="setting_use_usage_access_title">Use usage access</string>
+    <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Gomb-visszatérképezés engedélyezése</string>
     <string name="button_remap_use_shizuku_title">Használja Shizuku vagy Root vagy Root</string>
@@ -145,6 +147,7 @@
     <string name="freeze_dont_freeze_active_apps_title">Don\'t lefagyasztja az aktív alkalmazásokat</string>
     <string name="perm_usage_stats_title">Használati statisztika</string>
     <string name="perm_usage_stats_desc">Szükséges annak észleléséhez, hogy mely alkalmazások vannak jelenleg az előtérben, hogy elkerüljék azok lefagyását</string>
+    <string name="perm_usage_stats_desc_app_lock">Required to detect foreground apps for App Lock features when accessibility is not used.</string>
     <string name="perm_notif_listener_desc_freeze">Szükséges a lejátszott média és az aktív értesítések észleléséhez, hogy elkerülje azok lefagyását</string>
     <string name="freeze_mode_title">Freeze mode</string>
     <string name="freeze_mode_freeze">Freezing</string>
@@ -170,6 +173,13 @@
     <string name="notification_lighting_indicator_adjustment_section">Kijelző beállítása</string>
     <string name="notification_lighting_scale_title">Skála</string>
     <string name="notification_lighting_duration_title">Időtartam</string>
+    <string name="notification_lighting_style_sweep">Sweep</string>
+    <string name="notification_lighting_sweep_position_title">Position</string>
+    <string name="notification_lighting_sweep_random_shapes_title">Random shapes</string>
+    <string name="notification_lighting_sweep_thickness_title">Stroke thickness</string>
+    <string name="notification_lighting_sweep_pos_left">Left</string>
+    <string name="notification_lighting_sweep_pos_center">Center</string>
+    <string name="notification_lighting_sweep_pos_right">Right</string>
     <string name="settings_section_animation">Animáció</string>
     <string name="notification_lighting_pulse_count_title">Pulzusszám</string>
     <string name="notification_lighting_pulse_duration_title">Impulzus időtartama</string>
@@ -182,6 +192,7 @@
     <string name="ambient_show_lock_screen_desc">Nincs fekete fedőréteg</string>
     <!-- Tiles -->
     <string name="action_add">Hozzáadás</string>
+    <string name="action_added">Added</string>
     <string name="qs_tile_already_added">Már hozzáadva</string>
     <string name="qs_tile_requires_android_13">Android 13+ szükséges</string>
     <string name="tile_ui_blur">UI Blur</string>
@@ -248,6 +259,10 @@
     <string name="screen_locked_security_warning_text">Ez a funkció nem bolondbiztos. Előfordulhatnak olyan szélsőséges esetek, amikor valaki még mindig képes kommunikálni a csempével. \nNe feledje, hogy az Android mindig engedélyezi a kényszerített újraindítást, a Pixels pedig mindig lehetővé teszi az eszköz kikapcsolását a lezárási képernyőről is.</string>
     <string name="screen_locked_security_airplane_warning">Ügyeljen arra, hogy eltávolítsa a repülőgép üzemmód csempét a gyorsbeállításokból, mivel ez nem akadályozható meg, mivel nem nyit meg párbeszédablakot.</string>
     <string name="screen_locked_security_description">Ha engedélyezve van, a Gyorsbeállítások panel azonnal bezárul, és az eszköz zárolva lesz, ha valaki internetes csempékkel próbál kommunikálni, miközben az eszköz zárolva van. \n\nEz a biometrikus feloldást is letiltja, hogy megakadályozza a további jogosulatlan hozzáférést. Az animáció skálája 0,1-szeresére csökken, miközben zárolva van, hogy még nehezebb legyen vele kommunikálni.</string>
+    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
+    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
+    <string name="search_disable_qs_locked_title">Disable QS Locked</string>
+    <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
     <string name="sound_mode_reorder_title">Újrarendelési módok</string>
     <string name="sound_mode_long_press_hint">Nyomja meg hosszan a váltáshoz</string>
@@ -731,6 +746,9 @@
     <string name="automation_service_channel_name">Automatizálási szolgáltatás</string>
     <string name="automation_service_running_title">Automatizálás aktív</string>
     <string name="automation_service_running_desc">Rendszeresemények figyelése az automatizálásokhoz</string>
+    <string name="app_detection_service_channel_name">App Detection Service</string>
+    <string name="app_detection_service_running_title">App Detection Active</string>
+    <string name="app_detection_service_running_desc">Monitoring app activity</string>
     <string name="diy_action_device_effects">Eszközeffektusok</string>
     <string name="diy_device_effects_desc">Vezérelje a rendszerszintű effektusokat, például a szürkeárnyalatot, az AOD-elnyomást, a háttérkép elsötétítését és az éjszakai módot.</string>
     <string name="diy_effect_grayscale">Szürkeárnyalatos</string>
@@ -1149,6 +1167,10 @@
     <string name="cat_interface">Felület</string>
     <string name="cat_display">Kijelző</string>
     <string name="cat_protection">Védelem</string>
+    <string name="cat_accessibility">Accessibility</string>
+    <string name="cat_connectivity">Connectivity</string>
+    <string name="cat_privacy">Privacy</string>
+    <string name="cat_utils">Utilities</string>
     <string name="label_kbd_abc">ABC</string>
     <string name="label_kbd_symbols">\?#/</string>
     <string name="label_kaomoji">Kaomoji</string>

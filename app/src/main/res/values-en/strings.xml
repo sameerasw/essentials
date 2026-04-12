@@ -24,6 +24,8 @@
     <string name="app_lock_description">Secure your apps with biometric authentication. Locked apps will require authentication when launching, Stays unlocked until the screen turns off.</string>
     <string name="app_lock_warning">Beware that this is not a robust solution as this is only a 3rd party application. If you need strong security, consider using Private Space or other such features.</string>
     <string name="app_lock_biometric_note">Another note, the biometric authentication prompt only lets you use STRONG secure class methods. Face unlock security methods in WEAK class in devices such as Pixel 7 will only be able to utilize the available other STRONG auth methods such as fingerprint or pin.</string>
+    <string name="setting_use_usage_access_title">Use usage access</string>
+    <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Enable Button Remap</string>
     <string name="button_remap_use_shizuku_title">Use Shizuku</string>
@@ -145,6 +147,7 @@
     <string name="freeze_dont_freeze_active_apps_title">Don\'t freeze active apps</string>
     <string name="perm_usage_stats_title">Usage Stats</string>
     <string name="perm_usage_stats_desc">Required to detect which apps are currently in the foreground to avoid freezing them</string>
+    <string name="perm_usage_stats_desc_app_lock">Required to detect foreground apps for App Lock features when accessibility is not used.</string>
     <string name="perm_notif_listener_desc_freeze">Required to detect playing media and active notifications to avoid freezing them</string>
     <string name="freeze_mode_title">Freeze mode</string>
     <string name="freeze_mode_freeze">Freezing</string>
@@ -170,6 +173,13 @@
     <string name="notification_lighting_indicator_adjustment_section">Indicator adjustment</string>
     <string name="notification_lighting_scale_title">Scale</string>
     <string name="notification_lighting_duration_title">Duration</string>
+    <string name="notification_lighting_style_sweep">Sweep</string>
+    <string name="notification_lighting_sweep_position_title">Position</string>
+    <string name="notification_lighting_sweep_random_shapes_title">Random shapes</string>
+    <string name="notification_lighting_sweep_thickness_title">Stroke thickness</string>
+    <string name="notification_lighting_sweep_pos_left">Left</string>
+    <string name="notification_lighting_sweep_pos_center">Center</string>
+    <string name="notification_lighting_sweep_pos_right">Right</string>
     <string name="settings_section_animation">Animation</string>
     <string name="notification_lighting_pulse_count_title">Pulse count</string>
     <string name="notification_lighting_pulse_duration_title">Pulse duration</string>
@@ -182,6 +192,7 @@
     <string name="ambient_show_lock_screen_desc">No black overlay</string>
     <!-- Tiles -->
     <string name="action_add">Add</string>
+    <string name="action_added">Added</string>
     <string name="qs_tile_already_added">Already added</string>
     <string name="qs_tile_requires_android_13">Requires Android 13+</string>
     <string name="tile_ui_blur">UI Blur</string>
@@ -248,6 +259,10 @@
     <string name="screen_locked_security_warning_text">This feature is not foolproof. There may be edge cases where someone still being able to interact with the tile. \nAlso keep in mind that Android will always allow to do a forced reboot and Pixels will always allow the device to be turned off from the lock screen as well.</string>
     <string name="screen_locked_security_airplane_warning">Make sure to remove the airplane mode tile from quick settings as that is not preventable because it does not open a dialog window.</string>
     <string name="screen_locked_security_description">When enabled, the Quick Settings panel will be immediately closed and the device will be locked down if someone attempt to interact with Internet tiles while the device is locked. \n\nThis will also disable biometric unlock to prevent further unauthorized access. Animation scale will be reduced to 0.1x while locked to make it even harder to interact with.</string>
+    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
+    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
+    <string name="search_disable_qs_locked_title">Disable QS Locked</string>
+    <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
     <string name="sound_mode_reorder_title">Re-order modes</string>
     <string name="sound_mode_long_press_hint">Long press to toggle</string>
@@ -731,6 +746,9 @@
     <string name="automation_service_channel_name">Automation Service</string>
     <string name="automation_service_running_title">Automations Active</string>
     <string name="automation_service_running_desc">Monitoring system events for your automations</string>
+    <string name="app_detection_service_channel_name">App Detection Service</string>
+    <string name="app_detection_service_running_title">App Detection Active</string>
+    <string name="app_detection_service_running_desc">Monitoring app activity</string>
     <string name="diy_action_device_effects">Device Effects</string>
     <string name="diy_device_effects_desc">Control system-level effects like grayscale, AOD suppression, wallpaper dimming, and night mode.</string>
     <string name="diy_effect_grayscale">Grayscale</string>
@@ -1149,6 +1167,10 @@
     <string name="cat_interface">Interface</string>
     <string name="cat_display">Display</string>
     <string name="cat_protection">Protection</string>
+    <string name="cat_accessibility">Accessibility</string>
+    <string name="cat_connectivity">Connectivity</string>
+    <string name="cat_privacy">Privacy</string>
+    <string name="cat_utils">Utilities</string>
     <string name="label_kbd_abc">ABC</string>
     <string name="label_kbd_symbols">\?#/</string>
     <string name="label_kaomoji">Kaomoji</string>
