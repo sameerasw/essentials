@@ -192,6 +192,7 @@
     <string name="ambient_show_lock_screen_desc">لا يوجد تراكب أسود</string>
     <!-- Tiles -->
     <string name="action_add">يضيف</string>
+    <string name="action_added">Added</string>
     <string name="qs_tile_already_added">تمت إضافتها بالفعل</string>
     <string name="qs_tile_requires_android_13">يتطلب أندرويد 13+</string>
     <string name="tile_ui_blur">طمس واجهة المستخدم</string>
@@ -1166,6 +1167,10 @@
     <string name="cat_interface">واجهة</string>
     <string name="cat_display">العرض</string>
     <string name="cat_protection">حماية</string>
+    <string name="cat_accessibility">Accessibility</string>
+    <string name="cat_connectivity">Connectivity</string>
+    <string name="cat_privacy">Privacy</string>
+    <string name="cat_utils">Utilities</string>
     <string name="label_kbd_abc">اي بي سي</string>
     <string name="label_kbd_symbols">\?#/</string>
     <string name="label_kaomoji">كاوموجي </string>
