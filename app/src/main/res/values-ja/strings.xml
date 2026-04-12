@@ -24,6 +24,8 @@
     <string name="app_lock_description">生体認証でアプリを保護します。ロックされたアプリは起動時に認証が必要で、画面がオフになるまでロック解除された状態になります。</string>
     <string name="app_lock_warning">これはサードパーティ製アプリケーションであるため、堅牢なソリューションではないことにご注意ください。強力なセキュリティが必要な場合は、プライベートスペースなどの機能の使用を検討してください。</string>
     <string name="app_lock_biometric_note">また、生体認証プロンプトでは、強力なセキュリティクラスの方法のみを使用できます。Pixel 7 などのデバイスの弱いクラスの顔認証セキュリティ方法では、指紋やPINなど、利用可能な他の強力な認証方法のみを使用できます。</string>
+    <string name="setting_use_usage_access_title">Use usage access</string>
+    <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">ボタンリマップを有効にする</string>
     <string name="button_remap_use_shizuku_title">Shizuku を使用する</string>
@@ -145,6 +147,7 @@
     <string name="freeze_dont_freeze_active_apps_title">アクティブなアプリをフリーズしない</string>
     <string name="perm_usage_stats_title">使用状況へのアクセス</string>
     <string name="perm_usage_stats_desc">アプリをフリーズしないために、フォアグラウンドでアプリが動作しているかを確認するのに必要です</string>
+    <string name="perm_usage_stats_desc_app_lock">Required to detect foreground apps for App Lock features when accessibility is not used.</string>
     <string name="perm_notif_listener_desc_freeze">再生中のメディアやアクティブな通知を検知してフリーズを回避するのに必要です</string>
     <string name="freeze_mode_title">フリーズモード</string>
     <string name="freeze_mode_freeze">フリーズ</string>
@@ -170,6 +173,13 @@
     <string name="notification_lighting_indicator_adjustment_section">インジケーター調整</string>
     <string name="notification_lighting_scale_title">大きさ</string>
     <string name="notification_lighting_duration_title">間隔</string>
+    <string name="notification_lighting_style_sweep">Sweep</string>
+    <string name="notification_lighting_sweep_position_title">Position</string>
+    <string name="notification_lighting_sweep_random_shapes_title">Random shapes</string>
+    <string name="notification_lighting_sweep_thickness_title">Stroke thickness</string>
+    <string name="notification_lighting_sweep_pos_left">Left</string>
+    <string name="notification_lighting_sweep_pos_center">Center</string>
+    <string name="notification_lighting_sweep_pos_right">Right</string>
     <string name="settings_section_animation">アニメーション</string>
     <string name="notification_lighting_pulse_count_title">点滅回数</string>
     <string name="notification_lighting_pulse_duration_title">点滅間隔</string>
@@ -182,6 +192,7 @@
     <string name="ambient_show_lock_screen_desc">黒いオーバーレイなし</string>
     <!-- Tiles -->
     <string name="action_add">追加</string>
+    <string name="action_added">Added</string>
     <string name="qs_tile_already_added">追加済みです</string>
     <string name="qs_tile_requires_android_13">Android 13 以上が必要です</string>
     <string name="tile_ui_blur">UIブラー</string>
@@ -248,6 +259,10 @@
     <string name="screen_locked_security_warning_text">この機能は万全ではありません。まれにタイルを操作できる可能性があります。\nまた、Androidは常に強制再起動が可能であり、Pixelではロック画面からデバイスをシャットダウンできることに注意してください。</string>
     <string name="screen_locked_security_airplane_warning">機内モードタイルはダイアログウインドウを開かず、回避できませんので、クイック設定から必ず削除してください。</string>
     <string name="screen_locked_security_description">有効にすると、ロック画面で誰かがインターネットタイルを操作しようとすると、クイック設定パネルがすぐに閉じられ、デバイスがロックダウンされます。\n\nこれにより、生体認証によるロック解除も無効になり、さらなる不正アクセスを防止します。ロック中はアニメーション速度が0.1倍に縮小され、操作が更に困難になります。</string>
+    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
+    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
+    <string name="search_disable_qs_locked_title">Disable QS Locked</string>
+    <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
     <string name="sound_mode_reorder_title">モードの並べ替え</string>
     <string name="sound_mode_long_press_hint">長押しで切り替え</string>
@@ -623,6 +638,10 @@
     <string name="desc_auto_check_updates">アプリを起動したときにアップデートを確認します</string>
     <string name="action_all_set">完了</string>
     <string name="action_check_whats_new">更新内容を見る</string>
+    <string name="welcome_back_title">Welcome back to Essentials</string>
+    <string name="action_see_whats_new">See what\'s new</string>
+    <string name="msg_error_load_release_notes">Couldn\'t load the release note</string>
+    <string name="action_view_on_web">View on web</string>
     <string name="action_done">完了</string>
     <string name="action_preview">プレビュー</string>
     <string name="action_help_guide">ヘルプガイド</string>
@@ -731,6 +750,9 @@
     <string name="automation_service_channel_name">オートメーションサービス</string>
     <string name="automation_service_running_title">オートメーション動作中</string>
     <string name="automation_service_running_desc">自動化システムイベントを監視中です</string>
+    <string name="app_detection_service_channel_name">App Detection Service</string>
+    <string name="app_detection_service_running_title">App Detection Active</string>
+    <string name="app_detection_service_running_desc">Monitoring app activity</string>
     <string name="diy_action_device_effects">デバイスエフェクト</string>
     <string name="diy_device_effects_desc">グレースケール、常時表示ディスプレイ、暗い壁紙、ナイトモードなどのシステムレベルの効果を制御します。</string>
     <string name="diy_effect_grayscale">グレースケール</string>
@@ -1149,6 +1171,10 @@
     <string name="cat_interface">Interface</string>
     <string name="cat_display">ディスプレイ</string>
     <string name="cat_protection">プロテクション</string>
+    <string name="cat_accessibility">Accessibility</string>
+    <string name="cat_connectivity">Connectivity</string>
+    <string name="cat_privacy">Privacy</string>
+    <string name="cat_utils">Utilities</string>
     <string name="label_kbd_abc">ABC</string>
     <string name="label_kbd_symbols">\?#/</string>
     <string name="label_kaomoji">顔文字</string>
