@@ -805,7 +805,7 @@ fun SettingsContent(
                             containerColor = MaterialTheme.colorScheme.error
                         )
                     ) {
-                        Text("Reset App Data", color = MaterialTheme.colorScheme.onError)
+                        Text("Reset Onboarding", color = MaterialTheme.colorScheme.onError)
                     }
                 }
 
