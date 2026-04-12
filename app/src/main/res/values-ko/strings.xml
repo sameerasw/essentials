@@ -192,6 +192,7 @@
     <string name="ambient_show_lock_screen_desc">검은색 오버레이 없음</string>
     <!-- Tiles -->
     <string name="action_add">추가하다</string>
+    <string name="action_added">Added</string>
     <string name="qs_tile_already_added">이미 추가됨</string>
     <string name="qs_tile_requires_android_13">안드로이드 13 이상이 필요합니다</string>
     <string name="tile_ui_blur">UI 블러</string>
@@ -1166,6 +1167,10 @@
     <string name="cat_interface">인터페이스</string>
     <string name="cat_display">표시하다</string>
     <string name="cat_protection">보호</string>
+    <string name="cat_accessibility">Accessibility</string>
+    <string name="cat_connectivity">Connectivity</string>
+    <string name="cat_privacy">Privacy</string>
+    <string name="cat_utils">Utilities</string>
     <string name="label_kbd_abc">알파벳</string>
     <string name="label_kbd_symbols">\?#/</string>
     <string name="label_kaomoji">Kaomoji</string>
