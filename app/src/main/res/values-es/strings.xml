@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="label_beta">Beta </string>
+    <string name="label_beta">BETA</string>
     <string name="accessibility_service_description"><b>Servicio de Accesibilidad Esencial</b>\n\nEste servicio es necesario para las siguientes funciones avanzadas:\n\n<b>• Reasignación de Botones Físicos:</b>\nDetecta las pulsaciones de los botones de volumen incluso con la pantalla apagada para activar acciones como la Linterna.\n\n<b>• Ajustes por App:</b>\nSupervisa la app activa para aplicar perfiles específicos de Luz Nocturna Dinámica, Colores de Iluminación de Notificaciones y Bloqueo de Apps.\n\n<b>• Control de Pantalla:</b>\nPermite que la app bloquee la pantalla (p. ej., mediante Doble Toque o Widgets) y detecte cambios de estado.\n\n<b>• Seguridad:</b>\nEvita cambios no autorizados al detectar el contenido de la ventana cuando el dispositivo está bloqueado.\n\n<small>No se recopila ni transmite texto de entrada ni datos confidenciales del usuario.</small></string>
     <string name="freeze_activity_title">Congelar aplicación</string>
     <string name="freeze_activity_subtitle">Desactivar aplicaciones que rara vez se utilizan</string>
@@ -200,13 +200,13 @@
     <string name="tile_sensitive_content">Contenido sensible</string>
     <string name="tile_tap_to_wake">Toca para despertar</string>
     <string name="tile_aod">AOD</string>
-    <string name="tile_caffeinate">cafeína</string>
+    <string name="tile_caffeinate">Cafeína</string>
     <string name="tile_sound_mode">Modo de sonido</string>
     <string name="tile_notification_lighting">Iluminación de notificación</string>
     <string name="tile_dynamic_night_light">Luz nocturna dinámica</string>
     <string name="tile_locked_security">Seguridad bloqueada</string>
     <string name="tile_app_lock">Bloqueo de aplicaciones</string>
-    <string name="tile_mono_audio">audio mono</string>
+    <string name="tile_mono_audio">Audio mono</string>
     <string name="tile_flashlight">Flash</string>
     <string name="tile_app_freezing">Congelación de aplicaciones</string>
     <string name="tile_flashlight_pulse">Pulso de linterna</string>
@@ -225,7 +225,7 @@
     <string name="tile_color_picker">Selector de color</string>
     <string name="toast_eyedropper_failed">Are you sure you\'re on Androdi 17? (╯°_°）╯</string>
     <string name="subtitle_eye_dropper">Gotero para ojos</string>
-    <string name="on">En</string>
+    <string name="on">Encendido</string>
     <string name="off">Apagado</string>
     <string name="private_dns_custom_title">DNS privado personalizado</string>
     <string name="private_dns_presets_title">Ajustes preestablecidos de DNS comunes</string>
@@ -241,7 +241,7 @@
     <string name="dns_preset_google_hostname">dns.google</string>
     <string name="dns_preset_cloudflare">DNS de nube</string>
     <string name="dns_preset_cloudflare_hostname">1dot1dot1dot1.cloudflare-dns.com</string>
-    <string name="dns_preset_quad9">DNS cuádruple9</string>
+    <string name="dns_preset_quad9">Quad9 DNS</string>
     <string name="dns_preset_quad9_hostname">dns.quad9.net</string>
     <string name="dns_preset_cleanbrowsing">Navegación limpia</string>
     <string name="dns_preset_cleanbrowsing_hostname">filtro-adulto-dns.cleanbrowsing.org</string>
