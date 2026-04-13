@@ -24,8 +24,8 @@
     <string name="app_lock_description">生体認証でアプリを保護します。ロックされたアプリは起動時に認証が必要で、画面がオフになるまでロック解除された状態になります。</string>
     <string name="app_lock_warning">これはサードパーティ製アプリケーションであるため、堅牢なソリューションではないことにご注意ください。強力なセキュリティが必要な場合は、プライベートスペースなどの機能の使用を検討してください。</string>
     <string name="app_lock_biometric_note">また、生体認証プロンプトでは、強力なセキュリティクラスの方法のみを使用できます。Pixel 7 などのデバイスの弱いクラスの顔認証セキュリティ方法では、指紋やPINなど、利用可能な他の強力な認証方法のみを使用できます。</string>
-    <string name="setting_use_usage_access_title">Use usage access</string>
-    <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
+    <string name="setting_use_usage_access_title">使用状況へのアクセスを使う</string>
+    <string name="setting_use_usage_access_desc">アクセシビリティの代わりに（フリーズ、アプリロック、ダイナミックナイトモード）</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">ボタンリマップを有効にする</string>
     <string name="button_remap_use_shizuku_title">Shizuku を使用する</string>
@@ -174,12 +174,12 @@
     <string name="notification_lighting_scale_title">大きさ</string>
     <string name="notification_lighting_duration_title">間隔</string>
     <string name="notification_lighting_style_sweep">Sweep</string>
-    <string name="notification_lighting_sweep_position_title">Position</string>
-    <string name="notification_lighting_sweep_random_shapes_title">Random shapes</string>
-    <string name="notification_lighting_sweep_thickness_title">Stroke thickness</string>
-    <string name="notification_lighting_sweep_pos_left">Left</string>
-    <string name="notification_lighting_sweep_pos_center">Center</string>
-    <string name="notification_lighting_sweep_pos_right">Right</string>
+    <string name="notification_lighting_sweep_position_title">位置</string>
+    <string name="notification_lighting_sweep_random_shapes_title">ランダムな形</string>
+    <string name="notification_lighting_sweep_thickness_title">線の太さ</string>
+    <string name="notification_lighting_sweep_pos_left">左</string>
+    <string name="notification_lighting_sweep_pos_center">中央</string>
+    <string name="notification_lighting_sweep_pos_right">右</string>
     <string name="settings_section_animation">アニメーション</string>
     <string name="notification_lighting_pulse_count_title">点滅回数</string>
     <string name="notification_lighting_pulse_duration_title">点滅間隔</string>
@@ -1171,10 +1171,10 @@
     <string name="cat_interface">Interface</string>
     <string name="cat_display">ディスプレイ</string>
     <string name="cat_protection">プロテクション</string>
-    <string name="cat_accessibility">Accessibility</string>
-    <string name="cat_connectivity">Connectivity</string>
-    <string name="cat_privacy">Privacy</string>
-    <string name="cat_utils">Utilities</string>
+    <string name="cat_accessibility">アクセシビリティ</string>
+    <string name="cat_connectivity">接続</string>
+    <string name="cat_privacy">プライバシー</string>
+    <string name="cat_utils">ユーテリティ</string>
     <string name="label_kbd_abc">ABC</string>
     <string name="label_kbd_symbols">\?#/</string>
     <string name="label_kaomoji">顔文字</string>
