@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="label_beta">BETA</string>
-    <string name="accessibility_service_description"><b>Servicio de Accesibilidad Esencial</b>\n\nEste servicio es necesario para las siguientes funciones avanzadas:\n\n<b>• Reasignación de Botones Físicos:</b>\nDetecta las pulsaciones de los botones de volumen incluso con la pantalla apagada para activar acciones como la Linterna.\n\n<b>• Ajustes por App:</b>\nSupervisa la app activa para aplicar perfiles específicos de Luz Nocturna Dinámica, Colores de Iluminación de Notificaciones y Bloqueo de Apps.\n\n<b>• Control de Pantalla:</b>\nPermite que la app bloquee la pantalla (p. ej., mediante Doble Toque o Widgets) y detecte cambios de estado.\n\n<b>• Seguridad:</b>\nEvita cambios no autorizados al detectar el contenido de la ventana cuando el dispositivo está bloqueado.\n\n<small>No se recopila ni transmite texto de entrada ni datos confidenciales del usuario.</small></string>
+    <string name="accessibility_service_description"><b>Servicio de accesibilidad Essentials</b>\n\nEste servicio es necesario para las siguientes funciones avanzadas:\n\n<b>• Reasignación de botones físicos:</b>\nDetecta las pulsaciones de los botones de volumen incluso cuando la pantalla está apagada para activar acciones como la linterna.\ n\n<b>• Ajustes por aplicación:</b>\nSupervisa la aplicación activa en ese momento para aplicar perfiles específicos para la luz nocturna dinámica, los colores de iluminación de las notificaciones y el bloqueo de aplicaciones.\n\n<b>• Control de pantalla:</b>\nPermite a la aplicación bloquear la pantalla (por ejemplo, mediante doble toque o widgets) y detectar cambios en el estado de la pantalla.\ n\n<b>• Seguridad:</b>\nEvita cambios no autorizados al detectar el contenido de la ventana cuando el dispositivo está bloqueado.\n\n<small>No se recopila ni transmite ningún texto introducido ni datos confidenciales del usuario.</small></string>
     <string name="freeze_activity_title">Congelación de aplicaciones</string>
     <string name="freeze_activity_subtitle">Deshabilitar aplicaciones que rara vez se usan</string>
     <string name="freeze_shortcut_short_label">Congelación de aplicaciones</string>
@@ -20,7 +20,7 @@
     <string name="app_lock_enable_auth_subtitle">Autenticarse para habilitar el bloqueo de aplicaciones</string>
     <string name="app_lock_disable_auth_subtitle">Autenticarse para desactivar el bloqueo de aplicaciones</string>
     <string name="app_lock_select_apps_title">Seleccionar aplicaciones bloqueadas</string>
-    <string name="app_lock_select_apps_desc">Elija qué aplicaciones requieren autenticación</string>
+    <string name="app_lock_select_apps_desc">Elige qué aplicaciones requieren autenticación</string>
     <string name="app_lock_description">Proteja sus aplicaciones con autenticación biométrica. Las aplicaciones bloqueadas requerirán autenticación al iniciarse. Permanecen desbloqueadas hasta que la pantalla se apaga.</string>
     <string name="app_lock_warning">Tenga en cuenta que esta no es una solución sólida, ya que es solo una aplicación de terceros. Si necesita una seguridad sólida, considere utilizar el espacio privado u otras funciones similares.</string>
     <string name="app_lock_biometric_note">Otra nota, el mensaje de autenticación biométrica solo le permite utilizar métodos de clase seguros FUERTES. Los métodos de seguridad de desbloqueo facial de clase DÉBIL en dispositivos como Pixel 7 solo podrán utilizar otros métodos de autenticación FUERTES disponibles, como huella digital o PIN.</string>
@@ -28,7 +28,7 @@
     <string name="setting_use_usage_access_desc">En lugar de accesibilidad (Bloqueo de pantalla, Bloqueo de aplicaciones, Luz nocturna dinámica)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Habilitar reasignación de botones</string>
-    <string name="button_remap_use_shizuku_title">Utilice Shizuku o Root o Root</string>
+    <string name="button_remap_use_shizuku_title">Utiliza Shizuku o Root o Root</string>
     <string name="button_remap_use_shizuku_desc">Funciona con la pantalla apagada (Recomendado)</string>
     <string name="shizuku_not_running_toast">Shizuku no se está ejecutando</string>
     <string name="shizuku_detected_prefix">Detectado %1$s</string>
@@ -38,7 +38,7 @@
     <string name="flashlight_options_title">Opciones de linterna</string>
     <string name="flashlight_options_desc">Ajustar el desvanecimiento y otras configuraciones</string>
     <string name="setting_pitch_black_theme_title">Tema negro</string>
-    <string name="setting_pitch_black_theme_desc">Utilice fondo negro puro en modo oscuro</string>
+    <string name="setting_pitch_black_theme_desc">Utiliza un fondo negro puro en el modo oscuro</string>
     <string name="settings_section_haptic">Retroalimentación háptica</string>
     <string name="button_remap_section_long_press">Reasignar pulsación larga</string>
     <string name="screen_off">Pantalla apagada</string>
@@ -182,7 +182,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="notification_lighting_sweep_pos_center">Centro</string>
     <string name="notification_lighting_sweep_pos_right">Derecha</string>
     <string name="settings_section_animation">Animación</string>
-    <string name="notification_lighting_pulse_count_title">recuento de pulsos</string>
+    <string name="notification_lighting_pulse_count_title">Recuento de pulsos</string>
     <string name="notification_lighting_pulse_duration_title">Duración del pulso</string>
     <string name="settings_section_color_mode">Modo de color</string>
     <string name="settings_section_ambient_display">Pantalla ambiental</string>
@@ -258,7 +258,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="screen_locked_security_auth_disable">Autenticarse para desactivar la seguridad de pantalla bloqueada</string>
     <string name="warning_title">⚠️ ADVERTENCIA</string>
     <string name="screen_locked_security_warning_text">Esta característica no es infalible. Puede haber casos extremos en los que alguien aún pueda interactuar con el mosaico. \nTambién tenga en cuenta que Android siempre permitirá realizar un reinicio forzado y Pixels siempre permitirá que el dispositivo se apague desde la pantalla de bloqueo también.</string>
-    <string name="screen_locked_security_airplane_warning">Asegúrese de eliminar el mosaico del modo avión de la configuración rápida, ya que eso no se puede evitar porque no abre una ventana de diálogo.</string>
+    <string name="screen_locked_security_airplane_warning">Asegúrate de eliminar el icono del modo avión de los ajustes rápidos, ya que no se puede evitar, pues no abre ninguna ventana de diálogo.</string>
     <string name="screen_locked_security_description">Cuando esté habilitado, el panel de Configuración rápida se cerrará inmediatamente y el dispositivo se bloqueará si alguien intenta interactuar con mosaicos de Internet mientras el dispositivo está bloqueado. \n\nEsto también deshabilitará el desbloqueo biométrico para evitar más accesos no autorizados. La escala de la animación se reducirá a 0,1x mientras esté bloqueada para que sea aún más difícil interactuar con ella.</string>
     <string name="disable_qs_when_locked_title">Desactivar QS cuando el dispositivo esté bloqueado</string>
     <string name="disable_qs_when_locked_desc">Cierra inmediatamente el panel de Ajustes rápidos si alguien intenta abrirlo mientras el dispositivo está bloqueado.</string>
