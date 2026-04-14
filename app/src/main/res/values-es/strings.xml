@@ -141,7 +141,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="delay_5m">5 m</string>
     <string name="delay_15m">15 m</string>
     <string name="delay_manual">Manual</string>
-    <string name="freeze_auto_freeze_section">Aplicaciones de congelación automática</string>
+    <string name="freeze_auto_freeze_section">Congelar aplicaciones automáticamente</string>
     <string name="freeze_automation_hint">Congele las aplicaciones seleccionadas cuando el dispositivo se bloquee. Elija un retraso para evitar congelar aplicaciones si desbloquea la pantalla poco después de apagarla.</string>
     <string name="freeze_warning">Congelar aplicaciones del sistema puede ser peligroso y provocar un comportamiento inesperado.</string>
     <string name="action_enable_in_settings">Habilitar en Configuración</string>
@@ -164,10 +164,10 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="flashlight_pulse_same_as_lighting_title">Las mismas aplicaciones que la iluminación de notificaciones.</string>
     <string name="settings_section_style">Estilo</string>
     <string name="notification_lighting_stroke_adjustment_section">Ajuste de carrera</string>
-    <string name="notification_lighting_corner_radius_title">Radio de esquina</string>
+    <string name="notification_lighting_corner_radius_title">Radio de las esquinas</string>
     <string name="notification_lighting_stroke_thickness_title">Grosor del trazo</string>
     <string name="notification_lighting_glow_adjustment_section">Ajuste de brillo</string>
-    <string name="notification_lighting_glow_spread_title">propagación del resplandor</string>
+    <string name="notification_lighting_glow_spread_title">Propagación del brillo</string>
     <string name="notification_lighting_placement_section">Colocación</string>
     <string name="notification_lighting_h_pos_title">Posición horizontal</string>
     <string name="notification_lighting_v_pos_title">Posición vertical</string>
@@ -192,9 +192,9 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="ambient_show_lock_screen_title">Mostrar pantalla de bloqueo</string>
     <string name="ambient_show_lock_screen_desc">Sin superposición negra</string>
     <!-- Tiles -->
-    <string name="action_add">Agregar</string>
+    <string name="action_add">Añadir</string>
     <string name="action_added">Añadido</string>
-    <string name="qs_tile_already_added">Ya agregado</string>
+    <string name="qs_tile_already_added">Ya añadido</string>
     <string name="qs_tile_requires_android_13">Requiere Android 13+</string>
     <string name="tile_ui_blur">Desenfoque de la interfaz de usuario</string>
     <string name="tile_bubbles">Burbujas</string>
