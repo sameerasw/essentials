@@ -7,7 +7,7 @@
     <string name="freeze_shortcut_short_label">Congelación de aplicaciones</string>
     <string name="freeze_shortcut_long_label">Abrir aplicación congelada</string>
     <string name="frozen_app_shortcut_label">Aplicación congelada</string>
-    <string name="screen_off_widget_label">Pantalla vacía fuera del widget</string>
+    <string name="screen_off_widget_label">Widget vacío para apagar la pantalla</string>
     <string name="app_freezing_tile_label">Congelación de aplicaciones</string>
     <string name="flashlight_pulse_tile_label">Pulso de linterna</string>
     <string name="check_pre_releases_label">Consultar prelanzamiento</string>
@@ -18,12 +18,12 @@
     <string name="app_lock_enable_title">Habilitar bloqueo de aplicaciones</string>
     <string name="app_lock_auth_title">Seguridad de bloqueo de aplicaciones</string>
     <string name="app_lock_enable_auth_subtitle">Autenticarse para habilitar el bloqueo de aplicaciones</string>
-    <string name="app_lock_disable_auth_subtitle">Autenticarse para desactivar el bloqueo de aplicaciones</string>
+    <string name="app_lock_disable_auth_subtitle">Autenticarse para deshabilitar el bloqueo de aplicaciones</string>
     <string name="app_lock_select_apps_title">Seleccionar aplicaciones bloqueadas</string>
     <string name="app_lock_select_apps_desc">Elige qué aplicaciones requieren autenticación</string>
     <string name="app_lock_description">Proteja sus aplicaciones con autenticación biométrica. Las aplicaciones bloqueadas requerirán autenticación al iniciarse. Permanecen desbloqueadas hasta que la pantalla se apaga.</string>
     <string name="app_lock_warning">Tenga en cuenta que esta no es una solución sólida, ya que es solo una aplicación de terceros. Si necesita una seguridad sólida, considere utilizar el espacio privado u otras funciones similares.</string>
-    <string name="app_lock_biometric_note">Otra nota, el mensaje de autenticación biométrica solo le permite utilizar métodos de clase seguros FUERTES. Los métodos de seguridad de desbloqueo facial de clase DÉBIL en dispositivos como Pixel 7 solo podrán utilizar otros métodos de autenticación FUERTES disponibles, como huella digital o PIN.</string>
+    <string name="app_lock_biometric_note">Otra cosa: la solicitud de autenticación biométrica solo permite utilizar métodos de la clase de seguridad STRONG. Los métodos de desbloqueo facial de la clase WEAK en dispositivos como el Pixel 7 solo podrán utilizar los demás métodos de autenticación STRONG disponibles, como la huella dactilar o el PIN.</string>
     <string name="setting_use_usage_access_title">Usar acceso de uso</string>
     <string name="setting_use_usage_access_desc">En lugar de accesibilidad (Bloqueo de pantalla, Bloqueo de aplicaciones, Luz nocturna dinámica)</string>
     <!-- Button Remap -->
