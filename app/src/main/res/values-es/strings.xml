@@ -105,7 +105,7 @@
     <string name="perm_notif_policy_desc">Requerido para alternar entre los modos de sonido, vibración y silencio.</string>
     <string name="caffeinate_timeout_1h">1 h</string>
     <string name="caffeinate_timeout_infinity">∞</string>
-    <string name="caffeinate_starting_in">A partir de %1$ds…</string>
+    <string name="caffeinate_starting_in">Comenzando en %1$ds…</string>
     <string name="caffeinate_remaining">%1$s restante</string>
     <string name="caffeinate_live_channel_desc">Notificación persistente de cafeína</string>
     <!-- Dynamic Night Light -->
