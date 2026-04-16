@@ -134,7 +134,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="freeze_pick_apps_title">Seleccionar aplicaciones para congelar</string>
     <string name="freeze_pick_apps_desc">Elige qué aplicaciones se pueden congelar</string>
     <string name="settings_section_automation">Automatización</string>
-    <string name="freeze_when_locked_title">Congelar cuando está bloqueado</string>
+    <string name="freeze_when_locked_title">Congelar al bloquear</string>
     <string name="freeze_delay_title">Retraso de congelación</string>
     <string name="delay_immediate">Inmediato</string>
     <string name="delay_1m">1 m</string>
@@ -142,10 +142,10 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="delay_15m">15 m</string>
     <string name="delay_manual">Manual</string>
     <string name="freeze_auto_freeze_section">Congelar aplicaciones automáticamente</string>
-    <string name="freeze_automation_hint">Congele las aplicaciones seleccionadas cuando el dispositivo se bloquee. Elija un retraso para evitar congelar aplicaciones si desbloquea la pantalla poco después de apagarla.</string>
+    <string name="freeze_automation_hint">Congela las aplicaciones seleccionadas cuando el dispositivo se bloquee. Elige un retraso para evitar congelarlas si desbloqueas la pantalla poco después de apagarla.</string>
     <string name="freeze_warning">Congelar aplicaciones del sistema puede ser peligroso y provocar un comportamiento inesperado.</string>
-    <string name="action_enable_in_settings">Habilitar en Configuración</string>
-    <string name="freeze_dont_freeze_active_apps_title">No\'no congele aplicaciones activas</string>
+    <string name="action_enable_in_settings">Habilitar en Ajustes</string>
+    <string name="freeze_dont_freeze_active_apps_title">No congelar aplicaciones activas</string>
     <string name="perm_usage_stats_title">Estadísticas de uso</string>
     <string name="perm_usage_stats_desc">Requerido para detectar qué aplicaciones están actualmente en primer plano para evitar congelarlas</string>
     <string name="perm_usage_stats_desc_app_lock">Requerido para detectar aplicaciones en primer plano para las funciones de Bloqueo de Aplicaciones cuando no se usa la accesibilidad.</string>
@@ -156,8 +156,8 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="freeze_mode_warning_desc">No se puede cambiar de modo mientras las aplicaciones están congeladas. Por favor, descongélalas todas e inténtalo de nuevo.</string>
     <!-- Notification Lighting -->
     <string name="notification_lighting_screen_off_title">Mostrar solo cuando la pantalla está apagada</string>
-    <string name="notification_lighting_skip_silent_title">Saltar notificaciones silenciosas</string>
-    <string name="notification_lighting_skip_persistent_title">Saltar notificaciones persistentes</string>
+    <string name="notification_lighting_skip_silent_title">Omitir las notificaciones silenciosas</string>
+    <string name="notification_lighting_skip_persistent_title">Omitir notificaciones persistentes</string>
     <string name="settings_section_flashlight_pulse">Pulso de linterna</string>
     <string name="flashlight_pulse_title">Pulso de linterna</string>
     <string name="flashlight_pulse_facedown_title">Sólo mirando hacia abajo</string>
