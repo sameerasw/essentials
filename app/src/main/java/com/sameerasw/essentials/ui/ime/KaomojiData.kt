@@ -22,6 +22,7 @@ data class KaomojiObject(
     @SerializedName("value") val value: String
 )
 
+@androidx.annotation.Keep
 data class KaomojiCategory(
     val name: String,
     val kaomojis: List<KaomojiObject>

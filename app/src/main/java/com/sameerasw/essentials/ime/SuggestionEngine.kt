@@ -21,12 +21,14 @@ import java.io.FileOutputStream
 
 private const val TAG = "SuggestionEngine"
 
+@androidx.annotation.Keep
 enum class SuggestionType {
     Prediction,
     Correction,
     Learned
 }
 
+@androidx.annotation.Keep
 data class Suggestion(val text: String, val type: SuggestionType)
 
 class SuggestionEngine(private val context: Context) :
