@@ -575,7 +575,20 @@ class FlashlightHandler(
             }
 
             if (vibrator != null) {
-                performHapticFeedback(vibrator, specificType ?: HapticFeedbackType.DOUBLE)
+                val prefs = service.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+                val hapticName = prefs.getString(
+                    "button_remap_haptic_type",
+                    prefs.getString("flashlight_haptic_type", HapticFeedbackType.DOUBLE.name)
+                )
+
+                val type = try {
+                    val resolved = HapticFeedbackType.valueOf(hapticName ?: HapticFeedbackType.DOUBLE.name)
+                    if (resolved.name == "LONG") HapticFeedbackType.DOUBLE else resolved
+                } catch (e: Exception) {
+                    HapticFeedbackType.DOUBLE
+                }
+
+                performHapticFeedback(vibrator, specificType ?: type)
             }
         } catch (_: Exception) {
         }
