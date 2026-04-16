@@ -340,20 +340,9 @@ class NotificationLightingHandler(
             indicatorScale = indicatorScale,
             randomShapes = randomShapes,
         ) {
-            if (isAmbientDisplayRequested && !isInterrupted && !isPreview && !isAmbientShowLockScreen) {
-                service.performGlobalAction(AccessibilityService.GLOBAL_ACTION_LOCK_SCREEN)
-
-                handler.postDelayed({
-                    OverlayHelper.fadeOutAndRemoveOverlay(windowManager, overlay, overlayViews) {
-                        currentPackageShowing = null
-                        processQueue()
-                    }
-                }, 500)
-            } else {
-                OverlayHelper.fadeOutAndRemoveOverlay(windowManager, overlay, overlayViews) {
-                    currentPackageShowing = null
-                    processQueue()
-                }
+            OverlayHelper.fadeOutAndRemoveOverlay(windowManager, overlay, overlayViews) {
+                currentPackageShowing = null
+                processQueue()
             }
         }
     }

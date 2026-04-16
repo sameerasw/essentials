@@ -1,28 +1,20 @@
 package com.sameerasw.essentials.services.tiles
 
 import android.content.Intent
+import android.graphics.drawable.Icon
 import android.os.Build
 import android.service.quicksettings.Tile
-import android.service.quicksettings.TileService
+import androidx.annotation.RequiresApi
+import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.services.BatteryNotificationService
 
-class BatteryNotificationTileService : TileService() {
+@RequiresApi(Build.VERSION_CODES.N)
+class BatteryNotificationTileService : BaseTileService() {
 
-    private lateinit var settingsRepository: SettingsRepository
+    private val settingsRepository by lazy { SettingsRepository(this) }
 
-    override fun onCreate() {
-        super.onCreate()
-        settingsRepository = SettingsRepository(this)
-    }
-
-    override fun onStartListening() {
-        super.onStartListening()
-        updateTile()
-    }
-
-    override fun onClick() {
-        super.onClick()
+    override fun onTileClick() {
         val newState = !settingsRepository.isBatteryNotificationEnabled()
         settingsRepository.setBatteryNotificationEnabled(newState)
         
@@ -36,15 +28,19 @@ class BatteryNotificationTileService : TileService() {
         } else {
             stopService(intent)
         }
-        
-        updateTile()
     }
 
-    private fun updateTile() {
-        val tile = qsTile ?: return
-        val isEnabled = settingsRepository.isBatteryNotificationEnabled()
-        
-        tile.state = if (isEnabled) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
-        tile.updateTile()
+    override fun getTileLabel(): String = "Battery Info"
+
+    override fun getTileSubtitle(): String = if (settingsRepository.isBatteryNotificationEnabled()) "On" else "Off"
+
+    override fun hasFeaturePermission(): Boolean = true
+
+    override fun getTileState(): Int {
+        return if (settingsRepository.isBatteryNotificationEnabled()) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
+    }
+
+    override fun getTileIcon(): Icon {
+        return Icon.createWithResource(this, R.drawable.rounded_battery_android_frame_6_24)
     }
 }

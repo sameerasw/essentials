@@ -46,7 +46,11 @@
 -keep class com.sameerasw.essentials.data.repository.** { *; }
 -keep class com.sameerasw.essentials.domain.registry.** { *; }
 
--keep class com.sameerasw.essentials.ui.ime.EmojiDataResponse { *; }
+# Keep IME related models and suggestion logic
+-keep class com.sameerasw.essentials.ime.** { *; }
+-keep class com.sameerasw.essentials.ui.ime.** { *; }
+-keepclassmembers class com.sameerasw.essentials.ime.** { *; }
+-keepclassmembers class com.sameerasw.essentials.ui.ime.** { *; }
 
 # Data models for Gson
 -keep class com.sameerasw.essentials.data.model.** { *; }

@@ -11,9 +11,22 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.utils.PermissionUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import android.os.Handler
+import android.os.Looper
 
 @RequiresApi(Build.VERSION_CODES.N)
 abstract class BaseTileService : TileService() {
+
+    private val serviceJob = Job()
+    protected val serviceScope = CoroutineScope(Dispatchers.Main + serviceJob)
+    private val secureSettingsCache = mutableMapOf<String, Int>()
+
+    protected var isProcessing = false
 
     abstract fun onTileClick()
 
@@ -31,6 +44,11 @@ abstract class BaseTileService : TileService() {
         updateTile()
     }
 
+    override fun onDestroy() {
+        serviceJob.cancel()
+        super.onDestroy()
+    }
+
     override fun onTileAdded() {
         super.onTileAdded()
         setTileAddedState(true)
@@ -40,6 +58,7 @@ abstract class BaseTileService : TileService() {
     override fun onTileRemoved() {
         super.onTileRemoved()
         setTileAddedState(false)
+        secureSettingsCache.clear()
     }
 
     private fun setTileAddedState(isAdded: Boolean) {
@@ -51,25 +70,47 @@ abstract class BaseTileService : TileService() {
 
     override fun onClick() {
         super.onClick()
+        
+        // Immediate feedback 1: Haptics
         HapticUtil.performHapticForService(this)
-        if (!hasFeaturePermission()) {
+        
+        if (!hasFeaturePermission() || isProcessing) {
             return
         }
-        onTileClick()
+
+        // Immediate feedback 2: Processing state
+        isProcessing = true
         updateTile()
+
+        // Offload actual work to background
+        serviceScope.launch {
+            try {
+                onTileClick()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                withContext(Dispatchers.Main) {
+                    isProcessing = false
+                    updateTile()
+                }
+            }
+        }
     }
 
     protected fun updateTile() {
         val tile = qsTile ?: return
         val hasPerm = hasFeaturePermission()
-        tile.state = if (hasPerm) {
-            getTileState()
-        } else {
-            Tile.STATE_UNAVAILABLE
+        tile.state = when {
+            !hasPerm || isProcessing -> Tile.STATE_UNAVAILABLE
+            else -> getTileState()
         }
         tile.label = getTileLabel()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            tile.subtitle = if (!hasPerm) getString(R.string.permission_missing) else getTileSubtitle()
+            tile.subtitle = when {
+                !hasPerm -> getString(R.string.permission_missing)
+                isProcessing -> "Working..."
+                else -> getTileSubtitle()
+            }
         }
 
         val icon = getTileIcon()
@@ -82,14 +123,21 @@ abstract class BaseTileService : TileService() {
     protected abstract fun getTileState(): Int
 
     protected fun getSecureInt(key: String, def: Int): Int {
+        secureSettingsCache[key]?.let { return it }
+
         try {
             val value = Settings.Secure.getInt(contentResolver, key, -1)
-            if (value != -1) return value
+            if (value != -1) {
+                secureSettingsCache[key] = value
+                return value
+            }
         } catch (_: SecurityException) {
             // Only fallback to shell on SecurityException
             return try {
                 val output = ShellUtils.runCommandWithOutput(this, "settings get secure $key")
-                output?.toIntOrNull() ?: def
+                val result = output?.toIntOrNull() ?: def
+                secureSettingsCache[key] = result
+                result
             } catch (_: Exception) {
                 def
             }
@@ -100,6 +148,7 @@ abstract class BaseTileService : TileService() {
     }
 
     protected fun putSecureInt(key: String, value: Int) {
+        secureSettingsCache[key] = value // Update cache immediately
         try {
             Settings.Secure.putInt(contentResolver, key, value)
         } catch (_: Exception) {

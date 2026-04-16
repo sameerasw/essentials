@@ -173,12 +173,17 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         if (event == null) return
 
-        securityHandler.onAccessibilityEvent(event)
-
         if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
             val packageName = event.packageName?.toString() ?: return
             appFlowHandler.onPackageChanged(packageName)
         }
+
+        // Bypass security scanning for camera apps to avoid performance interference
+        if (appFlowHandler.isCameraApp()) {
+            return
+        }
+
+        securityHandler.onAccessibilityEvent(event)
     }
 
     override fun onInterrupt() {}
@@ -197,7 +202,15 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
 
     override fun onKeyEvent(event: KeyEvent): Boolean {
         val keyCode = event.keyCode
-        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+        val isVolumeKey = keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN
+
+        if (isVolumeKey) {
+            // Bypass logic for Camera apps to resolve conflicts with shutter/zoom functions
+            val foregroundPackage = rootInActiveWindow?.packageName?.toString() ?: appFlowHandler.currentPackage
+            if (appFlowHandler.isCameraApp(foregroundPackage)) {
+                return false
+            }
+
             val powerManager = getSystemService(POWER_SERVICE) as android.os.PowerManager
             if (!powerManager.isInteractive && event.action == KeyEvent.ACTION_DOWN) {
                 triggerAmbientGlanceVolume(keyCode)

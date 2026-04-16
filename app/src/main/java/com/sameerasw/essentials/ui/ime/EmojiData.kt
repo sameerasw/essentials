@@ -15,17 +15,20 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@androidx.annotation.Keep
 data class EmojiObject(
     @SerializedName("emoji") val emoji: String,
     @SerializedName("name") val name: String
 )
 
+@androidx.annotation.Keep
 data class EmojiCategory(
     val name: String,
     val iconRes: Int,
     val emojis: List<EmojiObject>
 )
 
+@androidx.annotation.Keep
 data class EmojiDataResponse(
     @SerializedName("emojis") val emojis: Map<String, Map<String, List<EmojiObject>>>
 )

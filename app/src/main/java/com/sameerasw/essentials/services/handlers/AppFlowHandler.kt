@@ -29,6 +29,8 @@ class AppFlowHandler(
     // App Lock State
     private var lockingPackage: String? = null
     private var lastLockRequestTime: Long = 0
+    var currentPackage: String? = null
+        private set
 
     // App Automation State
     private val activeAppAutomationIds = mutableSetOf<String>()
@@ -48,6 +50,8 @@ class AppFlowHandler(
     fun onPackageChanged(packageName: String, isFromUsageStats: Boolean = false) {
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
         val useUsageAccess = prefs.getBoolean("use_usage_access", false)
+
+        currentPackage = packageName
 
         if (packageName != context.packageName && packageName != lockingPackage) {
             lockingPackage = null
@@ -227,5 +231,27 @@ class AppFlowHandler(
                 }
             }
         }
+    }
+
+    fun isCameraApp(packageName: String? = currentPackage): Boolean {
+        if (packageName == null) return false
+
+        // Known camera packages
+        val cameraPackages = listOf(
+            "com.google.android.GoogleCamera",
+            "com.android.camera",
+            "com.sec.android.app.camera",
+            "com.huawei.camera",
+            "com.oneplus.camera",
+            "com.oppo.camera",
+            "com.miui.camera",
+            "com.sonyericsson.android.camera",
+            "com.sonymobile.android.camera"
+        )
+        if (cameraPackages.any { packageName.startsWith(it) }) return true
+
+        if (packageName.lowercase().contains("camera")) return true
+
+        return false
     }
 }

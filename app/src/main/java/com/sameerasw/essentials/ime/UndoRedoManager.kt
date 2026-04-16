@@ -3,11 +3,13 @@ package com.sameerasw.essentials.ime
 import android.view.inputmethod.InputConnection
 import java.util.Stack
 
+@androidx.annotation.Keep
 enum class ActionType {
     INSERT, // We typed something. Undo = Delete it.
     DELETE  // We deleted something. Undo = Re-insert it.
 }
 
+@androidx.annotation.Keep
 data class HistoryAction(
     val type: ActionType,
     var text: String,
