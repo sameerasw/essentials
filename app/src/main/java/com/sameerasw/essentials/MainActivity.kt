@@ -295,7 +295,7 @@ class MainActivity : AppCompatActivity() {
                     val tabs = remember { DIYTabs.entries }
 
                     val defaultTab by viewModel.defaultTab
-                    val initialPage = remember(tabs) {
+                    val initialPage = remember(tabs, defaultTab) {
                         val index = tabs.indexOf(defaultTab)
                         if (index != -1) index else 0
                     }
@@ -304,12 +304,12 @@ class MainActivity : AppCompatActivity() {
                     val scope = rememberCoroutineScope()
 
                     // Handle predictive back button for tab navigation
-                    PredictiveBackHandler(enabled = currentPage > 0) { progress ->
+                    PredictiveBackHandler(enabled = currentPage != initialPage) { progress ->
                         try {
                             progress.collect { backEvent ->
                                 backProgress.snapTo(backEvent.progress)
                             }
-                            currentPage = 0
+                            currentPage = initialPage
                             scope.launch {
                                 backProgress.animateTo(
                                     targetValue = 0f,
