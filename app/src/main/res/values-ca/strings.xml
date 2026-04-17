@@ -63,6 +63,8 @@
     <string name="feat_ambient_music_glance_desc">Un cop d\'ull als mitjans de comunicació sobre AOD</string>
     <string name="ambient_glance_docked_mode_title">Mode acoblat</string>
     <string name="ambient_glance_docked_mode_desc">Manteniu la superposició visible indefinidament mentre es reprodueix música a AOD</string>
+    <string name="ambient_glance_random_shapes_title">Random shapes</string>
+    <string name="ambient_glance_random_shapes_desc">Use various Material 3 shapes for the album art</string>
     <string name="feat_notification_glance_title">Vista de notificació</string>
     <string name="feat_notification_glance_desc">Manteniu l\'AOD activat mentre les notificacions estiguin pendents</string>
     <string name="notification_glance_same_as_lighting_title">Les mateixes aplicacions que la il·luminació de notificacions</string>
@@ -161,6 +163,8 @@
     <string name="flashlight_pulse_title">Pols de llanterna</string>
     <string name="flashlight_pulse_facedown_title">Només mirant cap avall</string>
     <string name="flashlight_pulse_same_as_lighting_title">Les mateixes aplicacions que la il·luminació de notificacions</string>
+    <string name="flashlight_pulse_max_brightness">Max brightness</string>
+    <string name="flashlight_pulse_preview">Preview pulse</string>
     <string name="settings_section_style">Estil</string>
     <string name="notification_lighting_stroke_adjustment_section">Ajust de carrera</string>
     <string name="notification_lighting_corner_radius_title">Radi de cantonada</string>
