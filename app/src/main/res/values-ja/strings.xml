@@ -255,11 +255,11 @@
     <string name="deactivated">Not optimized</string>
     <string name="permission_missing">Permission missing</string>
     <!-- Screen Locked Security -->
-    <string name="screen_locked_security_title">Disable QS tiles when the device is locked</string>
-    <string name="screen_locked_security_dialog_title">Disable QS tiles when the device is locked</string>
+    <string name="screen_locked_security_title">ロック画面セキュリティ</string>
+    <string name="screen_locked_security_dialog_title">ロック画面セキュリティ</string>
     <string name="warning_title">⚠️ 警告</string>
-    <string name="screen_locked_security_auth_enable">Authenticate to enable this feature</string>
-    <string name="screen_locked_security_auth_disable">Authenticate to disable this feature</string>
+    <string name="screen_locked_security_auth_enable">ロック画面セキュリティを有効にするための認証</string>
+    <string name="screen_locked_security_auth_disable">ロック画面セキュリティを無効にするための認証</string>
     <string name="screen_locked_security_desc">Disable quick setting tiles when the device is locked</string>
     <string name="search_disable_qs_locked_title">Disable QS Locked</string>
     <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
@@ -328,6 +328,19 @@
     <string name="smart_data_desc">特定の通信世代でモバイルデータを非表示にします</string>
     <string name="action_reset_all_icons">全てのアイコンをリセット</string>
     <string name="status_bar_section_advanced">その他の設定</string>
+    <string name="stb_advanced_flags_title">Advanced (Requires Shizuku/Root)</string>
+    <string name="hide_all_system_icons_title">Hide all system icons</string>
+    <string name="hide_all_system_icons_desc">Clear all non-notification icons from the status bar</string>
+    <string name="hide_system_icons_locked_only_title">Only hide system icons when locked</string>
+    <string name="hide_system_icons_locked_only_desc">Hides the status bar system icons when the device is locked and restores them upon unlock</string>
+    <string name="hide_clock_title">Hide clock</string>
+    <string name="hide_clock_desc">Completely remove the clock from the status bar</string>
+    <string name="hide_notification_icons_title">Hide notifications</string>
+    <string name="hide_notification_icons_desc">Hide all incoming notification icons</string>
+    <string name="feat_hide_gesture_bar_title">Hide gesture bar</string>
+    <string name="feat_other_customizations_title">Other customizations</string>
+    <string name="feat_other_customizations_desc">Additional system tweaks and modifications</string>
+    <string name="feat_hide_gesture_bar_desc">In gesture navigation</string>
     <string name="status_bar_icons_disclaimer">これらのオプションの実装は機種によって異なる場合があり、一部は全く機能しない場合がありますのでご注意ください。</string>
     <!-- Network Type Picker -->
     <string name="network_type_other">その他</string>
