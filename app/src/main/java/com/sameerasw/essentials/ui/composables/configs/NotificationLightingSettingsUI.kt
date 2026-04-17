@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
@@ -35,6 +36,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
@@ -133,6 +135,25 @@ fun NotificationLightingSettingsUI(
                 },
                 modifier = Modifier.highlight(highlightSetting == "skip_persistent_notifications")
             )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // App Selection Sheet Button
+        Button(
+            onClick = {
+                HapticUtil.performVirtualKeyHaptic(view)
+                showAppSelectionSheet = true
+            },
+            modifier = Modifier.fillMaxWidth().height(64.dp)
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Icon(painter = painterResource(id = R.drawable.rounded_apps_24), contentDescription = "Apps")
+                Text(stringResource(R.string.action_select_apps))
+            }
         }
 
 
@@ -640,19 +661,6 @@ fun NotificationLightingSettingsUI(
                     }
                 }
             }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // App Selection Sheet Button
-        Button(
-            onClick = {
-                HapticUtil.performVirtualKeyHaptic(view)
-                showAppSelectionSheet = true
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(stringResource(R.string.action_select_apps))
         }
 
         Text(
