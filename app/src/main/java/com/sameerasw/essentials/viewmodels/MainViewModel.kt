@@ -12,6 +12,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.database.ContentObserver
+import android.util.Log
 import android.net.Uri
 import android.os.Build
 import android.os.Handler
@@ -1430,6 +1431,18 @@ class MainViewModel : ViewModel() {
     fun setAutoRotateEnabled(enabled: Boolean) {
         isAutoRotateEnabled.value = enabled
         settingsRepository.setAutoRotateEnabled(enabled)
+    }
+
+    fun restartSystemUI() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                if (ShizukuUtils.isShizukuAvailable() && ShizukuUtils.hasPermission()) {
+                    ShizukuUtils.runCommand("am crash com.android.systemui")
+                } else if (RootUtils.isRootAvailable() && RootUtils.isRootPermissionGranted()) {
+                    RootUtils.runCommand("am crash com.android.systemui")
+                }
+            }
+        }
     }
 
     fun setScreenTimeout(timeoutMs: Long) {

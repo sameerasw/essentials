@@ -46,6 +46,7 @@ fun TextAnimationsSettingsUI(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
 
+
         RoundedCardContainer(spacing = 2.dp) {
             SegmentedPicker(
                 items = listOf("default", "glove"),
