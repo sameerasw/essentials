@@ -63,6 +63,8 @@
     <string name="feat_ambient_music_glance_desc">Обзор медиа в режиме AOD. Включает «Сейчас исполняется» на экране блокировки во время смены песни или громкости звука</string>
     <string name="ambient_glance_docked_mode_title">Закрепленный режим</string>
     <string name="ambient_glance_docked_mode_desc">Сохраняйте наложение видимым на неопределенный срок во время воспроизведения музыки на AOD</string>
+    <string name="ambient_glance_random_shapes_title">Random shapes</string>
+    <string name="ambient_glance_random_shapes_desc">Use various Material 3 shapes for the album art</string>
     <string name="feat_notification_glance_title">Обзор уведомлений</string>
     <string name="feat_notification_glance_desc">Не отключать AOD, пока ожидаются уведомления</string>
     <string name="notification_glance_same_as_lighting_title">Те же приложения, что и подсветка уведомлений</string>
@@ -161,6 +163,8 @@
     <string name="flashlight_pulse_title">Мигание фонариком</string>
     <string name="flashlight_pulse_facedown_title">Только экраном вниз</string>
     <string name="flashlight_pulse_same_as_lighting_title">Те же приложения, что и подсветка уведомлений</string>
+    <string name="flashlight_pulse_max_brightness">Максимальная яркость</string>
+    <string name="flashlight_pulse_preview">Предпросмотр</string>
     <string name="settings_section_style">Стиль</string>
     <string name="notification_lighting_stroke_adjustment_section">Регулировка хода</string>
     <string name="notification_lighting_corner_radius_title">Радиус закругления</string>
