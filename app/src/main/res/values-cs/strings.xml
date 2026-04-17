@@ -255,11 +255,12 @@
     <string name="deactivated">Neoptimalizováno</string>
     <string name="permission_missing">Chybí oprávnění</string>
     <!-- Screen Locked Security -->
-    <string name="screen_locked_security_title">Zabezpečení uzamčené obrazovky</string>
-    <string name="screen_locked_security_dialog_title">Zabezpečení uzamčené obrazovky</string>
-    <string name="screen_locked_security_auth_enable">Ověřením povolíte zabezpečení uzamčené obrazovky</string>
-    <string name="screen_locked_security_auth_disable">Ověřením deaktivujete zabezpečení uzamčené obrazovky</string>
+    <string name="screen_locked_security_title">Disable QS tiles when the device is locked</string>
+    <string name="screen_locked_security_dialog_title">Disable QS tiles when the device is locked</string>
     <string name="warning_title">⚠️ UPOZORNĚNÍ</string>
+    <string name="screen_locked_security_auth_enable">Authenticate to enable this feature</string>
+    <string name="screen_locked_security_auth_disable">Authenticate to disable this feature</string>
+    <string name="screen_locked_security_desc">Disable quick setting tiles when the device is locked</string>
     <string name="search_disable_qs_locked_title">Disable QS Locked</string>
     <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
@@ -651,6 +652,8 @@
     <string name="unit_seconds">%d seconds</string>
     <string name="unit_minute">1 minute</string>
     <string name="unit_minutes">%d minutes</string>
+    <string name="action_restart_systemui">Restart SystemUI</string>
+    <string name="desc_restart_systemui">Kills and restarts SystemUI process to apply some changes immediately</string>
     <string name="msg_error_load_release_notes">Couldn\'t load the release note</string>
     <string name="action_view_on_web">View on web</string>
     <string name="action_done">Hotovo</string>
