@@ -979,7 +979,8 @@ class SettingsRepository(private val context: Context) {
         return if (mode == "glove") {
             ScaleAnimationsProfile(
                 fontScale = 1.25f,
-                smallestWidth = 385
+                smallestWidth = 385,
+                touchSensitivityEnabled = true
             )
         } else {
             ScaleAnimationsProfile()
@@ -990,6 +991,22 @@ class SettingsRepository(private val context: Context) {
         val key = if (mode == "glove") KEY_SCALE_ANIMATIONS_GLOVE_PROFILE else KEY_SCALE_ANIMATIONS_DEFAULT_PROFILE
         val json = gson.toJson(profile)
         putString(key, json)
+    }
+
+    fun getTouchSensitivityEnabled(): Boolean {
+        return try {
+            android.provider.Settings.Secure.getInt(context.contentResolver, "touch_sensitivity_enabled", 0) == 1
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    fun setTouchSensitivityEnabled(enabled: Boolean) {
+        try {
+            android.provider.Settings.Secure.putInt(context.contentResolver, "touch_sensitivity_enabled", if (enabled) 1 else 0)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
 }

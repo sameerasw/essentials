@@ -6,5 +6,6 @@ data class ScaleAnimationsProfile(
     val animatorDurationScale: Float = 1.0f,
     val transitionAnimationScale: Float = 1.0f,
     val windowAnimationScale: Float = 1.0f,
-    val smallestWidth: Int = 360
+    val smallestWidth: Int = 360,
+    val touchSensitivityEnabled: Boolean = false
 )

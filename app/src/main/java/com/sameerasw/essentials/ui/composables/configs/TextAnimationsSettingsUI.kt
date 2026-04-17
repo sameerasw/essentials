@@ -67,6 +67,16 @@ fun TextAnimationsSettingsUI(
             )
         }
 
+        RoundedCardContainer {
+            com.sameerasw.essentials.ui.components.cards.IconToggleItem(
+                title = stringResource(R.string.label_increase_touch_sensitivity),
+                subtitle = stringResource(R.string.desc_increase_touch_sensitivity),
+                icon = R.drawable.rounded_touch_app_24,
+                checked = viewModel.isTouchSensitivityEnabled.value,
+                onCheckedChange = { viewModel.setTouchSensitivityEnabled(it) }
+            )
+        }
+
         // Text Section
         Text(
             text = stringResource(R.string.settings_section_text),

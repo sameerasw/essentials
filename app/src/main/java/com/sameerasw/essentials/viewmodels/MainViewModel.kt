@@ -230,6 +230,7 @@ class MainViewModel : ViewModel() {
     val isAmbientMusicGlanceDockedModeEnabled = mutableStateOf(false)
     val isAmbientMusicGlanceRandomShapesEnabled = mutableStateOf(true)
     val scaleAnimationsMode = mutableStateOf("default")
+    val isTouchSensitivityEnabled = mutableStateOf(false)
     val fontScale = mutableFloatStateOf(1.0f)
     val fontWeight = mutableIntStateOf(0)
     val animatorDurationScale = mutableFloatStateOf(1.0f)
@@ -947,6 +948,7 @@ class MainViewModel : ViewModel() {
         isAodForceTurnOffEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_AOD_FORCE_TURN_OFF_ENABLED)
         isNotificationGlanceSameAsLightingEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING, true)
         scaleAnimationsMode.value = settingsRepository.getScaleAnimationsMode()
+        isTouchSensitivityEnabled.value = settingsRepository.getTouchSensitivityEnabled()
         isPowerSaveModeEnabled.value = DeviceUtils.isPowerSaveMode(context)
         updateBlurState(context)
 
@@ -1390,7 +1392,8 @@ class MainViewModel : ViewModel() {
             animatorDurationScale = animatorDurationScale.floatValue,
             transitionAnimationScale = transitionAnimationScale.floatValue,
             windowAnimationScale = windowAnimationScale.floatValue,
-            smallestWidth = smallestWidth.intValue
+            smallestWidth = smallestWidth.intValue,
+            touchSensitivityEnabled = isTouchSensitivityEnabled.value
         )
         settingsRepository.saveScaleAnimationsProfile(oldMode, currentProfile)
 
@@ -1408,6 +1411,12 @@ class MainViewModel : ViewModel() {
         setAnimationScale(android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE, newProfile.transitionAnimationScale)
         setAnimationScale(android.provider.Settings.Global.WINDOW_ANIMATION_SCALE, newProfile.windowAnimationScale)
         setSmallestWidth(newProfile.smallestWidth)
+        setTouchSensitivityEnabled(newProfile.touchSensitivityEnabled)
+    }
+
+    fun setTouchSensitivityEnabled(enabled: Boolean) {
+        isTouchSensitivityEnabled.value = enabled
+        settingsRepository.setTouchSensitivityEnabled(enabled)
     }
 
     fun updateFontScale(scale: Float) {
