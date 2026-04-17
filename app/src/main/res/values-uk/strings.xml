@@ -54,6 +54,7 @@
     <string name="action_ai_assistant">AI помічник</string>
     <string name="action_take_screenshot">Зробити скріншот</string>
     <string name="action_cycle_sound_modes">Перемикайте звукові режими</string>
+    <string name="action_circle_to_search">Circle to Search</string>
     <string name="action_like_song">Як поточна пісня</string>
     <string name="like_song_settings_title">Як налаштування пісні</string>
     <string name="like_song_settings_desc">Ця функція потребує доступу до сповіщень, щоб виявити медіафайли, які зараз відтворюються, і активувати дію «подобається». Увімкніть його нижче.</string>
@@ -338,9 +339,11 @@
     <string name="hide_notification_icons_title">Hide notifications</string>
     <string name="hide_notification_icons_desc">Hide all incoming notification icons</string>
     <string name="feat_hide_gesture_bar_title">Hide gesture bar</string>
+    <string name="feat_hide_gesture_bar_desc">Hide the navigation pill at the bottom</string>
+    <string name="feat_circle_to_search_gesture_title">Circle to Search gesture</string>
+    <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
     <string name="feat_other_customizations_title">Other customizations</string>
     <string name="feat_other_customizations_desc">Additional system tweaks and modifications</string>
-    <string name="feat_hide_gesture_bar_desc">In gesture navigation</string>
     <string name="status_bar_icons_disclaimer">Зауважте, що реалізація цих параметрів може залежати від виробника комплектного обладнання, а деякі можуть взагалі не працювати.</string>
     <!-- Network Type Picker -->
     <string name="network_type_other">інше</string>
