@@ -63,6 +63,8 @@
     <string name="feat_ambient_music_glance_desc">Nhìn lướt qua phương tiện truyền thông trên AOD</string>
     <string name="ambient_glance_docked_mode_title">Chế độ gắn đế</string>
     <string name="ambient_glance_docked_mode_desc">Giữ lớp phủ hiển thị vô thời hạn trong khi nhạc đang phát trên AOD</string>
+    <string name="ambient_glance_random_shapes_title">Random shapes</string>
+    <string name="ambient_glance_random_shapes_desc">Use various Material 3 shapes for the album art</string>
     <string name="feat_notification_glance_title">Thông báo lướt qua</string>
     <string name="feat_notification_glance_desc">Luôn bật AOD trong khi thông báo đang chờ xử lý</string>
     <string name="notification_glance_same_as_lighting_title">Ứng dụng tương tự như đèn thông báo</string>
@@ -161,6 +163,8 @@
     <string name="flashlight_pulse_title">Xung đèn pin</string>
     <string name="flashlight_pulse_facedown_title">Chỉ khi úp mặt xuống</string>
     <string name="flashlight_pulse_same_as_lighting_title">Ứng dụng tương tự như đèn thông báo</string>
+    <string name="flashlight_pulse_max_brightness">Max brightness</string>
+    <string name="flashlight_pulse_preview">Preview pulse</string>
     <string name="settings_section_style">Phong cách</string>
     <string name="notification_lighting_stroke_adjustment_section">Điều chỉnh hành trình</string>
     <string name="notification_lighting_corner_radius_title">Bán kính góc</string>
