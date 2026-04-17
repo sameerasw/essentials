@@ -691,7 +691,7 @@ object FeatureRegistry {
             title = R.string.feat_screen_locked_security_title,
             iconRes = R.drawable.rounded_security_24,
             category = R.string.cat_protection,
-            description = R.string.feat_screen_locked_security_desc,
+            description = R.string.search_disable_qs_locked_desc,
             aboutDescription = R.string.about_desc_screen_locked_security,
             permissionKeys = listOf("ACCESSIBILITY", "WRITE_SECURE_SETTINGS", "DEVICE_ADMIN"),
             parentFeatureId = "Security"

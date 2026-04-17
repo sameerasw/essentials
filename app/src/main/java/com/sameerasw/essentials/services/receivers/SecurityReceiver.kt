@@ -11,7 +11,7 @@ import com.sameerasw.essentials.utils.ShellUtils
 class SecurityReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val settingsRepository = SettingsRepository(context)
-        val isDisableQsEnabled = settingsRepository.getBoolean(SettingsRepository.KEY_DISABLE_QS_WHEN_LOCKED, false)
+        val isDisableQsEnabled = settingsRepository.getBoolean(SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED, false)
 
         when (intent.action) {
             Intent.ACTION_SCREEN_OFF -> {
@@ -27,14 +27,14 @@ class SecurityReceiver : BroadcastReceiver() {
                 if (isDisableQsEnabled) {
                     com.sameerasw.essentials.utils.StatusBarManager.requestDisable(
                         context,
-                        "ScreenLockedSecurity",
+                        "DisableQsWhenLocked",
                         setOf(com.sameerasw.essentials.utils.StatusBarManager.FLAG_QUICK_SETTINGS)
                     )
                 }
             }
             Intent.ACTION_USER_PRESENT -> {
                 // Restore QS access on unlock
-                com.sameerasw.essentials.utils.StatusBarManager.requestRestore(context, "ScreenLockedSecurity")
+                com.sameerasw.essentials.utils.StatusBarManager.requestRestore(context, "DisableQsWhenLocked")
             }
         }
     }

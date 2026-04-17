@@ -50,6 +50,7 @@ fun ScreenLockedSecuritySettingsUI(
         ) {
             IconToggleItem(
                 title = stringResource(R.string.screen_locked_security_title),
+                description = stringResource(R.string.screen_locked_security_desc),
                 isChecked = viewModel.isScreenLockedSecurityEnabled.value,
                 onCheckedChange = { isChecked ->
                     if (context is FragmentActivity) {
@@ -77,71 +78,11 @@ fun ScreenLockedSecuritySettingsUI(
                 iconRes = R.drawable.rounded_security_24,
                 modifier = Modifier.highlight(highlightSetting == "screen_locked_security_toggle")
             )
-
-            IconToggleItem(
-                title = stringResource(R.string.disable_qs_when_locked_title),
-                description = stringResource(R.string.disable_qs_when_locked_desc),
-                isChecked = viewModel.isDisableQsWhenLockedEnabled.value,
-                onCheckedChange = { isChecked ->
-                    if (context is FragmentActivity) {
-                        BiometricHelper.showBiometricPrompt(
-                            activity = context,
-                            title = context.getString(R.string.screen_locked_security_dialog_title),
-                            subtitle = if (isChecked) context.getString(R.string.screen_locked_security_auth_enable) else context.getString(
-                                R.string.screen_locked_security_auth_disable
-                            ),
-                            onSuccess = {
-                                viewModel.setDisableQsWhenLockedEnabled(isChecked, context)
-                            }
-                        )
-                    } else {
-                        viewModel.setDisableQsWhenLockedEnabled(isChecked, context)
-                    }
-                },
-                enabled = viewModel.isScreenLockedSecurityEnabled.value && isAccessibilityEnabled && viewModel.isWriteSecureSettingsEnabled.value && viewModel.isDeviceAdminEnabled.value,
-                iconRes = R.drawable.rounded_security_24,
-                modifier = Modifier.highlight(highlightSetting == "disable_qs_when_locked_toggle")
-            )
         }
 
 
-        // Warning Section
-        RoundedCardContainer(
-            modifier = Modifier.fillMaxWidth(),
-            cornerRadius = 20.dp
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.errorContainer)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Text(
-                    text = stringResource(R.string.warning_title),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.error
-                )
-                Text(
-                    text = stringResource(R.string.screen_locked_security_warning_text),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Text(
-                    text = stringResource(R.string.screen_locked_security_airplane_warning),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.error,
-                    fontWeight = FontWeight.Medium
-                )
 
-            }
-        }
 
-        Text(
-            text = stringResource(R.string.screen_locked_security_description),
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(16.dp),
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
+
     }
 }
