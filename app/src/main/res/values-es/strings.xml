@@ -63,6 +63,8 @@
     <string name="feat_ambient_music_glance_desc">Un vistazo a los medios en AOD</string>
     <string name="ambient_glance_docked_mode_title">Modo acoplado</string>
     <string name="ambient_glance_docked_mode_desc">Mantener la superposición visible indefinidamente mientras se reproduce música en AOD</string>
+    <string name="ambient_glance_random_shapes_title">Random shapes</string>
+    <string name="ambient_glance_random_shapes_desc">Use various Material 3 shapes for the album art</string>
     <string name="feat_notification_glance_title">Vista rápida de notificación</string>
     <string name="feat_notification_glance_desc">Mantener AOD activado mientras las notificaciones estén pendientes</string>
     <string name="notification_glance_same_as_lighting_title">Las mismas aplicaciones que la iluminación de notificaciones</string>
@@ -162,6 +164,8 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="flashlight_pulse_title">Pulso de linterna</string>
     <string name="flashlight_pulse_facedown_title">Sólo mirando hacia abajo</string>
     <string name="flashlight_pulse_same_as_lighting_title">Las mismas aplicaciones que la iluminación de notificaciones.</string>
+    <string name="flashlight_pulse_max_brightness">Max brightness</string>
+    <string name="flashlight_pulse_preview">Preview pulse</string>
     <string name="settings_section_style">Estilo</string>
     <string name="notification_lighting_stroke_adjustment_section">Ajuste de carrera</string>
     <string name="notification_lighting_corner_radius_title">Radio de las esquinas</string>
