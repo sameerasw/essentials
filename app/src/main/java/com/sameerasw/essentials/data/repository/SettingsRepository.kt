@@ -111,6 +111,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_SCREEN_LOCKED_SECURITY_ENABLED = "screen_locked_security_enabled"
         const val KEY_HIDE_SYSTEM_ICONS = "hide_system_icons"
         const val KEY_HIDE_SYSTEM_ICONS_LOCKED_ONLY = "hide_system_icons_locked_only"
+        const val KEY_HIDE_GESTURE_BAR_ENABLED = "hide_gesture_bar_enabled"
         const val KEY_AUTO_UPDATE_ENABLED = "auto_update_enabled"
         const val KEY_UPDATE_NOTIFICATION_ENABLED = "update_notification_enabled"
         const val KEY_LAST_UPDATE_CHECK_TIME = "last_update_check_time"

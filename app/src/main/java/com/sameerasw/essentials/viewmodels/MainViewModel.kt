@@ -131,6 +131,8 @@ class MainViewModel : ViewModel() {
     val isWhatsNewVisible = mutableStateOf(false)
     val dnsPresets = mutableStateListOf<DnsPreset>()
     val addedQSTiles = mutableStateOf<Set<String>>(emptySet())
+    val isHideGestureBarEnabled = mutableStateOf(false)
+
 
 
     data class CalendarAccount(
@@ -515,6 +517,11 @@ class MainViewModel : ViewModel() {
         isShizukuAvailable.value = ShizukuUtils.isShizukuAvailable()
         isShizukuPermissionGranted.value = ShizukuUtils.hasPermission()
         isAutoAccessibilityEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_AUTO_ACCESSIBILITY_ENABLED)
+        isHideGestureBarEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_HIDE_GESTURE_BAR_ENABLED, false)
+        if (isHideGestureBarEnabled.value) {
+            applyHideGestureBar(context, true)
+        }
+
 
         if (isAutoAccessibilityEnabled.value && !isAccessibilityEnabled.value) {
             val serviceName = "${context.packageName}/${ScreenOffAccessibilityService::class.java.name}"
@@ -1242,10 +1249,25 @@ class MainViewModel : ViewModel() {
 
     fun setAmbientShowLockScreenEnabled(enabled: Boolean, context: Context) {
         isAmbientShowLockScreenEnabled.value = enabled
-        settingsRepository.putBoolean(
-            SettingsRepository.KEY_EDGE_LIGHTING_AMBIENT_SHOW_LOCK_SCREEN,
-            enabled
-        )
+        settingsRepository.putBoolean(SettingsRepository.KEY_EDGE_LIGHTING_AMBIENT_SHOW_LOCK_SCREEN, enabled)
+    }
+
+    fun setHideGestureBarEnabled(enabled: Boolean, context: Context) {
+        isHideGestureBarEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_HIDE_GESTURE_BAR_ENABLED, enabled)
+        applyHideGestureBar(context, enabled)
+    }
+
+    private fun applyHideGestureBar(context: Context, enabled: Boolean) {
+        if (enabled) {
+            com.sameerasw.essentials.utils.StatusBarManager.requestDisable(
+                context,
+                "HideGestureBar",
+                setOf(com.sameerasw.essentials.utils.StatusBarManager.FLAG_HOME)
+            )
+        } else {
+            com.sameerasw.essentials.utils.StatusBarManager.requestRestore(context, "HideGestureBar")
+        }
     }
 
     fun setSkipSilentNotifications(enabled: Boolean, context: Context) {
