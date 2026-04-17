@@ -227,6 +227,7 @@ class MainViewModel : ViewModel() {
     val batteryWidgetMaxDevices = mutableIntStateOf(8)
     val isBatteryWidgetBackgroundEnabled = mutableStateOf(true)
     val isAmbientMusicGlanceDockedModeEnabled = mutableStateOf(false)
+    val isAmbientMusicGlanceRandomShapesEnabled = mutableStateOf(true)
     val fontScale = mutableFloatStateOf(1.0f)
     val fontWeight = mutableIntStateOf(0)
     val animatorDurationScale = mutableFloatStateOf(1.0f)
@@ -931,6 +932,10 @@ class MainViewModel : ViewModel() {
             SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_DOCKED_MODE,
             false
         )
+        isAmbientMusicGlanceRandomShapesEnabled.value = settingsRepository.getBoolean(
+            SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_RANDOM_SHAPES,
+            true
+        )
         isCalendarSyncEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_CALENDAR_SYNC_ENABLED, false)
         isCalendarSyncPeriodicEnabled.value = settingsRepository.isCalendarSyncPeriodicEnabled()
@@ -1364,6 +1369,11 @@ class MainViewModel : ViewModel() {
     fun setAmbientMusicGlanceEnabled(enabled: Boolean) {
         isAmbientMusicGlanceEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_ENABLED, enabled)
+    }
+
+    fun setAmbientMusicGlanceRandomShapesEnabled(enabled: Boolean) {
+        isAmbientMusicGlanceRandomShapesEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_RANDOM_SHAPES, enabled)
     }
 
     fun updateFontScale(scale: Float) {

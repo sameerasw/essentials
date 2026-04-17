@@ -225,7 +225,8 @@ class AmbientGlanceHandler(
 
         // Update Dynamic Shape with Morphing
         val size = dpToPx(320f).toFloat()
-        val newPolygon = com.sameerasw.essentials.utils.AmbientMusicShapeHelper.getPolygon("${trackTitle}_${artistName}")
+        val randomEnabled = isRandomShapesEnabled()
+        val newPolygon = com.sameerasw.essentials.utils.AmbientMusicShapeHelper.getPolygon("${trackTitle}_${artistName}", randomEnabled)
 
         if (currentPolygon != null && currentPolygon != newPolygon) {
             val morph = androidx.graphics.shapes.Morph(currentPolygon!!, newPolygon)
@@ -358,8 +359,9 @@ class AmbientGlanceHandler(
 
         val size = dpToPx(320f)
 
-        currentPolygon = com.sameerasw.essentials.utils.AmbientMusicShapeHelper.getRandomPolygon()
-        currentShapePath = com.sameerasw.essentials.utils.AmbientMusicShapeHelper.getRandomShapePath(size.toFloat())
+        val randomEnabled = isRandomShapesEnabled()
+        currentPolygon = com.sameerasw.essentials.utils.AmbientMusicShapeHelper.getRandomPolygon(randomEnabled)
+        currentShapePath = com.sameerasw.essentials.utils.AmbientMusicShapeHelper.getRandomShapePath(size.toFloat(), randomEnabled)
 
         // Container for clipping
         clipContainer = FrameLayout(context).apply {
@@ -744,6 +746,17 @@ class AmbientGlanceHandler(
     private fun dpToPx(dp: Float): Int {
         val metrics = service.resources.displayMetrics
         return (dp * metrics.density).toInt()
+    }
+
+    private fun isRandomShapesEnabled(): Boolean {
+        val prefs = service.getSharedPreferences(
+            com.sameerasw.essentials.data.repository.SettingsRepository.PREFS_NAME,
+            Context.MODE_PRIVATE
+        )
+        return prefs.getBoolean(
+            com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_RANDOM_SHAPES,
+            true
+        )
     }
 
     private fun getPrimaryColor(context: Context): Int {
