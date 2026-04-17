@@ -54,6 +54,7 @@
     <string name="action_ai_assistant">AI 비서</string>
     <string name="action_take_screenshot">스크린샷 찍기</string>
     <string name="action_cycle_sound_modes">사이클 사운드 모드</string>
+    <string name="action_circle_to_search">Circle to Search</string>
     <string name="action_like_song">현재 노래 좋아요</string>
     <string name="like_song_settings_title">노래 설정 좋아요</string>
     <string name="like_song_settings_desc">이 기능을 사용하려면 현재 재생 중인 미디어를 감지하고 좋아요 작업을 실행하려면 알림 액세스가 필요합니다. 아래에서 활성화해 주세요.</string>
@@ -338,9 +339,11 @@
     <string name="hide_notification_icons_title">Hide notifications</string>
     <string name="hide_notification_icons_desc">Hide all incoming notification icons</string>
     <string name="feat_hide_gesture_bar_title">Hide gesture bar</string>
+    <string name="feat_hide_gesture_bar_desc">Hide the navigation pill at the bottom</string>
+    <string name="feat_circle_to_search_gesture_title">Circle to Search gesture</string>
+    <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
     <string name="feat_other_customizations_title">Other customizations</string>
     <string name="feat_other_customizations_desc">Additional system tweaks and modifications</string>
-    <string name="feat_hide_gesture_bar_desc">In gesture navigation</string>
     <string name="status_bar_icons_disclaimer">이러한 옵션의 구현은 OEM에 따라 다를 수 있으며 일부는 전혀 작동하지 않을 수도 있습니다.</string>
     <!-- Network Type Picker -->
     <string name="network_type_other">다른</string>
