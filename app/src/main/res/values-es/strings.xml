@@ -34,7 +34,7 @@
     <string name="shizuku_detected_prefix">Detectado %1$s</string>
     <string name="shizuku_status_prefix">Estado: %1$s</string>
     <string name="shizuku_open_button">Abrir Shizuku</string>
-    <string name="settings_section_flashlight">Flash</string>
+    <string name="settings_section_flashlight">Linterna</string>
     <string name="flashlight_options_title">Opciones de la linterna</string>
     <string name="flashlight_options_desc">Ajustar el desvanecimiento y otros ajustes</string>
     <string name="setting_pitch_black_theme_title">Tema negro absoluto</string>
@@ -65,7 +65,7 @@
     <string name="ambient_glance_docked_mode_desc">Mantener la superposición visible indefinidamente mientras se reproduce música en AOD</string>
     <string name="ambient_glance_random_shapes_title">Formas aleatorias</string>
     <string name="ambient_glance_random_shapes_desc">Usar varias formas de Material 3 para la carátula del álbum</string>
-    <string name="feat_notification_glance_title">Vista rápida de notificación</string>
+    <string name="feat_notification_glance_title">Vista rápida de notificaciones</string>
     <string name="feat_notification_glance_desc">Mantener AOD activado mientras las notificaciones estén pendientes</string>
     <string name="notification_glance_same_as_lighting_title">Las mismas aplicaciones que la iluminación de notificaciones</string>
     <string name="notification_glance_desc">Esta función activará dinámicamente la Pantalla Siempre Encendida (AOD) cuando llegue una notificación de una aplicación seleccionada y la desactivará cuando todas las notificaciones correspondientes se hayan descartado. Elige las aplicaciones o usa la misma selección que para la iluminación de notificaciones.</string>
@@ -79,7 +79,7 @@
     <string name="flashlight_global_title">Controles globales</string>
     <string name="flashlight_global_desc">Activar la linterna con fundido de entrada de forma global</string>
     <string name="flashlight_adjust_intensity_title">Ajustar la intensidad</string>
-    <string name="flashlight_adjust_intensity_desc">Volumen +: ajusta la intensidad de la linterna</string>
+    <string name="flashlight_adjust_intensity_desc">Volumen + - ajusta la intensidad de la linterna</string>
     <string name="flashlight_live_update_title">Actualización en vivo</string>
     <string name="flashlight_live_update_desc">Mostrar el nivel de brillo en la barra de estado</string>
     <string name="settings_section_other">Otro</string>
@@ -99,7 +99,7 @@
     <string name="caffeinate_skip_countdown_title">Saltar cuenta regresiva</string>
     <string name="caffeinate_skip_countdown_desc">Iniciar Cafeína inmediatamente.</string>
     <string name="caffeinate_timeout_presets_title">Preajustes de tiempo de espera</string>
-    <string name="caffeinate_timeout_presets_desc">Seleccione las duraciones disponibles para el mosaico QS</string>
+    <string name="caffeinate_timeout_presets_desc">Seleccionar las duraciones disponibles para el mosaico de Ajustes Rápidos</string>
     <string name="caffeinate_timeout_5m">5 m</string>
     <string name="caffeinate_timeout_10m">10 m</string>
     <string name="caffeinate_timeout_30m">30 m</string>
@@ -138,7 +138,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="settings_section_automation">Automatización</string>
     <string name="freeze_when_locked_title">Congelar al bloquear</string>
     <string name="freeze_delay_title">Retraso de congelación</string>
-    <string name="delay_immediate">Inmediato</string>
+    <string name="delay_immediate">Inmediatamente</string>
     <string name="delay_1m">1 m</string>
     <string name="delay_5m">5 m</string>
     <string name="delay_15m">15 m</string>
@@ -1301,11 +1301,11 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="prank_button_premium">¿Qué incluye la versión Premium?</string>
     <string name="prank_reveal_title">¡Feliz Día de los Inocentes!</string>
     <string name="prank_reveal_desc">Es broma, Essentials es y siempre será gratuito y de código abierto. ¡Disfrútalo! (っ◕‿◕)っ</string>
-    <string name="notification_lighting_style_system">System</string>
-    <string name="notification_lighting_system_mode_title">Ripple Animation</string>
-    <string name="notification_lighting_system_mode_charging_ripple">Bottom</string>
-    <string name="notification_lighting_system_mode_auth_ripple">Center</string>
-    <string name="notification_lighting_system_mode_custom_ripple">Custom</string>
-    <string name="msg_shizuku_root_required_system_lighting">Shizuku or Root permission is required for System lighting effects</string>
-    <string name="notification_lighting_system_disclaimer">Made for Google Pixel. Might not be available on other devices.</string>
+    <string name="notification_lighting_style_system">Sistema</string>
+    <string name="notification_lighting_system_mode_title">Animación de onda</string>
+    <string name="notification_lighting_system_mode_charging_ripple">Abajo</string>
+    <string name="notification_lighting_system_mode_auth_ripple">Centro</string>
+    <string name="notification_lighting_system_mode_custom_ripple">Personalizado</string>
+    <string name="msg_shizuku_root_required_system_lighting">Se requiere permiso de Shizuku o acceso Root para los efectos de iluminación del sistema</string>
+    <string name="notification_lighting_system_disclaimer">Diseñado para Google Pixel. Es posible que no esté disponible en otros dispositivos.</string>
 </resources>
