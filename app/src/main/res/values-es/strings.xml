@@ -54,7 +54,7 @@
     <string name="action_ai_assistant">Asistente de IA</string>
     <string name="action_take_screenshot">Hacer una captura de pantalla</string>
     <string name="action_cycle_sound_modes">Modos de sonido cíclicos</string>
-    <string name="action_circle_to_search">Circle to Search</string>
+    <string name="action_circle_to_search">Círculo para buscar</string>
     <string name="action_like_song">Me gusta la canción actual</string>
     <string name="like_song_settings_title">Me gusta la configuración de la canción</string>
     <string name="like_song_settings_desc">Esta función requiere acceso a las notificaciones para detectar el contenido multimedia que se está reproduciendo actualmente y activar la acción de \"Me gusta\". Actívala a continuación.</string>
@@ -213,7 +213,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="tile_locked_security">Seguridad bloqueada</string>
     <string name="tile_app_lock">Bloqueo de aplicaciones</string>
     <string name="tile_mono_audio">Audio mono</string>
-    <string name="tile_flashlight">Flash</string>
+    <string name="tile_flashlight">Linterna</string>
     <string name="tile_app_freezing">Congelación de aplicaciones</string>
     <string name="tile_flashlight_pulse">Pulso de la linterna</string>
     <string name="tile_stay_awake">Mantener despierto</string>
@@ -249,8 +249,8 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="dns_preset_cloudflare_hostname">1dot1dot1dot1.cloudflare-dns.com</string>
     <string name="dns_preset_quad9">DNS de Quad9</string>
     <string name="dns_preset_quad9_hostname">dns.quad9.net</string>
-    <string name="dns_preset_cleanbrowsing">Navegación limpia</string>
-    <string name="dns_preset_cleanbrowsing_hostname">filtro-adulto-dns.cleanbrowsing.org</string>
+    <string name="dns_preset_cleanbrowsing">CleanBrowsing</string>
+    <string name="dns_preset_cleanbrowsing_hostname">adult-filter-dns.cleanbrowsing.org</string>
     <string name="tile_charge_optimization">Cargando</string>
     <string name="limit_to_80">Límite al 80%</string>
     <string name="adaptive_charging">Adaptado</string>
@@ -262,7 +262,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="warning_title">⚠️ ADVERTENCIA</string>
     <string name="screen_locked_security_auth_enable">Autenticarse para activar esta función</string>
     <string name="screen_locked_security_auth_disable">Autenticarse para desactivar esta función</string>
-    <string name="screen_locked_security_desc">Desactivar los mosaicos de ajustes rápidos cuando el dispositivo está bloqueado</string>
+    <string name="screen_locked_security_desc">Desactivar los mosaicos de Ajustes Rápidos cuando el dispositivo esté bloqueado</string>
     <string name="search_disable_qs_locked_title">Desactivar bloqueo de Ajustes Rápidos</string>
     <string name="search_disable_qs_locked_desc">Evitar expandir los Ajustes Rápidos cuando el dispositivo está bloqueado</string>
     <!-- Sound Mode -->
@@ -271,7 +271,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="content_desc_drag_reorder">Arrastra para reordenar</string>
     <string name="sound_mode_sound">Sonido</string>
     <string name="sound_mode_vibrate">Vibrar</string>
-    <string name="sound_mode_silent">Silencioso</string>
+    <string name="sound_mode_silent">Silencio</string>
     <!-- Status Bar Categories -->
     <string name="status_bar_category_connectivity">Conectividad</string>
     <string name="status_bar_category_phone_network">Teléfono y red</string>
@@ -285,12 +285,12 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="icon_vpn">VPN</string>
     <string name="icon_airplane_mode">Modo avión</string>
     <string name="icon_hotspot">Punto de acceso</string>
-    <string name="icon_cast">Elenco</string>
+    <string name="icon_cast">Enviar</string>
     <string name="icon_mobile_data">Datos móviles</string>
     <string name="icon_phone_signal">Señal de teléfono</string>
-    <string name="icon_volte">VoLTE/VoNR</string>
-    <string name="icon_wifi_calling">Llamadas WiFi/VoWiFi</string>
-    <string name="icon_call_status">Estado de llamada/sincronización</string>
+    <string name="icon_volte">VoLTE / VoNR</string>
+    <string name="icon_wifi_calling">Llamadas WiFi / VoWiFi</string>
+    <string name="icon_call_status">Estado de llamada / Sincronización</string>
     <string name="icon_tty">TTY</string>
     <string name="icon_volume">Volumen</string>
     <string name="icon_headset">Auriculares</string>
@@ -303,13 +303,13 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="icon_power_saving">Ahorro de energía</string>
     <string name="icon_data_saver">Ahorro de datos</string>
     <string name="icon_rotation_lock">Bloqueo de rotación</string>
-    <string name="icon_location">Ubicación/GPS</string>
+    <string name="icon_location">Ubicación / GPS</string>
     <string name="icon_sync">Sincronizar</string>
     <string name="icon_managed_profile">Perfil administrado</string>
     <string name="icon_dnd">No molestar</string>
     <string name="icon_privacy">Privacidad y Carpeta segura</string>
     <string name="icon_security_status">Estado de seguridad (SU)</string>
-    <string name="icon_otg">Ratón/teclado OTG</string>
+    <string name="icon_otg">Ratón / Teclado OTG</string>
     <string name="icon_samsung_smart">Funciones inteligentes de Samsung</string>
     <string name="icon_samsung_services">Servicios Samsung</string>
     <string name="icon_ethernet">Ethernet</string>
@@ -319,14 +319,14 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="stb_battery_percentage_always">Siempre</string>
     <string name="stb_battery_percentage_charging">Cargando</string>
     <string name="stb_battery_percentage_never">Nunca</string>
-    <string name="stb_privacy_chip">La cámara y el micrófono utilizan chips.</string>
+    <string name="stb_privacy_chip">Indicadores de uso de cámara y micrófono</string>
     <string name="smart_data_title">Datos inteligentes</string>
     <string name="permission_read_phone_state_title">Leer el estado del teléfono</string>
-    <string name="permission_read_phone_state_desc">Requerido para detectar el tipo de red para la función Smart Data</string>
+    <string name="permission_read_phone_state_desc">Necesario para detectar el tipo de red para la función de Datos Inteligentes</string>
     <string name="permission_read_phone_state_desc_call_vibrations">Requerido para detectar cambios en el estado de las llamadas para activar la retroalimentación háptica.</string>
-    <string name="settings_section_smart_visibility">Visibilidad inteligente</string>
-    <string name="smart_wifi_title">WiFi inteligente</string>
-    <string name="smart_wifi_desc">Ocultar datos móviles cuando WiFi está conectado</string>
+    <string name="settings_section_smart_visibility">Visibilidad Inteligente</string>
+    <string name="smart_wifi_title">WiFi Inteligente</string>
+    <string name="smart_wifi_desc">Ocultar datos móviles cuando el WiFi está conectado</string>
     <string name="smart_data_desc">Ocultar datos móviles en ciertos modos</string>
     <string name="action_reset_all_icons">Restablecer todos los iconos</string>
     <string name="status_bar_section_advanced">Más configuraciones</string>
@@ -334,7 +334,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="hide_all_system_icons_title">Ocultar todos los iconos del sistema</string>
     <string name="hide_all_system_icons_desc">Eliminar todos los iconos que no sean de notificaciones de la barra de estado</string>
     <string name="hide_system_icons_locked_only_title">Ocultar los iconos del sistema solo cuando el dispositivo esté bloqueado</string>
-    <string name="hide_system_icons_locked_only_desc">Oculta los iconos del sistema en la barra de estado cuando el dispositivo está bloqueado y los restaura al desbloquearlo</string>
+    <string name="hide_system_icons_locked_only_desc">Ocultar los iconos del sistema en la barra de estado cuando el dispositivo está bloqueado y los restaura al desbloquearlo</string>
     <string name="hide_clock_title">Ocultar el reloj</string>
     <string name="hide_clock_desc">Elimina por completo el reloj de la barra de estado</string>
     <string name="hide_notification_icons_title">Ocultar notificaciones</string>
@@ -352,7 +352,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="search_clock_seconds_title">Segundos del reloj</string>
     <string name="search_clock_seconds_desc">Mostrar segundos en el reloj de la barra de estado</string>
     <string name="search_battery_percentage_title">Porcentaje de batería</string>
-    <string name="search_battery_percentage_desc">Configurar la visibilidad del porcentaje de batería</string>
+    <string name="search_battery_percentage_desc">Configurar la visibilidad del porcentaje de la batería</string>
     <string name="search_privacy_chip_title">Fichas de privacidad</string>
     <string name="search_privacy_chip_desc">Mostrar indicador cuando la cámara o el micrófono están en uso</string>
     <string name="search_desc_toggle_visibility">Alternar visibilidad para %1$s</string>
