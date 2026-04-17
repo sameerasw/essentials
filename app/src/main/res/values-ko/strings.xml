@@ -63,6 +63,8 @@
     <string name="feat_ambient_music_glance_desc">AOD에 대한 미디어 살펴보기</string>
     <string name="ambient_glance_docked_mode_title">도킹 모드</string>
     <string name="ambient_glance_docked_mode_desc">AOD에서 음악이 재생되는 동안 오버레이가 무기한 표시되도록 유지</string>
+    <string name="ambient_glance_random_shapes_title">Random shapes</string>
+    <string name="ambient_glance_random_shapes_desc">Use various Material 3 shapes for the album art</string>
     <string name="feat_notification_glance_title">알림 한눈에 보기</string>
     <string name="feat_notification_glance_desc">알림이 보류 중인 동안 AOD를 계속 켜두세요</string>
     <string name="notification_glance_same_as_lighting_title">알림 조명과 동일한 앱</string>
@@ -161,6 +163,8 @@
     <string name="flashlight_pulse_title">손전등 펄스</string>
     <string name="flashlight_pulse_facedown_title">아래로 향한 동안에만</string>
     <string name="flashlight_pulse_same_as_lighting_title">알림 조명과 동일한 앱</string>
+    <string name="flashlight_pulse_max_brightness">Max brightness</string>
+    <string name="flashlight_pulse_preview">Preview pulse</string>
     <string name="settings_section_style">스타일</string>
     <string name="notification_lighting_stroke_adjustment_section">스트로크 조정</string>
     <string name="notification_lighting_corner_radius_title">코너 반경</string>
