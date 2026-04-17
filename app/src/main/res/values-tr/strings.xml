@@ -638,6 +638,10 @@
     <string name="action_check_whats_new">Yeni Neler Var?</string>
     <string name="welcome_back_title">Essentials\'a tekrar hoş geldiniz</string>
     <string name="action_see_whats_new">Yenilikleri gör</string>
+    <string name="label_mode_default">Default</string>
+    <string name="label_mode_glove">Glove mode</string>
+    <string name="tile_scale_animations">Glove Mode</string>
+    <string name="about_desc_scale_animations_tile">Quickly toggle between Default and Glove mode UI profiles</string>
     <string name="msg_error_load_release_notes">Sürüm notları yüklenemedi</string>
     <string name="action_view_on_web">Web üzerinden görüntüle</string>
     <string name="action_done">Tamamlamak</string>
