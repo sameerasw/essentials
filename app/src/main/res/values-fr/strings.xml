@@ -54,7 +54,7 @@
     <string name="action_ai_assistant">Assistant IA</string>
     <string name="action_take_screenshot">Prendre une capture d\'écran</string>
     <string name="action_cycle_sound_modes">Changer de mode de sonnerie</string>
-    <string name="action_circle_to_search">Circle to Search</string>
+    <string name="action_circle_to_search">Entourez pour rechercher</string>
     <string name="action_like_song">Mettre un \"j\'aime\" à la musique actuelle</string>
     <string name="like_song_settings_title">Paramètres de \"j\'aime\" à la musique</string>
     <string name="like_song_settings_desc">Cette fonctionnalité requiert l\'accès aux notifications pour détecter le média actuellement joué et déclencher l\'action de \"j\'aime\". Veuillez l\'activer ci-dessous.</string>
@@ -261,7 +261,7 @@
     <string name="warning_title">⚠️ ATTENTION</string>
     <string name="screen_locked_security_auth_enable">Authentifiez-vous pour activer la protection de l\'écran de verrouillage</string>
     <string name="screen_locked_security_auth_disable">Authentifiez-vous pour désactiver la protection de l\'écran de verrouillage</string>
-    <string name="screen_locked_security_desc">Disable quick setting tiles when the device is locked</string>
+    <string name="screen_locked_security_desc">Désactiver les blocs de réglages rapides lorsque l\'appareil est verrouillé</string>
     <string name="search_disable_qs_locked_title">Désactiver les Réglages rapides au verrouillage</string>
     <string name="search_disable_qs_locked_desc">Empêcher l\'agrandissement des Réglages rapides quand l\'appareil est verrouillé</string>
     <!-- Sound Mode -->
@@ -329,21 +329,21 @@
     <string name="smart_data_desc">Cache les données mobiles dans certains modes</string>
     <string name="action_reset_all_icons">Réinitialiser les icônes</string>
     <string name="status_bar_section_advanced">Plus de paramètres</string>
-    <string name="stb_advanced_flags_title">Advanced (Requires Shizuku/Root)</string>
-    <string name="hide_all_system_icons_title">Hide all system icons</string>
-    <string name="hide_all_system_icons_desc">Clear all non-notification icons from the status bar</string>
-    <string name="hide_system_icons_locked_only_title">Only hide system icons when locked</string>
-    <string name="hide_system_icons_locked_only_desc">Hides the status bar system icons when the device is locked and restores them upon unlock</string>
-    <string name="hide_clock_title">Hide clock</string>
-    <string name="hide_clock_desc">Completely remove the clock from the status bar</string>
-    <string name="hide_notification_icons_title">Hide notifications</string>
-    <string name="hide_notification_icons_desc">Hide all incoming notification icons</string>
-    <string name="feat_hide_gesture_bar_title">Hide gesture bar</string>
-    <string name="feat_hide_gesture_bar_desc">Hide the navigation pill at the bottom</string>
-    <string name="feat_circle_to_search_gesture_title">Circle to Search gesture</string>
-    <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
-    <string name="feat_other_customizations_title">Other customizations</string>
-    <string name="feat_other_customizations_desc">Additional system tweaks and modifications</string>
+    <string name="stb_advanced_flags_title">Avancé (Requiert l\'accès Shizuku/Root)</string>
+    <string name="hide_all_system_icons_title">Masquer toutes les icônes système</string>
+    <string name="hide_all_system_icons_desc">Supprimer toutes les icônes non liées à des notifications de la barre d\'état</string>
+    <string name="hide_system_icons_locked_only_title">Masquer les icônes système uniquement lorsque l\'écran est verrouillé</string>
+    <string name="hide_system_icons_locked_only_desc">Masque les icônes système de la barre d\'état lorsque l\'appareil est verrouillé et les affiche à nouveau une fois celui-ci déverrouillé</string>
+    <string name="hide_clock_title">Cacher l\'horloge</string>
+    <string name="hide_clock_desc">Supprimer complètement l\'horloge de la barre d\'état</string>
+    <string name="hide_notification_icons_title">Masquer les notifications</string>
+    <string name="hide_notification_icons_desc">Masquer toutes les icônes de notification entrantes</string>
+    <string name="feat_hide_gesture_bar_title">Masquer la barre de gestes</string>
+    <string name="feat_hide_gesture_bar_desc">Masquer la barre de navigation en bas</string>
+    <string name="feat_circle_to_search_gesture_title">Geste « Entourez pour rechercher »</string>
+    <string name="feat_circle_to_search_gesture_desc">Appuyez longuement sur la zone inférieure pour lancer la fonction « Entourez pour rechercher »</string>
+    <string name="feat_other_customizations_title">Autres personnalisations</string>
+    <string name="feat_other_customizations_desc">Autres améliorations et modifications du système</string>
     <string name="status_bar_icons_disclaimer">Veuillez noter que l\'implémentation de ces options peut dépendre du constructeur et certaines peuvent ne pas fonctionner du tout.</string>
     <!-- Network Type Picker -->
     <string name="network_type_other">Autre</string>
@@ -668,8 +668,8 @@
     <string name="unit_seconds">%d secondes</string>
     <string name="unit_minute">1 minute</string>
     <string name="unit_minutes">%d minutes</string>
-    <string name="action_restart_systemui">Restart SystemUI</string>
-    <string name="desc_restart_systemui">Kills and restarts SystemUI process to apply some changes immediately</string>
+    <string name="action_restart_systemui">Redémarrer IU Système</string>
+    <string name="desc_restart_systemui">Arrête et redémarre le processus IU Système pour appliquer immédiatement certaines modifications</string>
     <string name="msg_error_load_release_notes">Impossible de charger les notes de version</string>
     <string name="action_view_on_web">Voir sur le Web</string>
     <string name="action_done">OK</string>
@@ -1303,11 +1303,11 @@
     <string name="prank_button_premium">Qu\'est-ce qu\'il y a dans le Premium ?</string>
     <string name="prank_reveal_title">Poisson d\'avril !</string>
     <string name="prank_reveal_desc">Je rigole, Essentials est et sera toujours gratuit et open source. Profitez ! (っ◕‿◕)っ</string>
-    <string name="notification_lighting_style_system">System</string>
-    <string name="notification_lighting_system_mode_title">Ripple Animation</string>
-    <string name="notification_lighting_system_mode_charging_ripple">Bottom</string>
-    <string name="notification_lighting_system_mode_auth_ripple">Center</string>
-    <string name="notification_lighting_system_mode_custom_ripple">Custom</string>
-    <string name="msg_shizuku_root_required_system_lighting">Shizuku or Root permission is required for System lighting effects</string>
-    <string name="notification_lighting_system_disclaimer">Made for Google Pixel. Might not be available on other devices.</string>
+    <string name="notification_lighting_style_system">Système</string>
+    <string name="notification_lighting_system_mode_title">Animation d\'ondulation</string>
+    <string name="notification_lighting_system_mode_charging_ripple">Bas</string>
+    <string name="notification_lighting_system_mode_auth_ripple">Centre</string>
+    <string name="notification_lighting_system_mode_custom_ripple">Personnalisé</string>
+    <string name="msg_shizuku_root_required_system_lighting">La permission Shizuku ou l\'accès racine (root) est nécessaire pour les effets d\'éclairage du système</string>
+    <string name="notification_lighting_system_disclaimer">Conçu pour Google Pixel. Peut ne pas être disponible sur d\'autres appareils.</string>
 </resources>
