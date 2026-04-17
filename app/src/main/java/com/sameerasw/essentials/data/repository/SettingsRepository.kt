@@ -105,6 +105,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_FLASHLIGHT_LAST_INTENSITY = "flashlight_last_intensity"
         const val KEY_FLASHLIGHT_PULSE_ENABLED = "flashlight_pulse_enabled"
         const val KEY_FLASHLIGHT_PULSE_FACEDOWN_ONLY = "flashlight_pulse_facedown_only"
+        const val KEY_FLASHLIGHT_PULSE_MAX_INTENSITY = "flashlight_pulse_max_intensity"
 
         const val KEY_SCREEN_LOCKED_SECURITY_ENABLED = "screen_locked_security_enabled"
         const val KEY_DISABLE_QS_WHEN_LOCKED = "disable_qs_when_locked"

@@ -16,7 +16,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalView
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.utils.HapticUtil
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -33,6 +35,8 @@ fun ConfigSliderItem(
     onValueChangeFinished: (() -> Unit)? = null,
     enabled: Boolean = true
 ) {
+    val view = LocalView.current
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -53,6 +57,7 @@ fun ConfigSliderItem(
         ) {
             IconButton(
                 onClick = {
+                    HapticUtil.performVirtualKeyHaptic(view)
                     val newValue = (BigDecimal.valueOf(value.toDouble())
                         .subtract(BigDecimal.valueOf(increment.toDouble()))
                         .setScale(2, RoundingMode.HALF_UP))
@@ -72,7 +77,12 @@ fun ConfigSliderItem(
 
             Slider(
                 value = value,
-                onValueChange = onValueChange,
+                onValueChange = {
+                    if (it != value) {
+                        HapticUtil.performSliderHaptic(view)
+                    }
+                    onValueChange(it)
+                },
                 valueRange = valueRange,
                 steps = steps,
                 onValueChangeFinished = onValueChangeFinished,
@@ -82,6 +92,7 @@ fun ConfigSliderItem(
 
             IconButton(
                 onClick = {
+                    HapticUtil.performVirtualKeyHaptic(view)
                     val newValue = (BigDecimal.valueOf(value.toDouble())
                         .add(BigDecimal.valueOf(increment.toDouble()))
                         .setScale(2, RoundingMode.HALF_UP))

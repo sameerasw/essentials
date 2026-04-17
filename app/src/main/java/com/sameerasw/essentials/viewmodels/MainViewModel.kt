@@ -48,6 +48,7 @@ import com.sameerasw.essentials.domain.model.UpdateInfo
 import com.sameerasw.essentials.domain.registry.SearchRegistry
 import com.sameerasw.essentials.services.CaffeinateWakeLockService
 import com.sameerasw.essentials.services.NotificationLightingService
+import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
 import com.sameerasw.essentials.services.receivers.SecurityDeviceAdminReceiver
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.utils.AppUtil
@@ -106,6 +107,7 @@ class MainViewModel : ViewModel() {
     val isFlashlightPulseEnabled = mutableStateOf(false)
     val isFlashlightPulseFacedownOnly = mutableStateOf(true)
     val isFlashlightPulseUseLightingApps = mutableStateOf(true)
+    val flashlightPulseMaxIntensity = mutableFloatStateOf(0.5f)
     val isLocationPermissionGranted = mutableStateOf(false)
     val isBackgroundLocationPermissionGranted = mutableStateOf(false)
     val isFullScreenIntentPermissionGranted = mutableStateOf(false)
@@ -472,6 +474,10 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_APRIL_FOOLS_SHOWN -> {
                         isAprilFoolsShown.value = settingsRepository.getBoolean(key)
                     }
+
+                    SettingsRepository.KEY_FLASHLIGHT_PULSE_MAX_INTENSITY -> {
+                        flashlightPulseMaxIntensity.floatValue = settingsRepository.getFloat(key, 0.5f)
+                    }
                 }
             }
         }
@@ -811,6 +817,10 @@ class MainViewModel : ViewModel() {
         isFlashlightPulseUseLightingApps.value = settingsRepository.getBoolean(
             SettingsRepository.KEY_FLASHLIGHT_PULSE_SAME_AS_LIGHTING,
             true
+        )
+        flashlightPulseMaxIntensity.floatValue = settingsRepository.getFloat(
+            SettingsRepository.KEY_FLASHLIGHT_PULSE_MAX_INTENSITY,
+            0.5f
         )
         isPitchBlackThemeEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_PITCH_BLACK_THEME_ENABLED)
@@ -1580,6 +1590,19 @@ class MainViewModel : ViewModel() {
             SettingsRepository.KEY_FLASHLIGHT_PULSE_SAME_AS_LIGHTING,
             enabled
         )
+    }
+
+    fun setFlashlightPulseMaxIntensity(intensity: Float) {
+        flashlightPulseMaxIntensity.floatValue = intensity
+        settingsRepository.putFloat(SettingsRepository.KEY_FLASHLIGHT_PULSE_MAX_INTENSITY, intensity)
+    }
+
+    fun previewFlashlightPulse(context: Context) {
+        val intent = Intent(context, FlashlightActionReceiver::class.java).apply {
+            action = FlashlightActionReceiver.ACTION_PULSE_NOTIFICATION
+            putExtra(FlashlightActionReceiver.EXTRA_IS_PREVIEW, true)
+        }
+        context.sendBroadcast(intent)
     }
 
     private fun Intent.addLightingExtras(

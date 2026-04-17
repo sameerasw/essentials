@@ -15,6 +15,7 @@ class FlashlightActionReceiver : BroadcastReceiver() {
         const val ACTION_SET_INTENSITY = "com.sameerasw.essentials.ACTION_SET_INTENSITY"
         const val ACTION_PULSE_NOTIFICATION = "com.sameerasw.essentials.ACTION_PULSE_NOTIFICATION"
         const val EXTRA_INTENSITY = "intensity"
+        const val EXTRA_IS_PREVIEW = "is_preview"
     }
 
     override fun onReceive(context: Context, intent: Intent) {
@@ -25,6 +26,9 @@ class FlashlightActionReceiver : BroadcastReceiver() {
             this.action = action
             if (intent.hasExtra(EXTRA_INTENSITY)) {
                 putExtra(EXTRA_INTENSITY, intent.getIntExtra(EXTRA_INTENSITY, 1))
+            }
+            if (intent.hasExtra(EXTRA_IS_PREVIEW)) {
+                putExtra(EXTRA_IS_PREVIEW, intent.getBooleanExtra(EXTRA_IS_PREVIEW, false))
             }
         }
         context.startService(serviceIntent)
