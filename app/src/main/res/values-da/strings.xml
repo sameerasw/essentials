@@ -63,6 +63,8 @@
     <string name="feat_ambient_music_glance_desc">Kig på medier på AOD</string>
     <string name="ambient_glance_docked_mode_title">Docket tilstand</string>
     <string name="ambient_glance_docked_mode_desc">Hold overlejringen synlig på ubestemt tid, mens der afspilles musik på AOD</string>
+    <string name="ambient_glance_random_shapes_title">Random shapes</string>
+    <string name="ambient_glance_random_shapes_desc">Use various Material 3 shapes for the album art</string>
     <string name="feat_notification_glance_title">Notifikationsblik</string>
     <string name="feat_notification_glance_desc">Hold AOD tændt, mens meddelelser afventer</string>
     <string name="notification_glance_same_as_lighting_title">Samme apps som meddelelsesbelysning</string>
@@ -161,6 +163,8 @@
     <string name="flashlight_pulse_title">Lommelygte puls</string>
     <string name="flashlight_pulse_facedown_title">Kun med forsiden nedad</string>
     <string name="flashlight_pulse_same_as_lighting_title">Samme apps som meddelelsesbelysning</string>
+    <string name="flashlight_pulse_max_brightness">Max brightness</string>
+    <string name="flashlight_pulse_preview">Preview pulse</string>
     <string name="settings_section_style">Stil</string>
     <string name="notification_lighting_stroke_adjustment_section">Slagtilpasning</string>
     <string name="notification_lighting_corner_radius_title">Hjørneradius</string>
