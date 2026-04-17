@@ -2,6 +2,8 @@ package com.sameerasw.essentials.ui.composables.configs
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.content.pm.PackageManager
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
@@ -58,6 +60,7 @@ fun StatusBarIconSettingsUI(
         isPermissionGranted || hasWriteSettings || viewModel.isShizukuAvailable.value || viewModel.isRootAvailable.value
 
     var showPermissionSheet by remember { mutableStateOf(false) }
+    var showAdvancedPermissionSheet by remember { mutableStateOf(false) }
 
     // Refresh permission state when composable is shown
     LaunchedEffect(Unit) {
@@ -87,6 +90,27 @@ fun StatusBarIconSettingsUI(
                         context,
                         Manifest.permission.READ_PHONE_STATE
                     ) == PackageManager.PERMISSION_GRANTED
+                )
+            )
+        )
+    }
+
+    if (showAdvancedPermissionSheet) {
+        PermissionsBottomSheet(
+            onDismissRequest = { showAdvancedPermissionSheet = false },
+            featureTitle = R.string.stb_advanced_flags_title,
+            permissions = listOf(
+                PermissionItem(
+                    iconRes = R.drawable.rounded_adb_24,
+                    title = R.string.perm_shizuku_title,
+                    description = R.string.perm_shizuku_desc,
+                    dependentFeatures = listOf(R.string.stb_advanced_flags_title),
+                    actionLabel = R.string.perm_shizuku_install_action,
+                    action = {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/thedjchi/Shizuku"))
+                        context.startActivity(intent)
+                    },
+                    isGranted = viewModel.isShizukuAvailable.value || viewModel.isRootAvailable.value
                 )
             )
         )
@@ -363,6 +387,97 @@ fun StatusBarIconSettingsUI(
             enabled = isPermissionGranted
         ) {
             Text(stringResource(R.string.action_reset_all_icons))
+        }
+
+        // Advanced Status Bar Flags Section
+        Text(
+            text = stringResource(R.string.stb_advanced_flags_title),
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        val isAdvancedEnabled = viewModel.isShizukuAvailable.value || viewModel.isRootAvailable.value
+
+        RoundedCardContainer(
+            modifier = Modifier,
+            spacing = 2.dp,
+            cornerRadius = 24.dp
+        ) {
+            IconToggleItem(
+                iconRes = R.drawable.rounded_android_24,
+                title = stringResource(R.string.hide_all_system_icons_title),
+                description = stringResource(R.string.hide_all_system_icons_desc),
+                isChecked = viewModel.isHideSystemIconsEnabled.value,
+                onCheckedChange = { checked ->
+                    if (!isAdvancedEnabled) {
+                        showAdvancedPermissionSheet = true
+                    } else {
+                        viewModel.setAdvancedFlagEnabled(
+                            context,
+                            StatusBarIconViewModel.PREF_HIDE_SYSTEM_ICONS,
+                            checked
+                        )
+                    }
+                },
+                enabled = true,
+                onDisabledClick = {
+                    if (!isAdvancedEnabled) {
+                        showAdvancedPermissionSheet = true
+                    }
+                },
+                modifier = Modifier.highlight(highlightSetting == "hide_system_icons")
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_nest_clock_farsight_analog_24,
+                title = stringResource(R.string.hide_clock_title),
+                description = stringResource(R.string.hide_clock_desc),
+                isChecked = viewModel.isHideClockEnabled.value,
+                onCheckedChange = { checked ->
+                    if (!isAdvancedEnabled) {
+                        showAdvancedPermissionSheet = true
+                    } else {
+                        viewModel.setAdvancedFlagEnabled(
+                            context,
+                            StatusBarIconViewModel.PREF_HIDE_CLOCK,
+                            checked
+                        )
+                    }
+                },
+                enabled = true,
+                onDisabledClick = {
+                    if (!isAdvancedEnabled) {
+                        showAdvancedPermissionSheet = true
+                    }
+                },
+                modifier = Modifier.highlight(highlightSetting == "hide_clock")
+            )
+
+            IconToggleItem(
+                iconRes = R.drawable.outline_circle_notifications_24,
+                title = stringResource(R.string.hide_notification_icons_title),
+                description = stringResource(R.string.hide_notification_icons_desc),
+                isChecked = viewModel.isHideNotificationIconsEnabled.value,
+                onCheckedChange = { checked ->
+                    if (!isAdvancedEnabled) {
+                        showAdvancedPermissionSheet = true
+                    } else {
+                        viewModel.setAdvancedFlagEnabled(
+                            context,
+                            StatusBarIconViewModel.PREF_HIDE_NOTIFICATION_ICONS,
+                            checked
+                        )
+                    }
+                },
+                enabled = true,
+                onDisabledClick = {
+                    if (!isAdvancedEnabled) {
+                        showAdvancedPermissionSheet = true
+                    }
+                },
+                modifier = Modifier.highlight(highlightSetting == "hide_notifications")
+            )
         }
 
         Text(stringResource(R.string.status_bar_icons_disclaimer))

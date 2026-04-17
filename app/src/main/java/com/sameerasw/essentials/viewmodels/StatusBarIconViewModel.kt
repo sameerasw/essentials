@@ -33,6 +33,11 @@ class StatusBarIconViewModel : ViewModel() {
     val batteryPercentageMode = mutableStateOf(0) // 0: Hide, 1: Always, 2: Charging
     val isPrivacyChipEnabled = mutableStateOf(true)
     val isWriteSettingsEnabled = mutableStateOf(false)
+ 
+    val isHideSystemIconsEnabled = mutableStateOf(false)
+    val isHideClockEnabled = mutableStateOf(false)
+    val isHideNotificationIconsEnabled = mutableStateOf(false)
+
 
     // Dynamic icon visibility states based on registry
     private val iconVisibilities =
@@ -51,6 +56,10 @@ class StatusBarIconViewModel : ViewModel() {
         const val PREF_SMART_DATA_ENABLED = "smart_data_enabled"
         const val PREF_SELECTED_NETWORK_TYPES = "selected_network_types"
         const val PREF_BATTERY_PERCENT_MODE = "battery_percent_mode"
+        const val PREF_HIDE_SYSTEM_ICONS = "hide_system_icons"
+        const val PREF_HIDE_CLOCK = "hide_clock"
+        const val PREF_HIDE_NOTIFICATION_ICONS = "hide_notification_icons"
+        private const val ADVANCED_FLAGS_REQUESTER_ID = "StatusBarIconAdvanced"
     }
 
     init {
@@ -103,6 +112,7 @@ class StatusBarIconViewModel : ViewModel() {
         isWriteSettingsEnabled.value =
             com.sameerasw.essentials.utils.PermissionUtils.canWriteSystemSettings(context)
         loadStatusBarSettings(context)
+        loadAdvancedFlags(context)
 
         if (isSmartWiFiEnabled.value && isWriteSecureSettingsEnabled.value) {
             startSmartWiFiUpdates(context)
@@ -475,6 +485,9 @@ class StatusBarIconViewModel : ViewModel() {
             setClockSecondsEnabled(false, context)
             setPrivacyChipEnabled(true, context)
         }
+        setAdvancedFlagEnabled(context, PREF_HIDE_SYSTEM_ICONS, false)
+        setAdvancedFlagEnabled(context, PREF_HIDE_CLOCK, false)
+        setAdvancedFlagEnabled(context, PREF_HIDE_NOTIFICATION_ICONS, false)
         setBatteryPercentageMode(0, context)
 
         // Build default visibility map
@@ -574,6 +587,45 @@ class StatusBarIconViewModel : ViewModel() {
                 com.sameerasw.essentials.utils.RootUtils.runCommand("settings put system $key $value")
                 com.sameerasw.essentials.utils.RootUtils.runCommand("settings put secure $key $value")
             }
+        }
+    }
+
+    private fun loadAdvancedFlags(context: Context) {
+        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+        isHideSystemIconsEnabled.value = prefs.getBoolean(PREF_HIDE_SYSTEM_ICONS, false)
+        isHideClockEnabled.value = prefs.getBoolean(PREF_HIDE_CLOCK, false)
+        isHideNotificationIconsEnabled.value = prefs.getBoolean(PREF_HIDE_NOTIFICATION_ICONS, false)
+        applyAdvancedFlags(context)
+    }
+
+    fun setAdvancedFlagEnabled(context: Context, flagKey: String, enabled: Boolean) {
+        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+        when (flagKey) {
+            PREF_HIDE_SYSTEM_ICONS -> isHideSystemIconsEnabled.value = enabled
+            PREF_HIDE_CLOCK -> isHideClockEnabled.value = enabled
+            PREF_HIDE_NOTIFICATION_ICONS -> isHideNotificationIconsEnabled.value = enabled
+        }
+        prefs.edit { putBoolean(flagKey, enabled) }
+        applyAdvancedFlags(context)
+    }
+
+    private fun applyAdvancedFlags(context: Context) {
+        val flags = mutableSetOf<String>()
+        if (isHideSystemIconsEnabled.value) flags.add(com.sameerasw.essentials.utils.StatusBarManager.FLAG_SYSTEM_ICONS)
+        if (isHideClockEnabled.value) flags.add(com.sameerasw.essentials.utils.StatusBarManager.FLAG_CLOCK)
+        if (isHideNotificationIconsEnabled.value) flags.add(com.sameerasw.essentials.utils.StatusBarManager.FLAG_NOTIFICATION_ICONS)
+
+        if (flags.isNotEmpty()) {
+            com.sameerasw.essentials.utils.StatusBarManager.requestDisable(
+                context,
+                ADVANCED_FLAGS_REQUESTER_ID,
+                flags
+            )
+        } else {
+            com.sameerasw.essentials.utils.StatusBarManager.requestRestore(
+                context,
+                ADVANCED_FLAGS_REQUESTER_ID
+            )
         }
     }
 }
