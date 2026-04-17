@@ -642,6 +642,15 @@
     <string name="label_mode_glove">Glove mode</string>
     <string name="tile_scale_animations">Glove Mode</string>
     <string name="about_desc_scale_animations_tile">Quickly toggle between Default and Glove mode UI profiles</string>
+    <string name="label_increase_touch_sensitivity">Increase touch sensitivity</string>
+    <string name="desc_increase_touch_sensitivity">Improve touch screen responsiveness when using gloves or screen protectors</string>
+    <string name="label_auto_rotate">Auto rotate</string>
+    <string name="desc_auto_rotate">Automatically rotate the screen when the device is turned</string>
+    <string name="label_screen_timeout">Screen timeout</string>
+    <string name="desc_screen_timeout">How long the screen stays on before turning off automatically</string>
+    <string name="unit_seconds">%d seconds</string>
+    <string name="unit_minute">1 minute</string>
+    <string name="unit_minutes">%d minutes</string>
     <string name="msg_error_load_release_notes">Couldn\'t load the release note</string>
     <string name="action_view_on_web">View on web</string>
     <string name="action_done">Făcut</string>
