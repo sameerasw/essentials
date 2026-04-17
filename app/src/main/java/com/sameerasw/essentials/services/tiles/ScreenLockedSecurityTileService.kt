@@ -41,14 +41,11 @@ class ScreenLockedSecurityTileService : BaseTileService() {
     override fun getTileLabel(): String = "Locked Security"
 
     override fun getTileSubtitle(): String {
-        return if (qsTile.state == Tile.STATE_ACTIVE) "Enabled" else "Disabled"
+        return if (getTileState() == Tile.STATE_ACTIVE) "Enabled" else "Disabled"
     }
 
     override fun hasFeaturePermission(): Boolean {
-        // Accessibility, Device Admin and Write Secure Settings are required
-        return PermissionUtils.isAccessibilityServiceEnabled(this) &&
-                PermissionUtils.isDeviceAdminActive(this) &&
-                PermissionUtils.canWriteSecureSettings(this)
+        return com.sameerasw.essentials.utils.ShellUtils.hasPermission(this)
     }
 
     override fun getTileIcon(): Icon = Icon.createWithResource(this, R.drawable.rounded_security_24)

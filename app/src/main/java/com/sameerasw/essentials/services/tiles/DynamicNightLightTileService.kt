@@ -17,7 +17,7 @@ class DynamicNightLightTileService : BaseTileService() {
     override fun getTileLabel(): String = "Dynamic Night Light"
 
     override fun getTileSubtitle(): String {
-        return if (qsTile.state == Tile.STATE_ACTIVE) "Enabled" else "Disabled"
+        return if (getTileState() == Tile.STATE_ACTIVE) "Enabled" else "Disabled"
     }
 
     override fun hasFeaturePermission(): Boolean {

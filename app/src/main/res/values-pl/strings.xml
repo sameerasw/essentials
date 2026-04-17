@@ -256,11 +256,6 @@
     <string name="screen_locked_security_auth_enable">Uwierzytelnij, aby włączyć zabezpieczenie z blokadą ekranu</string>
     <string name="screen_locked_security_auth_disable">Uwierzytelnij, aby wyłączyć zabezpieczenie z blokadą ekranu</string>
     <string name="warning_title">⚠️UWAGA</string>
-    <string name="screen_locked_security_warning_text">Ta funkcja nie jest niezawodna. Mogą wystąpić przypadki Edge, w których ktoś nadal będzie mógł wchodzić w interakcję z kafelkiem. \nPamiętaj też, że Android zawsze pozwoli na wymuszone ponowne uruchomienie, a Pixels zawsze pozwoli na wyłączenie urządzenia również z poziomu ekranu blokady.</string>
-    <string name="screen_locked_security_airplane_warning">Pamiętaj, aby usunąć kafelek trybu samolotowego z szybkich ustawień, ponieważ nie można temu zapobiec, ponieważ nie otwiera okna dialogowego.</string>
-    <string name="screen_locked_security_description">Po włączeniu panel Szybkich ustawień zostanie natychmiast zamknięty, a urządzenie zostanie zablokowane, jeśli ktoś spróbuje wejść w interakcję z kafelkami internetowymi, gdy urządzenie jest zablokowane. \n\n Spowoduje to również wyłączenie odblokowania biometrycznego, aby zapobiec dalszemu nieautoryzowanemu dostępowi. Po zablokowaniu skala animacji zostanie zmniejszona do 0,1x, aby jeszcze bardziej utrudnić interakcję.</string>
-    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
-    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
     <string name="search_disable_qs_locked_title">Disable QS Locked</string>
     <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
@@ -390,7 +385,6 @@
     <string name="feat_dynamic_night_light_title">Dynamiczne światło nocne</string>
     <string name="feat_dynamic_night_light_desc">Przełącz światło nocne na podstawie aplikacji</string>
     <string name="feat_screen_locked_security_title">Bezpieczeństwo z blokadą ekranu</string>
-    <string name="feat_screen_locked_security_desc">Zapobiegaj kontroli sieci</string>
     <string name="feat_app_lock_title">Blokada aplikacji</string>
     <string name="feat_app_lock_desc">Bezpieczne aplikacje za pomocą danych biometrycznych</string>
     <string name="feat_freeze_title">Zamrażać</string>

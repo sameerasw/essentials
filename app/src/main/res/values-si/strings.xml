@@ -256,11 +256,6 @@
     <string name="screen_locked_security_auth_enable">තිර අගුලු දැමූ ආරක්ෂාව සබල කිරීමට සත්‍යාපනය කරන්න</string>
     <string name="screen_locked_security_auth_disable">තිර අගුලු දැමූ ආරක්ෂාව අබල කිරීමට සත්‍යාපනය කරන්න</string>
     <string name="warning_title">⚠️ අවවාදයයි</string>
-    <string name="screen_locked_security_warning_text">මෙම විශේෂාංගය විකාරරූපී නොවේ. යමෙකුට තවමත් ටයිල් එක සමඟ අන්තර් ක්‍රියා කිරීමට හැකි වන අවස්ථා තිබිය හැක. \nඑමෙන්ම Android සෑම විටම බලහත්කාරයෙන් නැවත පණගැන්වීමට ඉඩ දෙන බවත් Pixels සෑම විටම උපාංගය අගුළු තිරයෙන් අක්‍රිය කිරීමට ඉඩ දෙන බවත් මතක තබා ගන්න.</string>
-    <string name="screen_locked_security_airplane_warning">එය සංවාද කවුළුවක් විවෘත නොකරන නිසා එය වැළැක්විය නොහැකි බැවින් ගුවන් යානා මාදිලියේ ටයිල් එක ඉක්මන් සිටුවම්වලින් ඉවත් කිරීමට වග බලා ගන්න.</string>
-    <string name="screen_locked_security_description">සබල කළ විට, ක්ෂණික සැකසුම් පැනලය වහා වසා දමනු ඇති අතර, උපාංගය අගුලු දමා තිබියදී යමෙකු අන්තර්ජාල ටයිල් සමඟ අන්තර් ක්‍රියා කිරීමට උත්සාහ කළහොත් උපාංගය අගුලු දමනු ඇත. \n\nමෙය තවදුරටත් අනවසර ප්‍රවේශය වැලැක්වීමට ජෛවමිතික අගුලු හැරීම ද අබල කරනු ඇත. සජීවිකරණ පරිමාණය අගුලු දමා ඇති අතරතුර 0.1x දක්වා අඩු කරනු ලබන අතර එය සමඟ අන්තර් ක්‍රියා කිරීම වඩාත් අපහසු වේ.</string>
-    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
-    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
     <string name="search_disable_qs_locked_title">Disable QS Locked</string>
     <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
@@ -390,7 +385,6 @@
     <string name="feat_dynamic_night_light_title">ගතික රාත්‍රී ආලෝකය</string>
     <string name="feat_dynamic_night_light_desc">යෙදුම මත පදනම්ව රාත්‍රී ආලෝකය ටොගල් කරන්න</string>
     <string name="feat_screen_locked_security_title">තිරය ​​අගුලු දැමූ ආරක්ෂාව</string>
-    <string name="feat_screen_locked_security_desc">ජාල පාලනය වැළැක්වීම</string>
     <string name="feat_app_lock_title">යෙදුම් අගුල</string>
     <string name="feat_app_lock_desc">ජෛවමිතික සමඟ ආරක්ෂිත යෙදුම්</string>
     <string name="feat_freeze_title">කැටි කරන්න</string>

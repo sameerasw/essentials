@@ -256,11 +256,6 @@
     <string name="screen_locked_security_auth_enable">Autentiqueu-vos per activar la seguretat de bloqueig de pantalla</string>
     <string name="screen_locked_security_auth_disable">Autentiqueu-vos per desactivar la seguretat de bloqueig de pantalla</string>
     <string name="warning_title">⚠️ ADVERTIMENT</string>
-    <string name="screen_locked_security_warning_text">Aquesta característica no és infal·lible. Hi pot haver casos extrems en què algú encara pugui interactuar amb la fitxa. \nTingues en compte que Android sempre permetrà fer un reinici forçat i Pixels sempre permetrà apagar el dispositiu des de la pantalla de bloqueig.</string>
-    <string name="screen_locked_security_airplane_warning">Assegureu-vos d\'eliminar la fitxa del mode avió de la configuració ràpida, ja que això no es pot evitar perquè no obre una finestra de diàleg.</string>
-    <string name="screen_locked_security_description">Quan estigui activat, el tauler de configuració ràpida es tancarà immediatament i el dispositiu es bloquejarà si algú intenta interactuar amb les fitxes d\'Internet mentre el dispositiu està bloquejat. \n\nAixò també desactivarà el desbloqueig biomètric per evitar més accés no autoritzat. l\'escala d\'animació es reduirà a 0,1x mentre estigui bloquejada per fer-hi encara més difícil interactuar.</string>
-    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
-    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
     <string name="search_disable_qs_locked_title">Disable QS Locked</string>
     <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
@@ -390,7 +385,6 @@
     <string name="feat_dynamic_night_light_title">Llum nocturna dinàmica</string>
     <string name="feat_dynamic_night_light_desc">Commuta la llum nocturna segons l\'aplicació</string>
     <string name="feat_screen_locked_security_title">Seguretat amb pantalla bloquejada</string>
-    <string name="feat_screen_locked_security_desc">Evita els controls de xarxa</string>
     <string name="feat_app_lock_title">Bloqueig de l\'aplicació</string>
     <string name="feat_app_lock_desc">Aplicacions segures amb biometria</string>
     <string name="feat_freeze_title">Congelar</string>

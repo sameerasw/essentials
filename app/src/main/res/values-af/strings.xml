@@ -256,11 +256,6 @@
     <string name="screen_locked_security_auth_enable">Staaf om skermgeslote sekuriteit te aktiveer</string>
     <string name="screen_locked_security_auth_disable">Staaf om skermgeslote sekuriteit te deaktiveer</string>
     <string name="warning_title">⚠️ WAARSKUWING</string>
-    <string name="screen_locked_security_warning_text">Hierdie kenmerk is nie onfeilbaar nie. Daar kan randgevalle wees waar iemand steeds met die teël kan kommunikeer. \nHou ook in gedagte dat Android altyd sal toelaat om \'n gedwonge herlaai te doen en Pixels sal altyd toelaat dat die toestel ook vanaf die sluitskerm afgeskakel word.</string>
-    <string name="screen_locked_security_airplane_warning">Maak seker dat u die vliegtuigmodusteël van vinnige instellings verwyder, aangesien dit nie voorkombaar is nie, want dit maak nie \'n dialoogvenster oop nie.</string>
-    <string name="screen_locked_security_description">Wanneer dit geaktiveer is, sal die Vinnige instellings-paneel onmiddellik gesluit word en die toestel sal gesluit word as iemand probeer om met internetteëls te kommunikeer terwyl die toestel gesluit is. \n\nDit sal ook biometriese ontsluiting deaktiveer om verdere ongemagtigde toegang te voorkom. Animasieskaal sal tot 0.1x verminder word terwyl dit gesluit is om dit nog moeiliker te maak om mee te kommunikeer.</string>
-    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
-    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
     <string name="search_disable_qs_locked_title">Disable QS Locked</string>
     <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
@@ -390,7 +385,6 @@
     <string name="feat_dynamic_night_light_title">Dinamiese naglig</string>
     <string name="feat_dynamic_night_light_desc">Wissel naglig gebaseer op app</string>
     <string name="feat_screen_locked_security_title">Skerm geslote sekuriteit</string>
-    <string name="feat_screen_locked_security_desc">Voorkom netwerkkontroles</string>
     <string name="feat_app_lock_title">Toepassingslot</string>
     <string name="feat_app_lock_desc">Beveilig toepassings met biometrie</string>
     <string name="feat_freeze_title">Vries</string>

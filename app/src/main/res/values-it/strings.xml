@@ -256,11 +256,6 @@
     <string name="screen_locked_security_auth_enable">Autenticarsi per abilitare la sicurezza dello schermo bloccato</string>
     <string name="screen_locked_security_auth_disable">Autenticarsi per disabilitare la sicurezza del blocco dello schermo</string>
     <string name="warning_title">⚠️ ATTENZIONE</string>
-    <string name="screen_locked_security_warning_text">Questa funzionalità non è infallibile. Potrebbero esserci casi limite in cui qualcuno è ancora in grado di interagire con il riquadro. \nTieni inoltre presente che Android consentirà sempre di eseguire un riavvio forzato e Pixel consentirà sempre anche lo spegnimento del dispositivo dalla schermata di blocco.</string>
-    <string name="screen_locked_security_airplane_warning">Assicurati di rimuovere il riquadro della modalità aereo dalle impostazioni rapide poiché ciò non è evitabile perché non apre una finestra di dialogo.</string>
-    <string name="screen_locked_security_description">Se abilitato, il pannello Impostazioni rapide verrà immediatamente chiuso e il dispositivo verrà bloccato se qualcuno tenta di interagire con i riquadri Internet mentre il dispositivo è bloccato. \n\nQuesto disabiliterà anche lo sblocco biometrico per impedire ulteriori accessi non autorizzati. La scala dell\'animazione verrà ridotta a 0,1x mentre è bloccata per rendere ancora più difficile l\'interazione.</string>
-    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
-    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
     <string name="search_disable_qs_locked_title">Disable QS Locked</string>
     <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
@@ -390,7 +385,6 @@
     <string name="feat_dynamic_night_light_title">Luce notturna dinamica</string>
     <string name="feat_dynamic_night_light_desc">Attiva/disattiva la luce notturna in base all\'app</string>
     <string name="feat_screen_locked_security_title">Sicurezza bloccata dallo schermo</string>
-    <string name="feat_screen_locked_security_desc">Prevenire i controlli di rete</string>
     <string name="feat_app_lock_title">Blocco dell\'app</string>
     <string name="feat_app_lock_desc">Proteggi le app con la biometria</string>
     <string name="feat_freeze_title">Congelare</string>

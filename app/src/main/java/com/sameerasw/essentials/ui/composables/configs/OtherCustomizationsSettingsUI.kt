@@ -17,19 +17,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.fragment.app.FragmentActivity
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.sheets.PermissionItem
 import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
-import com.sameerasw.essentials.utils.BiometricHelper
-import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
 @Composable
-fun ScreenLockedSecuritySettingsUI(
+fun OtherCustomizationsSettingsUI(
     viewModel: MainViewModel,
     modifier: Modifier = Modifier,
     highlightSetting: String? = null
@@ -46,13 +43,13 @@ fun ScreenLockedSecuritySettingsUI(
 
         PermissionsBottomSheet(
             onDismissRequest = { showPermissionSheet = false },
-            featureTitle = R.string.screen_locked_security_title,
+            featureTitle = R.string.feat_other_customizations_title,
             permissions = listOf(
                 PermissionItem(
                     iconRes = R.drawable.rounded_adb_24,
                     title = if (!isShizukuAvailable) R.string.perm_shizuku_title else R.string.perm_shizuku_grant_title,
                     description = if (!isShizukuAvailable) R.string.perm_shizuku_desc else R.string.perm_shizuku_grant_desc,
-                    dependentFeatures = listOf(R.string.screen_locked_security_title),
+                    dependentFeatures = listOf(R.string.feat_hide_gesture_bar_title),
                     actionLabel = if (!isShizukuAvailable) R.string.perm_shizuku_install_action else R.string.perm_action_grant,
                     action = {
                         if (!isShizukuAvailable) {
@@ -78,12 +75,6 @@ fun ScreenLockedSecuritySettingsUI(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        Text(
-            text = stringResource(R.string.settings_section_security),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
 
         RoundedCardContainer(
             modifier = Modifier,
@@ -93,30 +84,16 @@ fun ScreenLockedSecuritySettingsUI(
             val isShizukuGranted = viewModel.isShizukuAvailable.value && viewModel.isShizukuPermissionGranted.value
             val isRootGranted = viewModel.isRootAvailable.value && viewModel.isRootPermissionGranted.value
             val isShellGranted = isShizukuGranted || isRootGranted
-
+            
             IconToggleItem(
-                title = stringResource(R.string.screen_locked_security_title),
-                description = stringResource(R.string.screen_locked_security_desc),
-                isChecked = viewModel.isScreenLockedSecurityEnabled.value,
-                onCheckedChange = { isChecked ->
-                    if (!isShellGranted) {
-                        showPermissionSheet = true
-                    } else if (context is FragmentActivity) {
-                        BiometricHelper.showBiometricPrompt(
-                            activity = context,
-                            title = context.getString(R.string.screen_locked_security_dialog_title),
-                            subtitle = if (isChecked) context.getString(R.string.screen_locked_security_auth_enable) else context.getString(
-                                R.string.screen_locked_security_auth_disable
-                            ),
-                            onSuccess = {
-                                viewModel.setScreenLockedSecurityEnabled(
-                                    isChecked,
-                                    context
-                                )
-                            }
-                        )
+                title = stringResource(R.string.feat_hide_gesture_bar_title),
+                description = stringResource(R.string.feat_hide_gesture_bar_desc),
+                isChecked = viewModel.isHideGestureBarEnabled.value,
+                onCheckedChange = { enabled ->
+                    if (isShellGranted) {
+                        viewModel.setHideGestureBarEnabled(enabled, context)
                     } else {
-                        viewModel.setScreenLockedSecurityEnabled(isChecked, context)
+                        showPermissionSheet = true
                     }
                 },
                 enabled = true,
@@ -125,8 +102,8 @@ fun ScreenLockedSecuritySettingsUI(
                         showPermissionSheet = true
                     }
                 },
-                iconRes = R.drawable.rounded_security_24,
-                modifier = Modifier.highlight(highlightSetting == "screen_locked_security_toggle")
+                iconRes = R.drawable.rounded_home_24,
+                modifier = Modifier.highlight(highlightSetting == "hide_gesture_bar_toggle")
             )
         }
     }

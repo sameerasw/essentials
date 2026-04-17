@@ -256,11 +256,6 @@
     <string name="screen_locked_security_auth_enable">Xác thực để bật bảo mật khóa màn hình</string>
     <string name="screen_locked_security_auth_disable">Xác thực để tắt bảo mật khóa màn hình</string>
     <string name="warning_title">⚠️ CẢNH BÁO</string>
-    <string name="screen_locked_security_warning_text">Tính năng này không phải là dễ dàng. Có thể có những trường hợp đặc biệt khi ai đó vẫn có thể tương tác với ô. \nNgoài ra, hãy nhớ rằng Android sẽ luôn cho phép thực hiện khởi động lại bắt buộc và Pixel cũng sẽ luôn cho phép tắt thiết bị khỏi màn hình khóa.</string>
-    <string name="screen_locked_security_airplane_warning">Đảm bảo xóa ô chế độ trên máy bay khỏi cài đặt nhanh vì điều đó không thể ngăn chặn được vì nó không mở cửa sổ hộp thoại.</string>
-    <string name="screen_locked_security_description">Khi được bật, bảng Cài đặt nhanh sẽ đóng ngay lập tức và thiết bị sẽ bị khóa nếu ai đó cố gắng tương tác với các ô Internet trong khi thiết bị bị khóa. \n\nĐiều này cũng sẽ vô hiệu hóa mở khóa sinh trắc học để ngăn chặn truy cập trái phép tiếp theo. Tỷ lệ hoạt ảnh sẽ giảm xuống 0,1 lần khi bị khóa để khiến việc tương tác trở nên khó khăn hơn.</string>
-    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
-    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
     <string name="search_disable_qs_locked_title">Disable QS Locked</string>
     <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
@@ -390,7 +385,6 @@
     <string name="feat_dynamic_night_light_title">Đèn ngủ năng động</string>
     <string name="feat_dynamic_night_light_desc">Chuyển đổi ánh sáng ban đêm dựa trên ứng dụng</string>
     <string name="feat_screen_locked_security_title">Bảo mật khóa màn hình</string>
-    <string name="feat_screen_locked_security_desc">Ngăn chặn kiểm soát mạng</string>
     <string name="feat_app_lock_title">Khóa ứng dụng</string>
     <string name="feat_app_lock_desc">Bảo mật ứng dụng bằng sinh trắc học</string>
     <string name="feat_freeze_title">Đông cứng</string>

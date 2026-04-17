@@ -28,38 +28,6 @@ class SecurityHandler(
             val keyguardManager =
                 service.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
             if (keyguardManager.isKeyguardLocked) {
-                // Disable QS when locked logic
-                val isDisableQsWhenLocked = prefs.getBoolean("disable_qs_when_locked", false)
-                if (isDisableQsWhenLocked) {
-                    // Log for debugging
-                    // if (event.packageName == "com.android.systemui") {
-                    //     android.util.Log.d("SecurityHandler", "SystemUI Event Received: ${event.eventType}")
-                    // }
-
-                    val source = event.source ?: service.rootInActiveWindow
-                    var isQsVisible = false
-                    
-                    if (source != null && source.packageName == "com.android.systemui") {
-                        isQsVisible = scanForQs(source)
-                    }
-
-                    if (isQsVisible) {
-                        setReducedAnimationScale()
-                        service.performGlobalAction(GLOBAL_ACTION_BACK)
-                        lockDeviceHard()
-                        com.sameerasw.essentials.utils.HapticUtil.performHapticForService(
-                            service,
-                            com.sameerasw.essentials.domain.HapticFeedbackType.DOUBLE
-                        )
-                        Toast.makeText(
-                            service,
-                            com.sameerasw.essentials.R.string.error_unlock_network_settings,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        return
-                    }
-                }
-
                 if (event.eventType == AccessibilityEvent.TYPE_VIEW_CLICKED || event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
                     val source = event.source
                     if (source != null) {
@@ -68,29 +36,6 @@ class SecurityHandler(
                 }
             }
         }
-    }
-
-    private fun scanForQs(node: AccessibilityNodeInfo): Boolean {
-        val nodeText = node.text?.toString() ?: ""
-        val nodeDesc = node.contentDescription?.toString() ?: ""
-        val nodeId = node.viewIdResourceName ?: ""
-
-        if (nodeText.contains("Quick settings", ignoreCase = true) || 
-            nodeDesc.contains("Quick settings", ignoreCase = true) ||
-            nodeId.contains("quick_settings", ignoreCase = true) ||
-            nodeId.contains("qs_panel", ignoreCase = true) ||
-            nodeText.contains("QuickSettingsScene") || 
-            nodeDesc.contains("QuickSettingsScene")) {
-            return true
-        }
-
-        for (i in 0 until node.childCount) {
-            val child = node.getChild(i)
-            if (child != null && scanForQs(child)) {
-                return true
-            }
-        }
-        return false
     }
 
     private fun checkNetworkTileInteraction(source: AccessibilityNodeInfo) {

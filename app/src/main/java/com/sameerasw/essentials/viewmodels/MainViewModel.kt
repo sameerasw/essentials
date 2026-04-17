@@ -12,6 +12,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.database.ContentObserver
+import android.util.Log
 import android.net.Uri
 import android.os.Build
 import android.os.Handler
@@ -44,16 +45,19 @@ import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import com.sameerasw.essentials.domain.model.NotificationLightingSweepPosition
 import com.sameerasw.essentials.domain.model.SearchableItem
+import com.sameerasw.essentials.domain.model.ScaleAnimationsProfile
 import com.sameerasw.essentials.domain.model.UpdateInfo
 import com.sameerasw.essentials.domain.registry.SearchRegistry
 import com.sameerasw.essentials.services.CaffeinateWakeLockService
 import com.sameerasw.essentials.services.NotificationLightingService
+import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
 import com.sameerasw.essentials.services.receivers.SecurityDeviceAdminReceiver
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.utils.RootUtils
+import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.utils.ShizukuUtils
 import com.sameerasw.essentials.utils.UpdateNotificationHelper
 import kotlinx.coroutines.Dispatchers
@@ -106,6 +110,7 @@ class MainViewModel : ViewModel() {
     val isFlashlightPulseEnabled = mutableStateOf(false)
     val isFlashlightPulseFacedownOnly = mutableStateOf(true)
     val isFlashlightPulseUseLightingApps = mutableStateOf(true)
+    val flashlightPulseMaxIntensity = mutableFloatStateOf(0.5f)
     val isLocationPermissionGranted = mutableStateOf(false)
     val isBackgroundLocationPermissionGranted = mutableStateOf(false)
     val isFullScreenIntentPermissionGranted = mutableStateOf(false)
@@ -127,6 +132,8 @@ class MainViewModel : ViewModel() {
     val isWhatsNewVisible = mutableStateOf(false)
     val dnsPresets = mutableStateListOf<DnsPreset>()
     val addedQSTiles = mutableStateOf<Set<String>>(emptySet())
+    val isHideGestureBarEnabled = mutableStateOf(false)
+
 
 
     data class CalendarAccount(
@@ -141,7 +148,6 @@ class MainViewModel : ViewModel() {
 
 
     val isScreenLockedSecurityEnabled = mutableStateOf(false)
-    val isDisableQsWhenLockedEnabled = mutableStateOf(false)
     val isDeviceAdminEnabled = mutableStateOf(false)
     val isDeveloperModeEnabled = mutableStateOf(false)
     val isNotificationPolicyAccessGranted = mutableStateOf(false)
@@ -159,6 +165,7 @@ class MainViewModel : ViewModel() {
     val notificationLightingSweepPosition = mutableStateOf(NotificationLightingSweepPosition.CENTER)
     val notificationLightingSweepThickness = mutableFloatStateOf(8f)
     val notificationLightingSweepRandomShapes = mutableStateOf(false)
+    val notificationLightingSystemMode = mutableIntStateOf(0) // 0: Charging ripple, 1: Auth ripple
     val skipPersistentNotifications = mutableStateOf(false)
     val isAppLockEnabled = mutableStateOf(false)
     val isUseUsageAccess = mutableStateOf(false)
@@ -225,6 +232,11 @@ class MainViewModel : ViewModel() {
     val batteryWidgetMaxDevices = mutableIntStateOf(8)
     val isBatteryWidgetBackgroundEnabled = mutableStateOf(true)
     val isAmbientMusicGlanceDockedModeEnabled = mutableStateOf(false)
+    val isAmbientMusicGlanceRandomShapesEnabled = mutableStateOf(true)
+    val scaleAnimationsMode = mutableStateOf("default")
+    val isTouchSensitivityEnabled = mutableStateOf(false)
+    val isAutoRotateEnabled = mutableStateOf(false)
+    val screenTimeout = mutableStateOf(30000L)
     val fontScale = mutableFloatStateOf(1.0f)
     val fontWeight = mutableIntStateOf(0)
     val animatorDurationScale = mutableFloatStateOf(1.0f)
@@ -290,8 +302,6 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED -> isScreenLockedSecurityEnabled.value =
                         settingsRepository.getBoolean(key)
 
-                    SettingsRepository.KEY_DISABLE_QS_WHEN_LOCKED -> isDisableQsWhenLockedEnabled.value =
-                        settingsRepository.getBoolean(key)
 
                     SettingsRepository.KEY_MAPS_POWER_SAVING_ENABLED -> {
                         isMapsPowerSavingEnabled.value = settingsRepository.getBoolean(key)
@@ -472,6 +482,10 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_APRIL_FOOLS_SHOWN -> {
                         isAprilFoolsShown.value = settingsRepository.getBoolean(key)
                     }
+
+                    SettingsRepository.KEY_FLASHLIGHT_PULSE_MAX_INTENSITY -> {
+                        flashlightPulseMaxIntensity.floatValue = settingsRepository.getFloat(key, 0.5f)
+                    }
                 }
             }
         }
@@ -505,6 +519,12 @@ class MainViewModel : ViewModel() {
         isShizukuAvailable.value = ShizukuUtils.isShizukuAvailable()
         isShizukuPermissionGranted.value = ShizukuUtils.hasPermission()
         isAutoAccessibilityEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_AUTO_ACCESSIBILITY_ENABLED)
+        isHideGestureBarEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_HIDE_GESTURE_BAR_ENABLED, false)
+        notificationLightingSystemMode.intValue = settingsRepository.getNotificationLightingSystemMode()
+        if (isHideGestureBarEnabled.value) {
+            applyHideGestureBar(context, true)
+        }
+
 
         if (isAutoAccessibilityEnabled.value && !isAccessibilityEnabled.value) {
             val serviceName = "${context.packageName}/${ScreenOffAccessibilityService::class.java.name}"
@@ -812,6 +832,10 @@ class MainViewModel : ViewModel() {
             SettingsRepository.KEY_FLASHLIGHT_PULSE_SAME_AS_LIGHTING,
             true
         )
+        flashlightPulseMaxIntensity.floatValue = settingsRepository.getFloat(
+            SettingsRepository.KEY_FLASHLIGHT_PULSE_MAX_INTENSITY,
+            0.5f
+        )
         isPitchBlackThemeEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_PITCH_BLACK_THEME_ENABLED)
 
@@ -878,8 +902,6 @@ class MainViewModel : ViewModel() {
 
         isScreenLockedSecurityEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED)
-        isDisableQsWhenLockedEnabled.value =
-            settingsRepository.getBoolean(SettingsRepository.KEY_DISABLE_QS_WHEN_LOCKED, false)
         isDeviceAdminEnabled.value = isDeviceAdminActive(context)
 
         isAutoUpdateEnabled.value =
@@ -921,6 +943,10 @@ class MainViewModel : ViewModel() {
             SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_DOCKED_MODE,
             false
         )
+        isAmbientMusicGlanceRandomShapesEnabled.value = settingsRepository.getBoolean(
+            SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_RANDOM_SHAPES,
+            true
+        )
         isCalendarSyncEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_CALENDAR_SYNC_ENABLED, false)
         isCalendarSyncPeriodicEnabled.value = settingsRepository.isCalendarSyncPeriodicEnabled()
@@ -929,6 +955,10 @@ class MainViewModel : ViewModel() {
         isNotificationGlanceEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_ENABLED)
         isAodForceTurnOffEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_AOD_FORCE_TURN_OFF_ENABLED)
         isNotificationGlanceSameAsLightingEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING, true)
+        scaleAnimationsMode.value = settingsRepository.getScaleAnimationsMode()
+        isTouchSensitivityEnabled.value = settingsRepository.getTouchSensitivityEnabled()
+        isAutoRotateEnabled.value = settingsRepository.getAutoRotateEnabled()
+        screenTimeout.value = settingsRepository.getScreenTimeout()
         isPowerSaveModeEnabled.value = DeviceUtils.isPowerSaveMode(context)
         updateBlurState(context)
 
@@ -1222,10 +1252,25 @@ class MainViewModel : ViewModel() {
 
     fun setAmbientShowLockScreenEnabled(enabled: Boolean, context: Context) {
         isAmbientShowLockScreenEnabled.value = enabled
-        settingsRepository.putBoolean(
-            SettingsRepository.KEY_EDGE_LIGHTING_AMBIENT_SHOW_LOCK_SCREEN,
-            enabled
-        )
+        settingsRepository.putBoolean(SettingsRepository.KEY_EDGE_LIGHTING_AMBIENT_SHOW_LOCK_SCREEN, enabled)
+    }
+
+    fun setHideGestureBarEnabled(enabled: Boolean, context: Context) {
+        isHideGestureBarEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_HIDE_GESTURE_BAR_ENABLED, enabled)
+        applyHideGestureBar(context, enabled)
+    }
+
+    private fun applyHideGestureBar(context: Context, enabled: Boolean) {
+        if (enabled) {
+            com.sameerasw.essentials.utils.StatusBarManager.requestDisable(
+                context,
+                "HideGestureBar",
+                setOf(com.sameerasw.essentials.utils.StatusBarManager.FLAG_HOME)
+            )
+        } else {
+            com.sameerasw.essentials.utils.StatusBarManager.requestRestore(context, "HideGestureBar")
+        }
     }
 
     fun setSkipSilentNotifications(enabled: Boolean, context: Context) {
@@ -1239,8 +1284,17 @@ class MainViewModel : ViewModel() {
     }
 
     fun setNotificationLightingStyle(style: NotificationLightingStyle, context: Context) {
+        if (style == NotificationLightingStyle.SYSTEM && !ShellUtils.hasPermission(context)) {
+            // Permission handling should be done in UI, but we can ensure state consistency here
+            return
+        }
         notificationLightingStyle.value = style
         settingsRepository.putString(SettingsRepository.KEY_EDGE_LIGHTING_STYLE, style.name)
+    }
+
+    fun setNotificationLightingSystemMode(mode: Int, context: Context) {
+        notificationLightingSystemMode.intValue = mode
+        settingsRepository.saveNotificationLightingSystemMode(mode)
     }
 
     fun setNotificationLightingColorMode(mode: NotificationLightingColorMode, context: Context) {
@@ -1354,6 +1408,75 @@ class MainViewModel : ViewModel() {
     fun setAmbientMusicGlanceEnabled(enabled: Boolean) {
         isAmbientMusicGlanceEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_ENABLED, enabled)
+    }
+
+    fun setAmbientMusicGlanceRandomShapesEnabled(enabled: Boolean) {
+        isAmbientMusicGlanceRandomShapesEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_RANDOM_SHAPES, enabled)
+    }
+
+    fun switchScaleAnimationsMode(mode: String) {
+        val oldMode = scaleAnimationsMode.value
+        if (oldMode == mode) return
+
+        // 1. Save current state to old profile slot
+        val currentProfile = ScaleAnimationsProfile(
+            fontScale = fontScale.floatValue,
+            fontWeight = fontWeight.intValue,
+            animatorDurationScale = animatorDurationScale.floatValue,
+            transitionAnimationScale = transitionAnimationScale.floatValue,
+            windowAnimationScale = windowAnimationScale.floatValue,
+            smallestWidth = smallestWidth.intValue,
+            touchSensitivityEnabled = isTouchSensitivityEnabled.value,
+            autoRotateEnabled = isAutoRotateEnabled.value,
+            screenTimeout = screenTimeout.value
+        )
+        settingsRepository.saveScaleAnimationsProfile(oldMode, currentProfile)
+
+        // 2. Load new profile
+        val newProfile = settingsRepository.getScaleAnimationsProfile(mode)
+        
+        // 3. Update mode
+        scaleAnimationsMode.value = mode
+        settingsRepository.setScaleAnimationsMode(mode)
+
+        // 4. Apply new profile
+        setFontScale(newProfile.fontScale)
+        setFontWeight(newProfile.fontWeight)
+        setAnimationScale(android.provider.Settings.Global.ANIMATOR_DURATION_SCALE, newProfile.animatorDurationScale)
+        setAnimationScale(android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE, newProfile.transitionAnimationScale)
+        setAnimationScale(android.provider.Settings.Global.WINDOW_ANIMATION_SCALE, newProfile.windowAnimationScale)
+        setSmallestWidth(newProfile.smallestWidth)
+        setTouchSensitivityEnabled(newProfile.touchSensitivityEnabled)
+        setAutoRotateEnabled(newProfile.autoRotateEnabled)
+        setScreenTimeout(newProfile.screenTimeout)
+    }
+
+    fun setTouchSensitivityEnabled(enabled: Boolean) {
+        isTouchSensitivityEnabled.value = enabled
+        settingsRepository.setTouchSensitivityEnabled(enabled)
+    }
+
+    fun setAutoRotateEnabled(enabled: Boolean) {
+        isAutoRotateEnabled.value = enabled
+        settingsRepository.setAutoRotateEnabled(enabled)
+    }
+
+    fun restartSystemUI() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                if (ShizukuUtils.isShizukuAvailable() && ShizukuUtils.hasPermission()) {
+                    ShizukuUtils.runCommand("am crash com.android.systemui")
+                } else if (RootUtils.isRootAvailable() && RootUtils.isRootPermissionGranted()) {
+                    RootUtils.runCommand("am crash com.android.systemui")
+                }
+            }
+        }
+    }
+
+    fun setScreenTimeout(timeoutMs: Long) {
+        screenTimeout.value = timeoutMs
+        settingsRepository.setScreenTimeout(timeoutMs)
     }
 
     fun updateFontScale(scale: Float) {
@@ -1582,6 +1705,19 @@ class MainViewModel : ViewModel() {
         )
     }
 
+    fun setFlashlightPulseMaxIntensity(intensity: Float) {
+        flashlightPulseMaxIntensity.floatValue = intensity
+        settingsRepository.putFloat(SettingsRepository.KEY_FLASHLIGHT_PULSE_MAX_INTENSITY, intensity)
+    }
+
+    fun previewFlashlightPulse(context: Context) {
+        val intent = Intent(context, FlashlightActionReceiver::class.java).apply {
+            action = FlashlightActionReceiver.ACTION_PULSE_NOTIFICATION
+            putExtra(FlashlightActionReceiver.EXTRA_IS_PREVIEW, true)
+        }
+        context.sendBroadcast(intent)
+    }
+
     private fun Intent.addLightingExtras(
         cornerRadiusDp: Float? = null,
         strokeThicknessDp: Float? = null,
@@ -1612,9 +1748,14 @@ class MainViewModel : ViewModel() {
         putExtra("sweep_position", notificationLightingSweepPosition.value.name)
         putExtra("sweep_thickness", notificationLightingSweepThickness.floatValue)
         putExtra("random_shapes", notificationLightingSweepRandomShapes.value)
+        putExtra("system_lighting_mode", notificationLightingSystemMode.intValue)
     }
 
     fun triggerNotificationLighting(context: Context) {
+        if (notificationLightingStyle.value == NotificationLightingStyle.SYSTEM) {
+            triggerNotificationLightingSystem(context)
+            return
+        }
         try {
             val intent = Intent(context, NotificationLightingService::class.java).apply {
                 addLightingExtras(isPreview = false)
@@ -1623,6 +1764,28 @@ class MainViewModel : ViewModel() {
         } catch (e: Exception) {
             // ignore
         }
+    }
+
+    fun triggerNotificationLightingSystem(context: Context) {
+        if (!ShellUtils.hasPermission(context)) return
+
+        val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as android.view.WindowManager
+        val metrics = android.util.DisplayMetrics()
+        windowManager.defaultDisplay.getRealMetrics(metrics)
+        val centerX = metrics.widthPixels / 2
+        val centerY = metrics.heightPixels / 2
+
+        val command = if (notificationLightingSystemMode.intValue == 0) {
+            "cmd statusbar charging-ripple"
+        } else if (notificationLightingSystemMode.intValue == 1) {
+            "cmd statusbar auth-ripple custom $centerX $centerY"
+        } else {
+            val posX = (notificationLightingIndicatorX.value / 100f * metrics.widthPixels).toInt()
+            val posY = (notificationLightingIndicatorY.value / 100f * metrics.heightPixels).toInt()
+            "cmd statusbar auth-ripple custom $posX $posY"
+        }
+
+        ShellUtils.runCommand(context, command)
     }
 
     // Helper to show the overlay service
@@ -2319,11 +2482,9 @@ class MainViewModel : ViewModel() {
             SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED,
             enabled
         )
-    }
-
-    fun setDisableQsWhenLockedEnabled(enabled: Boolean, context: Context) {
-        isDisableQsWhenLockedEnabled.value = enabled
-        settingsRepository.putBoolean(SettingsRepository.KEY_DISABLE_QS_WHEN_LOCKED, enabled)
+        if (!enabled) {
+            com.sameerasw.essentials.utils.StatusBarManager.requestRestore(context, "DisableQsWhenLocked")
+        }
     }
 
     fun setNotificationLightingGlowSides(sides: Set<NotificationLightingSide>, context: Context) {

@@ -20,34 +20,25 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
-import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.HapticUtil
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun NotificationLightingStylePicker(
-    selectedStyle: NotificationLightingStyle,
-    onStyleSelected: (NotificationLightingStyle) -> Unit,
+fun NotificationLightingSystemModePicker(
+    selectedMode: Int,
+    onModeSelected: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val styles = listOf(
-        NotificationLightingStyle.STROKE,
-        NotificationLightingStyle.GLOW,
-        NotificationLightingStyle.INDICATOR,
-        NotificationLightingStyle.SWEEP,
-        NotificationLightingStyle.SYSTEM
-    )
+    val modes = listOf(0, 1, 2) // 0: Charging, 1: Auth, 2: Custom
     val icons = listOf(
-        R.drawable.rounded_rounded_corner_24,
-        R.drawable.rounded_blur_linear_24,
-        R.drawable.rounded_circles_24,
-        R.drawable.rounded_target_24,
-        R.drawable.rounded_mobile_24
+        R.drawable.rounded_keyboard_double_arrow_up_24,
+        R.drawable.rounded_center_focus_strong_24,
+        R.drawable.rounded_my_location_24
     )
+    val labels = listOf("Charging", "Auth", "Custom") // For semantics/descriptions
+    
     val view = LocalView.current
-
-    val selectedIndex = styles.indexOf(selectedStyle).coerceAtLeast(0)
 
     RoundedCardContainer(modifier = Modifier) {
         Row(
@@ -59,25 +50,25 @@ fun NotificationLightingStylePicker(
                 .padding(10.dp),
             horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
         ) {
-            val modifiers = List(styles.size) { Modifier.weight(1f) }
+            val modifiers = List(modes.size) { Modifier.weight(1f) }
 
-            styles.forEachIndexed { index, style ->
+            modes.forEachIndexed { index, mode ->
                 ToggleButton(
-                    checked = selectedIndex == index,
+                    checked = selectedMode == mode,
                     onCheckedChange = {
                         HapticUtil.performVirtualKeyHaptic(view)
-                        onStyleSelected(style)
+                        onModeSelected(mode)
                     },
                     modifier = modifiers[index].semantics { role = Role.RadioButton },
                     shapes = when (index) {
                         0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
-                        styles.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                        modes.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
                         else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
                     },
                 ) {
                     Icon(
                         painter = painterResource(id = icons[index]),
-                        contentDescription = style.name,
+                        contentDescription = labels[index],
                         modifier = Modifier.size(24.dp)
                     )
                 }

@@ -11,6 +11,7 @@ import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import com.sameerasw.essentials.domain.model.NotificationLightingSweepPosition
 import com.sameerasw.essentials.domain.model.DnsPreset
 import com.sameerasw.essentials.domain.model.TrackedRepo
+import com.sameerasw.essentials.domain.model.ScaleAnimationsProfile
 import com.sameerasw.essentials.domain.model.github.GitHubUser
 import com.sameerasw.essentials.utils.RootUtils
 import com.sameerasw.essentials.utils.ShizukuUtils
@@ -70,6 +71,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_EDGE_LIGHTING_SWEEP_POSITION = "edge_lighting_sweep_position"
         const val KEY_EDGE_LIGHTING_SWEEP_THICKNESS = "edge_lighting_sweep_thickness"
         const val KEY_EDGE_LIGHTING_SWEEP_RANDOM_SHAPES = "edge_lighting_sweep_random_shapes"
+        const val KEY_EDGE_LIGHTING_SYSTEM_MODE = "edge_lighting_system_mode"
         const val KEY_LOCK_SCREEN_WALLPAPER_SOURCE = "lock_screen_wallpaper_source"
 
         const val KEY_CALL_VIBRATIONS_ENABLED = "call_vibrations_enabled"
@@ -105,10 +107,12 @@ class SettingsRepository(private val context: Context) {
         const val KEY_FLASHLIGHT_LAST_INTENSITY = "flashlight_last_intensity"
         const val KEY_FLASHLIGHT_PULSE_ENABLED = "flashlight_pulse_enabled"
         const val KEY_FLASHLIGHT_PULSE_FACEDOWN_ONLY = "flashlight_pulse_facedown_only"
+        const val KEY_FLASHLIGHT_PULSE_MAX_INTENSITY = "flashlight_pulse_max_intensity"
 
         const val KEY_SCREEN_LOCKED_SECURITY_ENABLED = "screen_locked_security_enabled"
-        const val KEY_DISABLE_QS_WHEN_LOCKED = "disable_qs_when_locked"
-
+        const val KEY_HIDE_SYSTEM_ICONS = "hide_system_icons"
+        const val KEY_HIDE_SYSTEM_ICONS_LOCKED_ONLY = "hide_system_icons_locked_only"
+        const val KEY_HIDE_GESTURE_BAR_ENABLED = "hide_gesture_bar_enabled"
         const val KEY_AUTO_UPDATE_ENABLED = "auto_update_enabled"
         const val KEY_UPDATE_NOTIFICATION_ENABLED = "update_notification_enabled"
         const val KEY_LAST_UPDATE_CHECK_TIME = "last_update_check_time"
@@ -163,6 +167,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_LIKE_SONG_AOD_OVERLAY_ENABLED = "like_song_aod_overlay_enabled"
         const val KEY_AMBIENT_MUSIC_GLANCE_ENABLED = "ambient_music_glance_enabled"
         const val KEY_AMBIENT_MUSIC_GLANCE_DOCKED_MODE = "ambient_music_glance_docked_mode"
+        const val KEY_AMBIENT_MUSIC_GLANCE_RANDOM_SHAPES = "ambient_music_glance_random_shapes"
         const val KEY_CALENDAR_SYNC_ENABLED = "calendar_sync_enabled"
         const val KEY_CALENDAR_SYNC_SELECTED_CALENDARS = "calendar_sync_selected_calendars"
         const val KEY_CALENDAR_SYNC_PERIODIC_ENABLED = "calendar_sync_periodic_enabled"
@@ -194,6 +199,9 @@ class SettingsRepository(private val context: Context) {
         const val KEY_PRIVATE_DNS_PRESETS = "private_dns_presets"
         const val KEY_APRIL_FOOLS_SHOWN = "april_fools_shown"
         const val KEY_WHATS_NEW_LAST_SHOWN_COUNTER = "whats_new_last_shown_counter"
+        const val KEY_SCALE_ANIMATIONS_MODE = "scale_animations_mode"
+        const val KEY_SCALE_ANIMATIONS_DEFAULT_PROFILE = "scale_animations_default_profile"
+        const val KEY_SCALE_ANIMATIONS_GLOVE_PROFILE = "scale_animations_glove_profile"
     }
 
     // Observe changes
@@ -315,6 +323,9 @@ class SettingsRepository(private val context: Context) {
     fun saveNotificationLightingSweepPosition(position: NotificationLightingSweepPosition) {
         putString(KEY_EDGE_LIGHTING_SWEEP_POSITION, position.name)
     }
+
+    fun getNotificationLightingSystemMode(): Int = getInt(KEY_EDGE_LIGHTING_SYSTEM_MODE, 0)
+    fun saveNotificationLightingSystemMode(mode: Int) = putInt(KEY_EDGE_LIGHTING_SYSTEM_MODE, mode)
 
     fun getFreezeAutoExcludedApps(): Set<String> {
         val json = prefs.getString(KEY_FREEZE_AUTO_EXCLUDED_APPS, null)
@@ -950,6 +961,91 @@ class SettingsRepository(private val context: Context) {
 
     fun resetPrivateDnsPresets() {
         savePrivateDnsPresets(getDefaultDnsPresets())
+    }
+
+    fun getScaleAnimationsMode(): String = getString(KEY_SCALE_ANIMATIONS_MODE, "default") ?: "default"
+    fun setScaleAnimationsMode(mode: String) = putString(KEY_SCALE_ANIMATIONS_MODE, mode)
+
+    fun getScaleAnimationsProfile(mode: String): ScaleAnimationsProfile {
+        val key = if (mode == "glove") KEY_SCALE_ANIMATIONS_GLOVE_PROFILE else KEY_SCALE_ANIMATIONS_DEFAULT_PROFILE
+        val json = prefs.getString(key, null)
+        return if (json != null) {
+            try {
+                gson.fromJson(json, ScaleAnimationsProfile::class.java)
+            } catch (e: Exception) {
+                getDefaultScaleAnimationsProfile(mode)
+            }
+        } else {
+            getDefaultScaleAnimationsProfile(mode)
+        }
+    }
+
+    private fun getDefaultScaleAnimationsProfile(mode: String): ScaleAnimationsProfile {
+        return if (mode == "glove") {
+            ScaleAnimationsProfile(
+                fontScale = 1.25f,
+                smallestWidth = 385,
+                touchSensitivityEnabled = true,
+                autoRotateEnabled = true,
+                screenTimeout = 60000L
+            )
+        } else {
+            ScaleAnimationsProfile()
+        }
+    }
+
+    fun saveScaleAnimationsProfile(mode: String, profile: ScaleAnimationsProfile) {
+        val key = if (mode == "glove") KEY_SCALE_ANIMATIONS_GLOVE_PROFILE else KEY_SCALE_ANIMATIONS_DEFAULT_PROFILE
+        val json = gson.toJson(profile)
+        putString(key, json)
+    }
+
+    fun getTouchSensitivityEnabled(): Boolean {
+        return try {
+            android.provider.Settings.Secure.getInt(context.contentResolver, "touch_sensitivity_enabled", 0) == 1
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    fun setTouchSensitivityEnabled(enabled: Boolean) {
+        try {
+            android.provider.Settings.Secure.putInt(context.contentResolver, "touch_sensitivity_enabled", if (enabled) 1 else 0)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun getAutoRotateEnabled(): Boolean {
+        return try {
+            android.provider.Settings.System.getInt(context.contentResolver, android.provider.Settings.System.ACCELEROMETER_ROTATION, 0) == 1
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    fun setAutoRotateEnabled(enabled: Boolean) {
+        try {
+            android.provider.Settings.System.putInt(context.contentResolver, android.provider.Settings.System.ACCELEROMETER_ROTATION, if (enabled) 1 else 0)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun getScreenTimeout(): Long {
+        return try {
+            android.provider.Settings.System.getLong(context.contentResolver, android.provider.Settings.System.SCREEN_OFF_TIMEOUT, 30000L)
+        } catch (e: Exception) {
+            30000L
+        }
+    }
+
+    fun setScreenTimeout(timeoutMs: Long) {
+        try {
+            android.provider.Settings.System.putLong(context.contentResolver, android.provider.Settings.System.SCREEN_OFF_TIMEOUT, timeoutMs)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
 }

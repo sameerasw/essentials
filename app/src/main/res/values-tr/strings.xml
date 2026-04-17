@@ -256,11 +256,6 @@
     <string name="screen_locked_security_auth_enable">Ekran kilitli güvenliği etkinleştirmek için kimlik doğrulaması yapın</string>
     <string name="screen_locked_security_auth_disable">Ekran kilitli güvenliği devre dışı bırakmak için kimlik doğrulaması yapın</string>
     <string name="warning_title">⚠️ UYARI</string>
-    <string name="screen_locked_security_warning_text">Bu özellik kusursuz değildir. Birisinin hâlâ kutucukla etkileşim kurabildiği uç durumlar olabilir. \nAyrıca Android\'in her zaman zorunlu yeniden başlatmaya izin vereceğini ve Pixels\'in de cihazın kilit ekranından kapatılmasına her zaman izin vereceğini unutmayın.</string>
-    <string name="screen_locked_security_airplane_warning">Bir iletişim penceresi açmadığından bu durum önlenemeyeceği için uçak modu kutucuğunu hızlı ayarlardan çıkardığınızdan emin olun.</string>
-    <string name="screen_locked_security_description">Etkinleştirildiğinde, Hızlı Ayarlar paneli hemen kapatılacak ve cihaz kilitliyken birisi İnternet döşemeleriyle etkileşime girmeye çalışırsa cihaz kilitlenecektir. \n\nBu aynı zamanda daha fazla yetkisiz erişimi önlemek için biyometrik kilit açmayı da devre dışı bırakacaktır. Etkileşimi daha da zorlaştırmak için animasyon ölçeği kilitliyken 0,1x\'e düşürülecek.</string>
-    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
-    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
     <string name="search_disable_qs_locked_title">Disable QS Locked</string>
     <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
@@ -390,7 +385,6 @@
     <string name="feat_dynamic_night_light_title">Dinamik gece lambası</string>
     <string name="feat_dynamic_night_light_desc">Uygulamaya göre gece ışığını değiştir</string>
     <string name="feat_screen_locked_security_title">Ekran kilitli güvenlik</string>
-    <string name="feat_screen_locked_security_desc">Ağ kontrollerini önleyin</string>
     <string name="feat_app_lock_title">Uygulama kilidi</string>
     <string name="feat_app_lock_desc">Biyometri ile uygulamaları güvenli hale getirin</string>
     <string name="feat_freeze_title">Dondur</string>

@@ -49,6 +49,7 @@ class NotificationLightingService : Service() {
     private var sweepPosition: String = "CENTER"
     private var sweepThickness: Float = 8f
     private var randomShapes: Boolean = true
+    private var systemLightingMode: Int = 0
 
     private var screenReceiver: BroadcastReceiver? = null
 
@@ -155,6 +156,7 @@ class NotificationLightingService : Service() {
         sweepPosition = intent?.getStringExtra("sweep_position") ?: "CENTER"
         sweepThickness = intent?.getFloatExtra("sweep_thickness", 8f) ?: 8f
         randomShapes = intent?.getBooleanExtra("random_shapes", false) ?: false
+        systemLightingMode = intent?.getIntExtra("system_lighting_mode", 0) ?: 0
         val ignoreScreenState = intent?.getBooleanExtra("ignore_screen_state", false) ?: false
         val removePreview = intent?.getBooleanExtra("remove_preview", false) ?: false
 
@@ -223,6 +225,7 @@ class NotificationLightingService : Service() {
                             intent?.getBooleanExtra("is_ambient_show_lock_screen", false) ?: false
                         )
                         putExtra("random_shapes", randomShapes)
+                        putExtra("system_lighting_mode", systemLightingMode)
                         putExtra("package_name", intent.getStringExtra("package_name"))
                     }
                 // Use startService to request the accessibility service perform the elevated overlay.
@@ -295,6 +298,11 @@ class NotificationLightingService : Service() {
     }
 
     private fun showOverlay() {
+        if (edgeLightingStyle == NotificationLightingStyle.SYSTEM) {
+            triggerSystemLighting()
+            return
+        }
+
         // For preview mode, remove existing overlays immediately to facilitate rapid re-triggering
         if (isPreview && overlayViews.isNotEmpty()) {
             removeOverlay(immediate = true)
@@ -443,6 +451,34 @@ class NotificationLightingService : Service() {
 
     private fun canDrawOverlays(): Boolean {
         return Settings.canDrawOverlays(this)
+    }
+
+    private fun triggerSystemLighting() {
+        if (!com.sameerasw.essentials.utils.ShellUtils.hasPermission(this)) return
+
+        val wm = getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val metrics = android.util.DisplayMetrics()
+        wm.defaultDisplay.getRealMetrics(metrics)
+        val centerX = metrics.widthPixels / 2
+        val centerY = metrics.heightPixels / 2
+
+        val command = when (systemLightingMode) {
+            0 -> "cmd statusbar charging-ripple"
+            1 -> "cmd statusbar auth-ripple custom $centerX $centerY"
+            else -> {
+                val posX = (indicatorX / 100f * metrics.widthPixels).toInt()
+                val posY = (indicatorY / 100f * metrics.heightPixels).toInt()
+                "cmd statusbar auth-ripple custom $posX $posY"
+            }
+        }
+
+        com.sameerasw.essentials.utils.ShellUtils.runCommand(this, command)
+        
+        // No need to keep service running for system ripples as they are fire-and-forget
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            stopForeground(true)
+        }
+        stopSelf()
     }
 
 }

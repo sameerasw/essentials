@@ -29,23 +29,29 @@ import com.sameerasw.essentials.utils.HapticUtil
 @OptIn(androidx.compose.material3.ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun IconToggleItem(
-    iconRes: Int,
+    iconRes: Int = 0,
     title: String,
     modifier: Modifier = Modifier,
     description: String? = null,
-    isChecked: Boolean,
-    onCheckedChange: (Boolean) -> Unit,
+    isChecked: Boolean = false,
+    onCheckedChange: (Boolean) -> Unit = {},
     enabled: Boolean = true,
     onDisabledClick: (() -> Unit)? = null,
     showToggle: Boolean = true,
-    onClick: (() -> Unit)? = null
+    onClick: (() -> Unit)? = null,
+    subtitle: String? = null,
+    icon: Int? = null,
+    checked: Boolean? = null
 ) {
     val view = LocalView.current
+    val finalIconRes = icon ?: iconRes
+    val finalDescription = subtitle ?: description
+    val finalIsChecked = checked ?: isChecked
 
     val onClickAction = {
         if (enabled) {
             HapticUtil.performVirtualKeyHaptic(view)
-            onCheckedChange(!isChecked)
+            onCheckedChange(!finalIsChecked)
         } else if (onDisabledClick != null) {
             HapticUtil.performVirtualKeyHaptic(view)
             onDisabledClick()
@@ -67,22 +73,24 @@ fun IconToggleItem(
                 enabled = enabled,
                 modifier = modifier.fillMaxWidth(),
                 verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
-                leadingContent = {
-                    Icon(
-                        painter = painterResource(id = iconRes),
-                        contentDescription = title,
-                        modifier = Modifier.size(24.dp),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                },
+                leadingContent = if (finalIconRes != 0) {
+                    {
+                        Icon(
+                            painter = painterResource(id = finalIconRes),
+                            contentDescription = title,
+                            modifier = Modifier.size(24.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                } else null,
                 contentPadding = androidx.compose.foundation.layout.PaddingValues(
                     horizontal = 16.dp,
                     vertical = 16.dp
                 ),
-                supportingContent = if (description != null) {
+                supportingContent = if (finalDescription != null) {
                     {
                         Text(
-                            text = description,
+                            text = finalDescription,
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -100,7 +108,7 @@ fun IconToggleItem(
                             color = MaterialTheme.colorScheme.outlineVariant
                         )
                         Switch(
-                            checked = if (enabled) isChecked else false,
+                            checked = if (enabled) finalIsChecked else false,
                             onCheckedChange = { checked ->
                                 if (enabled) {
                                     HapticUtil.performVirtualKeyHaptic(view)
@@ -124,7 +132,7 @@ fun IconToggleItem(
             )
         } else {
             androidx.compose.material3.ListItem(
-                checked = isChecked && enabled,
+                checked = finalIsChecked && enabled,
                 onCheckedChange = { checked ->
                     if (enabled) {
                         HapticUtil.performVirtualKeyHaptic(view)
@@ -137,22 +145,24 @@ fun IconToggleItem(
                 enabled = enabled,
                 modifier = modifier.fillMaxWidth(),
                 verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
-                leadingContent = {
-                    Icon(
-                        painter = painterResource(id = iconRes),
-                        contentDescription = title,
-                        modifier = Modifier.size(24.dp),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                },
+                leadingContent = if (finalIconRes != 0) {
+                    {
+                        Icon(
+                            painter = painterResource(id = finalIconRes),
+                            contentDescription = title,
+                            modifier = Modifier.size(24.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                } else null,
                 contentPadding = androidx.compose.foundation.layout.PaddingValues(
                     horizontal = 16.dp,
                     vertical = 16.dp
                 ),
-                supportingContent = if (description != null) {
+                supportingContent = if (finalDescription != null) {
                     {
                         Text(
-                            text = description,
+                            text = finalDescription,
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -160,7 +170,7 @@ fun IconToggleItem(
                 } else null,
                 trailingContent = {
                     Switch(
-                        checked = if (enabled) isChecked else false,
+                        checked = if (enabled) finalIsChecked else false,
                         onCheckedChange = null, // Handled by ListItem
                         enabled = enabled
                     )
@@ -183,22 +193,24 @@ fun IconToggleItem(
             enabled = enabled,
             modifier = modifier.fillMaxWidth(),
             verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
-            leadingContent = {
-                Icon(
-                    painter = painterResource(id = iconRes),
-                    contentDescription = title,
-                    modifier = Modifier.size(24.dp),
-                    tint = MaterialTheme.colorScheme.primary
-                )
-            },
+            leadingContent = if (finalIconRes != 0) {
+                {
+                    Icon(
+                        painter = painterResource(id = finalIconRes),
+                        contentDescription = title,
+                        modifier = Modifier.size(24.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            } else null,
             contentPadding = androidx.compose.foundation.layout.PaddingValues(
                 horizontal = 16.dp,
                 vertical = 16.dp
             ),
-            supportingContent = if (description != null) {
+            supportingContent = if (finalDescription != null) {
                 {
                     Text(
-                        text = description,
+                        text = finalDescription,
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )

@@ -65,6 +65,7 @@ import com.sameerasw.essentials.services.tiles.NotificationLightingTileService
 import com.sameerasw.essentials.services.tiles.PrivateDnsTileService
 import com.sameerasw.essentials.services.tiles.PrivateNotificationsTileService
 import com.sameerasw.essentials.services.tiles.ScreenLockedSecurityTileService
+import com.sameerasw.essentials.services.tiles.ScaleAnimationsTileService
 import com.sameerasw.essentials.services.tiles.SoundModeTileService
 import com.sameerasw.essentials.services.tiles.StayAwakeTileService
 import com.sameerasw.essentials.services.tiles.TapToWakeTileService
@@ -187,7 +188,7 @@ fun QuickSettingsTilesSettingsUI(
             R.string.tile_locked_security,
             R.drawable.rounded_security_24,
             ScreenLockedSecurityTileService::class.java,
-            listOf("ACCESSIBILITY", "WRITE_SECURE_SETTINGS", "DEVICE_ADMIN"),
+            if (ShellUtils.isRootEnabled(context)) listOf("ROOT") else listOf("SHIZUKU"),
             R.string.about_desc_screen_locked_security,
             R.string.cat_privacy
         ),
@@ -261,6 +262,14 @@ fun QuickSettingsTilesSettingsUI(
             AdaptiveBrightnessTileService::class.java,
             listOf("WRITE_SETTINGS"),
             R.string.about_desc_adaptive_brightness,
+            R.string.cat_visuals
+        ),
+        QSTileInfo(
+            R.string.tile_scale_animations,
+            R.drawable.rounded_front_hand_24,
+            ScaleAnimationsTileService::class.java,
+            listOf("WRITE_SECURE_SETTINGS"),
+            R.string.about_desc_scale_animations_tile,
             R.string.cat_visuals
         ),
         QSTileInfo(

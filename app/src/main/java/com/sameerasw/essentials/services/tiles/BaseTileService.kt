@@ -156,6 +156,41 @@ abstract class BaseTileService : TileService() {
             ShellUtils.runCommand(this, "settings put secure $key $value")
         }
     }
+
+    protected fun getGlobalInt(key: String, def: Int): Int {
+        secureSettingsCache[key]?.let { return it }
+
+        try {
+            val value = Settings.Global.getInt(contentResolver, key, -1)
+            if (value != -1) {
+                secureSettingsCache[key] = value
+                return value
+            }
+        } catch (_: SecurityException) {
+            // Only fallback to shell on SecurityException
+            return try {
+                val output = ShellUtils.runCommandWithOutput(this, "settings get global $key")
+                val result = output?.toIntOrNull() ?: def
+                secureSettingsCache[key] = result
+                result
+            } catch (_: Exception) {
+                def
+            }
+        } catch (_: Exception) {
+            return def
+        }
+        return def
+    }
+
+    protected fun putGlobalInt(key: String, value: Int) {
+        secureSettingsCache[key] = value // Update cache immediately
+        try {
+            Settings.Global.putInt(contentResolver, key, value)
+        } catch (_: Exception) {
+            // Fallback to shell if standard API fails
+            ShellUtils.runCommand(this, "settings put global $key $value")
+        }
+    }
 }
 
 

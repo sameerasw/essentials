@@ -93,6 +93,17 @@ fun AmbientMusicGlanceSettingsUI(
                 onDisabledClick = { if (!isPermissionGranted) showPermissionSheet = true },
                 modifier = Modifier.highlight(highlightSetting == "ambient_glance_docked_mode")
             )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_interests_24,
+                title = stringResource(R.string.ambient_glance_random_shapes_title),
+                description = stringResource(R.string.ambient_glance_random_shapes_desc),
+                isChecked = viewModel.isAmbientMusicGlanceRandomShapesEnabled.value,
+                onCheckedChange = { viewModel.setAmbientMusicGlanceRandomShapesEnabled(it) },
+                enabled = isPermissionGranted && viewModel.isAmbientMusicGlanceEnabled.value,
+                onDisabledClick = { if (!isPermissionGranted) showPermissionSheet = true },
+                modifier = Modifier.highlight(highlightSetting == "ambient_glance_random_shapes")
+            )
         }
     }
 }

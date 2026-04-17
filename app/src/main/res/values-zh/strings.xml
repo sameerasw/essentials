@@ -256,11 +256,6 @@
     <string name="screen_locked_security_auth_enable">认证身份以启用锁屏安全</string>
     <string name="screen_locked_security_auth_disable">认证身份以禁用锁屏安全</string>
     <string name="warning_title">⚠️ 警告</string>
-    <string name="screen_locked_security_warning_text">此功能并非万无一失。可能存在某些极端情况，有人仍然能够与磁贴交互。\n另外请记住，Android 始终允许强制重启，Pixel 也始终允许从锁屏关闭设备。</string>
-    <string name="screen_locked_security_airplane_warning">请确保从快速设置中移除飞行模式磁贴，因为该磁贴无法被阻止（它不会打开对话框窗口）。</string>
-    <string name="screen_locked_security_description">启用后，如果有人尝试在设备锁定时与网络磁贴交互，快速设置面板将立即关闭，设备将被锁定。\n\n这还将禁用生物识别解锁以防止进一步的未经授权访问。锁定时动画缩放将减少到0.1倍，使交互更加困难。</string>
-    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
-    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
     <string name="search_disable_qs_locked_title">Disable QS Locked</string>
     <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
@@ -390,7 +385,6 @@
     <string name="feat_dynamic_night_light_title">动态夜间模式</string>
     <string name="feat_dynamic_night_light_desc">基于应用切换夜间模式</string>
     <string name="feat_screen_locked_security_title">锁屏安全</string>
-    <string name="feat_screen_locked_security_desc">防止网络控制</string>
     <string name="feat_app_lock_title">应用锁</string>
     <string name="feat_app_lock_desc">使用生物识别保护应用</string>
     <string name="feat_freeze_title">冻结</string>

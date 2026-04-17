@@ -257,11 +257,6 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="screen_locked_security_auth_enable">Autenticar para habilitar la seguridad de pantalla bloqueada</string>
     <string name="screen_locked_security_auth_disable">Autenticarse para desactivar la seguridad de pantalla bloqueada</string>
     <string name="warning_title">⚠️ ADVERTENCIA</string>
-    <string name="screen_locked_security_warning_text">Esta característica no es infalible. Puede haber casos extremos en los que alguien aún pueda interactuar con el mosaico. \nTambién tenga en cuenta que Android siempre permitirá realizar un reinicio forzado y Pixels siempre permitirá que el dispositivo se apague desde la pantalla de bloqueo también.</string>
-    <string name="screen_locked_security_airplane_warning">Asegúrate de eliminar el icono del modo avión de los ajustes rápidos, ya que no se puede evitar, pues no abre ninguna ventana de diálogo.</string>
-    <string name="screen_locked_security_description">Cuando esté habilitado, el panel de Configuración rápida se cerrará inmediatamente y el dispositivo se bloqueará si alguien intenta interactuar con mosaicos de Internet mientras el dispositivo está bloqueado. \n\nEsto también deshabilitará el desbloqueo biométrico para evitar más accesos no autorizados. La escala de la animación se reducirá a 0,1x mientras esté bloqueada para que sea aún más difícil interactuar con ella.</string>
-    <string name="disable_qs_when_locked_title">Desactivar QS cuando el dispositivo esté bloqueado</string>
-    <string name="disable_qs_when_locked_desc">Cierra inmediatamente el panel de Ajustes rápidos si alguien intenta abrirlo mientras el dispositivo está bloqueado.</string>
     <string name="search_disable_qs_locked_title">Desactivar QS bloqueado</string>
     <string name="search_disable_qs_locked_desc">Evitar expandir los Ajustes Rápidos cuando el dispositivo está bloqueado</string>
     <!-- Sound Mode -->
@@ -391,7 +386,6 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="feat_dynamic_night_light_title">Luz nocturna dinámica</string>
     <string name="feat_dynamic_night_light_desc">Alternar luz nocturna según la aplicación</string>
     <string name="feat_screen_locked_security_title">Seguridad de pantalla bloqueada</string>
-    <string name="feat_screen_locked_security_desc">Prevenir controles de red</string>
     <string name="feat_app_lock_title">Bloqueo de aplicaciones</string>
     <string name="feat_app_lock_desc">Aplicaciones seguras con biometría</string>
     <string name="feat_freeze_title">Congelar</string>

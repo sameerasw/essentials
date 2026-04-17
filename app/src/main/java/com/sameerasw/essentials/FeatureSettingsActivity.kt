@@ -67,6 +67,7 @@ import com.sameerasw.essentials.ui.composables.configs.KeyboardSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.LocationReachedSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.MapsPowerSavingSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.NotificationLightingSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.OtherCustomizationsSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.QuickSettingsTilesSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ScreenLockedSecuritySettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ScreenOffWidgetSettingsUI
@@ -263,6 +264,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                             "Battery notification" -> !viewModel.isPostNotificationsEnabled.value || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !viewModel.isBluetoothPermissionGranted.value)
                             "Text and animations" -> !viewModel.isWriteSettingsEnabled.value || !isWriteSecureSettingsEnabled
                             "Always on Display" -> !isWriteSecureSettingsEnabled
+                            "Other customizations" -> !com.sameerasw.essentials.utils.ShellUtils.hasPermission(context)
                             else -> false
                         }
                         if (hasMissingPermissions) {
@@ -628,6 +630,14 @@ class FeatureSettingsActivity : AppCompatActivity() {
 
                                     "Always on Display" -> {
                                         AlwaysOnDisplaySettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting
+                                        )
+                                    }
+
+                                    "Other customizations" -> {
+                                        OtherCustomizationsSettingsUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightSetting = highlightSetting

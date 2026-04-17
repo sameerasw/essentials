@@ -20,7 +20,6 @@ fun initPermissionRegistry() {
     PermissionRegistry.register("ACCESSIBILITY", R.string.feat_screen_off_widget_title)
     PermissionRegistry.register("ACCESSIBILITY", R.string.feat_notification_lighting_title)
     PermissionRegistry.register("ACCESSIBILITY", R.string.feat_dynamic_night_light_title)
-    PermissionRegistry.register("ACCESSIBILITY", R.string.feat_screen_locked_security_title)
     PermissionRegistry.register("ACCESSIBILITY", R.string.feat_app_lock_title)
     PermissionRegistry.register("ACCESSIBILITY", R.string.feat_ambient_music_glance_title)
 
@@ -28,14 +27,13 @@ fun initPermissionRegistry() {
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_statusbar_icons_title)
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_sound_mode_tile_title)
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_dynamic_night_light_title)
-    PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_screen_locked_security_title)
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.tile_developer_options)
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.tile_charge_optimization)
-
 
     // Shizuku permission
     PermissionRegistry.register("SHIZUKU", R.string.feat_freeze_title)
     PermissionRegistry.register("SHIZUKU", R.string.feat_maps_power_saving_title)
+    PermissionRegistry.register("SHIZUKU", R.string.feat_screen_locked_security_title)
     PermissionRegistry.register("USAGE_STATS", R.string.feat_freeze_title)
     PermissionRegistry.register("USAGE_STATS", R.string.feat_app_lock_title)
     PermissionRegistry.register("USAGE_STATS", R.string.feat_dynamic_night_light_title)
@@ -45,6 +43,7 @@ fun initPermissionRegistry() {
     PermissionRegistry.register("ROOT", R.string.feat_maps_power_saving_title)
     PermissionRegistry.register("ROOT", R.string.feat_freeze_title)
     PermissionRegistry.register("ROOT", R.string.feat_button_remap_title)
+    PermissionRegistry.register("ROOT", R.string.feat_screen_locked_security_title)
 
     // Notification listener permission
     PermissionRegistry.register("NOTIFICATION_LISTENER", R.string.feat_maps_power_saving_title)
@@ -70,7 +69,6 @@ fun initPermissionRegistry() {
     PermissionRegistry.register("READ_PHONE_STATE", R.string.feat_call_vibrations_title)
 
     // Device Admin permission
-    PermissionRegistry.register("DEVICE_ADMIN", R.string.feat_screen_locked_security_title)
 
     // Location permission
     PermissionRegistry.register("LOCATION", R.string.feat_location_reached_title)

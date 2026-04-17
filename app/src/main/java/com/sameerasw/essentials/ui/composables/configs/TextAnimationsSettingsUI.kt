@@ -24,6 +24,9 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.ui.components.pickers.SegmentedPicker
+import androidx.compose.material3.Icon
+import androidx.compose.ui.res.painterResource
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -42,6 +45,68 @@ fun TextAnimationsSettingsUI(
             .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+
+
+        RoundedCardContainer(spacing = 2.dp) {
+            SegmentedPicker(
+                items = listOf("default", "glove"),
+                selectedItem = viewModel.scaleAnimationsMode.value,
+                onItemSelected = { viewModel.switchScaleAnimationsMode(it) },
+                labelProvider = {
+                    when (it) {
+                        "glove" -> context.getString(R.string.label_mode_glove)
+                        else -> context.getString(R.string.label_mode_default)
+                    }
+                },
+                iconProvider = {
+                    when (it) {
+                        "glove" -> Icon(painterResource(R.drawable.round_front_hand_24), null)
+                        else -> Icon(painterResource(R.drawable.rounded_front_hand_24), null)
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
+        RoundedCardContainer {
+            com.sameerasw.essentials.ui.components.cards.IconToggleItem(
+                title = stringResource(R.string.label_increase_touch_sensitivity),
+                subtitle = stringResource(R.string.desc_increase_touch_sensitivity),
+                icon = R.drawable.rounded_touch_app_24,
+                checked = viewModel.isTouchSensitivityEnabled.value,
+                onCheckedChange = { viewModel.setTouchSensitivityEnabled(it) }
+            )
+            com.sameerasw.essentials.ui.components.cards.IconToggleItem(
+                title = stringResource(R.string.label_auto_rotate),
+                subtitle = stringResource(R.string.desc_auto_rotate),
+                icon = R.drawable.rounded_mobile_rotate_24,
+                checked = viewModel.isAutoRotateEnabled.value,
+                onCheckedChange = { viewModel.setAutoRotateEnabled(it) }
+            )
+
+        val timeoutValues = listOf(15000L, 30000L, 60000L, 120000L, 300000L, 600000L, 1800000L)
+        val currentTimeoutIndex = timeoutValues.indexOf(viewModel.screenTimeout.value).coerceAtLeast(0)
+
+            com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem(
+                title = stringResource(R.string.label_screen_timeout),
+                value = currentTimeoutIndex.toFloat(),
+                onValueChange = { index ->
+                    viewModel.setScreenTimeout(timeoutValues[index.toInt()])
+                },
+                valueRange = 0f..(timeoutValues.size - 1).toFloat(),
+                steps = timeoutValues.size - 2,
+                valueFormatter = { index ->
+                    val ms = timeoutValues[index.toInt()]
+                    when {
+                        ms < 60000 -> context.getString(R.string.unit_seconds, (ms / 1000).toInt())
+                        ms == 60000L -> context.getString(R.string.unit_minute)
+                        else -> context.getString(R.string.unit_minutes, (ms / 60000).toInt())
+                    }
+                },
+                icon = R.drawable.rounded_timer_24
+            )
+        }
+
         // Text Section
         Text(
             text = stringResource(R.string.settings_section_text),
