@@ -9,8 +9,8 @@
     <string name="frozen_app_shortcut_label">Aplicación congelada</string>
     <string name="screen_off_widget_label">Widget vacío para apagar la pantalla</string>
     <string name="app_freezing_tile_label">Congelación de aplicaciones</string>
-    <string name="flashlight_pulse_tile_label">Pulso de linterna</string>
-    <string name="check_pre_releases_label">Consultar prelanzamiento</string>
+    <string name="flashlight_pulse_tile_label">Pulso de la linterna</string>
+    <string name="check_pre_releases_label">Buscar versiones preliminares</string>
     <string name="check_pre_releases_desc">Podría ser inestable</string>
     <string name="label_default_tab">Pestaña predeterminada</string>
     <!-- App Lock -->
@@ -21,8 +21,8 @@
     <string name="app_lock_disable_auth_subtitle">Autenticarse para deshabilitar el bloqueo de aplicaciones</string>
     <string name="app_lock_select_apps_title">Seleccionar aplicaciones bloqueadas</string>
     <string name="app_lock_select_apps_desc">Elige qué aplicaciones requieren autenticación</string>
-    <string name="app_lock_description">Proteja sus aplicaciones con autenticación biométrica. Las aplicaciones bloqueadas requerirán autenticación al iniciarse. Permanecen desbloqueadas hasta que la pantalla se apaga.</string>
-    <string name="app_lock_warning">Tenga en cuenta que esta no es una solución sólida, ya que es solo una aplicación de terceros. Si necesita una seguridad sólida, considere utilizar el espacio privado u otras funciones similares.</string>
+    <string name="app_lock_description">Protege tus aplicaciones con autenticación biométrica. Las aplicaciones bloqueadas requerirán autenticación al iniciarse. Permanecen desbloqueadas hasta que la pantalla se apaga.</string>
+    <string name="app_lock_warning">Ten en cuenta que esta no es una solución robusta, ya que se trata únicamente de una aplicación de terceros. Si necesitas una seguridad sólida, plantéate utilizar Espacio Privado u otras funciones similares.</string>
     <string name="app_lock_biometric_note">Otra cosa: la solicitud de autenticación biométrica solo permite utilizar métodos de la clase de seguridad STRONG. Los métodos de desbloqueo facial de la clase WEAK en dispositivos como el Pixel 7 solo podrán utilizar los demás métodos de autenticación STRONG disponibles, como la huella dactilar o el PIN.</string>
     <string name="setting_use_usage_access_title">Usar acceso de uso</string>
     <string name="setting_use_usage_access_desc">En lugar de accesibilidad (Bloqueo de pantalla, Bloqueo de aplicaciones, Luz nocturna dinámica)</string>
@@ -35,7 +35,7 @@
     <string name="shizuku_status_prefix">Estado: %1$s</string>
     <string name="shizuku_open_button">Abrir Shizuku</string>
     <string name="settings_section_flashlight">Flash</string>
-    <string name="flashlight_options_title">Opciones de linterna</string>
+    <string name="flashlight_options_title">Opciones de la linterna</string>
     <string name="flashlight_options_desc">Ajustar el desvanecimiento y otros ajustes</string>
     <string name="setting_pitch_black_theme_title">Tema negro absoluto</string>
     <string name="setting_pitch_black_theme_desc">Utiliza un fondo negro puro en el modo oscuro</string>
@@ -63,6 +63,8 @@
     <string name="feat_ambient_music_glance_desc">Un vistazo a los medios en AOD</string>
     <string name="ambient_glance_docked_mode_title">Modo acoplado</string>
     <string name="ambient_glance_docked_mode_desc">Mantener la superposición visible indefinidamente mientras se reproduce música en AOD</string>
+    <string name="ambient_glance_random_shapes_title">Formas aleatorias</string>
+    <string name="ambient_glance_random_shapes_desc">Usar varias formas de Material 3 para la carátula del álbum</string>
     <string name="feat_notification_glance_title">Vista rápida de notificación</string>
     <string name="feat_notification_glance_desc">Mantener AOD activado mientras las notificaciones estén pendientes</string>
     <string name="notification_glance_same_as_lighting_title">Las mismas aplicaciones que la iluminación de notificaciones</string>
@@ -162,6 +164,8 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="flashlight_pulse_title">Pulso de linterna</string>
     <string name="flashlight_pulse_facedown_title">Sólo mirando hacia abajo</string>
     <string name="flashlight_pulse_same_as_lighting_title">Las mismas aplicaciones que la iluminación de notificaciones.</string>
+    <string name="flashlight_pulse_max_brightness">Brillo máximo</string>
+    <string name="flashlight_pulse_preview">Vista previa del pulso</string>
     <string name="settings_section_style">Estilo</string>
     <string name="notification_lighting_stroke_adjustment_section">Ajuste de carrera</string>
     <string name="notification_lighting_corner_radius_title">Radio de las esquinas</string>
@@ -252,12 +256,13 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="deactivated">No optimizado</string>
     <string name="permission_missing">Falta permiso</string>
     <!-- Screen Locked Security -->
-    <string name="screen_locked_security_title">Seguridad de pantalla bloqueada</string>
-    <string name="screen_locked_security_dialog_title">Seguridad de pantalla bloqueada</string>
-    <string name="screen_locked_security_auth_enable">Autenticar para habilitar la seguridad de pantalla bloqueada</string>
-    <string name="screen_locked_security_auth_disable">Autenticarse para desactivar la seguridad de pantalla bloqueada</string>
+    <string name="screen_locked_security_title">Desactivar los mosaicos de Ajustes Rápidos cuando el dispositivo esté bloqueado</string>
+    <string name="screen_locked_security_dialog_title">Desactivar los mosaicos de Ajustes Rápidos al bloquear el dispositivo</string>
     <string name="warning_title">⚠️ ADVERTENCIA</string>
-    <string name="search_disable_qs_locked_title">Desactivar QS bloqueado</string>
+    <string name="screen_locked_security_auth_enable">Autenticarse para activar esta función</string>
+    <string name="screen_locked_security_auth_disable">Autenticarse para desactivar esta función</string>
+    <string name="screen_locked_security_desc">Desactivar los mosaicos de ajustes rápidos cuando el dispositivo está bloqueado</string>
+    <string name="search_disable_qs_locked_title">Desactivar bloqueo de Ajustes Rápidos</string>
     <string name="search_disable_qs_locked_desc">Evitar expandir los Ajustes Rápidos cuando el dispositivo está bloqueado</string>
     <!-- Sound Mode -->
     <string name="sound_mode_reorder_title">Modos de reordenamiento</string>
@@ -324,6 +329,19 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="smart_data_desc">Ocultar datos móviles en ciertos modos</string>
     <string name="action_reset_all_icons">Restablecer todos los iconos</string>
     <string name="status_bar_section_advanced">Más configuraciones</string>
+    <string name="stb_advanced_flags_title">Avanzado (Requiere Shizuku/Root)</string>
+    <string name="hide_all_system_icons_title">Ocultar todos los iconos del sistema</string>
+    <string name="hide_all_system_icons_desc">Eliminar todos los iconos que no sean de notificaciones de la barra de estado</string>
+    <string name="hide_system_icons_locked_only_title">Ocultar los iconos del sistema solo cuando el dispositivo esté bloqueado</string>
+    <string name="hide_system_icons_locked_only_desc">Oculta los iconos del sistema en la barra de estado cuando el dispositivo está bloqueado y los restaura al desbloquearlo</string>
+    <string name="hide_clock_title">Ocultar el reloj</string>
+    <string name="hide_clock_desc">Elimina por completo el reloj de la barra de estado</string>
+    <string name="hide_notification_icons_title">Ocultar notificaciones</string>
+    <string name="hide_notification_icons_desc">Ocultar todos los iconos de notificaciones entrantes</string>
+    <string name="feat_hide_gesture_bar_title">Ocultar la barra de gestos</string>
+    <string name="feat_other_customizations_title">Otras personalizaciones</string>
+    <string name="feat_other_customizations_desc">Ajustes y modificaciones adicionales del sistema</string>
+    <string name="feat_hide_gesture_bar_desc">En la navegación por gestos</string>
     <string name="status_bar_icons_disclaimer">Tenga en cuenta que la implementación de estas opciones puede depender del OEM y es posible que algunas no funcionen en absoluto.</string>
     <!-- Network Type Picker -->
     <string name="network_type_other">Otro</string>
@@ -635,6 +653,21 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="action_check_whats_new">¿Qué hay de nuevo?</string>
     <string name="welcome_back_title">Bienvenido de nuevo a Essentials</string>
     <string name="action_see_whats_new">Mira qué hay de nuevo</string>
+    <string name="label_mode_default">Predeterminado</string>
+    <string name="label_mode_glove">Modo para guantes</string>
+    <string name="tile_scale_animations">Modo para Guantes</string>
+    <string name="about_desc_scale_animations_tile">Cambiar rápidamente entre los perfiles de interfaz Predeterminado y Modo guantes</string>
+    <string name="label_increase_touch_sensitivity">Aumentar la sensibilidad táctil</string>
+    <string name="desc_increase_touch_sensitivity">Mejora la sensibilidad de la pantalla táctil cuando se utilizan guantes o protectores de pantalla</string>
+    <string name="label_auto_rotate">Rotación automática</string>
+    <string name="desc_auto_rotate">Girar automáticamente la pantalla al girar el dispositivo</string>
+    <string name="label_screen_timeout">Tiempo de espera de la pantalla</string>
+    <string name="desc_screen_timeout">Cuánto tiempo permanece encendida la pantalla antes de apagarse automáticamente</string>
+    <string name="unit_seconds">%d segundos</string>
+    <string name="unit_minute">1 minuto</string>
+    <string name="unit_minutes">%d minutos</string>
+    <string name="action_restart_systemui">Reiniciar SystemUI</string>
+    <string name="desc_restart_systemui">Finaliza y reinicia el proceso de SystemUI para aplicar algunos cambios de inmediato</string>
     <string name="msg_error_load_release_notes">No se han podido cargar las notas de la versión</string>
     <string name="action_view_on_web">Ver en la web</string>
     <string name="action_done">Hecho</string>
@@ -1268,4 +1301,11 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="prank_button_premium">¿Qué incluye la versión Premium?</string>
     <string name="prank_reveal_title">¡Feliz Día de los Inocentes!</string>
     <string name="prank_reveal_desc">Es broma, Essentials es y siempre será gratuito y de código abierto. ¡Disfrútalo! (っ◕‿◕)っ</string>
+    <string name="notification_lighting_style_system">System</string>
+    <string name="notification_lighting_system_mode_title">Ripple Animation</string>
+    <string name="notification_lighting_system_mode_charging_ripple">Bottom</string>
+    <string name="notification_lighting_system_mode_auth_ripple">Center</string>
+    <string name="notification_lighting_system_mode_custom_ripple">Custom</string>
+    <string name="msg_shizuku_root_required_system_lighting">Shizuku or Root permission is required for System lighting effects</string>
+    <string name="notification_lighting_system_disclaimer">Made for Google Pixel. Might not be available on other devices.</string>
 </resources>

@@ -63,6 +63,8 @@
     <string name="feat_ambient_music_glance_desc">AODにメディアの情報を表示</string>
     <string name="ambient_glance_docked_mode_title">ドックモード</string>
     <string name="ambient_glance_docked_mode_desc">AODで音楽を再生している間、無期限にオーバーレイを表示します</string>
+    <string name="ambient_glance_random_shapes_title">Random shapes</string>
+    <string name="ambient_glance_random_shapes_desc">Use various Material 3 shapes for the album art</string>
     <string name="feat_notification_glance_title">通知を表示</string>
     <string name="feat_notification_glance_desc">Keep AOD on while notifications are pending</string>
     <string name="notification_glance_same_as_lighting_title">通知ライトと同じアプリ</string>
@@ -161,6 +163,8 @@
     <string name="flashlight_pulse_title">ライト点滅</string>
     <string name="flashlight_pulse_facedown_title">下を向いているときのみ</string>
     <string name="flashlight_pulse_same_as_lighting_title">通知ライトと同じアプリ</string>
+    <string name="flashlight_pulse_max_brightness">Max brightness</string>
+    <string name="flashlight_pulse_preview">Preview pulse</string>
     <string name="settings_section_style">スタイル</string>
     <string name="notification_lighting_stroke_adjustment_section">ストローク調整</string>
     <string name="notification_lighting_corner_radius_title">角の半径</string>
@@ -253,9 +257,10 @@
     <!-- Screen Locked Security -->
     <string name="screen_locked_security_title">ロック画面セキュリティ</string>
     <string name="screen_locked_security_dialog_title">ロック画面セキュリティ</string>
+    <string name="warning_title">⚠️ 警告</string>
     <string name="screen_locked_security_auth_enable">ロック画面セキュリティを有効にするための認証</string>
     <string name="screen_locked_security_auth_disable">ロック画面セキュリティを無効にするための認証</string>
-    <string name="warning_title">⚠️ 警告</string>
+    <string name="screen_locked_security_desc">Disable quick setting tiles when the device is locked</string>
     <string name="search_disable_qs_locked_title">Disable QS Locked</string>
     <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
@@ -323,6 +328,19 @@
     <string name="smart_data_desc">特定の通信世代でモバイルデータを非表示にします</string>
     <string name="action_reset_all_icons">全てのアイコンをリセット</string>
     <string name="status_bar_section_advanced">その他の設定</string>
+    <string name="stb_advanced_flags_title">Advanced (Requires Shizuku/Root)</string>
+    <string name="hide_all_system_icons_title">Hide all system icons</string>
+    <string name="hide_all_system_icons_desc">Clear all non-notification icons from the status bar</string>
+    <string name="hide_system_icons_locked_only_title">Only hide system icons when locked</string>
+    <string name="hide_system_icons_locked_only_desc">Hides the status bar system icons when the device is locked and restores them upon unlock</string>
+    <string name="hide_clock_title">Hide clock</string>
+    <string name="hide_clock_desc">Completely remove the clock from the status bar</string>
+    <string name="hide_notification_icons_title">Hide notifications</string>
+    <string name="hide_notification_icons_desc">Hide all incoming notification icons</string>
+    <string name="feat_hide_gesture_bar_title">Hide gesture bar</string>
+    <string name="feat_other_customizations_title">Other customizations</string>
+    <string name="feat_other_customizations_desc">Additional system tweaks and modifications</string>
+    <string name="feat_hide_gesture_bar_desc">In gesture navigation</string>
     <string name="status_bar_icons_disclaimer">これらのオプションの実装は機種によって異なる場合があり、一部は全く機能しない場合がありますのでご注意ください。</string>
     <!-- Network Type Picker -->
     <string name="network_type_other">その他</string>
@@ -634,6 +652,21 @@
     <string name="action_check_whats_new">更新内容を見る</string>
     <string name="welcome_back_title">Essentialsにおかえりなさい</string>
     <string name="action_see_whats_new">新機能を見る</string>
+    <string name="label_mode_default">Default</string>
+    <string name="label_mode_glove">Glove mode</string>
+    <string name="tile_scale_animations">Glove Mode</string>
+    <string name="about_desc_scale_animations_tile">Quickly toggle between Default and Glove mode UI profiles</string>
+    <string name="label_increase_touch_sensitivity">Increase touch sensitivity</string>
+    <string name="desc_increase_touch_sensitivity">Improve touch screen responsiveness when using gloves or screen protectors</string>
+    <string name="label_auto_rotate">Auto rotate</string>
+    <string name="desc_auto_rotate">Automatically rotate the screen when the device is turned</string>
+    <string name="label_screen_timeout">Screen timeout</string>
+    <string name="desc_screen_timeout">How long the screen stays on before turning off automatically</string>
+    <string name="unit_seconds">%d seconds</string>
+    <string name="unit_minute">1 minute</string>
+    <string name="unit_minutes">%d minutes</string>
+    <string name="action_restart_systemui">Restart SystemUI</string>
+    <string name="desc_restart_systemui">Kills and restarts SystemUI process to apply some changes immediately</string>
     <string name="msg_error_load_release_notes">Couldn\'t load the release note</string>
     <string name="action_view_on_web">View on web</string>
     <string name="action_done">完了</string>
@@ -1267,4 +1300,11 @@
     <string name="prank_button_premium">プレミアムには何が含まれていますか？</string>
     <string name="prank_reveal_title">エイプリルフール！</string>
     <string name="prank_reveal_desc">冗談ですよ。Essentialsはこれからもずっと無料かつオープンソースです。引き続きお楽しみください！(っ◕‿◕)っ</string>
+    <string name="notification_lighting_style_system">System</string>
+    <string name="notification_lighting_system_mode_title">Ripple Animation</string>
+    <string name="notification_lighting_system_mode_charging_ripple">Bottom</string>
+    <string name="notification_lighting_system_mode_auth_ripple">Center</string>
+    <string name="notification_lighting_system_mode_custom_ripple">Custom</string>
+    <string name="msg_shizuku_root_required_system_lighting">Shizuku or Root permission is required for System lighting effects</string>
+    <string name="notification_lighting_system_disclaimer">Made for Google Pixel. Might not be available on other devices.</string>
 </resources>

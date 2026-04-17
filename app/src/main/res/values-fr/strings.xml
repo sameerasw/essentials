@@ -63,6 +63,8 @@
     <string name="feat_ambient_music_glance_desc">Aperçu du média joué sur le mode Always-on</string>
     <string name="ambient_glance_docked_mode_title">Mode docké</string>
     <string name="ambient_glance_docked_mode_desc">Garder la superposition visible indéfiniment quand de la musique est jouée sur le mode Always-on</string>
+    <string name="ambient_glance_random_shapes_title">Formes aléatoires</string>
+    <string name="ambient_glance_random_shapes_desc">Utiliser les différentes formes Material 3 pour l\'image de l\'album</string>
     <string name="feat_notification_glance_title">Aperçu des notifications</string>
     <string name="feat_notification_glance_desc">Garder le mode Always-on tant qu\'il y a des notifications</string>
     <string name="notification_glance_same_as_lighting_title">Mêmes applis que les notifications lumineuses</string>
@@ -161,6 +163,8 @@
     <string name="flashlight_pulse_title">Clignotement de la de lampe torche</string>
     <string name="flashlight_pulse_facedown_title">Seulement quand le téléphone est vers le bas</string>
     <string name="flashlight_pulse_same_as_lighting_title">Mêmes applis que les notifications lumineuses</string>
+    <string name="flashlight_pulse_max_brightness">Luminosité maximale</string>
+    <string name="flashlight_pulse_preview">Prévisualiser le clignotement</string>
     <string name="settings_section_style">Style</string>
     <string name="notification_lighting_stroke_adjustment_section">Ajustement du trait</string>
     <string name="notification_lighting_corner_radius_title">Rayon des coins</string>
@@ -223,7 +227,7 @@
     <string name="tile_private_dns_off">Désactivé</string>
     <string name="tile_usb_debugging">Débogage USB</string>
     <string name="tile_color_picker">Sélecteur de couleur</string>
-    <string name="toast_eyedropper_failed">Are you sure you\'re on Androdi 17? (╯°_°）╯</string>
+    <string name="toast_eyedropper_failed">Êtes-vous sûr d\'avoir Android 17 ? (╯°_°）╯</string>
     <string name="subtitle_eye_dropper">Eye Dropper</string>
     <string name="on">Activer</string>
     <string name="off">Désactiver</string>
@@ -253,9 +257,10 @@
     <!-- Screen Locked Security -->
     <string name="screen_locked_security_title">Sécurité d\'écran verrouillé</string>
     <string name="screen_locked_security_dialog_title">Écran de verrouillage</string>
+    <string name="warning_title">⚠️ ATTENTION</string>
     <string name="screen_locked_security_auth_enable">Authentifiez-vous pour activer la protection de l\'écran de verrouillage</string>
     <string name="screen_locked_security_auth_disable">Authentifiez-vous pour désactiver la protection de l\'écran de verrouillage</string>
-    <string name="warning_title">⚠️ ATTENTION</string>
+    <string name="screen_locked_security_desc">Disable quick setting tiles when the device is locked</string>
     <string name="search_disable_qs_locked_title">Désactiver les Réglages rapides au verrouillage</string>
     <string name="search_disable_qs_locked_desc">Empêcher l\'agrandissement des Réglages rapides quand l\'appareil est verrouillé</string>
     <!-- Sound Mode -->
@@ -323,6 +328,19 @@
     <string name="smart_data_desc">Cache les données mobiles dans certains modes</string>
     <string name="action_reset_all_icons">Réinitialiser les icônes</string>
     <string name="status_bar_section_advanced">Plus de paramètres</string>
+    <string name="stb_advanced_flags_title">Advanced (Requires Shizuku/Root)</string>
+    <string name="hide_all_system_icons_title">Hide all system icons</string>
+    <string name="hide_all_system_icons_desc">Clear all non-notification icons from the status bar</string>
+    <string name="hide_system_icons_locked_only_title">Only hide system icons when locked</string>
+    <string name="hide_system_icons_locked_only_desc">Hides the status bar system icons when the device is locked and restores them upon unlock</string>
+    <string name="hide_clock_title">Hide clock</string>
+    <string name="hide_clock_desc">Completely remove the clock from the status bar</string>
+    <string name="hide_notification_icons_title">Hide notifications</string>
+    <string name="hide_notification_icons_desc">Hide all incoming notification icons</string>
+    <string name="feat_hide_gesture_bar_title">Hide gesture bar</string>
+    <string name="feat_other_customizations_title">Other customizations</string>
+    <string name="feat_other_customizations_desc">Additional system tweaks and modifications</string>
+    <string name="feat_hide_gesture_bar_desc">In gesture navigation</string>
     <string name="status_bar_icons_disclaimer">Veuillez noter que l\'implémentation de ces options peut dépendre du constructeur et certaines peuvent ne pas fonctionner du tout.</string>
     <!-- Network Type Picker -->
     <string name="network_type_other">Autre</string>
@@ -342,7 +360,7 @@
     <string name="cat_visuals">Visuels</string>
     <string name="cat_system">Système</string>
     <!-- UI Elements -->
-    <string name="search_placeholder">Recherchez des outils, des mods, ou des améliorations</string>
+    <string name="search_placeholder">Recherchez dans Essentials</string>
     <string name="search_no_results">Aucun résultat pour \"%1$s\"</string>
     <string name="search_results_title">Résultats de recherche</string>
     <string name="requires_following_permissions">\"%1$s\" a besoin des permissions suivantes</string>
@@ -634,6 +652,21 @@
     <string name="action_check_whats_new">Vérifier ce qu\'il y a de neuf ?</string>
     <string name="welcome_back_title">Bon retour sur Essentials</string>
     <string name="action_see_whats_new">Quoi de neuf ?</string>
+    <string name="label_mode_default">Par défaut</string>
+    <string name="label_mode_glove">Mode gants</string>
+    <string name="tile_scale_animations">Mode gants</string>
+    <string name="about_desc_scale_animations_tile">Basculez rapidement entre les profils d\'interface utilisateur « Par défaut » et « Mode gants »</string>
+    <string name="label_increase_touch_sensitivity">Augmenter la sensibilité tactile</string>
+    <string name="desc_increase_touch_sensitivity">Améliorer la réactivité de l\'écran tactile lorsque l\'on utilise des gants ou des protections d\'écran</string>
+    <string name="label_auto_rotate">Rotation automatique</string>
+    <string name="desc_auto_rotate">Faire pivoter automatiquement l\'écran lorsque l\'appareil est retourné</string>
+    <string name="label_screen_timeout">Délai d\'extinction de l\'écran</string>
+    <string name="desc_screen_timeout">Combien de temps est-ce que l\'écran reste allumé avant de s\'éteindre automatiquement</string>
+    <string name="unit_seconds">%d secondes</string>
+    <string name="unit_minute">1 minute</string>
+    <string name="unit_minutes">%d minutes</string>
+    <string name="action_restart_systemui">Restart SystemUI</string>
+    <string name="desc_restart_systemui">Kills and restarts SystemUI process to apply some changes immediately</string>
     <string name="msg_error_load_release_notes">Impossible de charger les notes de version</string>
     <string name="action_view_on_web">Voir sur le Web</string>
     <string name="action_done">OK</string>
@@ -1028,7 +1061,7 @@
     <string name="action_report_email">Signalement par e-mail</string>
     <string name="action_copy_clipboard">Copier dans le presse-papiers</string>
     <string name="bug_report_email_subject">Signalement de bug Essentials</string>
-    <string name="bug_report_send_via">Veuillez activer les rapports de crash car cela va automatiquement rapporter des détails qui aideraient à résoudre les problèmes.</string>
+    <string name="bug_report_send_via">Veuillez activer le rapport des erreurs, cela transmettra automatiquement des informations qui permettront de résoudre les problèmes.</string>
     <!-- Location Reached -->
     <string name="feat_location_reached_title">On est arrivés ?</string>
     <string name="feat_location_reached_desc">Soyez notifiés lorsque vous arrivez à une destination</string>
@@ -1267,4 +1300,11 @@
     <string name="prank_button_premium">Qu\'est-ce qu\'il y a dans le Premium ?</string>
     <string name="prank_reveal_title">Poisson d\'avril !</string>
     <string name="prank_reveal_desc">Je rigole, Essentials est et sera toujours gratuit et open source. Profitez ! (っ◕‿◕)っ</string>
+    <string name="notification_lighting_style_system">System</string>
+    <string name="notification_lighting_system_mode_title">Ripple Animation</string>
+    <string name="notification_lighting_system_mode_charging_ripple">Bottom</string>
+    <string name="notification_lighting_system_mode_auth_ripple">Center</string>
+    <string name="notification_lighting_system_mode_custom_ripple">Custom</string>
+    <string name="msg_shizuku_root_required_system_lighting">Shizuku or Root permission is required for System lighting effects</string>
+    <string name="notification_lighting_system_disclaimer">Made for Google Pixel. Might not be available on other devices.</string>
 </resources>
