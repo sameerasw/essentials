@@ -63,6 +63,8 @@
     <string name="feat_ambient_music_glance_desc">O privire asupra mass-media despre AOD</string>
     <string name="ambient_glance_docked_mode_title">Modul andocat</string>
     <string name="ambient_glance_docked_mode_desc">Păstrați suprapunerea vizibilă la nesfârșit în timp ce muzica este redată pe AOD</string>
+    <string name="ambient_glance_random_shapes_title">Random shapes</string>
+    <string name="ambient_glance_random_shapes_desc">Use various Material 3 shapes for the album art</string>
     <string name="feat_notification_glance_title">Privire de notificare</string>
     <string name="feat_notification_glance_desc">Păstrați AOD activat în timp ce notificările sunt în așteptare</string>
     <string name="notification_glance_same_as_lighting_title">Aceleași aplicații ca și iluminarea notificărilor</string>
@@ -161,6 +163,8 @@
     <string name="flashlight_pulse_title">Pulsul lanternei</string>
     <string name="flashlight_pulse_facedown_title">Doar cu fața în jos</string>
     <string name="flashlight_pulse_same_as_lighting_title">Aceleași aplicații ca și iluminarea notificărilor</string>
+    <string name="flashlight_pulse_max_brightness">Max brightness</string>
+    <string name="flashlight_pulse_preview">Preview pulse</string>
     <string name="settings_section_style">Stil</string>
     <string name="notification_lighting_stroke_adjustment_section">Reglarea cursei</string>
     <string name="notification_lighting_corner_radius_title">Raza colțului</string>
