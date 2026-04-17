@@ -63,6 +63,8 @@
     <string name="feat_ambient_music_glance_desc">Kyk na die media op AOD</string>
     <string name="ambient_glance_docked_mode_title">Gedokte modus</string>
     <string name="ambient_glance_docked_mode_desc">Hou die oorleg vir onbepaalde tyd sigbaar terwyl musiek op AOD speel</string>
+    <string name="ambient_glance_random_shapes_title">Random shapes</string>
+    <string name="ambient_glance_random_shapes_desc">Use various Material 3 shapes for the album art</string>
     <string name="feat_notification_glance_title">Kennisgewing blik</string>
     <string name="feat_notification_glance_desc">Hou AOD aan terwyl kennisgewings hangende is</string>
     <string name="notification_glance_same_as_lighting_title">Dieselfde toepassings as kennisgewingbeligting</string>
@@ -161,6 +163,8 @@
     <string name="flashlight_pulse_title">Flitslig pols</string>
     <string name="flashlight_pulse_facedown_title">Slegs terwyl jy na onder kyk</string>
     <string name="flashlight_pulse_same_as_lighting_title">Dieselfde toepassings as kennisgewingbeligting</string>
+    <string name="flashlight_pulse_max_brightness">Max brightness</string>
+    <string name="flashlight_pulse_preview">Preview pulse</string>
     <string name="settings_section_style">Styl</string>
     <string name="notification_lighting_stroke_adjustment_section">Beroerte aanpassing</string>
     <string name="notification_lighting_corner_radius_title">Hoek radius</string>
