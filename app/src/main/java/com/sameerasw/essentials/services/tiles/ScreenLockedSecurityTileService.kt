@@ -45,10 +45,7 @@ class ScreenLockedSecurityTileService : BaseTileService() {
     }
 
     override fun hasFeaturePermission(): Boolean {
-        // Accessibility, Device Admin and Write Secure Settings are required
-        return PermissionUtils.isAccessibilityServiceEnabled(this) &&
-                PermissionUtils.isDeviceAdminActive(this) &&
-                PermissionUtils.canWriteSecureSettings(this)
+        return com.sameerasw.essentials.utils.ShellUtils.hasPermission(this)
     }
 
     override fun getTileIcon(): Icon = Icon.createWithResource(this, R.drawable.rounded_security_24)

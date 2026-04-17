@@ -188,7 +188,7 @@ fun QuickSettingsTilesSettingsUI(
             R.string.tile_locked_security,
             R.drawable.rounded_security_24,
             ScreenLockedSecurityTileService::class.java,
-            listOf("ACCESSIBILITY", "WRITE_SECURE_SETTINGS", "DEVICE_ADMIN"),
+            if (ShellUtils.isRootEnabled(context)) listOf("ROOT") else listOf("SHIZUKU"),
             R.string.about_desc_screen_locked_security,
             R.string.cat_privacy
         ),

@@ -708,14 +708,14 @@ object FeatureRegistry {
             category = R.string.cat_protection,
             description = R.string.screen_locked_security_desc,
             aboutDescription = R.string.about_desc_screen_locked_security,
-            permissionKeys = listOf("ACCESSIBILITY", "WRITE_SECURE_SETTINGS", "DEVICE_ADMIN"),
+            permissionKeys = if (ShellUtils.isRootEnabled(com.sameerasw.essentials.EssentialsApp.context)) listOf("ROOT") else listOf("SHIZUKU"),
             parentFeatureId = "Security"
         ) {
             override fun isEnabled(viewModel: MainViewModel) =
                 viewModel.isScreenLockedSecurityEnabled.value
 
             override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
-                viewModel.isAccessibilityEnabled.value && viewModel.isWriteSecureSettingsEnabled.value && viewModel.isDeviceAdminEnabled.value
+                ShellUtils.hasPermission(context)
 
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
                 viewModel.setScreenLockedSecurityEnabled(enabled, context)
