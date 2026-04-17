@@ -63,6 +63,8 @@
     <string name="feat_ambient_music_glance_desc">AOD හි මාධ්‍ය දෙස බලන්න</string>
     <string name="ambient_glance_docked_mode_title">ඩොක්ඩ් මාදිලිය</string>
     <string name="ambient_glance_docked_mode_desc">AOD මත සංගීතය වාදනය වන අතරතුර උඩැතිරිය දින නියමයක් නොමැතිව දෘශ්‍යමානව තබා ගන්න</string>
+    <string name="ambient_glance_random_shapes_title">Random shapes</string>
+    <string name="ambient_glance_random_shapes_desc">Use various Material 3 shapes for the album art</string>
     <string name="feat_notification_glance_title">දැනුම්දීමේ බැල්ම</string>
     <string name="feat_notification_glance_desc">දැනුම්දීම් පොරොත්තුවෙන් සිටින අතරතුර AOD ක්‍රියාත්මකව තබා ගන්න</string>
     <string name="notification_glance_same_as_lighting_title">දැනුම්දීම් ආලෝකකරණයට සමාන යෙදුම්</string>
@@ -161,6 +163,8 @@
     <string name="flashlight_pulse_title">ෆ්ලෑෂ් ලයිට් ස්පන්දනය</string>
     <string name="flashlight_pulse_facedown_title">මුහුණට මුහුණලා සිටින විට පමණි</string>
     <string name="flashlight_pulse_same_as_lighting_title">දැනුම්දීම් ආලෝකකරණයට සමාන යෙදුම්</string>
+    <string name="flashlight_pulse_max_brightness">Max brightness</string>
+    <string name="flashlight_pulse_preview">Preview pulse</string>
     <string name="settings_section_style">ශෛලිය</string>
     <string name="notification_lighting_stroke_adjustment_section">ආඝාත ගැලපීම</string>
     <string name="notification_lighting_corner_radius_title">කෝනර් අරය</string>
