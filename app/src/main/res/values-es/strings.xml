@@ -639,6 +639,10 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="action_check_whats_new">¿Qué hay de nuevo?</string>
     <string name="welcome_back_title">Bienvenido de nuevo a Essentials</string>
     <string name="action_see_whats_new">Mira qué hay de nuevo</string>
+    <string name="label_mode_default">Default</string>
+    <string name="label_mode_glove">Glove mode</string>
+    <string name="tile_scale_animations">Glove Mode</string>
+    <string name="about_desc_scale_animations_tile">Quickly toggle between Default and Glove mode UI profiles</string>
     <string name="msg_error_load_release_notes">No se han podido cargar las notas de la versión</string>
     <string name="action_view_on_web">Ver en la web</string>
     <string name="action_done">Hecho</string>
