@@ -256,11 +256,6 @@
     <string name="screen_locked_security_auth_enable">Πραγματοποιήστε έλεγχο ταυτότητας για να ενεργοποιήσετε την ασφάλεια κλειδωμένης οθόνης</string>
     <string name="screen_locked_security_auth_disable">Πραγματοποιήστε έλεγχο ταυτότητας για να απενεργοποιήσετε την ασφάλεια κλειδωμένης οθόνης</string>
     <string name="warning_title">⚠️ ΠΡΟΕΙΔΟΠΟΙΗΣΗ</string>
-    <string name="screen_locked_security_warning_text">Αυτή η δυνατότητα δεν είναι αλάνθαστη. Μπορεί να υπάρχουν περιπτώσεις αιχμής όπου κάποιος εξακολουθεί να μπορεί να αλληλεπιδράσει με το πλακίδιο. \nΈχετε επίσης υπόψη ότι το Android θα επιτρέπει πάντα την αναγκαστική επανεκκίνηση και τα Pixel θα επιτρέπουν πάντα την απενεργοποίηση της συσκευής και από την οθόνη κλειδώματος.</string>
-    <string name="screen_locked_security_airplane_warning">Βεβαιωθείτε ότι έχετε αφαιρέσει το πλακίδιο λειτουργίας πτήσης από τις γρήγορες ρυθμίσεις, καθώς αυτό δεν μπορεί να αποφευχθεί επειδή δεν ανοίγει παράθυρο διαλόγου.</string>
-    <string name="screen_locked_security_description">Όταν ενεργοποιηθεί, ο πίνακας Γρήγορων ρυθμίσεων θα κλείσει αμέσως και η συσκευή θα κλειδωθεί εάν κάποιος επιχειρήσει να αλληλεπιδράσει με πλακίδια Διαδικτύου ενώ η συσκευή είναι κλειδωμένη. \n\nΑυτό θα απενεργοποιήσει επίσης το βιομετρικό ξεκλείδωμα για να αποτρέψει περαιτέρω μη εξουσιοδοτημένη πρόσβαση. Η κλίμακα κινούμενων εικόνων θα μειωθεί στο 0,1x ενώ θα είναι κλειδωμένη για να γίνει ακόμα πιο δύσκολη η αλληλεπίδραση.</string>
-    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
-    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
     <string name="search_disable_qs_locked_title">Disable QS Locked</string>
     <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
@@ -390,7 +385,6 @@
     <string name="feat_dynamic_night_light_title">Δυναμικό φως νύχτας</string>
     <string name="feat_dynamic_night_light_desc">Εναλλαγή νυχτερινού φωτός με βάση την εφαρμογή</string>
     <string name="feat_screen_locked_security_title">Ασφάλεια κλειδωμένης οθόνης</string>
-    <string name="feat_screen_locked_security_desc">Αποτρέψτε τους ελέγχους δικτύου</string>
     <string name="feat_app_lock_title">Κλείδωμα εφαρμογής</string>
     <string name="feat_app_lock_desc">Ασφαλίστε εφαρμογές με βιομετρικά στοιχεία</string>
     <string name="feat_freeze_title">Πάγωμα</string>

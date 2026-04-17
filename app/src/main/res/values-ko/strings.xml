@@ -256,11 +256,6 @@
     <string name="screen_locked_security_auth_enable">화면 잠금 보안을 활성화하려면 인증하세요.</string>
     <string name="screen_locked_security_auth_disable">화면 잠금 보안을 비활성화하려면 인증하세요.</string>
     <string name="warning_title">⚠️ 경고</string>
-    <string name="screen_locked_security_warning_text">이 기능은 완벽하지 않습니다. 누군가 여전히 타일과 상호작용할 수 있는 극단적인 경우가 있을 수 있습니다. \n또한 Android는 항상 강제 재부팅을 허용하고 Pixels에서는 항상 잠금 화면에서 기기가 꺼지는 것을 허용한다는 점을 명심하세요.</string>
-    <string name="screen_locked_security_airplane_warning">비행기 모드 타일은 대화 상자 창이 열리지 않기 때문에 방지할 수 없으므로 빠른 설정에서 제거하세요.</string>
-    <string name="screen_locked_security_description">활성화하면 빠른 설정 패널이 즉시 닫히고 장치가 잠겨 있는 동안 누군가 인터넷 타일과 상호 작용을 시도하면 장치가 잠깁니다. \n\n이렇게 하면 추가 무단 액세스를 방지하기 위해 생체 인식 잠금 해제도 비활성화됩니다. 잠긴 동안에는 애니메이션 크기가 0.1x로 줄어들어 상호작용이 더욱 어려워집니다.</string>
-    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
-    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
     <string name="search_disable_qs_locked_title">Disable QS Locked</string>
     <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
@@ -390,7 +385,6 @@
     <string name="feat_dynamic_night_light_title">동적 야간 조명</string>
     <string name="feat_dynamic_night_light_desc">앱에 따라 야간 조명 전환</string>
     <string name="feat_screen_locked_security_title">화면 잠금 보안</string>
-    <string name="feat_screen_locked_security_desc">네트워크 제어 방지</string>
     <string name="feat_app_lock_title">앱 잠금</string>
     <string name="feat_app_lock_desc">생체인식으로 앱 보호</string>
     <string name="feat_freeze_title">꼭 매달리게 하다</string>

@@ -256,11 +256,6 @@
     <string name="screen_locked_security_auth_enable">ロック画面セキュリティを有効にするための認証</string>
     <string name="screen_locked_security_auth_disable">ロック画面セキュリティを無効にするための認証</string>
     <string name="warning_title">⚠️ 警告</string>
-    <string name="screen_locked_security_warning_text">この機能は万全ではありません。まれにタイルを操作できる可能性があります。\nまた、Androidは常に強制再起動が可能であり、Pixelではロック画面からデバイスをシャットダウンできることに注意してください。</string>
-    <string name="screen_locked_security_airplane_warning">機内モードタイルはダイアログウインドウを開かず、回避できませんので、クイック設定から必ず削除してください。</string>
-    <string name="screen_locked_security_description">有効にすると、ロック画面で誰かがインターネットタイルを操作しようとすると、クイック設定パネルがすぐに閉じられ、デバイスがロックダウンされます。\n\nこれにより、生体認証によるロック解除も無効になり、さらなる不正アクセスを防止します。ロック中はアニメーション速度が0.1倍に縮小され、操作が更に困難になります。</string>
-    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
-    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
     <string name="search_disable_qs_locked_title">Disable QS Locked</string>
     <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
@@ -390,7 +385,6 @@
     <string name="feat_dynamic_night_light_title">ダイナミックナイトモード</string>
     <string name="feat_dynamic_night_light_desc">アプリに応じてナイトモードを切り替えます</string>
     <string name="feat_screen_locked_security_title">ロック画面セキュリティ</string>
-    <string name="feat_screen_locked_security_desc">ネットワーク制御を防ぐ</string>
     <string name="feat_app_lock_title">アプリロック</string>
     <string name="feat_app_lock_desc">生体認証でアプリを保護</string>
     <string name="feat_freeze_title">フリーズ</string>

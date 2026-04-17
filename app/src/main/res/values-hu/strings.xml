@@ -256,11 +256,6 @@
     <string name="screen_locked_security_auth_enable">Hitelesítés a képernyőzárolt biztonság engedélyezéséhez</string>
     <string name="screen_locked_security_auth_disable">Hitelesítés a képernyőzárolt biztonság letiltásához</string>
     <string name="warning_title">⚠️ FIGYELEM</string>
-    <string name="screen_locked_security_warning_text">Ez a funkció nem bolondbiztos. Előfordulhatnak olyan szélsőséges esetek, amikor valaki még mindig képes kommunikálni a csempével. \nNe feledje, hogy az Android mindig engedélyezi a kényszerített újraindítást, a Pixels pedig mindig lehetővé teszi az eszköz kikapcsolását a lezárási képernyőről is.</string>
-    <string name="screen_locked_security_airplane_warning">Ügyeljen arra, hogy eltávolítsa a repülőgép üzemmód csempét a gyorsbeállításokból, mivel ez nem akadályozható meg, mivel nem nyit meg párbeszédablakot.</string>
-    <string name="screen_locked_security_description">Ha engedélyezve van, a Gyorsbeállítások panel azonnal bezárul, és az eszköz zárolva lesz, ha valaki internetes csempékkel próbál kommunikálni, miközben az eszköz zárolva van. \n\nEz a biometrikus feloldást is letiltja, hogy megakadályozza a további jogosulatlan hozzáférést. Az animáció skálája 0,1-szeresére csökken, miközben zárolva van, hogy még nehezebb legyen vele kommunikálni.</string>
-    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
-    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
     <string name="search_disable_qs_locked_title">Disable QS Locked</string>
     <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
@@ -390,7 +385,6 @@
     <string name="feat_dynamic_night_light_title">Dinamikus éjszakai fény</string>
     <string name="feat_dynamic_night_light_desc">Éjszakai fény váltása az alkalmazás alapján</string>
     <string name="feat_screen_locked_security_title">Képernyőzárolt biztonság</string>
-    <string name="feat_screen_locked_security_desc">A hálózati vezérlés megakadályozása</string>
     <string name="feat_app_lock_title">Alkalmazászár</string>
     <string name="feat_app_lock_desc">Biztonságos alkalmazások biometrikus adatokkal</string>
     <string name="feat_freeze_title">Fagy</string>

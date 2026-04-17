@@ -256,11 +256,6 @@
     <string name="screen_locked_security_auth_enable">Ověřením povolíte zabezpečení uzamčené obrazovky</string>
     <string name="screen_locked_security_auth_disable">Ověřením deaktivujete zabezpečení uzamčené obrazovky</string>
     <string name="warning_title">⚠️ UPOZORNĚNÍ</string>
-    <string name="screen_locked_security_warning_text">Tato funkce není spolehlivá. Mohou se vyskytnout okrajové případy, kdy někdo bude stále schopen pracovat s dlaždicí. \nMějte také na paměti, že Android vždy umožní provést vynucený restart a Pixely také vždy umožní vypnout zařízení ze zamykací obrazovky.</string>
-    <string name="screen_locked_security_airplane_warning">Ujistěte se, že jste z rychlých nastavení odstranili dlaždici režimu v letadle, protože tomu nelze zabránit, protože neotevře dialogové okno.</string>
-    <string name="screen_locked_security_description">Pokud je tato možnost povolena, panel Rychlé nastavení se okamžitě zavře a zařízení se uzamkne, pokud se někdo pokusí o interakci s internetovými dlaždicemi, když je zařízení uzamčeno. \n\nTo také zakáže biometrické odemykání, aby se zabránilo dalšímu neoprávněnému přístupu. Měřítko animace se při uzamčení zmenší na 0,1x, aby bylo ještě obtížnější s ní pracovat.</string>
-    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
-    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
     <string name="search_disable_qs_locked_title">Disable QS Locked</string>
     <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
@@ -390,7 +385,6 @@
     <string name="feat_dynamic_night_light_title">Dynamické noční světlo</string>
     <string name="feat_dynamic_night_light_desc">Přepnout noční světlo na základě aplikace</string>
     <string name="feat_screen_locked_security_title">Zabezpečení uzamčené obrazovky</string>
-    <string name="feat_screen_locked_security_desc">Zabránit ovládání sítě</string>
     <string name="feat_app_lock_title">Zámek aplikace</string>
     <string name="feat_app_lock_desc">Zabezpečte aplikace pomocí biometrických údajů</string>
     <string name="feat_freeze_title">Zmrazit</string>

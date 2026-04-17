@@ -256,11 +256,6 @@
     <string name="screen_locked_security_auth_enable">Аутентификация для включения блокировки экрана</string>
     <string name="screen_locked_security_auth_disable">Аутентификация для отключения блокировки экрана</string>
     <string name="warning_title">⚠️ ВНИМАНИЕ</string>
-    <string name="screen_locked_security_warning_text">Эта функция не является надежной. В некоторых случаях пользователь все еще может взаимодействовать с плиткой. \nТакже имейте в виду, что Android всегда разрешает принудительную перезагрузку, а телефоны Pixel всегда позволяют отключить устройство с экрана блокировки.</string>
-    <string name="screen_locked_security_airplane_warning">Обязательно удалите плитку \"Режим полета\" из быстрых настроек, так как это невозможно предотвратить, поскольку она не открывает диалоговое окно.</string>
-    <string name="screen_locked_security_description">Когда включено, панель быстрых настроек будет немедленно закрываться, а устройство будет блокироваться, если кто-то попытается взаимодействовать с интернет-плитками, пока устройство заблокировано. \n\nПри этом будет отключена биометрическая разблокировка, чтобы предотвратить дальнейший несанкционированный доступ. Масштаб анимации при блокировке будет уменьшен до 0,1x, чтобы сделать взаимодействие с устройством еще более затруднительным.</string>
-    <string name="disable_qs_when_locked_title">Отключать QS при блокировке</string>
-    <string name="disable_qs_when_locked_desc">Немедленно закрывает панель быстрых настроек, если кто-то попытается открыть её, пока устройство заблокировано.</string>
     <string name="search_disable_qs_locked_title">Отключить блокировку QS</string>
     <string name="search_disable_qs_locked_desc">Запретить расширение быстрых настроек, когда устройство заблокировано</string>
     <!-- Sound Mode -->
@@ -390,7 +385,6 @@
     <string name="feat_dynamic_night_light_title">Динамический ночной свет</string>
     <string name="feat_dynamic_night_light_desc">Ночной свет по приложениям</string>
     <string name="feat_screen_locked_security_title">Безопасность при заблокированном экране</string>
-    <string name="feat_screen_locked_security_desc">Запретить сетевой контроль</string>
     <string name="feat_app_lock_title">Блокировка приложения</string>
     <string name="feat_app_lock_desc">Защитите приложения с помощью биометрии</string>
     <string name="feat_freeze_title">Заморозка</string>

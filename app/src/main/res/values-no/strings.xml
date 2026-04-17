@@ -256,11 +256,6 @@
     <string name="screen_locked_security_auth_enable">Autentiser for å aktivere skjermlåst sikkerhet</string>
     <string name="screen_locked_security_auth_disable">Autentiser for å deaktivere skjermlåst sikkerhet</string>
     <string name="warning_title">⚠️ ADVARSEL</string>
-    <string name="screen_locked_security_warning_text">Denne funksjonen er ikke idiotsikker. Det kan være kanttilfeller der noen fortsatt kan samhandle med flisen. \nHusk også at Android alltid vil tillate å gjøre en tvungen omstart og Pixels vil alltid tillate at enheten også slås av fra låseskjermen.</string>
-    <string name="screen_locked_security_airplane_warning">Sørg for å fjerne flymodusflisen fra hurtiginnstillingene, da det ikke kan forhindres fordi det ikke åpner et dialogvindu.</string>
-    <string name="screen_locked_security_description">Når det er aktivert, lukkes hurtiginnstillingspanelet umiddelbart og enheten vil bli låst hvis noen prøver å samhandle med Internett-fliser mens enheten er låst. \n\nDette vil også deaktivere biometrisk opplåsing for å forhindre ytterligere uautorisert tilgang. Animasjonsskalaen vil reduseres til 0,1x mens den er låst for å gjøre det enda vanskeligere å samhandle med.</string>
-    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
-    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
     <string name="search_disable_qs_locked_title">Disable QS Locked</string>
     <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
@@ -390,7 +385,6 @@
     <string name="feat_dynamic_night_light_title">Dynamisk nattlys</string>
     <string name="feat_dynamic_night_light_desc">Slå av nattlys basert på app</string>
     <string name="feat_screen_locked_security_title">Skjermlåst sikkerhet</string>
-    <string name="feat_screen_locked_security_desc">Forhindre nettverkskontroller</string>
     <string name="feat_app_lock_title">Applås</string>
     <string name="feat_app_lock_desc">Sikre apper med biometri</string>
     <string name="feat_freeze_title">Fryse</string>
