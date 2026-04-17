@@ -12,7 +12,6 @@ import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
 import com.sameerasw.essentials.data.repository.SettingsRepository
-import com.sameerasw.essentials.services.ScreenOffReceiver
 import com.sameerasw.essentials.utils.ShizukuUtils
 import io.sentry.Sentry
 import io.sentry.android.core.SentryAndroid
@@ -23,7 +22,7 @@ class EssentialsApp : Application() {
             private set
     }
 
-    private val screenOffReceiver = ScreenOffReceiver()
+    private val securityReceiver = com.sameerasw.essentials.services.receivers.SecurityReceiver()
 
     override fun onCreate() {
         super.onCreate()
@@ -45,17 +44,21 @@ class EssentialsApp : Application() {
 
         initSentry()
 
-        val intentFilter = IntentFilter(Intent.ACTION_SCREEN_OFF)
+        val intentFilter = IntentFilter().apply {
+            addAction(Intent.ACTION_SCREEN_OFF)
+            addAction(Intent.ACTION_USER_PRESENT)
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(screenOffReceiver, intentFilter, RECEIVER_EXPORTED)
+            registerReceiver(securityReceiver, intentFilter, RECEIVER_EXPORTED)
         } else {
-            registerReceiver(screenOffReceiver, intentFilter)
+            registerReceiver(securityReceiver, intentFilter)
         }
     }
 
     override fun onTerminate() {
         super.onTerminate()
-        unregisterReceiver(screenOffReceiver)
+        unregisterReceiver(securityReceiver)
     }
 
     private fun initSentry() {

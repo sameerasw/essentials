@@ -2426,11 +2426,17 @@ class MainViewModel : ViewModel() {
             SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED,
             enabled
         )
+        if (!enabled) {
+            com.sameerasw.essentials.utils.ShellUtils.runCommand(context, "cmd statusbar send-disable-flag none")
+        }
     }
 
     fun setDisableQsWhenLockedEnabled(enabled: Boolean, context: Context) {
         isDisableQsWhenLockedEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_DISABLE_QS_WHEN_LOCKED, enabled)
+        if (!enabled) {
+            com.sameerasw.essentials.utils.ShellUtils.runCommand(context, "cmd statusbar send-disable-flag none")
+        }
     }
 
     fun setNotificationLightingGlowSides(sides: Set<NotificationLightingSide>, context: Context) {
