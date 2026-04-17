@@ -54,6 +54,7 @@
     <string name="action_ai_assistant">アシスタント</string>
     <string name="action_take_screenshot">スクリーンショット</string>
     <string name="action_cycle_sound_modes">サイレントモードを切り替え</string>
+    <string name="action_circle_to_search">Circle to Search</string>
     <string name="action_like_song">再生中の曲をいいね</string>
     <string name="like_song_settings_title">いいね設定</string>
     <string name="like_song_settings_desc">この機能は、現在再生中のメディアを検出し「いいね」アクションをトリガーするために通知アクセスを必要とします。下記で有効にしてください。</string>
@@ -338,9 +339,11 @@
     <string name="hide_notification_icons_title">Hide notifications</string>
     <string name="hide_notification_icons_desc">Hide all incoming notification icons</string>
     <string name="feat_hide_gesture_bar_title">Hide gesture bar</string>
+    <string name="feat_hide_gesture_bar_desc">Hide the navigation pill at the bottom</string>
+    <string name="feat_circle_to_search_gesture_title">Circle to Search gesture</string>
+    <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
     <string name="feat_other_customizations_title">Other customizations</string>
     <string name="feat_other_customizations_desc">Additional system tweaks and modifications</string>
-    <string name="feat_hide_gesture_bar_desc">In gesture navigation</string>
     <string name="status_bar_icons_disclaimer">これらのオプションの実装は機種によって異なる場合があり、一部は全く機能しない場合がありますのでご注意ください。</string>
     <!-- Network Type Picker -->
     <string name="network_type_other">その他</string>
