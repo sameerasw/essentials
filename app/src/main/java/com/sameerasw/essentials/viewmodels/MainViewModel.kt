@@ -133,6 +133,7 @@ class MainViewModel : ViewModel() {
     val dnsPresets = mutableStateListOf<DnsPreset>()
     val addedQSTiles = mutableStateOf<Set<String>>(emptySet())
     val isHideGestureBarEnabled = mutableStateOf(false)
+    val isHideGestureBarOnLauncherEnabled = mutableStateOf(false)
     val isCircleToSearchGestureEnabled = mutableStateOf(false)
 
 
@@ -491,6 +492,11 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_CIRCLE_TO_SEARCH_GESTURE_ENABLED -> {
                         isCircleToSearchGestureEnabled.value = settingsRepository.getBoolean(key)
                     }
+
+                    SettingsRepository.KEY_HIDE_GESTURE_BAR_ON_LAUNCHER_ENABLED -> {
+                        isHideGestureBarOnLauncherEnabled.value = settingsRepository.getBoolean(key)
+                        appContext?.let { updateAppDetectionService(it) }
+                    }
                 }
             }
         }
@@ -526,10 +532,13 @@ class MainViewModel : ViewModel() {
         isAutoAccessibilityEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_AUTO_ACCESSIBILITY_ENABLED)
         isHideGestureBarEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_HIDE_GESTURE_BAR_ENABLED, false)
         isCircleToSearchGestureEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_CIRCLE_TO_SEARCH_GESTURE_ENABLED, false)
+        isHideGestureBarOnLauncherEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_HIDE_GESTURE_BAR_ON_LAUNCHER_ENABLED, false)
         notificationLightingSystemMode.intValue = settingsRepository.getNotificationLightingSystemMode()
         if (isHideGestureBarEnabled.value) {
             applyHideGestureBar(context, true)
         }
+        
+        updateAppDetectionService(context)
 
 
         if (isAutoAccessibilityEnabled.value && !isAccessibilityEnabled.value) {
@@ -1272,6 +1281,17 @@ class MainViewModel : ViewModel() {
         settingsRepository.putBoolean(SettingsRepository.KEY_CIRCLE_TO_SEARCH_GESTURE_ENABLED, enabled)
     }
 
+    fun setHideGestureBarOnLauncherEnabled(enabled: Boolean, context: Context) {
+        isHideGestureBarOnLauncherEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_HIDE_GESTURE_BAR_ON_LAUNCHER_ENABLED, enabled)
+        
+        if (!enabled) {
+            com.sameerasw.essentials.utils.StatusBarManager.requestRestore(context, "GestureBarAutomation")
+        }
+        
+        updateAppDetectionService(context)
+    }
+
     private fun applyHideGestureBar(context: Context, enabled: Boolean) {
         if (enabled) {
             com.sameerasw.essentials.utils.StatusBarManager.requestDisable(
@@ -1383,7 +1403,7 @@ class MainViewModel : ViewModel() {
         val intent = Intent(context, com.sameerasw.essentials.services.AppDetectionService::class.java)
         
         val hasAppAutomations = com.sameerasw.essentials.domain.diy.DIYRepository.automations.value.any { it.isEnabled && it.type == com.sameerasw.essentials.domain.diy.Automation.Type.APP }
-        val shouldRun = isUseUsageAccess.value && (isAppLockEnabled.value || isDynamicNightLightEnabled.value || hasAppAutomations)
+        val shouldRun = isUseUsageAccess.value && (isAppLockEnabled.value || isDynamicNightLightEnabled.value || isHideGestureBarOnLauncherEnabled.value || hasAppAutomations)
         
         if (shouldRun) {
             try {
