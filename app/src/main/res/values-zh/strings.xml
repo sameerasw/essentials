@@ -54,6 +54,7 @@
     <string name="action_ai_assistant">AI 助理</string>
     <string name="action_take_screenshot">屏幕截图</string>
     <string name="action_cycle_sound_modes">循环切换声音模式</string>
+    <string name="action_circle_to_search">Circle to Search</string>
     <string name="action_like_song">喜欢这首歌</string>
     <string name="like_song_settings_title">喜爱歌曲设置</string>
     <string name="like_song_settings_desc">本功能需要通知权限以检测当前正在播放的媒体和点按喜欢按钮。请在下方启用。</string>
@@ -338,9 +339,11 @@
     <string name="hide_notification_icons_title">Hide notifications</string>
     <string name="hide_notification_icons_desc">Hide all incoming notification icons</string>
     <string name="feat_hide_gesture_bar_title">Hide gesture bar</string>
+    <string name="feat_hide_gesture_bar_desc">Hide the navigation pill at the bottom</string>
+    <string name="feat_circle_to_search_gesture_title">Circle to Search gesture</string>
+    <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
     <string name="feat_other_customizations_title">Other customizations</string>
     <string name="feat_other_customizations_desc">Additional system tweaks and modifications</string>
-    <string name="feat_hide_gesture_bar_desc">In gesture navigation</string>
     <string name="status_bar_icons_disclaimer">请注意，这些选项的实现可能取决于设备制造商OEM，某些选项可能根本无法使用。</string>
     <!-- Network Type Picker -->
     <string name="network_type_other">其他</string>

@@ -54,6 +54,7 @@
     <string name="action_ai_assistant">Βοηθός AI</string>
     <string name="action_take_screenshot">Λήψη στιγμιότυπου οθόνης</string>
     <string name="action_cycle_sound_modes">Λειτουργίες ήχου κύκλου</string>
+    <string name="action_circle_to_search">Circle to Search</string>
     <string name="action_like_song">Όπως το τρέχον τραγούδι</string>
     <string name="like_song_settings_title">Όπως ρυθμίσεις τραγουδιού</string>
     <string name="like_song_settings_desc">Αυτή η λειτουργία απαιτεί πρόσβαση στις ειδοποιήσεις για τον εντοπισμό των μέσων που αναπαράγονται αυτήν τη στιγμή και την ενεργοποίηση της παρόμοιας ενέργειας. Ενεργοποιήστε το παρακάτω.</string>
@@ -338,9 +339,11 @@
     <string name="hide_notification_icons_title">Hide notifications</string>
     <string name="hide_notification_icons_desc">Hide all incoming notification icons</string>
     <string name="feat_hide_gesture_bar_title">Hide gesture bar</string>
+    <string name="feat_hide_gesture_bar_desc">Hide the navigation pill at the bottom</string>
+    <string name="feat_circle_to_search_gesture_title">Circle to Search gesture</string>
+    <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
     <string name="feat_other_customizations_title">Other customizations</string>
     <string name="feat_other_customizations_desc">Additional system tweaks and modifications</string>
-    <string name="feat_hide_gesture_bar_desc">In gesture navigation</string>
     <string name="status_bar_icons_disclaimer">Λάβετε υπόψη ότι η υλοποίηση αυτών των επιλογών μπορεί να εξαρτάται από τον OEM και ορισμένες μπορεί να μην είναι καθόλου λειτουργικές.</string>
     <!-- Network Type Picker -->
     <string name="network_type_other">Αλλος</string>

@@ -54,6 +54,7 @@
     <string name="action_ai_assistant">AI සහායක</string>
     <string name="action_take_screenshot">තිර රුවක් ගන්න</string>
     <string name="action_cycle_sound_modes">චක්‍ර ශබ්ද මාදිලි</string>
+    <string name="action_circle_to_search">Circle to Search</string>
     <string name="action_like_song">වර්තමාන ගීතය වගේ</string>
     <string name="like_song_settings_title">ගීත සැකසුම් වගේ</string>
     <string name="like_song_settings_desc">මෙම විශේෂාංගයට දැනට වාදනය වන මාධ්‍ය හඳුනා ගැනීමට සහ එවැනි ක්‍රියාවක් ක්‍රියාරම්භ කිරීමට දැනුම්දීම් ප්‍රවේශය අවශ්‍ය වේ. කරුණාකර එය පහත සබල කරන්න.</string>
@@ -338,9 +339,11 @@
     <string name="hide_notification_icons_title">Hide notifications</string>
     <string name="hide_notification_icons_desc">Hide all incoming notification icons</string>
     <string name="feat_hide_gesture_bar_title">Hide gesture bar</string>
+    <string name="feat_hide_gesture_bar_desc">Hide the navigation pill at the bottom</string>
+    <string name="feat_circle_to_search_gesture_title">Circle to Search gesture</string>
+    <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
     <string name="feat_other_customizations_title">Other customizations</string>
     <string name="feat_other_customizations_desc">Additional system tweaks and modifications</string>
-    <string name="feat_hide_gesture_bar_desc">In gesture navigation</string>
     <string name="status_bar_icons_disclaimer">මෙම විකල්පයන් ක්‍රියාත්මක කිරීම OEM මත රඳා පවතින අතර සමහර ඒවා කිසිසේත්ම ක්‍රියාකාරී නොවිය හැකි බව කරුණාවෙන් සලකන්න.</string>
     <!-- Network Type Picker -->
     <string name="network_type_other">වෙනත්</string>
