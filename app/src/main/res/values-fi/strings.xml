@@ -54,6 +54,7 @@
     <string name="action_ai_assistant">AI-avustaja</string>
     <string name="action_take_screenshot">Ota kuvakaappaus</string>
     <string name="action_cycle_sound_modes">Vaihda äänitilat</string>
+    <string name="action_circle_to_search">Circle to Search</string>
     <string name="action_like_song">Kuten nykyinen kappale</string>
     <string name="like_song_settings_title">Kuten kappaleasetukset</string>
     <string name="like_song_settings_desc">Tämä ominaisuus vaatii pääsyn ilmoituksiin, jotta se havaitsee parhaillaan toistettavan median ja käynnistää vastaavan toiminnon. Ota se käyttöön alla.</string>
@@ -338,9 +339,11 @@
     <string name="hide_notification_icons_title">Hide notifications</string>
     <string name="hide_notification_icons_desc">Hide all incoming notification icons</string>
     <string name="feat_hide_gesture_bar_title">Hide gesture bar</string>
+    <string name="feat_hide_gesture_bar_desc">Hide the navigation pill at the bottom</string>
+    <string name="feat_circle_to_search_gesture_title">Circle to Search gesture</string>
+    <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
     <string name="feat_other_customizations_title">Other customizations</string>
     <string name="feat_other_customizations_desc">Additional system tweaks and modifications</string>
-    <string name="feat_hide_gesture_bar_desc">In gesture navigation</string>
     <string name="status_bar_icons_disclaimer">Huomaa, että näiden vaihtoehtojen toteutus saattaa riippua OEM-valmistajista ja jotkut eivät välttämättä toimi ollenkaan.</string>
     <!-- Network Type Picker -->
     <string name="network_type_other">muu</string>

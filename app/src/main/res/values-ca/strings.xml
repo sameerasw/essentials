@@ -54,6 +54,7 @@
     <string name="action_ai_assistant">Assistent d\'IA</string>
     <string name="action_take_screenshot">Fes una captura de pantalla</string>
     <string name="action_cycle_sound_modes">Cicle els modes de so</string>
+    <string name="action_circle_to_search">Circle to Search</string>
     <string name="action_like_song">Com la cançó actual</string>
     <string name="like_song_settings_title">Com la configuració de cançons</string>
     <string name="like_song_settings_desc">Aquesta funció requereix accés a notificacions per detectar els mitjans que es reprodueixen actualment i activar l\'acció semblant. Si us plau, activeu-lo a continuació.</string>
@@ -338,9 +339,11 @@
     <string name="hide_notification_icons_title">Hide notifications</string>
     <string name="hide_notification_icons_desc">Hide all incoming notification icons</string>
     <string name="feat_hide_gesture_bar_title">Hide gesture bar</string>
+    <string name="feat_hide_gesture_bar_desc">Hide the navigation pill at the bottom</string>
+    <string name="feat_circle_to_search_gesture_title">Circle to Search gesture</string>
+    <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
     <string name="feat_other_customizations_title">Other customizations</string>
     <string name="feat_other_customizations_desc">Additional system tweaks and modifications</string>
-    <string name="feat_hide_gesture_bar_desc">In gesture navigation</string>
     <string name="status_bar_icons_disclaimer">Tingueu en compte que la implementació d\'aquestes opcions pot dependre de l\'OEM i algunes poden no ser funcionals en absolut.</string>
     <!-- Network Type Picker -->
     <string name="network_type_other">Altres</string>
