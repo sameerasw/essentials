@@ -45,12 +45,12 @@
     <string name="screen_on">Pantalla encendida</string>
     <string name="volume_up">Subir volumen</string>
     <string name="volume_down">Bajar volumen</string>
-    <string name="action_toggle_flashlight">Alternar linterna</string>
+    <string name="action_toggle_flashlight">Activar/desactivar la linterna</string>
     <string name="action_media_play_pause">Reproducir/pausar multimedia</string>
     <string name="action_media_next">Siguiente medio</string>
     <string name="action_media_previous">Medio anterior</string>
-    <string name="action_toggle_vibrate">Alternar vibración</string>
-    <string name="action_toggle_mute">Alternar silencio</string>
+    <string name="action_toggle_vibrate">Activar/desactivar la vibración</string>
+    <string name="action_toggle_mute">Activar/desactivar el silencio</string>
     <string name="action_ai_assistant">Asistente de IA</string>
     <string name="action_take_screenshot">Hacer una captura de pantalla</string>
     <string name="action_cycle_sound_modes">Modos de sonido cíclicos</string>
@@ -71,14 +71,14 @@
     <string name="notification_glance_same_as_lighting_title">Las mismas aplicaciones que la iluminación de notificaciones</string>
     <string name="notification_glance_desc">Esta función activará dinámicamente la Pantalla Siempre Encendida (AOD) cuando llegue una notificación de una aplicación seleccionada y la desactivará cuando todas las notificaciones correspondientes se hayan descartado. Elige las aplicaciones o usa la misma selección que para la iluminación de notificaciones.</string>
     <string name="grant_notification_access">Conceder acceso a las notificaciones</string>
-    <string name="action_toggle_media_volume">Activar o desactivar el volumen multimedia</string>
+    <string name="action_toggle_media_volume">Activar/desactivar el volumen multimedia</string>
     <string name="button_remap_screen_off_hint">Cuando la pantalla esté apagada, mantén pulsado el botón seleccionado para activar la acción que le hayas asignado. En los dispositivos Pixel, esta acción solo se activa si la función AOD está activada, debido a limitaciones del sistema.</string>
     <string name="button_remap_screen_on_hint">Cuando la pantalla esté encendida, mantén pulsado el botón seleccionado para activar la acción que se le ha asignado.</string>
     <string name="flashlight_intensity_title">Intensidad de la linterna</string>
     <string name="flashlight_fade_title">Fundido de entrada y salida</string>
-    <string name="flashlight_fade_desc">Activar o desactivar la linterna suavemente</string>
+    <string name="flashlight_fade_desc">Activar/desactivar la linterna suavemente</string>
     <string name="flashlight_global_title">Controles globales</string>
-    <string name="flashlight_global_desc">Activar la linterna con fundido de entrada de forma global</string>
+    <string name="flashlight_global_desc">Activar la linterna con fundido gradual de forma global</string>
     <string name="flashlight_adjust_intensity_title">Ajustar la intensidad</string>
     <string name="flashlight_adjust_intensity_desc">Volumen + - ajusta la intensidad de la linterna</string>
     <string name="flashlight_live_update_title">Actualización en vivo</string>
@@ -128,7 +128,7 @@
     <string name="freeze_mode_description_suspend_title">¿Qué es Suspender?</string>
     <string name="freeze_mode_description_suspend_body">Suspender una aplicación solía pausar su actividad y evitar ejecuciones en segundo plano, pero con los cambios recientes en Android, ahora solo pausa la aparición de notificaciones y poco más.
 Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzador, ya que seguirán apareciendo como iconos en escala de grises indicando que están en pausa.</string>
-    <string name="freeze_mode_description_suspend_footer">Debería funcionar igual que las funciones nativas de pausa de aplicaciones / modo de concentración.</string>
+    <string name="freeze_mode_description_suspend_footer">Debería funcionar igual que las funciones nativas de pausa de aplicaciones/modo de concentración.</string>
     <string name="content_desc_more_options">Más opciones</string>
     <string name="action_freeze_all">Congelar todas las aplicaciones</string>
     <string name="action_unfreeze_all">Descongelar todas las aplicaciones</string>
@@ -161,12 +161,12 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="notification_lighting_screen_off_title">Mostrar solo cuando la pantalla esté apagada</string>
     <string name="notification_lighting_skip_silent_title">Omitir las notificaciones silenciosas</string>
     <string name="notification_lighting_skip_persistent_title">Omitir las notificaciones persistentes</string>
-    <string name="settings_section_flashlight_pulse">Pulso de Linterna</string>
-    <string name="flashlight_pulse_title">Pulso de linterna</string>
+    <string name="settings_section_flashlight_pulse">Parpadeo de la Linterna</string>
+    <string name="flashlight_pulse_title">Parpadeo de la linterna</string>
     <string name="flashlight_pulse_facedown_title">Solo mientras esté boca abajo</string>
     <string name="flashlight_pulse_same_as_lighting_title">Las mismas aplicaciones que la iluminación de notificaciones.</string>
     <string name="flashlight_pulse_max_brightness">Brillo máximo</string>
-    <string name="flashlight_pulse_preview">Vista previa del pulso</string>
+    <string name="flashlight_pulse_preview">Vista previa del parpadeo</string>
     <string name="settings_section_style">Estilo</string>
     <string name="notification_lighting_stroke_adjustment_section">Ajuste del contorno</string>
     <string name="notification_lighting_corner_radius_title">Radio de las esquinas</string>
@@ -187,8 +187,8 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="notification_lighting_sweep_pos_center">Centro</string>
     <string name="notification_lighting_sweep_pos_right">Derecha</string>
     <string name="settings_section_animation">Animación</string>
-    <string name="notification_lighting_pulse_count_title">Recuento de pulsos</string>
-    <string name="notification_lighting_pulse_duration_title">Duración del pulso</string>
+    <string name="notification_lighting_pulse_count_title">Recuento de parpadeos</string>
+    <string name="notification_lighting_pulse_duration_title">Duración del parpadeo</string>
     <string name="settings_section_color_mode">Modo de color</string>
     <string name="settings_section_ambient_display">Pantalla ambiente</string>
     <string name="ambient_display_title">Pantalla ambiente</string>
@@ -215,7 +215,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="tile_mono_audio">Audio mono</string>
     <string name="tile_flashlight">Linterna</string>
     <string name="tile_app_freezing">Congelación de aplicaciones</string>
-    <string name="tile_flashlight_pulse">Pulso de la linterna</string>
+    <string name="tile_flashlight_pulse">Parpadeo de la linterna</string>
     <string name="tile_stay_awake">Mantener despierto</string>
     <string name="input_method_label">Teclado Essentials</string>
     <string name="subtype_en_us">Inglés (Estados Unidos)</string>
@@ -268,7 +268,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <!-- Sound Mode -->
     <string name="sound_mode_reorder_title">Modos de reordenamiento</string>
     <string name="sound_mode_long_press_hint">Mantén pulsado para alternar</string>
-    <string name="content_desc_drag_reorder">Arrastra para reordenar</string>
+    <string name="content_desc_drag_reorder">Arrastrar para reordenar</string>
     <string name="sound_mode_sound">Sonido</string>
     <string name="sound_mode_vibrate">Vibrar</string>
     <string name="sound_mode_silent">Silencio</string>
@@ -336,11 +336,11 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="hide_system_icons_locked_only_title">Ocultar los iconos del sistema solo cuando el dispositivo esté bloqueado</string>
     <string name="hide_system_icons_locked_only_desc">Ocultar los iconos del sistema en la barra de estado cuando el dispositivo está bloqueado y los restaura al desbloquearlo</string>
     <string name="hide_clock_title">Ocultar el reloj</string>
-    <string name="hide_clock_desc">Elimina por completo el reloj de la barra de estado</string>
+    <string name="hide_clock_desc">Eliminar por completo el reloj de la barra de estado</string>
     <string name="hide_notification_icons_title">Ocultar notificaciones</string>
     <string name="hide_notification_icons_desc">Ocultar todos los iconos de notificaciones entrantes</string>
     <string name="feat_hide_gesture_bar_title">Ocultar la barra de gestos</string>
-    <string name="feat_hide_gesture_bar_desc">En la navegación por gestos</string>
+    <string name="feat_hide_gesture_bar_desc">Ocultar el indicador de navegación en la parte inferior</string>
     <string name="feat_hide_gesture_bar_on_launcher_title">Mostrar en el lanzador</string>
     <string name="feat_hide_gesture_bar_on_launcher_desc">Mostrar dinámicamente la barra de gestos solo cuando estés en la pantalla de inicio</string>
     <string name="feat_circle_to_search_gesture_title">Gesto de Círculo para buscar</string>
