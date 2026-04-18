@@ -340,6 +340,8 @@
     <string name="hide_notification_icons_desc">Masquer toutes les icônes de notification entrantes</string>
     <string name="feat_hide_gesture_bar_title">Masquer la barre de gestes</string>
     <string name="feat_hide_gesture_bar_desc">Masquer la barre de navigation en bas</string>
+    <string name="feat_hide_gesture_bar_on_launcher_title">Show on launcher</string>
+    <string name="feat_hide_gesture_bar_on_launcher_desc">Dynamically show the gesture bar only when on the home screen</string>
     <string name="feat_circle_to_search_gesture_title">Geste « Entourez pour rechercher »</string>
     <string name="feat_circle_to_search_gesture_desc">Appuyez longuement sur la zone inférieure pour lancer la fonction « Entourez pour rechercher »</string>
     <string name="feat_other_customizations_title">Autres personnalisations</string>
