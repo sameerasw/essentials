@@ -61,7 +61,7 @@ Essential tools, mods and workarounds for Pixels and other Androids
 
 #### Security and Privacy
 
-- Screen locked security - Prevent network tile access when locked
+- Screen locked security - Disable QS tiles while locked
 - App lock
 
 #### Notifications and Alerts
