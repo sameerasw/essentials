@@ -513,7 +513,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="search_qs_freeze_title">Congelación de aplicaciones</string>
     <string name="search_qs_freeze_desc">Iniciar cuadrícula de congelación de aplicaciones</string>
     <string name="search_qs_pulse_title">Destellos de la linterna</string>
-    <string name="search_qs_pulse_desc">Activar/desactivar los destellos de linterna para las notificaciones</string>
+    <string name="search_qs_pulse_desc">Activar/desactivar los destellos de la linterna para las notificaciones</string>
     <string name="search_qs_stay_awake_desc">Activar/desactivar la opción de desarrollador \"Mantener despierto\"</string>
     <string name="search_qs_private_dns_title">DNS privado</string>
     <string name="search_qs_private_dns_desc">Alternar modos de DNS privado (Desactivado/Automático/Nombre de host)</string>
@@ -521,9 +521,9 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="search_qs_usb_debugging_desc">Activar/desactivar la opción de desarrollador \"Depuración USB\"</string>
     <string name="search_remap_enable_title">Habilitar reasignación de botones</string>
     <string name="search_remap_enable_desc">Interruptor principal para reasignar los botones de volumen</string>
-    <string name="search_remap_haptic_title">Reasignar retroalimentación háptica</string>
+    <string name="search_remap_haptic_title">Reasignar la retroalimentación háptica</string>
     <string name="search_remap_haptic_desc">Retroalimentación de vibración cuando se presiona el botón reasignado</string>
-    <string name="search_remap_flashlight_title">Alternar linterna</string>
+    <string name="search_remap_flashlight_title">Activar/desactivar la linterna</string>
     <string name="search_remap_flashlight_desc">Alternar linterna con botones de volumen</string>
     <string name="search_night_light_enable_title">Habilitar luz nocturna dinámica</string>
     <string name="search_night_light_enable_desc">Interruptor maestro para luz nocturna dinámica</string>
