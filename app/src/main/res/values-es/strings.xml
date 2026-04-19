@@ -637,7 +637,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="welcome_title">Bienvenido a Essentials</string>
     <string name="welcome_subtitle">Una caja de herramientas para entusiastas de Android</string>
     <string name="welcome_developer_attribution">por sameerasw.com</string>
-    <string name="action_lets_begin">Empecemos</string>
+    <string name="action_lets_begin">Comencemos</string>
     <string name="acknowledgement_title">Reconocimiento</string>
     <string name="acknowledgement_desc">Esta aplicación es una colección de utilidades que pueden interactuar en profundidad con el sistema de tu dispositivo. El uso de algunas funciones podría modificar la configuración o el comportamiento del sistema de formas inesperadas. \n\nSolo tienes que conceder los permisos necesarios para las funciones seleccionadas que estés utilizando, lo que te da un control total sobre el comportamiento de la aplicación. \n\nAdemás, la aplicación no rastrea ni almacena ninguno de tus datos personales; no los necesito... Mantente seguro. Puedes consultar el código fuente para obtener más información. \n\nEsta aplicación es totalmente de código abierto y es, y siempre será, de uso gratuito. No pagues ni instales desde fuentes desconocidas.</string>
     <string name="acknowledgement_warning">ADVERTENCIA: Procede con precaución. El desarrollador no se hace responsable de ninguna inestabilidad del sistema, pérdida de datos u otros problemas causados por el uso de esta aplicación. Al continuar, reconoces estos riesgos.</string>
@@ -676,7 +676,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="msg_error_load_release_notes">No se han podido cargar las notas de la versión</string>
     <string name="action_view_on_web">Ver en la web</string>
     <string name="action_done">Hecho</string>
-    <string name="action_preview">Avance</string>
+    <string name="action_preview">Vista previa</string>
     <string name="action_help_guide">Guía de ayuda</string>
     <string name="action_what_is_this">¿Qué es esto?</string>
     <string name="update_available_title">Actualización disponible</string>
