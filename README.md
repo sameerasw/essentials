@@ -76,6 +76,7 @@ Essential tools, mods and workarounds for Pixels and other Androids
 - Link actions - Intercept and share links from default apps
 - Button remap
 - Keyboard
+- Circle to search automations
 
 #### Widgets
 
@@ -84,11 +85,13 @@ Essential tools, mods and workarounds for Pixels and other Androids
 
 #### Display
 
-- Customize statusbar icons
+- Customize statusbar icons and modules
 - Dynamic Always on Display
 - Caffeinate to keep screen awake
 - Dynamic night light - App based night light
 - Scale and animation adjustments
+- Glove mode
+- Hide gesture bar
 
 #### Watch
 
