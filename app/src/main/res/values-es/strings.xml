@@ -793,7 +793,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla S
     <string name="diy_effect_suppress_ambient">Desactivar la visualización ambiental</string>
     <string name="diy_effect_dim_wallpaper">Atenuar el fondo de pantalla</string>
     <string name="diy_effect_night_mode">Modo nocturno</string>
-    <string name="diy_device_effects_android_15_warning">Esta función requiere Android 15 o superior.</string>
+    <string name="diy_device_effects_android_15_warning">Esta función requiere Android 15 o una versión superior.</string>
     <string name="diy_device_effects_enabled">Activado</string>
     <string name="diy_device_effects_disabled">Desactivado</string>
     <string name="diy_action_sound_mode">Modo de sonido</string>
@@ -821,7 +821,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla S
     <string name="label_shizuku_ritaka">Shizuku (Rikka)</string>
     <string name="label_shizuku_tuozi">Shizuku (TuoZi)</string>
     <string name="label_search_content_description">Buscar</string>
-    <string name="perm_device_admin_explanation">Se requiere para bloquear el dispositivo cuando se intentan realizar cambios de red no autorizados en la pantalla de bloqueo.</string>
+    <string name="perm_device_admin_explanation">Necesario para bloquear el dispositivo de forma estricta cuando se intentan realizar cambios de red no autorizados en la pantalla de bloqueo.</string>
     <string name="biometric_subtitle_access_settings">Autenticarse para acceder a la configuración</string>
     <string name="biometric_title_settings_format">%1$s Ajustes</string>
     <string name="keyword_feature">función</string>
@@ -859,7 +859,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla S
     </string-array>
     <string-array name="keywords_flashlight_pulse">
         <item>luz</item>
-        <item>antorcha</item>
+        <item>linterna</item>
         <item>destello</item>
         <item>notificación</item>
     </string-array>
@@ -872,7 +872,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla S
     <string-array name="keywords_notification_lighting">
         <item>brillo</item>
         <item>notificación</item>
-        <item>condujo</item>
+        <item>led</item>
     </string-array>
     <string-array name="keywords_round_shape">
         <item>redondo</item>
@@ -942,7 +942,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla S
         <item>viñeta</item>
     </string-array>
     <string-array name="keywords_float_window">
-        <item>flotar</item>
+        <item>flotante</item>
         <item>ventana</item>
         <item>superposición</item>
     </string-array>
