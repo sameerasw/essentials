@@ -54,6 +54,7 @@
     <string name="action_ai_assistant">AI ассистент</string>
     <string name="action_take_screenshot">Сделать снимок экрана</string>
     <string name="action_cycle_sound_modes">Переключение звуковых режимов</string>
+    <string name="action_circle_to_search">Circle to Search</string>
     <string name="action_like_song">Лайкнуть песню</string>
     <string name="like_song_settings_title">Лайкнуть настройки песни</string>
     <string name="like_song_settings_desc">Для этой функции требуется доступ к уведомлениям для обнаружения воспроизводимого в данный момент мультимедиа и запуска аналогичного действия. Пожалуйста, включите его ниже.</string>
@@ -63,6 +64,8 @@
     <string name="feat_ambient_music_glance_desc">Обзор медиа в режиме AOD. Включает «Сейчас исполняется» на экране блокировки во время смены песни или громкости звука</string>
     <string name="ambient_glance_docked_mode_title">Закрепленный режим</string>
     <string name="ambient_glance_docked_mode_desc">Сохраняйте наложение видимым на неопределенный срок во время воспроизведения музыки на AOD</string>
+    <string name="ambient_glance_random_shapes_title">Случайные фигуры</string>
+    <string name="ambient_glance_random_shapes_desc">Использовать различные формы Material 3 для оформления обложки альбома</string>
     <string name="feat_notification_glance_title">Обзор уведомлений</string>
     <string name="feat_notification_glance_desc">Не отключать AOD, пока ожидаются уведомления</string>
     <string name="notification_glance_same_as_lighting_title">Те же приложения, что и подсветка уведомлений</string>
@@ -161,6 +164,8 @@
     <string name="flashlight_pulse_title">Мигание фонариком</string>
     <string name="flashlight_pulse_facedown_title">Только экраном вниз</string>
     <string name="flashlight_pulse_same_as_lighting_title">Те же приложения, что и подсветка уведомлений</string>
+    <string name="flashlight_pulse_max_brightness">Максимальная яркость</string>
+    <string name="flashlight_pulse_preview">Предпросмотр</string>
     <string name="settings_section_style">Стиль</string>
     <string name="notification_lighting_stroke_adjustment_section">Регулировка хода</string>
     <string name="notification_lighting_corner_radius_title">Радиус закругления</string>
@@ -253,14 +258,10 @@
     <!-- Screen Locked Security -->
     <string name="screen_locked_security_title">Безопасность при заблокированном экране</string>
     <string name="screen_locked_security_dialog_title">Безопасность при заблокированном экране</string>
+    <string name="warning_title">⚠️ ВНИМАНИЕ</string>
     <string name="screen_locked_security_auth_enable">Аутентификация для включения блокировки экрана</string>
     <string name="screen_locked_security_auth_disable">Аутентификация для отключения блокировки экрана</string>
-    <string name="warning_title">⚠️ ВНИМАНИЕ</string>
-    <string name="screen_locked_security_warning_text">Эта функция не является надежной. В некоторых случаях пользователь все еще может взаимодействовать с плиткой. \nТакже имейте в виду, что Android всегда разрешает принудительную перезагрузку, а телефоны Pixel всегда позволяют отключить устройство с экрана блокировки.</string>
-    <string name="screen_locked_security_airplane_warning">Обязательно удалите плитку \"Режим полета\" из быстрых настроек, так как это невозможно предотвратить, поскольку она не открывает диалоговое окно.</string>
-    <string name="screen_locked_security_description">Когда включено, панель быстрых настроек будет немедленно закрываться, а устройство будет блокироваться, если кто-то попытается взаимодействовать с интернет-плитками, пока устройство заблокировано. \n\nПри этом будет отключена биометрическая разблокировка, чтобы предотвратить дальнейший несанкционированный доступ. Масштаб анимации при блокировке будет уменьшен до 0,1x, чтобы сделать взаимодействие с устройством еще более затруднительным.</string>
-    <string name="disable_qs_when_locked_title">Отключать QS при блокировке</string>
-    <string name="disable_qs_when_locked_desc">Немедленно закрывает панель быстрых настроек, если кто-то попытается открыть её, пока устройство заблокировано.</string>
+    <string name="screen_locked_security_desc">Отключает плитки быстрых настроек, когда устройство заблокировано</string>
     <string name="search_disable_qs_locked_title">Отключить блокировку QS</string>
     <string name="search_disable_qs_locked_desc">Запретить расширение быстрых настроек, когда устройство заблокировано</string>
     <!-- Sound Mode -->
@@ -328,6 +329,23 @@
     <string name="smart_data_desc">Скрыть мобильные данные в определенных режимах</string>
     <string name="action_reset_all_icons">Сбросить все значки</string>
     <string name="status_bar_section_advanced">Дополнительные настройки</string>
+    <string name="stb_advanced_flags_title">Продвинутые (требуется Shizuku/Root)</string>
+    <string name="hide_all_system_icons_title">Скрыть все системные значки</string>
+    <string name="hide_all_system_icons_desc">Удалите все значки, не связанные с уведомлениями, из строки состояния</string>
+    <string name="hide_system_icons_locked_only_title">Скрывать системные значки только при блокировке</string>
+    <string name="hide_system_icons_locked_only_desc">Скрывает системные значки в строке состояния, когда устройство заблокировано, и восстанавливает их после разблокировки</string>
+    <string name="hide_clock_title">Скрыть часы</string>
+    <string name="hide_clock_desc">Полностью уберите часы из строки состояния</string>
+    <string name="hide_notification_icons_title">Скрыть уведомления</string>
+    <string name="hide_notification_icons_desc">Скрыть все значки входящих уведомлений</string>
+    <string name="feat_hide_gesture_bar_title">Скрыть панель жестов</string>
+    <string name="feat_hide_gesture_bar_desc">Hide the navigation pill at the bottom</string>
+    <string name="feat_hide_gesture_bar_on_launcher_title">Show on launcher</string>
+    <string name="feat_hide_gesture_bar_on_launcher_desc">Dynamically show the gesture bar only when on the home screen</string>
+    <string name="feat_circle_to_search_gesture_title">Circle to Search gesture</string>
+    <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
+    <string name="feat_other_customizations_title">Другие настройки</string>
+    <string name="feat_other_customizations_desc">Дополнительные настройки и модификации системы</string>
     <string name="status_bar_icons_disclaimer">Обратите внимание, что реализация этих функций может зависеть от производителя оригинального оборудования, а некоторые из них могут быть вообще недоступны.</string>
     <!-- Network Type Picker -->
     <string name="network_type_other">Другое</string>
@@ -390,7 +408,6 @@
     <string name="feat_dynamic_night_light_title">Динамический ночной свет</string>
     <string name="feat_dynamic_night_light_desc">Ночной свет по приложениям</string>
     <string name="feat_screen_locked_security_title">Безопасность при заблокированном экране</string>
-    <string name="feat_screen_locked_security_desc">Запретить сетевой контроль</string>
     <string name="feat_app_lock_title">Блокировка приложения</string>
     <string name="feat_app_lock_desc">Защитите приложения с помощью биометрии</string>
     <string name="feat_freeze_title">Заморозка</string>
@@ -640,6 +657,21 @@
     <string name="action_check_whats_new">Проверьте \"Что нового?\"</string>
     <string name="welcome_back_title">Добро пожаловать в Essentials</string>
     <string name="action_see_whats_new">Что нового</string>
+    <string name="label_mode_default">По умолчанию</string>
+    <string name="label_mode_glove">«В перчатках»</string>
+    <string name="tile_scale_animations">«В перчатках»</string>
+    <string name="about_desc_scale_animations_tile">Быстрое переключение между профилями пользовательского интерфейса «По умолчанию» и «В перчатках»</string>
+    <string name="label_increase_touch_sensitivity">Увеличение чувствительности сенсорного экран</string>
+    <string name="desc_increase_touch_sensitivity">Улучшите чувствительность сенсорного экрана при использовании перчаток или защитных стекол</string>
+    <string name="label_auto_rotate">Автоматический поворот</string>
+    <string name="desc_auto_rotate">Автоматический поворот экрана при повороте устройства</string>
+    <string name="label_screen_timeout">Время отключения экрана</string>
+    <string name="desc_screen_timeout">Как долго экран остается включенным, прежде чем автоматически выключится</string>
+    <string name="unit_seconds">%d секунд</string>
+    <string name="unit_minute">1 минута</string>
+    <string name="unit_minutes">%d минут</string>
+    <string name="action_restart_systemui">Перезапустить SystemUI</string>
+    <string name="desc_restart_systemui">Завершает и перезапускает процесс SystemUI, чтобы немедленно применить некоторые изменения</string>
     <string name="msg_error_load_release_notes">Не удалось загрузить примечание к выпуску</string>
     <string name="action_view_on_web">Открыть в браузере</string>
     <string name="action_done">Готово</string>
@@ -1273,4 +1305,11 @@
     <string name="prank_button_premium">Что в Premium?</string>
     <string name="prank_reveal_title">С 1 апреля!</string>
     <string name="prank_reveal_desc">Шучу, Essentials есть и всегда будет бесплатным и с открытым исходным кодом. Наслаждайтесь! (っ◕‿◕)っ</string>
+    <string name="notification_lighting_style_system">System</string>
+    <string name="notification_lighting_system_mode_title">Ripple Animation</string>
+    <string name="notification_lighting_system_mode_charging_ripple">Bottom</string>
+    <string name="notification_lighting_system_mode_auth_ripple">Center</string>
+    <string name="notification_lighting_system_mode_custom_ripple">Custom</string>
+    <string name="msg_shizuku_root_required_system_lighting">Shizuku or Root permission is required for System lighting effects</string>
+    <string name="notification_lighting_system_disclaimer">Made for Google Pixel. Might not be available on other devices.</string>
 </resources>

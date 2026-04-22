@@ -4,5 +4,6 @@ enum class NotificationLightingStyle {
     STROKE,
     GLOW,
     INDICATOR,
-    SWEEP
+    SWEEP,
+    SYSTEM
 }

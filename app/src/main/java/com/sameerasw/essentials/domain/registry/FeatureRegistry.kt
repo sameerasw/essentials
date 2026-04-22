@@ -686,21 +686,36 @@ object FeatureRegistry {
                 viewModel.setDynamicNightLightEnabled(enabled, context)
         },
 
+
+        object : Feature(
+            id = "Other customizations",
+            title = R.string.feat_other_customizations_title,
+            iconRes = R.drawable.rounded_home_24,
+            category = R.string.cat_display,
+            description = R.string.feat_other_customizations_desc,
+            showToggle = false,
+            hasMoreSettings = true,
+            parentFeatureId = "Display"
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = true
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+        },
+
         object : Feature(
             id = "Screen locked security",
             title = R.string.feat_screen_locked_security_title,
             iconRes = R.drawable.rounded_security_24,
             category = R.string.cat_protection,
-            description = R.string.feat_screen_locked_security_desc,
+            description = R.string.screen_locked_security_desc,
             aboutDescription = R.string.about_desc_screen_locked_security,
-            permissionKeys = listOf("ACCESSIBILITY", "WRITE_SECURE_SETTINGS", "DEVICE_ADMIN"),
+            permissionKeys = if (ShellUtils.isRootEnabled(com.sameerasw.essentials.EssentialsApp.context)) listOf("ROOT") else listOf("SHIZUKU"),
             parentFeatureId = "Security"
         ) {
             override fun isEnabled(viewModel: MainViewModel) =
                 viewModel.isScreenLockedSecurityEnabled.value
 
             override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
-                viewModel.isAccessibilityEnabled.value && viewModel.isWriteSecureSettingsEnabled.value && viewModel.isDeviceAdminEnabled.value
+                ShellUtils.hasPermission(context)
 
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
                 viewModel.setScreenLockedSecurityEnabled(enabled, context)

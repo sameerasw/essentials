@@ -18,13 +18,7 @@ import android.view.accessibility.AccessibilityEvent
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.services.InputEventListenerService
-import com.sameerasw.essentials.services.handlers.AmbientGlanceHandler
-import com.sameerasw.essentials.services.handlers.AodForceTurnOffHandler
-import com.sameerasw.essentials.services.handlers.AppFlowHandler
-import com.sameerasw.essentials.services.handlers.ButtonRemapHandler
-import com.sameerasw.essentials.services.handlers.FlashlightHandler
-import com.sameerasw.essentials.services.handlers.NotificationLightingHandler
-import com.sameerasw.essentials.services.handlers.SecurityHandler
+import com.sameerasw.essentials.services.handlers.*
 import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
 import com.sameerasw.essentials.utils.FreezeManager
 import com.sameerasw.essentials.utils.performHapticFeedback
@@ -45,6 +39,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
     private lateinit var securityHandler: SecurityHandler
     private lateinit var ambientGlanceHandler: AmbientGlanceHandler
     private lateinit var aodForceTurnOffHandler: AodForceTurnOffHandler
+    private lateinit var omniGestureOverlayHandler: OmniGestureOverlayHandler
 
     private var screenReceiver: BroadcastReceiver? = null
 
@@ -58,6 +53,13 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         FreezeManager.freezeAll(this)
     }
 
+    private val preferenceChangeListener =
+        android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+            if (key == "circle_to_search_gesture_enabled" || key == "hide_gesture_bar_enabled") {
+                updateOmniOverlay()
+            }
+        }
+
     override fun onCreate() {
         super.onCreate()
 
@@ -69,6 +71,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         securityHandler = SecurityHandler(this)
         ambientGlanceHandler = AmbientGlanceHandler(this)
         aodForceTurnOffHandler = AodForceTurnOffHandler(this)
+        omniGestureOverlayHandler = OmniGestureOverlayHandler(this)
 
         flashlightHandler.register()
 
@@ -82,6 +85,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
                         aodForceTurnOffHandler.removeOverlay()
                         freezeHandler.removeCallbacks(freezeRunnable)
                         stopInputEventListener()
+                        updateOmniOverlay()
                     }
 
                     Intent.ACTION_SCREEN_OFF -> {
@@ -89,6 +93,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
                         scheduleFreeze()
                         startInputEventListenerIfEnabled()
                         ambientGlanceHandler.checkAndShowOnScreenOff()
+                        omniGestureOverlayHandler.updateOverlay(false) // Always hide when screen is off
                     }
 
                     Intent.ACTION_USER_PRESENT -> {
@@ -124,6 +129,9 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         proximitySensor?.let {
             sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
         }
+
+        getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+            .registerOnSharedPreferenceChangeListener(preferenceChangeListener)
     }
 
     private fun scheduleFreeze() {
@@ -152,6 +160,14 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         serviceInfo = serviceInfo.apply {
             flags = flags or AccessibilityServiceInfo.FLAG_REQUEST_FILTER_KEY_EVENTS
         }
+        updateOmniOverlay()
+    }
+
+    private fun updateOmniOverlay() {
+        val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+        val isHideBarEnabled = prefs.getBoolean("hide_gesture_bar_enabled", false)
+        val isGestureEnabled = prefs.getBoolean("circle_to_search_gesture_enabled", false)
+        omniGestureOverlayHandler.updateOverlay(isHideBarEnabled && isGestureEnabled)
     }
 
     override fun onDestroy() {
@@ -165,8 +181,11 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         notificationLightingHandler.removeOverlay()
         ambientGlanceHandler.removeOverlay()
         aodForceTurnOffHandler.removeOverlay()
+        omniGestureOverlayHandler.removeOverlay()
         stopInputEventListener()
         serviceScope.cancel()
+        getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+            .unregisterOnSharedPreferenceChangeListener(preferenceChangeListener)
         super.onDestroy()
     }
 
@@ -199,6 +218,11 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+
+    override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+        super.onConfigurationChanged(newConfig)
+        updateOmniOverlay() // Force refresh overlay on rotation
+    }
 
     override fun onKeyEvent(event: KeyEvent): Boolean {
         val keyCode = event.keyCode

@@ -25,6 +25,7 @@ import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.sheets.AppSelectionSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
+import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
@@ -69,6 +70,16 @@ fun FlashlightPulseSettingsUI(
                     },
                     modifier = Modifier.highlight(highlightSetting == "flashlight_pulse_facedown" || highlightSetting == "flashlight_pulse_facedown_only")
                 )
+
+                ConfigSliderItem(
+                    title = stringResource(R.string.flashlight_pulse_max_brightness),
+                    value = viewModel.flashlightPulseMaxIntensity.floatValue,
+                    onValueChange = { viewModel.setFlashlightPulseMaxIntensity(it) },
+                    valueRange = 0.05f..1f,
+                    valueFormatter = { "${(it * 100).toInt()}%" },
+                    increment = 0.05f,
+                    modifier = Modifier.highlight(highlightSetting == "flashlight_pulse_max_intensity")
+                )
             }
             IconToggleItem(
                 iconRes = R.drawable.rounded_apps_24,
@@ -81,8 +92,6 @@ fun FlashlightPulseSettingsUI(
             )
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
         // App Selection Sheet Button
         Button(
             onClick = {
@@ -93,6 +102,22 @@ fun FlashlightPulseSettingsUI(
             enabled = viewModel.isFlashlightPulseEnabled.value && !viewModel.isFlashlightPulseUseLightingApps.value
         ) {
             Text(stringResource(R.string.action_select_apps))
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        if (viewModel.isFlashlightPulseEnabled.value) {
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = {
+                    HapticUtil.performVirtualKeyHaptic(view)
+                    viewModel.previewFlashlightPulse(context)
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(stringResource(R.string.flashlight_pulse_preview))
+            }
         }
 
         Spacer(modifier = Modifier.height(80.dp))

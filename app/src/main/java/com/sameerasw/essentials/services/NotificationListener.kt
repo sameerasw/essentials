@@ -690,50 +690,52 @@ class NotificationListener : NotificationListenerService() {
                             prefs.getInt("edge_lighting_sweep_thickness", 8).toFloat()
                         }
                         val sweepPosition = prefs.getString("edge_lighting_sweep_position", "CENTER") ?: "CENTER"
-                        val randomShapes = prefs.getBoolean("edge_lighting_sweep_random_shapes", true)
+                                val randomShapes = prefs.getBoolean("edge_lighting_sweep_random_shapes", true)
+                                val systemLightingMode = prefs.getInt("edge_lighting_system_mode", 0)
 
-                        fun startNotificationLighting(resolvedColor: Int? = null) {
-                            val intent = Intent(
-                                applicationContext,
-                                NotificationLightingService::class.java
-                            ).apply {
-                                putExtra("corner_radius_dp", cornerRadius)
-                                putExtra("stroke_thickness_dp", strokeThickness)
-                                putExtra("color_mode", colorMode.name)
-                                putExtra("pulse_count", pulseCount)
-                                putExtra("pulse_duration", pulseDuration)
-                                putExtra("style", styleName)
-                                putExtra("glow_sides", glowSides.map { it.name }.toTypedArray())
-                                putExtra("indicator_x", indicatorX)
-                                putExtra("indicator_y", indicatorY)
-                                putExtra("indicator_scale", indicatorScale)
-                                if (resolvedColor != null) {
-                                    putExtra("resolved_color", resolvedColor)
-                                } else if (colorMode == NotificationLightingColorMode.CUSTOM) {
-                                    putExtra(
-                                        "custom_color",
-                                        prefs.getInt(
-                                            "edge_lighting_custom_color",
-                                            0xFF6200EE.toInt()
+                                fun startNotificationLighting(resolvedColor: Int? = null) {
+                                    val intent = Intent(
+                                        applicationContext,
+                                        NotificationLightingService::class.java
+                                    ).apply {
+                                        putExtra("corner_radius_dp", cornerRadius)
+                                        putExtra("stroke_thickness_dp", strokeThickness)
+                                        putExtra("color_mode", colorMode.name)
+                                        putExtra("pulse_count", pulseCount)
+                                        putExtra("pulse_duration", pulseDuration)
+                                        putExtra("style", styleName)
+                                        putExtra("glow_sides", glowSides.map { it.name }.toTypedArray())
+                                        putExtra("indicator_x", indicatorX)
+                                        putExtra("indicator_y", indicatorY)
+                                        putExtra("indicator_scale", indicatorScale)
+                                        if (resolvedColor != null) {
+                                            putExtra("resolved_color", resolvedColor)
+                                        } else if (colorMode == NotificationLightingColorMode.CUSTOM) {
+                                            putExtra(
+                                                "custom_color",
+                                                prefs.getInt(
+                                                    "edge_lighting_custom_color",
+                                                    0xFF6200EE.toInt()
+                                                )
+                                            )
+                                        }
+                                        putExtra(
+                                            "is_ambient_display",
+                                            prefs.getBoolean("edge_lighting_ambient_display", false)
                                         )
-                                    )
-                                }
-                                putExtra(
-                                    "is_ambient_display",
-                                    prefs.getBoolean("edge_lighting_ambient_display", false)
-                                )
-                                putExtra(
-                                    "is_ambient_show_lock_screen",
-                                    prefs.getBoolean(
-                                        "edge_lighting_ambient_show_lock_screen",
-                                        false
-                                    )
-                                )
-                                putExtra("sweep_position", sweepPosition)
-                                putExtra("sweep_thickness", sweepThickness)
-                                putExtra("random_shapes", randomShapes)
-                                putExtra("package_name", sbn.packageName)
-                            }
+                                        putExtra(
+                                            "is_ambient_show_lock_screen",
+                                            prefs.getBoolean(
+                                                "edge_lighting_ambient_show_lock_screen",
+                                                false
+                                            )
+                                        )
+                                        putExtra("sweep_position", sweepPosition)
+                                        putExtra("sweep_thickness", sweepThickness)
+                                        putExtra("random_shapes", randomShapes)
+                                        putExtra("system_lighting_mode", systemLightingMode)
+                                        putExtra("package_name", sbn.packageName)
+                                    }
                             if (PermissionUtils.isAccessibilityServiceEnabled(applicationContext)) {
                                 applicationContext.startService(intent)
                             } else {

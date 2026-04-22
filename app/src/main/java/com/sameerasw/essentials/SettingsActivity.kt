@@ -72,6 +72,7 @@ import com.sameerasw.essentials.domain.DIYTabs
 import com.sameerasw.essentials.domain.registry.PermissionRegistry
 import com.sameerasw.essentials.ui.components.EssentialsFloatingToolbar
 import com.sameerasw.essentials.ui.components.MadebySameeraswCard
+import com.sameerasw.essentials.ui.components.cards.FeatureCard
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.ui.components.cards.PermissionCard
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
@@ -389,6 +390,21 @@ fun SettingsContent(
             )
         }
 
+        Spacer(modifier = Modifier.height(16.dp))
+
+        RoundedCardContainer {
+            FeatureCard(
+                title = R.string.action_restart_systemui,
+                description = R.string.desc_restart_systemui,
+                isEnabled = true,
+                onToggle = {},
+                showToggle = false,
+                onClick = { viewModel.restartSystemUI() },
+                iconRes = R.drawable.rounded_refresh_24
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         val defaultTab by viewModel.defaultTab
         RoundedCardContainer {

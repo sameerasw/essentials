@@ -131,7 +131,10 @@ class FlashlightHandler(
                 }
             }
 
-            FlashlightActionReceiver.ACTION_PULSE_NOTIFICATION -> pulseFlashlightForNotificationWithCheck()
+            FlashlightActionReceiver.ACTION_PULSE_NOTIFICATION -> {
+                val isPreview = intent.getBooleanExtra(FlashlightActionReceiver.EXTRA_IS_PREVIEW, false)
+                pulseFlashlightForNotificationWithCheck(ignoreChecks = isPreview)
+            }
         }
     }
 
@@ -339,15 +342,17 @@ class FlashlightHandler(
 
     var isProximityBlocked = false
 
-    fun pulseFlashlightForNotificationWithCheck() {
+    fun pulseFlashlightForNotificationWithCheck(ignoreChecks: Boolean = false) {
         if (isTorchOn) return
-
+ 
         val prefs = service.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-        val pulseEnabled = prefs.getBoolean("flashlight_pulse_enabled", false)
-        if (!pulseEnabled) return
+        if (!ignoreChecks) {
+            val pulseEnabled = prefs.getBoolean("flashlight_pulse_enabled", false)
+            if (!pulseEnabled) return
 
-        val faceDownOnly = prefs.getBoolean("flashlight_pulse_facedown_only", true)
-        if (faceDownOnly && !isProximityBlocked) return
+            val faceDownOnly = prefs.getBoolean("flashlight_pulse_facedown_only", true)
+            if (faceDownOnly && !isProximityBlocked) return
+        }
 
         val cameraId = getCameraId() ?: return
 
@@ -358,7 +363,8 @@ class FlashlightHandler(
             flashlightJob?.cancel()
             flashlightJob = scope.launch {
                 val maxLevel = FlashlightUtil.getMaxLevel(service, cameraId)
-                val targetPulseLevel = (maxLevel * 0.2f).toInt().coerceAtLeast(1)
+                val pulseIntensity = prefs.getFloat("flashlight_pulse_max_intensity", 0.5f)
+                val targetPulseLevel = (maxLevel * pulseIntensity).toInt().coerceAtLeast(1)
 
                 isInternalToggle = true
 
