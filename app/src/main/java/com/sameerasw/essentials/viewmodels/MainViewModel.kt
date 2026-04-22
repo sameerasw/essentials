@@ -984,12 +984,7 @@ class MainViewModel : ViewModel() {
     }
 
     private fun startBatteryNotificationService(context: Context) {
-        val intent = Intent(context, com.sameerasw.essentials.services.BatteryNotificationService::class.java)
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            context.startForegroundService(intent)
-        } else {
-            context.startService(intent)
-        }
+        com.sameerasw.essentials.utils.ServiceUtils.startRequiredServices(context)
     }
 
     private fun stopBatteryNotificationService(context: Context) {
@@ -1400,24 +1395,7 @@ class MainViewModel : ViewModel() {
     }
 
     private fun updateAppDetectionService(context: Context) {
-        val intent = Intent(context, com.sameerasw.essentials.services.AppDetectionService::class.java)
-        
-        val hasAppAutomations = com.sameerasw.essentials.domain.diy.DIYRepository.automations.value.any { it.isEnabled && it.type == com.sameerasw.essentials.domain.diy.Automation.Type.APP }
-        val shouldRun = isUseUsageAccess.value && (isAppLockEnabled.value || isDynamicNightLightEnabled.value || isHideGestureBarOnLauncherEnabled.value || hasAppAutomations)
-        
-        if (shouldRun) {
-            try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    context.startForegroundService(intent)
-                } else {
-                    context.startService(intent)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        } else {
-            context.stopService(intent)
-        }
+        com.sameerasw.essentials.utils.ServiceUtils.startRequiredServices(context)
     }
 
     val isLikeSongToastEnabled = mutableStateOf(false)

@@ -41,6 +41,7 @@ class EssentialsApp : Application() {
         com.sameerasw.essentials.domain.diy.DIYRepository.init(this)
         com.sameerasw.essentials.services.automation.AutomationManager.init(this)
         com.sameerasw.essentials.services.CalendarSyncManager.init(this)
+        com.sameerasw.essentials.utils.ServiceUtils.startRequiredServices(this)
 
         initSentry()
 
