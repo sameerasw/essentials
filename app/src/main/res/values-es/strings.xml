@@ -546,7 +546,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="perm_shizuku_grant_title">Conceder permiso</string>
     <string name="perm_shizuku_grant_desc">Requerido para ejecutar comandos de ahorro de energía mientras Maps está navegando.</string>
     <string name="req_shizuku">Requiere Shizuku o Root</string>
-    <string name="perm_root_title">Acceso raíz</string>
+    <string name="perm_root_title">Acceso Root</string>
     <string name="perm_root_desc">Permisos necesarios para acciones del sistema utilizando privilegios de raíz.</string>
     <string name="perm_notif_listener_title">Servicio de notificaciones</string>
     <string name="perm_notif_listener_desc_maps">Requiere acceso al servicio de notificaciones para supervisar el estado de navegación de Google Maps y activar el ahorro de energía cuando no se esté navegando.</string>
