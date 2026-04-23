@@ -64,8 +64,8 @@
     <string name="feat_ambient_music_glance_desc">Ein Blick auf aktive Medien auf dem AOD</string>
     <string name="ambient_glance_docked_mode_title">Dock-Modus</string>
     <string name="ambient_glance_docked_mode_desc">Behalte das Overlay dauerhaft auf dem AOD, während Musik spielt</string>
-    <string name="ambient_glance_random_shapes_title">Random shapes</string>
-    <string name="ambient_glance_random_shapes_desc">Use various Material 3 shapes for the album art</string>
+    <string name="ambient_glance_random_shapes_title">Zufällige Formen</string>
+    <string name="ambient_glance_random_shapes_desc">Nutze verschiedene Material 3 Formen für das Musikcover</string>
     <string name="feat_notification_glance_title">Blick auf die Benachrichtigungen</string>
     <string name="feat_notification_glance_desc">AOD eingeschaltet lassen, solange Benachrichtigungen ausstehen</string>
     <string name="notification_glance_same_as_lighting_title">Dieselben Apps wie beim Benachrichtigungslicht</string>
@@ -164,7 +164,7 @@
     <string name="flashlight_pulse_title">Taschenlampenimpuls</string>
     <string name="flashlight_pulse_facedown_title">Nur, wenn das Handy umgedreht ist</string>
     <string name="flashlight_pulse_same_as_lighting_title">Dieselben Apps wie beim Benachrichtigungslicht</string>
-    <string name="flashlight_pulse_max_brightness">Max brightness</string>
+    <string name="flashlight_pulse_max_brightness">Maximale Helligkeit</string>
     <string name="flashlight_pulse_preview">Preview pulse</string>
     <string name="settings_section_style">Stil</string>
     <string name="notification_lighting_stroke_adjustment_section">Aufleuchten anpassen</string>
@@ -261,7 +261,7 @@
     <string name="warning_title">⚠️ WARNUNG</string>
     <string name="screen_locked_security_auth_enable">Authentifiziere dich, um Sicherheit bei Bildschirmsperre zu aktivieren</string>
     <string name="screen_locked_security_auth_disable">Authentifiziere dich, um Sicherheit bei Bildschirmsperre zu deaktivieren</string>
-    <string name="screen_locked_security_desc">Disable quick setting tiles when the device is locked</string>
+    <string name="screen_locked_security_desc">Blockiere Quick Settings teile, wenn das Gerät gesperrt ist</string>
     <string name="search_disable_qs_locked_title">Deaktiviere gesperrte Schnelleinstellungen</string>
     <string name="search_disable_qs_locked_desc">Verhindert, dass die Schnelleinstellungen angezeigt werden, wenn das Gerät gesperrt ist</string>
     <!-- Sound Mode -->
@@ -329,12 +329,12 @@
     <string name="smart_data_desc">Verstecke mobile Daten in bestimmten Modi</string>
     <string name="action_reset_all_icons">Alle Icons zurücksetzen</string>
     <string name="status_bar_section_advanced">Weitere Einstellungen</string>
-    <string name="stb_advanced_flags_title">Advanced (Requires Shizuku/Root)</string>
-    <string name="hide_all_system_icons_title">Hide all system icons</string>
+    <string name="stb_advanced_flags_title">Fortgeschritten (Benötigt Shizuku/Root)</string>
+    <string name="hide_all_system_icons_title">Verstecke alle System Icons</string>
     <string name="hide_all_system_icons_desc">Clear all non-notification icons from the status bar</string>
-    <string name="hide_system_icons_locked_only_title">Only hide system icons when locked</string>
-    <string name="hide_system_icons_locked_only_desc">Hides the status bar system icons when the device is locked and restores them upon unlock</string>
-    <string name="hide_clock_title">Hide clock</string>
+    <string name="hide_system_icons_locked_only_title">Verstecke System Icons, nur wenn gesperrt</string>
+    <string name="hide_system_icons_locked_only_desc">Versteckt die Statusleisten Symbole, wenn das Gerät gesperrt ist und zeigt diese nach dem entsperren wieder an</string>
+    <string name="hide_clock_title">Verstecke die Uhr</string>
     <string name="hide_clock_desc">Completely remove the clock from the status bar</string>
     <string name="hide_notification_icons_title">Hide notifications</string>
     <string name="hide_notification_icons_desc">Hide all incoming notification icons</string>
@@ -667,9 +667,9 @@
     <string name="desc_auto_rotate">Automatically rotate the screen when the device is turned</string>
     <string name="label_screen_timeout">Screen timeout</string>
     <string name="desc_screen_timeout">How long the screen stays on before turning off automatically</string>
-    <string name="unit_seconds">%d seconds</string>
+    <string name="unit_seconds">%d Sekunden</string>
     <string name="unit_minute">1 minute</string>
-    <string name="unit_minutes">%d minutes</string>
+    <string name="unit_minutes">%d Minuten</string>
     <string name="action_restart_systemui">Oberfläche Neustarten</string>
     <string name="desc_restart_systemui">Kills and restarts SystemUI process to apply some changes immediately</string>
     <string name="msg_error_load_release_notes">Die Änderungshinweise konnten nicht geladen werden</string>
@@ -749,9 +749,9 @@
     <string name="diy_trigger_charger_disconnected">Ladegerät getrennt</string>
     <string name="diy_trigger_schedule">Zeitplan</string>
     <string name="diy_state_time_period">Zeitraum</string>
-    <string name="diy_time_selection_title">Select Time</string>
+    <string name="diy_time_selection_title">Zeit Auswählen</string>
     <string name="diy_time_range_selection_title">Select Time Range</string>
-    <string name="diy_start_time_label">Start Time</string>
+    <string name="diy_start_time_label">Start Zeit</string>
     <string name="diy_end_time_label">End Time</string>
     <string name="diy_repeat_days_label">Repeat on</string>
     <string name="diy_state_charging">Lädt auf</string>
@@ -1272,7 +1272,7 @@
     <string name="label_transition_animation_scale">Übergangsanimationsfaktor</string>
     <string name="label_window_animation_scale">Fensteranimationsfaktor</string>
     <string name="about_desc_text_animations">Adjust system-wide font scale, weight, and animation speeds. Note that some settings may require advanced permissions or a device reboot for certain apps to reflect changes. \n\nAdditional shizuku or root permission may be necessary for scale adjustments</string>
-    <string name="feat_aod_force_turn_off_title">Force turn off AOD</string>
+    <string name="feat_aod_force_turn_off_title">Zwingen das AOD auszuschalten</string>
     <string name="feat_aod_force_turn_off_desc">Force turn off the AOD when no notifications. Requires accessibility permission.</string>
     <string name="feat_auto_accessibility_title">Auto accessibility</string>
     <string name="feat_auto_accessibility_desc">Automatically grants the accessibility permission on app launch if missing using WRITE_SECURE_SETTINGS.</string>
@@ -1307,9 +1307,9 @@
     <string name="prank_reveal_desc">Nur ein kleiner Scherz, Essentials ist und wird immer kostenlos und Open Source bleiben. Viel Spaß! (っ◕‿◕)っ</string>
     <string name="notification_lighting_style_system">System</string>
     <string name="notification_lighting_system_mode_title">Ripple Animation</string>
-    <string name="notification_lighting_system_mode_charging_ripple">Bottom</string>
-    <string name="notification_lighting_system_mode_auth_ripple">Center</string>
-    <string name="notification_lighting_system_mode_custom_ripple">Custom</string>
-    <string name="msg_shizuku_root_required_system_lighting">Shizuku or Root permission is required for System lighting effects</string>
+    <string name="notification_lighting_system_mode_charging_ripple">Unten</string>
+    <string name="notification_lighting_system_mode_auth_ripple">Mitte</string>
+    <string name="notification_lighting_system_mode_custom_ripple">Eigen</string>
+    <string name="msg_shizuku_root_required_system_lighting">Shizuku oder Root wird benötigt für System licht Effekte</string>
     <string name="notification_lighting_system_disclaimer">Made for Google Pixel. Might not be available on other devices.</string>
 </resources>
