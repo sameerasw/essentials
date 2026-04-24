@@ -54,6 +54,7 @@
     <string name="action_ai_assistant">Asystent AI</string>
     <string name="action_take_screenshot">Zrób zrzut ekranu</string>
     <string name="action_cycle_sound_modes">Cykliczne tryby dźwięku</string>
+    <string name="action_circle_to_search">Circle to Search</string>
     <string name="action_like_song">Jak aktualna piosenka</string>
     <string name="like_song_settings_title">Podobnie jak ustawienia utworu</string>
     <string name="like_song_settings_desc">Ta funkcja wymaga dostępu do powiadomień, aby wykryć aktualnie odtwarzane multimedia i wywołać podobną akcję. Włącz tę opcję poniżej.</string>
@@ -63,6 +64,8 @@
     <string name="feat_ambient_music_glance_desc">Spójrz na multimedia na AOD</string>
     <string name="ambient_glance_docked_mode_title">Tryb zadokowany</string>
     <string name="ambient_glance_docked_mode_desc">Zachowaj widoczność nakładki przez czas nieokreślony podczas odtwarzania muzyki na AOD</string>
+    <string name="ambient_glance_random_shapes_title">Random shapes</string>
+    <string name="ambient_glance_random_shapes_desc">Use various Material 3 shapes for the album art</string>
     <string name="feat_notification_glance_title">Rzut powiadomienia</string>
     <string name="feat_notification_glance_desc">Pozostaw funkcję AOD włączoną, gdy powiadomienia są oczekujące</string>
     <string name="notification_glance_same_as_lighting_title">Te same aplikacje, co oświetlenie powiadomień</string>
@@ -161,6 +164,8 @@
     <string name="flashlight_pulse_title">Impuls latarki</string>
     <string name="flashlight_pulse_facedown_title">Tylko twarzą w dół</string>
     <string name="flashlight_pulse_same_as_lighting_title">Te same aplikacje, co oświetlenie powiadomień</string>
+    <string name="flashlight_pulse_max_brightness">Max brightness</string>
+    <string name="flashlight_pulse_preview">Preview pulse</string>
     <string name="settings_section_style">Styl</string>
     <string name="notification_lighting_stroke_adjustment_section">Regulacja skoku</string>
     <string name="notification_lighting_corner_radius_title">Promień narożnika</string>
@@ -253,14 +258,10 @@
     <!-- Screen Locked Security -->
     <string name="screen_locked_security_title">Bezpieczeństwo z blokadą ekranu</string>
     <string name="screen_locked_security_dialog_title">Zabezpieczenia z blokadą ekranu</string>
+    <string name="warning_title">⚠️UWAGA</string>
     <string name="screen_locked_security_auth_enable">Uwierzytelnij, aby włączyć zabezpieczenie z blokadą ekranu</string>
     <string name="screen_locked_security_auth_disable">Uwierzytelnij, aby wyłączyć zabezpieczenie z blokadą ekranu</string>
-    <string name="warning_title">⚠️UWAGA</string>
-    <string name="screen_locked_security_warning_text">Ta funkcja nie jest niezawodna. Mogą wystąpić przypadki Edge, w których ktoś nadal będzie mógł wchodzić w interakcję z kafelkiem. \nPamiętaj też, że Android zawsze pozwoli na wymuszone ponowne uruchomienie, a Pixels zawsze pozwoli na wyłączenie urządzenia również z poziomu ekranu blokady.</string>
-    <string name="screen_locked_security_airplane_warning">Pamiętaj, aby usunąć kafelek trybu samolotowego z szybkich ustawień, ponieważ nie można temu zapobiec, ponieważ nie otwiera okna dialogowego.</string>
-    <string name="screen_locked_security_description">Po włączeniu panel Szybkich ustawień zostanie natychmiast zamknięty, a urządzenie zostanie zablokowane, jeśli ktoś spróbuje wejść w interakcję z kafelkami internetowymi, gdy urządzenie jest zablokowane. \n\n Spowoduje to również wyłączenie odblokowania biometrycznego, aby zapobiec dalszemu nieautoryzowanemu dostępowi. Po zablokowaniu skala animacji zostanie zmniejszona do 0,1x, aby jeszcze bardziej utrudnić interakcję.</string>
-    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
-    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
+    <string name="screen_locked_security_desc">Disable quick setting tiles when the device is locked</string>
     <string name="search_disable_qs_locked_title">Disable QS Locked</string>
     <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
@@ -328,6 +329,23 @@
     <string name="smart_data_desc">Ukryj mobilną transmisję danych w niektórych trybach</string>
     <string name="action_reset_all_icons">Zresetuj wszystkie ikony</string>
     <string name="status_bar_section_advanced">Więcej ustawień</string>
+    <string name="stb_advanced_flags_title">Advanced (Requires Shizuku/Root)</string>
+    <string name="hide_all_system_icons_title">Hide all system icons</string>
+    <string name="hide_all_system_icons_desc">Clear all non-notification icons from the status bar</string>
+    <string name="hide_system_icons_locked_only_title">Only hide system icons when locked</string>
+    <string name="hide_system_icons_locked_only_desc">Hides the status bar system icons when the device is locked and restores them upon unlock</string>
+    <string name="hide_clock_title">Hide clock</string>
+    <string name="hide_clock_desc">Completely remove the clock from the status bar</string>
+    <string name="hide_notification_icons_title">Hide notifications</string>
+    <string name="hide_notification_icons_desc">Hide all incoming notification icons</string>
+    <string name="feat_hide_gesture_bar_title">Hide gesture bar</string>
+    <string name="feat_hide_gesture_bar_desc">Hide the navigation pill at the bottom</string>
+    <string name="feat_hide_gesture_bar_on_launcher_title">Show on launcher</string>
+    <string name="feat_hide_gesture_bar_on_launcher_desc">Dynamically show the gesture bar only when on the home screen</string>
+    <string name="feat_circle_to_search_gesture_title">Circle to Search gesture</string>
+    <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
+    <string name="feat_other_customizations_title">Other customizations</string>
+    <string name="feat_other_customizations_desc">Additional system tweaks and modifications</string>
     <string name="status_bar_icons_disclaimer">Należy pamiętać, że wdrożenie tych opcji może zależeć od producenta OEM, a niektóre mogą w ogóle nie działać.</string>
     <!-- Network Type Picker -->
     <string name="network_type_other">Inny</string>
@@ -390,7 +408,6 @@
     <string name="feat_dynamic_night_light_title">Dynamiczne światło nocne</string>
     <string name="feat_dynamic_night_light_desc">Przełącz światło nocne na podstawie aplikacji</string>
     <string name="feat_screen_locked_security_title">Bezpieczeństwo z blokadą ekranu</string>
-    <string name="feat_screen_locked_security_desc">Zapobiegaj kontroli sieci</string>
     <string name="feat_app_lock_title">Blokada aplikacji</string>
     <string name="feat_app_lock_desc">Bezpieczne aplikacje za pomocą danych biometrycznych</string>
     <string name="feat_freeze_title">Zamrażać</string>
@@ -640,6 +657,21 @@
     <string name="action_check_whats_new">Check What\'s New?</string>
     <string name="welcome_back_title">Welcome back to Essentials</string>
     <string name="action_see_whats_new">See what\'s new</string>
+    <string name="label_mode_default">Default</string>
+    <string name="label_mode_glove">Glove mode</string>
+    <string name="tile_scale_animations">Glove Mode</string>
+    <string name="about_desc_scale_animations_tile">Quickly toggle between Default and Glove mode UI profiles</string>
+    <string name="label_increase_touch_sensitivity">Increase touch sensitivity</string>
+    <string name="desc_increase_touch_sensitivity">Improve touch screen responsiveness when using gloves or screen protectors</string>
+    <string name="label_auto_rotate">Auto rotate</string>
+    <string name="desc_auto_rotate">Automatically rotate the screen when the device is turned</string>
+    <string name="label_screen_timeout">Screen timeout</string>
+    <string name="desc_screen_timeout">How long the screen stays on before turning off automatically</string>
+    <string name="unit_seconds">%d seconds</string>
+    <string name="unit_minute">1 minute</string>
+    <string name="unit_minutes">%d minutes</string>
+    <string name="action_restart_systemui">Restart SystemUI</string>
+    <string name="desc_restart_systemui">Kills and restarts SystemUI process to apply some changes immediately</string>
     <string name="msg_error_load_release_notes">Couldn\'t load the release note</string>
     <string name="action_view_on_web">View on web</string>
     <string name="action_done">Zrobione</string>
@@ -1273,4 +1305,11 @@
     <string name="prank_button_premium">What\'s in Premium?</string>
     <string name="prank_reveal_title">April Fools!</string>
     <string name="prank_reveal_desc">Just kidding, Essentials is and will always be free and open source. Enjoy! (っ◕‿◕)っ</string>
+    <string name="notification_lighting_style_system">System</string>
+    <string name="notification_lighting_system_mode_title">Ripple Animation</string>
+    <string name="notification_lighting_system_mode_charging_ripple">Bottom</string>
+    <string name="notification_lighting_system_mode_auth_ripple">Center</string>
+    <string name="notification_lighting_system_mode_custom_ripple">Custom</string>
+    <string name="msg_shizuku_root_required_system_lighting">Shizuku or Root permission is required for System lighting effects</string>
+    <string name="notification_lighting_system_disclaimer">Made for Google Pixel. Might not be available on other devices.</string>
 </resources>

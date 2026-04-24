@@ -62,7 +62,7 @@ object ShizukuUtils {
         try {
             val process = service.newProcess(arrayOf("sh", "-c", command), null, "/")
             process?.waitFor()
-        } catch (e: RemoteException) {
+        } catch (@Suppress("UNUSED_PARAMETER") e: RemoteException) {
             // Command execution failed
         }
     }
@@ -97,7 +97,6 @@ object ShizukuUtils {
                 null
             }
         } catch (e: Exception) {
-            e.printStackTrace()
             null
         }
     }

@@ -14,6 +14,7 @@ import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import com.sameerasw.essentials.utils.OverlayHelper
+import com.sameerasw.essentials.utils.ShellUtils
 
 class NotificationLightingHandler(
     private val service: AccessibilityService
@@ -42,6 +43,7 @@ class NotificationLightingHandler(
     private var sweepPosition: String = "CENTER"
     private var sweepThickness: Float = 8f
     private var randomShapes: Boolean = true
+    private var systemLightingMode: Int = 0
 
     private var isAmbientShowLockScreen: Boolean = false
     private var isAmbientDisplayRequested: Boolean = false
@@ -124,6 +126,7 @@ class NotificationLightingHandler(
         sweepPosition = intent.getStringExtra("sweep_position") ?: "CENTER"
         sweepThickness = intent.getFloatExtra("sweep_thickness", 8f)
         randomShapes = intent.getBooleanExtra("random_shapes", false)
+        systemLightingMode = intent.getIntExtra("system_lighting_mode", 0)
         isInterrupted = false
     }
 
@@ -166,6 +169,13 @@ class NotificationLightingHandler(
     }
 
     private fun showNotificationLighting() {
+        if (edgeLightingStyle == NotificationLightingStyle.SYSTEM) {
+            triggerSystemLighting()
+            currentPackageShowing = null
+            processQueue()
+            return
+        }
+
         // Optimization check is now handled by processQueue and currentPackageShowing
         windowManager = service.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val powerManager = service.getSystemService(Context.POWER_SERVICE) as PowerManager
@@ -345,5 +355,27 @@ class NotificationLightingHandler(
                 processQueue()
             }
         }
+    }
+
+    private fun triggerSystemLighting() {
+        if (!ShellUtils.hasPermission(service)) return
+
+        val wm = service.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val metrics = android.util.DisplayMetrics()
+        wm.defaultDisplay.getRealMetrics(metrics)
+        val centerX = metrics.widthPixels / 2
+        val centerY = metrics.heightPixels / 2
+
+        val command = when (systemLightingMode) {
+            0 -> "cmd statusbar charging-ripple"
+            1 -> "cmd statusbar auth-ripple custom $centerX $centerY"
+            else -> {
+                val posX = (indicatorX / 100f * metrics.widthPixels).toInt()
+                val posY = (indicatorY / 100f * metrics.heightPixels).toInt()
+                "cmd statusbar auth-ripple custom $posX $posY"
+            }
+        }
+
+        ShellUtils.runCommand(service, command)
     }
 }

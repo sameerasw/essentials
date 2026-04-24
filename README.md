@@ -61,7 +61,7 @@ Essential tools, mods and workarounds for Pixels and other Androids
 
 #### Security and Privacy
 
-- Screen locked security - Prevent network tile access when locked
+- Screen locked security - Disable QS tiles while locked
 - App lock
 
 #### Notifications and Alerts
@@ -76,6 +76,7 @@ Essential tools, mods and workarounds for Pixels and other Androids
 - Link actions - Intercept and share links from default apps
 - Button remap
 - Keyboard
+- Circle to search automations
 
 #### Widgets
 
@@ -84,11 +85,13 @@ Essential tools, mods and workarounds for Pixels and other Androids
 
 #### Display
 
-- Customize statusbar icons
+- Customize statusbar icons and modules
 - Dynamic Always on Display
 - Caffeinate to keep screen awake
 - Dynamic night light - App based night light
 - Scale and animation adjustments
+- Glove mode
+- Hide gesture bar
 
 #### Watch
 
@@ -141,7 +144,8 @@ Essential tools, mods and workarounds for Pixels and other Androids
 - Android 8.0 or higher (Feature support may vary)
 - App permissions are optional, Grant necessary permissions for each feature
 - Targetted for Google Pixel devices extending to other Androids
-- Tested on Google Pixel 7 (Android 17 beta program)
+- Tested on Google Pixel 7 (Android 17 beta program).
+- > Some features and functionalities might not work as expected on other OEMs.
 
 # Screenshots
 

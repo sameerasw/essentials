@@ -802,6 +802,17 @@
                 android:name="autoStoreLocales"
                 android:value="true" />
         </service>
+        <service
+            android:name=".services.tiles.ScaleAnimationsTileService"
+            android:exported="true"
+            android:label="@string/tile_scale_animations"
+            android:icon="@drawable/rounded_settings_24"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

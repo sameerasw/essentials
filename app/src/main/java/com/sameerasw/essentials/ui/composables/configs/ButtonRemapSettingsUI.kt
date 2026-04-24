@@ -421,6 +421,12 @@ fun ButtonRemapSettingsUI(
                         hasSettings = true,
                         onSettingsClick = { showLikeSongOptions.value = true }
                     )
+                    RemapActionItem(
+                        title = stringResource(R.string.action_circle_to_search),
+                        isSelected = currentAction == "Circle to Search",
+                        onClick = { onActionSelected("Circle to Search") },
+                        iconRes = R.drawable.frame_inspect_24px,
+                    )
                     if (selectedScreenTab == 1) {
                         RemapActionItem(
                             title = stringResource(R.string.action_take_screenshot),

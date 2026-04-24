@@ -18,7 +18,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.runtime.Composable
@@ -35,10 +39,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
@@ -50,10 +56,16 @@ import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.pickers.GlowSidesPicker
 import com.sameerasw.essentials.ui.components.pickers.NotificationLightingColorModePicker
 import com.sameerasw.essentials.ui.components.pickers.NotificationLightingStylePicker
+import com.sameerasw.essentials.ui.components.pickers.NotificationLightingSystemModePicker
 import com.sameerasw.essentials.ui.components.sheets.AppSelectionSheet
+import com.sameerasw.essentials.ui.components.sheets.PermissionItem
+import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
+import android.content.Intent
+import android.net.Uri
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -70,6 +82,7 @@ fun NotificationLightingSettingsUI(
 
     // App selection Logic
     var showAppSelectionSheet by remember { mutableStateOf(false) }
+    var showPermissionsSheet by remember { mutableStateOf(false) }
 
     // Corner radius state
 
@@ -135,6 +148,25 @@ fun NotificationLightingSettingsUI(
             )
         }
 
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // App Selection Sheet Button
+        Button(
+            onClick = {
+                HapticUtil.performVirtualKeyHaptic(view)
+                showAppSelectionSheet = true
+            },
+            modifier = Modifier.fillMaxWidth().height(64.dp)
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Icon(painter = painterResource(id = R.drawable.rounded_apps_24), contentDescription = "Apps")
+                Text(stringResource(R.string.action_select_apps))
+            }
+        }
+
 
         // Style Picker
         Text(
@@ -147,13 +179,78 @@ fun NotificationLightingSettingsUI(
         NotificationLightingStylePicker(
             selectedStyle = viewModel.notificationLightingStyle.value,
             onStyleSelected = { style ->
+                if (style == NotificationLightingStyle.SYSTEM && !ShellUtils.hasPermission(context)) {
+                    showPermissionsSheet = true
+                    return@NotificationLightingStylePicker
+                }
                 viewModel.setNotificationLightingStyle(style, context)
                 viewModel.triggerNotificationLighting(context)
             },
         )
 
-        // Stroke Adjustment Section (For STROKE style)
         val style = viewModel.notificationLightingStyle.value
+
+        // System Mode Sector (Only for SYSTEM style)
+        if (style == NotificationLightingStyle.SYSTEM) {
+            Text(
+                text = stringResource(R.string.notification_lighting_system_mode_title),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            NotificationLightingSystemModePicker(
+                selectedMode = viewModel.notificationLightingSystemMode.intValue,
+                onModeSelected = { mode ->
+                    viewModel.setNotificationLightingSystemMode(mode, context)
+                    viewModel.triggerNotificationLightingSystem(context)
+                }
+            )
+
+            // Show placement sliders for custom system ripple
+            if (viewModel.notificationLightingSystemMode.intValue == 2) {
+                Text(
+                    text = stringResource(R.string.notification_lighting_indicator_adjustment_section),
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                RoundedCardContainer(modifier = Modifier) {
+                    ConfigSliderItem(
+                        title = stringResource(R.string.notification_lighting_h_pos_title),
+                        value = indicatorX,
+                        onValueChange = { newValue ->
+                            indicatorX = newValue
+                            HapticUtil.performSliderHaptic(view)
+                            viewModel.triggerNotificationLightingSystem(context)
+                        },
+                        valueRange = 0f..100f,
+                        valueFormatter = { "%.1f%%".format(it) },
+                        onValueChangeFinished = {
+                            viewModel.saveNotificationLightingIndicatorX(context, indicatorX)
+                        }
+                    )
+
+                    ConfigSliderItem(
+                        title = stringResource(R.string.notification_lighting_v_pos_title),
+                        value = indicatorY,
+                        onValueChange = { newValue ->
+                            indicatorY = newValue
+                            HapticUtil.performSliderHaptic(view)
+                            viewModel.triggerNotificationLightingSystem(context)
+                        },
+                        valueRange = 0f..100f,
+                        valueFormatter = { "%.1f%%".format(it) },
+                        onValueChangeFinished = {
+                            viewModel.saveNotificationLightingIndicatorY(context, indicatorY)
+                        }
+                    )
+                }
+            }
+                    }
+
+        // Stroke Adjustment Section (For STROKE style)
         if (style == NotificationLightingStyle.STROKE) {
             Text(
                 text = stringResource(R.string.notification_lighting_stroke_adjustment_section),
@@ -493,26 +590,27 @@ fun NotificationLightingSettingsUI(
 
 
         // Color Mode section
-        Text(
-            text = stringResource(R.string.settings_section_color_mode),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        RoundedCardContainer(
-            modifier = Modifier
-        ) {
-            NotificationLightingColorModePicker(
-                selectedMode = viewModel.notificationLightingColorMode.value,
-                onModeSelected = { mode ->
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    viewModel.setNotificationLightingColorMode(mode, context)
-                    viewModel.triggerNotificationLighting(context)
-                }
+        if (style != NotificationLightingStyle.SYSTEM) {
+            Text(
+                text = stringResource(R.string.settings_section_color_mode),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
-            if (viewModel.notificationLightingColorMode.value == NotificationLightingColorMode.CUSTOM) {
+            RoundedCardContainer(
+                modifier = Modifier
+            ) {
+                NotificationLightingColorModePicker(
+                    selectedMode = viewModel.notificationLightingColorMode.value,
+                    onModeSelected = { mode ->
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.setNotificationLightingColorMode(mode, context)
+                        viewModel.triggerNotificationLighting(context)
+                    }
+                )
+
+                if (viewModel.notificationLightingColorMode.value == NotificationLightingColorMode.CUSTOM) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -641,56 +739,46 @@ fun NotificationLightingSettingsUI(
                 }
             }
         }
+    }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // App Selection Sheet Button
-        Button(
-            onClick = {
-                HapticUtil.performVirtualKeyHaptic(view)
-                showAppSelectionSheet = true
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(stringResource(R.string.action_select_apps))
-        }
-
-        Text(
-            text = stringResource(R.string.settings_section_ambient_display),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(start = 16.dp, top = 16.dp),
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        Text(
-            text = stringResource(R.string.ambient_display_hint),
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        RoundedCardContainer {
-            IconToggleItem(
-                iconRes = R.drawable.rounded_nightlight_24,
-                title = stringResource(R.string.ambient_display_title),
-                description = stringResource(R.string.ambient_display_desc),
-                isChecked = viewModel.isAmbientDisplayEnabled.value,
-                onCheckedChange = { checked ->
-                    viewModel.setAmbientDisplayEnabled(checked, context)
-                },
-                modifier = Modifier.highlight(highlightSetting == "ambient_display")
+        if (style != NotificationLightingStyle.SYSTEM) {
+            Text(
+                text = stringResource(R.string.settings_section_ambient_display),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(start = 16.dp, top = 16.dp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            if (viewModel.isAmbientDisplayEnabled.value) {
+
+            Text(
+                text = stringResource(R.string.ambient_display_hint),
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            RoundedCardContainer {
                 IconToggleItem(
-                    iconRes = R.drawable.rounded_mobile_lock_portrait_24,
-                    title = stringResource(R.string.ambient_show_lock_screen_title),
-                    description = stringResource(R.string.ambient_show_lock_screen_desc),
-                    isChecked = viewModel.isAmbientShowLockScreenEnabled.value,
+                    iconRes = R.drawable.rounded_nightlight_24,
+                    title = stringResource(R.string.ambient_display_title),
+                    description = stringResource(R.string.ambient_display_desc),
+                    isChecked = viewModel.isAmbientDisplayEnabled.value,
                     onCheckedChange = { checked ->
-                        viewModel.setAmbientShowLockScreenEnabled(checked, context)
+                        viewModel.setAmbientDisplayEnabled(checked, context)
                     },
-                    modifier = Modifier.highlight(highlightSetting == "ambient_show_lock_screen")
+                    modifier = Modifier.highlight(highlightSetting == "ambient_display")
                 )
+                if (viewModel.isAmbientDisplayEnabled.value) {
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_mobile_lock_portrait_24,
+                        title = stringResource(R.string.ambient_show_lock_screen_title),
+                        description = stringResource(R.string.ambient_show_lock_screen_desc),
+                        isChecked = viewModel.isAmbientShowLockScreenEnabled.value,
+                        onCheckedChange = { checked ->
+                            viewModel.setAmbientShowLockScreenEnabled(checked, context)
+                        },
+                        modifier = Modifier.highlight(highlightSetting == "ambient_show_lock_screen")
+                    )
+                }
             }
         }
 
@@ -717,7 +805,39 @@ fun NotificationLightingSettingsUI(
             )
         }
 
+        if (showPermissionsSheet) {
+            PermissionsBottomSheet(
+                onDismissRequest = { showPermissionsSheet = false },
+                featureTitle = R.string.notification_lighting_style_system,
+                permissions = listOf(
+                    PermissionItem(
+                        iconRes = R.drawable.rounded_adb_24,
+                        title = R.string.perm_shizuku_title,
+                        description = R.string.perm_shizuku_desc,
+                        dependentFeatures = listOf(R.string.notification_lighting_style_system),
+                        actionLabel = R.string.perm_shizuku_install_action,
+                        action = {
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/thedjchi/Shizuku"))
+                            context.startActivity(intent)
+                        },
+                        secondaryActionLabel = R.string.action_refresh,
+                        secondaryAction = { viewModel.check(context) },
+                        isGranted = viewModel.isShizukuPermissionGranted.value
+                    )
+                )
+            )
+        }
 
+        if (style == NotificationLightingStyle.SYSTEM) {
+            Text(
+                text = stringResource(R.string.notification_lighting_system_disclaimer),
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
     }
 }
 
@@ -725,7 +845,7 @@ fun NotificationLightingSettingsUI(
 fun ColorCircle(
     color: Color,
     isSelected: Boolean,
-    size: androidx.compose.ui.unit.Dp = 40.dp,
+    size: Dp = 40.dp,
     onClick: () -> Unit
 ) {
     Box(

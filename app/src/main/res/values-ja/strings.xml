@@ -54,6 +54,7 @@
     <string name="action_ai_assistant">アシスタント</string>
     <string name="action_take_screenshot">スクリーンショット</string>
     <string name="action_cycle_sound_modes">サイレントモードを切り替え</string>
+    <string name="action_circle_to_search">かこって検索</string>
     <string name="action_like_song">再生中の曲をいいね</string>
     <string name="like_song_settings_title">いいね設定</string>
     <string name="like_song_settings_desc">この機能は、現在再生中のメディアを検出し「いいね」アクションをトリガーするために通知アクセスを必要とします。下記で有効にしてください。</string>
@@ -63,6 +64,8 @@
     <string name="feat_ambient_music_glance_desc">AODにメディアの情報を表示</string>
     <string name="ambient_glance_docked_mode_title">ドックモード</string>
     <string name="ambient_glance_docked_mode_desc">AODで音楽を再生している間、無期限にオーバーレイを表示します</string>
+    <string name="ambient_glance_random_shapes_title">ランダムな形</string>
+    <string name="ambient_glance_random_shapes_desc">アルバムアートにさまざまなMaterial 3の形状を使用する</string>
     <string name="feat_notification_glance_title">通知を表示</string>
     <string name="feat_notification_glance_desc">Keep AOD on while notifications are pending</string>
     <string name="notification_glance_same_as_lighting_title">通知ライトと同じアプリ</string>
@@ -161,6 +164,8 @@
     <string name="flashlight_pulse_title">ライト点滅</string>
     <string name="flashlight_pulse_facedown_title">下を向いているときのみ</string>
     <string name="flashlight_pulse_same_as_lighting_title">通知ライトと同じアプリ</string>
+    <string name="flashlight_pulse_max_brightness">最大の明るさ</string>
+    <string name="flashlight_pulse_preview">点滅をプレビュー</string>
     <string name="settings_section_style">スタイル</string>
     <string name="notification_lighting_stroke_adjustment_section">ストローク調整</string>
     <string name="notification_lighting_corner_radius_title">角の半径</string>
@@ -173,7 +178,7 @@
     <string name="notification_lighting_indicator_adjustment_section">インジケーター調整</string>
     <string name="notification_lighting_scale_title">大きさ</string>
     <string name="notification_lighting_duration_title">間隔</string>
-    <string name="notification_lighting_style_sweep">Sweep</string>
+    <string name="notification_lighting_style_sweep">スイープ</string>
     <string name="notification_lighting_sweep_position_title">位置</string>
     <string name="notification_lighting_sweep_random_shapes_title">ランダムな形</string>
     <string name="notification_lighting_sweep_thickness_title">線の太さ</string>
@@ -253,16 +258,12 @@
     <!-- Screen Locked Security -->
     <string name="screen_locked_security_title">ロック画面セキュリティ</string>
     <string name="screen_locked_security_dialog_title">ロック画面セキュリティ</string>
+    <string name="warning_title">⚠️ 警告</string>
     <string name="screen_locked_security_auth_enable">ロック画面セキュリティを有効にするための認証</string>
     <string name="screen_locked_security_auth_disable">ロック画面セキュリティを無効にするための認証</string>
-    <string name="warning_title">⚠️ 警告</string>
-    <string name="screen_locked_security_warning_text">この機能は万全ではありません。まれにタイルを操作できる可能性があります。\nまた、Androidは常に強制再起動が可能であり、Pixelではロック画面からデバイスをシャットダウンできることに注意してください。</string>
-    <string name="screen_locked_security_airplane_warning">機内モードタイルはダイアログウインドウを開かず、回避できませんので、クイック設定から必ず削除してください。</string>
-    <string name="screen_locked_security_description">有効にすると、ロック画面で誰かがインターネットタイルを操作しようとすると、クイック設定パネルがすぐに閉じられ、デバイスがロックダウンされます。\n\nこれにより、生体認証によるロック解除も無効になり、さらなる不正アクセスを防止します。ロック中はアニメーション速度が0.1倍に縮小され、操作が更に困難になります。</string>
-    <string name="disable_qs_when_locked_title">Disable QS when locked</string>
-    <string name="disable_qs_when_locked_desc">Immediately close the Quick Settings panel if someone tries to expand it while the device is locked.</string>
-    <string name="search_disable_qs_locked_title">Disable QS Locked</string>
-    <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
+    <string name="screen_locked_security_desc">デバイスがロックされているときに、クイック設定タイルを無効にする</string>
+    <string name="search_disable_qs_locked_title">クイック設定ロックオフ</string>
+    <string name="search_disable_qs_locked_desc">デバイスがロックされているときにクイック設定が展開されないようにする</string>
     <!-- Sound Mode -->
     <string name="sound_mode_reorder_title">モードの並べ替え</string>
     <string name="sound_mode_long_press_hint">長押しで切り替え</string>
@@ -328,6 +329,23 @@
     <string name="smart_data_desc">特定の通信世代でモバイルデータを非表示にします</string>
     <string name="action_reset_all_icons">全てのアイコンをリセット</string>
     <string name="status_bar_section_advanced">その他の設定</string>
+    <string name="stb_advanced_flags_title">詳細設定 (Shizuku・rootが必要)</string>
+    <string name="hide_all_system_icons_title">すべてのシステムアイコンを隠す</string>
+    <string name="hide_all_system_icons_desc">ステータスバーから通知ではないアイコンすべてを非表示にします</string>
+    <string name="hide_system_icons_locked_only_title">ロックしているときのみシステムアイコンを隠す</string>
+    <string name="hide_system_icons_locked_only_desc">デバイスがロックされている間はステータスバーのシステムアイコンを非表示にし、ロック解除時に元に戻します</string>
+    <string name="hide_clock_title">時計を隠す</string>
+    <string name="hide_clock_desc">ステータスバーから時計を完全に削除します</string>
+    <string name="hide_notification_icons_title">通知を隠す</string>
+    <string name="hide_notification_icons_desc">すべての着信や通知アイコンを非表示にする</string>
+    <string name="feat_hide_gesture_bar_title">ジェスチャーバーを隠す</string>
+    <string name="feat_hide_gesture_bar_desc">下部のナビゲーションピルを非表示にする</string>
+    <string name="feat_hide_gesture_bar_on_launcher_title">Show on launcher</string>
+    <string name="feat_hide_gesture_bar_on_launcher_desc">Dynamically show the gesture bar only when on the home screen</string>
+    <string name="feat_circle_to_search_gesture_title">Circle to Search gesture</string>
+    <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
+    <string name="feat_other_customizations_title">その他のカスタマイズ</string>
+    <string name="feat_other_customizations_desc">その他のシステムの調整と変更</string>
     <string name="status_bar_icons_disclaimer">これらのオプションの実装は機種によって異なる場合があり、一部は全く機能しない場合がありますのでご注意ください。</string>
     <!-- Network Type Picker -->
     <string name="network_type_other">その他</string>
@@ -390,7 +408,6 @@
     <string name="feat_dynamic_night_light_title">ダイナミックナイトモード</string>
     <string name="feat_dynamic_night_light_desc">アプリに応じてナイトモードを切り替えます</string>
     <string name="feat_screen_locked_security_title">ロック画面セキュリティ</string>
-    <string name="feat_screen_locked_security_desc">ネットワーク制御を防ぐ</string>
     <string name="feat_app_lock_title">アプリロック</string>
     <string name="feat_app_lock_desc">生体認証でアプリを保護</string>
     <string name="feat_freeze_title">フリーズ</string>
@@ -640,6 +657,21 @@
     <string name="action_check_whats_new">更新内容を見る</string>
     <string name="welcome_back_title">Essentialsにおかえりなさい</string>
     <string name="action_see_whats_new">新機能を見る</string>
+    <string name="label_mode_default">デフォルト</string>
+    <string name="label_mode_glove">手袋モード</string>
+    <string name="tile_scale_animations">手袋モード</string>
+    <string name="about_desc_scale_animations_tile">デフォルトと手袋モードのUIプロファイルをすばやく切り替える</string>
+    <string name="label_increase_touch_sensitivity">タッチ感度を上げる</string>
+    <string name="desc_increase_touch_sensitivity">手袋や画面保護フィルムを使用している際のタッチスクリーンの反応を改善する</string>
+    <string name="label_auto_rotate">自動回転</string>
+    <string name="desc_auto_rotate">デバイスを傾けたときに画面を自動的に回転させる</string>
+    <string name="label_screen_timeout">画面タイムアウト</string>
+    <string name="desc_screen_timeout">画面が自動的に消えるまでの時間</string>
+    <string name="unit_seconds">%d秒</string>
+    <string name="unit_minute">1分</string>
+    <string name="unit_minutes">%d分</string>
+    <string name="action_restart_systemui">システムUIを再起動</string>
+    <string name="desc_restart_systemui">システムUIプロセスを終了して再起動し、変更を直ちに反映します</string>
     <string name="msg_error_load_release_notes">Couldn\'t load the release note</string>
     <string name="action_view_on_web">View on web</string>
     <string name="action_done">完了</string>
@@ -1273,4 +1305,11 @@
     <string name="prank_button_premium">プレミアムには何が含まれていますか？</string>
     <string name="prank_reveal_title">エイプリルフール！</string>
     <string name="prank_reveal_desc">冗談ですよ。Essentialsはこれからもずっと無料かつオープンソースです。引き続きお楽しみください！(っ◕‿◕)っ</string>
+    <string name="notification_lighting_style_system">システム</string>
+    <string name="notification_lighting_system_mode_title">リップルアニメーション</string>
+    <string name="notification_lighting_system_mode_charging_ripple">下から</string>
+    <string name="notification_lighting_system_mode_auth_ripple">中央</string>
+    <string name="notification_lighting_system_mode_custom_ripple">カスタム</string>
+    <string name="msg_shizuku_root_required_system_lighting">Shizuku or Root permission is required for System lighting effects</string>
+    <string name="notification_lighting_system_disclaimer">Google Pixel専用です。他の端末ではご利用いただけない場合があります。</string>
 </resources>

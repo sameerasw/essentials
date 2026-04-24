@@ -36,9 +36,9 @@ object RootUtils {
             os.writeBytes("exit\n")
             os.flush()
             process.waitFor() == 0
-        } catch (e: IOException) {
+        } catch (@Suppress("UNUSED_PARAMETER") e: IOException) {
             false
-        } catch (e: InterruptedException) {
+        } catch (@Suppress("UNUSED_PARAMETER") e: InterruptedException) {
             false
         } finally {
             try {

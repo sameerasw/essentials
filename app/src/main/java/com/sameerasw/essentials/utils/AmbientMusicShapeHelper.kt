@@ -40,21 +40,23 @@ object AmbientMusicShapeHelper {
         MaterialShapes.Heart
     )
 
-    fun getShapePath(seed: String?, size: Float): Path {
-        return getPolygon(seed).toAndroidPath(size)
+    fun getShapePath(seed: String?, size: Float, isRandomEnabled: Boolean = true): Path {
+        return getPolygon(seed, isRandomEnabled).toAndroidPath(size)
     }
 
-    fun getRandomShapePath(size: Float): Path {
-        return getRandomPolygon().toAndroidPath(size)
+    fun getRandomShapePath(size: Float, isRandomEnabled: Boolean = true): Path {
+        return getRandomPolygon(isRandomEnabled).toAndroidPath(size)
     }
 
-    fun getPolygon(seed: String?): RoundedPolygon {
+    fun getPolygon(seed: String?, isRandomEnabled: Boolean = true): RoundedPolygon {
+        if (!isRandomEnabled) return MaterialShapes.Cookie12Sided
         val hash = seed?.hashCode() ?: 0
         val random = Random(hash.toLong())
         return allShapes[random.nextInt(allShapes.size)]
     }
 
-    fun getRandomPolygon(): RoundedPolygon {
+    fun getRandomPolygon(isRandomEnabled: Boolean = true): RoundedPolygon {
+        if (!isRandomEnabled) return MaterialShapes.Cookie12Sided
         val random = Random()
         return allShapes[random.nextInt(allShapes.size)]
     }

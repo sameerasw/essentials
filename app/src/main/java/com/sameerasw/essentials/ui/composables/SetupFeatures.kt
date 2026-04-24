@@ -371,57 +371,53 @@ fun SetupFeatures(
                 }
 
                 R.string.feat_screen_locked_security_title -> {
-                    if (!isAccessibilityEnabled) {
-                        missing.add(
-                            PermissionItem(
-                                iconRes = R.drawable.rounded_settings_accessibility_24,
-                                title = R.string.perm_accessibility_title,
-                                description = R.string.perm_accessibility_desc_common,
-                                dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
-                                actionLabel = R.string.perm_action_enable,
-                                action = {
-                                    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                    context.startActivity(intent)
-                                },
-                                isGranted = isAccessibilityEnabled
+                    if (isRootEnabled) {
+                        if (!isRootPermissionGranted) {
+                            missing.add(
+                                PermissionItem(
+                                    iconRes = R.drawable.rounded_security_24,
+                                    title = R.string.perm_root_title,
+                                    description = R.string.perm_root_desc,
+                                    dependentFeatures = listOf(R.string.feat_screen_locked_security_title),
+                                    action = {
+                                        viewModel.isRootPermissionGranted.value =
+                                            com.sameerasw.essentials.utils.RootUtils.isRootPermissionGranted()
+                                    },
+                                    isGranted = isRootPermissionGranted
+                                )
                             )
-                        )
-                    }
-                    if (!isWriteSecureSettingsEnabled) {
-                        missing.add(
-                            PermissionItem(
-                                iconRes = R.drawable.rounded_security_24,
-                                title = R.string.perm_write_secure_title,
-                                description = R.string.perm_write_secure_desc_common,
-                                dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
-                                actionLabel = R.string.perm_action_copy_adb,
-                                action = {
-                                    val adbCommand =
-                                        "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
-                                    val clipboard =
-                                        context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                                    val clip = ClipData.newPlainText("adb_command", adbCommand)
-                                    clipboard.setPrimaryClip(clip)
-                                },
-                                isGranted = isWriteSecureSettingsEnabled
+                        }
+                    } else {
+                        if (!isShizukuAvailable) {
+                            missing.add(
+                                PermissionItem(
+                                    iconRes = R.drawable.rounded_adb_24,
+                                    title = R.string.perm_shizuku_title,
+                                    description = R.string.perm_shizuku_desc,
+                                    dependentFeatures = listOf(R.string.feat_screen_locked_security_title),
+                                    action = {
+                                        val intent = Intent(
+                                            Intent.ACTION_VIEW,
+                                            "https://play.google.com/store/apps/details?id=moe.shizuku.privileged.api".toUri()
+                                        )
+                                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                        context.startActivity(intent)
+                                    },
+                                    isGranted = isShizukuAvailable
+                                )
                             )
-                        )
-                    }
-                    if (!viewModel.isDeviceAdminEnabled.value) {
-                        missing.add(
-                            PermissionItem(
-                                iconRes = R.drawable.rounded_security_24,
-                                title = R.string.perm_device_admin_title,
-                                description = R.string.perm_device_admin_desc,
-                                dependentFeatures = PermissionRegistry.getFeatures("DEVICE_ADMIN"),
-                                actionLabel = R.string.action_enable_in_settings,
-                                action = {
-                                    viewModel.requestDeviceAdmin(context)
-                                },
-                                isGranted = viewModel.isDeviceAdminEnabled.value
+                        } else if (!isShizukuPermissionGranted) {
+                            missing.add(
+                                PermissionItem(
+                                    iconRes = R.drawable.rounded_adb_24,
+                                    title = R.string.perm_shizuku_grant_title,
+                                    description = R.string.perm_shizuku_grant_desc,
+                                    dependentFeatures = listOf(R.string.feat_screen_locked_security_title),
+                                    action = { viewModel.requestShizukuPermission() },
+                                    isGranted = isShizukuPermissionGranted
+                                )
                             )
-                        )
+                        }
                     }
                 }
 
@@ -650,48 +646,60 @@ fun SetupFeatures(
                 )
             )
 
-            R.string.feat_screen_locked_security_title -> listOf(
-                PermissionItem(
-                    iconRes = R.drawable.rounded_settings_accessibility_24,
-                    title = R.string.perm_accessibility_title,
-                    description = R.string.perm_accessibility_desc_common,
-                    dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
-                    actionLabel = R.string.perm_action_enable,
-                    action = {
-                        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        context.startActivity(intent)
-                    },
-                    isGranted = isAccessibilityEnabled
-                ),
-                PermissionItem(
-                    iconRes = R.drawable.rounded_security_24,
-                    title = R.string.perm_write_secure_title,
-                    description = R.string.perm_write_secure_desc_common,
-                    dependentFeatures = PermissionRegistry.getFeatures("WRITE_SECURE_SETTINGS"),
-                    actionLabel = R.string.perm_action_copy_adb,
-                    action = {
-                        val adbCommand =
-                            "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS"
-                        val clipboard =
-                            context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                        val clip = ClipData.newPlainText("adb_command", adbCommand)
-                        clipboard.setPrimaryClip(clip)
-                    },
-                    isGranted = isWriteSecureSettingsEnabled
-                ),
-                PermissionItem(
-                    iconRes = R.drawable.rounded_security_24,
-                    title = R.string.perm_device_admin_title,
-                    description = R.string.perm_device_admin_desc,
-                    dependentFeatures = PermissionRegistry.getFeatures("DEVICE_ADMIN"),
-                    actionLabel = R.string.action_enable_in_settings,
-                    action = {
-                        viewModel.requestDeviceAdmin(context)
-                    },
-                    isGranted = viewModel.isDeviceAdminEnabled.value
-                )
-            )
+            R.string.feat_screen_locked_security_title -> {
+                val shellItems = mutableListOf<PermissionItem>()
+                if (isRootEnabled) {
+                    if (!isRootPermissionGranted) {
+                        shellItems.add(
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_security_24,
+                                title = R.string.perm_root_title,
+                                description = R.string.perm_root_desc,
+                                dependentFeatures = listOf(R.string.feat_screen_locked_security_title),
+                                action = {
+                                    viewModel.isRootPermissionGranted.value =
+                                        com.sameerasw.essentials.utils.RootUtils.isRootPermissionGranted()
+                                },
+                                isGranted = isRootPermissionGranted
+                            )
+                        )
+                    }
+                } else {
+                    if (!isShizukuAvailable) {
+                        shellItems.add(
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_adb_24,
+                                title = R.string.perm_shizuku_title,
+                                description = R.string.perm_shizuku_desc,
+                                dependentFeatures = listOf(R.string.feat_screen_locked_security_title),
+                                actionLabel = R.string.perm_shizuku_install_action,
+                                action = {
+                                    val intent = Intent(
+                                        Intent.ACTION_VIEW,
+                                        "https://play.google.com/store/apps/details?id=moe.shizuku.privileged.api".toUri()
+                                    )
+                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                    context.startActivity(intent)
+                                },
+                                isGranted = isShizukuAvailable
+                            )
+                        )
+                    } else if (!isShizukuPermissionGranted) {
+                        shellItems.add(
+                            PermissionItem(
+                                iconRes = R.drawable.rounded_adb_24,
+                                title = R.string.perm_shizuku_grant_title,
+                                description = R.string.perm_shizuku_grant_desc,
+                                dependentFeatures = listOf(R.string.feat_screen_locked_security_title),
+                                actionLabel = R.string.perm_action_grant,
+                                action = { viewModel.requestShizukuPermission() },
+                                isGranted = isShizukuPermissionGranted
+                            )
+                        )
+                    }
+                }
+                shellItems
+            }
 
             R.string.feat_app_lock_title -> listOf(
                 PermissionItem(
@@ -1189,10 +1197,14 @@ fun SetupFeatures(
                             isToggleEnabled = feature.isToggleEnabled(viewModel, context),
                             showToggle = feature.showToggle,
                             hasMoreSettings = feature.hasMoreSettings,
-                            onDisabledToggleClick = {
-                                currentFeature = feature.title
-                                showSheet = true
-                            },
+                             onDisabledToggleClick = {
+                                if (feature.id == "Screen locked security") {
+                                    feature.onClick(context, viewModel)
+                                } else {
+                                    currentFeature = feature.title
+                                    showSheet = true
+                                }
+                             },
                             description = feature.description,
                             isBeta = feature.isBeta,
                             isPinned = pinnedFeatureKeys.contains(feature.id),

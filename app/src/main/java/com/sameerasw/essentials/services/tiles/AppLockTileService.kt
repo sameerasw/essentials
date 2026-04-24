@@ -41,7 +41,7 @@ class AppLockTileService : BaseTileService() {
     override fun getTileLabel(): String = "App Lock"
 
     override fun getTileSubtitle(): String {
-        return if (qsTile.state == Tile.STATE_ACTIVE) "Enabled" else "Disabled"
+        return if (getTileState() == Tile.STATE_ACTIVE) "Enabled" else "Disabled"
     }
 
     override fun hasFeaturePermission(): Boolean {

@@ -4,6 +4,7 @@ import android.accessibilityservice.AccessibilityService
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
@@ -13,6 +14,7 @@ import com.sameerasw.essentials.domain.diy.Automation
 import com.sameerasw.essentials.domain.diy.DIYRepository
 import com.sameerasw.essentials.domain.model.AppSelection
 import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
+import com.sameerasw.essentials.utils.StatusBarManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -61,6 +63,7 @@ class AppFlowHandler(
             checkAppLock(packageName)
             checkHighlightNightLight(packageName)
             checkAppAutomations(packageName)
+            checkGestureBarAutomation(packageName)
         }
 
     }
@@ -253,5 +256,35 @@ class AppFlowHandler(
         if (packageName.lowercase().contains("camera")) return true
 
         return false
+    }
+
+    private fun checkGestureBarAutomation(packageName: String) {
+        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+        val isEnabled = prefs.getBoolean("hide_gesture_bar_on_launcher_enabled", false)
+        if (!isEnabled) return
+
+        if (isLauncher(packageName)) {
+            StatusBarManager.requestRestore(context, "GestureBarAutomation")
+        } else {
+            StatusBarManager.requestDisable(
+                context,
+                "GestureBarAutomation",
+                setOf(StatusBarManager.FLAG_HOME)
+            )
+        }
+    }
+
+    private fun isLauncher(packageName: String): Boolean {
+        if (packageName == "com.android.systemui") return true
+
+        val intent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
+        val resolveInfo = context.packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY)
+        val defaultLauncher = resolveInfo?.activityInfo?.packageName
+        
+        if (packageName == defaultLauncher) return true
+        
+        // Secondary check for other launchers if not default
+        val launchers = context.packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
+        return launchers.any { it.activityInfo.packageName == packageName }
     }
 }
