@@ -82,6 +82,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.unit.sp
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.state.LocalMenuStateManager
@@ -331,7 +333,7 @@ fun FreezeGridUI(
                                 modifier = Modifier.size(20.dp)
                             )
                             Spacer(Modifier.size(8.dp))
-                            Text(stringResource(R.string.action_freeze))
+                            Text(stringResource(R.string.action_freeze), fontSize = dimensionResource(R.dimen.font_small).value.sp)
                         }
 
                         Spacer(Modifier.size(ButtonGroupDefaults.ConnectedSpaceBetween))
@@ -352,7 +354,7 @@ fun FreezeGridUI(
                                 modifier = Modifier.size(20.dp)
                             )
                             Spacer(Modifier.size(8.dp))
-                            Text(stringResource(R.string.action_unfreeze))
+                            Text(stringResource(R.string.action_unfreeze), fontSize = dimensionResource(R.dimen.font_small).value.sp)
                         }
 
                         // More Menu Button
@@ -362,6 +364,7 @@ fun FreezeGridUI(
                                 isMenuExpanded = true
                             },
                             enabled = isShizukuAvailable && isShizukuPermissionGranted
+                            , modifier = Modifier.size(dimensionResource(R.dimen.button_normal))
                         ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.rounded_more_vert_24),
