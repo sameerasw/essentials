@@ -3,6 +3,7 @@
 Essential tools, mods and workarounds for Pixels and other Androids
 ## [sameerasw.com/essentials](https://sameerasw.com/essentials)
 
+<br>
 
 <p align="center">
 <img width="99%" src="https://github.com/user-attachments/assets/c0849951-4cf0-4a91-9964-f7c212977af1" />
@@ -10,6 +11,9 @@ Essential tools, mods and workarounds for Pixels and other Androids
 
 <p align="center">
   <a href="https://www.reddit.com/r/MadebySameerasw"><img  width="99%"  alt=" reddit-banner" src="https://github.com/user-attachments/assets/a5197458-d64a-4c6a-a6a3-9e1f36030205" /></a>
+</p>
+<p align="center">
+  <a href="https://t.me/tidwib"><img  width="99%"  alt=" telegram-banner" src="https://github.com/user-attachments/assets/425b3cc1-9ac6-46ec-8f48-71c7af9c9ca2" /></a>
 </p>
 
 <br>
