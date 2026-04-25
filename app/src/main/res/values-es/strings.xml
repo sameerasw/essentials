@@ -994,7 +994,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla S
     <string name="action_invert_selection">Invertir selección</string>
     <string name="toggle_show_system_apps">Mostrar aplicaciones del sistema</string>
     <!-- Updates -->
-    <string name="status_up_to_date">Estas al día</string>
+    <string name="status_up_to_date">Estás al día</string>
     <string name="warning_pre_release">Esta es una versión preliminar y podría ser inestable.</string>
     <string name="release_notes_format">Notas de la versión %1$s</string>
     <string name="action_view_on_github">Ver en GitHub</string>
