@@ -151,7 +151,7 @@ Essential tools, mods and workarounds for Pixels and other Androids
 - App permissions are optional, Grant necessary permissions for each feature
 - Targetted for Google Pixel devices extending to other Androids
 - Tested on Google Pixel 7 (Android 17 beta program).
-- > Some features and functionalities might not work as expected on other OEMs.
+- > Some features and functionalities might not work as expected on other OEMs. (Especially NothingOS and OneUI)
 
 # Screenshots
 
