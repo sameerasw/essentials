@@ -736,7 +736,7 @@
     <string name="about_desc_stay_awake">充電中は画面をスリープさせないようにします。\n\nデバイスが電源に接続されている間は画面がスリープ状態にならないようにします。デバッグ中の開発者に適しています。</string>
     <string name="about_desc_nfc">NFCを切り替えます。\n\nお支払いとペアリング用の近距離無線通信をすばやく有効または無効にします。</string>
     <string name="about_desc_adaptive_brightness">明るさ自動調整の切り替え\n\n周囲の明るさに基づく画面の明るさの自動調整を有効または無効にします。</string>
-    <string name="about_desc_private_dns">プライベートDNSを切り替えるます。\n\nオフ、自動、プライベートDNSプロバイダーモードを切り替えます。</string>
+    <string name="about_desc_private_dns">プライベートDNSを切り替えます。\n\nオフ、自動、プライベートDNSプロバイダーモードを切り替えます。</string>
     <string name="about_desc_usb_debugging">USBデバッグを切り替えます。\n\nクイック設定から直接ADBデバッグアクセスを有効または無効にします。</string>
     <string name="about_desc_color_picker">Android 17 BETA 2で導入されたカラーピッカーツールを起動します</string>
     <string name="about_desc_charge_optimization">バッテリーの寿命を最適化するために、最大充電量を制限し、適応型充電を使用します。これはPixelデバイス向けに特別に設計されており、長寿命と健全な充電サイクルを確保します。\n\nクレジット: TebbeUbben/ChargeQuickTile</string>
