@@ -764,6 +764,15 @@
         </receiver>
 
         <receiver
+            android:name=".services.receivers.AppBootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
             android:name=".services.automation.receivers.TimeAutomationReceiver"
             android:exported="false">
             <intent-filter>
