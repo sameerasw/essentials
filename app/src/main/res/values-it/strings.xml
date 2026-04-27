@@ -2,7 +2,7 @@
 <resources>
     <string name="label_beta">BETA</string>
     <string name="accessibility_service_description"><b>Servizio di Accessibilità Essentials</b>\n\nQuesto servizio è richiesto per le seguenti funzioni avanzate:\n\n<b>• Rimappatura dei tasti fisici:</b>\nRileva la pressione dei tasti del volume anche quando lo schermo è spento per attivare azioni come la Torcia.\n\n<b>• Impostazioni per singola app:</b>\nMonitora l\'app attualmente attiva per applicare profili specifici per la Luce notturna dinamica, i colori dell\'illuminazione delle notifiche e il Blocco app.\n\n<b>• Controllo dello schermo:</b>\nConsente all\'app di bloccare lo schermo (ad es. tramite Doppio tocco o Widget) e di rilevare i cambiamenti di stato dello schermo.\n\n<b>• Sicurezza:</b>\nImpedisce modifiche non autorizzate rilevando il contenuto delle finestre quando il dispositivo è bloccato.\n\n<small>Nessun testo inserito o dato sensibile dell\'utente viene raccolto o trasmesso.</small></string>
-    <string name="freeze_activity_title">Blocco dell\'app</string>
+    <string name="freeze_activity_title">Blocco App</string>
     <string name="freeze_activity_subtitle">Disattiva le app utilizzate raramente</string>
     <string name="freeze_shortcut_short_label">Blocco dell\'app</string>
     <string name="freeze_shortcut_long_label">Apri Blocco app</string>
@@ -54,7 +54,7 @@
     <string name="action_ai_assistant">Assistente AI</string>
     <string name="action_take_screenshot">Cattura uno screenshot</string>
     <string name="action_cycle_sound_modes">Scorri modalità audio</string>
-    <string name="action_circle_to_search">Circle to Search</string>
+    <string name="action_circle_to_search">Cerchia e Cerca</string>
     <string name="action_like_song">Mi Piace alla canzone attuale</string>
     <string name="like_song_settings_title">Mi Piace Impostazioni canzone</string>
     <string name="like_song_settings_desc">Questa funzione richiede l\'accesso alle notifiche per rilevare il supporto attualmente in riproduzione e attivare l\'azione mi piace. Si prega di abilitarlo di seguito.</string>
@@ -122,7 +122,7 @@
     <string name="action_remove">Rimuovi</string>
     <string name="action_create_shortcut">Crea shortcut</string>
     <string name="action_app_info">App info</string>
-    <string name="freeze_mode_description_freeze_title">What is Freeze?</string>
+    <string name="freeze_mode_description_freeze_title">Cos\'è Blocco App?</string>
     <string name="freeze_mode_description_freeze_body">App freezing disables the app\'s launch activity which removes it from the app list and updates. It will prevent the app from starting at all until it\'s unfrozen which saves resources but you will need to unfreeze from here or manually re-enable.</string>
     <string name="freeze_mode_description_freeze_warning">DO NOT FREEZE COMMUNICATION APPS</string>
     <string name="freeze_mode_description_suspend_title">What is Suspend?</string>
@@ -164,7 +164,7 @@
     <string name="flashlight_pulse_title">Flash della torcia</string>
     <string name="flashlight_pulse_facedown_title">Solo con lo schermo verso il basso</string>
     <string name="flashlight_pulse_same_as_lighting_title">Stesse app dell\'illuminazione delle notifiche</string>
-    <string name="flashlight_pulse_max_brightness">Max brightness</string>
+    <string name="flashlight_pulse_max_brightness">Luminosità massima</string>
     <string name="flashlight_pulse_preview">Preview pulse</string>
     <string name="settings_section_style">Stile</string>
     <string name="notification_lighting_stroke_adjustment_section">Regolazione del bagliore</string>
@@ -182,9 +182,9 @@
     <string name="notification_lighting_sweep_position_title">Position</string>
     <string name="notification_lighting_sweep_random_shapes_title">Random shapes</string>
     <string name="notification_lighting_sweep_thickness_title">Stroke thickness</string>
-    <string name="notification_lighting_sweep_pos_left">Left</string>
-    <string name="notification_lighting_sweep_pos_center">Center</string>
-    <string name="notification_lighting_sweep_pos_right">Right</string>
+    <string name="notification_lighting_sweep_pos_left">Sinistra</string>
+    <string name="notification_lighting_sweep_pos_center">Centro</string>
+    <string name="notification_lighting_sweep_pos_right">Destra</string>
     <string name="settings_section_animation">Animazioni</string>
     <string name="notification_lighting_pulse_count_title">Numero dei flash</string>
     <string name="notification_lighting_pulse_duration_title">Durata del flash</string>
@@ -330,13 +330,13 @@
     <string name="action_reset_all_icons">Ripristina tutte le icone</string>
     <string name="status_bar_section_advanced">Altre impostazioni</string>
     <string name="stb_advanced_flags_title">Advanced (Requires Shizuku/Root)</string>
-    <string name="hide_all_system_icons_title">Hide all system icons</string>
+    <string name="hide_all_system_icons_title">Nascondi tutte le icone di sistema</string>
     <string name="hide_all_system_icons_desc">Clear all non-notification icons from the status bar</string>
     <string name="hide_system_icons_locked_only_title">Only hide system icons when locked</string>
     <string name="hide_system_icons_locked_only_desc">Hides the status bar system icons when the device is locked and restores them upon unlock</string>
-    <string name="hide_clock_title">Hide clock</string>
+    <string name="hide_clock_title">Nascondi orologio</string>
     <string name="hide_clock_desc">Completely remove the clock from the status bar</string>
-    <string name="hide_notification_icons_title">Hide notifications</string>
+    <string name="hide_notification_icons_title">Nascondi notifiche</string>
     <string name="hide_notification_icons_desc">Hide all incoming notification icons</string>
     <string name="feat_hide_gesture_bar_title">Hide gesture bar</string>
     <string name="feat_hide_gesture_bar_desc">Hide the navigation pill at the bottom</string>
@@ -344,7 +344,7 @@
     <string name="feat_hide_gesture_bar_on_launcher_desc">Dynamically show the gesture bar only when on the home screen</string>
     <string name="feat_circle_to_search_gesture_title">Circle to Search gesture</string>
     <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
-    <string name="feat_other_customizations_title">Other customizations</string>
+    <string name="feat_other_customizations_title">Altre personalizzazioni</string>
     <string name="feat_other_customizations_desc">Additional system tweaks and modifications</string>
     <string name="status_bar_icons_disclaimer">Tieni presente che l\'implementazione di queste opzioni può dipendere dall\'OEM e alcune potrebbero non essere affatto funzionanti.</string>
     <!-- Network Type Picker -->
