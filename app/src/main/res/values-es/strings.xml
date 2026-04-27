@@ -1015,7 +1015,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla S
     <string name="action_website">Sitio web</string>
     <string name="action_contact">Contacto</string>
     <string name="action_telegram">Telegram</string>
-    <string name="action_support">Apoyar</string>
+    <string name="action_support">Apoyo</string>
     <string name="label_other_apps">Otras aplicaciones</string>
     <string name="app_airsync">AirSync</string>
     <string name="app_zenzero">ZenZero</string>
