@@ -123,11 +123,11 @@
     <string name="action_create_shortcut">Kısayol oluştur</string>
     <string name="action_app_info">Uygulama bilgisi</string>
     <string name="freeze_mode_description_freeze_title">Dondur nedir?</string>
-    <string name="freeze_mode_description_freeze_body">App freezing disables the app\'s launch activity which removes it from the app list and updates. It will prevent the app from starting at all until it\'s unfrozen which saves resources but you will need to unfreeze from here or manually re-enable.</string>
+    <string name="freeze_mode_description_freeze_body">Uygulama dondurma, uygulamanın başlatma etkinliğini devre dışı bırakarak onu uygulama listesinden ve güncellemelerden kaldırır. Dondurma işlemi kaldırılana kadar uygulamanın başlatılmasını engeller; bu da kaynak tasarrufu sağlar, ancak dondurma işlemini buradan kaldırmanız veya manuel olarak yeniden etkinleştirmeniz gerekecektir.</string>
     <string name="freeze_mode_description_freeze_warning">İLETİŞİM UYGULAMALARINI DONDURMAYIN</string>
     <string name="freeze_mode_description_suspend_title">Askıya alma nedir?</string>
-    <string name="freeze_mode_description_suspend_body">Suspending an app used to pause the app activity and prevent background executions but with recent Android changes, it only pauses the notifications from appearing and that\'s pretty much it. But does allows you to unpause from the launcher app list as they will be still available as grayscale paused app icons.</string>
-    <string name="freeze_mode_description_suspend_footer">Should work the same as the native app pause/ focus mode features.</string>
+    <string name="freeze_mode_description_suspend_body">Bir uygulamayı askıya almak eskiden uygulama etkinliğini durdurur ve arka plan işlemlerini engellerdi, ancak son Android değişiklikleriyle birlikte artık yalnızca bildirimlerin görünmesini durduruyor ve hepsi bu kadar. Ancak, uygulamalar gri tonlamalı askıya alınmış uygulama simgeleri olarak hala mevcut olacağından, başlatıcı uygulama listesinden uygulamayı tekrar aktif hale getirmenize olanak tanır.</string>
+    <string name="freeze_mode_description_suspend_footer">Yerel uygulamanın duraklatma/odaklanma modu özellikleriyle aynı şekilde çalışmalıdır.</string>
     <string name="content_desc_more_options">Daha fazla seçenek</string>
     <string name="action_freeze_all">Tüm uygulamaları dondur</string>
     <string name="action_unfreeze_all">Tüm uygulamaları çöz</string>
@@ -155,7 +155,7 @@
     <string name="freeze_mode_title">Dondurma modu</string>
     <string name="freeze_mode_freeze">Donduruluyor</string>
     <string name="freeze_mode_suspend">Uygulama askıya alma</string>
-    <string name="freeze_mode_warning_desc">Can not switch mode while apps are frozen. Please unfreeze all and try again.</string>
+    <string name="freeze_mode_warning_desc">Uygulamalar dondurulmuş haldeyken mod değiştirilemez. Lütfen tüm uygulamaların dondurulmasını kaldırın ve tekrar deneyin.</string>
     <!-- Notification Lighting -->
     <string name="notification_lighting_screen_off_title">Yalnızca ekran kapalıyken göster</string>
     <string name="notification_lighting_skip_silent_title">Sessiz bildirimleri atla</string>
@@ -178,7 +178,7 @@
     <string name="notification_lighting_indicator_adjustment_section">Gösterge ayarı</string>
     <string name="notification_lighting_scale_title">Ölçek</string>
     <string name="notification_lighting_duration_title">Süre</string>
-    <string name="notification_lighting_style_sweep">Sweep</string>
+    <string name="notification_lighting_style_sweep">Süpürme</string>
     <string name="notification_lighting_sweep_position_title">Konum</string>
     <string name="notification_lighting_sweep_random_shapes_title">Rastgele şekiller</string>
     <string name="notification_lighting_sweep_thickness_title">Vuruş kalınlığı</string>
@@ -341,8 +341,8 @@
     <string name="feat_hide_gesture_bar_title">Hareket çubuğunu gizle</string>
     <string name="feat_hide_gesture_bar_desc">Alttaki gezinme çubuğunu gizle</string>
     <string name="feat_hide_gesture_bar_on_launcher_title">Launcher\'da göster</string>
-    <string name="feat_hide_gesture_bar_on_launcher_desc">Dynamically show the gesture bar only when on the home screen</string>
-    <string name="feat_circle_to_search_gesture_title">Aramak için daire hareketi</string>
+    <string name="feat_hide_gesture_bar_on_launcher_desc">Dinamik olarak hareket çubuğunu yalnızca ana ekranda olduğunuzda gösterir</string>
+    <string name="feat_circle_to_search_gesture_title">Aramak için Daire hareketi</string>
     <string name="feat_circle_to_search_gesture_desc">Aramak için Daire\'yi başlatmak için alt alana uzun basın</string>
     <string name="feat_other_customizations_title">Diğer özelleştirmeler</string>
     <string name="feat_other_customizations_desc">Ek sistem ayarlamaları ve değişiklikleri</string>
@@ -638,7 +638,7 @@
     <string name="welcome_developer_attribution">sameerasw.com tarafından</string>
     <string name="action_lets_begin">Hadi Başlayalım</string>
     <string name="acknowledgement_title">Teşekkür</string>
-    <string name="acknowledgement_desc">This app is a collection of utilities that can interact deeply with your device system. Using some features might modify system settings or behavior in unexpected ways. \n\nYou only need to grant necessary permissions which are required for selected features you are using giving you full control over the app\'s behavior. \n\nFurther more, the app does not track or store any of your personal data, I don\'t need them... Keep to yourself safe. You can refer to the source code for more information. \n\nThis app is fully open source and is and always will be free to use. Do not pay or install from unknown sources.</string>
+    <string name="acknowledgement_desc">Bu uygulama, cihazınızın sistemiyle derinlemesine etkileşim kurabilen bir dizi yardımcı programdan oluşmaktadır. Bazı özelliklerin kullanımı, sistem ayarlarını veya davranışlarını beklenmedik şekillerde değiştirebilir. \n\nYalnızca kullandığınız seçili özellikler için gerekli olan izinleri vermeniz yeterlidir; bu da uygulamanın davranışları üzerinde tam kontrol sahibi olmanızı sağlar. \n\nAyrıca, uygulama kişisel verilerinizin hiçbirini takip etmez veya saklamaz, bunlara ihtiyacım yok... Güvende kalın. Daha fazla bilgi için kaynak koduna bakabilirsiniz. \n\nBu uygulama tamamen açık kaynaklıdır ve her zaman ücretsiz olarak kullanılabilir. Bilinmeyen kaynaklardan ücret ödemeyin veya yüklemeyin.</string>
     <string name="acknowledgement_warning">Uyarı: Dikkatle ilerleyin. Geliştirici, bu uygulamanın kullanımından kaynaklanan sistem kararsızlığı, veri kaybı veya diğer sorunlardan hiçbir sorumluluk kabul etmez. Devam ederek, bu riskleri kabul etmiş olursunuz.</string>
     <string name="acknowledgement_footer">Bunu dikkatlice okumadığınızı biliyorum ama yine de yardıma ihtiyacınız olursa geliştiriciye veya topluluğa ulaşmaktan çekinmeyin.</string>
     <string name="action_i_understand">Anladım</string>
@@ -705,9 +705,9 @@
     <string name="location_reached_saved_destinations">Kaydedilen Hedefler</string>
     <string name="location_reached_no_saved_dest">Henüz hedef kaydedilmedi.</string>
     <string name="location_reached_delete">Hedefi sil</string>
-    <string name="location_reached_tracking_now">Tracking Now</string>
+    <string name="location_reached_tracking_now">Şimdi takip ediliyor</string>
     <string name="location_reached_restart_btn">Yeniden başlat</string>
-    <string name="location_reached_instructional_desc">Share coordinates (Dropped pin) from Google Maps to Essentials to save as a destination.\n\nThe distance shown is the direct distance to the destination, not the distance along the roads.\n\nTake all calculations of time and distance with a grain of salt as they are not always accurate.</string>
+    <string name="location_reached_instructional_desc">Google Haritalar\'dan koordinatları (İşaretlenmiş nokta) Essentials\'a paylaşarak hedef olarak kaydedin.\n\nGösterilen mesafe, varış noktasına olan doğrudan mesafedir, karayolları üzerinden kat edilen mesafe değildir.\n\nZaman ve mesafe hesaplamalarının her zaman doğru olmayabileceği için, bu hesaplamaları ihtiyatla değerlendirin.</string>
     <string name="tile_location_reached">Henüz orada mıyız?</string>
     <string name="location_reached_radius_label">Yarıçap: %1$d m</string>
     <string name="location_reached_distance_label">Hedefe olan mesafe: %1$s</string>
@@ -1134,7 +1134,7 @@
     <string name="download_airsync_summary">Mac pil senkronizasyonu için gereklidir</string>
     <string name="feat_battery_notification_title">Pil bildirimi</string>
     <string name="feat_battery_notification_desc">Kalıcı pil durumu bildirimi</string>
-    <string name="battery_notification_hint">This notification displays battery levels for your connected Mac and Bluetooth devices. You can configure which devices to show in the Battery Widget settings.</string>
+    <string name="battery_notification_hint">Bu bildirim, bağlı Mac\'iniz ve Bluetooth cihazlarınızın pil seviyelerini gösterir. Pil Widget\'ı ayarlarından hangi cihazların gösterileceğini yapılandırabilirsiniz.</string>
     <string name="about_desc_battery_notification">Pil widget\'ı deneyimini bildirim gölgenizde çoğaltın. Bağlı tüm cihazlarınızın pil seviyelerini gerçek zamanlı olarak güncellenen tek bir kalıcı bildirimde gösterecektir. Buna Mac\'iniz (AirSync aracılığıyla) ve Bluetooth aksesuarları da dahildir.</string>
     <string name="battery_notification_channel_name">Pil Durumu Bildirimi</string>
     <string name="battery_notification_channel_desc">Bağlı cihazların pil seviyelerini gösteren kalıcı bildirim</string>
@@ -1297,14 +1297,14 @@
     <!-- Pixel Diagnostics -->
     <string name="label_diagnostics">Tanılama</string>
     <string name="label_device_check">Cihaz Kontrolü</string>
-    <string name="msg_flashbang">Get ready to be flashbanged!</string>
+    <string name="msg_flashbang">Şok bombasına hazır olun!</string>
     <string name="action_abort">İptal et</string>
     <string name="action_continue">Devam et</string>
-    <string name="prank_trial_expired_title">Your Essentials trial has expired</string>
-    <string name="prank_trial_expired_desc">Your free trial period of Essentials has ended. Access to advanced features like Button Remap, App Freezing, and DIY Automations with Premium.</string>
-    <string name="prank_button_premium">What\'s in Premium?</string>
-    <string name="prank_reveal_title">April Fools!</string>
-    <string name="prank_reveal_desc">Just kidding, Essentials is and will always be free and open source. Enjoy! (っ◕‿◕)っ</string>
+    <string name="prank_trial_expired_title">Essentials deneme süreniz sona erdi</string>
+    <string name="prank_trial_expired_desc">Essentials\'ı ücretsiz deneme süreniz sona erdi. Düğme Yeniden Eşleme, Uygulama Dondurma ve Kendi Otomasyonlarınızı Oluşturma gibi gelişmiş özelliklere Premium ile erişebilirsiniz.</string>
+    <string name="prank_button_premium">Premium\'da neler var?</string>
+    <string name="prank_reveal_title">1 Nisan şakası!</string>
+    <string name="prank_reveal_desc">Şaka yapıyorum, Essentials her zaman ücretsiz ve açık kaynaklı olacak. Keyfini çıkarın! (っ◕‿◕)っ</string>
     <string name="notification_lighting_style_system">Sistem</string>
     <string name="notification_lighting_system_mode_title">Dalgalanma Animasyonu</string>
     <string name="notification_lighting_system_mode_charging_ripple">Alt</string>
