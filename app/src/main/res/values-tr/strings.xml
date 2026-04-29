@@ -596,7 +596,7 @@
     <string name="action_view_readme">README dosyasını görüntüle</string>
     <string name="label_stars">%d Yıldız</string>
     <string name="label_installed_app">Yüklü uygulama</string>
-    <string name="label_not_installed">Kurulu değil</string>
+    <string name="label_not_installed">Yüklenmedi</string>
     <string name="action_pick_app">Uygulama seç</string>
     <string name="action_select_app">Uygulamayı seçin</string>
     <string name="action_untrack">Takibi kaldır</string>
