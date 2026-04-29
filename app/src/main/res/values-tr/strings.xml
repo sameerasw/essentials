@@ -232,7 +232,7 @@
     <string name="subtitle_eye_dropper">Göz Damlalığı</string>
     <string name="on">Açık</string>
     <string name="off">Kapalı</string>
-    <string name="private_dns_custom_title">Özel Özel DNS</string>
+    <string name="private_dns_custom_title">Özel Gizli DNS</string>
     <string name="private_dns_presets_title">DNS Ön Ayarları</string>
     <string name="dns_preset_add_title">DNS Ön Ayarı ekle</string>
     <string name="dns_preset_name_label">Ön ayar adı</string>
@@ -249,7 +249,7 @@
     <string name="dns_preset_quad9">Quad9 DNS</string>
     <string name="dns_preset_quad9_hostname">dns.quad9.net</string>
     <string name="dns_preset_cleanbrowsing">Temiz Tarama</string>
-    <string name="dns_preset_cleanbrowsing_hostname">yetişkin-filtre-dns.cleanbrowsing.org</string>
+    <string name="dns_preset_cleanbrowsing_hostname">adult-filter-dns.cleanbrowsing.org</string>
     <string name="tile_charge_optimization">Şarj etme</string>
     <string name="limit_to_80">%80 ile sınırla</string>
     <string name="adaptive_charging">Uyarlanabilir</string>
@@ -481,7 +481,7 @@
     <string name="search_skip_silent_title">Sessiz bildirimleri atla</string>
     <string name="search_skip_silent_desc">Sessiz bildirimler için aydınlatmayı gösterme</string>
     <string name="search_flashlight_pulse_title">El feneri darbesi</string>
-    <string name="search_flashlight_pulse_desc">Yeni bildirimler için el fenerini yavaşça yanıp sönün</string>
+    <string name="search_flashlight_pulse_desc">Yeni bildirimler için el fenerini yavaşça yanıp söner</string>
     <string name="search_only_facing_down_title">Sadece aşağıya doğru bakarken</string>
     <string name="search_only_facing_down_desc">El fenerini yalnızca cihaz aşağı dönükken titretin</string>
     <string name="snooze_no_channels_discovered">Henüz hiçbir sistem kanalı keşfedilmedi. Tespit edildikten sonra burada görünecekler.</string>
@@ -515,7 +515,7 @@
     <string name="search_qs_pulse_desc">Bildirim el feneri darbesini değiştir</string>
     <string name="search_qs_stay_awake_desc">Uyanık kalma geliştirici seçeneğini aç/kapat</string>
     <string name="search_qs_private_dns_title">Özel DNS</string>
-    <string name="search_qs_private_dns_desc">Özel DNS modlarını değiştir (Kapalı/Otomatik/Ana Bilgisayar Adı)</string>
+    <string name="search_qs_private_dns_desc">Özel DNS modlarını değiştir (Kapalı/Otomatik/Hostname)</string>
     <string name="search_qs_usb_debugging_title">USB Hata Ayıklama</string>
     <string name="search_qs_usb_debugging_desc">USB Hata Ayıklama geliştirici seçeneğini aç/kapat</string>
     <string name="search_remap_enable_title">Düğme Yeniden Eşlemesini Etkinleştir</string>
@@ -569,9 +569,9 @@
     <string name="perm_device_admin_title">Cihaz Yöneticisi</string>
     <string name="perm_device_admin_desc">Yetkisiz erişim girişimlerinde cihazı donanımsal olarak kilitlemek (biyometriyi devre dışı bırakarak) gereklidir</string>
     <string name="perm_action_grant">İzin Ver</string>
-    <string name="perm_action_copy_adb">ADb\'yi kopyala</string>
+    <string name="perm_action_copy_adb">ADB\'yi kopyala</string>
     <string name="perm_action_check">Kontrol etmek</string>
-    <string name="perm_action_enable">Ayarlar\'da etkinleştirin</string>
+    <string name="perm_action_enable">Ayarlar\'da etkinleştir</string>
     <string name="perm_action_how_to">Nasıl hibe edilir</string>
     <string name="perm_battery_optimization_title">Pil Optimizasyonu</string>
     <string name="perm_battery_optimization_desc">Güç tasarrufu sağlamak için hizmetin sistem tarafından sonlandırılmadığından emin olun.</string>
@@ -588,13 +588,13 @@
     <string name="tab_app_updates_title">Uygulama Güncellemeleri</string>
     <string name="action_add_repo">Depo Ekle</string>
     <string name="action_edit_repo">Depoyu Düzenle</string>
-    <string name="prompt_enter_repo_url">GitHub Deposu URl\'sini veya sahibi/repo\'yu girin</string>
+    <string name="prompt_enter_repo_url">GitHub Depo URL\'sini veya \'sahip/depo\'yu girin</string>
     <string name="action_track">İzlemek</string>
     <string name="error_no_apk_found">En son sürümde APK bulunamadı</string>
     <string name="error_repo_not_found">Depo bulunamadı</string>
     <string name="label_latest_release">Son Sürüm</string>
-    <string name="action_view_readme">BENİOku\'yu görüntüle</string>
-    <string name="label_stars">%1$d Yıldızlar</string>
+    <string name="action_view_readme">README dosyasını görüntüle</string>
+    <string name="label_stars">%d Yıldız</string>
     <string name="label_installed_app">Yüklü uygulama</string>
     <string name="label_not_installed">Kurulu değil</string>
     <string name="action_pick_app">Uygulama seç</string>
@@ -603,7 +603,7 @@
     <string name="label_pending">Askıda olması</string>
     <string name="label_up_to_date">Güncel</string>
     <string name="feat_app_updates_desc">Favori uygulamalarınızın en son sürümlerini doğrudan GitHub\'dan takip edin ve indirin.</string>
-    <string name="error_invalid_repo_format">Geçersiz biçim. Sahip/depo veya GitHub URl\'sini kullanın</string>
+    <string name="error_invalid_repo_format">Geçersiz format. sahip/depo veya GitHub URL\'si kullanın</string>
     <string name="error_generic_search">Arama sırasında bir hata oluştu</string>
     <string name="label_auto">Otomatik</string>
     <string name="label_options">Seçenekler</string>
@@ -649,7 +649,7 @@
     <string name="preferences_desc">Başlamak için bazı temel ayarları yapılandırın.</string>
     <string name="label_app_settings">Uygulama Ayarları</string>
     <string name="label_app_language">Dil</string>
-    <string name="label_haptic_feedback">Dokunsal Geri Bildirim</string>
+    <string name="label_haptic_feedback">Dokunsal Geri bildirim</string>
     <string name="label_updates">Güncellemeler</string>
     <string name="label_auto_check_updates">Güncellemeleri otomatik olarak kontrol et</string>
     <string name="desc_auto_check_updates">Uygulama başlatıldığında güncellemeleri kontrol eder</string>
@@ -685,7 +685,7 @@
     <string name="about_desc_screen_off_widget">Ana ekranınıza simge veya herhangi bir karışıklık eklemeyen, şeffaf, yeniden boyutlandırılabilir bir widget\'a dokunarak ekranı kolayca kapatın.</string>
     <string name="about_desc_statusbar_icons">Durum çubuğu simgeleriniz üzerinde tam kontrole sahip olun.\n\nDurum çubuğunuzu temiz tutmak için WiFi, Bluetooth veya hücresel veri gibi belirli simgeleri gizleyin. Ayrıca bazı akıllı kontrollerle saat formatını ve pil göstergesini de özelleştirebilirsiniz. Bunlar mevcut AOSP kontrollerinin listesidir; dolayısıyla cihazınızın işletim sistemi tüm kontrollere uymayabilir.</string>
     <string name="about_desc_caffeinate">Kafein, ekranınızın otomatik olarak kapanmasını engeller.\n\nEkranınızı belirli bir süre veya süresiz olarak uyanık tutun. Uzun makaleleri okurken veya bir tarife atıfta bulunurken kullanışlıdır.</string>
-    <string name="about_desc_maps_power_saving">Herhangi bir Android cihazda kilit ekranınızda görüntülenecek minimum zifiri siyah arka plana sahip Pixel 10 serisine özel Google Haritalar Güç Tasarrufu modunu edinin. Bir navigasyon oturumu başlatın, ekranı kapatıp tekrar açın.</string>
+    <string name="about_desc_maps_power_saving">Pixel 10 serisine özel Google Haritalar Güç Tasarrufu modunu, herhangi bir Android cihazınızda kilit ekranınızın üzerinde görüntülenecek minimal, simsiyah bir arka planla edinin. Bir navigasyon oturumu başlatın, ekranı kapatın ve tekrar açın. </string>
     <string name="about_desc_flashlight_pulse">Bir bildirim aldığınızda el fenerini çalıştırın.\n\nCihazların el feneri karartması için donanım desteği varsa, darbe sorunsuz bir şekilde canlandırılacaktır.</string>
     <string name="about_desc_snooze_notifications">Varsayılan olarak değiştirilemeyen can sıkıcı kalıcı sistem bildirimlerini erteleyin. \n\nLütfen bildirim gelene kadar bekleyin ve ardından bu özelliğe gidin.\'bildirim kanalı listelenecektir. Bir sonraki sefere ertelemek için bunu seçin.\n\nErtelenen herhangi bir bildirime Android\'deki bildirim geçmişinizden hâlâ erişebilirsiniz.</string>
     <string name="about_desc_quick_settings_tiles">Hızlı Ayarlar panelinize özel döşemeler ekleyin.\n\nNe yaptıklarını öğrenmek için bunlardan herhangi birine uzun basın.</string>
@@ -696,7 +696,7 @@
     <string name="about_desc_location_reached">Durağı asla kaçırmadığınızdan emin olmak için varış noktanıza yaklaştığınızda bildirim alın.\n\nGoogle Haritalar\'a gidin, hedefinizin yakınındaki bir raptiyeye uzun basın ve \"Bırakılan raptiye\" yazdığından emin olun (Aksi takdirde mesafe hesaplaması doğru olmayabilir) Ve ardından konumu Essentials uygulamasıyla paylaşın ve izlemeye başlayın.</string>
     <string name="location_reached_add_title">Hedef ekle</string>
     <string name="location_reached_edit_title">Hedefi düzenle</string>
-    <string name="location_reached_name_placeholder">Ev, Ofis, vb.</string>
+    <string name="location_reached_name_placeholder">Ev, İş vb.</string>
     <string name="location_reached_name_label">İsim</string>
     <string name="location_reached_save_btn">Kaydet</string>
     <string name="location_reached_cancel_btn">İptal et</string>
@@ -734,9 +734,9 @@
     <string name="about_desc_mono_audio">Ses kanallarını mono olarak birleştirin.\n\nTek bir kulaklık kullanıldığında veya erişilebilirlik amacıyla kullanışlıdır.</string>
     <string name="about_desc_flashlight_tile">El fenerini açın/kapatın.\n\nA Uzun basıldığında, bazı cihazlarda eksik olabilecek donanım uygulaması gerektirebilecek yoğunluk ayarı kontrolleri açılır.</string>
     <string name="about_desc_stay_awake">Şarj olurken ekranı uyanık tutun.\n\nHata ayıklama sırasında geliştiricilere uygun bir güç kaynağına bağlı olduğu sürece ekranın uyku moduna geçmesini engeller.</string>
-    <string name="about_desc_nfc">NFc\'yi açın/kapatın.\n\nÖdemeler ve eşleştirme için Yakın Alan İletişimini hızla etkinleştirin veya devre dışı bırakın.</string>
+    <string name="about_desc_nfc">NFC\'yi açın/kapatın.\n\nÖdemeler ve eşleştirme için Yakın Alan İletişimini hızla etkinleştirin veya devre dışı bırakın.</string>
     <string name="about_desc_adaptive_brightness">Uyarlanabilir parlaklığı açın/kapatın.\n\nOrtam ışığına göre otomatik ekran parlaklığı ayarını etkinleştirin veya devre dışı bırakın.</string>
-    <string name="about_desc_private_dns">Özel DNs\'yi değiştirin.\n\nKapalı, Otomatik ve Özel DNS sağlayıcı modları arasında geçiş yapın.</string>
+    <string name="about_desc_private_dns">Özel DNS\'i açın/kapatın.\n\nKapalı, Otomatik ve Özel DNS sağlayıcı modları arasında geçiş yapın.</string>
     <string name="about_desc_usb_debugging">USB Hata Ayıklamayı açın/kapatın.\n\nADB hata ayıklama erişimini doğrudan hızlı ayarlardan etkinleştirin veya devre dışı bırakın.</string>
     <string name="about_desc_color_picker">Android 17 BETA 2\'de sunulan renkleri seçmek için göz damlası aracını başlatın</string>
     <string name="about_desc_charge_optimization">Maksimum şarjı sınırlayarak veya uyarlanabilir şarjı kullanarak pil ömrünüzü optimize edin. Bu, uzun ömür ve sağlıklı şarj döngüleri sağlamak amacıyla Pixel cihazları için özel olarak tasarlanmıştır.\n\nKrediler: TebbeUbben/ChargeQuickTile</string>
@@ -917,7 +917,7 @@
     <string-array name="keywords_visual_style">
         <item>animasyon</item>
         <item>görsel</item>
-        <item>Bakmak</item>
+        <item>görünüm</item>
     </string-array>
     <string-array name="keywords_quiet_filter">
         <item>sessizlik</item>
@@ -996,7 +996,7 @@
     <string name="warning_pre_release">Bu, yayın öncesi bir sürümdür ve kararsız olabilir.</string>
     <string name="release_notes_format">Sürüm Notları %1$s</string>
     <string name="action_view_on_github">GitHub\'da görüntüle</string>
-    <string name="action_download_apk">APk\'yı indir</string>
+    <string name="action_download_apk">APK\'yi indir</string>
     <!-- Haptic Types -->
     <string name="haptic_none">Hiçbiri</string>
     <string name="haptic_subtle">Hemen göze çarpmayan</string>
@@ -1053,7 +1053,7 @@
     <string name="instruction_section_button_title">Düğme yeniden eşlemesi ekran kapalıyken çalışmıyor</string>
     <string name="instruction_section_button_desc">Bazı OEM\'ler, ekran gerçekten kapalıyken erişilebilirlik hizmeti raporlamasını sınırlar ancak AOD açıkken hala çalışabilirler. \nBu durumda, düğme yeniden eşlemelerini AOD açıkken kullanabilirsiniz ancak kapalıyken kullanamazsınız. \n\nGeçici bir çözüm olarak Shizuku izinlerini kullanmanız ve açmanız gerekecektir. Donanım giriş olaylarını tanımlayan ve dinleyen düğme yeniden eşleme ayarlarında \'Shizuku veya Root\' geçişini kullanın.\nBunun tüm cihazlarda ve ihtiyaçlarda çalışacağı garanti edilmez test edilmesi gerekiyor.\n\nVe aktif olsa bile, Shizuku yöntemi yalnızca ihtiyaç duyulduğunda kullanılacaktır. Aksi takdirde, uzun basış sırasında gerçek girişin engellenmesini de sağlayan Erişilebilirlik\'e her zaman geri dönülecektir.</string>
     <string name="instruction_section_flashlight_title">El feneri parlaklığı çalışmıyor</string>
-    <string name="instruction_section_flashlight_desc">Yalnızca sınırlı sayıda cihaz, el feneri yoğunluğunu ayarlayan donanım ve yazılım desteğine sahiptir. \n\n\'Android\'in minimum sürümü 13\'tür (SDK33).\nEl feneri parlaklık kontrolü yalnızca HAL sürüm 3.8 ve üzerini destekler, yani desteklenen cihazlar arasında en yeni olanlar (Örneğin, Pixel 6/7, Samsung S23, vb.)\'\npolodarb/El Feneri-Tiramisu</string>
+    <string name="instruction_section_flashlight_desc">Yalnızca sınırlı sayıda cihaz, el feneri yoğunluğunu ayarlayan donanım ve yazılım desteğine sahiptir. \n\n\'Android\'in minimum sürümü 13\'tür (SDK33).\nEl feneri parlaklık kontrolü yalnızca HAL sürüm 3.8 ve üzerini destekler, yani desteklenen cihazlar arasında en yeni olanlar (Örneğin, Pixel 6/7, Samsung S23, vb.)\'\npolodarb/Flashlight-Tiramisu</string>
     <string name="instruction_section_about_title">Bu uygulama da neyin nesi?</string>
     <string name="instruction_section_about_desc">Güzel soru,\n\nHer zaman cihazlarımdan en iyi şekilde yararlanmak istedim.\'İlk Project Treble cihazımı aldığımdan beri rootlu bir kullanıcıyım. ve ben\'Otomasyon söz konusu olduğunda tanrı gibi olan ve Android\'in tüm olası APi\'lerini ve dahili özelliklerini kullanan Tasker uygulamasını seviyorum.\n\nBu yüzden köksüz değilim ve stok Android beta deneyimine geri döndüm ve verilen ayrıcalıklarla mümkün olandan en iyi şekilde yararlanmak istedim. Bunları da paylaşabilir. Böylece, başlangıç ​​seviyesindeki Kotlin Jetpack bilgim ve birçok araştırma ve yardım aracının yanı sıra harika topluluğun desteğiyle, verilen izinlerle Android\'imde olmasını istediğim her şeyi içeren hepsi bir arada bir uygulama geliştirdim. Ve işte burada.\n\nÖzellik istekleri memnuniyetle karşılanır; mevcut izinler ve becerilerim ile bunların gerçekleştirilebilir olup olmadığını değerlendireceğim ve göreceğim. Günümüzde ne mümkün değil. :)\n\nNeden Play Store\'da olmasın?\nbilmiyorum\'Uygulamada kullanılan son derece hassas ve dahili izinler ve APi\'ler nedeniyle Geliştirici hesabımın yasaklanması riskini almak istemiyorum. Ancak Android\'in yan yüklemeye gidiş yönü göz önüne alındığında,\'Bakalım ne yapmamız gerekiyor. Yandan yüklenen uygulamaların kötü amaçlı olduğu endişelerini anlıyorum.\nKonuya gelmişken, Mac + Android kullanıcısıysanız diğer uygulamam AirSync\'e göz atın. *utanmaz fiş*\n\nKeyfini çıkarın, inşa etmeye devam edin! (っ◕‿◕)っ</string>
     <!-- Bug Reporting -->
@@ -1072,7 +1072,7 @@
     <string name="feat_location_reached_title">Henüz orada mıyız?</string>
     <string name="feat_location_reached_desc">Yakındaki hedef uyarıları</string>
     <string name="location_reached_how_to">Google Haritalar\'ı açın, bir konum seçin ve onu Essentials\'la paylaşın.</string>
-    <string name="location_reached_radius_title">Uyarı Yarıçapı: %1$d m</string>
+    <string name="location_reached_radius_title">Uyarı Yarıçapı: %d m</string>
     <string name="perm_location_title">Konum</string>
     <string name="perm_location_desc">Hedefinize varışınızı tespit etmek için kullanılır.</string>
     <string name="perm_bg_location_title">Arka Plan Konumu</string>
@@ -1112,7 +1112,7 @@
     <string name="search_keyboard_height_desc">Klavyenin toplam dikey boyutunu ayarlayın</string>
     <string name="search_keyboard_padding_title">Alt Dolgu</string>
     <string name="search_keyboard_padding_desc">Klavyenin altına boşluk ekleyin</string>
-    <string name="search_keyboard_haptics_title">Dokunsal Geribildirim</string>
+    <string name="search_keyboard_haptics_title">Dokunsal Geri bildirim</string>
     <string name="search_keyboard_haptics_desc">Tuşa basıldığında titreşim</string>
     <string name="test_keyboard_hint">Klavyeyi test edin</string>
     <string name="label_keyboard_height">Klavye Yüksekliği</string>
@@ -1147,7 +1147,7 @@
     <string name="auth_sign_in_rationale">API çağrısı sınırlarını genişletmek için oturum açın</string>
     <string name="auth_waiting_for_authorization">Yetki bekleniyor...</string>
     <string name="action_sign_in_github">GitHub\'la oturum açın</string>
-    <string name="action_sign_out">oturumu Kapat</string>
+    <string name="action_sign_out">Oturumu kapat</string>
     <string name="action_profile">Profil</string>
     <!-- App Updates / Repos -->
     <string name="label_release_notes">Sürüm Notları</string>
@@ -1171,12 +1171,12 @@
     <string name="auth_requesting_code">Cihaz kodu isteniyor...</string>
     <string name="auth_copy_code_instruction">1. Kodunuzu kopyalayın:</string>
     <string name="auth_paste_code_instruction">2. Kodu GitHub\'a yapıştırın:</string>
-    <string name="label_found_apks">Bulunan APk\'lar</string>
+    <string name="label_found_apks">Bulunan APK\'ler</string>
     <string name="label_readme">BENİOKU</string>
     <string name="action_refresh">Yenile</string>
     <!-- Added Missing Group Strings -->
     <string name="feat_sound_modes_title">Ses modu kutucuğu</string>
-    <string name="feat_sound_modes_desc">Ses modunu değiştirmek için QS döşemesi</string>
+    <string name="feat_sound_modes_desc">Ses modunu değiştirmek için QS kutucuğu</string>
     <string name="search_sound_mode_show_slider_title">Kaydırıcıyı göster</string>
     <string name="search_sound_mode_show_slider_desc">Kutucukta ses düzeyi kaydırıcısını göster</string>
     <string name="search_sound_mode_behavior_title">Döngü Davranışı</string>
