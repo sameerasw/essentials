@@ -30,7 +30,7 @@
     <string name="button_remap_enable_title">Düğme Yeniden Eşlemesini Etkinleştir</string>
     <string name="button_remap_use_shizuku_title">Shizuku veya Kök veya Kök kullanın</string>
     <string name="button_remap_use_shizuku_desc">Ekran kapalıyken çalışır (Önerilen)</string>
-    <string name="shizuku_not_running_toast">Shizuku çalışmıyor </string>
+    <string name="shizuku_not_running_toast">Shizuku çalışmıyor</string>
     <string name="shizuku_detected_prefix">%1$s algılanan</string>
     <string name="shizuku_status_prefix">Durum: %1$s</string>
     <string name="shizuku_open_button">Shizuku\'yu aç</string>
@@ -39,7 +39,7 @@
     <string name="flashlight_options_desc">Solmayı ve diğer ayarları düzenleyin</string>
     <string name="setting_pitch_black_theme_title">Zifiri siyah tema</string>
     <string name="setting_pitch_black_theme_desc">Karanlık modda saf siyah arka plan kullanın</string>
-    <string name="settings_section_haptic">Dokunsal Geri Bildirim</string>
+    <string name="settings_section_haptic">Dokunsal Geri bildirim</string>
     <string name="button_remap_section_long_press">Uzun Basmayı Yeniden Eşle</string>
     <string name="screen_off">Ekran Kapalı</string>
     <string name="screen_on">Ekran Açık</string>
@@ -108,7 +108,7 @@
     <string name="perm_notif_policy_desc">Ses, titreşim ve sessiz modları arasında geçiş yapmak için gereklidir</string>
     <string name="caffeinate_timeout_1h">1sa</string>
     <string name="caffeinate_timeout_infinity">∞</string>
-    <string name="caffeinate_starting_in"> %1$ds\'de başlıyor…</string>
+    <string name="caffeinate_starting_in">%1$ds\'de başlıyor…</string>
     <string name="caffeinate_remaining">%1$s geriye kalan</string>
     <string name="caffeinate_live_channel_desc">Kafein için kalıcı bildirim</string>
     <!-- Dynamic Night Light -->
@@ -147,7 +147,7 @@
     <string name="freeze_automation_hint">Cihaz kilitlendiğinde seçilen uygulamaları dondurun. Ekranı kapattıktan kısa bir süre sonra kilidini açarsanız uygulamaların donmasını önlemek için bir gecikme seçin.</string>
     <string name="freeze_warning">Sistem uygulamalarının dondurulması tehlikeli olabilir ve beklenmeyen davranışlara neden olabilir.</string>
     <string name="action_enable_in_settings">Ayarlar\'da etkinleştirin</string>
-    <string name="freeze_dont_freeze_active_apps_title">Giymek\'etkin uygulamaları dondurma</string>
+    <string name="freeze_dont_freeze_active_apps_title">Aktif uygulamaları dondurmayın</string>
     <string name="perm_usage_stats_title">Kullanım İstatistikleri</string>
     <string name="perm_usage_stats_desc">Donmasını önlemek amacıyla hangi uygulamaların ön planda olduğunu tespit etmek için gereklidir</string>
     <string name="perm_usage_stats_desc_app_lock">Uygulama Kilidi özellikleri için erişilebilirlik kullanılmadığında ön planda çalışan uygulamaları tespit etmek için gereklidir.</string>
@@ -167,7 +167,7 @@
     <string name="flashlight_pulse_max_brightness">Maksimum parlaklık</string>
     <string name="flashlight_pulse_preview">Nabızı ön izle</string>
     <string name="settings_section_style">Stil</string>
-    <string name="notification_lighting_stroke_adjustment_section">Strok ayarı</string>
+    <string name="notification_lighting_stroke_adjustment_section">Vuruş ayarı</string>
     <string name="notification_lighting_corner_radius_title">Köşe yarıçapı</string>
     <string name="notification_lighting_stroke_thickness_title">Kontur kalınlığı</string>
     <string name="notification_lighting_glow_adjustment_section">Işıma ayarı</string>
@@ -228,39 +228,39 @@
     <string name="tile_private_dns_off">Kapalı</string>
     <string name="tile_usb_debugging">USB Hata Ayıklama</string>
     <string name="tile_color_picker">Renk Seçici</string>
-    <string name="toast_eyedropper_failed">Are you sure you\'re on Androdi 17? (╯°_°）╯</string>
+    <string name="toast_eyedropper_failed">Android 17 kullandığınızdan emin misiniz? (╯°_°）╯</string>
     <string name="subtitle_eye_dropper">Göz Damlalığı</string>
     <string name="on">Açık</string>
     <string name="off">Kapalı</string>
     <string name="private_dns_custom_title">Özel Özel DNS</string>
-    <string name="private_dns_presets_title">Ortak DNS Ön Ayarları</string>
+    <string name="private_dns_presets_title">DNS Ön Ayarları</string>
     <string name="dns_preset_add_title">DNS Ön Ayarı ekle</string>
     <string name="dns_preset_name_label">Ön ayar adı</string>
     <string name="dns_preset_reset_action">Sıfırla</string>
     <string name="dns_preset_delete_content_description">Ön ayarı sil</string>
     <string name="dns_preset_reset_confirm">Tüm DNS ön ayarlarını varsayılana sıfırlamak istediğinizden emin misiniz? Bu, tüm özel ön ayarlarınızı silecektir.</string>
     <string name="private_dns_hostname_label">Sağlayıcı ana bilgisayar adı</string>
-    <string name="dns_preset_adguard">AdGuard DNs\'i</string>
+    <string name="dns_preset_adguard">AdGuard DNS</string>
     <string name="dns_preset_adguard_hostname">dns.adguard.com</string>
     <string name="dns_preset_google">Google Genel DNS</string>
     <string name="dns_preset_google_hostname">dns.google</string>
-    <string name="dns_preset_cloudflare">Cloudflare DNs\'si</string>
+    <string name="dns_preset_cloudflare">Cloudflare DNS</string>
     <string name="dns_preset_cloudflare_hostname">1dot1dot1dot1.cloudflare-dns.com</string>
     <string name="dns_preset_quad9">Quad9 DNS</string>
     <string name="dns_preset_quad9_hostname">dns.quad9.net</string>
     <string name="dns_preset_cleanbrowsing">Temiz Tarama</string>
     <string name="dns_preset_cleanbrowsing_hostname">yetişkin-filtre-dns.cleanbrowsing.org</string>
     <string name="tile_charge_optimization">Şarj etme</string>
-    <string name="limit_to_80">%%80 ile sınırla</string>
+    <string name="limit_to_80">%80 ile sınırla</string>
     <string name="adaptive_charging">Uyarlanabilir</string>
     <string name="deactivated">Optimize edilmemiş</string>
     <string name="permission_missing">İzin eksik</string>
     <!-- Screen Locked Security -->
-    <string name="screen_locked_security_title">Ekran kilitli güvenlik</string>
-    <string name="screen_locked_security_dialog_title">Ekran Kilitli Güvenlik</string>
+    <string name="screen_locked_security_title">Cihaz kilitliyken QS kutucuklarını devre dışı bırak</string>
+    <string name="screen_locked_security_dialog_title">Cihaz kilitliyken QS kutucuklarını devre dışı bırak</string>
     <string name="warning_title">⚠️ UYARI</string>
-    <string name="screen_locked_security_auth_enable">Ekran kilitli güvenliği etkinleştirmek için kimlik doğrulaması yapın</string>
-    <string name="screen_locked_security_auth_disable">Ekran kilitli güvenliği devre dışı bırakmak için kimlik doğrulaması yapın</string>
+    <string name="screen_locked_security_auth_enable">Bu özelliği etkinleştirmek için kimlik doğrulaması yapın</string>
+    <string name="screen_locked_security_auth_disable">Bu özelliği devre dışı bırakmak için kimlik doğrulaması yapın</string>
     <string name="screen_locked_security_desc">Cihaz kilitliyken hızlı ayar kutucuklarını devre dışı bırakın</string>
     <string name="search_disable_qs_locked_title">Kilitlenince QS\'i devre dışı bırak</string>
     <string name="search_disable_qs_locked_desc">Cihaz kilitliyken Hızlı Ayarlar\'ın açılmasını engelleyin</string>
@@ -273,7 +273,7 @@
     <string name="sound_mode_silent">Sessiz</string>
     <!-- Status Bar Categories -->
     <string name="status_bar_category_connectivity">Bağlantı</string>
-    <string name="status_bar_category_phone_network">Telefon ve Ağ</string>
+    <string name="status_bar_category_phone_network">Telefon &amp; Ağ</string>
     <string name="status_bar_category_audio_media">Ses&amp; Medya</string>
     <string name="status_bar_category_system_status">Sistem Durumu</string>
     <string name="status_bar_category_oem_specific">OEM\'e Özel</string>
@@ -305,7 +305,7 @@
     <string name="icon_location">Konum / GPS</string>
     <string name="icon_sync">Senkronizasyon</string>
     <string name="icon_managed_profile">Yönetilen Profil</string>
-    <string name="icon_dnd">Rahatsız etmeyin</string>
+    <string name="icon_dnd">Rahatsız Etmeyin</string>
     <string name="icon_privacy">Gizlilik &amp; Güvenli Klasör</string>
     <string name="icon_security_status">Güvenlik Durumu (SU)</string>
     <string name="icon_otg">OTG Fare / Klavye</string>
@@ -430,7 +430,7 @@
     <string name="watermark_exif_aperture">Diyafram</string>
     <string name="watermark_exif_iso">ISO</string>
     <string name="watermark_exif_shutter_speed">Enstantane Hızı</string>
-    <string name="watermark_exif_date">Tarih ve Saat</string>
+    <string name="watermark_exif_date">Tarih &amp; Saat</string>
     <string name="watermark_move_to_top">Yukarıya Taşı</string>
     <string name="watermark_left_align">Sola Hizala</string>
     <string name="watermark_text_size_brand">Marka Boyutu</string>
@@ -448,7 +448,7 @@
     <string name="watermark_logo_size">Logo Boyutu</string>
     <string name="watermark_edit_texts">Filigran Metinlerini Düzenle</string>
     <string name="watermark_device_brand">Cihaz markası</string>
-    <string name="watermark_date_time">Tarih ve Saat</string>
+    <string name="watermark_date_time">Tarih &amp; Saat</string>
     <string name="watermark_no_date">Tarih bilgisi yok</string>
     <string name="watermark_rotate_left">Sola döndür</string>
     <string name="watermark_rotate_right">Sağa döndür</string>
@@ -464,9 +464,9 @@
     <string name="calendar_sync_no_calendars">Yerel takvim bulunamadı</string>
     <string name="calendar_sync_sync_started">Takvim senkronizasyonu başladı</string>
     <!-- Search Settings -->
-    <string name="search_haptic_title">Widget Dokunsal geribildirimi</string>
+    <string name="search_haptic_title">Widget Dokunsal geri bildirimi</string>
     <string name="search_haptic_desc">Widget dokunuşları için dokunsal geri bildirimi seçin</string>
-    <string name="search_smart_wifi_title">Akıllı Wi-Fi</string>
+    <string name="search_smart_wifi_title">Akıllı WiFi</string>
     <string name="search_smart_wifi_desc">WiFi bağlandığında mobil verileri gizle</string>
     <string name="search_smart_data_title">Akıllı Veriler</string>
     <string name="search_smart_data_desc">Belirli modlarda mobil verileri gizle</string>
@@ -1041,7 +1041,7 @@
     <string name="instruction_section_maps_desc">Bu özellik, şu anda Pixel 10 serisine özel olan Google Haritalar güç tasarrufu modunu otomatik olarak tetikler. Bir topluluk üyesi, haritaların minMode etkinliğini kök ayrıcalıklarıyla başlatarak herhangi bir Android cihazda hala kullanılabilir olduğunu keşfetti. \n\nVe ardından, bir gezinme oturumu sırasında ekran kapandığında otomatik olarak tetiklenecek şekilde Tasker ile otomatik hale getirdim ve ardından sadece çalışma zamanı Shizuku izinleriyle aynı şeyi başarabildim. \n\nBu özellik, Pixel 10 serisinin AOD\'sinde gösterilmek üzere tasarlanmıştır; bu nedenle, zaman zaman ekranda yatay modu desteklemediğine dair bir mesaj belirebilir.
  Bu, uygulama tarafından önlenemez ve göz ardı edebilirsiniz.</string>
     <string name="instruction_section_silent_title">Sessiz ses modu</string>
-    <string name="instruction_section_silent_desc">Sessiz modun aynı zamanda DNd\'yi de tetiklediğini fark etmiş olabilirsiniz. \n\nBu, Android\'in bunu nasıl uyguladığından kaynaklanmaktadır; titreşim moduna geçmek için aynı APi\'yi kullansak bile, bazı nedenlerden dolayı sessiz modla birlikte DNd\'yi de açar ve bu şu anda önlenebilir değildir. :(</string>
+    <string name="instruction_section_silent_desc">Sessiz modun aynı zamanda DND\'yi de tetiklediğini fark etmiş olabilirsiniz. \n\nBu, Android\'in bunu uygulama şeklinden kaynaklanmaktadır; titreşim moduna geçmek için aynı API\'yi kullansak bile, nedense sessiz modla birlikte DND\'yi de açar ve bu şu anda önlenebilir değil. :(</string>
     <string name="instruction_section_freeze_title">Dondurmak nedir?</string>
     <string name="instruction_section_freeze_desc">Uygulamaları duraklatın ve dikkatinizi dağıtacak şeylerden uzak durun, aynı zamanda arka planda çalışan uygulamaları önleyerek biraz güç tasarrufu yapın. Nadiren kullanılan uygulamalar için uygundur. \n\nSiz dondurmayı çözmediğiniz sürece acil bir durumda sizi bilgilendirmeyecekleri için herhangi bir iletişim hizmeti için önerilmez. \n\nSistem kararsızlığına yol açabileceğinden sistem uygulamalarını dondurmamanız önemle tavsiye edilir. Dikkatli ilerleyin, Uyarıldınız. \n\nDolu\'dan İlham Alındı ​​&lt;3</string>
     <string name="instruction_section_security_title">Uygulama kilidi ve ekran kilitli güvenlik gerçekten güvenli midir?</string>
@@ -1067,7 +1067,7 @@
     <string name="action_report_email">E-posta Raporu</string>
     <string name="action_copy_clipboard">Panoya kopyala</string>
     <string name="bug_report_email_subject">Temel Hata Raporu</string>
-    <string name="bug_report_send_via">Şununla gönder:</string>
+    <string name="bug_report_send_via">Lütfen kaza raporlamayı etkinleştirin; bu sayede sorunların çözülmesine yardımcı olacak ayrıntılar otomatik olarak raporlanacaktır.</string>
     <!-- Location Reached -->
     <string name="feat_location_reached_title">Henüz orada mıyız?</string>
     <string name="feat_location_reached_desc">Yakındaki hedef uyarıları</string>
@@ -1158,14 +1158,14 @@
     <string name="time_just_now">hemen şimdi</string>
     <string name="today">Bugün</string>
     <string name="yesterday">Dün</string>
-    <string name="time_min_ago">%1$dm önce</string>
-    <string name="time_hour_ago">%1$dsaat önce</string>
-    <string name="time_day_ago">%1$dgün önce</string>
+    <string name="time_min_ago">%1$ddk önce</string>
+    <string name="time_hour_ago">%1$dsa önce</string>
+    <string name="time_day_ago">%1$dg önce</string>
     <string name="time_days_ago">%1$d gün önce</string>
     <string name="time_weeks_ago">%1$d hafta önce</string>
-    <string name="time_month_ago">%1$day önce</string>
+    <string name="time_month_ago">%1$d ay önce</string>
     <string name="time_months_ago">%1$d ay önce</string>
-    <string name="time_year_ago">%1$dsen önce</string>
+    <string name="time_year_ago">%1$dy önce</string>
     <string name="action_retry">Yeniden dene</string>
     <string name="action_start_sign_in">Oturum Açmayı Başlat</string>
     <string name="auth_requesting_code">Cihaz kodu isteniyor...</string>
