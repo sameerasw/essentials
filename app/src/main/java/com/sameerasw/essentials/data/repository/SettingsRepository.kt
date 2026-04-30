@@ -204,6 +204,11 @@ class SettingsRepository(private val context: Context) {
         const val KEY_SCALE_ANIMATIONS_MODE = "scale_animations_mode"
         const val KEY_SCALE_ANIMATIONS_DEFAULT_PROFILE = "scale_animations_default_profile"
         const val KEY_SCALE_ANIMATIONS_GLOVE_PROFILE = "scale_animations_glove_profile"
+        const val KEY_REFRESH_RATE_MODE = "refresh_rate_mode"
+        const val KEY_REFRESH_RATE_FIXED = "refresh_rate_fixed"
+        const val KEY_REFRESH_RATE_MIN = "refresh_rate_min"
+        const val KEY_REFRESH_RATE_PEAK = "refresh_rate_peak"
+        const val KEY_REFRESH_RATE_DEFAULT_PEAK_INFINITY = "refresh_rate_default_peak_infinity"
     }
 
     // Observe changes
@@ -908,6 +913,24 @@ class SettingsRepository(private val context: Context) {
             if (contains(KEY_WINDOW_ANIMATION_SCALE)) {
                 setAnimationScale(android.provider.Settings.Global.WINDOW_ANIMATION_SCALE, getFloat(KEY_WINDOW_ANIMATION_SCALE, 1.0f))
             }
+            if (contains(KEY_REFRESH_RATE_FIXED) || contains(KEY_REFRESH_RATE_MIN) || contains(KEY_REFRESH_RATE_PEAK)) {
+                val mode = getRefreshRateMode()
+                val fixed = getFloat(KEY_REFRESH_RATE_FIXED, 0f)
+                val min = getFloat(KEY_REFRESH_RATE_MIN, 0f)
+                val peak = getFloat(KEY_REFRESH_RATE_PEAK, 0f)
+
+                if (fixed <= 0f && min <= 0f && peak <= 0f) {
+                    com.sameerasw.essentials.utils.RefreshRateUtils.resetRefreshRate(
+                        shouldRestoreInfinityPeakOnRefreshRateReset()
+                    )
+                } else if (mode == com.sameerasw.essentials.utils.RefreshRateUtils.MODE_RANGE && min > 0f && peak > 0f) {
+                    com.sameerasw.essentials.utils.RefreshRateUtils.applyRangeRefreshRate(min, peak)
+                } else if (fixed > 0f || peak > 0f) {
+                    com.sameerasw.essentials.utils.RefreshRateUtils.applyFixedRefreshRate(
+                        if (fixed > 0f) fixed else peak
+                    )
+                }
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -967,6 +990,25 @@ class SettingsRepository(private val context: Context) {
 
     fun getScaleAnimationsMode(): String = getString(KEY_SCALE_ANIMATIONS_MODE, "default") ?: "default"
     fun setScaleAnimationsMode(mode: String) = putString(KEY_SCALE_ANIMATIONS_MODE, mode)
+
+    fun getRefreshRateMode(): String =
+        getString(KEY_REFRESH_RATE_MODE, com.sameerasw.essentials.utils.RefreshRateUtils.MODE_FIXED)
+            ?: com.sameerasw.essentials.utils.RefreshRateUtils.MODE_FIXED
+
+    fun setRefreshRateMode(mode: String) = putString(KEY_REFRESH_RATE_MODE, mode)
+
+    fun saveRefreshRateState(mode: String, fixed: Float, min: Float, peak: Float) {
+        putString(KEY_REFRESH_RATE_MODE, mode)
+        putFloat(KEY_REFRESH_RATE_FIXED, fixed)
+        putFloat(KEY_REFRESH_RATE_MIN, min)
+        putFloat(KEY_REFRESH_RATE_PEAK, peak)
+    }
+
+    fun shouldRestoreInfinityPeakOnRefreshRateReset(): Boolean =
+        getBoolean(KEY_REFRESH_RATE_DEFAULT_PEAK_INFINITY, false)
+
+    fun setRestoreInfinityPeakOnRefreshRateReset(enabled: Boolean) =
+        putBoolean(KEY_REFRESH_RATE_DEFAULT_PEAK_INFINITY, enabled)
 
     fun getScaleAnimationsProfile(mode: String): ScaleAnimationsProfile {
         val key = if (mode == "glove") KEY_SCALE_ANIMATIONS_GLOVE_PROFILE else KEY_SCALE_ANIMATIONS_DEFAULT_PROFILE

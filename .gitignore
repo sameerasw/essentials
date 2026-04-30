@@ -31,3 +31,5 @@ replay_pid*
 *app/release/
 
 Build/
+
+local.properties

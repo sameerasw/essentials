@@ -34,6 +34,8 @@ fun initPermissionRegistry() {
     PermissionRegistry.register("SHIZUKU", R.string.feat_freeze_title)
     PermissionRegistry.register("SHIZUKU", R.string.feat_maps_power_saving_title)
     PermissionRegistry.register("SHIZUKU", R.string.feat_screen_locked_security_title)
+    PermissionRegistry.register("SHIZUKU", R.string.feat_screen_refresh_rate_title)
+    PermissionRegistry.register("SHIZUKU", R.string.tile_refresh_rate)
     PermissionRegistry.register("USAGE_STATS", R.string.feat_freeze_title)
     PermissionRegistry.register("USAGE_STATS", R.string.feat_app_lock_title)
     PermissionRegistry.register("USAGE_STATS", R.string.feat_dynamic_night_light_title)

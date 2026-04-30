@@ -80,6 +80,7 @@ class QSPreferencesActivity : ComponentActivity() {
                 "com.sameerasw.essentials.services.tiles.StayAwakeTileService" -> "Quick settings tiles"
                 "com.sameerasw.essentials.services.tiles.NfcTileService" -> "NFC"
                 "com.sameerasw.essentials.services.tiles.AdaptiveBrightnessTileService" -> "Quick settings tiles"
+                "com.sameerasw.essentials.services.tiles.RefreshRateTileService" -> "Screen refresh rate"
                 "com.sameerasw.essentials.services.tiles.MapsPowerSavingTileService" -> "Maps power saving mode"
                 "com.sameerasw.essentials.services.tiles.UsbDebuggingTileService" -> "Quick settings tiles"
                 "com.sameerasw.essentials.services.tiles.BatteryNotificationTileService" -> "Battery notification"

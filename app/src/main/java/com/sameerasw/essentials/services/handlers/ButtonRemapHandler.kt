@@ -150,9 +150,9 @@ class ButtonRemapHandler(
                 val am = service.getSystemService(Context.AUDIO_SERVICE) as AudioManager
                 val direction =
                     if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) AudioManager.ADJUST_RAISE else AudioManager.ADJUST_LOWER
-                am.adjustStreamVolume(
-                    AudioManager.STREAM_MUSIC,
+                am.adjustSuggestedStreamVolume(
                     direction,
+                    AudioManager.USE_DEFAULT_STREAM_TYPE,
                     AudioManager.FLAG_SHOW_UI
                 )
             }
