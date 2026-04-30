@@ -28,7 +28,7 @@
     <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Aktiveer Knoppie Remap</string>
-    <string name="button_remap_use_shizuku_title">Gebruik Shizuku of Root of Root</string>
+    <string name="button_remap_use_shizuku_title">Use Shizuku or Root</string>
     <string name="button_remap_use_shizuku_desc">Werk met skerm af (aanbeveel)</string>
     <string name="shizuku_not_running_toast">Shizuku loop nie</string>
     <string name="shizuku_detected_prefix">Bespeur %1$s</string>
