@@ -28,7 +28,7 @@
     <string name="setting_use_usage_access_desc">アクセシビリティの代わりに（フリーズ、アプリロック、ダイナミックナイトモード）</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">ボタンリマップを有効にする</string>
-    <string name="button_remap_use_shizuku_title">Shizuku を使用する</string>
+    <string name="button_remap_use_shizuku_title">Use Shizuku or Root</string>
     <string name="button_remap_use_shizuku_desc">画面オフ時にも動作させます (推奨)</string>
     <string name="shizuku_not_running_toast">Shizukuは動作していません</string>
     <string name="shizuku_detected_prefix">%1$s を検出</string>
