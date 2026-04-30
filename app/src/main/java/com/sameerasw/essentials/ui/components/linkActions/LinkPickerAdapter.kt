@@ -365,7 +365,7 @@ fun LinkPickerScreen(
         }
 
         ModalBottomSheet(
-            onDismissRequest = { },
+            onDismissRequest = { showEditSheet = false },
             sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
             containerColor = MaterialTheme.colorScheme.surfaceContainer
         ) {

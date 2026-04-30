@@ -42,11 +42,15 @@ class FlashlightHandler(
     private var flashlightJob: Job? = null
     private var isInternalToggle = false
 
-    private val NOTIFICATION_ID_FLASHLIGHT = 1001
+    private val NOTIFICATION_ID_FLASHLIGHT = 1010
     private val CHANNEL_ID_FLASHLIGHT = "flashlight_live_update"
 
     private val torchCallback = object : CameraManager.TorchCallback() {
         override fun onTorchModeChanged(cameraId: String, enabled: Boolean) {
+            if (!enabled) {
+                cancelFlashlightNotification()
+            }
+
             val primaryId = getCameraId()
             if (cameraId != primaryId) return // Ignore updates from auxiliary camera IDs
 
@@ -140,7 +144,7 @@ class FlashlightHandler(
 
     private fun updateFlashlightNotification(intensity: Int) {
         val prefs = service.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-        if (!prefs.getBoolean("flashlight_live_update_enabled", true)) {
+        if (!prefs.getBoolean("flashlight_live_update_enabled", true) || !isTorchOn) {
             cancelFlashlightNotification()
             return
         }

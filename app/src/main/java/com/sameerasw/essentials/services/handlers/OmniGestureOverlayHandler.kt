@@ -37,26 +37,16 @@ class OmniGestureOverlayHandler(private val service: AccessibilityService) {
         runCatching { VibrationEffect.createWaveform(timings, amplitudes, -1) }.getOrNull()
     }
 
-    fun updateOverlay(enabled: Boolean) {
+    fun updateOverlay(enabled: Boolean, heightDp: Float = 48f, isPreview: Boolean = false) {
         handler.post {
-            if (enabled) showOverlay() else removeOverlay()
+            if (enabled) showOverlay(heightDp, isPreview) else removeOverlay()
         }
     }
 
-    private fun showOverlay() {
-        if (overlayView != null) return
-
-        overlayView = View(service).apply {
-            setBackgroundColor(Color.TRANSPARENT)
-            setOnTouchListener { _, event ->
-                handleTouch(event)
-                true
-            }
-        }
-
+    private fun showOverlay(heightDp: Float, isPreview: Boolean) {
         val params = WindowManager.LayoutParams(
             dpToPx(WIDTH_DP),
-            dpToPx(HEIGHT_DP),
+            dpToPx(heightDp),
             WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                     WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
@@ -69,7 +59,21 @@ class OmniGestureOverlayHandler(private val service: AccessibilityService) {
             }
         }
 
-        runCatching { windowManager.addView(overlayView, params) }
+        if (overlayView == null) {
+            overlayView = View(service).apply {
+                setBackgroundColor(if (isPreview) Color.parseColor("#406200EE") else Color.TRANSPARENT)
+                setOnTouchListener { _, event ->
+                    handleTouch(event)
+                    true
+                }
+            }
+            runCatching { windowManager.addView(overlayView, params) }
+        } else {
+            overlayView?.apply {
+                setBackgroundColor(if (isPreview) Color.parseColor("#406200EE") else Color.TRANSPARENT)
+                runCatching { windowManager.updateViewLayout(this, params) }
+            }
+        }
     }
 
     private fun handleTouch(event: MotionEvent) {

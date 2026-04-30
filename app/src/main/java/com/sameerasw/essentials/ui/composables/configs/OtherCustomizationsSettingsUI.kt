@@ -23,7 +23,15 @@ import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.sheets.PermissionItem
 import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.runtime.DisposableEffect
+import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.viewmodels.MainViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.compose.ui.platform.LocalLifecycleOwner
 
 enum class PermissionModule {
     HIDE_GESTURE_BAR,
@@ -119,19 +127,35 @@ fun OtherCustomizationsSettingsUI(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
+        val isShizukuGranted = viewModel.isShizukuAvailable.value && viewModel.isShizukuPermissionGranted.value
+        val isRootGranted = viewModel.isRootAvailable.value && viewModel.isRootPermissionGranted.value
+        val isShellGranted = isShizukuGranted || isRootGranted
+        val isAccessibilityEnabled = viewModel.isAccessibilityEnabled.value
+        val isUsageStatsGranted = viewModel.isUsageStatsPermissionGranted.value
+        val isAppDetectionGranted = if (viewModel.isUseUsageAccess.value) isUsageStatsGranted else isAccessibilityEnabled
 
         RoundedCardContainer(
             modifier = Modifier,
             spacing = 2.dp,
             cornerRadius = 24.dp
         ) {
-            val isShizukuGranted = viewModel.isShizukuAvailable.value && viewModel.isShizukuPermissionGranted.value
-            val isRootGranted = viewModel.isRootAvailable.value && viewModel.isRootPermissionGranted.value
-            val isShellGranted = isShizukuGranted || isRootGranted
-            val isAccessibilityEnabled = viewModel.isAccessibilityEnabled.value
-            val isUsageStatsGranted = viewModel.isUsageStatsPermissionGranted.value
-            val isAppDetectionGranted = if (viewModel.isUseUsageAccess.value) isUsageStatsGranted else isAccessibilityEnabled
-            
+
+            val lifecycleOwner = LocalLifecycleOwner.current
+            DisposableEffect(lifecycleOwner, viewModel.isCircleToSearchGestureEnabled.value) {
+                val observer = LifecycleEventObserver { _, event ->
+                    if (event == Lifecycle.Event.ON_RESUME) {
+                        viewModel.setCircleToSearchPreviewEnabled(viewModel.isCircleToSearchGestureEnabled.value)
+                    } else if (event == Lifecycle.Event.ON_PAUSE) {
+                        viewModel.setCircleToSearchPreviewEnabled(false)
+                    }
+                }
+                lifecycleOwner.lifecycle.addObserver(observer)
+                onDispose {
+                    lifecycleOwner.lifecycle.removeObserver(observer)
+                    viewModel.setCircleToSearchPreviewEnabled(false)
+                }
+            }
+
             IconToggleItem(
                 title = stringResource(R.string.feat_hide_gesture_bar_title),
                 description = stringResource(R.string.feat_hide_gesture_bar_desc),
@@ -185,7 +209,7 @@ fun OtherCustomizationsSettingsUI(
                         requestingPermissionFor = PermissionModule.CIRCLE_TO_SEARCH
                     }
                 },
-                enabled = viewModel.isHideGestureBarEnabled.value || viewModel.isHideGestureBarOnLauncherEnabled.value,
+                enabled = true,
                 onDisabledClick = {
                     if (!isShellGranted || !isAccessibilityEnabled) {
                         requestingPermissionFor = PermissionModule.CIRCLE_TO_SEARCH
@@ -194,6 +218,23 @@ fun OtherCustomizationsSettingsUI(
                 iconRes = R.drawable.rounded_touch_app_24,
                 modifier = Modifier.highlight(highlightSetting == "circle_to_search_gesture_toggle")
             )
+
+            AnimatedVisibility(
+                visible = viewModel.isCircleToSearchGestureEnabled.value,
+                enter = expandVertically(),
+                exit = shrinkVertically()
+            ) {
+                ConfigSliderItem(
+                    title = stringResource(R.string.feat_circle_to_search_gesture_height_title),
+                    value = viewModel.circleToSearchGestureHeight.floatValue,
+                    onValueChange = { viewModel.setCircleToSearchGestureHeight(it) },
+                    valueRange = 24f..120f,
+                    increment = 4f,
+                    iconRes = R.drawable.rounded_border_bottom_24,
+                    description = stringResource(R.string.feat_circle_to_search_gesture_height_desc),
+                    valueFormatter = { "${it.toInt()} dp" }
+                )
+            }
         }
     }
 }

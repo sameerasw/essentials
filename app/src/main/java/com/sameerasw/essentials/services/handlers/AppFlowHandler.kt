@@ -27,6 +27,7 @@ class AppFlowHandler(
     private val scope = CoroutineScope(Dispatchers.Main)
 
     private val authenticatedPackages = mutableSetOf<String>()
+    private val lastLeaveTimes = mutableMapOf<String, Long>()
 
     // App Lock State
     private var lockingPackage: String? = null
@@ -53,7 +54,12 @@ class AppFlowHandler(
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
         val useUsageAccess = prefs.getBoolean("use_usage_access", false)
 
+        val oldPackage = currentPackage
         currentPackage = packageName
+
+        if (oldPackage != null && oldPackage != packageName) {
+            lastLeaveTimes[oldPackage] = System.currentTimeMillis()
+        }
 
         if (packageName != context.packageName && packageName != lockingPackage) {
             lockingPackage = null
@@ -100,6 +106,29 @@ class AppFlowHandler(
         }
 
         val isLocked = selectedApps.find { it.packageName == packageName }?.isEnabled ?: false
+
+        if (isLocked && authenticatedPackages.contains(packageName)) {
+            val delayIndex = prefs.getInt("app_lock_auto_lock_delay_index", 0)
+            if (delayIndex > 0) {
+                val delayMinutes = when (delayIndex) {
+                    1 -> 1
+                    2 -> 5
+                    3 -> 10
+                    4 -> 20
+                    5 -> 30
+                    else -> 0
+                }
+                
+                val lastLeaveTime = lastLeaveTimes[packageName] ?: 0L
+                if (lastLeaveTime > 0) {
+                    val now = System.currentTimeMillis()
+                    if (now - lastLeaveTime > delayMinutes * 60 * 1000L) {
+                        authenticatedPackages.remove(packageName)
+                        lastLeaveTimes.remove(packageName)
+                    }
+                }
+            }
+        }
 
         if (isLocked && !authenticatedPackages.contains(packageName)) {
             // Skip if we already requested a lock for this package very recently
