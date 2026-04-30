@@ -13,6 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.staticCompositionLocalOf
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 
 @Composable
@@ -58,11 +59,13 @@ fun SegmentedDropdownMenuItem(
     )
 ) {
     val view = androidx.compose.ui.platform.LocalView.current
+    val dismiss = LocalDropdownMenuDismiss.current
     DropdownMenuItem(
         text = text,
         onClick = {
             com.sameerasw.essentials.utils.HapticUtil.performUIHaptic(view)
             onClick()
+            dismiss?.invoke()
         },
         modifier = modifier
             .clip(MaterialTheme.shapes.extraSmall)
@@ -73,3 +76,5 @@ fun SegmentedDropdownMenuItem(
         colors = colors
     )
 }
+
+val LocalDropdownMenuDismiss = staticCompositionLocalOf<(() -> Unit)?> { null }

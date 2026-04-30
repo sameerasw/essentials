@@ -20,8 +20,10 @@ import androidx.fragment.app.FragmentActivity
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.cards.FeatureCard
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
+import com.sameerasw.essentials.ui.components.cards.ConfigPickerItem
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.sheets.AppSelectionSheet
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.BiometricHelper
 import com.sameerasw.essentials.viewmodels.MainViewModel
@@ -42,6 +44,15 @@ fun AppLockSettingsUI(
     val isUsageStatsPermissionGranted by viewModel.isUsageStatsPermissionGranted
     
     val canEnableAppLock = if (isUseUsageAccess) isUsageStatsPermissionGranted else isAccessibilityEnabled
+
+    val delayLabels = listOf(
+        stringResource(R.string.app_lock_auto_lock_delay_none),
+        stringResource(R.string.app_lock_auto_lock_delay_1min),
+        stringResource(R.string.app_lock_auto_lock_delay_5min),
+        stringResource(R.string.app_lock_auto_lock_delay_10min),
+        stringResource(R.string.app_lock_auto_lock_delay_20min),
+        stringResource(R.string.app_lock_auto_lock_delay_30min)
+    )
 
     Column(
         modifier = modifier
@@ -95,6 +106,24 @@ fun AppLockSettingsUI(
                 onClick = { isAppSelectionSheetOpen = true },
                 modifier = Modifier.highlight(highlightKey == "app_lock_selected_apps")
             )
+
+            ConfigPickerItem(
+                title = stringResource(R.string.app_lock_auto_lock_delay_title),
+                description = stringResource(R.string.app_lock_auto_lock_delay_desc),
+                iconRes = R.drawable.rounded_lock_clock_24,
+                isEnabled = isAppLockEnabled,
+                selectedValue = delayLabels[viewModel.appLockAutoLockDelayIndex.intValue],
+                modifier = Modifier.highlight(highlightKey == "app_lock_auto_lock_delay")
+            ) {
+                delayLabels.forEachIndexed { index, label ->
+                    SegmentedDropdownMenuItem(
+                        text = { Text(label) },
+                        onClick = {
+                            viewModel.setAppLockAutoLockDelayIndex(index)
+                        }
+                    )
+                }
+            }
         }
 
         Text(

@@ -173,6 +173,7 @@ class MainViewModel : ViewModel() {
     val notificationLightingSystemMode = mutableIntStateOf(0) // 0: Charging ripple, 1: Auth ripple
     val skipPersistentNotifications = mutableStateOf(false)
     val isAppLockEnabled = mutableStateOf(false)
+    val appLockAutoLockDelayIndex = mutableIntStateOf(0)
     val isUseUsageAccess = mutableStateOf(false)
     val isFreezeWhenLockedEnabled = mutableStateOf(false)
     val freezeLockDelayIndex = mutableIntStateOf(1) // Default: 1 minute
@@ -967,6 +968,8 @@ class MainViewModel : ViewModel() {
             settingsRepository.getLong(SettingsRepository.KEY_LAST_UPDATE_CHECK_TIME)
         isAppLockEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_APP_LOCK_ENABLED)
+        appLockAutoLockDelayIndex.intValue =
+            settingsRepository.getInt(SettingsRepository.KEY_APP_LOCK_AUTO_LOCK_DELAY_INDEX, 0)
         isFreezeWhenLockedEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_FREEZE_WHEN_LOCKED_ENABLED)
         isFreezeDontFreezeActiveAppsEnabled.value =
@@ -1435,6 +1438,11 @@ class MainViewModel : ViewModel() {
         isAppLockEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_APP_LOCK_ENABLED, enabled)
         updateAppDetectionService(context)
+    }
+
+    fun setAppLockAutoLockDelayIndex(index: Int) {
+        appLockAutoLockDelayIndex.intValue = index
+        settingsRepository.putInt(SettingsRepository.KEY_APP_LOCK_AUTO_LOCK_DELAY_INDEX, index)
     }
 
     fun setUseUsageAccess(enabled: Boolean, context: Context) {

@@ -432,6 +432,14 @@
     <string name="feat_screen_locked_security_title">Screen locked security</string>
     <string name="feat_app_lock_title">App lock</string>
     <string name="feat_app_lock_desc">Secure apps with biometrics</string>
+    <string name="app_lock_auto_lock_delay_title">Auto lock delay</string>
+    <string name="app_lock_auto_lock_delay_desc">After leaving the app</string>
+    <string name="app_lock_auto_lock_delay_none">None</string>
+    <string name="app_lock_auto_lock_delay_1min">1 minute</string>
+    <string name="app_lock_auto_lock_delay_5min">5 minutes</string>
+    <string name="app_lock_auto_lock_delay_10min">10 minutes</string>
+    <string name="app_lock_auto_lock_delay_20min">20 minutes</string>
+    <string name="app_lock_auto_lock_delay_30min">30 minutes</string>
     <string name="feat_freeze_title">Freeze</string>
     <string name="feat_freeze_desc">Disable rarely used apps</string>
     <string name="feat_watermark_title">Watermark</string>

@@ -124,6 +124,7 @@ class SettingsRepository(private val context: Context) {
 
         const val KEY_APP_LOCK_ENABLED = "app_lock_enabled"
         const val KEY_APP_LOCK_SELECTED_APPS = "app_lock_selected_apps"
+        const val KEY_APP_LOCK_AUTO_LOCK_DELAY_INDEX = "app_lock_auto_lock_delay_index"
         const val KEY_USE_USAGE_ACCESS = "use_usage_access"
 
         const val KEY_FREEZE_WHEN_LOCKED_ENABLED = "freeze_when_locked_enabled"
