@@ -1021,7 +1021,6 @@
     <string name="action_turn_off">Uitzetten</string>
     <string name="feature_flashlight_brightness_title">Helderheid van zaklamp</string>
     <!-- QS / Activities -->
-    <string name="error_unlock_network_settings">Ontgrendel de telefoon om netwerkinstellingen te veranderen</string>
     <!-- About Section -->
     <string name="developed_by_format">Ontwikkelt door %1$s\nmet ❤\uFE0F uit \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="action_website">Website</string>

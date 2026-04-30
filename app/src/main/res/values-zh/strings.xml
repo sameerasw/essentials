@@ -1021,7 +1021,6 @@
     <string name="action_turn_off">关闭</string>
     <string name="feature_flashlight_brightness_title">手电筒亮度</string>
     <!-- QS / Activities -->
-    <string name="error_unlock_network_settings">解锁手机以更改网络设置</string>
     <!-- About Section -->
     <string name="developed_by_format">由 %1$s 开发\n带着 ❤\uFE0F 来自 \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="action_website">网站</string>

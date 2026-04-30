@@ -1021,7 +1021,6 @@
     <string name="action_turn_off">Ausschalten</string>
     <string name="feature_flashlight_brightness_title">Helligkeit der Taschenlampe</string>
     <!-- QS / Activities -->
-    <string name="error_unlock_network_settings">Entsperre das Handy, um die Netzwerkeinstellungen zu ändern</string>
     <!-- About Section -->
     <string name="developed_by_format">Entwickelt von %1$s\nmit ❤\uFE0F in \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="action_website">Webseite</string>

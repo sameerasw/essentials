@@ -1021,7 +1021,6 @@
     <string name="action_turn_off">Выключить</string>
     <string name="feature_flashlight_brightness_title">Яркость фонарика</string>
     <!-- QS / Activities -->
-    <string name="error_unlock_network_settings">Разблокируйте телефон, чтобы изменить настройки сети</string>
     <!-- About Section -->
     <string name="developed_by_format">Разработано %1$s\nс ❤\uFE0F из \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="action_website">Веб-сайт</string>

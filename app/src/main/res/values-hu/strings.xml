@@ -1021,7 +1021,6 @@
     <string name="action_turn_off">Kapcsolja ki</string>
     <string name="feature_flashlight_brightness_title">Zseblámpa fényereje</string>
     <!-- QS / Activities -->
-    <string name="error_unlock_network_settings">Oldja fel a telefon zárolását a hálózati beállítások módosításához</string>
     <!-- About Section -->
     <string name="developed_by_format">Fejlesztője: %1$s\na ❤\uFE0F feladó \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="action_website">Weboldal</string>

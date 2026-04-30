@@ -1021,7 +1021,6 @@
     <string name="action_turn_off">Vypnout</string>
     <string name="feature_flashlight_brightness_title">Jas svítilny</string>
     <!-- QS / Activities -->
-    <string name="error_unlock_network_settings">Chcete-li změnit nastavení sítě, odemkněte telefon</string>
     <!-- About Section -->
     <string name="developed_by_format">Vyvinuto společností %1$s\ns ❤\uFE0F  od \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="action_website">webové stránky</string>

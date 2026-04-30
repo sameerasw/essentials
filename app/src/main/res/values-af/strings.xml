@@ -1021,7 +1021,6 @@
     <string name="action_turn_off">Skakel Af</string>
     <string name="feature_flashlight_brightness_title">Flitslig Helderheid</string>
     <!-- QS / Activities -->
-    <string name="error_unlock_network_settings">Ontsluit foon om netwerkinstellings te verander</string>
     <!-- About Section -->
     <string name="developed_by_format">Ontwikkel deur %1$s\nmet ❤\uFE0F van \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="action_website">Webwerf</string>

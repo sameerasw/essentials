@@ -1021,7 +1021,6 @@
     <string name="action_turn_off">オフにする</string>
     <string name="feature_flashlight_brightness_title">ライトの明るさ</string>
     <!-- QS / Activities -->
-    <string name="error_unlock_network_settings">ネットワーク設定を変更するには、ロックを解除してください</string>
     <!-- About Section -->
     <string name="developed_by_format">制作者 %1$s\n with ❤\uFE0F from \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="action_website">ウェブサイト</string>

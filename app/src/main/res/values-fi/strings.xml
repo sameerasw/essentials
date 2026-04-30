@@ -1021,7 +1021,6 @@
     <string name="action_turn_off">Sammuta</string>
     <string name="feature_flashlight_brightness_title">Taskulamppujen kirkkaus</string>
     <!-- QS / Activities -->
-    <string name="error_unlock_network_settings">Avaa puhelimen lukitus muuttaaksesi verkkoasetuksia</string>
     <!-- About Section -->
     <string name="developed_by_format">Kehittäjä %1$s\nyhdessä ❤\uFE0F  alkaen \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="action_website">Verkkosivusto</string>

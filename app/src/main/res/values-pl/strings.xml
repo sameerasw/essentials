@@ -1021,7 +1021,6 @@
     <string name="action_turn_off">Wyłączyć coś</string>
     <string name="feature_flashlight_brightness_title">Jasność latarki</string>
     <!-- QS / Activities -->
-    <string name="error_unlock_network_settings">Odblokuj telefon, aby zmienić ustawienia sieciowe</string>
     <!-- About Section -->
     <string name="developed_by_format">Opracowany przez %1$s\nz ❤\uFE0F od \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="action_website">Strona internetowa</string>

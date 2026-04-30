@@ -1021,7 +1021,6 @@
     <string name="action_turn_off">Tắt</string>
     <string name="feature_flashlight_brightness_title">Độ sáng của đèn pin</string>
     <!-- QS / Activities -->
-    <string name="error_unlock_network_settings">Mở khóa điện thoại để thay đổi cài đặt mạng</string>
     <!-- About Section -->
     <string name="developed_by_format">Được phát triển bởi %1$s\nvới ❤\uFE0F từ \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="action_website">Trang web</string>

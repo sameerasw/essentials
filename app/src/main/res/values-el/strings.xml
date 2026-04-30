@@ -1021,7 +1021,6 @@
     <string name="action_turn_off">Κλείνω</string>
     <string name="feature_flashlight_brightness_title">Φωτεινότητα φακού</string>
     <!-- QS / Activities -->
-    <string name="error_unlock_network_settings">Ξεκλειδώστε το τηλέφωνο για να αλλάξετε τις ρυθμίσεις δικτύου</string>
     <!-- About Section -->
     <string name="developed_by_format">Αναπτύχθηκε από %1$s\nμε ❤\uFE0F από \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="action_website">Δικτυακός τόπος</string>

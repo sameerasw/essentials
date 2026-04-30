@@ -1021,7 +1021,6 @@
     <string name="action_turn_off">Turn Off</string>
     <string name="feature_flashlight_brightness_title">Flashlight Brightness</string>
     <!-- QS / Activities -->
-    <string name="error_unlock_network_settings">Unlock phone to change network settings</string>
     <!-- About Section -->
     <string name="developed_by_format">Developed by %1$s\nwith ❤\uFE0F from \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="action_website">Website</string>

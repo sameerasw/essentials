@@ -1021,7 +1021,6 @@
     <string name="action_turn_off">Spegnere</string>
     <string name="feature_flashlight_brightness_title">Luminosità della torcia</string>
     <!-- QS / Activities -->
-    <string name="error_unlock_network_settings">Sblocca il telefono per modificare le impostazioni di rete</string>
     <!-- About Section -->
     <string name="developed_by_format">Sviluppato da %1$s\ncon ❤\uFE0F da \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="action_website">Sito web</string>

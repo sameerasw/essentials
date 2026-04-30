@@ -1021,7 +1021,6 @@
     <string name="action_turn_off">Slå av</string>
     <string name="feature_flashlight_brightness_title">Lommelykt lysstyrke</string>
     <!-- QS / Activities -->
-    <string name="error_unlock_network_settings">Lås opp telefonen for å endre nettverksinnstillinger</string>
     <!-- About Section -->
     <string name="developed_by_format">Utviklet av %1$s\nmed ❤\uFE0F fra \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="action_website">Nettsted</string>

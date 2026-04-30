@@ -1021,7 +1021,6 @@
     <string name="action_turn_off">Neko</string>
     <string name="feature_flashlight_brightness_title">Lero pa mac ma ki lwongo ni Flashlight</string>
     <!-- QS / Activities -->
-    <string name="error_unlock_network_settings">Yab cim me loko kit ma ki keto kwede cim</string>
     <!-- About Section -->
     <string name="developed_by_format">Ki yubu ki %1$s\nki ❤\uFE0F ki \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="action_website">Kabedo me wilobo</string>

@@ -1021,7 +1021,6 @@
     <string name="action_turn_off">Kapamak</string>
     <string name="feature_flashlight_brightness_title">El Feneri Parlaklığı</string>
     <!-- QS / Activities -->
-    <string name="error_unlock_network_settings">Ağ ayarlarını değiştirmek için telefonun kilidini açın</string>
     <!-- About Section -->
     <string name="developed_by_format">%1$s tarafından\n❤\uFE0F ile \uD83C\uDDF1\uD83C\uDDF0\'de geliştirildi</string>
     <string name="action_website">Web sitesi</string>

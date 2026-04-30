@@ -1021,7 +1021,6 @@
     <string name="action_turn_off">Sluk</string>
     <string name="feature_flashlight_brightness_title">Lommelygte lysstyrke</string>
     <!-- QS / Activities -->
-    <string name="error_unlock_network_settings">Lås telefonen op for at ændre netværksindstillinger</string>
     <!-- About Section -->
     <string name="developed_by_format">Udviklet af %1$s\nmed ❤\uFE0F fra \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="action_website">Hjemmeside</string>

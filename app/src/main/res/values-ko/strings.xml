@@ -1021,7 +1021,6 @@
     <string name="action_turn_off">끄기</string>
     <string name="feature_flashlight_brightness_title">손전등 밝기</string>
     <!-- QS / Activities -->
-    <string name="error_unlock_network_settings">네트워크 설정을 변경하려면 휴대전화를 잠금 해제하세요.</string>
     <!-- About Section -->
     <string name="developed_by_format">❤ %1$s\nfrom과 함께\uFE0F 에 의해 개발됨 \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="action_website">웹사이트</string>

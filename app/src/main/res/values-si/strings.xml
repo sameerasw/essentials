@@ -1021,7 +1021,6 @@
     <string name="action_turn_off">නිවා දමන්න</string>
     <string name="feature_flashlight_brightness_title">ෆ්ලෑෂ් ලයිට් දීප්තිය</string>
     <!-- QS / Activities -->
-    <string name="error_unlock_network_settings">ජාල සැකසුම් වෙනස් කිරීමට දුරකථනය අගුළු හරින්න</string>
     <!-- About Section -->
     <string name="developed_by_format"> %1$s\n සමගින් ❤\uFE0F  වෙතින් සංවර්ධිත \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="action_website">වෙබ් අඩවිය</string>

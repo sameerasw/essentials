@@ -1021,7 +1021,6 @@
     <string name="action_turn_off">Éteindre</string>
     <string name="feature_flashlight_brightness_title">Luminosité de la lampe-torche</string>
     <!-- QS / Activities -->
-    <string name="error_unlock_network_settings">Déverrouillez le téléphone pour changer les paramètres réseaux</string>
     <!-- About Section -->
     <string name="developed_by_format">Développé par %1$s\n avec ❤\uFE0F du \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="action_website">Site web</string>

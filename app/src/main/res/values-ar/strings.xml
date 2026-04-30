@@ -1021,7 +1021,6 @@
     <string name="action_turn_off">إيقاف</string>
     <string name="feature_flashlight_brightness_title">سطوع المصباح</string>
     <!-- QS / Activities -->
-    <string name="error_unlock_network_settings">افتح قفل الهاتف لتغيير إعدادات الشبكة</string>
     <!-- About Section -->
     <string name="developed_by_format">تم تطويره بواسطة %1$s\nمع ❤\uFE0F من \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="action_website">موقعي الإلكتروني</string>

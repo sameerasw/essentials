@@ -1023,7 +1023,6 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla S
     <string name="action_turn_off">Apagar</string>
     <string name="feature_flashlight_brightness_title">Brillo de la linterna</string>
     <!-- QS / Activities -->
-    <string name="error_unlock_network_settings">Desbloquear el teléfono para cambiar la configuración de red</string>
     <!-- About Section -->
     <string name="developed_by_format">Desarrollado por %1$s\ncon ❤\uFE0F de \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="action_website">Sitio web</string>

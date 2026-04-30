@@ -1021,7 +1021,6 @@
     <string name="action_turn_off">Искључи</string>
     <string name="feature_flashlight_brightness_title">Осветљеност лампе</string>
     <!-- QS / Activities -->
-    <string name="error_unlock_network_settings">Откључајте телефон да бисте променили подешавања мреже</string>
     <!-- About Section -->
     <string name="developed_by_format">Девелопед би %1$s\nса ❤\uFE0F из \uD83C\uDDF1\uD83C\uDDF0</string>
     <string name="action_website">Вебсите</string>
