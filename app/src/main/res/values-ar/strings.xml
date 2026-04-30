@@ -28,7 +28,7 @@
     <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">تمكين زر إعادة التعيين</string>
-    <string name="button_remap_use_shizuku_title">استخدم Shizuku أو Root أو Root</string>
+    <string name="button_remap_use_shizuku_title">Use Shizuku or Root</string>
     <string name="button_remap_use_shizuku_desc">يعمل مع إيقاف الشاشة (مستحسن)</string>
     <string name="shizuku_not_running_toast">Shizuku لا يعمل</string>
     <string name="shizuku_detected_prefix">أُكتُشف %1$s</string>
