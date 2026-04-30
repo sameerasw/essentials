@@ -1306,11 +1306,11 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla S
     <string name="search_refresh_rate_mode_title">Modo de frecuencia de actualización</string>
     <string name="search_refresh_rate_mode_desc">Cambiar entre control de frecuencia de actualización fija y variable</string>
     <string name="search_refresh_rate_fixed_title">Frecuencia de actualización fija</string>
-    <string name="search_refresh_rate_fixed_desc">Lock the display to one custom refresh rate</string>
-    <string name="search_refresh_rate_range_title">Refresh Rate Range</string>
-    <string name="search_refresh_rate_range_desc">Configure separate minimum and peak refresh rates</string>
-    <string name="search_refresh_rate_reset_title">Reset Refresh Rate</string>
-    <string name="search_refresh_rate_reset_desc">Clear the custom refresh rate override</string>
+    <string name="search_refresh_rate_fixed_desc">Fijar la pantalla a una única frecuencia de actualización personalizada</string>
+    <string name="search_refresh_rate_range_title">Rango de frecuencia de actualización</string>
+    <string name="search_refresh_rate_range_desc">Configurar por separado la frecuencia de actualización mínima y máxima</string>
+    <string name="search_refresh_rate_reset_title">Restablecer la frecuencia de actualización</string>
+    <string name="search_refresh_rate_reset_desc">Eliminar la anulación personalizada de la frecuencia de actualización</string>
     <string name="feat_aod_force_turn_off_title">Forzar desactivación del AOD (Pantalla Siempre Activa)</string>
     <string name="feat_aod_force_turn_off_desc">Forzar la desactivación del AOD cuando no haya notificaciones. Requiere permiso de accesibilidad.</string>
     <string name="feat_auto_accessibility_title">Accesibilidad automática</string>
