@@ -28,7 +28,7 @@
     <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Aktiver knappen Remap</string>
-    <string name="button_remap_use_shizuku_title">Bruk Shizuku eller Root eller Root</string>
+    <string name="button_remap_use_shizuku_title">Use Shizuku or Root</string>
     <string name="button_remap_use_shizuku_desc">Fungerer med skjerm av (anbefalt)</string>
     <string name="shizuku_not_running_toast">Shizuku kjører ikke</string>
     <string name="shizuku_detected_prefix">Oppdaget %1$s</string>
