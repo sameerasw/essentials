@@ -28,7 +28,7 @@
     <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Yab bute ma ki lwongo ni Remap</string>
-    <string name="button_remap_use_shizuku_title">Tii ki Shizuku onyo Root onyo Root</string>
+    <string name="button_remap_use_shizuku_title">Use Shizuku or Root</string>
     <string name="button_remap_use_shizuku_desc">Tiiyo ki wang gin ma ki neno iye (ki miiyo tam iye)</string>
     <string name="shizuku_not_running_toast">Shizuku pe tye ka ngwec</string>
     <string name="shizuku_detected_prefix">Ki nongo %1$s</string>
