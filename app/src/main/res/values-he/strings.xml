@@ -28,7 +28,7 @@
     <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">הפעל מיפוי לחצנים</string>
-    <string name="button_remap_use_shizuku_title">Use Shizuku</string>
+    <string name="button_remap_use_shizuku_title">Use Shizuku or Root</string>
     <string name="button_remap_use_shizuku_desc">עובד עם מסך כבוי (מומלץ)</string>
     <string name="shizuku_not_running_toast">Shizuku אינו פועל</string>
     <string name="shizuku_detected_prefix">Detected %1$s</string>
