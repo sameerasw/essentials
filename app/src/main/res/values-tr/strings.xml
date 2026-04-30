@@ -615,7 +615,7 @@
     <string name="btn_enable_keyboard">Ayarlarda etkinleştir</string>
     <string name="btn_select_keyboard">Essentials\'a geç</string>
     <string name="label_enabled">Etkinleştirilmiş</string>
-    <string name="label_disabled">Engelli</string>
+    <string name="label_disabled">Devre dışı</string>
     <string name="tile_adaptive_brightness">Uyarlanabilir Parlaklık</string>
     <string name="tile_maps_power_saving">Haritalar Güç Tasarrufu</string>
     <string name="action_search">Aramak</string>
@@ -775,10 +775,10 @@
     <string name="diy_out_action_label">Çıkış Eylemi</string>
     <string name="action_cancel">İptal et</string>
     <string name="action_save">Kaydet</string>
-    <string name="action_edit">Düzenlemek</string>
-    <string name="action_delete">Silmek</string>
-    <string name="action_enable">Olanak vermek</string>
-    <string name="action_disable">Devre dışı bırakmak</string>
+    <string name="action_edit">Düzenle</string>
+    <string name="action_delete">Sil</string>
+    <string name="action_enable">Etkinleştir</string>
+    <string name="action_disable">Devre dışı bırak</string>
     <string name="automation_service_channel_name">Otomasyon Hizmeti</string>
     <string name="automation_service_running_title">Otomasyonlar Aktif</string>
     <string name="automation_service_running_desc">Otomasyonlarınız için sistem olaylarını izleme</string>
@@ -793,7 +793,7 @@
     <string name="diy_effect_night_mode">Gece Modu</string>
     <string name="diy_device_effects_android_15_warning">Bu özellik Android 15 veya üzerini gerektirir.</string>
     <string name="diy_device_effects_enabled">Etkinleştirilmiş</string>
-    <string name="diy_device_effects_disabled">Engelli</string>
+    <string name="diy_device_effects_disabled">Devre dışı</string>
     <string name="diy_action_sound_mode">Ses Modu</string>
     <string name="diy_sound_mode_desc">Bu eylem, tetikleyicilere bağlı olarak Ses, Titreşim ve Sessiz modları arasında geçiş yapılmasına olanak tanır. Rahatsız Etmeyin erişimi gerektirir.</string>
     <!-- About Section -->
@@ -1106,7 +1106,7 @@
     <string name="root_not_available_toast">Kök erişimi mevcut değil. Lütfen kök yöneticinizi kontrol edin.</string>
     <!-- System Keyboard -->
     <string name="feat_system_keyboard_title">Klavye</string>
-    <string name="feat_system_keys">Anahtarlar</string>
+    <string name="feat_system_keys">Tuşlar</string>
     <string name="feat_system_keyboard_desc">Düzeni ve davranışı özelleştirin</string>
     <string name="search_keyboard_height_title">Klavye Yüksekliği</string>
     <string name="search_keyboard_height_desc">Klavyenin toplam dikey boyutunu ayarlayın</string>
@@ -1118,7 +1118,7 @@
     <string name="label_keyboard_height">Klavye Yüksekliği</string>
     <string name="label_keyboard_bottom_padding">Alt Dolgu</string>
     <string name="label_keyboard_haptics">Dokunsal Geri bildirim</string>
-    <string name="label_keyboard_roundness">Anahtar Yuvarlaklığı</string>
+    <string name="label_keyboard_roundness">Tuş Yuvarlaklığı</string>
     <string name="label_keyboard_functions_bottom">İşlevleri aşağıya taşı</string>
     <string name="label_keyboard_functions_padding">Yan dolgu fonksiyonları</string>
     <string name="label_keyboard_haptic_strength">Dokunsal geri bildirim gücü</string>
