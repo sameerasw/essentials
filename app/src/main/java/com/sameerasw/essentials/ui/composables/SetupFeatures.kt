@@ -51,6 +51,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.width
@@ -1001,6 +1002,7 @@ fun SetupFeatures(
             onValueChange = { new ->
                 viewModel.onSearchQueryChanged(new, context)
             },
+                maxLines = 1,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
@@ -1014,9 +1016,12 @@ fun SetupFeatures(
                 )
             },
             placeholder = {
-                if (!isFocused && viewModel.searchQuery.value.isEmpty()) Text(
-                    stringResource(R.string.search_placeholder)
-                )
+                if (!isFocused && viewModel.searchQuery.value.isEmpty())
+                    Text(
+                        text = stringResource(R.string.search_placeholder),
+                        maxLines = 1,
+                        modifier = Modifier.basicMarquee()
+                    )
             },
             shape = MaterialTheme.shapes.extraExtraLarge,
             singleLine = true,

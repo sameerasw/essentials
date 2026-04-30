@@ -13,10 +13,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.sameerasw.essentials.R
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -63,7 +66,7 @@ fun <T> SegmentedPicker(
                         iconProvider(item)
                         androidx.compose.foundation.layout.Spacer(Modifier.padding(end = 8.dp))
                     }
-                    Text(labelProvider(item))
+                    Text(labelProvider(item), fontSize = dimensionResource(R.dimen.font_small).value.sp)
                 }
             }
         }

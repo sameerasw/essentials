@@ -69,6 +69,7 @@ import com.sameerasw.essentials.ui.composables.configs.MapsPowerSavingSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.NotificationLightingSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.OtherCustomizationsSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.QuickSettingsTilesSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.RefreshRateSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ScreenLockedSecuritySettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ScreenOffWidgetSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.SnoozeNotificationsSettingsUI
@@ -207,6 +208,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                     val isNotificationLightingAccessibilityEnabled by viewModel.isNotificationLightingAccessibilityEnabled
                     val isNotificationListenerEnabled by viewModel.isNotificationListenerEnabled
                     val isReadPhoneStateEnabled by viewModel.isReadPhoneStateEnabled
+                    val isShizukuPermissionGranted by viewModel.isShizukuPermissionGranted
 
                     // FAB State for Notification Lighting
                     var fabExpanded by remember { mutableStateOf(true) }
@@ -236,7 +238,8 @@ class FeatureSettingsActivity : AppCompatActivity() {
                         isOverlayPermissionGranted,
                         isNotificationLightingAccessibilityEnabled,
                         isNotificationListenerEnabled,
-                        isReadPhoneStateEnabled
+                        isReadPhoneStateEnabled,
+                        isShizukuPermissionGranted
                     ) {
                         val hasMissingPermissions = when (featureId) {
                             "Screen off widget" -> !isAccessibilityEnabled
@@ -253,6 +256,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
 
                             "Location reached" -> !viewModel.isLocationPermissionGranted.value || !viewModel.isBackgroundLocationPermissionGranted.value
                             "Quick settings tiles" -> !viewModel.isWriteSettingsEnabled.value
+                            "Screen refresh rate" -> !viewModel.isShizukuPermissionGranted.value
                             // Top level checks for other features (rarely hit if they are children, but safe to add)
                             "Ambient music glance" -> !isAccessibilityEnabled || !isNotificationListenerEnabled
                             "Call vibrations" -> !isReadPhoneStateEnabled || !isNotificationListenerEnabled
@@ -402,6 +406,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                 "Caffeinate" -> !viewModel.isPostNotificationsEnabled.value
                                                 "Battery notification" -> !viewModel.isPostNotificationsEnabled.value || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !viewModel.isBluetoothPermissionGranted.value)
                                                 "Text and animations" -> !viewModel.isWriteSettingsEnabled.value || !isWriteSecureSettingsEnabled
+                                                "Screen refresh rate" -> !viewModel.isShizukuPermissionGranted.value
                                                 else -> false
                                             }
 
@@ -622,6 +627,14 @@ class FeatureSettingsActivity : AppCompatActivity() {
 
                                     "Text and animations" -> {
                                         TextAnimationsSettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting
+                                        )
+                                    }
+
+                                    "Screen refresh rate" -> {
+                                        RefreshRateSettingsUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightSetting = highlightSetting

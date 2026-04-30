@@ -56,6 +56,7 @@ import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.PermissionUtils
+import com.sameerasw.essentials.utils.RefreshRateUtils
 import com.sameerasw.essentials.utils.RootUtils
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.utils.ShizukuUtils
@@ -239,6 +240,10 @@ class MainViewModel : ViewModel() {
     val isTouchSensitivityEnabled = mutableStateOf(false)
     val isAutoRotateEnabled = mutableStateOf(false)
     val screenTimeout = mutableStateOf(30000L)
+    val refreshRateMode = mutableStateOf(RefreshRateUtils.MODE_FIXED)
+    val fixedRefreshRate = mutableFloatStateOf(0f)
+    val minRefreshRate = mutableFloatStateOf(0f)
+    val peakRefreshRate = mutableFloatStateOf(0f)
     val fontScale = mutableFloatStateOf(1.0f)
     val fontWeight = mutableIntStateOf(0)
     val animatorDurationScale = mutableFloatStateOf(1.0f)
@@ -283,6 +288,10 @@ class MainViewModel : ViewModel() {
                     }
                     Settings.Secure.getUriFor("sysui_qs_tiles") -> {
                         appContext?.let { updateAddedQSTiles(it) }
+                    }
+                    Settings.System.getUriFor("peak_refresh_rate"),
+                    Settings.System.getUriFor("min_refresh_rate") -> {
+                        appContext?.let { syncRefreshRateState(it) }
                     }
                 }
             }
@@ -467,6 +476,12 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_TRANSITION_ANIMATION_SCALE -> transitionAnimationScale.floatValue = settingsRepository.getAnimationScale(android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE)
                     SettingsRepository.KEY_WINDOW_ANIMATION_SCALE -> windowAnimationScale.floatValue = settingsRepository.getAnimationScale(android.provider.Settings.Global.WINDOW_ANIMATION_SCALE)
                     SettingsRepository.KEY_SMALLEST_WIDTH -> smallestWidth.intValue = settingsRepository.getSmallestWidth()
+                    SettingsRepository.KEY_REFRESH_RATE_MODE -> refreshRateMode.value = settingsRepository.getRefreshRateMode()
+                    SettingsRepository.KEY_REFRESH_RATE_FIXED,
+                    SettingsRepository.KEY_REFRESH_RATE_MIN,
+                    SettingsRepository.KEY_REFRESH_RATE_PEAK -> {
+                        appContext?.let { syncRefreshRateState(it) }
+                    }
                     SettingsRepository.KEY_NOTIFICATION_GLANCE_ENABLED -> isNotificationGlanceEnabled.value = settingsRepository.getBoolean(key)
                     SettingsRepository.KEY_AOD_FORCE_TURN_OFF_ENABLED -> isAodForceTurnOffEnabled.value = settingsRepository.getBoolean(key)
                     SettingsRepository.KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING -> isNotificationGlanceSameAsLightingEnabled.value = settingsRepository.getBoolean(key, true)
@@ -631,6 +646,16 @@ class MainViewModel : ViewModel() {
             false,
             contentObserver
         )
+        context.contentResolver.registerContentObserver(
+            Settings.System.getUriFor("peak_refresh_rate"),
+            false,
+            contentObserver
+        )
+        context.contentResolver.registerContentObserver(
+            Settings.System.getUriFor("min_refresh_rate"),
+            false,
+            contentObserver
+        )
 
         try {
             context.contentResolver.registerContentObserver(
@@ -692,6 +717,8 @@ class MainViewModel : ViewModel() {
         transitionAnimationScale.floatValue = settingsRepository.getAnimationScale(android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE)
         windowAnimationScale.floatValue = settingsRepository.getAnimationScale(android.provider.Settings.Global.WINDOW_ANIMATION_SCALE)
         smallestWidth.intValue = settingsRepository.getSmallestWidth()
+        refreshRateMode.value = settingsRepository.getRefreshRateMode()
+        syncRefreshRateState(context)
         hasShizukuPermission.value = ShizukuUtils.hasPermission() || RootUtils.isRootAvailable()
 
         isMapsPowerSavingEnabled.value =
@@ -1486,6 +1513,187 @@ class MainViewModel : ViewModel() {
     fun setScreenTimeout(timeoutMs: Long) {
         screenTimeout.value = timeoutMs
         settingsRepository.setScreenTimeout(timeoutMs)
+    }
+
+    fun setRefreshRateMode(mode: String) {
+        refreshRateMode.value = mode
+        if (mode == RefreshRateUtils.MODE_RANGE) {
+            if (minRefreshRate.floatValue <= 0f && peakRefreshRate.floatValue <= 0f) {
+                val seedValue = when {
+                    fixedRefreshRate.floatValue > 0f -> RefreshRateUtils.normalizeRate(fixedRefreshRate.floatValue)
+                    else -> 60f
+                }
+                minRefreshRate.floatValue = seedValue
+                peakRefreshRate.floatValue = seedValue
+            }
+        } else if (fixedRefreshRate.floatValue <= 0f) {
+            fixedRefreshRate.floatValue = when {
+                peakRefreshRate.floatValue > 0f -> RefreshRateUtils.normalizeRate(peakRefreshRate.floatValue)
+                minRefreshRate.floatValue > 0f -> RefreshRateUtils.normalizeRate(minRefreshRate.floatValue)
+                else -> 60f
+            }
+        }
+        settingsRepository.setRefreshRateMode(mode)
+    }
+
+    fun updateFixedRefreshRate(value: Float) {
+        fixedRefreshRate.floatValue = value
+    }
+
+    fun updateMinRefreshRate(value: Float) {
+        val safeMin = value.coerceAtMost(peakRefreshRate.floatValue.takeIf { it > 0f } ?: value)
+        minRefreshRate.floatValue = safeMin
+        if (peakRefreshRate.floatValue > 0f && peakRefreshRate.floatValue < safeMin) {
+            peakRefreshRate.floatValue = safeMin
+        }
+    }
+
+    fun updatePeakRefreshRate(value: Float) {
+        val safePeak = value.coerceAtLeast(minRefreshRate.floatValue.takeIf { it > 0f } ?: value)
+        peakRefreshRate.floatValue = safePeak
+        if (minRefreshRate.floatValue > safePeak) {
+            minRefreshRate.floatValue = safePeak
+        }
+    }
+
+    fun applyFixedRefreshRate(context: Context) {
+        val value = fixedRefreshRate.floatValue
+        if (value <= 0f) {
+            resetRefreshRate(context)
+            return
+        }
+
+        if (RefreshRateUtils.applyFixedRefreshRate(value)) {
+            val normalized = RefreshRateUtils.normalizeRate(value)
+            fixedRefreshRate.floatValue = normalized
+            minRefreshRate.floatValue = normalized
+            peakRefreshRate.floatValue = normalized
+            refreshRateMode.value = RefreshRateUtils.MODE_FIXED
+            persistRefreshRateStateIfNeeded(
+                mode = RefreshRateUtils.MODE_FIXED,
+                fixed = normalized,
+                min = normalized,
+                peak = normalized
+            )
+        } else {
+            syncRefreshRateState(context)
+        }
+    }
+
+    fun applyRefreshRateRange(context: Context) {
+        val minValue = minRefreshRate.floatValue
+        val peakValue = peakRefreshRate.floatValue
+        if (minValue <= 0f || peakValue <= 0f) {
+            persistRefreshRateStateIfNeeded(
+                mode = RefreshRateUtils.MODE_RANGE,
+                fixed = fixedRefreshRate.floatValue,
+                min = minValue,
+                peak = peakValue
+            )
+            return
+        }
+
+        if (RefreshRateUtils.applyRangeRefreshRate(minValue, peakValue)) {
+            val normalizedMin = RefreshRateUtils.normalizeRate(minValue)
+            val normalizedPeak = RefreshRateUtils.normalizeRate(maxOf(minValue, peakValue))
+            minRefreshRate.floatValue = normalizedMin
+            peakRefreshRate.floatValue = normalizedPeak
+            fixedRefreshRate.floatValue = normalizedPeak
+            refreshRateMode.value = RefreshRateUtils.MODE_RANGE
+            persistRefreshRateStateIfNeeded(
+                mode = RefreshRateUtils.MODE_RANGE,
+                fixed = normalizedPeak,
+                min = normalizedMin,
+                peak = normalizedPeak
+            )
+        } else {
+            syncRefreshRateState(context)
+        }
+    }
+
+    fun resetRefreshRate(context: Context) {
+        val restoreInfinityPeak = settingsRepository.shouldRestoreInfinityPeakOnRefreshRateReset()
+        if (RefreshRateUtils.resetRefreshRate(restoreInfinityPeak)) {
+            fixedRefreshRate.floatValue = 0f
+            minRefreshRate.floatValue = 0f
+            peakRefreshRate.floatValue = 0f
+            persistRefreshRateStateIfNeeded(
+                mode = refreshRateMode.value,
+                fixed = 0f,
+                min = 0f,
+                peak = 0f
+            )
+        } else {
+            syncRefreshRateState(context)
+        }
+    }
+
+    private fun syncRefreshRateState(context: Context) {
+        val refreshRateState = RefreshRateUtils.getCurrentState(context)
+        if (refreshRateState.isSystemManaged) {
+            settingsRepository.setRestoreInfinityPeakOnRefreshRateReset(
+                refreshRateState.usesInfinityDefaultPeak
+            )
+        }
+        val actualMin = refreshRateState.min
+        val actualPeak = refreshRateState.peak
+        val hasCustom = !refreshRateState.isSystemManaged && (actualMin > 0f || actualPeak > 0f)
+        val storedMode = settingsRepository.getRefreshRateMode()
+
+        if (!hasCustom) {
+            fixedRefreshRate.floatValue = 0f
+            minRefreshRate.floatValue = 0f
+            peakRefreshRate.floatValue = 0f
+            persistRefreshRateStateIfNeeded(
+                mode = storedMode,
+                fixed = 0f,
+                min = 0f,
+                peak = 0f
+            )
+            return
+        }
+
+        val resolvedMin = if (actualMin > 0f) actualMin else actualPeak
+        val resolvedPeak = if (actualPeak > 0f) actualPeak else actualMin
+        val resolvedMode =
+            if (resolvedMin > 0f && resolvedPeak > 0f && resolvedMin != resolvedPeak) {
+                RefreshRateUtils.MODE_RANGE
+            } else {
+                storedMode
+            }
+
+        refreshRateMode.value = resolvedMode
+        fixedRefreshRate.floatValue = resolvedPeak
+        minRefreshRate.floatValue = resolvedMin
+        peakRefreshRate.floatValue = resolvedPeak
+        persistRefreshRateStateIfNeeded(
+            mode = resolvedMode,
+            fixed = resolvedPeak,
+            min = resolvedMin,
+            peak = resolvedPeak
+        )
+    }
+
+    private fun persistRefreshRateStateIfNeeded(mode: String, fixed: Float, min: Float, peak: Float) {
+        val storedMode = settingsRepository.getRefreshRateMode()
+        val storedFixed = settingsRepository.getFloat(SettingsRepository.KEY_REFRESH_RATE_FIXED, 0f)
+        val storedMin = settingsRepository.getFloat(SettingsRepository.KEY_REFRESH_RATE_MIN, 0f)
+        val storedPeak = settingsRepository.getFloat(SettingsRepository.KEY_REFRESH_RATE_PEAK, 0f)
+
+        if (storedMode == mode &&
+            storedFixed == fixed &&
+            storedMin == min &&
+            storedPeak == peak
+        ) {
+            return
+        }
+
+        settingsRepository.saveRefreshRateState(
+            mode = mode,
+            fixed = fixed,
+            min = min,
+            peak = peak
+        )
     }
 
     fun updateFontScale(scale: Float) {

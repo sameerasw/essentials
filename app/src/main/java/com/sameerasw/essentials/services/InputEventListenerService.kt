@@ -168,9 +168,9 @@ class InputEventListenerService : Service() {
                                             android.media.AudioManager.ADJUST_RAISE
                                         else
                                             android.media.AudioManager.ADJUST_LOWER
-                                    am.adjustStreamVolume(
-                                        android.media.AudioManager.STREAM_MUSIC,
+                                    am.adjustSuggestedStreamVolume(
                                         direction,
+                                        android.media.AudioManager.USE_DEFAULT_STREAM_TYPE,
                                         android.media.AudioManager.FLAG_SHOW_UI
                                     )
                                 }
@@ -196,9 +196,9 @@ class InputEventListenerService : Service() {
                                         android.media.AudioManager.ADJUST_RAISE
                                     else
                                         android.media.AudioManager.ADJUST_LOWER
-                                am.adjustStreamVolume(
-                                    android.media.AudioManager.STREAM_MUSIC,
+                                am.adjustSuggestedStreamVolume(
                                     dirKey,
+                                    android.media.AudioManager.USE_DEFAULT_STREAM_TYPE,
                                     android.media.AudioManager.FLAG_SHOW_UI
                                 )
                             }
