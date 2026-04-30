@@ -28,7 +28,7 @@
     <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Bật bản đồ lại nút</string>
-    <string name="button_remap_use_shizuku_title">Use Shizuku or Root</string>
+    <string name="button_remap_use_shizuku_title">Sử dụng Shizuku hoặc Root hoặc Root</string>
     <string name="button_remap_use_shizuku_desc">Hoạt động khi tắt màn hình (Được khuyến nghị)</string>
     <string name="shizuku_not_running_toast">Shizuku không chạy</string>
     <string name="shizuku_detected_prefix">Đã phát hiện %1$s</string>
@@ -222,6 +222,8 @@
     <string name="tile_inactive">Không hoạt động</string>
     <string name="tile_developer_options">Tùy chọn nhà phát triển</string>
     <string name="about_desc_developer_options">Chuyển đổi tùy chọn nhà phát triển hệ thống từ ô QS một cách dễ dàng. Điều này có thể đặt lại một số cài đặt dành cho nhà phát triển mà bạn đã sửa đổi.</string>
+    <string name="tile_refresh_rate">Refresh Rate</string>
+    <string name="about_desc_refresh_rate_tile">Cycle between the system default and preset refresh rates directly from a Quick Settings tile using Shizuku.</string>
     <string name="nfc_tile_label">NFC</string>
     <string name="tile_private_dns">DNS riêng</string>
     <string name="tile_private_dns_auto">Tự động</string>
@@ -339,7 +341,7 @@
     <string name="hide_notification_icons_title">Hide notifications</string>
     <string name="hide_notification_icons_desc">Hide all incoming notification icons</string>
     <string name="feat_hide_gesture_bar_title">Hide gesture bar</string>
-    <string name="feat_hide_gesture_bar_desc">Hide the navigation pill at the bottom</string>
+    <string name="feat_hide_gesture_bar_desc">In gesture navigation</string>
     <string name="feat_hide_gesture_bar_on_launcher_title">Show on launcher</string>
     <string name="feat_hide_gesture_bar_on_launcher_desc">Dynamically show the gesture bar only when on the home screen</string>
     <string name="feat_circle_to_search_gesture_title">Circle to Search gesture</string>
@@ -518,6 +520,8 @@
     <string name="search_qs_private_dns_desc">Chu kỳ các chế độ DNS riêng (Tắt/Tự động/Tên máy chủ)</string>
     <string name="search_qs_usb_debugging_title">Gỡ lỗi USB</string>
     <string name="search_qs_usb_debugging_desc">Chuyển đổi tùy chọn nhà phát triển Gỡ lỗi USB</string>
+    <string name="search_qs_refresh_rate_title">Refresh Rate</string>
+    <string name="search_qs_refresh_rate_desc">Cycle between the system default and preset screen refresh rates</string>
     <string name="search_remap_enable_title">Bật bản đồ lại nút</string>
     <string name="search_remap_enable_desc">Chuyển đổi chính để ánh xạ lại nút âm lượng</string>
     <string name="search_remap_haptic_title">Bản đồ lại phản hồi xúc giác</string>
@@ -1259,6 +1263,8 @@
     <string name="label_apps">Ứng dụng</string>
     <string name="feat_text_animations_title">Quy mô và hình ảnh động</string>
     <string name="feat_text_animations_desc">Điều chỉnh quy mô hệ thống và hình ảnh động</string>
+    <string name="feat_screen_refresh_rate_title">Screen Refresh Rate</string>
+    <string name="feat_screen_refresh_rate_desc">Set a fixed or ranged screen refresh rate</string>
     <string name="settings_section_text">Chữ</string>
     <string name="label_font_scale">Tỷ lệ phông chữ</string>
     <string name="label_font_weight">Trọng lượng phông chữ</string>
@@ -1272,6 +1278,28 @@
     <string name="label_transition_animation_scale">Quy mô hoạt ảnh chuyển tiếp</string>
     <string name="label_window_animation_scale">Tỷ lệ hoạt ảnh cửa sổ</string>
     <string name="about_desc_text_animations">Điều chỉnh tỷ lệ phông chữ, trọng lượng và tốc độ hoạt ảnh trên toàn hệ thống. Lưu ý rằng một số cài đặt có thể yêu cầu quyền nâng cao hoặc khởi động lại thiết bị đối với một số ứng dụng nhất định để phản ánh các thay đổi. \n\nCó thể cần thêm quyền shizuku hoặc quyền root để điều chỉnh tỷ lệ</string>
+    <string name="about_desc_screen_refresh_rate">Set a custom screen refresh rate using Shizuku. Fixed mode locks both the minimum and peak refresh rate to one value, while range mode lets you define separate minimum and peak values. Reset clears the custom override and returns the device to its system-managed refresh behavior.</string>
+    <string name="refresh_rate_section_mode">Mode</string>
+    <string name="refresh_rate_section_values">Refresh Rate</string>
+    <string name="refresh_rate_mode_fixed">Fixed</string>
+    <string name="refresh_rate_mode_range">Range</string>
+    <string name="refresh_rate_fixed_title">Fixed refresh rate</string>
+    <string name="refresh_rate_fixed_desc">Set both minimum and peak refresh rate to the same value</string>
+    <string name="refresh_rate_min_title">Minimum refresh rate</string>
+    <string name="refresh_rate_min_desc">Choose the lowest refresh rate the display may use</string>
+    <string name="refresh_rate_peak_title">Peak refresh rate</string>
+    <string name="refresh_rate_peak_desc">Choose the highest refresh rate the display may use</string>
+    <string name="refresh_rate_system_default">System</string>
+    <string name="refresh_rate_reset_desc">Remove the custom override and return to the system default refresh behavior</string>
+    <string name="msg_refresh_rate_permission_required">Shizuku permission required to adjust refresh rate</string>
+    <string name="search_refresh_rate_mode_title">Refresh Rate Mode</string>
+    <string name="search_refresh_rate_mode_desc">Switch between fixed and ranged refresh rate control</string>
+    <string name="search_refresh_rate_fixed_title">Fixed Refresh Rate</string>
+    <string name="search_refresh_rate_fixed_desc">Lock the display to one custom refresh rate</string>
+    <string name="search_refresh_rate_range_title">Refresh Rate Range</string>
+    <string name="search_refresh_rate_range_desc">Configure separate minimum and peak refresh rates</string>
+    <string name="search_refresh_rate_reset_title">Reset Refresh Rate</string>
+    <string name="search_refresh_rate_reset_desc">Clear the custom refresh rate override</string>
     <string name="feat_aod_force_turn_off_title">Buộc tắt AOD</string>
     <string name="feat_aod_force_turn_off_desc">Buộc tắt AOD khi không có thông báo. Yêu cầu quyền truy cập.</string>
     <string name="feat_auto_accessibility_title">Tự động truy cập</string>
