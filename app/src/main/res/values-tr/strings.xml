@@ -545,8 +545,8 @@
     <string name="perm_shizuku_grant_title">İzin Ver</string>
     <string name="perm_shizuku_grant_desc">Haritalarda gezinirken güç tasarrufu komutlarını çalıştırmak için gereklidir.</string>
     <string name="req_shizuku">Shizuku veya Root gerektirir</string>
-    <string name="perm_root_title">Kök Erişimi</string>
-    <string name="perm_root_desc">Kök ayrıcalıklarını kullanan sistem eylemleri için gereken izinler.</string>
+    <string name="perm_root_title">Root Erişimi</string>
+    <string name="perm_root_desc">Root ayrıcalıklarını kullanan sistem eylemleri için gereken izinler.</string>
     <string name="perm_notif_listener_title">Bildirim Dinleyicisi</string>
     <string name="perm_notif_listener_desc_maps">Google Haritalar navigasyon durumunu izlemek ve navigasyon yapılmadığında güç tasarrufunu etkinleştirmek için bildirim dinleyicisi erişimi gerektirir.</string>
     <string name="perm_notif_listener_desc_lighting">Yeni bildirimleri algılamak ve uç aydınlatmayı tetiklemek için bildirim dinleyicisi erişimi gerektirir.</string>
@@ -593,7 +593,7 @@
     <string name="error_no_apk_found">En son sürümde APK bulunamadı</string>
     <string name="error_repo_not_found">Depo bulunamadı</string>
     <string name="label_latest_release">Son Sürüm</string>
-    <string name="action_view_readme">README dosyasını görüntüle</string>
+    <string name="action_view_readme">BENİOKU dosyasını görüntüle</string>
     <string name="label_stars">%d Yıldız</string>
     <string name="label_installed_app">Yüklü uygulama</string>
     <string name="label_not_installed">Yüklenmedi</string>
@@ -614,7 +614,7 @@
     <string name="label_keyboard_setup">Klavye Kurulumu</string>
     <string name="btn_enable_keyboard">Ayarlarda etkinleştir</string>
     <string name="btn_select_keyboard">Essentials\'a geç</string>
-    <string name="label_enabled">Etkinleştirilmiş</string>
+    <string name="label_enabled">Etkin</string>
     <string name="label_disabled">Devre dışı</string>
     <string name="tile_adaptive_brightness">Uyarlanabilir Parlaklık</string>
     <string name="tile_maps_power_saving">Haritalar Güç Tasarrufu</string>
@@ -792,7 +792,7 @@
     <string name="diy_effect_dim_wallpaper">Loş Duvar Kağıdı</string>
     <string name="diy_effect_night_mode">Gece Modu</string>
     <string name="diy_device_effects_android_15_warning">Bu özellik Android 15 veya üzerini gerektirir.</string>
-    <string name="diy_device_effects_enabled">Etkinleştirilmiş</string>
+    <string name="diy_device_effects_enabled">Etkin</string>
     <string name="diy_device_effects_disabled">Devre dışı</string>
     <string name="diy_action_sound_mode">Ses Modu</string>
     <string name="diy_sound_mode_desc">Bu eylem, tetikleyicilere bağlı olarak Ses, Titreşim ve Sessiz modları arasında geçiş yapılmasına olanak tanır. Rahatsız Etmeyin erişimi gerektirir.</string>
@@ -1101,9 +1101,9 @@
     <string name="location_reached_alarm_subtitle">İnmeye hazırlanın</string>
     <string name="location_reached_dismiss">Azletmek</string>
     <string name="location_reached_toast_set">Hedef seti: %1$.4f, %2$.4f</string>
-    <string name="setting_use_root_title">Root erişimi kullan</string>
+    <string name="setting_use_root_title">Root kullan</string>
     <string name="setting_use_root_desc">Shizuku\'nun yerine</string>
-    <string name="root_not_available_toast">Kök erişimi mevcut değil. Lütfen kök yöneticinizi kontrol edin.</string>
+    <string name="root_not_available_toast">Root erişimi mevcut değil. Lütfen root yöneticinizi kontrol edin.</string>
     <!-- System Keyboard -->
     <string name="feat_system_keyboard_title">Klavye</string>
     <string name="feat_system_keys">Tuşlar</string>
