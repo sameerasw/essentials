@@ -28,7 +28,7 @@
     <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Povolit přemapování tlačítek</string>
-    <string name="button_remap_use_shizuku_title">Použijte Shizuku nebo Root nebo Root</string>
+    <string name="button_remap_use_shizuku_title">Use Shizuku or Root</string>
     <string name="button_remap_use_shizuku_desc">Funguje s vypnutou obrazovkou (doporučeno)</string>
     <string name="shizuku_not_running_toast">Shizuku neběží</string>
     <string name="shizuku_detected_prefix">Zjištěno %1$s</string>
