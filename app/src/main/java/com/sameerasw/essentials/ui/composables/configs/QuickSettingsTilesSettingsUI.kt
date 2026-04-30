@@ -64,6 +64,7 @@ import com.sameerasw.essentials.services.tiles.NfcTileService
 import com.sameerasw.essentials.services.tiles.NotificationLightingTileService
 import com.sameerasw.essentials.services.tiles.PrivateDnsTileService
 import com.sameerasw.essentials.services.tiles.PrivateNotificationsTileService
+import com.sameerasw.essentials.services.tiles.RefreshRateTileService
 import com.sameerasw.essentials.services.tiles.ScreenLockedSecurityTileService
 import com.sameerasw.essentials.services.tiles.ScaleAnimationsTileService
 import com.sameerasw.essentials.services.tiles.SoundModeTileService
@@ -270,6 +271,14 @@ fun QuickSettingsTilesSettingsUI(
             ScaleAnimationsTileService::class.java,
             listOf("WRITE_SECURE_SETTINGS"),
             R.string.about_desc_scale_animations_tile,
+            R.string.cat_visuals
+        ),
+        QSTileInfo(
+            R.string.tile_refresh_rate,
+            R.drawable.rounded_shutter_speed_24,
+            RefreshRateTileService::class.java,
+            listOf("SHIZUKU"),
+            R.string.about_desc_refresh_rate_tile,
             R.string.cat_visuals
         ),
         QSTileInfo(

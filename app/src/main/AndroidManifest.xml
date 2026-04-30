@@ -822,6 +822,20 @@
             </intent-filter>
         </service>
 
+        <service
+            android:name=".services.tiles.RefreshRateTileService"
+            android:exported="true"
+            android:label="@string/tile_refresh_rate"
+            android:icon="@drawable/rounded_shutter_speed_24"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.quicksettings.TILE_CATEGORY"
+                android:value="android.service.quicksettings.CATEGORY_DISPLAY" />
+        </service>
+
     </application>
 
 </manifest>

@@ -182,6 +182,43 @@ object FeatureRegistry {
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
         },
         object : Feature(
+            id = "Screen refresh rate",
+            title = R.string.feat_screen_refresh_rate_title,
+            iconRes = R.drawable.rounded_shutter_speed_24,
+            category = R.string.cat_interface,
+            description = R.string.feat_screen_refresh_rate_desc,
+            aboutDescription = R.string.about_desc_screen_refresh_rate,
+            permissionKeys = listOf("SHIZUKU"),
+            searchableSettings = listOf(
+                SearchSetting(
+                    R.string.search_refresh_rate_mode_title,
+                    R.string.search_refresh_rate_mode_desc,
+                    "refresh_rate_mode"
+                ),
+                SearchSetting(
+                    R.string.search_refresh_rate_fixed_title,
+                    R.string.search_refresh_rate_fixed_desc,
+                    "refresh_rate_fixed"
+                ),
+                SearchSetting(
+                    R.string.search_refresh_rate_range_title,
+                    R.string.search_refresh_rate_range_desc,
+                    "refresh_rate_range"
+                ),
+                SearchSetting(
+                    R.string.search_refresh_rate_reset_title,
+                    R.string.search_refresh_rate_reset_desc,
+                    "refresh_rate_reset",
+                    R.array.keywords_restore_default
+                )
+            ),
+            showToggle = false,
+            parentFeatureId = "Display"
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = true
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+        },
+        object : Feature(
             id = "Watch",
             title = R.string.feat_watch_title,
             iconRes = R.drawable.rounded_watch_24,
@@ -600,6 +637,13 @@ object FeatureRegistry {
                     R.string.search_qs_usb_debugging_desc,
                     "USB Debugging",
                     R.array.keywords_adb_debug,
+                    R.string.feat_qs_tiles_title
+                ),
+                SearchSetting(
+                    R.string.search_qs_refresh_rate_title,
+                    R.string.search_qs_refresh_rate_desc,
+                    "Refresh Rate",
+                    R.array.keywords_visual_style,
                     R.string.feat_qs_tiles_title
                 )
             )
