@@ -383,6 +383,11 @@ class NotificationListener : NotificationListenerService() {
         )
 
         if (isEnabled) {
+            // Skip if Android Auto is running
+            if (AppUtil.isAndroidAutoRunning(this)) {
+                return
+            }
+
             val metadata = activeSession.metadata
             val title = metadata?.getString(android.media.MediaMetadata.METADATA_KEY_TITLE)
             val artist = metadata?.getString(android.media.MediaMetadata.METADATA_KEY_ARTIST)

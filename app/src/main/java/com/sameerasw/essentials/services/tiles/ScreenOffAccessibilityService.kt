@@ -238,6 +238,10 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
     private fun triggerAmbientGlanceVolume(keyCode: Int) {
         val prefs = getSharedPreferences(SettingsRepository.PREFS_NAME, MODE_PRIVATE)
         if (prefs.getBoolean(SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_ENABLED, false)) {
+            // Skip if Android Auto is running
+            if (com.sameerasw.essentials.utils.AppUtil.isAndroidAutoRunning(this)) {
+                return
+            }
             val title = prefs.getString("current_media_title", null)
             val artist = prefs.getString("current_media_artist", null)
 

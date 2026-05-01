@@ -132,6 +132,13 @@ class AmbientDreamService : DreamService() {
 
     private val burnInProtectionRunnable = object : Runnable {
         override fun run() {
+            if (isDetached) return
+            
+            // Revert to clock if Android Auto is running
+            if (com.sameerasw.essentials.utils.AppUtil.isAndroidAutoRunning(this@AmbientDreamService)) {
+                switchToClockMode()
+            }
+
             shiftUi()
             handler.postDelayed(this, 60000) // Every minute
         }
@@ -140,6 +147,13 @@ class AmbientDreamService : DreamService() {
     private val progressUpdateRunnable = object : Runnable {
         override fun run() {
             if (isDetached) return
+
+            // Revert to clock if Android Auto is running
+            if (com.sameerasw.essentials.utils.AppUtil.isAndroidAutoRunning(this@AmbientDreamService)) {
+                switchToClockMode()
+                return
+            }
+
             handler.postDelayed(this, 1000L)
         }
     }
@@ -452,6 +466,13 @@ class AmbientDreamService : DreamService() {
 
     private fun handleIntent(intent: Intent) {
         if (isDetached) return
+        
+        // Skip if Android Auto is running
+        if (com.sameerasw.essentials.utils.AppUtil.isAndroidAutoRunning(this)) {
+            switchToClockMode()
+            return
+        }
+
         eventType = intent.getStringExtra("event_type")
         targetPackage = intent.getStringExtra("package_name")
         val newTitle = intent.getStringExtra("track_title")
@@ -565,6 +586,11 @@ class AmbientDreamService : DreamService() {
 
     private fun switchToMusicMode() {
         if (isMusicMode) return
+
+        // Skip if Android Auto is running
+        if (com.sameerasw.essentials.utils.AppUtil.isAndroidAutoRunning(this)) {
+            return
+        }
         isMusicMode = true
 
         // Move Clock to Top

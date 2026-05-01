@@ -64,6 +64,12 @@ class AmbientGlanceHandler(
         override fun run() {
             if (overlayView == null || !isDockedMode) return
 
+            // Dismiss if Android Auto is running
+            if (com.sameerasw.essentials.utils.AppUtil.isAndroidAutoRunning(service)) {
+                fadeOutAndRemove()
+                return
+            }
+
             // Randomly shift elements by a few pixels (-15dp to +15dp)
             val maxShiftPx = dpToPx(15f).toFloat()
             val random = Random()
@@ -81,7 +87,13 @@ class AmbientGlanceHandler(
     private val progressUpdateRunnable = object : Runnable {
         override fun run() {
             if (overlayView == null || isDetached) return
-            
+
+            // Dismiss if Android Auto is running
+            if (com.sameerasw.essentials.utils.AppUtil.isAndroidAutoRunning(service)) {
+                fadeOutAndRemove()
+                return
+            }
+
             // Dismiss if music stops/pauses
             val mediaSessionManager = service.getSystemService(Context.MEDIA_SESSION_SERVICE) as MediaSessionManager
             val componentName = android.content.ComponentName(service, ScreenOffAccessibilityService::class.java)
@@ -131,6 +143,10 @@ class AmbientGlanceHandler(
 
     fun handleIntent(intent: Intent) {
         if (intent.action == "SHOW_AMBIENT_GLANCE") {
+            // Skip if Android Auto is running
+            if (com.sameerasw.essentials.utils.AppUtil.isAndroidAutoRunning(service)) {
+                return
+            }
             eventType = intent.getStringExtra("event_type")
             val newTitle = intent.getStringExtra("track_title")
             val newArtist = intent.getStringExtra("artist_name")
@@ -293,6 +309,11 @@ class AmbientGlanceHandler(
     }
 
     private fun showOverlay() {
+        // Skip if Android Auto is running
+        if (com.sameerasw.essentials.utils.AppUtil.isAndroidAutoRunning(service)) {
+            return
+        }
+
         // Remove existing if any
         removeOverlay()
 
@@ -649,6 +670,11 @@ class AmbientGlanceHandler(
         )
 
         if (isEnabled && isDocked) {
+            // Skip if Android Auto is running
+            if (com.sameerasw.essentials.utils.AppUtil.isAndroidAutoRunning(service)) {
+                return
+            }
+
             val intent = Intent("com.sameerasw.essentials.ACTION_REQUEST_AMBIENT_GLANCE").apply {
                 setPackage(service.packageName)
             }
