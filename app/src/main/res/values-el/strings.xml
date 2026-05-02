@@ -587,6 +587,7 @@
     <string name="perm_action_check">Ελεγχος</string>
     <string name="perm_action_enable">Ενεργοποίηση στις Ρυθμίσεις</string>
     <string name="perm_action_how_to">Πώς να χορηγήσετε</string>
+    <string name="perm_action_granted">Granted</string>
     <string name="perm_battery_optimization_title">Βελτιστοποίηση μπαταρίας</string>
     <string name="perm_battery_optimization_desc">Βεβαιωθείτε ότι η υπηρεσία δεν σκοτώνεται από το σύστημα για εξοικονόμηση ενέργειας.</string>
     <!-- Tabs -->
