@@ -587,6 +587,7 @@
     <string name="perm_action_check">Tarkista</string>
     <string name="perm_action_enable">Ota käyttöön asetuksissa</string>
     <string name="perm_action_how_to">Kuinka myöntää</string>
+    <string name="perm_action_granted">Granted</string>
     <string name="perm_battery_optimization_title">Akun optimointi</string>
     <string name="perm_battery_optimization_desc">Varmista, että järjestelmä ei lopeta palvelua virran säästämiseksi.</string>
     <!-- Tabs -->
