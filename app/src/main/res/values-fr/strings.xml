@@ -1350,4 +1350,17 @@
     <string name="notification_lighting_system_mode_custom_ripple">Personnalisé</string>
     <string name="msg_shizuku_root_required_system_lighting">La permission Shizuku ou l\'accès racine (root) est nécessaire pour les effets d\'éclairage du système</string>
     <string name="notification_lighting_system_disclaimer">Conçu pour Google Pixel. Peut ne pas être disponible sur d\'autres appareils.</string>
+    <!-- Live Wallpaper -->
+    <string name="feat_live_wallpaper_title">Live wallpaper</string>
+    <string name="feat_live_wallpaper_desc">Set custom video as live wallpaper</string>
+    <string name="live_wallpaper_label">Live Wallpaper</string>
+    <string name="live_wallpaper_description">A video live wallpaper that plays when unlocked.</string>
+    <string name="live_wallpaper_playback_trigger_title">Play when</string>
+    <string name="live_wallpaper_trigger_unlock">Unlock</string>
+    <string name="live_wallpaper_trigger_screen_on">Screen on</string>
+    <string name="live_wallpaper_video_title">Video</string>
+    <string name="btn_apply">Apply</string>
+    <string name="add_video">Add video</string>
+    <string name="custom_video">Custom video</string>
+    <string name="about_desc_live_wallpaper">Set your favorite video as your home screen wallpaper. Choose between triggering the animation upon unlocking or simply whenever the screen turns on for a dynamic experience.</string>
 </resources>
