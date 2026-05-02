@@ -587,6 +587,7 @@
     <string name="perm_action_check">Tarkista</string>
     <string name="perm_action_enable">Ota käyttöön asetuksissa</string>
     <string name="perm_action_how_to">Kuinka myöntää</string>
+    <string name="perm_action_granted">Granted</string>
     <string name="perm_battery_optimization_title">Akun optimointi</string>
     <string name="perm_battery_optimization_desc">Varmista, että järjestelmä ei lopeta palvelua virran säästämiseksi.</string>
     <!-- Tabs -->
@@ -1349,4 +1350,17 @@
     <string name="notification_lighting_system_mode_custom_ripple">Custom</string>
     <string name="msg_shizuku_root_required_system_lighting">Shizuku or Root permission is required for System lighting effects</string>
     <string name="notification_lighting_system_disclaimer">Made for Google Pixel. Might not be available on other devices.</string>
+    <!-- Live Wallpaper -->
+    <string name="feat_live_wallpaper_title">Live wallpaper</string>
+    <string name="feat_live_wallpaper_desc">Set custom video as live wallpaper</string>
+    <string name="live_wallpaper_label">Live Wallpaper</string>
+    <string name="live_wallpaper_description">A video live wallpaper that plays when unlocked.</string>
+    <string name="live_wallpaper_playback_trigger_title">Play when</string>
+    <string name="live_wallpaper_trigger_unlock">Unlock</string>
+    <string name="live_wallpaper_trigger_screen_on">Screen on</string>
+    <string name="live_wallpaper_video_title">Video</string>
+    <string name="btn_apply">Apply</string>
+    <string name="add_video">Add video</string>
+    <string name="custom_video">Custom video</string>
+    <string name="about_desc_live_wallpaper">Set your favorite video as your home screen wallpaper. Choose between triggering the animation upon unlocking or simply whenever the screen turns on for a dynamic experience.</string>
 </resources>
