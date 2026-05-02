@@ -587,6 +587,7 @@
     <string name="perm_action_check">Controllo</string>
     <string name="perm_action_enable">Abilita nelle Impostazioni</string>
     <string name="perm_action_how_to">Come concedere</string>
+    <string name="perm_action_granted">Granted</string>
     <string name="perm_battery_optimization_title">Ottimizzazione della batteria</string>
     <string name="perm_battery_optimization_desc">Assicurarsi che il servizio non venga interrotto dal sistema per risparmiare energia.</string>
     <!-- Tabs -->
