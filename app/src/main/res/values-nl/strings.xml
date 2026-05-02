@@ -587,6 +587,7 @@
     <string name="perm_action_check">Checken</string>
     <string name="perm_action_enable">In de instellingen inschakelen</string>
     <string name="perm_action_how_to">Hoe je toestemming geeft</string>
+    <string name="perm_action_granted">Granted</string>
     <string name="perm_battery_optimization_title">Batterijoptimalisatie</string>
     <string name="perm_battery_optimization_desc">Zorgt ervoor dat de service niet gestopt wordt door het systeem om stroom te besparen.</string>
     <!-- Tabs -->
