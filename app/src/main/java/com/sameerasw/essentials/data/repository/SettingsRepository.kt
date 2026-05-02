@@ -841,9 +841,22 @@ class SettingsRepository(private val context: Context) {
 
     fun getLiveWallpaperAvailableVideos(): List<String> {
         val raws = com.sameerasw.essentials.R.raw::class.java.fields.mapNotNull { field ->
-            try { field.name } catch (e: Exception) { null }
+            try { 
+                if (field.name == "keep") null else field.name 
+            } catch (e: Exception) { null }
         }
         return raws + getLiveWallpaperCustomVideos()
+    }
+
+    fun removeLiveWallpaperCustomVideo(videoUri: String) {
+        val current = getLiveWallpaperCustomVideos().toMutableList()
+        if (current.remove(videoUri)) {
+            saveLiveWallpaperCustomVideos(current)
+            // If the removed video was selected, revert to default
+            if (getLiveWallpaperSelectedVideo() == videoUri) {
+                saveLiveWallpaperSelectedVideo(LIVE_WALLPAPER_DEFAULT_VIDEO)
+            }
+        }
     }
 
     fun getFontScale(): Float {

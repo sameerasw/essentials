@@ -12,6 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -34,6 +35,9 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.services.LiveWallpaperService
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
+import com.sameerasw.essentials.ui.components.pickers.SegmentedPicker
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import kotlinx.coroutines.Dispatchers
@@ -103,6 +107,11 @@ fun LiveWallpaperSettingsUI(
                 .height(56.dp),
             shape = RoundedCornerShape(28.dp)
         ) {
+            Icon(
+                painter = painterResource(id = R.drawable.rounded_open_in_new_24),
+                contentDescription = null,
+                modifier = Modifier.size(24.dp).padding(end = 8.dp)
+            )
             Text(
                 text = stringResource(R.string.btn_apply),
                 style = MaterialTheme.typography.titleMedium
@@ -117,28 +126,21 @@ fun LiveWallpaperSettingsUI(
         )
 
         RoundedCardContainer {
-            SingleChoiceSegmentedButtonRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                val options = listOf(
-                    SettingsRepository.LIVE_WALLPAPER_TRIGGER_UNLOCK to stringResource(R.string.live_wallpaper_trigger_unlock),
-                    SettingsRepository.LIVE_WALLPAPER_TRIGGER_SCREEN_ON to stringResource(R.string.live_wallpaper_trigger_screen_on)
-                )
-                options.forEachIndexed { index, (value, label) ->
-                    SegmentedButton(
-                        selected = playbackTrigger == value,
-                        onClick = {
-                            HapticUtil.performCustomHaptic(view, 0.5f)
-                            playbackTrigger = value
-                            repository.saveLiveWallpaperPlaybackTrigger(value)
-                        },
-                        shape = SegmentedButtonDefaults.itemShape(index = index, count = options.size)
-                    ) {
-                        Text(label)
-                    }
-                }
-            }
+            val options = listOf(
+                SettingsRepository.LIVE_WALLPAPER_TRIGGER_UNLOCK to stringResource(R.string.live_wallpaper_trigger_unlock),
+                SettingsRepository.LIVE_WALLPAPER_TRIGGER_SCREEN_ON to stringResource(R.string.live_wallpaper_trigger_screen_on)
+            )
+            
+            SegmentedPicker(
+                items = options,
+                selectedItem = options.find { it.first == playbackTrigger } ?: options.first(),
+                onItemSelected = { option ->
+                    playbackTrigger = option.first
+                    repository.saveLiveWallpaperPlaybackTrigger(option.first)
+                },
+                labelProvider = { it.second },
+                modifier = Modifier.fillMaxWidth()
+            )
         }
 
         Text(
@@ -172,7 +174,14 @@ fun LiveWallpaperSettingsUI(
                         HapticUtil.performCustomHaptic(view, 0.5f)
                         selectedVideo = video
                         repository.saveLiveWallpaperSelectedVideo(video)
-                    }
+                    },
+                    onRemove = if (video.startsWith("content://")) {
+                        {
+                            repository.removeLiveWallpaperCustomVideo(video)
+                            availableVideos = repository.getLiveWallpaperAvailableVideos()
+                            selectedVideo = repository.getLiveWallpaperSelectedVideo()
+                        }
+                    } else null
                 )
             }
         }
@@ -181,11 +190,13 @@ fun LiveWallpaperSettingsUI(
     }
 }
 
+@OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
-fun ThumbnailItem(videoName: String, isSelected: Boolean, onClick: () -> Unit) {
+fun ThumbnailItem(videoName: String, isSelected: Boolean, onClick: () -> Unit, onRemove: (() -> Unit)? = null) {
     val context = LocalContext.current
     val view = LocalView.current
     var thumbnail by remember { mutableStateOf<Bitmap?>(null) }
+    var showMenu by remember { mutableStateOf(false) }
 
     LaunchedEffect(videoName) {
         thumbnail = withContext(Dispatchers.IO) {
@@ -212,9 +223,15 @@ fun ThumbnailItem(videoName: String, isSelected: Boolean, onClick: () -> Unit) {
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.clickable {
-            onClick()
-        }
+        modifier = Modifier.combinedClickable(
+            onClick = { onClick() },
+            onLongClick = {
+                if (onRemove != null) {
+                    HapticUtil.performHeavyHaptic(view)
+                    showMenu = true
+                }
+            }
+        )
     ) {
         Box(
             modifier = Modifier
@@ -249,19 +266,26 @@ fun ThumbnailItem(videoName: String, isSelected: Boolean, onClick: () -> Unit) {
                     modifier = Modifier.size(24.dp)
                 )
             }
+
+            SegmentedDropdownMenu(
+                expanded = showMenu,
+                onDismissRequest = { showMenu = false }
+            ) {
+                SegmentedDropdownMenuItem(
+                    text = { Text(stringResource(R.string.action_remove)) },
+                    onClick = {
+                        showMenu = false
+                        onRemove?.invoke()
+                    },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.rounded_delete_24),
+                            contentDescription = null
+                        )
+                    }
+                )
+            }
         }
-        
-        Text(
-            text = if (videoName.startsWith("content://")) {
-                stringResource(R.string.custom_video)
-            } else {
-                videoName.replace("_", " ").replaceFirstChar { it.uppercase() }
-            },
-            style = MaterialTheme.typography.labelSmall,
-            maxLines = 1,
-            color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.padding(top = 4.dp)
-        )
     }
 }
 
@@ -285,12 +309,5 @@ fun AddVideoItem(onClick: () -> Unit) {
                 modifier = Modifier.size(32.dp)
             )
         }
-
-        Text(
-            text = stringResource(R.string.add_video),
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.padding(top = 4.dp)
-        )
     }
 }
