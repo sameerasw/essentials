@@ -587,6 +587,7 @@
     <string name="perm_action_check">Kontrol etmek</string>
     <string name="perm_action_enable">Ayarlar\'da etkinleştir</string>
     <string name="perm_action_how_to">Nasıl verilir</string>
+    <string name="perm_action_granted">Granted</string>
     <string name="perm_battery_optimization_title">Pil Optimizasyonu</string>
     <string name="perm_battery_optimization_desc">Güç tasarrufu sağlamak için hizmetin sistem tarafından sonlandırılmadığından emin olun.</string>
     <!-- Tabs -->
