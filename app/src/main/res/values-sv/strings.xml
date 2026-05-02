@@ -587,6 +587,7 @@
     <string name="perm_action_check">Kontrollera</string>
     <string name="perm_action_enable">Aktivera i Inställningar</string>
     <string name="perm_action_how_to">Hur man beviljar</string>
+    <string name="perm_action_granted">Granted</string>
     <string name="perm_battery_optimization_title">Batterioptimering</string>
     <string name="perm_battery_optimization_desc">Se till att tjänsten inte dödas av systemet för att spara ström.</string>
     <!-- Tabs -->
