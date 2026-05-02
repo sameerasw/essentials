@@ -588,7 +588,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="perm_action_check">Conprobar</string>
     <string name="perm_action_enable">Activar en Ajustes</string>
     <string name="perm_action_how_to">Cómo conceder</string>
-    <string name="perm_action_granted">Granted</string>
+    <string name="perm_action_granted">Concedido</string>
     <string name="perm_battery_optimization_title">Optimización de la batería</string>
     <string name="perm_battery_optimization_desc">Asegúrate de que el sistema no finalice el servicio para ahorrar energía.</string>
     <!-- Tabs -->
@@ -1352,4 +1352,17 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla S
     <string name="notification_lighting_system_mode_custom_ripple">Personalizado</string>
     <string name="msg_shizuku_root_required_system_lighting">Se requiere permiso de Shizuku o acceso Root para los efectos de iluminación del sistema</string>
     <string name="notification_lighting_system_disclaimer">Diseñado para Google Pixel. Puede que no esté disponible en otros dispositivos.</string>
+    <!-- Live Wallpaper -->
+    <string name="feat_live_wallpaper_title">Fondo de pantalla animado</string>
+    <string name="feat_live_wallpaper_desc">Establecer un video personalizado como fondo de pantalla animado</string>
+    <string name="live_wallpaper_label">Fondo de pantalla animado</string>
+    <string name="live_wallpaper_description">Un fondo de pantalla animado en vídeo que se reproduce al desbloquear el dispositivo.</string>
+    <string name="live_wallpaper_playback_trigger_title">Play when</string>
+    <string name="live_wallpaper_trigger_unlock">Unlock</string>
+    <string name="live_wallpaper_trigger_screen_on">Screen on</string>
+    <string name="live_wallpaper_video_title">Video</string>
+    <string name="btn_apply">Apply</string>
+    <string name="add_video">Add video</string>
+    <string name="custom_video">Custom video</string>
+    <string name="about_desc_live_wallpaper">Set your favorite video as your home screen wallpaper. Choose between triggering the animation upon unlocking or simply whenever the screen turns on for a dynamic experience.</string>
 </resources>
