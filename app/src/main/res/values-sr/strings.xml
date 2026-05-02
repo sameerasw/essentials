@@ -587,6 +587,7 @@
     <string name="perm_action_check">Провери</string>
     <string name="perm_action_enable">Омогућите у подешавањима</string>
     <string name="perm_action_how_to">Како одобрити</string>
+    <string name="perm_action_granted">Granted</string>
     <string name="perm_battery_optimization_title">Оптимизација батерије</string>
     <string name="perm_battery_optimization_desc">Уверите се да систем не уништи услугу да бисте уштедели енергију.</string>
     <!-- Tabs -->
