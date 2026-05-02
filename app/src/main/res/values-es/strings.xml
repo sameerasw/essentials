@@ -588,6 +588,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="perm_action_check">Conprobar</string>
     <string name="perm_action_enable">Activar en Ajustes</string>
     <string name="perm_action_how_to">Cómo conceder</string>
+    <string name="perm_action_granted">Granted</string>
     <string name="perm_battery_optimization_title">Optimización de la batería</string>
     <string name="perm_battery_optimization_desc">Asegúrate de que el sistema no finalice el servicio para ahorrar energía.</string>
     <!-- Tabs -->
