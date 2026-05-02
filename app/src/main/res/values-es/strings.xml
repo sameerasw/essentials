@@ -1354,7 +1354,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla S
     <string name="notification_lighting_system_disclaimer">Diseñado para Google Pixel. Puede que no esté disponible en otros dispositivos.</string>
     <!-- Live Wallpaper -->
     <string name="feat_live_wallpaper_title">Fondo de pantalla animado</string>
-    <string name="feat_live_wallpaper_desc">Establecer un video personalizado como fondo de pantalla animado</string>
+    <string name="feat_live_wallpaper_desc">Establecer un vídeo personalizado como fondo de pantalla animado</string>
     <string name="live_wallpaper_label">Fondo de pantalla animado</string>
     <string name="live_wallpaper_description">Un fondo de pantalla animado en vídeo que se reproduce al desbloquear el dispositivo.</string>
     <string name="live_wallpaper_playback_trigger_title">Reproducir cuando</string>
@@ -1362,7 +1362,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla S
     <string name="live_wallpaper_trigger_screen_on">Pantalla encendida</string>
     <string name="live_wallpaper_video_title">Vídeo</string>
     <string name="btn_apply">Aplicar</string>
-    <string name="add_video">Añadir video</string>
+    <string name="add_video">Añadir vídeo</string>
     <string name="custom_video">Vídeo personalizado</string>
-    <string name="about_desc_live_wallpaper">Establece tu video favorito como fondo de pantalla de inicio. Elige entre activar la animación al desbloquear o simplemente cuando la pantalla se encienda para una experiencia dinámica.</string>
+    <string name="about_desc_live_wallpaper">Establece tu vídeo favorito como fondo de pantalla de inicio. Elige entre activar la animación al desbloquear o simplemente cuando la pantalla se encienda para una experiencia dinámica.</string>
 </resources>
