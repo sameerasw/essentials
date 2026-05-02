@@ -587,6 +587,7 @@
     <string name="perm_action_check">Verifica</string>
     <string name="perm_action_enable">Activați în Setări</string>
     <string name="perm_action_how_to">Cum se acordă</string>
+    <string name="perm_action_granted">Granted</string>
     <string name="perm_battery_optimization_title">Optimizarea bateriei</string>
     <string name="perm_battery_optimization_desc">Asigurați-vă că serviciul nu este oprit de sistem pentru a economisi energie.</string>
     <!-- Tabs -->
