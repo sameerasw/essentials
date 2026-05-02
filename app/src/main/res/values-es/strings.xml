@@ -745,7 +745,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="about_desc_bubbles">Activa/desactiva las burbujas flotantes de notificaciones.\n\nActiva o desactiva rápidamente el ajuste del sistema para las burbujas de conversación.</string>
     <string name="about_desc_sensitive_content">Oculta el contenido sensible en la pantalla de bloqueo\n\nActiva o desactiva si el contenido de las notificaciones se muestra u oculta cuando el dispositivo está bloqueado.</string>
     <string name="about_desc_tap_to_wake">Activar/desactivar la función de tocar para activar.\n\nPermite habilitar o deshabilitar la opción de encender la pantalla con un toque.</string>
-    <string name="about_desc_aod">Activar/desactivar Pantalla Siempre Activa.\n\nActiva o desactiva rápidamente la pantalla siempre activa para ver información de un vistazo.</string>
+    <string name="about_desc_aod">Activar/desactivar Pantalla Siempre Activa.\n\nActiva o desactiva rápidamente la Pantalla Siempre Activa para ver información de un vistazo.</string>
     <string name="about_desc_notification_glance">Controla automáticamente tu Pantalla Siempre Activa según tus notificaciones. 
 Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla Siempre Activa permanecerá encendida hasta que descartes la notificación, asegurando que no te pierdas información importante sin gastar batería cuando no hay avisos.</string>
     <string name="about_desc_mono_audio">Combina los canales de audio en mono.\n\nÚtil cuando usas un solo auricular o con fines de accesibilidad.</string>
@@ -1312,7 +1312,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla S
     <string name="search_refresh_rate_range_desc">Configurar por separado la frecuencia de actualización mínima y máxima</string>
     <string name="search_refresh_rate_reset_title">Restablecer la frecuencia de actualización</string>
     <string name="search_refresh_rate_reset_desc">Eliminar la anulación personalizada de la frecuencia de actualización</string>
-    <string name="feat_aod_force_turn_off_title">Forzar desactivación del AOD (Pantalla Siempre Activa)</string>
+    <string name="feat_aod_force_turn_off_title">Forzar desactivación de AOD (Pantalla Siempre Activa)</string>
     <string name="feat_aod_force_turn_off_desc">Forzar la desactivación del AOD cuando no haya notificaciones. Requiere permiso de accesibilidad.</string>
     <string name="feat_auto_accessibility_title">Accesibilidad automática</string>
     <string name="feat_auto_accessibility_desc">Concede automáticamente el permiso de accesibilidad al iniciar la aplicación si falta, utilizando WRITE_SECURE_SETTINGS.</string>
