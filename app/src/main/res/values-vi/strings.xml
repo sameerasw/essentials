@@ -587,6 +587,7 @@
     <string name="perm_action_check">Kiểm tra</string>
     <string name="perm_action_enable">Bật trong Cài đặt</string>
     <string name="perm_action_how_to">Làm thế nào để cấp</string>
+    <string name="perm_action_granted">Granted</string>
     <string name="perm_battery_optimization_title">Tối ưu hóa pin</string>
     <string name="perm_battery_optimization_desc">Đảm bảo dịch vụ không bị hệ thống tắt để tiết kiệm điện năng.</string>
     <!-- Tabs -->
