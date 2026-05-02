@@ -587,6 +587,7 @@
     <string name="perm_action_check">Ellenőrzés</string>
     <string name="perm_action_enable">Engedélyezze a Beállításokban</string>
     <string name="perm_action_how_to">Hogyan kell megadni</string>
+    <string name="perm_action_granted">Granted</string>
     <string name="perm_battery_optimization_title">Akkumulátor optimalizálás</string>
     <string name="perm_battery_optimization_desc">Győződjön meg arról, hogy a szolgáltatást nem ölte meg a rendszer az energiatakarékosság érdekében.</string>
     <!-- Tabs -->
