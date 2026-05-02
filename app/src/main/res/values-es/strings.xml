@@ -1357,12 +1357,12 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla S
     <string name="feat_live_wallpaper_desc">Establecer un video personalizado como fondo de pantalla animado</string>
     <string name="live_wallpaper_label">Fondo de pantalla animado</string>
     <string name="live_wallpaper_description">Un fondo de pantalla animado en vídeo que se reproduce al desbloquear el dispositivo.</string>
-    <string name="live_wallpaper_playback_trigger_title">Play when</string>
-    <string name="live_wallpaper_trigger_unlock">Unlock</string>
-    <string name="live_wallpaper_trigger_screen_on">Screen on</string>
-    <string name="live_wallpaper_video_title">Video</string>
-    <string name="btn_apply">Apply</string>
-    <string name="add_video">Add video</string>
-    <string name="custom_video">Custom video</string>
-    <string name="about_desc_live_wallpaper">Set your favorite video as your home screen wallpaper. Choose between triggering the animation upon unlocking or simply whenever the screen turns on for a dynamic experience.</string>
+    <string name="live_wallpaper_playback_trigger_title">Reproducir cuando</string>
+    <string name="live_wallpaper_trigger_unlock">Desbloquear</string>
+    <string name="live_wallpaper_trigger_screen_on">Pantalla encendida</string>
+    <string name="live_wallpaper_video_title">Vídeo</string>
+    <string name="btn_apply">Aplicar</string>
+    <string name="add_video">Añadir video</string>
+    <string name="custom_video">Vídeo personalizado</string>
+    <string name="about_desc_live_wallpaper">Establece tu video favorito como fondo de pantalla de inicio. Elige entre activar la animación al desbloquear o simplemente cuando la pantalla se encienda para una experiencia dinámica.</string>
 </resources>
