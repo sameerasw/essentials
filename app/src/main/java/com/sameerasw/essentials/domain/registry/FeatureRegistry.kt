@@ -151,19 +151,6 @@ object FeatureRegistry {
         },
 
         object : Feature(
-            id = "LiveWallpaper",
-            title = R.string.feat_live_wallpaper_title,
-            iconRes = R.drawable.rounded_slow_motion_video_24,
-            category = R.string.cat_interface,
-            parentFeatureId = "Display",
-            description = R.string.feat_live_wallpaper_desc,
-            aboutDescription = R.string.about_desc_live_wallpaper,
-            showToggle = false
-        ) {
-            override fun isEnabled(viewModel: MainViewModel) = true
-            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
-        },
-        object : Feature(
             id = "Always on Display",
             title = R.string.feat_always_on_display_title,
             iconRes = R.drawable.rounded_mobile_text_2_24,
@@ -743,6 +730,21 @@ object FeatureRegistry {
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
                 viewModel.setDynamicNightLightEnabled(enabled, context)
         },
+
+        object : Feature(
+            id = "LiveWallpaper",
+            title = R.string.feat_live_wallpaper_title,
+            iconRes = R.drawable.rounded_slow_motion_video_24,
+            category = R.string.cat_interface,
+            parentFeatureId = "Display",
+            description = R.string.feat_live_wallpaper_desc,
+            aboutDescription = R.string.about_desc_live_wallpaper,
+            showToggle = false
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = true
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+        },
+
 
 
         object : Feature(
