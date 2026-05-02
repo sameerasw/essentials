@@ -587,6 +587,7 @@
     <string name="perm_action_check">Check</string>
     <string name="perm_action_enable">Aktiver i Indstillinger</string>
     <string name="perm_action_how_to">Hvordan bevilger man</string>
+    <string name="perm_action_granted">Granted</string>
     <string name="perm_battery_optimization_title">Batterioptimering</string>
     <string name="perm_battery_optimization_desc">Sørg for, at tjenesten ikke dræbes af systemet for at spare strøm.</string>
     <!-- Tabs -->
