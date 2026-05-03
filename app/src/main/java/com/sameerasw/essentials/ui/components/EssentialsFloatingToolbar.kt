@@ -4,6 +4,7 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -140,11 +141,10 @@ fun EssentialsFloatingToolbar(
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.background,
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
                         modifier = Modifier
                             .widthIn(min = 100.dp, max = 250.dp)
                             .padding(horizontal = 8.dp)
-                            .align(Alignment.CenterVertically)
+                            .align(Alignment.CenterVertically).basicMarquee()
                     )
                 }
             } else {
