@@ -28,7 +28,7 @@
     <string name="setting_use_usage_access_desc">En lugar de accesibilidad (Bloqueo de pantalla, Bloqueo de aplicaciones, Luz nocturna dinámica)</string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">Habilitar reasignación de botones</string>
-    <string name="button_remap_use_shizuku_title">Utiliza Shizuku o Root o Root</string>
+    <string name="button_remap_use_shizuku_title">Utiliza Shizuku o Root</string>
     <string name="button_remap_use_shizuku_desc">Funciona con la pantalla apagada (Recomendado)</string>
     <string name="shizuku_not_running_toast">Shizuku no se está ejecutando</string>
     <string name="shizuku_detected_prefix">Detectado %1$s</string>
@@ -69,7 +69,7 @@
     <string name="feat_notification_glance_title">Vista rápida de notificaciones</string>
     <string name="feat_notification_glance_desc">Mantener AOD activado mientras las notificaciones estén pendientes</string>
     <string name="notification_glance_same_as_lighting_title">Las mismas aplicaciones que la iluminación de notificaciones</string>
-    <string name="notification_glance_desc">Esta función activará dinámicamente la Pantalla Siempre Encendida (AOD) cuando llegue una notificación de una aplicación seleccionada y la desactivará cuando todas las notificaciones correspondientes se hayan descartado. Elige las aplicaciones o usa la misma selección que para la iluminación de notificaciones.</string>
+    <string name="notification_glance_desc">Esta función activará dinámicamente la Pantalla Siempre Activa (AOD) cuando llegue una notificación de una aplicación seleccionada y la desactivará cuando todas las notificaciones correspondientes se hayan descartado. Elige las aplicaciones o usa la misma selección que para la iluminación de notificaciones.</string>
     <string name="grant_notification_access">Conceder acceso a las notificaciones</string>
     <string name="action_toggle_media_volume">Activar/desactivar el volumen multimedia</string>
     <string name="button_remap_screen_off_hint">Cuando la pantalla esté apagada, mantén pulsado el botón seleccionado para activar la acción que le hayas asignado. En los dispositivos Pixel, esta acción solo se activa si la función AOD está activada, debido a limitaciones del sistema.</string>
@@ -205,7 +205,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="tile_bubbles">Burbujas</string>
     <string name="tile_sensitive_content">Contenido sensible</string>
     <string name="tile_tap_to_wake">Tocar para activar</string>
-    <string name="tile_aod">AOD (Pantalla siempre activa)</string>
+    <string name="tile_aod">AOD (Pantalla Siempre Activa)</string>
     <string name="tile_caffeinate">Cafeína</string>
     <string name="tile_sound_mode">Modo de sonido</string>
     <string name="tile_notification_lighting">Iluminación de notificaciones</string>
@@ -254,7 +254,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="dns_preset_cleanbrowsing">CleanBrowsing</string>
     <string name="dns_preset_cleanbrowsing_hostname">adult-filter-dns.cleanbrowsing.org</string>
     <string name="tile_charge_optimization">Cargando</string>
-    <string name="limit_to_80">Límite al 80%</string>
+    <string name="limit_to_80">Limitar al 80%</string>
     <string name="adaptive_charging">Adaptado</string>
     <string name="deactivated">No optimizado</string>
     <string name="permission_missing">Falta permiso</string>
@@ -272,7 +272,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="sound_mode_long_press_hint">Mantén pulsado para alternar</string>
     <string name="content_desc_drag_reorder">Arrastrar para reordenar</string>
     <string name="sound_mode_sound">Sonido</string>
-    <string name="sound_mode_vibrate">Vibrar</string>
+    <string name="sound_mode_vibrate">Vibración</string>
     <string name="sound_mode_silent">Silencio</string>
     <!-- Status Bar Categories -->
     <string name="status_bar_category_connectivity">Conectividad</string>
@@ -427,7 +427,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="feat_freeze_desc">Deshabilitar aplicaciones de uso poco frecuente</string>
     <string name="feat_watermark_title">Marca de agua</string>
     <string name="feat_watermark_desc">Añadir datos EXIF ​​y logotipos a las fotos</string>
-    <string name="feat_always_on_display_title">Pantalla Siempre Encendida</string>
+    <string name="feat_always_on_display_title">Pantalla Siempre Activa</string>
     <string name="feat_always_on_display_desc">Mostrar hora e información con la pantalla apagada</string>
     <string name="feat_calendar_sync_title">Sincronización del calendario</string>
     <string name="feat_calendar_sync_desc">Sincronizar eventos con tu reloj</string>
@@ -745,7 +745,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="about_desc_bubbles">Activa/desactiva las burbujas flotantes de notificaciones.\n\nActiva o desactiva rápidamente el ajuste del sistema para las burbujas de conversación.</string>
     <string name="about_desc_sensitive_content">Oculta el contenido sensible en la pantalla de bloqueo\n\nActiva o desactiva si el contenido de las notificaciones se muestra u oculta cuando el dispositivo está bloqueado.</string>
     <string name="about_desc_tap_to_wake">Activar/desactivar la función de tocar para activar.\n\nPermite habilitar o deshabilitar la opción de encender la pantalla con un toque.</string>
-    <string name="about_desc_aod">Activar/desactivar Pantalla Siempre Activa.\n\nActiva o desactiva rápidamente la pantalla siempre activa para ver información de un vistazo.</string>
+    <string name="about_desc_aod">Activar/desactivar Pantalla Siempre Activa.\n\nActiva o desactiva rápidamente la Pantalla Siempre Activa para ver información de un vistazo.</string>
     <string name="about_desc_notification_glance">Controla automáticamente tu Pantalla Siempre Activa según tus notificaciones. 
 Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla Siempre Activa permanecerá encendida hasta que descartes la notificación, asegurando que no te pierdas información importante sin gastar batería cuando no hay avisos.</string>
     <string name="about_desc_mono_audio">Combina los canales de audio en mono.\n\nÚtil cuando usas un solo auricular o con fines de accesibilidad.</string>
@@ -754,7 +754,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla S
     <string name="about_desc_nfc">Activar/desactivar el NFC.\n\nActiva o desactiva rápidamente la comunicación de campo cercano (NFC) para pagos y emparejamientos.</string>
     <string name="about_desc_adaptive_brightness">Alternar brillo adaptativo.\n\nHabilite o deshabilite el ajuste automático del brillo de la pantalla según la luz ambiental.</string>
     <string name="about_desc_private_dns">Activar/desactivar el DNS privado.\n\nAlternar entre los modos Desactivado, Automático y Proveedor de DNS privado.</string>
-    <string name="about_desc_usb_debugging">Activar o desactivar la depuración USB.\n\nActiva o desactiva el acceso a la depuración ADB directamente desde los ajustes rápidos.</string>
+    <string name="about_desc_usb_debugging">Activar/desactivar la depuración USB.\n\nActiva o desactiva el acceso a la depuración ADB directamente desde los ajustes rápidos.</string>
     <string name="about_desc_color_picker">Inicia la herramienta cuentagotas para seleccionar colores, introducida en Android 17 BETA 2</string>
     <string name="about_desc_charge_optimization">Optimiza la duración de la batería limitando la carga máxima o usando la carga adaptativa. Esta función está diseñada especialmente para dispositivos Pixel para garantizar una mayor vida útil y ciclos de carga saludables.\n\nCréditos: TebbeUbben/ChargeQuickTile</string>
     <string name="action_download">Descargar</string>
@@ -1142,7 +1142,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla S
     <string name="shape_flat">Plano</string>
     <string name="shape_inverse">Inverso</string>
     <string name="feat_batteries_title">Baterías</string>
-    <string name="feat_batteries_desc">Supervisa los niveles de batería de tu dispositivo</string>
+    <string name="feat_batteries_desc">Supervisa los niveles de batería de tus dispositivos</string>
     <string name="batteries_widget_label">Estado de la batería</string>
     <string name="connect_to_airsync">Conectarse a AirSync</string>
     <string name="connect_to_airsync_summary">Mostrar la batería de tu dispositivo Mac conectado en AirSync</string>
@@ -1197,7 +1197,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla S
     <string name="search_sound_mode_behavior_title">Comportamiento del ciclo</string>
     <string name="search_sound_mode_behavior_desc">Elige los modos por los que se alternará</string>
     <string name="feat_ambient_music_title">Un vistazo a la música ambiental</string>
-    <string name="feat_ambient_music_desc">Un vistazo a los medios en la Pantalla Siempre Activa</string>
+    <string name="feat_ambient_music_desc">Un vistazo a los medios en AOD (Pantalla Siempre Activa)</string>
     <string name="feat_sound_haptics_title">Sonido y vibración</string>
     <string name="feat_sound_haptics_desc">Funciones de volumen y vibración</string>
     <string name="feat_security_privacy_title">Seguridad y privacidad</string>
@@ -1312,7 +1312,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla S
     <string name="search_refresh_rate_range_desc">Configurar por separado la frecuencia de actualización mínima y máxima</string>
     <string name="search_refresh_rate_reset_title">Restablecer la frecuencia de actualización</string>
     <string name="search_refresh_rate_reset_desc">Eliminar la anulación personalizada de la frecuencia de actualización</string>
-    <string name="feat_aod_force_turn_off_title">Forzar desactivación del AOD (Pantalla Siempre Activa)</string>
+    <string name="feat_aod_force_turn_off_title">Forzar desactivación de AOD (Pantalla Siempre Activa)</string>
     <string name="feat_aod_force_turn_off_desc">Forzar la desactivación del AOD cuando no haya notificaciones. Requiere permiso de accesibilidad.</string>
     <string name="feat_auto_accessibility_title">Accesibilidad automática</string>
     <string name="feat_auto_accessibility_desc">Concede automáticamente el permiso de accesibilidad al iniciar la aplicación si falta, utilizando WRITE_SECURE_SETTINGS.</string>
@@ -1354,15 +1354,15 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla S
     <string name="notification_lighting_system_disclaimer">Diseñado para Google Pixel. Puede que no esté disponible en otros dispositivos.</string>
     <!-- Live Wallpaper -->
     <string name="feat_live_wallpaper_title">Fondo de pantalla animado</string>
-    <string name="feat_live_wallpaper_desc">Establecer un video personalizado como fondo de pantalla animado</string>
+    <string name="feat_live_wallpaper_desc">Establecer un vídeo personalizado como fondo de pantalla animado</string>
     <string name="live_wallpaper_label">Fondo de pantalla animado</string>
     <string name="live_wallpaper_description">Un fondo de pantalla animado en vídeo que se reproduce al desbloquear el dispositivo.</string>
-    <string name="live_wallpaper_playback_trigger_title">Play when</string>
-    <string name="live_wallpaper_trigger_unlock">Unlock</string>
-    <string name="live_wallpaper_trigger_screen_on">Screen on</string>
-    <string name="live_wallpaper_video_title">Video</string>
-    <string name="btn_apply">Apply</string>
-    <string name="add_video">Add video</string>
-    <string name="custom_video">Custom video</string>
-    <string name="about_desc_live_wallpaper">Set your favorite video as your home screen wallpaper. Choose between triggering the animation upon unlocking or simply whenever the screen turns on for a dynamic experience.</string>
+    <string name="live_wallpaper_playback_trigger_title">Reproducir cuando</string>
+    <string name="live_wallpaper_trigger_unlock">Desbloquear</string>
+    <string name="live_wallpaper_trigger_screen_on">Pantalla encendida</string>
+    <string name="live_wallpaper_video_title">Vídeo</string>
+    <string name="btn_apply">Aplicar</string>
+    <string name="add_video">Añadir vídeo</string>
+    <string name="custom_video">Vídeo personalizado</string>
+    <string name="about_desc_live_wallpaper">Establece tu vídeo favorito como fondo de pantalla de inicio. Elige entre activar la animación al desbloquear o simplemente cuando la pantalla se encienda para una experiencia dinámica.</string>
 </resources>
