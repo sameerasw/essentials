@@ -324,10 +324,10 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="stb_privacy_chip">Indicadores de uso de cámara y micrófono</string>
     <string name="smart_data_title">Datos inteligentes</string>
     <string name="permission_read_phone_state_title">Leer el estado del teléfono</string>
-    <string name="permission_read_phone_state_desc">Necesario para detectar el tipo de red para la función de Datos Inteligentes</string>
+    <string name="permission_read_phone_state_desc">Necesario para detectar el tipo de red para la función de Datos inteligentes</string>
     <string name="permission_read_phone_state_desc_call_vibrations">Requerido para detectar cambios en el estado de las llamadas para activar la retroalimentación háptica.</string>
-    <string name="settings_section_smart_visibility">Visibilidad Inteligente</string>
-    <string name="smart_wifi_title">WiFi Inteligente</string>
+    <string name="settings_section_smart_visibility">Visibilidad inteligente</string>
+    <string name="smart_wifi_title">WiFi inteligente</string>
     <string name="smart_wifi_desc">Ocultar datos móviles cuando el WiFi está conectado</string>
     <string name="smart_data_desc">Ocultar datos móviles en ciertos modos</string>
     <string name="action_reset_all_icons">Restablecer todos los iconos</string>
@@ -367,7 +367,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <!-- Extraction Batch 1 -->
     <!-- Categories -->
     <string name="cat_tools">Herramientas</string>
-    <string name="cat_visuals">Imágenes</string>
+    <string name="cat_visuals">Visuales</string>
     <string name="cat_system">Sistema</string>
     <!-- UI Elements -->
     <string name="search_placeholder">Buscar en Essentials</string>
@@ -438,7 +438,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="watermark_pick_image">Seleccionar imagen</string>
     <string name="watermark_save_success">Imagen guardada en la galería</string>
     <string name="action_share">Compartir</string>
-    <string name="watermark_exif_settings">Configuración EXIF</string>
+    <string name="watermark_exif_settings">Ajustes EXIF</string>
     <string name="watermark_exif_focal_length">Longitud focal</string>
     <string name="watermark_exif_aperture">Apertura</string>
     <string name="watermark_exif_iso">ISO</string>
@@ -468,7 +468,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="action_next">Siguiente</string>
     <string name="action_ok">ACEPTAR</string>
     <string name="action_save_changes">Guardar cambios</string>
-    <string name="calendar_sync_settings_title">Configuración de sincronización del calendario</string>
+    <string name="calendar_sync_settings_title">Ajustes de sincronización del calendario</string>
     <string name="calendar_sync_select_calendars">Sincronizar calendarios específicos</string>
     <string name="calendar_sync_periodic_title">Sincronización periódica</string>
     <string name="calendar_sync_periodic_desc">Sincronización cada 15 minutos si se encuentran cambios</string>
@@ -478,7 +478,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="calendar_sync_sync_started">Se inició la sincronización del calendario</string>
     <!-- Search Settings -->
     <string name="search_haptic_title">Vibración háptica del widget</string>
-    <string name="search_haptic_desc">“Elige la respuesta háptica para los toques en el widget</string>
+    <string name="search_haptic_desc">Elige la respuesta háptica para los toques en el widget</string>
     <string name="search_smart_wifi_title">WiFi inteligente</string>
     <string name="search_smart_wifi_desc">Ocultar los datos móviles cuando haya Wi‑Fi conectado</string>
     <string name="search_smart_data_title">Datos inteligentes</string>
