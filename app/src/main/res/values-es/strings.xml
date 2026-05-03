@@ -1121,7 +1121,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla S
     <string name="root_not_available_toast">Acceso root no disponible. Por favor, revisa tu administrador de root.</string>
     <!-- System Keyboard -->
     <string name="feat_system_keyboard_title">Teclado</string>
-    <string name="feat_system_keys">Claves</string>
+    <string name="feat_system_keys">Teclas</string>
     <string name="feat_system_keyboard_desc">Personalizar diseño y comportamiento</string>
     <string name="search_keyboard_height_title">Altura del teclado</string>
     <string name="search_keyboard_height_desc">Ajustar el tamaño vertical total del teclado</string>
