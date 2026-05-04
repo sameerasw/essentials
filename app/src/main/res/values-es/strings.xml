@@ -1070,7 +1070,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="instruction_section_flashlight_title">El ajuste de brillo de la linterna no funciona</string>
     <string name="instruction_section_flashlight_desc">Solo un número limitado de dispositivos cuenta con soporte de hardware y software para ajustar la intensidad de la linterna. \n\n\'La versión mínima de Android es 13 (SDK33).\nEl control de brillo de la linterna solo es compatible con HAL versión 3.8 o superior, por lo que, entre los dispositivos compatibles, solo los más recientes (por ejemplo, Pixel 6/7, Samsung S23, etc.) lo soportan\'\npolodarb/Flashlight-Tiramisu</string>
     <string name="instruction_section_about_title">¿Qué demonios es esta aplicación?</string>
-    <string name="instruction_section_about_desc">Buena pregunta,\n\nSiempre he querido exprimir al máximo mis dispositivos, ya que he sido usuario con root desde que tuve mi primer dispositivo con Project Treble. Y siempre me ha encantado la app Tasker, que es como el dios de la automatización y del aprovechamiento de todas las APIs y funciones internas posibles de Android.\n\nAhora estoy sin root y de vuelta en la experiencia beta de Android stock, y quería sacar el máximo provecho de lo que es posible con los privilegios disponibles. Y ya que estaba, pensé en compartirlo. Así que, con mis conocimientos básicos de Kotlin Jetpack, con mucha investigación, herramientas de asistencia y también con la gran comunidad, construí una app todo‑en‑uno que contiene todo lo que quería tener en mi Android con los permisos disponibles. Y aquí está.\n\nLas solicitudes de funciones son bienvenidas; las consideraré y veré si son posibles con los permisos disponibles y mis habilidades. Hoy en día, ¿qué no es posible? :)\n\n¿Por qué no está en Play Store?\nNo quiero arriesgarme a que mi cuenta de desarrollador sea baneada debido a los permisos internos y altamente sensibles que usa la app. Pero con la dirección que está tomando la instalación de apps por sideloading en Android, ya veremos qué tenemos que hacer. Entiendo las preocupaciones sobre las apps instaladas por fuera de la tienda y el riesgo de que sean maliciosas.\nYa que estamos en el tema, échale un vistazo a mi otra app AirSync si eres usuario de Mac + Android. *Autopromoción descarada*\n\n¡Disfruta, y sigue creando! (っ◕‿◕)っ</string>
+    <string name="instruction_section_about_desc">Buena pregunta,\n\nSiempre he querido exprimir al máximo mis dispositivos, ya que he sido usuario con root desde que tuve mi primer dispositivo con Project Treble. Y siempre me ha encantado la app Tasker, que es como el dios de la automatización y del aprovechamiento de todas las APIs y funciones internas posibles de Android.\n\nAhora estoy sin root y de vuelta en la experiencia beta de Android stock, y quería sacar el máximo provecho de lo que es posible con los privilegios disponibles. Y ya que estaba, pensé en compartirlo. Así que, con mis conocimientos básicos de Kotlin Jetpack, con mucha investigación, herramientas de asistencia y también con la gran comunidad, construí una app todo‑en‑uno que contiene todo lo que quería tener en mi Android con los permisos disponibles. Y aquí está.\n\nLas solicitudes de funciones son bienvenidas; las consideraré y veré si son posibles con los permisos disponibles y mis habilidades. Hoy en día, ¿qué no es posible? :)\n\n¿Por qué no está en Play Store?\nNo quiero arriesgarme a que mi cuenta de desarrollador sea baneada debido a los permisos internos y altamente sensibles que usa la app. Pero con la dirección que está tomando la instalación de apps desde otras fuentes en Android, ya veremos qué tenemos que hacer. Entiendo las preocupaciones sobre las apps instaladas por fuera de la tienda y el riesgo de que sean maliciosas.\nYa que estamos en el tema, échale un vistazo a mi otra app AirSync si eres usuario de Mac + Android. *Autopromoción descarada*\n\n¡Disfruta, y sigue creando! (っ◕‿◕)っ</string>
     <!-- Bug Reporting -->
     <string name="toast_bug_report_copied">Informe de errores copiado al portapapeles</string>
     <string name="bug_report_title">Informe de errores</string>
@@ -1191,13 +1191,13 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="action_refresh">Actualizar</string>
     <!-- Added Missing Group Strings -->
     <string name="feat_sound_modes_title">Mosaico de modo de sonido</string>
-    <string name="feat_sound_modes_desc">Mosaico de Ajustes Rápidos para cambiar el modo de sonido</string>
+    <string name="feat_sound_modes_desc">Mosaico de Ajustes rápidos para cambiar el modo de sonido</string>
     <string name="search_sound_mode_show_slider_title">Mostrar control deslizante</string>
     <string name="search_sound_mode_show_slider_desc">Mostrar el control de volumen en el mosaico</string>
     <string name="search_sound_mode_behavior_title">Comportamiento del ciclo</string>
     <string name="search_sound_mode_behavior_desc">Elige los modos por los que se alternará</string>
     <string name="feat_ambient_music_title">Un vistazo a la música ambiental</string>
-    <string name="feat_ambient_music_desc">Un vistazo a los medios en AOD (Pantalla Siempre Activa)</string>
+    <string name="feat_ambient_music_desc">Un vistazo a los medios en AOD (Pantalla siempre activa)</string>
     <string name="feat_sound_haptics_title">Sonido y vibración</string>
     <string name="feat_sound_haptics_desc">Funciones de volumen y vibración</string>
     <string name="feat_security_privacy_title">Seguridad y privacidad</string>
@@ -1312,7 +1312,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="search_refresh_rate_range_desc">Configurar por separado la frecuencia de actualización mínima y máxima</string>
     <string name="search_refresh_rate_reset_title">Restablecer la frecuencia de actualización</string>
     <string name="search_refresh_rate_reset_desc">Eliminar la anulación personalizada de la frecuencia de actualización</string>
-    <string name="feat_aod_force_turn_off_title">Forzar desactivación de AOD (Pantalla Siempre Activa)</string>
+    <string name="feat_aod_force_turn_off_title">Forzar desactivación de AOD (Pantalla siempre activa)</string>
     <string name="feat_aod_force_turn_off_desc">Forzar la desactivación del AOD cuando no haya notificaciones. Requiere permiso de accesibilidad.</string>
     <string name="feat_auto_accessibility_title">Accesibilidad automática</string>
     <string name="feat_auto_accessibility_desc">Concede automáticamente el permiso de accesibilidad al iniciar la aplicación si falta, utilizando WRITE_SECURE_SETTINGS.</string>
