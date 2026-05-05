@@ -429,7 +429,15 @@
     <string name="feat_always_on_display_title">항상 표시됨</string>
     <string name="feat_always_on_display_desc">화면이 꺼진 동안 시간 및 정보 표시</string>
     <string name="feat_calendar_sync_title">캘린더 동기화</string>
-    <string name="feat_calendar_sync_desc">시계에 이벤트 동기화</string>
+    <string name="feat_calendar_sync_desc">Sync your phone calendar to your watch</string>
+    <string name="feat_lock_from_watch_title">Lock from Watch</string>
+    <string name="feat_lock_from_watch_desc">Lock your phone remotely</string>
+    <string name="remote_lock_mode_title">Lock Mode</string>
+    <string name="remote_lock_mode_screen_off">Screen off</string>
+    <string name="remote_lock_mode_lock">Lock</string>
+    <string name="remote_lock_mode_admin_note">Using device admin lock will disable biometrics</string>
+    <string name="watch_connected_status">Connected</string>
+    <string name="watch_unknown_name">Unknown Watch</string>
     <string name="watermark_style_overlay">씌우다</string>
     <string name="watermark_style_frame">액자</string>
     <string name="watermark_show_brand">장치 브랜드</string>
