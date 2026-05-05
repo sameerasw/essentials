@@ -258,4 +258,15 @@ object PermissionUtils {
         } catch (_: Exception) {
         }
     }
+
+    fun openDeviceAdminSettings(context: Context) {
+        try {
+            val intent = Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN)
+            val adminComponent = ComponentName(context, SecurityDeviceAdminReceiver::class.java)
+            intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, adminComponent)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(intent)
+        } catch (e: Exception) {
+        }
+    }
 }

@@ -359,6 +359,10 @@ class FeatureSettingsActivity : AppCompatActivity() {
                             }
 
                             if (featureId == "Watch") {
+                                val context = androidx.compose.ui.platform.LocalContext.current
+                                LaunchedEffect(Unit) {
+                                    watchViewModel.check(context)
+                                }
                                 WatchSettingsUI(
                                     viewModel = watchViewModel,
                                     modifier = Modifier.padding(top = 16.dp)
@@ -607,6 +611,15 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightKey = highlightSetting
+                                        )
+                                    }
+
+                                    "Lock from Watch" -> {
+                                        com.sameerasw.essentials.ui.composables.configs.RemoteLockSettingsUI(
+                                            mainViewModel = viewModel,
+                                            watchViewModel = watchViewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting
                                         )
                                     }
 
