@@ -12,7 +12,7 @@
     <string name="flashlight_pulse_tile_label">نبض المصباح</string>
     <string name="check_pre_releases_label">التحقق من أحدث إصدار بيتا</string>
     <string name="check_pre_releases_desc">قد تكون غير مستقرة</string>
-    <string name="label_default_tab">Default tab</string>
+    <string name="label_default_tab">علامة التبويب الافتراضية</string>
     <!-- App Lock -->
     <string name="settings_section_security">الحماية</string>
     <string name="app_lock_enable_title">تمكين قفل التطبيق</string>
