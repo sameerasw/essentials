@@ -81,6 +81,13 @@ object DeviceInfoSyncManager {
             }
         }, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
 
+        // Sync on ringer mode change
+        context.registerReceiver(object : android.content.BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                syncDeviceInfo(context)
+            }
+        }, IntentFilter(android.media.AudioManager.RINGER_MODE_CHANGED_ACTION))
+
         // Sync on flashlight change
         val cameraManager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
         cameraManager.registerTorchCallback(torchCallback, handler)
@@ -126,6 +133,8 @@ object DeviceInfoSyncManager {
                 plugged == BatteryManager.BATTERY_PLUGGED_WIRELESS
 
         val putDataMapReq = PutDataMapRequest.create(SYNC_PATH)
+        val ringerMode = (context.getSystemService(Context.AUDIO_SERVICE) as? android.media.AudioManager)?.ringerMode ?: 2
+
         val dataMap = putDataMapReq.dataMap
         dataMap.putInt("battery_level", batteryPct)
         dataMap.putBoolean("is_charging", isCharging)
@@ -133,6 +142,7 @@ object DeviceInfoSyncManager {
         dataMap.putInt("flashlight_level", torchLevel)
         dataMap.putInt("flashlight_max_level", maxTorchLevel)
         dataMap.putBoolean("flashlight_intensity_supported", isIntensitySupported)
+        dataMap.putInt("ringer_mode", ringerMode)
         dataMap.putLong("timestamp", System.currentTimeMillis())
 
         val putDataReq = putDataMapReq.asPutDataRequest()

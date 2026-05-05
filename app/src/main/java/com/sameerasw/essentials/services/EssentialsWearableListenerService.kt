@@ -35,6 +35,9 @@ class EssentialsWearableListenerService : WearableListenerService() {
                 }
                 sendBroadcast(intent)
             }
+            "/toggle_sound_mode" -> {
+                com.sameerasw.essentials.services.handlers.SoundModeHandler(this).cycleNextMode()
+            }
         }
     }
 }
