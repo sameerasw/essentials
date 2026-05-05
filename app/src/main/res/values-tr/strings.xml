@@ -429,7 +429,7 @@
     <string name="feat_always_on_display_title">Her Zaman Açık Ekran</string>
     <string name="feat_always_on_display_desc">Ekran kapalıyken saati ve bilgileri göster</string>
     <string name="feat_calendar_sync_title">Takvim Senkronizasyonu</string>
-    <string name="feat_calendar_sync_desc">Sync your phone calendar to your watch</string>
+    <string name="feat_calendar_sync_desc">Etkinlikleri saatinize senkronize edin</string>
     <string name="feat_lock_from_watch_title">Lock from Watch</string>
     <string name="feat_lock_from_watch_desc">Lock your phone remotely</string>
     <string name="remote_lock_mode_title">Lock Mode</string>
