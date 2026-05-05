@@ -429,7 +429,7 @@
     <string name="feat_always_on_display_title">دائما على الشاشة</string>
     <string name="feat_always_on_display_desc">عرض الوقت والمعلومات أثناء إيقاف تشغيل الشاشة</string>
     <string name="feat_calendar_sync_title">مزامنة التقويم</string>
-    <string name="feat_calendar_sync_desc">Sync your phone calendar to your watch</string>
+    <string name="feat_calendar_sync_desc">مزامنة الأحداث مع ساعتك</string>
     <string name="feat_lock_from_watch_title">Lock from Watch</string>
     <string name="feat_lock_from_watch_desc">Lock your phone remotely</string>
     <string name="remote_lock_mode_title">Lock Mode</string>
