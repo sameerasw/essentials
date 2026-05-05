@@ -429,7 +429,15 @@
     <string name="feat_always_on_display_title">Întotdeauna pe ecran</string>
     <string name="feat_always_on_display_desc">Afișați ora și informațiile cu ecranul oprit</string>
     <string name="feat_calendar_sync_title">Sincronizare calendar</string>
-    <string name="feat_calendar_sync_desc">Sincronizați evenimentele cu ceasul dvs</string>
+    <string name="feat_calendar_sync_desc">Sync your phone calendar to your watch</string>
+    <string name="feat_lock_from_watch_title">Lock from Watch</string>
+    <string name="feat_lock_from_watch_desc">Lock your phone remotely</string>
+    <string name="remote_lock_mode_title">Lock Mode</string>
+    <string name="remote_lock_mode_screen_off">Screen off</string>
+    <string name="remote_lock_mode_lock">Lock</string>
+    <string name="remote_lock_mode_admin_note">Using device admin lock will disable biometrics</string>
+    <string name="watch_connected_status">Connected</string>
+    <string name="watch_unknown_name">Unknown Watch</string>
     <string name="watermark_style_overlay">Suprapunere</string>
     <string name="watermark_style_frame">Cadru</string>
     <string name="watermark_show_brand">Marca dispozitivului</string>

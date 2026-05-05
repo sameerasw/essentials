@@ -326,8 +326,8 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="permission_read_phone_state_title">Leer el estado del teléfono</string>
     <string name="permission_read_phone_state_desc">Necesario para detectar el tipo de red para la función de Datos inteligentes</string>
     <string name="permission_read_phone_state_desc_call_vibrations">Requerido para detectar cambios en el estado de las llamadas para activar la retroalimentación háptica.</string>
-    <string name="settings_section_smart_visibility">Visibilidad inteligente</string>
-    <string name="smart_wifi_title">WiFi inteligente</string>
+    <string name="settings_section_smart_visibility">Visibilidad Inteligente</string>
+    <string name="smart_wifi_title">WiFi Inteligente</string>
     <string name="smart_wifi_desc">Ocultar datos móviles cuando el WiFi está conectado</string>
     <string name="smart_data_desc">Ocultar datos móviles en ciertos modos</string>
     <string name="action_reset_all_icons">Restablecer todos los iconos</string>
@@ -430,7 +430,15 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="feat_always_on_display_title">Pantalla siempre activa</string>
     <string name="feat_always_on_display_desc">Mostrar hora e información con la pantalla apagada</string>
     <string name="feat_calendar_sync_title">Sincronización del calendario</string>
-    <string name="feat_calendar_sync_desc">Sincronizar eventos con tu reloj</string>
+    <string name="feat_calendar_sync_desc">Sync your phone calendar to your watch</string>
+    <string name="feat_lock_from_watch_title">Lock from Watch</string>
+    <string name="feat_lock_from_watch_desc">Lock your phone remotely</string>
+    <string name="remote_lock_mode_title">Lock Mode</string>
+    <string name="remote_lock_mode_screen_off">Screen off</string>
+    <string name="remote_lock_mode_lock">Lock</string>
+    <string name="remote_lock_mode_admin_note">Using device admin lock will disable biometrics</string>
+    <string name="watch_connected_status">Connected</string>
+    <string name="watch_unknown_name">Unknown Watch</string>
     <string name="watermark_style_overlay">Superposición</string>
     <string name="watermark_style_frame">Marco</string>
     <string name="watermark_show_brand">Marca del dispositivo</string>

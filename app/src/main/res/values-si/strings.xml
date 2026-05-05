@@ -429,7 +429,15 @@
     <string name="feat_always_on_display_title">සැමවිටම ප්‍රදර්ශනයේ</string>
     <string name="feat_always_on_display_desc">තිරය ​​ක්‍රියාවිරහිත වන අතරතුර කාලය සහ තොරතුරු පෙන්වන්න</string>
     <string name="feat_calendar_sync_title">දින දර්ශන සමමුහුර්තකරණය</string>
-    <string name="feat_calendar_sync_desc">ඔබගේ ඔරලෝසුවට සිදුවීම් සමමුහුර්ත කරන්න</string>
+    <string name="feat_calendar_sync_desc">Sync your phone calendar to your watch</string>
+    <string name="feat_lock_from_watch_title">Lock from Watch</string>
+    <string name="feat_lock_from_watch_desc">Lock your phone remotely</string>
+    <string name="remote_lock_mode_title">Lock Mode</string>
+    <string name="remote_lock_mode_screen_off">Screen off</string>
+    <string name="remote_lock_mode_lock">Lock</string>
+    <string name="remote_lock_mode_admin_note">Using device admin lock will disable biometrics</string>
+    <string name="watch_connected_status">Connected</string>
+    <string name="watch_unknown_name">Unknown Watch</string>
     <string name="watermark_style_overlay">අතිච්ඡාදනය</string>
     <string name="watermark_style_frame">රාමුව</string>
     <string name="watermark_show_brand">උපාංග වෙළඳ නාමය</string>

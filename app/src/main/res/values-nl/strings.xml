@@ -429,7 +429,15 @@
     <string name="feat_always_on_display_title">Always-On Display</string>
     <string name="feat_always_on_display_desc">Laat tijd en informatie zien wanneer het scherm uit is</string>
     <string name="feat_calendar_sync_title">Kalenders synchroniseren</string>
-    <string name="feat_calendar_sync_desc">Gebeurtenissen synchroniseren naar je horloge</string>
+    <string name="feat_calendar_sync_desc">Sync your phone calendar to your watch</string>
+    <string name="feat_lock_from_watch_title">Lock from Watch</string>
+    <string name="feat_lock_from_watch_desc">Lock your phone remotely</string>
+    <string name="remote_lock_mode_title">Lock Mode</string>
+    <string name="remote_lock_mode_screen_off">Screen off</string>
+    <string name="remote_lock_mode_lock">Lock</string>
+    <string name="remote_lock_mode_admin_note">Using device admin lock will disable biometrics</string>
+    <string name="watch_connected_status">Connected</string>
+    <string name="watch_unknown_name">Unknown Watch</string>
     <string name="watermark_style_overlay">Overlay</string>
     <string name="watermark_style_frame">Kader</string>
     <string name="watermark_show_brand">Apparatenmerk</string>
