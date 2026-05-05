@@ -454,6 +454,8 @@
     <string name="remote_lock_mode_screen_off">Screen off</string>
     <string name="remote_lock_mode_lock">Lock</string>
     <string name="remote_lock_mode_admin_note">Using device admin lock will disable biometrics</string>
+    <string name="watch_connected_status">Connected</string>
+    <string name="watch_unknown_name">Unknown Watch</string>
     <string name="watermark_style_overlay">Overlay</string>
     <string name="watermark_style_frame">Frame</string>
     <string name="watermark_show_brand">Device Brand</string>

@@ -9,6 +9,7 @@ import com.sameerasw.essentials.data.repository.SettingsRepository
 
 class WatchViewModel : ViewModel() {
     val isWatchDetected = mutableStateOf(false)
+    val connectedWatchName = mutableStateOf<String?>(null)
     val remoteLockMode = mutableStateOf(0) // 0: Screen off, 1: Lock
 
     fun load(repository: SettingsRepository) {
@@ -24,8 +25,10 @@ class WatchViewModel : ViewModel() {
         val nodeClient = Wearable.getNodeClient(context)
         nodeClient.connectedNodes.addOnSuccessListener { nodes ->
             isWatchDetected.value = nodes.isNotEmpty()
+            connectedWatchName.value = nodes.firstOrNull()?.displayName
         }.addOnFailureListener {
             isWatchDetected.value = false
+            connectedWatchName.value = null
         }
     }
 }

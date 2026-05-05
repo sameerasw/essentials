@@ -359,6 +359,10 @@ class FeatureSettingsActivity : AppCompatActivity() {
                             }
 
                             if (featureId == "Watch") {
+                                val context = androidx.compose.ui.platform.LocalContext.current
+                                LaunchedEffect(Unit) {
+                                    watchViewModel.check(context)
+                                }
                                 WatchSettingsUI(
                                     viewModel = watchViewModel,
                                     modifier = Modifier.padding(top = 16.dp)
