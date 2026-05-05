@@ -134,6 +134,8 @@ object DeviceInfoSyncManager {
 
         val putDataMapReq = PutDataMapRequest.create(SYNC_PATH)
         val ringerMode = (context.getSystemService(Context.AUDIO_SERVICE) as? android.media.AudioManager)?.ringerMode ?: 2
+        val deviceName = android.provider.Settings.Global.getString(context.contentResolver, android.provider.Settings.Global.DEVICE_NAME)
+            ?: android.os.Build.MODEL
 
         val dataMap = putDataMapReq.dataMap
         dataMap.putInt("battery_level", batteryPct)
@@ -143,6 +145,7 @@ object DeviceInfoSyncManager {
         dataMap.putInt("flashlight_max_level", maxTorchLevel)
         dataMap.putBoolean("flashlight_intensity_supported", isIntensitySupported)
         dataMap.putInt("ringer_mode", ringerMode)
+        dataMap.putString("device_name", deviceName)
         dataMap.putLong("timestamp", System.currentTimeMillis())
 
         val putDataReq = putDataMapReq.asPutDataRequest()
