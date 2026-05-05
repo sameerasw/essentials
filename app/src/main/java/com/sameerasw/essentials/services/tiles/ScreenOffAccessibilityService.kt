@@ -110,6 +110,14 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
                     "FORCE_TURN_OFF_AOD" -> {
                         aodForceTurnOffHandler.forceTurnOff()
                     }
+
+                    FlashlightActionReceiver.ACTION_TOGGLE,
+                    FlashlightActionReceiver.ACTION_OFF,
+                    FlashlightActionReceiver.ACTION_SET_INTENSITY,
+                    FlashlightActionReceiver.ACTION_INCREASE,
+                    FlashlightActionReceiver.ACTION_DECREASE -> {
+                        flashlightHandler.handleIntent(intent)
+                    }
                 }
             }
         }
@@ -120,6 +128,11 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
             addAction(InputEventListenerService.ACTION_VOLUME_LONG_PRESSED)
             addAction("SHOW_AMBIENT_GLANCE")
             addAction("FORCE_TURN_OFF_AOD")
+            addAction(FlashlightActionReceiver.ACTION_TOGGLE)
+            addAction(FlashlightActionReceiver.ACTION_OFF)
+            addAction(FlashlightActionReceiver.ACTION_SET_INTENSITY)
+            addAction(FlashlightActionReceiver.ACTION_INCREASE)
+            addAction(FlashlightActionReceiver.ACTION_DECREASE)
         }
         registerReceiver(screenReceiver, filter, RECEIVER_EXPORTED)
 

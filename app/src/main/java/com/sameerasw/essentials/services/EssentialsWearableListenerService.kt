@@ -11,9 +11,30 @@ class EssentialsWearableListenerService : WearableListenerService() {
     }
 
     override fun onMessageReceived(messageEvent: MessageEvent) {
-        Log.d(TAG, "onMessageReceived: ${messageEvent.path}")
-        if (messageEvent.path == PATH_REQUEST_SYNC) {
-            DeviceInfoSyncManager.forceSync(this)
+        super.onMessageReceived(messageEvent)
+        
+        when (messageEvent.path) {
+            PATH_REQUEST_SYNC -> {
+                DeviceInfoSyncManager.forceSync(this)
+            }
+            "/toggle_flashlight" -> {
+                val intent = android.content.Intent(this, com.sameerasw.essentials.services.receivers.FlashlightActionReceiver::class.java).apply {
+                    action = com.sameerasw.essentials.services.receivers.FlashlightActionReceiver.ACTION_TOGGLE
+                }
+                sendBroadcast(intent)
+            }
+            "/set_flashlight_intensity" -> {
+                val intensity = try {
+                    String(messageEvent.data).toInt()
+                } catch (e: Exception) {
+                    1
+                }
+                val intent = android.content.Intent(this, com.sameerasw.essentials.services.receivers.FlashlightActionReceiver::class.java).apply {
+                    action = com.sameerasw.essentials.services.receivers.FlashlightActionReceiver.ACTION_SET_INTENSITY
+                    putExtra(com.sameerasw.essentials.services.receivers.FlashlightActionReceiver.EXTRA_INTENSITY, intensity)
+                }
+                sendBroadcast(intent)
+            }
         }
     }
 }

@@ -301,7 +301,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
-                <data android:scheme="wear" android:host="*" android:pathPrefix="/request_device_info_sync" />
+                <data android:scheme="wear" android:host="*" android:pathPrefix="/" />
             </intent-filter>
         </service>
 
@@ -689,6 +689,8 @@
                 <action android:name="com.sameerasw.essentials.ACTION_FLASHLIGHT_INCREASE" />
                 <action android:name="com.sameerasw.essentials.ACTION_FLASHLIGHT_DECREASE" />
                 <action android:name="com.sameerasw.essentials.ACTION_FLASHLIGHT_OFF" />
+                <action android:name="com.sameerasw.essentials.ACTION_FLASHLIGHT_TOGGLE" />
+                <action android:name="com.sameerasw.essentials.ACTION_SET_INTENSITY" />
             </intent-filter>
         </receiver>
 

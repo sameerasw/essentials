@@ -170,4 +170,33 @@ object FlashlightUtil {
         return fadeFlashlight(context, cameraId, currentLevel, targetLevel, durationMs, steps)
     }
 
+    fun getCameraId(context: Context): String? {
+        val cameraManager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
+        try {
+            var targetCameraId: String? = null
+            for (id in cameraManager.cameraIdList) {
+                val chars = cameraManager.getCameraCharacteristics(id)
+                val flashAvailable = chars.get(CameraCharacteristics.FLASH_INFO_AVAILABLE) ?: false
+                val lensFacing = chars.get(CameraCharacteristics.LENS_FACING)
+                if (flashAvailable && lensFacing == CameraCharacteristics.LENS_FACING_BACK) {
+                    targetCameraId = id
+                    break
+                }
+            }
+            if (targetCameraId == null) {
+                for (id in cameraManager.cameraIdList) {
+                    val chars = cameraManager.getCameraCharacteristics(id)
+                    if (chars.get(CameraCharacteristics.FLASH_INFO_AVAILABLE) == true) {
+                        targetCameraId = id
+                        break
+                    }
+                }
+            }
+            return targetCameraId
+        } catch (e: Exception) {
+            Log.e(TAG, "Error getting camera ID", e)
+        }
+        return null
+    }
+
 }
