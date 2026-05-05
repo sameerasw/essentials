@@ -587,7 +587,7 @@
     <string name="perm_action_check">Kontrol etmek</string>
     <string name="perm_action_enable">Ayarlar\'da etkinleştir</string>
     <string name="perm_action_how_to">Nasıl verilir</string>
-    <string name="perm_action_granted">Granted</string>
+    <string name="perm_action_granted">Verildi</string>
     <string name="perm_battery_optimization_title">Pil Optimizasyonu</string>
     <string name="perm_battery_optimization_desc">Güç tasarrufu sağlamak için hizmetin sistem tarafından sonlandırılmadığından emin olun.</string>
     <!-- Tabs -->
@@ -645,7 +645,7 @@
     <!-- Sentry Crash Reporting -->
     <string name="sentry_report_mode_title">Çökme raporu</string>
     <string name="sentry_mode_off">Kapalı</string>
-    <string name="sentry_mode_auto">Oto</string>
+    <string name="sentry_mode_auto">Otomatik</string>
     <string name="sentry_crash_toast">Essentials çöktü, Rapor gönderildi</string>
     <string name="simulate_crash">Çökmeyi simüle et</string>
     <string name="welcome_title">Essentials\'a hoş geldiniz</string>
@@ -781,7 +781,7 @@
     <string name="diy_action_low_power_off">Düşük Güç Modunu Kapat</string>
     <string name="diy_action_dim_wallpaper">Loş Duvar Kağıdı</string>
     <string name="diy_dim_wallpaper_desc">Bu eylem, sistem duvar kağıdı karartmasını ayarlamak için Shizuku veya Root\'u gerektirir.</string>
-    <string name="diy_select_trigger">Tetikleyiciyi Seçin</string>
+    <string name="diy_select_trigger">Tetikleyici Seçin</string>
     <string name="diy_create_app_title">Uygulama</string>
     <string name="diy_create_app_desc">Açık uygulamaya göre otomatikleştirin</string>
     <string name="diy_select_state">Durum Seçin</string>
@@ -1352,16 +1352,16 @@
     <string name="msg_shizuku_root_required_system_lighting">Sistem aydınlatma efektleri için Shizuku veya Root izni gereklidir</string>
     <string name="notification_lighting_system_disclaimer">Google Pixel için geliştirilmiştir. Diğer cihazlarda kullanılamayabilir.</string>
     <!-- Live Wallpaper -->
-    <string name="feat_live_wallpaper_title">Live wallpaper</string>
-    <string name="feat_live_wallpaper_desc">Set custom video as live wallpaper</string>
-    <string name="live_wallpaper_label">Live Wallpaper</string>
-    <string name="live_wallpaper_description">A video live wallpaper that plays when unlocked.</string>
-    <string name="live_wallpaper_playback_trigger_title">Play when</string>
-    <string name="live_wallpaper_trigger_unlock">Unlock</string>
-    <string name="live_wallpaper_trigger_screen_on">Screen on</string>
+    <string name="feat_live_wallpaper_title">Canlı duvar kağıdı</string>
+    <string name="feat_live_wallpaper_desc">Özel videoyu canlı duvar kağıdı olarak ayarlayın</string>
+    <string name="live_wallpaper_label">Canlı Duvar Kağıdı</string>
+    <string name="live_wallpaper_description">Kilit açıldığında oynatıln bir video canlı duvar kağıdı.</string>
+    <string name="live_wallpaper_playback_trigger_title">Oynat</string>
+    <string name="live_wallpaper_trigger_unlock">Kilit açıldığında</string>
+    <string name="live_wallpaper_trigger_screen_on">Ekran açıldığında</string>
     <string name="live_wallpaper_video_title">Video</string>
-    <string name="btn_apply">Apply</string>
-    <string name="add_video">Add video</string>
-    <string name="custom_video">Custom video</string>
-    <string name="about_desc_live_wallpaper">Set your favorite video as your home screen wallpaper. Choose between triggering the animation upon unlocking or simply whenever the screen turns on for a dynamic experience.</string>
+    <string name="btn_apply">Uygula</string>
+    <string name="add_video">Video ekle</string>
+    <string name="custom_video">Özel video</string>
+    <string name="about_desc_live_wallpaper">En sevdiğiniz videoyu ana ekran duvar kağıdınız olarak ayarlayın. Dinamik bir deneyim için animasyonun kilidi açtığınızda mı yoksa ekran açıldığında mı tetikleneceğini seçin.</string>
 </resources>

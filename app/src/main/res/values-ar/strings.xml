@@ -12,7 +12,7 @@
     <string name="flashlight_pulse_tile_label">نبض المصباح</string>
     <string name="check_pre_releases_label">التحقق من أحدث إصدار بيتا</string>
     <string name="check_pre_releases_desc">قد تكون غير مستقرة</string>
-    <string name="label_default_tab">Default tab</string>
+    <string name="label_default_tab">علامة التبويب الافتراضية</string>
     <!-- App Lock -->
     <string name="settings_section_security">الحماية</string>
     <string name="app_lock_enable_title">تمكين قفل التطبيق</string>
@@ -24,8 +24,8 @@
     <string name="app_lock_description">قم بتأمين تطبيقاتك من خلال المصادقة البيومترية. ستتطلب التطبيقات المقفلة المصادقة عند التشغيل، وتظل مفتوحة حتى يتم إيقاف تشغيل الشاشة.</string>
     <string name="app_lock_warning">احذر من أن هذا ليس حلاً قويًا لأنه مجرد تطبيق تابع لجهة خارجية. إذا كنت بحاجة إلى أمان قوي، ففكر في استخدام المساحة الخاصة أو ميزات أخرى من هذا القبيل.</string>
     <string name="app_lock_biometric_note">ملاحظة أخرى، تتيح لك مطالبة المصادقة البيومترية فقط استخدام أساليب الفئة الآمنة القوية. لن تتمكن طرق أمان فتح القفل بالوجه من فئة WEAK في أجهزة مثل Pixel 7 إلا من استخدام طرق المصادقة القوية الأخرى المتاحة مثل بصمة الإصبع أو الدبوس.</string>
-    <string name="setting_use_usage_access_title">Use usage access</string>
-    <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
+    <string name="setting_use_usage_access_title">استخدم إمكانية الوصول إلى الاستخدامات</string>
+    <string name="setting_use_usage_access_desc">بدلاً من ميزات إمكانية الوصول (التجميد، قفل التطبيق، الإضاءة الليلية الديناميكية) </string>
     <!-- Button Remap -->
     <string name="button_remap_enable_title">تمكين زر إعادة التعيين</string>
     <string name="button_remap_use_shizuku_title">استخدم Shizuku أو Root أو Root</string>
@@ -54,7 +54,7 @@
     <string name="action_ai_assistant">مساعد الذكاء الاصطناعي</string>
     <string name="action_take_screenshot">خذ لقطة للشاشة</string>
     <string name="action_cycle_sound_modes">أنماط دورة صوت</string>
-    <string name="action_circle_to_search">Circle to Search</string>
+    <string name="action_circle_to_search">ارسم دائرة للبحث Circle to Search</string>
     <string name="action_like_song">تفضيل الأغنية الحالية </string>
     <string name="like_song_settings_title">تفضيل إعدادات الأغنية</string>
     <string name="like_song_settings_desc">تتطلب هذه الميزة الوصول إلى الإشعارات لاكتشاف الوسائط التي يتم تشغيلها حاليًا وتشغيل الإجراء المماثل. يرجى تمكينه أدناه.</string>
@@ -64,8 +64,8 @@
     <string name="feat_ambient_music_glance_desc">قم بإلقاء نظرة سريعة على الوسائط الموجودة على AOD</string>
     <string name="ambient_glance_docked_mode_title">وضع الإرساء</string>
     <string name="ambient_glance_docked_mode_desc">اجعل التراكب مرئيًا إلى أجل غير مسمى أثناء تشغيل الموسيقى على AOD</string>
-    <string name="ambient_glance_random_shapes_title">Random shapes</string>
-    <string name="ambient_glance_random_shapes_desc">Use various Material 3 shapes for the album art</string>
+    <string name="ambient_glance_random_shapes_title">أشكال عشوائية</string>
+    <string name="ambient_glance_random_shapes_desc">استخدم أشكالًا متنوعة من ماتيريال 3 لتصميم غلاف الألبوم </string>
     <string name="feat_notification_glance_title">لمحة الإشعارات </string>
     <string name="feat_notification_glance_desc">احتفظ بـ AOD قيد التشغيل أثناء انتظار الإشعارات</string>
     <string name="notification_glance_same_as_lighting_title">نفس التطبيقات التي تعمل مع إضاءة الإشعارات</string>
@@ -119,14 +119,14 @@
     <string name="settings_section_app_control">التحكم في التطبيق</string>
     <string name="action_freeze">تجميد</string>
     <string name="action_unfreeze">قم بإلغاء التجميد</string>
-    <string name="action_remove">Remove</string>
-    <string name="action_create_shortcut">Create shortcut</string>
-    <string name="action_app_info">App info</string>
-    <string name="freeze_mode_description_freeze_title">What is Freeze?</string>
-    <string name="freeze_mode_description_freeze_body">App freezing disables the app\'s launch activity which removes it from the app list and updates. It will prevent the app from starting at all until it\'s unfrozen which saves resources but you will need to unfreeze from here or manually re-enable.</string>
-    <string name="freeze_mode_description_freeze_warning">DO NOT FREEZE COMMUNICATION APPS</string>
-    <string name="freeze_mode_description_suspend_title">What is Suspend?</string>
-    <string name="freeze_mode_description_suspend_body">Suspending an app used to pause the app activity and prevent background executions but with recent Android changes, it only pauses the notifications from appearing and that\'s pretty much it. But does allows you to unpause from the launcher app list as they will be still available as grayscale paused app icons.</string>
+    <string name="action_remove">إزالة</string>
+    <string name="action_create_shortcut">إنشاء اختصار</string>
+    <string name="action_app_info">معلومات التطبيق</string>
+    <string name="freeze_mode_description_freeze_title">ما هو التجميد؟</string>
+    <string name="freeze_mode_description_freeze_body">يؤدي تجميد التطبيق إلى تعطيل عملية تشغيله، مما يزيله من قائمة التطبيقات والتحديثات. سيمنع هذا التجميد التطبيق من البدء نهائيًا حتى يتم إلغاء تجميده، مما يوفر موارد النظام، ولكن ستحتاج إلى إلغاء التجميد من هنا أو إعادة تفعيله يدويًا. </string>
+    <string name="freeze_mode_description_freeze_warning">لا تقم بتجميد تطبيقات الاتصال </string>
+    <string name="freeze_mode_description_suspend_title">ما هو الإيقاف المؤقت؟ </string>
+    <string name="freeze_mode_description_suspend_body">كان تعليق التطبيق يُستخدم سابقًا لإيقاف نشاطه ومنع تشغيله في الخلفية، ولكن مع التحديثات الأخيرة لنظام أندرويد، أصبح يقتصر على إيقاف ظهور الإشعارات فقط. مع ذلك، يُمكنك إعادة تشغيل التطبيق من قائمة التطبيقات في المشغل، حيث ستظل أيقونات التطبيقات المتوقفة باللون الرمادي متاحة.</string>
     <string name="freeze_mode_description_suspend_footer">Should work the same as the native app pause/ focus mode features.</string>
     <string name="content_desc_more_options">المزيد من الخيارات</string>
     <string name="action_freeze_all">تجميد جميع التطبيقات</string>
