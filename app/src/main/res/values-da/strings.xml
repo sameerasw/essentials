@@ -429,7 +429,15 @@
     <string name="feat_always_on_display_title">Altid på display</string>
     <string name="feat_always_on_display_desc">Vis tid og info, mens skærmen er slukket</string>
     <string name="feat_calendar_sync_title">Kalendersynkronisering</string>
-    <string name="feat_calendar_sync_desc">Synkroniser begivenheder til dit ur</string>
+    <string name="feat_calendar_sync_desc">Sync your phone calendar to your watch</string>
+    <string name="feat_lock_from_watch_title">Lock from Watch</string>
+    <string name="feat_lock_from_watch_desc">Lock your phone remotely</string>
+    <string name="remote_lock_mode_title">Lock Mode</string>
+    <string name="remote_lock_mode_screen_off">Screen off</string>
+    <string name="remote_lock_mode_lock">Lock</string>
+    <string name="remote_lock_mode_admin_note">Using device admin lock will disable biometrics</string>
+    <string name="watch_connected_status">Connected</string>
+    <string name="watch_unknown_name">Unknown Watch</string>
     <string name="watermark_style_overlay">Overlejring</string>
     <string name="watermark_style_frame">Ramme</string>
     <string name="watermark_show_brand">Enhedsmærke</string>
