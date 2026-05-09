@@ -803,7 +803,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="action_edit">Editar</string>
     <string name="action_delete">Eliminar</string>
     <string name="action_enable">Habilitar</string>
-    <string name="action_disable">Deshabilitar</string>
+    <string name="action_disable">Desactivar</string>
     <string name="automation_service_channel_name">Servicio de automatización</string>
     <string name="automation_service_running_title">Automatizaciones activas</string>
     <string name="automation_service_running_desc">Supervisando eventos del sistema para tus automatizaciones</string>
