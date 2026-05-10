@@ -18,7 +18,7 @@
     <string name="app_lock_enable_title">Habilitar bloqueo de aplicaciones</string>
     <string name="app_lock_auth_title">Seguridad de bloqueo de aplicaciones</string>
     <string name="app_lock_enable_auth_subtitle">Autenticarse para habilitar el bloqueo de aplicaciones</string>
-    <string name="app_lock_disable_auth_subtitle">Autenticarse para deshabilitar el bloqueo de aplicaciones</string>
+    <string name="app_lock_disable_auth_subtitle">Autentícate para desactivar el bloqueo de aplicaciones</string>
     <string name="app_lock_select_apps_title">Seleccionar aplicaciones bloqueadas</string>
     <string name="app_lock_select_apps_desc">Elige qué aplicaciones requieren autenticación</string>
     <string name="app_lock_description">Protege tus aplicaciones con autenticación biométrica. Las aplicaciones bloqueadas requerirán autenticación al iniciarse. Permanecen desbloqueadas hasta que la pantalla se apaga.</string>
@@ -112,7 +112,7 @@
     <string name="caffeinate_remaining">%1$s restante</string>
     <string name="caffeinate_live_channel_desc">Notificación persistente para Cafeína</string>
     <!-- Dynamic Night Light -->
-    <string name="dynamic_night_light_enable_title">Habilitar Luz nocturna dinámica</string>
+    <string name="dynamic_night_light_enable_title">Activar Luz nocturna dinámica</string>
     <string name="dynamic_night_light_apps_section">Aplicaciones que desactivan la luz nocturna</string>
     <string name="action_select_apps">Seleccionar aplicaciones</string>
     <!-- App Freezing -->
@@ -123,7 +123,7 @@
     <string name="action_create_shortcut">Crear acceso directo</string>
     <string name="action_app_info">Información de la aplicación</string>
     <string name="freeze_mode_description_freeze_title">¿Qué es Congelar?</string>
-    <string name="freeze_mode_description_freeze_body">La congelación de una aplicación deshabilita su actividad de inicio, lo que la elimina de la lista de aplicaciones y detiene sus actualizaciones. Esto evitará que la aplicación se inicie por completo hasta que sea descongelada, lo cual ahorra recursos. Sin embargo, deberás descongelarla desde aquí o volver a habilitarla manualmente.</string>
+    <string name="freeze_mode_description_freeze_body">La congelación de una aplicación desactiva su actividad de inicio, lo que la elimina de la lista de aplicaciones y detiene sus actualizaciones. Esto evitará que la aplicación se inicie por completo hasta que sea descongelada, lo cual ahorra recursos. Sin embargo, deberás descongelarla desde aquí o volver a activarla manualmente.</string>
     <string name="freeze_mode_description_freeze_warning">NO CONGELES LAS APLICACIONES DE COMUNICACIÓN</string>
     <string name="freeze_mode_description_suspend_title">¿Qué es Suspender?</string>
     <string name="freeze_mode_description_suspend_body">Suspender una aplicación solía pausar su actividad y evitar ejecuciones en segundo plano, pero con los cambios recientes en Android, ahora solo pausa la aparición de notificaciones y poco más.
@@ -147,7 +147,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="freeze_auto_freeze_section">Congelar aplicaciones automáticamente</string>
     <string name="freeze_automation_hint">Congela las aplicaciones seleccionadas cuando el dispositivo se bloquee. Elige un retraso para evitar congelarlas si desbloqueas la pantalla poco después de apagarla.</string>
     <string name="freeze_warning">Congelar aplicaciones del sistema puede ser peligroso y provocar un comportamiento inesperado.</string>
-    <string name="action_enable_in_settings">Habilitar en Ajustes</string>
+    <string name="action_enable_in_settings">Activar en Ajustes</string>
     <string name="freeze_dont_freeze_active_apps_title">No congelar aplicaciones activas</string>
     <string name="perm_usage_stats_title">Estadísticas de uso</string>
     <string name="perm_usage_stats_desc">Requerido para detectar qué aplicaciones están actualmente en primer plano para evitar congelarlas</string>
@@ -436,7 +436,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="remote_lock_mode_title">Modo de bloqueo</string>
     <string name="remote_lock_mode_screen_off">Pantalla apagada</string>
     <string name="remote_lock_mode_lock">Bloquear</string>
-    <string name="remote_lock_mode_admin_note">Usar el bloqueo de administrador del dispositivo deshabilitará la biometría</string>
+    <string name="remote_lock_mode_admin_note">Usar el bloqueo de administrador del dispositivo desactivará la biometría</string>
     <string name="watch_connected_status">Conectado</string>
     <string name="watch_unknown_name">Reloj desconocido</string>
     <string name="watermark_style_overlay">Superposición</string>
@@ -541,15 +541,15 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="search_qs_usb_debugging_desc">Activar/desactivar la opción de desarrollador \"Depuración USB\"</string>
     <string name="search_qs_refresh_rate_title">Frecuencia de actualización</string>
     <string name="search_qs_refresh_rate_desc">Alternar entre la frecuencia de actualización predeterminada del sistema y las frecuencias de pantalla preestablecidas</string>
-    <string name="search_remap_enable_title">Habilitar reasignación de botones</string>
+    <string name="search_remap_enable_title">Activar reasignación de botones</string>
     <string name="search_remap_enable_desc">Interruptor principal para reasignar los botones de volumen</string>
     <string name="search_remap_haptic_title">Reasignar la retroalimentación háptica</string>
     <string name="search_remap_haptic_desc">Retroalimentación de vibración cuando se presiona el botón reasignado</string>
     <string name="search_remap_flashlight_title">Activar/desactivar la linterna</string>
     <string name="search_remap_flashlight_desc">Activar/desactivar la linterna con los botones de volumen</string>
-    <string name="search_night_light_enable_title">Habilitar Luz nocturna dinámica</string>
+    <string name="search_night_light_enable_title">Activar Luz nocturna dinámica</string>
     <string name="search_night_light_enable_desc">Interruptor principal para la luz nocturna dinámica</string>
-    <string name="search_app_lock_enable_title">Habilitar bloqueo de aplicaciones</string>
+    <string name="search_app_lock_enable_title">Activar bloqueo de aplicaciones</string>
     <string name="search_app_lock_enable_desc">Interruptor principal para el bloqueo de aplicaciones</string>
     <string name="search_app_lock_pick_title">Seleccionar aplicaciones bloqueadas</string>
     <string name="search_app_lock_pick_desc">Elige qué aplicaciones requieren autenticación</string>
@@ -605,7 +605,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="tab_freeze_title">Congelado</string>
     <string name="tab_diy">DIY (Hazlo tú mismo)</string>
     <string name="tab_apps">Aplicaciones</string>
-    <string name="tab_freeze_subtitle">Aplicaciones deshabilitadas</string>
+    <string name="tab_freeze_subtitle">Aplicaciones desactivadas</string>
     <string name="tab_diy_subtitle">Hazlo tú mismo</string>
     <string name="tab_apps_subtitle">Buscar y administrar aplicaciones</string>
     <string name="feat_app_updates_title">Actualizaciones de aplicaciones</string>
@@ -752,7 +752,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="about_desc_ui_blur">Activa/desactiva fácilmente el efecto de desenfoque a nivel del sistema en todo el sistema operativo.</string>
     <string name="about_desc_bubbles">Activa/desactiva las burbujas flotantes de notificaciones.\n\nActiva o desactiva rápidamente el ajuste del sistema para las burbujas de conversación.</string>
     <string name="about_desc_sensitive_content">Oculta el contenido sensible en la pantalla de bloqueo\n\nActiva o desactiva si el contenido de las notificaciones se muestra u oculta cuando el dispositivo está bloqueado.</string>
-    <string name="about_desc_tap_to_wake">Activar/desactivar la función de tocar para activar.\n\nPermite habilitar o deshabilitar la opción de encender la pantalla con un toque.</string>
+    <string name="about_desc_tap_to_wake">Activar/desactivar la función de tocar para activar.\n\nPermite activar o desactivar la opción de encender la pantalla con un toque.</string>
     <string name="about_desc_aod">Activar/desactivar Pantalla siempre activa.\n\nActiva o desactiva rápidamente la Pantalla siempre activa para ver información de un vistazo.</string>
     <string name="about_desc_notification_glance">Controla automáticamente tu Pantalla siempre activa según tus notificaciones. 
 Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla siempre activa permanecerá encendida hasta que descartes la notificación, asegurando que no te pierdas información importante sin gastar batería cuando no hay avisos.</string>
@@ -760,7 +760,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="about_desc_flashlight_tile">Activar/desactivar la linterna.\n\nUna pulsación prolongada abre los controles de ajuste de intensidad, lo cual puede requerir una implementación de hardware que algunos dispositivos podrían no tener.</string>
     <string name="about_desc_stay_awake">Mantener la pantalla activa mientras se carga.\n\nEvita que la pantalla se apague mientras el dispositivo esté conectado a una fuente de alimentación, algo útil para desarrolladores durante la depuración.</string>
     <string name="about_desc_nfc">Activar/desactivar el NFC.\n\nActiva o desactiva rápidamente la comunicación de campo cercano (NFC) para pagos y emparejamientos.</string>
-    <string name="about_desc_adaptive_brightness">Alternar Brillo adaptativo.\n\nHabilite o deshabilite el ajuste automático del brillo de la pantalla según la luz ambiental.</string>
+    <string name="about_desc_adaptive_brightness">Alternar Brillo adaptativo.\n\nActiva o desactiva el ajuste automático del brillo de la pantalla según la luz ambiental.</string>
     <string name="about_desc_private_dns">Activar/desactivar el DNS privado.\n\nAlternar entre los modos Desactivado, Automático y Proveedor de DNS privado.</string>
     <string name="about_desc_usb_debugging">Activar/desactivar la depuración USB.\n\nActiva o desactiva el acceso a la depuración ADB directamente desde los ajustes rápidos.</string>
     <string name="about_desc_color_picker">Inicia la herramienta cuentagotas para seleccionar colores, introducida en Android 17 BETA 2</string>
@@ -802,7 +802,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="action_save">Guardar</string>
     <string name="action_edit">Editar</string>
     <string name="action_delete">Eliminar</string>
-    <string name="action_enable">Habilitar</string>
+    <string name="action_enable">Activar</string>
     <string name="action_disable">Desactivar</string>
     <string name="automation_service_channel_name">Servicio de automatización</string>
     <string name="automation_service_running_title">Automatizaciones activas</string>
@@ -1090,7 +1090,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="action_report_email">Informe por correo electrónico</string>
     <string name="action_copy_clipboard">Copiar al portapapeles</string>
     <string name="bug_report_email_subject">Informe de errores de Essential</string>
-    <string name="bug_report_send_via">Por favor, habilita los informes de fallos, ya que enviarán automáticamente detalles que ayudarán a resolver los problemas.</string>
+    <string name="bug_report_send_via">Por favor, activa los informes de fallos, ya que enviarán automáticamente detalles que ayudarán a resolver los problemas.</string>
     <!-- Location Reached -->
     <string name="feat_location_reached_title">¿Ya llegamos?</string>
     <string name="feat_location_reached_desc">Alertas de destino cercano</string>
