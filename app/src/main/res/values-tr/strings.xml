@@ -1225,6 +1225,9 @@
     <string name="watch_no_companion_title">İzleme algılanmadı</string>
     <string name="watch_no_companion_desc">Saatinizde Essentials Wear yardımcı uygulamasının yüklü olmadığı anlaşılıyor.</string>
     <string name="watch_install_companion_action">Tamamlayıcıyı Yükle</string>
+    <string name="watch_help_title">Install on Watch</string>
+    <string name="watch_help_description">To use Watch features, you need to install the Essentials companion app on your Wear OS watch. Click the button below to open the Play Store directly on your watch.</string>
+    <string name="watch_help_open_play_store">Open on Watch</string>
     <string name="cat_interaction">Etkileşim</string>
     <string name="cat_interface">Arayüz</string>
     <string name="cat_display">Görüntülemek</string>
