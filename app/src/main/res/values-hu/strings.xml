@@ -1224,6 +1224,9 @@
     <string name="watch_no_companion_title">Nem észlelhető óra</string>
     <string name="watch_no_companion_desc">Úgy tűnik, nincs telepítve az Essentials Wear kiegészítő alkalmazás az órájára.</string>
     <string name="watch_install_companion_action">Telepítse a Companiont</string>
+    <string name="watch_help_title">Install on Watch</string>
+    <string name="watch_help_description">To use Watch features, you need to install the Essentials companion app on your Wear OS watch. Click the button below to open the Play Store directly on your watch.</string>
+    <string name="watch_help_open_play_store">Open on Watch</string>
     <string name="cat_interaction">Kölcsönhatás</string>
     <string name="cat_interface">Felület</string>
     <string name="cat_display">Kijelző</string>
