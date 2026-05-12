@@ -1224,6 +1224,9 @@
     <string name="watch_no_companion_title">Aucune montre détectée</string>
     <string name="watch_no_companion_desc">Il semble que vous n\'ayez pas l\'application compagnon Essentials Wear installée sur votre montre.</string>
     <string name="watch_install_companion_action">Installer l\'appli compagnon</string>
+    <string name="watch_help_title">Install on Watch</string>
+    <string name="watch_help_description">To use Watch features, you need to install the Essentials companion app on your Wear OS watch. Click the button below to open the Play Store directly on your watch.</string>
+    <string name="watch_help_open_play_store">Open on Watch</string>
     <string name="cat_interaction">Interaction</string>
     <string name="cat_interface">Interface</string>
     <string name="cat_display">Affichage</string>
