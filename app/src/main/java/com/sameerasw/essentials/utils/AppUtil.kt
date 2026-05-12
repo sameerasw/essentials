@@ -26,6 +26,7 @@ object AppUtil {
 
     // Target size for app icons to balance quality and performance
     private const val ICON_SIZE = 64
+    private const val SHORTCUT_ICON_SIZE = 192
 
     /**
      * Get all installed apps (not just launcher apps)
@@ -197,20 +198,35 @@ object AppUtil {
         return bitmap
     }
 
-    fun drawableToBitmap(drawable: android.graphics.drawable.Drawable): Bitmap {
-        if (drawable is BitmapDrawable) {
+    fun drawableToBitmap(drawable: android.graphics.drawable.Drawable, size: Int? = null): Bitmap {
+        if (drawable is BitmapDrawable && size == null) {
             return drawable.bitmap
         }
 
+        val width = size ?: drawable.intrinsicWidth.coerceAtLeast(1)
+        val height = size ?: drawable.intrinsicHeight.coerceAtLeast(1)
+
         val bitmap = Bitmap.createBitmap(
-            drawable.intrinsicWidth.coerceAtLeast(1),
-            drawable.intrinsicHeight.coerceAtLeast(1),
+            width,
+            height,
             Bitmap.Config.ARGB_8888
         )
         val canvas = Canvas(bitmap)
-        drawable.setBounds(0, 0, canvas.width, canvas.height)
+        drawable.setBounds(0, 0, width, height)
         drawable.draw(canvas)
         return bitmap
+    }
+
+    /**
+     * Get a properly sized icon for shortcuts
+     */
+    fun getShortcutIcon(context: Context, packageName: String): Bitmap {
+        val drawable = try {
+            context.packageManager.getApplicationIcon(packageName)
+        } catch (e: Exception) {
+            context.packageManager.defaultActivityIcon
+        }
+        return drawableToBitmap(drawable, SHORTCUT_ICON_SIZE)
     }
 
     fun getAppVersion(context: Context, packageName: String): String? {

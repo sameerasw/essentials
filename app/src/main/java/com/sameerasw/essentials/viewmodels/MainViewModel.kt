@@ -610,16 +610,11 @@ class MainViewModel : ViewModel() {
         }
 
         if (androidx.core.content.pm.ShortcutManagerCompat.isRequestPinShortcutSupported(context)) {
-            val appIcon = try {
-                val drawable = context.packageManager.getApplicationIcon(config.packageName)
-                AppUtil.drawableToBitmap(drawable)
-            } catch (e: Exception) {
-                null
-            }
+            val appIcon = AppUtil.getShortcutIcon(context, config.packageName)
 
             val pinShortcutInfo = androidx.core.content.pm.ShortcutInfoCompat.Builder(context, config.packageName)
                 .setShortLabel(appName)
-                .setIcon(if (appIcon != null) androidx.core.graphics.drawable.IconCompat.createWithBitmap(appIcon) else androidx.core.graphics.drawable.IconCompat.createWithResource(context, R.drawable.rounded_volume_off_24))
+                .setIcon(androidx.core.graphics.drawable.IconCompat.createWithBitmap(appIcon))
                 .setIntent(intent)
                 .build()
 

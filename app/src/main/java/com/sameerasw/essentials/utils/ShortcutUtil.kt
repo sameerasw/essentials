@@ -27,7 +27,7 @@ object ShortcutUtil {
                 val shortcut = ShortcutInfo.Builder(context, app.packageName)
                     .setShortLabel(app.appName)
                     .setLongLabel(app.appName)
-                    .setIcon(Icon.createWithBitmap(app.icon.asAndroidBitmap()))
+                    .setIcon(Icon.createWithBitmap(AppUtil.getShortcutIcon(context, app.packageName)))
                     .setIntent(intent)
                     .build()
 
