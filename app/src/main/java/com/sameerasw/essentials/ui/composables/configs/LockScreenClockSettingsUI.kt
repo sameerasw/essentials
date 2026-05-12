@@ -13,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -26,13 +27,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.pickers.SegmentedPicker
+import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.theme.Shapes
 import com.sameerasw.essentials.utils.HapticUtil
-import com.sameerasw.essentials.viewmodels.MainViewModel
-
-@OptIn(ExperimentalMaterial3Api::class)
+import com.sameerasw.essentials.viewmodels.MainViewModel@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun LockScreenClockSettingsUI(
     viewModel: MainViewModel,
@@ -75,7 +76,11 @@ fun LockScreenClockSettingsUI(
             ClockColorOption("RED", Color(0xFFE57373), -23641, R.string.color_red),
             ClockColorOption("GREEN", Color(0xFF81C784), -14057967, R.string.color_green),
             ClockColorOption("BLUE", Color(0xFF64B5F6), -14575885, R.string.color_blue),
-            ClockColorOption("YELLOW", Color(0xFFFFF176), -5317, R.string.color_yellow)
+            ClockColorOption("YELLOW", Color(0xFFFFF176), -5317, R.string.color_yellow),
+            ClockColorOption("ORANGE", Color(0xFFFFB74D), -18611, R.string.color_orange),
+            ClockColorOption("PURPLE", Color(0xFFBA68C8), -4560702, R.string.color_purple),
+            ClockColorOption("PINK", Color(0xFFF06292), -1023342, R.string.color_pink),
+            ClockColorOption("TEAL", Color(0xFF4DB6AC), -11684180, R.string.color_teal)
         )
     }
 
@@ -98,7 +103,7 @@ fun LockScreenClockSettingsUI(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 16.dp),
+            .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
@@ -113,7 +118,6 @@ fun LockScreenClockSettingsUI(
             preferredItemWidth = 180.dp,
             itemSpacing = 2.dp,
             modifier = Modifier
-                .padding(horizontal = 16.dp)
                 .fillMaxWidth()
                 .height(200.dp)
         ) { index ->
@@ -130,7 +134,6 @@ fun LockScreenClockSettingsUI(
                         detectTapGestures {
                             HapticUtil.performUIHaptic(view)
                             if (option.id == "DEFAULT") {
-                                // Default/Flex merge. Keep current variant if already one of them
                                 if (!isDefaultStyleSelected) {
                                     viewModel.setLockScreenClockId("DEFAULT", context)
                                 }
@@ -158,121 +161,161 @@ fun LockScreenClockSettingsUI(
             }
         }
 
-        RoundedCardContainer(modifier = Modifier.padding(horizontal = 8.dp)) {
+        // Color & Tone Section
+        Text(
+            text = stringResource(R.string.label_color),
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 4.dp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        RoundedCardContainer {
             Column(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.fillMaxWidth()
+                .background(
+                    color = MaterialTheme.colorScheme.surfaceBright,
+            shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd)
+            ).padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Color Picker
-                Text(
-                    text = "Color",
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    colorOptions.forEach { colorOption ->
-                        val isColorSelected = viewModel.lockScreenClockSelectedColorId.value == colorOption.id
-                        Box(
-                            modifier = Modifier
-                                .size(40.dp)
-                                .background(
-                                    if (colorOption.id == "DEFAULT") MaterialTheme.colorScheme.surfaceVariant else colorOption.color,
-                                    CircleShape
-                                )
-                                .border(
-                                    width = if (isColorSelected) 3.dp else 1.dp,
-                                    color = if (isColorSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline.copy(alpha = 0.3f),
-                                    shape = CircleShape
-                                )
-                                .pointerInput(colorOption) {
-                                    detectTapGestures {
-                                        HapticUtil.performUIHaptic(view)
-                                        viewModel.setLockScreenClockColor(colorOption.id, colorOption.seedColor, context)
-                                    }
-                                },
-                            contentAlignment = Alignment.Center
-                        ) {
-                            if (colorOption.id == "DEFAULT") {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.rounded_palette_24),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(20.dp),
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
+                // Multi-row Color Picker
+                val rows = colorOptions.chunked(5)
+                rows.forEach { rowOptions ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        rowOptions.forEach { colorOption ->
+                            ColorCircle(
+                                colorOption = colorOption,
+                                isSelected = viewModel.lockScreenClockSelectedColorId.value == colorOption.id,
+                                onClick = {
+                                    HapticUtil.performUIHaptic(view)
+                                    viewModel.setLockScreenClockColor(colorOption.id, colorOption.seedColor, context)
+                                }
+                            )
                         }
                     }
                 }
+            }
 
-                ClockAxisSlider(
-                    label = stringResource(R.string.label_color_tone),
-                    value = viewModel.lockScreenClockColorTone.intValue.toFloat(),
-                    onValueChange = { viewModel.setLockScreenClockColorTone(it.toInt(), context) },
+            ConfigSliderItem(
+                title = stringResource(R.string.label_color_tone),
+                value = viewModel.lockScreenClockColorTone.intValue.toFloat(),
+                onValueChange = { viewModel.setLockScreenClockColorTone(it.toInt(), context) },
+                valueRange = 0f..100f,
+                valueFormatter = { "${it.toInt()}%" },
+                iconRes = R.drawable.rounded_palette_24,
+                enabled = viewModel.lockScreenClockSelectedColorId.value != "DEFAULT"
+            )
+        }
+
+        if (isDefaultStyleSelected) {
+            Text(
+                text = stringResource(R.string.label_style_font),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 4.dp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            RoundedCardContainer {
+                SegmentedPicker(
+                    items = listOf("DEFAULT", "DIGITAL_CLOCK_FLEX"),
+                    selectedItem = currentClockId ?: "DEFAULT",
+                    onItemSelected = { viewModel.setLockScreenClockId(it, context) },
+                    labelProvider = { if (it == "DEFAULT") "Default" else "Flex" }
+                )
+
+                ConfigSliderItem(
+                    title = stringResource(R.string.label_weight),
+                    value = viewModel.lockScreenClockWeight.intValue.toFloat(),
+                    onValueChange = { viewModel.setLockScreenClockWeight(it.toInt(), context) },
+                    valueRange = 100f..1000f,
+                    increment = 10f,
+                    valueFormatter = { it.toInt().toString() },
+                    iconRes = R.drawable.rounded_line_weight_24
+                )
+
+                ConfigSliderItem(
+                    title = stringResource(R.string.label_width),
+                    value = viewModel.lockScreenClockWidth.intValue.toFloat(),
+                    onValueChange = { viewModel.setLockScreenClockWidth(it.toInt(), context) },
+                    valueRange = 25f..200f,
+                    increment = 5f,
+                    valueFormatter = { it.toInt().toString() },
+                    iconRes = R.drawable.rounded_arrows_outward_24
+                )
+
+                ConfigSliderItem(
+                    title = stringResource(R.string.label_roundness),
+                    value = viewModel.lockScreenClockRoundness.intValue.toFloat(),
+                    onValueChange = { viewModel.setLockScreenClockRoundness(it.toInt(), context) },
                     valueRange = 0f..100f,
-                    view = view
+                    increment = 5f,
+                    valueFormatter = { it.toInt().toString() },
+                    iconRes = R.drawable.rounded_rounded_corner_24
                 )
+            }
+        }
 
-                if (isDefaultStyleSelected) {
+        // About Section
+        RoundedCardContainer {
+            IconToggleItem(
+                iconRes = R.drawable.rounded_info_24,
+                title = stringResource(R.string.about_title),
+                description = stringResource(R.string.about_desc_lock_screen_clock),
+                isChecked = false,
+                onCheckedChange = {},
+                showToggle = false
+            )
+        }
 
-                    Text(
-                        text = stringResource(R.string.label_variation),
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
+        Spacer(modifier = Modifier.height(32.dp))
+    }
+}
 
-                    RoundedCardContainer {
-                        SegmentedPicker(
-                            items = listOf("DEFAULT", "DIGITAL_CLOCK_FLEX"),
-                            selectedItem = currentClockId ?: "DEFAULT",
-                            onItemSelected = { viewModel.setLockScreenClockId(it, context) },
-                            labelProvider = { if (it == "DEFAULT") "Default" else "Flex" },
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
-
-                    ClockAxisSlider(
-                        label = stringResource(R.string.label_weight),
-                        value = viewModel.lockScreenClockWeight.intValue.toFloat(),
-                        onValueChange = { viewModel.setLockScreenClockWeight(it.toInt(), context) },
-                        valueRange = 100f..1000f,
-                        view = view
-                    )
-                    ClockAxisSlider(
-                        label = stringResource(R.string.label_width),
-                        value = viewModel.lockScreenClockWidth.intValue.toFloat(),
-                        onValueChange = { viewModel.setLockScreenClockWidth(it.toInt(), context) },
-                        valueRange = 25f..200f,
-                        view = view
-                    )
-
-                    ClockAxisSlider(
-                        label = stringResource(R.string.label_roundness),
-                        value = viewModel.lockScreenClockRoundness.intValue.toFloat(),
-                        onValueChange = { viewModel.setLockScreenClockRoundness(it.toInt(), context) },
-                        valueRange = 0f..100f,
-                        view = view
-                    )
+@Composable
+fun ColorCircle(
+    colorOption: ClockColorOption,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .size(44.dp)
+            .clip(CircleShape)
+            .background(
+                if (colorOption.id == "DEFAULT") MaterialTheme.colorScheme.surfaceVariant else colorOption.color
+            )
+            .border(
+                width = if (isSelected) 3.dp else 1.dp,
+                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline.copy(alpha = 0.2f),
+                shape = CircleShape
+            )
+            .pointerInput(colorOption.id) {
+                detectTapGestures {
+                    onClick()
                 }
-            }
+            },
+        contentAlignment = Alignment.Center
+    ) {
+        if (colorOption.id == "DEFAULT") {
+            Icon(
+                painter = painterResource(id = R.drawable.rounded_palette_24),
+                contentDescription = null,
+                modifier = Modifier.size(20.dp),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
-
-        RoundedCardContainer(modifier = Modifier.padding(horizontal = 8.dp)) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Text(
-                    text = stringResource(R.string.about_desc_lock_screen_clock),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
+        
+        if (isSelected) {
+            Box(
+                modifier = Modifier
+                    .size(8.dp)
+                    .clip(CircleShape)
+                    .background(if (colorOption.id == "DEFAULT") MaterialTheme.colorScheme.primary else Color.White)
+            )
         }
-
-        Spacer(modifier = Modifier.height(80.dp))
     }
 }
 
@@ -289,42 +332,3 @@ data class ClockColorOption(
     val nameRes: Int
 )
 
-@Composable
-private fun ClockAxisSlider(
-    label: String,
-    value: Float,
-    onValueChange: (Float) -> Unit,
-    valueRange: ClosedFloatingPointRange<Float>,
-    view: android.view.View
-) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = label,
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            Text(
-                text = value.toInt().toString(),
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.Bold
-            )
-        }
-        Slider(
-            value = value,
-            onValueChange = {
-                if (it.toInt() != value.toInt()) {
-                    HapticUtil.performSliderHaptic(view)
-                }
-                onValueChange(it)
-            },
-            valueRange = valueRange,
-            modifier = Modifier.fillMaxWidth()
-        )
-    }
-}

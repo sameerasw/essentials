@@ -1576,6 +1576,10 @@ class MainViewModel : ViewModel() {
             "GREEN" -> android.graphics.Color.parseColor("#81C784")
             "BLUE" -> android.graphics.Color.parseColor("#64B5F6")
             "YELLOW" -> android.graphics.Color.parseColor("#FFF176")
+            "ORANGE" -> android.graphics.Color.parseColor("#FFB74D")
+            "PURPLE" -> android.graphics.Color.parseColor("#BA68C8")
+            "PINK" -> android.graphics.Color.parseColor("#F06292")
+            "TEAL" -> android.graphics.Color.parseColor("#4DB6AC")
             else -> return 0
         }
         val hsv = FloatArray(3)

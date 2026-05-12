@@ -1509,11 +1509,18 @@
     <string name="label_width">Width</string>
     <string name="label_grade">Grade</string>
     <string name="label_roundness">Roundness</string>
-    <string name="label_color_tone">Color Tone</string>
+    <string name="label_color_tone">Lightness</string>
     <string name="label_variation">Variation</string>
+    <string name="label_color">Color</string>
+    <string name="label_style_font">Style &amp; Font</string>
+    <string name="about_title">About</string>
     <string name="color_default">Default</string>
     <string name="color_red">Red</string>
     <string name="color_green">Green</string>
     <string name="color_blue">Blue</string>
     <string name="color_yellow">Yellow</string>
+    <string name="color_orange">Orange</string>
+    <string name="color_purple">Purple</string>
+    <string name="color_pink">Pink</string>
+    <string name="color_teal">Teal</string>
 </resources>
