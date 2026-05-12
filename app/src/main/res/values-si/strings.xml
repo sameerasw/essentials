@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="label_beta">බීටා</string>
-    <string name="shut_up_attempt_shizuku_restart">Attempt Shizuku restart</string>
-    <string name="shut_up_shizuku_restart_warning_title">Shizuku Restart Warning</string>
-    <string name="shut_up_shizuku_restart_warning_message">Since wireless debugging was toggled, Shizuku services might not have started automatically causing freezing to not function. Consider turning on attempt shizuku restart as well</string>
+    <string name="shut_up_attempt_shizuku_restart">Shizuku නැවත ආරම්භ කිරීමට උත්සාහ කරන්න</string>
+    <string name="shut_up_shizuku_restart_warning_title">Shizuku නැවත ආරම්භ කිරීමේ අනතුරු ඇඟවීම</string>
+    <string name="shut_up_shizuku_restart_warning_message">Wireless debugging ටොගල් කර ඇති බැවින්, Shizuku සේවාවන් ස්වයංක්‍රීයව ආරම්භ නොවී තිබිය හැකි අතර එමඟින් යෙදුම් කැටි කිරීම ක්‍රියාත්මක නොවේ. Shizuku නැවත ආරම්භ කිරීමට උත්සාහ කරන්න විකල්පයද ක්‍රියාත්මක කිරීම සලකා බලන්න</string>
     <string name="accessibility_service_description"><b>Essentials Accessibility Service</b>\n\nThis service is required for the following advanced features:\n\n<b>• Physical Button Remapping:</b>\nDetects volume button presses even when the screen is off to trigger actions like the Flashlight.\n\n<b>• Per-App Settings:</b>\nMonitors the currently active app to apply specific profiles for Dynamic Night Light, Notification Lighting Colors, and App Lock.\n\n<b>• Screen Control:</b>\nAllows the app to lock the screen (e.g. via Double Tap or Widgets) and detect screen state changes.\n\n<b>• Security:</b>\nPrevents unauthorized changes by detecting window content when the device is locked.\n\n<small>No input text or sensitive user data is collected or transmitted.</small></string>
     <string name="freeze_activity_title">යෙදුම් කැටි කිරීම</string>
     <string name="freeze_activity_subtitle">කලාතුරකින් භාවිතා කරන යෙදුම් අක්රිය කරන්න</string>
@@ -1390,10 +1390,49 @@
     <string name="shut_up_disable_wireless_debugging">Disable Wireless Debugging</string>
     <string name="shut_up_disable_accessibility">Disable Accessibility Services</string>
     <string name="shut_up_shortcut_created">Shortcut created for %s</string>
+    <string name="feat_disable_rotation_suggestion_title">භ්‍රමණ යෝජනා අබල කරන්න</string>
+    <string name="feat_disable_rotation_suggestion_desc">ස්වයංක්‍රීය භ්‍රමණය අක්‍රිය වූ විට භ්‍රමණ බොත්තම පෙන්වන්න එපා</string>
     <string name="shut_up_toast_active">App got shut up</string>
     <string name="shut_up_toast_restored">Shut up features returned</string>
     <string name="shut_up_auto_archive_notif_title">Auto Freeze</string>
     <string name="shut_up_auto_archive_notif_text">%1$s will be archived in %2$d seconds</string>
     <string name="shut_up_auto_archive_action_freeze">Freeze now</string>
     <string name="shut_up_auto_archive_action_abort">Abort</string>
+    <!-- Lock Screen Clock -->
+    <string name="feat_lock_screen_clock_title">Lock screen clock</string>
+    <string name="feat_lock_screen_clock_desc">Customize lock screen clock on Pixels</string>
+    <string name="about_desc_lock_screen_clock">Change the lock screen clock style on Pixels. Select from the available clock faces provided by the System UI. Some old styles might not be available.</string>
+    <string name="lock_screen_clock_bignum">Big Number</string>
+    <string name="lock_screen_clock_calligraphy">Calligraphy</string>
+    <string name="lock_screen_clock_flex">Flex</string>
+    <string name="lock_screen_clock_growth">Growth</string>
+    <string name="lock_screen_clock_handwritten">Handwritten</string>
+    <string name="lock_screen_clock_inflate">Inflate</string>
+    <string name="lock_screen_clock_metro">Metro</string>
+    <string name="lock_screen_clock_numoverlap">Number Overlap</string>
+    <string name="lock_screen_clock_weather">Weather</string>
+    <string name="lock_screen_clock_select_label">Select Clock Style</string>
+    <string name="lock_screen_clock_current_label">Current</string>
+    <string name="lock_screen_clock_apply_label">Apply</string>
+    <string name="lock_screen_clock_applied_toast">Clock style applied</string>
+    <string name="lock_screen_clock_permission_required">WRITE_SECURE_SETTINGS permission required</string>
+    <string name="lock_screen_clock_default">Default</string>
+    <string name="label_weight">Weight</string>
+    <string name="label_width">Width</string>
+    <string name="label_grade">Grade</string>
+    <string name="label_roundness">Roundness</string>
+    <string name="label_color_tone">Lightness</string>
+    <string name="label_variation">Variation</string>
+    <string name="label_color">Color</string>
+    <string name="label_style_font">Style &amp; Font</string>
+    <string name="about_title">About</string>
+    <string name="color_default">Default</string>
+    <string name="color_red">Red</string>
+    <string name="color_green">Green</string>
+    <string name="color_blue">Blue</string>
+    <string name="color_yellow">Yellow</string>
+    <string name="color_orange">Orange</string>
+    <string name="color_purple">Purple</string>
+    <string name="color_pink">Pink</string>
+    <string name="color_teal">Teal</string>
 </resources>
