@@ -1224,6 +1224,9 @@
     <string name="watch_no_companion_title">Geen horlosie bespeur nie</string>
     <string name="watch_no_companion_desc">Dit lyk of jy nie die Essentials Wear-metgeselprogram op jou horlosie geïnstalleer het nie.</string>
     <string name="watch_install_companion_action">Installeer Companion</string>
+    <string name="watch_help_title">Install on Watch</string>
+    <string name="watch_help_description">To use Watch features, you need to install the Essentials companion app on your Wear OS watch. Click the button below to open the Play Store directly on your watch.</string>
+    <string name="watch_help_open_play_store">Open on Watch</string>
     <string name="cat_interaction">Interaksie</string>
     <string name="cat_interface">Koppelvlak</string>
     <string name="cat_display">Vertoon</string>
