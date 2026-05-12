@@ -69,6 +69,18 @@ fun LockScreenClockSettingsUI(
 
     val carouselState = rememberCarouselState { clockOptions.size }
 
+    LaunchedEffect(carouselState) {
+        var isFirst = true
+        snapshotFlow { carouselState.currentItem }
+            .collect {
+                if (isFirst) {
+                    isFirst = false
+                } else {
+                    HapticUtil.performSliderHaptic(view)
+                }
+            }
+    }
+
     Column(
         modifier = modifier
             .fillMaxWidth()
