@@ -1114,7 +1114,7 @@
     <string name="location_reached_fsi_desc">Неопходно је да пробудите уређај по доласку. Додирните да бисте одобрили.</string>
     <string name="location_reached_dist_m">%1$d м</string>
     <string name="location_reached_dist_km">%1$.1ф км</string>
-    <string name="location_reached_service_title">Путни аларм активан</string>
+    <string name="location_reached_service_title">Travelling to %1$s</string>
     <string name="location_reached_service_remaining">%1$s преостали (%2$d%%)</string>
     <string name="location_reached_channel_name">Травел Прогресс</string>
     <string name="location_reached_channel_desc">Приказује удаљеност до одредишта у реалном времену</string>

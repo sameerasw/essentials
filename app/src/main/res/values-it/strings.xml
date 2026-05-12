@@ -1114,7 +1114,7 @@
     <string name="location_reached_fsi_desc">Necessario per riattivare il dispositivo all\'arrivo. Tocca per concedere.</string>
     <string name="location_reached_dist_m">%1$d M</string>
     <string name="location_reached_dist_km">%1$.1f km</string>
-    <string name="location_reached_service_title">Allarme di viaggio attivo</string>
+    <string name="location_reached_service_title">Travelling to %1$s</string>
     <string name="location_reached_service_remaining">%1$s rimanente (%2$d%%)</string>
     <string name="location_reached_channel_name">Progresso del viaggio</string>
     <string name="location_reached_channel_desc">Mostra la distanza in tempo reale dalla destinazione</string>

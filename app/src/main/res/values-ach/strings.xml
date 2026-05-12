@@ -1114,7 +1114,7 @@
     <string name="location_reached_fsi_desc">Mitte me juku cim ni ka oo. Dii me miini.</string>
     <string name="location_reached_dist_m">%1$d m</string>
     <string name="location_reached_dist_km">%1$.1f km</string>
-    <string name="location_reached_service_title">Alarm me wot tye ka tic</string>
+    <string name="location_reached_service_title">Travelling to %1$s</string>
     <string name="location_reached_service_remaining">%1$s ma odong (%2$d%%)</string>
     <string name="location_reached_channel_name">Wot tye ka mede anyim</string>
     <string name="location_reached_channel_desc">Nyutu bor ma tye i kare kikome me oo kama omyera icit iye</string>

@@ -1114,7 +1114,7 @@
     <string name="location_reached_fsi_desc">Vyžadováno k probuzení zařízení při příjezdu. Klepnutím udělíte.</string>
     <string name="location_reached_dist_m">%1$d m</string>
     <string name="location_reached_dist_km">%1$.1f km</string>
-    <string name="location_reached_service_title">Aktivní cestovní alarm</string>
+    <string name="location_reached_service_title">Travelling to %1$s</string>
     <string name="location_reached_service_remaining">%1$s zbývající (%2$d%%)</string>
     <string name="location_reached_channel_name">Cestovní pokrok</string>
     <string name="location_reached_channel_desc">Zobrazuje vzdálenost do cíle v reálném čase</string>

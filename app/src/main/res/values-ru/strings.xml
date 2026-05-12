@@ -1114,7 +1114,7 @@
     <string name="location_reached_fsi_desc">Требуется разрешение на пробуждение устройства по прибытии. Нажмите, чтобы разрешить.</string>
     <string name="location_reached_dist_m">%1$d м</string>
     <string name="location_reached_dist_km">%1$.1f км</string>
-    <string name="location_reached_service_title">Сигнализация движения активна</string>
+    <string name="location_reached_service_title">Travelling to %1$s</string>
     <string name="location_reached_service_remaining">%1$s осталось (%2$d%%)</string>
     <string name="location_reached_channel_name">Прогресс путешествия</string>
     <string name="location_reached_channel_desc">Показывает расстояние до пункта назначения в режиме реального времени</string>

@@ -1114,7 +1114,7 @@
     <string name="location_reached_fsi_desc">需要在到达时唤醒您的设备。点击授予。</string>
     <string name="location_reached_dist_m">%1$d 米</string>
     <string name="location_reached_dist_km">%1$.1f 公里</string>
-    <string name="location_reached_service_title">旅行闹钟活跃</string>
+    <string name="location_reached_service_title">Travelling to %1$s</string>
     <string name="location_reached_service_remaining">剩余 %1$s</string>
     <string name="location_reached_channel_name">行程进度</string>
     <string name="location_reached_channel_desc">显示到目的地的实时距离</string>

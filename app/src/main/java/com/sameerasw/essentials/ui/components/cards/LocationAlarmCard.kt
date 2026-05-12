@@ -22,6 +22,8 @@ fun LocationAlarmCard(
     isAnyTracking: Boolean,
     onStart: () -> Unit,
     onStop: () -> Unit,
+    onPause: () -> Unit,
+    onResume: () -> Unit,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -67,20 +69,38 @@ fun LocationAlarmCard(
         },
         trailingContent = {
             if (isActive) {
-                IconButton(
-                    onClick = {
-                        com.sameerasw.essentials.utils.HapticUtil.performVirtualKeyHaptic(view)
-                        onStop()
-                    },
-                    colors = IconButtonDefaults.iconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.errorContainer,
-                        contentColor = MaterialTheme.colorScheme.error
-                    )
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.rounded_close_24),
-                        contentDescription = "Stop"
-                    )
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    IconButton(
+                        onClick = {
+                            com.sameerasw.essentials.utils.HapticUtil.performVirtualKeyHaptic(view)
+                            if (alarm.isPaused) onResume() else onPause()
+                        },
+                        colors = IconButtonDefaults.iconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    ) {
+                        Icon(
+                            painter = painterResource(if (alarm.isPaused) R.drawable.round_play_arrow_24 else R.drawable.rounded_pause_24),
+                            contentDescription = if (alarm.isPaused) "Resume" else "Pause"
+                        )
+                    }
+
+                    IconButton(
+                        onClick = {
+                            com.sameerasw.essentials.utils.HapticUtil.performVirtualKeyHaptic(view)
+                            onStop()
+                        },
+                        colors = IconButtonDefaults.iconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.errorContainer,
+                            contentColor = MaterialTheme.colorScheme.error
+                        )
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.rounded_close_24),
+                            contentDescription = "Stop"
+                        )
+                    }
                 }
             } else if (!isAnyTracking) {
                 IconButton(

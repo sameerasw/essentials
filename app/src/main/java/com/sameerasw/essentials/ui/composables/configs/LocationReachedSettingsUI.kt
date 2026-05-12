@@ -82,6 +82,8 @@ fun LocationReachedSettingsUI(
                     remainingTimeMinutes = remainingTimeMinutes,
                     startDistance = startDistance,
                     onStop = { locationViewModel.stopTracking() },
+                    onPause = { locationViewModel.pauseTracking() },
+                    onResume = { locationViewModel.resumeTracking() },
                     onStart = { 
                         HapticUtil.performVirtualKeyHaptic(view)
                         locationViewModel.startTracking(it) 
@@ -120,6 +122,14 @@ fun LocationReachedSettingsUI(
                                     onStop = { 
                                         HapticUtil.performVirtualKeyHaptic(view)
                                         locationViewModel.stopTracking() 
+                                    },
+                                    onPause = {
+                                        HapticUtil.performVirtualKeyHaptic(view)
+                                        locationViewModel.pauseTracking()
+                                    },
+                                    onResume = {
+                                        HapticUtil.performVirtualKeyHaptic(view)
+                                        locationViewModel.resumeTracking()
                                     },
                                     onClick = {
                                         HapticUtil.performVirtualKeyHaptic(view)
@@ -206,9 +216,12 @@ fun TopStatusCard(
     remainingTimeMinutes: Int?,
     startDistance: Float,
     onStop: () -> Unit,
+    onPause: () -> Unit,
+    onResume: () -> Unit,
     onStart: (String) -> Unit
 ) {
     val isTracking = activeAlarm != null
+    val isPaused = activeAlarm?.isPaused == true
     val displayAlarm = activeAlarm ?: lastTrip
 
     RoundedCardContainer(
@@ -298,26 +311,50 @@ fun TopStatusCard(
                         color = MaterialTheme.colorScheme.primary,
                         trackColor = MaterialTheme.colorScheme.primaryContainer,
                         wavelength = 20.dp,
-                        amplitude = { 1.0f }
+                        amplitude = { if (isPaused) 0f else 1.0f }
                     )
                 }
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                Button(
-                    onClick = onStop,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.errorContainer,
-                        contentColor = MaterialTheme.colorScheme.error
-                    ),
-                    shape = androidx.compose.foundation.shape.CircleShape
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Icon(painterResource(R.drawable.rounded_close_24), contentDescription = null)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(stringResource(R.string.action_stop))
+                    Button(
+                        onClick = { if (isPaused) onResume() else onPause() },
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(56.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        ),
+                        shape = androidx.compose.foundation.shape.CircleShape
+                    ) {
+                        Icon(
+                            painterResource(if (isPaused) R.drawable.round_play_arrow_24 else R.drawable.rounded_pause_24),
+                            contentDescription = null
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(if (isPaused) stringResource(R.string.location_reached_resume) else stringResource(R.string.location_reached_pause))
+                    }
+
+                    Button(
+                        onClick = onStop,
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(56.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.errorContainer,
+                            contentColor = MaterialTheme.colorScheme.error
+                        ),
+                        shape = androidx.compose.foundation.shape.CircleShape
+                    ) {
+                        Icon(painterResource(R.drawable.rounded_close_24), contentDescription = null)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.action_stop))
+                    }
                 }
             } else if (lastTrip != null) {
                 val context = LocalContext.current
