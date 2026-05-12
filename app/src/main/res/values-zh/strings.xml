@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="label_beta">测试版</string>
+    <string name="shut_up_attempt_shizuku_restart">Attempt Shizuku restart</string>
+    <string name="shut_up_shizuku_restart_warning_title">Shizuku Restart Warning</string>
+    <string name="shut_up_shizuku_restart_warning_message">Since wireless debugging was toggled, Shizuku services might not have started automatically causing freezing to not function. Consider turning on attempt shizuku restart as well</string>
     <string name="accessibility_service_description"><b>Essentials 无障碍服务</b>\n\n此服务被应用于以下增强型功能:\n\n<b>• 物理按键映射:</b>\n在屏幕熄灭状态下检测音量键状态以触发如手电筒等功能.\n\n<b>• 独立应用设置:</b>\n检测当前活动的应用以应用动态夜间光效, 通知闪光和应用锁等功能\n\n<b>• 屏幕控制:</b>\n允许应用通过双击或点击小部件以锁定屏幕或检测屏幕状态变化.\n\n<b>• 安全:</b>\n通过在设备锁定时检测窗口内容来避免未经授权的更改.\n\n<small>输入内容和敏感用户数据不会被收集和上传.</small></string>
     <string name="freeze_activity_title">应用冻结</string>
     <string name="freeze_activity_subtitle">禁用不常用的应用</string>
@@ -732,6 +735,8 @@
     <string name="location_reached_restart_btn">重新开始</string>
     <string name="location_reached_instructional_desc">从Google Maps分享坐标（已落下的图钉）到Essentials以保存为目的地。\n\n显示的距离是到目的地的直线距离，而非道路距离。\n\n请对时间和距离的所有计算持保留态度，因为它们并不总是准确的。</string>
     <string name="tile_location_reached">我们到了吗？</string>
+    <string name="location_reached_pause">Pause</string>
+    <string name="location_reached_resume">Resume</string>
     <string name="location_reached_radius_label">半径：%1$d 米</string>
     <string name="location_reached_distance_label">到目标距离：%1$s</string>
     <string name="location_reached_last_travelled">上次：%1$s</string>
@@ -1221,6 +1226,10 @@
     <string name="watch_no_companion_title">未检测到手表</string>
     <string name="watch_no_companion_desc">看起来您的手表上未安装Essentials Wear配套应用。</string>
     <string name="watch_install_companion_action">安装配套应用</string>
+    <string name="action_download_from_github">Download from GitHub</string>
+    <string name="watch_help_title">Install on Watch</string>
+    <string name="watch_help_description">To use Watch features, you need to install the Essentials companion app on your Wear OS watch. Click the button below to open the Play Store directly on your watch.</string>
+    <string name="watch_help_open_play_store">Open on Watch</string>
     <string name="cat_interaction">交互</string>
     <string name="cat_interface">界面</string>
     <string name="cat_display">显示</string>
@@ -1384,10 +1393,49 @@
     <string name="shut_up_disable_wireless_debugging">Disable Wireless Debugging</string>
     <string name="shut_up_disable_accessibility">Disable Accessibility Services</string>
     <string name="shut_up_shortcut_created">Shortcut created for %s</string>
+    <string name="feat_disable_rotation_suggestion_title">Disable rotation suggestion</string>
+    <string name="feat_disable_rotation_suggestion_desc">Do not show the rotation button when auto-rotate is off</string>
     <string name="shut_up_toast_active">App got shut up</string>
     <string name="shut_up_toast_restored">Shut up features returned</string>
     <string name="shut_up_auto_archive_notif_title">Auto Freeze</string>
     <string name="shut_up_auto_archive_notif_text">%1$s will be archived in %2$d seconds</string>
     <string name="shut_up_auto_archive_action_freeze">Freeze now</string>
     <string name="shut_up_auto_archive_action_abort">Abort</string>
+    <!-- Lock Screen Clock -->
+    <string name="feat_lock_screen_clock_title">Lock screen clock</string>
+    <string name="feat_lock_screen_clock_desc">Customize lock screen clock on Pixels</string>
+    <string name="about_desc_lock_screen_clock">Change the lock screen clock style on Pixels. Select from the available clock faces provided by the System UI. Some old styles might not be available.</string>
+    <string name="lock_screen_clock_bignum">Big Number</string>
+    <string name="lock_screen_clock_calligraphy">Calligraphy</string>
+    <string name="lock_screen_clock_flex">Flex</string>
+    <string name="lock_screen_clock_growth">Growth</string>
+    <string name="lock_screen_clock_handwritten">Handwritten</string>
+    <string name="lock_screen_clock_inflate">Inflate</string>
+    <string name="lock_screen_clock_metro">Metro</string>
+    <string name="lock_screen_clock_numoverlap">Number Overlap</string>
+    <string name="lock_screen_clock_weather">Weather</string>
+    <string name="lock_screen_clock_select_label">Select Clock Style</string>
+    <string name="lock_screen_clock_current_label">Current</string>
+    <string name="lock_screen_clock_apply_label">Apply</string>
+    <string name="lock_screen_clock_applied_toast">Clock style applied</string>
+    <string name="lock_screen_clock_permission_required">WRITE_SECURE_SETTINGS permission required</string>
+    <string name="lock_screen_clock_default">Default</string>
+    <string name="label_weight">Weight</string>
+    <string name="label_width">Width</string>
+    <string name="label_grade">Grade</string>
+    <string name="label_roundness">Roundness</string>
+    <string name="label_color_tone">Lightness</string>
+    <string name="label_variation">Variation</string>
+    <string name="label_color">Color</string>
+    <string name="label_style_font">Style &amp; Font</string>
+    <string name="about_title">About</string>
+    <string name="color_default">Default</string>
+    <string name="color_red">Red</string>
+    <string name="color_green">Green</string>
+    <string name="color_blue">Blue</string>
+    <string name="color_yellow">Yellow</string>
+    <string name="color_orange">Orange</string>
+    <string name="color_purple">Purple</string>
+    <string name="color_pink">Pink</string>
+    <string name="color_teal">Teal</string>
 </resources>

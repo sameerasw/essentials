@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="label_beta">BÊTA</string>
+    <string name="shut_up_attempt_shizuku_restart">Attempt Shizuku restart</string>
+    <string name="shut_up_shizuku_restart_warning_title">Shizuku Restart Warning</string>
+    <string name="shut_up_shizuku_restart_warning_message">Since wireless debugging was toggled, Shizuku services might not have started automatically causing freezing to not function. Consider turning on attempt shizuku restart as well</string>
     <string name="accessibility_service_description"><b>Service d\'accessibilité Essentials</b>\n\nCe service est requis pour les fonctionnalités suivantes :\n\n<b>• Réattribution d\'un bouton physique :</b>\nDétecte les appuis sur le bouton volume même si l\'écran est éteint pour déclencher des actions comme allumer la lampe-torche.\n\n<b>• Réglage par appli :</b>\nSurveille les applications actives pour appliquer des profils spécifiques pour le mode éclairage nocturne dynamique, le réglage de couleurs des notifications lumineuses et le verrouillage d\'applis.\n\n<b>• Contrôler l\'écran :</b>\nAutorise l\'application à verrouiller l\'écran (par exemple en utilisant le Double Tap ou les Widgets) et détecter le changement d\'état de l\'écran.\n\n<b>• Sécurité :</b>\nPrévenir les changements non autorisé en détectant le contenu des fenêtres lorsque l\'appareil est verrouillé.\n\n<small>Aucun texte saisi ou de données utilisateur sensibles sont collectées ou transmises.</small></string>
     <string name="freeze_activity_title">Gel d\'applis</string>
     <string name="freeze_activity_subtitle">Désactiver les applis rarement utilisées</string>
@@ -732,6 +735,8 @@
     <string name="location_reached_restart_btn">Redémarrer</string>
     <string name="location_reached_instructional_desc">Partagez les coordonnées (Repère placé) depuis Google Maps vers Essentials pour enregistrer une destination.\n\nLa distance affichée est la distance à vol d\'oiseau vers la destination, pas la distance de trajet par les routes.\n\nPrenez tous les calculs de temps et de distance avec des pincettes car ils ne sont pas toujours corrects.</string>
     <string name="tile_location_reached">On est arrivés ?</string>
+    <string name="location_reached_pause">Pause</string>
+    <string name="location_reached_resume">Resume</string>
     <string name="location_reached_radius_label">Rayon : %1$dm</string>
     <string name="location_reached_distance_label">Distance de la destination : %1$s</string>
     <string name="location_reached_last_travelled">Dernier : %1$s</string>
@@ -1221,6 +1226,10 @@
     <string name="watch_no_companion_title">Aucune montre détectée</string>
     <string name="watch_no_companion_desc">Il semble que vous n\'ayez pas l\'application compagnon Essentials Wear installée sur votre montre.</string>
     <string name="watch_install_companion_action">Installer l\'appli compagnon</string>
+    <string name="action_download_from_github">Download from GitHub</string>
+    <string name="watch_help_title">Install on Watch</string>
+    <string name="watch_help_description">To use Watch features, you need to install the Essentials companion app on your Wear OS watch. Click the button below to open the Play Store directly on your watch.</string>
+    <string name="watch_help_open_play_store">Open on Watch</string>
     <string name="cat_interaction">Interaction</string>
     <string name="cat_interface">Interface</string>
     <string name="cat_display">Affichage</string>
@@ -1384,10 +1393,49 @@
     <string name="shut_up_disable_wireless_debugging">Disable Wireless Debugging</string>
     <string name="shut_up_disable_accessibility">Disable Accessibility Services</string>
     <string name="shut_up_shortcut_created">Shortcut created for %s</string>
+    <string name="feat_disable_rotation_suggestion_title">Disable rotation suggestion</string>
+    <string name="feat_disable_rotation_suggestion_desc">Do not show the rotation button when auto-rotate is off</string>
     <string name="shut_up_toast_active">App got shut up</string>
     <string name="shut_up_toast_restored">Shut up features returned</string>
     <string name="shut_up_auto_archive_notif_title">Auto Freeze</string>
     <string name="shut_up_auto_archive_notif_text">%1$s will be archived in %2$d seconds</string>
     <string name="shut_up_auto_archive_action_freeze">Freeze now</string>
     <string name="shut_up_auto_archive_action_abort">Abort</string>
+    <!-- Lock Screen Clock -->
+    <string name="feat_lock_screen_clock_title">Lock screen clock</string>
+    <string name="feat_lock_screen_clock_desc">Customize lock screen clock on Pixels</string>
+    <string name="about_desc_lock_screen_clock">Change the lock screen clock style on Pixels. Select from the available clock faces provided by the System UI. Some old styles might not be available.</string>
+    <string name="lock_screen_clock_bignum">Big Number</string>
+    <string name="lock_screen_clock_calligraphy">Calligraphy</string>
+    <string name="lock_screen_clock_flex">Flex</string>
+    <string name="lock_screen_clock_growth">Growth</string>
+    <string name="lock_screen_clock_handwritten">Handwritten</string>
+    <string name="lock_screen_clock_inflate">Inflate</string>
+    <string name="lock_screen_clock_metro">Metro</string>
+    <string name="lock_screen_clock_numoverlap">Number Overlap</string>
+    <string name="lock_screen_clock_weather">Weather</string>
+    <string name="lock_screen_clock_select_label">Select Clock Style</string>
+    <string name="lock_screen_clock_current_label">Current</string>
+    <string name="lock_screen_clock_apply_label">Apply</string>
+    <string name="lock_screen_clock_applied_toast">Clock style applied</string>
+    <string name="lock_screen_clock_permission_required">WRITE_SECURE_SETTINGS permission required</string>
+    <string name="lock_screen_clock_default">Default</string>
+    <string name="label_weight">Weight</string>
+    <string name="label_width">Width</string>
+    <string name="label_grade">Grade</string>
+    <string name="label_roundness">Roundness</string>
+    <string name="label_color_tone">Lightness</string>
+    <string name="label_variation">Variation</string>
+    <string name="label_color">Color</string>
+    <string name="label_style_font">Style &amp; Font</string>
+    <string name="about_title">About</string>
+    <string name="color_default">Default</string>
+    <string name="color_red">Red</string>
+    <string name="color_green">Green</string>
+    <string name="color_blue">Blue</string>
+    <string name="color_yellow">Yellow</string>
+    <string name="color_orange">Orange</string>
+    <string name="color_purple">Purple</string>
+    <string name="color_pink">Pink</string>
+    <string name="color_teal">Teal</string>
 </resources>

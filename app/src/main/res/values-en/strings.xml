@@ -735,6 +735,8 @@
     <string name="location_reached_restart_btn">Re-Start</string>
     <string name="location_reached_instructional_desc">Share coordinates (Dropped pin) from Google Maps to Essentials to save as a destination.\n\nThe distance shown is the direct distance to the destination, not the distance along the roads.\n\nTake all calculations of time and distance with a grain of salt as they are not always accurate.</string>
     <string name="tile_location_reached">Are we there yet?</string>
+    <string name="location_reached_pause">Pause</string>
+    <string name="location_reached_resume">Resume</string>
     <string name="location_reached_radius_label">Radius: %1$d m</string>
     <string name="location_reached_distance_label">Distance to target: %1$s</string>
     <string name="location_reached_last_travelled">Last: %1$s</string>
@@ -1224,6 +1226,7 @@
     <string name="watch_no_companion_title">No Watch detected</string>
     <string name="watch_no_companion_desc">It looks like you do not have the Essentials Wear companion app installed on your watch.</string>
     <string name="watch_install_companion_action">Install Companion</string>
+    <string name="action_download_from_github">Download from GitHub</string>
     <string name="watch_help_title">Install on Watch</string>
     <string name="watch_help_description">To use Watch features, you need to install the Essentials companion app on your Wear OS watch. Click the button below to open the Play Store directly on your watch.</string>
     <string name="watch_help_open_play_store">Open on Watch</string>
@@ -1416,4 +1419,23 @@
     <string name="lock_screen_clock_apply_label">Apply</string>
     <string name="lock_screen_clock_applied_toast">Clock style applied</string>
     <string name="lock_screen_clock_permission_required">WRITE_SECURE_SETTINGS permission required</string>
+    <string name="lock_screen_clock_default">Default</string>
+    <string name="label_weight">Weight</string>
+    <string name="label_width">Width</string>
+    <string name="label_grade">Grade</string>
+    <string name="label_roundness">Roundness</string>
+    <string name="label_color_tone">Lightness</string>
+    <string name="label_variation">Variation</string>
+    <string name="label_color">Color</string>
+    <string name="label_style_font">Style &amp; Font</string>
+    <string name="about_title">About</string>
+    <string name="color_default">Default</string>
+    <string name="color_red">Red</string>
+    <string name="color_green">Green</string>
+    <string name="color_blue">Blue</string>
+    <string name="color_yellow">Yellow</string>
+    <string name="color_orange">Orange</string>
+    <string name="color_purple">Purple</string>
+    <string name="color_pink">Pink</string>
+    <string name="color_teal">Teal</string>
 </resources>
