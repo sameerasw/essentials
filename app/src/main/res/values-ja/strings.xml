@@ -735,6 +735,8 @@
     <string name="location_reached_restart_btn">リスタート</string>
     <string name="location_reached_instructional_desc">Google マップの座標（指定した地点）を Essentials に共有し、目的地として保存します。\n\n表示される距離は、目的地までの直線距離であり、道のりではありません。\n\n所要時間や距離の計算結果は必ずしも正確ではないため、あくまで目安としてご利用ください。</string>
     <string name="tile_location_reached">まだ着かないの？</string>
+    <string name="location_reached_pause">Pause</string>
+    <string name="location_reached_resume">Resume</string>
     <string name="location_reached_radius_label">半径：%1$dm</string>
     <string name="location_reached_distance_label">Distance to target: %1$s</string>
     <string name="location_reached_last_travelled">最後：%1$s</string>
@@ -1117,7 +1119,7 @@
     <string name="location_reached_fsi_desc">到着時にデバイスを起動するのに必要です。許可するにはタップしてください。</string>
     <string name="location_reached_dist_m">%1$dm</string>
     <string name="location_reached_dist_km">%1$.1fkm</string>
-    <string name="location_reached_service_title">Travel Alarm active</string>
+    <string name="location_reached_service_title">Travelling to %1$s</string>
     <string name="location_reached_service_remaining">残り%1$s (%2$d%%)</string>
     <string name="location_reached_channel_name">お出かけの進行状況</string>
     <string name="location_reached_channel_desc">目的地までの距離をリアルタイムで表示</string>
@@ -1224,6 +1226,7 @@
     <string name="watch_no_companion_title">スマートウォッチが検出されませんでした</string>
     <string name="watch_no_companion_desc">お使いのスマートウォッチにEssentials Wearコンパニオンアプリがインストールされていないようです。</string>
     <string name="watch_install_companion_action">コンパニオンをインストール</string>
+    <string name="action_download_from_github">Download from GitHub</string>
     <string name="watch_help_title">Install on Watch</string>
     <string name="watch_help_description">To use Watch features, you need to install the Essentials companion app on your Wear OS watch. Click the button below to open the Play Store directly on your watch.</string>
     <string name="watch_help_open_play_store">Open on Watch</string>
