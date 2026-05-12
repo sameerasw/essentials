@@ -39,6 +39,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
     private lateinit var ambientGlanceHandler: AmbientGlanceHandler
     private lateinit var aodForceTurnOffHandler: AodForceTurnOffHandler
     private lateinit var omniGestureOverlayHandler: OmniGestureOverlayHandler
+    private lateinit var statusBarIconHandler: StatusBarIconHandler
 
     private var screenReceiver: BroadcastReceiver? = null
 
@@ -58,6 +59,8 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
                 key == "circle_to_search_gesture_height" || 
                 key == "circle_to_search_preview_enabled") {
                 updateOmniOverlay()
+            } else if (key == "smart_wifi_enabled" || key == "smart_data_enabled" || key == "battery_percent_mode" || key?.startsWith("icon_") == true) {
+                statusBarIconHandler.updateAll()
             }
         }
 
@@ -72,8 +75,10 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         ambientGlanceHandler = AmbientGlanceHandler(this)
         aodForceTurnOffHandler = AodForceTurnOffHandler(this)
         omniGestureOverlayHandler = OmniGestureOverlayHandler(this)
+        statusBarIconHandler = StatusBarIconHandler(this)
 
         flashlightHandler.register()
+        statusBarIconHandler.register()
 
         // Screen Receiver
         screenReceiver = object : BroadcastReceiver() {
@@ -194,6 +199,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         ambientGlanceHandler.removeOverlay()
         aodForceTurnOffHandler.removeOverlay()
         omniGestureOverlayHandler.removeOverlay()
+        statusBarIconHandler.unregister()
         stopInputEventListener()
         serviceScope.cancel()
         getSharedPreferences("essentials_prefs", MODE_PRIVATE)
