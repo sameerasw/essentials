@@ -1224,6 +1224,9 @@
     <string name="watch_no_companion_title">Kelloa ei havaittu</string>
     <string name="watch_no_companion_desc">Näyttää siltä, ​​että kelloosi ei ole asennettu Essentials Wear -kumppanisovellusta.</string>
     <string name="watch_install_companion_action">Asenna Companion</string>
+    <string name="watch_help_title">Install on Watch</string>
+    <string name="watch_help_description">To use Watch features, you need to install the Essentials companion app on your Wear OS watch. Click the button below to open the Play Store directly on your watch.</string>
+    <string name="watch_help_open_play_store">Open on Watch</string>
     <string name="cat_interaction">Vuorovaikutus</string>
     <string name="cat_interface">Käyttöliittymä</string>
     <string name="cat_display">Näyttö</string>
