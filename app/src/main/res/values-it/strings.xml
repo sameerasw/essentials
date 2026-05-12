@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="label_beta">BETA</string>
+    <string name="shut_up_attempt_shizuku_restart">Attempt Shizuku restart</string>
+    <string name="shut_up_shizuku_restart_warning_title">Shizuku Restart Warning</string>
+    <string name="shut_up_shizuku_restart_warning_message">Since wireless debugging was toggled, Shizuku services might not have started automatically causing freezing to not function. Consider turning on attempt shizuku restart as well</string>
     <string name="accessibility_service_description"><b>Servizio di Accessibilità Essentials</b>\n\nQuesto servizio è richiesto per le seguenti funzioni avanzate:\n\n<b>• Rimappatura dei tasti fisici:</b>\nRileva la pressione dei tasti del volume anche quando lo schermo è spento per attivare azioni come la Torcia.\n\n<b>• Impostazioni per singola app:</b>\nMonitora l\'app attualmente attiva per applicare profili specifici per la Luce notturna dinamica, i colori dell\'illuminazione delle notifiche e il Blocco app.\n\n<b>• Controllo dello schermo:</b>\nConsente all\'app di bloccare lo schermo (ad es. tramite Doppio tocco o Widget) e di rilevare i cambiamenti di stato dello schermo.\n\n<b>• Sicurezza:</b>\nImpedisce modifiche non autorizzate rilevando il contenuto delle finestre quando il dispositivo è bloccato.\n\n<small>Nessun testo inserito o dato sensibile dell\'utente viene raccolto o trasmesso.</small></string>
     <string name="freeze_activity_title">Blocco App</string>
     <string name="freeze_activity_subtitle">Disattiva le app utilizzate raramente</string>
