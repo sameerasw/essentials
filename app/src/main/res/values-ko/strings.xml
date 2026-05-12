@@ -735,6 +735,8 @@
     <string name="location_reached_restart_btn">Re-Start</string>
     <string name="location_reached_instructional_desc">Share coordinates (Dropped pin) from Google Maps to Essentials to save as a destination.\n\nThe distance shown is the direct distance to the destination, not the distance along the roads.\n\nTake all calculations of time and distance with a grain of salt as they are not always accurate.</string>
     <string name="tile_location_reached">Are we there yet?</string>
+    <string name="location_reached_pause">Pause</string>
+    <string name="location_reached_resume">Resume</string>
     <string name="location_reached_radius_label">Radius: %1$d m</string>
     <string name="location_reached_distance_label">Distance to target: %1$s</string>
     <string name="location_reached_last_travelled">Last: %1$s</string>
@@ -1117,7 +1119,7 @@
     <string name="location_reached_fsi_desc">도착 시 기기를 깨워야 합니다. 부여하려면 탭하세요.</string>
     <string name="location_reached_dist_m">%1$d 중</string>
     <string name="location_reached_dist_km">%1$.1fkm</string>
-    <string name="location_reached_service_title">여행 알람 활성화</string>
+    <string name="location_reached_service_title">Travelling to %1$s</string>
     <string name="location_reached_service_remaining">%1$s 남음 (%2$d%%)</string>
     <string name="location_reached_channel_name">여행 진행</string>
     <string name="location_reached_channel_desc">목적지까지의 거리를 실시간으로 표시</string>
@@ -1224,6 +1226,7 @@
     <string name="watch_no_companion_title">시계가 감지되지 않음</string>
     <string name="watch_no_companion_desc">시계에 Essentials Wear 컴패니언 앱이 설치되어 있지 않은 것 같습니다.</string>
     <string name="watch_install_companion_action">컴패니언 설치</string>
+    <string name="action_download_from_github">Download from GitHub</string>
     <string name="watch_help_title">Install on Watch</string>
     <string name="watch_help_description">To use Watch features, you need to install the Essentials companion app on your Wear OS watch. Click the button below to open the Play Store directly on your watch.</string>
     <string name="watch_help_open_play_store">Open on Watch</string>
