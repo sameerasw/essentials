@@ -1119,7 +1119,7 @@
     <string name="location_reached_fsi_desc">Az eszköz felébresztéséhez érkezéskor szükséges. Koppintson az engedélyezéshez.</string>
     <string name="location_reached_dist_m">%1$d m</string>
     <string name="location_reached_dist_km">%1$.1f km</string>
-    <string name="location_reached_service_title">Travelling to %1$s</string>
+    <string name="location_reached_service_title">Utazási riasztó aktív</string>
     <string name="location_reached_service_remaining">%1$s fennmaradó (%2$d%%)</string>
     <string name="location_reached_channel_name">Az utazás előrehaladása</string>
     <string name="location_reached_channel_desc">Valós idejű távolságot mutat a céltól</string>
