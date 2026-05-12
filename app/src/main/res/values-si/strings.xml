@@ -1438,6 +1438,4 @@
     <string name="color_purple">Purple</string>
     <string name="color_pink">Pink</string>
     <string name="color_teal">Teal</string>
-    <string name="feat_disable_rotation_suggestion_title">භ්‍රමණ යෝජනා අබල කරන්න</string>
-    <string name="feat_disable_rotation_suggestion_desc">ස්වයංක්‍රීය භ්‍රමණය අක්‍රිය වූ විට භ්‍රමණ බොත්තම පෙන්වන්න එපා</string>
 </resources>
