@@ -147,6 +147,7 @@ class MainViewModel : ViewModel() {
 
     val shutUpConfigs = mutableStateOf<List<com.sameerasw.essentials.domain.model.ShutUpAppConfig>>(emptyList())
     val isShutUpLoading = mutableStateOf(false)
+    val isShutUpAttemptShizukuRestart = mutableStateOf(true)
 
 
 
@@ -545,6 +546,10 @@ class MainViewModel : ViewModel() {
                         liveWallpaperCustomVideos.clear()
                         liveWallpaperCustomVideos.addAll(settingsRepository.getLiveWallpaperCustomVideos())
                     }
+
+                    SettingsRepository.KEY_SHUT_UP_ATTEMPT_SHIZUKU_RESTART -> {
+                        isShutUpAttemptShizukuRestart.value = settingsRepository.isShutUpAttemptShizukuRestartEnabled()
+                    }
                 }
             }
         }
@@ -574,6 +579,11 @@ class MainViewModel : ViewModel() {
         current.removeAll { it.packageName == packageName }
         settingsRepository.saveShutUpConfigs(current)
         loadShutUpConfigs()
+    }
+
+    fun setShutUpAttemptShizukuRestartEnabled(enabled: Boolean) {
+        isShutUpAttemptShizukuRestart.value = enabled
+        settingsRepository.setShutUpAttemptShizukuRestartEnabled(enabled)
     }
 
     fun saveShutUpSelectedApps(context: Context, apps: List<AppSelection>) {
@@ -643,6 +653,7 @@ class MainViewModel : ViewModel() {
         isHideGestureBarOnLauncherEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_HIDE_GESTURE_BAR_ON_LAUNCHER_ENABLED, false)
         notificationLightingSystemMode.intValue = settingsRepository.getNotificationLightingSystemMode()
         
+        isShutUpAttemptShizukuRestart.value = settingsRepository.isShutUpAttemptShizukuRestartEnabled()
         loadShutUpConfigs()
 
         if (isHideGestureBarEnabled.value) {

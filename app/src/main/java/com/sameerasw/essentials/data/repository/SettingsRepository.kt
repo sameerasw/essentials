@@ -225,6 +225,7 @@ class SettingsRepository(private val context: Context) {
 
         const val KEY_SHUT_UP_SELECTED_APPS = "shut_up_selected_apps"
         const val KEY_SHUT_UP_ORIGINAL_SETTINGS = "shut_up_original_settings"
+        const val KEY_SHUT_UP_ATTEMPT_SHIZUKU_RESTART = "shut_up_attempt_shizuku_restart"
     }
 
     // Observe changes
@@ -799,6 +800,9 @@ class SettingsRepository(private val context: Context) {
         }
         saveTrackedRepos(current)
     }
+
+    fun isShutUpAttemptShizukuRestartEnabled(): Boolean = getBoolean(KEY_SHUT_UP_ATTEMPT_SHIZUKU_RESTART, true)
+    fun setShutUpAttemptShizukuRestartEnabled(enabled: Boolean) = putBoolean(KEY_SHUT_UP_ATTEMPT_SHIZUKU_RESTART, enabled)
 
     fun removeTrackedRepo(fullName: String) {
         val current = getTrackedRepos().toMutableList()
