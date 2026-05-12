@@ -226,6 +226,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_SHUT_UP_SELECTED_APPS = "shut_up_selected_apps"
         const val KEY_SHUT_UP_ORIGINAL_SETTINGS = "shut_up_original_settings"
         const val KEY_SHUT_UP_ATTEMPT_SHIZUKU_RESTART = "shut_up_attempt_shizuku_restart"
+        const val KEY_DISABLE_ROTATION_SUGGESTION = "disable_rotation_suggestion"
     }
 
     // Observe changes

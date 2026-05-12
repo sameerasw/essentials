@@ -1389,7 +1389,9 @@
     <string name="shut_up_disable_usb_debugging">Disable USB Debugging</string>
     <string name="shut_up_disable_wireless_debugging">Disable Wireless Debugging</string>
     <string name="shut_up_disable_accessibility">Disable Accessibility Services</string>
-    <string name="shut_up_shortcut_created">Shortcut created for %s</string>
+    <string name="shut_up_shortcut_created">Shortcut for %1$s created on home screen</string>
+    <string name="feat_disable_rotation_suggestion_title">Disable rotation suggestion</string>
+    <string name="feat_disable_rotation_suggestion_desc">Do not show the rotation button when auto-rotate is off</string>
     <string name="shut_up_toast_active">App got shut up</string>
     <string name="shut_up_toast_restored">Shut up features returned</string>
     <string name="shut_up_auto_archive_notif_title">Auto Freeze</string>

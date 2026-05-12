@@ -139,6 +139,7 @@ class MainViewModel : ViewModel() {
     val isCircleToSearchGestureEnabled = mutableStateOf(false)
     val circleToSearchGestureHeight = mutableFloatStateOf(48f)
     val isCircleToSearchPreviewEnabled = mutableStateOf(false)
+    val isDisableRotationSuggestionEnabled = mutableStateOf(false)
 
     // Live Wallpaper
     val liveWallpaperSelectedVideo = mutableStateOf(SettingsRepository.LIVE_WALLPAPER_DEFAULT_VIDEO)
@@ -550,6 +551,10 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_SHUT_UP_ATTEMPT_SHIZUKU_RESTART -> {
                         isShutUpAttemptShizukuRestart.value = settingsRepository.isShutUpAttemptShizukuRestartEnabled()
                     }
+                    SettingsRepository.KEY_DISABLE_ROTATION_SUGGESTION -> {
+                        isDisableRotationSuggestionEnabled.value = settingsRepository.getBoolean(key)
+                        appContext?.let { applyDisableRotationSuggestion(it, isDisableRotationSuggestionEnabled.value) }
+                    }
                 }
             }
         }
@@ -649,6 +654,7 @@ class MainViewModel : ViewModel() {
         notificationLightingSystemMode.intValue = settingsRepository.getNotificationLightingSystemMode()
         
         isShutUpAttemptShizukuRestart.value = settingsRepository.isShutUpAttemptShizukuRestartEnabled()
+        isDisableRotationSuggestionEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_DISABLE_ROTATION_SUGGESTION, false)
         loadShutUpConfigs()
 
         if (isHideGestureBarEnabled.value) {
@@ -1433,6 +1439,35 @@ class MainViewModel : ViewModel() {
         }
         
         updateAppDetectionService(context)
+    }
+
+    fun setDisableRotationSuggestionEnabled(enabled: Boolean, context: Context) {
+        isDisableRotationSuggestionEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_DISABLE_ROTATION_SUGGESTION, enabled)
+        applyDisableRotationSuggestion(context, enabled)
+    }
+
+    private fun applyDisableRotationSuggestion(context: Context, enabled: Boolean) {
+        val value = if (enabled) 0 else 1
+        val key = "show_rotation_suggestions"
+
+        var success = false
+        if (PermissionUtils.canWriteSecureSettings(context)) {
+            try {
+                success = Settings.Secure.putInt(context.contentResolver, key, value)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        if (!success) {
+            val command = "settings put secure $key $value"
+            if (ShizukuUtils.hasPermission()) {
+                ShizukuUtils.runCommand(command)
+            } else if (RootUtils.isRootPermissionGranted()) {
+                RootUtils.runCommand(command)
+            }
+        }
     }
 
     private fun applyHideGestureBar(context: Context, enabled: Boolean) {
