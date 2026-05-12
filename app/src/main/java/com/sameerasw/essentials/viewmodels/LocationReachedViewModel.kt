@@ -169,6 +169,7 @@ class LocationReachedViewModel(application: Application) : AndroidViewModel(appl
             // Save as last trip
             lastTrip.value = alarm
             repository.saveLastTrip(alarm)
+            repository.updatePausedState(id, false)
         }
 
         repository.saveActiveAlarmId(null)
@@ -179,6 +180,25 @@ class LocationReachedViewModel(application: Application) : AndroidViewModel(appl
         repository.saveStartDistance(0f)
         repository.saveStartTime(0L)
         startTime.value = 0L
+    }
+
+    fun pauseTracking() {
+        val id = activeAlarmId.value ?: return
+        val intent = Intent(getApplication(), LocationReachedService::class.java).apply {
+            action = LocationReachedService.ACTION_PAUSE
+        }
+        getApplication<Application>().startService(intent)
+        repository.updatePausedState(id, true)
+    }
+
+    fun resumeTracking() {
+        val id = activeAlarmId.value ?: return
+        val intent = Intent(getApplication(), LocationReachedService::class.java).apply {
+            action = LocationReachedService.ACTION_RESUME
+        }
+        getApplication<Application>().startService(intent)
+        repository.updatePausedState(id, false)
+        updateCurrentDistance()
     }
 
     private var distanceTrackingJob: kotlinx.coroutines.Job? = null
@@ -212,6 +232,8 @@ class LocationReachedViewModel(application: Application) : AndroidViewModel(appl
     fun updateCurrentDistance() {
         val id = activeAlarmId.value
         val activeAlarm = savedAlarms.value.find { it.id == id } ?: tempAlarm.value ?: return
+
+        if (activeAlarm.isPaused) return
 
         fusedLocationClient.getCurrentLocation(Priority.PRIORITY_BALANCED_POWER_ACCURACY, null)
             .addOnSuccessListener { location ->

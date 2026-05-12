@@ -4,6 +4,7 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -38,6 +39,7 @@ fun EssentialsFloatingToolbar(
     selectedIndex: Int = -1,
     // Standard Mode
     title: String? = null,
+    isBeta: Boolean = false,
     onBackClick: (() -> Unit)? = null,
     onHelpClick: (() -> Unit)? = null,
     // FAB / Action
@@ -135,17 +137,37 @@ fun EssentialsFloatingToolbar(
 
                 if (title != null) {
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.background,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                         modifier = Modifier
                             .widthIn(min = 100.dp, max = 250.dp)
                             .padding(horizontal = 8.dp)
                             .align(Alignment.CenterVertically)
-                    )
+                    ) {
+                        Text(
+                            text = title,
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.background,
+                            maxLines = 1,
+                            modifier = Modifier.basicMarquee().weight(1f, fill = false)
+                        )
+                        if (isBeta) {
+                            Card(
+                                colors = CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.background
+                                ),
+                                shape = MaterialTheme.shapes.extraSmall
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.label_beta),
+                                    modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        }
+                    }
                 }
             } else {
                 // TABBED MODE - Expanding labels

@@ -116,50 +116,11 @@ class StatusBarIconViewModel : ViewModel() {
         loadStatusBarSettings(context)
         loadAdvancedFlags(context)
 
-        if (isSmartWiFiEnabled.value && isWriteSecureSettingsEnabled.value) {
-            startSmartWiFiUpdates(context)
-        }
+        loadStatusBarSettings(context)
+        loadAdvancedFlags(context)
 
-        if (isSmartDataEnabled.value && isWriteSecureSettingsEnabled.value) {
-            startSmartDataUpdates(context)
-        }
-
-        if (batteryPercentageMode.value == 2) {
-            startBatteryStatusListener(context)
-        }
-    }
-
-    private fun startBatteryStatusListener(context: Context) {
-        if (batteryReceiver != null) return
-
-        batteryReceiver = object : android.content.BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                if (batteryPercentageMode.value == 2) {
-                    val isCharging = intent.action == Intent.ACTION_POWER_CONNECTED
-                    updateSettingsValue(
-                        context,
-                        "status_bar_show_battery_percent",
-                        if (isCharging) 1 else 0
-                    )
-                }
-            }
-        }
-
-        val filter = IntentFilter().apply {
-            addAction(Intent.ACTION_POWER_CONNECTED)
-            addAction(Intent.ACTION_POWER_DISCONNECTED)
-        }
-        context.registerReceiver(batteryReceiver, filter)
-    }
-
-    private fun stopBatteryStatusListener(context: Context) {
-        batteryReceiver?.let {
-            try {
-                context.unregisterReceiver(it)
-            } catch (e: Exception) {
-            }
-            batteryReceiver = null
-        }
+        // Initial update for UI consistency
+        updateIconBlacklist(context)
     }
 
     /**
@@ -239,13 +200,7 @@ class StatusBarIconViewModel : ViewModel() {
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
             putBoolean(PREF_SMART_WIFI_ENABLED, enabled)
         }
-
-        if (enabled && isWriteSecureSettingsEnabled.value) {
-            startSmartWiFiUpdates(context)
-        } else {
-            smartWifiJob?.cancel()
-            updateIconBlacklist(context)
-        }
+        updateIconBlacklist(context)
     }
 
     fun setSmartDataEnabled(enabled: Boolean, context: Context) {
@@ -253,14 +208,7 @@ class StatusBarIconViewModel : ViewModel() {
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
             putBoolean(PREF_SMART_DATA_ENABLED, enabled)
         }
-
-        if (enabled && isWriteSecureSettingsEnabled.value) {
-            startSmartDataUpdates(context)
-        } else {
-            smartDataJob?.cancel()
-            updateIconBlacklist(context)
-        }
-
+        updateIconBlacklist(context)
         updateSelectedNetworkTypes(context, enabled)
     }
 
@@ -295,117 +243,6 @@ class StatusBarIconViewModel : ViewModel() {
 
         val blacklistNames = StatusBarIconRegistry.getBlacklistNames(getIconVisibilities())
         updateIconBlacklistSetting(context, blacklistNames)
-    }
-
-    private fun startSmartWiFiUpdates(context: Context) {
-        smartWifiJob?.cancel()
-        smartWifiJob = scope.launch {
-            while (true) {
-                val isWifiConnected = isWifiConnected(context)
-                updateSmartWiFiBlacklist(context, isWifiConnected)
-                delay(1000)
-            }
-        }
-    }
-
-    /**
-     * Update blacklist for Smart WiFi feature
-     * Uses registry-based approach for clean code
-     */
-    private fun updateSmartWiFiBlacklist(context: Context, wifiConnected: Boolean) {
-        if (!isSmartWiFiEnabled.value || !isWriteSecureSettingsEnabled.value) return
-
-        val visibilities = getIconVisibilities().toMutableMap()
-
-        // Smart WiFi logic: hide mobile data when WiFi is connected
-        val mobileDataVisible = visibilities["mobile_data"] ?: true
-        visibilities["mobile_data"] = mobileDataVisible && !wifiConnected
-
-        val blacklistNames = StatusBarIconRegistry.getBlacklistNames(visibilities)
-        updateIconBlacklistSetting(context, blacklistNames)
-    }
-
-    private fun startSmartDataUpdates(context: Context) {
-        smartDataJob?.cancel()
-        smartDataJob = scope.launch {
-            while (true) {
-                val currentNetworkType = getCurrentNetworkType(context)
-                updateSmartDataBlacklist(context, currentNetworkType)
-                delay(10000)
-            }
-        }
-    }
-
-    /**
-     * Update blacklist for Smart Data feature
-     */
-    private fun updateSmartDataBlacklist(context: Context, networkType: NetworkType) {
-        if (!isSmartDataEnabled.value || !isWriteSecureSettingsEnabled.value) {
-            return
-        }
-
-        if (isSmartWiFiEnabled.value && isWifiConnected(context)) {
-            return
-        }
-
-        val visibilities = getIconVisibilities().toMutableMap()
-
-        val shouldHideMobileData = selectedNetworkTypes.value.contains(networkType) ||
-                (selectedNetworkTypes.value.contains(NetworkType.NETWORK_OTHER) &&
-                        !setOf(
-                            NetworkType.NETWORK_5G,
-                            NetworkType.NETWORK_4G,
-                            NetworkType.NETWORK_3G
-                        ).contains(networkType))
-
-        visibilities["mobile_data"] = !shouldHideMobileData
-
-        val blacklistNames = StatusBarIconRegistry.getBlacklistNames(visibilities)
-        updateIconBlacklistSetting(context, blacklistNames)
-    }
-
-    private fun getCurrentNetworkType(context: Context): NetworkType {
-        return try {
-            if (ContextCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.READ_PHONE_STATE
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                return NetworkType.NETWORK_OTHER
-            }
-
-            val connectivityManager =
-                context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            val network = connectivityManager.activeNetwork ?: return NetworkType.NETWORK_OTHER
-            val capabilities = connectivityManager.getNetworkCapabilities(network)
-                ?: return NetworkType.NETWORK_OTHER
-
-            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-                return NetworkType.NETWORK_OTHER
-            }
-
-            val telephonyManager =
-                context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-
-            @Suppress("DEPRECATION")
-            val networkType = telephonyManager.networkType
-
-            when (networkType) {
-                TelephonyManager.NETWORK_TYPE_NR -> NetworkType.NETWORK_5G
-                TelephonyManager.NETWORK_TYPE_LTE,
-                TelephonyManager.NETWORK_TYPE_HSPAP -> NetworkType.NETWORK_4G
-
-                TelephonyManager.NETWORK_TYPE_HSDPA,
-                TelephonyManager.NETWORK_TYPE_HSUPA,
-                TelephonyManager.NETWORK_TYPE_HSPA,
-                TelephonyManager.NETWORK_TYPE_UMTS,
-                TelephonyManager.NETWORK_TYPE_TD_SCDMA -> NetworkType.NETWORK_3G
-
-                else -> NetworkType.NETWORK_OTHER
-            }
-        } catch (@Suppress("UNUSED_PARAMETER") e: Exception) {
-            NetworkType.NETWORK_OTHER
-        }
     }
 
     private fun isWifiConnected(context: Context): Boolean {
@@ -533,12 +370,6 @@ class StatusBarIconViewModel : ViewModel() {
         batteryPercentageMode.value = mode
         context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE).edit {
             putInt(PREF_BATTERY_PERCENT_MODE, mode)
-        }
-
-        if (mode == 2) {
-            startBatteryStatusListener(context)
-        } else {
-            stopBatteryStatusListener(context)
         }
 
         val systemValue = when (mode) {

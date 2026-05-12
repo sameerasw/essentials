@@ -225,6 +225,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                     // Help Sheet State
                     var showHelpSheet by remember { mutableStateOf(false) }
                     var showInstructionsSheet by remember { mutableStateOf(false) }
+                    var showWatchInstallHelpSheet by remember { mutableStateOf(false) }
                     var selectedHelpFeature by remember {
                         mutableStateOf<com.sameerasw.essentials.domain.model.Feature?>(
                             null
@@ -270,6 +271,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                             "Battery notification" -> !viewModel.isPostNotificationsEnabled.value || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !viewModel.isBluetoothPermissionGranted.value)
                             "Text and animations" -> !viewModel.isWriteSettingsEnabled.value || !isWriteSecureSettingsEnabled
                             "Always on Display" -> !isWriteSecureSettingsEnabled
+                            "Lock screen clock" -> !isWriteSecureSettingsEnabled
                             "Other customizations" -> !com.sameerasw.essentials.utils.ShellUtils.hasPermission(context)
                             "Shut-Up!" -> !isWriteSecureSettingsEnabled || !viewModel.isUsageStatsPermissionGranted.value
                             else -> false
@@ -323,6 +325,12 @@ class FeatureSettingsActivity : AppCompatActivity() {
                     if (showInstructionsSheet) {
                         com.sameerasw.essentials.ui.components.sheets.InstructionsBottomSheet(
                             onDismissRequest = { showInstructionsSheet = false }
+                        )
+                    }
+
+                    if (showWatchInstallHelpSheet) {
+                        com.sameerasw.essentials.ui.components.sheets.WatchInstallHelpBottomSheet(
+                            onDismissRequest = { showWatchInstallHelpSheet = false }
                         )
                     }
 
@@ -413,6 +421,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                 "Caffeinate" -> !viewModel.isPostNotificationsEnabled.value
                                                 "Battery notification" -> !viewModel.isPostNotificationsEnabled.value || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !viewModel.isBluetoothPermissionGranted.value)
                                                 "Text and animations" -> !viewModel.isWriteSettingsEnabled.value || !isWriteSecureSettingsEnabled
+                                                "Lock screen clock" -> !isWriteSecureSettingsEnabled
                                                 "Screen refresh rate" -> !viewModel.isShizukuPermissionGranted.value
                                                 "Shut-Up!" -> !isWriteSecureSettingsEnabled || !viewModel.isUsageStatsPermissionGranted.value
                                                 else -> false
@@ -682,6 +691,14 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                         )
                                     }
 
+                                    "Lock screen clock" -> {
+                                        com.sameerasw.essentials.ui.composables.configs.LockScreenClockSettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting
+                                        )
+                                    }
+
                                     "Shut-Up!" -> {
                                         ShutUpSettingsUI(
                                             viewModel = viewModel,
@@ -700,12 +717,15 @@ class FeatureSettingsActivity : AppCompatActivity() {
 
                         EssentialsFloatingToolbar(
                             title = pageTitle,
+                            isBeta = featureObj?.isBeta ?: false,
                             onBackClick = { finish() },
                             modifier = Modifier
                                 .align(Alignment.BottomCenter)
                                 .zIndex(1f),
                             onHelpClick = {
-                                if (hasMenu) {
+                                if (featureId == "Watch") {
+                                    showWatchInstallHelpSheet = true
+                                } else if (hasMenu) {
                                     selectedHelpFeature = featureObj
                                     showHelpSheet = true
                                 } else {

@@ -128,6 +128,7 @@ dependencies {
     // Google Maps & Location
     implementation(libs.play.services.location)
     implementation(libs.play.services.wearable)
+    implementation(libs.androidx.wear.remote.interactions)
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.gson)
     
@@ -152,5 +153,11 @@ dependencies {
     // Media3 for Live Wallpaper
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.common)
+
+    // RemoteIntent support
+    implementation("androidx.wear:wear-remote-interactions:1.1.0-alpha02")
+
+    // tandard wearable library
+    implementation("com.google.android.gms:play-services-wearable:19.0.0")
 
 }
