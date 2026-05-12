@@ -1119,7 +1119,7 @@
     <string name="location_reached_fsi_desc">Απαιτείται η αφύπνιση της συσκευής σας κατά την άφιξη. Πατήστε για παραχώρηση.</string>
     <string name="location_reached_dist_m">%1$d m</string>
     <string name="location_reached_dist_km">%1$.1f χλμ</string>
-    <string name="location_reached_service_title">Travelling to %1$s</string>
+    <string name="location_reached_service_title">Ενεργός συναγερμός ταξιδιού</string>
     <string name="location_reached_service_remaining">%1$s υπόλοιπο (%2$d%%)</string>
     <string name="location_reached_channel_name">Ταξιδιωτική Πρόοδος</string>
     <string name="location_reached_channel_desc">Εμφανίζει την απόσταση από τον προορισμό σε πραγματικό χρόνο</string>
