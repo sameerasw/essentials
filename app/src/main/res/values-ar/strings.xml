@@ -735,6 +735,8 @@
     <string name="location_reached_restart_btn">Re-Start</string>
     <string name="location_reached_instructional_desc">Share coordinates (Dropped pin) from Google Maps to Essentials to save as a destination.\n\nThe distance shown is the direct distance to the destination, not the distance along the roads.\n\nTake all calculations of time and distance with a grain of salt as they are not always accurate.</string>
     <string name="tile_location_reached">Are we there yet?</string>
+    <string name="location_reached_pause">Pause</string>
+    <string name="location_reached_resume">Resume</string>
     <string name="location_reached_radius_label">Radius: %1$d m</string>
     <string name="location_reached_distance_label">Distance to target: %1$s</string>
     <string name="location_reached_last_travelled">Last: %1$s</string>
@@ -1117,7 +1119,7 @@
     <string name="location_reached_fsi_desc">مطلوب لتنبيه جهازك عند الوصول. انقر للمنح.</string>
     <string name="location_reached_dist_m">%1$d م</string>
     <string name="location_reached_dist_km">%1$.1f كم</string>
-    <string name="location_reached_service_title">إنذار السفر نشط</string>
+    <string name="location_reached_service_title">Travelling to %1$s</string>
     <string name="location_reached_service_remaining">%1$s المتبقي (%2$d%%)</string>
     <string name="location_reached_channel_name">تقدم السفر</string>
     <string name="location_reached_channel_desc">يظهر المسافة في الوقت الحقيقي إلى الوجهة</string>
@@ -1224,6 +1226,7 @@
     <string name="watch_no_companion_title">لم يتم اكتشاف أي ساعة</string>
     <string name="watch_no_companion_desc">يبدو أنه ليس لديك التطبيق المرافق لـ Essentials Wear مثبتًا على ساعتك.</string>
     <string name="watch_install_companion_action">تثبيت رفيق</string>
+    <string name="action_download_from_github">Download from GitHub</string>
     <string name="watch_help_title">Install on Watch</string>
     <string name="watch_help_description">To use Watch features, you need to install the Essentials companion app on your Wear OS watch. Click the button below to open the Play Store directly on your watch.</string>
     <string name="watch_help_open_play_store">Open on Watch</string>
