@@ -352,7 +352,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                 direction = BlurDirection.TOP
                             )
                     ) {
-                        val hasScroll = featureId != "Sound mode tile" && featureId != "Quick settings tiles" && featureId != "Location reached" && featureId != "Lock screen clock"
+                        val hasScroll = featureId != "Sound mode tile" && featureId != "Quick settings tiles" && featureId != "Location reached"
                         Column(
                             modifier = Modifier
                                 .fillMaxSize()

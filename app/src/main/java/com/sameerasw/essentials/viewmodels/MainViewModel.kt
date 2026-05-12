@@ -141,6 +141,13 @@ class MainViewModel : ViewModel() {
     val isCircleToSearchPreviewEnabled = mutableStateOf(false)
     val isDisableRotationSuggestionEnabled = mutableStateOf(false)
     val lockScreenClockId = mutableStateOf<String?>(null)
+    val lockScreenClockWeight = mutableIntStateOf(300)
+    val lockScreenClockWidth = mutableIntStateOf(116)
+    val lockScreenClockGrade = mutableIntStateOf(0)
+    val lockScreenClockRoundness = mutableIntStateOf(100)
+    val lockScreenClockColorTone = mutableIntStateOf(75)
+    val lockScreenClockSelectedColorId = mutableStateOf("DEFAULT")
+    val lockScreenClockSeedColor = mutableIntStateOf(0)
 
     // Live Wallpaper
     val liveWallpaperSelectedVideo = mutableStateOf(SettingsRepository.LIVE_WALLPAPER_DEFAULT_VIDEO)
@@ -657,6 +664,13 @@ class MainViewModel : ViewModel() {
         isShutUpAttemptShizukuRestart.value = settingsRepository.isShutUpAttemptShizukuRestartEnabled()
         isDisableRotationSuggestionEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_DISABLE_ROTATION_SUGGESTION, false)
         lockScreenClockId.value = readCurrentLockScreenClockId(context)
+        lockScreenClockWeight.intValue = settingsRepository.getLockScreenClockWeight()
+        lockScreenClockWidth.intValue = settingsRepository.getLockScreenClockWidth()
+        lockScreenClockGrade.intValue = settingsRepository.getLockScreenClockGrade()
+        lockScreenClockRoundness.intValue = settingsRepository.getLockScreenClockRoundness()
+        lockScreenClockColorTone.intValue = settingsRepository.getLockScreenClockColorTone()
+        lockScreenClockSelectedColorId.value = settingsRepository.getLockScreenClockSelectedColorId()
+        lockScreenClockSeedColor.intValue = settingsRepository.getLockScreenClockSeedColor()
         loadShutUpConfigs()
 
         if (isHideGestureBarEnabled.value) {
@@ -1473,7 +1487,12 @@ class MainViewModel : ViewModel() {
     }
 
     fun setLockScreenClockId(clockId: String, context: Context) {
-        val json = "{\"clockId\":\"$clockId\"}"
+        val timestamp = System.currentTimeMillis()
+        val json = if (lockScreenClockSelectedColorId.value == "DEFAULT") {
+            "{\"clockId\":\"$clockId\",\"metadata\":{\"metadataSelectedColorId\":\"DEFAULT\",\"metadataColorToneProgress\":${lockScreenClockColorTone.intValue},\"appliedTimestamp\":$timestamp},\"axes\":[{\"key\":\"wght\",\"value\":${lockScreenClockWeight.intValue}},{\"key\":\"wdth\",\"value\":${lockScreenClockWidth.intValue}},{\"key\":\"ROND\",\"value\":${lockScreenClockRoundness.intValue}}]}"
+        } else {
+            "{\"clockId\":\"$clockId\",\"seedColor\":${lockScreenClockSeedColor.intValue},\"metadata\":{\"metadataSelectedColorId\":\"${lockScreenClockSelectedColorId.value}\",\"metadataColorToneProgress\":${lockScreenClockColorTone.intValue},\"appliedTimestamp\":$timestamp},\"axes\":[{\"key\":\"wght\",\"value\":${lockScreenClockWeight.intValue}},{\"key\":\"wdth\",\"value\":${lockScreenClockWidth.intValue}},{\"key\":\"ROND\",\"value\":${lockScreenClockRoundness.intValue}}]}"
+        }
         val command = "settings put secure lock_screen_custom_clock_face '$json'"
         var success = false
 
@@ -1502,6 +1521,44 @@ class MainViewModel : ViewModel() {
         if (success) {
             lockScreenClockId.value = clockId
         }
+    }
+
+    fun setLockScreenClockWeight(value: Int, context: Context) {
+        lockScreenClockWeight.intValue = value
+        settingsRepository.setLockScreenClockWeight(value)
+        lockScreenClockId.value?.let { setLockScreenClockId(it, context) }
+    }
+
+    fun setLockScreenClockWidth(value: Int, context: Context) {
+        lockScreenClockWidth.intValue = value
+        settingsRepository.setLockScreenClockWidth(value)
+        lockScreenClockId.value?.let { setLockScreenClockId(it, context) }
+    }
+
+    fun setLockScreenClockGrade(value: Int, context: Context) {
+        lockScreenClockGrade.intValue = value
+        settingsRepository.setLockScreenClockGrade(value)
+        lockScreenClockId.value?.let { setLockScreenClockId(it, context) }
+    }
+
+    fun setLockScreenClockRoundness(value: Int, context: Context) {
+        lockScreenClockRoundness.intValue = value
+        settingsRepository.setLockScreenClockRoundness(value)
+        lockScreenClockId.value?.let { setLockScreenClockId(it, context) }
+    }
+
+    fun setLockScreenClockColorTone(value: Int, context: Context) {
+        lockScreenClockColorTone.intValue = value
+        settingsRepository.setLockScreenClockColorTone(value)
+        lockScreenClockId.value?.let { setLockScreenClockId(it, context) }
+    }
+
+    fun setLockScreenClockColor(id: String, seed: Int, context: Context) {
+        lockScreenClockSelectedColorId.value = id
+        lockScreenClockSeedColor.intValue = seed
+        settingsRepository.setLockScreenClockSelectedColorId(id)
+        settingsRepository.setLockScreenClockSeedColor(seed)
+        lockScreenClockId.value?.let { setLockScreenClockId(it, context) }
     }
 
     private fun readCurrentLockScreenClockId(context: Context): String? {

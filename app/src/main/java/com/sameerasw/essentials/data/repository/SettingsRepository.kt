@@ -227,6 +227,14 @@ class SettingsRepository(private val context: Context) {
         const val KEY_SHUT_UP_ORIGINAL_SETTINGS = "shut_up_original_settings"
         const val KEY_SHUT_UP_ATTEMPT_SHIZUKU_RESTART = "shut_up_attempt_shizuku_restart"
         const val KEY_DISABLE_ROTATION_SUGGESTION = "disable_rotation_suggestion"
+
+        const val KEY_LOCK_SCREEN_CLOCK_WEIGHT = "lock_screen_clock_weight"
+        const val KEY_LOCK_SCREEN_CLOCK_WIDTH = "lock_screen_clock_width"
+        const val KEY_LOCK_SCREEN_CLOCK_GRADE = "lock_screen_clock_grade"
+        const val KEY_LOCK_SCREEN_CLOCK_ROUNDNESS = "lock_screen_clock_roundness"
+        const val KEY_LOCK_SCREEN_CLOCK_COLOR_TONE = "lock_screen_clock_color_tone"
+        const val KEY_LOCK_SCREEN_CLOCK_SELECTED_COLOR_ID = "lock_screen_clock_selected_color_id"
+        const val KEY_LOCK_SCREEN_CLOCK_SEED_COLOR = "lock_screen_clock_seed_color"
     }
 
     // Observe changes
@@ -1214,5 +1222,25 @@ class SettingsRepository(private val context: Context) {
         }
     }
 
+    fun getLockScreenClockWeight(): Int = getInt(KEY_LOCK_SCREEN_CLOCK_WEIGHT, 300)
+    fun setLockScreenClockWeight(value: Int) = putInt(KEY_LOCK_SCREEN_CLOCK_WEIGHT, value)
+
+    fun getLockScreenClockWidth(): Int = getInt(KEY_LOCK_SCREEN_CLOCK_WIDTH, 116)
+    fun setLockScreenClockWidth(value: Int) = putInt(KEY_LOCK_SCREEN_CLOCK_WIDTH, value)
+
+    fun getLockScreenClockGrade(): Int = getInt(KEY_LOCK_SCREEN_CLOCK_GRADE, 0)
+    fun setLockScreenClockGrade(value: Int) = putInt(KEY_LOCK_SCREEN_CLOCK_GRADE, value)
+
+    fun getLockScreenClockRoundness(): Int = getInt(KEY_LOCK_SCREEN_CLOCK_ROUNDNESS, 100)
+    fun setLockScreenClockRoundness(value: Int) = putInt(KEY_LOCK_SCREEN_CLOCK_ROUNDNESS, value)
+
+    fun getLockScreenClockColorTone(): Int = getInt(KEY_LOCK_SCREEN_CLOCK_COLOR_TONE, 75)
+    fun setLockScreenClockColorTone(value: Int) = putInt(KEY_LOCK_SCREEN_CLOCK_COLOR_TONE, value)
+
+    fun getLockScreenClockSelectedColorId(): String = getString(KEY_LOCK_SCREEN_CLOCK_SELECTED_COLOR_ID, "DEFAULT") ?: "DEFAULT"
+    fun setLockScreenClockSelectedColorId(value: String) = putString(KEY_LOCK_SCREEN_CLOCK_SELECTED_COLOR_ID, value)
+
+    fun getLockScreenClockSeedColor(): Int = getInt(KEY_LOCK_SCREEN_CLOCK_SEED_COLOR, 0)
+    fun setLockScreenClockSeedColor(value: Int) = putInt(KEY_LOCK_SCREEN_CLOCK_SEED_COLOR, value)
 }
 
