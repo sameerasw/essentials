@@ -10,6 +10,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -626,7 +627,7 @@ fun QSTileCard(
                     style = MaterialTheme.typography.titleMedium,
                     color = contentColor,
                     maxLines = 1,
-                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                    modifier = Modifier.basicMarquee()
                 )
                 Text(
                     text = if (isMissingPermissions) "Grant permission"
