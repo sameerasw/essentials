@@ -220,6 +220,20 @@ object FeatureRegistry {
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
         },
         object : Feature(
+            id = "Lock screen clock",
+            title = R.string.feat_lock_screen_clock_title,
+            iconRes = R.drawable.rounded_nest_clock_farsight_analog_24,
+            category = R.string.cat_interface,
+            description = R.string.feat_lock_screen_clock_desc,
+            aboutDescription = R.string.about_desc_lock_screen_clock,
+            permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
+            showToggle = false,
+            parentFeatureId = "Display"
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = true
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+        },
+        object : Feature(
             id = "Watch",
             title = R.string.feat_watch_title,
             iconRes = R.drawable.rounded_watch_24,

@@ -271,6 +271,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                             "Battery notification" -> !viewModel.isPostNotificationsEnabled.value || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !viewModel.isBluetoothPermissionGranted.value)
                             "Text and animations" -> !viewModel.isWriteSettingsEnabled.value || !isWriteSecureSettingsEnabled
                             "Always on Display" -> !isWriteSecureSettingsEnabled
+                            "Lock screen clock" -> !isWriteSecureSettingsEnabled
                             "Other customizations" -> !com.sameerasw.essentials.utils.ShellUtils.hasPermission(context)
                             "Shut-Up!" -> !isWriteSecureSettingsEnabled || !viewModel.isUsageStatsPermissionGranted.value
                             else -> false
@@ -351,7 +352,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                 direction = BlurDirection.TOP
                             )
                     ) {
-                        val hasScroll = featureId != "Sound mode tile" && featureId != "Quick settings tiles" && featureId != "Location reached"
+                        val hasScroll = featureId != "Sound mode tile" && featureId != "Quick settings tiles" && featureId != "Location reached" && featureId != "Lock screen clock"
                         Column(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -420,6 +421,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                 "Caffeinate" -> !viewModel.isPostNotificationsEnabled.value
                                                 "Battery notification" -> !viewModel.isPostNotificationsEnabled.value || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !viewModel.isBluetoothPermissionGranted.value)
                                                 "Text and animations" -> !viewModel.isWriteSettingsEnabled.value || !isWriteSecureSettingsEnabled
+                                                "Lock screen clock" -> !isWriteSecureSettingsEnabled
                                                 "Screen refresh rate" -> !viewModel.isShizukuPermissionGranted.value
                                                 "Shut-Up!" -> !isWriteSecureSettingsEnabled || !viewModel.isUsageStatsPermissionGranted.value
                                                 else -> false
@@ -683,6 +685,14 @@ class FeatureSettingsActivity : AppCompatActivity() {
 
                                     "Other customizations" -> {
                                         OtherCustomizationsSettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting
+                                        )
+                                    }
+
+                                    "Lock screen clock" -> {
+                                        com.sameerasw.essentials.ui.composables.configs.LockScreenClockSettingsUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightSetting = highlightSetting

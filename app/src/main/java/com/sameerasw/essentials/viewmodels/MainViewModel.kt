@@ -140,6 +140,7 @@ class MainViewModel : ViewModel() {
     val circleToSearchGestureHeight = mutableFloatStateOf(48f)
     val isCircleToSearchPreviewEnabled = mutableStateOf(false)
     val isDisableRotationSuggestionEnabled = mutableStateOf(false)
+    val lockScreenClockId = mutableStateOf<String?>(null)
 
     // Live Wallpaper
     val liveWallpaperSelectedVideo = mutableStateOf(SettingsRepository.LIVE_WALLPAPER_DEFAULT_VIDEO)
@@ -655,6 +656,7 @@ class MainViewModel : ViewModel() {
         
         isShutUpAttemptShizukuRestart.value = settingsRepository.isShutUpAttemptShizukuRestartEnabled()
         isDisableRotationSuggestionEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_DISABLE_ROTATION_SUGGESTION, false)
+        lockScreenClockId.value = readCurrentLockScreenClockId(context)
         loadShutUpConfigs()
 
         if (isHideGestureBarEnabled.value) {
@@ -1467,6 +1469,52 @@ class MainViewModel : ViewModel() {
             } else if (RootUtils.isRootPermissionGranted()) {
                 RootUtils.runCommand(command)
             }
+        }
+    }
+
+    fun setLockScreenClockId(clockId: String, context: Context) {
+        val json = "{\"clockId\":\"$clockId\"}"
+        val command = "settings put secure lock_screen_custom_clock_face '$json'"
+        var success = false
+
+        if (PermissionUtils.canWriteSecureSettings(context)) {
+            try {
+                success = Settings.Secure.putString(
+                    context.contentResolver,
+                    "lock_screen_custom_clock_face",
+                    json
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        if (!success) {
+            if (ShizukuUtils.hasPermission()) {
+                ShizukuUtils.runCommand(command)
+                success = true
+            } else if (RootUtils.isRootPermissionGranted()) {
+                RootUtils.runCommand(command)
+                success = true
+            }
+        }
+
+        if (success) {
+            lockScreenClockId.value = clockId
+        }
+    }
+
+    private fun readCurrentLockScreenClockId(context: Context): String? {
+        return try {
+            val raw = Settings.Secure.getString(
+                context.contentResolver,
+                "lock_screen_custom_clock_face"
+            ) ?: return null
+            // Extract clockId from JSON string like {"clockId":"DIGITAL_CLOCK_WEATHER"}
+            val match = Regex(""""clockId":\s*"([^"]+)"""").find(raw)
+            match?.groupValues?.getOrNull(1)
+        } catch (e: Exception) {
+            null
         }
     }
 
