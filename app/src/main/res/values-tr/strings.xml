@@ -1389,6 +1389,6 @@
     <string name="shut_up_toast_restored">Susturma özellikleri geri döndü</string>
     <string name="shut_up_auto_archive_notif_title">Otomatik Dondurma</string>
     <string name="shut_up_auto_archive_notif_text">%1$s %2$d saniye içinde arşivlenecek</string>
-    <string name="shut_up_auto_archive_action_freeze">Şimdi Dondur</string>
+    <string name="shut_up_auto_archive_action_freeze">Şimdi dondur</string>
     <string name="shut_up_auto_archive_action_abort">İptal et</string>
 </resources>
