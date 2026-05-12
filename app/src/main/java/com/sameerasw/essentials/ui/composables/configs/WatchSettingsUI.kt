@@ -10,11 +10,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
+import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.WatchViewModel
 
 @Composable
@@ -23,6 +25,7 @@ fun WatchSettingsUI(
     modifier: Modifier = Modifier
 ) {
     val uriHandler = LocalUriHandler.current
+    val view = LocalView.current
     val isWatchDetected = viewModel.isWatchDetected.value
     val connectedWatchName = viewModel.connectedWatchName.value
 
@@ -101,6 +104,7 @@ fun WatchSettingsUI(
                         modifier = Modifier.padding(top = 4.dp, bottom = 12.dp)
                     )
                     val context = LocalContext.current
+                    /*
                     Button(
                         onClick = { viewModel.openPlayStoreOnWatch(context) },
                         modifier = Modifier.fillMaxWidth(),
@@ -110,6 +114,27 @@ fun WatchSettingsUI(
                         )
                     ) {
                         Text(stringResource(R.string.watch_install_companion_action))
+                    }
+                    */
+
+                    Button(
+                        onClick = { 
+                            HapticUtil.performUIHaptic(view)
+                            uriHandler.openUri("http://github.com/sameerasw/essentials-wear/releases/latest") 
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.onPrimary,
+                            contentColor = MaterialTheme.colorScheme.primary
+                        )
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.rounded_download_24),
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(stringResource(R.string.action_download_from_github))
                     }
                 }
             }

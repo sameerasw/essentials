@@ -9,12 +9,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
-
+import com.sameerasw.essentials.utils.HapticUtil
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sameerasw.essentials.viewmodels.WatchViewModel
 
@@ -26,6 +27,7 @@ fun WatchInstallHelpBottomSheet(
 ) {
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
+    val view = LocalView.current
 
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
@@ -83,6 +85,7 @@ fun WatchInstallHelpBottomSheet(
                 }
             }
 
+            /*
             // Action Button
             Button(
                 onClick = {
@@ -105,6 +108,34 @@ fun WatchInstallHelpBottomSheet(
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = stringResource(R.string.watch_help_open_play_store),
+                    style = MaterialTheme.typography.labelLarge
+                )
+            }
+            */
+
+            // GitHub Download Button
+            Button(
+                onClick = {
+                    HapticUtil.performUIHaptic(view)
+                    uriHandler.openUri("http://github.com/sameerasw/essentials-wear/releases/latest")
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                shape = MaterialTheme.shapes.extraLarge,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                )
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.rounded_download_24),
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = stringResource(R.string.action_download_from_github),
                     style = MaterialTheme.typography.labelLarge
                 )
             }
