@@ -1550,15 +1550,44 @@ class MainViewModel : ViewModel() {
     fun setLockScreenClockColorTone(value: Int, context: Context) {
         lockScreenClockColorTone.intValue = value
         settingsRepository.setLockScreenClockColorTone(value)
+
+        // Update effective seed color based on new tone
+        if (lockScreenClockSelectedColorId.value != "DEFAULT") {
+            val effectiveSeed = calculateEffectiveSeedColor(lockScreenClockSelectedColorId.value, value)
+            lockScreenClockSeedColor.intValue = effectiveSeed
+            settingsRepository.setLockScreenClockSeedColor(effectiveSeed)
+        }
+
         lockScreenClockId.value?.let { setLockScreenClockId(it, context) }
     }
 
     fun setLockScreenClockColor(id: String, seed: Int, context: Context) {
         lockScreenClockSelectedColorId.value = id
-        lockScreenClockSeedColor.intValue = seed
+        val effectiveSeed = if (id == "DEFAULT") 0 else calculateEffectiveSeedColor(id, lockScreenClockColorTone.intValue)
+        lockScreenClockSeedColor.intValue = effectiveSeed
         settingsRepository.setLockScreenClockSelectedColorId(id)
-        settingsRepository.setLockScreenClockSeedColor(seed)
+        settingsRepository.setLockScreenClockSeedColor(effectiveSeed)
         lockScreenClockId.value?.let { setLockScreenClockId(it, context) }
+    }
+
+    private fun calculateEffectiveSeedColor(colorId: String, tone: Int): Int {
+        val baseColor = when (colorId) {
+            "RED" -> android.graphics.Color.parseColor("#E57373")
+            "GREEN" -> android.graphics.Color.parseColor("#81C784")
+            "BLUE" -> android.graphics.Color.parseColor("#64B5F6")
+            "YELLOW" -> android.graphics.Color.parseColor("#FFF176")
+            else -> return 0
+        }
+        val hsv = FloatArray(3)
+        android.graphics.Color.colorToHSV(baseColor, hsv)
+
+        // Calibrated HSV mapping to match user examples:
+        // Tone 0  -> Saturation ~0.8, Value ~0.35 (Dark, saturated)
+        // Tone 100 -> Saturation ~0.2, Value ~1.0  (Light, pastel)
+        hsv[1] = (0.8f - (tone / 100f) * 0.6f).coerceIn(0f, 1f)
+        hsv[2] = (0.35f + (tone / 100f) * 0.65f).coerceIn(0f, 1f)
+
+        return android.graphics.Color.HSVToColor(hsv)
     }
 
     private fun readCurrentLockScreenClockId(context: Context): String? {
