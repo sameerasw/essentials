@@ -1226,6 +1226,9 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="watch_no_companion_title">No se detectó ningún reloj</string>
     <string name="watch_no_companion_desc">Parece que no tienes instalada la aplicación complementaria Essentials Wear en tu reloj.</string>
     <string name="watch_install_companion_action">Instalar la aplicación complementaria</string>
+    <string name="watch_help_title">Install on Watch</string>
+    <string name="watch_help_description">To use Watch features, you need to install the Essentials companion app on your Wear OS watch. Click the button below to open the Play Store directly on your watch.</string>
+    <string name="watch_help_open_play_store">Open on Watch</string>
     <string name="cat_interaction">Interacción</string>
     <string name="cat_interface">Interfaz</string>
     <string name="cat_display">Pantalla</string>
