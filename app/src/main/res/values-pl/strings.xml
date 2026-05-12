@@ -1119,7 +1119,7 @@
     <string name="location_reached_fsi_desc">Wymagane, aby obudzić urządzenie po przyjeździe. Kliknij, aby przyznać.</string>
     <string name="location_reached_dist_m">%1$d M</string>
     <string name="location_reached_dist_km">%1$.1f km</string>
-    <string name="location_reached_service_title">Travelling to %1$s</string>
+    <string name="location_reached_service_title">Aktywny alarm podróżny</string>
     <string name="location_reached_service_remaining">%1$s pozostałe (%2$d%%)</string>
     <string name="location_reached_channel_name">Postęp podróży</string>
     <string name="location_reached_channel_desc">Pokazuje w czasie rzeczywistym odległość do celu</string>
