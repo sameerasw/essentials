@@ -29,6 +29,7 @@ fun initPermissionRegistry() {
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_dynamic_night_light_title)
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.tile_developer_options)
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.tile_charge_optimization)
+    PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_lock_screen_clock_title)
 
     // Shizuku permission
     PermissionRegistry.register("SHIZUKU", R.string.feat_freeze_title)

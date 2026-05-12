@@ -1114,7 +1114,7 @@
     <string name="location_reached_fsi_desc">Vereist voor het wekken van je apparaat bij aankomst. Klikken om toestemmingen te geven.</string>
     <string name="location_reached_dist_m">%1$d m</string>
     <string name="location_reached_dist_km">%1$.1f km</string>
-    <string name="location_reached_service_title">Travel Alarm active</string>
+    <string name="location_reached_service_title">Travelling to %1$s</string>
     <string name="location_reached_service_remaining">%1$s resterend (%2$d%%)</string>
     <string name="location_reached_channel_name">Reisvoortgang</string>
     <string name="location_reached_channel_desc">Laat de realtime afstand tot de bestemming zien</string>

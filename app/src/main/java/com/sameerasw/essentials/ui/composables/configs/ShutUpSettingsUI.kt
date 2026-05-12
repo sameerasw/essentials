@@ -152,7 +152,8 @@ fun ShutUpSettingsUI(
                 config = configs.find { it.packageName == selectedConfigForEditing?.packageName } ?: selectedConfigForEditing!!,
                 onConfigChanged = { viewModel.updateShutUpConfig(it) },
                 onCreateShortcut = { viewModel.createShutUpShortcut(context, it) },
-                isFrozen = isFrozen
+                isFrozen = isFrozen,
+                viewModel = viewModel
             )
         }
     }

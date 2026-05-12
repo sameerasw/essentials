@@ -1114,7 +1114,7 @@
     <string name="location_reached_fsi_desc">مطلوب لتنبيه جهازك عند الوصول. انقر للمنح.</string>
     <string name="location_reached_dist_m">%1$d م</string>
     <string name="location_reached_dist_km">%1$.1f كم</string>
-    <string name="location_reached_service_title">إنذار السفر نشط</string>
+    <string name="location_reached_service_title">Travelling to %1$s</string>
     <string name="location_reached_service_remaining">%1$s المتبقي (%2$d%%)</string>
     <string name="location_reached_channel_name">تقدم السفر</string>
     <string name="location_reached_channel_desc">يظهر المسافة في الوقت الحقيقي إلى الوجهة</string>

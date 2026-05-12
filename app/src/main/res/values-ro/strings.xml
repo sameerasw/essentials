@@ -1114,7 +1114,7 @@
     <string name="location_reached_fsi_desc">Este necesar să vă treziți dispozitivul la sosire. Atingeți pentru a acorda.</string>
     <string name="location_reached_dist_m">%1$d m</string>
     <string name="location_reached_dist_km">%1$.1f km</string>
-    <string name="location_reached_service_title">Alarma de călătorie activă</string>
+    <string name="location_reached_service_title">Travelling to %1$s</string>
     <string name="location_reached_service_remaining">%1$s rămas (%2$d%%)</string>
     <string name="location_reached_channel_name">Progresul călătoriei</string>
     <string name="location_reached_channel_desc">Afișează distanța în timp real până la destinație</string>

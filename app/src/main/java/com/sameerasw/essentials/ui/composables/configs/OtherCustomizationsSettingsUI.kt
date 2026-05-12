@@ -37,6 +37,7 @@ enum class PermissionModule {
     HIDE_GESTURE_BAR,
     SHOW_ON_LAUNCHER,
     CIRCLE_TO_SEARCH,
+    DISABLE_ROTATION_SUGGESTION,
     NONE
 }
 
@@ -111,6 +112,7 @@ fun OtherCustomizationsSettingsUI(
                 listOf(shizukuPermission, appDetectionPermission)
             }
             PermissionModule.CIRCLE_TO_SEARCH -> listOf(shizukuPermission, accessibilityPermission)
+            PermissionModule.DISABLE_ROTATION_SUGGESTION -> listOf(shizukuPermission)
             else -> emptyList()
         }
 
@@ -217,6 +219,27 @@ fun OtherCustomizationsSettingsUI(
                 },
                 iconRes = R.drawable.rounded_touch_app_24,
                 modifier = Modifier.highlight(highlightSetting == "circle_to_search_gesture_toggle")
+            )
+
+            IconToggleItem(
+                title = stringResource(R.string.feat_disable_rotation_suggestion_title),
+                description = stringResource(R.string.feat_disable_rotation_suggestion_desc),
+                isChecked = viewModel.isDisableRotationSuggestionEnabled.value,
+                onCheckedChange = { enabled ->
+                    if (viewModel.isWriteSecureSettingsEnabled.value || viewModel.isShizukuPermissionGranted.value || viewModel.isRootPermissionGranted.value) {
+                        viewModel.setDisableRotationSuggestionEnabled(enabled, context)
+                    } else {
+                        requestingPermissionFor = PermissionModule.DISABLE_ROTATION_SUGGESTION
+                    }
+                },
+                enabled = true,
+                onDisabledClick = {
+                    if (!viewModel.isWriteSecureSettingsEnabled.value && !viewModel.isShizukuPermissionGranted.value && !viewModel.isRootPermissionGranted.value) {
+                        requestingPermissionFor = PermissionModule.DISABLE_ROTATION_SUGGESTION
+                    }
+                },
+                iconRes = R.drawable.rounded_mobile_rotate_24,
+                modifier = Modifier.highlight(highlightSetting == "disable_rotation_suggestion_toggle")
             )
 
             AnimatedVisibility(

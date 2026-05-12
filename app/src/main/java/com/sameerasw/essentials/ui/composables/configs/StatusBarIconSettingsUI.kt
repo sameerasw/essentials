@@ -328,13 +328,12 @@ fun StatusBarIconSettingsUI(
                         color = MaterialTheme.colorScheme.surfaceBright,
                         shape = androidx.compose.foundation.shape.RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd)
                     )
-                    .padding(16.dp)
                     .highlight(highlightSetting == "battery_percentage")
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 8.dp),
+                        .padding(top =  16.dp, start = 20.dp, end = 16.dp, bottom = 2.dp),
                     verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
                 ) {
                     Text(

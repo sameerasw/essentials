@@ -1,6 +1,7 @@
 package com.sameerasw.essentials.ui.components.pickers
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -66,7 +67,7 @@ fun <T> SegmentedPicker(
                         iconProvider(item)
                         androidx.compose.foundation.layout.Spacer(Modifier.padding(end = 8.dp))
                     }
-                    Text(labelProvider(item), fontSize = dimensionResource(R.dimen.font_small).value.sp)
+                    Text(labelProvider(item), fontSize = dimensionResource(R.dimen.font_small).value.sp, modifier= Modifier.basicMarquee(), maxLines = 1)
                 }
             }
         }

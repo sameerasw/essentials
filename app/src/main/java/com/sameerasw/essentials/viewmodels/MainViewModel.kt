@@ -139,6 +139,15 @@ class MainViewModel : ViewModel() {
     val isCircleToSearchGestureEnabled = mutableStateOf(false)
     val circleToSearchGestureHeight = mutableFloatStateOf(48f)
     val isCircleToSearchPreviewEnabled = mutableStateOf(false)
+    val isDisableRotationSuggestionEnabled = mutableStateOf(false)
+    val lockScreenClockId = mutableStateOf<String?>(null)
+    val lockScreenClockWeight = mutableIntStateOf(300)
+    val lockScreenClockWidth = mutableIntStateOf(116)
+    val lockScreenClockGrade = mutableIntStateOf(0)
+    val lockScreenClockRoundness = mutableIntStateOf(100)
+    val lockScreenClockColorTone = mutableIntStateOf(75)
+    val lockScreenClockSelectedColorId = mutableStateOf("DEFAULT")
+    val lockScreenClockSeedColor = mutableIntStateOf(0)
 
     // Live Wallpaper
     val liveWallpaperSelectedVideo = mutableStateOf(SettingsRepository.LIVE_WALLPAPER_DEFAULT_VIDEO)
@@ -147,6 +156,7 @@ class MainViewModel : ViewModel() {
 
     val shutUpConfigs = mutableStateOf<List<com.sameerasw.essentials.domain.model.ShutUpAppConfig>>(emptyList())
     val isShutUpLoading = mutableStateOf(false)
+    val isShutUpAttemptShizukuRestart = mutableStateOf(true)
 
 
 
@@ -545,6 +555,14 @@ class MainViewModel : ViewModel() {
                         liveWallpaperCustomVideos.clear()
                         liveWallpaperCustomVideos.addAll(settingsRepository.getLiveWallpaperCustomVideos())
                     }
+
+                    SettingsRepository.KEY_SHUT_UP_ATTEMPT_SHIZUKU_RESTART -> {
+                        isShutUpAttemptShizukuRestart.value = settingsRepository.isShutUpAttemptShizukuRestartEnabled()
+                    }
+                    SettingsRepository.KEY_DISABLE_ROTATION_SUGGESTION -> {
+                        isDisableRotationSuggestionEnabled.value = settingsRepository.getBoolean(key)
+                        appContext?.let { applyDisableRotationSuggestion(it, isDisableRotationSuggestionEnabled.value) }
+                    }
                 }
             }
         }
@@ -576,6 +594,11 @@ class MainViewModel : ViewModel() {
         loadShutUpConfigs()
     }
 
+    fun setShutUpAttemptShizukuRestartEnabled(enabled: Boolean) {
+        isShutUpAttemptShizukuRestart.value = enabled
+        settingsRepository.setShutUpAttemptShizukuRestartEnabled(enabled)
+    }
+
     fun saveShutUpSelectedApps(context: Context, apps: List<AppSelection>) {
         val currentConfigs = settingsRepository.loadShutUpConfigs().associateBy { it.packageName }
         val newConfigs = apps.filter { it.isEnabled }.map {
@@ -600,16 +623,11 @@ class MainViewModel : ViewModel() {
         }
 
         if (androidx.core.content.pm.ShortcutManagerCompat.isRequestPinShortcutSupported(context)) {
-            val appIcon = try {
-                val drawable = context.packageManager.getApplicationIcon(config.packageName)
-                AppUtil.drawableToBitmap(drawable)
-            } catch (e: Exception) {
-                null
-            }
+            val appIcon = AppUtil.getShortcutIcon(context, config.packageName)
 
             val pinShortcutInfo = androidx.core.content.pm.ShortcutInfoCompat.Builder(context, config.packageName)
                 .setShortLabel(appName)
-                .setIcon(if (appIcon != null) androidx.core.graphics.drawable.IconCompat.createWithBitmap(appIcon) else androidx.core.graphics.drawable.IconCompat.createWithResource(context, R.drawable.rounded_volume_off_24))
+                .setIcon(androidx.core.graphics.drawable.IconCompat.createWithBitmap(appIcon))
                 .setIntent(intent)
                 .build()
 
@@ -643,6 +661,16 @@ class MainViewModel : ViewModel() {
         isHideGestureBarOnLauncherEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_HIDE_GESTURE_BAR_ON_LAUNCHER_ENABLED, false)
         notificationLightingSystemMode.intValue = settingsRepository.getNotificationLightingSystemMode()
         
+        isShutUpAttemptShizukuRestart.value = settingsRepository.isShutUpAttemptShizukuRestartEnabled()
+        isDisableRotationSuggestionEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_DISABLE_ROTATION_SUGGESTION, false)
+        lockScreenClockId.value = readCurrentLockScreenClockId(context)
+        lockScreenClockWeight.intValue = settingsRepository.getLockScreenClockWeight()
+        lockScreenClockWidth.intValue = settingsRepository.getLockScreenClockWidth()
+        lockScreenClockGrade.intValue = settingsRepository.getLockScreenClockGrade()
+        lockScreenClockRoundness.intValue = settingsRepository.getLockScreenClockRoundness()
+        lockScreenClockColorTone.intValue = settingsRepository.getLockScreenClockColorTone()
+        lockScreenClockSelectedColorId.value = settingsRepository.getLockScreenClockSelectedColorId()
+        lockScreenClockSeedColor.intValue = settingsRepository.getLockScreenClockSeedColor()
         loadShutUpConfigs()
 
         if (isHideGestureBarEnabled.value) {
@@ -1427,6 +1455,157 @@ class MainViewModel : ViewModel() {
         }
         
         updateAppDetectionService(context)
+    }
+
+    fun setDisableRotationSuggestionEnabled(enabled: Boolean, context: Context) {
+        isDisableRotationSuggestionEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_DISABLE_ROTATION_SUGGESTION, enabled)
+        applyDisableRotationSuggestion(context, enabled)
+    }
+
+    private fun applyDisableRotationSuggestion(context: Context, enabled: Boolean) {
+        val value = if (enabled) 0 else 1
+        val key = "show_rotation_suggestions"
+
+        var success = false
+        if (PermissionUtils.canWriteSecureSettings(context)) {
+            try {
+                success = Settings.Secure.putInt(context.contentResolver, key, value)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        if (!success) {
+            val command = "settings put secure $key $value"
+            if (ShizukuUtils.hasPermission()) {
+                ShizukuUtils.runCommand(command)
+            } else if (RootUtils.isRootPermissionGranted()) {
+                RootUtils.runCommand(command)
+            }
+        }
+    }
+
+    fun setLockScreenClockId(clockId: String, context: Context) {
+        val timestamp = System.currentTimeMillis()
+        val json = if (lockScreenClockSelectedColorId.value == "DEFAULT") {
+            "{\"clockId\":\"$clockId\",\"metadata\":{\"metadataSelectedColorId\":\"DEFAULT\",\"metadataColorToneProgress\":${lockScreenClockColorTone.intValue},\"appliedTimestamp\":$timestamp},\"axes\":[{\"key\":\"wght\",\"value\":${lockScreenClockWeight.intValue}},{\"key\":\"wdth\",\"value\":${lockScreenClockWidth.intValue}},{\"key\":\"ROND\",\"value\":${lockScreenClockRoundness.intValue}}]}"
+        } else {
+            "{\"clockId\":\"$clockId\",\"seedColor\":${lockScreenClockSeedColor.intValue},\"metadata\":{\"metadataSelectedColorId\":\"${lockScreenClockSelectedColorId.value}\",\"metadataColorToneProgress\":${lockScreenClockColorTone.intValue},\"appliedTimestamp\":$timestamp},\"axes\":[{\"key\":\"wght\",\"value\":${lockScreenClockWeight.intValue}},{\"key\":\"wdth\",\"value\":${lockScreenClockWidth.intValue}},{\"key\":\"ROND\",\"value\":${lockScreenClockRoundness.intValue}}]}"
+        }
+        val command = "settings put secure lock_screen_custom_clock_face '$json'"
+        var success = false
+
+        if (PermissionUtils.canWriteSecureSettings(context)) {
+            try {
+                success = Settings.Secure.putString(
+                    context.contentResolver,
+                    "lock_screen_custom_clock_face",
+                    json
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        if (!success) {
+            if (ShizukuUtils.hasPermission()) {
+                ShizukuUtils.runCommand(command)
+                success = true
+            } else if (RootUtils.isRootPermissionGranted()) {
+                RootUtils.runCommand(command)
+                success = true
+            }
+        }
+
+        if (success) {
+            lockScreenClockId.value = clockId
+        }
+    }
+
+    fun setLockScreenClockWeight(value: Int, context: Context) {
+        lockScreenClockWeight.intValue = value
+        settingsRepository.setLockScreenClockWeight(value)
+        lockScreenClockId.value?.let { setLockScreenClockId(it, context) }
+    }
+
+    fun setLockScreenClockWidth(value: Int, context: Context) {
+        lockScreenClockWidth.intValue = value
+        settingsRepository.setLockScreenClockWidth(value)
+        lockScreenClockId.value?.let { setLockScreenClockId(it, context) }
+    }
+
+    fun setLockScreenClockGrade(value: Int, context: Context) {
+        lockScreenClockGrade.intValue = value
+        settingsRepository.setLockScreenClockGrade(value)
+        lockScreenClockId.value?.let { setLockScreenClockId(it, context) }
+    }
+
+    fun setLockScreenClockRoundness(value: Int, context: Context) {
+        lockScreenClockRoundness.intValue = value
+        settingsRepository.setLockScreenClockRoundness(value)
+        lockScreenClockId.value?.let { setLockScreenClockId(it, context) }
+    }
+
+    fun setLockScreenClockColorTone(value: Int, context: Context) {
+        lockScreenClockColorTone.intValue = value
+        settingsRepository.setLockScreenClockColorTone(value)
+
+        // Update effective seed color based on new tone
+        if (lockScreenClockSelectedColorId.value != "DEFAULT") {
+            val effectiveSeed = calculateEffectiveSeedColor(lockScreenClockSelectedColorId.value, value)
+            lockScreenClockSeedColor.intValue = effectiveSeed
+            settingsRepository.setLockScreenClockSeedColor(effectiveSeed)
+        }
+
+        lockScreenClockId.value?.let { setLockScreenClockId(it, context) }
+    }
+
+    fun setLockScreenClockColor(id: String, seed: Int, context: Context) {
+        lockScreenClockSelectedColorId.value = id
+        val effectiveSeed = if (id == "DEFAULT") 0 else calculateEffectiveSeedColor(id, lockScreenClockColorTone.intValue)
+        lockScreenClockSeedColor.intValue = effectiveSeed
+        settingsRepository.setLockScreenClockSelectedColorId(id)
+        settingsRepository.setLockScreenClockSeedColor(effectiveSeed)
+        lockScreenClockId.value?.let { setLockScreenClockId(it, context) }
+    }
+
+    private fun calculateEffectiveSeedColor(colorId: String, tone: Int): Int {
+        val baseColor = when (colorId) {
+            "RED" -> android.graphics.Color.parseColor("#E57373")
+            "GREEN" -> android.graphics.Color.parseColor("#81C784")
+            "BLUE" -> android.graphics.Color.parseColor("#64B5F6")
+            "YELLOW" -> android.graphics.Color.parseColor("#FFF176")
+            "ORANGE" -> android.graphics.Color.parseColor("#FFB74D")
+            "PURPLE" -> android.graphics.Color.parseColor("#BA68C8")
+            "PINK" -> android.graphics.Color.parseColor("#F06292")
+            "TEAL" -> android.graphics.Color.parseColor("#4DB6AC")
+            else -> return 0
+        }
+        val hsv = FloatArray(3)
+        android.graphics.Color.colorToHSV(baseColor, hsv)
+
+        // Calibrated HSV mapping to match user examples:
+        // Tone 0  -> Saturation ~0.8, Value ~0.35 (Dark, saturated)
+        // Tone 100 -> Saturation ~0.2, Value ~1.0  (Light, pastel)
+        hsv[1] = (0.8f - (tone / 100f) * 0.6f).coerceIn(0f, 1f)
+        hsv[2] = (0.35f + (tone / 100f) * 0.65f).coerceIn(0f, 1f)
+
+        return android.graphics.Color.HSVToColor(hsv)
+    }
+
+    private fun readCurrentLockScreenClockId(context: Context): String? {
+        return try {
+            val raw = Settings.Secure.getString(
+                context.contentResolver,
+                "lock_screen_custom_clock_face"
+            ) ?: return null
+            // Extract clockId from JSON string like {"clockId":"DIGITAL_CLOCK_WEATHER"}
+            val match = Regex(""""clockId":\s*"([^"]+)"""").find(raw)
+            match?.groupValues?.getOrNull(1)
+        } catch (e: Exception) {
+            null
+        }
     }
 
     private fun applyHideGestureBar(context: Context, enabled: Boolean) {

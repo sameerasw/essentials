@@ -150,4 +150,19 @@ class LocationReachedRepository(context: Context) {
             saveAlarms(alarms)
         }
     }
+
+    fun updatePausedState(alarmId: String, isPaused: Boolean) {
+        val alarms = getAlarms().toMutableList()
+        val index = alarms.indexOfFirst { it.id == alarmId }
+        if (index != -1) {
+            alarms[index] = alarms[index].copy(isPaused = isPaused)
+            saveAlarms(alarms)
+        }
+        
+        // Also update temp alarm if it matches
+        val currentTemp = _tempAlarm.value
+        if (currentTemp?.id == alarmId) {
+            _tempAlarm.value = currentTemp.copy(isPaused = isPaused)
+        }
+    }
 }

@@ -106,21 +106,6 @@ object FeatureRegistry {
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
         },
         object : Feature(
-            id = "Shut-Up!",
-            title = R.string.feat_shut_up_title,
-            iconRes = R.drawable.rounded_domino_mask_24,
-            category = R.string.cat_system,
-            description = R.string.feat_shut_up_desc,
-            aboutDescription = R.string.shut_up_description,
-            permissionKeys = listOf("WRITE_SECURE_SETTINGS", "USAGE_STATS"),
-            showToggle = false,
-            hasMoreSettings = true,
-            parentFeatureId = "Security"
-        ) {
-            override fun isEnabled(viewModel: MainViewModel) = true
-            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
-        },
-        object : Feature(
             id = "Notifications",
             title = R.string.feat_notifications_alerts_title,
             iconRes = R.drawable.rounded_notification_sound_24,
@@ -228,6 +213,20 @@ object FeatureRegistry {
                     R.array.keywords_restore_default
                 )
             ),
+            showToggle = false,
+            parentFeatureId = "Display"
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = true
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+        },
+        object : Feature(
+            id = "Lock screen clock",
+            title = R.string.feat_lock_screen_clock_title,
+            iconRes = R.drawable.rounded_nest_clock_farsight_analog_24,
+            category = R.string.cat_interface,
+            description = R.string.feat_lock_screen_clock_desc,
+            aboutDescription = R.string.about_desc_lock_screen_clock,
+            permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
             showToggle = false,
             parentFeatureId = "Display"
         ) {
@@ -826,13 +825,29 @@ object FeatureRegistry {
 
             override fun isEnabled(viewModel: MainViewModel) = viewModel.isAppLockEnabled.value
             override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
-                if (viewModel.isUseUsageAccess.value)
+                (if (viewModel.isUseUsageAccess.value)
                     viewModel.isUsageStatsPermissionGranted.value
                 else
-                    viewModel.isAccessibilityEnabled.value
+                    viewModel.isAccessibilityEnabled.value)
 
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
                 viewModel.setAppLockEnabled(enabled, context)
+        },
+        object : Feature(
+            id = "Shut-Up!",
+            title = R.string.feat_shut_up_title,
+            iconRes = R.drawable.rounded_domino_mask_24,
+            category = R.string.cat_system,
+            description = R.string.feat_shut_up_desc,
+            aboutDescription = R.string.shut_up_description,
+            permissionKeys = listOf("WRITE_SECURE_SETTINGS", "USAGE_STATS"),
+            showToggle = false,
+            hasMoreSettings = true,
+            isBeta = true,
+            parentFeatureId = "Security"
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = true
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
         },
 
         object : Feature(
