@@ -735,6 +735,8 @@
     <string name="location_reached_restart_btn">Yeniden başlat</string>
     <string name="location_reached_instructional_desc">Google Haritalar\'dan koordinatları (İşaretlenmiş nokta) Essentials\'a paylaşarak hedef olarak kaydedin.\n\nGösterilen mesafe, varış noktasına olan doğrudan mesafedir, karayolları üzerinden kat edilen mesafe değildir.\n\nZaman ve mesafe hesaplamalarının her zaman doğru olmayabileceği için, bu hesaplamaları ihtiyatla değerlendirin.</string>
     <string name="tile_location_reached">Henüz orada mıyız?</string>
+    <string name="location_reached_pause">Pause</string>
+    <string name="location_reached_resume">Resume</string>
     <string name="location_reached_radius_label">Yarıçap: %1$d m</string>
     <string name="location_reached_distance_label">Hedefe olan mesafe: %1$s</string>
     <string name="location_reached_last_travelled">Son: %1$s</string>
@@ -1118,7 +1120,7 @@
     <string name="location_reached_fsi_desc">Varışta cihazınızı uyandırmak için gereklidir. Vermek için dokunun.</string>
     <string name="location_reached_dist_m">%1$d M</string>
     <string name="location_reached_dist_km">%1$.1f km</string>
-    <string name="location_reached_service_title">Seyahat alarmı etkin</string>
+    <string name="location_reached_service_title">Travelling to %1$s</string>
     <string name="location_reached_service_remaining">%1$s kalan (%2$d%%)</string>
     <string name="location_reached_channel_name">Seyahat İlerlemesi</string>
     <string name="location_reached_channel_desc">Hedefe olan gerçek zamanlı mesafeyi gösterir</string>
@@ -1225,6 +1227,7 @@
     <string name="watch_no_companion_title">İzleme algılanmadı</string>
     <string name="watch_no_companion_desc">Saatinizde Essentials Wear yardımcı uygulamasının yüklü olmadığı anlaşılıyor.</string>
     <string name="watch_install_companion_action">Tamamlayıcıyı Yükle</string>
+    <string name="action_download_from_github">Download from GitHub</string>
     <string name="watch_help_title">Install on Watch</string>
     <string name="watch_help_description">To use Watch features, you need to install the Essentials companion app on your Wear OS watch. Click the button below to open the Play Store directly on your watch.</string>
     <string name="watch_help_open_play_store">Open on Watch</string>
