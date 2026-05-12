@@ -225,6 +225,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                     // Help Sheet State
                     var showHelpSheet by remember { mutableStateOf(false) }
                     var showInstructionsSheet by remember { mutableStateOf(false) }
+                    var showWatchInstallHelpSheet by remember { mutableStateOf(false) }
                     var selectedHelpFeature by remember {
                         mutableStateOf<com.sameerasw.essentials.domain.model.Feature?>(
                             null
@@ -323,6 +324,12 @@ class FeatureSettingsActivity : AppCompatActivity() {
                     if (showInstructionsSheet) {
                         com.sameerasw.essentials.ui.components.sheets.InstructionsBottomSheet(
                             onDismissRequest = { showInstructionsSheet = false }
+                        )
+                    }
+
+                    if (showWatchInstallHelpSheet) {
+                        com.sameerasw.essentials.ui.components.sheets.WatchInstallHelpBottomSheet(
+                            onDismissRequest = { showWatchInstallHelpSheet = false }
                         )
                     }
 
@@ -706,7 +713,9 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                 .align(Alignment.BottomCenter)
                                 .zIndex(1f),
                             onHelpClick = {
-                                if (hasMenu) {
+                                if (featureId == "Watch") {
+                                    showWatchInstallHelpSheet = true
+                                } else if (hasMenu) {
                                     selectedHelpFeature = featureObj
                                     showHelpSheet = true
                                 } else {

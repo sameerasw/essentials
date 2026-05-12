@@ -100,8 +100,9 @@ fun WatchSettingsUI(
                         color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
                         modifier = Modifier.padding(top = 4.dp, bottom = 12.dp)
                     )
+                    val context = LocalContext.current
                     Button(
-                        onClick = { uriHandler.openUri("https://github.com/sameerasw/essentials-wear") },
+                        onClick = { viewModel.openPlayStoreOnWatch(context) },
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.onPrimary,

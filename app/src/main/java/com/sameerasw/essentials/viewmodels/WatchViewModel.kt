@@ -31,4 +31,13 @@ class WatchViewModel : ViewModel() {
             connectedWatchName.value = null
         }
     }
+
+    fun openPlayStoreOnWatch(context: Context) {
+        val intent = android.content.Intent(android.content.Intent.ACTION_VIEW)
+            .setData(android.net.Uri.parse("market://details?id=com.sameerasw.essentials"))
+            .addCategory(android.content.Intent.CATEGORY_BROWSABLE)
+
+        val remoteActivityHelper = androidx.wear.remote.interactions.RemoteActivityHelper(context)
+        remoteActivityHelper.startRemoteActivity(intent)
+    }
 }
