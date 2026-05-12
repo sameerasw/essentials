@@ -1224,6 +1224,9 @@
     <string name="watch_no_companion_title">Nebyly zjištěny žádné hodinky</string>
     <string name="watch_no_companion_desc">Zdá se, že v hodinkách nemáte nainstalovanou doprovodnou aplikaci Essentials Wear.</string>
     <string name="watch_install_companion_action">Nainstalujte Companion</string>
+    <string name="watch_help_title">Install on Watch</string>
+    <string name="watch_help_description">To use Watch features, you need to install the Essentials companion app on your Wear OS watch. Click the button below to open the Play Store directly on your watch.</string>
+    <string name="watch_help_open_play_store">Open on Watch</string>
     <string name="cat_interaction">Interakce</string>
     <string name="cat_interface">Rozhraní</string>
     <string name="cat_display">Zobrazit</string>
