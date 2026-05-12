@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="label_beta">БЕТА</string>
+    <string name="shut_up_attempt_shizuku_restart">Attempt Shizuku restart</string>
+    <string name="shut_up_shizuku_restart_warning_title">Shizuku Restart Warning</string>
+    <string name="shut_up_shizuku_restart_warning_message">Since wireless debugging was toggled, Shizuku services might not have started automatically causing freezing to not function. Consider turning on attempt shizuku restart as well</string>
     <string name="accessibility_service_description"><b>Служба специальных возможностей Essentials</b>\n\nЭта служба необходима для следующих функций:\n\n<b>• Переназначение физических кнопок:</b>\nОбнаруживает нажатие кнопок громкости, даже если экран выключен, чтобы вызывать такие действия, как фонарик.\n\n<b>• Индивидуальные настройки приложений:</b>\nОтслеживает текущее активное приложение для применения конкретных профилей для Динамической ночной подсветки, Цвета подсветки уведомлений и блокировку приложений.\n\n<b>• Контроль экрана:</b>\nПозволяет приложению блокировать экран (например, через двойное нажатие или виджет) и обнаруживать изменения состояния экрана.\n\n<b>• Безопасность:</b>\nПредотвращает несанкционированные изменения, обнаруживая содержимое окна, когда устройство заблокировано.\n\n<small>Никакой вводимый текст или конфиденциальные данные не собираются и не передаются.</small></string>
     <string name="freeze_activity_title">Заморозка приложений</string>
     <string name="freeze_activity_subtitle">Отключить редко используемые приложения</string>
