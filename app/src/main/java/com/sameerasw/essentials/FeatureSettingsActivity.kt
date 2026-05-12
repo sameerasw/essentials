@@ -700,6 +700,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
 
                         EssentialsFloatingToolbar(
                             title = pageTitle,
+                            isBeta = featureObj?.isBeta ?: false,
                             onBackClick = { finish() },
                             modifier = Modifier
                                 .align(Alignment.BottomCenter)

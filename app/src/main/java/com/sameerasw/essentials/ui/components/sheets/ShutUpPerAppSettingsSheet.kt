@@ -50,7 +50,7 @@ fun ShutUpPerAppSettingsSheet(
                     iconRes = R.drawable.rounded_settings_24,
                     title = stringResource(R.string.shut_up_disable_dev_options),
                     isChecked = currentConfig.disableDevOptions,
-                    onCheckedChange = { 
+                    onCheckedChange = {
                         val newConfig = currentConfig.copy(disableDevOptions = it)
                         currentConfig = newConfig
                         onConfigChanged(newConfig)
@@ -60,7 +60,7 @@ fun ShutUpPerAppSettingsSheet(
                     iconRes = R.drawable.rounded_adb_24,
                     title = stringResource(R.string.shut_up_disable_usb_debugging),
                     isChecked = currentConfig.disableUsbDebugging,
-                    onCheckedChange = { 
+                    onCheckedChange = {
                         val newConfig = currentConfig.copy(disableUsbDebugging = it)
                         currentConfig = newConfig
                         onConfigChanged(newConfig)
@@ -70,22 +70,41 @@ fun ShutUpPerAppSettingsSheet(
                     iconRes = R.drawable.rounded_android_wifi_4_bar_plus_24,
                     title = stringResource(R.string.shut_up_disable_wireless_debugging),
                     isChecked = currentConfig.disableWirelessDebugging,
-                    onCheckedChange = { 
+                    onCheckedChange = {
                         val newConfig = currentConfig.copy(disableWirelessDebugging = it)
                         currentConfig = newConfig
                         onConfigChanged(newConfig)
                     }
                 )
+//                if (currentConfig.disableWirelessDebugging){
+//                    IconToggleItem(
+//                        iconRes = R.drawable.rounded_adb_24,
+//                        title = stringResource(R.string.shut_up_auto_archive_notif_title),
+//                        isChecked = restartShizuku,
+//                        onCheckedChange = {
+//                            val newConfig = currentConfig.copy(autoArchive = it)
+//                            currentConfig = newConfig
+//                            onConfigChanged(newConfig)
+//                        }
+//                    )
+//                }
                 IconToggleItem(
                     iconRes = R.drawable.rounded_settings_accessibility_24,
                     title = stringResource(R.string.shut_up_disable_accessibility),
                     isChecked = currentConfig.disableAccessibility,
-                    onCheckedChange = { 
+                    onCheckedChange = {
                         val newConfig = currentConfig.copy(disableAccessibility = it)
                         currentConfig = newConfig
                         onConfigChanged(newConfig)
                     }
                 )
+            }
+
+            RoundedCardContainer(
+                modifier = Modifier,
+                spacing = 2.dp,
+                cornerRadius = 24.dp
+            ) {
                 IconToggleItem(
                     iconRes = R.drawable.rounded_snowflake_24,
                     title = stringResource(R.string.shut_up_auto_archive_notif_title),

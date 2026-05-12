@@ -115,6 +115,7 @@ object FeatureRegistry {
             permissionKeys = listOf("WRITE_SECURE_SETTINGS", "USAGE_STATS"),
             showToggle = false,
             hasMoreSettings = true,
+            isBeta = true,
             parentFeatureId = "Security"
         ) {
             override fun isEnabled(viewModel: MainViewModel) = true
