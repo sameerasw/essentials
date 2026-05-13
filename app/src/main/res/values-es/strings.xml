@@ -71,11 +71,11 @@
     <string name="essentials_on_display_respect_notifications_title">Respetar las nuevas notificaciones</string>
     <string name="essentials_on_display_respect_notifications_desc">Desactivar temporalmente ante nuevas notificaciones</string>
     <string name="essentials_on_display_random_shapes_title">Formas aleatorias</string>
-    <string name="essentials_on_display_random_shapes_desc">Usar varias formas de Material 3 para la carátula del álbum</string>
+    <string name="essentials_on_display_random_shapes_desc">Usar varias formas de Material You para la carátula del álbum</string>
     <string name="essentials_on_display_album_art_title">Carátula del álbum</string>
     <string name="essentials_on_display_clock_title">Reloj</string>
     <string name="essentials_on_display_force_fill_while_charging_title">Usar siempre mientras se carga</string>
-    <string name="essentials_on_display_force_fill_while_charging_desc">Force Fill mode when the device is plugged in regardless of the selected mode</string>
+    <string name="essentials_on_display_force_fill_while_charging_desc">Forzar el modo Relleno cuando el dispositivo esté conectado, sin importar el modo seleccionado</string>
     <string name="label_size">Tamaño</string>
     <string name="feat_notification_glance_title">Vista rápida de notificaciones</string>
     <string name="feat_notification_glance_desc">Mantener AOD activado mientras las notificaciones estén pendientes</string>
