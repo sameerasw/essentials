@@ -119,7 +119,8 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
                         buttonRemapHandler.handleExternalVolumeLongPress(intent)
                     }
 
-                    "SHOW_AMBIENT_GLANCE" -> {
+                    "SHOW_AMBIENT_GLANCE",
+                    "HIDE_AMBIENT_GLANCE_TEMPORARILY" -> {
                         ambientGlanceHandler.handleIntent(intent)
                     }
 
@@ -143,6 +144,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
             addAction(Intent.ACTION_USER_PRESENT)
             addAction(InputEventListenerService.ACTION_VOLUME_LONG_PRESSED)
             addAction("SHOW_AMBIENT_GLANCE")
+            addAction("HIDE_AMBIENT_GLANCE_TEMPORARILY")
             addAction("FORCE_TURN_OFF_AOD")
             addAction(FlashlightActionReceiver.ACTION_TOGGLE)
             addAction(FlashlightActionReceiver.ACTION_OFF)

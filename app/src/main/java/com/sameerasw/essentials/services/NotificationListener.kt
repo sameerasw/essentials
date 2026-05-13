@@ -617,6 +617,7 @@ class NotificationListener : NotificationListenerService() {
         if (sbn.packageName == packageName) {
             return
         }
+        handleRespectNotifications(sbn)
 
         val prefs =
             applicationContext.getSharedPreferences("essentials_prefs", MODE_PRIVATE)
@@ -675,6 +676,7 @@ class NotificationListener : NotificationListenerService() {
 
             if (isMedia) {
                 handleMediaUpdate(sbn)
+                handleCallVibrations(sbn)
                 return
             }
 
@@ -1184,6 +1186,39 @@ class NotificationListener : NotificationListenerService() {
             }
         } catch (e: Exception) {
             emptyList()
+        }
+    }
+
+    private fun handleRespectNotifications(sbn: StatusBarNotification) {
+        try {
+            val notification = sbn.notification
+            val extras = notification.extras
+            val isMedia = extras.containsKey(Notification.EXTRA_MEDIA_SESSION) ||
+                    extras.getString(Notification.EXTRA_TEMPLATE) == "android.app.Notification\$MediaStyle"
+            
+            // Do not hide for media or calls as they are handled/displayed by EOD already
+            if (isMedia || sbn.packageName.contains("telecom") || sbn.packageName.contains("dialer")) return
+
+            val prefs = getSharedPreferences(SettingsRepository.PREFS_NAME, MODE_PRIVATE)
+            val respectEnabled = prefs.getBoolean(SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_RESPECT_NOTIFICATIONS, false)
+            if (!respectEnabled) return
+
+            val isDocked = prefs.getBoolean(SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_DOCKED_MODE, false)
+            if (!isDocked) return
+
+            // Criteria: Non-silent or Lighting logic
+            val isLightingOn = prefs.getBoolean(SettingsRepository.KEY_EDGE_LIGHTING_ENABLED, false)
+            val shouldHide = if (isLightingOn) {
+                isAppSelectedForNotificationLighting(sbn.packageName)
+            } else {
+                !sbn.isOngoing && sbn.notification.priority >= Notification.PRIORITY_DEFAULT
+            }
+
+            if (shouldHide) {
+                sendBroadcast(Intent("HIDE_AMBIENT_GLANCE_TEMPORARILY").setPackage(packageName))
+            }
+        } catch (e: Exception) {
+            Log.e("NotificationListener", "Error in handleRespectNotifications", e)
         }
     }
 }

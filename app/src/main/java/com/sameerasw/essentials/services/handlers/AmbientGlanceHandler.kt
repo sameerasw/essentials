@@ -46,6 +46,25 @@ class AmbientGlanceHandler(
         volumeStrokeView?.animate()?.alpha(0f)?.setDuration(500)?.start()
     }
 
+    private val temporaryHideRunnable = Runnable {
+        if (overlayView != null) {
+            // Check if media is still playing
+            val mediaSessionManager =
+                service.getSystemService(Context.MEDIA_SESSION_SERVICE) as MediaSessionManager
+            val componentName =
+                android.content.ComponentName(service, ScreenOffAccessibilityService::class.java)
+            val sessions = mediaSessionManager.getActiveSessions(componentName)
+            val isPlaying =
+                sessions.any { it.playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING }
+
+            if (isPlaying) {
+                overlayView?.animate()?.alpha(1f)?.setDuration(500)?.start()
+            } else {
+                fadeOutAndRemove()
+            }
+        }
+    }
+
     private var clockView: android.widget.TextClock? = null
     private var centerContainer: FrameLayout? = null
     private var clipContainer: FrameLayout? = null
@@ -149,6 +168,15 @@ class AmbientGlanceHandler(
     }
 
     fun handleIntent(intent: Intent) {
+        if (intent.action == "HIDE_AMBIENT_GLANCE_TEMPORARILY") {
+            if (overlayView != null && overlayView?.alpha != 0f) {
+                overlayView?.animate()?.alpha(0f)?.setDuration(500)?.start()
+                handler.removeCallbacks(temporaryHideRunnable)
+                handler.postDelayed(temporaryHideRunnable, 7000)
+            }
+            return
+        }
+
         if (intent.action == "SHOW_AMBIENT_GLANCE") {
             // Skip if Android Auto is running
             if (com.sameerasw.essentials.utils.AppUtil.isAndroidAutoRunning(service)) {
@@ -337,14 +365,23 @@ class AmbientGlanceHandler(
 
     private fun applyClockFontVariations(clock: android.widget.TextClock, isFill: Boolean) {
         val prefs = service.getSharedPreferences(com.sameerasw.essentials.data.repository.SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
-        val size = prefs.getInt(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_CLOCK_SIZE, 80)
-        clock.textSize = if (isFill) size.toFloat() else 25f
+        
+        if (isFill) {
+            val size = prefs.getInt(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_CLOCK_SIZE, 80)
+            clock.textSize = size.toFloat()
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            val weight = prefs.getInt(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_CLOCK_WEIGHT, 400)
-            val width = prefs.getInt(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_CLOCK_WIDTH, 100)
-            val roundness = prefs.getInt(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_CLOCK_ROUNDNESS, 50)
-            clock.fontVariationSettings = "'wght' $weight, 'wdth' $width, 'ROND' $roundness"
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                val weight = prefs.getInt(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_CLOCK_WEIGHT, 400)
+                val width = prefs.getInt(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_CLOCK_WIDTH, 100)
+                val roundness = prefs.getInt(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_CLOCK_ROUNDNESS, 50)
+                clock.fontVariationSettings = "'wght' $weight, 'wdth' $width, 'ROND' $roundness"
+            }
+        } else {
+            // Fixed styling for standard modes
+            clock.textSize = 24f 
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                clock.fontVariationSettings = "'wght' 500, 'wdth' 100, 'ROND' 50"
+            }
         }
     }
 

@@ -101,6 +101,16 @@ fun EssentialsOnDisplaySettingsUI(
                 onDisabledClick = { if (!isPermissionGranted) showPermissionSheet = true },
                 modifier = Modifier.highlight(highlightSetting == "essentials_on_display_docked_mode")
             )
+
+            androidx.compose.animation.AnimatedVisibility(visible = viewModel.isAmbientMusicGlanceDockedModeEnabled.value) {
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_notification_sound_24,
+                    title = stringResource(R.string.essentials_on_display_respect_notifications_title),
+                    description = stringResource(R.string.essentials_on_display_respect_notifications_desc),
+                    isChecked = viewModel.isAmbientMusicGlanceRespectNotificationsEnabled.value,
+                    onCheckedChange = { viewModel.setAmbientMusicGlanceRespectNotificationsEnabled(it) }
+                )
+            }
         }
 
         Text(

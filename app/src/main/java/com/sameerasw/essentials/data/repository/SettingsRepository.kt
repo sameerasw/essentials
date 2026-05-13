@@ -179,6 +179,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_AMBIENT_MUSIC_GLANCE_CLOCK_WIDTH = "ambient_music_glance_clock_width"
         const val KEY_AMBIENT_MUSIC_GLANCE_CLOCK_ROUNDNESS = "ambient_music_glance_clock_roundness"
         const val KEY_AMBIENT_MUSIC_GLANCE_FORCE_FILL_WHILE_CHARGING = "ambient_music_glance_force_fill_while_charging"
+        const val KEY_AMBIENT_MUSIC_GLANCE_RESPECT_NOTIFICATIONS = "ambient_music_glance_respect_notifications"
         const val KEY_CALENDAR_SYNC_ENABLED = "calendar_sync_enabled"
         const val KEY_CALENDAR_SYNC_SELECTED_CALENDARS = "calendar_sync_selected_calendars"
         const val KEY_CALENDAR_SYNC_PERIODIC_ENABLED = "calendar_sync_periodic_enabled"
@@ -1240,6 +1241,9 @@ class SettingsRepository(private val context: Context) {
 
     fun isAmbientMusicGlanceForceFillWhileChargingEnabled(): Boolean = prefs.getBoolean(KEY_AMBIENT_MUSIC_GLANCE_FORCE_FILL_WHILE_CHARGING, false)
     fun setAmbientMusicGlanceForceFillWhileChargingEnabled(enabled: Boolean) = prefs.edit().putBoolean(KEY_AMBIENT_MUSIC_GLANCE_FORCE_FILL_WHILE_CHARGING, enabled).apply()
+
+    fun isAmbientMusicGlanceRespectNotificationsEnabled(): Boolean = prefs.getBoolean(KEY_AMBIENT_MUSIC_GLANCE_RESPECT_NOTIFICATIONS, true)
+    fun setAmbientMusicGlanceRespectNotificationsEnabled(enabled: Boolean) = prefs.edit().putBoolean(KEY_AMBIENT_MUSIC_GLANCE_RESPECT_NOTIFICATIONS, enabled).apply()
 
     // Notification Glance Settings
 
