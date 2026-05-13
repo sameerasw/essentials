@@ -1109,7 +1109,7 @@
     <string name="location_reached_processing">Konum işleniyor…</string>
     <string name="location_reached_dist_remaining">KALAN MESAFE</string>
     <string name="location_reached_calculating">Hesaplanıyor…</string>
-    <string name="location_reached_stop_tracking">Takibi Durdur</string>
+    <string name="location_reached_stop_tracking">Durdur</string>
     <string name="location_reached_dest_ready">Hedef Hazır</string>
     <string name="location_reached_start_tracking">Takibi Başlat</string>
     <string name="location_reached_view_map">Haritayı Görüntüle</string>
@@ -1120,7 +1120,7 @@
     <string name="location_reached_fsi_desc">Varışta cihazınızı uyandırmak için gereklidir. Vermek için dokunun.</string>
     <string name="location_reached_dist_m">%1$d M</string>
     <string name="location_reached_dist_km">%1$.1f km</string>
-    <string name="location_reached_service_title">Seyahat alarmı etkin</string>
+    <string name="location_reached_service_title">%1$s\'a yolculuk</string>
     <string name="location_reached_service_remaining">%1$s kalan (%2$d%%)</string>
     <string name="location_reached_channel_name">Seyahat İlerlemesi</string>
     <string name="location_reached_channel_desc">Hedefe olan gerçek zamanlı mesafeyi gösterir</string>
