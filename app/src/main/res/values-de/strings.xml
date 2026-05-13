@@ -63,12 +63,12 @@
     <string name="like_song_settings_desc">Diese Funktion erfordert Zugriff auf Benachrichtigungen, um die aktuell wiedergegebenen Medien zu erkennen und die entsprechende Aktion auszulösen. Bitte aktiviere diese Funktion unten.</string>
     <string name="like_song_toast_enabled">Toast-Nachricht anzeigen</string>
     <string name="like_song_aod_overlay_title">Overlay im AOD anzeigen</string>
-    <string name="feat_ambient_music_glance_title">Blick auf die Musik</string>
-    <string name="feat_ambient_music_glance_desc">Ein Blick auf aktive Medien auf dem AOD</string>
-    <string name="ambient_glance_docked_mode_title">Dock-Modus</string>
-    <string name="ambient_glance_docked_mode_desc">Behalte das Overlay dauerhaft auf dem AOD, während Musik spielt</string>
-    <string name="ambient_glance_random_shapes_title">Zufällige Formen</string>
-    <string name="ambient_glance_random_shapes_desc">Nutze verschiedene Material 3 Formen für das Musikcover</string>
+    <string name="feat_essentials_on_display_title">Essentials On Display</string>
+    <string name="feat_essentials_on_display_desc">Glance at media and info on AOD</string>
+    <string name="essentials_on_display_docked_mode_title">Docked mode</string>
+    <string name="essentials_on_display_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
+    <string name="essentials_on_display_random_shapes_title">Random shapes</string>
+    <string name="essentials_on_display_random_shapes_desc">Use various Material 3 shapes for the album art</string>
     <string name="feat_notification_glance_title">Blick auf die Benachrichtigungen</string>
     <string name="feat_notification_glance_desc">AOD eingeschaltet lassen, solange Benachrichtigungen ausstehen</string>
     <string name="notification_glance_same_as_lighting_title">Dieselben Apps wie beim Benachrichtigungslicht</string>
@@ -582,7 +582,7 @@
     <string name="perm_default_browser_title">Standardbrowser</string>
     <string name="perm_default_browser_desc">Benötigt für die effiziente Verwaltung von Links</string>
     <string name="perm_accessibility_desc_remap">Benötigt zum Abfangen von Hardware-Tastenereignissen</string>
-    <string name="perm_accessibility_desc_ambient_music_glance">Benötigt, um Volumetastenereignisse bei ausgeschaltetem Bildschirm abzufangen, um das \"Blick auf die Musik\"-Overlay auszulösen.</string>
+    <string name="perm_accessibility_desc_essentials_on_display">Required to intercept volume key events while the screen is off to trigger the Essentials On Display overlay.</string>
     <string name="perm_accessibility_desc_night_light">Benötigt zur Überwachung von Vordergrundanwendungen.</string>
     <string name="perm_write_secure_title">Geschützte Einstellungen umschreiben</string>
     <string name="perm_write_secure_desc_common">Benötigt für Statusleisten-Symbole und Sicherheit bei Bildschirmsperre</string>
@@ -706,7 +706,7 @@
     <string name="action_what_is_this">Was ist das?</string>
     <string name="update_available_title">Aktualisierung verfügbar</string>
     <string name="about_desc_your_android">Sieh dir deine Hardware- und Software-Spezifikationen im Detail an. Diese Informationen werden von GSMArena und den Systemeigenschaften abgerufen, um dir einen umfassenden Überblick über dein Android-Gerät zu geben.</string>
-    <string name="about_desc_ambient_music_glance">\"Blick auf die Musik\" zeigt ein Overlay der aktuellen Wiedergabe auf dem Sperrbildschirm an, wenn Musik abgespielt wird und sich die Wiedergabe ändert. \n\nWenn dein Gerät keine Überlagerungen über dem AOD unterstützt, kannst du während des Ladevorgangs alternativ den in den Android-Einstellungen hinzugefügten Bildschirmschoner wählen.</string>
+    <string name="about_desc_essentials_on_display">Essentials On Display shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
     <string name="about_desc_notification_lighting">Benachrichtigungslich sorgt für einen schönen Randbeleuchtungseffekt, wenn du eine Benachrichtigung erhälst.\n\nDu kannst den Animationsstil, die Farben und das Verhalten individuell anpassen. Die Funktion ist auch bei ausgeschaltetem Bildschirm (abhängig vom Hersteller) oder über der aktuellen App verfügbar. Wähle Apps, Benachrichtigungsprioritäten oder welches Verhalten das Benachrichtigungslich haben soll mit den entsprechen Steuerungselementen aus. Falls dein Hersteller Overlays über dem Always-On-Display nicht unterstützt, nutze die unten aufgeführte Option „Ambient-Display“.</string>
     <string name="about_desc_screen_off_widget">Schalten den Bildschirm ganz einfach mit einem Fingertipp auf ein transparentes, in der Größe anpassbares Widget aus, das deinen Startbildschirm weder mit Symbolen noch mit unnötigen Elementen überfüllt.</string>
     <string name="about_desc_statusbar_icons">Übernehme die volle Kontrolle über die Symbole in deiner Statusleiste.\n\nBlende bestimmte Symbole wie WLAN, Bluetooth oder Mobilfunkdaten aus, um deine Statusleiste übersichtlich zu halten. Außerdem kannst du das Uhrenformat und die Akkuanzeige mit einigen praktischen Einstellungsoptionen anpassen. Dies ist eine Liste der verfügbaren AOSP-Einstellungen; daher unterstützt das Betriebssystem Ihres Geräts möglicherweise nicht alle Optionen.</string>
@@ -1207,8 +1207,6 @@
     <string name="search_sound_mode_show_slider_desc">Lautstärkeregler in Kachel anzeigen</string>
     <string name="search_sound_mode_behavior_title">Cycle Behavior</string>
     <string name="search_sound_mode_behavior_desc">Choose modes to cycle through</string>
-    <string name="feat_ambient_music_title">Blick auf die Musik</string>
-    <string name="feat_ambient_music_desc">Ein Blick auf aktive Medien auf dem AOD</string>
     <string name="feat_sound_haptics_title">Ton und Haptik</string>
     <string name="feat_sound_haptics_desc">Lautstärke und haptische Funktionen</string>
     <string name="feat_security_privacy_title">Sicherheit und Privatsphäre</string>
