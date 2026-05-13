@@ -10,6 +10,11 @@ kotlin {
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_11)
         freeCompilerArgs.add("-Xannotation-default-target=param-property")
+        optIn.addAll(
+            "androidx.compose.material3.ExperimentalMaterial3Api",
+            "androidx.compose.material3.ExperimentalMaterial3ExpressiveApi",
+            "androidx.compose.foundation.ExperimentalFoundationApi"
+        )
     }
 }
 
@@ -83,7 +88,7 @@ dependencies {
     implementation("androidx.core:core-splashscreen:1.0.1")
 
     // Force latest Material3 1.5.0-alpha17 for new MaterialShapes
-    implementation("androidx.compose.material3:material3:1.5.0-alpha17")
+    implementation("androidx.compose.material3:material3:1.5.0-alpha19")
 
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
