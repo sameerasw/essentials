@@ -22,7 +22,7 @@ class AirSyncBridgeReceiver : BroadcastReceiver() {
 
             val repository = SettingsRepository(context)
             val isEnabled = repository.getBoolean(SettingsRepository.KEY_AIRSYNC_CONNECTION_ENABLED)
-            
+
             android.util.Log.d(
                 "AirSyncBridge",
                 "Received Mac status broadcast. Bridge enabled: $isEnabled, level=$level, charging=$isCharging"
@@ -35,7 +35,8 @@ class AirSyncBridgeReceiver : BroadcastReceiver() {
                 repository.putBoolean(SettingsRepository.KEY_AIRSYNC_MAC_CONNECTED, isConnected)
 
                 // Trigger widget update directly
-                val appWidgetManager = context.getSystemService(Context.APPWIDGET_SERVICE) as? android.appwidget.AppWidgetManager
+                val appWidgetManager =
+                    context.getSystemService(Context.APPWIDGET_SERVICE) as? android.appwidget.AppWidgetManager
                 if (appWidgetManager == null) {
                     pendingResult.finish()
                     return
@@ -49,12 +50,14 @@ class AirSyncBridgeReceiver : BroadcastReceiver() {
                         // Define keys matching BatteriesWidget
                         val KEY_AIRSYNC_ENABLED =
                             androidx.datastore.preferences.core.booleanPreferencesKey(
-                                SettingsRepository.KEY_AIRSYNC_CONNECTION_ENABLED)
+                                SettingsRepository.KEY_AIRSYNC_CONNECTION_ENABLED
+                            )
                         val KEY_MAC_LEVEL =
                             androidx.datastore.preferences.core.intPreferencesKey(SettingsRepository.KEY_MAC_BATTERY_LEVEL)
                         val KEY_MAC_CONNECTED =
                             androidx.datastore.preferences.core.booleanPreferencesKey(
-                                SettingsRepository.KEY_AIRSYNC_MAC_CONNECTED)
+                                SettingsRepository.KEY_AIRSYNC_MAC_CONNECTED
+                            )
 
                         val glanceIds =
                             glanceAppWidgetManager.getGlanceIds(com.sameerasw.essentials.services.widgets.BatteriesWidget::class.java)
@@ -75,7 +78,8 @@ class AirSyncBridgeReceiver : BroadcastReceiver() {
                                 // Add charging state
                                 val KEY_MAC_IS_CHARGING =
                                     androidx.datastore.preferences.core.booleanPreferencesKey(
-                                        SettingsRepository.KEY_MAC_BATTERY_IS_CHARGING)
+                                        SettingsRepository.KEY_MAC_BATTERY_IS_CHARGING
+                                    )
                                 prefs[KEY_MAC_IS_CHARGING] = isCharging
                             }
 

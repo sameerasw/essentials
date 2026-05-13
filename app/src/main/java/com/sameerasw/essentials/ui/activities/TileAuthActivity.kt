@@ -1,6 +1,5 @@
 package com.sameerasw.essentials.ui.activities
 
-import android.content.Context
 import android.os.Bundle
 import androidx.core.content.edit
 import androidx.fragment.app.FragmentActivity

@@ -2,13 +2,11 @@ package com.sameerasw.essentials.viewmodels
 
 import android.app.Application
 import android.content.Intent
-import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
-import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.LocationReachedRepository
 import com.sameerasw.essentials.domain.model.LocationAlarm
 import com.sameerasw.essentials.services.LocationReachedService
@@ -129,7 +127,7 @@ class LocationReachedViewModel(application: Application) : AndroidViewModel(appl
 
     fun startTracking(alarmId: String) {
         val alarm = savedAlarms.value.find { it.id == alarmId } ?: return
-        
+
         // Stop any previous tracking
         if (activeAlarmId.value != null && activeAlarmId.value != alarmId) {
             stopTracking()
@@ -155,7 +153,7 @@ class LocationReachedViewModel(application: Application) : AndroidViewModel(appl
                     repository.saveStartDistance(dist)
                 }
             }
-        
+
         // Clear last trip when starting new
         lastTrip.value = null
         repository.saveLastTrip(null)
@@ -164,7 +162,7 @@ class LocationReachedViewModel(application: Application) : AndroidViewModel(appl
     fun stopTracking() {
         val id = activeAlarmId.value ?: return
         val alarm = savedAlarms.value.find { it.id == id }
-        
+
         if (alarm != null) {
             // Save as last trip
             lastTrip.value = alarm
@@ -258,7 +256,7 @@ class LocationReachedViewModel(application: Application) : AndroidViewModel(appl
 
         val elapsedMillis = System.currentTimeMillis() - startT
         val distanceTravelled = startDistMeters - currentDistMeters
-        
+
         if (distanceTravelled <= 0 || elapsedMillis <= 0) {
             remainingTimeMinutes.value = null
             return
@@ -335,12 +333,14 @@ class LocationReachedViewModel(application: Application) : AndroidViewModel(appl
 
             if (lat != 0.0 && lng != 0.0) {
                 android.util.Log.d("LocationReachedVM", "Parsed coordinates: $lat, $lng")
-                repository.setTempAlarm(LocationAlarm(
-                    latitude = lat,
-                    longitude = lng,
-                    name = "New Destination",
-                    isEnabled = false
-                ))
+                repository.setTempAlarm(
+                    LocationAlarm(
+                        latitude = lat,
+                        longitude = lng,
+                        name = "New Destination",
+                        isEnabled = false
+                    )
+                )
                 repository.setShowBottomSheet(true)
                 updateCurrentDistance()
                 repository.setIsProcessing(false)
@@ -377,12 +377,14 @@ class LocationReachedViewModel(application: Application) : AndroidViewModel(appl
                     val lat = pathMatch.groupValues[1].toDoubleOrNull() ?: 0.0
                     val lng = pathMatch.groupValues[2].toDoubleOrNull() ?: 0.0
                     if (lat != 0.0 && lng != 0.0) {
-                        repository.setTempAlarm(LocationAlarm(
-                            latitude = lat,
-                            longitude = lng,
-                            name = "New Destination",
-                            isEnabled = false
-                        ))
+                        repository.setTempAlarm(
+                            LocationAlarm(
+                                latitude = lat,
+                                longitude = lng,
+                                name = "New Destination",
+                                isEnabled = false
+                            )
+                        )
                         repository.setShowBottomSheet(true)
                         updateCurrentDistance()
                     }

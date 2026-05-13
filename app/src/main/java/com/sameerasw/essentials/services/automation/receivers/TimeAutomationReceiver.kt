@@ -40,10 +40,12 @@ class TimeAutomationReceiver : BroadcastReceiver() {
                             CombinedActionExecutor.execute(context, action)
                         }
                     }
+
                     Automation.Type.STATE -> {
                         val action = if (isEntry) automation.entryAction else automation.exitAction
                         action?.let { CombinedActionExecutor.execute(context, it) }
                     }
+
                     else -> {}
                 }
             } catch (e: Exception) {

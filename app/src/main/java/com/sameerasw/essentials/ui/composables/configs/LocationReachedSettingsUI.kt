@@ -2,20 +2,35 @@ package com.sameerasw.essentials.ui.composables.configs
 
 import android.os.Build
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearWavyProgressIndicator
+import androidx.compose.material3.LoadingIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -26,7 +41,6 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.cards.LocationAlarmCard
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.sheets.LocationReachedBottomSheet
-import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.LocationReachedViewModel
 import com.sameerasw.essentials.viewmodels.MainViewModel
@@ -84,9 +98,9 @@ fun LocationReachedSettingsUI(
                     onStop = { locationViewModel.stopTracking() },
                     onPause = { locationViewModel.pauseTracking() },
                     onResume = { locationViewModel.resumeTracking() },
-                    onStart = { 
+                    onStart = {
                         HapticUtil.performVirtualKeyHaptic(view)
-                        locationViewModel.startTracking(it) 
+                        locationViewModel.startTracking(it)
                     }
                 )
             }
@@ -110,34 +124,34 @@ fun LocationReachedSettingsUI(
                     RoundedCardContainer(
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                            savedAlarms.forEachIndexed { index, alarm ->
-                                LocationAlarmCard(
-                                    alarm = alarm,
-                                    isActive = activeAlarmId == alarm.id,
-                                    isAnyTracking = activeAlarmId != null,
-                                    onStart = { 
-                                        HapticUtil.performVirtualKeyHaptic(view)
-                                        locationViewModel.startTracking(alarm.id) 
-                                    },
-                                    onStop = { 
-                                        HapticUtil.performVirtualKeyHaptic(view)
-                                        locationViewModel.stopTracking() 
-                                    },
-                                    onPause = {
-                                        HapticUtil.performVirtualKeyHaptic(view)
-                                        locationViewModel.pauseTracking()
-                                    },
-                                    onResume = {
-                                        HapticUtil.performVirtualKeyHaptic(view)
-                                        locationViewModel.resumeTracking()
-                                    },
-                                    onClick = {
-                                        HapticUtil.performVirtualKeyHaptic(view)
-                                        locationViewModel.setTempAlarm(alarm)
-                                        locationViewModel.setShowBottomSheet(true)
-                                    }
-                                )
-                            }
+                        savedAlarms.forEachIndexed { index, alarm ->
+                            LocationAlarmCard(
+                                alarm = alarm,
+                                isActive = activeAlarmId == alarm.id,
+                                isAnyTracking = activeAlarmId != null,
+                                onStart = {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    locationViewModel.startTracking(alarm.id)
+                                },
+                                onStop = {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    locationViewModel.stopTracking()
+                                },
+                                onPause = {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    locationViewModel.pauseTracking()
+                                },
+                                onResume = {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    locationViewModel.resumeTracking()
+                                },
+                                onClick = {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    locationViewModel.setTempAlarm(alarm)
+                                    locationViewModel.setShowBottomSheet(true)
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -185,14 +199,18 @@ fun LocationReachedSettingsUI(
                             title = stringResource(R.string.location_reached_fsi_title),
                             description = stringResource(R.string.location_reached_fsi_desc),
                             isChecked = false,
-                            onCheckedChange = { mainViewModel.requestFullScreenIntentPermission(context) },
+                            onCheckedChange = {
+                                mainViewModel.requestFullScreenIntentPermission(
+                                    context
+                                )
+                            },
                             iconRes = R.drawable.rounded_info_24,
                             showToggle = false
                         )
                     }
                 }
             }
-            
+
             item {
                 Spacer(modifier = Modifier.height(100.dp))
             }
@@ -238,7 +256,11 @@ fun TopStatusCard(
         ) {
             if (isTracking) {
                 val context = LocalContext.current
-                val iconResId = context.resources.getIdentifier(displayAlarm?.iconResName ?: "round_navigation_24", "drawable", context.packageName)
+                val iconResId = context.resources.getIdentifier(
+                    displayAlarm?.iconResName ?: "round_navigation_24",
+                    "drawable",
+                    context.packageName
+                )
 
                 Icon(
                     painter = painterResource(id = if (iconResId != 0) iconResId else R.drawable.round_navigation_24),
@@ -337,7 +359,11 @@ fun TopStatusCard(
                             contentDescription = null
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(if (isPaused) stringResource(R.string.location_reached_resume) else stringResource(R.string.location_reached_pause))
+                        Text(
+                            if (isPaused) stringResource(R.string.location_reached_resume) else stringResource(
+                                R.string.location_reached_pause
+                            )
+                        )
                     }
 
                     Button(
@@ -351,14 +377,21 @@ fun TopStatusCard(
                         ),
                         shape = androidx.compose.foundation.shape.CircleShape
                     ) {
-                        Icon(painterResource(R.drawable.rounded_close_24), contentDescription = null)
+                        Icon(
+                            painterResource(R.drawable.rounded_close_24),
+                            contentDescription = null
+                        )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(stringResource(R.string.action_stop))
                     }
                 }
             } else if (lastTrip != null) {
                 val context = LocalContext.current
-                val iconResId = context.resources.getIdentifier(lastTrip.iconResName, "drawable", context.packageName)
+                val iconResId = context.resources.getIdentifier(
+                    lastTrip.iconResName,
+                    "drawable",
+                    context.packageName
+                )
 
                 Icon(
                     painter = painterResource(id = if (iconResId != 0) iconResId else R.drawable.round_navigation_24),

@@ -6,7 +6,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -38,7 +46,7 @@ fun MadebySameeraswCard(
     val context = LocalContext.current
     val redditUrl = "https://www.reddit.com/r/MadebySameerasw/"
     val isDark = isSystemInDarkTheme()
-    
+
     val brandColor = Color(0xFF49FCBB)
     val brandColorDark = Color(0xFF007A54) // Darker tone for light theme
     val accentColor = if (isDark) brandColor else brandColorDark
@@ -77,7 +85,11 @@ fun MadebySameeraswCard(
                         .clip(CircleShape)
                         .background(MaterialTheme.colorScheme.surfaceBright)
                         .border(4.dp, MaterialTheme.colorScheme.surfaceBright, CircleShape)
-                        .border(6.dp, accentColor.copy(alpha = 0.5f), CircleShape) // Subtle outer ring
+                        .border(
+                            6.dp,
+                            accentColor.copy(alpha = 0.5f),
+                            CircleShape
+                        ) // Subtle outer ring
                         .padding(4.dp)
                         .border(2.dp, Color(0xFF49FCBB), CircleShape) // Sharper inner stroke
                 ) {

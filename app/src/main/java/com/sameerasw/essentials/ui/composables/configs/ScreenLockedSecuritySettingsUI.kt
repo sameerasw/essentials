@@ -25,7 +25,6 @@ import com.sameerasw.essentials.ui.components.sheets.PermissionItem
 import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.BiometricHelper
-import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
 @Composable
@@ -42,7 +41,8 @@ fun ScreenLockedSecuritySettingsUI(
         val isShizukuGranted = viewModel.isShizukuPermissionGranted.value
         val isRootAvailable = viewModel.isRootAvailable.value
         val isRootGranted = viewModel.isRootPermissionGranted.value
-        val isShellGranted = (isShizukuAvailable && isShizukuGranted) || (isRootAvailable && isRootGranted)
+        val isShellGranted =
+            (isShizukuAvailable && isShizukuGranted) || (isRootAvailable && isRootGranted)
 
         PermissionsBottomSheet(
             onDismissRequest = { showPermissionSheet = false },
@@ -90,8 +90,10 @@ fun ScreenLockedSecuritySettingsUI(
             spacing = 2.dp,
             cornerRadius = 24.dp
         ) {
-            val isShizukuGranted = viewModel.isShizukuAvailable.value && viewModel.isShizukuPermissionGranted.value
-            val isRootGranted = viewModel.isRootAvailable.value && viewModel.isRootPermissionGranted.value
+            val isShizukuGranted =
+                viewModel.isShizukuAvailable.value && viewModel.isShizukuPermissionGranted.value
+            val isRootGranted =
+                viewModel.isRootAvailable.value && viewModel.isRootPermissionGranted.value
             val isShellGranted = isShizukuGranted || isRootGranted
 
             IconToggleItem(

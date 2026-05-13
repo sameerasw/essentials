@@ -83,19 +83,20 @@ fun Modifier.progressiveBlur(
     showGradientOverlay: Boolean = true
 ): Modifier = composed {
     val overlayColor = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.65f)
-    
-    val blurModifier = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && blurRadius > 0f) {
-        Modifier.graphicsLayer {
-            val shader = RuntimeShader(PROGRESSIVE_BLUR_SKSL)
-            shader.setFloatUniform("blurRadius", blurRadius)
-            shader.setFloatUniform("height", height)
-            shader.setFloatUniform("contentHeight", size.height)
-            shader.setIntUniform("isTop", if (direction == BlurDirection.TOP) 1 else 0)
-            
-            renderEffect = RenderEffect.createRuntimeShaderEffect(shader, "content")
-                .asComposeRenderEffect()
-        }
-    } else Modifier
+
+    val blurModifier =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && blurRadius > 0f) {
+            Modifier.graphicsLayer {
+                val shader = RuntimeShader(PROGRESSIVE_BLUR_SKSL)
+                shader.setFloatUniform("blurRadius", blurRadius)
+                shader.setFloatUniform("height", height)
+                shader.setFloatUniform("contentHeight", size.height)
+                shader.setIntUniform("isTop", if (direction == BlurDirection.TOP) 1 else 0)
+
+                renderEffect = RenderEffect.createRuntimeShaderEffect(shader, "content")
+                    .asComposeRenderEffect()
+            }
+        } else Modifier
 
     val gradientModifier = if (showGradientOverlay) {
         Modifier.drawWithContent {
@@ -107,6 +108,7 @@ fun Modifier.progressiveBlur(
                         endY = height
                     ) to height
                 }
+
                 BlurDirection.BOTTOM -> {
                     Brush.verticalGradient(
                         colors = listOf(Color.Transparent, overlayColor),
@@ -118,5 +120,7 @@ fun Modifier.progressiveBlur(
         }
     } else Modifier
 
-    this.then(blurModifier).then(gradientModifier)
+    this
+        .then(blurModifier)
+        .then(gradientModifier)
 }

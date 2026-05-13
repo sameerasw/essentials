@@ -44,7 +44,7 @@ class SoundModeHandler(private val context: Context) {
         } catch (e: Exception) {
             // OEM-specific restrictions or race conditions
         }
-        
+
         return nextRingerMode
     }
 }

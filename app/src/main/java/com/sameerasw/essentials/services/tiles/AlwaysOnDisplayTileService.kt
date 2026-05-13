@@ -1,10 +1,7 @@
 package com.sameerasw.essentials.services.tiles
 
-import android.Manifest
-import android.content.pm.PackageManager
 import android.graphics.drawable.Icon
 import android.os.Build
-import android.provider.Settings
 import android.service.quicksettings.Tile
 import androidx.annotation.RequiresApi
 import com.sameerasw.essentials.R
@@ -48,11 +45,13 @@ class AlwaysOnDisplayTileService : BaseTileService() {
                 setGlanceEnabled(false)
                 setAodEnabled(true)
             }
+
             isAodEnabled() -> {
                 // On -> Off
                 setAodEnabled(false)
                 setGlanceEnabled(false)
             }
+
             else -> {
                 // Off -> Dynamic
                 setGlanceEnabled(true)
@@ -64,7 +63,7 @@ class AlwaysOnDisplayTileService : BaseTileService() {
     private fun isAodEnabled(): Boolean {
         return getSecureInt("doze_always_on", 0) == 1
     }
-    
+
     private fun setAodEnabled(enabled: Boolean) {
         putSecureInt("doze_always_on", if (enabled) 1 else 0)
     }

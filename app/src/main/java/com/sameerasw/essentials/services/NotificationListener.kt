@@ -84,7 +84,10 @@ class NotificationListener : NotificationListenerService() {
                 val discoveredChannels: MutableList<com.sameerasw.essentials.domain.model.MapsChannel> =
                     if (discoveredJson != null) {
                         try {
-                            gson.fromJson(discoveredJson, Array<com.sameerasw.essentials.domain.model.MapsChannel>::class.java).toMutableList()
+                            gson.fromJson(
+                                discoveredJson,
+                                Array<com.sameerasw.essentials.domain.model.MapsChannel>::class.java
+                            ).toMutableList()
                         } catch (_: Exception) {
                             mutableListOf()
                         }
@@ -136,7 +139,10 @@ class NotificationListener : NotificationListenerService() {
                 val discoveredChannels: MutableList<com.sameerasw.essentials.domain.model.SnoozeChannel> =
                     if (discoveredJson != null) {
                         try {
-                            gson.fromJson(discoveredJson, Array<com.sameerasw.essentials.domain.model.SnoozeChannel>::class.java).toMutableList()
+                            gson.fromJson(
+                                discoveredJson,
+                                Array<com.sameerasw.essentials.domain.model.SnoozeChannel>::class.java
+                            ).toMutableList()
                         } catch (_: Exception) {
                             mutableListOf()
                         }
@@ -434,7 +440,7 @@ class NotificationListener : NotificationListenerService() {
                 }
             }
             // 2. Trigger Glance only if screen is OFF or Screensaver is Active
-            val powerManager = getSystemService(POWER_SERVICE) as android.os.PowerManager
+            val powerManager = getSystemService(POWER_SERVICE) as PowerManager
             val isDreaming = com.sameerasw.essentials.services.dreams.AmbientDreamService.isDreaming
 
             if (!powerManager.isInteractive || bypassInteractiveCheck || isDreaming) {
@@ -567,7 +573,8 @@ class NotificationListener : NotificationListenerService() {
                     val blockedChannelsJson = prefs.getString("snooze_blocked_channels", null)
                     val blockedChannels: Set<String> = if (blockedChannelsJson != null) {
                         try {
-                            com.google.gson.Gson().fromJson(blockedChannelsJson, Array<String>::class.java).toSet()
+                            com.google.gson.Gson()
+                                .fromJson(blockedChannelsJson, Array<String>::class.java).toSet()
                         } catch (_: Exception) {
                             emptySet()
                         }
@@ -665,7 +672,10 @@ class NotificationListener : NotificationListenerService() {
                         val glowSidesJson = prefs.getString("edge_lighting_glow_sides", null)
                         val glowSides: Set<NotificationLightingSide> = if (glowSidesJson != null) {
                             try {
-                                gson.fromJson(glowSidesJson, Array<NotificationLightingSide>::class.java).toSet()
+                                gson.fromJson(
+                                    glowSidesJson,
+                                    Array<NotificationLightingSide>::class.java
+                                ).toSet()
                             } catch (_: Exception) {
                                 setOf(NotificationLightingSide.LEFT, NotificationLightingSide.RIGHT)
                             }
@@ -694,53 +704,55 @@ class NotificationListener : NotificationListenerService() {
                         } catch (e: ClassCastException) {
                             prefs.getInt("edge_lighting_sweep_thickness", 8).toFloat()
                         }
-                        val sweepPosition = prefs.getString("edge_lighting_sweep_position", "CENTER") ?: "CENTER"
-                                val randomShapes = prefs.getBoolean("edge_lighting_sweep_random_shapes", true)
-                                val systemLightingMode = prefs.getInt("edge_lighting_system_mode", 0)
+                        val sweepPosition =
+                            prefs.getString("edge_lighting_sweep_position", "CENTER") ?: "CENTER"
+                        val randomShapes =
+                            prefs.getBoolean("edge_lighting_sweep_random_shapes", true)
+                        val systemLightingMode = prefs.getInt("edge_lighting_system_mode", 0)
 
-                                fun startNotificationLighting(resolvedColor: Int? = null) {
-                                    val intent = Intent(
-                                        applicationContext,
-                                        NotificationLightingService::class.java
-                                    ).apply {
-                                        putExtra("corner_radius_dp", cornerRadius)
-                                        putExtra("stroke_thickness_dp", strokeThickness)
-                                        putExtra("color_mode", colorMode.name)
-                                        putExtra("pulse_count", pulseCount)
-                                        putExtra("pulse_duration", pulseDuration)
-                                        putExtra("style", styleName)
-                                        putExtra("glow_sides", glowSides.map { it.name }.toTypedArray())
-                                        putExtra("indicator_x", indicatorX)
-                                        putExtra("indicator_y", indicatorY)
-                                        putExtra("indicator_scale", indicatorScale)
-                                        if (resolvedColor != null) {
-                                            putExtra("resolved_color", resolvedColor)
-                                        } else if (colorMode == NotificationLightingColorMode.CUSTOM) {
-                                            putExtra(
-                                                "custom_color",
-                                                prefs.getInt(
-                                                    "edge_lighting_custom_color",
-                                                    0xFF6200EE.toInt()
-                                                )
-                                            )
-                                        }
-                                        putExtra(
-                                            "is_ambient_display",
-                                            prefs.getBoolean("edge_lighting_ambient_display", false)
+                        fun startNotificationLighting(resolvedColor: Int? = null) {
+                            val intent = Intent(
+                                applicationContext,
+                                NotificationLightingService::class.java
+                            ).apply {
+                                putExtra("corner_radius_dp", cornerRadius)
+                                putExtra("stroke_thickness_dp", strokeThickness)
+                                putExtra("color_mode", colorMode.name)
+                                putExtra("pulse_count", pulseCount)
+                                putExtra("pulse_duration", pulseDuration)
+                                putExtra("style", styleName)
+                                putExtra("glow_sides", glowSides.map { it.name }.toTypedArray())
+                                putExtra("indicator_x", indicatorX)
+                                putExtra("indicator_y", indicatorY)
+                                putExtra("indicator_scale", indicatorScale)
+                                if (resolvedColor != null) {
+                                    putExtra("resolved_color", resolvedColor)
+                                } else if (colorMode == NotificationLightingColorMode.CUSTOM) {
+                                    putExtra(
+                                        "custom_color",
+                                        prefs.getInt(
+                                            "edge_lighting_custom_color",
+                                            0xFF6200EE.toInt()
                                         )
-                                        putExtra(
-                                            "is_ambient_show_lock_screen",
-                                            prefs.getBoolean(
-                                                "edge_lighting_ambient_show_lock_screen",
-                                                false
-                                            )
-                                        )
-                                        putExtra("sweep_position", sweepPosition)
-                                        putExtra("sweep_thickness", sweepThickness)
-                                        putExtra("random_shapes", randomShapes)
-                                        putExtra("system_lighting_mode", systemLightingMode)
-                                        putExtra("package_name", sbn.packageName)
-                                    }
+                                    )
+                                }
+                                putExtra(
+                                    "is_ambient_display",
+                                    prefs.getBoolean("edge_lighting_ambient_display", false)
+                                )
+                                putExtra(
+                                    "is_ambient_show_lock_screen",
+                                    prefs.getBoolean(
+                                        "edge_lighting_ambient_show_lock_screen",
+                                        false
+                                    )
+                                )
+                                putExtra("sweep_position", sweepPosition)
+                                putExtra("sweep_thickness", sweepThickness)
+                                putExtra("random_shapes", randomShapes)
+                                putExtra("system_lighting_mode", systemLightingMode)
+                                putExtra("package_name", sbn.packageName)
+                            }
                             if (PermissionUtils.isAccessibilityServiceEnabled(applicationContext)) {
                                 applicationContext.startService(intent)
                             } else {
@@ -834,7 +846,8 @@ class NotificationListener : NotificationListenerService() {
     private fun handleNotificationGlance(sbn: StatusBarNotification, isPosted: Boolean) {
         try {
             val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
-            val enabled = prefs.getBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_ENABLED, false)
+            val enabled =
+                prefs.getBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_ENABLED, false)
             if (!enabled) {
                 if (activeGlanceNotifications.isNotEmpty()) {
                     activeGlanceNotifications.clear()
@@ -867,13 +880,16 @@ class NotificationListener : NotificationListenerService() {
             val newValue = if (enable) 1 else 0
             if (currentValue != newValue) {
                 Settings.Secure.putInt(contentResolver, "doze_always_on", newValue)
-                
+
                 // If turning OFF and force turn off workaround is enabled, trigger it
                 if (!enable) {
-                    val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+                    val powerManager = getSystemService(POWER_SERVICE) as PowerManager
                     if (!powerManager.isInteractive) {
                         val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
-                        val forceTurnOffEnabled = prefs.getBoolean(SettingsRepository.KEY_AOD_FORCE_TURN_OFF_ENABLED, false)
+                        val forceTurnOffEnabled = prefs.getBoolean(
+                            SettingsRepository.KEY_AOD_FORCE_TURN_OFF_ENABLED,
+                            false
+                        )
                         if (forceTurnOffEnabled) {
                             sendBroadcast(Intent("FORCE_TURN_OFF_AOD").setPackage(packageName))
                         }
@@ -888,16 +904,21 @@ class NotificationListener : NotificationListenerService() {
     private fun isAppSelectedForNotificationGlance(packageName: String): Boolean {
         try {
             val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
-            val sameAsLighting = prefs.getBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING, true)
+            val sameAsLighting =
+                prefs.getBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING, true)
             if (sameAsLighting) {
                 return isAppSelectedForNotificationLighting(packageName)
             }
 
-            val json = prefs.getString(SettingsRepository.KEY_NOTIFICATION_GLANCE_SELECTED_APPS, null)
+            val json =
+                prefs.getString(SettingsRepository.KEY_NOTIFICATION_GLANCE_SELECTED_APPS, null)
             if (json == null) return true
 
             val selectedApps: List<com.sameerasw.essentials.domain.model.AppSelection> =
-                com.google.gson.Gson().fromJson(json, Array<com.sameerasw.essentials.domain.model.AppSelection>::class.java).toList()
+                com.google.gson.Gson().fromJson(
+                    json,
+                    Array<com.sameerasw.essentials.domain.model.AppSelection>::class.java
+                ).toList()
 
             val app = selectedApps.find { it.packageName == packageName }
             return app?.isEnabled ?: true
@@ -949,7 +970,8 @@ class NotificationListener : NotificationListenerService() {
         val detectionChannelsJson = prefs.getString("maps_detection_channels", null)
         val detectionChannels: Set<String> = if (detectionChannelsJson != null) {
             try {
-                com.google.gson.Gson().fromJson(detectionChannelsJson, Array<String>::class.java).toSet()
+                com.google.gson.Gson().fromJson(detectionChannelsJson, Array<String>::class.java)
+                    .toSet()
             } catch (_: Exception) {
                 emptySet()
             }
@@ -994,7 +1016,7 @@ class NotificationListener : NotificationListenerService() {
             val onlyShowWhenScreenOff = prefs.getBoolean("edge_lighting_only_screen_off", true)
             if (onlyShowWhenScreenOff) {
                 val powerManager =
-                    getSystemService(POWER_SERVICE) as android.os.PowerManager
+                    getSystemService(POWER_SERVICE) as PowerManager
                 val isScreenOn = powerManager.isInteractive
                 if (isScreenOn) {
                     return false
@@ -1010,7 +1032,10 @@ class NotificationListener : NotificationListenerService() {
 
             val gson = com.google.gson.Gson()
             val selectedApps: List<com.sameerasw.essentials.domain.model.AppSelection> =
-                gson.fromJson(json, Array<com.sameerasw.essentials.domain.model.AppSelection>::class.java).toList()
+                gson.fromJson(
+                    json,
+                    Array<com.sameerasw.essentials.domain.model.AppSelection>::class.java
+                ).toList()
 
             // Find the app in the saved list
             val app = selectedApps.find { it.packageName == packageName }
@@ -1042,7 +1067,10 @@ class NotificationListener : NotificationListenerService() {
 
             val gson = com.google.gson.Gson()
             val selectedApps: List<com.sameerasw.essentials.domain.model.AppSelection> =
-                gson.fromJson(json, Array<com.sameerasw.essentials.domain.model.AppSelection>::class.java).toList()
+                gson.fromJson(
+                    json,
+                    Array<com.sameerasw.essentials.domain.model.AppSelection>::class.java
+                ).toList()
 
             // Find the app in the saved list
             val app = selectedApps.find { it.packageName == packageName }
@@ -1067,12 +1095,12 @@ class NotificationListener : NotificationListenerService() {
                 for (sbn in notifications) {
                     val token = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         sbn.notification.extras.getParcelable(
-                            android.app.Notification.EXTRA_MEDIA_SESSION,
+                            Notification.EXTRA_MEDIA_SESSION,
                             android.media.session.MediaSession.Token::class.java
                         )
                     } else {
                         @Suppress("DEPRECATION")
-                        sbn.notification.extras.getParcelable(android.app.Notification.EXTRA_MEDIA_SESSION)
+                        sbn.notification.extras.getParcelable(Notification.EXTRA_MEDIA_SESSION)
                     }
                     if (token != null) {
                         sessions.add(android.media.session.MediaController(this, token))

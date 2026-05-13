@@ -728,9 +728,14 @@ object FeatureRegistry {
             parentFeatureId = "Display"
         ) {
             override val permissionKeys: List<String>
-                get() = if (com.sameerasw.essentials.data.repository.SettingsRepository(com.sameerasw.essentials.EssentialsApp.context)
-                        .getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_USE_USAGE_ACCESS))
-                    listOf("USAGE_STATS", "WRITE_SECURE_SETTINGS") else listOf("ACCESSIBILITY", "WRITE_SECURE_SETTINGS")
+                get() = if (com.sameerasw.essentials.data.repository.SettingsRepository(
+                        EssentialsApp.context)
+                        .getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_USE_USAGE_ACCESS)
+                )
+                    listOf("USAGE_STATS", "WRITE_SECURE_SETTINGS") else listOf(
+                    "ACCESSIBILITY",
+                    "WRITE_SECURE_SETTINGS"
+                )
 
             override fun isEnabled(viewModel: MainViewModel) =
                 viewModel.isDynamicNightLightEnabled.value
@@ -760,7 +765,6 @@ object FeatureRegistry {
         },
 
 
-
         object : Feature(
             id = "Other customizations",
             title = R.string.feat_other_customizations_title,
@@ -782,7 +786,9 @@ object FeatureRegistry {
             category = R.string.cat_protection,
             description = R.string.screen_locked_security_desc,
             aboutDescription = R.string.about_desc_screen_locked_security,
-            permissionKeys = if (ShellUtils.isRootEnabled(com.sameerasw.essentials.EssentialsApp.context)) listOf("ROOT") else listOf("SHIZUKU"),
+            permissionKeys = if (ShellUtils.isRootEnabled(EssentialsApp.context)) listOf(
+                "ROOT"
+            ) else listOf("SHIZUKU"),
             parentFeatureId = "Security"
         ) {
             override fun isEnabled(viewModel: MainViewModel) =
@@ -819,8 +825,10 @@ object FeatureRegistry {
             parentFeatureId = "Security"
         ) {
             override val permissionKeys: List<String>
-                get() = if (com.sameerasw.essentials.data.repository.SettingsRepository(com.sameerasw.essentials.EssentialsApp.context)
-                        .getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_USE_USAGE_ACCESS))
+                get() = if (com.sameerasw.essentials.data.repository.SettingsRepository(
+                        EssentialsApp.context)
+                        .getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_USE_USAGE_ACCESS)
+                )
                     listOf("USAGE_STATS") else listOf("ACCESSIBILITY")
 
             override fun isEnabled(viewModel: MainViewModel) = viewModel.isAppLockEnabled.value
@@ -994,7 +1002,7 @@ object FeatureRegistry {
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
                 viewModel.setCalendarSyncEnabled(enabled, context)
         },
-        
+
         object : Feature(
             id = "Lock from Watch",
             title = R.string.feat_lock_from_watch_title,

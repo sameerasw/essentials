@@ -18,7 +18,14 @@ import android.view.accessibility.AccessibilityEvent
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.services.InputEventListenerService
-import com.sameerasw.essentials.services.handlers.*
+import com.sameerasw.essentials.services.handlers.AmbientGlanceHandler
+import com.sameerasw.essentials.services.handlers.AodForceTurnOffHandler
+import com.sameerasw.essentials.services.handlers.AppFlowHandler
+import com.sameerasw.essentials.services.handlers.ButtonRemapHandler
+import com.sameerasw.essentials.services.handlers.FlashlightHandler
+import com.sameerasw.essentials.services.handlers.NotificationLightingHandler
+import com.sameerasw.essentials.services.handlers.OmniGestureOverlayHandler
+import com.sameerasw.essentials.services.handlers.StatusBarIconHandler
 import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
 import com.sameerasw.essentials.utils.FreezeManager
 import com.sameerasw.essentials.utils.performHapticFeedback
@@ -55,11 +62,15 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
 
     private val preferenceChangeListener =
         android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-            if (key == "circle_to_search_gesture_enabled" || 
-                key == "circle_to_search_gesture_height" || 
-                key == "circle_to_search_preview_enabled") {
+            if (key == "circle_to_search_gesture_enabled" ||
+                key == "circle_to_search_gesture_height" ||
+                key == "circle_to_search_preview_enabled"
+            ) {
                 updateOmniOverlay()
-            } else if (key == "smart_wifi_enabled" || key == "smart_data_enabled" || key == "battery_percent_mode" || key?.startsWith("icon_") == true) {
+            } else if (key == "smart_wifi_enabled" || key == "smart_data_enabled" || key == "battery_percent_mode" || key?.startsWith(
+                    "icon_"
+                ) == true
+            ) {
                 statusBarIconHandler.updateAll()
             }
         }
@@ -183,7 +194,11 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
     private fun updateOmniOverlay() {
         val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
         val isGestureEnabled = prefs.getBoolean("circle_to_search_gesture_enabled", false)
-        val height = try { prefs.getFloat("circle_to_search_gesture_height", 48f) } catch (e: Exception) { 48f }
+        val height = try {
+            prefs.getFloat("circle_to_search_gesture_height", 48f)
+        } catch (e: Exception) {
+            48f
+        }
         val isPreview = prefs.getBoolean("circle_to_search_preview_enabled", false)
         omniGestureOverlayHandler.updateOverlay(isGestureEnabled, height, isPreview)
     }
@@ -237,11 +252,13 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
 
     override fun onKeyEvent(event: KeyEvent): Boolean {
         val keyCode = event.keyCode
-        val isVolumeKey = keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN
+        val isVolumeKey =
+            keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN
 
         if (isVolumeKey) {
             // Bypass logic for Camera apps to resolve conflicts with shutter/zoom functions
-            val foregroundPackage = rootInActiveWindow?.packageName?.toString() ?: appFlowHandler.currentPackage
+            val foregroundPackage =
+                rootInActiveWindow?.packageName?.toString() ?: appFlowHandler.currentPackage
             if (appFlowHandler.isCameraApp(foregroundPackage)) {
                 return false
             }
@@ -303,7 +320,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
                     val vibrator = getSystemService(VIBRATOR_SERVICE) as? Vibrator
                     vibrator?.let { performHapticFeedback(it, hapticType) }
                 }
-                performGlobalAction(AccessibilityService.GLOBAL_ACTION_LOCK_SCREEN)
+                performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN)
             }
 
             "SHOW_NOTIFICATION_LIGHTING" -> notificationLightingHandler.handleIntent(intent)

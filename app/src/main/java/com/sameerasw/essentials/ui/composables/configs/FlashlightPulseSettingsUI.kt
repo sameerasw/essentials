@@ -24,8 +24,8 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.sheets.AppSelectionSheet
-import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
+import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
 

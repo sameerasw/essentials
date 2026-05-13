@@ -13,7 +13,7 @@ import com.sameerasw.essentials.services.automation.receivers.TimeAutomationRece
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Calendar
 import com.sameerasw.essentials.domain.diy.State as DIYState
 
 class TimeModule : AutomationModule {
@@ -38,41 +38,71 @@ class TimeModule : AutomationModule {
 
     override fun updateAutomations(automations: List<Automation>) {
         this.automations = automations
-        appContext?.let { 
+        appContext?.let {
             checkCurrentStates(it)
-            scheduleAllAlarms(it) 
+            scheduleAllAlarms(it)
         }
     }
 
     private fun scheduleAllAlarms(context: Context) {
         cancelAllAlarms(context)
-        
+
         automations.forEach { automation ->
             when (automation.type) {
                 Automation.Type.TRIGGER -> {
                     (automation.trigger as? Trigger.Schedule)?.let { schedule ->
-                        scheduleAlarm(context, automation.id, schedule.hour, schedule.minute, schedule.days, true)
+                        scheduleAlarm(
+                            context,
+                            automation.id,
+                            schedule.hour,
+                            schedule.minute,
+                            schedule.days,
+                            true
+                        )
                     }
                 }
+
                 Automation.Type.STATE -> {
                     (automation.state as? DIYState.TimePeriod)?.let { period ->
-                        scheduleAlarm(context, automation.id, period.startHour, period.startMinute, period.days, true)
-                        scheduleAlarm(context, automation.id, period.endHour, period.endMinute, period.days, false)
+                        scheduleAlarm(
+                            context,
+                            automation.id,
+                            period.startHour,
+                            period.startMinute,
+                            period.days,
+                            true
+                        )
+                        scheduleAlarm(
+                            context,
+                            automation.id,
+                            period.endHour,
+                            period.endMinute,
+                            period.days,
+                            false
+                        )
                     }
                 }
+
                 else -> {}
             }
         }
     }
 
-    private fun scheduleAlarm(context: Context, id: String, hour: Int, minute: Int, days: Set<Int>, isEntry: Boolean) {
+    private fun scheduleAlarm(
+        context: Context,
+        id: String,
+        hour: Int,
+        minute: Int,
+        days: Set<Int>,
+        isEntry: Boolean
+    ) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, TimeAutomationReceiver::class.java).apply {
             action = TimeAutomationReceiver.ACTION_TRIGGER
             putExtra(TimeAutomationReceiver.EXTRA_AUTOMATION_ID, id)
             putExtra(TimeAutomationReceiver.EXTRA_IS_ENTRY, isEntry)
         }
-        
+
         val requestCode = (id + isEntry.toString()).hashCode()
         val pendingIntent = PendingIntent.getBroadcast(
             context,
@@ -82,40 +112,43 @@ class TimeModule : AutomationModule {
         )
 
         val calendar = calculateNextOccurrence(hour, minute, days)
-        android.util.Log.d(ID, "Scheduling alarm for automation $id (entry=$isEntry) at ${calendar.time}")
-        
+        Log.d(
+            ID,
+            "Scheduling alarm for automation $id (entry=$isEntry) at ${calendar.time}"
+        )
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             try {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-                if (alarmManager.canScheduleExactAlarms()) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    if (alarmManager.canScheduleExactAlarms()) {
+                        alarmManager.setExactAndAllowWhileIdle(
+                            AlarmManager.RTC_WAKEUP,
+                            calendar.timeInMillis,
+                            pendingIntent
+                        )
+                    } else {
+                        // Fallback to inexact
+                        alarmManager.setAndAllowWhileIdle(
+                            AlarmManager.RTC_WAKEUP,
+                            calendar.timeInMillis,
+                            pendingIntent
+                        )
+                    }
+                } else {
                     alarmManager.setExactAndAllowWhileIdle(
                         AlarmManager.RTC_WAKEUP,
                         calendar.timeInMillis,
                         pendingIntent
                     )
-                } else {
-                    // Fallback to inexact
-                    alarmManager.setAndAllowWhileIdle(
-                        AlarmManager.RTC_WAKEUP,
-                        calendar.timeInMillis,
-                        pendingIntent
-                    )
                 }
-            } else {
-                alarmManager.setExactAndAllowWhileIdle(
+            } catch (e: SecurityException) {
+                alarmManager.setAndAllowWhileIdle(
                     AlarmManager.RTC_WAKEUP,
                     calendar.timeInMillis,
                     pendingIntent
                 )
             }
-        } catch (e: SecurityException) {
-            alarmManager.setAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP,
-                calendar.timeInMillis,
-                pendingIntent
-            )
-        }
-} else {
+        } else {
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
         }
     }
@@ -126,15 +159,25 @@ class TimeModule : AutomationModule {
             val intent = Intent(context, TimeAutomationReceiver::class.java).apply {
                 action = TimeAutomationReceiver.ACTION_TRIGGER
             }
-            
+
             val rc1 = (automation.id + "true").hashCode()
-            PendingIntent.getBroadcast(context, rc1, intent, PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE)?.let {
+            PendingIntent.getBroadcast(
+                context,
+                rc1,
+                intent,
+                PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
+            )?.let {
                 alarmManager.cancel(it)
                 it.cancel()
             }
-            
+
             val rc2 = (automation.id + "false").hashCode()
-            PendingIntent.getBroadcast(context, rc2, intent, PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE)?.let {
+            PendingIntent.getBroadcast(
+                context,
+                rc2,
+                intent,
+                PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
+            )?.let {
                 alarmManager.cancel(it)
                 it.cancel()
             }
@@ -172,7 +215,10 @@ class TimeModule : AutomationModule {
             val currentMinute = now.get(Calendar.MINUTE)
             val currentDay = now.get(Calendar.DAY_OF_WEEK)
 
-            android.util.Log.d(ID, "Checking current states at $currentHour:$currentMinute on day $currentDay")
+            Log.d(
+                ID,
+                "Checking current states at $currentHour:$currentMinute on day $currentDay"
+            )
 
             automations.filter { it.type == Automation.Type.STATE && it.isEnabled }
                 .forEach { automation ->
@@ -189,15 +235,31 @@ class TimeModule : AutomationModule {
                             }
 
                             val wasActive = activeStateAutomations.contains(automation.id)
-                            
+
                             if (isActive && !wasActive) {
-                                Log.d(ID, "State ${automation.id} became active. Executing entry actions.")
+                                Log.d(
+                                    ID,
+                                    "State ${automation.id} became active. Executing entry actions."
+                                )
                                 activeStateAutomations.add(automation.id)
-                                automation.entryAction?.let { CombinedActionExecutor.execute(context, it) }
+                                automation.entryAction?.let {
+                                    CombinedActionExecutor.execute(
+                                        context,
+                                        it
+                                    )
+                                }
                             } else if (!isActive && wasActive) {
-                                Log.d(ID, "State ${automation.id} became inactive. Executing exit actions.")
+                                Log.d(
+                                    ID,
+                                    "State ${automation.id} became inactive. Executing exit actions."
+                                )
                                 activeStateAutomations.remove(automation.id)
-                                automation.exitAction?.let { CombinedActionExecutor.execute(context, it) }
+                                automation.exitAction?.let {
+                                    CombinedActionExecutor.execute(
+                                        context,
+                                        it
+                                    )
+                                }
                             }
                         }
                     }

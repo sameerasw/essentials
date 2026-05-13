@@ -456,7 +456,7 @@ class NotificationLightingService : Service() {
     private fun triggerSystemLighting() {
         if (!com.sameerasw.essentials.utils.ShellUtils.hasPermission(this)) return
 
-        val wm = getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val wm = getSystemService(WINDOW_SERVICE) as WindowManager
         val metrics = android.util.DisplayMetrics()
         wm.defaultDisplay.getRealMetrics(metrics)
         val centerX = metrics.widthPixels / 2
@@ -473,7 +473,7 @@ class NotificationLightingService : Service() {
         }
 
         com.sameerasw.essentials.utils.ShellUtils.runCommand(this, command)
-        
+
         // No need to keep service running for system ripples as they are fire-and-forget
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             stopForeground(true)

@@ -107,7 +107,7 @@ class SuggestionEngine(private val context: Context) :
                 Log.e(TAG, "Error init SymSpell", e)
             }
         }
-        
+
         // Init User Dictionary (Background)
         scope.launch(Dispatchers.IO) {
             loadUserDictionary()
@@ -129,9 +129,10 @@ class SuggestionEngine(private val context: Context) :
             // Inject into SymSpell if ready
             if (isSymSpellReady && symSpell != null) {
                 userWords.forEach { (word, freq) ->
-                     try {
-                         symSpell?.createDictionaryEntry(word, freq.toDouble() + 10000.0)
-                     } catch (e: Exception) { }
+                    try {
+                        symSpell?.createDictionaryEntry(word, freq.toDouble() + 10000.0)
+                    } catch (e: Exception) {
+                    }
                 }
             }
         } catch (e: Exception) {
@@ -141,23 +142,24 @@ class SuggestionEngine(private val context: Context) :
 
     fun learnWord(word: String) {
         if (word.length < 2) return
-        if (word.any { it.isDigit() }) return 
-        
+        if (word.any { it.isDigit() }) return
+
         val currentFreq = userWords.getOrDefault(word, 0L)
         val newFreq = currentFreq + 1
         userWords[word] = newFreq
-        
+
         if (isSymSpellReady) {
             try {
-                 symSpell?.createDictionaryEntry(word, newFreq.toDouble() + 10000.0)
-            } catch (e: Exception) { }
+                symSpell?.createDictionaryEntry(word, newFreq.toDouble() + 10000.0)
+            } catch (e: Exception) {
+            }
         }
 
         CoroutineScope(Dispatchers.IO).launch {
             saveUserDictionary()
         }
     }
-    
+
     private fun saveUserDictionary() {
         try {
             FileOutputStream(userDictFile).use { fos ->
@@ -187,7 +189,8 @@ class SuggestionEngine(private val context: Context) :
                     symSpell?.lookup(word, Verbosity.Closest, 2.0)
                         ?.map { item ->
                             val term = item.term
-                            val type = if (userWords.containsKey(term)) SuggestionType.Learned else SuggestionType.Prediction
+                            val type =
+                                if (userWords.containsKey(term)) SuggestionType.Learned else SuggestionType.Prediction
                             Suggestion(term, type)
                         }
                         ?.distinctBy { it.text }
@@ -237,7 +240,8 @@ class SuggestionEngine(private val context: Context) :
 
         // Merge: SymSpell (Prediction) + Android (Correction)
         // Deduplicate
-        val androidSuggestionsList = androidSuggestions.map { Suggestion(it, SuggestionType.Correction) }
+        val androidSuggestionsList =
+            androidSuggestions.map { Suggestion(it, SuggestionType.Correction) }
         val merged = (currentSymSpellSuggestions + androidSuggestionsList)
             .distinctBy { it.text }
             .take(8)
@@ -252,14 +256,14 @@ class SuggestionEngine(private val context: Context) :
         currentSymSpellSuggestions = emptyList()
     }
 
-    fun getUserWords() = userWords.toMap() 
-    
+    fun getUserWords() = userWords.toMap()
+
     fun removeUserWord(word: String) {
         if (userWords.containsKey(word)) {
             userWords.remove(word)
-             CoroutineScope(Dispatchers.IO).launch {
+            CoroutineScope(Dispatchers.IO).launch {
                 saveUserDictionary()
-             }
+            }
         }
     }
 }

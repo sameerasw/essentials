@@ -5,8 +5,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +13,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -36,23 +36,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.FreezeMode
-import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
-import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.components.cards.AppToggleItem
 import com.sameerasw.essentials.ui.components.cards.FeatureCard
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.components.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.components.sheets.AppSelectionSheet
 import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
@@ -176,7 +175,10 @@ fun FreezeSettingsUI(
                             modifier = Modifier.size(20.dp)
                         )
                         Spacer(Modifier.size(8.dp))
-                        Text(stringResource(R.string.action_freeze), fontSize = dimensionResource(R.dimen.font_small).value.sp)
+                        Text(
+                            stringResource(R.string.action_freeze),
+                            fontSize = dimensionResource(R.dimen.font_small).value.sp
+                        )
                     }
 
                     // Unfreeze Button
@@ -195,7 +197,10 @@ fun FreezeSettingsUI(
                             modifier = Modifier.size(20.dp)
                         )
                         Spacer(Modifier.size(8.dp))
-                        Text(stringResource(R.string.action_unfreeze), fontSize = dimensionResource(R.dimen.font_small).value.sp)
+                        Text(
+                            stringResource(R.string.action_unfreeze),
+                            fontSize = dimensionResource(R.dimen.font_small).value.sp
+                        )
                     }
 
                     // More Menu Button
@@ -204,8 +209,9 @@ fun FreezeSettingsUI(
                             HapticUtil.performVirtualKeyHaptic(view)
                             isMenuExpanded = true
                         },
-                        enabled = isShizukuAvailable && isShizukuPermissionGranted
-                    , modifier = Modifier.size(dimensionResource(R.dimen.button_normal))) {
+                        enabled = isShizukuAvailable && isShizukuPermissionGranted,
+                        modifier = Modifier.size(dimensionResource(R.dimen.button_normal))
+                    ) {
                         Icon(
                             painter = painterResource(id = R.drawable.rounded_more_vert_24),
                             contentDescription = stringResource(R.string.content_desc_more_options)
@@ -300,127 +306,127 @@ fun FreezeSettingsUI(
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
-        RoundedCardContainer{
-        SegmentedPicker(
-            items = FreezeMode.entries,
-            selectedItem = FreezeMode.fromInt(viewModel.freezeMode.intValue),
-            onItemSelected = { mode ->
-                if (viewModel.freezeMode.intValue != mode.value) {
-                    if (viewModel.anyAppsCurrentlyFrozen(context)) {
-                        showModeWarningResult = true
-                    } else {
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        viewModel.setFreezeMode(mode.value, context)
-                    }
-                }
-            },
-            labelProvider = { mode ->
-                when (mode) {
-                    FreezeMode.FREEZE -> context.getString(R.string.freeze_mode_freeze)
-                    FreezeMode.SUSPEND -> context.getString(R.string.freeze_mode_suspend)
-                }
-            },
-            iconProvider = { mode ->
-                Icon(
-                    painter = painterResource(
-                        id = when (mode) {
-                            FreezeMode.FREEZE -> R.drawable.rounded_mode_cool_24
-                            FreezeMode.SUSPEND -> R.drawable.rounded_pause_24
+        RoundedCardContainer {
+            SegmentedPicker(
+                items = FreezeMode.entries,
+                selectedItem = FreezeMode.fromInt(viewModel.freezeMode.intValue),
+                onItemSelected = { mode ->
+                    if (viewModel.freezeMode.intValue != mode.value) {
+                        if (viewModel.anyAppsCurrentlyFrozen(context)) {
+                            showModeWarningResult = true
+                        } else {
+                            HapticUtil.performVirtualKeyHaptic(view)
+                            viewModel.setFreezeMode(mode.value, context)
                         }
-                    ),
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp)
-                )
-            },
-        )
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    color = MaterialTheme.colorScheme.surfaceBright,
-                )
-                .padding(8.dp)
-        ) {
-            HorizontalPager(
-                state = pagerState,
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.Top
-            ) { page ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                    .background(
-                        color = MaterialTheme.colorScheme.surfaceContainer,
-                        shape = RoundedCornerShape(20.dp)
-                    )
-                        .padding(20.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    if (page == 0) {
-                        Text(
-                            text = stringResource(R.string.freeze_mode_description_freeze_title),
-                            style = MaterialTheme.typography.titleLarge,
-                            color = MaterialTheme.colorScheme.primary,
-                        )
-                        Text(
-                            text = stringResource(R.string.freeze_mode_description_freeze_body),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Text(
-                            text = stringResource(R.string.freeze_mode_description_freeze_warning),
-                            style = MaterialTheme.typography.labelLarge,
-                            color = MaterialTheme.colorScheme.error,
-                            fontWeight = FontWeight.Bold
-                        )
-                    } else {
-                        Text(
-                            text = stringResource(R.string.freeze_mode_description_suspend_title),
-                            style = MaterialTheme.typography.titleLarge,
-                            color = MaterialTheme.colorScheme.primary,
-                        )
-                        Text(
-                            text = stringResource(R.string.freeze_mode_description_suspend_body),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Text(
-                            text = stringResource(R.string.freeze_mode_description_suspend_footer),
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            fontWeight = FontWeight.Medium
-                        )
                     }
-                }
-            }
+                },
+                labelProvider = { mode ->
+                    when (mode) {
+                        FreezeMode.FREEZE -> context.getString(R.string.freeze_mode_freeze)
+                        FreezeMode.SUSPEND -> context.getString(R.string.freeze_mode_suspend)
+                    }
+                },
+                iconProvider = { mode ->
+                    Icon(
+                        painter = painterResource(
+                            id = when (mode) {
+                                FreezeMode.FREEZE -> R.drawable.rounded_mode_cool_24
+                                FreezeMode.SUSPEND -> R.drawable.rounded_pause_24
+                            }
+                        ),
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp)
+                    )
+                },
+            )
 
-            // Pagination Indicators
-            Row(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 8.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+                    .background(
+                        color = MaterialTheme.colorScheme.surfaceBright,
+                    )
+                    .padding(8.dp)
             ) {
-                repeat(2) { iteration ->
-                    val isActive = pagerState.currentPage == iteration
-                    val color by animateColorAsState(
-                        targetValue = if (isActive) MaterialTheme.colorScheme.primary 
-                                     else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f),
-                        label = "dotColor"
-                    )
-                    
-                    Box(
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.Top
+                ) { page ->
+                    Column(
                         modifier = Modifier
-                            .padding(4.dp)
-                            .size(if (isActive) 8.dp else 6.dp)
-                            .background(color, CircleShape)
-                    )
+                            .fillMaxWidth()
+                            .background(
+                                color = MaterialTheme.colorScheme.surfaceContainer,
+                                shape = RoundedCornerShape(20.dp)
+                            )
+                            .padding(20.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        if (page == 0) {
+                            Text(
+                                text = stringResource(R.string.freeze_mode_description_freeze_title),
+                                style = MaterialTheme.typography.titleLarge,
+                                color = MaterialTheme.colorScheme.primary,
+                            )
+                            Text(
+                                text = stringResource(R.string.freeze_mode_description_freeze_body),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Text(
+                                text = stringResource(R.string.freeze_mode_description_freeze_warning),
+                                style = MaterialTheme.typography.labelLarge,
+                                color = MaterialTheme.colorScheme.error,
+                                fontWeight = FontWeight.Bold
+                            )
+                        } else {
+                            Text(
+                                text = stringResource(R.string.freeze_mode_description_suspend_title),
+                                style = MaterialTheme.typography.titleLarge,
+                                color = MaterialTheme.colorScheme.primary,
+                            )
+                            Text(
+                                text = stringResource(R.string.freeze_mode_description_suspend_body),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Text(
+                                text = stringResource(R.string.freeze_mode_description_suspend_footer),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+                    }
+                }
+
+                // Pagination Indicators
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    repeat(2) { iteration ->
+                        val isActive = pagerState.currentPage == iteration
+                        val color by animateColorAsState(
+                            targetValue = if (isActive) MaterialTheme.colorScheme.primary
+                            else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f),
+                            label = "dotColor"
+                        )
+
+                        Box(
+                            modifier = Modifier
+                                .padding(4.dp)
+                                .size(if (isActive) 8.dp else 6.dp)
+                                .background(color, CircleShape)
+                        )
+                    }
                 }
             }
         }
-    }
 
         Text(
             text = stringResource(R.string.settings_section_automation),
@@ -634,7 +640,9 @@ fun FreezeSettingsUI(
             androidx.compose.material3.AlertDialog(
                 onDismissRequest = { showModeWarningResult = false },
                 confirmButton = {
-                    androidx.compose.material3.TextButton(onClick = { showModeWarningResult = false }) {
+                    androidx.compose.material3.TextButton(onClick = {
+                        showModeWarningResult = false
+                    }) {
                         Text(stringResource(id = R.string.action_ok))
                     }
                 },

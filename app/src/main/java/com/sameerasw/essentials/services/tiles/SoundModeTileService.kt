@@ -55,7 +55,8 @@ class SoundModeTileService : BaseTileService() {
         }
     }
 
-    override fun getTileSubtitle(): String = if (hasFeaturePermission()) "Mode" else getString(R.string.permission_missing)
+    override fun getTileSubtitle(): String =
+        if (hasFeaturePermission()) "Mode" else getString(R.string.permission_missing)
 
     override fun hasFeaturePermission(): Boolean {
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager

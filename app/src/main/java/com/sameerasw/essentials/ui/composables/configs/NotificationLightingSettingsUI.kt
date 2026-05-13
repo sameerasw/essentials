@@ -1,5 +1,7 @@
 package com.sameerasw.essentials.ui.composables.configs
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,9 +22,6 @@ import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.runtime.Composable
@@ -48,7 +47,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
-import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import com.sameerasw.essentials.domain.model.NotificationLightingSweepPosition
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
@@ -60,8 +58,6 @@ import com.sameerasw.essentials.ui.components.pickers.NotificationLightingSystem
 import com.sameerasw.essentials.ui.components.sheets.AppSelectionSheet
 import com.sameerasw.essentials.ui.components.sheets.PermissionItem
 import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
-import android.content.Intent
-import android.net.Uri
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.HapticUtil
@@ -156,13 +152,18 @@ fun NotificationLightingSettingsUI(
                 HapticUtil.performVirtualKeyHaptic(view)
                 showAppSelectionSheet = true
             },
-            modifier = Modifier.fillMaxWidth().height(64.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(64.dp)
         ) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
-            ){
-                Icon(painter = painterResource(id = R.drawable.rounded_apps_24), contentDescription = "Apps")
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.rounded_apps_24),
+                    contentDescription = "Apps"
+                )
                 Text(stringResource(R.string.action_select_apps))
             }
         }
@@ -248,7 +249,7 @@ fun NotificationLightingSettingsUI(
                     )
                 }
             }
-                    }
+        }
 
         // Stroke Adjustment Section (For STROKE style)
         if (style == NotificationLightingStyle.STROKE) {
@@ -611,135 +612,135 @@ fun NotificationLightingSettingsUI(
                 )
 
                 if (viewModel.notificationLightingColorMode.value == NotificationLightingColorMode.CUSTOM) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(
-                            color = MaterialTheme.colorScheme.surfaceBright,
-                            shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd)
-                        )
-                        .padding(bottom = 16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    val allColors = remember {
-                        val colors = mutableListOf<Int>()
-                        val totalColumns = 21
-
-                        for (page in 0..2) {
-
-                            val row1 = mutableListOf<Int>()
-                            val row2 = mutableListOf<Int>()
-                            val row3 = mutableListOf<Int>()
-
-                            for (col in 0..6) {
-                                val globalCol = page * 7 + col
-                                val hue = (globalCol.toFloat() / totalColumns) * 360f
-
-                                // Row 1: Light
-                                row1.add(
-                                    android.graphics.Color.HSVToColor(
-                                        floatArrayOf(
-                                            hue,
-                                            0.4f,
-                                            1.0f
-                                        )
-                                    )
-                                )
-                                // Row 2: Regular
-                                row2.add(
-                                    android.graphics.Color.HSVToColor(
-                                        floatArrayOf(
-                                            hue,
-                                            0.85f,
-                                            1.0f
-                                        )
-                                    )
-                                )
-                                // Row 3: Dark
-                                row3.add(
-                                    android.graphics.Color.HSVToColor(
-                                        floatArrayOf(
-                                            hue,
-                                            1.0f,
-                                            0.55f
-                                        )
-                                    )
-                                )
-                            }
-                            colors.addAll(row1)
-                            colors.addAll(row2)
-                            colors.addAll(row3)
-                        }
-                        colors
-                    }
-
-                    val pages = allColors.chunked(21)
-                    val pagerState = rememberPagerState(pageCount = { pages.size })
-                    val currentCustomColor = viewModel.notificationLightingCustomColor.intValue
-
-                    HorizontalPager(
-                        state = pagerState,
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(170.dp)
-                    ) { pageIndex ->
-                        val pageColors = pages[pageIndex]
-                        Column(
+                            .background(
+                                color = MaterialTheme.colorScheme.surfaceBright,
+                                shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd)
+                            )
+                            .padding(bottom = 16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        val allColors = remember {
+                            val colors = mutableListOf<Int>()
+                            val totalColumns = 21
+
+                            for (page in 0..2) {
+
+                                val row1 = mutableListOf<Int>()
+                                val row2 = mutableListOf<Int>()
+                                val row3 = mutableListOf<Int>()
+
+                                for (col in 0..6) {
+                                    val globalCol = page * 7 + col
+                                    val hue = (globalCol.toFloat() / totalColumns) * 360f
+
+                                    // Row 1: Light
+                                    row1.add(
+                                        android.graphics.Color.HSVToColor(
+                                            floatArrayOf(
+                                                hue,
+                                                0.4f,
+                                                1.0f
+                                            )
+                                        )
+                                    )
+                                    // Row 2: Regular
+                                    row2.add(
+                                        android.graphics.Color.HSVToColor(
+                                            floatArrayOf(
+                                                hue,
+                                                0.85f,
+                                                1.0f
+                                            )
+                                        )
+                                    )
+                                    // Row 3: Dark
+                                    row3.add(
+                                        android.graphics.Color.HSVToColor(
+                                            floatArrayOf(
+                                                hue,
+                                                1.0f,
+                                                0.55f
+                                            )
+                                        )
+                                    )
+                                }
+                                colors.addAll(row1)
+                                colors.addAll(row2)
+                                colors.addAll(row3)
+                            }
+                            colors
+                        }
+
+                        val pages = allColors.chunked(21)
+                        val pagerState = rememberPagerState(pageCount = { pages.size })
+                        val currentCustomColor = viewModel.notificationLightingCustomColor.intValue
+
+                        HorizontalPager(
+                            state = pagerState,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 8.dp),
-                            verticalArrangement = Arrangement.spacedBy(10.dp)
-                        ) {
-                            val rows = pageColors.chunked(7)
-                            rows.forEach { rowColors ->
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceEvenly
-                                ) {
-                                    rowColors.forEach { colorInt ->
-                                        ColorCircle(
-                                            color = Color(colorInt),
-                                            isSelected = currentCustomColor == colorInt,
-                                            size = 36.dp,
-                                            onClick = {
-                                                HapticUtil.performVirtualKeyHaptic(view)
-                                                viewModel.setNotificationLightingCustomColor(
-                                                    colorInt,
-                                                    context
-                                                )
-                                                viewModel.triggerNotificationLighting(context)
-                                            }
-                                        )
+                                .height(170.dp)
+                        ) { pageIndex ->
+                            val pageColors = pages[pageIndex]
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 8.dp),
+                                verticalArrangement = Arrangement.spacedBy(10.dp)
+                            ) {
+                                val rows = pageColors.chunked(7)
+                                rows.forEach { rowColors ->
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceEvenly
+                                    ) {
+                                        rowColors.forEach { colorInt ->
+                                            ColorCircle(
+                                                color = Color(colorInt),
+                                                isSelected = currentCustomColor == colorInt,
+                                                size = 36.dp,
+                                                onClick = {
+                                                    HapticUtil.performVirtualKeyHaptic(view)
+                                                    viewModel.setNotificationLightingCustomColor(
+                                                        colorInt,
+                                                        context
+                                                    )
+                                                    viewModel.triggerNotificationLighting(context)
+                                                }
+                                            )
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
 
-                    // Pager Indicator
-                    Row(
-                        Modifier
-                            .height(8.dp)
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        repeat(pages.size) { iteration ->
-                            val color =
-                                if (pagerState.currentPage == iteration) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
-                            Box(
-                                modifier = Modifier
-                                    .padding(horizontal = 4.dp)
-                                    .clip(CircleShape)
-                                    .background(color)
-                                    .size(8.dp)
-                            )
+                        // Pager Indicator
+                        Row(
+                            Modifier
+                                .height(8.dp)
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            repeat(pages.size) { iteration ->
+                                val color =
+                                    if (pagerState.currentPage == iteration) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
+                                Box(
+                                    modifier = Modifier
+                                        .padding(horizontal = 4.dp)
+                                        .clip(CircleShape)
+                                        .background(color)
+                                        .size(8.dp)
+                                )
+                            }
                         }
                     }
                 }
             }
         }
-    }
 
         if (style != NotificationLightingStyle.SYSTEM) {
             Text(
@@ -817,7 +818,10 @@ fun NotificationLightingSettingsUI(
                         dependentFeatures = listOf(R.string.notification_lighting_style_system),
                         actionLabel = R.string.perm_shizuku_install_action,
                         action = {
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/thedjchi/Shizuku"))
+                            val intent = Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse("https://github.com/thedjchi/Shizuku")
+                            )
                             context.startActivity(intent)
                         },
                         secondaryActionLabel = R.string.action_refresh,

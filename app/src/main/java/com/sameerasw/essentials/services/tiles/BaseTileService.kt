@@ -10,14 +10,11 @@ import androidx.core.content.edit
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.ShellUtils
-import com.sameerasw.essentials.utils.PermissionUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import android.os.Handler
-import android.os.Looper
 
 @RequiresApi(Build.VERSION_CODES.N)
 abstract class BaseTileService : TileService() {
@@ -70,10 +67,10 @@ abstract class BaseTileService : TileService() {
 
     override fun onClick() {
         super.onClick()
-        
+
         // Immediate feedback 1: Haptics
         HapticUtil.performHapticForService(this)
-        
+
         if (!hasFeaturePermission() || isProcessing) {
             return
         }

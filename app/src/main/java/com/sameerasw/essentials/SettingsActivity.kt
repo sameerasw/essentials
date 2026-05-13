@@ -10,12 +10,12 @@ import android.os.Bundle
 import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -23,10 +23,10 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -39,17 +39,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -64,7 +60,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.core.app.ActivityCompat
@@ -85,8 +80,8 @@ import com.sameerasw.essentials.ui.components.sheets.UpdateBottomSheet
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
-import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.DeviceUtils
+import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import rikka.shizuku.Shizuku
@@ -110,9 +105,10 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        
-        val isDarkMode = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) == 
-            android.content.res.Configuration.UI_MODE_NIGHT_YES
+
+        val isDarkMode =
+            (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                    android.content.res.Configuration.UI_MODE_NIGHT_YES
         window.setBackgroundDrawableResource(if (isDarkMode) android.R.color.black else R.color.app_window_background)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             window.isNavigationBarContrastEnforced = false
@@ -123,7 +119,7 @@ class SettingsActivity : AppCompatActivity() {
             val isPitchBlackThemeEnabled by viewModel.isPitchBlackThemeEnabled
             EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
                 val context = LocalContext.current
-                val view = LocalView.current
+                LocalView.current
 
                 var showBugReportSheet by remember { mutableStateOf(false) }
 
@@ -141,7 +137,8 @@ class SettingsActivity : AppCompatActivity() {
                 val statusBarHeightPx = with(LocalDensity.current) {
                     WindowInsets.statusBars.asPaddingValues().calculateTopPadding().toPx()
                 }
-                val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+                val statusBarHeight =
+                    WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
 
                 val isBlurEnabled by viewModel.isBlurEnabled
 
@@ -155,7 +152,7 @@ class SettingsActivity : AppCompatActivity() {
                             direction = BlurDirection.TOP
                         )
                 ) {
-                    val contentPadding = androidx.compose.foundation.layout.PaddingValues(
+                    val contentPadding = PaddingValues(
                         top = statusBarHeight,
                         bottom = 150.dp,
                         start = 16.dp,
@@ -215,7 +212,7 @@ class SettingsActivity : AppCompatActivity() {
 @Composable
 fun SettingsContent(
     viewModel: MainViewModel,
-    contentPadding: androidx.compose.foundation.layout.PaddingValues,
+    contentPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
     val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
@@ -320,7 +317,9 @@ fun SettingsContent(
                     showInstructionsSheet = true
                 },
                 showToggle = false,
-                modifier = Modifier.fillMaxWidth().height(72.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(72.dp)
             )
         }
 

@@ -1,6 +1,5 @@
 package com.sameerasw.essentials.utils
 
-import android.graphics.Matrix
 import android.graphics.Path
 import androidx.compose.material3.MaterialShapes
 import androidx.graphics.shapes.RoundedPolygon
@@ -61,14 +60,20 @@ object AmbientMusicShapeHelper {
         return allShapes[random.nextInt(allShapes.size)]
     }
 
-    fun updatePathFromMorph(morph: androidx.graphics.shapes.Morph, progress: Float, size: Float, targetPath: Path, rotation: Float = 0f) {
+    fun updatePathFromMorph(
+        morph: androidx.graphics.shapes.Morph,
+        progress: Float,
+        size: Float,
+        targetPath: Path,
+        rotation: Float = 0f
+    ) {
         val rawPath = morph.toPath(progress)
         val matrix = android.graphics.Matrix()
         matrix.postScale(size, size)
         if (rotation != 0f) {
             matrix.postRotate(rotation, size / 2f, size / 2f)
         }
-        
+
         targetPath.reset()
         targetPath.set(rawPath)
         targetPath.transform(matrix)

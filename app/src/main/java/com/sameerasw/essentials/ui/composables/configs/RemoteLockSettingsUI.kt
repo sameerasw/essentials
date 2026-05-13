@@ -1,18 +1,23 @@
 package com.sameerasw.essentials.ui.composables.configs
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
-import com.sameerasw.essentials.ui.components.cards.ConfigPickerItem
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
-import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
@@ -28,7 +33,7 @@ fun RemoteLockSettingsUI(
     val context = LocalContext.current
     val settingsRepository = remember { SettingsRepository(context) }
     var showPermissionSheet by remember { mutableStateOf(false) }
-    
+
     val isAccessibilityEnabled by mainViewModel.isAccessibilityEnabled
     val isDeviceAdminEnabled by mainViewModel.isDeviceAdminEnabled
     val remoteLockMode by watchViewModel.remoteLockMode
@@ -102,7 +107,7 @@ fun RemoteLockSettingsUI(
                 modifier = Modifier.highlight(highlightSetting == "remote_lock_mode")
             )
         }
-        
+
         Text(
             text = stringResource(R.string.remote_lock_mode_admin_note),
             style = MaterialTheme.typography.labelMedium,

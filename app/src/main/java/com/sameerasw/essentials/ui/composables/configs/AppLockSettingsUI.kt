@@ -18,12 +18,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentActivity
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.ui.components.cards.ConfigPickerItem
 import com.sameerasw.essentials.ui.components.cards.FeatureCard
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
-import com.sameerasw.essentials.ui.components.cards.ConfigPickerItem
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
-import com.sameerasw.essentials.ui.components.sheets.AppSelectionSheet
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
+import com.sameerasw.essentials.ui.components.sheets.AppSelectionSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.utils.BiometricHelper
 import com.sameerasw.essentials.viewmodels.MainViewModel
@@ -42,8 +42,9 @@ fun AppLockSettingsUI(
     val isUseUsageAccess by viewModel.isUseUsageAccess
     val isAccessibilityEnabled by viewModel.isAccessibilityEnabled
     val isUsageStatsPermissionGranted by viewModel.isUsageStatsPermissionGranted
-    
-    val canEnableAppLock = if (isUseUsageAccess) isUsageStatsPermissionGranted else isAccessibilityEnabled
+
+    val canEnableAppLock =
+        if (isUseUsageAccess) isUsageStatsPermissionGranted else isAccessibilityEnabled
 
     val delayLabels = listOf(
         stringResource(R.string.app_lock_auto_lock_delay_none),

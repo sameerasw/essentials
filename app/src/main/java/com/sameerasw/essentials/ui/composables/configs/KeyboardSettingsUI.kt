@@ -1,7 +1,6 @@
 package com.sameerasw.essentials.ui.composables.configs
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -319,7 +318,7 @@ fun KeyboardSettingsUI(
         }
 
         Spacer(Modifier.height(32.dp))
-        
+
         if (viewModel.isUserDictionarySheetVisible.value) {
             com.sameerasw.essentials.ui.composables.sheets.UserDictionaryBottomSheet(
                 viewModel = viewModel,

@@ -18,12 +18,13 @@ class ScaleAnimationsTileService : BaseTileService() {
     }
 
     override fun hasFeaturePermission(): Boolean {
-        return true 
+        return true
     }
 
     override fun getTileIcon(): Icon {
         val mode = settingsRepository.getScaleAnimationsMode()
-        val iconRes = if (mode == "glove") R.drawable.round_front_hand_24 else R.drawable.rounded_front_hand_24
+        val iconRes =
+            if (mode == "glove") R.drawable.round_front_hand_24 else R.drawable.rounded_front_hand_24
         return Icon.createWithResource(this, iconRes)
     }
 
@@ -56,15 +57,24 @@ class ScaleAnimationsTileService : BaseTileService() {
         settingsRepository.setScaleAnimationsMode(newMode)
 
         applyProfile(newProfile)
-        
+
     }
 
     private fun applyProfile(profile: ScaleAnimationsProfile) {
         settingsRepository.setFontScale(profile.fontScale)
         settingsRepository.setFontWeight(profile.fontWeight)
-        settingsRepository.setAnimationScale(android.provider.Settings.Global.ANIMATOR_DURATION_SCALE, profile.animatorDurationScale)
-        settingsRepository.setAnimationScale(android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE, profile.transitionAnimationScale)
-        settingsRepository.setAnimationScale(android.provider.Settings.Global.WINDOW_ANIMATION_SCALE, profile.windowAnimationScale)
+        settingsRepository.setAnimationScale(
+            android.provider.Settings.Global.ANIMATOR_DURATION_SCALE,
+            profile.animatorDurationScale
+        )
+        settingsRepository.setAnimationScale(
+            android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE,
+            profile.transitionAnimationScale
+        )
+        settingsRepository.setAnimationScale(
+            android.provider.Settings.Global.WINDOW_ANIMATION_SCALE,
+            profile.windowAnimationScale
+        )
         settingsRepository.setSmallestWidth(profile.smallestWidth)
         settingsRepository.setTouchSensitivityEnabled(profile.touchSensitivityEnabled)
         settingsRepository.setAutoRotateEnabled(profile.autoRotateEnabled)

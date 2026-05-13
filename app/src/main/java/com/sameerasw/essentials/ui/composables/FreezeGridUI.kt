@@ -1,9 +1,17 @@
 package com.sameerasw.essentials.ui.composables
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -21,12 +29,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroupDefaults
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -43,14 +51,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.input.pointer.pointerInput
@@ -58,44 +70,29 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.BorderStroke
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardCapitalization
-import android.content.Intent
-import android.net.Uri
-import android.provider.Settings
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.blur
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.unit.sp
-import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
-import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
-import com.sameerasw.essentials.ui.state.LocalMenuStateManager
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.NotificationApp
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
+import com.sameerasw.essentials.ui.state.LocalMenuStateManager
 import com.sameerasw.essentials.utils.FreezeManager
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.ShortcutUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -333,7 +330,10 @@ fun FreezeGridUI(
                                 modifier = Modifier.size(20.dp)
                             )
                             Spacer(Modifier.size(8.dp))
-                            Text(stringResource(R.string.action_freeze), fontSize = dimensionResource(R.dimen.font_small).value.sp)
+                            Text(
+                                stringResource(R.string.action_freeze),
+                                fontSize = dimensionResource(R.dimen.font_small).value.sp
+                            )
                         }
 
                         Spacer(Modifier.size(ButtonGroupDefaults.ConnectedSpaceBetween))
@@ -354,7 +354,10 @@ fun FreezeGridUI(
                                 modifier = Modifier.size(20.dp)
                             )
                             Spacer(Modifier.size(8.dp))
-                            Text(stringResource(R.string.action_unfreeze), fontSize = dimensionResource(R.dimen.font_small).value.sp)
+                            Text(
+                                stringResource(R.string.action_unfreeze),
+                                fontSize = dimensionResource(R.dimen.font_small).value.sp
+                            )
                         }
 
                         // More Menu Button
@@ -363,8 +366,8 @@ fun FreezeGridUI(
                                 HapticUtil.performVirtualKeyHaptic(view)
                                 isMenuExpanded = true
                             },
-                            enabled = isShizukuAvailable && isShizukuPermissionGranted
-                            , modifier = Modifier.size(dimensionResource(R.dimen.button_normal))
+                            enabled = isShizukuAvailable && isShizukuPermissionGranted,
+                            modifier = Modifier.size(dimensionResource(R.dimen.button_normal))
                         ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.rounded_more_vert_24),
@@ -516,19 +519,31 @@ fun FreezeGridUI(
                                                 },
                                                 onToggleFreeze = {
                                                     scope.launch(Dispatchers.IO) {
-                                                        val isCurrentlyFrozen = frozenStates[app.packageName] ?: false
+                                                        val isCurrentlyFrozen =
+                                                            frozenStates[app.packageName] ?: false
                                                         if (isCurrentlyFrozen) {
-                                                            FreezeManager.unfreezeApp(context, app.packageName)
+                                                            FreezeManager.unfreezeApp(
+                                                                context,
+                                                                app.packageName
+                                                            )
                                                         } else {
-                                                            FreezeManager.freezeApp(context, app.packageName)
+                                                            FreezeManager.freezeApp(
+                                                                context,
+                                                                app.packageName
+                                                            )
                                                         }
                                                         withContext(Dispatchers.Main) {
-                                                            frozenStates[app.packageName] = !isCurrentlyFrozen
+                                                            frozenStates[app.packageName] =
+                                                                !isCurrentlyFrozen
                                                         }
                                                     }
                                                 },
                                                 onRemove = {
-                                                    viewModel.updateFreezeAppEnabled(context, app.packageName, false)
+                                                    viewModel.updateFreezeAppEnabled(
+                                                        context,
+                                                        app.packageName,
+                                                        false
+                                                    )
                                                 }
                                             )
                                         }
@@ -592,7 +607,7 @@ fun AppGridItem(
     }
 
     val grayscaleMatrix = remember { ColorMatrix().apply { setToSaturation(0.4f) } }
-    
+
     val borderColor by animateColorAsState(
         targetValue = if (isHighlighted) MaterialTheme.colorScheme.primary else Color.Transparent,
         label = "borderColorAnimation"
@@ -679,7 +694,11 @@ fun AppGridItem(
             ) {
                 SegmentedDropdownMenuItem(
                     text = {
-                        Text(if (isFrozen) stringResource(R.string.action_unfreeze) else stringResource(R.string.action_freeze))
+                        Text(
+                            if (isFrozen) stringResource(R.string.action_unfreeze) else stringResource(
+                                R.string.action_freeze
+                            )
+                        )
                     },
                     onClick = {
                         showMenu = false

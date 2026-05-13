@@ -93,7 +93,7 @@ fun AlwaysOnDisplaySettingsUI(
                 modifier = Modifier.highlight(highlightSetting == "notification_glance_same_apps")
             )
 
-            val isAccessibilityEnabled = viewModel.isAccessibilityEnabled.value
+            viewModel.isAccessibilityEnabled.value
             IconToggleItem(
                 iconRes = R.drawable.rounded_power_settings_new_24,
                 title = stringResource(R.string.feat_aod_force_turn_off_title),
@@ -101,9 +101,14 @@ fun AlwaysOnDisplaySettingsUI(
                 onCheckedChange = { checked ->
                     HapticUtil.performVirtualKeyHaptic(view)
                     // Check latest snapshot inside lambda
-                    val currentlyEnabled = com.sameerasw.essentials.utils.PermissionUtils.isAccessibilityServiceEnabled(context)
+                    val currentlyEnabled =
+                        com.sameerasw.essentials.utils.PermissionUtils.isAccessibilityServiceEnabled(
+                            context
+                        )
                     if (checked && !currentlyEnabled) {
-                        com.sameerasw.essentials.utils.PermissionUtils.openAccessibilitySettings(context)
+                        com.sameerasw.essentials.utils.PermissionUtils.openAccessibilitySettings(
+                            context
+                        )
                     } else {
                         viewModel.toggleAodForceTurnOffEnabled(checked)
                     }
@@ -119,12 +124,12 @@ fun AlwaysOnDisplaySettingsUI(
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
-            Text(
-                text = stringResource(R.string.feat_aod_force_turn_off_desc),
-                modifier = Modifier.padding(16.dp),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+        Text(
+            text = stringResource(R.string.feat_aod_force_turn_off_desc),
+            modifier = Modifier.padding(16.dp),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
 
         if (!viewModel.isNotificationGlanceSameAsLightingEnabled.value) {
             Button(
@@ -145,7 +150,12 @@ fun AlwaysOnDisplaySettingsUI(
             AppSelectionSheet(
                 onDismissRequest = { showAppSelectionSheet = false },
                 onLoadApps = { viewModel.loadNotificationGlanceSelectedApps(it) },
-                onSaveApps = { ctx, apps -> viewModel.saveNotificationGlanceSelectedApps(ctx, apps) },
+                onSaveApps = { ctx, apps ->
+                    viewModel.saveNotificationGlanceSelectedApps(
+                        ctx,
+                        apps
+                    )
+                },
                 onAppToggle = { ctx, pkg, enabled ->
                     viewModel.updateNotificationGlanceAppEnabled(
                         ctx,

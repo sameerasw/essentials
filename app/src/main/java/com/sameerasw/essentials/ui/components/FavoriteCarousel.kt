@@ -24,7 +24,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,7 +41,6 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.Feature
@@ -185,7 +183,9 @@ fun FavoriteCarousel(
                         style = MaterialTheme.typography.labelSmall,
                         textAlign = TextAlign.Center,
                         maxLines = 1,
-                        modifier = Modifier.fillMaxWidth().basicMarquee()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .basicMarquee()
                     )
                 }
 

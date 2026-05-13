@@ -37,7 +37,7 @@ fun NotificationLightingSystemModePicker(
         R.drawable.rounded_my_location_24
     )
     val labels = listOf("Charging", "Auth", "Custom") // For semantics/descriptions
-    
+
     val view = LocalView.current
 
     RoundedCardContainer(modifier = Modifier) {

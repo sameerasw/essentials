@@ -1,7 +1,6 @@
 package com.sameerasw.essentials.ime
 
 import android.content.ClipboardManager
-import android.content.Context
 import android.inputmethodservice.InputMethodService
 import android.util.Log
 import android.view.KeyEvent
@@ -375,17 +374,20 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                                         false
                                     )
                                 }
+
                                 SettingsRepository.KEY_USER_DICT_LAST_UPDATE -> {
                                     lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
                                         suggestionEngine.loadUserDictionary()
                                     }
                                 }
+
                                 SettingsRepository.KEY_KEYBOARD_LONG_PRESS_SYMBOLS -> {
                                     isLongPressSymbolsEnabled = sharedPreferences.getBoolean(
                                         SettingsRepository.KEY_KEYBOARD_LONG_PRESS_SYMBOLS,
                                         false
                                     )
                                 }
+
                                 SettingsRepository.KEY_KEYBOARD_ACCENTED_CHARACTERS -> {
                                     isAccentedCharactersEnabled = sharedPreferences.getBoolean(
                                         SettingsRepository.KEY_KEYBOARD_ACCENTED_CHARACTERS,
@@ -447,7 +449,8 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                                     val textBefore = ic.getTextBeforeCursor(50, 0)?.toString()
                                     if (!textBefore.isNullOrEmpty()) {
                                         val content = textBefore.dropLast(1)
-                                        val lastWord = content.split(Regex("[^a-zA-Z0-9']")).lastOrNull() ?: ""
+                                        val lastWord =
+                                            content.split(Regex("[^a-zA-Z0-9']")).lastOrNull() ?: ""
                                         if (lastWord.isNotEmpty()) {
                                             lifecycleScope.launch(kotlinx.coroutines.Dispatchers.Default) {
                                                 suggestionEngine.learnWord(lastWord)
@@ -468,42 +471,94 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                             val ic = currentInputConnection
                             undoRedoManager.undo(ic)
                         },
-                         onKeyPress = { keyCode ->
-                             handleKeyPress(keyCode)
-                         },
-                         canDelete = {
-                             currentInputConnection?.getTextBeforeCursor(1, 0)?.isNotEmpty() == true
-                         },
+                        onKeyPress = { keyCode ->
+                            handleKeyPress(keyCode)
+                        },
+                        canDelete = {
+                            currentInputConnection?.getTextBeforeCursor(1, 0)?.isNotEmpty() == true
+                        },
                         onCursorMove = { keyCode, isSelection, isWordJump ->
                             val ic = currentInputConnection
                             if (ic != null) {
                                 if (isSelection || isWordJump) {
                                     val eventTime = System.currentTimeMillis()
                                     var metaState = 0
-                                    
+
                                     // Press Modifiers
                                     if (isSelection) {
-                                        ic.sendKeyEvent(KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_SHIFT_LEFT, 0, 0))
-                                        metaState = metaState or KeyEvent.META_SHIFT_ON or KeyEvent.META_SHIFT_LEFT_ON
+                                        ic.sendKeyEvent(
+                                            KeyEvent(
+                                                eventTime,
+                                                eventTime,
+                                                KeyEvent.ACTION_DOWN,
+                                                KeyEvent.KEYCODE_SHIFT_LEFT,
+                                                0,
+                                                0
+                                            )
+                                        )
+                                        metaState =
+                                            metaState or KeyEvent.META_SHIFT_ON or KeyEvent.META_SHIFT_LEFT_ON
                                     }
                                     if (isWordJump) {
-                                        ic.sendKeyEvent(KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_CTRL_LEFT, 0, 0))
-                                        metaState = metaState or KeyEvent.META_CTRL_ON or KeyEvent.META_CTRL_LEFT_ON
+                                        ic.sendKeyEvent(
+                                            KeyEvent(
+                                                eventTime,
+                                                eventTime,
+                                                KeyEvent.ACTION_DOWN,
+                                                KeyEvent.KEYCODE_CTRL_LEFT,
+                                                0,
+                                                0
+                                            )
+                                        )
+                                        metaState =
+                                            metaState or KeyEvent.META_CTRL_ON or KeyEvent.META_CTRL_LEFT_ON
                                     }
 
                                     // The Arrow Key
                                     ic.sendKeyEvent(
-                                        KeyEvent(eventTime, eventTime, KeyEvent.ACTION_DOWN, keyCode, 0, metaState)
+                                        KeyEvent(
+                                            eventTime,
+                                            eventTime,
+                                            KeyEvent.ACTION_DOWN,
+                                            keyCode,
+                                            0,
+                                            metaState
+                                        )
                                     )
                                     ic.sendKeyEvent(
-                                        KeyEvent(eventTime, eventTime, KeyEvent.ACTION_UP, keyCode, 0, metaState)
+                                        KeyEvent(
+                                            eventTime,
+                                            eventTime,
+                                            KeyEvent.ACTION_UP,
+                                            keyCode,
+                                            0,
+                                            metaState
+                                        )
                                     )
 
                                     if (isWordJump) {
-                                        ic.sendKeyEvent(KeyEvent(eventTime, eventTime, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_CTRL_LEFT, 0, 0))
+                                        ic.sendKeyEvent(
+                                            KeyEvent(
+                                                eventTime,
+                                                eventTime,
+                                                KeyEvent.ACTION_UP,
+                                                KeyEvent.KEYCODE_CTRL_LEFT,
+                                                0,
+                                                0
+                                            )
+                                        )
                                     }
                                     if (isSelection) {
-                                        ic.sendKeyEvent(KeyEvent(eventTime, eventTime, KeyEvent.ACTION_UP, KeyEvent.KEYCODE_SHIFT_LEFT, 0, 0))
+                                        ic.sendKeyEvent(
+                                            KeyEvent(
+                                                eventTime,
+                                                eventTime,
+                                                KeyEvent.ACTION_UP,
+                                                KeyEvent.KEYCODE_SHIFT_LEFT,
+                                                0,
+                                                0
+                                            )
+                                        )
                                     }
                                 } else {
                                     handleKeyPress(keyCode)
@@ -571,10 +626,14 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
                     if (!before.isNullOrEmpty()) {
                         var deleteCount = 1
                         val len = before.length
-                        if (len >= 2 && Character.isSurrogatePair(before[len - 2], before[len - 1])) {
+                        if (len >= 2 && Character.isSurrogatePair(
+                                before[len - 2],
+                                before[len - 1]
+                            )
+                        ) {
                             deleteCount = 2
                         }
-                        
+
                         val charToDelete = before.subSequence(len - deleteCount, len).toString()
                         undoRedoManager.recordDelete(charToDelete)
                         inputConnection.deleteSurroundingText(deleteCount, 0)
@@ -655,9 +714,10 @@ class EssentialsInputMethodService : InputMethodService(), LifecycleOwner, ViewM
 
         // Lookup suggestion for current word
         if (newSelStart == newSelEnd) {
-             updateSuggestions()
+            updateSuggestions()
         }
     }
+
     fun deleteClipboardItem(text: String) {
         val current = _clipboardHistory.value.toMutableList()
         if (current.remove(text)) {

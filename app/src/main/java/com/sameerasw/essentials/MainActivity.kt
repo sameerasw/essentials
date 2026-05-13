@@ -6,40 +6,45 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.animation.AnticipateInterpolator
+import android.widget.Toast
+import androidx.activity.compose.PredictiveBackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.compose.animation.core.animateFloatAsState
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularWavyProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingToolbarDefaults
-import androidx.compose.material3.FloatingToolbarDefaults.ScreenOffset
 import androidx.compose.material3.FloatingToolbarExitDirection.Companion.Bottom
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -55,56 +60,38 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.draw.alpha
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
-import androidx.activity.compose.PredictiveBackHandler
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
-import androidx.appcompat.app.AppCompatActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import android.widget.Toast
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import coil.compose.AsyncImage
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.DIYTabs
 import com.sameerasw.essentials.domain.registry.initPermissionRegistry
 import com.sameerasw.essentials.ui.components.EssentialsFloatingToolbar
 import com.sameerasw.essentials.ui.components.ToolbarItem
 import com.sameerasw.essentials.ui.components.cards.TrackedRepoCard
-import androidx.compose.foundation.layout.statusBarsPadding
-import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.components.sheets.AddRepoBottomSheet
 import com.sameerasw.essentials.ui.components.sheets.GitHubAuthSheet
 import com.sameerasw.essentials.ui.components.sheets.InstructionsBottomSheet
 import com.sameerasw.essentials.ui.components.sheets.PrankBottomSheet
 import com.sameerasw.essentials.ui.components.sheets.UpdateBottomSheet
-import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
-import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
-import com.sameerasw.essentials.ui.composables.WelcomeScreen
 import com.sameerasw.essentials.ui.composables.DIYScreen
 import com.sameerasw.essentials.ui.composables.FreezeGridUI
 import com.sameerasw.essentials.ui.composables.SetupFeatures
+import com.sameerasw.essentials.ui.composables.WelcomeScreen
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
@@ -114,6 +101,9 @@ import com.sameerasw.essentials.viewmodels.GitHubAuthViewModel
 import com.sameerasw.essentials.viewmodels.LocationReachedViewModel
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
     val viewModel: MainViewModel by viewModels()
@@ -201,7 +191,8 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 // Animate the branding icon if it exists
-                val brandingViewId = resources.getIdentifier("splashscreen_branding_view", "id", "android")
+                val brandingViewId =
+                    resources.getIdentifier("splashscreen_branding_view", "id", "android")
                 val brandingView = if (brandingViewId != 0) {
                     splashScreenView.findViewById<android.view.View>(brandingViewId)
                 } else {
@@ -259,7 +250,6 @@ class MainActivity : AppCompatActivity() {
 
                     var showUpdateSheet by remember { mutableStateOf(false) }
                     var showInstructionsSheet by remember { mutableStateOf(false) }
-                    val isUpdateAvailable by viewModel.isUpdateAvailable
                     val updateInfo by viewModel.updateInfo
 
                     var showGitHubAuthSheet by remember { mutableStateOf(false) }
@@ -298,7 +288,11 @@ class MainActivity : AppCompatActivity() {
                         val index = tabs.indexOf(defaultTab)
                         if (index != -1) index else 0
                     }
-                    var currentPage by remember { androidx.compose.runtime.mutableIntStateOf(initialPage) }
+                    var currentPage by remember {
+                        androidx.compose.runtime.mutableIntStateOf(
+                            initialPage
+                        )
+                    }
                     val backProgress = remember { Animatable(0f) }
                     val scope = rememberCoroutineScope()
 
@@ -359,7 +353,7 @@ class MainActivity : AppCompatActivity() {
                     val prankSheetState = androidx.compose.material3.rememberModalBottomSheetState(
                         skipPartiallyExpanded = true
                     )
-                    
+
                     if (isAprilFoolsSheetVisible) {
                         PrankBottomSheet(
                             viewModel = viewModel,
@@ -460,13 +454,20 @@ class MainActivity : AppCompatActivity() {
                     }
                     Box(modifier = Modifier.fillMaxSize()) {
                         Scaffold(
-                            contentWindowInsets = androidx.compose.foundation.layout.WindowInsets(0, 0, 0, 0),
+                            contentWindowInsets = WindowInsets(
+                                0,
+                                0,
+                                0,
+                                0
+                            ),
                             containerColor = MaterialTheme.colorScheme.surfaceContainer,
                             topBar = {}
                         ) { innerPadding ->
-                            val statusBarHeightPx = with(androidx.compose.ui.platform.LocalDensity.current) {
-                                WindowInsets.statusBars.asPaddingValues().calculateTopPadding().toPx()
-                            }
+                            val statusBarHeightPx =
+                                with(androidx.compose.ui.platform.LocalDensity.current) {
+                                    WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+                                        .toPx()
+                                }
 
                             Box(
                                 modifier = Modifier
@@ -478,7 +479,8 @@ class MainActivity : AppCompatActivity() {
                                     )
                             ) {
                                 val currentTab = remember(tabs, currentPage) {
-                                    tabs.getOrNull(currentPage) ?: tabs.firstOrNull() ?: DIYTabs.ESSENTIALS
+                                    tabs.getOrNull(currentPage) ?: tabs.firstOrNull()
+                                    ?: DIYTabs.ESSENTIALS
                                 }
 
                                 EssentialsFloatingToolbar(
@@ -505,16 +507,28 @@ class MainActivity : AppCompatActivity() {
                                                     HapticUtil.performVirtualKeyHaptic(view)
                                                     when (currentTab) {
                                                         DIYTabs.ESSENTIALS -> {
-                                                            startActivity(Intent(context, SettingsActivity::class.java))
+                                                            startActivity(
+                                                                Intent(
+                                                                    context,
+                                                                    SettingsActivity::class.java
+                                                                )
+                                                            )
                                                         }
+
                                                         DIYTabs.FREEZE -> {
-                                                            startActivity(Intent(context, FeatureSettingsActivity::class.java).apply {
-                                                                putExtra("feature", "Freeze")
-                                                            })
+                                                            startActivity(
+                                                                Intent(
+                                                                    context,
+                                                                    FeatureSettingsActivity::class.java
+                                                                ).apply {
+                                                                    putExtra("feature", "Freeze")
+                                                                })
                                                         }
+
                                                         DIYTabs.DIY -> {
                                                             showNewAutomationSheet = true
                                                         }
+
                                                         DIYTabs.APPS -> {
                                                             val user = gitHubUser
                                                             if (user != null) {
@@ -528,7 +542,12 @@ class MainActivity : AppCompatActivity() {
                                                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                                                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                                                 shape = MaterialTheme.shapes.large,
-                                                elevation = androidx.compose.material3.FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp)
+                                                elevation = androidx.compose.material3.FloatingActionButtonDefaults.elevation(
+                                                    0.dp,
+                                                    0.dp,
+                                                    0.dp,
+                                                    0.dp
+                                                )
                                             ) {
                                                 when (currentTab) {
                                                     DIYTabs.ESSENTIALS -> {
@@ -537,24 +556,29 @@ class MainActivity : AppCompatActivity() {
                                                             contentDescription = stringResource(R.string.content_desc_settings)
                                                         )
                                                     }
+
                                                     DIYTabs.FREEZE -> {
                                                         Icon(
                                                             painter = painterResource(id = R.drawable.rounded_settings_heart_24),
                                                             contentDescription = stringResource(R.string.content_desc_settings)
                                                         )
                                                     }
+
                                                     DIYTabs.DIY -> {
                                                         Icon(
                                                             painter = painterResource(id = R.drawable.rounded_add_24),
                                                             contentDescription = stringResource(R.string.diy_editor_new_title)
                                                         )
                                                     }
+
                                                     DIYTabs.APPS -> {
                                                         val user = gitHubUser
                                                         if (user != null) {
                                                             AsyncImage(
                                                                 model = user.avatarUrl,
-                                                                contentDescription = stringResource(R.string.action_profile),
+                                                                contentDescription = stringResource(
+                                                                    R.string.action_profile
+                                                                ),
                                                                 contentScale = ContentScale.Crop,
                                                                 modifier = Modifier
                                                                     .size(24.dp)
@@ -565,7 +589,9 @@ class MainActivity : AppCompatActivity() {
                                                         } else {
                                                             Icon(
                                                                 painter = painterResource(id = R.drawable.brand_github),
-                                                                contentDescription = stringResource(R.string.action_sign_in_github)
+                                                                contentDescription = stringResource(
+                                                                    R.string.action_sign_in_github
+                                                                )
                                                             )
                                                         }
                                                     }
@@ -577,11 +603,19 @@ class MainActivity : AppCompatActivity() {
                                                 if (user != null) {
                                                     SegmentedDropdownMenu(
                                                         expanded = showFabProfileMenu,
-                                                        onDismissRequest = { showFabProfileMenu = false }
+                                                        onDismissRequest = {
+                                                            showFabProfileMenu = false
+                                                        }
                                                     ) {
                                                         SegmentedDropdownMenuItem(
-                                                            text = { Text(user.name ?: user.login) },
-                                                            onClick = { showFabProfileMenu = false },
+                                                            text = {
+                                                                Text(
+                                                                    user.name ?: user.login
+                                                                )
+                                                            },
+                                                            onClick = {
+                                                                showFabProfileMenu = false
+                                                            },
                                                             leadingIcon = {
                                                                 Icon(
                                                                     painter = painterResource(id = R.drawable.brand_github),
@@ -635,7 +669,8 @@ class MainActivity : AppCompatActivity() {
                                         ),
                                     label = "Tab Transition"
                                 ) { targetPage ->
-                                    val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+                                    val statusBarHeight = WindowInsets.statusBars.asPaddingValues()
+                                        .calculateTopPadding()
                                     val topContentPadding = statusBarHeight
                                     val bottomToolbarPadding = 150.dp
                                     val contentPadding = PaddingValues(
@@ -661,14 +696,22 @@ class MainActivity : AppCompatActivity() {
                                                 modifier = Modifier.fillMaxSize(),
                                                 contentPadding = contentPadding,
                                                 onGetStartedClick = {
-                                                    startActivity(Intent(context, FeatureSettingsActivity::class.java).apply {
-                                                        putExtra("feature", "Freeze")
-                                                    })
+                                                    startActivity(
+                                                        Intent(
+                                                            context,
+                                                            FeatureSettingsActivity::class.java
+                                                        ).apply {
+                                                            putExtra("feature", "Freeze")
+                                                        })
                                                 },
                                                 onSettingsClick = {
-                                                    startActivity(Intent(context, FeatureSettingsActivity::class.java).apply {
-                                                        putExtra("feature", "Freeze")
-                                                    })
+                                                    startActivity(
+                                                        Intent(
+                                                            context,
+                                                            FeatureSettingsActivity::class.java
+                                                        ).apply {
+                                                            putExtra("feature", "Freeze")
+                                                        })
                                                 }
                                             )
                                         }
@@ -678,8 +721,12 @@ class MainActivity : AppCompatActivity() {
                                                 modifier = Modifier.fillMaxSize(),
                                                 contentPadding = contentPadding,
                                                 showNewAutomationSheet = showNewAutomationSheet,
-                                                onDismissNewAutomationSheet = { showNewAutomationSheet = false },
-                                                onNewAutomationClick = { showNewAutomationSheet = true }
+                                                onDismissNewAutomationSheet = {
+                                                    showNewAutomationSheet = false
+                                                },
+                                                onNewAutomationClick = {
+                                                    showNewAutomationSheet = true
+                                                }
                                             )
                                         }
 
@@ -691,7 +738,11 @@ class MainActivity : AppCompatActivity() {
                                                     Column(
                                                         modifier = Modifier
                                                             .fillMaxSize()
-                                                            .padding(bottom = bottomToolbarPadding, start = 16.dp, end = 16.dp),
+                                                            .padding(
+                                                                bottom = bottomToolbarPadding,
+                                                                start = 16.dp,
+                                                                end = 16.dp
+                                                            ),
                                                         horizontalAlignment = Alignment.CenterHorizontally,
                                                         verticalArrangement = Arrangement.Center
                                                     ) {
@@ -701,180 +752,147 @@ class MainActivity : AppCompatActivity() {
                                                     Column(
                                                         modifier = Modifier
                                                             .fillMaxSize()
-                                                            .padding(bottom = bottomToolbarPadding, start = 16.dp, end = 16.dp),
+                                                            .padding(
+                                                                bottom = bottomToolbarPadding,
+                                                                start = 16.dp,
+                                                                end = 16.dp
+                                                            ),
                                                         horizontalAlignment = Alignment.CenterHorizontally,
                                                         verticalArrangement = Arrangement.Center
                                                     ) {
-                                                    Text(
-                                                        text = stringResource(R.string.msg_no_repos_tracked),
-                                                        style = MaterialTheme.typography.bodyLarge,
-                                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                                    )
+                                                        Text(
+                                                            text = stringResource(R.string.msg_no_repos_tracked),
+                                                            style = MaterialTheme.typography.bodyLarge,
+                                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                        )
 
-                                                    Spacer(modifier = Modifier.height(16.dp))
+                                                        Spacer(modifier = Modifier.height(16.dp))
 
-                                                    Button(
-                                                        onClick = {
-                                                            HapticUtil.performVirtualKeyHaptic(view)
-                                                            showAddRepoSheet = true
+                                                        Button(
+                                                            onClick = {
+                                                                HapticUtil.performVirtualKeyHaptic(
+                                                                    view
+                                                                )
+                                                                showAddRepoSheet = true
+                                                            }
+                                                        ) {
+                                                            Text(stringResource(R.string.action_add_repository))
                                                         }
+
+                                                        Spacer(modifier = Modifier.height(32.dp))
+
+                                                        Text(
+                                                            text = stringResource(R.string.label_apps),
+                                                            style = MaterialTheme.typography.titleMedium,
+                                                            modifier = Modifier.padding(bottom = 12.dp),
+                                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                        )
+
+                                                        ImportExportButtons(
+                                                            view = view,
+                                                            exportLauncher = exportLauncher,
+                                                            importLauncher = importLauncher,
+                                                            showExport = false
+                                                        )
+                                                    }
+                                                } else {
+                                                    val pending =
+                                                        trackedRepos.filter { it.isUpdateAvailable && it.mappedPackageName != null }
+                                                            .sortedByDescending { it.publishedAt }
+                                                    val upToDate =
+                                                        trackedRepos.filter { !it.isUpdateAvailable && it.mappedPackageName != null }
+                                                            .sortedByDescending { it.publishedAt }
+                                                    val notInstalled =
+                                                        trackedRepos.filter { it.mappedPackageName == null }
+
+                                                    LazyColumn(
+                                                        modifier = Modifier.fillMaxSize(),
+                                                        contentPadding = PaddingValues(
+                                                            bottom = bottomToolbarPadding,
+                                                            start = 16.dp,
+                                                            end = 16.dp
+                                                        ),
+                                                        verticalArrangement = Arrangement.spacedBy(
+                                                            16.dp
+                                                        )
                                                     ) {
-                                                        Text(stringResource(R.string.action_add_repository))
-                                                    }
-
-                                                    Spacer(modifier = Modifier.height(32.dp))
-
-                                                    Text(
-                                                        text = stringResource(R.string.label_apps),
-                                                        style = MaterialTheme.typography.titleMedium,
-                                                        modifier = Modifier.padding(bottom = 12.dp),
-                                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                                    )
-
-                                                    ImportExportButtons(
-                                                        view = view,
-                                                        exportLauncher = exportLauncher,
-                                                        importLauncher = importLauncher,
-                                                        showExport = false
-                                                    )
-                                                }
-                                            } else {
-                                                val pending =
-                                                    trackedRepos.filter { it.isUpdateAvailable && it.mappedPackageName != null }
-                                                        .sortedByDescending { it.publishedAt }
-                                                val upToDate =
-                                                    trackedRepos.filter { !it.isUpdateAvailable && it.mappedPackageName != null }
-                                                        .sortedByDescending { it.publishedAt }
-                                                val notInstalled =
-                                                    trackedRepos.filter { it.mappedPackageName == null }
-
-                                                LazyColumn(
-                                                    modifier = Modifier.fillMaxSize(),
-                                                    contentPadding = PaddingValues(
-                                                        bottom = bottomToolbarPadding,
-                                                        start = 16.dp,
-                                                        end = 16.dp
-                                                    ),
-                                                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                                                ) {
-                                                    item {
-                                                        Spacer(modifier = Modifier.height(topContentPadding))
-                                                    }
-                                                    item {
-                                                        RoundedCardContainer {
-                                                            AppsActionButtons(
-                                                                view = view,
-                                                                onAddClick = {
-                                                                    HapticUtil.performUIHaptic(view)
-                                                                    showAddRepoSheet = true
-                                                                },
-                                                                onRefreshAllClick = {
-                                                                    HapticUtil.performUIHaptic(view)
-                                                                    updatesViewModel.checkForUpdates(context)
-                                                                },
-                                                                isRefreshing = refreshingRepoIds.isNotEmpty(),
-                                                                progress = { animatedProgress }
-                                                            )
-                                                        }
-                                                    }
-
-                                                    // Pending Section
-                                                    if (pending.isNotEmpty()) {
                                                         item {
-                                                            Text(
-                                                                text = "${stringResource(R.string.label_pending)} (${pending.size})",
-                                                                style = MaterialTheme.typography.titleMedium,
-                                                                modifier = Modifier.padding(
-                                                                    start = 16.dp,
-                                                                    bottom = 8.dp
-                                                                ),
-                                                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                            Spacer(
+                                                                modifier = Modifier.height(
+                                                                    topContentPadding
+                                                                )
                                                             )
                                                         }
                                                         item {
                                                             RoundedCardContainer {
-                                                                pending.forEach { repo ->
-                                                                    val isInstalling =
-                                                                        updatesViewModel.installingRepoId.value == repo.fullName
-                                                                    TrackedRepoCard(
-                                                                        repo = repo,
-                                                                        isLoading = refreshingRepoIds.contains(
-                                                                            repo.fullName
-                                                                        ),
-                                                                        installStatus = if (isInstalling) updatesViewModel.installStatus.value else null,
-                                                                        downloadProgress = if (isInstalling) updatesViewModel.updateProgress.value else 0f,
-                                                                        onClick = {
-                                                                            updatesViewModel.prepareEdit(
-                                                                                context,
-                                                                                repo
-                                                                            )
-                                                                            showAddRepoSheet = true
-                                                                        },
-                                                                        onActionClick = {
-                                                                            updatesViewModel.downloadAndInstall(
-                                                                                context,
-                                                                                repo
-                                                                            )
-                                                                        },
-                                                                        onDeleteClick = {
-                                                                            updatesViewModel.untrackRepo(
-                                                                                context,
-                                                                                repo.fullName
-                                                                            )
-                                                                        },
-                                                                        onShowReleaseNotes = {
-                                                                            repoToShowReleaseNotesFullName =
-                                                                                repo.fullName
-                                                                            updatesViewModel.fetchReleaseNotesIfNeeded(
-                                                                                context,
-                                                                                repo
-                                                                            )
-                                                                        }
-                                                                    )
-                                                                }
+                                                                AppsActionButtons(
+                                                                    view = view,
+                                                                    onAddClick = {
+                                                                        HapticUtil.performUIHaptic(
+                                                                            view
+                                                                        )
+                                                                        showAddRepoSheet = true
+                                                                    },
+                                                                    onRefreshAllClick = {
+                                                                        HapticUtil.performUIHaptic(
+                                                                            view
+                                                                        )
+                                                                        updatesViewModel.checkForUpdates(
+                                                                            context
+                                                                        )
+                                                                    },
+                                                                    isRefreshing = refreshingRepoIds.isNotEmpty(),
+                                                                    progress = { animatedProgress }
+                                                                )
                                                             }
                                                         }
-                                                    }
 
-                                                    // Up-to-date Section
-                                                    if (upToDate.isNotEmpty()) {
-                                                        item {
-                                                            Text(
-                                                                text = "${stringResource(R.string.label_up_to_date)} (${upToDate.size})",
-                                                                style = MaterialTheme.typography.titleMedium,
-                                                                modifier = Modifier.padding(
-                                                                    start = 16.dp,
-                                                                    bottom = 8.dp
-                                                                ),
-                                                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                                                            )
-                                                        }
-                                                        item {
-                                                            RoundedCardContainer {
-                                                                upToDate.forEach { repo ->
-                                                                    val isInstalling =
-                                                                        updatesViewModel.installingRepoId.value == repo.fullName
-                                                                    TrackedRepoCard(
-                                                                        repo = repo,
-                                                                        isLoading = refreshingRepoIds.contains(
-                                                                            repo.fullName
-                                                                        ),
-                                                                        installStatus = if (isInstalling) updatesViewModel.installStatus.value else null,
-                                                                        downloadProgress = if (isInstalling) updatesViewModel.updateProgress.value else 0f,
-                                                                        onClick = {
-                                                                            updatesViewModel.prepareEdit(
-                                                                                context,
-                                                                                repo
-                                                                            )
-                                                                            showAddRepoSheet = true
-                                                                        },
-                                                                        onActionClick = {
-                                                                            if (repo.isUpdateAvailable) {
+                                                        // Pending Section
+                                                        if (pending.isNotEmpty()) {
+                                                            item {
+                                                                Text(
+                                                                    text = "${stringResource(R.string.label_pending)} (${pending.size})",
+                                                                    style = MaterialTheme.typography.titleMedium,
+                                                                    modifier = Modifier.padding(
+                                                                        start = 16.dp,
+                                                                        bottom = 8.dp
+                                                                    ),
+                                                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                                )
+                                                            }
+                                                            item {
+                                                                RoundedCardContainer {
+                                                                    pending.forEach { repo ->
+                                                                        val isInstalling =
+                                                                            updatesViewModel.installingRepoId.value == repo.fullName
+                                                                        TrackedRepoCard(
+                                                                            repo = repo,
+                                                                            isLoading = refreshingRepoIds.contains(
+                                                                                repo.fullName
+                                                                            ),
+                                                                            installStatus = if (isInstalling) updatesViewModel.installStatus.value else null,
+                                                                            downloadProgress = if (isInstalling) updatesViewModel.updateProgress.value else 0f,
+                                                                            onClick = {
+                                                                                updatesViewModel.prepareEdit(
+                                                                                    context,
+                                                                                    repo
+                                                                                )
+                                                                                showAddRepoSheet =
+                                                                                    true
+                                                                            },
+                                                                            onActionClick = {
                                                                                 updatesViewModel.downloadAndInstall(
                                                                                     context,
                                                                                     repo
                                                                                 )
-                                                                            } else {
+                                                                            },
+                                                                            onDeleteClick = {
+                                                                                updatesViewModel.untrackRepo(
+                                                                                    context,
+                                                                                    repo.fullName
+                                                                                )
+                                                                            },
+                                                                            onShowReleaseNotes = {
                                                                                 repoToShowReleaseNotesFullName =
                                                                                     repo.fullName
                                                                                 updatesViewModel.fetchReleaseNotesIfNeeded(
@@ -882,32 +900,143 @@ class MainActivity : AppCompatActivity() {
                                                                                     repo
                                                                                 )
                                                                             }
-                                                                        },
-                                                                        onDeleteClick = {
-                                                                            updatesViewModel.untrackRepo(
-                                                                                context,
-                                                                                repo.fullName
-                                                                            )
-                                                                        },
-                                                                        onShowReleaseNotes = {
-                                                                            repoToShowReleaseNotesFullName =
-                                                                                repo.fullName
-                                                                            updatesViewModel.fetchReleaseNotesIfNeeded(
-                                                                                context,
-                                                                                repo
-                                                                            )
-                                                                        }
-                                                                    )
+                                                                        )
+                                                                    }
                                                                 }
                                                             }
                                                         }
-                                                    }
 
-                                                    // Not Installed Section
-                                                    if (notInstalled.isNotEmpty()) {
+                                                        // Up-to-date Section
+                                                        if (upToDate.isNotEmpty()) {
+                                                            item {
+                                                                Text(
+                                                                    text = "${stringResource(R.string.label_up_to_date)} (${upToDate.size})",
+                                                                    style = MaterialTheme.typography.titleMedium,
+                                                                    modifier = Modifier.padding(
+                                                                        start = 16.dp,
+                                                                        bottom = 8.dp
+                                                                    ),
+                                                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                                )
+                                                            }
+                                                            item {
+                                                                RoundedCardContainer {
+                                                                    upToDate.forEach { repo ->
+                                                                        val isInstalling =
+                                                                            updatesViewModel.installingRepoId.value == repo.fullName
+                                                                        TrackedRepoCard(
+                                                                            repo = repo,
+                                                                            isLoading = refreshingRepoIds.contains(
+                                                                                repo.fullName
+                                                                            ),
+                                                                            installStatus = if (isInstalling) updatesViewModel.installStatus.value else null,
+                                                                            downloadProgress = if (isInstalling) updatesViewModel.updateProgress.value else 0f,
+                                                                            onClick = {
+                                                                                updatesViewModel.prepareEdit(
+                                                                                    context,
+                                                                                    repo
+                                                                                )
+                                                                                showAddRepoSheet =
+                                                                                    true
+                                                                            },
+                                                                            onActionClick = {
+                                                                                if (repo.isUpdateAvailable) {
+                                                                                    updatesViewModel.downloadAndInstall(
+                                                                                        context,
+                                                                                        repo
+                                                                                    )
+                                                                                } else {
+                                                                                    repoToShowReleaseNotesFullName =
+                                                                                        repo.fullName
+                                                                                    updatesViewModel.fetchReleaseNotesIfNeeded(
+                                                                                        context,
+                                                                                        repo
+                                                                                    )
+                                                                                }
+                                                                            },
+                                                                            onDeleteClick = {
+                                                                                updatesViewModel.untrackRepo(
+                                                                                    context,
+                                                                                    repo.fullName
+                                                                                )
+                                                                            },
+                                                                            onShowReleaseNotes = {
+                                                                                repoToShowReleaseNotesFullName =
+                                                                                    repo.fullName
+                                                                                updatesViewModel.fetchReleaseNotesIfNeeded(
+                                                                                    context,
+                                                                                    repo
+                                                                                )
+                                                                            }
+                                                                        )
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+
+                                                        // Not Installed Section
+                                                        if (notInstalled.isNotEmpty()) {
+                                                            item {
+                                                                Text(
+                                                                    text = "${stringResource(R.string.label_not_installed)} (${notInstalled.size})",
+                                                                    style = MaterialTheme.typography.titleMedium,
+                                                                    modifier = Modifier.padding(
+                                                                        start = 16.dp,
+                                                                        bottom = 8.dp
+                                                                    ),
+                                                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                                )
+                                                            }
+                                                            item {
+                                                                RoundedCardContainer {
+                                                                    notInstalled.forEach { repo ->
+                                                                        val isInstalling =
+                                                                            updatesViewModel.installingRepoId.value == repo.fullName
+                                                                        TrackedRepoCard(
+                                                                            repo = repo,
+                                                                            isLoading = refreshingRepoIds.contains(
+                                                                                repo.fullName
+                                                                            ),
+                                                                            installStatus = if (isInstalling) updatesViewModel.installStatus.value else null,
+                                                                            downloadProgress = if (isInstalling) updatesViewModel.updateProgress.value else 0f,
+                                                                            onClick = {
+                                                                                updatesViewModel.prepareEdit(
+                                                                                    context,
+                                                                                    repo
+                                                                                )
+                                                                                showAddRepoSheet =
+                                                                                    true
+                                                                            },
+                                                                            onActionClick = {
+                                                                                updatesViewModel.downloadAndInstall(
+                                                                                    context,
+                                                                                    repo
+                                                                                )
+                                                                            },
+                                                                            onDeleteClick = {
+                                                                                updatesViewModel.untrackRepo(
+                                                                                    context,
+                                                                                    repo.fullName
+                                                                                )
+                                                                            },
+                                                                            onShowReleaseNotes = {
+                                                                                repoToShowReleaseNotesFullName =
+                                                                                    repo.fullName
+                                                                                updatesViewModel.fetchReleaseNotesIfNeeded(
+                                                                                    context,
+                                                                                    repo
+                                                                                )
+                                                                            }
+                                                                        )
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+
+                                                        // Apps Section
                                                         item {
                                                             Text(
-                                                                text = "${stringResource(R.string.label_not_installed)} (${notInstalled.size})",
+                                                                text = stringResource(R.string.label_apps),
                                                                 style = MaterialTheme.typography.titleMedium,
                                                                 modifier = Modifier.padding(
                                                                     start = 16.dp,
@@ -915,72 +1044,15 @@ class MainActivity : AppCompatActivity() {
                                                                 ),
                                                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                                                             )
+                                                            Spacer(modifier = Modifier.height(8.dp))
+                                                            ImportExportButtons(
+                                                                view = view,
+                                                                exportLauncher = exportLauncher,
+                                                                importLauncher = importLauncher
+                                                            )
                                                         }
-                                                        item {
-                                                            RoundedCardContainer {
-                                                                notInstalled.forEach { repo ->
-                                                                    val isInstalling =
-                                                                        updatesViewModel.installingRepoId.value == repo.fullName
-                                                                    TrackedRepoCard(
-                                                                        repo = repo,
-                                                                        isLoading = refreshingRepoIds.contains(
-                                                                            repo.fullName
-                                                                        ),
-                                                                        installStatus = if (isInstalling) updatesViewModel.installStatus.value else null,
-                                                                        downloadProgress = if (isInstalling) updatesViewModel.updateProgress.value else 0f,
-                                                                        onClick = {
-                                                                            updatesViewModel.prepareEdit(
-                                                                                context,
-                                                                                repo
-                                                                            )
-                                                                            showAddRepoSheet = true
-                                                                        },
-                                                                        onActionClick = {
-                                                                            updatesViewModel.downloadAndInstall(
-                                                                                context,
-                                                                                repo
-                                                                            )
-                                                                        },
-                                                                        onDeleteClick = {
-                                                                            updatesViewModel.untrackRepo(
-                                                                                context,
-                                                                                repo.fullName
-                                                                            )
-                                                                        },
-                                                                        onShowReleaseNotes = {
-                                                                            repoToShowReleaseNotesFullName =
-                                                                                repo.fullName
-                                                                            updatesViewModel.fetchReleaseNotesIfNeeded(
-                                                                                context,
-                                                                                repo
-                                                                            )
-                                                                        }
-                                                                    )
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-
-                                                    // Apps Section
-                                                    item {
-                                                        Text(
-                                                            text = stringResource(R.string.label_apps),
-                                                            style = MaterialTheme.typography.titleMedium,
-                                                            modifier = Modifier.padding(
-                                                                start = 16.dp,
-                                                                bottom = 8.dp
-                                                            ),
-                                                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                                                        )
-                                                        Spacer(modifier = Modifier.height(8.dp))
-                                                        ImportExportButtons(
-                                                            view = view,
-                                                            exportLauncher = exportLauncher,
-                                                            importLauncher = importLauncher
-                                                        )
                                                     }
                                                 }
-                                            }
 
                                             }
                                         }
@@ -991,8 +1063,8 @@ class MainActivity : AppCompatActivity() {
 
                         androidx.compose.animation.AnimatedVisibility(
                             visible = !isOnboardingCompleted || isWhatsNewVisible,
-                            enter = androidx.compose.animation.fadeIn() + androidx.compose.animation.slideInVertically { it },
-                            exit = androidx.compose.animation.fadeOut() + androidx.compose.animation.slideOutVertically { it }
+                            enter = fadeIn() + slideInVertically { it },
+                            exit = fadeOut() + slideOutVertically { it }
                         ) {
                             WelcomeScreen(
                                 viewModel = viewModel,
@@ -1016,7 +1088,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-    
+
     override fun onResume() {
         super.onResume()
         viewModel.check(this)

@@ -3,21 +3,20 @@ package com.sameerasw.essentials.services
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.hardware.camera2.CameraManager
 import android.os.BatteryManager
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
-import android.hardware.camera2.CameraManager
-import com.sameerasw.essentials.utils.FlashlightUtil
 import com.google.android.gms.wearable.PutDataMapRequest
 import com.google.android.gms.wearable.Wearable
+import com.sameerasw.essentials.utils.FlashlightUtil
 
 object DeviceInfoSyncManager {
     private const val TAG = "DeviceInfoSyncManager"
     private const val SYNC_PATH = "/device_info"
     private val handler = Handler(Looper.getMainLooper())
     private var isInitialized = false
-    
+
     private var isTorchOn = false
     private var torchLevel = 1
     private var maxTorchLevel = 1
@@ -29,14 +28,15 @@ object DeviceInfoSyncManager {
             val primaryId = FlashlightUtil.getCameraId(context)
             if (cameraId == primaryId) {
                 isTorchOn = enabled
-                
+
                 var level = FlashlightUtil.getCurrentLevel(context, cameraId)
                 // Fallback to last known intensity if system returns default level 1
                 if (enabled && level <= 1) {
-                    val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+                    val prefs =
+                        context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
                     level = prefs.getInt("flashlight_last_intensity", level)
                 }
-                
+
                 torchLevel = level
                 maxTorchLevel = FlashlightUtil.getMaxLevel(context, cameraId)
                 isIntensitySupported = FlashlightUtil.isIntensitySupported(context, cameraId)
@@ -67,10 +67,10 @@ object DeviceInfoSyncManager {
         if (isInitialized) return
         currentContext = context.applicationContext
         isInitialized = true
-        
+
         // Initial sync
         syncDeviceInfo(context)
-        
+
         // Start periodic sync
         handler.postDelayed(syncRunnable, 5 * 60 * 1000)
 
@@ -91,7 +91,7 @@ object DeviceInfoSyncManager {
         // Sync on flashlight change
         val cameraManager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
         cameraManager.registerTorchCallback(torchCallback, handler)
-        
+
         // Get initial flashlight state
         val id = FlashlightUtil.getCameraId(context)
         if (id != null) {
@@ -122,8 +122,9 @@ object DeviceInfoSyncManager {
 
         val level: Int = batteryStatus?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
         val scale: Int = batteryStatus?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
-        val batteryPct = if (level != -1 && scale != -1) (level / scale.toFloat() * 100).toInt() else -1
-        
+        val batteryPct =
+            if (level != -1 && scale != -1) (level / scale.toFloat() * 100).toInt() else -1
+
         val status: Int = batteryStatus?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: -1
         val plugged: Int = batteryStatus?.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1) ?: -1
         val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
@@ -133,8 +134,13 @@ object DeviceInfoSyncManager {
                 plugged == BatteryManager.BATTERY_PLUGGED_WIRELESS
 
         val putDataMapReq = PutDataMapRequest.create(SYNC_PATH)
-        val ringerMode = (context.getSystemService(Context.AUDIO_SERVICE) as? android.media.AudioManager)?.ringerMode ?: 2
-        val deviceName = android.provider.Settings.Global.getString(context.contentResolver, android.provider.Settings.Global.DEVICE_NAME)
+        val ringerMode =
+            (context.getSystemService(Context.AUDIO_SERVICE) as? android.media.AudioManager)?.ringerMode
+                ?: 2
+        val deviceName = android.provider.Settings.Global.getString(
+            context.contentResolver,
+            android.provider.Settings.Global.DEVICE_NAME
+        )
             ?: android.os.Build.MODEL
 
         val dataMap = putDataMapReq.dataMap

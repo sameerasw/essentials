@@ -18,11 +18,13 @@ object ColorFormatUtils {
                 val b = Color.blue(color)
                 "rgb($r, $g, $b)"
             }
+
             ColorFormat.HSL -> {
                 val hsl = FloatArray(3)
                 AndroidColorUtils.colorToHSL(color, hsl)
                 String.format("hsl(%.0f, %.0f%%, %.0f%%)", hsl[0], hsl[1] * 100, hsl[2] * 100)
             }
+
             ColorFormat.HSV -> {
                 val hsv = FloatArray(3)
                 Color.colorToHSV(color, hsv)

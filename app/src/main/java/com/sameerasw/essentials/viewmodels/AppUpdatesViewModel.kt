@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.GitHubRepository
 import com.sameerasw.essentials.data.repository.SettingsRepository
@@ -24,7 +25,6 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.net.HttpURLConnection
 import java.net.URL
-import com.google.gson.Gson
 
 class AppUpdatesViewModel : ViewModel() {
     private val gitHubRepository = GitHubRepository()
@@ -513,51 +513,52 @@ class AppUpdatesViewModel : ViewModel() {
         }
     }
 
-        fun exportTrackedRepos(context: Context, outputStream: OutputStream) {
+    fun exportTrackedRepos(context: Context, outputStream: OutputStream) {
+        try {
+            val repos = SettingsRepository(context).getTrackedRepos()
+            val json = gson.toJson(repos)
+            outputStream.write(json.toByteArray())
+            outputStream.flush()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
             try {
-                val repos = SettingsRepository(context).getTrackedRepos()
-                val json = gson.toJson(repos)
-                outputStream.write(json.toByteArray())
-                outputStream.flush()
+                outputStream.close()
             } catch (e: Exception) {
-                e.printStackTrace()
-            } finally {
-                try {
-                    outputStream.close()
-                } catch (e: Exception) {
-                }
-            }
-        }
-
-        fun importTrackedRepos(context: Context, inputStream: InputStream): Boolean {
-            return try {
-                val json = inputStream.bufferedReader().use { it.readText() }
-                val importedRepos: List<TrackedRepo> = gson.fromJson(json, Array<TrackedRepo>::class.java).toList()
-                if (importedRepos.isNotEmpty()) {
-                    val settingsRepo = SettingsRepository(context)
-                    val currentRepos = settingsRepo.getTrackedRepos().toMutableList()
-                    importedRepos.forEach { imported ->
-                        val index = currentRepos.indexOfFirst { it.fullName == imported.fullName }
-                        if (index != -1) {
-                            currentRepos[index] = imported
-                        } else {
-                            currentRepos.add(imported)
-                        }
-                    }
-                    settingsRepo.saveTrackedRepos(currentRepos)
-                    loadTrackedRepos(context)
-                    true
-                } else {
-                    false
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                false
-            } finally {
-                try {
-                    inputStream.close()
-                } catch (e: Exception) {
-                }
             }
         }
     }
+
+    fun importTrackedRepos(context: Context, inputStream: InputStream): Boolean {
+        return try {
+            val json = inputStream.bufferedReader().use { it.readText() }
+            val importedRepos: List<TrackedRepo> =
+                gson.fromJson(json, Array<TrackedRepo>::class.java).toList()
+            if (importedRepos.isNotEmpty()) {
+                val settingsRepo = SettingsRepository(context)
+                val currentRepos = settingsRepo.getTrackedRepos().toMutableList()
+                importedRepos.forEach { imported ->
+                    val index = currentRepos.indexOfFirst { it.fullName == imported.fullName }
+                    if (index != -1) {
+                        currentRepos[index] = imported
+                    } else {
+                        currentRepos.add(imported)
+                    }
+                }
+                settingsRepo.saveTrackedRepos(currentRepos)
+                loadTrackedRepos(context)
+                true
+            } else {
+                false
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        } finally {
+            try {
+                inputStream.close()
+            } catch (e: Exception) {
+            }
+        }
+    }
+}

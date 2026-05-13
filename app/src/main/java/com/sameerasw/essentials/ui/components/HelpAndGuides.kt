@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.ui.components
 
+import android.content.Intent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
@@ -12,12 +13,10 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -43,7 +42,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
-import android.content.Intent
 
 data class InstructionStep(
     val instruction: String,

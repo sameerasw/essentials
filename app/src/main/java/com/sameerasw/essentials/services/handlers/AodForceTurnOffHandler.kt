@@ -26,28 +26,31 @@ class AodForceTurnOffHandler(private val service: AccessibilityService) {
         val powerManager = service.getSystemService(Context.POWER_SERVICE) as PowerManager
         // Only run if screen is not interactive (currently in AOD or off)
         if (powerManager.isInteractive || isRunning) {
-            Log.d("AodForceTurnOff", "Skipping forceTurnOff: isInteractive=${powerManager.isInteractive}, isRunning=$isRunning")
+            Log.d(
+                "AodForceTurnOff",
+                "Skipping forceTurnOff: isInteractive=${powerManager.isInteractive}, isRunning=$isRunning"
+            )
             return
         }
-        
+
         Log.d("AodForceTurnOff", "Starting forceTurnOff sequence")
         isRunning = true
         showOverlay()
-        
+
         // Sequence: Overlay -> Wake -> Lock -> Remove Overlay
         // Using slightly longer delays to ensure system registers actions
         handler.postDelayed({
             wakeScreen()
-            
+
             handler.postDelayed({
                 lockScreen()
-                
+
                 // Allow time for the lock action to process and screen to turn off
                 handler.postDelayed({
                     removeOverlay()
                     isRunning = false
                     Log.d("AodForceTurnOff", "ForceTurnOff sequence completed")
-                }, 600) 
+                }, 600)
             }, 100)
         }, 50)
     }
@@ -76,7 +79,8 @@ class AodForceTurnOffHandler(private val service: AccessibilityService) {
         ).apply {
             gravity = Gravity.CENTER
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+                layoutInDisplayCutoutMode =
+                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
             }
         }
 
@@ -90,6 +94,7 @@ class AodForceTurnOffHandler(private val service: AccessibilityService) {
 
     private fun wakeScreen() {
         val powerManager = service.getSystemService(Context.POWER_SERVICE) as PowerManager
+
         @Suppress("DEPRECATION")
         val wakeLock = powerManager.newWakeLock(
             PowerManager.SCREEN_BRIGHT_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP,
@@ -108,7 +113,8 @@ class AodForceTurnOffHandler(private val service: AccessibilityService) {
         if (overlayView != null && windowManager != null) {
             try {
                 windowManager?.removeView(overlayView)
-            } catch (_: Exception) {}
+            } catch (_: Exception) {
+            }
             overlayView = null
         }
         isRunning = false

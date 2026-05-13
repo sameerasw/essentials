@@ -1,17 +1,22 @@
 package com.sameerasw.essentials.ui.components
 
+import android.content.ComponentName
+import android.content.Intent
+import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,48 +24,36 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import com.sameerasw.essentials.R
-import com.sameerasw.essentials.data.model.DeviceSpecs
-import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
-import android.content.ComponentName
-import android.content.Intent
-import android.os.Build
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.material3.Surface
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.window.Dialog
 import coil.ImageLoader
+import coil.compose.AsyncImage
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
-import com.sameerasw.essentials.ui.theme.Shapes
+import com.sameerasw.essentials.R
+import com.sameerasw.essentials.data.model.DeviceSpecs
+import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.modifiers.shimmer
+import com.sameerasw.essentials.ui.theme.Shapes
+import com.sameerasw.essentials.utils.DeviceImageMapper
 import com.sameerasw.essentials.utils.DeviceInfo
 import com.sameerasw.essentials.utils.DeviceUtils
-import com.sameerasw.essentials.utils.DeviceImageMapper
 import com.sameerasw.essentials.utils.HapticUtil
 
 @Composable
@@ -76,7 +69,7 @@ fun DeviceHeroCard(
     val view = LocalView.current
     val imageUrls = deviceSpecs?.imageUrls ?: emptyList()
     val isPixel = deviceInfo.manufacturer.contains("Google", ignoreCase = true)
-    
+
     var showFlashbangDialog by remember { mutableStateOf(false) }
 
     val launchIntent = { packageName: String, className: String ->
@@ -87,7 +80,7 @@ fun DeviceHeroCard(
             }
             context.startActivity(intent)
         } catch (e: Exception) {
-            
+
         }
     }
 
@@ -96,11 +89,14 @@ fun DeviceHeroCard(
             onDismiss = { showFlashbangDialog = false },
             onContinue = {
                 showFlashbangDialog = false
-                launchIntent("com.google.android.apps.diagnosticstool", "com.google.android.apps.diagnosticstool.login.EndUserLoginActivity")
+                launchIntent(
+                    "com.google.android.apps.diagnosticstool",
+                    "com.google.android.apps.diagnosticstool.login.EndUserLoginActivity"
+                )
             }
         )
     }
-    
+
     // Only show the illustration page if it's a Pixel AND we have a mapping
     val illustrationRes = DeviceImageMapper.getDeviceDrawable(deviceInfo.model)
     val showIllustration = isPixel && illustrationRes != 0
@@ -146,13 +142,15 @@ fun DeviceHeroCard(
                         } else {
                             // real image from gsmarena (or local cache)
                             val imageIndex = if (showIllustration) page - 1 else page
-                            val imageModel = if (deviceSpecs?.localImagePaths?.isNotEmpty() == true && 
-                                deviceSpecs.localImagePaths.size > imageIndex) {
-                                deviceSpecs.localImagePaths[imageIndex]
-                            } else {
-                                imageUrls[imageIndex]
-                            }
-                            
+                            val imageModel =
+                                if (deviceSpecs?.localImagePaths?.isNotEmpty() == true &&
+                                    deviceSpecs.localImagePaths.size > imageIndex
+                                ) {
+                                    deviceSpecs.localImagePaths[imageIndex]
+                                } else {
+                                    imageUrls[imageIndex]
+                                }
+
                             AsyncImage(
                                 model = imageModel,
                                 contentDescription = "Device Image",
@@ -202,7 +200,7 @@ fun DeviceHeroCard(
                 translationY = contentOffset().toPx()
             },
             style = MaterialTheme.typography.headlineMedium.copy(
-                fontFamily = null 
+                fontFamily = null
             ),
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSurface
@@ -366,10 +364,10 @@ fun DeviceHeroCard(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                        .background(
-                            MaterialTheme.colorScheme.surfaceBright,
-                            shape = Shapes.extraSmall
-                        )
+                    .background(
+                        MaterialTheme.colorScheme.surfaceBright,
+                        shape = Shapes.extraSmall
+                    )
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -379,7 +377,10 @@ fun DeviceHeroCard(
                     label = stringResource(id = R.string.label_diagnostics),
                     onClick = {
                         HapticUtil.performVirtualKeyHaptic(view)
-                        launchIntent("com.android.devicediagnostics", "com.android.devicediagnostics.MainActivity")
+                        launchIntent(
+                            "com.android.devicediagnostics",
+                            "com.android.devicediagnostics.MainActivity"
+                        )
                     }
                 )
                 PixelToolButton(

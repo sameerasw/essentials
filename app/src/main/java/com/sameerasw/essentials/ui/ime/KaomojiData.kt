@@ -2,19 +2,18 @@ package com.sameerasw.essentials.ui.ime
 
 import android.content.Context
 import android.util.Log
-import com.google.gson.Gson
-import com.google.gson.annotations.SerializedName
-import com.sameerasw.essentials.R
-import java.io.InputStreamReader
+import androidx.annotation.Keep
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.State
+import com.google.gson.Gson
+import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import androidx.annotation.Keep
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.InputStreamReader
 
 @Keep
 data class KaomojiObject(
@@ -22,7 +21,7 @@ data class KaomojiObject(
     @SerializedName("value") val value: String
 )
 
-@androidx.annotation.Keep
+@Keep
 data class KaomojiCategory(
     val name: String,
     val kaomojis: List<KaomojiObject>
@@ -49,7 +48,7 @@ object KaomojiData {
                 val inputStream = context.assets.open("kaomoji.json")
                 val reader = InputStreamReader(inputStream)
                 val response = Gson().fromJson(reader, KaomojiDataResponse::class.java)
-                
+
                 val grouped = response.kaomoji.groupBy { it.category }
                 val loadedCategories = grouped.map { (categoryName, list) ->
                     KaomojiCategory(
@@ -66,7 +65,7 @@ object KaomojiData {
                     isLoaded = true
                     _isLoading.value = false
                 }
-                
+
                 reader.close()
                 inputStream.close()
             } catch (e: Exception) {

@@ -2,17 +2,13 @@ package com.sameerasw.essentials.ui.components.cards
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -110,7 +106,7 @@ fun AppToggleItem(
             },
             enabled = enabled,
             modifier = modifier.fillMaxWidth(),
-            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+            verticalAlignment = Alignment.CenterVertically,
             leadingContent = {
                 if (icon != null) {
                     Image(
@@ -182,7 +178,7 @@ fun AppToggleItem(
             onClick = onClickAction,
             enabled = enabled,
             modifier = modifier.fillMaxWidth(),
-            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+            verticalAlignment = Alignment.CenterVertically,
             leadingContent = {
                 if (icon != null) {
                     Image(

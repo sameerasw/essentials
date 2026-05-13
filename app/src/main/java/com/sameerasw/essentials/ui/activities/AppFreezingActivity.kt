@@ -49,7 +49,7 @@ class AppFreezingActivity : ComponentActivity() {
         setContent {
             val viewModel: MainViewModel = viewModel()
             val context = LocalContext.current
-            
+
             LaunchedEffect(Unit) {
                 viewModel.check(context)
                 viewModel.refreshFreezePickedApps(context)
@@ -70,7 +70,7 @@ class AppFreezingActivity : ComponentActivity() {
                         val statusBarHeightPx = with(density) {
                             WindowInsets.statusBars.asPaddingValues().calculateTopPadding().toPx()
                         }
-                        
+
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -89,8 +89,10 @@ class AppFreezingActivity : ComponentActivity() {
                                 viewModel = viewModel,
                                 modifier = Modifier.fillMaxSize(),
                                 contentPadding = PaddingValues(
-                                    top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding(),
-                                    bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 130.dp,
+                                    top = WindowInsets.statusBars.asPaddingValues()
+                                        .calculateTopPadding(),
+                                    bottom = WindowInsets.navigationBars.asPaddingValues()
+                                        .calculateBottomPadding() + 130.dp,
                                     start = 0.dp,
                                     end = 0.dp
                                 ),
@@ -98,9 +100,10 @@ class AppFreezingActivity : ComponentActivity() {
                                     finish()
                                 },
                                 onSettingsClick = {
-                                    val intent = Intent(context, FeatureSettingsActivity::class.java).apply {
-                                        putExtra("feature", "Freeze")
-                                    }
+                                    val intent =
+                                        Intent(context, FeatureSettingsActivity::class.java).apply {
+                                            putExtra("feature", "Freeze")
+                                        }
                                     context.startActivity(intent)
                                 }
                             )

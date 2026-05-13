@@ -25,7 +25,7 @@ sealed interface State {
         override val title: Int = R.string.diy_state_screen_on
         override val icon: Int = R.drawable.rounded_mobile_text_2_24
     }
- 
+
     @Keep
     data class TimePeriod(
         @SerializedName("startHour") val startHour: Int = 0,

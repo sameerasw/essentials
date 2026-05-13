@@ -3,7 +3,6 @@ package com.sameerasw.essentials.ui.components.sheets
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,7 +23,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -128,7 +126,11 @@ fun PrankBottomSheet(
                                         false
                                     )
                                     HapticUtil.performHeavyHaptic(view)
-                                    android.widget.Toast.makeText(view.context, "Prank reset for testing", android.widget.Toast.LENGTH_SHORT).show()
+                                    android.widget.Toast.makeText(
+                                        view.context,
+                                        "Prank reset for testing",
+                                        android.widget.Toast.LENGTH_SHORT
+                                    ).show()
                                 },
                                 onTap = {
                                     HapticUtil.performUIHaptic(view)
@@ -140,7 +142,7 @@ fun PrankBottomSheet(
                     Text(text = stringResource(R.string.action_continue))
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
