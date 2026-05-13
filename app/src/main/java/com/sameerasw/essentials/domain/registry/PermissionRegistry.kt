@@ -21,7 +21,7 @@ fun initPermissionRegistry() {
     PermissionRegistry.register("ACCESSIBILITY", R.string.feat_notification_lighting_title)
     PermissionRegistry.register("ACCESSIBILITY", R.string.feat_dynamic_night_light_title)
     PermissionRegistry.register("ACCESSIBILITY", R.string.feat_app_lock_title)
-    PermissionRegistry.register("ACCESSIBILITY", R.string.feat_ambient_music_glance_title)
+    PermissionRegistry.register("ACCESSIBILITY", R.string.feat_essentials_on_display_title)
 
     // Write secure settings permission
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_statusbar_icons_title)
@@ -52,7 +52,7 @@ fun initPermissionRegistry() {
     PermissionRegistry.register("NOTIFICATION_LISTENER", R.string.feat_maps_power_saving_title)
     PermissionRegistry.register("NOTIFICATION_LISTENER", R.string.feat_notification_lighting_title)
     PermissionRegistry.register("NOTIFICATION_LISTENER", R.string.feat_call_vibrations_title)
-    PermissionRegistry.register("NOTIFICATION_LISTENER", R.string.feat_ambient_music_glance_title)
+    PermissionRegistry.register("NOTIFICATION_LISTENER", R.string.feat_essentials_on_display_title)
 
     // Bluetooth permissions
     PermissionRegistry.register("BLUETOOTH_CONNECT", R.string.feat_batteries_title)

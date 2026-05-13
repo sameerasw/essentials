@@ -511,13 +511,13 @@ fun SetupFeatures(
                     }
                 }
 
-                R.string.feat_ambient_music_glance_title -> {
+                R.string.feat_essentials_on_display_title -> {
                     if (!isAccessibilityEnabled) {
                         missing.add(
                             PermissionItem(
                                 iconRes = R.drawable.rounded_settings_accessibility_24,
                                 title = R.string.perm_accessibility_title,
-                                description = R.string.perm_accessibility_desc_ambient_music_glance,
+                                description = R.string.perm_accessibility_desc_essentials_on_display,
                                 dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
                                 actionLabel = R.string.perm_action_enable,
                                 action = {
@@ -779,11 +779,11 @@ fun SetupFeatures(
                 )
             )
 
-            R.string.feat_ambient_music_glance_title -> listOf(
+            R.string.feat_essentials_on_display_title -> listOf(
                 PermissionItem(
                     iconRes = R.drawable.rounded_settings_accessibility_24,
                     title = R.string.perm_accessibility_title,
-                    description = R.string.perm_accessibility_desc_ambient_music_glance,
+                    description = R.string.perm_accessibility_desc_essentials_on_display,
                     dependentFeatures = PermissionRegistry.getFeatures("ACCESSIBILITY"),
                     actionLabel = R.string.perm_action_enable,
                     action = {

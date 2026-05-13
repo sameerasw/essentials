@@ -20,7 +20,7 @@ import com.sameerasw.essentials.viewmodels.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AmbientMusicGlanceSettingsUI(
+fun EssentialsOnDisplaySettingsUI(
     viewModel: MainViewModel,
     modifier: Modifier = Modifier,
     highlightSetting: String? = null
@@ -36,13 +36,13 @@ fun AmbientMusicGlanceSettingsUI(
     if (showPermissionSheet) {
         com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet(
             onDismissRequest = { showPermissionSheet = false },
-            featureTitle = R.string.feat_ambient_music_glance_title,
+            featureTitle = R.string.feat_essentials_on_display_title,
             permissions = listOf(
                 com.sameerasw.essentials.ui.components.sheets.PermissionItem(
                     iconRes = R.drawable.rounded_settings_accessibility_24,
                     title = R.string.perm_accessibility_title,
-                    description = R.string.perm_accessibility_desc_ambient_music_glance,
-                    dependentFeatures = listOf(R.string.feat_ambient_music_glance_title),
+                    description = R.string.perm_accessibility_desc_essentials_on_display,
+                    dependentFeatures = listOf(R.string.feat_essentials_on_display_title),
                     actionLabel = R.string.perm_action_enable,
                     action = {
                         val intent =
@@ -56,7 +56,7 @@ fun AmbientMusicGlanceSettingsUI(
                     iconRes = R.drawable.rounded_notifications_unread_24,
                     title = R.string.perm_notif_listener_title,
                     description = R.string.perm_notif_listener_desc_lighting,
-                    dependentFeatures = listOf(R.string.feat_ambient_music_glance_title),
+                    dependentFeatures = listOf(R.string.feat_essentials_on_display_title),
                     actionLabel = R.string.perm_action_grant,
                     action = { viewModel.requestNotificationListenerPermission(context) },
                     isGranted = isNotificationListenerEnabled
@@ -74,35 +74,35 @@ fun AmbientMusicGlanceSettingsUI(
         RoundedCardContainer {
             IconToggleItem(
                 iconRes = R.drawable.rounded_blur_on_24,
-                title = stringResource(R.string.feat_ambient_music_glance_title),
-                description = stringResource(R.string.feat_ambient_music_glance_desc),
+                title = stringResource(R.string.feat_essentials_on_display_title),
+                description = stringResource(R.string.feat_essentials_on_display_desc),
                 isChecked = viewModel.isAmbientMusicGlanceEnabled.value,
                 onCheckedChange = { viewModel.setAmbientMusicGlanceEnabled(it) },
                 enabled = isPermissionGranted,
                 onDisabledClick = { showPermissionSheet = true },
-                modifier = Modifier.highlight(highlightSetting == "enable_ambient_glance")
+                modifier = Modifier.highlight(highlightSetting == "enable_essentials_on_display")
             )
 
             IconToggleItem(
                 iconRes = R.drawable.rounded_mobile_charge_24,
-                title = stringResource(R.string.ambient_glance_docked_mode_title),
-                description = stringResource(R.string.ambient_glance_docked_mode_desc),
+                title = stringResource(R.string.essentials_on_display_docked_mode_title),
+                description = stringResource(R.string.essentials_on_display_docked_mode_desc),
                 isChecked = viewModel.isAmbientMusicGlanceDockedModeEnabled.value,
                 onCheckedChange = { viewModel.setAmbientMusicGlanceDockedModeEnabled(it) },
                 enabled = isPermissionGranted && viewModel.isAmbientMusicGlanceEnabled.value,
                 onDisabledClick = { if (!isPermissionGranted) showPermissionSheet = true },
-                modifier = Modifier.highlight(highlightSetting == "ambient_glance_docked_mode")
+                modifier = Modifier.highlight(highlightSetting == "essentials_on_display_docked_mode")
             )
 
             IconToggleItem(
                 iconRes = R.drawable.rounded_interests_24,
-                title = stringResource(R.string.ambient_glance_random_shapes_title),
-                description = stringResource(R.string.ambient_glance_random_shapes_desc),
+                title = stringResource(R.string.essentials_on_display_random_shapes_title),
+                description = stringResource(R.string.essentials_on_display_random_shapes_desc),
                 isChecked = viewModel.isAmbientMusicGlanceRandomShapesEnabled.value,
                 onCheckedChange = { viewModel.setAmbientMusicGlanceRandomShapesEnabled(it) },
                 enabled = isPermissionGranted && viewModel.isAmbientMusicGlanceEnabled.value,
                 onDisabledClick = { if (!isPermissionGranted) showPermissionSheet = true },
-                modifier = Modifier.highlight(highlightSetting == "ambient_glance_random_shapes")
+                modifier = Modifier.highlight(highlightSetting == "essentials_on_display_random_shapes")
             )
         }
     }
