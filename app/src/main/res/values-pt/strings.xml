@@ -63,12 +63,12 @@
     <string name="like_song_settings_desc">Este recurso requer acesso à notificação para detectar a mídia atualmente sendo reproduzida e acionar a ação semelhante. Ative-o abaixo.</string>
     <string name="like_song_toast_enabled">Mostrar mensagem de brinde</string>
     <string name="like_song_aod_overlay_title">Mostrar sobreposição no AOD</string>
-    <string name="feat_ambient_music_glance_title">Olhar de música ambiente</string>
-    <string name="feat_ambient_music_glance_desc">Dê uma olhada na mídia no AOD</string>
-    <string name="ambient_glance_docked_mode_title">Modo encaixado</string>
-    <string name="ambient_glance_docked_mode_desc">Mantenha a sobreposição visível indefinidamente enquanto a música estiver tocando no AOD</string>
-    <string name="ambient_glance_random_shapes_title">Random shapes</string>
-    <string name="ambient_glance_random_shapes_desc">Use various Material 3 shapes for the album art</string>
+    <string name="feat_essentials_on_display_title">Essentials On Display</string>
+    <string name="feat_essentials_on_display_desc">Glance at media and info on AOD</string>
+    <string name="essentials_on_display_docked_mode_title">Docked mode</string>
+    <string name="essentials_on_display_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
+    <string name="essentials_on_display_random_shapes_title">Random shapes</string>
+    <string name="essentials_on_display_random_shapes_desc">Use various Material 3 shapes for the album art</string>
     <string name="feat_notification_glance_title">Visão geral da notificação</string>
     <string name="feat_notification_glance_desc">Mantenha o AOD ativado enquanto as notificações estiverem pendentes</string>
     <string name="notification_glance_same_as_lighting_title">Os mesmos aplicativos da iluminação de notificação</string>
@@ -582,7 +582,7 @@
     <string name="perm_default_browser_title">Navegador padrão</string>
     <string name="perm_default_browser_desc">Necessário para lidar com links de forma eficiente</string>
     <string name="perm_accessibility_desc_remap">Necessário para interceptar eventos de botão de hardware</string>
-    <string name="perm_accessibility_desc_ambient_music_glance">Necessário para interceptar eventos de teclas de volume enquanto a tela está desligada para acionar a sobreposição Ambient Glance.</string>
+    <string name="perm_accessibility_desc_essentials_on_display">Required to intercept volume key events while the screen is off to trigger the Essentials On Display overlay.</string>
     <string name="perm_accessibility_desc_night_light">Necessário para monitorar aplicativos em primeiro plano.</string>
     <string name="perm_write_secure_title">Gravar configurações seguras</string>
     <string name="perm_write_secure_desc_common">Obrigatório para ícones da barra de status e segurança de tela bloqueada</string>
@@ -706,7 +706,7 @@
     <string name="action_what_is_this">O que é isso?</string>
     <string name="update_available_title">Atualização disponível</string>
     <string name="about_desc_your_android">Glance at your device\'s hardware and software specifications in detail. This information is fetched from GSMArena and system properties to provide a comprehensive overview of your Android device.</string>
-    <string name="about_desc_ambient_music_glance">Ambient Music Glance mostra uma sobreposição Now Playing na tela de bloqueio quando a música está tocando e a reprodução muda. \n\nSe o seu dispositivo não suporta sobreposições sobre AOD, você pode optar pelo protetor de tela Ambience adicionado nas configurações do Android como alternativa durante o carregamento.</string>
+    <string name="about_desc_essentials_on_display">Essentials On Display shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
     <string name="about_desc_notification_lighting">A iluminação de notificação adiciona um belo efeito de iluminação de borda quando você recebe notificações.\n\nVocê pode personalizar o estilo, as cores e o comportamento da animação. Funciona mesmo quando a tela está desligada (depende do OEM) ou na parte superior do seu aplicativo atual. Escolha aplicativos, prioridade de notificação ou qual comportamento deve ser desencadeado a partir de determinados controles. Se o seu OEM não suportar sobreposições acima de AOD, use a opção de exibição ambiente encontrada abaixo.</string>
     <string name="about_desc_screen_off_widget">Desligue facilmente a tela com um toque em um widget redimensionável transparente que não adiciona ícones ou qualquer confusão à sua tela inicial.</string>
     <string name="about_desc_statusbar_icons">Assuma o controle total sobre os ícones da barra de status.\n\nOculte ícones específicos como WiFi, Bluetooth ou dados de celular para manter sua barra de status limpa. Você também pode personalizar o formato do relógio e o indicador de bateria com alguns controles inteligentes. Esta é a lista de controles AOSP disponíveis, portanto o sistema operacional do seu dispositivo pode não respeitar todos os controles.</string>
@@ -1207,8 +1207,6 @@
     <string name="search_sound_mode_show_slider_desc">Mostrar controle deslizante de volume no bloco</string>
     <string name="search_sound_mode_behavior_title">Comportamento do Ciclo</string>
     <string name="search_sound_mode_behavior_desc">Escolha os modos para percorrer</string>
-    <string name="feat_ambient_music_title">Olhar de música ambiente</string>
-    <string name="feat_ambient_music_desc">Dê uma olhada na mídia no AOD</string>
     <string name="feat_sound_haptics_title">Som e sensação tátil</string>
     <string name="feat_sound_haptics_desc">Volume e recursos táteis</string>
     <string name="feat_security_privacy_title">Segurança e privacidade</string>
