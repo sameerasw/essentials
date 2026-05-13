@@ -64,11 +64,11 @@
     <string name="like_song_toast_enabled">Mostrar mensaje emergente</string>
     <string name="like_song_aod_overlay_title">Mostrar superposición en AOD</string>
     <string name="feat_essentials_on_display_title">Essentials On Display</string>
-    <string name="feat_essentials_on_display_desc">Glance at media and info on AOD</string>
-    <string name="essentials_on_display_docked_mode_title">Docked mode</string>
-    <string name="essentials_on_display_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
-    <string name="essentials_on_display_random_shapes_title">Random shapes</string>
-    <string name="essentials_on_display_random_shapes_desc">Use various Material 3 shapes for the album art</string>
+    <string name="feat_essentials_on_display_desc">Consultar de un vistazo la información y el contenido multimedia en AOD</string>
+    <string name="essentials_on_display_docked_mode_title">Modo acoplado</string>
+    <string name="essentials_on_display_docked_mode_desc">Mantener la superposición visible indefinidamente mientras se reproduce música en AOD</string>
+    <string name="essentials_on_display_random_shapes_title">Formas aleatorias</string>
+    <string name="essentials_on_display_random_shapes_desc">Usar varias formas de Material 3 para la carátula del álbum</string>
     <string name="feat_notification_glance_title">Vista rápida de notificaciones</string>
     <string name="feat_notification_glance_desc">Mantener AOD activado mientras las notificaciones estén pendientes</string>
     <string name="notification_glance_same_as_lighting_title">Las mismas aplicaciones que la iluminación de notificaciones</string>
@@ -583,7 +583,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="perm_default_browser_title">Navegador predeterminado</string>
     <string name="perm_default_browser_desc">Requerido para gestionar los enlaces de forma eficiente</string>
     <string name="perm_accessibility_desc_remap">Requerido para interceptar eventos de botones físicos</string>
-    <string name="perm_accessibility_desc_essentials_on_display">Required to intercept volume key events while the screen is off to trigger the Essentials On Display overlay.</string>
+    <string name="perm_accessibility_desc_essentials_on_display">Requerido para interceptar los eventos de las teclas de volumen mientras la pantalla está apagada y activar la superposición de Essentials On Display.</string>
     <string name="perm_accessibility_desc_night_light">Necesario para supervisar las aplicaciones en primer plano.</string>
     <string name="perm_write_secure_title">Escribir Ajustes seguros</string>
     <string name="perm_write_secure_desc_common">Requerido para los iconos de la barra de estado y la seguridad con la pantalla bloqueada</string>
@@ -707,7 +707,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="action_what_is_this">¿Qué es esto?</string>
     <string name="update_available_title">Actualización disponible</string>
     <string name="about_desc_your_android">Echa un vistazo a las especificaciones de hardware y software de tu dispositivo con todo detalle. Esta información se obtiene de GSMArena y de las propiedades del sistema para ofrecerte una descripción general completa de tu dispositivo Android.</string>
-    <string name="about_desc_essentials_on_display">Essentials On Display shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
+    <string name="about_desc_essentials_on_display">Essentials On Display muestra una superposición de Now Playing en tu pantalla de bloqueo cuando hay música en reproducción y cambia el estado de la reproducción. \n\nSi tu dispositivo no admite superposiciones sobre el AOD, puedes usar el salvapantallas Ambience añadido en los ajustes de Android como alternativa mientras el dispositivo está cargando.</string>
     <string name="about_desc_notification_lighting">Iluminación de notificaciones añade un hermoso efecto de iluminación en los bordes cuando recibes notificaciones.\n\nPuedes personalizar el estilo de la animación, los colores y el comportamiento. Funciona incluso cuando la pantalla está apagada (dependiendo del OEM) o por encima de la aplicación que estés usando. Elige las aplicaciones, la prioridad de las notificaciones o el comportamiento que debería activar el efecto desde los controles disponibles. Si tu OEM no admite superposiciones sobre la pantalla AOD, usa la opción de Pantalla ambiente que se encuentra más abajo.</string>
     <string name="about_desc_screen_off_widget">Apaga la pantalla fácilmente con un toque en un widget transparente y redimensionable que no añade iconos ni desordena tu pantalla de inicio.</string>
     <string name="about_desc_statusbar_icons">Toma el control total sobre los iconos de tu barra de estado.\n\nOculta iconos específicos como WiFi, Bluetooth o Datos móviles para mantener limpia tu barra de estado. También puedes personalizar el formato del reloj y el indicador de batería con algunos controles inteligentes. Esta es la lista de controles AOSP disponibles, por lo que es posible que el sistema operativo de tu dispositivo no respete todos los controles.</string>
