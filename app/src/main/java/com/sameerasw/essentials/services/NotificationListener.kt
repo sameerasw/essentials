@@ -31,6 +31,13 @@ class NotificationListener : NotificationListenerService() {
         const val ACTION_LIKE_CURRENT_SONG = "com.sameerasw.essentials.ACTION_LIKE_CURRENT_SONG"
         const val ACTION_REQUEST_AMBIENT_GLANCE =
             "com.sameerasw.essentials.ACTION_REQUEST_AMBIENT_GLANCE"
+
+        private var latestArtBitmap: Bitmap? = null
+        private var latestArtHash: Long = -1L
+
+        fun getCachedBitmap(hash: Long): Bitmap? {
+            return if (latestArtHash == hash) latestArtBitmap else null
+        }
     }
 
     private val activeGlanceNotifications = mutableSetOf<String>()
@@ -443,6 +450,9 @@ class NotificationListener : NotificationListenerService() {
                 return
             }
 
+            val playbackState = activeSession.playbackState
+            val isPlaying = playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING
+
             val metadata = activeSession.metadata
             val title = metadata?.getString(android.media.MediaMetadata.METADATA_KEY_TITLE)
             val artist = metadata?.getString(android.media.MediaMetadata.METADATA_KEY_ARTIST)
@@ -461,6 +471,8 @@ class NotificationListener : NotificationListenerService() {
                 val bitmap = extractBitmap(metadata, sbn ?: activeNotifications?.find { it.packageName == activeSession.packageName })
 
                 if (bitmap != null) {
+                    latestArtBitmap = bitmap
+                    latestArtHash = artHash.toLong()
                     // Save asynchronously to avoid blocking main thread
                     Thread {
                         try {
@@ -491,6 +503,13 @@ class NotificationListener : NotificationListenerService() {
                             e.printStackTrace()
                         }
                     }.start()
+                } else {
+                    // If art extraction failed for THIS specific song, clear memory cache
+                    // to prevent showing old song's art from memory
+                    if (latestArtHash != artHash.toLong()) {
+                        latestArtBitmap = null
+                        latestArtHash = -1L
+                    }
                 }
 
                 // 2. Trigger Glance only if screen is OFF or Screensaver is Active
@@ -500,9 +519,10 @@ class NotificationListener : NotificationListenerService() {
                 if (!powerManager.isInteractive || bypassInteractiveCheck || isDreaming) {
                     val intent = Intent("SHOW_AMBIENT_GLANCE").apply {
                         putExtra("event_type", eventType)
+                        putExtra("is_playing", isPlaying)
                         putExtra("track_title", title)
                         putExtra("artist_name", artist)
-                        putExtra("art_hash", artHash) // PASS HASH
+                        putExtra("art_hash", artHash.toLong()) // PASS HASH
                         putExtra("is_already_liked", isAlreadyLiked)
                         putExtra("is_docked_mode", isDockedMode)
                         putExtra("package_name", activeSession.packageName)

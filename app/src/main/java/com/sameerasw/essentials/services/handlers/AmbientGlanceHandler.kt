@@ -349,38 +349,64 @@ class AmbientGlanceHandler(
 
         try {
             val hashToUse = if (artHash != -1L) artHash else kotlin.math.abs("${title}_${artist}".hashCode().toLong())
-            val artFile = File(service.cacheDir, "art_$hashToUse.png")
-            val bitmap = if (artFile.exists()) {
-                BitmapFactory.decodeFile(artFile.absolutePath)
-            } else {
-                // Only use temp fallback if not retrying for a specific song
-                if (retryCount == 0) {
-                    val tempFile = File(service.cacheDir, "temp_album_art.png")
-                    if (tempFile.exists()) BitmapFactory.decodeFile(tempFile.absolutePath) else null
-                } else null
+            
+            // 1. Try Memory Cache first (Instant)
+            val cachedBitmap = com.sameerasw.essentials.services.NotificationListener.getCachedBitmap(hashToUse)
+            if (cachedBitmap != null) {
+                applyBitmaps(cachedBitmap)
+                return
             }
 
-            if (bitmap != null) {
-                nextImageView?.setImageBitmap(bitmap)
-                backgroundNextImageView?.setImageBitmap(bitmap)
-                if (morphAnimator?.isRunning != true) {
-                    imageView?.setImageBitmap(bitmap)
-                    backgroundImageView?.setImageBitmap(bitmap)
+            // 2. Try Disk Cache
+            val artFile = File(service.cacheDir, "art_$hashToUse.png")
+            if (artFile.exists()) {
+                Thread {
+                    try {
+                        val bitmap = BitmapFactory.decodeFile(artFile.absolutePath)
+                        if (bitmap != null) {
+                            handler.post { applyBitmaps(bitmap) }
+                        }
+                    } catch (_: Exception) {}
+                }.start()
+                return
+            }
+
+            // 3. Fallback or Retry
+            if (retryCount == 0) {
+                val tempFile = File(service.cacheDir, "temp_album_art.png")
+                if (tempFile.exists()) {
+                    Thread {
+                        try {
+                            val bitmap = BitmapFactory.decodeFile(tempFile.absolutePath)
+                            if (bitmap != null) {
+                                handler.post { applyBitmaps(bitmap) }
+                            }
+                        } catch (_: Exception) {}
+                    }.start()
                 }
+            }
+
+            if (retryCount < 12) { // Try for 6 seconds
+                handler.postDelayed({ updateAlbumArt(retryCount + 1) }, 500)
             } else {
-                if (retryCount < 12) { // Try for 6 seconds
-                    handler.postDelayed({ updateAlbumArt(retryCount + 1) }, 500)
-                } else {
-                    val placeholder = android.graphics.drawable.ColorDrawable(getPrimaryColor(service))
-                    nextImageView?.setImageDrawable(placeholder)
-                    backgroundNextImageView?.setImageDrawable(placeholder)
-                    if (morphAnimator?.isRunning != true) {
-                        imageView?.setImageDrawable(placeholder)
-                        backgroundImageView?.setImageDrawable(placeholder)
-                    }
+                val placeholder = android.graphics.drawable.ColorDrawable(getPrimaryColor(service))
+                nextImageView?.setImageDrawable(placeholder)
+                backgroundNextImageView?.setImageDrawable(placeholder)
+                if (morphAnimator?.isRunning != true) {
+                    imageView?.setImageDrawable(placeholder)
+                    backgroundImageView?.setImageDrawable(placeholder)
                 }
             }
         } catch (_: Exception) {
+        }
+    }
+
+    private fun applyBitmaps(bitmap: android.graphics.Bitmap) {
+        nextImageView?.setImageBitmap(bitmap)
+        backgroundNextImageView?.setImageBitmap(bitmap)
+        if (morphAnimator?.isRunning != true) {
+            imageView?.setImageBitmap(bitmap)
+            backgroundImageView?.setImageBitmap(bitmap)
         }
     }
 
