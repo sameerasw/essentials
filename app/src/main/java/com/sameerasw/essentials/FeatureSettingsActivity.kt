@@ -49,7 +49,7 @@ import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.linkActions.LinkPickerScreen
 import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.composables.configs.AlwaysOnDisplaySettingsUI
-import com.sameerasw.essentials.ui.composables.configs.AmbientMusicGlanceSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.EssentialsOnDisplaySettingsUI
 import com.sameerasw.essentials.ui.composables.configs.AppLockSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.BatteriesSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.BatteryNotificationSettingsUI
@@ -254,7 +254,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                             "Quick settings tiles" -> !viewModel.isWriteSettingsEnabled.value
                             "Screen refresh rate" -> !viewModel.isShizukuPermissionGranted.value
                             // Top level checks for other features (rarely hit if they are children, but safe to add)
-                            "Ambient music glance" -> !isAccessibilityEnabled || !isNotificationListenerEnabled
+                            "Essentials On Display" -> !isAccessibilityEnabled || !isNotificationListenerEnabled
                             "Call vibrations" -> !isReadPhoneStateEnabled || !isNotificationListenerEnabled
                             "Maps power saving mode" -> !isNotificationListenerEnabled || !com.sameerasw.essentials.utils.ShellUtils.hasPermission(
                                 context
@@ -405,7 +405,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                     context
                                                 )
 
-                                                "Ambient music glance" -> !isAccessibilityEnabled || !isNotificationListenerEnabled
+                                                "Essentials On Display" -> !isAccessibilityEnabled || !isNotificationListenerEnabled
                                                 "Call vibrations" -> !isReadPhoneStateEnabled || !isNotificationListenerEnabled
                                                 "Calendar Sync" -> androidx.core.content.ContextCompat.checkSelfPermission(
                                                     context,
@@ -613,8 +613,8 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                         )
                                     }
 
-                                    "Ambient music glance" -> {
-                                        AmbientMusicGlanceSettingsUI(
+                                    "Essentials On Display" -> {
+                                        EssentialsOnDisplaySettingsUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightSetting = highlightSetting

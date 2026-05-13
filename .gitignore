@@ -33,3 +33,4 @@ replay_pid*
 Build/
 
 local.properties
+.agents/
