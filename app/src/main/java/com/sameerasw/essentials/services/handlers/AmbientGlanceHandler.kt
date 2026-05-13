@@ -50,6 +50,9 @@ class AmbientGlanceHandler(
     private var centerContainer: FrameLayout? = null
     private var clipContainer: FrameLayout? = null
     private var textContainer: LinearLayout? = null
+    private var backgroundImageView: ImageView? = null
+    private var backgroundNextImageView: ImageView? = null
+    private var backgroundScrim: View? = null
 
     private var currentShapePath: Path? = null
     private var currentPolygon: androidx.graphics.shapes.RoundedPolygon? = null
@@ -279,7 +282,8 @@ class AmbientGlanceHandler(
         } else {
             currentShapePath = com.sameerasw.essentials.utils.AmbientMusicShapeHelper.getShapePath(
                 "${trackTitle}_${artistName}",
-                size
+                size,
+                randomEnabled
             )
             volumeStrokeView?.updatePath(currentShapePath!!)
             clipContainer?.invalidateOutline()
@@ -299,19 +303,28 @@ class AmbientGlanceHandler(
 
             if (bitmap != null) {
                 nextImageView?.setImageBitmap(bitmap)
+                backgroundNextImageView?.setImageBitmap(bitmap)
                 if (morphAnimator?.isRunning != true) {
                     imageView?.setImageBitmap(bitmap)
+                    backgroundImageView?.setImageBitmap(bitmap)
                 }
             } else {
                 val placeholder = android.graphics.drawable.ColorDrawable(getPrimaryColor(service))
                 nextImageView?.setImageDrawable(placeholder)
+                backgroundNextImageView?.setImageDrawable(placeholder)
                 if (morphAnimator?.isRunning != true) {
                     imageView?.setImageDrawable(placeholder)
+                    backgroundImageView?.setImageDrawable(placeholder)
                 }
             }
         } catch (_: Exception) {
         }
 
+        // Handle Background Alpha for Fill mode
+        val mode = getAlbumArtMode()
+        backgroundImageView?.animate()?.alpha(if (mode == "fill") 1f else 0f)?.setDuration(500)?.start()
+        backgroundScrim?.animate()?.alpha(if (mode == "fill") 1f else 0f)?.setDuration(500)?.start()
+        centerContainer?.animate()?.alpha(if (mode == "fill") 0f else 1f)?.setDuration(500)?.start()
     }
 
     private fun showOverlay() {
@@ -348,6 +361,38 @@ class AmbientGlanceHandler(
             setBackgroundColor(Color.BLACK)
         }
 
+        val mode = getAlbumArtMode()
+
+        // 0. Background for Fill mode
+        backgroundImageView = ImageView(context).apply {
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+            )
+            scaleType = ImageView.ScaleType.CENTER_CROP
+            alpha = if (mode == "fill") 1f else 0f
+            if (bitmap != null) setImageBitmap(bitmap)
+        }
+        backgroundNextImageView = ImageView(context).apply {
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+            )
+            scaleType = ImageView.ScaleType.CENTER_CROP
+            alpha = 0f
+        }
+        backgroundScrim = View(context).apply {
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+            )
+            setBackgroundColor(0x80000000.toInt()) // Darker scrim for full screen background
+            alpha = if (mode == "fill") 1f else 0f
+        }
+        rootLayout.addView(backgroundImageView)
+        rootLayout.addView(backgroundNextImageView)
+        rootLayout.addView(backgroundScrim)
+
         // 1. Clock at top
         clockView = object : TextClock(context) {
             override fun onDetachedFromWindow() {
@@ -382,6 +427,7 @@ class AmbientGlanceHandler(
                 FrameLayout.LayoutParams.WRAP_CONTENT,
                 Gravity.CENTER
             )
+            alpha = if (mode == "fill") 0f else 1f
         }
 
         val size = dpToPx(320f)
@@ -775,6 +821,9 @@ class AmbientGlanceHandler(
             centerContainer = null
             textContainer = null
             imageView = null
+            backgroundImageView = null
+            backgroundNextImageView = null
+            backgroundScrim = null
             titleView = null
             artistView = null
         }
@@ -785,15 +834,19 @@ class AmbientGlanceHandler(
         return (dp * metrics.density).toInt()
     }
 
-    private fun isRandomShapesEnabled(): Boolean {
+    private fun getAlbumArtMode(): String {
         val prefs = service.getSharedPreferences(
             com.sameerasw.essentials.data.repository.SettingsRepository.PREFS_NAME,
             Context.MODE_PRIVATE
         )
-        return prefs.getBoolean(
-            com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_RANDOM_SHAPES,
-            true
-        )
+        return prefs.getString(
+            com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_ALBUM_ART_MODE,
+            "default"
+        ) ?: "default"
+    }
+
+    private fun isRandomShapesEnabled(): Boolean {
+        return getAlbumArtMode() == "random"
     }
 
     private fun getPrimaryColor(context: Context): Int {

@@ -258,6 +258,7 @@ class MainViewModel : ViewModel() {
     val isBatteryWidgetBackgroundEnabled = mutableStateOf(true)
     val isAmbientMusicGlanceDockedModeEnabled = mutableStateOf(false)
     val isAmbientMusicGlanceRandomShapesEnabled = mutableStateOf(true)
+    val ambientMusicGlanceAlbumArtMode = mutableStateOf("default")
     val scaleAnimationsMode = mutableStateOf("default")
     val isTouchSensitivityEnabled = mutableStateOf(false)
     val isAutoRotateEnabled = mutableStateOf(false)
@@ -1231,6 +1232,10 @@ class MainViewModel : ViewModel() {
             SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_RANDOM_SHAPES,
             true
         )
+        ambientMusicGlanceAlbumArtMode.value = settingsRepository.getString(
+            SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_ALBUM_ART_MODE,
+            "default"
+        ) ?: "default"
         isCalendarSyncEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_CALENDAR_SYNC_ENABLED, false)
         isCalendarSyncPeriodicEnabled.value = settingsRepository.isCalendarSyncPeriodicEnabled()
@@ -1895,6 +1900,14 @@ class MainViewModel : ViewModel() {
         settingsRepository.putBoolean(
             SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_RANDOM_SHAPES,
             enabled
+        )
+    }
+
+    fun setAmbientMusicGlanceAlbumArtMode(mode: String) {
+        ambientMusicGlanceAlbumArtMode.value = mode
+        settingsRepository.putString(
+            SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_ALBUM_ART_MODE,
+            mode
         )
     }
 

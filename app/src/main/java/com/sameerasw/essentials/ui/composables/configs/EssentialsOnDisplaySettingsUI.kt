@@ -1,9 +1,14 @@
 package com.sameerasw.essentials.ui.composables.configs
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -12,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.glance.text.Text
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
@@ -93,17 +99,19 @@ fun EssentialsOnDisplaySettingsUI(
                 onDisabledClick = { if (!isPermissionGranted) showPermissionSheet = true },
                 modifier = Modifier.highlight(highlightSetting == "essentials_on_display_docked_mode")
             )
-
-            IconToggleItem(
-                iconRes = R.drawable.rounded_interests_24,
-                title = stringResource(R.string.essentials_on_display_random_shapes_title),
-                description = stringResource(R.string.essentials_on_display_random_shapes_desc),
-                isChecked = viewModel.isAmbientMusicGlanceRandomShapesEnabled.value,
-                onCheckedChange = { viewModel.setAmbientMusicGlanceRandomShapesEnabled(it) },
-                enabled = isPermissionGranted && viewModel.isAmbientMusicGlanceEnabled.value,
-                onDisabledClick = { if (!isPermissionGranted) showPermissionSheet = true },
-                modifier = Modifier.highlight(highlightSetting == "essentials_on_display_random_shapes")
-            )
         }
+
+        Text(
+            text = stringResource(R.string.essentials_on_display_album_art_title),
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        com.sameerasw.essentials.ui.components.pickers.AlbumArtModePicker(
+            selectedMode = viewModel.ambientMusicGlanceAlbumArtMode.value,
+            onModeSelected = { viewModel.setAmbientMusicGlanceAlbumArtMode(it) },
+            modifier = Modifier.highlight(highlightSetting == "essentials_on_display_album_art")
+        )
     }
 }
