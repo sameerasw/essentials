@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="label_customization">Personalización</string>
     <string name="label_beta">BETA</string>
     <string name="shut_up_attempt_shizuku_restart">Intentar reiniciar Shizuku</string>
     <string name="shut_up_shizuku_restart_warning_title">Advertencia de reinicio de Shizuku</string>
@@ -67,11 +68,15 @@
     <string name="feat_essentials_on_display_desc">Consultar de un vistazo la información y el contenido multimedia en AOD</string>
     <string name="essentials_on_display_docked_mode_title">Modo acoplado</string>
     <string name="essentials_on_display_docked_mode_desc">Mantener la superposición visible indefinidamente mientras se reproduce música en AOD</string>
-    <string name="essentials_on_display_album_art_title">Album art</string>
-    <string name="essentials_on_display_clock_title">Clock</string>
-    <string name="essentials_on_display_force_fill_while_charging_title">Always use while charging</string>
+    <string name="essentials_on_display_respect_notifications_title">Respetar las nuevas notificaciones</string>
+    <string name="essentials_on_display_respect_notifications_desc">Desactivar temporalmente ante nuevas notificaciones</string>
+    <string name="essentials_on_display_random_shapes_title">Formas aleatorias</string>
+    <string name="essentials_on_display_random_shapes_desc">Usar varias formas de Material 3 para la carátula del álbum</string>
+    <string name="essentials_on_display_album_art_title">Carátula del álbum</string>
+    <string name="essentials_on_display_clock_title">Reloj</string>
+    <string name="essentials_on_display_force_fill_while_charging_title">Usar siempre mientras se carga</string>
     <string name="essentials_on_display_force_fill_while_charging_desc">Force Fill mode when the device is plugged in regardless of the selected mode</string>
-    <string name="label_size">Size</string>
+    <string name="label_size">Tamaño</string>
     <string name="feat_notification_glance_title">Vista rápida de notificaciones</string>
     <string name="feat_notification_glance_desc">Mantener AOD activado mientras las notificaciones estén pendientes</string>
     <string name="notification_glance_same_as_lighting_title">Las mismas aplicaciones que la iluminación de notificaciones</string>
