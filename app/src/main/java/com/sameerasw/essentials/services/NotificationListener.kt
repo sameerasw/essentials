@@ -10,6 +10,10 @@ import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.util.Log
 import androidx.annotation.RequiresApi
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.MapsState
@@ -175,6 +179,50 @@ class NotificationListener : NotificationListenerService() {
             } catch (_: Exception) {
             }
         }
+    }
+
+    private fun extractBitmap(metadata: android.media.MediaMetadata?, sbn: StatusBarNotification?): Bitmap? {
+        // 1. Try Metadata bitmaps
+        var bitmap = metadata?.getBitmap(android.media.MediaMetadata.METADATA_KEY_ALBUM_ART)
+        if (bitmap == null) {
+            bitmap = metadata?.getBitmap(android.media.MediaMetadata.METADATA_KEY_ART)
+        }
+
+        // 2. Try Notification Large Icon
+        if (bitmap == null && sbn != null) {
+            val largeIcon = sbn.notification.getLargeIcon()
+            if (largeIcon != null) {
+                try {
+                    val drawable = largeIcon.loadDrawable(this)
+                    if (drawable is BitmapDrawable) {
+                        bitmap = drawable.bitmap
+                    } else if (drawable != null) {
+                        bitmap = Bitmap.createBitmap(
+                            drawable.intrinsicWidth.coerceAtLeast(1),
+                            drawable.intrinsicHeight.coerceAtLeast(1),
+                            Bitmap.Config.ARGB_8888
+                        )
+                        val canvas = Canvas(bitmap)
+                        drawable.setBounds(0, 0, canvas.width, canvas.height)
+                        drawable.draw(canvas)
+                    }
+                } catch (_: Exception) {}
+            }
+        }
+
+        // 3. Try Notification Extra Picture (BigPictureStyle)
+        if (bitmap == null && sbn != null) {
+            @Suppress("DEPRECATION")
+            bitmap = sbn.notification.extras.getParcelable(Notification.EXTRA_PICTURE) as? Bitmap
+        }
+
+        // 4. Try Notification Extra Large Icon (Old style)
+        if (bitmap == null && sbn != null) {
+            @Suppress("DEPRECATION")
+            bitmap = sbn.notification.extras.getParcelable(Notification.EXTRA_LARGE_ICON) as? Bitmap
+        }
+
+        return bitmap
     }
 
     override fun onDestroy() {
@@ -377,7 +425,8 @@ class NotificationListener : NotificationListenerService() {
         activeSession: android.media.session.MediaController,
         eventType: String,
         isAlreadyLikedOverride: Boolean? = null,
-        bypassInteractiveCheck: Boolean = false
+        bypassInteractiveCheck: Boolean = false,
+        sbn: StatusBarNotification? = null
     ) {
         val prefs = getSharedPreferences(
             SettingsRepository.PREFS_NAME,
@@ -403,57 +452,64 @@ class NotificationListener : NotificationListenerService() {
                 false
             )
 
-            // 1. Always Extract & Cache Album Art (Dictionary style)
-            var bitmap = metadata?.getBitmap(android.media.MediaMetadata.METADATA_KEY_ALBUM_ART)
-            if (bitmap == null) {
-                bitmap = metadata?.getBitmap(android.media.MediaMetadata.METADATA_KEY_ART)
-            }
-
+            // 1. Robust Album Art Extraction
             if (title != null) {
                 val artHash = kotlin.math.abs("${title}_${artist}".hashCode())
                 val artFile = java.io.File(cacheDir, "art_$artHash.png")
 
+                // Extract bitmap from all possible sources
+                val bitmap = extractBitmap(metadata, sbn ?: activeNotifications?.find { it.packageName == activeSession.packageName })
+
                 if (bitmap != null) {
-                    try {
-                        val out = java.io.FileOutputStream(artFile)
-                        bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, out)
-                        out.flush()
-                        out.close()
+                    // Save asynchronously to avoid blocking main thread
+                    Thread {
+                        try {
+                            val tempWriteFile = java.io.File(cacheDir, "art_$artHash.tmp")
+                            val out = java.io.FileOutputStream(tempWriteFile)
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+                            out.flush()
+                            out.close()
+                            tempWriteFile.renameTo(artFile)
 
-                        val tempFile = java.io.File(cacheDir, "temp_album_art.png")
-                        val tempOut = java.io.FileOutputStream(tempFile)
-                        bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, tempOut)
-                        tempOut.flush()
-                        tempOut.close()
+                            val tempArtFile = java.io.File(cacheDir, "temp_album_art.png")
+                            val tempArtTmp = java.io.File(cacheDir, "temp_album_art.tmp")
+                            val tempOut = java.io.FileOutputStream(tempArtTmp)
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, tempOut)
+                            tempOut.flush()
+                            tempOut.close()
+                            tempArtTmp.renameTo(tempArtFile)
 
-                        // Cleanup old art files (Keep last 3)
-                        val files = cacheDir.listFiles { _, name -> name.startsWith("art_") }
-                        if (files != null && files.size > 3) {
-                            files.sortByDescending { it.lastModified() }
-                            for (i in 5 until files.size) {
-                                files[i].delete()
+                            // Cleanup old art files (Keep last 3)
+                            val files = cacheDir.listFiles { _, name -> name.startsWith("art_") && !name.endsWith(".tmp") }
+                            if (files != null && files.size > 3) {
+                                files.sortByDescending { it.lastModified() }
+                                for (i in 3 until files.size) {
+                                    files[i].delete()
+                                }
                             }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
                         }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
+                    }.start()
                 }
-            }
-            // 2. Trigger Glance only if screen is OFF or Screensaver is Active
-            val powerManager = getSystemService(POWER_SERVICE) as PowerManager
-            val isDreaming = com.sameerasw.essentials.services.dreams.AmbientDreamService.isDreaming
 
-            if (!powerManager.isInteractive || bypassInteractiveCheck || isDreaming) {
-                val intent = Intent("SHOW_AMBIENT_GLANCE").apply {
-                    putExtra("event_type", eventType)
-                    putExtra("track_title", title)
-                    putExtra("artist_name", artist)
-                    putExtra("is_already_liked", isAlreadyLiked)
-                    putExtra("is_docked_mode", isDockedMode)
-                    putExtra("package_name", activeSession.packageName)
-                    setPackage(packageName)
+                // 2. Trigger Glance only if screen is OFF or Screensaver is Active
+                val powerManager = getSystemService(POWER_SERVICE) as PowerManager
+                val isDreaming = com.sameerasw.essentials.services.dreams.AmbientDreamService.isDreaming
+
+                if (!powerManager.isInteractive || bypassInteractiveCheck || isDreaming) {
+                    val intent = Intent("SHOW_AMBIENT_GLANCE").apply {
+                        putExtra("event_type", eventType)
+                        putExtra("track_title", title)
+                        putExtra("artist_name", artist)
+                        putExtra("art_hash", artHash) // PASS HASH
+                        putExtra("is_already_liked", isAlreadyLiked)
+                        putExtra("is_docked_mode", isDockedMode)
+                        putExtra("package_name", activeSession.packageName)
+                        setPackage(packageName)
+                    }
+                    sendBroadcast(intent)
                 }
-                sendBroadcast(intent)
             }
         }
     }
@@ -521,7 +577,7 @@ class NotificationListener : NotificationListenerService() {
                     .apply()
 
                 if (eventType != null) {
-                    triggerAmbientGlance(controller, eventType, isLiked)
+                    triggerAmbientGlance(controller, eventType, isLiked, sbn = sbn)
                 }
             }
         } catch (e: Exception) {

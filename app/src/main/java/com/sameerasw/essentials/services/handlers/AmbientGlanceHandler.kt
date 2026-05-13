@@ -135,6 +135,7 @@ class AmbientGlanceHandler(
     private var isDockedMode: Boolean = false
     private var volumePercentage: Int = 0
     private var volumeKey: Int = -1
+    private var artHash: Long = -1L
 
     companion object {
         const val EVENT_LIKE = "like"
@@ -168,25 +169,22 @@ class AmbientGlanceHandler(
             isDockedMode = intent.getBooleanExtra("is_docked_mode", false)
             volumePercentage = intent.getIntExtra("volume_percentage", 0)
             volumeKey = intent.getIntExtra("volume_key_code", -1)
+            val newArtHash = if (intent.hasExtra("art_hash")) intent.getLongExtra("art_hash", -1L) else -1L
+            if (newArtHash != -1L) artHash = newArtHash
 
             if (overlayView != null) {
                 // If song changed while visible, refresh entire overlay or just content
                 if (eventType == EVENT_TRACK_CHANGE || metadataChanged) {
+                    // Reset to Music Mode
+                    volumeIconView?.animate()?.alpha(0f)?.setDuration(200)?.start()
+                    volumeStrokeView?.setColor(Color.GRAY)
+                    handler.removeCallbacks(revertToMusicRunnable)
 
-                    if (overlayView != null) {
-                        // Reset to Music Mode
-                        volumeIconView?.animate()?.alpha(0f)?.setDuration(200)?.start()
-                        volumeStrokeView?.setColor(Color.GRAY)
-                        handler.removeCallbacks(revertToMusicRunnable)
+                    updateMetadata()
 
-                        updateMetadata()
-
-                        // Restart progress
-                        handler.removeCallbacks(progressUpdateRunnable)
-                        handler.post(progressUpdateRunnable)
-                    } else {
-                        showOverlay()
-                    }
+                    // Restart progress
+                    handler.removeCallbacks(progressUpdateRunnable)
+                    handler.post(progressUpdateRunnable)
                     return
                 }
 
@@ -248,6 +246,9 @@ class AmbientGlanceHandler(
         // Update Dynamic Shape with Morphing
         val size = dpToPx(320f).toFloat()
         val randomEnabled = isRandomShapesEnabled()
+        val mode = getAlbumArtMode()
+        val isFill = mode == "fill"
+
         val newPolygon = com.sameerasw.essentials.utils.AmbientMusicShapeHelper.getPolygon(
             "${trackTitle}_${artistName}",
             randomEnabled
@@ -270,11 +271,22 @@ class AmbientGlanceHandler(
                     }
 
                     nextImageView?.alpha = progress
+                    if (isFill) {
+                        backgroundNextImageView?.alpha = progress
+                        backgroundImageView?.alpha = 1f - progress
+                    }
                 }
                 addListener(object : android.animation.AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: android.animation.Animator) {
                         imageView?.setImageDrawable(nextImageView?.drawable)
+                        if (isFill) {
+                            backgroundImageView?.setImageDrawable(backgroundNextImageView?.drawable)
+                            backgroundImageView?.alpha = 1f
+                        } else {
+                            backgroundImageView?.alpha = 0f
+                        }
                         nextImageView?.alpha = 0f
+                        backgroundNextImageView?.alpha = 0f
                     }
                 })
                 start()
@@ -287,18 +299,37 @@ class AmbientGlanceHandler(
             )
             volumeStrokeView?.updatePath(currentShapePath!!)
             clipContainer?.invalidateOutline()
+
+            // Update background alpha if not morphing
+            backgroundImageView?.alpha = if (isFill) 1f else 0f
+            backgroundNextImageView?.alpha = 0f
         }
         currentPolygon = newPolygon
 
-        // Reload Bitmap
+        updateAlbumArt()
+
+        // Handle Background Alpha for Fill mode
+        backgroundImageView?.animate()?.alpha(if (isFill) 1f else 0f)?.setDuration(500)?.start()
+        backgroundScrim?.animate()?.alpha(if (isFill) 1f else 0f)?.setDuration(500)?.start()
+        centerContainer?.animate()?.alpha(if (isFill) 0f else 1f)?.setDuration(500)?.start()
+    }
+
+    private fun updateAlbumArt(retryCount: Int = 0) {
+        val title = trackTitle
+        val artist = artistName
+        if (title == null) return
+
         try {
-            val artHash = kotlin.math.abs("${trackTitle}_${artistName}".hashCode())
-            val artFile = File(service.cacheDir, "art_$artHash.png")
+            val hashToUse = if (artHash != -1L) artHash else kotlin.math.abs("${title}_${artist}".hashCode().toLong())
+            val artFile = File(service.cacheDir, "art_$hashToUse.png")
             val bitmap = if (artFile.exists()) {
                 BitmapFactory.decodeFile(artFile.absolutePath)
             } else {
-                val tempFile = File(service.cacheDir, "temp_album_art.png")
-                if (tempFile.exists()) BitmapFactory.decodeFile(tempFile.absolutePath) else null
+                // Only use temp fallback if not retrying for a specific song
+                if (retryCount == 0) {
+                    val tempFile = File(service.cacheDir, "temp_album_art.png")
+                    if (tempFile.exists()) BitmapFactory.decodeFile(tempFile.absolutePath) else null
+                } else null
             }
 
             if (bitmap != null) {
@@ -309,22 +340,20 @@ class AmbientGlanceHandler(
                     backgroundImageView?.setImageBitmap(bitmap)
                 }
             } else {
-                val placeholder = android.graphics.drawable.ColorDrawable(getPrimaryColor(service))
-                nextImageView?.setImageDrawable(placeholder)
-                backgroundNextImageView?.setImageDrawable(placeholder)
-                if (morphAnimator?.isRunning != true) {
-                    imageView?.setImageDrawable(placeholder)
-                    backgroundImageView?.setImageDrawable(placeholder)
+                if (retryCount < 12) { // Try for 6 seconds
+                    handler.postDelayed({ updateAlbumArt(retryCount + 1) }, 500)
+                } else {
+                    val placeholder = android.graphics.drawable.ColorDrawable(getPrimaryColor(service))
+                    nextImageView?.setImageDrawable(placeholder)
+                    backgroundNextImageView?.setImageDrawable(placeholder)
+                    if (morphAnimator?.isRunning != true) {
+                        imageView?.setImageDrawable(placeholder)
+                        backgroundImageView?.setImageDrawable(placeholder)
+                    }
                 }
             }
         } catch (_: Exception) {
         }
-
-        // Handle Background Alpha for Fill mode
-        val mode = getAlbumArtMode()
-        backgroundImageView?.animate()?.alpha(if (mode == "fill") 1f else 0f)?.setDuration(500)?.start()
-        backgroundScrim?.animate()?.alpha(if (mode == "fill") 1f else 0f)?.setDuration(500)?.start()
-        centerContainer?.animate()?.alpha(if (mode == "fill") 0f else 1f)?.setDuration(500)?.start()
     }
 
     private fun showOverlay() {
