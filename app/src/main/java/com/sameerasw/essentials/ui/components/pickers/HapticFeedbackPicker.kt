@@ -65,7 +65,12 @@ fun HapticFeedbackPicker(
                     else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
                 },
             ) {
-                Text(stringResource(label), fontSize = dimensionResource(R.dimen.font_small).value.sp, modifier= Modifier.basicMarquee(), maxLines = 1)
+                Text(
+                    stringResource(label),
+                    fontSize = dimensionResource(R.dimen.font_small).value.sp,
+                    modifier = Modifier.basicMarquee(),
+                    maxLines = 1
+                )
             }
         }
     }

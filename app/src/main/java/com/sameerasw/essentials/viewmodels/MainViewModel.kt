@@ -2,7 +2,6 @@ package com.sameerasw.essentials.viewmodels
 
 import android.Manifest
 import android.app.Activity
-import com.sameerasw.essentials.domain.model.DnsPreset
 import android.app.ActivityManager
 import android.app.admin.DevicePolicyManager
 import android.content.BroadcastReceiver
@@ -12,9 +11,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.database.ContentObserver
-import android.util.Log
 import android.net.Uri
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.os.PowerManager
@@ -40,13 +37,14 @@ import com.sameerasw.essentials.data.repository.UpdateRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.MapsState
 import com.sameerasw.essentials.domain.model.AppSelection
+import com.sameerasw.essentials.domain.model.DnsPreset
 import com.sameerasw.essentials.domain.model.NotificationApp
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import com.sameerasw.essentials.domain.model.NotificationLightingSweepPosition
-import com.sameerasw.essentials.domain.model.SearchableItem
 import com.sameerasw.essentials.domain.model.ScaleAnimationsProfile
+import com.sameerasw.essentials.domain.model.SearchableItem
 import com.sameerasw.essentials.domain.model.UpdateInfo
 import com.sameerasw.essentials.domain.registry.SearchRegistry
 import com.sameerasw.essentials.services.CaffeinateWakeLockService
@@ -130,7 +128,8 @@ class MainViewModel : ViewModel() {
     val isAodForceTurnOffEnabled = mutableStateOf(false)
     val isAutoAccessibilityEnabled = mutableStateOf(false)
     val isNotificationGlanceSameAsLightingEnabled = mutableStateOf(true)
-    val isOnboardingCompleted = mutableStateOf(true) // Default to true so it doesn't flash on first check if not loaded
+    val isOnboardingCompleted =
+        mutableStateOf(true) // Default to true so it doesn't flash on first check if not loaded
     val isWhatsNewVisible = mutableStateOf(false)
     val dnsPresets = mutableStateListOf<DnsPreset>()
     val addedQSTiles = mutableStateOf<Set<String>>(emptySet())
@@ -151,13 +150,14 @@ class MainViewModel : ViewModel() {
 
     // Live Wallpaper
     val liveWallpaperSelectedVideo = mutableStateOf(SettingsRepository.LIVE_WALLPAPER_DEFAULT_VIDEO)
-    val liveWallpaperPlaybackTrigger = mutableStateOf(SettingsRepository.LIVE_WALLPAPER_TRIGGER_UNLOCK)
+    val liveWallpaperPlaybackTrigger =
+        mutableStateOf(SettingsRepository.LIVE_WALLPAPER_TRIGGER_UNLOCK)
     val liveWallpaperCustomVideos = mutableStateListOf<String>()
 
-    val shutUpConfigs = mutableStateOf<List<com.sameerasw.essentials.domain.model.ShutUpAppConfig>>(emptyList())
+    val shutUpConfigs =
+        mutableStateOf<List<com.sameerasw.essentials.domain.model.ShutUpAppConfig>>(emptyList())
     val isShutUpLoading = mutableStateOf(false)
     val isShutUpAttemptShizukuRestart = mutableStateOf(true)
-
 
 
     data class CalendarAccount(
@@ -257,7 +257,14 @@ class MainViewModel : ViewModel() {
     val batteryWidgetMaxDevices = mutableIntStateOf(8)
     val isBatteryWidgetBackgroundEnabled = mutableStateOf(true)
     val isAmbientMusicGlanceDockedModeEnabled = mutableStateOf(false)
-    val isAmbientMusicGlanceRandomShapesEnabled = mutableStateOf(true)
+    val isAmbientMusicGlanceRandomShapesEnabled = mutableStateOf(false)
+    val ambientMusicGlanceAlbumArtMode = mutableStateOf("default")
+    val ambientMusicGlanceClockSize = mutableIntStateOf(80)
+    val ambientMusicGlanceClockWeight = mutableIntStateOf(400)
+    val ambientMusicGlanceClockWidth = mutableIntStateOf(100)
+    val ambientMusicGlanceClockRoundness = mutableIntStateOf(50)
+    val isAmbientMusicGlanceForceFillWhileChargingEnabled = mutableStateOf(false)
+    val isAmbientMusicGlanceRespectNotificationsEnabled = mutableStateOf(true)
     val scaleAnimationsMode = mutableStateOf("default")
     val isTouchSensitivityEnabled = mutableStateOf(false)
     val isAutoRotateEnabled = mutableStateOf(false)
@@ -290,27 +297,38 @@ class MainViewModel : ViewModel() {
                     Settings.System.getUriFor(Settings.System.FONT_SCALE) -> {
                         fontScale.floatValue = settingsRepository.getFontScale()
                     }
+
                     Settings.Secure.getUriFor("font_weight_adjustment") -> {
                         fontWeight.intValue = settingsRepository.getFontWeight()
                     }
+
                     Settings.Global.getUriFor(Settings.Global.ANIMATOR_DURATION_SCALE) -> {
-                        animatorDurationScale.floatValue = settingsRepository.getAnimationScale(Settings.Global.ANIMATOR_DURATION_SCALE)
+                        animatorDurationScale.floatValue =
+                            settingsRepository.getAnimationScale(Settings.Global.ANIMATOR_DURATION_SCALE)
                     }
+
                     Settings.Global.getUriFor(Settings.Global.TRANSITION_ANIMATION_SCALE) -> {
-                        transitionAnimationScale.floatValue = settingsRepository.getAnimationScale(Settings.Global.TRANSITION_ANIMATION_SCALE)
+                        transitionAnimationScale.floatValue =
+                            settingsRepository.getAnimationScale(Settings.Global.TRANSITION_ANIMATION_SCALE)
                     }
+
                     Settings.Global.getUriFor(Settings.Global.WINDOW_ANIMATION_SCALE) -> {
-                        windowAnimationScale.floatValue = settingsRepository.getAnimationScale(Settings.Global.WINDOW_ANIMATION_SCALE)
+                        windowAnimationScale.floatValue =
+                            settingsRepository.getAnimationScale(Settings.Global.WINDOW_ANIMATION_SCALE)
                     }
+
                     Settings.Secure.getUriFor("display_density_forced") -> {
                         smallestWidth.intValue = settingsRepository.getSmallestWidth()
                     }
+
                     Settings.Secure.getUriFor("doze_always_on") -> {
                         isAodEnabled.value = settingsRepository.isAodEnabled()
                     }
+
                     Settings.Secure.getUriFor("sysui_qs_tiles") -> {
                         appContext?.let { updateAddedQSTiles(it) }
                     }
+
                     Settings.System.getUriFor("peak_refresh_rate"),
                     Settings.System.getUriFor("min_refresh_rate") -> {
                         appContext?.let { syncRefreshRateState(it) }
@@ -322,7 +340,10 @@ class MainViewModel : ViewModel() {
 
     private val preferenceChangeListener =
         object : android.content.SharedPreferences.OnSharedPreferenceChangeListener {
-            override fun onSharedPreferenceChanged(sharedPreferences: android.content.SharedPreferences?, key: String?) {
+            override fun onSharedPreferenceChanged(
+                sharedPreferences: android.content.SharedPreferences?,
+                key: String?
+            ) {
                 if (key == null) return
 
                 when (key) {
@@ -367,7 +388,8 @@ class MainViewModel : ViewModel() {
                         settingsRepository.getInt(key, 1)
 
                     SettingsRepository.KEY_FREEZE_AUTO_EXCLUDED_APPS -> {
-                        freezeAutoExcludedApps.value = settingsRepository.getFreezeAutoExcludedApps()
+                        freezeAutoExcludedApps.value =
+                            settingsRepository.getFreezeAutoExcludedApps()
                     }
 
                     SettingsRepository.KEY_FREEZE_MODE -> {
@@ -477,7 +499,8 @@ class MainViewModel : ViewModel() {
                     }
 
                     SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_DOCKED_MODE -> {
-                        isAmbientMusicGlanceDockedModeEnabled.value = settingsRepository.getBoolean(key)
+                        isAmbientMusicGlanceDockedModeEnabled.value =
+                            settingsRepository.getBoolean(key)
                     }
 
                     SettingsRepository.KEY_CALENDAR_SYNC_ENABLED -> {
@@ -492,22 +515,44 @@ class MainViewModel : ViewModel() {
                         appContext?.let { refreshTrackedUpdates(it) }
                     }
 
-                    SettingsRepository.KEY_FONT_SCALE -> fontScale.floatValue = settingsRepository.getFontScale()
-                    SettingsRepository.KEY_FONT_WEIGHT -> fontWeight.intValue = settingsRepository.getFontWeight()
-                    SettingsRepository.KEY_ANIMATOR_DURATION_SCALE -> animatorDurationScale.floatValue = settingsRepository.getAnimationScale(android.provider.Settings.Global.ANIMATOR_DURATION_SCALE)
-                    SettingsRepository.KEY_TRANSITION_ANIMATION_SCALE -> transitionAnimationScale.floatValue = settingsRepository.getAnimationScale(android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE)
-                    SettingsRepository.KEY_WINDOW_ANIMATION_SCALE -> windowAnimationScale.floatValue = settingsRepository.getAnimationScale(android.provider.Settings.Global.WINDOW_ANIMATION_SCALE)
-                    SettingsRepository.KEY_SMALLEST_WIDTH -> smallestWidth.intValue = settingsRepository.getSmallestWidth()
-                    SettingsRepository.KEY_REFRESH_RATE_MODE -> refreshRateMode.value = settingsRepository.getRefreshRateMode()
+                    SettingsRepository.KEY_FONT_SCALE -> fontScale.floatValue =
+                        settingsRepository.getFontScale()
+
+                    SettingsRepository.KEY_FONT_WEIGHT -> fontWeight.intValue =
+                        settingsRepository.getFontWeight()
+
+                    SettingsRepository.KEY_ANIMATOR_DURATION_SCALE -> animatorDurationScale.floatValue =
+                        settingsRepository.getAnimationScale(Settings.Global.ANIMATOR_DURATION_SCALE)
+
+                    SettingsRepository.KEY_TRANSITION_ANIMATION_SCALE -> transitionAnimationScale.floatValue =
+                        settingsRepository.getAnimationScale(Settings.Global.TRANSITION_ANIMATION_SCALE)
+
+                    SettingsRepository.KEY_WINDOW_ANIMATION_SCALE -> windowAnimationScale.floatValue =
+                        settingsRepository.getAnimationScale(Settings.Global.WINDOW_ANIMATION_SCALE)
+
+                    SettingsRepository.KEY_SMALLEST_WIDTH -> smallestWidth.intValue =
+                        settingsRepository.getSmallestWidth()
+
+                    SettingsRepository.KEY_REFRESH_RATE_MODE -> refreshRateMode.value =
+                        settingsRepository.getRefreshRateMode()
+
                     SettingsRepository.KEY_REFRESH_RATE_FIXED,
                     SettingsRepository.KEY_REFRESH_RATE_MIN,
                     SettingsRepository.KEY_REFRESH_RATE_PEAK -> {
                         appContext?.let { syncRefreshRateState(it) }
                     }
-                    SettingsRepository.KEY_NOTIFICATION_GLANCE_ENABLED -> isNotificationGlanceEnabled.value = settingsRepository.getBoolean(key)
-                    SettingsRepository.KEY_AOD_FORCE_TURN_OFF_ENABLED -> isAodForceTurnOffEnabled.value = settingsRepository.getBoolean(key)
-                    SettingsRepository.KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING -> isNotificationGlanceSameAsLightingEnabled.value = settingsRepository.getBoolean(key, true)
-                    SettingsRepository.KEY_AUTO_ACCESSIBILITY_ENABLED -> isAutoAccessibilityEnabled.value = settingsRepository.getBoolean(key)
+
+                    SettingsRepository.KEY_NOTIFICATION_GLANCE_ENABLED -> isNotificationGlanceEnabled.value =
+                        settingsRepository.getBoolean(key)
+
+                    SettingsRepository.KEY_AOD_FORCE_TURN_OFF_ENABLED -> isAodForceTurnOffEnabled.value =
+                        settingsRepository.getBoolean(key)
+
+                    SettingsRepository.KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING -> isNotificationGlanceSameAsLightingEnabled.value =
+                        settingsRepository.getBoolean(key, true)
+
+                    SettingsRepository.KEY_AUTO_ACCESSIBILITY_ENABLED -> isAutoAccessibilityEnabled.value =
+                        settingsRepository.getBoolean(key)
 
                     SettingsRepository.KEY_USE_BLUR -> {
                         appContext?.let { updateBlurState(it) }
@@ -523,7 +568,8 @@ class MainViewModel : ViewModel() {
                     }
 
                     SettingsRepository.KEY_FLASHLIGHT_PULSE_MAX_INTENSITY -> {
-                        flashlightPulseMaxIntensity.floatValue = settingsRepository.getFloat(key, 0.5f)
+                        flashlightPulseMaxIntensity.floatValue =
+                            settingsRepository.getFloat(key, 0.5f)
                     }
 
                     SettingsRepository.KEY_CIRCLE_TO_SEARCH_GESTURE_ENABLED -> {
@@ -531,7 +577,8 @@ class MainViewModel : ViewModel() {
                     }
 
                     SettingsRepository.KEY_CIRCLE_TO_SEARCH_GESTURE_HEIGHT -> {
-                        circleToSearchGestureHeight.floatValue = settingsRepository.getFloat(key, 48f)
+                        circleToSearchGestureHeight.floatValue =
+                            settingsRepository.getFloat(key, 48f)
                     }
 
                     SettingsRepository.KEY_CIRCLE_TO_SEARCH_PREVIEW_ENABLED -> {
@@ -544,11 +591,13 @@ class MainViewModel : ViewModel() {
                     }
 
                     SettingsRepository.KEY_LIVE_WALLPAPER_SELECTED_VIDEO -> {
-                        liveWallpaperSelectedVideo.value = settingsRepository.getLiveWallpaperSelectedVideo()
+                        liveWallpaperSelectedVideo.value =
+                            settingsRepository.getLiveWallpaperSelectedVideo()
                     }
 
                     SettingsRepository.KEY_LIVE_WALLPAPER_PLAYBACK_TRIGGER -> {
-                        liveWallpaperPlaybackTrigger.value = settingsRepository.getLiveWallpaperPlaybackTrigger()
+                        liveWallpaperPlaybackTrigger.value =
+                            settingsRepository.getLiveWallpaperPlaybackTrigger()
                     }
 
                     SettingsRepository.KEY_LIVE_WALLPAPER_CUSTOM_VIDEOS -> {
@@ -557,11 +606,19 @@ class MainViewModel : ViewModel() {
                     }
 
                     SettingsRepository.KEY_SHUT_UP_ATTEMPT_SHIZUKU_RESTART -> {
-                        isShutUpAttemptShizukuRestart.value = settingsRepository.isShutUpAttemptShizukuRestartEnabled()
+                        isShutUpAttemptShizukuRestart.value =
+                            settingsRepository.isShutUpAttemptShizukuRestartEnabled()
                     }
+
                     SettingsRepository.KEY_DISABLE_ROTATION_SUGGESTION -> {
-                        isDisableRotationSuggestionEnabled.value = settingsRepository.getBoolean(key)
-                        appContext?.let { applyDisableRotationSuggestion(it, isDisableRotationSuggestionEnabled.value) }
+                        isDisableRotationSuggestionEnabled.value =
+                            settingsRepository.getBoolean(key)
+                        appContext?.let {
+                            applyDisableRotationSuggestion(
+                                it,
+                                isDisableRotationSuggestionEnabled.value
+                            )
+                        }
                     }
                 }
             }
@@ -602,13 +659,18 @@ class MainViewModel : ViewModel() {
     fun saveShutUpSelectedApps(context: Context, apps: List<AppSelection>) {
         val currentConfigs = settingsRepository.loadShutUpConfigs().associateBy { it.packageName }
         val newConfigs = apps.filter { it.isEnabled }.map {
-            currentConfigs[it.packageName] ?: com.sameerasw.essentials.domain.model.ShutUpAppConfig(it.packageName)
+            currentConfigs[it.packageName] ?: com.sameerasw.essentials.domain.model.ShutUpAppConfig(
+                it.packageName
+            )
         }
         settingsRepository.saveShutUpConfigs(newConfigs)
         loadShutUpConfigs()
     }
 
-    fun createShutUpShortcut(context: Context, config: com.sameerasw.essentials.domain.model.ShutUpAppConfig) {
+    fun createShutUpShortcut(
+        context: Context,
+        config: com.sameerasw.essentials.domain.model.ShutUpAppConfig
+    ) {
         val appName = try {
             val appInfo = context.packageManager.getApplicationInfo(config.packageName, 0)
             context.packageManager.getApplicationLabel(appInfo).toString()
@@ -616,23 +678,33 @@ class MainViewModel : ViewModel() {
             config.packageName
         }
 
-        val intent = Intent(context, com.sameerasw.essentials.ShutUpShortcutActivity::class.java).apply {
-            action = Intent.ACTION_MAIN
-            putExtra("package_name", config.packageName)
-            data = Uri.parse("shutup://${config.packageName}")
-        }
+        val intent =
+            Intent(context, com.sameerasw.essentials.ShutUpShortcutActivity::class.java).apply {
+                action = Intent.ACTION_MAIN
+                putExtra("package_name", config.packageName)
+                data = Uri.parse("shutup://${config.packageName}")
+            }
 
         if (androidx.core.content.pm.ShortcutManagerCompat.isRequestPinShortcutSupported(context)) {
             val appIcon = AppUtil.getShortcutIcon(context, config.packageName)
 
-            val pinShortcutInfo = androidx.core.content.pm.ShortcutInfoCompat.Builder(context, config.packageName)
-                .setShortLabel(appName)
-                .setIcon(androidx.core.graphics.drawable.IconCompat.createWithBitmap(appIcon))
-                .setIntent(intent)
-                .build()
+            val pinShortcutInfo =
+                androidx.core.content.pm.ShortcutInfoCompat.Builder(context, config.packageName)
+                    .setShortLabel(appName)
+                    .setIcon(androidx.core.graphics.drawable.IconCompat.createWithBitmap(appIcon))
+                    .setIntent(intent)
+                    .build()
 
-            androidx.core.content.pm.ShortcutManagerCompat.requestPinShortcut(context, pinShortcutInfo, null)
-            Toast.makeText(context, context.getString(R.string.shut_up_shortcut_created, appName), Toast.LENGTH_SHORT).show()
+            androidx.core.content.pm.ShortcutManagerCompat.requestPinShortcut(
+                context,
+                pinShortcutInfo,
+                null
+            )
+            Toast.makeText(
+                context,
+                context.getString(R.string.shut_up_shortcut_created, appName),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -653,35 +725,52 @@ class MainViewModel : ViewModel() {
         isWriteSecureSettingsEnabled.value = PermissionUtils.canWriteSecureSettings(context)
         isShizukuAvailable.value = ShizukuUtils.isShizukuAvailable()
         isShizukuPermissionGranted.value = ShizukuUtils.hasPermission()
-        isAutoAccessibilityEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_AUTO_ACCESSIBILITY_ENABLED)
-        isHideGestureBarEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_HIDE_GESTURE_BAR_ENABLED, false)
-        isCircleToSearchGestureEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_CIRCLE_TO_SEARCH_GESTURE_ENABLED, false)
-        circleToSearchGestureHeight.floatValue = settingsRepository.getFloat(SettingsRepository.KEY_CIRCLE_TO_SEARCH_GESTURE_HEIGHT, 48f)
-        isCircleToSearchPreviewEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_CIRCLE_TO_SEARCH_PREVIEW_ENABLED, false)
-        isHideGestureBarOnLauncherEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_HIDE_GESTURE_BAR_ON_LAUNCHER_ENABLED, false)
-        notificationLightingSystemMode.intValue = settingsRepository.getNotificationLightingSystemMode()
-        
-        isShutUpAttemptShizukuRestart.value = settingsRepository.isShutUpAttemptShizukuRestartEnabled()
-        isDisableRotationSuggestionEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_DISABLE_ROTATION_SUGGESTION, false)
+        isAutoAccessibilityEnabled.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_AUTO_ACCESSIBILITY_ENABLED)
+        isHideGestureBarEnabled.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_HIDE_GESTURE_BAR_ENABLED, false)
+        isCircleToSearchGestureEnabled.value = settingsRepository.getBoolean(
+            SettingsRepository.KEY_CIRCLE_TO_SEARCH_GESTURE_ENABLED,
+            false
+        )
+        circleToSearchGestureHeight.floatValue =
+            settingsRepository.getFloat(SettingsRepository.KEY_CIRCLE_TO_SEARCH_GESTURE_HEIGHT, 48f)
+        isCircleToSearchPreviewEnabled.value = settingsRepository.getBoolean(
+            SettingsRepository.KEY_CIRCLE_TO_SEARCH_PREVIEW_ENABLED,
+            false
+        )
+        isHideGestureBarOnLauncherEnabled.value = settingsRepository.getBoolean(
+            SettingsRepository.KEY_HIDE_GESTURE_BAR_ON_LAUNCHER_ENABLED,
+            false
+        )
+        notificationLightingSystemMode.intValue =
+            settingsRepository.getNotificationLightingSystemMode()
+
+        isShutUpAttemptShizukuRestart.value =
+            settingsRepository.isShutUpAttemptShizukuRestartEnabled()
+        isDisableRotationSuggestionEnabled.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_DISABLE_ROTATION_SUGGESTION, false)
         lockScreenClockId.value = readCurrentLockScreenClockId(context)
         lockScreenClockWeight.intValue = settingsRepository.getLockScreenClockWeight()
         lockScreenClockWidth.intValue = settingsRepository.getLockScreenClockWidth()
         lockScreenClockGrade.intValue = settingsRepository.getLockScreenClockGrade()
         lockScreenClockRoundness.intValue = settingsRepository.getLockScreenClockRoundness()
         lockScreenClockColorTone.intValue = settingsRepository.getLockScreenClockColorTone()
-        lockScreenClockSelectedColorId.value = settingsRepository.getLockScreenClockSelectedColorId()
+        lockScreenClockSelectedColorId.value =
+            settingsRepository.getLockScreenClockSelectedColorId()
         lockScreenClockSeedColor.intValue = settingsRepository.getLockScreenClockSeedColor()
         loadShutUpConfigs()
 
         if (isHideGestureBarEnabled.value) {
             applyHideGestureBar(context, true)
         }
-        
+
         updateAppDetectionService(context)
 
 
         if (isAutoAccessibilityEnabled.value && !isAccessibilityEnabled.value) {
-            val serviceName = "${context.packageName}/${ScreenOffAccessibilityService::class.java.name}"
+            val serviceName =
+                "${context.packageName}/${ScreenOffAccessibilityService::class.java.name}"
             var success = false
 
             if (isWriteSecureSettingsEnabled.value) {
@@ -690,7 +779,11 @@ class MainViewModel : ViewModel() {
                         context.contentResolver,
                         Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
                     ) ?: ""
-                    val newServices = if (enabledServices.isEmpty()) serviceName else if (!enabledServices.contains(serviceName)) "$enabledServices:$serviceName" else enabledServices
+                    val newServices =
+                        if (enabledServices.isEmpty()) serviceName else if (!enabledServices.contains(
+                                serviceName
+                            )
+                        ) "$enabledServices:$serviceName" else enabledServices
                     Settings.Secure.putString(
                         context.contentResolver,
                         Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,
@@ -708,9 +801,14 @@ class MainViewModel : ViewModel() {
             }
 
             if (success) {
-                isAccessibilityEnabled.value = PermissionUtils.isAccessibilityServiceEnabled(context)
+                isAccessibilityEnabled.value =
+                    PermissionUtils.isAccessibilityServiceEnabled(context)
                 if (isAccessibilityEnabled.value) {
-                    android.widget.Toast.makeText(context, "Accessibility auto-granted", android.widget.Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        "Accessibility auto-granted",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
@@ -834,12 +932,15 @@ class MainViewModel : ViewModel() {
         isWidgetEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_WIDGET_ENABLED)
         isStatusBarIconControlEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_STATUS_BAR_ICON_CONTROL_ENABLED)
-        
+
         fontScale.floatValue = settingsRepository.getFontScale()
         fontWeight.intValue = settingsRepository.getFontWeight()
-        animatorDurationScale.floatValue = settingsRepository.getAnimationScale(android.provider.Settings.Global.ANIMATOR_DURATION_SCALE)
-        transitionAnimationScale.floatValue = settingsRepository.getAnimationScale(android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE)
-        windowAnimationScale.floatValue = settingsRepository.getAnimationScale(android.provider.Settings.Global.WINDOW_ANIMATION_SCALE)
+        animatorDurationScale.floatValue =
+            settingsRepository.getAnimationScale(Settings.Global.ANIMATOR_DURATION_SCALE)
+        transitionAnimationScale.floatValue =
+            settingsRepository.getAnimationScale(Settings.Global.TRANSITION_ANIMATION_SCALE)
+        windowAnimationScale.floatValue =
+            settingsRepository.getAnimationScale(Settings.Global.WINDOW_ANIMATION_SCALE)
         smallestWidth.intValue = settingsRepository.getSmallestWidth()
         refreshRateMode.value = settingsRepository.getRefreshRateMode()
         syncRefreshRateState(context)
@@ -864,11 +965,15 @@ class MainViewModel : ViewModel() {
 
         notificationLightingStyle.value = settingsRepository.getNotificationLightingStyle()
         notificationLightingColorMode.value = settingsRepository.getNotificationLightingColorMode()
-        isUseUsageAccess.value = settingsRepository.getBoolean(SettingsRepository.KEY_USE_USAGE_ACCESS)
-        isOnboardingCompleted.value = settingsRepository.getBoolean(SettingsRepository.KEY_ONBOARDING_COMPLETED, false)
-        
-        val lastShownCounter = settingsRepository.getInt(SettingsRepository.KEY_WHATS_NEW_LAST_SHOWN_COUNTER, 0)
-        isWhatsNewVisible.value = isOnboardingCompleted.value && lastShownCounter < com.sameerasw.essentials.BuildConfig.WHATS_NEW_COUNTER
+        isUseUsageAccess.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_USE_USAGE_ACCESS)
+        isOnboardingCompleted.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_ONBOARDING_COMPLETED, false)
+
+        val lastShownCounter =
+            settingsRepository.getInt(SettingsRepository.KEY_WHATS_NEW_LAST_SHOWN_COUNTER, 0)
+        isWhatsNewVisible.value =
+            isOnboardingCompleted.value && lastShownCounter < com.sameerasw.essentials.BuildConfig.WHATS_NEW_COUNTER
 
         notificationLightingCustomColor.intValue = settingsRepository.getInt(
             SettingsRepository.KEY_EDGE_LIGHTING_CUSTOM_COLOR,
@@ -887,9 +992,9 @@ class MainViewModel : ViewModel() {
         isRootEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_USE_ROOT)
 
         if (isRootEnabled.value) {
-            isRootAvailable.value = com.sameerasw.essentials.utils.RootUtils.isRootAvailable()
+            isRootAvailable.value = RootUtils.isRootAvailable()
             isRootPermissionGranted.value =
-                com.sameerasw.essentials.utils.RootUtils.isRootPermissionGranted()
+                RootUtils.isRootPermissionGranted()
         } else {
             isRootAvailable.value = false
             isRootPermissionGranted.value = false
@@ -898,14 +1003,21 @@ class MainViewModel : ViewModel() {
         notificationLightingIndicatorScale.value =
             settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_INDICATOR_SCALE, 1.0f)
         notificationLightingGlowSides.value = settingsRepository.getNotificationLightingGlowSides()
-        notificationLightingSweepPosition.value = settingsRepository.getNotificationLightingSweepPosition()
-        notificationLightingSweepThickness.floatValue = settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_SWEEP_THICKNESS, 8f)
-        notificationLightingSweepRandomShapes.value = settingsRepository.getBoolean(SettingsRepository.KEY_EDGE_LIGHTING_SWEEP_RANDOM_SHAPES, true)
+        notificationLightingSweepPosition.value =
+            settingsRepository.getNotificationLightingSweepPosition()
+        notificationLightingSweepThickness.floatValue =
+            settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_SWEEP_THICKNESS, 8f)
+        notificationLightingSweepRandomShapes.value = settingsRepository.getBoolean(
+            SettingsRepository.KEY_EDGE_LIGHTING_SWEEP_RANDOM_SHAPES,
+            true
+        )
 
         MapsState.isEnabled = isMapsPowerSavingEnabled.value
         hapticFeedbackType.value = settingsRepository.getHapticFeedbackType()
         defaultTab.value = settingsRepository.getDIYTab()
-        sentryReportMode.value = settingsRepository.getString(SettingsRepository.KEY_SENTRY_REPORT_MODE, "auto") ?: "auto"
+        sentryReportMode.value =
+            settingsRepository.getString(SettingsRepository.KEY_SENTRY_REPORT_MODE, "auto")
+                ?: "auto"
 
         // Live Wallpaper initialization
         liveWallpaperSelectedVideo.value = settingsRepository.getLiveWallpaperSelectedVideo()
@@ -1038,13 +1150,17 @@ class MainViewModel : ViewModel() {
         isLongPressSymbolsEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_KEYBOARD_LONG_PRESS_SYMBOLS, false)
         isAccentedCharactersEnabled.value =
-            settingsRepository.getBoolean(SettingsRepository.KEY_KEYBOARD_ACCENTED_CHARACTERS, false)
+            settingsRepository.getBoolean(
+                SettingsRepository.KEY_KEYBOARD_ACCENTED_CHARACTERS,
+                false
+            )
 
         isAirSyncConnectionEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_AIRSYNC_CONNECTION_ENABLED)
-        
+
         // April Fools Check
-        isAprilFoolsShown.value = settingsRepository.getBoolean(SettingsRepository.KEY_APRIL_FOOLS_SHOWN)
+        isAprilFoolsShown.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_APRIL_FOOLS_SHOWN)
         if (!isAprilFoolsShown.value) {
             val calendar = java.util.Calendar.getInstance()
             val month = calendar.get(java.util.Calendar.MONTH)
@@ -1120,16 +1236,28 @@ class MainViewModel : ViewModel() {
         )
         isAmbientMusicGlanceRandomShapesEnabled.value = settingsRepository.getBoolean(
             SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_RANDOM_SHAPES,
-            true
+            false
         )
+        ambientMusicGlanceAlbumArtMode.value = settingsRepository.getAmbientMusicGlanceAlbumArtMode()
+        ambientMusicGlanceClockSize.intValue = settingsRepository.getAmbientMusicGlanceClockSize()
+        ambientMusicGlanceClockWeight.intValue = settingsRepository.getAmbientMusicGlanceClockWeight()
+        ambientMusicGlanceClockWidth.intValue = settingsRepository.getAmbientMusicGlanceClockWidth()
+        ambientMusicGlanceClockRoundness.intValue = settingsRepository.getAmbientMusicGlanceClockRoundness()
+        isAmbientMusicGlanceForceFillWhileChargingEnabled.value = settingsRepository.isAmbientMusicGlanceForceFillWhileChargingEnabled()
+        isAmbientMusicGlanceRespectNotificationsEnabled.value = settingsRepository.isAmbientMusicGlanceRespectNotificationsEnabled()
         isCalendarSyncEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_CALENDAR_SYNC_ENABLED, false)
         isCalendarSyncPeriodicEnabled.value = settingsRepository.isCalendarSyncPeriodicEnabled()
         isBatteryNotificationEnabled.value = settingsRepository.isBatteryNotificationEnabled()
         selectedCalendarIds.value = settingsRepository.getCalendarSyncSelectedCalendars()
-        isNotificationGlanceEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_ENABLED)
-        isAodForceTurnOffEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_AOD_FORCE_TURN_OFF_ENABLED)
-        isNotificationGlanceSameAsLightingEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING, true)
+        isNotificationGlanceEnabled.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_ENABLED)
+        isAodForceTurnOffEnabled.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_AOD_FORCE_TURN_OFF_ENABLED)
+        isNotificationGlanceSameAsLightingEnabled.value = settingsRepository.getBoolean(
+            SettingsRepository.KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING,
+            true
+        )
         scaleAnimationsMode.value = settingsRepository.getScaleAnimationsMode()
         isTouchSensitivityEnabled.value = settingsRepository.getTouchSensitivityEnabled()
         isAutoRotateEnabled.value = settingsRepository.getAutoRotateEnabled()
@@ -1148,7 +1276,10 @@ class MainViewModel : ViewModel() {
     }
 
     private fun stopBatteryNotificationService(context: Context) {
-        val intent = Intent(context, com.sameerasw.essentials.services.BatteryNotificationService::class.java)
+        val intent = Intent(
+            context,
+            com.sameerasw.essentials.services.BatteryNotificationService::class.java
+        )
         context.stopService(intent)
     }
 
@@ -1226,10 +1357,10 @@ class MainViewModel : ViewModel() {
         isAccentedCharactersEnabled.value = enabled
         settingsRepository.setAccentedCharactersEnabled(enabled)
     }
-    
+
     fun loadUserDictionaryWords(context: Context) {
-        val ims = context.applicationContext as? com.sameerasw.essentials.ime.EssentialsInputMethodService
-        
+        context.applicationContext as? com.sameerasw.essentials.ime.EssentialsInputMethodService
+
         viewModelScope.launch(Dispatchers.IO) {
             val file = java.io.File(context.filesDir, "user_dict.txt")
             if (file.exists()) {
@@ -1237,20 +1368,20 @@ class MainViewModel : ViewModel() {
                 file.forEachLine { line ->
                     val parts = line.split(" ")
                     if (parts.size >= 2) {
-                         map[parts[0]] = parts[1].toLongOrNull() ?: 1L
+                        map[parts[0]] = parts[1].toLongOrNull() ?: 1L
                     }
                 }
                 withContext(Dispatchers.Main) {
                     userDictionaryWords.value = map
                 }
             } else {
-                 withContext(Dispatchers.Main) {
+                withContext(Dispatchers.Main) {
                     userDictionaryWords.value = emptyMap()
                 }
             }
         }
     }
-    
+
     fun deleteUserWord(word: String, context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
             // Read, remove, write
@@ -1259,7 +1390,10 @@ class MainViewModel : ViewModel() {
                 val lines = file.readLines().filter { !it.startsWith("$word ") }
                 file.writeText(lines.joinToString("\n"))
                 loadUserDictionaryWords(context)
-                settingsRepository.putLong(SettingsRepository.KEY_USER_DICT_LAST_UPDATE, System.currentTimeMillis())
+                settingsRepository.putLong(
+                    SettingsRepository.KEY_USER_DICT_LAST_UPDATE,
+                    System.currentTimeMillis()
+                )
             }
         }
     }
@@ -1272,7 +1406,10 @@ class MainViewModel : ViewModel() {
                 withContext(Dispatchers.Main) {
                     userDictionaryWords.value = emptyMap()
                 }
-                settingsRepository.putLong(SettingsRepository.KEY_USER_DICT_LAST_UPDATE, System.currentTimeMillis())
+                settingsRepository.putLong(
+                    SettingsRepository.KEY_USER_DICT_LAST_UPDATE,
+                    System.currentTimeMillis()
+                )
             }
         }
     }
@@ -1291,7 +1428,7 @@ class MainViewModel : ViewModel() {
         val useBlurSetting = settingsRepository.getBoolean(SettingsRepository.KEY_USE_BLUR, true)
         val isProblematic = DeviceUtils.isBlurProblematicDevice()
         val isPowerSave = DeviceUtils.isPowerSaveMode(context)
-        
+
         isBlurSettingEnabled.value = useBlurSetting
         isBlurEnabled.value = useBlurSetting && !isProblematic && !isPowerSave
     }
@@ -1422,7 +1559,10 @@ class MainViewModel : ViewModel() {
 
     fun setAmbientShowLockScreenEnabled(enabled: Boolean, context: Context) {
         isAmbientShowLockScreenEnabled.value = enabled
-        settingsRepository.putBoolean(SettingsRepository.KEY_EDGE_LIGHTING_AMBIENT_SHOW_LOCK_SCREEN, enabled)
+        settingsRepository.putBoolean(
+            SettingsRepository.KEY_EDGE_LIGHTING_AMBIENT_SHOW_LOCK_SCREEN,
+            enabled
+        )
     }
 
     fun setHideGestureBarEnabled(enabled: Boolean, context: Context) {
@@ -1433,7 +1573,10 @@ class MainViewModel : ViewModel() {
 
     fun setCircleToSearchGestureEnabled(enabled: Boolean, context: Context) {
         isCircleToSearchGestureEnabled.value = enabled
-        settingsRepository.putBoolean(SettingsRepository.KEY_CIRCLE_TO_SEARCH_GESTURE_ENABLED, enabled)
+        settingsRepository.putBoolean(
+            SettingsRepository.KEY_CIRCLE_TO_SEARCH_GESTURE_ENABLED,
+            enabled
+        )
     }
 
     fun setCircleToSearchGestureHeight(height: Float) {
@@ -1443,17 +1586,26 @@ class MainViewModel : ViewModel() {
 
     fun setCircleToSearchPreviewEnabled(enabled: Boolean) {
         isCircleToSearchPreviewEnabled.value = enabled
-        settingsRepository.putBoolean(SettingsRepository.KEY_CIRCLE_TO_SEARCH_PREVIEW_ENABLED, enabled)
+        settingsRepository.putBoolean(
+            SettingsRepository.KEY_CIRCLE_TO_SEARCH_PREVIEW_ENABLED,
+            enabled
+        )
     }
 
     fun setHideGestureBarOnLauncherEnabled(enabled: Boolean, context: Context) {
         isHideGestureBarOnLauncherEnabled.value = enabled
-        settingsRepository.putBoolean(SettingsRepository.KEY_HIDE_GESTURE_BAR_ON_LAUNCHER_ENABLED, enabled)
-        
+        settingsRepository.putBoolean(
+            SettingsRepository.KEY_HIDE_GESTURE_BAR_ON_LAUNCHER_ENABLED,
+            enabled
+        )
+
         if (!enabled) {
-            com.sameerasw.essentials.utils.StatusBarManager.requestRestore(context, "GestureBarAutomation")
+            com.sameerasw.essentials.utils.StatusBarManager.requestRestore(
+                context,
+                "GestureBarAutomation"
+            )
         }
-        
+
         updateAppDetectionService(context)
     }
 
@@ -1553,7 +1705,8 @@ class MainViewModel : ViewModel() {
 
         // Update effective seed color based on new tone
         if (lockScreenClockSelectedColorId.value != "DEFAULT") {
-            val effectiveSeed = calculateEffectiveSeedColor(lockScreenClockSelectedColorId.value, value)
+            val effectiveSeed =
+                calculateEffectiveSeedColor(lockScreenClockSelectedColorId.value, value)
             lockScreenClockSeedColor.intValue = effectiveSeed
             settingsRepository.setLockScreenClockSeedColor(effectiveSeed)
         }
@@ -1563,7 +1716,10 @@ class MainViewModel : ViewModel() {
 
     fun setLockScreenClockColor(id: String, seed: Int, context: Context) {
         lockScreenClockSelectedColorId.value = id
-        val effectiveSeed = if (id == "DEFAULT") 0 else calculateEffectiveSeedColor(id, lockScreenClockColorTone.intValue)
+        val effectiveSeed = if (id == "DEFAULT") 0 else calculateEffectiveSeedColor(
+            id,
+            lockScreenClockColorTone.intValue
+        )
         lockScreenClockSeedColor.intValue = effectiveSeed
         settingsRepository.setLockScreenClockSelectedColorId(id)
         settingsRepository.setLockScreenClockSeedColor(effectiveSeed)
@@ -1616,7 +1772,10 @@ class MainViewModel : ViewModel() {
                 setOf(com.sameerasw.essentials.utils.StatusBarManager.FLAG_HOME)
             )
         } else {
-            com.sameerasw.essentials.utils.StatusBarManager.requestRestore(context, "HideGestureBar")
+            com.sameerasw.essentials.utils.StatusBarManager.requestRestore(
+                context,
+                "HideGestureBar"
+            )
         }
     }
 
@@ -1747,7 +1906,45 @@ class MainViewModel : ViewModel() {
 
     fun setAmbientMusicGlanceRandomShapesEnabled(enabled: Boolean) {
         isAmbientMusicGlanceRandomShapesEnabled.value = enabled
-        settingsRepository.putBoolean(SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_RANDOM_SHAPES, enabled)
+        settingsRepository.putBoolean(
+            SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_RANDOM_SHAPES,
+            enabled
+        )
+    }
+
+    fun setAmbientMusicGlanceAlbumArtMode(mode: String) {
+        ambientMusicGlanceAlbumArtMode.value = mode
+        settingsRepository.setAmbientMusicGlanceAlbumArtMode(mode)
+    }
+
+    fun setAmbientMusicGlanceClockSize(size: Int) {
+        ambientMusicGlanceClockSize.intValue = size
+        settingsRepository.setAmbientMusicGlanceClockSize(size)
+    }
+
+    fun setAmbientMusicGlanceClockWeight(weight: Int) {
+        ambientMusicGlanceClockWeight.intValue = weight
+        settingsRepository.setAmbientMusicGlanceClockWeight(weight)
+    }
+
+    fun setAmbientMusicGlanceClockWidth(width: Int) {
+        ambientMusicGlanceClockWidth.intValue = width
+        settingsRepository.setAmbientMusicGlanceClockWidth(width)
+    }
+
+    fun setAmbientMusicGlanceClockRoundness(roundness: Int) {
+        ambientMusicGlanceClockRoundness.intValue = roundness
+        settingsRepository.setAmbientMusicGlanceClockRoundness(roundness)
+    }
+
+    fun setAmbientMusicGlanceForceFillWhileChargingEnabled(enabled: Boolean) {
+        isAmbientMusicGlanceForceFillWhileChargingEnabled.value = enabled
+        settingsRepository.setAmbientMusicGlanceForceFillWhileChargingEnabled(enabled)
+    }
+
+    fun setAmbientMusicGlanceRespectNotificationsEnabled(enabled: Boolean) {
+        isAmbientMusicGlanceRespectNotificationsEnabled.value = enabled
+        settingsRepository.setAmbientMusicGlanceRespectNotificationsEnabled(enabled)
     }
 
     fun switchScaleAnimationsMode(mode: String) {
@@ -1770,7 +1967,7 @@ class MainViewModel : ViewModel() {
 
         // 2. Load new profile
         val newProfile = settingsRepository.getScaleAnimationsProfile(mode)
-        
+
         // 3. Update mode
         scaleAnimationsMode.value = mode
         settingsRepository.setScaleAnimationsMode(mode)
@@ -1778,9 +1975,18 @@ class MainViewModel : ViewModel() {
         // 4. Apply new profile
         setFontScale(newProfile.fontScale)
         setFontWeight(newProfile.fontWeight)
-        setAnimationScale(android.provider.Settings.Global.ANIMATOR_DURATION_SCALE, newProfile.animatorDurationScale)
-        setAnimationScale(android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE, newProfile.transitionAnimationScale)
-        setAnimationScale(android.provider.Settings.Global.WINDOW_ANIMATION_SCALE, newProfile.windowAnimationScale)
+        setAnimationScale(
+            Settings.Global.ANIMATOR_DURATION_SCALE,
+            newProfile.animatorDurationScale
+        )
+        setAnimationScale(
+            Settings.Global.TRANSITION_ANIMATION_SCALE,
+            newProfile.transitionAnimationScale
+        )
+        setAnimationScale(
+            Settings.Global.WINDOW_ANIMATION_SCALE,
+            newProfile.windowAnimationScale
+        )
         setSmallestWidth(newProfile.smallestWidth)
         setTouchSensitivityEnabled(newProfile.touchSensitivityEnabled)
         setAutoRotateEnabled(newProfile.autoRotateEnabled)
@@ -1819,7 +2025,10 @@ class MainViewModel : ViewModel() {
         if (mode == RefreshRateUtils.MODE_RANGE) {
             if (minRefreshRate.floatValue <= 0f && peakRefreshRate.floatValue <= 0f) {
                 val seedValue = when {
-                    fixedRefreshRate.floatValue > 0f -> RefreshRateUtils.normalizeRate(fixedRefreshRate.floatValue)
+                    fixedRefreshRate.floatValue > 0f -> RefreshRateUtils.normalizeRate(
+                        fixedRefreshRate.floatValue
+                    )
+
                     else -> 60f
                 }
                 minRefreshRate.floatValue = seedValue
@@ -1973,7 +2182,12 @@ class MainViewModel : ViewModel() {
         )
     }
 
-    private fun persistRefreshRateStateIfNeeded(mode: String, fixed: Float, min: Float, peak: Float) {
+    private fun persistRefreshRateStateIfNeeded(
+        mode: String,
+        fixed: Float,
+        min: Float,
+        peak: Float
+    ) {
         val storedMode = settingsRepository.getRefreshRateMode()
         val storedFixed = settingsRepository.getFloat(SettingsRepository.KEY_REFRESH_RATE_FIXED, 0f)
         val storedMin = settingsRepository.getFloat(SettingsRepository.KEY_REFRESH_RATE_MIN, 0f)
@@ -2015,9 +2229,14 @@ class MainViewModel : ViewModel() {
 
     fun setAnimationScale(key: String, scale: Float) {
         when (key) {
-            android.provider.Settings.Global.ANIMATOR_DURATION_SCALE -> animatorDurationScale.floatValue = scale
-            android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE -> transitionAnimationScale.floatValue = scale
-            android.provider.Settings.Global.WINDOW_ANIMATION_SCALE -> windowAnimationScale.floatValue = scale
+            Settings.Global.ANIMATOR_DURATION_SCALE -> animatorDurationScale.floatValue =
+                scale
+
+            Settings.Global.TRANSITION_ANIMATION_SCALE -> transitionAnimationScale.floatValue =
+                scale
+
+            Settings.Global.WINDOW_ANIMATION_SCALE -> windowAnimationScale.floatValue =
+                scale
         }
         settingsRepository.setAnimationScale(key, scale)
     }
@@ -2028,9 +2247,9 @@ class MainViewModel : ViewModel() {
     }
 
     fun resetAnimationsToDefault() {
-        setAnimationScale(android.provider.Settings.Global.ANIMATOR_DURATION_SCALE, 1.0f)
-        setAnimationScale(android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE, 1.0f)
-        setAnimationScale(android.provider.Settings.Global.WINDOW_ANIMATION_SCALE, 1.0f)
+        setAnimationScale(Settings.Global.ANIMATOR_DURATION_SCALE, 1.0f)
+        setAnimationScale(Settings.Global.TRANSITION_ANIMATION_SCALE, 1.0f)
+        setAnimationScale(Settings.Global.WINDOW_ANIMATION_SCALE, 1.0f)
     }
 
     fun updateSmallestWidth(width: Int) {
@@ -2223,7 +2442,10 @@ class MainViewModel : ViewModel() {
 
     fun setFlashlightPulseMaxIntensity(intensity: Float) {
         flashlightPulseMaxIntensity.floatValue = intensity
-        settingsRepository.putFloat(SettingsRepository.KEY_FLASHLIGHT_PULSE_MAX_INTENSITY, intensity)
+        settingsRepository.putFloat(
+            SettingsRepository.KEY_FLASHLIGHT_PULSE_MAX_INTENSITY,
+            intensity
+        )
     }
 
     fun previewFlashlightPulse(context: Context) {
@@ -2243,7 +2465,10 @@ class MainViewModel : ViewModel() {
         val radius = cornerRadiusDp
             ?: settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_CORNER_RADIUS, 20f)
         val thickness = strokeThicknessDp
-            ?: settingsRepository.getFloat(SettingsRepository.KEY_EDGE_LIGHTING_STROKE_THICKNESS, 8f)
+            ?: settingsRepository.getFloat(
+                SettingsRepository.KEY_EDGE_LIGHTING_STROKE_THICKNESS,
+                8f
+            )
 
         putExtra("corner_radius_dp", radius)
         putExtra("stroke_thickness_dp", thickness)
@@ -2285,7 +2510,8 @@ class MainViewModel : ViewModel() {
     fun triggerNotificationLightingSystem(context: Context) {
         if (!ShellUtils.hasPermission(context)) return
 
-        val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as android.view.WindowManager
+        val windowManager =
+            context.getSystemService(Context.WINDOW_SERVICE) as android.view.WindowManager
         val metrics = android.util.DisplayMetrics()
         windowManager.defaultDisplay.getRealMetrics(metrics)
         val centerX = metrics.widthPixels / 2
@@ -2323,8 +2549,10 @@ class MainViewModel : ViewModel() {
     }
 
     fun requestWriteSecureSettingsPermission(context: Context) {
-        val adbCommand = "adb shell pm grant ${context.packageName} android.permission.WRITE_SECURE_SETTINGS"
-        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+        val adbCommand =
+            "adb shell pm grant ${context.packageName} android.permission.WRITE_SECURE_SETTINGS"
+        val clipboard =
+            context.getSystemService(Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
         val clip = android.content.ClipData.newPlainText("adb_command", adbCommand)
         clipboard.setPrimaryClip(clip)
     }
@@ -2377,7 +2605,7 @@ class MainViewModel : ViewModel() {
         notificationLightingIndicatorX.value = x
         notificationLightingIndicatorY.value = y
         notificationLightingIndicatorScale.value = scale
-        
+
         try {
             val intent = Intent(context, NotificationLightingService::class.java).apply {
                 addLightingExtras(styleOverride = NotificationLightingStyle.INDICATOR)
@@ -2395,7 +2623,7 @@ class MainViewModel : ViewModel() {
     ) {
         notificationLightingSweepPosition.value = position
         notificationLightingSweepThickness.floatValue = thickness
-        
+
         try {
             val intent = Intent(context, NotificationLightingService::class.java).apply {
                 addLightingExtras(styleOverride = NotificationLightingStyle.SWEEP)
@@ -2614,7 +2842,7 @@ class MainViewModel : ViewModel() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             try {
                 val intent = Intent(Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT).apply {
-                    data = android.net.Uri.fromParts("package", context.packageName, null)
+                    data = Uri.fromParts("package", context.packageName, null)
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }
                 context.startActivity(intent)
@@ -2912,7 +3140,12 @@ class MainViewModel : ViewModel() {
 
     fun anyAppsCurrentlyFrozen(context: Context): Boolean {
         val picked = freezePickedApps.value
-        return picked.any { com.sameerasw.essentials.utils.FreezeManager.isAppFrozen(context, it.packageName) }
+        return picked.any {
+            com.sameerasw.essentials.utils.FreezeManager.isAppFrozen(
+                context,
+                it.packageName
+            )
+        }
     }
 
     fun setFreezeMode(mode: Int, context: Context) {
@@ -3014,7 +3247,10 @@ class MainViewModel : ViewModel() {
             enabled
         )
         if (!enabled) {
-            com.sameerasw.essentials.utils.StatusBarManager.requestRestore(context, "DisableQsWhenLocked")
+            com.sameerasw.essentials.utils.StatusBarManager.requestRestore(
+                context,
+                "DisableQsWhenLocked"
+            )
         }
     }
 
@@ -3038,7 +3274,10 @@ class MainViewModel : ViewModel() {
         settingsRepository.putFloat(SettingsRepository.KEY_EDGE_LIGHTING_INDICATOR_SCALE, scale)
     }
 
-    fun setNotificationLightingSweepPosition(position: NotificationLightingSweepPosition, context: Context) {
+    fun setNotificationLightingSweepPosition(
+        position: NotificationLightingSweepPosition,
+        context: Context
+    ) {
         notificationLightingSweepPosition.value = position
         settingsRepository.saveNotificationLightingSweepPosition(position)
     }
@@ -3050,9 +3289,11 @@ class MainViewModel : ViewModel() {
 
     fun saveNotificationLightingSweepRandomShapes(context: Context, enabled: Boolean) {
         notificationLightingSweepRandomShapes.value = enabled
-        settingsRepository.putBoolean(SettingsRepository.KEY_EDGE_LIGHTING_SWEEP_RANDOM_SHAPES, enabled)
+        settingsRepository.putBoolean(
+            SettingsRepository.KEY_EDGE_LIGHTING_SWEEP_RANDOM_SHAPES,
+            enabled
+        )
     }
-
 
 
     fun exportConfigs(context: Context, outputStream: java.io.OutputStream) {
@@ -3142,9 +3383,13 @@ class MainViewModel : ViewModel() {
         settingsRepository.putBoolean(SettingsRepository.KEY_AOD_FORCE_TURN_OFF_ENABLED, enabled)
         isAodForceTurnOffEnabled.value = enabled
     }
+
     fun setNotificationGlanceSameAsLightingEnabled(enabled: Boolean) {
         isNotificationGlanceSameAsLightingEnabled.value = enabled
-        settingsRepository.putBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING, enabled)
+        settingsRepository.putBoolean(
+            SettingsRepository.KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING,
+            enabled
+        )
     }
 
     fun loadNotificationGlanceSelectedApps(context: Context): List<AppSelection> {
@@ -3155,7 +3400,11 @@ class MainViewModel : ViewModel() {
         settingsRepository.saveNotificationGlanceSelectedApps(apps)
     }
 
-    fun updateNotificationGlanceAppEnabled(context: Context, packageName: String, enabled: Boolean) {
+    fun updateNotificationGlanceAppEnabled(
+        context: Context,
+        packageName: String,
+        enabled: Boolean
+    ) {
         settingsRepository.updateNotificationGlanceAppSelection(packageName, enabled)
     }
 
@@ -3165,7 +3414,7 @@ class MainViewModel : ViewModel() {
             try {
                 context.contentResolver.unregisterContentObserver(contentObserver)
             } catch (e: Exception) {
-                
+
             }
             try {
                 powerSaveReceiver?.let { context.unregisterReceiver(it) }
@@ -3182,13 +3431,19 @@ class MainViewModel : ViewModel() {
         isOnboardingCompleted.value = completed
         settingsRepository.putBoolean(SettingsRepository.KEY_ONBOARDING_COMPLETED, completed)
         if (completed) {
-            settingsRepository.putInt(SettingsRepository.KEY_WHATS_NEW_LAST_SHOWN_COUNTER, com.sameerasw.essentials.BuildConfig.WHATS_NEW_COUNTER)
+            settingsRepository.putInt(
+                SettingsRepository.KEY_WHATS_NEW_LAST_SHOWN_COUNTER,
+                com.sameerasw.essentials.BuildConfig.WHATS_NEW_COUNTER
+            )
         }
     }
 
     fun completeWhatsNew() {
         isWhatsNewVisible.value = false
-        settingsRepository.putInt(SettingsRepository.KEY_WHATS_NEW_LAST_SHOWN_COUNTER, com.sameerasw.essentials.BuildConfig.WHATS_NEW_COUNTER)
+        settingsRepository.putInt(
+            SettingsRepository.KEY_WHATS_NEW_LAST_SHOWN_COUNTER,
+            com.sameerasw.essentials.BuildConfig.WHATS_NEW_COUNTER
+        )
     }
 
     fun resetOnboarding(context: Context) {

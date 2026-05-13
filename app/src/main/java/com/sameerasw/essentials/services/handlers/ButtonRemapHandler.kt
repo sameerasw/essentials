@@ -205,6 +205,7 @@ class ButtonRemapHandler(
                 )
                 triggerHapticFeedback()
             }
+
             "Circle to Search" -> {
                 com.sameerasw.essentials.utils.OmniTriggerUtil.trigger(service)
                 triggerHapticFeedback()
@@ -254,14 +255,15 @@ class ButtonRemapHandler(
     }
 
     private fun toggleRingerMode(targetMode: Int) {
-        val notificationManager = service.getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
+        val notificationManager =
+            service.getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
         if (!notificationManager.isNotificationPolicyAccessGranted) {
             return
         }
 
         val am = service.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         val currentMode = am.ringerMode
-        
+
         try {
             if (currentMode == targetMode) {
                 am.ringerMode = AudioManager.RINGER_MODE_NORMAL

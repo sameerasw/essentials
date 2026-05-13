@@ -33,7 +33,12 @@ object TimeUtil {
                     context.getString(R.string.today)
                 }
             }
-            days == 1L || (days == 0L && !isSameDay(now, timestamp)) -> context.getString(R.string.yesterday)
+
+            days == 1L || (days == 0L && !isSameDay(
+                now,
+                timestamp
+            )) -> context.getString(R.string.yesterday)
+
             days < 7L -> context.getString(R.string.time_days_ago, days.toInt())
             days < 30L -> context.getString(R.string.time_weeks_ago, (days / 7).toInt())
             days < 365L -> context.getString(R.string.time_months_ago, (days / 30).toInt())
@@ -45,6 +50,6 @@ object TimeUtil {
         val cal1 = java.util.Calendar.getInstance().apply { timeInMillis = t1 }
         val cal2 = java.util.Calendar.getInstance().apply { timeInMillis = t2 }
         return cal1.get(java.util.Calendar.YEAR) == cal2.get(java.util.Calendar.YEAR) &&
-               cal1.get(java.util.Calendar.DAY_OF_YEAR) == cal2.get(java.util.Calendar.DAY_OF_YEAR)
+                cal1.get(java.util.Calendar.DAY_OF_YEAR) == cal2.get(java.util.Calendar.DAY_OF_YEAR)
     }
 }

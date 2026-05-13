@@ -243,7 +243,8 @@ object AppUtil {
      */
     fun isAndroidAutoRunning(context: Context): Boolean {
         // 1. Check UiModeManager
-        val uiModeManager = context.getSystemService(Context.UI_MODE_SERVICE) as? android.app.UiModeManager
+        val uiModeManager =
+            context.getSystemService(Context.UI_MODE_SERVICE) as? android.app.UiModeManager
         if (uiModeManager?.currentModeType == android.content.res.Configuration.UI_MODE_TYPE_CAR) return true
 
         // 2. Check Configuration
@@ -251,14 +252,16 @@ object AppUtil {
         if ((config.uiMode and android.content.res.Configuration.UI_MODE_TYPE_MASK) == android.content.res.Configuration.UI_MODE_TYPE_CAR) return true
 
         // 3. Check for Android Auto Projection (Virtual Displays)
-        val displayManager = context.getSystemService(Context.DISPLAY_SERVICE) as? android.hardware.display.DisplayManager
+        val displayManager =
+            context.getSystemService(Context.DISPLAY_SERVICE) as? android.hardware.display.DisplayManager
         val displays = displayManager?.displays
         if (displays != null) {
             for (display in displays) {
                 val name = display.name ?: ""
-                if (name.contains("Android Auto", ignoreCase = true) || 
+                if (name.contains("Android Auto", ignoreCase = true) ||
                     name.contains("Wireless Projector", ignoreCase = true) ||
-                    name.contains("Car", ignoreCase = true)) {
+                    name.contains("Car", ignoreCase = true)
+                ) {
                     return true
                 }
             }
@@ -266,8 +269,12 @@ object AppUtil {
 
         // 4. Check for active Car packages
         try {
-            val carPackages = listOf("com.google.android.projection.gearhead", "com.google.android.apps.auto.carservice")
-            val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as? android.app.ActivityManager
+            val carPackages = listOf(
+                "com.google.android.projection.gearhead",
+                "com.google.android.apps.auto.carservice"
+            )
+            val activityManager =
+                context.getSystemService(Context.ACTIVITY_SERVICE) as? android.app.ActivityManager
             val processes = activityManager?.runningAppProcesses
             if (processes != null) {
                 for (process in processes) {
@@ -278,7 +285,8 @@ object AppUtil {
                     }
                 }
             }
-        } catch (_: Exception) {}
+        } catch (_: Exception) {
+        }
 
         return false
     }

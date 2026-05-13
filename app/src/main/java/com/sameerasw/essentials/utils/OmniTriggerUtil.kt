@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.os.IBinder
 import android.os.SystemClock
 import android.util.Log
-import androidx.annotation.RequiresApi
 import com.sameerasw.essentials.shizuku.ShizukuPermissionHelper
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import java.lang.reflect.Method
@@ -25,8 +24,9 @@ object OmniTriggerUtil {
         if (iVimsClass != null) return
         runCatching {
             iVimsClass = Class.forName("com.android.internal.app.IVoiceInteractionManagerService")
-            vimsInterfaceMethod = Class.forName("com.android.internal.app.IVoiceInteractionManagerService\$Stub")
-                .getMethod("asInterface", IBinder::class.java)
+            vimsInterfaceMethod =
+                Class.forName("com.android.internal.app.IVoiceInteractionManagerService\$Stub")
+                    .getMethod("asInterface", IBinder::class.java)
             serviceManagerClass = Class.forName("android.os.ServiceManager")
             getServiceMethod = serviceManagerClass?.getMethod("getService", String::class.java)
         }
@@ -34,7 +34,7 @@ object OmniTriggerUtil {
 
     fun trigger(context: Context): Boolean {
         ensureReflection()
-        
+
         val bundle = Bundle().apply {
             putLong("invocation_time_ms", SystemClock.elapsedRealtime())
             putInt("omni.entry_point", 1)
@@ -72,9 +72,24 @@ object OmniTriggerUtil {
     private fun invokeShowSession(clazz: Class<*>, vims: Any, bundle: Bundle): Boolean {
         return runCatching {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                HiddenApiBypass.invoke(clazz, vims, "showSessionFromSession", null, bundle, 7, "hyperOS_home") as Boolean? ?: false
+                HiddenApiBypass.invoke(
+                    clazz,
+                    vims,
+                    "showSessionFromSession",
+                    null,
+                    bundle,
+                    7,
+                    "hyperOS_home"
+                ) as Boolean? ?: false
             } else {
-                HiddenApiBypass.invoke(clazz, vims, "showSessionFromSession", null, bundle, 7) as Boolean? ?: false
+                HiddenApiBypass.invoke(
+                    clazz,
+                    vims,
+                    "showSessionFromSession",
+                    null,
+                    bundle,
+                    7
+                ) as Boolean? ?: false
             }
         }.getOrDefault(false)
     }

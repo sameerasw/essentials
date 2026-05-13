@@ -211,9 +211,11 @@ fun LinkPickerScreen(
             }
         }
 
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding)) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
             // Link display and Edit action
             Row(
                 modifier = Modifier

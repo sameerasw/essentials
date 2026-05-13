@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,15 +19,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.components.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.utils.HapticUtil
-import com.sameerasw.essentials.ui.components.pickers.SegmentedPicker
-import androidx.compose.material3.Icon
-import androidx.compose.ui.res.painterResource
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -84,10 +84,11 @@ fun TextAnimationsSettingsUI(
                 onCheckedChange = { viewModel.setAutoRotateEnabled(it) }
             )
 
-        val timeoutValues = listOf(15000L, 30000L, 60000L, 120000L, 300000L, 600000L, 1800000L)
-        val currentTimeoutIndex = timeoutValues.indexOf(viewModel.screenTimeout.value).coerceAtLeast(0)
+            val timeoutValues = listOf(15000L, 30000L, 60000L, 120000L, 300000L, 600000L, 1800000L)
+            val currentTimeoutIndex =
+                timeoutValues.indexOf(viewModel.screenTimeout.value).coerceAtLeast(0)
 
-            com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem(
+            ConfigSliderItem(
                 title = stringResource(R.string.label_screen_timeout),
                 value = currentTimeoutIndex.toFloat(),
                 onValueChange = { index ->
@@ -181,7 +182,7 @@ fun TextAnimationsSettingsUI(
 
         RoundedCardContainer(spacing = 2.dp) {
             val isEnabled = viewModel.hasShizukuPermission.value
-            
+
             ConfigSliderItem(
                 title = stringResource(R.string.label_smallest_width),
                 value = viewModel.smallestWidth.intValue.toFloat(),
@@ -229,7 +230,9 @@ fun TextAnimationsSettingsUI(
                         text = stringResource(R.string.msg_shizuku_permission_required),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.weight(1f).padding(end = 8.dp)
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(end = 8.dp)
                     )
                     Button(
                         onClick = {
@@ -261,7 +264,10 @@ fun TextAnimationsSettingsUI(
                 title = stringResource(R.string.label_animator_duration_scale),
                 value = viewModel.animatorDurationScale.floatValue,
                 onValueChange = {
-                    viewModel.setAnimationScale(android.provider.Settings.Global.ANIMATOR_DURATION_SCALE, it)
+                    viewModel.setAnimationScale(
+                        android.provider.Settings.Global.ANIMATOR_DURATION_SCALE,
+                        it
+                    )
                     HapticUtil.performSliderHaptic(view)
                 },
                 valueRange = 0f..10f,
@@ -274,7 +280,10 @@ fun TextAnimationsSettingsUI(
                 title = stringResource(R.string.label_transition_animation_scale),
                 value = viewModel.transitionAnimationScale.floatValue,
                 onValueChange = {
-                    viewModel.setAnimationScale(android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE, it)
+                    viewModel.setAnimationScale(
+                        android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE,
+                        it
+                    )
                     HapticUtil.performSliderHaptic(view)
                 },
                 valueRange = 0f..10f,
@@ -287,7 +296,10 @@ fun TextAnimationsSettingsUI(
                 title = stringResource(R.string.label_window_animation_scale),
                 value = viewModel.windowAnimationScale.floatValue,
                 onValueChange = {
-                    viewModel.setAnimationScale(android.provider.Settings.Global.WINDOW_ANIMATION_SCALE, it)
+                    viewModel.setAnimationScale(
+                        android.provider.Settings.Global.WINDOW_ANIMATION_SCALE,
+                        it
+                    )
                     HapticUtil.performSliderHaptic(view)
                 },
                 valueRange = 0f..10f,

@@ -67,7 +67,7 @@ class LocationReachedRepository(context: Context) {
                     saveActiveAlarmId(migratedAlarm.id)
                 }
             }
-            
+
             // Clear old prefs
             prefs.edit().apply {
                 remove("location_reached_lat")
@@ -158,7 +158,7 @@ class LocationReachedRepository(context: Context) {
             alarms[index] = alarms[index].copy(isPaused = isPaused)
             saveAlarms(alarms)
         }
-        
+
         // Also update temp alarm if it matches
         val currentTemp = _tempAlarm.value
         if (currentTemp?.id == alarmId) {

@@ -136,7 +136,8 @@ class FlashlightHandler(
             }
 
             FlashlightActionReceiver.ACTION_PULSE_NOTIFICATION -> {
-                val isPreview = intent.getBooleanExtra(FlashlightActionReceiver.EXTRA_IS_PREVIEW, false)
+                val isPreview =
+                    intent.getBooleanExtra(FlashlightActionReceiver.EXTRA_IS_PREVIEW, false)
                 pulseFlashlightForNotificationWithCheck(ignoreChecks = isPreview)
             }
         }
@@ -348,7 +349,7 @@ class FlashlightHandler(
 
     fun pulseFlashlightForNotificationWithCheck(ignoreChecks: Boolean = false) {
         if (isTorchOn) return
- 
+
         val prefs = service.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
         if (!ignoreChecks) {
             val pulseEnabled = prefs.getBoolean("flashlight_pulse_enabled", false)
@@ -548,7 +549,7 @@ class FlashlightHandler(
                     } catch (e: Exception) {
                         // SILENT: Handle silently as per user request
                     }
-                    
+
                     if (success) {
                         currentIntensityLevel = overrideIntensity ?: if (prefs.getBoolean(
                                 "flashlight_global_enabled",
@@ -592,7 +593,8 @@ class FlashlightHandler(
                 )
 
                 val type = try {
-                    val resolved = HapticFeedbackType.valueOf(hapticName ?: HapticFeedbackType.DOUBLE.name)
+                    val resolved =
+                        HapticFeedbackType.valueOf(hapticName ?: HapticFeedbackType.DOUBLE.name)
                     if (resolved.name == "LONG") HapticFeedbackType.DOUBLE else resolved
                 } catch (e: Exception) {
                     HapticFeedbackType.DOUBLE

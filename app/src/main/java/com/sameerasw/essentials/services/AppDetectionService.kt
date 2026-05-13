@@ -1,6 +1,9 @@
 package com.sameerasw.essentials.services
 
-import android.app.*
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.Service
 import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
 import android.content.BroadcastReceiver
@@ -12,12 +15,9 @@ import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import android.util.Log
 import androidx.core.app.NotificationCompat
-import com.sameerasw.essentials.AppLockActivity
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.services.handlers.AppFlowHandler
-import java.util.*
 
 class AppDetectionService : Service() {
 
@@ -42,6 +42,7 @@ class AppDetectionService : Service() {
                         appFlowHandler.onAuthenticated(packageName)
                     }
                 }
+
                 "APP_AUTHENTICATION_FAILED" -> {
                     goHome()
                 }
@@ -54,7 +55,7 @@ class AppDetectionService : Service() {
         isRunning = true
         appFlowHandler = AppFlowHandler(this)
         createNotificationChannel()
-        
+
         val filter = IntentFilter().apply {
             addAction("APP_AUTHENTICATED")
             addAction("APP_AUTHENTICATION_FAILED")
@@ -68,16 +69,16 @@ class AppDetectionService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         startForeground(
-            NOTIFICATION_ID, 
+            NOTIFICATION_ID,
             createNotification(),
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE else 0
         )
-        
+
         if (!isPolling) {
             isPolling = true
             startPolling()
         }
-        
+
         return START_STICKY
     }
 
@@ -85,32 +86,36 @@ class AppDetectionService : Service() {
         handler.postDelayed(object : Runnable {
             override fun run() {
                 if (!isPolling) return
-                
+
                 val currentPackage = getForegroundPackage()
                 if (currentPackage != null && currentPackage != lastPackageName) {
                     lastPackageName = currentPackage
                     appFlowHandler.onPackageChanged(currentPackage, isFromUsageStats = true)
                 }
-                
+
                 handler.postDelayed(this, POLL_INTERVAL)
             }
         }, POLL_INTERVAL)
     }
 
     private fun getForegroundPackage(): String? {
-        val usageStatsManager = getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
+        val usageStatsManager = getSystemService(USAGE_STATS_SERVICE) as UsageStatsManager
         val time = System.currentTimeMillis()
-        val stats = usageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, time - 1000 * 10, time)
-        
+        val stats = usageStatsManager.queryUsageStats(
+            UsageStatsManager.INTERVAL_DAILY,
+            time - 1000 * 10,
+            time
+        )
+
         if (stats == null || stats.isEmpty()) return null
-        
+
         var recentStats: UsageStats? = null
         for (usageStats in stats) {
             if (recentStats == null || usageStats.lastTimeUsed > recentStats.lastTimeUsed) {
                 recentStats = usageStats
             }
         }
-        
+
         return recentStats?.packageName
     }
 
@@ -127,7 +132,8 @@ class AppDetectionService : Service() {
         handler.removeCallbacksAndMessages(null)
         try {
             unregisterReceiver(authReceiver)
-        } catch (_: Exception) {}
+        } catch (_: Exception) {
+        }
         super.onDestroy()
     }
 

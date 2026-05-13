@@ -1,8 +1,31 @@
 package com.sameerasw.essentials.ui.components.sheets
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.BottomSheetDefaults
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.LoadingIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Slider
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -10,7 +33,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
-import com.sameerasw.essentials.domain.model.LocationAlarm
 import com.sameerasw.essentials.ui.components.LocationIconPicker
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.viewmodels.LocationReachedViewModel
@@ -23,11 +45,10 @@ fun LocationReachedBottomSheet(
 ) {
     val tempAlarm by viewModel.tempAlarm
     val currentAlarm = tempAlarm
-    val distance by viewModel.currentDistance
     val view = androidx.compose.ui.platform.LocalView.current
-    
+
     val isProcessing by viewModel.isProcessingCoordinates
-    
+
     if (currentAlarm == null && !isProcessing) return
 
     ModalBottomSheet(
@@ -44,9 +65,9 @@ fun LocationReachedBottomSheet(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
-                text = if (currentAlarm != null && viewModel.savedAlarms.value.any { it.id == currentAlarm.id }) 
-                    stringResource(R.string.location_reached_edit_title) 
-                    else stringResource(R.string.location_reached_add_title),
+                text = if (currentAlarm != null && viewModel.savedAlarms.value.any { it.id == currentAlarm.id })
+                    stringResource(R.string.location_reached_edit_title)
+                else stringResource(R.string.location_reached_add_title),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
@@ -55,7 +76,9 @@ fun LocationReachedBottomSheet(
             if (isProcessing && currentAlarm == null) {
                 RoundedCardContainer(
                     containerColor = MaterialTheme.colorScheme.surfaceBright,
-                    modifier = Modifier.fillMaxWidth().height(200.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
                 ) {
                     Column(
                         modifier = Modifier.fillMaxSize(),
@@ -92,8 +115,8 @@ fun LocationReachedBottomSheet(
 
                         LocationIconPicker(
                             selectedIconName = currentAlarm.iconResName,
-                            onIconSelected = { 
-                                viewModel.setTempAlarm(currentAlarm.copy(iconResName = it)) 
+                            onIconSelected = {
+                                viewModel.setTempAlarm(currentAlarm.copy(iconResName = it))
                             }
                         )
 
@@ -105,7 +128,10 @@ fun LocationReachedBottomSheet(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Text(
-                                text = "%.5f, %.5f".format(currentAlarm.latitude, currentAlarm.longitude),
+                                text = "%.5f, %.5f".format(
+                                    currentAlarm.latitude,
+                                    currentAlarm.longitude
+                                ),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurface,
                                 fontWeight = FontWeight.Medium
@@ -115,17 +141,22 @@ fun LocationReachedBottomSheet(
                         // Radius Slider
                         Column {
                             Text(
-                                text = stringResource(R.string.location_reached_radius_label, currentAlarm.radius),
+                                text = stringResource(
+                                    R.string.location_reached_radius_label,
+                                    currentAlarm.radius
+                                ),
                                 style = MaterialTheme.typography.labelLarge,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Slider(
                                 value = currentAlarm.radius.toFloat(),
-                                onValueChange = { 
+                                onValueChange = {
                                     if (it.toInt() != currentAlarm.radius) {
-                                        com.sameerasw.essentials.utils.HapticUtil.performSliderHaptic(view)
+                                        com.sameerasw.essentials.utils.HapticUtil.performSliderHaptic(
+                                            view
+                                        )
                                     }
-                                    viewModel.setTempAlarm(currentAlarm.copy(radius = it.toInt())) 
+                                    viewModel.setTempAlarm(currentAlarm.copy(radius = it.toInt()))
                                 },
                                 valueRange = 100f..5000f,
                                 steps = 49
@@ -135,7 +166,8 @@ fun LocationReachedBottomSheet(
                 }
             }
 
-            val isEditing = currentAlarm != null && viewModel.savedAlarms.value.any { it.id == currentAlarm.id }
+            val isEditing =
+                currentAlarm != null && viewModel.savedAlarms.value.any { it.id == currentAlarm.id }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -174,7 +206,7 @@ fun LocationReachedBottomSheet(
                 ) {
                     Text(stringResource(R.string.location_reached_cancel_btn))
                 }
-                
+
                 Button(
                     onClick = {
                         val alarm = tempAlarm

@@ -40,26 +40,6 @@ object FeatureRegistry {
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
         },
 
-        object : Feature(
-            id = "Ambient music glance",
-            title = R.string.feat_ambient_music_title,
-            iconRes = R.drawable.rounded_music_note_24,
-            category = R.string.cat_interface,
-            description = R.string.feat_ambient_music_desc,
-            aboutDescription = R.string.about_desc_ambient_music_glance,
-            permissionKeys = listOf("ACCESSIBILITY", "NOTIFICATION_LISTENER"),
-            showToggle = true,
-            parentFeatureId = "Sound"
-        ) {
-            override fun isEnabled(viewModel: MainViewModel) =
-                viewModel.isAmbientMusicGlanceEnabled.value
-
-            override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
-                viewModel.isNotificationListenerEnabled.value && viewModel.isAccessibilityEnabled.value
-
-            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
-                viewModel.setAmbientMusicGlanceEnabled(enabled)
-        },
 
         object : Feature(
             id = "Call vibrations",
@@ -148,6 +128,27 @@ object FeatureRegistry {
         ) {
             override fun isEnabled(viewModel: MainViewModel) = true
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+        },
+        object : Feature(
+            id = "Essentials On Display",
+            title = R.string.feat_essentials_on_display_title,
+            iconRes = R.drawable.rounded_music_video_24,
+            category = R.string.cat_interface,
+            description = R.string.feat_essentials_on_display_desc,
+            aboutDescription = R.string.about_desc_essentials_on_display,
+            permissionKeys = listOf("ACCESSIBILITY", "NOTIFICATION_LISTENER"),
+            hasMoreSettings = true,
+            showToggle = true,
+            parentFeatureId = "Display"
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) =
+                viewModel.isAmbientMusicGlanceEnabled.value
+
+            override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
+                viewModel.isNotificationListenerEnabled.value && viewModel.isAccessibilityEnabled.value
+
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
+                viewModel.setAmbientMusicGlanceEnabled(enabled)
         },
 
         object : Feature(
@@ -728,9 +729,14 @@ object FeatureRegistry {
             parentFeatureId = "Display"
         ) {
             override val permissionKeys: List<String>
-                get() = if (com.sameerasw.essentials.data.repository.SettingsRepository(com.sameerasw.essentials.EssentialsApp.context)
-                        .getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_USE_USAGE_ACCESS))
-                    listOf("USAGE_STATS", "WRITE_SECURE_SETTINGS") else listOf("ACCESSIBILITY", "WRITE_SECURE_SETTINGS")
+                get() = if (com.sameerasw.essentials.data.repository.SettingsRepository(
+                        EssentialsApp.context)
+                        .getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_USE_USAGE_ACCESS)
+                )
+                    listOf("USAGE_STATS", "WRITE_SECURE_SETTINGS") else listOf(
+                    "ACCESSIBILITY",
+                    "WRITE_SECURE_SETTINGS"
+                )
 
             override fun isEnabled(viewModel: MainViewModel) =
                 viewModel.isDynamicNightLightEnabled.value
@@ -760,7 +766,6 @@ object FeatureRegistry {
         },
 
 
-
         object : Feature(
             id = "Other customizations",
             title = R.string.feat_other_customizations_title,
@@ -782,7 +787,9 @@ object FeatureRegistry {
             category = R.string.cat_protection,
             description = R.string.screen_locked_security_desc,
             aboutDescription = R.string.about_desc_screen_locked_security,
-            permissionKeys = if (ShellUtils.isRootEnabled(com.sameerasw.essentials.EssentialsApp.context)) listOf("ROOT") else listOf("SHIZUKU"),
+            permissionKeys = if (ShellUtils.isRootEnabled(EssentialsApp.context)) listOf(
+                "ROOT"
+            ) else listOf("SHIZUKU"),
             parentFeatureId = "Security"
         ) {
             override fun isEnabled(viewModel: MainViewModel) =
@@ -819,8 +826,10 @@ object FeatureRegistry {
             parentFeatureId = "Security"
         ) {
             override val permissionKeys: List<String>
-                get() = if (com.sameerasw.essentials.data.repository.SettingsRepository(com.sameerasw.essentials.EssentialsApp.context)
-                        .getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_USE_USAGE_ACCESS))
+                get() = if (com.sameerasw.essentials.data.repository.SettingsRepository(
+                        EssentialsApp.context)
+                        .getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_USE_USAGE_ACCESS)
+                )
                     listOf("USAGE_STATS") else listOf("ACCESSIBILITY")
 
             override fun isEnabled(viewModel: MainViewModel) = viewModel.isAppLockEnabled.value
@@ -994,7 +1003,7 @@ object FeatureRegistry {
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
                 viewModel.setCalendarSyncEnabled(enabled, context)
         },
-        
+
         object : Feature(
             id = "Lock from Watch",
             title = R.string.feat_lock_from_watch_title,
@@ -1011,26 +1020,6 @@ object FeatureRegistry {
         },
 
 
-        object : Feature(
-            id = "Ambient music glance",
-            title = R.string.feat_ambient_music_glance_title,
-            iconRes = R.drawable.rounded_music_video_24,
-            category = R.string.cat_visuals,
-            description = R.string.feat_ambient_music_glance_desc,
-            permissionKeys = listOf("ACCESSIBILITY", "NOTIFICATION_LISTENER"),
-            hasMoreSettings = true,
-            showToggle = true,
-            isVisibleInMain = false
-        ) {
-            override fun isEnabled(viewModel: MainViewModel) =
-                viewModel.isAmbientMusicGlanceEnabled.value
-
-            override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
-                viewModel.isNotificationListenerEnabled.value && viewModel.isAccessibilityEnabled.value
-
-            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
-                viewModel.setAmbientMusicGlanceEnabled(enabled)
-        },
 
         object : Feature(
             id = "App updates",

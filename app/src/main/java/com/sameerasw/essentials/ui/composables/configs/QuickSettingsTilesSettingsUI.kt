@@ -51,7 +51,6 @@ import com.sameerasw.essentials.services.tiles.AdaptiveBrightnessTileService
 import com.sameerasw.essentials.services.tiles.AlwaysOnDisplayTileService
 import com.sameerasw.essentials.services.tiles.AppFreezingTileService
 import com.sameerasw.essentials.services.tiles.AppLockTileService
-import com.sameerasw.essentials.services.tiles.BatteryNotificationTileService
 import com.sameerasw.essentials.services.tiles.BubblesTileService
 import com.sameerasw.essentials.services.tiles.CaffeinateTileService
 import com.sameerasw.essentials.services.tiles.ChargeQuickTileService
@@ -66,8 +65,8 @@ import com.sameerasw.essentials.services.tiles.NotificationLightingTileService
 import com.sameerasw.essentials.services.tiles.PrivateDnsTileService
 import com.sameerasw.essentials.services.tiles.PrivateNotificationsTileService
 import com.sameerasw.essentials.services.tiles.RefreshRateTileService
-import com.sameerasw.essentials.services.tiles.ScreenLockedSecurityTileService
 import com.sameerasw.essentials.services.tiles.ScaleAnimationsTileService
+import com.sameerasw.essentials.services.tiles.ScreenLockedSecurityTileService
 import com.sameerasw.essentials.services.tiles.SoundModeTileService
 import com.sameerasw.essentials.services.tiles.StayAwakeTileService
 import com.sameerasw.essentials.services.tiles.TapToWakeTileService
@@ -461,10 +460,10 @@ fun QuickSettingsTilesSettingsUI(
 
                         val addedTiles by viewModel.addedQSTiles
                         val componentName = ComponentName(context, tile.serviceClass)
-                        val isAdded = addedTiles.any { 
-                            it.contains(componentName.flattenToString()) || 
-                            it.contains(componentName.flattenToShortString()) ||
-                            it.contains(tile.serviceClass.name)
+                        val isAdded = addedTiles.any {
+                            it.contains(componentName.flattenToString()) ||
+                                    it.contains(componentName.flattenToShortString()) ||
+                                    it.contains(tile.serviceClass.name)
                         }
 
                         QSTileCard(
@@ -487,7 +486,8 @@ fun QuickSettingsTilesSettingsUI(
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                                         val statusBarManager =
                                             context.getSystemService(StatusBarManager::class.java)
-                                        val componentName = ComponentName(context, tile.serviceClass)
+                                        val componentName =
+                                            ComponentName(context, tile.serviceClass)
 
                                         statusBarManager.requestAddTileService(
                                             componentName,
@@ -522,7 +522,7 @@ fun QuickSettingsTilesSettingsUI(
                     }
                     // Determine if we need a spacer for the last odd item
                     if (rowTiles.size < 2) {
-                        androidx.compose.foundation.layout.Spacer(modifier = Modifier.weight(1f))
+                        Spacer(modifier = Modifier.weight(1f))
                     }
                 }
             }

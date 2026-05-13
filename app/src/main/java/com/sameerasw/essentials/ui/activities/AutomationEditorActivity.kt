@@ -25,8 +25,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LoadingIndicator
@@ -100,7 +98,6 @@ class AutomationEditorActivity : ComponentActivity() {
         }
     }
 
-    @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -459,9 +456,12 @@ class AutomationEditorActivity : ComponentActivity() {
                                                         Trigger.ChargerConnected,
                                                         Trigger.ChargerDisconnected,
                                                         Trigger.Schedule(
-                                                            hour = (selectedTrigger as? Trigger.Schedule)?.hour ?: 0,
-                                                            minute = (selectedTrigger as? Trigger.Schedule)?.minute ?: 0,
-                                                            days = (selectedTrigger as? Trigger.Schedule)?.days ?: emptySet()
+                                                            hour = (selectedTrigger as? Trigger.Schedule)?.hour
+                                                                ?: 0,
+                                                            minute = (selectedTrigger as? Trigger.Schedule)?.minute
+                                                                ?: 0,
+                                                            days = (selectedTrigger as? Trigger.Schedule)?.days
+                                                                ?: emptySet()
                                                         )
                                                     )
                                                     triggers.forEach { trigger ->
@@ -483,11 +483,16 @@ class AutomationEditorActivity : ComponentActivity() {
                                                         DIYState.Charging,
                                                         DIYState.ScreenOn,
                                                         DIYState.TimePeriod(
-                                                            startHour = (selectedState as? DIYState.TimePeriod)?.startHour ?: 0,
-                                                            startMinute = (selectedState as? DIYState.TimePeriod)?.startMinute ?: 0,
-                                                            endHour = (selectedState as? DIYState.TimePeriod)?.endHour ?: 0,
-                                                            endMinute = (selectedState as? DIYState.TimePeriod)?.endMinute ?: 0,
-                                                            days = (selectedState as? DIYState.TimePeriod)?.days ?: emptySet()
+                                                            startHour = (selectedState as? DIYState.TimePeriod)?.startHour
+                                                                ?: 0,
+                                                            startMinute = (selectedState as? DIYState.TimePeriod)?.startMinute
+                                                                ?: 0,
+                                                            endHour = (selectedState as? DIYState.TimePeriod)?.endHour
+                                                                ?: 0,
+                                                            endMinute = (selectedState as? DIYState.TimePeriod)?.endMinute
+                                                                ?: 0,
+                                                            days = (selectedState as? DIYState.TimePeriod)?.days
+                                                                ?: emptySet()
                                                         )
                                                     )
                                                     states.forEach { state ->

@@ -42,7 +42,7 @@ sealed interface Trigger {
         override val title: Int = R.string.diy_trigger_charger_disconnected
         override val icon: Int = R.drawable.rounded_battery_android_frame_3_24
     }
- 
+
     @Keep
     data class Schedule(
         @SerializedName("hour") val hour: Int = 0,

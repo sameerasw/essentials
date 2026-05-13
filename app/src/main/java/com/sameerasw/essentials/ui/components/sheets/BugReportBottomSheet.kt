@@ -1,21 +1,11 @@
 package com.sameerasw.essentials.ui.components.sheets
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -49,7 +39,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
-import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import io.sentry.Sentry
@@ -133,7 +122,9 @@ fun BugReportBottomSheet(
                 value = feedbackMessage,
                 onValueChange = { feedbackMessage = it },
                 label = { Text(stringResource(R.string.bug_report_feedback_placeholder)) },
-                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
                 shape = MaterialTheme.shapes.large,
                 minLines = 3
             )
@@ -158,7 +149,8 @@ fun BugReportBottomSheet(
                             feedback.contactEmail = contactEmail
                         }
                         Sentry.captureFeedback(feedback)
-                        Toast.makeText(context, R.string.msg_feedback_sent, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, R.string.msg_feedback_sent, Toast.LENGTH_SHORT)
+                            .show()
                         onDismissRequest()
                     },
                     modifier = Modifier.fillMaxWidth(),
@@ -177,13 +169,16 @@ fun BugReportBottomSheet(
                     text = stringResource(R.string.label_alternatively),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.outline,
-                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(vertical = 4.dp)
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(vertical = 4.dp)
                 )
 
                 // GitHub
                 OutlinedButton(
                     onClick = {
-                        val body = "Feedback:\n$feedbackMessage\n\nDevice Info:\n$deviceInfoString\n\n"
+                        val body =
+                            "Feedback:\n$feedbackMessage\n\nDevice Info:\n$deviceInfoString\n\n"
                         val encodedBody = Uri.encode(body)
                         val intent = Intent(
                             Intent.ACTION_VIEW,
@@ -205,8 +200,10 @@ fun BugReportBottomSheet(
                 // Email
                 OutlinedButton(
                     onClick = {
-                        val contactLine = if (contactEmail.isNotBlank()) "Contact Email: $contactEmail\n" else ""
-                        val body = "${contactLine}Feedback:\n$feedbackMessage\n\nDevice Info:\n$deviceInfoString\n\n"
+                        val contactLine =
+                            if (contactEmail.isNotBlank()) "Contact Email: $contactEmail\n" else ""
+                        val body =
+                            "${contactLine}Feedback:\n$feedbackMessage\n\nDevice Info:\n$deviceInfoString\n\n"
                         val intent = Intent(Intent.ACTION_SENDTO).apply {
                             data = Uri.parse("mailto:")
                             putExtra(Intent.EXTRA_EMAIL, arrayOf("mail@sameerasw.com"))

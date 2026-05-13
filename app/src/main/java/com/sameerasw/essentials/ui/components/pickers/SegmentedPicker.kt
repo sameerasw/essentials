@@ -67,7 +67,12 @@ fun <T> SegmentedPicker(
                         iconProvider(item)
                         androidx.compose.foundation.layout.Spacer(Modifier.padding(end = 8.dp))
                     }
-                    Text(labelProvider(item), fontSize = dimensionResource(R.dimen.font_small).value.sp, modifier= Modifier.basicMarquee(), maxLines = 1)
+                    Text(
+                        labelProvider(item),
+                        fontSize = dimensionResource(R.dimen.font_small).value.sp,
+                        modifier = Modifier.basicMarquee(),
+                        maxLines = 1
+                    )
                 }
             }
         }

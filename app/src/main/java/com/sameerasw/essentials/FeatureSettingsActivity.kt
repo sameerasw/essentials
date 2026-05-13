@@ -7,6 +7,7 @@ import android.os.VibratorManager
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,7 +15,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
@@ -22,11 +22,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -38,12 +34,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.core.net.toUri
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -55,8 +49,7 @@ import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.linkActions.LinkPickerScreen
 import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.composables.configs.AlwaysOnDisplaySettingsUI
-import com.sameerasw.essentials.ui.composables.configs.AmbientMusicGlanceSettingsUI
-
+import com.sameerasw.essentials.ui.composables.configs.EssentialsOnDisplaySettingsUI
 import com.sameerasw.essentials.ui.composables.configs.AppLockSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.BatteriesSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.BatteryNotificationSettingsUI
@@ -69,11 +62,11 @@ import com.sameerasw.essentials.ui.composables.configs.LocationReachedSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.MapsPowerSavingSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.NotificationLightingSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.OtherCustomizationsSettingsUI
-import com.sameerasw.essentials.ui.composables.configs.ShutUpSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.QuickSettingsTilesSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.RefreshRateSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ScreenLockedSecuritySettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ScreenOffWidgetSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.ShutUpSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.SnoozeNotificationsSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.SoundModeTileSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.StatusBarIconSettingsUI
@@ -83,7 +76,6 @@ import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.BiometricSecurityHelper
-import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.CaffeinateViewModel
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.viewmodels.StatusBarIconViewModel
@@ -109,9 +101,10 @@ class FeatureSettingsActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             window.isNavigationBarContrastEnforced = false
         }
-        
-        val isDarkMode = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) == 
-            android.content.res.Configuration.UI_MODE_NIGHT_YES
+
+        val isDarkMode =
+            (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                    android.content.res.Configuration.UI_MODE_NIGHT_YES
         window.setBackgroundDrawableResource(if (isDarkMode) android.R.color.black else R.color.app_window_background)
         val featureId = intent.getStringExtra("feature") ?: ""
         val featureObj = FeatureRegistry.ALL_FEATURES.find { it.id == featureId }
@@ -178,7 +171,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                 androidx.compose.runtime.CompositionLocalProvider(
                     com.sameerasw.essentials.ui.state.LocalMenuStateManager provides remember { com.sameerasw.essentials.ui.state.MenuStateManager() }
                 ) {
-                    val view = LocalView.current
+                    LocalView.current
                     val prefs = context.getSharedPreferences("essentials_prefs", MODE_PRIVATE)
 
                     val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -261,7 +254,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                             "Quick settings tiles" -> !viewModel.isWriteSettingsEnabled.value
                             "Screen refresh rate" -> !viewModel.isShizukuPermissionGranted.value
                             // Top level checks for other features (rarely hit if they are children, but safe to add)
-                            "Ambient music glance" -> !isAccessibilityEnabled || !isNotificationListenerEnabled
+                            "Essentials On Display" -> !isAccessibilityEnabled || !isNotificationListenerEnabled
                             "Call vibrations" -> !isReadPhoneStateEnabled || !isNotificationListenerEnabled
                             "Maps power saving mode" -> !isNotificationListenerEnabled || !com.sameerasw.essentials.utils.ShellUtils.hasPermission(
                                 context
@@ -272,7 +265,10 @@ class FeatureSettingsActivity : AppCompatActivity() {
                             "Text and animations" -> !viewModel.isWriteSettingsEnabled.value || !isWriteSecureSettingsEnabled
                             "Always on Display" -> !isWriteSecureSettingsEnabled
                             "Lock screen clock" -> !isWriteSecureSettingsEnabled
-                            "Other customizations" -> !com.sameerasw.essentials.utils.ShellUtils.hasPermission(context)
+                            "Other customizations" -> !com.sameerasw.essentials.utils.ShellUtils.hasPermission(
+                                context
+                            )
+
                             "Shut-Up!" -> !isWriteSecureSettingsEnabled || !viewModel.isUsageStatsPermissionGranted.value
                             else -> false
                         }
@@ -334,13 +330,15 @@ class FeatureSettingsActivity : AppCompatActivity() {
                         )
                     }
 
-                    val pageTitle = if (featureObj != null) stringResource(featureObj.title) else featureId
+                    val pageTitle =
+                        if (featureObj != null) stringResource(featureObj.title) else featureId
                     val hasMenu = featureObj != null && featureObj.aboutDescription != null
 
                     val statusBarHeightPx = with(LocalDensity.current) {
                         WindowInsets.statusBars.asPaddingValues().calculateTopPadding().toPx()
                     }
-                    val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+                    val statusBarHeight =
+                        WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
 
                     Box(
                         modifier = Modifier
@@ -352,7 +350,8 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                 direction = BlurDirection.TOP
                             )
                     ) {
-                        val hasScroll = featureId != "Sound mode tile" && featureId != "Quick settings tiles" && featureId != "Location reached"
+                        val hasScroll =
+                            featureId != "Sound mode tile" && featureId != "Quick settings tiles" && featureId != "Location reached"
                         Column(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -365,11 +364,15 @@ class FeatureSettingsActivity : AppCompatActivity() {
                         ) {
                             // Top padding for status bar
                             if (featureId != "Quick settings tiles" && featureId != "Location reached") {
-                                androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(statusBarHeight))
+                                androidx.compose.foundation.layout.Spacer(
+                                    modifier = Modifier.height(
+                                        statusBarHeight
+                                    )
+                                )
                             }
 
                             if (featureId == "Watch") {
-                                val context = androidx.compose.ui.platform.LocalContext.current
+                                val context = LocalContext.current
                                 LaunchedEffect(Unit) {
                                     watchViewModel.check(context)
                                 }
@@ -402,7 +405,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                     context
                                                 )
 
-                                                "Ambient music glance" -> !isAccessibilityEnabled || !isNotificationListenerEnabled
+                                                "Essentials On Display" -> !isAccessibilityEnabled || !isNotificationListenerEnabled
                                                 "Call vibrations" -> !isReadPhoneStateEnabled || !isNotificationListenerEnabled
                                                 "Calendar Sync" -> androidx.core.content.ContextCompat.checkSelfPermission(
                                                     context,
@@ -610,8 +613,8 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                         )
                                     }
 
-                                    "Ambient music glance" -> {
-                                        AmbientMusicGlanceSettingsUI(
+                                    "Essentials On Display" -> {
+                                        EssentialsOnDisplaySettingsUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightSetting = highlightSetting
@@ -711,7 +714,11 @@ class FeatureSettingsActivity : AppCompatActivity() {
                             }
                             // Bottom padding for toolbar
                             if (featureId != "Quick settings tiles" && featureId != "Location reached") {
-                                androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(150.dp))
+                                androidx.compose.foundation.layout.Spacer(
+                                    modifier = Modifier.height(
+                                        150.dp
+                                    )
+                                )
                             }
                         }
 

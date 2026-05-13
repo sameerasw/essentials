@@ -1,17 +1,56 @@
 package com.sameerasw.essentials.ui.composables
 
 import android.content.Intent
-import android.os.Build
-import android.view.View
 import android.content.res.Configuration
-import androidx.compose.animation.*
-import androidx.compose.animation.core.*
-import androidx.compose.foundation.*
+import android.os.Build
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,8 +67,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import com.sameerasw.essentials.ui.components.HelpAndGuidesContent
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import coil.ImageLoader
 import coil.compose.AsyncImage
@@ -37,18 +76,18 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.sameerasw.essentials.R
-import com.sameerasw.essentials.ui.theme.GoogleSansFlexRounded
+import com.sameerasw.essentials.ui.components.HelpAndGuidesContent
+import com.sameerasw.essentials.ui.components.WhatsNewCustomContent
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
-import com.sameerasw.essentials.ui.components.sheets.UpdateBottomSheet
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
-import com.sameerasw.essentials.viewmodels.MainViewModel
-import com.sameerasw.essentials.utils.HapticUtil
-import com.sameerasw.essentials.utils.DeviceUtils
-import androidx.compose.ui.unit.sp
 import com.sameerasw.essentials.ui.components.pickers.CrashReportingPicker
 import com.sameerasw.essentials.ui.components.pickers.LanguagePicker
+import com.sameerasw.essentials.ui.components.sheets.UpdateBottomSheet
 import com.sameerasw.essentials.ui.components.text.SimpleMarkdown
-import com.sameerasw.essentials.ui.components.WhatsNewCustomContent
+import com.sameerasw.essentials.ui.theme.GoogleSansFlexRounded
+import com.sameerasw.essentials.utils.DeviceUtils
+import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.viewmodels.MainViewModel
 import kotlinx.coroutines.launch
 import kotlin.math.PI
 import kotlin.math.atan2
@@ -70,7 +109,7 @@ fun WelcomeScreen(
 ) {
     val view = LocalView.current
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
+    rememberCoroutineScope()
 
     var currentStep by remember { mutableStateOf(OnboardingStep.WELCOME) }
     val rotationAnimatable = remember { Animatable(0f) }
@@ -231,8 +270,10 @@ fun WelcomeStepContent(
                             onDragStart = {
                                 scope.launch { rotationAnimatable.stop() }
                                 currentRotation = rotationAnimatable.value
-                                lastMajorNotch = kotlin.math.round(currentRotation / majorStep).toInt()
-                                lastMinorNotch = kotlin.math.round(currentRotation / minorStep).toInt()
+                                lastMajorNotch =
+                                    kotlin.math.round(currentRotation / majorStep).toInt()
+                                lastMinorNotch =
+                                    kotlin.math.round(currentRotation / minorStep).toInt()
                             },
                             onDrag = { change, _ ->
                                 val oldAngle = atan2(
@@ -259,13 +300,15 @@ fun WelcomeStepContent(
                                 }
 
                                 // Minor notches - Subtle texture only during drag
-                                val currentMinorNotch = kotlin.math.round(currentRotation / minorStep).toInt()
+                                val currentMinorNotch =
+                                    kotlin.math.round(currentRotation / minorStep).toInt()
                                 if (currentMinorNotch != lastMinorNotch) {
                                     HapticUtil.performMicroHaptic(view)
                                     lastMinorNotch = currentMinorNotch
                                 }
 
-                                lastMajorNotch = kotlin.math.round(currentRotation / majorStep).toInt()
+                                lastMajorNotch =
+                                    kotlin.math.round(currentRotation / majorStep).toInt()
 
                                 scope.launch {
                                     rotationAnimatable.snapTo(currentRotation)
@@ -280,7 +323,8 @@ fun WelcomeStepContent(
                                             stiffness = Spring.StiffnessLow
                                         )
                                     ) {
-                                        val currentMajorNotch = kotlin.math.round(value / majorStep).toInt()
+                                        val currentMajorNotch =
+                                            kotlin.math.round(value / majorStep).toInt()
                                         if (currentMajorNotch != lastMajorNotch) {
                                             HapticUtil.performMediumHaptic(view)
                                             lastMajorNotch = currentMajorNotch
@@ -351,7 +395,7 @@ fun WelcomeStepContent(
             }
 
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             if (!isWhatsNewFlow) {
                 val appLanguage by viewModel.appLanguage
                 RoundedCardContainer(modifier = Modifier.padding(horizontal = 16.dp)) {
@@ -431,7 +475,7 @@ fun AcknowledgementStepContent(
                     .padding(horizontal = 24.dp)
                     .verticalScroll(rememberScrollState())
             ) {
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
@@ -602,12 +646,16 @@ fun FeatureIntroStepContent(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     GifItem(
-                        modifier = Modifier.fillMaxWidth().height(320.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(320.dp),
                         imageLoader = imageLoader,
                         gifResId = R.drawable.feature_help
                     )
                     GifItem(
-                        modifier = Modifier.fillMaxWidth().height(320.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(320.dp),
                         imageLoader = imageLoader,
                         gifResId = R.drawable.tile_help
                     )
@@ -776,7 +824,9 @@ fun WhatsNewStepContent(
             ) {
                 if (isCheckingUpdate) {
                     Box(
-                        modifier = Modifier.fillMaxWidth().height(200.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         CircularProgressIndicator()
@@ -799,7 +849,8 @@ fun WhatsNewStepContent(
 
                             Spacer(modifier = Modifier.height(16.dp))
 
-                            val webUrl = updateInfo?.releaseUrl ?: "https://github.com/sameerasw/essentials/releases"
+                            val webUrl = updateInfo?.releaseUrl
+                                ?: "https://github.com/sameerasw/essentials/releases"
                             TextButton(
                                 onClick = {
                                     HapticUtil.performVirtualKeyHaptic(view)
@@ -943,7 +994,9 @@ fun PreferencesStepContent(
             Text(
                 text = stringResource(R.string.label_app_settings),
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(start = 12.dp, bottom = 8.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(start = 12.dp, bottom = 8.dp)
+                    .fillMaxWidth(),
                 color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Start
             )
@@ -993,7 +1046,9 @@ fun PreferencesStepContent(
             Text(
                 text = stringResource(R.string.label_updates),
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(start = 12.dp, bottom = 8.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(start = 12.dp, bottom = 8.dp)
+                    .fillMaxWidth(),
                 color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Start
             )

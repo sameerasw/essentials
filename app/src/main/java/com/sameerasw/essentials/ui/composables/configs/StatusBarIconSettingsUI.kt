@@ -3,8 +3,8 @@ package com.sameerasw.essentials.ui.composables.configs
 import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.content.pm.PackageManager
+import android.net.Uri
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -107,7 +107,10 @@ fun StatusBarIconSettingsUI(
                     dependentFeatures = listOf(R.string.stb_advanced_flags_title),
                     actionLabel = R.string.perm_shizuku_install_action,
                     action = {
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/thedjchi/Shizuku"))
+                        val intent = Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse("https://github.com/thedjchi/Shizuku")
+                        )
                         context.startActivity(intent)
                     },
                     isGranted = viewModel.isShizukuAvailable.value || viewModel.isRootAvailable.value
@@ -246,19 +249,20 @@ fun StatusBarIconSettingsUI(
                     ) == PackageManager.PERMISSION_GRANTED)
 
                 if (isSwitchDisabled) {
-                    Box(modifier = Modifier
-                        .matchParentSize()
-                        .clickable {
-                            HapticUtil.performUIHaptic(view)
-                            val hasPermission = ContextCompat.checkSelfPermission(
-                                context,
-                                Manifest.permission.READ_PHONE_STATE
-                            ) == PackageManager.PERMISSION_GRANTED
+                    Box(
+                        modifier = Modifier
+                            .matchParentSize()
+                            .clickable {
+                                HapticUtil.performUIHaptic(view)
+                                val hasPermission = ContextCompat.checkSelfPermission(
+                                    context,
+                                    Manifest.permission.READ_PHONE_STATE
+                                ) == PackageManager.PERMISSION_GRANTED
 
-                            if (!hasPermission) {
-                                showPermissionSheet = true
-                            }
-                        })
+                                if (!hasPermission) {
+                                    showPermissionSheet = true
+                                }
+                            })
                 }
             }
 
@@ -333,7 +337,7 @@ fun StatusBarIconSettingsUI(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top =  16.dp, start = 20.dp, end = 16.dp, bottom = 2.dp),
+                        .padding(top = 16.dp, start = 20.dp, end = 16.dp, bottom = 2.dp),
                     verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
                 ) {
                     Text(
@@ -396,7 +400,8 @@ fun StatusBarIconSettingsUI(
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
-        val isAdvancedEnabled = viewModel.isShizukuAvailable.value || viewModel.isRootAvailable.value
+        val isAdvancedEnabled =
+            viewModel.isShizukuAvailable.value || viewModel.isRootAvailable.value
 
         RoundedCardContainer(
             modifier = Modifier,

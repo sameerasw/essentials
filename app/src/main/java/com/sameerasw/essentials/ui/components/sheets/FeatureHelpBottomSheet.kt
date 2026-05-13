@@ -91,7 +91,7 @@ fun FeatureHelpBottomSheet(
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     val description = if (feature.aboutDescription != null) {
-                        stringResource(feature.aboutDescription!!)
+                        stringResource(feature.aboutDescription)
                     } else {
                         stringResource(feature.description)
                     }

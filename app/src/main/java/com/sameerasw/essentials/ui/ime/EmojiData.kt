@@ -2,18 +2,18 @@ package com.sameerasw.essentials.ui.ime
 
 import android.content.Context
 import android.util.Log
-import com.google.gson.Gson
-import com.google.gson.annotations.SerializedName
-import com.sameerasw.essentials.R
-import java.io.InputStreamReader
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.State
+import com.google.gson.Gson
+import com.google.gson.annotations.SerializedName
+import com.sameerasw.essentials.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.InputStreamReader
 
 @androidx.annotation.Keep
 data class EmojiObject(
@@ -50,7 +50,7 @@ object EmojiData {
                 val inputStream = context.assets.open("emojis.json")
                 val reader = InputStreamReader(inputStream)
                 val response = Gson().fromJson(reader, EmojiDataResponse::class.java)
-                
+
                 val loadedCategories = mutableListOf<EmojiCategory>()
                 val loadedAllEmojis = mutableListOf<EmojiObject>()
 
@@ -60,12 +60,13 @@ object EmojiData {
                         combinedEmojis.addAll(emojiList)
                         loadedAllEmojis.addAll(emojiList)
                     }
-                    
+
                     if (combinedEmojis.isNotEmpty()) {
                         loadedCategories.add(
                             EmojiCategory(
                                 name = categoryName,
-                                iconRes = categoryIcons[categoryName] ?: R.drawable.rounded_action_key_24,
+                                iconRes = categoryIcons[categoryName]
+                                    ?: R.drawable.rounded_action_key_24,
                                 emojis = combinedEmojis
                             )
                         )
@@ -95,7 +96,7 @@ object EmojiData {
                     isLoaded = true
                     _isLoading.value = false
                 }
-                
+
                 reader.close()
                 inputStream.close()
             } catch (e: Exception) {

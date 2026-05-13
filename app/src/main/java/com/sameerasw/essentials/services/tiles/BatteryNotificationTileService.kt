@@ -17,7 +17,7 @@ class BatteryNotificationTileService : BaseTileService() {
     override fun onTileClick() {
         val newState = !settingsRepository.isBatteryNotificationEnabled()
         settingsRepository.setBatteryNotificationEnabled(newState)
-        
+
         val intent = Intent(this, BatteryNotificationService::class.java)
         if (newState) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -32,7 +32,8 @@ class BatteryNotificationTileService : BaseTileService() {
 
     override fun getTileLabel(): String = "Battery Info"
 
-    override fun getTileSubtitle(): String = if (settingsRepository.isBatteryNotificationEnabled()) "On" else "Off"
+    override fun getTileSubtitle(): String =
+        if (settingsRepository.isBatteryNotificationEnabled()) "On" else "Off"
 
     override fun hasFeaturePermission(): Boolean = true
 

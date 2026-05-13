@@ -73,8 +73,8 @@ class AmbientDreamService : DreamService() {
     private var likeStatusView: ImageView? = null
     private var volumeIconView: ImageView? = null
     private var volumeStrokeView: VolumeStrokeView? = null
-    
-    private var currentShapePath: android.graphics.Path? = null
+
+    private var currentShapePath: Path? = null
 
     // State
     private var isMusicMode = false
@@ -96,19 +96,14 @@ class AmbientDreamService : DreamService() {
             handler.post {
                 val title = metadata?.getString(android.media.MediaMetadata.METADATA_KEY_TITLE)
                 val artist = metadata?.getString(android.media.MediaMetadata.METADATA_KEY_ARTIST)
-                
-                if (title != trackTitle || artist != artistName) {
-                    trackTitle = title
-                    artistName = artist
-                    
-                    currentController?.let { isAlreadyLiked = checkIsLiked(it) }
-                    
-                    var artBitmap = metadata?.getBitmap(android.media.MediaMetadata.METADATA_KEY_ALBUM_ART)
-                    if (artBitmap == null) {
-                        artBitmap = metadata?.getBitmap(android.media.MediaMetadata.METADATA_KEY_ART)
-                    }
-                    updateMetadata(artBitmap)
-                }
+
+                trackTitle = title
+                artistName = artist
+
+                currentController?.let { isAlreadyLiked = checkIsLiked(it) }
+
+                val artBitmap = extractBitmap(metadata)
+                updateMetadata(artBitmap)
             }
         }
 
@@ -133,7 +128,7 @@ class AmbientDreamService : DreamService() {
     private val burnInProtectionRunnable = object : Runnable {
         override fun run() {
             if (isDetached) return
-            
+
             // Revert to clock if Android Auto is running
             if (com.sameerasw.essentials.utils.AppUtil.isAndroidAutoRunning(this@AmbientDreamService)) {
                 switchToClockMode()
@@ -190,7 +185,10 @@ class AmbientDreamService : DreamService() {
         // Register Media Session Listener
         try {
             val mediaSessionManager = getSystemService(MEDIA_SESSION_SERVICE) as MediaSessionManager
-            val componentName = android.content.ComponentName(this, com.sameerasw.essentials.services.NotificationListener::class.java)
+            val componentName = android.content.ComponentName(
+                this,
+                com.sameerasw.essentials.services.NotificationListener::class.java
+            )
             mediaSessionManager.addOnActiveSessionsChangedListener(sessionListener, componentName)
             updateActiveSession(mediaSessionManager.getActiveSessions(componentName))
         } catch (e: Exception) {
@@ -263,7 +261,8 @@ class AmbientDreamService : DreamService() {
         val size = dpToPx(320f)
 
         currentPolygon = com.sameerasw.essentials.utils.AmbientMusicShapeHelper.getRandomPolygon()
-        currentShapePath = com.sameerasw.essentials.utils.AmbientMusicShapeHelper.getRandomShapePath(size.toFloat())
+        currentShapePath =
+            com.sameerasw.essentials.utils.AmbientMusicShapeHelper.getRandomShapePath(size.toFloat())
 
         // Container for clipping
         clipContainer = FrameLayout(this).apply {
@@ -304,7 +303,7 @@ class AmbientDreamService : DreamService() {
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.MATCH_PARENT
             )
-            setBackgroundColor(0x40000000.toInt())
+            setBackgroundColor(0x40000000)
         }
 
         clipContainer?.addView(imageView)
@@ -405,12 +404,12 @@ class AmbientDreamService : DreamService() {
                             if (isMusicMode) {
                                 volumeStrokeView?.setColor(Color.WHITE)
                                 volumeStrokeView?.updatePercentage(perc)
-                                
+
                                 // Show and schedule hide
                                 volumeStrokeView?.animate()?.alpha(1f)?.setDuration(300)?.start()
                                 handler.removeCallbacks(volumeHideRunnable)
                                 handler.postDelayed(volumeHideRunnable, 3000)
-                                
+
                                 handler.removeCallbacks(revertToMusicRunnable)
                                 handler.postDelayed(revertToMusicRunnable, 5000)
                             }
@@ -466,7 +465,7 @@ class AmbientDreamService : DreamService() {
 
     private fun handleIntent(intent: Intent) {
         if (isDetached) return
-        
+
         // Skip if Android Auto is running
         if (com.sameerasw.essentials.utils.AppUtil.isAndroidAutoRunning(this)) {
             switchToClockMode()
@@ -497,7 +496,7 @@ class AmbientDreamService : DreamService() {
             if (eventType == "volume") {
                 volumeStrokeView?.setColor(Color.WHITE)
                 volumeStrokeView?.updatePercentage(volumePercentage)
-                
+
                 // Show and schedule hide
                 volumeStrokeView?.animate()?.alpha(1f)?.setDuration(300)?.start()
                 handler.removeCallbacks(volumeHideRunnable)
@@ -517,7 +516,8 @@ class AmbientDreamService : DreamService() {
 
     private fun updateActiveSession(sessions: List<android.media.session.MediaController>?) {
         if (isDetached) return
-        val playingSession = sessions?.firstOrNull { it.playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING }
+        val playingSession =
+            sessions?.firstOrNull { it.playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING }
 
         if (playingSession != null) {
             if (currentController?.sessionToken != playingSession.sessionToken) {
@@ -530,12 +530,8 @@ class AmbientDreamService : DreamService() {
                 trackTitle = metadata?.getString(android.media.MediaMetadata.METADATA_KEY_TITLE)
                 artistName = metadata?.getString(android.media.MediaMetadata.METADATA_KEY_ARTIST)
                 isAlreadyLiked = checkIsLiked(playingSession)
-                
-                var artBitmap = metadata?.getBitmap(android.media.MediaMetadata.METADATA_KEY_ALBUM_ART)
-                if (artBitmap == null) {
-                    artBitmap = metadata?.getBitmap(android.media.MediaMetadata.METADATA_KEY_ART)
-                }
 
+                val artBitmap = extractBitmap(metadata)
                 if (playingSession.playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING) {
                     switchToMusicMode()
                 }
@@ -570,10 +566,9 @@ class AmbientDreamService : DreamService() {
         } catch (e: SecurityException) {
             // Fallback for Android 16+ or restricted environments
             try {
-                val sessions = mutableListOf<android.media.session.MediaController>()
-                val notifications =
-                    (getSystemService(android.app.NotificationManager::class.java))?.activeNotifications
-                        ?: emptyArray()
+                mutableListOf<android.media.session.MediaController>()
+                (getSystemService(android.app.NotificationManager::class.java))?.activeNotifications
+                    ?: emptyArray()
 
                 emptyList()
             } catch (_: Exception) {
@@ -642,8 +637,9 @@ class AmbientDreamService : DreamService() {
 
         // Update Dynamic Shape with Morphing
         val size = dpToPx(320f).toFloat()
-        val newPolygon = com.sameerasw.essentials.utils.AmbientMusicShapeHelper.getPolygon("${trackTitle}_${artistName}")
-        
+        val newPolygon =
+            com.sameerasw.essentials.utils.AmbientMusicShapeHelper.getPolygon("${trackTitle}_${artistName}")
+
         if (currentPolygon != null && currentPolygon != newPolygon) {
             val morph = androidx.graphics.shapes.Morph(currentPolygon!!, newPolygon)
             morphAnimator?.cancel()
@@ -659,7 +655,7 @@ class AmbientDreamService : DreamService() {
                         volumeStrokeView?.updatePath(path)
                         clipContainer?.invalidateOutline()
                     }
-                    
+
                     nextImageView?.alpha = progress
                 }
                 addListener(object : android.animation.AnimatorListenerAdapter() {
@@ -671,7 +667,6 @@ class AmbientDreamService : DreamService() {
                 start()
             }
         } else {
-            // ... (rest of the else block)
             currentShapePath = com.sameerasw.essentials.utils.AmbientMusicShapeHelper.getShapePath(
                 "${trackTitle}_${artistName}",
                 size
@@ -681,6 +676,10 @@ class AmbientDreamService : DreamService() {
         }
         currentPolygon = newPolygon
 
+        updateAlbumArt(directBitmap)
+    }
+
+    private fun updateAlbumArt(directBitmap: android.graphics.Bitmap? = null, retryCount: Int = 0) {
         if (directBitmap != null) {
             nextImageView?.setImageBitmap(directBitmap)
             if (morphAnimator?.isRunning != true) {
@@ -691,7 +690,11 @@ class AmbientDreamService : DreamService() {
 
         // Load Art from Cache (Fallback)
         try {
-            val artHash = abs("${trackTitle}_${artistName}".hashCode())
+            val title = trackTitle
+            val artist = artistName
+            if (title == null) return
+
+            val artHash = abs("${title}_${artist}".hashCode())
             val artFile = File(cacheDir, "art_$artHash.png")
             val bitmap = if (artFile.exists()) {
                 BitmapFactory.decodeFile(artFile.absolutePath)
@@ -702,10 +705,34 @@ class AmbientDreamService : DreamService() {
             if (bitmap != null) {
                 imageView?.setImageBitmap(bitmap)
             } else {
-                imageView?.setImageDrawable(ColorDrawable(Color.DKGRAY))
+                if (retryCount < 10) {
+                    handler.postDelayed({ updateAlbumArt(null, retryCount + 1) }, 500)
+                } else {
+                    imageView?.setImageDrawable(ColorDrawable(Color.DKGRAY))
+                }
             }
         } catch (_: Exception) {
         }
+    }
+
+    private fun extractBitmap(metadata: android.media.MediaMetadata?): android.graphics.Bitmap? {
+        var bitmap = metadata?.getBitmap(android.media.MediaMetadata.METADATA_KEY_ALBUM_ART)
+        if (bitmap == null) {
+            bitmap = metadata?.getBitmap(android.media.MediaMetadata.METADATA_KEY_ART)
+        }
+        if (bitmap == null) {
+            // In DreamService we don't have easy access to SBN, so we rely on metadata URI if available
+            val artUri = metadata?.getString(android.media.MediaMetadata.METADATA_KEY_ALBUM_ART_URI)
+                ?: metadata?.getString(android.media.MediaMetadata.METADATA_KEY_ART_URI)
+            if (artUri != null) {
+                try {
+                    val stream = contentResolver.openInputStream(android.net.Uri.parse(artUri))
+                    bitmap = BitmapFactory.decodeStream(stream)
+                    stream?.close()
+                } catch (_: Exception) {}
+            }
+        }
+        return bitmap
     }
 
     private fun checkIsLiked(session: android.media.session.MediaController): Boolean {
@@ -780,7 +807,7 @@ class AmbientDreamService : DreamService() {
     // Copy of Inner Class
     private inner class VolumeStrokeView(
         context: Context,
-        private var petalPath: android.graphics.Path,
+        private var petalPath: Path,
         private val percentage: Int
     ) : View(context) {
         private var currentPercentage: Float = percentage.toFloat()
@@ -796,7 +823,7 @@ class AmbientDreamService : DreamService() {
         private val progressPath = Path()
         private var isDetached = false
 
-        fun updatePath(newPath: android.graphics.Path) {
+        fun updatePath(newPath: Path) {
             this.petalPath = newPath
             this.pathMeasure = PathMeasure(newPath, false)
             invalidate()

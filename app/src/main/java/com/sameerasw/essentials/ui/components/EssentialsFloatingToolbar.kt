@@ -5,9 +5,34 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.basicMarquee
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.FloatingToolbarDefaults
+import androidx.compose.material3.FloatingToolbarScrollBehavior
+import androidx.compose.material3.HorizontalFloatingToolbar
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,11 +41,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
-import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
-import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.utils.HapticUtil
 
 data class ToolbarItem(
@@ -55,11 +77,11 @@ fun EssentialsFloatingToolbar(
     val configuration = LocalConfiguration.current
     val fontScale = LocalDensity.current.fontScale
     val screenWidth = configuration.screenWidthDp
-    
+
     // Hide label if font scale is large or screen width is too small
     val isLargeFont = fontScale > 1.25f
-    val isCompactScreen = screenWidth < 400 
-    
+    val isCompactScreen = screenWidth < 400
+
     val shouldHideLabel = isLargeFont || (isCompactScreen && items.size > 3)
 
     val finalFab: (@Composable () -> Unit)? = when {
@@ -67,7 +89,8 @@ fun EssentialsFloatingToolbar(
         onHelpClick != null && fabAction == null -> {
             {
                 FloatingActionButton(
-                    onClick = {HapticUtil.performUIHaptic(view)
+                    onClick = {
+                        HapticUtil.performUIHaptic(view)
                         onHelpClick()
                     },
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -82,10 +105,12 @@ fun EssentialsFloatingToolbar(
                 }
             }
         }
+
         fabAction != null && fabIconRes != null -> {
             {
                 FloatingActionButton(
-                    onClick = {HapticUtil.performUIHaptic(view)
+                    onClick = {
+                        HapticUtil.performUIHaptic(view)
                         fabAction()
                     },
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -100,6 +125,7 @@ fun EssentialsFloatingToolbar(
                 }
             }
         }
+
         else -> null
     }
 
@@ -150,7 +176,9 @@ fun EssentialsFloatingToolbar(
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.background,
                             maxLines = 1,
-                            modifier = Modifier.basicMarquee().weight(1f, fill = false)
+                            modifier = Modifier
+                                .basicMarquee()
+                                .weight(1f, fill = false)
                         )
                         if (isBeta) {
                             Card(

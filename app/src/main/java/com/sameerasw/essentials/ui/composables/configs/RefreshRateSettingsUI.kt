@@ -153,7 +153,9 @@ fun RefreshRateSettingsUI(
                         text = stringResource(R.string.refresh_rate_reset_desc),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.weight(1f).padding(end = 8.dp)
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(end = 8.dp)
                     )
                     Button(
                         onClick = {
@@ -173,7 +175,9 @@ fun RefreshRateSettingsUI(
                         text = stringResource(R.string.msg_refresh_rate_permission_required),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.weight(1f).padding(end = 8.dp)
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(end = 8.dp)
                     )
                     Button(
                         onClick = {

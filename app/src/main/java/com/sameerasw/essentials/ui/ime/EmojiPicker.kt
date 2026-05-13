@@ -4,8 +4,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -14,8 +24,18 @@ import androidx.compose.foundation.pager.PagerDefaults
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,7 +46,6 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -111,7 +130,7 @@ fun EmojiPicker(
             val category = EmojiData.categories.getOrNull(pageIndex)
             if (category != null) {
                 val gridState = gridStates.getOrPut(pageIndex) { LazyGridState() }
-                
+
                 Column(modifier = Modifier.fillMaxSize()) {
                     // Category Header within the page
                     Text(
@@ -140,13 +159,13 @@ fun EmojiPicker(
                         ) { emojiObj ->
                             val interactionSource = remember { MutableInteractionSource() }
                             val isPressed by interactionSource.collectIsPressedAsState()
-                            
+
                             Box(
                                 modifier = Modifier
                                     .aspectRatio(1f)
                                     .clip(RoundedCornerShape(keyRoundness))
                                     .background(
-                                        if (isPressed) MaterialTheme.colorScheme.surfaceContainerHighest 
+                                        if (isPressed) MaterialTheme.colorScheme.surfaceContainerHighest
                                         else Color.Transparent
                                     )
                                     .clickable(
@@ -183,7 +202,7 @@ fun EmojiPicker(
             EmojiData.categories.forEachIndexed { index, category ->
                 val isSelected = index == pagerState.currentPage
                 val interactionSource = remember { MutableInteractionSource() }
-                
+
                 IconButton(
                     onClick = {
                         scope.launch {
@@ -199,15 +218,15 @@ fun EmojiPicker(
                         .padding(vertical = 2.dp)
                         .clip(RoundedCornerShape(keyRoundness / 2))
                         .background(
-                            if (isSelected) MaterialTheme.colorScheme.primaryContainer 
+                            if (isSelected) MaterialTheme.colorScheme.primaryContainer
                             else Color.Transparent
                         )
                 ) {
                     Icon(
                         painter = painterResource(id = category.iconRes),
                         contentDescription = category.name,
-                        tint = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer 
-                               else MaterialTheme.colorScheme.onSurfaceVariant,
+                        tint = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer
+                        else MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(24.dp)
                     )
                 }

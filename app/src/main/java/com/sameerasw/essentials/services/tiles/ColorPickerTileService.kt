@@ -1,8 +1,6 @@
 package com.sameerasw.essentials.services.tiles
 
 import android.app.PendingIntent
-import android.content.ActivityNotFoundException
-import android.content.ComponentName
 import android.content.Intent
 import android.graphics.drawable.Icon
 import android.os.Build
@@ -29,7 +27,10 @@ class ColorPickerTileService : BaseTileService() {
     override fun getTileState(): Int = Tile.STATE_INACTIVE
 
     override fun onTileClick() {
-        val intent = Intent(this, com.sameerasw.essentials.ui.activities.ColorPickerActivity::class.java).apply {
+        val intent = Intent(
+            this,
+            com.sameerasw.essentials.ui.activities.ColorPickerActivity::class.java
+        ).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
 

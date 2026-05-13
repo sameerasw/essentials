@@ -133,7 +133,12 @@ fun WatermarkScreen(
                     modifier = Modifier.padding(bottom = 16.dp, end = 16.dp),
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    elevation = androidx.compose.material3.FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp)
+                    elevation = androidx.compose.material3.FloatingActionButtonDefaults.elevation(
+                        0.dp,
+                        0.dp,
+                        0.dp,
+                        0.dp
+                    )
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.rounded_edit_24),

@@ -43,13 +43,16 @@ class PrivateDnsTileService : BaseTileService() {
             MODE_HOSTNAME -> {
                 val hostname = getPrivateDnsHostname()
                 if (!hostname.isNullOrEmpty()) {
-                    val settingsRepository = com.sameerasw.essentials.data.repository.SettingsRepository(this)
-                    val preset = settingsRepository.getPrivateDnsPresets().find { it.hostname == hostname }
+                    val settingsRepository =
+                        com.sameerasw.essentials.data.repository.SettingsRepository(this)
+                    val preset =
+                        settingsRepository.getPrivateDnsPresets().find { it.hostname == hostname }
                     preset?.name ?: hostname
                 } else {
                     getString(R.string.feat_qs_tiles_title)
                 }
             }
+
             else -> getString(R.string.tile_private_dns_off)
         }
     }

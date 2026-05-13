@@ -156,7 +156,8 @@ class NotificationLightingHandler(
             if (immediate) {
                 try {
                     windowManager?.removeView(overlay)
-                } catch (_: Exception) {}
+                } catch (_: Exception) {
+                }
                 iterator.remove()
             } else {
                 try {

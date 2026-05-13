@@ -274,7 +274,7 @@ class WatermarkEngine(
 
             val shadowPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
                 colorFilter = android.graphics.PorterDuffColorFilter(
-                    shadowColor!!,
+                    shadowColor,
                     PorterDuff.Mode.SRC_IN
                 )
                 alpha = 128

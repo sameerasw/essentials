@@ -2,10 +2,18 @@ package com.sameerasw.essentials.ui.components.cards
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -28,7 +36,7 @@ fun LocationAlarmCard(
     modifier: Modifier = Modifier
 ) {
     val view = androidx.compose.ui.platform.LocalView.current
-    
+
     ListItem(
         modifier = modifier
             .fillMaxWidth()
@@ -39,7 +47,8 @@ fun LocationAlarmCard(
             },
         leadingContent = {
             val context = androidx.compose.ui.platform.LocalContext.current
-            val iconResId = context.resources.getIdentifier(alarm.iconResName, "drawable", context.packageName)
+            val iconResId =
+                context.resources.getIdentifier(alarm.iconResName, "drawable", context.packageName)
             Icon(
                 painter = painterResource(id = if (iconResId != 0) iconResId else R.drawable.round_navigation_24),
                 contentDescription = null,
@@ -58,9 +67,12 @@ fun LocationAlarmCard(
         supportingContent = {
             val context = androidx.compose.ui.platform.LocalContext.current
             val lastTravelledText = alarm.lastTravelled?.let {
-                stringResource(R.string.location_reached_last_travelled, com.sameerasw.essentials.utils.TimeUtil.formatRelativeDate(it, context))
+                stringResource(
+                    R.string.location_reached_last_travelled,
+                    com.sameerasw.essentials.utils.TimeUtil.formatRelativeDate(it, context)
+                )
             } ?: stringResource(R.string.location_reached_never)
-            
+
             Text(
                 text = lastTravelledText,
                 style = MaterialTheme.typography.bodySmall,

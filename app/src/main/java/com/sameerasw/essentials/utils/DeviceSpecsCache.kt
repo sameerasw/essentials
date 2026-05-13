@@ -26,7 +26,7 @@ object DeviceSpecsCache {
             if (!file.exists()) return null
             val json = file.readText()
             val specs = gson.fromJson(json, DeviceSpecs::class.java)
-            
+
             // Validate essential data integrity or refetch
             @Suppress("SENSELESS_COMPARISON")
             if (specs == null || specs.detailSpec == null) {
@@ -72,36 +72,37 @@ object DeviceSpecsCache {
      * Downloads and saves device images locally.
      * Returns a copy of [specs] with the [DeviceSpecs.localImagePaths] populated.
      */
-    suspend fun downloadImages(context: Context, specs: DeviceSpecs): DeviceSpecs = withContext(Dispatchers.IO) {
-        val dir = File(context.filesDir, IMAGES_DIR)
-        if (!dir.exists()) dir.mkdirs()
+    suspend fun downloadImages(context: Context, specs: DeviceSpecs): DeviceSpecs =
+        withContext(Dispatchers.IO) {
+            val dir = File(context.filesDir, IMAGES_DIR)
+            if (!dir.exists()) dir.mkdirs()
 
-        val localPaths = mutableListOf<String>()
-        specs.imageUrls.forEachIndexed { index, url ->
-            try {
-                // Use a stable filename based on index and extension
-                val extension = url.substringAfterLast(".", "jpg").split("?").first()
-                val fileName = "device_image_${index}.${extension}"
-                val file = File(dir, fileName)
-                
-                // Only download if it doesn't already exist or if it's the first image (often updated)
-                if (!file.exists()) {
-                    URL(url).openStream().use { input ->
-                        FileOutputStream(file).use { output ->
-                            input.copyTo(output)
+            val localPaths = mutableListOf<String>()
+            specs.imageUrls.forEachIndexed { index, url ->
+                try {
+                    // Use a stable filename based on index and extension
+                    val extension = url.substringAfterLast(".", "jpg").split("?").first()
+                    val fileName = "device_image_${index}.${extension}"
+                    val file = File(dir, fileName)
+
+                    // Only download if it doesn't already exist or if it's the first image (often updated)
+                    if (!file.exists()) {
+                        URL(url).openStream().use { input ->
+                            FileOutputStream(file).use { output ->
+                                input.copyTo(output)
+                            }
                         }
                     }
+                    localPaths.add(file.absolutePath)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    // If download fails, we don't add to localPaths,
+                    // UI will fall back to imageUrls
                 }
-                localPaths.add(file.absolutePath)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                // If download fails, we don't add to localPaths, 
-                // UI will fall back to imageUrls
             }
+
+            val updatedSpecs = specs.copy(localImagePaths = localPaths)
+            saveSpecs(context, updatedSpecs)
+            updatedSpecs
         }
-        
-        val updatedSpecs = specs.copy(localImagePaths = localPaths)
-        saveSpecs(context, updatedSpecs)
-        updatedSpecs
-    }
 }

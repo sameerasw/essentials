@@ -93,7 +93,7 @@ class LocationReachedService : Service() {
                 val activeId = repository.getActiveAlarmId()
                 val alarms = repository.getAlarms()
                 val alarm = alarms.find { it.id == activeId }
-                
+
                 if (alarm != null) {
                     updateProgress(alarm)
                 } else {
@@ -109,12 +109,12 @@ class LocationReachedService : Service() {
         val activeId = repository.getActiveAlarmId()
         val alarms = repository.getAlarms()
         val alarm = alarms.find { it.id == activeId }
-        
+
         if (alarm != null) {
             repository.saveLastTrip(alarm)
             repository.updatePausedState(alarm.id, false)
         }
-        
+
         repository.saveActiveAlarmId(null)
         stopSelf()
     }
@@ -135,7 +135,7 @@ class LocationReachedService : Service() {
         repository.updatePausedState(activeId, false)
         // Force an update to refresh notification buttons immediately
         updateNotification(null)
-        
+
         // Then try to get location
         val alarms = repository.getAlarms()
         val alarm = alarms.find { it.id == activeId }
@@ -228,7 +228,7 @@ class LocationReachedService : Service() {
             if (distanceTravelled > 0 && elapsed > 0) {
                 val remainingMillis = (currentDistMeters * elapsed / distanceTravelled).toLong()
                 val remainingMinutes = (remainingMillis / 60000).toInt().coerceAtLeast(1)
-                
+
                 etaText = if (remainingMinutes >= 60) {
                     val hrs = remainingMinutes / 60
                     val mins = remainingMinutes % 60
@@ -247,7 +247,11 @@ class LocationReachedService : Service() {
         return buildOngoingNotification(null, 0, null)
     }
 
-    private fun buildOngoingNotification(distanceKm: Float?, progress: Int, etaText: String?): Notification {
+    private fun buildOngoingNotification(
+        distanceKm: Float?,
+        progress: Int,
+        etaText: String?
+    ): Notification {
         val stopIntent = Intent(this, LocationReachedService::class.java).apply {
             action = ACTION_STOP
         }
@@ -274,7 +278,12 @@ class LocationReachedService : Service() {
         } ?: getString(R.string.location_reached_calculating)
 
         val contentText = if (etaText != null) {
-            getString(R.string.location_reached_service_remaining_with_eta, distanceText, progress, etaText)
+            getString(
+                R.string.location_reached_service_remaining_with_eta,
+                distanceText,
+                progress,
+                etaText
+            )
         } else {
             getString(R.string.location_reached_service_remaining, distanceText, progress)
         }
@@ -304,7 +313,12 @@ class LocationReachedService : Service() {
             val destinationName = alarm?.name?.ifEmpty { "Destination" } ?: "Destination"
             val builder = Notification.Builder(this, CHANNEL_ID)
                 .setSmallIcon(finalIconId)
-                .setContentTitle(getString(R.string.location_reached_service_title, destinationName))
+                .setContentTitle(
+                    getString(
+                        R.string.location_reached_service_title,
+                        destinationName
+                    )
+                )
                 .setContentText(if (isPaused) getString(R.string.location_reached_pause) else contentText)
                 .setOngoing(true)
                 .setOnlyAlertOnce(true)
@@ -371,7 +385,10 @@ class LocationReachedService : Service() {
                         .invoke(builder, "Paused")
                 } else {
                     distanceKm?.let {
-                        builder.javaClass.getMethod("setShortCriticalText", CharSequence::class.java)
+                        builder.javaClass.getMethod(
+                            "setShortCriticalText",
+                            CharSequence::class.java
+                        )
                             .invoke(builder, distanceText)
                     }
                 }
