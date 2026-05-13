@@ -63,12 +63,12 @@
     <string name="like_song_settings_desc">Gin man mito ni ki mi ngec me neno gin ma tye ka tuko i kare ni ki me cako tic ma kit meno. Wakwayi ni iket piny kany.</string>
     <string name="like_song_toast_enabled">Nyut kwena ma ki lwongo ni toast</string>
     <string name="like_song_aod_overlay_title">Nyut gin ma ki keto i kom AOD</string>
-    <string name="feat_ambient_music_glance_title">Neno wer ma mako kabedo ni</string>
-    <string name="feat_ambient_music_glance_desc">Nen i kom jami ma ki cwalo i AOD</string>
-    <string name="ambient_glance_docked_mode_title">kit ma ki keto kwede</string>
-    <string name="ambient_glance_docked_mode_desc">Gwok gin ma ki keto i kom gin ni wek onen matwal nongo wer tye ka winye i AOD</string>
-    <string name="ambient_glance_random_shapes_title">Random shapes</string>
-    <string name="ambient_glance_random_shapes_desc">Use various Material 3 shapes for the album art</string>
+    <string name="feat_essentials_on_display_title">Essentials On Display</string>
+    <string name="feat_essentials_on_display_desc">Glance at media and info on AOD</string>
+    <string name="essentials_on_display_docked_mode_title">Docked mode</string>
+    <string name="essentials_on_display_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
+    <string name="essentials_on_display_random_shapes_title">Random shapes</string>
+    <string name="essentials_on_display_random_shapes_desc">Use various Material 3 shapes for the album art</string>
     <string name="feat_notification_glance_title">neno ngec</string>
     <string name="feat_notification_glance_desc">Ket AOD i tic nongo ngec tye ka kuro</string>
     <string name="notification_glance_same_as_lighting_title">App acel ki lok ma nyutu ngec</string>
@@ -582,7 +582,7 @@
     <string name="perm_default_browser_title">Gin ma ki tiyo kwede me neno piny i intanet</string>
     <string name="perm_default_browser_desc">Mitte me tic ki jami ma ki keto kacel maber</string>
     <string name="perm_accessibility_desc_remap">Mitte me juku jami ma tye ka time i bute ma ki lwongo ni hardware</string>
-    <string name="perm_accessibility_desc_ambient_music_glance">Mite me mako gin ma tye ka time i kare ma gin ma ki neno ni tye ka tic me yabo Ambient Glance overlay.</string>
+    <string name="perm_accessibility_desc_essentials_on_display">Required to intercept volume key events while the screen is off to trigger the Essentials On Display overlay.</string>
     <string name="perm_accessibility_desc_night_light">Mite me neno jami ma tye anyim.</string>
     <string name="perm_write_secure_title">Co jami ma ki gwoko maber</string>
     <string name="perm_write_secure_desc_common">Mitte pi lanyut me Statusbar ki Screen Locked Security</string>
@@ -706,7 +706,7 @@
     <string name="action_what_is_this">Eni ngo?</string>
     <string name="update_available_title">Lok manyen tye</string>
     <string name="about_desc_your_android">Glance at your device\'s hardware and software specifications in detail. This information is fetched from GSMArena and system properties to provide a comprehensive overview of your Android device.</string>
-    <string name="about_desc_ambient_music_glance">Ambient Music Glance nyutu Now Playing ma ki keto i kom gin ma ki lwongo ni lock screen ka wer tye ka winye ki ka wer tye ka loko. \n\nKa cim ni pe twero tic ki jami ma ki keto i kom AOD, ki in itwero yero Ambience screensaver ma ki medo i yub me Android ni ma calo gin mukene ka itye ka cwalo mac.</string>
+    <string name="about_desc_essentials_on_display">Essentials On Display shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
     <string name="about_desc_notification_lighting">Mac ma nyutu ngec medo mac ma ryeny maber ka inongo ngec.\n\nItwero loko kit ma cal ni nen kwede, kala ne, ki kit ma en nen kwede. Tiiyo kede ka gin ma ki neno ni tye ka tic (ma jenge i kom OEM) onyo i kom gin ma itye ka tic kwede. Yer jami ma ki tiyo kwede, ngec ma pire tek onyo kit ma omyera obed ka kelo ki i kom jami ma kimiyo. Ka OEM ni pe miiyo kony me keto jami ma malo ma kato AOD, peny Ambient display option ma nonge piny kany.</string>
     <string name="about_desc_screen_off_widget">Wek wang gin ma ki neno ni oyot ki dii i kom gin ma ki twero loko dit ne ma pe medo cal onyo gin mo kiken i wang gin ma ki neno ni.</string>
     <string name="about_desc_statusbar_icons">Bed ki twero i kom cal ma nyutu rwom me kwo ni.\n\nKano jami mogo ma calo WiFi, Bluetooth, onyo ngec me cim me gwoko kabedo ni maleng. In bene itwero loko kit cawa ki lanyut pa batri ki jami mogo ma ryek bene. Magi aye dul pa AOSP ma tye wek OS pa cim ni pe owor jami ni weng.</string>
@@ -1207,8 +1207,6 @@
     <string name="search_sound_mode_show_slider_desc">Nyut gin ma ki lwongo ni slider i tile</string>
     <string name="search_sound_mode_behavior_title">Kit me ngwec</string>
     <string name="search_sound_mode_behavior_desc">Yer kit ma ibi wot kwede</string>
-    <string name="feat_ambient_music_title">Neno wer ma mako kabedo ni</string>
-    <string name="feat_ambient_music_desc">Nen i kom jami ma ki cwalo i AOD</string>
     <string name="feat_sound_haptics_title">Dwon ki Haptics</string>
     <string name="feat_sound_haptics_desc">Dwon ki kit ma mako kwede</string>
     <string name="feat_security_privacy_title">Gwoko kuc ki bedo piri keni</string>
