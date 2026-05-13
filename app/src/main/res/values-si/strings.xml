@@ -63,12 +63,12 @@
     <string name="like_song_settings_desc">මෙම විශේෂාංගයට දැනට වාදනය වන මාධ්‍ය හඳුනා ගැනීමට සහ එවැනි ක්‍රියාවක් ක්‍රියාරම්භ කිරීමට දැනුම්දීම් ප්‍රවේශය අවශ්‍ය වේ. කරුණාකර එය පහත සබල කරන්න.</string>
     <string name="like_song_toast_enabled">ටෝස්ට් පණිවිඩය පෙන්වන්න</string>
     <string name="like_song_aod_overlay_title">AOD මත උඩැතිරිය පෙන්වන්න</string>
-    <string name="feat_ambient_music_glance_title">අවට සංගීත බැල්ම</string>
-    <string name="feat_ambient_music_glance_desc">AOD හි මාධ්‍ය දෙස බලන්න</string>
-    <string name="ambient_glance_docked_mode_title">ඩොක්ඩ් මාදිලිය</string>
-    <string name="ambient_glance_docked_mode_desc">AOD මත සංගීතය වාදනය වන අතරතුර උඩැතිරිය දින නියමයක් නොමැතිව දෘශ්‍යමානව තබා ගන්න</string>
-    <string name="ambient_glance_random_shapes_title">Random shapes</string>
-    <string name="ambient_glance_random_shapes_desc">Use various Material 3 shapes for the album art</string>
+    <string name="feat_essentials_on_display_title">Essentials On Display</string>
+    <string name="feat_essentials_on_display_desc">Glance at media and info on AOD</string>
+    <string name="essentials_on_display_docked_mode_title">Docked mode</string>
+    <string name="essentials_on_display_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
+    <string name="essentials_on_display_random_shapes_title">Random shapes</string>
+    <string name="essentials_on_display_random_shapes_desc">Use various Material 3 shapes for the album art</string>
     <string name="feat_notification_glance_title">දැනුම්දීමේ බැල්ම</string>
     <string name="feat_notification_glance_desc">දැනුම්දීම් පොරොත්තුවෙන් සිටින අතරතුර AOD ක්‍රියාත්මකව තබා ගන්න</string>
     <string name="notification_glance_same_as_lighting_title">දැනුම්දීම් ආලෝකකරණයට සමාන යෙදුම්</string>
@@ -582,7 +582,7 @@
     <string name="perm_default_browser_title">පෙරනිමි බ්‍රව්සරය</string>
     <string name="perm_default_browser_desc">සබැඳි කාර්යක්ෂමව හැසිරවීමට අවශ්‍ය වේ</string>
     <string name="perm_accessibility_desc_remap">දෘඪාංග බොත්තම් සිදුවීම් වලට බාධා කිරීමට අවශ්‍ය වේ</string>
-    <string name="perm_accessibility_desc_ambient_music_glance">Ambient Glance උඩැතිරිය ක්‍රියාරම්භ කිරීමට තිරය ක්‍රියාවිරහිතව ඇති අතරතුර ශබ්ද ප්‍රධාන සිදුවීම්වලට බාධා කිරීමට අවශ්‍ය වේ.</string>
+    <string name="perm_accessibility_desc_essentials_on_display">Required to intercept volume key events while the screen is off to trigger the Essentials On Display overlay.</string>
     <string name="perm_accessibility_desc_night_light">පෙරබිම් යෙදුම් නිරීක්ෂණය කිරීමට අවශ්‍ය වේ.</string>
     <string name="perm_write_secure_title">ආරක්ෂිත සැකසුම් ලියන්න</string>
     <string name="perm_write_secure_desc_common">තත්ව තීරු අයිකන සහ තිර අගුලු දැමූ ආරක්ෂාව සඳහා අවශ්‍ය වේ</string>
@@ -706,7 +706,7 @@
     <string name="action_what_is_this">මේ කුමක් ද?</string>
     <string name="update_available_title">යාවත්කාලීන ලබා ගත හැක</string>
     <string name="about_desc_your_android">Glance at your device\'s hardware and software specifications in detail. This information is fetched from GSMArena and system properties to provide a comprehensive overview of your Android device.</string>
-    <string name="about_desc_ambient_music_glance">Ambient Music Glance සංගීතය වාදනය වන විට සහ පසුධාවනය වෙනස් වන විට ඔබගේ අගුළු තිරයේ Now Playing overlay එකක් පෙන්වයි. \n\nඔබගේ උපාංගය AOD හරහා උඩැතිරිවලට සහය නොදක්වන්නේ නම්, ඔබට ආරෝපණය කරන අතරතුර විකල්පයක් ලෙස ඔබේ Android සැකසීම් තුළ එකතු කරන ලද Ambience screensaver තෝරාගත හැක.</string>
+    <string name="about_desc_essentials_on_display">Essentials On Display shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
     <string name="about_desc_notification_lighting">දැනුම්දීම් ආලෝකය ඔබට දැනුම්දීම් ලැබුණු විට අලංකාර දාර ආලෝකකරණ බලපෑමක් එක් කරයි.\n\nඔබට සජීවිකරණ විලාසය, වර්ණ සහ හැසිරීම අභිරුචිකරණය කළ හැකිය. එය තිරය ක්‍රියා විරහිත වූ විට (OEM මත යැපෙන) හෝ ඔබගේ වත්මන් යෙදුමට ඉහළින් ඇති විට පවා ක්‍රියා කරයි. යෙදුම්, දැනුම්දීම් ප්‍රමුඛතාව හෝ ලබා දී ඇති පාලනවලින් එය ක්‍රියාත්මක කළ යුතු හැසිරීම තෝරන්න. ඔබේ OEM AODට ඉහළින් ඇති ආවරණ සඳහා සහය නොදක්වන්නේ නම්, පහත ඇති සංසරණ සංදර්ශක විකල්පයට එරෙහිව නඩු පවරන්න.</string>
     <string name="about_desc_screen_off_widget">ඔබේ මුල් තිරයට අයිකන හෝ කිසිදු අවුල් සහගත බවක් එක් නොකරන විනිවිද පෙනෙන ප්‍රමාණය වෙනස් කළ හැකි විජට් එකක් මත තට්ටු කිරීමෙන් තිරය පහසුවෙන් ක්‍රියා විරහිත කරන්න.</string>
     <string name="about_desc_statusbar_icons">ඔබගේ තත්ත්‍ව තීරු අයිකන මත සම්පූර්ණ පාලනය ගන්න.\n\nඔබගේ තත්ත්‍ව තීරුව පිරිසිදුව තබා ගැනීමට WiFi, Bluetooth, හෝ සෙලියුලර් දත්ත වැනි විශේෂිත අයිකන සඟවන්න. ඔබට සමහර ස්මාර්ට් පාලනයන් සමඟ ඔරලෝසු ආකෘතිය සහ බැටරි දර්ශකය අභිරුචිකරණය කළ හැකිය. මේවා පවතින AOSP පාලන ලැයිස්තුව වන බැවින් ඔබගේ උපාංග OS සියලු පාලනවලට ගරු නොකරනු ඇත.</string>
@@ -1207,8 +1207,6 @@
     <string name="search_sound_mode_show_slider_desc">ටයිල් එකේ වෙළුම් ස්ලයිඩරය පෙන්වන්න</string>
     <string name="search_sound_mode_behavior_title">චක්‍ර හැසිරීම</string>
     <string name="search_sound_mode_behavior_desc">චක්‍රීය කිරීමට මාතයන් තෝරන්න</string>
-    <string name="feat_ambient_music_title">අවට සංගීත බැල්ම</string>
-    <string name="feat_ambient_music_desc">AOD හි මාධ්‍ය දෙස බලන්න</string>
     <string name="feat_sound_haptics_title">ශබ්දය සහ හප්ටික්ස්</string>
     <string name="feat_sound_haptics_desc">පරිමාව සහ හප්ටික් ලක්ෂණ</string>
     <string name="feat_security_privacy_title">ආරක්ෂාව සහ පෞද්ගලිකත්වය</string>
