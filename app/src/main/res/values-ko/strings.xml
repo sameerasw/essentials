@@ -63,12 +63,12 @@
     <string name="like_song_settings_desc">이 기능을 사용하려면 현재 재생 중인 미디어를 감지하고 좋아요 작업을 실행하려면 알림 액세스가 필요합니다. 아래에서 활성화해 주세요.</string>
     <string name="like_song_toast_enabled">토스트 메시지 표시</string>
     <string name="like_song_aod_overlay_title">AOD에 오버레이 표시</string>
-    <string name="feat_ambient_music_glance_title">주변 음악 한눈에 보기</string>
-    <string name="feat_ambient_music_glance_desc">AOD에 대한 미디어 살펴보기</string>
-    <string name="ambient_glance_docked_mode_title">도킹 모드</string>
-    <string name="ambient_glance_docked_mode_desc">AOD에서 음악이 재생되는 동안 오버레이가 무기한 표시되도록 유지</string>
-    <string name="ambient_glance_random_shapes_title">Random shapes</string>
-    <string name="ambient_glance_random_shapes_desc">Use various Material 3 shapes for the album art</string>
+    <string name="feat_essentials_on_display_title">Essentials On Display</string>
+    <string name="feat_essentials_on_display_desc">Glance at media and info on AOD</string>
+    <string name="essentials_on_display_docked_mode_title">Docked mode</string>
+    <string name="essentials_on_display_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
+    <string name="essentials_on_display_random_shapes_title">Random shapes</string>
+    <string name="essentials_on_display_random_shapes_desc">Use various Material 3 shapes for the album art</string>
     <string name="feat_notification_glance_title">알림 한눈에 보기</string>
     <string name="feat_notification_glance_desc">알림이 보류 중인 동안 AOD를 계속 켜두세요</string>
     <string name="notification_glance_same_as_lighting_title">알림 조명과 동일한 앱</string>
@@ -582,7 +582,7 @@
     <string name="perm_default_browser_title">기본 브라우저</string>
     <string name="perm_default_browser_desc">링크를 효율적으로 처리하는 데 필요</string>
     <string name="perm_accessibility_desc_remap">하드웨어 버튼 이벤트를 가로채는 데 필요합니다.</string>
-    <string name="perm_accessibility_desc_ambient_music_glance">Ambient Glance 오버레이를 트리거하려면 화면이 꺼져 있는 동안 볼륨 키 이벤트를 가로채는 데 필요합니다.</string>
+    <string name="perm_accessibility_desc_essentials_on_display">Required to intercept volume key events while the screen is off to trigger the Essentials On Display overlay.</string>
     <string name="perm_accessibility_desc_night_light">포그라운드 애플리케이션을 모니터링하는 데 필요합니다.</string>
     <string name="perm_write_secure_title">보안 설정 쓰기</string>
     <string name="perm_write_secure_desc_common">상태 표시줄 아이콘 및 화면 잠금 보안에 필요합니다.</string>
@@ -706,7 +706,7 @@
     <string name="action_what_is_this">이게 뭔가요?</string>
     <string name="update_available_title">업데이트 가능</string>
     <string name="about_desc_your_android">Glance at your device\'s hardware and software specifications in detail. This information is fetched from GSMArena and system properties to provide a comprehensive overview of your Android device.</string>
-    <string name="about_desc_ambient_music_glance">Ambient Music Glance는 음악이 재생되고 재생이 변경될 때 잠금 화면에 Now Playing 오버레이를 표시합니다. \n\n기기가 AOD를 통한 오버레이를 지원하지 않는 경우 충전하는 동안 Android 설정에 추가된 Ambience 화면 보호기를 대안으로 선택할 수 있습니다.</string>
+    <string name="about_desc_essentials_on_display">Essentials On Display shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
     <string name="about_desc_notification_lighting">알림 조명은 알림을 받을 때 아름다운 가장자리 조명 효과를 추가합니다.\n\n애니메이션 스타일, 색상 및 동작을 사용자 정의할 수 있습니다. 화면이 꺼져 있거나(OEM에 따라 다름) 현재 앱 위에 있는 경우에도 작동합니다. 앱, 알림 우선순위 또는 특정 컨트롤에서 트리거되어야 하는 동작을 선택하세요. OEM이 AOD 위의 오버레이를 지원하지 않는 경우 아래에 있는 주변 디스플레이 옵션을 사용하세요.</string>
     <string name="about_desc_screen_off_widget">홈 화면에 아이콘이나 어수선한 요소를 추가하지 않는 투명하고 크기 조절이 가능한 위젯을 탭하여 쉽게 화면을 끌 수 있습니다.</string>
     <string name="about_desc_statusbar_icons">상태 표시줄 아이콘을 완전히 제어하세요.\n\nWiFi, 블루투스, 셀룰러 데이터와 같은 특정 아이콘을 숨겨 상태 표시줄을 깨끗하게 유지하세요. 일부 스마트 컨트롤을 사용하여 시계 형식과 배터리 표시기를 사용자 정의할 수도 있습니다. 이는 사용 가능한 AOSP 컨트롤 목록이므로 장치 OS가 모든 컨트롤을 따르지 않을 수도 있습니다.</string>
@@ -1207,8 +1207,6 @@
     <string name="search_sound_mode_show_slider_desc">타일에 볼륨 슬라이더 표시</string>
     <string name="search_sound_mode_behavior_title">사이클 동작</string>
     <string name="search_sound_mode_behavior_desc">순환할 모드 선택</string>
-    <string name="feat_ambient_music_title">주변 음악 한눈에 보기</string>
-    <string name="feat_ambient_music_desc">AOD에 대한 미디어 살펴보기</string>
     <string name="feat_sound_haptics_title">사운드 및 햅틱</string>
     <string name="feat_sound_haptics_desc">볼륨 및 햅틱 기능</string>
     <string name="feat_security_privacy_title">보안 및 개인정보 보호</string>
