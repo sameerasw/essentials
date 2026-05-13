@@ -1119,7 +1119,7 @@
     <string name="location_reached_fsi_desc">到着時にデバイスを起動するのに必要です。許可するにはタップしてください。</string>
     <string name="location_reached_dist_m">%1$dm</string>
     <string name="location_reached_dist_km">%1$.1fkm</string>
-    <string name="location_reached_service_title">Travelling to %1$s</string>
+    <string name="location_reached_service_title">Travel Alarm active</string>
     <string name="location_reached_service_remaining">残り%1$s (%2$d%%)</string>
     <string name="location_reached_channel_name">お出かけの進行状況</string>
     <string name="location_reached_channel_desc">目的地までの距離をリアルタイムで表示</string>
