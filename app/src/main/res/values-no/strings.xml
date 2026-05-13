@@ -63,12 +63,12 @@
     <string name="like_song_settings_desc">Denne funksjonen krever varslingstilgang for å oppdage media som spilles for øyeblikket og utløse lignende handling. Aktiver den nedenfor.</string>
     <string name="like_song_toast_enabled">Vis toast-melding</string>
     <string name="like_song_aod_overlay_title">Vis overlegg på AOD</string>
-    <string name="feat_ambient_music_glance_title">Et blikk på ambient musikk</string>
-    <string name="feat_ambient_music_glance_desc">Se på media på AOD</string>
-    <string name="ambient_glance_docked_mode_title">Dokket modus</string>
-    <string name="ambient_glance_docked_mode_desc">Hold overlegget synlig på ubestemt tid mens musikk spilles på AOD</string>
-    <string name="ambient_glance_random_shapes_title">Random shapes</string>
-    <string name="ambient_glance_random_shapes_desc">Use various Material 3 shapes for the album art</string>
+    <string name="feat_essentials_on_display_title">Essentials On Display</string>
+    <string name="feat_essentials_on_display_desc">Glance at media and info on AOD</string>
+    <string name="essentials_on_display_docked_mode_title">Docked mode</string>
+    <string name="essentials_on_display_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
+    <string name="essentials_on_display_random_shapes_title">Random shapes</string>
+    <string name="essentials_on_display_random_shapes_desc">Use various Material 3 shapes for the album art</string>
     <string name="feat_notification_glance_title">Varslingsblikk</string>
     <string name="feat_notification_glance_desc">Hold AOD på mens varsler venter</string>
     <string name="notification_glance_same_as_lighting_title">Samme apper som varslingslys</string>
@@ -582,7 +582,7 @@
     <string name="perm_default_browser_title">Standard nettleser</string>
     <string name="perm_default_browser_desc">Nødvendig for å håndtere koblinger effektivt</string>
     <string name="perm_accessibility_desc_remap">Nødvendig for å avskjære maskinvareknapphendelser</string>
-    <string name="perm_accessibility_desc_ambient_music_glance">Nødvendig for å avskjære volumtasthendelser mens skjermen er av for å utløse Ambient Glance-overlegget.</string>
+    <string name="perm_accessibility_desc_essentials_on_display">Required to intercept volume key events while the screen is off to trigger the Essentials On Display overlay.</string>
     <string name="perm_accessibility_desc_night_light">Nødvendig for å overvåke forgrunnsapplikasjoner.</string>
     <string name="perm_write_secure_title">Skriv sikre innstillinger</string>
     <string name="perm_write_secure_desc_common">Kreves for statuslinjeikoner og skjermlåst sikkerhet</string>
@@ -706,7 +706,7 @@
     <string name="action_what_is_this">Hva er dette?</string>
     <string name="update_available_title">Oppdatering tilgjengelig</string>
     <string name="about_desc_your_android">Glance at your device\'s hardware and software specifications in detail. This information is fetched from GSMArena and system properties to provide a comprehensive overview of your Android device.</string>
-    <string name="about_desc_ambient_music_glance">Ambient Music Glance viser et Now Playing-overlegg på låseskjermen når musikk spilles av og avspillingen endres. \n\nHvis enheten din ikke støtter overlegg over AOD, kan du velge Ambience-skjermspareren lagt til i Android-innstillingene dine som et alternativ mens du lader.</string>
+    <string name="about_desc_essentials_on_display">Essentials On Display shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
     <string name="about_desc_notification_lighting">Varslingslys gir en vakker kantlyseffekt når du mottar varsler.\n\nDu kan tilpasse animasjonsstil, farger og oppførsel. Den fungerer selv når skjermen er av (OEM-avhengig) eller på toppen av din nåværende app. Velg apper, varslingsprioritet eller hvilken oppførsel den skal utløse fra gitte kontroller. Hvis din OEM ikke støtter overlegg over AOD, saksøk alternativet Ambient Display nedenfor.</string>
     <string name="about_desc_screen_off_widget">Slå enkelt av skjermen med et trykk på en gjennomsiktig widget som kan endres størrelse som ikke legger til ikoner eller noe rot på startskjermen.</string>
     <string name="about_desc_statusbar_icons">Ta full kontroll over statuslinjeikonene dine.\n\nSkjul spesifikke ikoner som WiFi, Bluetooth eller mobildata for å holde statuslinjen ren. Du kan også tilpasse klokkeformatet og batteriindikatoren med noen smarte kontroller. Dette er listen over tilgjengelige AOSP-kontroller, slik at enhetens operativsystem kanskje ikke respekterer alle kontrollene.</string>
@@ -1207,8 +1207,6 @@
     <string name="search_sound_mode_show_slider_desc">Vis volumglidebryteren i flisen</string>
     <string name="search_sound_mode_behavior_title">Syklusatferd</string>
     <string name="search_sound_mode_behavior_desc">Velg moduser å bla gjennom</string>
-    <string name="feat_ambient_music_title">Et blikk på ambient musikk</string>
-    <string name="feat_ambient_music_desc">Se på media på AOD</string>
     <string name="feat_sound_haptics_title">Lyd og haptikk</string>
     <string name="feat_sound_haptics_desc">Volum og haptiske funksjoner</string>
     <string name="feat_security_privacy_title">Sikkerhet og personvern</string>
