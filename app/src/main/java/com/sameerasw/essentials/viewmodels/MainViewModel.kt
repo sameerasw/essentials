@@ -263,6 +263,7 @@ class MainViewModel : ViewModel() {
     val ambientMusicGlanceClockWeight = mutableIntStateOf(400)
     val ambientMusicGlanceClockWidth = mutableIntStateOf(100)
     val ambientMusicGlanceClockRoundness = mutableIntStateOf(50)
+    val isAmbientMusicGlanceForceFillWhileChargingEnabled = mutableStateOf(false)
     val scaleAnimationsMode = mutableStateOf("default")
     val isTouchSensitivityEnabled = mutableStateOf(false)
     val isAutoRotateEnabled = mutableStateOf(false)
@@ -1241,6 +1242,7 @@ class MainViewModel : ViewModel() {
         ambientMusicGlanceClockWeight.intValue = settingsRepository.getAmbientMusicGlanceClockWeight()
         ambientMusicGlanceClockWidth.intValue = settingsRepository.getAmbientMusicGlanceClockWidth()
         ambientMusicGlanceClockRoundness.intValue = settingsRepository.getAmbientMusicGlanceClockRoundness()
+        isAmbientMusicGlanceForceFillWhileChargingEnabled.value = settingsRepository.isAmbientMusicGlanceForceFillWhileChargingEnabled()
         isCalendarSyncEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_CALENDAR_SYNC_ENABLED, false)
         isCalendarSyncPeriodicEnabled.value = settingsRepository.isCalendarSyncPeriodicEnabled()
@@ -1931,6 +1933,11 @@ class MainViewModel : ViewModel() {
     fun setAmbientMusicGlanceClockRoundness(roundness: Int) {
         ambientMusicGlanceClockRoundness.intValue = roundness
         settingsRepository.setAmbientMusicGlanceClockRoundness(roundness)
+    }
+
+    fun setAmbientMusicGlanceForceFillWhileChargingEnabled(enabled: Boolean) {
+        isAmbientMusicGlanceForceFillWhileChargingEnabled.value = enabled
+        settingsRepository.setAmbientMusicGlanceForceFillWhileChargingEnabled(enabled)
     }
 
     fun switchScaleAnimationsMode(mode: String) {

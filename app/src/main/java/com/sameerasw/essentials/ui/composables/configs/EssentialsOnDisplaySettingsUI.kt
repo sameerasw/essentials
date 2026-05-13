@@ -2,8 +2,10 @@ package com.sameerasw.essentials.ui.composables.configs
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -162,6 +164,18 @@ fun EssentialsOnDisplaySettingsUI(
                         increment = 5f,
                         valueFormatter = { it.toInt().toString() },
                         iconRes = R.drawable.rounded_rounded_corner_24
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                RoundedCardContainer {
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_battery_android_frame_plus_24,
+                        title = stringResource(R.string.essentials_on_display_force_fill_while_charging_title),
+                        description = stringResource(R.string.essentials_on_display_force_fill_while_charging_desc),
+                        isChecked = viewModel.isAmbientMusicGlanceForceFillWhileChargingEnabled.value,
+                        onCheckedChange = { viewModel.setAmbientMusicGlanceForceFillWhileChargingEnabled(it) }
                     )
                 }
             }

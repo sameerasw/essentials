@@ -901,14 +901,18 @@ class AmbientGlanceHandler(
     }
 
     private fun getAlbumArtMode(): String {
-        val prefs = service.getSharedPreferences(
-            com.sameerasw.essentials.data.repository.SettingsRepository.PREFS_NAME,
-            Context.MODE_PRIVATE
-        )
-        return prefs.getString(
-            com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_ALBUM_ART_MODE,
-            "default"
-        ) ?: "default"
+        val prefs = service.getSharedPreferences(com.sameerasw.essentials.data.repository.SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
+        val selectedMode = prefs.getString(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_ALBUM_ART_MODE, "default") ?: "default"
+
+        val forceFillWhileCharging = prefs.getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_FORCE_FILL_WHILE_CHARGING, false)
+        if (forceFillWhileCharging) {
+            val batteryStatus: Intent? = service.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+            val status: Int = batteryStatus?.getIntExtra(android.os.BatteryManager.EXTRA_STATUS, -1) ?: -1
+            val isCharging: Boolean = status == android.os.BatteryManager.BATTERY_STATUS_CHARGING || status == android.os.BatteryManager.BATTERY_STATUS_FULL
+            if (isCharging) return "fill"
+        }
+
+        return selectedMode
     }
 
     private fun isRandomShapesEnabled(): Boolean {

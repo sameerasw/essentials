@@ -70,6 +70,8 @@
     <string name="essentials_on_display_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
     <string name="essentials_on_display_album_art_title">Album art</string>
     <string name="essentials_on_display_clock_title">Clock</string>
+    <string name="essentials_on_display_force_fill_while_charging_title">Always use while charging</string>
+    <string name="essentials_on_display_force_fill_while_charging_desc">Force Fill mode when the device is plugged in regardless of the selected mode</string>
     <string name="label_size">Size</string>
     <string name="feat_notification_glance_title">Notification glance</string>
     <string name="feat_notification_glance_desc">Keep AOD on while notifications are pending</string>
