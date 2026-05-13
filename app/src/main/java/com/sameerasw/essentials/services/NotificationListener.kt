@@ -41,6 +41,8 @@ class NotificationListener : NotificationListenerService() {
     }
 
     private val activeGlanceNotifications = mutableSetOf<String>()
+    private val unreadNotifications = mutableMapOf<String, String>() // key -> package name
+    private var isScreenLocked = false
 
     private val likeActionReceiver = object : android.content.BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -48,6 +50,11 @@ class NotificationListener : NotificationListenerService() {
                 handleLikeSongAction()
             } else if (intent?.action == ACTION_REQUEST_AMBIENT_GLANCE) {
                 handleRequestAmbientGlance()
+            } else if (intent?.action == Intent.ACTION_SCREEN_OFF) {
+                isScreenLocked = true
+            } else if (intent?.action == Intent.ACTION_USER_PRESENT) {
+                isScreenLocked = false
+                unreadNotifications.clear()
             }
         }
     }
@@ -55,9 +62,14 @@ class NotificationListener : NotificationListenerService() {
     override fun onListenerConnected() {
         super.onListenerConnected()
         try {
+            val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
+            isScreenLocked = !pm.isInteractive
+            
             val filter = android.content.IntentFilter().apply {
                 addAction(ACTION_LIKE_CURRENT_SONG)
                 addAction(ACTION_REQUEST_AMBIENT_GLANCE)
+                addAction(Intent.ACTION_SCREEN_OFF)
+                addAction(Intent.ACTION_USER_PRESENT)
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 registerReceiver(likeActionReceiver, filter, RECEIVER_NOT_EXPORTED)
@@ -526,6 +538,7 @@ class NotificationListener : NotificationListenerService() {
                         putExtra("is_already_liked", isAlreadyLiked)
                         putExtra("is_docked_mode", isDockedMode)
                         putExtra("package_name", activeSession.packageName)
+                        putStringArrayListExtra("unread_packages", ArrayList(unreadNotifications.values.distinct().toList()))
                         setPackage(packageName)
                     }
                     sendBroadcast(intent)
@@ -618,6 +631,24 @@ class NotificationListener : NotificationListenerService() {
             return
         }
         handleRespectNotifications(sbn)
+        
+        val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
+        val isReallyLocked = isScreenLocked || !pm.isInteractive
+
+        if (isReallyLocked && !sbn.isOngoing && sbn.packageName != packageName) {
+            unreadNotifications[sbn.key] = sbn.packageName
+            // Trigger refresh if something is playing
+            try {
+                val mediaSessionManager = getSystemService(MEDIA_SESSION_SERVICE) as android.media.session.MediaSessionManager
+                val sessions = getMediaSessions(mediaSessionManager)
+                val activeSession = sessions.firstOrNull {
+                    it.playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING
+                }
+                if (activeSession != null) {
+                    triggerAmbientGlance(activeSession, "notification_update")
+                }
+            } catch (_: Exception) {}
+        }
 
         val prefs =
             applicationContext.getSharedPreferences("essentials_prefs", MODE_PRIVATE)
@@ -910,6 +941,20 @@ class NotificationListener : NotificationListenerService() {
     }
 
     override fun onNotificationRemoved(sbn: StatusBarNotification) {
+        unreadNotifications.remove(sbn.key)
+        
+        // Trigger refresh if something is playing
+        try {
+            val mediaSessionManager = getSystemService(MEDIA_SESSION_SERVICE) as android.media.session.MediaSessionManager
+            val sessions = getMediaSessions(mediaSessionManager)
+            val activeSession = sessions.firstOrNull {
+                it.playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING
+            }
+            if (activeSession != null) {
+                triggerAmbientGlance(activeSession, "notification_update")
+            }
+        } catch (_: Exception) {}
+
         lastCallVibrateTime.remove(sbn.key)
         if (sbn.packageName == "com.google.android.apps.maps") {
             MapsState.hasNavigationNotification = false

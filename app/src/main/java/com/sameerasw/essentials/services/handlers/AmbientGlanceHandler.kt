@@ -65,6 +65,7 @@ class AmbientGlanceHandler(
         }
     }
 
+    private var notificationIconsLayout: android.widget.LinearLayout? = null
     private var clockView: android.widget.TextClock? = null
     private var centerContainer: FrameLayout? = null
     private var clipContainer: FrameLayout? = null
@@ -200,6 +201,7 @@ class AmbientGlanceHandler(
             if (intent.hasExtra("is_already_liked")) {
                 isAlreadyLiked = intent.getBooleanExtra("is_already_liked", false)
             }
+            val unreadPackages = intent.getStringArrayListExtra("unread_packages") ?: ArrayList()
             isDockedMode = intent.getBooleanExtra("is_docked_mode", false)
             volumePercentage = intent.getIntExtra("volume_percentage", 0)
             volumeKey = intent.getIntExtra("volume_key_code", -1)
@@ -208,13 +210,14 @@ class AmbientGlanceHandler(
 
             if (overlayView != null) {
                 // If song changed while visible, refresh entire overlay or just content
-                if (eventType == EVENT_TRACK_CHANGE || metadataChanged) {
+                if (eventType == EVENT_TRACK_CHANGE || metadataChanged || eventType == "notification_update") {
                     // Reset to Music Mode
                     volumeIconView?.animate()?.alpha(0f)?.setDuration(200)?.start()
                     volumeStrokeView?.setColor(Color.GRAY)
                     handler.removeCallbacks(revertToMusicRunnable)
 
                     updateMetadata()
+                    updateNotificationIcons(unreadPackages)
 
                     // Restart progress
                     handler.removeCallbacks(progressUpdateRunnable)
@@ -268,6 +271,7 @@ class AmbientGlanceHandler(
             }
 
             showOverlay()
+            updateNotificationIcons(unreadPackages)
         }
     }
 
@@ -355,7 +359,7 @@ class AmbientGlanceHandler(
                 applyClockFontVariations(clock, isFill)
                 (clock.layoutParams as FrameLayout.LayoutParams).apply {
                     gravity = if (isFill) Gravity.CENTER else Gravity.TOP or Gravity.CENTER_HORIZONTAL
-                    topMargin = if (isFill) 0 else dpToPx(100f)
+                    topMargin = if (isFill) -dpToPx(40f) else dpToPx(100f)
                 }
                 clock.requestLayout()
                 clock.animate().alpha(0.8f).setDuration(250).start()
@@ -381,6 +385,24 @@ class AmbientGlanceHandler(
             clock.textSize = 24f 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 clock.fontVariationSettings = "'wght' 500, 'wdth' 100, 'ROND' 50"
+            }
+        }
+    }
+
+    private fun updateNotificationIcons(packages: List<String>) {
+        notificationIconsLayout?.let { layout ->
+            layout.removeAllViews()
+            packages.distinct().forEach { pkg ->
+                try {
+                    val icon = service.packageManager.getApplicationIcon(pkg)
+                    val imageView = ImageView(service).apply {
+                        layoutParams = android.widget.LinearLayout.LayoutParams(dpToPx(28f), dpToPx(28f))
+                        setImageDrawable(icon)
+                        alpha = 0.8f
+                    }
+                    layout.addView(imageView)
+                } catch (_: Exception) {
+                }
             }
         }
     }
@@ -554,7 +576,7 @@ class AmbientGlanceHandler(
                 FrameLayout.LayoutParams.WRAP_CONTENT,
                 if (isFill) Gravity.CENTER else Gravity.TOP or Gravity.CENTER_HORIZONTAL
             ).apply {
-                topMargin = if (isFill) 0 else dpToPx(100f)
+                topMargin = if (isFill) -dpToPx(40f) else dpToPx(100f)
             }
             typeface = googleSansFlex
             applyClockFontVariations(this, isFill)
@@ -766,6 +788,24 @@ class AmbientGlanceHandler(
         }
 
 
+        // 4. Notification Icons at bottom
+        notificationIconsLayout = android.widget.LinearLayout(context).apply {
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
+            ).apply {
+                bottomMargin = dpToPx(60f)
+            }
+            orientation = android.widget.LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER
+            dividerDrawable = android.graphics.drawable.GradientDrawable().apply {
+                setSize(dpToPx(12f), 0)
+            }
+            showDividers = android.widget.LinearLayout.SHOW_DIVIDER_MIDDLE
+        }
+        rootLayout.addView(notificationIconsLayout)
+
         overlayView = rootLayout
         overlayView?.alpha = 0f
 
@@ -958,6 +998,7 @@ class AmbientGlanceHandler(
             volumeStrokeView = null
             volumeIconView = null
             likeStatusView = null
+            notificationIconsLayout = null
             clockView = null
             centerContainer = null
             textContainer = null
