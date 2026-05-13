@@ -28,85 +28,111 @@ object BatteryRingDrawer {
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
 
+        val progressBitmap = drawProgressArc(batteryLevel, ringColor, hasStatusIcon, width, height)
+        val trackBitmap = drawTrackArc(batteryLevel, trackColor, hasStatusIcon, width, height)
+
+        canvas.drawBitmap(trackBitmap, 0f, 0f, null)
+        canvas.drawBitmap(progressBitmap, 0f, 0f, null)
+
+        return bitmap
+    }
+
+    fun drawProgressArc(
+        batteryLevel: Int,
+        @ColorInt color: Int,
+        hasStatusIcon: Boolean,
+        width: Int,
+        height: Int
+    ): Bitmap {
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        val clampedLevel = batteryLevel.coerceIn(0, 100)
+        if (clampedLevel <= 0) return bitmap
+
         val strokeWidth = width * 0.11f
         val padding = strokeWidth + (width * 0.05f)
-        val rect = RectF(
-            padding,
-            padding,
-            width - padding,
-            height - padding
-        )
+        val rect = RectF(padding, padding, width - padding, height - padding)
         val radius = rect.width() / 2f
-
-        // Config
-        val trackStrokeWidth = strokeWidth * 0.5f
 
         val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             style = Paint.Style.STROKE
             strokeCap = Paint.Cap.ROUND
+            this.strokeWidth = strokeWidth
+            this.color = color
         }
 
-        // Dynamic Gap: 60 degrees if status icon present, otherwise 0 (full circle)
         val topGapDegrees = if (hasStatusIcon) 60f else 0f
-
         val capAngleDegrees = ((strokeWidth / 2f) / radius) * (180f / PI.toFloat())
-        val trackCapAngleDegrees = ((trackStrokeWidth / 2f) / radius) * (180f / PI.toFloat())
-
-        // Start drawing from: -90 (top) + half gap
         val startAngle = -90f + (topGapDegrees / 2)
         val totalAvailableSweep = 360f - topGapDegrees
-
-        val clampedLevel = batteryLevel.coerceIn(0, 100)
         val progressSweepRaw = (clampedLevel / 100f) * totalAvailableSweep
-
-        // Visual Gap between segments
         val segmentGapDegrees = 8f
 
-        // --- Draw Progress Arc ---
-        if (clampedLevel > 0) {
-            paint.strokeWidth = strokeWidth
-            paint.color = ringColor
-
-            val visualStart = startAngle
-            val visualEnd = if (clampedLevel >= 100) {
-                startAngle + totalAvailableSweep
-            } else {
-                (startAngle + progressSweepRaw - (segmentGapDegrees / 2)).coerceAtLeast(startAngle)
-            }
-
-            val visualSpan = visualEnd - visualStart
-
-            if (visualSpan > (capAngleDegrees * 2)) {
-                val drawStart = visualStart + capAngleDegrees
-                val drawSweep = (visualEnd - capAngleDegrees) - drawStart
-                if (drawSweep > 0) {
-                    canvas.drawArc(rect, drawStart, drawSweep, false, paint)
-                }
-            } else if (visualSpan > 0) {
-                val center = visualStart + visualSpan / 2
-                paint.style = Paint.Style.FILL
-                canvas.drawArc(rect, center, 0.1f, false, paint)
-            }
+        val visualStart = startAngle
+        val visualEnd = if (clampedLevel >= 100) {
+            startAngle + totalAvailableSweep
+        } else {
+            (startAngle + progressSweepRaw - (segmentGapDegrees / 2)).coerceAtLeast(startAngle)
         }
 
-        // --- Draw Track Arc (Filler) ---
-        if (clampedLevel < 100) {
-            paint.strokeWidth = trackStrokeWidth
-            paint.color = trackColor
-            paint.style = Paint.Style.STROKE // Reset style if changed above
+        val visualSpan = visualEnd - visualStart
+        if (visualSpan > (capAngleDegrees * 2)) {
+            val drawStart = visualStart + capAngleDegrees
+            val drawSweep = (visualEnd - capAngleDegrees) - drawStart
+            if (drawSweep > 0) {
+                canvas.drawArc(rect, drawStart, drawSweep, false, paint)
+            }
+        } else if (visualSpan > 0) {
+            val center = visualStart + visualSpan / 2
+            paint.style = Paint.Style.FILL
+            canvas.drawArc(rect, center, 0.1f, false, paint)
+        }
 
-            val visualStart = (startAngle + progressSweepRaw + (segmentGapDegrees / 2))
-                .coerceAtMost(startAngle + totalAvailableSweep)
+        return bitmap
+    }
 
-            val visualEnd = startAngle + totalAvailableSweep
+    fun drawTrackArc(
+        batteryLevel: Int,
+        @ColorInt color: Int,
+        hasStatusIcon: Boolean,
+        width: Int,
+        height: Int
+    ): Bitmap {
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        val clampedLevel = batteryLevel.coerceIn(0, 100)
+        if (clampedLevel >= 100) return bitmap
 
-            val visualSpan = visualEnd - visualStart
-            if (visualSpan > (trackCapAngleDegrees * 2)) {
-                val drawStart = visualStart + trackCapAngleDegrees
-                val drawSweep = (visualEnd - trackCapAngleDegrees) - drawStart
-                if (drawSweep > 0) {
-                    canvas.drawArc(rect, drawStart, drawSweep, false, paint)
-                }
+        val strokeWidth = width * 0.11f
+        val trackStrokeWidth = strokeWidth * 0.5f
+        val padding = strokeWidth + (width * 0.05f)
+        val rect = RectF(padding, padding, width - padding, height - padding)
+        val radius = rect.width() / 2f
+
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            style = Paint.Style.STROKE
+            strokeCap = Paint.Cap.ROUND
+            this.strokeWidth = trackStrokeWidth
+            this.color = color
+        }
+
+        val topGapDegrees = if (hasStatusIcon) 60f else 0f
+        val trackCapAngleDegrees = ((trackStrokeWidth / 2f) / radius) * (180f / PI.toFloat())
+        val startAngle = -90f + (topGapDegrees / 2)
+        val totalAvailableSweep = 360f - topGapDegrees
+        val progressSweepRaw = (clampedLevel / 100f) * totalAvailableSweep
+        val segmentGapDegrees = 8f
+
+        val visualStart = (startAngle + progressSweepRaw + (segmentGapDegrees / 2))
+            .coerceAtMost(startAngle + totalAvailableSweep)
+        val visualEnd = startAngle + totalAvailableSweep
+
+        val visualSpan = visualEnd - visualStart
+        if (visualSpan > (trackCapAngleDegrees * 2)) {
+            val drawStart = visualStart + trackCapAngleDegrees
+            val drawSweep = (visualEnd - trackCapAngleDegrees) - drawStart
+            if (drawSweep > 0) {
+                canvas.drawArc(rect, drawStart, drawSweep, false, paint)
             }
         }
 

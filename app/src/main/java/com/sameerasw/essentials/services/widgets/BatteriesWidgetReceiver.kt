@@ -25,15 +25,6 @@ class BatteriesWidgetReceiver : GlanceAppWidgetReceiver() {
 
                     val glanceIds = glanceAppWidgetManager.getGlanceIds(BatteriesWidget::class.java)
                     glanceIds.forEach { glanceId ->
-                        // Update widget state with a timestamp to force re-render
-                        androidx.glance.appwidget.state.updateAppWidgetState(
-                            context,
-                            glanceId
-                        ) { prefs ->
-                            val THEME_UPDATE_KEY =
-                                androidx.datastore.preferences.core.longPreferencesKey("theme_update_time")
-                            prefs[THEME_UPDATE_KEY] = System.currentTimeMillis()
-                        }
                         glanceAppWidget.update(context, glanceId)
                     }
                 } catch (e: Exception) {
