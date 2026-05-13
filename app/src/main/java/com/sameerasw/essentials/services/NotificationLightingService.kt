@@ -120,27 +120,25 @@ class NotificationLightingService : Service() {
 
         // Get corner radius from intent, default to OverlayHelper.CORNER_RADIUS_DP
         cornerRadiusDp =
-            intent?.getFloatExtra("corner_radius_dp", OverlayHelper.CORNER_RADIUS_DP.toFloat())
-                ?: OverlayHelper.CORNER_RADIUS_DP.toFloat()
+            intent.getFloatExtra("corner_radius_dp", OverlayHelper.CORNER_RADIUS_DP.toFloat())
         strokeThicknessDp =
-            intent?.getFloatExtra("stroke_thickness_dp", OverlayHelper.STROKE_DP.toFloat())
-                ?: OverlayHelper.STROKE_DP.toFloat()
-        isPreview = intent?.getBooleanExtra("is_preview", false) ?: false
-        val colorModeName = intent?.getStringExtra("color_mode")
+            intent.getFloatExtra("stroke_thickness_dp", OverlayHelper.STROKE_DP.toFloat())
+        isPreview = intent.getBooleanExtra("is_preview", false)
+        val colorModeName = intent.getStringExtra("color_mode")
         colorMode = NotificationLightingColorMode.valueOf(
             colorModeName ?: NotificationLightingColorMode.SYSTEM.name
         )
-        customColor = intent?.getIntExtra("custom_color", 0) ?: 0
-        resolvedColor = if (intent?.hasExtra("resolved_color") == true) intent.getIntExtra(
+        customColor = intent.getIntExtra("custom_color", 0)
+        resolvedColor = if (intent.hasExtra("resolved_color") == true) intent.getIntExtra(
             "resolved_color",
             0
         ) else null
-        pulseCount = intent?.getIntExtra("pulse_count", 1) ?: 1
-        pulseDuration = intent?.getLongExtra("pulse_duration", 3000L) ?: 3000L
-        val styleName = intent?.getStringExtra("style")
+        pulseCount = intent.getIntExtra("pulse_count", 1)
+        pulseDuration = intent.getLongExtra("pulse_duration", 3000L)
+        val styleName = intent.getStringExtra("style")
         edgeLightingStyle =
             if (styleName != null) NotificationLightingStyle.valueOf(styleName) else NotificationLightingStyle.STROKE
-        val glowSidesArray = intent?.getStringArrayExtra("glow_sides")
+        val glowSidesArray = intent.getStringArrayExtra("glow_sides")
         glowSides = glowSidesArray?.mapNotNull {
             try {
                 NotificationLightingSide.valueOf(it)
@@ -149,16 +147,16 @@ class NotificationLightingService : Service() {
             }
         }?.toSet()
             ?: setOf(NotificationLightingSide.LEFT, NotificationLightingSide.RIGHT)
-        indicatorX = intent?.getFloatExtra("indicator_x", 50f) ?: 50f
-        indicatorY = intent?.getFloatExtra("indicator_y", 2f) ?: 2f
-        indicatorScale = intent?.getFloatExtra("indicator_scale", 1.0f) ?: 1.0f
-        isAmbientDisplay = intent?.getBooleanExtra("is_ambient_display", false) ?: false
-        sweepPosition = intent?.getStringExtra("sweep_position") ?: "CENTER"
-        sweepThickness = intent?.getFloatExtra("sweep_thickness", 8f) ?: 8f
-        randomShapes = intent?.getBooleanExtra("random_shapes", false) ?: false
-        systemLightingMode = intent?.getIntExtra("system_lighting_mode", 0) ?: 0
-        val ignoreScreenState = intent?.getBooleanExtra("ignore_screen_state", false) ?: false
-        val removePreview = intent?.getBooleanExtra("remove_preview", false) ?: false
+        indicatorX = intent.getFloatExtra("indicator_x", 50f)
+        indicatorY = intent.getFloatExtra("indicator_y", 2f)
+        indicatorScale = intent.getFloatExtra("indicator_scale", 1.0f)
+        isAmbientDisplay = intent.getBooleanExtra("is_ambient_display", false)
+        sweepPosition = intent.getStringExtra("sweep_position") ?: "CENTER"
+        sweepThickness = intent.getFloatExtra("sweep_thickness", 8f)
+        randomShapes = intent.getBooleanExtra("random_shapes", false)
+        systemLightingMode = intent.getIntExtra("system_lighting_mode", 0)
+        val ignoreScreenState = intent.getBooleanExtra("ignore_screen_state", false)
+        val removePreview = intent.getBooleanExtra("remove_preview", false)
 
         if (removePreview) {
             // If accessibility service is enabled, delegate to it
@@ -183,7 +181,7 @@ class NotificationLightingService : Service() {
         }
 
 
-        val isForegroundStart = intent?.getBooleanExtra("is_foreground_start", false) ?: false
+        val isForegroundStart = intent.getBooleanExtra("is_foreground_start", false)
         if (isForegroundStart && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             try {
                 startForeground(NOTIF_ID, buildNotification())
@@ -202,8 +200,8 @@ class NotificationLightingService : Service() {
                         putExtra("stroke_thickness_dp", strokeThicknessDp)
                         putExtra("is_preview", isPreview)
                         putExtra("ignore_screen_state", ignoreScreenState)
-                        putExtra("color_mode", intent?.getStringExtra("color_mode"))
-                        putExtra("custom_color", intent?.getIntExtra("custom_color", 0) ?: 0)
+                        putExtra("color_mode", intent.getStringExtra("color_mode"))
+                        putExtra("custom_color", intent.getIntExtra("custom_color", 0))
                         putExtra("pulse_count", pulseCount)
                         putExtra("pulse_duration", pulseDuration)
                         putExtra("style", edgeLightingStyle.name)
@@ -213,16 +211,16 @@ class NotificationLightingService : Service() {
                         putExtra("indicator_scale", indicatorScale)
                         putExtra("sweep_position", sweepPosition)
                         putExtra("sweep_thickness", sweepThickness)
-                        if (intent?.hasExtra("resolved_color") == true) {
+                        if (intent.hasExtra("resolved_color")) {
                             putExtra("resolved_color", intent.getIntExtra("resolved_color", 0))
                         }
                         putExtra(
                             "is_ambient_display",
-                            intent?.getBooleanExtra("is_ambient_display", false) ?: false
+                            intent.getBooleanExtra("is_ambient_display", false)
                         )
                         putExtra(
                             "is_ambient_show_lock_screen",
-                            intent?.getBooleanExtra("is_ambient_show_lock_screen", false) ?: false
+                            intent.getBooleanExtra("is_ambient_show_lock_screen", false)
                         )
                         putExtra("random_shapes", randomShapes)
                         putExtra("system_lighting_mode", systemLightingMode)
@@ -379,9 +377,7 @@ class NotificationLightingService : Service() {
                             // When all overlays are removed, stop foreground
                             if (overlayViews.isEmpty()) {
                                 try {
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                        stopForeground(true)
-                                    }
+                                    stopForeground(true)
                                 } catch (_: Exception) {
                                 }
                             }
@@ -429,9 +425,7 @@ class NotificationLightingService : Service() {
                     // When all overlays are removed, stop foreground
                     if (overlayViews.isEmpty()) {
                         try {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                stopForeground(true)
-                            }
+                            stopForeground(true)
                         } catch (_: Exception) {
                         }
                     }
@@ -441,9 +435,7 @@ class NotificationLightingService : Service() {
 
         if (immediate && overlayViews.isEmpty()) {
             try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    stopForeground(true)
-                }
+                stopForeground(true)
             } catch (_: Exception) {
             }
         }
@@ -475,9 +467,7 @@ class NotificationLightingService : Service() {
         com.sameerasw.essentials.utils.ShellUtils.runCommand(this, command)
 
         // No need to keep service running for system ripples as they are fire-and-forget
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            stopForeground(true)
-        }
+        stopForeground(true)
         stopSelf()
     }
 

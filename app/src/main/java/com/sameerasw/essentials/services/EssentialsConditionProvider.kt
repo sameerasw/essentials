@@ -31,6 +31,7 @@ class EssentialsConditionProvider : ConditionProviderService() {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onConnected() {
 
         Log.d(TAG, "onConnected")
@@ -43,11 +44,13 @@ class EssentialsConditionProvider : ConditionProviderService() {
         instance = null
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onSubscribe(conditionId: Uri?) {
         Log.d(TAG, "onSubscribe: $conditionId")
         notifyChange(false)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onUnsubscribe(conditionId: Uri?) {
         Log.d(TAG, "onUnsubscribe: $conditionId")
     }

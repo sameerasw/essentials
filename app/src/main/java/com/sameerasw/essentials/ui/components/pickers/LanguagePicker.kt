@@ -14,7 +14,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuAnchorType
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -74,7 +74,7 @@ fun LanguagePicker(
                     readOnly = true,
                     modifier = Modifier
                         .widthIn(max = 200.dp) // Limit width to prevent overflow
-                        .menuAnchor(MenuAnchorType.PrimaryEditable, true),
+                        .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryEditable, true),
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                     colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
                     shape = RoundedCornerShape(12.dp),

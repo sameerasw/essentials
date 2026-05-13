@@ -440,7 +440,7 @@ class AmbientGlanceHandler(
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.MATCH_PARENT
             )
-            setBackgroundColor(0x40000000.toInt())
+            setBackgroundColor(0x40000000)
         }
 
         clipContainer?.addView(imageView)

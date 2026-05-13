@@ -373,7 +373,7 @@ class AppFlowHandler(
         val wasShutUpConfig = shutUpConfigs.find { it.packageName == oldPackage && it.isEnabled }
 
         // Check if it was already frozen to avoid duplicate triggers (e.g. on screen off)
-        val isAlreadyFrozen = oldPackage?.let { FreezeManager.isAppFrozen(context, it) } ?: false
+        val isAlreadyFrozen = oldPackage.let { FreezeManager.isAppFrozen(context, it) }
 
         // We consider the new app a Shut-Up app if it's in the list OR if it's the shortcut activity
         val isNewAppShutUp = shutUpConfigs.any { it.packageName == newPackage && it.isEnabled } ||

@@ -194,7 +194,7 @@ fun PrivateDnsSettingsOverlay(onDismiss: () -> Unit) {
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             OutlinedButton(
                                 onClick = {
-                                    (viewModel as? com.sameerasw.essentials.viewmodels.MainViewModel)?.resetDnsPresets()
+                                    viewModel.resetDnsPresets()
                                     HapticUtil.performUIHaptic(view)
                                 },
                                 modifier = Modifier.height(32.dp),
@@ -239,7 +239,7 @@ fun PrivateDnsSettingsOverlay(onDismiss: () -> Unit) {
                         AddDnsPresetDialog(
                             onDismiss = { showAddDialog = false },
                             onConfirm = { name, host ->
-                                (viewModel as? com.sameerasw.essentials.viewmodels.MainViewModel)?.addDnsPreset(
+                                viewModel.addDnsPreset(
                                     name,
                                     host
                                 )
@@ -251,8 +251,7 @@ fun PrivateDnsSettingsOverlay(onDismiss: () -> Unit) {
 
                     RoundedCardContainer {
                         val presets =
-                            (viewModel as? com.sameerasw.essentials.viewmodels.MainViewModel)?.dnsPresets
-                                ?: emptyList<DnsPreset>()
+                            viewModel.dnsPresets
 
                         presets.forEach { preset ->
                             DnsPresetItem(
@@ -264,7 +263,7 @@ fun PrivateDnsSettingsOverlay(onDismiss: () -> Unit) {
                                     HapticUtil.performUIHaptic(view)
                                 },
                                 onDelete = {
-                                    (viewModel as? com.sameerasw.essentials.viewmodels.MainViewModel)?.removeDnsPreset(
+                                    viewModel.removeDnsPreset(
                                         preset
                                     )
                                     HapticUtil.performUIHaptic(view)

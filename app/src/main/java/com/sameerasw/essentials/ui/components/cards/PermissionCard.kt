@@ -56,7 +56,7 @@ fun PermissionCard(
     }
 
     val resolvedSecondaryLabel = when (secondaryActionLabel) {
-        is Int -> stringResource(id = secondaryActionLabel as Int)
+        is Int -> stringResource(id = secondaryActionLabel)
         is String -> secondaryActionLabel
         else -> null
     }

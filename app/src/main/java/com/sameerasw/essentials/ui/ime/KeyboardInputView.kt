@@ -579,7 +579,7 @@ fun KeyboardInputView(
                                 }
 
                                 // Slide selection - relative movement from start
-                                val deltaX = change.position.x - (baselineX ?: change.position.x)
+                                val deltaX = change.position.x - baselineX
                                 val stepWidthPx = with(density) { 40.dp.toPx() }
 
                                 val index = ((deltaX / stepWidthPx) + initialAccentIndex).toInt()
