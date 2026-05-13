@@ -131,6 +131,31 @@ fun EssentialsOnDisplaySettingsUI(
         )
 
         androidx.compose.animation.AnimatedVisibility(
+            visible = viewModel.ambientMusicGlanceAlbumArtMode.value == "default",
+            enter = androidx.compose.animation.expandVertically() + androidx.compose.animation.fadeIn(),
+            exit = androidx.compose.animation.shrinkVertically() + androidx.compose.animation.fadeOut()
+        ) {
+            Column {
+                Text(
+                    text = stringResource(R.string.label_customization),
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                RoundedCardContainer {
+                    IconToggleItem(
+                        iconRes = R.drawable.outline_interests_24,
+                        title = stringResource(R.string.essentials_on_display_random_shapes_title),
+                        description = stringResource(R.string.essentials_on_display_random_shapes_desc),
+                        isChecked = viewModel.isAmbientMusicGlanceRandomShapesEnabled.value,
+                        onCheckedChange = { viewModel.setAmbientMusicGlanceRandomShapesEnabled(it) }
+                    )
+                }
+            }
+        }
+
+        androidx.compose.animation.AnimatedVisibility(
             visible = viewModel.ambientMusicGlanceAlbumArtMode.value == "fill",
             enter = androidx.compose.animation.expandVertically() + androidx.compose.animation.fadeIn(),
             exit = androidx.compose.animation.shrinkVertically() + androidx.compose.animation.fadeOut()

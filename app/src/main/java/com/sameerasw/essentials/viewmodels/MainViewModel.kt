@@ -257,7 +257,7 @@ class MainViewModel : ViewModel() {
     val batteryWidgetMaxDevices = mutableIntStateOf(8)
     val isBatteryWidgetBackgroundEnabled = mutableStateOf(true)
     val isAmbientMusicGlanceDockedModeEnabled = mutableStateOf(false)
-    val isAmbientMusicGlanceRandomShapesEnabled = mutableStateOf(true)
+    val isAmbientMusicGlanceRandomShapesEnabled = mutableStateOf(false)
     val ambientMusicGlanceAlbumArtMode = mutableStateOf("default")
     val ambientMusicGlanceClockSize = mutableIntStateOf(80)
     val ambientMusicGlanceClockWeight = mutableIntStateOf(400)
@@ -1236,7 +1236,7 @@ class MainViewModel : ViewModel() {
         )
         isAmbientMusicGlanceRandomShapesEnabled.value = settingsRepository.getBoolean(
             SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_RANDOM_SHAPES,
-            true
+            false
         )
         ambientMusicGlanceAlbumArtMode.value = settingsRepository.getAmbientMusicGlanceAlbumArtMode()
         ambientMusicGlanceClockSize.intValue = settingsRepository.getAmbientMusicGlanceClockSize()

@@ -30,13 +30,12 @@ fun AlbumArtModePicker(
     onModeSelected: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val modes = listOf("default", "random", "fill")
+    val modes = listOf("default", "fill")
     val icons = listOf(
         R.drawable.rounded_award_star_24,
-        R.drawable.outline_interests_24,
         R.drawable.rounded_fullscreen_portrait_24
     )
-    val labels = listOf("Default", "Random", "Fill")
+    val labels = listOf("Default", "Fill")
 
     val view = LocalView.current
 
