@@ -102,7 +102,11 @@ fun EssentialsOnDisplaySettingsUI(
                 modifier = Modifier.highlight(highlightSetting == "essentials_on_display_docked_mode")
             )
 
-            androidx.compose.animation.AnimatedVisibility(visible = viewModel.isAmbientMusicGlanceDockedModeEnabled.value) {
+            androidx.compose.animation.AnimatedVisibility(
+                visible = viewModel.isAmbientMusicGlanceDockedModeEnabled.value,
+                enter = androidx.compose.animation.expandVertically() + androidx.compose.animation.fadeIn(),
+                exit = androidx.compose.animation.shrinkVertically() + androidx.compose.animation.fadeOut()
+            ) {
                 IconToggleItem(
                     iconRes = R.drawable.rounded_notification_sound_24,
                     title = stringResource(R.string.essentials_on_display_respect_notifications_title),
@@ -126,7 +130,11 @@ fun EssentialsOnDisplaySettingsUI(
             modifier = Modifier.highlight(highlightSetting == "essentials_on_display_album_art")
         )
 
-        androidx.compose.animation.AnimatedVisibility(visible = viewModel.ambientMusicGlanceAlbumArtMode.value == "fill") {
+        androidx.compose.animation.AnimatedVisibility(
+            visible = viewModel.ambientMusicGlanceAlbumArtMode.value == "fill",
+            enter = androidx.compose.animation.expandVertically() + androidx.compose.animation.fadeIn(),
+            exit = androidx.compose.animation.shrinkVertically() + androidx.compose.animation.fadeOut()
+        ) {
             Column {
                 Text(
                     text = stringResource(R.string.essentials_on_display_clock_title),
