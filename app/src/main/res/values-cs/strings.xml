@@ -63,12 +63,12 @@
     <string name="like_song_settings_desc">Tato funkce vyžaduje přístup k oznámení, aby bylo možné zjistit aktuálně přehrávané médium a spustit podobnou akci. Aktivujte jej prosím níže.</string>
     <string name="like_song_toast_enabled">Zobrazit zprávu toastu</string>
     <string name="like_song_aod_overlay_title">Zobrazit překryvnou vrstvu na AOD</string>
-    <string name="feat_ambient_music_glance_title">Pohled na ambientní hudbu</string>
-    <string name="feat_ambient_music_glance_desc">Podívejte se na média na AOD</string>
-    <string name="ambient_glance_docked_mode_title">Dokovaný režim</string>
-    <string name="ambient_glance_docked_mode_desc">Při přehrávání hudby na AOD ponechejte překryvnou vrstvu viditelnou po neomezenou dobu</string>
-    <string name="ambient_glance_random_shapes_title">Random shapes</string>
-    <string name="ambient_glance_random_shapes_desc">Use various Material 3 shapes for the album art</string>
+    <string name="feat_essentials_on_display_title">Essentials On Display</string>
+    <string name="feat_essentials_on_display_desc">Glance at media and info on AOD</string>
+    <string name="essentials_on_display_docked_mode_title">Docked mode</string>
+    <string name="essentials_on_display_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
+    <string name="essentials_on_display_random_shapes_title">Random shapes</string>
+    <string name="essentials_on_display_random_shapes_desc">Use various Material 3 shapes for the album art</string>
     <string name="feat_notification_glance_title">Pohled na oznámení</string>
     <string name="feat_notification_glance_desc">Ponechejte AOD zapnuté, zatímco čekají na oznámení</string>
     <string name="notification_glance_same_as_lighting_title">Stejné aplikace jako osvětlení oznámení</string>
@@ -582,7 +582,7 @@
     <string name="perm_default_browser_title">Výchozí prohlížeč</string>
     <string name="perm_default_browser_desc">Požadováno pro efektivní zpracování odkazů</string>
     <string name="perm_accessibility_desc_remap">Vyžadováno k zachycení událostí hardwarových tlačítek</string>
-    <string name="perm_accessibility_desc_ambient_music_glance">Vyžaduje se k zachycení událostí tlačítek hlasitosti, když je obrazovka vypnutá, aby se spustilo překrytí Ambient Glance.</string>
+    <string name="perm_accessibility_desc_essentials_on_display">Required to intercept volume key events while the screen is off to trigger the Essentials On Display overlay.</string>
     <string name="perm_accessibility_desc_night_light">Potřebné pro sledování aplikací v popředí.</string>
     <string name="perm_write_secure_title">Zapište nastavení zabezpečení</string>
     <string name="perm_write_secure_desc_common">Vyžadováno pro ikony stavového řádku a zabezpečení uzamčené obrazovky</string>
@@ -706,7 +706,7 @@
     <string name="action_what_is_this">co to je?</string>
     <string name="update_available_title">Aktualizace k dispozici</string>
     <string name="about_desc_your_android">Glance at your device\'s hardware and software specifications in detail. This information is fetched from GSMArena and system properties to provide a comprehensive overview of your Android device.</string>
-    <string name="about_desc_ambient_music_glance">Ambient Music Glance zobrazuje na obrazovce uzamčení překryvnou vrstvu Právě se přehrává, když se přehrává hudba a přehrávání se mění. \n\nPokud vaše zařízení nepodporuje překryvy přes AOD, můžete se rozhodnout pro spořič obrazovky Ambience přidaný do nastavení Androidu jako alternativu během nabíjení.</string>
+    <string name="about_desc_essentials_on_display">Essentials On Display shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
     <string name="about_desc_notification_lighting">Osvětlení oznámení přidává krásný efekt okrajového osvětlení, když obdržíte oznámení.\n\n Styl animace, barvy a chování si můžete přizpůsobit. Funguje to, i když je obrazovka vypnutá (závisí na OEM) nebo na vaší aktuální aplikaci. Vyberte aplikace, prioritu oznámení nebo jaké chování by se mělo spouštět z daných ovládacích prvků. Pokud váš OEM nepodporuje překryvy nad AOD, zažalujte možnost Ambient display níže.</string>
     <string name="about_desc_screen_off_widget">Obrazovku snadno vypněte klepnutím na průhledný widget s měnitelnou velikostí, který na vaši domovskou obrazovku nepřidává ikony ani žádný nepořádek.</string>
     <string name="about_desc_statusbar_icons">Převezměte plnou kontrolu nad ikonami stavového řádku.\n\nSkryjte konkrétní ikony, jako je WiFi, Bluetooth nebo mobilní data, aby byl stavový řádek čistý. Pomocí některých chytrých ovládacích prvků si také můžete přizpůsobit formát hodin a indikátor baterie. Toto je seznam dostupných ovládacích prvků AOSP, takže operační systém vašeho zařízení nemusí respektovat všechny ovládací prvky.</string>
@@ -1207,8 +1207,6 @@
     <string name="search_sound_mode_show_slider_desc">Zobrazit posuvník hlasitosti v dlaždici</string>
     <string name="search_sound_mode_behavior_title">Cyklické chování</string>
     <string name="search_sound_mode_behavior_desc">Vyberte režimy, které chcete procházet</string>
-    <string name="feat_ambient_music_title">Pohled na ambientní hudbu</string>
-    <string name="feat_ambient_music_desc">Podívejte se na média na AOD</string>
     <string name="feat_sound_haptics_title">Zvuk a haptika</string>
     <string name="feat_sound_haptics_desc">Objem a haptické vlastnosti</string>
     <string name="feat_security_privacy_title">Zabezpečení a soukromí</string>
