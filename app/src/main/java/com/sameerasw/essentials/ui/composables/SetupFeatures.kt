@@ -80,7 +80,6 @@ import kotlinx.coroutines.launch
 
 private const val FEATURE_MAPS_POWER_SAVING = R.string.feat_maps_power_saving_title
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SetupFeatures(
     viewModel: MainViewModel,

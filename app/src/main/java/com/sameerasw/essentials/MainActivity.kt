@@ -115,7 +115,6 @@ import com.sameerasw.essentials.viewmodels.LocationReachedViewModel
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 class MainActivity : AppCompatActivity() {
     val viewModel: MainViewModel by viewModels()
     val updatesViewModel: AppUpdatesViewModel by viewModels()
@@ -1042,7 +1041,6 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun AppsActionButtons(
     view: android.view.View,
