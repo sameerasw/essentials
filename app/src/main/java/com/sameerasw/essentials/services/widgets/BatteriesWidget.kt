@@ -4,15 +4,18 @@ import android.content.Context
 import android.os.BatteryManager
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.times
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.toColorInt
+import androidx.glance.ColorFilter
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.Image
 import androidx.glance.ImageProvider
 import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.provideContent
 import androidx.glance.background
 import androidx.glance.layout.Alignment
@@ -25,6 +28,7 @@ import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.height
 import androidx.glance.layout.padding
+import androidx.glance.layout.size
 import androidx.glance.layout.width
 import com.sameerasw.essentials.R
 
@@ -95,24 +99,28 @@ class BatteriesWidget : GlanceAppWidget() {
                 val isAndroidCharging =
                     (batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_STATUS) == BatteryManager.BATTERY_STATUS_CHARGING)
 
-                val androidFinalStatusIcon = if (isAndroidCharging) R.drawable.rounded_flash_on_24
-                else if (androidLevel <= 15) R.drawable.rounded_battery_android_frame_alert_24
-                else null
+                val androidStatusIcon = when {
+                    isAndroidCharging -> R.drawable.rounded_flash_on_24
+                    androidLevel <= 15 -> R.drawable.rounded_battery_android_frame_alert_24
+                    else -> null
+                }
 
                 batteryItems.add(
                     BatteryItemData(
                         level = androidLevel,
                         iconRes = R.drawable.rounded_mobile_24,
                         name = "Android",
-                        statusIconRes = androidFinalStatusIcon
+                        statusIconRes = androidStatusIcon
                     )
                 )
 
                 // Mac Item
                 if (showMac) {
-                    val macStatusIcon = if (macIsCharging) R.drawable.rounded_flash_on_24
-                    else if (macLevel <= 15) R.drawable.rounded_battery_android_frame_alert_24
-                    else null
+                    val macStatusIcon = when {
+                        macIsCharging -> R.drawable.rounded_flash_on_24
+                        macLevel <= 15 -> R.drawable.rounded_battery_android_frame_alert_24
+                        else -> null
+                    }
                     batteryItems.add(
                         BatteryItemData(
                             level = macLevel,
@@ -126,8 +134,12 @@ class BatteriesWidget : GlanceAppWidget() {
                 // Bluetooth Items
                 if (hasBluetooth) {
                     try {
+                        val gson = com.google.gson.Gson()
                         val devices: List<com.sameerasw.essentials.utils.BluetoothBatteryUtils.BluetoothDeviceBattery> =
-                            com.google.gson.Gson().fromJson(bluetoothJson, Array<com.sameerasw.essentials.utils.BluetoothBatteryUtils.BluetoothDeviceBattery>::class.java).toList()
+                            gson.fromJson(
+                                bluetoothJson,
+                                Array<com.sameerasw.essentials.utils.BluetoothBatteryUtils.BluetoothDeviceBattery>::class.java
+                            ).toList()
 
                         devices.forEach { device ->
                             val iconRes = when {
@@ -135,17 +147,11 @@ class BatteriesWidget : GlanceAppWidget() {
                                 device.name.contains("bud", true) ||
                                         device.name.contains("pod", true) ||
                                         device.name.contains("momentum", true) ||
-                                        device.name.contains(
-                                            "head",
-                                            true
-                                        ) -> R.drawable.rounded_headphones_24
-
+                                        device.name.contains("head", true) -> R.drawable.rounded_headphones_24
                                 else -> R.drawable.rounded_bluetooth_24
                             }
 
-                            // Bluetooth doesn't report charging usually, so just Low Battery check
-                            val statusIcon =
-                                if (device.level <= 15) R.drawable.rounded_battery_android_frame_alert_24 else null
+                            val statusIcon = if (device.level <= 15) R.drawable.rounded_battery_android_frame_alert_24 else null
 
                             batteryItems.add(
                                 BatteryItemData(
@@ -156,9 +162,7 @@ class BatteriesWidget : GlanceAppWidget() {
                                 )
                             )
                         }
-                    } catch (e: Exception) {
-                        // ignore parsing error
-                    }
+                    } catch (_: Exception) {}
                 }
 
                 val displayedItems = batteryItems.take(maxDevices)
@@ -166,26 +170,19 @@ class BatteriesWidget : GlanceAppWidget() {
                 // 3. Render
                 val context = androidx.glance.LocalContext.current
                 val systemConfig = android.content.res.Resources.getSystem().configuration
-
-                val forcedConfig =
-                    android.content.res.Configuration(context.resources.configuration)
-                forcedConfig.uiMode = systemConfig.uiMode
-
-                val configContext = context.createConfigurationContext(forcedConfig)
-
-                val basePrimary = GlanceTheme.colors.primary.getColor(configContext).toArgb()
-                val baseError = GlanceTheme.colors.error.getColor(configContext).toArgb()
-                val onSurface = GlanceTheme.colors.onSurface.getColor(configContext).toArgb()
-                val widgetBackgroundColor =
-                    GlanceTheme.colors.widgetBackground.getColor(configContext).toArgb()
+                val configContext = context.createConfigurationContext(
+                    android.content.res.Configuration(context.resources.configuration).apply {
+                        uiMode = systemConfig.uiMode
+                    }
+                )
 
                 val colors = ThemeColors(
-                    primary = basePrimary,
-                    error = baseError,
+                    primary = GlanceTheme.colors.primary.getColor(configContext).toArgb(),
+                    error = GlanceTheme.colors.error.getColor(configContext).toArgb(),
                     warning = "#FFC107".toColorInt(),
-                    track = ColorUtils.setAlphaComponent(onSurface, 30),
-                    surface = widgetBackgroundColor,
-                    iconTint = onSurface
+                    track = ColorUtils.setAlphaComponent(GlanceTheme.colors.onSurface.getColor(configContext).toArgb(), 30),
+                    surface = GlanceTheme.colors.widgetBackground.getColor(configContext).toArgb(),
+                    iconTint = GlanceTheme.colors.onSurface.getColor(configContext).toArgb()
                 )
 
                 val backgroundModifier = if (isBackgroundEnabled) {
@@ -194,28 +191,28 @@ class BatteriesWidget : GlanceAppWidget() {
                     GlanceModifier.background(android.graphics.Color.TRANSPARENT)
                 }
 
-                val effectivePadding = if (width < 100.dp || height < 100.dp) 4.dp else 8.dp
                 val isSingleItem = displayedItems.size <= 1
-                val items = displayedItems.ifEmpty {
-                    listOf(
-                        BatteryItemData(
-                            androidLevel,
-                            R.drawable.rounded_mobile_24,
-                            "Android"
-                        )
-                    )
-                }
+                val effectivePadding = if (width < 100.dp || height < 100.dp) 4.dp else 8.dp
+                val outerPadding = if (isSingleItem && width > 120.dp) 16.dp else effectivePadding
+                val spacing = 8.dp
 
                 // Dynamic Grid Calculation
                 val itemMinWidth = if (isSingleItem) 120.dp else 72.dp
-                val columns = (width / itemMinWidth).toInt().coerceIn(1, items.size)
-                val rows = items.chunked(columns)
+                val columns = (width / itemMinWidth).toInt().coerceIn(1, displayedItems.size.coerceAtLeast(1))
+                val rows = displayedItems.chunked(columns)
+                
+                val availableWidth = (width - (outerPadding * 2) - (spacing * (columns - 1))).coerceAtLeast(1.dp)
+                val availableHeight = (height - (outerPadding * 2) - (rows.size.let { if (it > 1) (it - 1) * spacing.value.dp else 0.dp })).coerceAtLeast(1.dp)
+                
+                val itemWidth = availableWidth / columns
+                val rowHeight = availableHeight / rows.size.coerceAtLeast(1)
+                val boxSize = if (itemWidth < rowHeight) itemWidth else rowHeight
 
                 Column(
                     modifier = GlanceModifier
                         .fillMaxSize()
                         .then(backgroundModifier)
-                        .padding(if (isSingleItem && width > 120.dp) 16.dp else effectivePadding),
+                        .padding(outerPadding),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -227,31 +224,35 @@ class BatteriesWidget : GlanceAppWidget() {
                         ) {
                             rowItems.forEachIndexed { colIndex, item ->
                                 val itemResolution = if (isSingleItem) 512 else 340
-                                BatteryItemBox(
-                                    configContext,
-                                    item,
-                                    colors,
-                                    size = itemResolution,
-                                    modifier = GlanceModifier.defaultWeight().fillMaxHeight()
-                                )
+                                Box(
+                                    modifier = GlanceModifier.defaultWeight().fillMaxHeight(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    BatteryItemBox(
+                                        context = configContext,
+                                        item = item,
+                                        colors = colors,
+                                        itemSize = boxSize,
+                                        sizePx = itemResolution,
+                                        modifier = GlanceModifier.size(boxSize)
+                                    )
+                                }
                                 if (colIndex < rowItems.size - 1 || rowItems.size < columns) {
-                                    Spacer(modifier = GlanceModifier.width(8.dp))
+                                    Spacer(modifier = GlanceModifier.width(spacing))
                                 }
                             }
                             // Filler for consistent sizing
                             if (rowItems.size < columns) {
                                 repeat(columns - rowItems.size) { i ->
-                                    Spacer(
-                                        modifier = GlanceModifier.defaultWeight().fillMaxHeight()
-                                    )
+                                    Spacer(modifier = GlanceModifier.defaultWeight().fillMaxHeight())
                                     if (i < (columns - rowItems.size - 1)) {
-                                        Spacer(modifier = GlanceModifier.width(8.dp))
+                                        Spacer(modifier = GlanceModifier.width(spacing))
                                     }
                                 }
                             }
                         }
                         if (rowIndex < rows.size - 1) {
-                            Spacer(modifier = GlanceModifier.height(8.dp))
+                            Spacer(modifier = GlanceModifier.height(spacing))
                         }
                     }
                 }
@@ -280,7 +281,8 @@ class BatteriesWidget : GlanceAppWidget() {
         context: Context,
         item: BatteryItemData,
         colors: ThemeColors,
-        size: Int = 300,
+        itemSize: androidx.compose.ui.unit.Dp,
+        sizePx: Int = 340,
         modifier: GlanceModifier = GlanceModifier
     ) {
         val ringColor = when {
@@ -289,28 +291,72 @@ class BatteriesWidget : GlanceAppWidget() {
             else -> colors.primary
         }
 
-        val icon = ContextCompat.getDrawable(context, item.iconRes)
-        val statusIcon = item.statusIconRes?.let { ContextCompat.getDrawable(context, it) }
-
-        val bitmap = com.sameerasw.essentials.utils.BatteryRingDrawer.drawBatteryWidget(
-            context,
-            item.level,
-            ringColor,
-            colors.track,
-            colors.iconTint,
-            colors.surface,
-            icon,
-            statusIcon,
-            size,
-            size
-        )
+        val padding = if (itemSize > 100.dp) 12.dp else 8.dp
+        val iconPadding = if (itemSize > 100.dp) 32.dp else 24.dp
 
         Box(modifier = modifier, contentAlignment = Alignment.Center) {
+            // 1. Background Circle
+            Box(
+                modifier = GlanceModifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .background(androidx.compose.ui.graphics.Color(colors.surface))
+                    .cornerRadius(100.dp)
+            ) {}
+
+            // 2. Battery Ring (Arcs)
+            val ringBitmap = com.sameerasw.essentials.utils.BatteryRingDrawer.drawBatteryRing(
+                context,
+                item.level,
+                ringColor,
+                colors.track,
+                item.statusIconRes != null,
+                sizePx,
+                sizePx
+            )
             Image(
-                provider = ImageProvider(bitmap),
-                contentDescription = "${item.name}: ${item.level}%",
+                provider = ImageProvider(ringBitmap),
+                contentDescription = null,
                 modifier = GlanceModifier.fillMaxSize()
             )
+
+            // 3. Center Device Icon
+            Image(
+                provider = ImageProvider(item.iconRes),
+                contentDescription = null,
+                colorFilter = androidx.glance.ColorFilter.tint(
+                    androidx.glance.unit.ColorProvider(androidx.compose.ui.graphics.Color(colors.iconTint))
+                ),
+                modifier = GlanceModifier.fillMaxSize().padding(iconPadding)
+            )
+
+            // 4. Status Indicator Bubble (at the top)
+            if (item.statusIconRes != null) {
+                val bubbleSize = if (itemSize > 100.dp) 32.dp else 24.dp
+                val bubbleIconPadding = if (itemSize > 100.dp) 6.dp else 4.dp
+                
+                Box(
+                    modifier = GlanceModifier.fillMaxSize(),
+                    contentAlignment = Alignment.TopCenter
+                ) {
+                    Box(
+                        modifier = GlanceModifier
+                            .size(bubbleSize)
+                            .background(androidx.compose.ui.graphics.Color(ringColor))
+                            .cornerRadius(100.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Image(
+                            provider = ImageProvider(item.statusIconRes),
+                            contentDescription = null,
+                            colorFilter = androidx.glance.ColorFilter.tint(
+                                androidx.glance.unit.ColorProvider(androidx.compose.ui.graphics.Color(colors.surface))
+                            ),
+                            modifier = GlanceModifier.fillMaxSize().padding(bubbleIconPadding)
+                        )
+                    }
+                }
+            }
         }
     }
 }

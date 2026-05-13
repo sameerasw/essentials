@@ -12,27 +12,21 @@ import kotlin.math.PI
 
 object BatteryRingDrawer {
 
-    fun drawBatteryWidget(
+    /**
+     * Optimized ring drawing for Glance components.
+     * Only draws the arcs, leaving icons and backgrounds to Glance native primitives.
+     */
+    fun drawBatteryRing(
         context: Context,
         batteryLevel: Int,
         @ColorInt ringColor: Int,
         @ColorInt trackColor: Int,
-        @ColorInt iconTint: Int,
-        @ColorInt backgroundColor: Int,
-        deviceIcon: Drawable?,
-        statusIcon: Drawable?,  // New parameter for charging/warning icon
+        hasStatusIcon: Boolean,
         width: Int,
         height: Int
     ): Bitmap {
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
-
-        val bgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            style = Paint.Style.FILL
-            color = backgroundColor
-        }
-        val centerX = width / 2f
-        val centerY = height / 2f
 
         val strokeWidth = width * 0.11f
         val padding = strokeWidth + (width * 0.05f)
@@ -44,10 +38,6 @@ object BatteryRingDrawer {
         )
         val radius = rect.width() / 2f
 
-        val bubbleRadius = radius + (strokeWidth / 2f)
-
-        canvas.drawCircle(centerX, centerY, bubbleRadius, bgPaint)
-
         // Config
         val trackStrokeWidth = strokeWidth * 0.5f
 
@@ -57,7 +47,7 @@ object BatteryRingDrawer {
         }
 
         // Dynamic Gap: 60 degrees if status icon present, otherwise 0 (full circle)
-        val topGapDegrees = if (statusIcon != null) 60f else 0f
+        val topGapDegrees = if (hasStatusIcon) 60f else 0f
 
         val capAngleDegrees = ((strokeWidth / 2f) / radius) * (180f / PI.toFloat())
         val trackCapAngleDegrees = ((trackStrokeWidth / 2f) / radius) * (180f / PI.toFloat())
@@ -67,7 +57,6 @@ object BatteryRingDrawer {
         val totalAvailableSweep = 360f - topGapDegrees
 
         val clampedLevel = batteryLevel.coerceIn(0, 100)
-
         val progressSweepRaw = (clampedLevel / 100f) * totalAvailableSweep
 
         // Visual Gap between segments
@@ -93,12 +82,10 @@ object BatteryRingDrawer {
                 if (drawSweep > 0) {
                     canvas.drawArc(rect, drawStart, drawSweep, false, paint)
                 }
-            } else {
-                if (visualSpan > 0) {
-                    val center = visualStart + visualSpan / 2
-                    paint.style = Paint.Style.FILL
-                    canvas.drawArc(rect, center, 0.1f, false, paint)
-                }
+            } else if (visualSpan > 0) {
+                val center = visualStart + visualSpan / 2
+                paint.style = Paint.Style.FILL
+                canvas.drawArc(rect, center, 0.1f, false, paint)
             }
         }
 
@@ -106,6 +93,7 @@ object BatteryRingDrawer {
         if (clampedLevel < 100) {
             paint.strokeWidth = trackStrokeWidth
             paint.color = trackColor
+            paint.style = Paint.Style.STROKE // Reset style if changed above
 
             val visualStart = (startAngle + progressSweepRaw + (segmentGapDegrees / 2))
                 .coerceAtMost(startAngle + totalAvailableSweep)
@@ -122,45 +110,85 @@ object BatteryRingDrawer {
             }
         }
 
-        // --- Draw Status Icon (Top) if present ---
+        return bitmap
+    }
+
+    /**
+     * Legacy method for non-Glance components (e.g. Notifications).
+     */
+    fun drawBatteryWidget(
+        context: Context,
+        batteryLevel: Int,
+        @ColorInt ringColor: Int,
+        @ColorInt trackColor: Int,
+        @ColorInt iconTint: Int,
+        @ColorInt backgroundColor: Int,
+        deviceIcon: Drawable?,
+        statusIcon: Drawable?,
+        width: Int,
+        height: Int
+    ): Bitmap {
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+
+        val strokeWidth = width * 0.11f
+        val centerX = width / 2f
+        val centerY = height / 2f
+
+        // 1. Draw Background
+        val bgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            style = Paint.Style.FILL
+            color = backgroundColor
+        }
+        val padding = strokeWidth + (width * 0.05f)
+        val rect = RectF(padding, padding, width - padding, height - padding)
+        val bubbleRadius = (rect.width() / 2f) + (strokeWidth / 2f)
+        canvas.drawCircle(centerX, centerY, bubbleRadius, bgPaint)
+
+        // 2. Draw Ring
+        val ringBitmap = drawBatteryRing(
+            context, batteryLevel, ringColor, trackColor, statusIcon != null, width, height
+        )
+        canvas.drawBitmap(ringBitmap, 0f, 0f, null)
+
+        // 3. Draw Status Icon Bubble
         if (statusIcon != null) {
             val smallIconRadius = strokeWidth * 1.3f
-            val centerX = width / 2f
             val iconCenterY = rect.top
 
-            val smallIconPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                style = Paint.Style.FILL
-                color = ringColor
-            }
-            // Bubble Background
-            canvas.drawCircle(centerX, iconCenterY, smallIconRadius, smallIconPaint)
+            bgPaint.color = ringColor
+            canvas.drawCircle(centerX, iconCenterY, smallIconRadius, bgPaint)
 
             val iconSize = (smallIconRadius * 1.5f).toInt()
-            val iconLeft = (centerX - iconSize / 2).toInt()
-            val iconTop = (iconCenterY - iconSize / 2).toInt()
-            statusIcon.setBounds(iconLeft, iconTop, iconLeft + iconSize, iconTop + iconSize)
+            val iconOffset = iconSize / 2
+            statusIcon.setBounds(
+                (centerX - iconOffset).toInt(),
+                (iconCenterY - iconOffset).toInt(),
+                (centerX + iconOffset).toInt(),
+                (iconCenterY + iconOffset).toInt()
+            )
             statusIcon.setTint(backgroundColor)
             statusIcon.draw(canvas)
         }
 
-        // --- Draw Center Device Icon ---
-        val innerPadding = strokeWidth * 1.5f
+        // 4. Draw Device Icon
         deviceIcon?.let {
-            val availableWidth = (rect.width() - innerPadding * 2).toInt()
-            val availableHeight = (rect.height() - innerPadding * 2).toInt()
-            val iconBitmap = it.toBitmap(availableWidth, availableHeight)
+            val innerPadding = strokeWidth * 1.5f
+            val iconSize = (rect.width() - innerPadding * 2).toInt()
+            val iconBitmap = it.toBitmap(iconSize, iconSize)
 
-            val iconLeft = (width - iconBitmap.width) / 2f
-            val iconTop = (height - iconBitmap.height) / 2f
-
-            val iconPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-            val colorFilter = android.graphics.PorterDuffColorFilter(
-                iconTint,
-                android.graphics.PorterDuff.Mode.SRC_IN
+            val iconPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                colorFilter = android.graphics.PorterDuffColorFilter(
+                    iconTint,
+                    android.graphics.PorterDuff.Mode.SRC_IN
+                )
+            }
+            canvas.drawBitmap(
+                iconBitmap,
+                (width - iconBitmap.width) / 2f,
+                (height - iconBitmap.height) / 2f,
+                iconPaint
             )
-            iconPaint.colorFilter = colorFilter
-
-            canvas.drawBitmap(iconBitmap, iconLeft, iconTop, iconPaint)
         }
 
         return bitmap
