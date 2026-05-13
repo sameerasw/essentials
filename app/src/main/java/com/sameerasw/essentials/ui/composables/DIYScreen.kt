@@ -29,8 +29,8 @@ import com.sameerasw.essentials.ui.activities.AutomationEditorActivity
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.diy.AutomationItem
 import com.sameerasw.essentials.ui.components.sheets.NewAutomationSheet
-import com.sameerasw.essentials.viewmodels.DIYViewModel
 import com.sameerasw.essentials.utils.HapticUtil
+import com.sameerasw.essentials.viewmodels.DIYViewModel
 
 @Composable
 fun DIYScreen(

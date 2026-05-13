@@ -8,6 +8,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -46,7 +47,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sameerasw.essentials.ui.components.ReusableTopAppBar
 import com.sameerasw.essentials.ui.components.cards.TrackedRepoCard
@@ -260,7 +260,12 @@ class AppUpdatesActivity : AppCompatActivity() {
                             modifier = Modifier.padding(bottom = 16.dp, end = 16.dp),
                             containerColor = MaterialTheme.colorScheme.primaryContainer,
                             contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                            elevation = androidx.compose.material3.FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp)
+                            elevation = androidx.compose.material3.FloatingActionButtonDefaults.elevation(
+                                0.dp,
+                                0.dp,
+                                0.dp,
+                                0.dp
+                            )
                         ) {
                             androidx.compose.material3.Icon(
                                 painter = painterResource(id = R.drawable.rounded_add_24),
@@ -299,7 +304,7 @@ class AppUpdatesActivity : AppCompatActivity() {
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center
                         ) {
-                            androidx.compose.material3.Text(
+                            Text(
                                 text = stringResource(R.string.msg_no_repos_tracked),
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -307,7 +312,7 @@ class AppUpdatesActivity : AppCompatActivity() {
 
                             Spacer(modifier = Modifier.height(32.dp))
 
-                            androidx.compose.material3.Text(
+                            Text(
                                 text = stringResource(R.string.label_apps),
                                 style = MaterialTheme.typography.titleMedium,
                                 modifier = Modifier.padding(bottom = 12.dp),
@@ -334,7 +339,7 @@ class AppUpdatesActivity : AppCompatActivity() {
                             // Pending Section
                             if (pending.isNotEmpty()) {
                                 item {
-                                    androidx.compose.material3.Text(
+                                    Text(
                                         text = "${stringResource(R.string.label_pending)} (${pending.size})",
                                         style = MaterialTheme.typography.titleMedium,
                                         modifier = Modifier.padding(start = 16.dp, bottom = 8.dp),
@@ -383,7 +388,7 @@ class AppUpdatesActivity : AppCompatActivity() {
                             // Up-to-date Section
                             if (upToDate.isNotEmpty()) {
                                 item {
-                                    androidx.compose.material3.Text(
+                                    Text(
                                         text = "${stringResource(R.string.label_up_to_date)} (${upToDate.size})",
                                         style = MaterialTheme.typography.titleMedium,
                                         modifier = Modifier.padding(start = 16.dp, bottom = 8.dp),
@@ -441,7 +446,7 @@ class AppUpdatesActivity : AppCompatActivity() {
                             // Not Installed Section
                             if (notInstalled.isNotEmpty()) {
                                 item {
-                                    androidx.compose.material3.Text(
+                                    Text(
                                         text = "${stringResource(R.string.label_not_installed)} (${notInstalled.size})",
                                         style = MaterialTheme.typography.titleMedium,
                                         modifier = Modifier.padding(start = 16.dp, bottom = 8.dp),
@@ -489,7 +494,7 @@ class AppUpdatesActivity : AppCompatActivity() {
 
                             // Apps Section
                             item {
-                                androidx.compose.material3.Text(
+                                Text(
                                     text = stringResource(R.string.label_apps),
                                     style = MaterialTheme.typography.titleMedium,
                                     modifier = Modifier.padding(start = 16.dp, bottom = 8.dp),

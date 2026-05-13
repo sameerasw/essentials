@@ -29,7 +29,7 @@ class UndoRedoManager {
         if (undoStack.isNotEmpty()) {
             val top = undoStack.peek()
             val isRecent = (now - top.timestamp) < BATCH_TIMEOUT_MS
-            
+
             if (top.type == ActionType.INSERT && isRecent) {
                 top.text += text
                 val updated = top.copy(text = top.text, timestamp = now)
@@ -38,7 +38,7 @@ class UndoRedoManager {
                 return
             }
         }
-        
+
         undoStack.push(HistoryAction(ActionType.INSERT, text, now))
     }
 
@@ -46,11 +46,11 @@ class UndoRedoManager {
         if (text.isEmpty()) return
         val now = System.currentTimeMillis()
         redoStack.clear()
-        
+
         if (undoStack.isNotEmpty()) {
             val top = undoStack.peek()
             val isRecent = (now - top.timestamp) < BATCH_TIMEOUT_MS
-            
+
             if (top.type == ActionType.DELETE && isRecent) {
                 top.text = text + top.text
                 val updated = top.copy(text = top.text, timestamp = now)
@@ -62,13 +62,13 @@ class UndoRedoManager {
 
         undoStack.push(HistoryAction(ActionType.DELETE, text, now))
     }
-    
+
     fun canUndo(): Boolean = undoStack.isNotEmpty()
     fun canRedo(): Boolean = redoStack.isNotEmpty()
 
     fun undo(ic: InputConnection?) {
         if (ic == null || undoStack.isEmpty()) return
-        
+
         val action = undoStack.pop()
         redoStack.push(action)
 
@@ -76,6 +76,7 @@ class UndoRedoManager {
             ActionType.INSERT -> {
                 ic.deleteSurroundingText(action.text.length, 0)
             }
+
             ActionType.DELETE -> {
                 ic.commitText(action.text, 1)
             }
@@ -84,7 +85,7 @@ class UndoRedoManager {
 
     fun redo(ic: InputConnection?) {
         if (ic == null || redoStack.isEmpty()) return
-        
+
         val action = redoStack.pop()
         undoStack.push(action)
 
@@ -92,6 +93,7 @@ class UndoRedoManager {
             ActionType.INSERT -> {
                 ic.commitText(action.text, 1)
             }
+
             ActionType.DELETE -> {
                 ic.deleteSurroundingText(action.text.length, 0)
             }

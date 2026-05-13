@@ -1,11 +1,24 @@
 package com.sameerasw.essentials.ui.ime
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
@@ -14,8 +27,16 @@ import androidx.compose.foundation.pager.PagerDefaults
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,11 +46,8 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.foundation.basicMarquee
-import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -118,10 +136,14 @@ fun KaomojiPicker(
                 val gridState = gridStates.getOrPut(pageIndex) { LazyGridState() }
                 val context = androidx.compose.ui.platform.LocalContext.current
                 val categoryNameRes = remember(category.name) {
-                    context.resources.getIdentifier("kaomoji_cat_${category.name}", "string", context.packageName)
+                    context.resources.getIdentifier(
+                        "kaomoji_cat_${category.name}",
+                        "string",
+                        context.packageName
+                    )
                 }
-                val localizedName = if (categoryNameRes != 0) androidx.compose.ui.res.stringResource(categoryNameRes) else category.name.replaceFirstChar { it.uppercase() }
-                
+                if (categoryNameRes != 0) androidx.compose.ui.res.stringResource(categoryNameRes) else category.name.replaceFirstChar { it.uppercase() }
+
                 Column(modifier = Modifier.fillMaxSize()) {
                     // Category Header within the page
 //                    Text(
@@ -150,13 +172,13 @@ fun KaomojiPicker(
                         ) { index, kaomojiObj ->
                             val interactionSource = remember { MutableInteractionSource() }
                             val isPressed by interactionSource.collectIsPressedAsState()
-                            
+
                             Box(
                                 modifier = Modifier
                                     .height(48.dp)
                                     .clip(RoundedCornerShape(keyRoundness))
                                     .background(
-                                        if (isPressed) MaterialTheme.colorScheme.surfaceContainerHighest 
+                                        if (isPressed) MaterialTheme.colorScheme.surfaceContainerHighest
                                         else MaterialTheme.colorScheme.surfaceContainerLow
                                     )
                                     .clickable(
@@ -199,12 +221,17 @@ fun KaomojiPicker(
                 val category = KaomojiData.categories[index]
                 val isSelected = index == pagerState.currentPage
                 val interactionSource = remember { MutableInteractionSource() }
-                
+
                 val context = androidx.compose.ui.platform.LocalContext.current
                 val categoryNameRes = remember(category.name) {
-                    context.resources.getIdentifier("kaomoji_cat_${category.name}", "string", context.packageName)
+                    context.resources.getIdentifier(
+                        "kaomoji_cat_${category.name}",
+                        "string",
+                        context.packageName
+                    )
                 }
-                val localizedName = if (categoryNameRes != 0) androidx.compose.ui.res.stringResource(categoryNameRes) else category.name.replaceFirstChar { it.uppercase() }
+                val localizedName =
+                    if (categoryNameRes != 0) androidx.compose.ui.res.stringResource(categoryNameRes) else category.name.replaceFirstChar { it.uppercase() }
 
                 Box(
                     modifier = Modifier
@@ -236,7 +263,7 @@ fun KaomojiPicker(
                             fontSize = 10.sp
                         ),
                         color = if (isSelected) MaterialTheme.colorScheme.background
-                               else MaterialTheme.colorScheme.secondary,
+                        else MaterialTheme.colorScheme.secondary,
                         maxLines = 1,
                         modifier = Modifier
                             .padding(horizontal = 4.dp)

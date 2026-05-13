@@ -4,18 +4,27 @@ import android.accessibilityservice.AccessibilityService
 import android.content.Context
 import android.graphics.Color
 import android.graphics.PixelFormat
-import android.os.*
-import android.view.*
+import android.os.Build
+import android.os.Handler
+import android.os.Looper
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
+import android.view.Gravity
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewConfiguration
+import android.view.WindowManager
 import com.sameerasw.essentials.utils.OmniTriggerUtil
 
 class OmniGestureOverlayHandler(private val service: AccessibilityService) {
     private val windowManager = service.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     private val vibrator = getVibratorInstance()
-    
+
     private var overlayView: View? = null
     private val handler = Handler(Looper.getMainLooper())
     private val touchSlop = ViewConfiguration.get(service).scaledTouchSlop
-    
+
     private var startX = 0f
     private var startY = 0f
     private var isLongPressActive = false
@@ -55,7 +64,8 @@ class OmniGestureOverlayHandler(private val service: AccessibilityService) {
         ).apply {
             gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+                layoutInDisplayCutoutMode =
+                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
             }
         }
 
@@ -85,11 +95,13 @@ class OmniGestureOverlayHandler(private val service: AccessibilityService) {
                 handler.postDelayed(longPressRunnable, LONG_PRESS_TIMEOUT)
                 startRampingHaptic()
             }
+
             MotionEvent.ACTION_MOVE -> {
                 if (Math.abs(event.x - startX) > touchSlop || Math.abs(event.y - startY) > touchSlop) {
                     cancelLongPress()
                 }
             }
+
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> cancelLongPress()
         }
     }
@@ -126,7 +138,12 @@ class OmniGestureOverlayHandler(private val service: AccessibilityService) {
     private fun fallbackRampingWaveform(v: Vibrator) {
         fallbackEffect?.let {
             runCatching { v.vibrate(it) }
-        } ?: v.vibrate(VibrationEffect.createOneShot(LONG_PRESS_TIMEOUT, VibrationEffect.DEFAULT_AMPLITUDE))
+        } ?: v.vibrate(
+            VibrationEffect.createOneShot(
+                LONG_PRESS_TIMEOUT,
+                VibrationEffect.DEFAULT_AMPLITUDE
+            )
+        )
     }
 
     private fun triggerFinalTick() {

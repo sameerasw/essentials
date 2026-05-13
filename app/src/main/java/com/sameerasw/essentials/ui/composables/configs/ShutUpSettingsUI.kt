@@ -1,8 +1,18 @@
 package com.sameerasw.essentials.ui.composables.configs
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
@@ -29,7 +39,7 @@ fun ShutUpSettingsUI(
     val context = LocalContext.current
     var isAppSelectionSheetOpen by remember { mutableStateOf(false) }
     var selectedConfigForEditing by remember { mutableStateOf<ShutUpAppConfig?>(null) }
-    
+
     val configs by viewModel.shutUpConfigs
 
     Column(
@@ -65,7 +75,8 @@ fun ShutUpSettingsUI(
             configs.forEach { config ->
                 val appName = remember(config.packageName) {
                     try {
-                        val appInfo = context.packageManager.getApplicationInfo(config.packageName, 0)
+                        val appInfo =
+                            context.packageManager.getApplicationInfo(config.packageName, 0)
                         context.packageManager.getApplicationLabel(appInfo).toString()
                     } catch (e: Exception) {
                         config.packageName
@@ -82,7 +93,7 @@ fun ShutUpSettingsUI(
                         null
                     }
                 }
-                
+
                 FeatureCard(
                     title = appName,
                     description = config.packageName,
@@ -134,7 +145,7 @@ fun ShutUpSettingsUI(
         if (isAppSelectionSheetOpen) {
             AppSelectionSheet(
                 onDismissRequest = { isAppSelectionSheetOpen = false },
-                onLoadApps = { ctx -> 
+                onLoadApps = { ctx ->
                     viewModel.shutUpConfigs.value.map { AppSelection(it.packageName, true) }
                 },
                 onSaveApps = { ctx, apps -> viewModel.saveShutUpSelectedApps(ctx, apps) }
@@ -146,10 +157,11 @@ fun ShutUpSettingsUI(
             val isFrozen = remember(selectedConfigForEditing) {
                 frozenApps.any { it.packageName == selectedConfigForEditing?.packageName }
             }
-            
+
             ShutUpPerAppSettingsSheet(
                 onDismissRequest = { selectedConfigForEditing = null },
-                config = configs.find { it.packageName == selectedConfigForEditing?.packageName } ?: selectedConfigForEditing!!,
+                config = configs.find { it.packageName == selectedConfigForEditing?.packageName }
+                    ?: selectedConfigForEditing!!,
                 onConfigChanged = { viewModel.updateShutUpConfig(it) },
                 onCreateShortcut = { viewModel.createShutUpShortcut(context, it) },
                 isFrozen = isFrozen,

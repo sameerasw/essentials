@@ -16,7 +16,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
@@ -33,7 +32,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -48,7 +46,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -67,13 +64,14 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.changedToUp
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.LocalViewConfiguration
@@ -90,8 +88,6 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import androidx.compose.ui.zIndex
 import com.sameerasw.essentials.R
-import com.sameerasw.essentials.data.repository.SettingsRepository
-import com.sameerasw.essentials.ime.EssentialsInputMethodService
 import com.sameerasw.essentials.ime.Suggestion
 import com.sameerasw.essentials.ime.SuggestionType
 import com.sameerasw.essentials.utils.HapticUtil
@@ -237,7 +233,7 @@ fun KeyButton(
 
     val scope = rememberCoroutineScope()
     val view = LocalView.current
-    val viewConfiguration = LocalViewConfiguration.current
+    LocalViewConfiguration.current
 
     Box(
         modifier = modifier
@@ -250,11 +246,11 @@ fun KeyButton(
                         val press = PressInteraction.Press(offset)
                         scope.launch { interactionSource.emit(press) }
                         onPress()
-                        
+
                         var isReleased = false
                         val repeatJob = if (onRepeat != null) {
                             scope.launch {
-                                delay(500) 
+                                delay(500)
                                 while (!isReleased) {
                                     if (canRepeat?.invoke() != false) {
                                         onRepeat()
@@ -438,7 +434,7 @@ fun KeyboardInputView(
 
     fun handleKeyPress(keyCode: Int) {
         onKeyPress(keyCode)
-        if (keyCode == android.view.KeyEvent.KEYCODE_DEL) {
+        if (keyCode == KeyEvent.KEYCODE_DEL) {
             if (currentWord.isNotEmpty()) {
                 currentWord = currentWord.dropLast(1)
             }
@@ -581,14 +577,14 @@ fun KeyboardInputView(
                                 if (baselineX == null) {
                                     baselineX = change.position.x
                                 }
-                                
+
                                 // Slide selection - relative movement from start
-                                val deltaX = change.position.x - (baselineX ?: change.position.x)
+                                val deltaX = change.position.x - baselineX
                                 val stepWidthPx = with(density) { 40.dp.toPx() }
-                                
+
                                 val index = ((deltaX / stepWidthPx) + initialAccentIndex).toInt()
                                     .coerceIn(0, longPressVariants.size - 1)
-                                
+
                                 if (index != selectedAccentIndex) {
                                     selectedAccentIndex = index
                                     performLightHaptic()
@@ -794,14 +790,14 @@ fun KeyboardInputView(
                                                     isKaomojiMode = false
                                                 }
                                             } else if (desc == "Backspace") {
-                                                onKeyPress(android.view.KeyEvent.KEYCODE_DEL)
+                                                onKeyPress(KeyEvent.KEYCODE_DEL)
                                             } else if (desc == "Expand") {
                                                 isSuggestionsCollapsed = false
                                             }
                                         },
                                         onRepeat = {
                                             if (desc == "Backspace") {
-                                                onKeyPress(android.view.KeyEvent.KEYCODE_DEL)
+                                                onKeyPress(KeyEvent.KEYCODE_DEL)
                                                 performLightHaptic()
                                             }
                                         },
@@ -822,9 +818,13 @@ fun KeyboardInputView(
                                         contentColor = if ((desc == "Clipboard" && isClipboardMode) || (desc == "Emoji" && (isEmojiMode || isKaomojiMode))) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface,
                                         shape = RoundedCornerShape(animatedRadius),
                                         modifier = if (desc == "Expand") {
-                                            Modifier.width(50.dp).fillMaxHeight()
+                                            Modifier
+                                                .width(50.dp)
+                                                .fillMaxHeight()
                                         } else {
-                                            Modifier.weight(1.3f).fillMaxHeight()
+                                            Modifier
+                                                .weight(1.3f)
+                                                .fillMaxHeight()
                                         }
                                     ) {
                                         Icon(
@@ -994,7 +994,8 @@ fun KeyboardInputView(
 
                     else -> {
                         Column(
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier
+                                .fillMaxSize()
                                 .blur(animatedBlurRadius),
                             verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
@@ -1009,7 +1010,6 @@ fun KeyboardInputView(
                                         key(char) {
                                             val numInteraction =
                                                 remember { MutableInteractionSource() }
-                                            val isPressed by numInteraction.collectIsPressedAsState()
                                             KeyButton(
                                                 onClick = { handleType(char) },
                                                 onPress = { performLightHaptic() },
@@ -1070,19 +1070,25 @@ fun KeyboardInputView(
                                                         val variants = mutableListOf<String>()
                                                         val xRatio = (index + 0.5f) / 10f
                                                         var startIndex = 0
-                                                        
+
                                                         if (xRatio < 0.35f) {
-                                                            if (secondary != null) variants.add(secondary)
+                                                            if (secondary != null) variants.add(
+                                                                secondary
+                                                            )
                                                             variants.addAll(accents)
                                                             startIndex = 0
                                                         } else if (xRatio > 0.65f) {
                                                             variants.addAll(accents)
-                                                            if (secondary != null) variants.add(secondary)
+                                                            if (secondary != null) variants.add(
+                                                                secondary
+                                                            )
                                                             startIndex = variants.size - 1
                                                         } else {
                                                             val half = accents.size / 2
                                                             variants.addAll(accents.take(half))
-                                                            if (secondary != null) variants.add(secondary)
+                                                            if (secondary != null) variants.add(
+                                                                secondary
+                                                            )
                                                             startIndex = variants.size - 1
                                                             variants.addAll(accents.drop(half))
                                                         }
@@ -1161,21 +1167,28 @@ fun KeyboardInputView(
                                                                 if (isAccentedCharactersEnabled) KeyAccentMap[char]
                                                                     ?: emptyList() else emptyList()
                                                             val variants = mutableListOf<String>()
-                                                            val xRatio = (index + 0.5f) / currentRow2.size.toFloat()
+                                                            val xRatio =
+                                                                (index + 0.5f) / currentRow2.size.toFloat()
                                                             var startIndex = 0
 
                                                             if (xRatio < 0.35f) {
-                                                                if (secondary != null) variants.add(secondary)
+                                                                if (secondary != null) variants.add(
+                                                                    secondary
+                                                                )
                                                                 variants.addAll(accents)
                                                                 startIndex = 0
                                                             } else if (xRatio > 0.65f) {
                                                                 variants.addAll(accents)
-                                                                if (secondary != null) variants.add(secondary)
+                                                                if (secondary != null) variants.add(
+                                                                    secondary
+                                                                )
                                                                 startIndex = variants.size - 1
                                                             } else {
                                                                 val half = accents.size / 2
                                                                 variants.addAll(accents.take(half))
-                                                                if (secondary != null) variants.add(secondary)
+                                                                if (secondary != null) variants.add(
+                                                                    secondary
+                                                                )
                                                                 startIndex = variants.size - 1
                                                                 variants.addAll(accents.drop(half))
                                                             }
@@ -1351,17 +1364,23 @@ fun KeyboardInputView(
                                                         var startIndex = 0
 
                                                         if (xRatio < 0.35f) {
-                                                            if (secondary != null) variants.add(secondary)
+                                                            if (secondary != null) variants.add(
+                                                                secondary
+                                                            )
                                                             variants.addAll(accents)
                                                             startIndex = 0
                                                         } else if (xRatio > 0.65f) {
                                                             variants.addAll(accents)
-                                                            if (secondary != null) variants.add(secondary)
+                                                            if (secondary != null) variants.add(
+                                                                secondary
+                                                            )
                                                             startIndex = variants.size - 1
                                                         } else {
                                                             val half = accents.size / 2
                                                             variants.addAll(accents.take(half))
-                                                            if (secondary != null) variants.add(secondary)
+                                                            if (secondary != null) variants.add(
+                                                                secondary
+                                                            )
                                                             startIndex = variants.size - 1
                                                             variants.addAll(accents.drop(half))
                                                         }
@@ -1623,7 +1642,6 @@ fun KeyboardInputView(
                                         targetValue = if (isPressedSpace) 4.dp else keyRoundness,
                                         label = "cornerRadius"
                                     )
-                                    var accumulatedDx by remember { mutableStateOf(0f) }
                                     val sweepThreshold = 25f // pixels per cursor move
 
                                     val animatedColorSpace by animateColorAsState(

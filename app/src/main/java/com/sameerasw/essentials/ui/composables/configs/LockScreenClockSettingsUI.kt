@@ -3,37 +3,52 @@ package com.sameerasw.essentials.ui.composables.configs
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
-import com.sameerasw.essentials.ui.theme.Shapes
 import com.sameerasw.essentials.utils.HapticUtil
-import com.sameerasw.essentials.viewmodels.MainViewModel@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+import com.sameerasw.essentials.viewmodels.MainViewModel
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun LockScreenClockSettingsUI(
     viewModel: MainViewModel,
@@ -59,14 +74,46 @@ fun LockScreenClockSettingsUI(
     val clockOptions = remember {
         listOf(
             ClockOption("DEFAULT", R.string.lock_screen_clock_default, R.drawable.clock_flex),
-            ClockOption("ANALOG_CLOCK_BIGNUM", R.string.lock_screen_clock_bignum, R.drawable.clock_bignum),
-            ClockOption("DIGITAL_CLOCK_CALLIGRAPHY", R.string.lock_screen_clock_calligraphy, R.drawable.clock_calligraphy),
-            ClockOption("DIGITAL_CLOCK_GROWTH", R.string.lock_screen_clock_growth, R.drawable.clock_growth),
-            ClockOption("DIGITAL_CLOCK_HANDWRITTEN", R.string.lock_screen_clock_handwritten, R.drawable.clock_handwritten),
-            ClockOption("DIGITAL_CLOCK_INFLATE", R.string.lock_screen_clock_inflate, R.drawable.clock_inflate),
-            ClockOption("DIGITAL_CLOCK_METRO", R.string.lock_screen_clock_metro, R.drawable.clock_metro),
-            ClockOption("DIGITAL_CLOCK_NUMBEROVERLAP", R.string.lock_screen_clock_numoverlap, R.drawable.clock_overlap),
-            ClockOption("DIGITAL_CLOCK_WEATHER", R.string.lock_screen_clock_weather, R.drawable.clock_weather)
+            ClockOption(
+                "ANALOG_CLOCK_BIGNUM",
+                R.string.lock_screen_clock_bignum,
+                R.drawable.clock_bignum
+            ),
+            ClockOption(
+                "DIGITAL_CLOCK_CALLIGRAPHY",
+                R.string.lock_screen_clock_calligraphy,
+                R.drawable.clock_calligraphy
+            ),
+            ClockOption(
+                "DIGITAL_CLOCK_GROWTH",
+                R.string.lock_screen_clock_growth,
+                R.drawable.clock_growth
+            ),
+            ClockOption(
+                "DIGITAL_CLOCK_HANDWRITTEN",
+                R.string.lock_screen_clock_handwritten,
+                R.drawable.clock_handwritten
+            ),
+            ClockOption(
+                "DIGITAL_CLOCK_INFLATE",
+                R.string.lock_screen_clock_inflate,
+                R.drawable.clock_inflate
+            ),
+            ClockOption(
+                "DIGITAL_CLOCK_METRO",
+                R.string.lock_screen_clock_metro,
+                R.drawable.clock_metro
+            ),
+            ClockOption(
+                "DIGITAL_CLOCK_NUMBEROVERLAP",
+                R.string.lock_screen_clock_numoverlap,
+                R.drawable.clock_overlap
+            ),
+            ClockOption(
+                "DIGITAL_CLOCK_WEATHER",
+                R.string.lock_screen_clock_weather,
+                R.drawable.clock_weather
+            )
         )
     }
 
@@ -84,7 +131,8 @@ fun LockScreenClockSettingsUI(
         )
     }
 
-    val isDefaultStyleSelected = currentClockId == "DEFAULT" || currentClockId == "DIGITAL_CLOCK_FLEX"
+    val isDefaultStyleSelected =
+        currentClockId == "DEFAULT" || currentClockId == "DIGITAL_CLOCK_FLEX"
 
     val carouselState = rememberCarouselState { clockOptions.size }
 
@@ -122,7 +170,8 @@ fun LockScreenClockSettingsUI(
                 .height(200.dp)
         ) { index ->
             val option = clockOptions[index]
-            val isSelected = if (option.id == "DEFAULT") isDefaultStyleSelected else currentClockId == option.id
+            val isSelected =
+                if (option.id == "DEFAULT") isDefaultStyleSelected else currentClockId == option.id
 
             Box(
                 modifier = Modifier
@@ -171,11 +220,13 @@ fun LockScreenClockSettingsUI(
 
         RoundedCardContainer {
             Column(
-                modifier = Modifier.fillMaxWidth()
-                .background(
-                    color = MaterialTheme.colorScheme.surfaceBright,
-            shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd)
-            ).padding(16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        color = MaterialTheme.colorScheme.surfaceBright,
+                        shape = RoundedCornerShape(MaterialTheme.shapes.extraSmall.bottomEnd)
+                    )
+                    .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 // Multi-row Color Picker
@@ -191,7 +242,11 @@ fun LockScreenClockSettingsUI(
                                 isSelected = viewModel.lockScreenClockSelectedColorId.value == colorOption.id,
                                 onClick = {
                                     HapticUtil.performUIHaptic(view)
-                                    viewModel.setLockScreenClockColor(colorOption.id, colorOption.seedColor, context)
+                                    viewModel.setLockScreenClockColor(
+                                        colorOption.id,
+                                        colorOption.seedColor,
+                                        context
+                                    )
                                 }
                             )
                         }
@@ -289,7 +344,9 @@ fun ColorCircle(
             )
             .border(
                 width = if (isSelected) 3.dp else 1.dp,
-                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline.copy(alpha = 0.2f),
+                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline.copy(
+                    alpha = 0.2f
+                ),
                 shape = CircleShape
             )
             .pointerInput(colorOption.id) {
@@ -307,7 +364,7 @@ fun ColorCircle(
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-        
+
         if (isSelected) {
             Box(
                 modifier = Modifier

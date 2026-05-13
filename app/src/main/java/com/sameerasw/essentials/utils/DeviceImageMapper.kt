@@ -33,7 +33,7 @@ object DeviceImageMapper {
                 R.drawable.pixel_9pro_9proxl_10_10pro_10proxl
 
             m.contains("pixel 9") -> R.drawable.pixel_9
-            
+
             // Default fallback
             else -> 0
         }

@@ -3,9 +3,9 @@ package com.sameerasw.essentials
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -16,7 +16,8 @@ class LinkPickerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val locationViewModel = com.sameerasw.essentials.viewmodels.LocationReachedViewModel(application)
+        val locationViewModel =
+            com.sameerasw.essentials.viewmodels.LocationReachedViewModel(application)
         if (locationViewModel.handleIntent(intent)) {
             val settingsIntent = Intent(this, FeatureSettingsActivity::class.java).apply {
                 putExtra("feature", "Location reached")

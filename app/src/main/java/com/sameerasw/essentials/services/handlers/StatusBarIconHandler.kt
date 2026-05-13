@@ -29,7 +29,7 @@ class StatusBarIconHandler(private val context: Context) {
 
     private val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    
+
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
             updateAll()
@@ -39,7 +39,10 @@ class StatusBarIconHandler(private val context: Context) {
             updateAll()
         }
 
-        override fun onCapabilitiesChanged(network: Network, networkCapabilities: NetworkCapabilities) {
+        override fun onCapabilitiesChanged(
+            network: Network,
+            networkCapabilities: NetworkCapabilities
+        ) {
             updateAll()
         }
     }
@@ -71,36 +74,40 @@ class StatusBarIconHandler(private val context: Context) {
     fun unregister() {
         try {
             connectivityManager.unregisterNetworkCallback(networkCallback)
-        } catch (e: Exception) {}
-        
+        } catch (e: Exception) {
+        }
+
         try {
             context.unregisterReceiver(batteryReceiver)
-        } catch (e: Exception) {}
-        
+        } catch (e: Exception) {
+        }
+
         smartDataJob?.cancel()
     }
 
     fun updateAll() {
         scope.launch {
             val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-            val isSmartWiFiEnabled = prefs.getBoolean(StatusBarIconViewModel.PREF_SMART_WIFI_ENABLED, false)
-            val isSmartDataEnabled = prefs.getBoolean(StatusBarIconViewModel.PREF_SMART_DATA_ENABLED, false)
-            
+            val isSmartWiFiEnabled =
+                prefs.getBoolean(StatusBarIconViewModel.PREF_SMART_WIFI_ENABLED, false)
+            val isSmartDataEnabled =
+                prefs.getBoolean(StatusBarIconViewModel.PREF_SMART_DATA_ENABLED, false)
+
             if (isSmartWiFiEnabled || isSmartDataEnabled) {
                 updateNetworkIcons(isSmartWiFiEnabled, isSmartDataEnabled)
             }
-            
+
             updateBatteryPercentage()
         }
     }
 
     private fun updateNetworkIcons(isSmartWiFiEnabled: Boolean, isSmartDataEnabled: Boolean) {
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-        
+
         // 1. Get current states
         val isWifiConnected = isWifiConnected()
         val networkType = getCurrentNetworkType()
-        
+
         // 2. Load user preferences for all icons
         val visibilities = StatusBarIconRegistry.ALL_ICONS.associate { icon ->
             icon.id to prefs.getBoolean(icon.preferencesKey, icon.defaultVisible)
@@ -120,14 +127,15 @@ class StatusBarIconHandler(private val context: Context) {
             )?.map { NetworkType.valueOf(it) }?.toSet() ?: emptySet()
 
             val shouldHideMobileData = selectedNetworkTypes.contains(networkType) ||
-                (selectedNetworkTypes.contains(NetworkType.NETWORK_OTHER) &&
-                        !setOf(
-                            NetworkType.NETWORK_5G,
-                            NetworkType.NETWORK_4G,
-                            NetworkType.NETWORK_3G
-                        ).contains(networkType))
+                    (selectedNetworkTypes.contains(NetworkType.NETWORK_OTHER) &&
+                            !setOf(
+                                NetworkType.NETWORK_5G,
+                                NetworkType.NETWORK_4G,
+                                NetworkType.NETWORK_3G
+                            ).contains(networkType))
 
-            visibilities["mobile_data"] = visibilities["mobile_data"] == true && !shouldHideMobileData
+            visibilities["mobile_data"] =
+                visibilities["mobile_data"] == true && !shouldHideMobileData
         }
 
         // 5. Update system settings
@@ -138,7 +146,7 @@ class StatusBarIconHandler(private val context: Context) {
     private fun updateBatteryPercentage() {
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
         val mode = prefs.getInt(StatusBarIconViewModel.PREF_BATTERY_PERCENT_MODE, 0)
-        
+
         if (mode != 2) return // Only handle "Charging Only" mode here
 
         val batteryStatus: Intent? = IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { ifilter ->
@@ -147,7 +155,7 @@ class StatusBarIconHandler(private val context: Context) {
         val status: Int = batteryStatus?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: -1
         val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
                 status == BatteryManager.BATTERY_STATUS_FULL
-        
+
         updateSettingsValue("status_bar_show_battery_percent", if (isCharging) 1 else 0)
     }
 
@@ -176,24 +184,28 @@ class StatusBarIconHandler(private val context: Context) {
     private fun getCurrentNetworkType(): NetworkType {
         return try {
             val network = connectivityManager.activeNetwork ?: return NetworkType.NETWORK_OTHER
-            val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return NetworkType.NETWORK_OTHER
+            val capabilities = connectivityManager.getNetworkCapabilities(network)
+                ?: return NetworkType.NETWORK_OTHER
 
             if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
                 return NetworkType.NETWORK_OTHER
             }
 
-            val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+            val telephonyManager =
+                context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
             val networkType = telephonyManager.networkType
 
             when (networkType) {
                 TelephonyManager.NETWORK_TYPE_NR -> NetworkType.NETWORK_5G
                 TelephonyManager.NETWORK_TYPE_LTE,
                 TelephonyManager.NETWORK_TYPE_HSPAP -> NetworkType.NETWORK_4G
+
                 TelephonyManager.NETWORK_TYPE_HSDPA,
                 TelephonyManager.NETWORK_TYPE_HSUPA,
                 TelephonyManager.NETWORK_TYPE_HSPA,
                 TelephonyManager.NETWORK_TYPE_UMTS,
                 TelephonyManager.NETWORK_TYPE_TD_SCDMA -> NetworkType.NETWORK_3G
+
                 else -> NetworkType.NETWORK_OTHER
             }
         } catch (e: Exception) {

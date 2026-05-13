@@ -5,13 +5,13 @@ import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.model.AppSelection
+import com.sameerasw.essentials.domain.model.DnsPreset
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import com.sameerasw.essentials.domain.model.NotificationLightingSweepPosition
-import com.sameerasw.essentials.domain.model.DnsPreset
-import com.sameerasw.essentials.domain.model.TrackedRepo
 import com.sameerasw.essentials.domain.model.ScaleAnimationsProfile
+import com.sameerasw.essentials.domain.model.TrackedRepo
 import com.sameerasw.essentials.domain.model.github.GitHubUser
 import com.sameerasw.essentials.utils.RootUtils
 import com.sameerasw.essentials.utils.ShizukuUtils
@@ -24,7 +24,7 @@ class SettingsRepository(private val context: Context) {
     private val prefs: SharedPreferences =
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     private val gson = Gson()
-    
+
     init {
         migrateUsageAccessKey()
     }
@@ -485,7 +485,8 @@ class SettingsRepository(private val context: Context) {
     fun updateFlashlightPulseAppSelection(packageName: String, enabled: Boolean) =
         updateAppSelection(KEY_FLASHLIGHT_PULSE_SELECTED_APPS, packageName, enabled)
 
-    fun loadNotificationGlanceSelectedApps() = loadAppSelection(KEY_NOTIFICATION_GLANCE_SELECTED_APPS)
+    fun loadNotificationGlanceSelectedApps() =
+        loadAppSelection(KEY_NOTIFICATION_GLANCE_SELECTED_APPS)
 
     fun saveNotificationGlanceSelectedApps(apps: List<AppSelection>) =
         saveAppSelection(KEY_NOTIFICATION_GLANCE_SELECTED_APPS, apps)
@@ -497,7 +498,10 @@ class SettingsRepository(private val context: Context) {
         val json = prefs.getString(KEY_SHUT_UP_SELECTED_APPS, null)
         return if (json != null) {
             try {
-                gson.fromJson(json, Array<com.sameerasw.essentials.domain.model.ShutUpAppConfig>::class.java).toList()
+                gson.fromJson(
+                    json,
+                    Array<com.sameerasw.essentials.domain.model.ShutUpAppConfig>::class.java
+                ).toList()
             } catch (e: Exception) {
                 emptyList()
             }
@@ -565,7 +569,10 @@ class SettingsRepository(private val context: Context) {
         val json = prefs.getString(KEY_SNOOZE_DISCOVERED_CHANNELS, null)
         return if (json != null) {
             try {
-                gson.fromJson(json, Array<com.sameerasw.essentials.domain.model.SnoozeChannel>::class.java).toList()
+                gson.fromJson(
+                    json,
+                    Array<com.sameerasw.essentials.domain.model.SnoozeChannel>::class.java
+                ).toList()
             } catch (e: Exception) {
                 emptyList()
             }
@@ -602,7 +609,10 @@ class SettingsRepository(private val context: Context) {
         val json = prefs.getString(KEY_MAPS_DISCOVERED_CHANNELS, null)
         return if (json != null) {
             try {
-                gson.fromJson(json, Array<com.sameerasw.essentials.domain.model.MapsChannel>::class.java).toList()
+                gson.fromJson(
+                    json,
+                    Array<com.sameerasw.essentials.domain.model.MapsChannel>::class.java
+                ).toList()
             } catch (e: Exception) {
                 emptyList()
             }
@@ -700,7 +710,8 @@ class SettingsRepository(private val context: Context) {
     fun importConfigs(inputStream: java.io.InputStream): Boolean {
         return try {
             val json = inputStream.bufferedReader().use { it.readText() }
-            val allConfigs: Map<String, Map<String, Map<String, Any>>> = gson.fromJson(json, Map::class.java) as Map<String, Map<String, Map<String, Any>>>
+            val allConfigs: Map<String, Map<String, Map<String, Any>>> =
+                gson.fromJson(json, Map::class.java) as Map<String, Map<String, Map<String, Any>>>
 
             allConfigs.forEach { (fileName, prefWrapper) ->
                 val p = context.getSharedPreferences(fileName, Context.MODE_PRIVATE)
@@ -745,7 +756,10 @@ class SettingsRepository(private val context: Context) {
     fun getBluetoothDevicesBattery(): List<com.sameerasw.essentials.utils.BluetoothBatteryUtils.BluetoothDeviceBattery> {
         val json = prefs.getString(KEY_BLUETOOTH_DEVICES_BATTERY, null) ?: return emptyList()
         return try {
-            gson.fromJson(json, Array<com.sameerasw.essentials.utils.BluetoothBatteryUtils.BluetoothDeviceBattery>::class.java).toList()
+            gson.fromJson(
+                json,
+                Array<com.sameerasw.essentials.utils.BluetoothBatteryUtils.BluetoothDeviceBattery>::class.java
+            ).toList()
         } catch (e: Exception) {
             emptyList()
         }
@@ -810,8 +824,11 @@ class SettingsRepository(private val context: Context) {
         saveTrackedRepos(current)
     }
 
-    fun isShutUpAttemptShizukuRestartEnabled(): Boolean = getBoolean(KEY_SHUT_UP_ATTEMPT_SHIZUKU_RESTART, true)
-    fun setShutUpAttemptShizukuRestartEnabled(enabled: Boolean) = putBoolean(KEY_SHUT_UP_ATTEMPT_SHIZUKU_RESTART, enabled)
+    fun isShutUpAttemptShizukuRestartEnabled(): Boolean =
+        getBoolean(KEY_SHUT_UP_ATTEMPT_SHIZUKU_RESTART, true)
+
+    fun setShutUpAttemptShizukuRestartEnabled(enabled: Boolean) =
+        putBoolean(KEY_SHUT_UP_ATTEMPT_SHIZUKU_RESTART, enabled)
 
     fun removeTrackedRepo(fullName: String) {
         val current = getTrackedRepos().toMutableList()
@@ -858,13 +875,18 @@ class SettingsRepository(private val context: Context) {
     }
 
     fun isUserDictionaryEnabled(): Boolean = getBoolean(KEY_USER_DICTIONARY_ENABLED, false)
-    fun setUserDictionaryEnabled(enabled: Boolean) = putBoolean(KEY_USER_DICTIONARY_ENABLED, enabled)
+    fun setUserDictionaryEnabled(enabled: Boolean) =
+        putBoolean(KEY_USER_DICTIONARY_ENABLED, enabled)
 
     fun isAccentedCharactersEnabled(): Boolean = getBoolean(KEY_KEYBOARD_ACCENTED_CHARACTERS, false)
-    fun setAccentedCharactersEnabled(enabled: Boolean) = putBoolean(KEY_KEYBOARD_ACCENTED_CHARACTERS, enabled)
+    fun setAccentedCharactersEnabled(enabled: Boolean) =
+        putBoolean(KEY_KEYBOARD_ACCENTED_CHARACTERS, enabled)
 
-    fun isBatteryNotificationEnabled(): Boolean = getBoolean(KEY_BATTERY_NOTIFICATION_ENABLED, false)
-    fun setBatteryNotificationEnabled(enabled: Boolean) = putBoolean(KEY_BATTERY_NOTIFICATION_ENABLED, enabled)
+    fun isBatteryNotificationEnabled(): Boolean =
+        getBoolean(KEY_BATTERY_NOTIFICATION_ENABLED, false)
+
+    fun setBatteryNotificationEnabled(enabled: Boolean) =
+        putBoolean(KEY_BATTERY_NOTIFICATION_ENABLED, enabled)
 
     // Live Wallpaper Helpers
     private val liveWallpaperPrefs: SharedPreferences by lazy {
@@ -872,25 +894,33 @@ class SettingsRepository(private val context: Context) {
     }
 
     fun getLiveWallpaperSelectedVideo(): String =
-        liveWallpaperPrefs.getString(KEY_LIVE_WALLPAPER_SELECTED_VIDEO, LIVE_WALLPAPER_DEFAULT_VIDEO)
+        liveWallpaperPrefs.getString(
+            KEY_LIVE_WALLPAPER_SELECTED_VIDEO,
+            LIVE_WALLPAPER_DEFAULT_VIDEO
+        )
             ?: LIVE_WALLPAPER_DEFAULT_VIDEO
 
     fun saveLiveWallpaperSelectedVideo(video: String) =
         liveWallpaperPrefs.edit().putString(KEY_LIVE_WALLPAPER_SELECTED_VIDEO, video).apply()
 
     fun getLiveWallpaperPlaybackTrigger(): String =
-        liveWallpaperPrefs.getString(KEY_LIVE_WALLPAPER_PLAYBACK_TRIGGER, LIVE_WALLPAPER_TRIGGER_UNLOCK)
+        liveWallpaperPrefs.getString(
+            KEY_LIVE_WALLPAPER_PLAYBACK_TRIGGER,
+            LIVE_WALLPAPER_TRIGGER_UNLOCK
+        )
             ?: LIVE_WALLPAPER_TRIGGER_UNLOCK
 
     fun saveLiveWallpaperPlaybackTrigger(trigger: String) =
         liveWallpaperPrefs.edit().putString(KEY_LIVE_WALLPAPER_PLAYBACK_TRIGGER, trigger).apply()
 
     fun getLiveWallpaperCustomVideos(): List<String> =
-        liveWallpaperPrefs.getString(KEY_LIVE_WALLPAPER_CUSTOM_VIDEOS, "")?.split(",")?.filter { it.isNotEmpty() }
+        liveWallpaperPrefs.getString(KEY_LIVE_WALLPAPER_CUSTOM_VIDEOS, "")?.split(",")
+            ?.filter { it.isNotEmpty() }
             ?: emptyList()
 
     fun saveLiveWallpaperCustomVideos(videos: List<String>) =
-        liveWallpaperPrefs.edit().putString(KEY_LIVE_WALLPAPER_CUSTOM_VIDEOS, videos.joinToString(",")).apply()
+        liveWallpaperPrefs.edit()
+            .putString(KEY_LIVE_WALLPAPER_CUSTOM_VIDEOS, videos.joinToString(",")).apply()
 
     fun addLiveWallpaperCustomVideo(uri: String) {
         val current = getLiveWallpaperCustomVideos().toMutableList()
@@ -903,9 +933,11 @@ class SettingsRepository(private val context: Context) {
 
     fun getLiveWallpaperAvailableVideos(): List<String> {
         val raws = com.sameerasw.essentials.R.raw::class.java.fields.mapNotNull { field ->
-            try { 
-                if (field.name == "keep") null else field.name 
-            } catch (e: Exception) { null }
+            try {
+                if (field.name == "keep") null else field.name
+            } catch (e: Exception) {
+                null
+            }
         }
         return raws + getLiveWallpaperCustomVideos()
     }
@@ -923,7 +955,10 @@ class SettingsRepository(private val context: Context) {
 
     fun getFontScale(): Float {
         return try {
-            android.provider.Settings.System.getFloat(context.contentResolver, android.provider.Settings.System.FONT_SCALE)
+            android.provider.Settings.System.getFloat(
+                context.contentResolver,
+                android.provider.Settings.System.FONT_SCALE
+            )
         } catch (e: Exception) {
             1.0f
         }
@@ -932,7 +967,11 @@ class SettingsRepository(private val context: Context) {
     fun setFontScale(scale: Float) {
         putFloat(KEY_FONT_SCALE, scale)
         try {
-            android.provider.Settings.System.putFloat(context.contentResolver, android.provider.Settings.System.FONT_SCALE, scale)
+            android.provider.Settings.System.putFloat(
+                context.contentResolver,
+                android.provider.Settings.System.FONT_SCALE,
+                scale
+            )
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -940,7 +979,10 @@ class SettingsRepository(private val context: Context) {
 
     fun getFontWeight(): Int {
         return try {
-            android.provider.Settings.Secure.getInt(context.contentResolver, "font_weight_adjustment")
+            android.provider.Settings.Secure.getInt(
+                context.contentResolver,
+                "font_weight_adjustment"
+            )
         } catch (e: Exception) {
             0
         }
@@ -949,7 +991,11 @@ class SettingsRepository(private val context: Context) {
     fun setFontWeight(weight: Int) {
         putInt(KEY_FONT_WEIGHT, weight)
         try {
-            android.provider.Settings.Secure.putInt(context.contentResolver, "font_weight_adjustment", weight)
+            android.provider.Settings.Secure.putInt(
+                context.contentResolver,
+                "font_weight_adjustment",
+                weight
+            )
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -957,7 +1003,10 @@ class SettingsRepository(private val context: Context) {
 
     fun getSmallestWidth(): Int {
         val forcedDensity = try {
-            android.provider.Settings.Secure.getInt(context.contentResolver, "display_density_forced")
+            android.provider.Settings.Secure.getInt(
+                context.contentResolver,
+                "display_density_forced"
+            )
         } catch (e: Exception) {
             0
         }
@@ -974,7 +1023,7 @@ class SettingsRepository(private val context: Context) {
         val metrics = context.resources.displayMetrics
         val widthPx = Math.min(metrics.widthPixels, metrics.heightPixels)
         val density = (widthPx * 160) / widthDp
-        
+
         val command = "wm density $density"
         if (ShizukuUtils.isShizukuAvailable() && ShizukuUtils.hasPermission()) {
             ShizukuUtils.runCommand(command)
@@ -982,7 +1031,11 @@ class SettingsRepository(private val context: Context) {
             RootUtils.runCommand(command)
         } else {
             try {
-                android.provider.Settings.Secure.putInt(context.contentResolver, "display_density_forced", density)
+                android.provider.Settings.Secure.putInt(
+                    context.contentResolver,
+                    "display_density_forced",
+                    density
+                )
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -997,7 +1050,11 @@ class SettingsRepository(private val context: Context) {
             RootUtils.runCommand(command)
         } else {
             try {
-                android.provider.Settings.Secure.putString(context.contentResolver, "display_density_forced", null)
+                android.provider.Settings.Secure.putString(
+                    context.contentResolver,
+                    "display_density_forced",
+                    null
+                )
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -1015,9 +1072,20 @@ class SettingsRepository(private val context: Context) {
 
     fun setAnimationScale(key: String, scale: Float) {
         when (key) {
-            android.provider.Settings.Global.ANIMATOR_DURATION_SCALE -> putFloat(KEY_ANIMATOR_DURATION_SCALE, scale)
-            android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE -> putFloat(KEY_TRANSITION_ANIMATION_SCALE, scale)
-            android.provider.Settings.Global.WINDOW_ANIMATION_SCALE -> putFloat(KEY_WINDOW_ANIMATION_SCALE, scale)
+            android.provider.Settings.Global.ANIMATOR_DURATION_SCALE -> putFloat(
+                KEY_ANIMATOR_DURATION_SCALE,
+                scale
+            )
+
+            android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE -> putFloat(
+                KEY_TRANSITION_ANIMATION_SCALE,
+                scale
+            )
+
+            android.provider.Settings.Global.WINDOW_ANIMATION_SCALE -> putFloat(
+                KEY_WINDOW_ANIMATION_SCALE,
+                scale
+            )
         }
         try {
             android.provider.Settings.Global.putFloat(context.contentResolver, key, scale)
@@ -1035,15 +1103,27 @@ class SettingsRepository(private val context: Context) {
                 setFontWeight(getInt(KEY_FONT_WEIGHT, 0))
             }
             if (contains(KEY_ANIMATOR_DURATION_SCALE)) {
-                setAnimationScale(android.provider.Settings.Global.ANIMATOR_DURATION_SCALE, getFloat(KEY_ANIMATOR_DURATION_SCALE, 1.0f))
+                setAnimationScale(
+                    android.provider.Settings.Global.ANIMATOR_DURATION_SCALE,
+                    getFloat(KEY_ANIMATOR_DURATION_SCALE, 1.0f)
+                )
             }
             if (contains(KEY_TRANSITION_ANIMATION_SCALE)) {
-                setAnimationScale(android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE, getFloat(KEY_TRANSITION_ANIMATION_SCALE, 1.0f))
+                setAnimationScale(
+                    android.provider.Settings.Global.TRANSITION_ANIMATION_SCALE,
+                    getFloat(KEY_TRANSITION_ANIMATION_SCALE, 1.0f)
+                )
             }
             if (contains(KEY_WINDOW_ANIMATION_SCALE)) {
-                setAnimationScale(android.provider.Settings.Global.WINDOW_ANIMATION_SCALE, getFloat(KEY_WINDOW_ANIMATION_SCALE, 1.0f))
+                setAnimationScale(
+                    android.provider.Settings.Global.WINDOW_ANIMATION_SCALE,
+                    getFloat(KEY_WINDOW_ANIMATION_SCALE, 1.0f)
+                )
             }
-            if (contains(KEY_REFRESH_RATE_FIXED) || contains(KEY_REFRESH_RATE_MIN) || contains(KEY_REFRESH_RATE_PEAK)) {
+            if (contains(KEY_REFRESH_RATE_FIXED) || contains(KEY_REFRESH_RATE_MIN) || contains(
+                    KEY_REFRESH_RATE_PEAK
+                )
+            ) {
                 val mode = getRefreshRateMode()
                 val fixed = getFloat(KEY_REFRESH_RATE_FIXED, 0f)
                 val min = getFloat(KEY_REFRESH_RATE_MIN, 0f)
@@ -1101,11 +1181,31 @@ class SettingsRepository(private val context: Context) {
 
     private fun getDefaultDnsPresets(): List<DnsPreset> {
         return listOf(
-            DnsPreset(name = context.getString(com.sameerasw.essentials.R.string.dns_preset_adguard), hostname = "dns.adguard.com", isDefault = true),
-            DnsPreset(name = context.getString(com.sameerasw.essentials.R.string.dns_preset_google), hostname = "dns.google", isDefault = true),
-            DnsPreset(name = context.getString(com.sameerasw.essentials.R.string.dns_preset_cloudflare), hostname = "1dot1dot1dot1.cloudflare-dns.com", isDefault = true),
-            DnsPreset(name = context.getString(com.sameerasw.essentials.R.string.dns_preset_quad9), hostname = "dns.quad9.net", isDefault = true),
-            DnsPreset(name = context.getString(com.sameerasw.essentials.R.string.dns_preset_cleanbrowsing), hostname = "adult-filter-dns.cleanbrowsing.org", isDefault = true)
+            DnsPreset(
+                name = context.getString(com.sameerasw.essentials.R.string.dns_preset_adguard),
+                hostname = "dns.adguard.com",
+                isDefault = true
+            ),
+            DnsPreset(
+                name = context.getString(com.sameerasw.essentials.R.string.dns_preset_google),
+                hostname = "dns.google",
+                isDefault = true
+            ),
+            DnsPreset(
+                name = context.getString(com.sameerasw.essentials.R.string.dns_preset_cloudflare),
+                hostname = "1dot1dot1dot1.cloudflare-dns.com",
+                isDefault = true
+            ),
+            DnsPreset(
+                name = context.getString(com.sameerasw.essentials.R.string.dns_preset_quad9),
+                hostname = "dns.quad9.net",
+                isDefault = true
+            ),
+            DnsPreset(
+                name = context.getString(com.sameerasw.essentials.R.string.dns_preset_cleanbrowsing),
+                hostname = "adult-filter-dns.cleanbrowsing.org",
+                isDefault = true
+            )
         )
     }
 
@@ -1118,7 +1218,9 @@ class SettingsRepository(private val context: Context) {
         savePrivateDnsPresets(getDefaultDnsPresets())
     }
 
-    fun getScaleAnimationsMode(): String = getString(KEY_SCALE_ANIMATIONS_MODE, "default") ?: "default"
+    fun getScaleAnimationsMode(): String =
+        getString(KEY_SCALE_ANIMATIONS_MODE, "default") ?: "default"
+
     fun setScaleAnimationsMode(mode: String) = putString(KEY_SCALE_ANIMATIONS_MODE, mode)
 
     fun getRefreshRateMode(): String =
@@ -1141,7 +1243,8 @@ class SettingsRepository(private val context: Context) {
         putBoolean(KEY_REFRESH_RATE_DEFAULT_PEAK_INFINITY, enabled)
 
     fun getScaleAnimationsProfile(mode: String): ScaleAnimationsProfile {
-        val key = if (mode == "glove") KEY_SCALE_ANIMATIONS_GLOVE_PROFILE else KEY_SCALE_ANIMATIONS_DEFAULT_PROFILE
+        val key =
+            if (mode == "glove") KEY_SCALE_ANIMATIONS_GLOVE_PROFILE else KEY_SCALE_ANIMATIONS_DEFAULT_PROFILE
         val json = prefs.getString(key, null)
         return if (json != null) {
             try {
@@ -1169,14 +1272,19 @@ class SettingsRepository(private val context: Context) {
     }
 
     fun saveScaleAnimationsProfile(mode: String, profile: ScaleAnimationsProfile) {
-        val key = if (mode == "glove") KEY_SCALE_ANIMATIONS_GLOVE_PROFILE else KEY_SCALE_ANIMATIONS_DEFAULT_PROFILE
+        val key =
+            if (mode == "glove") KEY_SCALE_ANIMATIONS_GLOVE_PROFILE else KEY_SCALE_ANIMATIONS_DEFAULT_PROFILE
         val json = gson.toJson(profile)
         putString(key, json)
     }
 
     fun getTouchSensitivityEnabled(): Boolean {
         return try {
-            android.provider.Settings.Secure.getInt(context.contentResolver, "touch_sensitivity_enabled", 0) == 1
+            android.provider.Settings.Secure.getInt(
+                context.contentResolver,
+                "touch_sensitivity_enabled",
+                0
+            ) == 1
         } catch (e: Exception) {
             false
         }
@@ -1184,7 +1292,11 @@ class SettingsRepository(private val context: Context) {
 
     fun setTouchSensitivityEnabled(enabled: Boolean) {
         try {
-            android.provider.Settings.Secure.putInt(context.contentResolver, "touch_sensitivity_enabled", if (enabled) 1 else 0)
+            android.provider.Settings.Secure.putInt(
+                context.contentResolver,
+                "touch_sensitivity_enabled",
+                if (enabled) 1 else 0
+            )
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -1192,7 +1304,11 @@ class SettingsRepository(private val context: Context) {
 
     fun getAutoRotateEnabled(): Boolean {
         return try {
-            android.provider.Settings.System.getInt(context.contentResolver, android.provider.Settings.System.ACCELEROMETER_ROTATION, 0) == 1
+            android.provider.Settings.System.getInt(
+                context.contentResolver,
+                android.provider.Settings.System.ACCELEROMETER_ROTATION,
+                0
+            ) == 1
         } catch (e: Exception) {
             false
         }
@@ -1200,7 +1316,11 @@ class SettingsRepository(private val context: Context) {
 
     fun setAutoRotateEnabled(enabled: Boolean) {
         try {
-            android.provider.Settings.System.putInt(context.contentResolver, android.provider.Settings.System.ACCELEROMETER_ROTATION, if (enabled) 1 else 0)
+            android.provider.Settings.System.putInt(
+                context.contentResolver,
+                android.provider.Settings.System.ACCELEROMETER_ROTATION,
+                if (enabled) 1 else 0
+            )
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -1208,7 +1328,11 @@ class SettingsRepository(private val context: Context) {
 
     fun getScreenTimeout(): Long {
         return try {
-            android.provider.Settings.System.getLong(context.contentResolver, android.provider.Settings.System.SCREEN_OFF_TIMEOUT, 30000L)
+            android.provider.Settings.System.getLong(
+                context.contentResolver,
+                android.provider.Settings.System.SCREEN_OFF_TIMEOUT,
+                30000L
+            )
         } catch (e: Exception) {
             30000L
         }
@@ -1216,7 +1340,11 @@ class SettingsRepository(private val context: Context) {
 
     fun setScreenTimeout(timeoutMs: Long) {
         try {
-            android.provider.Settings.System.putLong(context.contentResolver, android.provider.Settings.System.SCREEN_OFF_TIMEOUT, timeoutMs)
+            android.provider.Settings.System.putLong(
+                context.contentResolver,
+                android.provider.Settings.System.SCREEN_OFF_TIMEOUT,
+                timeoutMs
+            )
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -1237,8 +1365,11 @@ class SettingsRepository(private val context: Context) {
     fun getLockScreenClockColorTone(): Int = getInt(KEY_LOCK_SCREEN_CLOCK_COLOR_TONE, 75)
     fun setLockScreenClockColorTone(value: Int) = putInt(KEY_LOCK_SCREEN_CLOCK_COLOR_TONE, value)
 
-    fun getLockScreenClockSelectedColorId(): String = getString(KEY_LOCK_SCREEN_CLOCK_SELECTED_COLOR_ID, "DEFAULT") ?: "DEFAULT"
-    fun setLockScreenClockSelectedColorId(value: String) = putString(KEY_LOCK_SCREEN_CLOCK_SELECTED_COLOR_ID, value)
+    fun getLockScreenClockSelectedColorId(): String =
+        getString(KEY_LOCK_SCREEN_CLOCK_SELECTED_COLOR_ID, "DEFAULT") ?: "DEFAULT"
+
+    fun setLockScreenClockSelectedColorId(value: String) =
+        putString(KEY_LOCK_SCREEN_CLOCK_SELECTED_COLOR_ID, value)
 
     fun getLockScreenClockSeedColor(): Int = getInt(KEY_LOCK_SCREEN_CLOCK_SEED_COLOR, 0)
     fun setLockScreenClockSeedColor(value: Int) = putInt(KEY_LOCK_SCREEN_CLOCK_SEED_COLOR, value)

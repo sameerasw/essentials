@@ -3,12 +3,10 @@ package com.sameerasw.essentials.services.tiles
 import android.content.Intent
 import android.graphics.drawable.Icon
 import android.os.Build
-import android.provider.Settings
 import android.service.quicksettings.Tile
 import androidx.annotation.RequiresApi
 import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
-import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.utils.ShellUtils
 
 @RequiresApi(Build.VERSION_CODES.N)
@@ -46,7 +44,7 @@ class ChargeQuickTileService : BaseTileService() {
     override fun onTileClick() {
         val adaptiveChargingEnabled = getSecureInt(ADAPTIVE_CHARGING_SETTING, 0) == 1
         val chargeOptimizationEnabled = getSecureInt(CHARGE_OPTIMIZATION_MODE, 0) == 1
-        
+
         when {
             adaptiveChargingEnabled -> {
                 putSecureInt(CHARGE_OPTIMIZATION_MODE, 1)

@@ -2,36 +2,34 @@ package com.sameerasw.essentials.ui.composables.configs
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.sheets.PermissionItem
 import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
-import com.sameerasw.essentials.ui.modifiers.highlight
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
-import androidx.compose.runtime.DisposableEffect
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
+import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.viewmodels.MainViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.compose.ui.platform.LocalLifecycleOwner
 
 enum class PermissionModule {
     HIDE_GESTURE_BAR,
@@ -55,7 +53,8 @@ fun OtherCustomizationsSettingsUI(
         val isShizukuGranted = viewModel.isShizukuPermissionGranted.value
         val isRootAvailable = viewModel.isRootAvailable.value
         val isRootGranted = viewModel.isRootPermissionGranted.value
-        val isShellGranted = (isShizukuAvailable && isShizukuGranted) || (isRootAvailable && isRootGranted)
+        val isShellGranted =
+            (isShizukuAvailable && isShizukuGranted) || (isRootAvailable && isRootGranted)
         val isAccessibilityEnabled = viewModel.isAccessibilityEnabled.value
         val isUsageStatsGranted = viewModel.isUsageStatsPermissionGranted.value
         val useUsageAccess = viewModel.isUseUsageAccess.value
@@ -89,9 +88,16 @@ fun OtherCustomizationsSettingsUI(
             iconRes = R.drawable.rounded_accessibility_new_24,
             title = R.string.perm_accessibility_title,
             description = R.string.perm_accessibility_desc_common,
-            dependentFeatures = listOf(R.string.feat_hide_gesture_bar_on_launcher_title, R.string.feat_circle_to_search_gesture_title),
+            dependentFeatures = listOf(
+                R.string.feat_hide_gesture_bar_on_launcher_title,
+                R.string.feat_circle_to_search_gesture_title
+            ),
             actionLabel = if (isAccessibilityEnabled) R.string.label_enabled else R.string.perm_action_enable,
-            action = { com.sameerasw.essentials.utils.PermissionUtils.openAccessibilitySettings(context) },
+            action = {
+                com.sameerasw.essentials.utils.PermissionUtils.openAccessibilitySettings(
+                    context
+                )
+            },
             isGranted = isAccessibilityEnabled
         )
 
@@ -108,9 +114,11 @@ fun OtherCustomizationsSettingsUI(
         val permissionsToShow = when (requestingPermissionFor) {
             PermissionModule.HIDE_GESTURE_BAR -> listOf(shizukuPermission)
             PermissionModule.SHOW_ON_LAUNCHER -> {
-                val appDetectionPermission = if (useUsageAccess) usageStatsPermission else accessibilityPermission
+                val appDetectionPermission =
+                    if (useUsageAccess) usageStatsPermission else accessibilityPermission
                 listOf(shizukuPermission, appDetectionPermission)
             }
+
             PermissionModule.CIRCLE_TO_SEARCH -> listOf(shizukuPermission, accessibilityPermission)
             PermissionModule.DISABLE_ROTATION_SUGGESTION -> listOf(shizukuPermission)
             else -> emptyList()
@@ -129,12 +137,15 @@ fun OtherCustomizationsSettingsUI(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        val isShizukuGranted = viewModel.isShizukuAvailable.value && viewModel.isShizukuPermissionGranted.value
-        val isRootGranted = viewModel.isRootAvailable.value && viewModel.isRootPermissionGranted.value
+        val isShizukuGranted =
+            viewModel.isShizukuAvailable.value && viewModel.isShizukuPermissionGranted.value
+        val isRootGranted =
+            viewModel.isRootAvailable.value && viewModel.isRootPermissionGranted.value
         val isShellGranted = isShizukuGranted || isRootGranted
         val isAccessibilityEnabled = viewModel.isAccessibilityEnabled.value
         val isUsageStatsGranted = viewModel.isUsageStatsPermissionGranted.value
-        val isAppDetectionGranted = if (viewModel.isUseUsageAccess.value) isUsageStatsGranted else isAccessibilityEnabled
+        val isAppDetectionGranted =
+            if (viewModel.isUseUsageAccess.value) isUsageStatsGranted else isAccessibilityEnabled
 
         RoundedCardContainer(
             modifier = Modifier,

@@ -50,8 +50,8 @@ class AmbientGlanceHandler(
     private var centerContainer: FrameLayout? = null
     private var clipContainer: FrameLayout? = null
     private var textContainer: LinearLayout? = null
-    
-    private var currentShapePath: android.graphics.Path? = null
+
+    private var currentShapePath: Path? = null
     private var currentPolygon: androidx.graphics.shapes.RoundedPolygon? = null
     private var morphAnimator: android.animation.ValueAnimator? = null
 
@@ -95,11 +95,14 @@ class AmbientGlanceHandler(
             }
 
             // Dismiss if music stops/pauses
-            val mediaSessionManager = service.getSystemService(Context.MEDIA_SESSION_SERVICE) as MediaSessionManager
-            val componentName = android.content.ComponentName(service, ScreenOffAccessibilityService::class.java)
+            val mediaSessionManager =
+                service.getSystemService(Context.MEDIA_SESSION_SERVICE) as MediaSessionManager
+            val componentName =
+                android.content.ComponentName(service, ScreenOffAccessibilityService::class.java)
             val sessions = mediaSessionManager.getActiveSessions(componentName)
-            val anyPlaying = sessions.any { it.playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING }
-            
+            val anyPlaying =
+                sessions.any { it.playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING }
+
             if (!anyPlaying) {
                 fadeOutAndRemove()
                 return
@@ -192,7 +195,7 @@ class AmbientGlanceHandler(
                     else if (volumeKey == 25) volumeIconView?.setImageResource(R.drawable.rounded_volume_down_24)
                     volumeIconView?.animate()?.alpha(1f)?.setDuration(200)?.start()
                     volumeStrokeView?.setColor(Color.WHITE)
-                    
+
                     // Show and schedule hide
                     volumeStrokeView?.animate()?.alpha(1f)?.setDuration(300)?.start()
                     handler.removeCallbacks(volumeHideRunnable)
@@ -242,7 +245,10 @@ class AmbientGlanceHandler(
         // Update Dynamic Shape with Morphing
         val size = dpToPx(320f).toFloat()
         val randomEnabled = isRandomShapesEnabled()
-        val newPolygon = com.sameerasw.essentials.utils.AmbientMusicShapeHelper.getPolygon("${trackTitle}_${artistName}", randomEnabled)
+        val newPolygon = com.sameerasw.essentials.utils.AmbientMusicShapeHelper.getPolygon(
+            "${trackTitle}_${artistName}",
+            randomEnabled
+        )
 
         if (currentPolygon != null && currentPolygon != newPolygon) {
             val morph = androidx.graphics.shapes.Morph(currentPolygon!!, newPolygon)
@@ -259,7 +265,7 @@ class AmbientGlanceHandler(
                         volumeStrokeView?.updatePath(path)
                         clipContainer?.invalidateOutline()
                     }
-                    
+
                     nextImageView?.alpha = progress
                 }
                 addListener(object : android.animation.AnimatorListenerAdapter() {
@@ -381,8 +387,13 @@ class AmbientGlanceHandler(
         val size = dpToPx(320f)
 
         val randomEnabled = isRandomShapesEnabled()
-        currentPolygon = com.sameerasw.essentials.utils.AmbientMusicShapeHelper.getRandomPolygon(randomEnabled)
-        currentShapePath = com.sameerasw.essentials.utils.AmbientMusicShapeHelper.getRandomShapePath(size.toFloat(), randomEnabled)
+        currentPolygon =
+            com.sameerasw.essentials.utils.AmbientMusicShapeHelper.getRandomPolygon(randomEnabled)
+        currentShapePath =
+            com.sameerasw.essentials.utils.AmbientMusicShapeHelper.getRandomShapePath(
+                size.toFloat(),
+                randomEnabled
+            )
 
         // Container for clipping
         clipContainer = FrameLayout(context).apply {
@@ -429,7 +440,7 @@ class AmbientGlanceHandler(
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.MATCH_PARENT
             )
-            setBackgroundColor(0x40000000.toInt())
+            setBackgroundColor(0x40000000)
         }
 
         clipContainer?.addView(imageView)
@@ -463,7 +474,7 @@ class AmbientGlanceHandler(
         volumeStrokeView?.setColor(if (eventType == EVENT_VOLUME) Color.WHITE else Color.GRAY)
         volumeStrokeView?.alpha = if (eventType == EVENT_VOLUME) 1f else 0f
         centerContainer?.addView(volumeStrokeView)
-        
+
         if (eventType == EVENT_VOLUME) {
             handler.removeCallbacks(volumeHideRunnable)
             handler.postDelayed(volumeHideRunnable, 3000)
@@ -796,7 +807,7 @@ class AmbientGlanceHandler(
 
     private inner class VolumeStrokeView(
         context: Context,
-        private var petalPath: android.graphics.Path,
+        private var petalPath: Path,
         private val percentage: Int
     ) : View(context) {
         private var currentPercentage: Float = percentage.toFloat()
@@ -812,7 +823,7 @@ class AmbientGlanceHandler(
         private val progressPath = Path()
         private var isDetached = false
 
-        fun updatePath(newPath: android.graphics.Path) {
+        fun updatePath(newPath: Path) {
             this.petalPath = newPath
             this.pathMeasure = PathMeasure(newPath, false)
             invalidate()

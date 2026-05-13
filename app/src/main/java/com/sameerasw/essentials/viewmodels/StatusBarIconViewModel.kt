@@ -1,17 +1,13 @@
 package com.sameerasw.essentials.viewmodels
 
-import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.BatteryManager
 import android.provider.Settings
-import android.telephony.TelephonyManager
 import androidx.compose.runtime.mutableStateOf
-import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 import com.sameerasw.essentials.domain.StatusBarIconRegistry
@@ -21,8 +17,6 @@ import com.sameerasw.essentials.utils.updateIconBlacklistSetting
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class StatusBarIconViewModel : ViewModel() {
     val isWriteSecureSettingsEnabled = mutableStateOf(false)
@@ -33,7 +27,7 @@ class StatusBarIconViewModel : ViewModel() {
     val batteryPercentageMode = mutableStateOf(0) // 0: Hide, 1: Always, 2: Charging
     val isPrivacyChipEnabled = mutableStateOf(true)
     val isWriteSettingsEnabled = mutableStateOf(false)
- 
+
     val isHideSystemIconsEnabled = mutableStateOf(false)
     val isHideSystemIconsLockedOnlyEnabled = mutableStateOf(false)
     val isHideClockEnabled = mutableStateOf(false)
@@ -426,7 +420,8 @@ class StatusBarIconViewModel : ViewModel() {
     private fun loadAdvancedFlags(context: Context) {
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
         isHideSystemIconsEnabled.value = prefs.getBoolean(PREF_HIDE_SYSTEM_ICONS, false)
-        isHideSystemIconsLockedOnlyEnabled.value = prefs.getBoolean(PREF_HIDE_SYSTEM_ICONS_LOCKED_ONLY, false)
+        isHideSystemIconsLockedOnlyEnabled.value =
+            prefs.getBoolean(PREF_HIDE_SYSTEM_ICONS_LOCKED_ONLY, false)
         isHideClockEnabled.value = prefs.getBoolean(PREF_HIDE_CLOCK, false)
         isHideNotificationIconsEnabled.value = prefs.getBoolean(PREF_HIDE_NOTIFICATION_ICONS, false)
         applyAdvancedFlags(context)

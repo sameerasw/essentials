@@ -62,6 +62,7 @@ object RefreshRateUtils {
         return when {
             min > 0f && peak > 0f && min.roundToInt() != peak.roundToInt() ->
                 "${min.roundToInt()}-${peak.roundToInt()} Hz"
+
             else -> "${getDisplayValue(context).roundToInt()} Hz"
         }
     }
@@ -172,9 +173,9 @@ object RefreshRateUtils {
         if (!isMinUnset) return false
 
         return isUnsetValue(rawPeak) ||
-            isInfinityValue(rawPeak) ||
-            peak <= 0f ||
-            peak.roundToInt() == DEFAULT_SYSTEM_REFRESH_RATE.roundToInt()
+                isInfinityValue(rawPeak) ||
+                peak <= 0f ||
+                peak.roundToInt() == DEFAULT_SYSTEM_REFRESH_RATE.roundToInt()
     }
 
     private fun isUnsetValue(rawValue: String?): Boolean {
@@ -185,7 +186,7 @@ object RefreshRateUtils {
     private fun isInfinityValue(rawValue: String?): Boolean {
         val trimmed = rawValue?.trim().orEmpty()
         return trimmed.equals("Infinity", ignoreCase = true) ||
-            trimmed.equals("inf", ignoreCase = true)
+                trimmed.equals("inf", ignoreCase = true)
     }
 
     private fun getHighestSupportedRefreshRate(context: Context): Float {

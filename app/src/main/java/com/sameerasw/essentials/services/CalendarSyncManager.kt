@@ -33,8 +33,12 @@ object CalendarSyncManager {
         }
 
         // Listen for preference changes to start/stop sync
-        repo.registerOnSharedPreferenceChangeListener(object : SharedPreferences.OnSharedPreferenceChangeListener {
-            override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        repo.registerOnSharedPreferenceChangeListener(object :
+            SharedPreferences.OnSharedPreferenceChangeListener {
+            override fun onSharedPreferenceChanged(
+                sharedPreferences: SharedPreferences?,
+                key: String?
+            ) {
                 if (key == SettingsRepository.KEY_CALENDAR_SYNC_ENABLED) {
                     val enabled = repo.getBoolean(key, false)
                     if (enabled != isSyncEnabled) {

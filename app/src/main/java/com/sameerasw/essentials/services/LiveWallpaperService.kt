@@ -1,12 +1,12 @@
 package com.sameerasw.essentials.services
 
 import android.app.KeyguardManager
-import android.net.Uri
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
+import android.net.Uri
 import android.service.wallpaper.WallpaperService
 import android.view.SurfaceHolder
 import androidx.annotation.OptIn
@@ -25,7 +25,7 @@ class LiveWallpaperService : WallpaperService() {
         private var exoPlayer: ExoPlayer? = null
         private lateinit var repository: SettingsRepository
         private val executor = android.os.Handler(android.os.Looper.getMainLooper())
-        private val keyguardManager by lazy { getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager }
+        private val keyguardManager by lazy { getSystemService(KEYGUARD_SERVICE) as KeyguardManager }
 
         private val prefsListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
             when (key) {
@@ -52,11 +52,12 @@ class LiveWallpaperService : WallpaperService() {
                             exoPlayer?.seekTo(0)
                         }, 500)
                     }
+
                     Intent.ACTION_SCREEN_ON -> {
-                        val shouldPlay = isPreview || 
-                                       !keyguardManager.isKeyguardLocked || 
-                                       repository.getLiveWallpaperPlaybackTrigger() == SettingsRepository.LIVE_WALLPAPER_TRIGGER_SCREEN_ON
-                        
+                        val shouldPlay = isPreview ||
+                                !keyguardManager.isKeyguardLocked ||
+                                repository.getLiveWallpaperPlaybackTrigger() == SettingsRepository.LIVE_WALLPAPER_TRIGGER_SCREEN_ON
+
                         if (shouldPlay) {
                             executor.removeCallbacksAndMessages(null)
                             exoPlayer?.play()
@@ -76,7 +77,7 @@ class LiveWallpaperService : WallpaperService() {
         override fun onCreate(surfaceHolder: SurfaceHolder?) {
             super.onCreate(surfaceHolder)
             repository = SettingsRepository(applicationContext)
-            
+
             val filter = IntentFilter().apply {
                 addAction(Intent.ACTION_USER_PRESENT)
                 addAction(Intent.ACTION_SCREEN_OFF)
@@ -89,9 +90,9 @@ class LiveWallpaperService : WallpaperService() {
 
         override fun onVisibilityChanged(visible: Boolean) {
             if (visible) {
-                val shouldPlay = isPreview || 
-                               !keyguardManager.isKeyguardLocked || 
-                               repository.getLiveWallpaperPlaybackTrigger() == SettingsRepository.LIVE_WALLPAPER_TRIGGER_SCREEN_ON
+                val shouldPlay = isPreview ||
+                        !keyguardManager.isKeyguardLocked ||
+                        repository.getLiveWallpaperPlaybackTrigger() == SettingsRepository.LIVE_WALLPAPER_TRIGGER_SCREEN_ON
                 if (shouldPlay) exoPlayer?.play()
             } else {
                 exoPlayer?.pause()
@@ -111,9 +112,9 @@ class LiveWallpaperService : WallpaperService() {
                 volume = 0f
                 videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
                 loadSelectedVideo()
-                val shouldPlay = isPreview || 
-                               !keyguardManager.isKeyguardLocked || 
-                               repository.getLiveWallpaperPlaybackTrigger() == SettingsRepository.LIVE_WALLPAPER_TRIGGER_SCREEN_ON
+                val shouldPlay = isPreview ||
+                        !keyguardManager.isKeyguardLocked ||
+                        repository.getLiveWallpaperPlaybackTrigger() == SettingsRepository.LIVE_WALLPAPER_TRIGGER_SCREEN_ON
                 playWhenReady = shouldPlay
             }
         }
@@ -146,7 +147,10 @@ class LiveWallpaperService : WallpaperService() {
         override fun onDestroy() {
             super.onDestroy()
             executor.removeCallbacksAndMessages(null)
-            try { unregisterReceiver(receiver) } catch (e: Exception) { }
+            try {
+                unregisterReceiver(receiver)
+            } catch (e: Exception) {
+            }
             repository.unregisterOnSharedPreferenceChangeListener(prefsListener)
             exoPlayer?.release()
             exoPlayer = null

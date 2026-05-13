@@ -1,7 +1,6 @@
 package com.sameerasw.essentials.ui.activities
 
 import android.app.KeyguardManager
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.os.VibrationEffect
@@ -148,7 +147,7 @@ class LocationAlarmActivity : ComponentActivity() {
         val activeId = repo.getActiveAlarmId()
         val alarms = repo.getAlarms()
         val alarm = alarms.find { it.id == activeId }
-        
+
         if (alarm != null) {
             repo.saveLastTrip(alarm)
         }

@@ -1,6 +1,5 @@
 package com.sameerasw.essentials.services.receivers
 
-import android.app.KeyguardManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -11,9 +10,16 @@ import com.sameerasw.essentials.utils.ShellUtils
 class SecurityReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val settingsRepository = SettingsRepository(context)
-        val isDisableQsEnabled = settingsRepository.getBoolean(SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED, false)
-        val isHideSystemIconsEnabled = settingsRepository.getBoolean(SettingsRepository.KEY_HIDE_SYSTEM_ICONS, false)
-        val isHideSystemIconsLockedOnlyEnabled = settingsRepository.getBoolean(SettingsRepository.KEY_HIDE_SYSTEM_ICONS_LOCKED_ONLY, false)
+        val isDisableQsEnabled = settingsRepository.getBoolean(
+            SettingsRepository.KEY_SCREEN_LOCKED_SECURITY_ENABLED,
+            false
+        )
+        val isHideSystemIconsEnabled =
+            settingsRepository.getBoolean(SettingsRepository.KEY_HIDE_SYSTEM_ICONS, false)
+        val isHideSystemIconsLockedOnlyEnabled = settingsRepository.getBoolean(
+            SettingsRepository.KEY_HIDE_SYSTEM_ICONS_LOCKED_ONLY,
+            false
+        )
 
         when (intent.action) {
             Intent.ACTION_SCREEN_OFF -> {
@@ -43,10 +49,17 @@ class SecurityReceiver : BroadcastReceiver() {
                     )
                 }
             }
+
             Intent.ACTION_USER_PRESENT -> {
                 // Restore QS and System Icons on unlock
-                com.sameerasw.essentials.utils.StatusBarManager.requestRestore(context, "DisableQsWhenLocked")
-                com.sameerasw.essentials.utils.StatusBarManager.requestRestore(context, "StatusBarIconAdvancedLocked")
+                com.sameerasw.essentials.utils.StatusBarManager.requestRestore(
+                    context,
+                    "DisableQsWhenLocked"
+                )
+                com.sameerasw.essentials.utils.StatusBarManager.requestRestore(
+                    context,
+                    "StatusBarIconAdvancedLocked"
+                )
             }
         }
     }

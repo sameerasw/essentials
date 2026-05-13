@@ -9,6 +9,7 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,25 +17,13 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.background
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -44,11 +33,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -64,8 +51,6 @@ import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.DeviceInfo
 import com.sameerasw.essentials.utils.DeviceUtils
-import com.sameerasw.essentials.utils.GSMArenaService
-import com.sameerasw.essentials.utils.HapticUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -85,7 +70,11 @@ class YourAndroidViewModel : ViewModel() {
 
     var hasRunStartupAnimation = false
 
-    fun loadDeviceSpecs(context: android.content.Context, deviceInfo: com.sameerasw.essentials.utils.DeviceInfo, forceRefresh: Boolean = false) {
+    fun loadDeviceSpecs(
+        context: android.content.Context,
+        deviceInfo: DeviceInfo,
+        forceRefresh: Boolean = false
+    ) {
         if (!forceRefresh && _deviceSpecs.value != null) {
             _isSpecsLoading.value = false
             return
@@ -97,12 +86,12 @@ class YourAndroidViewModel : ViewModel() {
                     _isRefreshing.value = true
                 } else {
                     _isSpecsLoading.value = true
-                    
+
                     // Try to load from cache first
                     val cached = withContext(Dispatchers.IO) {
                         com.sameerasw.essentials.utils.DeviceSpecsCache.getCachedSpecs(context)
                     }
-                    
+
                     if (cached != null) {
                         _deviceSpecs.value = cached
                         _isSpecsLoading.value = false
@@ -118,7 +107,7 @@ class YourAndroidViewModel : ViewModel() {
 
                     // Generate a prioritized list of search queries
                     val queries = mutableListOf<String>()
-                    
+
                     // 1. Marketing name (Manufacturer + Model)
                     if (model.contains(manufacturer, ignoreCase = true)) {
                         queries.add(model)
@@ -142,12 +131,12 @@ class YourAndroidViewModel : ViewModel() {
                             }
                         }
                     }
-                    
+
                     // 4. Model number directly if it's different from marketing name
                     if (!queries.contains(model)) {
                         queries.add(model)
                     }
-                    
+
                     // 5. Device codename (e.g., "shiba", "a51", "r9q")
                     if (deviceCodename.isNotBlank() && !queries.contains(deviceCodename)) {
                         queries.add(deviceCodename)
@@ -162,10 +151,14 @@ class YourAndroidViewModel : ViewModel() {
 
                 if (fetchedSpecs != null) {
                     // Download and cache images
-                    val specsWithImages = com.sameerasw.essentials.utils.DeviceSpecsCache.downloadImages(context, fetchedSpecs)
+                    val specsWithImages =
+                        com.sameerasw.essentials.utils.DeviceSpecsCache.downloadImages(
+                            context,
+                            fetchedSpecs
+                        )
                     _deviceSpecs.value = specsWithImages
                 }
-                
+
                 _isSpecsLoading.value = false
                 _isRefreshing.value = false
             } catch (e: Exception) {
@@ -187,20 +180,22 @@ class YourAndroidActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        
-        val isDarkMode = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) == android.content.res.Configuration.UI_MODE_NIGHT_YES
+
+        val isDarkMode =
+            (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) == android.content.res.Configuration.UI_MODE_NIGHT_YES
         window.setBackgroundDrawableResource(if (isDarkMode) android.R.color.black else R.color.app_window_background)
 
         setContent {
-            val mainViewModel: com.sameerasw.essentials.viewmodels.MainViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+            val mainViewModel: com.sameerasw.essentials.viewmodels.MainViewModel =
+                androidx.lifecycle.viewmodel.compose.viewModel()
             val isPitchBlackThemeEnabled by mainViewModel.isPitchBlackThemeEnabled
             val isBlurEnabled by mainViewModel.isBlurEnabled
-            
+
             val viewModel: YourAndroidViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
             val deviceSpecs by viewModel.deviceSpecs.collectAsState()
             val isSpecsLoading by viewModel.isSpecsLoading.collectAsState()
             val isRefreshing by viewModel.isRefreshing.collectAsState()
-            
+
             val context = androidx.compose.ui.platform.LocalContext.current
             val deviceInfo = remember { DeviceUtils.getDeviceInfo(context) }
             var showHelpSheet by remember { mutableStateOf(false) }
@@ -216,8 +211,15 @@ class YourAndroidActivity : ComponentActivity() {
                     showToggle = false,
                     hasMoreSettings = false
                 ) {
-                    override fun isEnabled(viewModel: com.sameerasw.essentials.viewmodels.MainViewModel) = true
-                    override fun onToggle(viewModel: com.sameerasw.essentials.viewmodels.MainViewModel, context: android.content.Context, enabled: Boolean) {}
+                    override fun isEnabled(viewModel: com.sameerasw.essentials.viewmodels.MainViewModel) =
+                        true
+
+                    override fun onToggle(
+                        viewModel: com.sameerasw.essentials.viewmodels.MainViewModel,
+                        context: android.content.Context,
+                        enabled: Boolean
+                    ) {
+                    }
                 }
             }
 
@@ -299,7 +301,8 @@ fun YourAndroidContent(
         }
     }
 
-    val mainViewModel: com.sameerasw.essentials.viewmodels.MainViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    val mainViewModel: com.sameerasw.essentials.viewmodels.MainViewModel =
+        androidx.lifecycle.viewmodel.compose.viewModel()
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
     val initialImageOffset = (screenHeight / 2) - 240.dp - 64.dp
@@ -337,7 +340,8 @@ fun YourAndroidContent(
             )
             .verticalScroll(rememberScrollState())
             .padding(
-                top = contentPadding.calculateTopPadding() + WindowInsets.statusBars.asPaddingValues().calculateTopPadding(),
+                top = contentPadding.calculateTopPadding() + WindowInsets.statusBars.asPaddingValues()
+                    .calculateTopPadding(),
                 bottom = 150.dp,
                 start = 16.dp,
                 end = 16.dp

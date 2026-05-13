@@ -15,9 +15,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.platform.LocalView
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.utils.HapticUtil
 import java.math.BigDecimal
@@ -61,7 +61,9 @@ fun ConfigSliderItem(
                 Icon(
                     painter = painterResource(id = finalIconRes),
                     contentDescription = null,
-                    modifier = Modifier.padding(end = 12.dp).size(24.dp),
+                    modifier = Modifier
+                        .padding(end = 12.dp)
+                        .size(24.dp),
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
@@ -69,7 +71,9 @@ fun ConfigSliderItem(
                 Text(
                     text = "$title: ${valueFormatter(value)}",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
+                    color = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                        alpha = 0.38f
+                    )
                 )
                 if (finalDescription != null) {
                     Text(

@@ -33,7 +33,6 @@ import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
-import com.sameerasw.essentials.domain.model.NotificationLightingSweepPosition
 import androidx.compose.ui.graphics.Color as ComposeColor
 
 /**
@@ -122,49 +121,61 @@ object OverlayHelper {
         }
 
         val density = context.resources.displayMetrics.density
-        val glowSizePx = (80 * density).toInt() 
+        val glowSizePx = (80 * density).toInt()
 
         if (sides.contains(NotificationLightingSide.LEFT)) {
-            val leftGlow = GlowSideView(context, color, NotificationLightingSide.LEFT, blurRadiusDp).apply {
-                tag = "left_glow"
-                alpha = 0.5f
-                layoutParams = FrameLayout.LayoutParams(glowSizePx, ViewGroup.LayoutParams.MATCH_PARENT).apply {
-                    gravity = Gravity.START
+            val leftGlow =
+                GlowSideView(context, color, NotificationLightingSide.LEFT, blurRadiusDp).apply {
+                    tag = "left_glow"
+                    alpha = 0.5f
+                    layoutParams =
+                        FrameLayout.LayoutParams(glowSizePx, ViewGroup.LayoutParams.MATCH_PARENT)
+                            .apply {
+                                gravity = Gravity.START
+                            }
                 }
-            }
             overlay.addView(leftGlow)
         }
 
         if (sides.contains(NotificationLightingSide.RIGHT)) {
-            val rightGlow = GlowSideView(context, color, NotificationLightingSide.RIGHT, blurRadiusDp).apply {
-                tag = "right_glow"
-                alpha = 0.5f
-                layoutParams = FrameLayout.LayoutParams(glowSizePx, ViewGroup.LayoutParams.MATCH_PARENT).apply {
-                    gravity = Gravity.END
+            val rightGlow =
+                GlowSideView(context, color, NotificationLightingSide.RIGHT, blurRadiusDp).apply {
+                    tag = "right_glow"
+                    alpha = 0.5f
+                    layoutParams =
+                        FrameLayout.LayoutParams(glowSizePx, ViewGroup.LayoutParams.MATCH_PARENT)
+                            .apply {
+                                gravity = Gravity.END
+                            }
                 }
-            }
             overlay.addView(rightGlow)
         }
 
         if (sides.contains(NotificationLightingSide.TOP)) {
-            val topGlow = GlowSideView(context, color, NotificationLightingSide.TOP, blurRadiusDp).apply {
-                tag = "top_glow"
-                alpha = 0.5f
-                layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, glowSizePx).apply {
-                    gravity = Gravity.TOP
+            val topGlow =
+                GlowSideView(context, color, NotificationLightingSide.TOP, blurRadiusDp).apply {
+                    tag = "top_glow"
+                    alpha = 0.5f
+                    layoutParams =
+                        FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, glowSizePx)
+                            .apply {
+                                gravity = Gravity.TOP
+                            }
                 }
-            }
             overlay.addView(topGlow)
         }
 
         if (sides.contains(NotificationLightingSide.BOTTOM)) {
-            val bottomGlow = GlowSideView(context, color, NotificationLightingSide.BOTTOM, blurRadiusDp).apply {
-                tag = "bottom_glow"
-                alpha = 0.5f
-                layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, glowSizePx).apply {
-                    gravity = Gravity.BOTTOM
+            val bottomGlow =
+                GlowSideView(context, color, NotificationLightingSide.BOTTOM, blurRadiusDp).apply {
+                    tag = "bottom_glow"
+                    alpha = 0.5f
+                    layoutParams =
+                        FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, glowSizePx)
+                            .apply {
+                                gravity = Gravity.BOTTOM
+                            }
                 }
-            }
             overlay.addView(bottomGlow)
         }
 
@@ -223,7 +234,6 @@ object OverlayHelper {
         randomShapes: Boolean,
         showBackground: Boolean
     ): FrameLayout {
-        val glowRadiusDp = 15f
         val overlay = FrameLayout(context)
         if (showBackground) {
             overlay.setBackgroundColor(Color.BLACK)
@@ -259,7 +269,7 @@ object OverlayHelper {
             style = android.graphics.Paint.Style.STROKE
             this.color = this@SweepShapeView.color
             strokeWidth = context.resources.displayMetrics.density * strokeDp
-            
+
             maskFilter = android.graphics.BlurMaskFilter(
                 context.resources.displayMetrics.density * 15f,
                 android.graphics.BlurMaskFilter.Blur.NORMAL
@@ -283,14 +293,14 @@ object OverlayHelper {
             if (polygon != null) {
                 // Get path from polygon scaled to size
                 val shapePath = polygon.toPath()
-                
+
                 // Scale and move path
                 val matrix = android.graphics.Matrix()
                 // Shapes from toPath() are normalized to [0, 1] range.
                 // Scale to currentRadius * 2 and center it.
                 matrix.postScale(currentRadius * 2f, currentRadius * 2f)
                 matrix.postTranslate(centerX - currentRadius, centerY - currentRadius)
-                
+
                 shapePath.transform(matrix)
                 canvas.drawPath(shapePath, paint)
             } else {
@@ -330,14 +340,17 @@ object OverlayHelper {
                     0f, 0f, w, 0f,
                     color, Color.TRANSPARENT, android.graphics.Shader.TileMode.CLAMP
                 )
+
                 NotificationLightingSide.RIGHT -> android.graphics.LinearGradient(
                     w, 0f, 0f, 0f,
                     color, Color.TRANSPARENT, android.graphics.Shader.TileMode.CLAMP
                 )
+
                 NotificationLightingSide.TOP -> android.graphics.LinearGradient(
                     0f, 0f, 0f, h,
                     color, Color.TRANSPARENT, android.graphics.Shader.TileMode.CLAMP
                 )
+
                 NotificationLightingSide.BOTTOM -> android.graphics.LinearGradient(
                     0f, h, 0f, 0f,
                     color, Color.TRANSPARENT, android.graphics.Shader.TileMode.CLAMP
@@ -488,7 +501,6 @@ object OverlayHelper {
         pulseDurationMillis: Long = 3000L,
         onAnimationEnd: (() -> Unit)? = null
     ) {
-        val sweepGlowRadiusDp = 15f
         if (style == NotificationLightingStyle.GLOW) {
             val vg = view as? ViewGroup
             if (vg != null) {
@@ -812,7 +824,8 @@ object OverlayHelper {
         // Max radius to cover the whole screen from the start point
         val maxDistX = Math.max(startX, screenWidth - startX)
         val maxDistY = Math.max(startY, screenHeight - startY)
-        val maxRadius = Math.sqrt((maxDistX * maxDistX + maxDistY * maxDistY).toDouble()).toFloat() + (15f * displayMetrics.density)
+        val maxRadius = Math.sqrt((maxDistX * maxDistX + maxDistY * maxDistY).toDouble())
+            .toFloat() + (15f * displayMetrics.density)
 
         var pulseCount = 0
 

@@ -1,24 +1,20 @@
 package com.sameerasw.essentials.ui.components.sheets
 
 import android.content.Intent
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -36,16 +32,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.ContentDrawScope
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -54,8 +44,6 @@ import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.pickers.SegmentedPicker
 import com.sameerasw.essentials.utils.ColorFormatUtils
 import com.sameerasw.essentials.utils.HapticUtil
-import kotlin.math.cos
-import kotlin.math.sin
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -68,7 +56,7 @@ fun ColorPickerBottomSheet(
     val view = LocalView.current
     val clipboardManager = LocalClipboardManager.current
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    
+
     var selectedFormat by remember { mutableStateOf(ColorFormatUtils.ColorFormat.HEX) }
     val formattedColor = remember(colorInt, selectedFormat) {
         ColorFormatUtils.formatColor(colorInt, selectedFormat)
@@ -93,7 +81,11 @@ fun ColorPickerBottomSheet(
                     .size(160.dp)
                     .clip(MaterialShapes.Cookie6Sided.toShape())
                     .background(Color(colorInt))
-                    .border(5.dp, MaterialTheme.colorScheme.outline, MaterialShapes.Cookie6Sided.toShape()),
+                    .border(
+                        5.dp,
+                        MaterialTheme.colorScheme.outline,
+                        MaterialShapes.Cookie6Sided.toShape()
+                    ),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -105,31 +97,31 @@ fun ColorPickerBottomSheet(
             }
 
             RoundedCardContainer {
-            // Segmented Picker for Format
-            SegmentedPicker(
-                items = ColorFormatUtils.ColorFormat.values().toList(),
-                selectedItem = selectedFormat,
-                onItemSelected = { selectedFormat = it },
-                labelProvider = { it.name },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            // Formatted Color Text
-            Surface(
-                color = MaterialTheme.colorScheme.surfaceBright,
-                shape = MaterialTheme.shapes.extraSmall,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = formattedColor,
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(16.dp),
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                // Segmented Picker for Format
+                SegmentedPicker(
+                    items = ColorFormatUtils.ColorFormat.values().toList(),
+                    selectedItem = selectedFormat,
+                    onItemSelected = { selectedFormat = it },
+                    labelProvider = { it.name },
+                    modifier = Modifier.fillMaxWidth()
                 )
+
+                // Formatted Color Text
+                Surface(
+                    color = MaterialTheme.colorScheme.surfaceBright,
+                    shape = MaterialTheme.shapes.extraSmall,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = formattedColor,
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(16.dp),
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    )
+                }
             }
-        }
 
             // Actions Row
             Row(
@@ -143,7 +135,9 @@ fun ColorPickerBottomSheet(
                         HapticUtil.performMediumHaptic(view)
                         onRetake()
                     },
-                    modifier = Modifier.weight(0.75f).height(56.dp)
+                    modifier = Modifier
+                        .weight(0.75f)
+                        .height(56.dp)
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.rounded_colorize_24),
@@ -164,7 +158,9 @@ fun ColorPickerBottomSheet(
                         val shareIntent = Intent.createChooser(sendIntent, null)
                         context.startActivity(shareIntent)
                     },
-                    modifier = Modifier.weight(1.5f).height(56.dp)
+                    modifier = Modifier
+                        .weight(1.5f)
+                        .height(56.dp)
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.rounded_share_24),
@@ -178,10 +174,16 @@ fun ColorPickerBottomSheet(
                     onClick = {
                         HapticUtil.performHeavyHaptic(view)
                         clipboardManager.setText(AnnotatedString(formattedColor))
-                        android.widget.Toast.makeText(context, "Copied to clipboard", android.widget.Toast.LENGTH_SHORT).show()
+                        android.widget.Toast.makeText(
+                            context,
+                            "Copied to clipboard",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
                         onDismissRequest()
                     },
-                    modifier = Modifier.weight(1.5f).height(56.dp)
+                    modifier = Modifier
+                        .weight(1.5f)
+                        .height(56.dp)
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.rounded_content_copy_24),
