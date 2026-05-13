@@ -63,12 +63,12 @@
     <string name="like_song_settings_desc">Această funcție necesită acces la notificări pentru a detecta conținutul media care se redă în prezent și pentru a declanșa o acțiune similară. Activați-l mai jos.</string>
     <string name="like_song_toast_enabled">Afișează mesajul toast</string>
     <string name="like_song_aod_overlay_title">Afișați suprapunerea pe AOD</string>
-    <string name="feat_ambient_music_glance_title">Privire de muzică ambientală</string>
-    <string name="feat_ambient_music_glance_desc">O privire asupra mass-media despre AOD</string>
-    <string name="ambient_glance_docked_mode_title">Modul andocat</string>
-    <string name="ambient_glance_docked_mode_desc">Păstrați suprapunerea vizibilă la nesfârșit în timp ce muzica este redată pe AOD</string>
-    <string name="ambient_glance_random_shapes_title">Random shapes</string>
-    <string name="ambient_glance_random_shapes_desc">Use various Material 3 shapes for the album art</string>
+    <string name="feat_essentials_on_display_title">Essentials On Display</string>
+    <string name="feat_essentials_on_display_desc">Glance at media and info on AOD</string>
+    <string name="essentials_on_display_docked_mode_title">Docked mode</string>
+    <string name="essentials_on_display_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
+    <string name="essentials_on_display_random_shapes_title">Random shapes</string>
+    <string name="essentials_on_display_random_shapes_desc">Use various Material 3 shapes for the album art</string>
     <string name="feat_notification_glance_title">Privire de notificare</string>
     <string name="feat_notification_glance_desc">Păstrați AOD activat în timp ce notificările sunt în așteptare</string>
     <string name="notification_glance_same_as_lighting_title">Aceleași aplicații ca și iluminarea notificărilor</string>
@@ -582,7 +582,7 @@
     <string name="perm_default_browser_title">Browser implicit</string>
     <string name="perm_default_browser_desc">Necesar pentru a gestiona legăturile în mod eficient</string>
     <string name="perm_accessibility_desc_remap">Necesar pentru a intercepta evenimentele butonului hardware</string>
-    <string name="perm_accessibility_desc_ambient_music_glance">Necesar pentru a intercepta evenimentele tastei de volum în timp ce ecranul este oprit pentru a declanșa suprapunerea Ambient Glance.</string>
+    <string name="perm_accessibility_desc_essentials_on_display">Required to intercept volume key events while the screen is off to trigger the Essentials On Display overlay.</string>
     <string name="perm_accessibility_desc_night_light">Necesar pentru monitorizarea aplicațiilor din prim-plan.</string>
     <string name="perm_write_secure_title">Scrieți Setări Securizate</string>
     <string name="perm_write_secure_desc_common">Necesar pentru pictogramele din bara de stare și securitatea ecranului blocat</string>
@@ -706,7 +706,7 @@
     <string name="action_what_is_this">Ce este asta?</string>
     <string name="update_available_title">Actualizare disponibilă</string>
     <string name="about_desc_your_android">Glance at your device\'s hardware and software specifications in detail. This information is fetched from GSMArena and system properties to provide a comprehensive overview of your Android device.</string>
-    <string name="about_desc_ambient_music_glance">Ambient Music Glance afișează o suprapunere Now Playing pe ecranul dvs. de blocare când muzica este redată și redarea se modifică. \n\nDacă dispozitivul dvs. nu acceptă suprapuneri peste AOD, puteți opta pentru economizorul de ecran Ambience adăugat în setările Android ca alternativă în timpul încărcării.</string>
+    <string name="about_desc_essentials_on_display">Essentials On Display shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
     <string name="about_desc_notification_lighting">Iluminarea notificărilor adaugă un efect frumos de iluminare marginală atunci când primiți notificări.\n\nPuteți personaliza stilul, culorile și comportamentul animației. Funcționează chiar și atunci când ecranul este oprit (în funcție de OEM) sau deasupra aplicației dvs. actuale. Alegeți aplicațiile, prioritatea notificărilor sau comportamentul pe care ar trebui să se declanșeze din comenzile date. Dacă OEM-ul dvs. nu acceptă suprapuneri deasupra AOD, dați în judecată opțiunea de afișare ambientală găsită mai jos.</string>
     <string name="about_desc_screen_off_widget">Opriți cu ușurință ecranul printr-o atingere pe un widget transparent redimensionabil care nu adaugă pictograme sau orice dezordine pe ecranul dvs. de pornire.</string>
     <string name="about_desc_statusbar_icons">Preluați controlul deplin asupra pictogramelor din bara de stare.\n\nAscunde pictogramele specifice, cum ar fi WiFi, Bluetooth sau date celulare, pentru a menține bara de stare curată. De asemenea, puteți personaliza formatul ceasului și indicatorul bateriei cu unele comenzi inteligente. Acestea sunt lista de controale AOSP disponibile, astfel încât sistemul de operare al dispozitivului dvs. ar putea să nu respecte toate comenzile.</string>
@@ -1207,8 +1207,6 @@
     <string name="search_sound_mode_show_slider_desc">Afișați glisorul de volum în tigla</string>
     <string name="search_sound_mode_behavior_title">Comportamentul ciclului</string>
     <string name="search_sound_mode_behavior_desc">Alegeți moduri de parcurs</string>
-    <string name="feat_ambient_music_title">Privire de muzică ambientală</string>
-    <string name="feat_ambient_music_desc">O privire asupra mass-media despre AOD</string>
     <string name="feat_sound_haptics_title">Sunet și haptică</string>
     <string name="feat_sound_haptics_desc">Caracteristici de volum și haptic</string>
     <string name="feat_security_privacy_title">Securitate și confidențialitate</string>
