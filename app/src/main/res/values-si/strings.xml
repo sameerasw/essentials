@@ -1119,7 +1119,7 @@
     <string name="location_reached_fsi_desc">පැමිණීමෙන් පසු ඔබගේ උපාංගය අවදි කිරීමට අවශ්‍ය වේ. ප්‍රදානය කිරීමට තට්ටු කරන්න.</string>
     <string name="location_reached_dist_m">%1$d මීටර්</string>
     <string name="location_reached_dist_km">කිලෝමීටර් %1$.1f</string>
-    <string name="location_reached_service_title">Travelling to %1$s</string>
+    <string name="location_reached_service_title">සංචාරක අනතුරු ඇඟවීම සක්‍රීයයි</string>
     <string name="location_reached_service_remaining">%1$s ඉතිරි (%2$d%%)</string>
     <string name="location_reached_channel_name">ගමන් ප්‍රගතිය</string>
     <string name="location_reached_channel_desc">ගමනාන්තයට තත්‍ය කාලීන දුර පෙන්වයි</string>

@@ -1119,7 +1119,7 @@
     <string name="location_reached_fsi_desc">Vereis om jou toestel wakker te maak met aankoms. Tik om toe te staan.</string>
     <string name="location_reached_dist_m">%1$d m</string>
     <string name="location_reached_dist_km">%1$.1f km</string>
-    <string name="location_reached_service_title">Travelling to %1$s</string>
+    <string name="location_reached_service_title">Reisalarm aktief</string>
     <string name="location_reached_service_remaining">%1$s oorblywende (%2$d%%)</string>
     <string name="location_reached_channel_name">Reisvordering</string>
     <string name="location_reached_channel_desc">Toon intydse afstand na bestemming</string>

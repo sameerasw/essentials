@@ -1119,7 +1119,7 @@
     <string name="location_reached_fsi_desc">Потрібно, щоб вивести пристрій із режиму сну після прибуття. Торкніться, щоб надати.</string>
     <string name="location_reached_dist_m">%1$d м</string>
     <string name="location_reached_dist_km">%1$.1f км</string>
-    <string name="location_reached_service_title">Travelling to %1$s</string>
+    <string name="location_reached_service_title">Будильник подорожі активний</string>
     <string name="location_reached_service_remaining">%1$s залишилося (%2$d%%)</string>
     <string name="location_reached_channel_name">Прогрес подорожі</string>
     <string name="location_reached_channel_desc">Показує відстань до місця призначення в реальному часі</string>
