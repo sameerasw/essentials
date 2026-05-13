@@ -451,7 +451,13 @@ class AmbientGlanceHandler(
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.MATCH_PARENT
             )
-            setBackgroundColor(0x80000000.toInt()) // Darker scrim for full screen background
+            // Radial gradient for vignette effect (dark edges, clear center)
+            background = android.graphics.drawable.GradientDrawable().apply {
+                gradientType = android.graphics.drawable.GradientDrawable.RADIAL_GRADIENT
+                colors = intArrayOf(0x00000000, 0xFF000000.toInt())
+                gradientRadius = context.resources.displayMetrics.widthPixels.toFloat() * 1.1f
+                setGradientCenter(0.5f, 0.5f)
+            }
             alpha = if (mode == "fill") 1f else 0f
         }
         rootLayout.addView(backgroundImageView)
