@@ -154,6 +154,12 @@ class AmbientGlanceHandler(
             if (com.sameerasw.essentials.utils.AppUtil.isAndroidAutoRunning(service)) {
                 return
             }
+
+            val isPlaying = intent.getBooleanExtra("is_playing", true)
+            if (!isPlaying) {
+                if (overlayView != null) fadeOutAndRemove()
+                return
+            }
             eventType = intent.getStringExtra("event_type")
             val newTitle = intent.getStringExtra("track_title")
             val newArtist = intent.getStringExtra("artist_name")

@@ -565,9 +565,7 @@ class NotificationListener : NotificationListenerService() {
                 val isLiked = isLikedState(controller)
 
                 if (lastState == null) {
-                    if (isPlaying) {
-                        eventType = "play_pause"
-                    }
+                    eventType = "play_pause"
                 } else {
                     val titleChanged = title != lastState.title
                     val stateChanged = isPlaying != lastState.isPlaying
@@ -576,9 +574,7 @@ class NotificationListener : NotificationListenerService() {
                     if (titleChanged) {
                         eventType = "track_change"
                     } else if (stateChanged) {
-                        if (isPlaying) {
-                            eventType = "play_pause"
-                        }
+                        eventType = "play_pause"
                     } else if (likedChanged) {
                         eventType = "like"
                     }
