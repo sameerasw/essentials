@@ -63,12 +63,12 @@
     <string name="like_song_settings_desc">This feature requires notification access to detect the currently playing media and trigger the like action. Please enable it below.</string>
     <string name="like_song_toast_enabled">Show toast message</string>
     <string name="like_song_aod_overlay_title">Show overlay on AOD</string>
-    <string name="feat_ambient_music_glance_title">Ambient music glance</string>
-    <string name="feat_ambient_music_glance_desc">Glance at media on AOD</string>
-    <string name="ambient_glance_docked_mode_title">Docked mode</string>
-    <string name="ambient_glance_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
-    <string name="ambient_glance_random_shapes_title">Random shapes</string>
-    <string name="ambient_glance_random_shapes_desc">Use various Material 3 shapes for the album art</string>
+    <string name="feat_essentials_on_display_title">Essentials On Display</string>
+    <string name="feat_essentials_on_display_desc">Glance at media and info on AOD</string>
+    <string name="essentials_on_display_docked_mode_title">Docked mode</string>
+    <string name="essentials_on_display_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
+    <string name="essentials_on_display_random_shapes_title">Random shapes</string>
+    <string name="essentials_on_display_random_shapes_desc">Use various Material 3 shapes for the album art</string>
     <string name="feat_notification_glance_title">Notification glance</string>
     <string name="feat_notification_glance_desc">Keep AOD on while notifications are pending</string>
     <string name="notification_glance_same_as_lighting_title">Same apps as notification lighting</string>
@@ -582,7 +582,7 @@
     <string name="perm_default_browser_title">Default Browser</string>
     <string name="perm_default_browser_desc">Required to handle links efficiently</string>
     <string name="perm_accessibility_desc_remap">Required to intercept hardware button events</string>
-    <string name="perm_accessibility_desc_ambient_music_glance">Required to intercept volume key events while the screen is off to trigger the Ambient Glance overlay.</string>
+    <string name="perm_accessibility_desc_essentials_on_display">Required to intercept volume key events while the screen is off to trigger the Essentials On Display overlay.</string>
     <string name="perm_accessibility_desc_night_light">Needed to monitor foreground applications.</string>
     <string name="perm_write_secure_title">Write Secure Settings</string>
     <string name="perm_write_secure_desc_common">Required for Statusbar icons and Screen Locked Security</string>
@@ -706,7 +706,7 @@
     <string name="action_what_is_this">What is this?</string>
     <string name="update_available_title">Update Available</string>
     <string name="about_desc_your_android">Glance at your device\'s hardware and software specifications in detail. This information is fetched from GSMArena and system properties to provide a comprehensive overview of your Android device.</string>
-    <string name="about_desc_ambient_music_glance">Ambient Music Glance shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
+    <string name="about_desc_essentials_on_display">Essentials On Display shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
     <string name="about_desc_notification_lighting">Notification Lighting adds a beautiful edge lighting effect when you receive notifications.\n\nYou can customize the animation style, colors, and behavior. It works even when the screen is off (OEM dependent) or on top of your current app. Pick apps, notification priority or what behavior it should be triggering on from given controls. If your OEM does not support overlays above AOD, sue the Ambient display option found below.</string>
     <string name="about_desc_screen_off_widget">Easily turn the screen off with a tap on a transparent resizable widget that does not add icons or any clutter to your home screen.</string>
     <string name="about_desc_statusbar_icons">Take full control over your status bar icons.\n\nHide specific icons like WiFi, Bluetooth, or cellular data to keep your status bar clean. You can also customize the clock format and battery indicator with some smart controls as well. These are the list of available AOSP controls so your device OS might not respect all the controls.</string>
@@ -1207,8 +1207,6 @@
     <string name="search_sound_mode_show_slider_desc">Show volume slider in tile</string>
     <string name="search_sound_mode_behavior_title">Cycle Behavior</string>
     <string name="search_sound_mode_behavior_desc">Choose modes to cycle through</string>
-    <string name="feat_ambient_music_title">Ambient music glance</string>
-    <string name="feat_ambient_music_desc">Glance at media on AOD</string>
     <string name="feat_sound_haptics_title">Sound and Haptics</string>
     <string name="feat_sound_haptics_desc">Volume and haptic features</string>
     <string name="feat_security_privacy_title">Security and Privacy</string>
