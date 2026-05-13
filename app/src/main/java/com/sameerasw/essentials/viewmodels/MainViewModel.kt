@@ -259,6 +259,10 @@ class MainViewModel : ViewModel() {
     val isAmbientMusicGlanceDockedModeEnabled = mutableStateOf(false)
     val isAmbientMusicGlanceRandomShapesEnabled = mutableStateOf(true)
     val ambientMusicGlanceAlbumArtMode = mutableStateOf("default")
+    val ambientMusicGlanceClockSize = mutableIntStateOf(80)
+    val ambientMusicGlanceClockWeight = mutableIntStateOf(400)
+    val ambientMusicGlanceClockWidth = mutableIntStateOf(100)
+    val ambientMusicGlanceClockRoundness = mutableIntStateOf(50)
     val scaleAnimationsMode = mutableStateOf("default")
     val isTouchSensitivityEnabled = mutableStateOf(false)
     val isAutoRotateEnabled = mutableStateOf(false)
@@ -1232,10 +1236,11 @@ class MainViewModel : ViewModel() {
             SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_RANDOM_SHAPES,
             true
         )
-        ambientMusicGlanceAlbumArtMode.value = settingsRepository.getString(
-            SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_ALBUM_ART_MODE,
-            "default"
-        ) ?: "default"
+        ambientMusicGlanceAlbumArtMode.value = settingsRepository.getAmbientMusicGlanceAlbumArtMode()
+        ambientMusicGlanceClockSize.intValue = settingsRepository.getAmbientMusicGlanceClockSize()
+        ambientMusicGlanceClockWeight.intValue = settingsRepository.getAmbientMusicGlanceClockWeight()
+        ambientMusicGlanceClockWidth.intValue = settingsRepository.getAmbientMusicGlanceClockWidth()
+        ambientMusicGlanceClockRoundness.intValue = settingsRepository.getAmbientMusicGlanceClockRoundness()
         isCalendarSyncEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_CALENDAR_SYNC_ENABLED, false)
         isCalendarSyncPeriodicEnabled.value = settingsRepository.isCalendarSyncPeriodicEnabled()
@@ -1905,10 +1910,27 @@ class MainViewModel : ViewModel() {
 
     fun setAmbientMusicGlanceAlbumArtMode(mode: String) {
         ambientMusicGlanceAlbumArtMode.value = mode
-        settingsRepository.putString(
-            SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_ALBUM_ART_MODE,
-            mode
-        )
+        settingsRepository.setAmbientMusicGlanceAlbumArtMode(mode)
+    }
+
+    fun setAmbientMusicGlanceClockSize(size: Int) {
+        ambientMusicGlanceClockSize.intValue = size
+        settingsRepository.setAmbientMusicGlanceClockSize(size)
+    }
+
+    fun setAmbientMusicGlanceClockWeight(weight: Int) {
+        ambientMusicGlanceClockWeight.intValue = weight
+        settingsRepository.setAmbientMusicGlanceClockWeight(weight)
+    }
+
+    fun setAmbientMusicGlanceClockWidth(width: Int) {
+        ambientMusicGlanceClockWidth.intValue = width
+        settingsRepository.setAmbientMusicGlanceClockWidth(width)
+    }
+
+    fun setAmbientMusicGlanceClockRoundness(roundness: Int) {
+        ambientMusicGlanceClockRoundness.intValue = roundness
+        settingsRepository.setAmbientMusicGlanceClockRoundness(roundness)
     }
 
     fun switchScaleAnimationsMode(mode: String) {

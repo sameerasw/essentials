@@ -174,6 +174,10 @@ class SettingsRepository(private val context: Context) {
         const val KEY_AMBIENT_MUSIC_GLANCE_DOCKED_MODE = "ambient_music_glance_docked_mode"
         const val KEY_AMBIENT_MUSIC_GLANCE_RANDOM_SHAPES = "ambient_music_glance_random_shapes"
         const val KEY_AMBIENT_MUSIC_GLANCE_ALBUM_ART_MODE = "ambient_music_glance_album_art_mode"
+        const val KEY_AMBIENT_MUSIC_GLANCE_CLOCK_SIZE = "ambient_music_glance_clock_size"
+        const val KEY_AMBIENT_MUSIC_GLANCE_CLOCK_WEIGHT = "ambient_music_glance_clock_weight"
+        const val KEY_AMBIENT_MUSIC_GLANCE_CLOCK_WIDTH = "ambient_music_glance_clock_width"
+        const val KEY_AMBIENT_MUSIC_GLANCE_CLOCK_ROUNDNESS = "ambient_music_glance_clock_roundness"
         const val KEY_CALENDAR_SYNC_ENABLED = "calendar_sync_enabled"
         const val KEY_CALENDAR_SYNC_SELECTED_CALENDARS = "calendar_sync_selected_calendars"
         const val KEY_CALENDAR_SYNC_PERIODIC_ENABLED = "calendar_sync_periodic_enabled"
@@ -1214,10 +1218,26 @@ class SettingsRepository(private val context: Context) {
         val json = gson.toJson(presets)
         putString(KEY_PRIVATE_DNS_PRESETS, json)
     }
-
     fun resetPrivateDnsPresets() {
         savePrivateDnsPresets(getDefaultDnsPresets())
     }
+
+    fun getAmbientMusicGlanceAlbumArtMode(): String = prefs.getString(KEY_AMBIENT_MUSIC_GLANCE_ALBUM_ART_MODE, "default") ?: "default"
+    fun setAmbientMusicGlanceAlbumArtMode(mode: String) = prefs.edit().putString(KEY_AMBIENT_MUSIC_GLANCE_ALBUM_ART_MODE, mode).apply()
+
+    fun getAmbientMusicGlanceClockSize(): Int = prefs.getInt(KEY_AMBIENT_MUSIC_GLANCE_CLOCK_SIZE, 80)
+    fun setAmbientMusicGlanceClockSize(size: Int) = prefs.edit().putInt(KEY_AMBIENT_MUSIC_GLANCE_CLOCK_SIZE, size).apply()
+
+    fun getAmbientMusicGlanceClockWeight(): Int = prefs.getInt(KEY_AMBIENT_MUSIC_GLANCE_CLOCK_WEIGHT, 400)
+    fun setAmbientMusicGlanceClockWeight(weight: Int) = prefs.edit().putInt(KEY_AMBIENT_MUSIC_GLANCE_CLOCK_WEIGHT, weight).apply()
+
+    fun getAmbientMusicGlanceClockWidth(): Int = prefs.getInt(KEY_AMBIENT_MUSIC_GLANCE_CLOCK_WIDTH, 100)
+    fun setAmbientMusicGlanceClockWidth(width: Int) = prefs.edit().putInt(KEY_AMBIENT_MUSIC_GLANCE_CLOCK_WIDTH, width).apply()
+
+    fun getAmbientMusicGlanceClockRoundness(): Int = prefs.getInt(KEY_AMBIENT_MUSIC_GLANCE_CLOCK_ROUNDNESS, 50)
+    fun setAmbientMusicGlanceClockRoundness(roundness: Int) = prefs.edit().putInt(KEY_AMBIENT_MUSIC_GLANCE_CLOCK_ROUNDNESS, roundness).apply()
+
+    // Notification Glance Settings
 
     fun getScaleAnimationsMode(): String =
         getString(KEY_SCALE_ANIMATIONS_MODE, "default") ?: "default"

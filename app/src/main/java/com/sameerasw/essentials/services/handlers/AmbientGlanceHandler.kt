@@ -46,7 +46,7 @@ class AmbientGlanceHandler(
         volumeStrokeView?.animate()?.alpha(0f)?.setDuration(500)?.start()
     }
 
-    private var clockView: View? = null
+    private var clockView: android.widget.TextClock? = null
     private var centerContainer: FrameLayout? = null
     private var clipContainer: FrameLayout? = null
     private var textContainer: LinearLayout? = null
@@ -272,8 +272,8 @@ class AmbientGlanceHandler(
 
                     nextImageView?.alpha = progress
                     if (isFill) {
-                        backgroundNextImageView?.alpha = progress
-                        backgroundImageView?.alpha = 1f - progress
+                        backgroundNextImageView?.alpha = progress * 0.7f
+                        backgroundImageView?.alpha = (1f - progress) * 0.7f
                     }
                 }
                 addListener(object : android.animation.AnimatorListenerAdapter() {
@@ -281,7 +281,7 @@ class AmbientGlanceHandler(
                         imageView?.setImageDrawable(nextImageView?.drawable)
                         if (isFill) {
                             backgroundImageView?.setImageDrawable(backgroundNextImageView?.drawable)
-                            backgroundImageView?.alpha = 1f
+                            backgroundImageView?.alpha = 0.7f
                         } else {
                             backgroundImageView?.alpha = 0f
                         }
@@ -309,9 +309,37 @@ class AmbientGlanceHandler(
         updateAlbumArt()
 
         // Handle Background Alpha for Fill mode
-        backgroundImageView?.animate()?.alpha(if (isFill) 1f else 0f)?.setDuration(500)?.start()
+        backgroundImageView?.animate()?.alpha(if (isFill) 0.7f else 0f)?.setDuration(500)?.start()
         backgroundScrim?.animate()?.alpha(if (isFill) 1f else 0f)?.setDuration(500)?.start()
         centerContainer?.animate()?.alpha(if (isFill) 0f else 1f)?.setDuration(500)?.start()
+
+        // Update Clock Layout based on mode
+        clockView?.let { clock ->
+            clock.animate().alpha(0f).setDuration(250).withEndAction {
+                clock.format12Hour = if (isFill) "hh\nmm" else "hh:mm"
+                clock.format24Hour = if (isFill) "HH\nmm" else "HH:mm"
+                applyClockFontVariations(clock, isFill)
+                (clock.layoutParams as FrameLayout.LayoutParams).apply {
+                    gravity = if (isFill) Gravity.CENTER else Gravity.TOP or Gravity.CENTER_HORIZONTAL
+                    topMargin = if (isFill) 0 else dpToPx(100f)
+                }
+                clock.requestLayout()
+                clock.animate().alpha(0.8f).setDuration(250).start()
+            }.start()
+        }
+    }
+
+    private fun applyClockFontVariations(clock: android.widget.TextClock, isFill: Boolean) {
+        val prefs = service.getSharedPreferences(com.sameerasw.essentials.data.repository.SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
+        val size = prefs.getInt(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_CLOCK_SIZE, 80)
+        clock.textSize = if (isFill) size.toFloat() else 25f
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            val weight = prefs.getInt(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_CLOCK_WEIGHT, 400)
+            val width = prefs.getInt(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_CLOCK_WIDTH, 100)
+            val roundness = prefs.getInt(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_CLOCK_ROUNDNESS, 50)
+            clock.fontVariationSettings = "'wght' $weight, 'wdth' $width, 'ROND' $roundness"
+        }
     }
 
     private fun updateAlbumArt(retryCount: Int = 0) {
@@ -399,8 +427,12 @@ class AmbientGlanceHandler(
                 FrameLayout.LayoutParams.MATCH_PARENT
             )
             scaleType = ImageView.ScaleType.CENTER_CROP
-            alpha = if (mode == "fill") 1f else 0f
+            alpha = if (mode == "fill") 0.7f else 0f
             if (bitmap != null) setImageBitmap(bitmap)
+            
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                setRenderEffect(android.graphics.RenderEffect.createBlurEffect(30f, 30f, android.graphics.Shader.TileMode.CLAMP))
+            }
         }
         backgroundNextImageView = ImageView(context).apply {
             layoutParams = FrameLayout.LayoutParams(
@@ -409,6 +441,10 @@ class AmbientGlanceHandler(
             )
             scaleType = ImageView.ScaleType.CENTER_CROP
             alpha = 0f
+            
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                setRenderEffect(android.graphics.RenderEffect.createBlurEffect(30f, 30f, android.graphics.Shader.TileMode.CLAMP))
+            }
         }
         backgroundScrim = View(context).apply {
             layoutParams = FrameLayout.LayoutParams(
@@ -432,19 +468,21 @@ class AmbientGlanceHandler(
                 }
             }
         }.apply {
-            format12Hour = "hh:mm"
-            format24Hour = "HH:mm"
-            textSize = 25f
+            val isFill = mode == "fill"
+            format12Hour = if (isFill) "hh\nmm" else "hh:mm"
+            format24Hour = if (isFill) "HH\nmm" else "HH:mm"
+            setLineSpacing(0f, 0.8f)
             setTextColor(Color.WHITE)
             gravity = Gravity.CENTER
             layoutParams = FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.WRAP_CONTENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT,
-                Gravity.TOP or Gravity.CENTER_HORIZONTAL
+                if (isFill) Gravity.CENTER else Gravity.TOP or Gravity.CENTER_HORIZONTAL
             ).apply {
-                topMargin = dpToPx(100f)
+                topMargin = if (isFill) 0 else dpToPx(100f)
             }
             typeface = googleSansFlex
+            applyClockFontVariations(this, isFill)
             alpha = 0.8f
         }
         rootLayout.addView(clockView)
@@ -589,7 +627,6 @@ class AmbientGlanceHandler(
                 setMargins(dpToPx(24f), 0, dpToPx(24f), dpToPx(4f))
             }
             maxLines = 1
-            ellipsize = android.text.TextUtils.TruncateAt.END
         }
 
 

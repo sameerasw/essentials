@@ -113,5 +113,58 @@ fun EssentialsOnDisplaySettingsUI(
             onModeSelected = { viewModel.setAmbientMusicGlanceAlbumArtMode(it) },
             modifier = Modifier.highlight(highlightSetting == "essentials_on_display_album_art")
         )
+
+        androidx.compose.animation.AnimatedVisibility(visible = viewModel.ambientMusicGlanceAlbumArtMode.value == "fill") {
+            Column {
+                Text(
+                    text = stringResource(R.string.essentials_on_display_clock_title),
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                RoundedCardContainer {
+                    com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem(
+                        title = stringResource(R.string.label_size),
+                        value = viewModel.ambientMusicGlanceClockSize.intValue.toFloat(),
+                        onValueChange = { viewModel.setAmbientMusicGlanceClockSize(it.toInt()) },
+                        valueRange = 40f..150f,
+                        increment = 5f,
+                        valueFormatter = { it.toInt().toString() },
+                        iconRes = R.drawable.rounded_mobile_text_2_24
+                    )
+
+                    com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem(
+                        title = stringResource(R.string.label_weight),
+                        value = viewModel.ambientMusicGlanceClockWeight.intValue.toFloat(),
+                        onValueChange = { viewModel.setAmbientMusicGlanceClockWeight(it.toInt()) },
+                        valueRange = 100f..1000f,
+                        increment = 10f,
+                        valueFormatter = { it.toInt().toString() },
+                        iconRes = R.drawable.rounded_line_weight_24
+                    )
+
+                    com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem(
+                        title = stringResource(R.string.label_width),
+                        value = viewModel.ambientMusicGlanceClockWidth.intValue.toFloat(),
+                        onValueChange = { viewModel.setAmbientMusicGlanceClockWidth(it.toInt()) },
+                        valueRange = 25f..200f,
+                        increment = 5f,
+                        valueFormatter = { it.toInt().toString() },
+                        iconRes = R.drawable.rounded_arrows_outward_24
+                    )
+
+                    com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem(
+                        title = stringResource(R.string.label_roundness),
+                        value = viewModel.ambientMusicGlanceClockRoundness.intValue.toFloat(),
+                        onValueChange = { viewModel.setAmbientMusicGlanceClockRoundness(it.toInt()) },
+                        valueRange = 0f..100f,
+                        increment = 5f,
+                        valueFormatter = { it.toInt().toString() },
+                        iconRes = R.drawable.rounded_rounded_corner_24
+                    )
+                }
+            }
+        }
     }
 }
