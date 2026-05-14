@@ -702,7 +702,8 @@ object FeatureRegistry {
                     R.array.keywords_flashlight
                 )
             ),
-            parentFeatureId = "Input"
+            parentFeatureId = "Input",
+            animationRes = R.raw.button_animation
         ) {
             override fun isEnabled(viewModel: MainViewModel) = viewModel.isButtonRemapEnabled.value
             override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
