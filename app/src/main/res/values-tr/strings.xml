@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="label_customization">Customization</string>
+    <string name="label_customization">Özelleştirme</string>
     <string name="label_beta">BETA</string>
-    <string name="shut_up_attempt_shizuku_restart">Attempt Shizuku restart</string>
-    <string name="shut_up_shizuku_restart_warning_title">Shizuku Restart Warning</string>
-    <string name="shut_up_shizuku_restart_warning_message">Since wireless debugging was toggled, Shizuku services might not have started automatically causing freezing to not function. Consider turning on attempt shizuku restart as well</string>
+    <string name="shut_up_attempt_shizuku_restart">Shizuku\'yu yeniden başlatmayı deneyin</string>
+    <string name="shut_up_shizuku_restart_warning_title">Shizuku Yeniden Başlatma Uyarısı</string>
+    <string name="shut_up_shizuku_restart_warning_message">Kablosuz hata ayıklama etkinleştirildiğinden, Shizuku servisleri otomatik olarak başlamamış olabilir ve bu da dondurma işleminin çalışmamasına neden olabilir. Shizuku\'yu yeniden başlatmayı deneme seçeneğini de etkinleştirmeyi düşünün</string>
     <string name="accessibility_service_description"><b>Essentials Erişilebilirlik Servisi</b>\n\nBu servis bazı gelişmiş özellikler için gereklidir:\n\n<b>Fiziksel Tuş Atama:</b>\nEkran kapalıyken bile ses tuşlarını algılayıp Fener gibi özellikleri aktif etmeyi sağlar.\n\n<b>Uygulama Başına Ayarlar:</b>\nDinamik Gece Işığı, Bildirim Aydınlatma Renkleri ve Uygulama Kilitleme gibi özelliklere spesifik profiller ayarlamak için şu anda kullanılan uygulamayı gözetler.\n\n<b>Ekran Kontrolu:</b>\nUygulamaların ekranı kapatmasına ve ekran durumunu değiştirmesine olanak sağlar (Ekrana Çift Tıklama veya bir Widget gibi)\n\n<b>Güvenlik:</b>\nEkran kapalıyken açık olan uygulamayı tespit ederek izin verilmeyen değişiklikleri engeller.\n\n<small>Yazılı olan bilgiler veya kullanıcı bilgileri toplanmaz veya aktarılmaz.</small></string>
     <string name="freeze_activity_title">Uygulama Dondurma</string>
     <string name="freeze_activity_subtitle">Nadiren kullanılan uygulamaları devre dışı bırakın</string>
@@ -65,13 +65,13 @@
     <string name="like_song_toast_enabled">Tost mesajını göster</string>
     <string name="like_song_aod_overlay_title">AOD\'de kaplamayı göster</string>
     <string name="feat_essentials_on_display_title">Essentials On Display</string>
-    <string name="feat_essentials_on_display_desc">Glance at media and info on AOD</string>
+    <string name="feat_essentials_on_display_desc">AOD ile ilgili medya ve bilgilere göz atın</string>
     <string name="essentials_on_display_docked_mode_title">Docked mode</string>
-    <string name="essentials_on_display_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
+    <string name="essentials_on_display_docked_mode_desc">Zaman aşımı yok</string>
     <string name="essentials_on_display_respect_notifications_title">Respect new notifications</string>
     <string name="essentials_on_display_respect_notifications_desc">Briefly disable for new notifications</string>
     <string name="essentials_on_display_random_shapes_title">Random shapes</string>
-    <string name="essentials_on_display_random_shapes_desc">Use various Material 3 shapes for the album art</string>
+    <string name="essentials_on_display_random_shapes_desc">Rastgele Material You şekilleri kullan</string>
     <string name="essentials_on_display_album_art_title">Album art</string>
     <string name="essentials_on_display_clock_title">Clock</string>
     <string name="essentials_on_display_force_fill_while_charging_title">Always use while charging</string>
@@ -603,7 +603,7 @@
     <string name="perm_device_admin_desc">Yetkisiz erişim girişimlerinde cihazı donanımsal olarak kilitlemek (biyometriyi devre dışı bırakarak) gereklidir</string>
     <string name="perm_action_grant">İzin Ver</string>
     <string name="perm_action_copy_adb">ADB\'yi kopyala</string>
-    <string name="perm_action_check">Kontrol etmek</string>
+    <string name="perm_action_check">Kontrol et</string>
     <string name="perm_action_enable">Ayarlar\'da etkinleştir</string>
     <string name="perm_action_how_to">Nasıl verilir</string>
     <string name="perm_action_granted">Verildi</string>
