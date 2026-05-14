@@ -64,7 +64,7 @@ fun LottieFeatureAnimation(
                 .drawWithContent {
                     drawContent()
                     drawRect(
-                        color = primaryColor.copy(alpha = 0.5f),
+                        color = primaryColor.copy(alpha = 0.7f),
                         blendMode = BlendMode.SrcAtop
                     )
                 }
