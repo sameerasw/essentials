@@ -46,11 +46,25 @@ fun LottieFeatureAnimation(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(vertical = 16.dp)
-                .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
+                .graphicsLayer(
+                    compositingStrategy = CompositingStrategy.Offscreen,
+                    clip = true,
+                    shape = androidx.compose.foundation.shape.GenericShape { size, _ ->
+                        val trim = size.height * 0.073f
+                        addRect(
+                            androidx.compose.ui.geometry.Rect(
+                                0f,
+                                trim,
+                                size.width,
+                                size.height - trim
+                            )
+                        )
+                    }
+                )
                 .drawWithContent {
                     drawContent()
                     drawRect(
-                        color = primaryColor.copy(alpha = 0.3f),
+                        color = primaryColor.copy(alpha = 0.2f),
                         blendMode = BlendMode.SrcAtop
                     )
                 }
