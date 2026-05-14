@@ -407,7 +407,8 @@ object FeatureRegistry {
                 )
             ),
             showToggle = true,
-            parentFeatureId = "Notifications"
+            parentFeatureId = "Notifications",
+            animationRes = R.raw.lighting_animation
         ) {
             override fun isEnabled(viewModel: MainViewModel) =
                 viewModel.isNotificationLightingEnabled.value
