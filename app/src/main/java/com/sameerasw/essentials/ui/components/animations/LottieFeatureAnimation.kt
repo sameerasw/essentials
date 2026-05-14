@@ -9,19 +9,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.airbnb.lottie.LottieProperty
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.airbnb.lottie.compose.rememberLottieDynamicProperties
-import com.airbnb.lottie.compose.rememberLottieDynamicProperty
 
 @Composable
 fun LottieFeatureAnimation(
@@ -36,18 +34,6 @@ fun LottieFeatureAnimation(
     )
 
     val primaryColor = MaterialTheme.colorScheme.primary
-    val dynamicProperties = rememberLottieDynamicProperties(
-        rememberLottieDynamicProperty(
-            property = LottieProperty.COLOR,
-            value = primaryColor.toArgb(),
-            keyPath = arrayOf("**")
-        ),
-        rememberLottieDynamicProperty(
-            property = LottieProperty.STROKE_COLOR,
-            value = primaryColor.toArgb(),
-            keyPath = arrayOf("**")
-        )
-    )
 
     Box(
         modifier = modifier
@@ -57,7 +43,6 @@ fun LottieFeatureAnimation(
         LottieAnimation(
             composition = composition,
             progress = { progress },
-            dynamicProperties = dynamicProperties,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(vertical = 16.dp)
@@ -76,6 +61,13 @@ fun LottieFeatureAnimation(
                         )
                     }
                 )
+                .drawWithContent {
+                    drawContent()
+                    drawRect(
+                        color = primaryColor.copy(alpha = 0.2f),
+                        blendMode = BlendMode.SrcAtop
+                    )
+                }
         )
     }
 }
