@@ -16,6 +16,14 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.graphics.toArgb
+import com.airbnb.lottie.LottieProperty
+import com.airbnb.lottie.compose.rememberLottieDynamicProperties
+import com.airbnb.lottie.compose.rememberLottieDynamicProperty
+
 @Composable
 fun LottieFeatureAnimation(
     resId: Int,
@@ -28,6 +36,17 @@ fun LottieFeatureAnimation(
         iterations = LottieConstants.IterateForever
     )
 
+    val dynamicProperties = rememberLottieDynamicProperties(
+        rememberLottieDynamicProperty(
+            property = LottieProperty.COLOR_FILTER,
+            value = PorterDuffColorFilter(
+                MaterialTheme.colorScheme.primary.copy(alpha = 0.5f).toArgb(),
+                PorterDuff.Mode.OVERLAY
+            ),
+            keyPath = arrayOf("**")
+        )
+    )
+
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -36,6 +55,7 @@ fun LottieFeatureAnimation(
         LottieAnimation(
             composition = composition,
             progress = { progress },
+            dynamicProperties = dynamicProperties,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(vertical = 16.dp)
