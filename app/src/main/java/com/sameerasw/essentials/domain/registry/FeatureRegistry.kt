@@ -179,7 +179,8 @@ object FeatureRegistry {
             aboutDescription = R.string.about_desc_text_animations,
             permissionKeys = listOf("WRITE_SETTINGS", "WRITE_SECURE_SETTINGS"),
             showToggle = false,
-            parentFeatureId = "Display"
+            parentFeatureId = "Display",
+            animationRes = R.raw.scale_animation
         ) {
             override fun isEnabled(viewModel: MainViewModel) = true
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
@@ -443,7 +444,8 @@ object FeatureRegistry {
                 )
             ),
             showToggle = true,
-            parentFeatureId = "Notifications"
+            parentFeatureId = "Notifications",
+            animationRes = R.raw.flash_animation
         ) {
             override fun isEnabled(viewModel: MainViewModel) =
                 viewModel.isFlashlightPulseEnabled.value
