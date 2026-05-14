@@ -87,6 +87,11 @@ import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.viewmodels.StatusBarIconViewModel
 import com.sameerasw.essentials.viewmodels.WatchViewModel
 import kotlinx.coroutines.delay
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.geometry.Offset
+import com.sameerasw.essentials.utils.HapticUtil
 
 @OptIn(ExperimentalMaterial3Api::class)
 class FeatureSettingsActivity : AppCompatActivity() {
@@ -339,6 +344,51 @@ class FeatureSettingsActivity : AppCompatActivity() {
                     val pageTitle =
                         if (featureObj != null) stringResource(featureObj.title) else featureId
                     val hasMenu = featureObj != null && featureObj.aboutDescription != null
+                    val view = LocalView.current
+
+                    val density = LocalDensity.current
+                    val minHeaderHeight = 200.dp
+                    val maxHeaderHeight = 400.dp
+                    var headerHeight by remember { mutableStateOf(minHeaderHeight) }
+
+                    val nestedScrollConnection = remember {
+                        object : NestedScrollConnection {
+                            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                                val delta = available.y
+                                if (delta < 0 && headerHeight > minHeaderHeight) {
+                                    val oldHeight = headerHeight
+                                    headerHeight = with(density) {
+                                        (oldHeight.toPx() + delta).toDp()
+                                    }.coerceAtLeast(minHeaderHeight)
+                                    val consumed = oldHeight - headerHeight
+                                    return Offset(0f, with(density) { -consumed.toPx() })
+                                }
+                                return Offset.Zero
+                            }
+
+                            override fun onPostScroll(
+                                consumed: Offset,
+                                available: Offset,
+                                source: NestedScrollSource
+                            ): Offset {
+                                val delta = available.y
+                                if (delta > 0) {
+                                    val oldHeight = headerHeight
+                                    headerHeight = with(density) {
+                                        (oldHeight.toPx() + delta).toDp()
+                                    }.coerceAtMost(maxHeaderHeight)
+                                    
+                                    if (headerHeight == maxHeaderHeight && oldHeight < maxHeaderHeight) {
+                                        HapticUtil.performLightHaptic(view)
+                                    }
+                                    
+                                    val produced = headerHeight - oldHeight
+                                    return Offset(0f, with(density) { produced.toPx() })
+                                }
+                                return Offset.Zero
+                            }
+                        }
+                    }
 
                     val statusBarHeightPx = with(LocalDensity.current) {
                         WindowInsets.statusBars.asPaddingValues().calculateTopPadding().toPx()
@@ -366,7 +416,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                     height = with(LocalDensity.current) { 150.dp.toPx() },
                                     direction = BlurDirection.BOTTOM
                                 )
-                                .then(if (hasScroll) Modifier.verticalScroll(rememberScrollState()) else Modifier)
+                                .then(if (hasScroll) Modifier.nestedScroll(nestedScrollConnection).verticalScroll(rememberScrollState()) else Modifier)
                         ) {
                             // Top padding for status bar
                             if (featureId != "Quick settings tiles" && featureId != "Location reached") {
@@ -380,6 +430,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                             if (featureObj != null && featureObj.animationRes != 0) {
                                 LottieFeatureAnimation(
                                     resId = featureObj.animationRes,
+                                    height = headerHeight,
                                     modifier = Modifier.padding(horizontal = 16.dp)
                                 )
                             }
