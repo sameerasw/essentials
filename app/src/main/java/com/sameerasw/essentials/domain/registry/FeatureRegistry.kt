@@ -316,7 +316,8 @@ object FeatureRegistry {
                 )
             ),
             showToggle = false,
-            parentFeatureId = "Display"
+            parentFeatureId = "Display",
+            animationRes = R.raw.status_animation
         ) {
             override fun isEnabled(viewModel: MainViewModel) =
                 viewModel.isStatusBarIconControlEnabled.value
@@ -731,7 +732,8 @@ object FeatureRegistry {
                 )
             ),
             showToggle = true,
-            parentFeatureId = "Display"
+            parentFeatureId = "Display",
+            animationRes = R.raw.night_animation
         ) {
             override val permissionKeys: List<String>
                 get() = if (com.sameerasw.essentials.data.repository.SettingsRepository(
