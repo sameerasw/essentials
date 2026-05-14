@@ -139,7 +139,8 @@ object FeatureRegistry {
             permissionKeys = listOf("ACCESSIBILITY", "NOTIFICATION_LISTENER"),
             hasMoreSettings = true,
             showToggle = true,
-            parentFeatureId = "Display"
+            parentFeatureId = "Display",
+            animationRes = R.raw.aod_animation
         ) {
             override fun isEnabled(viewModel: MainViewModel) =
                 viewModel.isAmbientMusicGlanceEnabled.value

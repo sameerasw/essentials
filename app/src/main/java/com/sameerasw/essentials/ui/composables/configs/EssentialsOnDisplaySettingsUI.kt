@@ -23,6 +23,10 @@ import androidx.glance.text.Text
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.components.pickers.AlbumArtModePicker
+import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
+import com.sameerasw.essentials.ui.components.sheets.PermissionItem
+import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
@@ -42,11 +46,11 @@ fun EssentialsOnDisplaySettingsUI(
     val isPermissionGranted = isAccessibilityEnabled && isNotificationListenerEnabled
 
     if (showPermissionSheet) {
-        com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet(
+        PermissionsBottomSheet(
             onDismissRequest = { showPermissionSheet = false },
             featureTitle = R.string.feat_essentials_on_display_title,
             permissions = listOf(
-                com.sameerasw.essentials.ui.components.sheets.PermissionItem(
+                PermissionItem(
                     iconRes = R.drawable.rounded_settings_accessibility_24,
                     title = R.string.perm_accessibility_title,
                     description = R.string.perm_accessibility_desc_essentials_on_display,
@@ -60,7 +64,7 @@ fun EssentialsOnDisplaySettingsUI(
                     },
                     isGranted = isAccessibilityEnabled
                 ),
-                com.sameerasw.essentials.ui.components.sheets.PermissionItem(
+                PermissionItem(
                     iconRes = R.drawable.rounded_notifications_unread_24,
                     title = R.string.perm_notif_listener_title,
                     description = R.string.perm_notif_listener_desc_lighting,
@@ -124,7 +128,7 @@ fun EssentialsOnDisplaySettingsUI(
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
-        com.sameerasw.essentials.ui.components.pickers.AlbumArtModePicker(
+        AlbumArtModePicker(
             selectedMode = viewModel.ambientMusicGlanceAlbumArtMode.value,
             onModeSelected = { viewModel.setAmbientMusicGlanceAlbumArtMode(it) },
             modifier = Modifier.highlight(highlightSetting == "essentials_on_display_album_art")
@@ -169,7 +173,7 @@ fun EssentialsOnDisplaySettingsUI(
                 )
 
                 RoundedCardContainer {
-                    com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem(
+                    ConfigSliderItem(
                         title = stringResource(R.string.label_size),
                         value = viewModel.ambientMusicGlanceClockSize.intValue.toFloat(),
                         onValueChange = { viewModel.setAmbientMusicGlanceClockSize(it.toInt()) },
@@ -179,7 +183,7 @@ fun EssentialsOnDisplaySettingsUI(
                         iconRes = R.drawable.rounded_mobile_text_2_24
                     )
 
-                    com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem(
+                    ConfigSliderItem(
                         title = stringResource(R.string.label_weight),
                         value = viewModel.ambientMusicGlanceClockWeight.intValue.toFloat(),
                         onValueChange = { viewModel.setAmbientMusicGlanceClockWeight(it.toInt()) },
@@ -189,7 +193,7 @@ fun EssentialsOnDisplaySettingsUI(
                         iconRes = R.drawable.rounded_line_weight_24
                     )
 
-                    com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem(
+                    ConfigSliderItem(
                         title = stringResource(R.string.label_width),
                         value = viewModel.ambientMusicGlanceClockWidth.intValue.toFloat(),
                         onValueChange = { viewModel.setAmbientMusicGlanceClockWidth(it.toInt()) },
@@ -199,7 +203,7 @@ fun EssentialsOnDisplaySettingsUI(
                         iconRes = R.drawable.rounded_arrows_outward_24
                     )
 
-                    com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem(
+                    ConfigSliderItem(
                         title = stringResource(R.string.label_roundness),
                         value = viewModel.ambientMusicGlanceClockRoundness.intValue.toFloat(),
                         onValueChange = { viewModel.setAmbientMusicGlanceClockRoundness(it.toInt()) },

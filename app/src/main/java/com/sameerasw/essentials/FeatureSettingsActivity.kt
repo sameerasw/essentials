@@ -72,6 +72,12 @@ import com.sameerasw.essentials.ui.composables.configs.SoundModeTileSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.StatusBarIconSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.TextAnimationsSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.WatchSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.FreezeSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.CalendarSyncSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.RemoteLockSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.FlashlightPulseSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.LockScreenClockSettingsUI
+import com.sameerasw.essentials.ui.components.animations.LottieFeatureAnimation
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
@@ -371,6 +377,13 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                 )
                             }
 
+                            if (featureObj != null && featureObj.animationRes != 0) {
+                                LottieFeatureAnimation(
+                                    resId = featureObj.animationRes,
+                                    modifier = Modifier.padding(horizontal = 16.dp)
+                                )
+                            }
+
                             if (featureId == "Watch") {
                                 val context = LocalContext.current
                                 LaunchedEffect(Unit) {
@@ -564,7 +577,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                     }
 
                                     "Freeze" -> {
-                                        com.sameerasw.essentials.ui.composables.configs.FreezeSettingsUI(
+                                        FreezeSettingsUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightKey = highlightSetting
@@ -622,7 +635,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                     }
 
                                     "Calendar Sync" -> {
-                                        com.sameerasw.essentials.ui.composables.configs.CalendarSyncSettingsUI(
+                                        CalendarSyncSettingsUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightKey = highlightSetting
@@ -630,7 +643,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                     }
 
                                     "Lock from Watch" -> {
-                                        com.sameerasw.essentials.ui.composables.configs.RemoteLockSettingsUI(
+                                        RemoteLockSettingsUI(
                                             mainViewModel = viewModel,
                                             watchViewModel = watchViewModel,
                                             modifier = Modifier.padding(top = 16.dp),
@@ -647,7 +660,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                     }
 
                                     "Flashlight pulse" -> {
-                                        com.sameerasw.essentials.ui.composables.configs.FlashlightPulseSettingsUI(
+                                        FlashlightPulseSettingsUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightSetting = highlightSetting
@@ -695,7 +708,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                     }
 
                                     "Lock screen clock" -> {
-                                        com.sameerasw.essentials.ui.composables.configs.LockScreenClockSettingsUI(
+                                        LockScreenClockSettingsUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightSetting = highlightSetting
