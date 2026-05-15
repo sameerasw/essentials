@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Intent
 import android.os.Build
 import androidx.compose.foundation.background
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,6 +39,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -116,22 +120,33 @@ fun DeviceHeroCard(
                         scaleY = 1f + (overscrollOffset / 1000f)
                     }
                     .size(200.dp + extraSize)
-                    .padding(bottom = 32.dp)
+                    .padding(top = 12.dp, bottom = 32.dp)
             )
         }
 
         // User-set Device Name
         Text(
             text = deviceInfo.deviceName,
-            modifier = Modifier.graphicsLayer {
-                alpha = contentAlpha()
-                translationY = contentOffset().toPx()
-            },
-            style = MaterialTheme.typography.headlineMedium.copy(
-                fontFamily = null
+            modifier = Modifier
+                .graphicsLayer {
+                    alpha = contentAlpha()
+                    translationY = contentOffset().toPx()
+                }
+                .basicMarquee(),
+            style = MaterialTheme.typography.headlineLarge.copy(
+                fontFamily = FontFamily(
+                    Font(
+                        R.font.google_sans_flex,
+                        variationSettings = FontVariation.Settings(
+                            FontVariation.width(150f),
+                            FontVariation.weight(FontWeight.Normal.weight),
+                            FontVariation.Setting("ROND", 100f)
+                        )
+                    )
+                )
             ),
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface
+            color = MaterialTheme.colorScheme.onSurface,
+            maxLines = 1
         )
 
         // Manufacturer Model
