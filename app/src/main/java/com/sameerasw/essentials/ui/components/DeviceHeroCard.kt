@@ -59,6 +59,7 @@ fun DeviceHeroCard(
     deviceInfo: DeviceInfo,
     contentAlpha: () -> Float = { 1f },
     contentOffset: () -> Dp = { 0.dp },
+    overscrollOffset: Float = 0f,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -98,6 +99,27 @@ fun DeviceHeroCard(
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        val androidLogoRes = DeviceImageMapper.getAndroidLogo(deviceInfo)
+        val density = androidx.compose.ui.platform.LocalDensity.current
+        val extraSize = with(density) { (overscrollOffset).toDp() }
+
+        if (androidLogoRes != 0) {
+            Icon(
+                painter = painterResource(id = androidLogoRes),
+                contentDescription = null,
+                tint = Color.Unspecified,
+                modifier = Modifier
+                    .graphicsLayer {
+                        alpha = contentAlpha()
+                        translationY = contentOffset().toPx()
+                        scaleX = 1f + (overscrollOffset / 1000f)
+                        scaleY = 1f + (overscrollOffset / 1000f)
+                    }
+                    .size(200.dp + extraSize)
+                    .padding(bottom = 32.dp)
+            )
+        }
+
         // User-set Device Name
         Text(
             text = deviceInfo.deviceName,
@@ -132,64 +154,49 @@ fun DeviceHeroCard(
                 translationY = contentOffset().toPx()
             },
     ) {
-
-        val androidLogoRes = DeviceImageMapper.getAndroidLogo(deviceInfo)
-        if (isPixel && androidLogoRes != 0) {
-            Row(
-                modifier = Modifier
-                    .background(
-                        MaterialTheme.colorScheme.surfaceContainerHighest,
-                        shape = Shapes.extraSmall
-                    )
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(id = androidLogoRes),
-                        contentDescription = null,
-                        tint = Color.Unspecified,
-                        modifier = Modifier.size(56.dp)
-                    )
-                    Column(horizontalAlignment = Alignment.Start) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                text = "Android ${deviceInfo.androidVersion} (${
-                                    DeviceUtils.getOSName(
-                                        deviceInfo.sdkInt,
-                                        deviceInfo.osCodename
-                                    )
-                                })",
-                                style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                        Text(
-                            text = "API ${deviceInfo.sdkInt} • Patch: ${
-                                DeviceUtils.formatSecurityPatch(
-                                    deviceInfo.securityPatch
-                                )
-                            }",
-                            style = MaterialTheme.typography.labelMedium,
-                            fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+        // Android Version Info
+        Row(
+            modifier = Modifier
+                .background(
+                    MaterialTheme.colorScheme.surfaceContainerHighest,
+                    shape = Shapes.extraSmall
+                )
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = "Android ${deviceInfo.androidVersion} (${
+                        DeviceUtils.getOSName(
+                            deviceInfo.sdkInt,
+                            deviceInfo.osCodename
                         )
-                        Text(
-                            text = "Build: ${deviceInfo.display}",
-                            style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.Normal,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
+                    })",
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = "API ${deviceInfo.sdkInt} • Patch: ${
+                        DeviceUtils.formatSecurityPatch(
+                            deviceInfo.securityPatch
                         )
-                    }
-                }
+                    }",
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Text(
+                    text = "Build: ${deviceInfo.display}",
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = FontWeight.Normal,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
+                )
             }
         }
+
 
         Column(
             modifier = Modifier

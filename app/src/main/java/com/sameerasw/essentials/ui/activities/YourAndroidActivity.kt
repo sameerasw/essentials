@@ -30,6 +30,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.compose.ui.input.pointer.pointerInput
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.DeviceHeroCard
 import com.sameerasw.essentials.ui.components.EssentialsFloatingToolbar
@@ -49,6 +51,9 @@ import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.DeviceInfo
 import com.sameerasw.essentials.utils.DeviceUtils
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalView
+import com.sameerasw.essentials.utils.HapticUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -160,6 +165,55 @@ fun YourAndroidContent(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
+    val scrollState = rememberScrollState()
+    val overscrollOffset = remember { androidx.compose.animation.core.Animatable(0f) }
+    val scope = rememberCoroutineScope()
+    val view = LocalView.current
+
+    val nestedScrollConnection = remember {
+        object : androidx.compose.ui.input.nestedscroll.NestedScrollConnection {
+            override fun onPreScroll(
+                available: androidx.compose.ui.geometry.Offset,
+                source: androidx.compose.ui.input.nestedscroll.NestedScrollSource
+            ): androidx.compose.ui.geometry.Offset {
+                if (available.y < 0 && overscrollOffset.value > 0) {
+                    val toConsume =
+                        if (overscrollOffset.value + available.y >= 0) available.y else -overscrollOffset.value
+                    scope.launch {
+                        overscrollOffset.snapTo(overscrollOffset.value + toConsume)
+                    }
+                    return androidx.compose.ui.geometry.Offset(0f, toConsume)
+                }
+                return androidx.compose.ui.geometry.Offset.Zero
+            }
+
+            override fun onPostScroll(
+                consumed: androidx.compose.ui.geometry.Offset,
+                available: androidx.compose.ui.geometry.Offset,
+                source: androidx.compose.ui.input.nestedscroll.NestedScrollSource
+            ): androidx.compose.ui.geometry.Offset {
+                if (available.y > 0 && scrollState.value == 0) {
+                    val prevValue = overscrollOffset.value
+                    if (prevValue >= 350f) return androidx.compose.ui.geometry.Offset.Zero
+
+                    val newValue = (prevValue + available.y * 0.5f).coerceAtMost(350f)
+                    scope.launch {
+                        overscrollOffset.snapTo(newValue)
+                    }
+
+                    // Haptic feedback when stretched significantly
+                    if (prevValue < 300f && newValue >= 300f) {
+                        HapticUtil.performUIHaptic(view)
+                    }
+
+                    return androidx.compose.ui.geometry.Offset(0f, available.y)
+                }
+                return super.onPostScroll(consumed, available, source)
+            }
+        }
+    }
+
+
     var isStartupAnimationRunning by remember { mutableStateOf(hasRunStartupAnimation) }
 
     LaunchedEffect(hasRunStartupAnimation) {
@@ -201,7 +255,23 @@ fun YourAndroidContent(
                 height = with(LocalDensity.current) { 150.dp.toPx() },
                 direction = BlurDirection.BOTTOM
             )
-            .verticalScroll(rememberScrollState())
+            .nestedScroll(nestedScrollConnection)
+            .pointerInput(Unit) {
+                awaitPointerEventScope {
+                    while (true) {
+                        val event = awaitPointerEvent()
+                        if (event.type == androidx.compose.ui.input.pointer.PointerEventType.Release && overscrollOffset.value > 0) {
+                            scope.launch {
+                                overscrollOffset.animateTo(
+                                    0f,
+                                    androidx.compose.animation.core.spring(stiffness = androidx.compose.animation.core.Spring.StiffnessMediumLow)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+            .verticalScroll(scrollState)
             .padding(
                 top = contentPadding.calculateTopPadding() + WindowInsets.statusBars.asPaddingValues()
                     .calculateTopPadding(),
@@ -214,7 +284,8 @@ fun YourAndroidContent(
         DeviceHeroCard(
             deviceInfo = deviceInfo,
             contentAlpha = { contentAlphaState.value },
-            contentOffset = { contentOffsetState.value }
+            contentOffset = { contentOffsetState.value },
+            overscrollOffset = overscrollOffset.value
         )
     }
 }
