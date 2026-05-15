@@ -855,6 +855,9 @@
     <string name="label_shizuku_ritaka">Shizuku (Rikka)</string>
     <string name="label_shizuku_tuozi">Shizuku (TuoZi)</string>
     <string name="label_search_content_description">Vyhledávání</string>
+    <string name="label_recent_searches">Recent Searches</string>
+    <string name="label_no_recent_searches">No recent searches</string>
+    <string name="label_clear_all">Clear all</string>
     <string name="perm_device_admin_explanation">Vyžaduje se k pevnému uzamčení zařízení při pokusu o neoprávněné změny sítě na obrazovce uzamčení.</string>
     <string name="biometric_subtitle_access_settings">Pro přístup k nastavení se ověřte</string>
     <string name="biometric_title_settings_format">%1$s Nastavení</string>
