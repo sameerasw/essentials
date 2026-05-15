@@ -862,12 +862,6 @@ fun SetupFeatures(
     val keyboardController = LocalSoftwareKeyboardController.current
     val isKeyboardVisible = WindowInsets.isImeVisible
 
-    // Detect keyboard closing to clear focus
-    LaunchedEffect(isKeyboardVisible) {
-        if (!isKeyboardVisible && isFocused) {
-            focusManager.clearFocus()
-        }
-    }
 
     val pullRefreshState = rememberPullToRefreshState()
     var isRefreshing by rememberSaveable { mutableStateOf(false) }
