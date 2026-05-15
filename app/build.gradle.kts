@@ -165,4 +165,7 @@ dependencies {
     // tandard wearable library
     implementation("com.google.android.gms:play-services-wearable:19.0.0")
 
+    // Lottie for animations
+    implementation("com.airbnb.android:lottie-compose:6.4.0")
+
 }

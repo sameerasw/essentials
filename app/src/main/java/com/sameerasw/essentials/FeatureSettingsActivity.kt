@@ -72,6 +72,12 @@ import com.sameerasw.essentials.ui.composables.configs.SoundModeTileSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.StatusBarIconSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.TextAnimationsSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.WatchSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.FreezeSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.CalendarSyncSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.RemoteLockSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.FlashlightPulseSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.LockScreenClockSettingsUI
+import com.sameerasw.essentials.ui.components.animations.LottieFeatureAnimation
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
@@ -81,6 +87,11 @@ import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.viewmodels.StatusBarIconViewModel
 import com.sameerasw.essentials.viewmodels.WatchViewModel
 import kotlinx.coroutines.delay
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.geometry.Offset
+import com.sameerasw.essentials.utils.HapticUtil
 
 @OptIn(ExperimentalMaterial3Api::class)
 class FeatureSettingsActivity : AppCompatActivity() {
@@ -333,6 +344,51 @@ class FeatureSettingsActivity : AppCompatActivity() {
                     val pageTitle =
                         if (featureObj != null) stringResource(featureObj.title) else featureId
                     val hasMenu = featureObj != null && featureObj.aboutDescription != null
+                    val view = LocalView.current
+
+                    val density = LocalDensity.current
+                    val minHeaderHeight = 200.dp
+                    val maxHeaderHeight = 400.dp
+                    var headerHeight by remember { mutableStateOf(minHeaderHeight) }
+
+                    val nestedScrollConnection = remember {
+                        object : NestedScrollConnection {
+                            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                                val delta = available.y
+                                if (delta < 0 && headerHeight > minHeaderHeight) {
+                                    val oldHeight = headerHeight
+                                    headerHeight = with(density) {
+                                        (oldHeight.toPx() + delta).toDp()
+                                    }.coerceAtLeast(minHeaderHeight)
+                                    val consumed = oldHeight - headerHeight
+                                    return Offset(0f, with(density) { -consumed.toPx() })
+                                }
+                                return Offset.Zero
+                            }
+
+                            override fun onPostScroll(
+                                consumed: Offset,
+                                available: Offset,
+                                source: NestedScrollSource
+                            ): Offset {
+                                val delta = available.y
+                                if (delta > 0) {
+                                    val oldHeight = headerHeight
+                                    headerHeight = with(density) {
+                                        (oldHeight.toPx() + delta).toDp()
+                                    }.coerceAtMost(maxHeaderHeight)
+                                    
+                                    if (headerHeight == maxHeaderHeight && oldHeight < maxHeaderHeight) {
+                                        HapticUtil.performLightHaptic(view)
+                                    }
+                                    
+                                    val produced = headerHeight - oldHeight
+                                    return Offset(0f, with(density) { produced.toPx() })
+                                }
+                                return Offset.Zero
+                            }
+                        }
+                    }
 
                     val statusBarHeightPx = with(LocalDensity.current) {
                         WindowInsets.statusBars.asPaddingValues().calculateTopPadding().toPx()
@@ -360,7 +416,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                     height = with(LocalDensity.current) { 150.dp.toPx() },
                                     direction = BlurDirection.BOTTOM
                                 )
-                                .then(if (hasScroll) Modifier.verticalScroll(rememberScrollState()) else Modifier)
+                                .then(if (hasScroll) Modifier.nestedScroll(nestedScrollConnection).verticalScroll(rememberScrollState()) else Modifier)
                         ) {
                             // Top padding for status bar
                             if (featureId != "Quick settings tiles" && featureId != "Location reached") {
@@ -368,6 +424,14 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                     modifier = Modifier.height(
                                         statusBarHeight
                                     )
+                                )
+                            }
+
+                            if (featureObj != null && featureObj.animationRes != 0) {
+                                LottieFeatureAnimation(
+                                    resId = featureObj.animationRes,
+                                    height = headerHeight,
+                                    modifier = Modifier.padding(horizontal = 16.dp)
                                 )
                             }
 
@@ -564,7 +628,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                     }
 
                                     "Freeze" -> {
-                                        com.sameerasw.essentials.ui.composables.configs.FreezeSettingsUI(
+                                        FreezeSettingsUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightKey = highlightSetting
@@ -622,7 +686,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                     }
 
                                     "Calendar Sync" -> {
-                                        com.sameerasw.essentials.ui.composables.configs.CalendarSyncSettingsUI(
+                                        CalendarSyncSettingsUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightKey = highlightSetting
@@ -630,7 +694,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                     }
 
                                     "Lock from Watch" -> {
-                                        com.sameerasw.essentials.ui.composables.configs.RemoteLockSettingsUI(
+                                        RemoteLockSettingsUI(
                                             mainViewModel = viewModel,
                                             watchViewModel = watchViewModel,
                                             modifier = Modifier.padding(top = 16.dp),
@@ -647,7 +711,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                     }
 
                                     "Flashlight pulse" -> {
-                                        com.sameerasw.essentials.ui.composables.configs.FlashlightPulseSettingsUI(
+                                        FlashlightPulseSettingsUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightSetting = highlightSetting
@@ -695,7 +759,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                     }
 
                                     "Lock screen clock" -> {
-                                        com.sameerasw.essentials.ui.composables.configs.LockScreenClockSettingsUI(
+                                        LockScreenClockSettingsUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightSetting = highlightSetting

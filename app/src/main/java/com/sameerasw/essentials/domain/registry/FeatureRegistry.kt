@@ -34,7 +34,8 @@ object FeatureRegistry {
                 )
             ),
             showToggle = false,
-            parentFeatureId = "Sound"
+            parentFeatureId = "Sound",
+            animationRes = R.raw.sound_animation
         ) {
             override fun isEnabled(viewModel: MainViewModel) = true
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
@@ -139,7 +140,8 @@ object FeatureRegistry {
             permissionKeys = listOf("ACCESSIBILITY", "NOTIFICATION_LISTENER"),
             hasMoreSettings = true,
             showToggle = true,
-            parentFeatureId = "Display"
+            parentFeatureId = "Display",
+            animationRes = R.raw.aod_animation
         ) {
             override fun isEnabled(viewModel: MainViewModel) =
                 viewModel.isAmbientMusicGlanceEnabled.value
@@ -160,7 +162,8 @@ object FeatureRegistry {
             aboutDescription = R.string.about_desc_aod,
             permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
             showToggle = true,
-            parentFeatureId = "Display"
+            parentFeatureId = "Display",
+            animationRes = R.raw.aod_animation
         ) {
             override fun isEnabled(viewModel: MainViewModel) = viewModel.isAodEnabled.value
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {
@@ -178,7 +181,8 @@ object FeatureRegistry {
             aboutDescription = R.string.about_desc_text_animations,
             permissionKeys = listOf("WRITE_SETTINGS", "WRITE_SECURE_SETTINGS"),
             showToggle = false,
-            parentFeatureId = "Display"
+            parentFeatureId = "Display",
+            animationRes = R.raw.scale_animation
         ) {
             override fun isEnabled(viewModel: MainViewModel) = true
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
@@ -215,7 +219,8 @@ object FeatureRegistry {
                 )
             ),
             showToggle = false,
-            parentFeatureId = "Display"
+            parentFeatureId = "Display",
+            animationRes = R.raw.refresh_animation
         ) {
             override fun isEnabled(viewModel: MainViewModel) = true
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
@@ -314,7 +319,8 @@ object FeatureRegistry {
                 )
             ),
             showToggle = false,
-            parentFeatureId = "Display"
+            parentFeatureId = "Display",
+            animationRes = R.raw.status_animation
         ) {
             override fun isEnabled(viewModel: MainViewModel) =
                 viewModel.isStatusBarIconControlEnabled.value
@@ -342,7 +348,8 @@ object FeatureRegistry {
                 )
             ),
             showToggle = true,
-            parentFeatureId = "Display"
+            parentFeatureId = "Display",
+            animationRes = R.raw.caffeinate_animation
         ) {
             override fun isEnabled(viewModel: MainViewModel) = viewModel.isCaffeinateActive.value
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {
@@ -406,7 +413,8 @@ object FeatureRegistry {
                 )
             ),
             showToggle = true,
-            parentFeatureId = "Notifications"
+            parentFeatureId = "Notifications",
+            animationRes = R.raw.lighting_animation
         ) {
             override fun isEnabled(viewModel: MainViewModel) =
                 viewModel.isNotificationLightingEnabled.value
@@ -441,7 +449,8 @@ object FeatureRegistry {
                 )
             ),
             showToggle = true,
-            parentFeatureId = "Notifications"
+            parentFeatureId = "Notifications",
+            animationRes = R.raw.flash_animation
         ) {
             override fun isEnabled(viewModel: MainViewModel) =
                 viewModel.isFlashlightPulseEnabled.value
@@ -700,7 +709,8 @@ object FeatureRegistry {
                     R.array.keywords_flashlight
                 )
             ),
-            parentFeatureId = "Input"
+            parentFeatureId = "Input",
+            animationRes = R.raw.button_animation
         ) {
             override fun isEnabled(viewModel: MainViewModel) = viewModel.isButtonRemapEnabled.value
             override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
@@ -726,7 +736,8 @@ object FeatureRegistry {
                 )
             ),
             showToggle = true,
-            parentFeatureId = "Display"
+            parentFeatureId = "Display",
+            animationRes = R.raw.night_animation
         ) {
             override val permissionKeys: List<String>
                 get() = if (com.sameerasw.essentials.data.repository.SettingsRepository(
@@ -790,7 +801,8 @@ object FeatureRegistry {
             permissionKeys = if (ShellUtils.isRootEnabled(EssentialsApp.context)) listOf(
                 "ROOT"
             ) else listOf("SHIZUKU"),
-            parentFeatureId = "Security"
+            parentFeatureId = "Security",
+            animationRes = R.raw.lock_animation
         ) {
             override fun isEnabled(viewModel: MainViewModel) =
                 viewModel.isScreenLockedSecurityEnabled.value
@@ -823,7 +835,8 @@ object FeatureRegistry {
                     R.array.keywords_selection
                 )
             ),
-            parentFeatureId = "Security"
+            parentFeatureId = "Security",
+            animationRes = R.raw.applock_animation
         ) {
             override val permissionKeys: List<String>
                 get() = if (com.sameerasw.essentials.data.repository.SettingsRepository(
@@ -853,7 +866,8 @@ object FeatureRegistry {
             showToggle = false,
             hasMoreSettings = true,
             isBeta = true,
-            parentFeatureId = "Security"
+            parentFeatureId = "Security",
+            animationRes = R.raw.shutup_animation
         ) {
             override fun isEnabled(viewModel: MainViewModel) = true
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
