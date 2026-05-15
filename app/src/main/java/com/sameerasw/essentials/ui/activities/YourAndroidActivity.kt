@@ -82,6 +82,8 @@ import com.sameerasw.essentials.ui.components.cards.TrackedRepoCard
 import com.sameerasw.essentials.ui.components.AppsActionButtons
 import com.sameerasw.essentials.ui.components.ImportExportButtons
 import android.widget.Toast
+import androidx.compose.animation.core.EaseInOutBounce
+import androidx.compose.animation.core.EaseOut
 import androidx.compose.foundation.layout.fillMaxWidth
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.DeviceInfo
@@ -414,7 +416,6 @@ fun YourAndroidContent(
 
     LaunchedEffect(hasRunStartupAnimation) {
         if (!hasRunStartupAnimation) {
-            delay(100)
             isStartupAnimationRunning = true
             onAnimationRun()
         }
@@ -429,15 +430,15 @@ fun YourAndroidContent(
 
     val contentAlphaState = animateFloatAsState(
         targetValue = if (isStartupAnimationRunning) 1f else 0f,
-        animationSpec = tween(durationMillis = 750, delayMillis = 350, easing = LinearEasing),
+        animationSpec = tween(durationMillis = 400, delayMillis = 0, easing = EaseOut),
         label = "contentAlpha"
     )
 
     val contentOffsetState = animateDpAsState(
         targetValue = if (isStartupAnimationRunning) 0.dp else 40.dp,
         animationSpec = tween(
-            durationMillis = 750,
-            delayMillis = 350,
+            durationMillis = 400,
+            delayMillis = 0,
             easing = FastOutSlowInEasing
         ),
         label = "contentOffset"
