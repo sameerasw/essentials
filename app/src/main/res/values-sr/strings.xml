@@ -855,6 +855,9 @@
     <string name="label_shizuku_ritaka">Шизуку (Рика)</string>
     <string name="label_shizuku_tuozi">Шизуку (ТуоЗи)</string>
     <string name="label_search_content_description">Тражи</string>
+    <string name="label_recent_searches">Recent Searches</string>
+    <string name="label_no_recent_searches">No recent searches</string>
+    <string name="label_clear_all">Clear all</string>
     <string name="perm_device_admin_explanation">Неопходно је за чврсто закључавање уређаја када се покушају неовлашћене промене мреже на закључаном екрану.</string>
     <string name="biometric_subtitle_access_settings">Потврдите аутентичност да бисте приступили подешавањима</string>
     <string name="biometric_title_settings_format">%1$s Подешавања</string>
