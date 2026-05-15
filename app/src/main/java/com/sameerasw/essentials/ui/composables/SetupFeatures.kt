@@ -1086,7 +1086,7 @@ fun SetupFeatures(
                     onFeatureLongClick = { feature ->
                         viewModel.togglePinFeature(feature.id)
                     },
-                    modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)
+                    modifier = Modifier.padding( bottom = 16.dp)
                 )
             }
 
