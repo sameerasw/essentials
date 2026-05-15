@@ -6,8 +6,14 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.provider.Settings
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,7 +30,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LoadingIndicator
@@ -53,9 +62,14 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.foundation.layout.isImeVisible
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.material3.IconButton
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -837,8 +851,17 @@ fun SetupFeatures(
     val scrollState = rememberScrollState()
     val view = LocalView.current
     val focusRequester = remember { FocusRequester() }
-    val focusManager = LocalFocusManager.current
     var isFocused by remember { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val isKeyboardVisible = WindowInsets.isImeVisible
+
+    // Detect keyboard closing to clear focus
+    LaunchedEffect(isKeyboardVisible) {
+        if (!isKeyboardVisible && isFocused) {
+            focusManager.clearFocus()
+        }
+    }
 
     val pullRefreshState = rememberPullToRefreshState()
     var isRefreshing by rememberSaveable { mutableStateOf(false) }
@@ -1087,10 +1110,30 @@ fun SetupFeatures(
                     focusedBorderColor = MaterialTheme.colorScheme.primary,
                     unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     focusedContainerColor = MaterialTheme.colorScheme.surfaceBright
-                )
+                ),
+                trailingIcon = {
+                    if (isFocused || viewModel.searchQuery.value.isNotEmpty()) {
+                        IconButton(onClick = {
+                            if (viewModel.searchQuery.value.isNotEmpty()) {
+                                viewModel.onSearchQueryChanged("", context)
+                            } else {
+                                focusManager.clearFocus()
+                            }
+                        }) {
+                            Icon(
+                                imageVector = Icons.Rounded.Clear,
+                                contentDescription = "Clear search"
+                            )
+                        }
+                    }
+                }
             )
 
-            if (pinnedFeatureKeys.isNotEmpty() && viewModel.searchQuery.value.isEmpty()) {
+            AnimatedVisibility(
+                visible = !isFocused && pinnedFeatureKeys.isNotEmpty() && viewModel.searchQuery.value.isEmpty(),
+                enter = fadeIn() + expandVertically(),
+                exit = fadeOut() + shrinkVertically()
+            ) {
                 FavoriteCarousel(
                     pinnedKeys = pinnedFeatureKeys,
                     onFeatureClick = { feature ->
@@ -1105,13 +1148,103 @@ fun SetupFeatures(
                     onFeatureLongClick = { feature ->
                         viewModel.togglePinFeature(feature.id)
                     },
-                    modifier = Modifier.padding( bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = 16.dp)
                 )
             }
 
             val searchQuery = viewModel.searchQuery.value
             val searchResults = viewModel.searchResults.value
             val isSearchingViewModel = viewModel.isSearching.value
+            val recentSearches by viewModel.recentSearches
+
+            if (isFocused && searchQuery.isEmpty()) {
+                if (recentSearches.isEmpty()) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 64.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.Search,
+                            contentDescription = null,
+                            modifier = Modifier.size(64.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                        )
+                        Text(
+                            text = stringResource(R.string.label_no_recent_searches),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(top = 16.dp)
+                        )
+                    }
+                } else {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 32.dp, vertical = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(R.string.label_recent_searches),
+                            style = MaterialTheme.typography.titleSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Text(
+                            text = stringResource(R.string.label_clear_all),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.clickable { viewModel.clearRecentSearches() }
+                        )
+                    }
+
+                    RoundedCardContainer(
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    ) {
+                        recentSearches.forEach { result ->
+                            FeatureCard(
+                                title = result.title,
+                                isEnabled = true,
+                                onToggle = {},
+                                onClick = {
+                                    viewModel.addRecentSearch(result)
+                                    val feature = allFeatures.find { it.id == result.featureKey }
+                                    if (feature != null) {
+                                        BiometricSecurityHelper.runWithAuth(
+                                            activity = context as FragmentActivity,
+                                            feature = feature,
+                                            action = {
+                                                context.startActivity(
+                                                    Intent(
+                                                        context,
+                                                        FeatureSettingsActivity::class.java
+                                                    ).apply {
+                                                        putExtra("feature", result.featureKey)
+                                                        result.targetSettingHighlightKey?.let {
+                                                            putExtra("highlight_setting", it)
+                                                        }
+                                                    }
+                                                )
+                                            }
+                                        )
+                                    }
+                                },
+                                iconRes = result.icon ?: R.drawable.rounded_settings_24,
+                                showToggle = false,
+                                hasMoreSettings = true,
+                                description = result.description,
+                                isBeta = result.isBeta,
+                                isPinned = pinnedFeatureKeys.contains(result.featureKey),
+                                onPinToggle = {
+                                    viewModel.togglePinFeature(result.featureKey)
+                                }
+                            )
+                        }
+                    }
+                }
+            }
 
             // Loading indicator while filtering
             if (isSearchingViewModel) {
@@ -1165,6 +1298,7 @@ fun SetupFeatures(
                                 isEnabled = true,
                                 onToggle = {},
                                 onClick = {
+                                    viewModel.addRecentSearch(result)
                                     val feature = allFeatures.find { it.id == result.featureKey }
                                     if (feature != null) {
                                         BiometricSecurityHelper.runWithAuth(
@@ -1222,7 +1356,7 @@ fun SetupFeatures(
                         }
                     }
                 }
-            } else {
+            } else if (!isFocused) {
                 // Render Top Level Features (No Categories)
                 val topLevelFeatures =
                     allFeatures.filter { it.parentFeatureId == null && it.isVisibleInMain }
@@ -1340,9 +1474,9 @@ fun SetupFeatures(
                         }
                     }
                 }
-
-                Spacer(modifier = Modifier.height(contentPadding.calculateBottomPadding()))
             }
+
+            Spacer(modifier = Modifier.height(contentPadding.calculateBottomPadding() + 64.dp))
         }
     }
 }

@@ -206,6 +206,7 @@ class MainViewModel : ViewModel() {
     val searchQuery = mutableStateOf("")
     val searchResults = mutableStateOf<List<SearchableItem>>(emptyList())
     val isSearching = mutableStateOf(false)
+    val recentSearches = mutableStateOf<List<SearchableItem>>(emptyList())
 
     // Update state
     val updateInfo = mutableStateOf<UpdateInfo?>(null)
@@ -760,6 +761,7 @@ class MainViewModel : ViewModel() {
             settingsRepository.getLockScreenClockSelectedColorId()
         lockScreenClockSeedColor.intValue = settingsRepository.getLockScreenClockSeedColor()
         loadShutUpConfigs()
+        recentSearches.value = settingsRepository.getRecentSearches()
 
         if (isHideGestureBarEnabled.value) {
             applyHideGestureBar(context, true)
@@ -1304,6 +1306,22 @@ class MainViewModel : ViewModel() {
         isSearching.value = true
         searchResults.value = SearchRegistry.search(context, query)
         isSearching.value = false
+    }
+
+    fun addRecentSearch(item: SearchableItem) {
+        val current = recentSearches.value.toMutableList()
+        // Remove existing to move to top
+        current.removeAll { it.title == item.title && it.featureKey == item.featureKey && it.targetSettingHighlightKey == item.targetSettingHighlightKey }
+        current.add(0, item)
+        // Limit to 10
+        val limited = current.take(10)
+        recentSearches.value = limited
+        settingsRepository.saveRecentSearches(limited)
+    }
+
+    fun clearRecentSearches() {
+        recentSearches.value = emptyList()
+        settingsRepository.saveRecentSearches(emptyList())
     }
 
     fun togglePinFeature(featureId: String) {

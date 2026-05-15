@@ -242,6 +242,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_LOCK_SCREEN_CLOCK_COLOR_TONE = "lock_screen_clock_color_tone"
         const val KEY_LOCK_SCREEN_CLOCK_SELECTED_COLOR_ID = "lock_screen_clock_selected_color_id"
         const val KEY_LOCK_SCREEN_CLOCK_SEED_COLOR = "lock_screen_clock_seed_color"
+        const val KEY_RECENT_SEARCHES = "recent_searches"
     }
 
     // Observe changes
@@ -804,6 +805,25 @@ class SettingsRepository(private val context: Context) {
     fun savePinnedFeatures(features: List<String>) {
         val json = gson.toJson(features)
         putString(KEY_PINNED_FEATURES, json)
+    }
+
+    fun getRecentSearches(): List<com.sameerasw.essentials.domain.model.SearchableItem> {
+        val json = prefs.getString(KEY_RECENT_SEARCHES, null)
+        return if (json != null) {
+            try {
+                gson.fromJson(
+                    json,
+                    Array<com.sameerasw.essentials.domain.model.SearchableItem>::class.java
+                ).toList()
+            } catch (e: Exception) {
+                emptyList()
+            }
+        } else emptyList()
+    }
+
+    fun saveRecentSearches(items: List<com.sameerasw.essentials.domain.model.SearchableItem>) {
+        val json = gson.toJson(items)
+        putString(KEY_RECENT_SEARCHES, json)
     }
 
     fun getTrackedRepos(): List<TrackedRepo> {
