@@ -855,6 +855,9 @@
     <string name="label_shizuku_ritaka">Shizuku (Rikka)</string>
     <string name="label_shizuku_tuozi">Shizuku (TuoZi)</string>
     <string name="label_search_content_description">Moyo</string>
+    <string name="label_recent_searches">Recent Searches</string>
+    <string name="label_no_recent_searches">No recent searches</string>
+    <string name="label_clear_all">Clear all</string>
     <string name="perm_device_admin_explanation">Mite me juku jami ni ka ki temo loko jami ma pe ki yer i kom gin ma ki lwongo ni lock screen.</string>
     <string name="biometric_subtitle_access_settings">Moko tam me donyo i jami ma ki keto</string>
     <string name="biometric_title_settings_format">%1$s Kit ma ki keto kwede</string>
