@@ -879,7 +879,13 @@ fun SetupFeatures(
     LaunchedEffect(isRefreshing) {
         if (isRefreshing) {
             HapticUtil.performUIHaptic(view)
-            context.startActivity(Intent(context, YourAndroidActivity::class.java))
+            val intent = Intent(context, YourAndroidActivity::class.java)
+            val options = androidx.core.app.ActivityOptionsCompat.makeCustomAnimation(
+                context,
+                R.anim.anim_slide_in_top,
+                R.anim.anim_stay
+            )
+            context.startActivity(intent, options.toBundle())
             shouldResetRefreshing = true
         }
     }

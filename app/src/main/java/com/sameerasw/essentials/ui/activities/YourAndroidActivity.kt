@@ -230,7 +230,10 @@ class YourAndroidActivity : ComponentActivity() {
                     val localView = androidx.compose.ui.platform.LocalView.current
                     EssentialsFloatingToolbar(
                         title = stringResource(R.string.tab_your_android),
-                        onBackClick = { finish() },
+                        onBackClick = {
+                            finish()
+                            overridePendingTransition(R.anim.anim_stay, R.anim.anim_slide_out_top)
+                        },
                         floatingActionButton = {
                             Box {
                                 FloatingActionButton(
@@ -347,6 +350,11 @@ class YourAndroidActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.anim_stay, R.anim.anim_slide_out_top)
     }
 }
 
