@@ -663,7 +663,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="label_settings">Ajustes</string>
     <string name="action_report_bug">Informar de un error</string>
     <!-- Sentry Crash Reporting -->
-    <string name="sentry_report_mode_title">Informe de fallos</string>
+    <string name="sentry_report_mode_title">Informe de errores</string>
     <string name="sentry_mode_off">Apagado</string>
     <string name="sentry_mode_auto">Auto</string>
     <string name="sentry_crash_toast">Essentials se ha bloqueado, informe enviado</string>
@@ -1106,7 +1106,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="action_report_email">Informe por correo electrónico</string>
     <string name="action_copy_clipboard">Copiar al portapapeles</string>
     <string name="bug_report_email_subject">Informe de errores de Essential</string>
-    <string name="bug_report_send_via">Por favor, activa los informes de fallos, ya que enviarán automáticamente detalles que ayudarán a resolver los problemas.</string>
+    <string name="bug_report_send_via">Por favor, activa los informes de errores, ya que enviarán automáticamente detalles que ayudarán a resolver los problemas.</string>
     <!-- Location Reached -->
     <string name="feat_location_reached_title">¿Ya llegamos?</string>
     <string name="feat_location_reached_desc">Alertas de destino cercano</string>
