@@ -20,7 +20,7 @@
     <!-- App Lock -->
     <string name="settings_section_security">Keamanan</string>
     <string name="app_lock_enable_title">Hidupkan kunci aplikasi</string>
-    <string name="app_lock_auth_title">Kunci aplikasi </string>
+    <string name="app_lock_auth_title">Kunci aplikasi</string>
     <string name="app_lock_enable_auth_subtitle">Authenticate to enable app lock</string>
     <string name="app_lock_disable_auth_subtitle">Authenticate to disable app lock</string>
     <string name="app_lock_select_apps_title">Select locked apps</string>
@@ -70,8 +70,8 @@
     <string name="essentials_on_display_docked_mode_desc">No timeout</string>
     <string name="essentials_on_display_respect_notifications_title">Respect new notifications</string>
     <string name="essentials_on_display_respect_notifications_desc">Briefly disable for new notifications</string>
-    <string name="essentials_on_display_random_shapes_title">Random shapes</string>
-    <string name="essentials_on_display_random_shapes_desc">Use random Material You shapes</string>
+    <string name="essentials_on_display_random_shapes_title">Bentuk acak</string>
+    <string name="essentials_on_display_random_shapes_desc">Gunakan bentuk Material You acak</string>
     <string name="essentials_on_display_album_art_title">Album art</string>
     <string name="essentials_on_display_clock_title">Clock</string>
     <string name="essentials_on_display_force_fill_while_charging_title">Always use while charging</string>
@@ -97,7 +97,7 @@
     <string name="settings_section_other">Other</string>
     <string name="flashlight_always_off_title">Always turn off flashlight</string>
     <string name="flashlight_always_off_desc">Even while display is on</string>
-    <string name="content_desc_settings">Settings</string>
+    <string name="content_desc_settings">Pengaturan</string>
     <!-- Caffeinate / Permissions -->
     <string name="permission_show_notification_title">Show Notification</string>
     <string name="permission_post_notifications_title">Post Notifications</string>
@@ -135,7 +135,7 @@
     <string name="action_app_info">App info</string>
     <string name="freeze_mode_description_freeze_title">What is Freeze?</string>
     <string name="freeze_mode_description_freeze_body">App freezing disables the app\'s launch activity which removes it from the app list and updates. It will prevent the app from starting at all until it\'s unfrozen which saves resources but you will need to unfreeze from here or manually re-enable.</string>
-    <string name="freeze_mode_description_freeze_warning">DO NOT FREEZE COMMUNICATION APPS</string>
+    <string name="freeze_mode_description_freeze_warning">JANGAN BEKUKAN APLIKASI KOMUNIKASI</string>
     <string name="freeze_mode_description_suspend_title">What is Suspend?</string>
     <string name="freeze_mode_description_suspend_body">Suspending an app used to pause the app activity and prevent background executions but with recent Android changes, it only pauses the notifications from appearing and that\'s pretty much it. But does allows you to unpause from the launcher app list as they will be still available as grayscale paused app icons.</string>
     <string name="freeze_mode_description_suspend_footer">Should work the same as the native app pause/ focus mode features.</string>
@@ -206,13 +206,13 @@
     <string name="ambient_display_title">Ambient display</string>
     <string name="ambient_display_hint">Suitable if you are not using AOD.</string>
     <string name="ambient_display_desc">Wake screen and show lighting</string>
-    <string name="ambient_show_lock_screen_title">Show lock screen</string>
+    <string name="ambient_show_lock_screen_title">Munculkan layar kunci</string>
     <string name="ambient_show_lock_screen_desc">No black overlay</string>
     <!-- Tiles -->
     <string name="action_add">Add</string>
     <string name="action_added">Added</string>
     <string name="qs_tile_already_added">Already added</string>
-    <string name="qs_tile_requires_android_13">Requires Android 13+</string>
+    <string name="qs_tile_requires_android_13">Memerlukan Android 13+</string>
     <string name="tile_ui_blur">UI Blur</string>
     <string name="tile_bubbles">Bubbles</string>
     <string name="tile_sensitive_content">Sensitive Content</string>
@@ -228,29 +228,29 @@
     <string name="tile_flashlight">Flashlight</string>
     <string name="tile_app_freezing">App Freezing</string>
     <string name="tile_flashlight_pulse">Flashlight Pulse</string>
-    <string name="tile_stay_awake">Stay awake</string>
+    <string name="tile_stay_awake">Tetap terjaga</string>
     <string name="input_method_label">Essentials Keyboard</string>
     <string name="subtype_en_us">English (US)</string>
     <string name="tile_active">Active</string>
     <string name="tile_inactive">Inactive</string>
-    <string name="tile_developer_options">Developer Options</string>
+    <string name="tile_developer_options">Opsi developer</string>
     <string name="about_desc_developer_options">Toggle system Developer Options from a QS tile easily. This may reset some of the developer settings you have modified.</string>
     <string name="tile_refresh_rate">Refresh Rate</string>
     <string name="about_desc_refresh_rate_tile">Cycle between the system default and preset refresh rates directly from a Quick Settings tile using Shizuku.</string>
     <string name="nfc_tile_label">NFC</string>
-    <string name="tile_private_dns">Private DNS</string>
+    <string name="tile_private_dns">DNS Pribadi</string>
     <string name="tile_private_dns_auto">Auto</string>
     <string name="tile_private_dns_off">Off</string>
     <string name="tile_usb_debugging">USB Debugging</string>
-    <string name="tile_color_picker">Color Picker</string>
-    <string name="toast_eyedropper_failed">Are you sure you\'re on Android 17? (╯°_°）╯</string>
+    <string name="tile_color_picker">Pemilih Warna</string>
+    <string name="toast_eyedropper_failed">Kamu yakin kamu di Android 17? (╯°_°）╯</string>
     <string name="subtitle_eye_dropper">Eye Dropper</string>
     <string name="on">On</string>
     <string name="off">Off</string>
     <string name="private_dns_custom_title">Custom Private DNS</string>
     <string name="private_dns_presets_title">DNS Presets</string>
     <string name="dns_preset_add_title">Add DNS Preset</string>
-    <string name="dns_preset_name_label">Preset name</string>
+    <string name="dns_preset_name_label">Nama Preset</string>
     <string name="dns_preset_reset_action">Reset</string>
     <string name="dns_preset_delete_content_description">Delete preset</string>
     <string name="dns_preset_reset_confirm">Are you sure you want to reset all DNS presets to defaults? This will remove all your custom presets.</string>
@@ -297,10 +297,10 @@
     <string name="icon_bluetooth">Bluetooth</string>
     <string name="icon_nfc">NFC / Felica</string>
     <string name="icon_vpn">VPN</string>
-    <string name="icon_airplane_mode">Airplane Mode</string>
+    <string name="icon_airplane_mode">Mode Pesawat</string>
     <string name="icon_hotspot">Hotspot</string>
     <string name="icon_cast">Cast</string>
-    <string name="icon_mobile_data">Mobile Data</string>
+    <string name="icon_mobile_data">Data Seluler</string>
     <string name="icon_phone_signal">Phone Signal</string>
     <string name="icon_volte">VoLTE / VoNR</string>
     <string name="icon_wifi_calling">WiFi Calling / VoWiFi</string>
@@ -328,9 +328,9 @@
     <string name="icon_samsung_services">Samsung Services</string>
     <string name="icon_ethernet">Ethernet</string>
     <!-- Status Bar Settings -->
-    <string name="stb_clock_seconds">Show Seconds in Clock</string>
-    <string name="stb_battery_percentage">Battery Percentage</string>
-    <string name="stb_battery_percentage_always">Always</string>
+    <string name="stb_clock_seconds">Tampilkan detik di Jam</string>
+    <string name="stb_battery_percentage">Persentase Baterai</string>
+    <string name="stb_battery_percentage_always">Selalu</string>
     <string name="stb_battery_percentage_charging">Charging</string>
     <string name="stb_battery_percentage_never">Never</string>
     <string name="stb_privacy_chip">Camera and Microphone use chips</string>
@@ -349,7 +349,7 @@
     <string name="hide_all_system_icons_desc">Clear all non-notification icons from the status bar</string>
     <string name="hide_system_icons_locked_only_title">Only hide system icons when locked</string>
     <string name="hide_system_icons_locked_only_desc">Hides the status bar system icons when the device is locked and restores them upon unlock</string>
-    <string name="hide_clock_title">Hide clock</string>
+    <string name="hide_clock_title">Sembunyikan Jam</string>
     <string name="hide_clock_desc">Completely remove the clock from the status bar</string>
     <string name="hide_notification_icons_title">Hide notifications</string>
     <string name="hide_notification_icons_desc">Hide all incoming notification icons</string>
@@ -361,7 +361,7 @@
     <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
     <string name="feat_circle_to_search_gesture_height_title">Gesture zone height</string>
     <string name="feat_circle_to_search_gesture_height_desc">Adjust the height of the touch area at the bottom</string>
-    <string name="feat_other_customizations_title">Other customizations</string>
+    <string name="feat_other_customizations_title">Kustomisasi lainnya</string>
     <string name="feat_other_customizations_desc">Additional system tweaks and modifications</string>
     <string name="status_bar_icons_disclaimer">Please note that the implementation of these options may depend on the OEM and some may not be functional at all.</string>
     <!-- Network Type Picker -->
@@ -394,7 +394,7 @@
     <string name="feat_caffeinate_title">Caffeinate</string>
     <string name="feat_caffeinate_desc">Keep the screen awake</string>
     <string name="feat_maps_power_saving_title">Maps power saving mode</string>
-    <string name="feat_maps_power_saving_desc">For any Android device</string>
+    <string name="feat_maps_power_saving_desc">Untuk semua perangkat Android</string>
     <string name="feat_notification_lighting_title">Notification lighting</string>
     <string name="feat_notification_lighting_desc">Light up for notifications</string>
     <string name="feat_flashlight_pulse_desc">Pulse the flashlight for notifications</string>
@@ -419,7 +419,7 @@
     <string name="feat_snooze_notifications_title">Snooze system notifications</string>
     <string name="feat_snooze_notifications_desc">Snooze persistent notifications</string>
     <string name="feat_qs_tiles_title">Quick settings tiles</string>
-    <string name="feat_qs_tiles_desc">View all</string>
+    <string name="feat_qs_tiles_desc">Lihat semua</string>
     <string name="feat_button_remap_title">Button remap</string>
     <string name="feat_button_remap_desc">Remap hardware button actions</string>
     <string name="feat_dynamic_night_light_title">Dynamic night light</string>
@@ -1429,7 +1429,7 @@
     <string name="lock_screen_clock_current_label">Current</string>
     <string name="lock_screen_clock_apply_label">Apply</string>
     <string name="lock_screen_clock_applied_toast">Clock style applied</string>
-    <string name="lock_screen_clock_permission_required">WRITE_SECURE_SETTINGS permission required</string>
+    <string name="lock_screen_clock_permission_required">Memerlukan perizinan WRITE_SECURE_SETTINGS</string>
     <string name="lock_screen_clock_default">Default</string>
     <string name="label_weight">Weight</string>
     <string name="label_width">Width</string>
