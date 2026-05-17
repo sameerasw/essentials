@@ -8,7 +8,7 @@
     <string name="accessibility_service_description"><b>Essentials Accessibility Service</b>\n\nThis service is required for the following advanced features:\n\n<b>• Physical Button Remapping:</b>\nDetects volume button presses even when the screen is off to trigger actions like the Flashlight.\n\n<b>• Per-App Settings:</b>\nMonitors the currently active app to apply specific profiles for Dynamic Night Light, Notification Lighting Colors, and App Lock.\n\n<b>• Screen Control:</b>\nAllows the app to lock the screen (e.g. via Double Tap or Widgets) and detect screen state changes.\n\n<b>• Security:</b>\nPrevents unauthorized changes by detecting window content when the device is locked.\n\n<small>No input text or sensitive user data is collected or transmitted.</small></string>
     <string name="freeze_activity_title">Înghețarea aplicației</string>
     <string name="freeze_activity_subtitle">Dezactivați aplicațiile care sunt utilizate rar</string>
-    <string name="freeze_shortcut_short_label">Frozen Apps</string>
+    <string name="freeze_shortcut_short_label">Înghețarea aplicației</string>
     <string name="freeze_shortcut_long_label">Deschideți App Freezing</string>
     <string name="frozen_app_shortcut_label">Aplicația înghețată</string>
     <string name="screen_off_widget_label">Ecran gol dezactivat widget</string>
