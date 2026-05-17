@@ -205,6 +205,7 @@ class MainViewModel : ViewModel() {
     val freezeAutoExcludedApps = mutableStateOf<Set<String>>(emptySet())
     val isFreezeDontFreezeActiveAppsEnabled = mutableStateOf(false)
     val freezeMode = mutableIntStateOf(0)
+    val isFreezeShowInLauncherEnabled = mutableStateOf(true)
 
     // Search state
     val searchQuery = mutableStateOf("")
@@ -400,6 +401,23 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_FREEZE_MODE -> {
                         freezeMode.intValue = settingsRepository.getFreezeMode()
+                    }
+
+                    SettingsRepository.KEY_FREEZE_SHOW_IN_LAUNCHER -> {
+                        val enabled = settingsRepository.getBoolean(key, true)
+                        isFreezeShowInLauncherEnabled.value = enabled
+                        appContext?.let { ctx ->
+                            val componentName = ComponentName(ctx, "com.sameerasw.essentials.AppFreezingLauncher")
+                            try {
+                                ctx.packageManager.setComponentEnabledSetting(
+                                    componentName,
+                                    if (enabled) PackageManager.COMPONENT_ENABLED_STATE_ENABLED else PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                                    PackageManager.DONT_KILL_APP
+                                )
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                        }
                     }
 
                     SettingsRepository.KEY_USE_ROOT -> isRootEnabled.value =
@@ -1218,6 +1236,26 @@ class MainViewModel : ViewModel() {
         freezeLockDelayIndex.intValue =
             settingsRepository.getInt(SettingsRepository.KEY_FREEZE_LOCK_DELAY_INDEX, 1)
         freezeAutoExcludedApps.value = settingsRepository.getFreezeAutoExcludedApps()
+        isFreezeShowInLauncherEnabled.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_FREEZE_SHOW_IN_LAUNCHER, true)
+        
+        // Sync PackageManager component enabled state on startup
+        val showLauncher = isFreezeShowInLauncherEnabled.value
+        val componentName = ComponentName(context, "com.sameerasw.essentials.AppFreezingLauncher")
+        try {
+            val currentState = context.packageManager.getComponentEnabledSetting(componentName)
+            val targetState = if (showLauncher) PackageManager.COMPONENT_ENABLED_STATE_ENABLED else PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+            if (currentState != targetState) {
+                context.packageManager.setComponentEnabledSetting(
+                    componentName,
+                    targetState,
+                    PackageManager.DONT_KILL_APP
+                )
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
         isDeveloperModeEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_DEVELOPER_MODE_ENABLED)
 
@@ -2438,6 +2476,23 @@ class MainViewModel : ViewModel() {
     fun setFreezeLockDelayIndex(index: Int, context: Context) {
         freezeLockDelayIndex.intValue = index
         settingsRepository.putInt(SettingsRepository.KEY_FREEZE_LOCK_DELAY_INDEX, index)
+    }
+
+    fun setFreezeShowInLauncherEnabled(enabled: Boolean, context: Context) {
+        isFreezeShowInLauncherEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_FREEZE_SHOW_IN_LAUNCHER, enabled)
+        
+        // Dynamically enable or disable the AppFreezingLauncher activity-alias component
+        val componentName = ComponentName(context, "com.sameerasw.essentials.AppFreezingLauncher")
+        try {
+            context.packageManager.setComponentEnabledSetting(
+                componentName,
+                if (enabled) PackageManager.COMPONENT_ENABLED_STATE_ENABLED else PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                PackageManager.DONT_KILL_APP
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     fun saveNotificationLightingPulseCount(context: Context, count: Float) {
