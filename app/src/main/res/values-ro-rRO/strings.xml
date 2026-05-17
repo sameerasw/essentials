@@ -1,0 +1,1457 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="label_customization">Customization</string>
+    <string name="label_beta">BETA</string>
+    <string name="shut_up_attempt_shizuku_restart">Attempt Shizuku restart</string>
+    <string name="shut_up_shizuku_restart_warning_title">Shizuku Restart Warning</string>
+    <string name="shut_up_shizuku_restart_warning_message">Since wireless debugging was toggled, Shizuku services might not have started automatically causing freezing to not function. Consider turning on attempt shizuku restart as well</string>
+    <string name="accessibility_service_description"><b>Essentials Accessibility Service</b>\n\nThis service is required for the following advanced features:\n\n<b>• Physical Button Remapping:</b>\nDetects volume button presses even when the screen is off to trigger actions like the Flashlight.\n\n<b>• Per-App Settings:</b>\nMonitors the currently active app to apply specific profiles for Dynamic Night Light, Notification Lighting Colors, and App Lock.\n\n<b>• Screen Control:</b>\nAllows the app to lock the screen (e.g. via Double Tap or Widgets) and detect screen state changes.\n\n<b>• Security:</b>\nPrevents unauthorized changes by detecting window content when the device is locked.\n\n<small>No input text or sensitive user data is collected or transmitted.</small></string>
+    <string name="freeze_activity_title">Înghețarea aplicației</string>
+    <string name="freeze_activity_subtitle">Dezactivați aplicațiile care sunt utilizate rar</string>
+    <string name="freeze_shortcut_short_label">Înghețarea aplicației</string>
+    <string name="freeze_shortcut_long_label">Deschideți App Freezing</string>
+    <string name="frozen_app_shortcut_label">Aplicația înghețată</string>
+    <string name="screen_off_widget_label">Ecran gol dezactivat widget</string>
+    <string name="app_freezing_tile_label">Înghețarea aplicației</string>
+    <string name="flashlight_pulse_tile_label">Puls lanternă</string>
+    <string name="check_pre_releases_label">Verificați pre-lansări</string>
+    <string name="check_pre_releases_desc">Poate fi instabil</string>
+    <string name="label_default_tab">Default tab</string>
+    <!-- App Lock -->
+    <string name="settings_section_security">Securitate</string>
+    <string name="app_lock_enable_title">Activați blocarea aplicației</string>
+    <string name="app_lock_auth_title">Securitate Blocare aplicații</string>
+    <string name="app_lock_enable_auth_subtitle">Autentificați-vă pentru a activa blocarea aplicației</string>
+    <string name="app_lock_disable_auth_subtitle">Autentificați-vă pentru a dezactiva blocarea aplicației</string>
+    <string name="app_lock_select_apps_title">Selectați aplicațiile blocate</string>
+    <string name="app_lock_select_apps_desc">Alegeți ce aplicații necesită autentificare</string>
+    <string name="app_lock_description">Asigurați-vă aplicațiile cu autentificare biometrică. Aplicațiile blocate vor necesita autentificare la lansare, rămân deblocate până când ecranul se stinge.</string>
+    <string name="app_lock_warning">Atenție că aceasta nu este o soluție robustă, deoarece aceasta este doar o aplicație terță parte. Dacă aveți nevoie de securitate puternică, luați în considerare utilizarea spațiului privat sau alte astfel de funcții.</string>
+    <string name="app_lock_biometric_note">O altă notă, promptul de autentificare biometrică vă permite doar să utilizați metode de clasă PUTERNICE securizate. Metodele de securitate de deblocare facială din clasa SLAB în dispozitive precum Pixel 7 vor putea utiliza numai celelalte metode de autentificare PUTERNICE disponibile, cum ar fi amprenta digitală sau PIN.</string>
+    <string name="setting_use_usage_access_title">Use usage access</string>
+    <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
+    <!-- Button Remap -->
+    <string name="button_remap_enable_title">Activați Button Remap</string>
+    <string name="button_remap_use_shizuku_title">Folosiți Shizuku sau Root sau Root</string>
+    <string name="button_remap_use_shizuku_desc">Funcționează cu ecranul oprit (recomandat)</string>
+    <string name="shizuku_not_running_toast">Shizuku nu rulează</string>
+    <string name="shizuku_detected_prefix">Detectat %1$s</string>
+    <string name="shizuku_status_prefix">Stare: %1$s</string>
+    <string name="shizuku_open_button">Deschide Shizuku</string>
+    <string name="settings_section_flashlight">Lanternă</string>
+    <string name="flashlight_options_title">Opțiuni pentru lanternă</string>
+    <string name="flashlight_options_desc">Ajustați estomparea și alte setări</string>
+    <string name="setting_pitch_black_theme_title">Tema pitch black</string>
+    <string name="setting_pitch_black_theme_desc">Utilizați fundal negru pur în modul întunecat</string>
+    <string name="settings_section_haptic">Feedback haptic</string>
+    <string name="button_remap_section_long_press">Remapează apăsarea lungă</string>
+    <string name="screen_off">Ecran oprit</string>
+    <string name="screen_on">Ecranul pornit</string>
+    <string name="volume_up">Creșterea volumului</string>
+    <string name="volume_down">Volum jos</string>
+    <string name="action_toggle_flashlight">Comutați lanterna</string>
+    <string name="action_media_play_pause">Redare media/pauză</string>
+    <string name="action_media_next">Media în continuare</string>
+    <string name="action_media_previous">Media anterior</string>
+    <string name="action_toggle_vibrate">Comutați vibrația</string>
+    <string name="action_toggle_mute">Comutați dezactivarea sunetului</string>
+    <string name="action_ai_assistant">Asistent AI</string>
+    <string name="action_take_screenshot">Faceți o captură de ecran</string>
+    <string name="action_cycle_sound_modes">Ciclul modurilor de sunet</string>
+    <string name="action_circle_to_search">Circle to Search</string>
+    <string name="action_like_song">Ca melodia curentă</string>
+    <string name="like_song_settings_title">Ca și setările melodiilor</string>
+    <string name="like_song_settings_desc">Această funcție necesită acces la notificări pentru a detecta conținutul media care se redă în prezent și pentru a declanșa o acțiune similară. Activați-l mai jos.</string>
+    <string name="like_song_toast_enabled">Afișează mesajul toast</string>
+    <string name="like_song_aod_overlay_title">Afișați suprapunerea pe AOD</string>
+    <string name="feat_essentials_on_display_title">Essentials On Display</string>
+    <string name="feat_essentials_on_display_desc">Glance at media and info on AOD</string>
+    <string name="essentials_on_display_docked_mode_title">Docked mode</string>
+    <string name="essentials_on_display_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
+    <string name="essentials_on_display_respect_notifications_title">Respect new notifications</string>
+    <string name="essentials_on_display_respect_notifications_desc">Briefly disable for new notifications</string>
+    <string name="essentials_on_display_random_shapes_title">Random shapes</string>
+    <string name="essentials_on_display_random_shapes_desc">Use various Material 3 shapes for the album art</string>
+    <string name="essentials_on_display_album_art_title">Album art</string>
+    <string name="essentials_on_display_clock_title">Clock</string>
+    <string name="essentials_on_display_force_fill_while_charging_title">Always use while charging</string>
+    <string name="essentials_on_display_force_fill_while_charging_desc">Force Fill mode when the device is plugged in regardless of the selected mode</string>
+    <string name="label_size">Size</string>
+    <string name="feat_notification_glance_title">Privire de notificare</string>
+    <string name="feat_notification_glance_desc">Păstrați AOD activat în timp ce notificările sunt în așteptare</string>
+    <string name="notification_glance_same_as_lighting_title">Aceleași aplicații ca și iluminarea notificărilor</string>
+    <string name="notification_glance_desc">Această funcție va activa în mod dinamic Afișarea întotdeauna când sosește o notificare de la o aplicație selectată și o va dezactiva odată ce toate notificările care se potrivesc sunt respinse. Alegeți aplicații sau utilizați aceeași selecție ca iluminarea de notificare.</string>
+    <string name="grant_notification_access">Acordați acces la notificări</string>
+    <string name="action_toggle_media_volume">Comutați volumul media</string>
+    <string name="button_remap_screen_off_hint">Când ecranul este oprit, apăsați lung butonul selectat pentru a declanșa acțiunea atribuită. Pe dispozitivele Pixel, această acțiune este declanșată numai dacă AOD este activat din cauza limitărilor sistemului.</string>
+    <string name="button_remap_screen_on_hint">Când ecranul este pornit, apăsați lung butonul selectat pentru a declanșa acțiunea atribuită.</string>
+    <string name="flashlight_intensity_title">Intensitatea lanternei</string>
+    <string name="flashlight_fade_title">Se estompează înăuntru și în afară</string>
+    <string name="flashlight_fade_desc">Comutați ușor lanterna</string>
+    <string name="flashlight_global_title">Controale globale</string>
+    <string name="flashlight_global_desc">Lanterna cu fade-in la nivel global</string>
+    <string name="flashlight_adjust_intensity_title">Reglați intensitatea</string>
+    <string name="flashlight_adjust_intensity_desc">Volum + - ajustează intensitatea lanternei</string>
+    <string name="flashlight_live_update_title">Actualizare live</string>
+    <string name="flashlight_live_update_desc">Afișați luminozitatea în bara de stare</string>
+    <string name="settings_section_other">Alte</string>
+    <string name="flashlight_always_off_title">Opriți întotdeauna lanterna</string>
+    <string name="flashlight_always_off_desc">Chiar și când afișajul este pornit</string>
+    <string name="content_desc_settings">Setări</string>
+    <!-- Caffeinate / Permissions -->
+    <string name="permission_show_notification_title">Afișează notificarea</string>
+    <string name="permission_post_notifications_title">Postați notificări</string>
+    <string name="permission_post_notifications_desc">Permite aplicației să afișeze notificări</string>
+    <string name="permission_grant_action">Acordați permisiunea</string>
+    <string name="caffeinate_notification_title">Cofeinat activ</string>
+    <string name="caffeinate_active">Activ</string>
+    <string name="caffeinate_notification_desc">Ecranul este ținut treaz</string>
+    <string name="caffeinate_battery_optimization_title">Ignorați optimizarea bateriei</string>
+    <string name="caffeinate_abort_screen_off_title">Anulați cu ecranul oprit</string>
+    <string name="caffeinate_skip_countdown_title">Omite numărătoarea inversă</string>
+    <string name="caffeinate_skip_countdown_desc">Începeți imediat Coffeinate.</string>
+    <string name="caffeinate_timeout_presets_title">Timeout Presets</string>
+    <string name="caffeinate_timeout_presets_desc">Selectați duratele disponibile pentru țigla QS</string>
+    <string name="caffeinate_timeout_5m">5m</string>
+    <string name="caffeinate_timeout_10m">10m</string>
+    <string name="caffeinate_timeout_30m">30m</string>
+    <string name="perm_notif_policy_title">Nu deranjați accesul</string>
+    <string name="perm_notif_policy_desc">Necesar pentru a comuta între modurile de sunet, vibrație și sunet</string>
+    <string name="caffeinate_timeout_1h">1h</string>
+    <string name="caffeinate_timeout_infinity">∞</string>
+    <string name="caffeinate_starting_in">Începând în %1$ds…</string>
+    <string name="caffeinate_remaining">%1$s ramanand</string>
+    <string name="caffeinate_live_channel_desc">Notificare persistentă pentru cofeinat</string>
+    <!-- Dynamic Night Light -->
+    <string name="dynamic_night_light_enable_title">Activați Lumina de noapte dinamică</string>
+    <string name="dynamic_night_light_apps_section">Aplicații care dezactivează lumina de noapte</string>
+    <string name="action_select_apps">Selectați aplicații</string>
+    <!-- App Freezing -->
+    <string name="settings_section_app_control">Controlul aplicației</string>
+    <string name="action_freeze">Îngheţa</string>
+    <string name="action_unfreeze">Dezghețați</string>
+    <string name="action_remove">Remove</string>
+    <string name="action_create_shortcut">Create shortcut</string>
+    <string name="action_app_info">App info</string>
+    <string name="freeze_mode_description_freeze_title">What is Freeze?</string>
+    <string name="freeze_mode_description_freeze_body">App freezing disables the app\'s launch activity which removes it from the app list and updates. It will prevent the app from starting at all until it\'s unfrozen which saves resources but you will need to unfreeze from here or manually re-enable.</string>
+    <string name="freeze_mode_description_freeze_warning">DO NOT FREEZE COMMUNICATION APPS</string>
+    <string name="freeze_mode_description_suspend_title">What is Suspend?</string>
+    <string name="freeze_mode_description_suspend_body">Suspending an app used to pause the app activity and prevent background executions but with recent Android changes, it only pauses the notifications from appearing and that\'s pretty much it. But does allows you to unpause from the launcher app list as they will be still available as grayscale paused app icons.</string>
+    <string name="freeze_mode_description_suspend_footer">Should work the same as the native app pause/ focus mode features.</string>
+    <string name="content_desc_more_options">Mai multe opțiuni</string>
+    <string name="action_freeze_all">Înghețați toate aplicațiile</string>
+    <string name="action_unfreeze_all">Dezghețați toate aplicațiile</string>
+    <string name="action_export_freeze">Exportați lista de aplicații înghețate</string>
+    <string name="action_import_freeze">Importați lista de aplicații înghețate</string>
+    <string name="freeze_pick_apps_title">Alegeți aplicații pentru a îngheța</string>
+    <string name="freeze_pick_apps_desc">Alegeți ce aplicații pot fi înghețate</string>
+    <string name="freeze_show_in_launcher_title">Show in launcher</string>
+    <string name="freeze_show_in_launcher_desc">Add a launcher shortcut for easier access</string>
+    <string name="settings_section_automation">Automatizare</string>
+    <string name="freeze_when_locked_title">Înghețați când este blocat</string>
+    <string name="freeze_delay_title">Încetare întârziere</string>
+    <string name="delay_immediate">Imediat</string>
+    <string name="delay_1m">1m</string>
+    <string name="delay_5m">5m</string>
+    <string name="delay_15m">15m</string>
+    <string name="delay_manual">Manual</string>
+    <string name="freeze_auto_freeze_section">Înghețați automat aplicațiile</string>
+    <string name="freeze_automation_hint">Înghețați aplicațiile selectate când dispozitivul se blochează. Alegeți o întârziere pentru a evita înghețarea aplicațiilor dacă deblocați ecranul la scurt timp după ce îl opriți.</string>
+    <string name="freeze_warning">Înghețarea aplicațiilor de sistem poate fi periculoasă și poate provoca un comportament neașteptat.</string>
+    <string name="action_enable_in_settings">Activați în Setări</string>
+    <string name="freeze_dont_freeze_active_apps_title">Nu\'Nu înghețați aplicațiile active</string>
+    <string name="perm_usage_stats_title">Statistici de utilizare</string>
+    <string name="perm_usage_stats_desc">Necesar pentru a detecta ce aplicații sunt în prim-plan pentru a evita înghețarea lor</string>
+    <string name="perm_usage_stats_desc_app_lock">Required to detect foreground apps for App Lock features when accessibility is not used.</string>
+    <string name="perm_notif_listener_desc_freeze">Necesar pentru a detecta redarea media și notificările active pentru a evita înghețarea acestora</string>
+    <string name="freeze_mode_title">Freeze mode</string>
+    <string name="freeze_mode_freeze">Freezing</string>
+    <string name="freeze_mode_suspend">App suspension</string>
+    <string name="freeze_mode_warning_desc">Can not switch mode while apps are frozen. Please unfreeze all and try again.</string>
+    <!-- Notification Lighting -->
+    <string name="notification_lighting_screen_off_title">Afișează numai când ecranul este oprit</string>
+    <string name="notification_lighting_skip_silent_title">Omite notificările silențioase</string>
+    <string name="notification_lighting_skip_persistent_title">Omite notificările persistente</string>
+    <string name="settings_section_flashlight_pulse">Puls lanternă</string>
+    <string name="flashlight_pulse_title">Pulsul lanternei</string>
+    <string name="flashlight_pulse_facedown_title">Doar cu fața în jos</string>
+    <string name="flashlight_pulse_same_as_lighting_title">Aceleași aplicații ca și iluminarea notificărilor</string>
+    <string name="flashlight_pulse_max_brightness">Max brightness</string>
+    <string name="flashlight_pulse_preview">Preview pulse</string>
+    <string name="settings_section_style">Stil</string>
+    <string name="notification_lighting_stroke_adjustment_section">Reglarea cursei</string>
+    <string name="notification_lighting_corner_radius_title">Raza colțului</string>
+    <string name="notification_lighting_stroke_thickness_title">Grosimea cursei</string>
+    <string name="notification_lighting_glow_adjustment_section">Reglarea strălucirii</string>
+    <string name="notification_lighting_glow_spread_title">Strălucire răspândită</string>
+    <string name="notification_lighting_placement_section">Plasarea</string>
+    <string name="notification_lighting_h_pos_title">Poziție orizontală</string>
+    <string name="notification_lighting_v_pos_title">Poziție verticală</string>
+    <string name="notification_lighting_indicator_adjustment_section">Reglarea indicatorului</string>
+    <string name="notification_lighting_scale_title">Scară</string>
+    <string name="notification_lighting_duration_title">Durată</string>
+    <string name="notification_lighting_style_sweep">Sweep</string>
+    <string name="notification_lighting_sweep_position_title">Position</string>
+    <string name="notification_lighting_sweep_random_shapes_title">Random shapes</string>
+    <string name="notification_lighting_sweep_thickness_title">Stroke thickness</string>
+    <string name="notification_lighting_sweep_pos_left">Left</string>
+    <string name="notification_lighting_sweep_pos_center">Center</string>
+    <string name="notification_lighting_sweep_pos_right">Right</string>
+    <string name="settings_section_animation">Animaţie</string>
+    <string name="notification_lighting_pulse_count_title">Numărarea pulsului</string>
+    <string name="notification_lighting_pulse_duration_title">Durata pulsului</string>
+    <string name="settings_section_color_mode">Modul Culoare</string>
+    <string name="settings_section_ambient_display">Afișaj ambiental</string>
+    <string name="ambient_display_title">Afișaj ambiental</string>
+    <string name="ambient_display_hint">Potrivit dacă nu utilizați AOD.</string>
+    <string name="ambient_display_desc">Treziți ecranul și afișați iluminarea</string>
+    <string name="ambient_show_lock_screen_title">Afișează ecranul de blocare</string>
+    <string name="ambient_show_lock_screen_desc">Fără suprapunere neagră</string>
+    <!-- Tiles -->
+    <string name="action_add">Adăuga</string>
+    <string name="action_added">Added</string>
+    <string name="qs_tile_already_added">Deja adăugată</string>
+    <string name="qs_tile_requires_android_13">Necesită Android 13+</string>
+    <string name="tile_ui_blur">UI Blur</string>
+    <string name="tile_bubbles">bule</string>
+    <string name="tile_sensitive_content">Conținut sensibil</string>
+    <string name="tile_tap_to_wake">Atingeți pentru a trezi</string>
+    <string name="tile_aod">AOD</string>
+    <string name="tile_caffeinate">Cofeinat</string>
+    <string name="tile_sound_mode">Modul de sunet</string>
+    <string name="tile_notification_lighting">Iluminare de notificare</string>
+    <string name="tile_dynamic_night_light">Lumină de noapte dinamică</string>
+    <string name="tile_locked_security">Securitate blocată</string>
+    <string name="tile_app_lock">Blocare aplicație</string>
+    <string name="tile_mono_audio">Audio mono</string>
+    <string name="tile_flashlight">Lanternă</string>
+    <string name="tile_app_freezing">Înghețarea aplicației</string>
+    <string name="tile_flashlight_pulse">Puls lanternă</string>
+    <string name="tile_stay_awake">Stai treaz</string>
+    <string name="input_method_label">Tastatură Essentials</string>
+    <string name="subtype_en_us">engleză (SUA)</string>
+    <string name="tile_active">Activ</string>
+    <string name="tile_inactive">Inactiv</string>
+    <string name="tile_developer_options">Opțiuni pentru dezvoltatori</string>
+    <string name="about_desc_developer_options">Comutați cu ușurință opțiunile pentru dezvoltatori de sistem dintr-o țiglă QS. Acest lucru poate reseta unele dintre setările de dezvoltator pe care le-ați modificat.</string>
+    <string name="tile_refresh_rate">Refresh Rate</string>
+    <string name="about_desc_refresh_rate_tile">Cycle between the system default and preset refresh rates directly from a Quick Settings tile using Shizuku.</string>
+    <string name="nfc_tile_label">NFC</string>
+    <string name="tile_private_dns">DNS privat</string>
+    <string name="tile_private_dns_auto">Auto</string>
+    <string name="tile_private_dns_off">Oprit</string>
+    <string name="tile_usb_debugging">Depanare USB</string>
+    <string name="tile_color_picker">Selector de culoare</string>
+    <string name="toast_eyedropper_failed">Are you sure you\'re on Androdi 17? (╯°_°）╯</string>
+    <string name="subtitle_eye_dropper">Picurator pentru ochi</string>
+    <string name="on">Pe</string>
+    <string name="off">Oprit</string>
+    <string name="private_dns_custom_title">DNS privat personalizat</string>
+    <string name="private_dns_presets_title">Presetări DNS comune</string>
+    <string name="dns_preset_add_title">Add DNS Preset</string>
+    <string name="dns_preset_name_label">Preset name</string>
+    <string name="dns_preset_reset_action">Reset</string>
+    <string name="dns_preset_delete_content_description">Delete preset</string>
+    <string name="dns_preset_reset_confirm">Are you sure you want to reset all DNS presets to defaults? This will remove all your custom presets.</string>
+    <string name="private_dns_hostname_label">Numele de gazdă al furnizorului</string>
+    <string name="dns_preset_adguard">AdGuard DNS</string>
+    <string name="dns_preset_adguard_hostname">dns.adguard.com</string>
+    <string name="dns_preset_google">DNS public Google</string>
+    <string name="dns_preset_google_hostname">dns.google</string>
+    <string name="dns_preset_cloudflare">Cloudflare DNS</string>
+    <string name="dns_preset_cloudflare_hostname">1dot1dot1dot1.cloudflare-dns.com</string>
+    <string name="dns_preset_quad9">Quad9 DNS</string>
+    <string name="dns_preset_quad9_hostname">dns.quad9.net</string>
+    <string name="dns_preset_cleanbrowsing">CleanBrowsing</string>
+    <string name="dns_preset_cleanbrowsing_hostname">adult-filter-dns.cleanbrowsing.org</string>
+    <string name="tile_charge_optimization">Încărcare</string>
+    <string name="limit_to_80">Limita la 80%</string>
+    <string name="adaptive_charging">Adaptiv</string>
+    <string name="deactivated">Neoptimizat</string>
+    <string name="permission_missing">Lipsește permisiunea</string>
+    <!-- Screen Locked Security -->
+    <string name="screen_locked_security_title">Ecran blocat de securitate</string>
+    <string name="screen_locked_security_dialog_title">Ecran blocat de securitate</string>
+    <string name="warning_title">⚠️ AVERTISMENT</string>
+    <string name="screen_locked_security_auth_enable">Autentificați-vă pentru a activa securitatea blocată cu ecranul</string>
+    <string name="screen_locked_security_auth_disable">Autentificați-vă pentru a dezactiva securitatea ecranului blocat</string>
+    <string name="screen_locked_security_desc">Disable quick setting tiles when the device is locked</string>
+    <string name="search_disable_qs_locked_title">Disable QS Locked</string>
+    <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
+    <!-- Sound Mode -->
+    <string name="sound_mode_reorder_title">Moduri de reordonare</string>
+    <string name="sound_mode_long_press_hint">Apăsați lung pentru a comuta</string>
+    <string name="content_desc_drag_reorder">Trageți pentru a reordona</string>
+    <string name="sound_mode_sound">Sunet</string>
+    <string name="sound_mode_vibrate">Vibrați</string>
+    <string name="sound_mode_silent">Tăcut</string>
+    <!-- Status Bar Categories -->
+    <string name="status_bar_category_connectivity">Conectivitate</string>
+    <string name="status_bar_category_phone_network">Telefon și rețea</string>
+    <string name="status_bar_category_audio_media">Audio și media</string>
+    <string name="status_bar_category_system_status">Stare sistem</string>
+    <string name="status_bar_category_oem_specific">Specific OEM</string>
+    <!-- Status Bar Icons -->
+    <string name="icon_wifi">Wifi</string>
+    <string name="icon_bluetooth">Bluetooth</string>
+    <string name="icon_nfc">NFC / Felica</string>
+    <string name="icon_vpn">VPN</string>
+    <string name="icon_airplane_mode">Modul Avion</string>
+    <string name="icon_hotspot">Hotspot</string>
+    <string name="icon_cast">Distribuție</string>
+    <string name="icon_mobile_data">Date mobile</string>
+    <string name="icon_phone_signal">Semnal de telefon</string>
+    <string name="icon_volte">VoLTE / VoNR</string>
+    <string name="icon_wifi_calling">Apeluri WiFi / VoWiFi</string>
+    <string name="icon_call_status">Stare apel / Sincronizare</string>
+    <string name="icon_tty">TTY</string>
+    <string name="icon_volume">Volum</string>
+    <string name="icon_headset">Căști</string>
+    <string name="icon_speakerphone">Difuzor</string>
+    <string name="icon_dmb">DMB</string>
+    <string name="icon_clock">Ceas</string>
+    <string name="icon_ime">Metoda de introducere (IME)</string>
+    <string name="icon_alarm">Alarma</string>
+    <string name="icon_battery">Baterie</string>
+    <string name="icon_power_saving">Economie de energie</string>
+    <string name="icon_data_saver">Economizor de date</string>
+    <string name="icon_rotation_lock">Blocare rotație</string>
+    <string name="icon_location">Locație / GPS</string>
+    <string name="icon_sync">Sincronizare</string>
+    <string name="icon_managed_profile">Profil gestionat</string>
+    <string name="icon_dnd">Nu deranjați</string>
+    <string name="icon_privacy">Confidențialitate și dosar securizat</string>
+    <string name="icon_security_status">Stare de securitate (SU)</string>
+    <string name="icon_otg">Mouse/Tastatură OTG</string>
+    <string name="icon_samsung_smart">Funcții inteligente Samsung</string>
+    <string name="icon_samsung_services">Servicii Samsung</string>
+    <string name="icon_ethernet">Ethernet</string>
+    <!-- Status Bar Settings -->
+    <string name="stb_clock_seconds">Afișează secundele în ceas</string>
+    <string name="stb_battery_percentage">Procentul bateriei</string>
+    <string name="stb_battery_percentage_always">Întotdeauna</string>
+    <string name="stb_battery_percentage_charging">Încărcare</string>
+    <string name="stb_battery_percentage_never">Nu</string>
+    <string name="stb_privacy_chip">Camera și microfonul folosesc cipuri</string>
+    <string name="smart_data_title">Date inteligente</string>
+    <string name="permission_read_phone_state_title">Citiți starea telefonului</string>
+    <string name="permission_read_phone_state_desc">Necesar pentru a detecta tipul de rețea pentru caracteristica Smart Data</string>
+    <string name="permission_read_phone_state_desc_call_vibrations">Necesar pentru a detecta modificările stării apelului pentru a declanșa feedback haptic.</string>
+    <string name="settings_section_smart_visibility">Vizibilitate inteligentă</string>
+    <string name="smart_wifi_title">WiFi inteligent</string>
+    <string name="smart_wifi_desc">Ascundeți datele mobile atunci când WiFi este conectat</string>
+    <string name="smart_data_desc">Ascundeți datele mobile în anumite moduri</string>
+    <string name="action_reset_all_icons">Resetați toate pictogramele</string>
+    <string name="status_bar_section_advanced">Mai multe setări</string>
+    <string name="stb_advanced_flags_title">Advanced (Requires Shizuku/Root)</string>
+    <string name="hide_all_system_icons_title">Hide all system icons</string>
+    <string name="hide_all_system_icons_desc">Clear all non-notification icons from the status bar</string>
+    <string name="hide_system_icons_locked_only_title">Only hide system icons when locked</string>
+    <string name="hide_system_icons_locked_only_desc">Hides the status bar system icons when the device is locked and restores them upon unlock</string>
+    <string name="hide_clock_title">Hide clock</string>
+    <string name="hide_clock_desc">Completely remove the clock from the status bar</string>
+    <string name="hide_notification_icons_title">Hide notifications</string>
+    <string name="hide_notification_icons_desc">Hide all incoming notification icons</string>
+    <string name="feat_hide_gesture_bar_title">Hide gesture bar</string>
+    <string name="feat_hide_gesture_bar_desc">In gesture navigation</string>
+    <string name="feat_hide_gesture_bar_on_launcher_title">Show on launcher</string>
+    <string name="feat_hide_gesture_bar_on_launcher_desc">Dynamically show the gesture bar only when on the home screen</string>
+    <string name="feat_circle_to_search_gesture_title">Circle to Search gesture</string>
+    <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
+    <string name="feat_circle_to_search_gesture_height_title">Gesture zone height</string>
+    <string name="feat_circle_to_search_gesture_height_desc">Adjust the height of the touch area at the bottom</string>
+    <string name="feat_other_customizations_title">Other customizations</string>
+    <string name="feat_other_customizations_desc">Additional system tweaks and modifications</string>
+    <string name="status_bar_icons_disclaimer">Vă rugăm să rețineți că implementarea acestor opțiuni poate depinde de OEM și unele pot să nu fie funcționale deloc.</string>
+    <!-- Network Type Picker -->
+    <string name="network_type_other">Alte</string>
+    <!-- Search -->
+    <string name="search_clock_seconds_title">Ceas secunde</string>
+    <string name="search_clock_seconds_desc">Afișați secundele în ceasul din bara de stare</string>
+    <string name="search_battery_percentage_title">Procentul bateriei</string>
+    <string name="search_battery_percentage_desc">Configurați vizibilitatea procentuală a bateriei</string>
+    <string name="search_privacy_chip_title">cipuri de confidențialitate</string>
+    <string name="search_privacy_chip_desc">Afișați indicatorul când camera sau microfonul sunt în uz</string>
+    <string name="search_desc_toggle_visibility">Comutați vizibilitatea pentru %1$s</string>
+    <string name="action_pin">Fixați la Favorite</string>
+    <string name="action_unpin">Anulați fixarea din Favorite</string>
+    <!-- Extraction Batch 1 -->
+    <!-- Categories -->
+    <string name="cat_tools">Instrumente</string>
+    <string name="cat_visuals">Imagini vizuale</string>
+    <string name="cat_system">Sistem</string>
+    <!-- UI Elements -->
+    <string name="search_placeholder">Search for Tools, Mods and Tweaks</string>
+    <string name="search_no_results">Niciun rezultat pentru \"%1$s\"</string>
+    <string name="search_results_title">Rezultatele căutării</string>
+    <string name="requires_following_permissions">%1$s necesită următoarele permisiuni</string>
+    <!-- Features -->
+    <string name="feat_screen_off_widget_title">Widget oprit ecran</string>
+    <string name="feat_screen_off_widget_desc">Widget invizibil pentru a opri ecranul</string>
+    <string name="feat_statusbar_icons_title">Pictograme din bara de stare</string>
+    <string name="feat_statusbar_icons_desc">Controlați vizibilitatea pictogramelor din bara de stare</string>
+    <string name="feat_caffeinate_title">Cofeinat</string>
+    <string name="feat_caffeinate_desc">Ține ecranul treaz</string>
+    <string name="feat_maps_power_saving_title">Modul de economisire a energiei pe hărți</string>
+    <string name="feat_maps_power_saving_desc">Pentru orice dispozitiv Android</string>
+    <string name="feat_notification_lighting_title">Iluminare de notificare</string>
+    <string name="feat_notification_lighting_desc">Aprindeți pentru notificări</string>
+    <string name="feat_flashlight_pulse_desc">Pulsați lanterna pentru notificări</string>
+    <string name="feat_sound_mode_tile_title">Tigla mod sunet</string>
+    <string name="feat_call_vibrations_title">Apel vibrații</string>
+    <string name="feat_call_vibrations_desc">Vibrați pentru acțiuni de apel</string>
+    <string name="show_bluetooth_devices">Afișați dispozitivele Bluetooth</string>
+    <string name="show_bluetooth_devices_summary">Afișează nivelul bateriei dispozitivelor Bluetooth conectate</string>
+    <string name="limit_max_devices">Limitați numărul maxim de dispozitive</string>
+    <string name="limit_max_devices_summary">Ajustați numărul maxim de dispozitive vizibile în widget</string>
+    <string name="widget_background_title">Fundal widget</string>
+    <string name="widget_background_summary">Afișați fundalul widgetului</string>
+    <!-- DIY Automation -->
+    <string name="diy_create_trigger_title">Automatizarea declanșării</string>
+    <string name="diy_create_trigger_desc">Programați o acțiune pentru a declanșa o observație</string>
+    <string name="diy_create_state_title">Automatizare de stat</string>
+    <string name="diy_create_state_desc">Programați o acțiune de executat pe baza stării unei stări de intrare și de ieșire</string>
+    <string name="diy_editor_new_title">Automatizare nouă</string>
+    <string name="diy_editor_edit_title">Editați automatizarea</string>
+    <string name="feat_link_actions_title">Conectați acțiuni</string>
+    <string name="feat_link_actions_desc">Gestionați legăturile cu mai multe aplicații</string>
+    <string name="feat_snooze_notifications_title">Amânați notificările de sistem</string>
+    <string name="feat_snooze_notifications_desc">Amânați notificările persistente</string>
+    <string name="feat_qs_tiles_title">Dale cu setări rapide</string>
+    <string name="feat_qs_tiles_desc">Vezi toate</string>
+    <string name="feat_button_remap_title">Remaptarea butoanelor</string>
+    <string name="feat_button_remap_desc">Remapează acțiunile butonului hardware</string>
+    <string name="feat_dynamic_night_light_title">Lumină de noapte dinamică</string>
+    <string name="feat_dynamic_night_light_desc">Comutați lumina de noapte în funcție de aplicație</string>
+    <string name="feat_screen_locked_security_title">Ecran blocat de securitate</string>
+    <string name="feat_app_lock_title">Blocare aplicație</string>
+    <string name="feat_app_lock_desc">Aplicații securizate cu biometrie</string>
+    <string name="app_lock_auto_lock_delay_title">Auto lock delay</string>
+    <string name="app_lock_auto_lock_delay_desc">After leaving the app</string>
+    <string name="app_lock_auto_lock_delay_none">None</string>
+    <string name="app_lock_auto_lock_delay_1min">1 minute</string>
+    <string name="app_lock_auto_lock_delay_5min">5 minutes</string>
+    <string name="app_lock_auto_lock_delay_10min">10 minutes</string>
+    <string name="app_lock_auto_lock_delay_20min">20 minutes</string>
+    <string name="app_lock_auto_lock_delay_30min">30 minutes</string>
+    <string name="feat_freeze_title">Îngheţa</string>
+    <string name="feat_freeze_desc">Dezactivați aplicațiile utilizate rar</string>
+    <string name="feat_watermark_title">Filigran</string>
+    <string name="feat_watermark_desc">Adăugați date EXIF ​​și sigle la fotografii</string>
+    <string name="feat_always_on_display_title">Întotdeauna pe ecran</string>
+    <string name="feat_always_on_display_desc">Afișați ora și informațiile cu ecranul oprit</string>
+    <string name="feat_calendar_sync_title">Sincronizare calendar</string>
+    <string name="feat_calendar_sync_desc">Sync your phone calendar to your watch</string>
+    <string name="feat_lock_from_watch_title">Lock from Watch</string>
+    <string name="feat_lock_from_watch_desc">Lock your phone remotely</string>
+    <string name="remote_lock_mode_title">Lock Mode</string>
+    <string name="remote_lock_mode_screen_off">Screen off</string>
+    <string name="remote_lock_mode_lock">Lock</string>
+    <string name="remote_lock_mode_admin_note">Using device admin lock will disable biometrics</string>
+    <string name="watch_connected_status">Connected</string>
+    <string name="watch_unknown_name">Unknown Watch</string>
+    <string name="watermark_style_overlay">Suprapunere</string>
+    <string name="watermark_style_frame">Cadru</string>
+    <string name="watermark_show_brand">Marca dispozitivului</string>
+    <string name="watermark_show_exif">Date EXIF</string>
+    <string name="watermark_pick_image">Alegeți imaginea</string>
+    <string name="watermark_save_success">Imaginea salvată în galerie</string>
+    <string name="action_share">Distribuie</string>
+    <string name="watermark_exif_settings">Setări EXIF</string>
+    <string name="watermark_exif_focal_length">Distanța focală</string>
+    <string name="watermark_exif_aperture">Deschidere</string>
+    <string name="watermark_exif_iso">ISO</string>
+    <string name="watermark_exif_shutter_speed">Viteza obturatorului</string>
+    <string name="watermark_exif_date">Data și ora</string>
+    <string name="watermark_move_to_top">Mutați în partea de sus</string>
+    <string name="watermark_left_align">Aliniați la stânga</string>
+    <string name="watermark_text_size_brand">Dimensiunea mărcii</string>
+    <string name="watermark_text_size_data">Dimensiunea datelor</string>
+    <string name="watermark_text_size_custom">Dimensiunea textului</string>
+    <string name="watermark_font_options">Dimensiunea fontului</string>
+    <string name="watermark_custom_text">Text personalizat</string>
+    <string name="watermark_custom_text_hint">Introduceți textul dvs....</string>
+    <string name="watermark_spacing">Spațiere</string>
+    <string name="watermark_border_width">Lățimea chenarului</string>
+    <string name="watermark_border_corners">Colțuri rotunde</string>
+    <string name="watermark_color_section">Culoare</string>
+    <string name="watermark_logo_section">Logo</string>
+    <string name="watermark_logo_show">Arată sigla</string>
+    <string name="watermark_logo_size">Dimensiunea logo-ului</string>
+    <string name="watermark_edit_texts">Editați textele filigranului</string>
+    <string name="watermark_device_brand">Marca dispozitivului</string>
+    <string name="watermark_date_time">Data și ora</string>
+    <string name="watermark_no_date">Fără informații despre dată</string>
+    <string name="watermark_rotate_left">Rotiți la stânga</string>
+    <string name="watermark_rotate_right">Rotiți la dreapta</string>
+    <string name="action_next">Următorul</string>
+    <string name="action_ok">Bine</string>
+    <string name="action_save_changes">Salvați modificările</string>
+    <string name="calendar_sync_settings_title">Setări de sincronizare a calendarului</string>
+    <string name="calendar_sync_select_calendars">Sincronizați anumite calendare</string>
+    <string name="calendar_sync_periodic_title">Sincronizare periodică</string>
+    <string name="calendar_sync_periodic_desc">Sincronizează la fiecare 15 minute dacă s-au găsit modificări</string>
+    <string name="calendar_sync_sync_now">Sincronizează acum</string>
+    <string name="calendar_sync_manual_sync_desc">Declanșează sincronizarea imediată pentru vizionare</string>
+    <string name="calendar_sync_no_calendars">Nu s-au găsit calendare locale</string>
+    <string name="calendar_sync_sync_started">Sincronizarea calendarului a început</string>
+    <!-- Search Settings -->
+    <string name="search_haptic_title">Feedback haptic widget</string>
+    <string name="search_haptic_desc">Alegeți feedback haptic pentru atingerea widgetului</string>
+    <string name="search_smart_wifi_title">WiFi inteligent</string>
+    <string name="search_smart_wifi_desc">Ascundeți datele mobile atunci când WiFi este conectat</string>
+    <string name="search_smart_data_title">Date inteligente</string>
+    <string name="search_smart_data_desc">Ascundeți datele mobile în anumite moduri</string>
+    <string name="search_reset_icons_title">Resetați toate pictogramele</string>
+    <string name="search_reset_icons_desc">Resetați vizibilitatea pictogramei barei de stare la valoarea implicită</string>
+    <string name="search_caffeinate_abort_screen_off_title">Anulați cofeinatul cu ecranul oprit</string>
+    <string name="search_caffeinate_abort_screen_off_desc">Opriți automat cofeinatul când blocați manual dispozitivul</string>
+    <string name="search_lighting_style_title">Stilul de iluminare</string>
+    <string name="search_lighting_style_desc">Alegeți între Stroke, Glow, Spinner și multe altele</string>
+    <string name="search_corner_radius_title">Raza colțului</string>
+    <string name="search_corner_radius_desc">Reglați raza colțului luminii de notificare</string>
+    <string name="search_skip_silent_title">Omite notificările silențioase</string>
+    <string name="search_skip_silent_desc">Nu afișați iluminarea pentru notificări silențioase</string>
+    <string name="search_flashlight_pulse_title">Pulsul lanternei</string>
+    <string name="search_flashlight_pulse_desc">Pulsează încet lanterna pentru notificări noi</string>
+    <string name="search_only_facing_down_title">Doar cu fața în jos</string>
+    <string name="search_only_facing_down_desc">Lanterna cu impulsuri numai când dispozitivul este cu fața în jos</string>
+    <string name="snooze_no_channels_discovered">Nu s-a descoperit încă niciun canal de sistem. Acestea vor apărea aici odată detectate.</string>
+    <string name="search_qs_blur_title">UI Blur</string>
+    <string name="search_qs_blur_desc">Comutați estomparea interfeței de utilizare la nivel de sistem</string>
+    <string name="search_qs_bubbles_title">bule</string>
+    <string name="search_qs_bubbles_desc">Activați bulele de fereastră plutitoare</string>
+    <string name="search_qs_sensitive_title">Conținut sensibil</string>
+    <string name="search_qs_sensitive_desc">Ascundeți detaliile notificărilor pe ecranul de blocare</string>
+    <string name="search_qs_wake_title">Atingeți pentru a trezi</string>
+    <string name="search_qs_wake_desc">Atingeți de două ori pentru a activa controlul</string>
+    <string name="search_qs_aod_title">AOD</string>
+    <string name="search_qs_aod_desc">Comutator Always On Display</string>
+    <string name="search_qs_caffeinate_title">Cofeinat</string>
+    <string name="search_qs_caffeinate_desc">Comutare menține ecranul treaz</string>
+    <string name="search_qs_sound_title">Modul de sunet</string>
+    <string name="search_qs_sound_desc">Ciclul modurilor de sunet (Sonerie/Vibrare/Silențios)</string>
+    <string name="search_qs_lighting_title">Iluminare de notificare</string>
+    <string name="search_qs_lighting_desc">Comutați serviciul de iluminare a notificărilor</string>
+    <string name="search_qs_night_light_title">Lumină de noapte dinamică</string>
+    <string name="search_qs_night_light_desc">Comutator de automatizare a luminii de noapte</string>
+    <string name="search_qs_locked_sec_title">Securitate blocată</string>
+    <string name="search_qs_locked_sec_desc">Securitatea rețelei pe comutarea ecranului de blocare</string>
+    <string name="search_qs_mono_title">Audio mono</string>
+    <string name="search_qs_mono_desc">Forțați comutarea ieșirii audio mono</string>
+    <string name="search_qs_flashlight_title">Lanternă</string>
+    <string name="search_qs_flashlight_desc">Comutator de lanternă dedicat</string>
+    <string name="search_qs_freeze_title">Înghețarea aplicației</string>
+    <string name="search_qs_freeze_desc">Lansați grila de înghețare a aplicației</string>
+    <string name="search_qs_pulse_title">Puls lanternă</string>
+    <string name="search_qs_pulse_desc">Comutați pulsul lanternei de notificare</string>
+    <string name="search_qs_stay_awake_desc">Comutați opțiunea de dezvoltator rămâne treaz</string>
+    <string name="search_qs_private_dns_title">DNS privat</string>
+    <string name="search_qs_private_dns_desc">Comutați modurile DNS private (Oprit/Automat/Nume gazdă)</string>
+    <string name="search_qs_usb_debugging_title">Depanare USB</string>
+    <string name="search_qs_usb_debugging_desc">Comutați opțiunea de dezvoltator de depanare USB</string>
+    <string name="search_qs_refresh_rate_title">Refresh Rate</string>
+    <string name="search_qs_refresh_rate_desc">Cycle between the system default and preset screen refresh rates</string>
+    <string name="search_remap_enable_title">Activați Button Remap</string>
+    <string name="search_remap_enable_desc">Comutator principal pentru remaparea butonului de volum</string>
+    <string name="search_remap_haptic_title">Remapează feedbackul haptic</string>
+    <string name="search_remap_haptic_desc">Feedback de vibrație când este apăsat butonul remapat</string>
+    <string name="search_remap_flashlight_title">Comutare lanternă</string>
+    <string name="search_remap_flashlight_desc">Comutați lanterna cu butoanele de volum</string>
+    <string name="search_night_light_enable_title">Activați Lumina de noapte dinamică</string>
+    <string name="search_night_light_enable_desc">Comutator principal pentru lumină de noapte dinamică</string>
+    <string name="search_app_lock_enable_title">Activați blocarea aplicației</string>
+    <string name="search_app_lock_enable_desc">Comutator principal pentru blocarea aplicației</string>
+    <string name="search_app_lock_pick_title">Selectați aplicațiile blocate</string>
+    <string name="search_app_lock_pick_desc">Alegeți ce aplicații necesită autentificare</string>
+    <string name="search_freeze_pick_title">Alegeți aplicații pentru a îngheța</string>
+    <string name="search_freeze_pick_desc">Alegeți ce aplicații pot fi înghețate</string>
+    <string name="search_freeze_all_title">Înghețați toate aplicațiile</string>
+    <string name="search_freeze_all_desc">Înghețați imediat toate aplicațiile selectate</string>
+    <string name="search_freeze_locked_title">Înghețați când este blocat</string>
+    <string name="search_freeze_locked_desc">Înghețați aplicațiile selectate când dispozitivul se blochează</string>
+    <string name="search_freeze_delay_title">Încetare întârziere</string>
+    <string name="search_freeze_delay_desc">Întârziere înainte de înghețare după blocare</string>
+    <!-- Permissions metadata -->
+    <string name="perm_shizuku_title">Shizuku</string>
+    <string name="perm_shizuku_desc">Necesar pentru comenzi avansate. Instalați Shizuku din Play Store.</string>
+    <string name="perm_shizuku_install_action">Instalați Shizuku</string>
+    <string name="perm_shizuku_grant_title">Acordați permisiunea</string>
+    <string name="perm_shizuku_grant_desc">Necesar pentru a rula comenzi de economisire a energiei în timp ce hărțile navighează.</string>
+    <string name="req_shizuku">Necesită Shizuku sau Root</string>
+    <string name="perm_root_title">Acces rădăcină</string>
+    <string name="perm_root_desc">Permisiuni necesare pentru acțiunile sistemului care utilizează privilegii Root.</string>
+    <string name="perm_notif_listener_title">Ascultător de notificare</string>
+    <string name="perm_notif_listener_desc_maps">Necesită accesul ascultătorului de notificări pentru a monitoriza starea navigației Google Maps și pentru a activa economisirea energiei atunci când nu navighezi.</string>
+    <string name="perm_notif_listener_desc_lighting">Necesită accesul ascultătorului de notificări pentru a detecta notificări noi și pentru a declanșa iluminarea marginii.</string>
+    <string name="perm_notif_listener_desc_snooze">Necesită accesul ascultătorului de notificări pentru a monitoriza și amâna notificările de sistem nedorite.</string>
+    <string name="perm_accessibility_title">Serviciul de accesibilitate</string>
+    <string name="perm_accessibility_desc_common">Necesar pentru Blocarea aplicației, widgetul de oprire a ecranului și alte funcții pentru a detecta interacțiunile</string>
+    <string name="perm_accessibility_desc_lighting">Necesar pentru a declanșa iluminarea notificărilor pentru notificări noi</string>
+    <string name="perm_default_browser_title">Browser implicit</string>
+    <string name="perm_default_browser_desc">Necesar pentru a gestiona legăturile în mod eficient</string>
+    <string name="perm_accessibility_desc_remap">Necesar pentru a intercepta evenimentele butonului hardware</string>
+    <string name="perm_accessibility_desc_essentials_on_display">Required to intercept volume key events while the screen is off to trigger the Essentials On Display overlay.</string>
+    <string name="perm_accessibility_desc_night_light">Necesar pentru monitorizarea aplicațiilor din prim-plan.</string>
+    <string name="perm_write_secure_title">Scrieți Setări Securizate</string>
+    <string name="perm_write_secure_desc_common">Necesar pentru pictogramele din bara de stare și securitatea ecranului blocat</string>
+    <string name="perm_write_secure_desc_night_light">Este necesar să comutați Lumina de noapte. Acordați prin ADB sau root.</string>
+    <string name="perm_write_settings_title">Modificați setările sistemului</string>
+    <string name="perm_write_settings_desc">Necesar pentru a comuta Luminozitatea adaptivă și alte setări de sistem</string>
+    <string name="perm_overlay_title">Permisiune de suprapunere</string>
+    <string name="perm_overlay_desc">Necesar pentru a afișa suprapunerea luminii de notificare pe ecran</string>
+    <string name="perm_device_admin_title">Administrator de dispozitiv</string>
+    <string name="perm_device_admin_desc">Necesar pentru blocarea completă a dispozitivului (dezactivarea datelor biometrice) în cazul încercărilor de acces neautorizat</string>
+    <string name="perm_action_grant">Acordați permisiunea</string>
+    <string name="perm_action_copy_adb">Copiați ADB</string>
+    <string name="perm_action_check">Verifica</string>
+    <string name="perm_action_enable">Activați în Setări</string>
+    <string name="perm_action_how_to">Cum se acordă</string>
+    <string name="perm_action_granted">Granted</string>
+    <string name="perm_battery_optimization_title">Optimizarea bateriei</string>
+    <string name="perm_battery_optimization_desc">Asigurați-vă că serviciul nu este oprit de sistem pentru a economisi energie.</string>
+    <!-- Tabs -->
+    <string name="tab_essentials">Esențiale</string>
+    <string name="tab_freeze">Îngheţa</string>
+    <string name="tab_freeze_title">Îngheţat</string>
+    <string name="tab_diy">DIY</string>
+    <string name="tab_apps">Aplicații</string>
+    <string name="tab_freeze_subtitle">Aplicații dezactivate</string>
+    <string name="tab_diy_subtitle">Fă-o singur</string>
+    <string name="tab_apps_subtitle">Găsiți și gestionați aplicații</string>
+    <string name="feat_app_updates_title">Actualizări ale aplicației</string>
+    <string name="tab_app_updates_title">Actualizări ale aplicației</string>
+    <string name="action_add_repo">Adăugați un depozit</string>
+    <string name="action_edit_repo">Editați depozitul</string>
+    <string name="prompt_enter_repo_url">Introduceți adresa URL a depozitului GitHub sau proprietarul/depozitul</string>
+    <string name="action_track">Urmări</string>
+    <string name="error_no_apk_found">Nu s-a găsit niciun APK în cea mai recentă versiune</string>
+    <string name="error_repo_not_found">Depozitul nu a fost găsit</string>
+    <string name="label_latest_release">Ultima Lansare</string>
+    <string name="action_view_readme">Vizualizați README</string>
+    <string name="label_stars">%d Stele</string>
+    <string name="label_installed_app">Aplicație instalată</string>
+    <string name="label_not_installed">Nu este instalat</string>
+    <string name="action_pick_app">Alegeți aplicația</string>
+    <string name="action_select_app">Selectați aplicația</string>
+    <string name="action_untrack">Anulează urmărirea</string>
+    <string name="label_pending">În așteptare</string>
+    <string name="label_up_to_date">La zi</string>
+    <string name="feat_app_updates_desc">Urmăriți și descărcați cele mai recente versiuni pentru aplicațiile dvs. preferate direct din GitHub.</string>
+    <string name="error_invalid_repo_format">Format nevalid. Utilizați proprietar/repo sau adresa URL GitHub</string>
+    <string name="error_generic_search">A apărut o eroare în timpul căutării</string>
+    <string name="label_auto">Auto</string>
+    <string name="label_options">Opțiuni</string>
+    <string name="option_allow_prereleases">Verificați pre-lansări</string>
+    <string name="option_notifications">Notificări</string>
+    <string name="error_rate_limited">Limita ratei GitHub a fost depășită. Vă rugăm să încercați din nou mai târziu.</string>
+    <!-- Keyboard Setup -->
+    <string name="label_keyboard_setup">Configurare tastatură</string>
+    <string name="btn_enable_keyboard">Activați în setări</string>
+    <string name="btn_select_keyboard">Comutați la Essentials</string>
+    <string name="label_enabled">Activat</string>
+    <string name="label_disabled">Dezactivat</string>
+    <string name="tile_adaptive_brightness">Luminozitate adaptivă</string>
+    <string name="tile_maps_power_saving">Hărți Economisire energie</string>
+    <string name="action_search">Căutare</string>
+    <string name="action_stop">Stop</string>
+    <string name="label_search">Căutare</string>
+    <string name="search_frozen_apps_placeholder">Search frozen apps</string>
+    <!-- UI Components General -->
+    <string name="action_back">Spate</string>
+    <string name="content_desc_back">Spate</string>
+    <string name="label_settings">Setări</string>
+    <string name="action_report_bug">Raportați o eroare</string>
+    <!-- Sentry Crash Reporting -->
+    <string name="sentry_report_mode_title">Crash reporting</string>
+    <string name="sentry_mode_off">Off</string>
+    <string name="sentry_mode_auto">Auto</string>
+    <string name="sentry_crash_toast">Essentials crashed, Report sent</string>
+    <string name="simulate_crash">Simulate crash</string>
+    <string name="welcome_title">Welcome to Essentials</string>
+    <string name="welcome_subtitle">A Toolbox for Android Nerds</string>
+    <string name="welcome_developer_attribution">by sameerasw.com</string>
+    <string name="action_lets_begin">Let\'s Begin</string>
+    <string name="acknowledgement_title">Acknowledgement</string>
+    <string name="acknowledgement_desc">This app is a collection of utilities that can interact deeply with your device system. Using some features might modify system settings or behavior in unexpected ways. \n\nYou only need to grant necessary permissions which are required for selected features you are using giving you full control over the app\'s behavior. \n\nFurther more, the app does not track or store any of your personal data, I don\'t need them... Keep to yourself safe. You can refer to the source code for more information. \n\nThis app is fully open source and is and always will be free to use. Do not pay or install from unknown sources.</string>
+    <string name="acknowledgement_warning">WARNING: Proceed with caution. The developer takes no responsibility for any system instability, data loss, or other issues caused by the use of this app. By proceeding, you acknowledge these risks.</string>
+    <string name="acknowledgement_footer">I know you didn\'t even read this carefully but, in case you need any help, feel free to reach out the developer or the community.</string>
+    <string name="action_i_understand">I Understand</string>
+    <string name="feature_intro_desc">Anytime you are clueless on a feature or a Quick Settings Tile on what it does and what permissions may necessary for it, just long press it and pick \'What is this?\' to learn more.</string>
+    <string name="feature_intro_footer">You can report bugs or find helpful guides anytime in the app settings.</string>
+    <string name="action_let_me_in">Let Me in Already</string>
+    <string name="preferences_title">Preferences</string>
+    <string name="preferences_desc">Configure some basic settings to get started.</string>
+    <string name="label_app_settings">App Settings</string>
+    <string name="label_app_language">Language</string>
+    <string name="label_haptic_feedback">Haptic Feedback</string>
+    <string name="label_updates">Updates</string>
+    <string name="label_auto_check_updates">Auto check for updates</string>
+    <string name="desc_auto_check_updates">Check for updates at app launch</string>
+    <string name="action_all_set">All Set</string>
+    <string name="action_check_whats_new">Check What\'s New?</string>
+    <string name="welcome_back_title">Welcome back to Essentials</string>
+    <string name="action_see_whats_new">See what\'s new</string>
+    <string name="label_mode_default">Default</string>
+    <string name="label_mode_glove">Glove mode</string>
+    <string name="tile_scale_animations">Glove Mode</string>
+    <string name="about_desc_scale_animations_tile">Quickly toggle between Default and Glove mode UI profiles</string>
+    <string name="label_increase_touch_sensitivity">Increase touch sensitivity</string>
+    <string name="desc_increase_touch_sensitivity">Improve touch screen responsiveness when using gloves or screen protectors</string>
+    <string name="label_auto_rotate">Auto rotate</string>
+    <string name="desc_auto_rotate">Automatically rotate the screen when the device is turned</string>
+    <string name="label_screen_timeout">Screen timeout</string>
+    <string name="desc_screen_timeout">How long the screen stays on before turning off automatically</string>
+    <string name="unit_seconds">%d seconds</string>
+    <string name="unit_minute">1 minute</string>
+    <string name="unit_minutes">%d minutes</string>
+    <string name="action_restart_systemui">Restart SystemUI</string>
+    <string name="desc_restart_systemui">Kills and restarts SystemUI process to apply some changes immediately</string>
+    <string name="msg_error_load_release_notes">Couldn\'t load the release note</string>
+    <string name="action_view_on_web">View on web</string>
+    <string name="action_done">Făcut</string>
+    <string name="action_preview">Previzualizare</string>
+    <string name="action_help_guide">Ghid de ajutor</string>
+    <string name="action_what_is_this">Ce este asta?</string>
+    <string name="update_available_title">Actualizare disponibilă</string>
+    <string name="about_desc_your_android">Glance at your device\'s hardware and software specifications in detail. This information is fetched from GSMArena and system properties to provide a comprehensive overview of your Android device.</string>
+    <string name="about_desc_essentials_on_display">Essentials On Display shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
+    <string name="about_desc_notification_lighting">Iluminarea notificărilor adaugă un efect frumos de iluminare marginală atunci când primiți notificări.\n\nPuteți personaliza stilul, culorile și comportamentul animației. Funcționează chiar și atunci când ecranul este oprit (în funcție de OEM) sau deasupra aplicației dvs. actuale. Alegeți aplicațiile, prioritatea notificărilor sau comportamentul pe care ar trebui să se declanșeze din comenzile date. Dacă OEM-ul dvs. nu acceptă suprapuneri deasupra AOD, dați în judecată opțiunea de afișare ambientală găsită mai jos.</string>
+    <string name="about_desc_screen_off_widget">Opriți cu ușurință ecranul printr-o atingere pe un widget transparent redimensionabil care nu adaugă pictograme sau orice dezordine pe ecranul dvs. de pornire.</string>
+    <string name="about_desc_statusbar_icons">Preluați controlul deplin asupra pictogramelor din bara de stare.\n\nAscunde pictogramele specifice, cum ar fi WiFi, Bluetooth sau date celulare, pentru a menține bara de stare curată. De asemenea, puteți personaliza formatul ceasului și indicatorul bateriei cu unele comenzi inteligente. Acestea sunt lista de controale AOSP disponibile, astfel încât sistemul de operare al dispozitivului dvs. ar putea să nu respecte toate comenzile.</string>
+    <string name="about_desc_caffeinate">Cofeinatul previne oprirea automată a ecranului.\n\nPăstrați ecranul treaz pentru o anumită durată sau pe o perioadă nedeterminată. Util atunci când citiți articole lungi sau faceți referințe la o rețetă.</string>
+    <string name="about_desc_maps_power_saving">Obțineți modul exclusiv de economisire a energiei Google Maps din seria Pixel 10, cu fundal negru minim, pentru a fi afișat pe ecranul de blocare pe orice dispozitiv Android. Începeți o sesiune de navigare, opriți și reporniți ecranul.</string>
+    <string name="about_desc_flashlight_pulse">Pulsați lanterna când primiți o notificare.\n\nCu dispozitivele au suport hardware pentru atenuarea lanternei, pulsul va fi animat fără probleme.</string>
+    <string name="about_desc_snooze_notifications">Amânați notificările persistente de sistem enervante care nu pot fi modificate în mod implicit. \n\nVă rugăm să așteptați până când sosește notificarea și apoi accesați această funcție unde va fi listat⟐\' canalul de notificare. Selectați-l pentru a amâna data viitoare.\n\nOrice notificare amânată poate fi accesată în continuare din istoricul notificărilor din Android.</string>
+    <string name="about_desc_quick_settings_tiles">Adăugați piese personalizate în panoul Setări rapide.\n\nApăsați lung pe oricare dintre ele pentru a afla ce fac.</string>
+    <string name="about_desc_button_remap">Remapează-ți butoanele hardware pentru a efectua diferite acțiuni și comenzi rapide.\n\nPersonalizați ceea ce se întâmplă atunci când apăsați lung butoanele de volum în anumite condiții. \n\nUnele comportamente, cum ar fi declanșatorul de oprire a ecranului sau comenzile lanternei, ar putea să nu fie dependente de toate dispozitivele și dispozitivele OEM, deoarece este posibil ca OEM să nu funcționeze pe toate dispozitivele lor. Unele scenarii ar putea fi rezolvate folosind permisiunile Shizuku, dar este posibil să nu ofere aceeași experiență din cauza implementărilor.</string>
+    <string name="about_desc_dynamic_night_light">Comutați automat filtrul de lumină albastră a ecranului pe baza aplicației din prim-plan.</string>
+    <string name="about_desc_screen_locked_security">Îmbunătățiți securitatea când dispozitivul este blocat.\n\nRestricționați accesul la unele piese QS sensibile, prevenind modificările neautorizate ale rețelei și împiedicându-le să reîncerce să facă acest lucru, prin creșterea vitezei de animație pentru a preveni spam-ul tactil.\n\nAceastă caracteristică nu este robustă și poate avea defecte, cum ar fi unele plăci care permit comutarea directă, cum ar fi bluetooth sau modul de zbor, care nu pot fi prevenite.</string>
+    <string name="about_desc_app_lock">Securizează-ți aplicațiile cu un strat de autentificare secundar.\n\nMetoda de autentificare a ecranului de blocare a dispozitivului va fi utilizată atâta timp cât îndeplinește nivelul de securitate biometrică clasa 3 conform standardelor Android.</string>
+    <string name="about_desc_location_reached">Primiți notificări când vă apropiați de destinație pentru a vă asigura că nu pierdeți oprirea.\n\nAccesați Google Maps, apăsați lung pe un indicator din apropierea destinației dvs. și asigurați-vă că scrie „Spinul aruncat” (În caz contrar, calculul distanței ar putea să nu fie precis), apoi partajați locația în aplicația Essentials și începeți urmărirea.</string>
+    <string name="location_reached_add_title">Add Destination</string>
+    <string name="location_reached_edit_title">Edit Destination</string>
+    <string name="location_reached_name_placeholder">Home, Office, etc.</string>
+    <string name="location_reached_name_label">Name</string>
+    <string name="location_reached_save_btn">Save</string>
+    <string name="location_reached_cancel_btn">Cancel</string>
+    <string name="location_reached_resolving">Resolving location…</string>
+    <string name="location_reached_last_trip">Last Trip</string>
+    <string name="location_reached_saved_destinations">Saved Destinations</string>
+    <string name="location_reached_no_saved_dest">No destinations saved yet.</string>
+    <string name="location_reached_delete">Delete Destination</string>
+    <string name="location_reached_tracking_now">Tracking Now</string>
+    <string name="location_reached_restart_btn">Re-Start</string>
+    <string name="location_reached_instructional_desc">Share coordinates (Dropped pin) from Google Maps to Essentials to save as a destination.\n\nThe distance shown is the direct distance to the destination, not the distance along the roads.\n\nTake all calculations of time and distance with a grain of salt as they are not always accurate.</string>
+    <string name="tile_location_reached">Are we there yet?</string>
+    <string name="location_reached_pause">Pause</string>
+    <string name="location_reached_resume">Resume</string>
+    <string name="location_reached_radius_label">Radius: %1$d m</string>
+    <string name="location_reached_distance_label">Distance to target: %1$s</string>
+    <string name="location_reached_last_travelled">Last: %1$s</string>
+    <string name="location_reached_never">Never</string>
+    <string name="location_reached_to_go">To go</string>
+    <string name="location_reached_eta_min">%1$d min</string>
+    <string name="location_reached_eta_hr_min">%1$d hr %2$d min</string>
+    <string name="location_reached_service_remaining_with_eta">%1$s (%2$d%%) • %3$s to go</string>
+    <string name="about_desc_freeze">Înghețați aplicațiile pentru a le opri să ruleze în fundal.\n\nPreveniți consumarea bateriei și utilizarea datelor prin înghețarea completă a aplicațiilor atunci când nu le utilizați. Ele vor fi dezghețate instantaneu când le lansați. Aplicațiile nu vor apărea în sertarul de aplicații și, de asemenea, nu vor apărea pentru actualizările aplicațiilor în Magazinul Play când sunt înghețate.</string>
+    <string name="about_desc_system_keyboard">O metodă de introducere personalizată pe care nimeni nu a cerut-o.\n\nEste doar un experiment. Este posibil ca mai multe limbi să nu primească suport, deoarece este o implementare foarte complexă și consumatoare de timp.</string>
+    <string name="about_desc_batteries">Monitorizați nivelul bateriei tuturor dispozitivelor dvs. conectate.\n\nVedeți starea bateriei căștilor, ceasului și altor accesorii Bluetooth într-un singur loc. Conectați-vă cu aplicația AirSync pentru a afișa și nivelul bateriei mac-ului.</string>
+    <string name="about_desc_watermark">Adăugați o legendă/filigran personalizat fotografiilor dvs. cu date EXIF ​​și informații despre dispozitiv.\n\nPartajați o imagine direct din altă aplicație la Essentials pentru a adăuga cu ușurință un filigran.</string>
+    <string name="about_desc_calendar_sync">Sincronizați tot programul viitor al calendarului, indiferent de restricțiile privind conturile Google care nu permit să fie adăugate la dispozitivele wearOS din cauza politicilor de la serviciu sau de la școală. \n\nAsigurați-vă că instalați aplicația însoțitoare wearOS Essentials pentru a afișa programul în aplicație, precum și într-o dală sau o complicație.</string>
+    <string name="about_desc_app_updates">Urmăriți actualizările pentru aplicațiile dvs. instalate.\n\nPrimiți notificări despre actualizările disponibile, vizualizați jurnalele de modificări și instalați-le cu ușurință printr-o atingere.</string>
+    <string name="about_desc_call_vibrations">Adăugați feedback haptic la apelurile dvs.\n\nVibrați atunci când un apel este conectat, deconectat sau acceptat, oferindu-vă confirmare tactilă fără a privi ecranul.</string>
+    <string name="about_desc_sound_mode_tile">Comutați rapid între modurile Sunet, Vibrare și Silențios.\n\nO placă convenabilă pentru a vă schimba modul de sonerie fără a utiliza butoanele de volum sau setările. Puteți reordona modurile sau dezactivați oricare, dacă nu este necesar, pentru a personaliza comutatorul de țiglă la comportamentul ciclului.</string>
+    <string name="about_desc_ui_blur">Comutați cu ușurință efectul de adâncime a estomparii la nivel de sistem în sistemul de operare.</string>
+    <string name="about_desc_bubbles">Activați sau dezactivați bulele de notificare plutitoare.\n\nComută rapid setarea la nivel de sistem pentru bulele de conversație.</string>
+    <string name="about_desc_sensitive_content">Ascundeți conținutul sensibil pe ecranul de blocare.\n\nComută dacă conținutul de notificare este afișat sau ascuns atunci când dispozitivul este blocat.</string>
+    <string name="about_desc_tap_to_wake">Comutați apăsarea pentru a activa funcționalitatea.\n\nActivați sau dezactivați capacitatea de a activa ecranul printr-o atingere.</string>
+    <string name="about_desc_aod">Comutați întotdeauna pe afișaj.\n\nActivați sau dezactivați rapid afișajul permanent pentru a vedea informații dintr-o privire.</string>
+    <string name="about_desc_notification_glance">Controlați automat Always On Display pe baza notificărilor dvs. Când sosește un mesaj sau o alertă de la o aplicație selectată, AOD va rămâne activat până când închideți notificarea, asigurându-vă că nu pierdeți niciodată informații importante fără a pierde bateria atunci când nu sunt prezente alerte.</string>
+    <string name="about_desc_mono_audio">Combinați canalele audio în mono.\n\nUtil atunci când utilizați o singură cască sau în scopuri de accesibilitate.</string>
+    <string name="about_desc_flashlight_tile">Comutați lanterna.\n\nO apăsare lungă deschide comenzile pentru reglarea intensității, care ar putea necesita implementare hardware care poate lipsi unele dispozitive.</string>
+    <string name="about_desc_stay_awake">Păstrați ecranul treaz în timp ce se încarcă.\n\nÎmpiedică ecranul să intre în somn atâta timp cât dispozitivul este conectat la o sursă de alimentare care este potrivită pentru dezvoltatori în timpul depanării.</string>
+    <string name="about_desc_nfc">Comutați NFC.\n\nActivați sau dezactivați rapid Comunicarea în câmp apropiat pentru plăți și asociere.</string>
+    <string name="about_desc_adaptive_brightness">Comutați luminozitatea adaptivă.\n\nActivați sau dezactivați ajustarea automată a luminozității ecranului în funcție de lumina ambientală.</string>
+    <string name="about_desc_private_dns">Comutați DNS privat.\n\nParcurgeți modurile Off, Automat și Private DNS provider.</string>
+    <string name="about_desc_usb_debugging">Comutați depanarea USB.\n\nActivați sau dezactivați accesul la depanare ADB direct din setările rapide.</string>
+    <string name="about_desc_color_picker">Lansați instrumentul picurător pentru a alege culorile introduse în Android 17 BETA 2</string>
+    <string name="about_desc_charge_optimization">Optimizați-vă durata de viață a bateriei limitând încărcarea maximă sau utilizând încărcarea adaptivă. Acesta este conceput special pentru dispozitivele Pixel pentru a asigura longevitate și cicluri de încărcare sănătoase.\n\nCredite: TebbeUbben/ChargeQuickTile</string>
+    <string name="action_download">Descărcați</string>
+    <!-- DIY Section -->
+    <string name="diy_trigger_screen_off">Ecran oprit</string>
+    <string name="diy_trigger_screen_on">Ecranul pornit</string>
+    <string name="diy_trigger_device_unlock">Deblocare dispozitiv</string>
+    <string name="diy_trigger_charger_connected">Încărcătorul conectat</string>
+    <string name="diy_trigger_charger_disconnected">Încărcătorul deconectat</string>
+    <string name="diy_trigger_schedule">Schedule</string>
+    <string name="diy_state_time_period">Time Period</string>
+    <string name="diy_time_selection_title">Select Time</string>
+    <string name="diy_time_range_selection_title">Select Time Range</string>
+    <string name="diy_start_time_label">Start Time</string>
+    <string name="diy_end_time_label">End Time</string>
+    <string name="diy_repeat_days_label">Repeat on</string>
+    <string name="diy_state_charging">Încărcare</string>
+    <string name="diy_state_screen_on">Ecranul pornit</string>
+    <string name="diy_action_haptic">Vibrați</string>
+    <string name="diy_action_notification">Afișează notificarea</string>
+    <string name="diy_action_remove_notification">Eliminați notificarea</string>
+    <string name="diy_action_flashlight_on">Porniți lanterna</string>
+    <string name="diy_action_flashlight_off">Opriți lanterna</string>
+    <string name="diy_action_flashlight_toggle">Comutați lanterna</string>
+    <string name="diy_action_low_power_on">Turn On Low Power Mode</string>
+    <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
+    <string name="diy_action_dim_wallpaper">Dim Wallpaper</string>
+    <string name="diy_dim_wallpaper_desc">Această acțiune necesită Shizuku sau Root pentru a regla estomparea tapetului sistemului.</string>
+    <string name="diy_select_trigger">Selectați Declanșare</string>
+    <string name="diy_create_app_title">App</string>
+    <string name="diy_create_app_desc">Automatizați pe baza aplicației deschise</string>
+    <string name="diy_select_state">Selectați Stat</string>
+    <string name="diy_select_action">Selectați Acțiune</string>
+    <string name="diy_in_action_label">În Acțiune</string>
+    <string name="diy_out_action_label">Out Action</string>
+    <string name="action_cancel">Anula</string>
+    <string name="action_save">Salva</string>
+    <string name="action_edit">Edita</string>
+    <string name="action_delete">Şterge</string>
+    <string name="action_enable">Permite</string>
+    <string name="action_disable">Dezactivați</string>
+    <string name="automation_service_channel_name">Serviciul de automatizare</string>
+    <string name="automation_service_running_title">Automatizări active</string>
+    <string name="automation_service_running_desc">Monitorizarea evenimentelor sistemului pentru automatizările dvs</string>
+    <string name="app_detection_service_channel_name">App Detection Service</string>
+    <string name="app_detection_service_running_title">App Detection Active</string>
+    <string name="app_detection_service_running_desc">Monitoring app activity</string>
+    <string name="diy_action_device_effects">Efectele dispozitivului</string>
+    <string name="diy_device_effects_desc">Controlați efectele la nivel de sistem, cum ar fi tonuri de gri, suprimare AOD, estomparea imaginii de fundal și modul noapte.</string>
+    <string name="diy_effect_grayscale">Tonuri de gri</string>
+    <string name="diy_effect_suppress_ambient">Suprimați afișajul ambiental</string>
+    <string name="diy_effect_dim_wallpaper">Dim Wallpaper</string>
+    <string name="diy_effect_night_mode">Modul Noapte</string>
+    <string name="diy_device_effects_android_15_warning">Această funcție necesită Android 15 sau o versiune ulterioară.</string>
+    <string name="diy_device_effects_enabled">Activat</string>
+    <string name="diy_device_effects_disabled">Dezactivat</string>
+    <string name="diy_action_sound_mode">Modul de sunet</string>
+    <string name="diy_sound_mode_desc">Această acțiune permite comutarea între modurile Sunet, Vibrare și Silențios pe baza declanșatoarelor. Necesită acces Nu deranja.</string>
+    <!-- About Section -->
+    <string name="app_developer_name">Sameera Wijerathna</string>
+    <string name="app_description">Cutia de instrumente all-in-one pentru Pixel și Android</string>
+    <!-- Edge Lighting -->
+    <string name="color_mode_system">Sistem</string>
+    <string name="color_mode_custom">Personalizat</string>
+    <string name="color_mode_app_specific">Specific aplicației</string>
+    <!-- Biometric & Security -->
+    <string name="error_auth_failed">Autentificarea eșuată</string>
+    <string name="shortcut_creation_hint_toast">Apăsați lung pe o aplicație din grilă pentru a adăuga o comandă rapidă</string>
+    <string name="error_app_uninstalled">Aplicația nu a fost găsită sau dezinstalată</string>
+    <!-- Notifications -->
+    <string name="update_channel_name">Actualizări ale aplicației</string>
+    <string name="update_channel_desc">Notificări pentru actualizări noi de aplicații</string>
+    <string name="notification_update_available">Actualizare disponibilă</string>
+    <string name="battery_notification_no_devices">Niciun dispozitiv conectat</string>
+    <string name="label_unknown">Necunoscut</string>
+    <string name="network_type_5g">5G</string>
+    <string name="network_type_4g">4G</string>
+    <string name="network_type_3g">3G</string>
+    <string name="label_shizuku_ritaka">Shizuku (Rikka)</string>
+    <string name="label_shizuku_tuozi">Shizuku (TuoZi)</string>
+    <string name="label_search_content_description">Căutare</string>
+    <string name="label_recent_searches">Recent Searches</string>
+    <string name="label_no_recent_searches">No recent searches</string>
+    <string name="label_clear_all">Clear all</string>
+    <string name="perm_device_admin_explanation">Este necesar să blocați dispozitivul atunci când se încearcă modificări neautorizate în rețea pe ecranul de blocare.</string>
+    <string name="biometric_subtitle_access_settings">Autentificați-vă pentru a accesa setările</string>
+    <string name="biometric_title_settings_format">%1$s Setări</string>
+    <string name="keyword_feature">caracteristică</string>
+    <string name="keyword_settings">setări</string>
+    <string name="keyword_hide">ascunde</string>
+    <string name="keyword_show">spectacol</string>
+    <string name="keyword_visibility">vizibilitate</string>
+    <string name="error_loading_apps">Eroare la încărcarea aplicațiilor: %1$s</string>
+    <string-array name="keywords_haptic">
+        <item>vibratie</item>
+        <item>atingere</item>
+        <item>simt</item>
+    </string-array>
+    <string-array name="keywords_network_visibility">
+        <item>reţea</item>
+        <item>vizibilitate</item>
+        <item>auto</item>
+        <item>ascunde</item>
+    </string-array>
+    <string-array name="keywords_restore_default">
+        <item>restabili</item>
+        <item>implicit</item>
+        <item>pictograma</item>
+    </string-array>
+    <string-array name="keywords_keyboard">
+        <item>tastatura</item>
+        <item>înălţime</item>
+        <item>umplutura</item>
+        <item>haptic</item>
+        <item>intrare</item>
+    </string-array>
+    <string-array name="keywords_flashlight">
+        <item>aprinde</item>
+        <item>torță</item>
+    </string-array>
+    <string-array name="keywords_flashlight_pulse">
+        <item>aprinde</item>
+        <item>torță</item>
+        <item>puls</item>
+        <item>notificare</item>
+    </string-array>
+    <string-array name="keywords_qs_stay_awake">
+        <item>treaz</item>
+        <item>dezvoltator</item>
+        <item>putere</item>
+        <item>încărca</item>
+    </string-array>
+    <string-array name="keywords_notification_lighting">
+        <item>strălucire</item>
+        <item>notificare</item>
+        <item>LED</item>
+    </string-array>
+    <string-array name="keywords_round_shape">
+        <item>rundă</item>
+        <item>formă</item>
+        <item>margine</item>
+    </string-array>
+    <string-array name="keywords_privacy">
+        <item>asigura</item>
+        <item>intimitate</item>
+        <item>biometric</item>
+        <item>faţă</item>
+        <item>amprenta</item>
+    </string-array>
+    <string-array name="keywords_sound_accessibility">
+        <item>sunet</item>
+        <item>accesibilitate</item>
+        <item>auzi</item>
+    </string-array>
+    <string-array name="keywords_timeout">
+        <item>şedere</item>
+        <item>pe</item>
+        <item>pauză</item>
+    </string-array>
+    <string-array name="keywords_wake_display">
+        <item>atingere</item>
+        <item>trezi</item>
+        <item>afişa</item>
+    </string-array>
+    <string-array name="keywords_timer">
+        <item>cronometrul</item>
+        <item>așteaptă</item>
+        <item>pauză</item>
+    </string-array>
+    <string name="label_keyboard_always_dark">Temă mereu întunecată</string>
+    <string name="label_keyboard_pitch_black">Tema pitch black</string>
+    <string name="label_keyboard_clipboard_enabled">Istoricul clipboard-ului</string>
+    <string name="label_keyboard_long_press_symbols">Long press for symbols</string>
+    <string name="label_keyboard_accented_characters">Accented characters</string>
+    <string-array name="keywords_selection">
+        <item>listă</item>
+        <item>culegător</item>
+        <item>selecţie</item>
+    </string-array>
+    <string-array name="keywords_visual_style">
+        <item>animaţie</item>
+        <item>vizual</item>
+        <item>Uite</item>
+    </string-array>
+    <string-array name="keywords_quiet_filter">
+        <item>linişti</item>
+        <item>ignora</item>
+        <item>filtra</item>
+    </string-array>
+    <string-array name="keywords_automation_lock">
+        <item>automatizare</item>
+        <item>auto</item>
+        <item>blocare</item>
+    </string-array>
+    <string-array name="keywords_adb_debug">
+        <item>adb</item>
+        <item>USB</item>
+        <item>depanare</item>
+    </string-array>
+    <string-array name="keywords_blur_glass">
+        <item>estompa</item>
+        <item>sticlă</item>
+        <item>vinietă</item>
+    </string-array>
+    <string-array name="keywords_float_window">
+        <item>plutire</item>
+        <item>fereastră</item>
+        <item>suprapunere</item>
+    </string-array>
+    <string-array name="keywords_always_display">
+        <item>întotdeauna</item>
+        <item>afişa</item>
+        <item>ceas</item>
+    </string-array>
+    <string-array name="keywords_audio_mute">
+        <item>audio</item>
+        <item>mut</item>
+        <item>volum</item>
+    </string-array>
+    <string-array name="keywords_blue_filter">
+        <item>albastru</item>
+        <item>filtra</item>
+        <item>auto</item>
+    </string-array>
+    <string-array name="keywords_app_freezing">
+        <item>îngheţa</item>
+        <item>shizuku</item>
+    </string-array>
+    <string-array name="keywords_manual_now">
+        <item>manual</item>
+        <item>acum</item>
+        <item>shizuku</item>
+    </string-array>
+    <string-array name="keywords_proximity_sensor">
+        <item>proximitate</item>
+        <item>senzor</item>
+        <item>faţă</item>
+        <item>jos</item>
+    </string-array>
+    <string-array name="keywords_switch_master">
+        <item>comutator</item>
+        <item>maestru</item>
+    </string-array>
+    <string-array name="keywords_vibration">
+        <item>vibratie</item>
+        <item>simt</item>
+    </string-array>
+    <string-array name="keywords_battery">
+        <item>baterie</item>
+        <item>încărca</item>
+        <item>optimizare</item>
+        <item>pixel</item>
+    </string-array>
+    <!-- App Selection Extra -->
+    <string name="action_invert_selection">Inversați selecția</string>
+    <string name="toggle_show_system_apps">Afișați aplicațiile de sistem</string>
+    <!-- Updates -->
+    <string name="status_up_to_date">Ești la curent</string>
+    <string name="warning_pre_release">Aceasta este o versiune pre-lansare și poate fi instabilă.</string>
+    <string name="release_notes_format">Note de lansare %1$s</string>
+    <string name="action_view_on_github">Vizualizați pe GitHub</string>
+    <string name="action_download_apk">Descărcați APK</string>
+    <!-- Haptic Types -->
+    <string name="haptic_none">Nici unul</string>
+    <string name="haptic_subtle">Subtil</string>
+    <string name="haptic_double">Dubla</string>
+    <string name="haptic_click">Clic</string>
+    <string name="haptic_tick">Bifă</string>
+    <!-- Flashlight Intensity Overlay -->
+    <string name="action_turn_off">Opriți</string>
+    <string name="feature_flashlight_brightness_title">Luminozitatea lanternei</string>
+    <!-- QS / Activities -->
+    <!-- About Section -->
+    <string name="developed_by_format">Dezvoltat de %1$s\ncu ❤\uFE0F de la \uD83C\uDDF1\uD83C\uDDF0</string>
+    <string name="action_website">Site-ul web</string>
+    <string name="action_contact">Contact</string>
+    <string name="action_telegram">Telegramă</string>
+    <string name="action_support">Sprijin</string>
+    <string name="label_other_apps">Alte aplicații</string>
+    <string name="app_airsync">AirSync</string>
+    <string name="app_zenzero">ZenZero</string>
+    <string name="app_canvas">Pânză</string>
+    <string name="app_tasks">Sarcini</string>
+    <string name="app_zero">Zero</string>
+    <!-- Help & Guides -->
+    <string name="help_guides_title">Ajutor și ghiduri</string>
+    <string name="need_more_support_reach_out">Ai nevoie de mai mult sprijin? Întinde mâna,</string>
+    <string name="action_collapse">Colaps</string>
+    <string name="action_expand">Extinde</string>
+    <string name="support_group_label">Grup de suport</string>
+    <string name="email_label">E-mail</string>
+    <string name="send_email_chooser_title">Trimite e-mail</string>
+    <string name="error_no_email_app">Nu este disponibilă nicio aplicație de e-mail</string>
+    <string name="instruction_step_image_description">Pas %1$d Imagine</string>
+    <!-- Instructions Content -->
+    <string name="instruction_section_perms_title">Permisiuni de accesibilitate, notificare și suprapunere</string>
+    <string name="instruction_step_perms_1">Este posibil să primiți acest mesaj de acces refuzat dacă încercați să acordați permisiuni sensibile, cum ar fi permisiuni de accesibilitate, de ascultare a notificărilor sau de suprapunere. Pentru a-l acorda, verificați pașii de mai jos.</string>
+    <string name="instruction_step_perms_2">1. Accesați pagina de informații despre aplicație din Essentials.</string>
+    <string name="instruction_step_perms_3">2. Deschideți meniul cu 3 puncte și selectați \'Permite setări restricționate\'. Poate fi necesar să vă autentificați cu datele biometrice. După ce ați terminat, încercați să acordați din nou permisiunea.</string>
+    <string name="instruction_section_shizuku_title">Shizuku</string>
+    <string name="instruction_section_shizuku_desc">Shizuku este un instrument puternic care permite aplicațiilor să folosească API-urile de sistem direct cu permisiuni ADB sau root. Este necesar pentru funcții precum modul Hărți minim, App Freezer. Și va ajuta să acordați unele permisiuni, cum ar fi WRITE_SECURE_SETTINGS. \n\nDar versiunea Shizuku Play Store ar putea fi depășită și probabil va fi inutilizabilă pe versiunile recente de Android, așa că, în acest caz, vă rugăm să obțineți cea mai recentă versiune de pe github sau o actualizare a acesteia.</string>
+    <string name="instruction_section_maps_title">Modul de economisire a energiei pe hărți</string>
+    <string name="instruction_section_maps_desc">Această funcție declanșează automat modul de economisire a energiei Google Maps, care este în prezent exclusiv pentru seria Pixel 10. Un membru al comunității a descoperit că este încă utilizabil pe orice dispozitiv Android lansând activitatea hărților minMode cu privilegii de rădăcină. \n\nȘi apoi, l-am automatizat cu Tasker pentru a se declanșa automat când ecranul se oprește în timpul unei sesiuni de navigare și apoi am reușit să realizez același lucru doar cu Shizuku în timpul de rulare. permisiuni. \n\nEste destinat să fie afișat peste AOD din seria Pixel 10, așa că, din această cauză, este posibil să vedeți un mesaj ocazional să apară pe afișaj că nu acceptă modul peisaj. Acest lucru nu este evitat de aplicație și puteți ignora.</string>
+    <string name="instruction_section_silent_title">Mod sunet silențios</string>
+    <string name="instruction_section_silent_desc">Poate ați observat că și modul silențios declanșează DND. \n\nAceasta se datorează modului în care Android l-a implementat, deoarece, chiar dacă folosim același API pentru a trece la modul vibrație, din anumite motive activează DND împreună cu modul silențios și acest lucru nu este evitabil în acest moment. :(</string>
+    <string name="instruction_section_freeze_title">Ce este congelarea?</string>
+    <string name="instruction_section_freeze_desc">Întrerupeți și stați departe de distragerile aplicației, economisind în același timp puțină energie, împiedicând aplicațiile să ruleze în fundal. Potrivit pentru aplicațiile rar utilizate. \n\nNu este recomandat pentru niciun serviciu de comunicații, deoarece acestea nu vă vor anunța în caz de urgență decât dacă le dezghețați. \n\nSe recomandă să nu înghețați aplicațiile de sistem, deoarece acestea pot duce la instabilitate a sistemului. Procedați cu prudență, ați fost avertizat. \n\nInspirat de Hail &lt;3</string>
+    <string name="instruction_section_security_title">Blocarea aplicației și securitatea blocării ecranului sunt cu adevărat sigure?</string>
+    <string name="instruction_section_security_desc">Absolut nu. \n\nOrice aplicație terță parte nu poate interfera 100% cu interacțiunile obișnuite cu dispozitivul și chiar și blocarea aplicației este doar o suprapunere deasupra aplicațiilor selectate pentru a preveni interacțiunea cu acestea. Există soluții și nu este sigură. \n\nAcelași lucru este valabil și cu funcția de securitate blocată cu ecranul care detectează pe cineva care încearcă să interacționeze cu plăcile de rețea, care din anumite motive sunt încă accesibile pentru oricine pe Pixels. Deci, dacă se străduiesc suficient, s-ar putea să le schimbe și mai ales dacă ați adăugat o piesă QS pentru modul de zbor, această aplicație nu poate împiedica interacțiunile cu ea. \n\nAceste caracteristici sunt făcute la fel ca experimente pentru utilizare ușoară și nu ar recomanda niciodată ca soluții puternice de securitate și confidențialitate. \n\nAlternative sigure:\n - Blocare aplicație: spațiu privat și dosar securizat pe Pixels și Samsung\n - Prevenirea accesului la rețelele mobile: asigurați-vă că protecția împotriva furtului și offline/oprire găsiți setările dispozitivului meu sunt activate. Puteți căuta și în sistemul de operare Graphene.</string>
+    <string name="instruction_section_statusbar_title">Pictograme din bara de stare</string>
+    <string name="instruction_section_statusbar_desc">Este posibil să observați că, chiar și după resetarea pictogramelor din bara de stare, unele pictograme, cum ar fi rotirea dispozitivului, pictogramele căștilor cu fir pot rămâne vizibile. Acest lucru se datorează modului în care lista neagră a barei de statut este implementată în Android și modului în care OEM-ul dvs. le-ar fi personalizat. \nEste posibil să aveți nevoie de ajustări suplimentare. \n\nDe asemenea, nu toate opțiunile de vizibilitate a pictogramelor pot funcționa, deoarece acestea depind de implementările și disponibilitatea OEM.</string>
+    <string name="instruction_section_lighting_title">Iluminarea de notificare nu funcționează</string>
+    <string name="instruction_section_lighting_desc">Depinde de OEM. Unele precum OneUI nu par să permită suprapuneri deasupra AOD, împiedicând afișarea efectelor de lumină. În acest caz, încercați afișarea ambientală ca o soluție.</string>
+    <string name="instruction_section_button_title">Rematarea butoanelor nu funcționează când afișajul este oprit</string>
+    <string name="instruction_section_button_desc">Unii OEM limitează raportarea serviciului de accesibilitate odată ce afișajul este de fapt oprit, dar pot funcționa în continuare când AOD este pornit. \nÎn acest caz, puteți utiliza remapările butoanelor cu AOD activat, dar nu și cu dezactivat. \n\nCa o soluție, va trebui să utilizați permisiunile Shizuku și să activați \'Folosește Shizuku sau Root\' comutați în setările de remapare a butoanelor care identifică și ascultă evenimentele de intrare hardware.\nAcest lucru nu este garantat să funcționeze pe toate dispozitivele și necesită testare.\n\nȘi chiar dacă\'este activată, metoda Shizuku va fi folosită numai atunci când aceasta\'e nevoie. În caz contrar, va reveni întotdeauna la Accesibilitate, care se ocupă și de blocarea intrării reale în timpul apăsării lungi.</string>
+    <string name="instruction_section_flashlight_title">Luminozitatea lanternei nu funcționează</string>
+    <string name="instruction_section_flashlight_desc">Doar un număr limitat de dispozitive au suport hardware și software pentru ajustarea intensității lanternei. \n\n\'Versiunea minimă de Android este 13 (SDK33).\nControlul luminozității lanternei acceptă doar versiunea HAL 3.8 și cele superioare (deci, printre cele mai recente dispozitive acceptate cu Pixel, de exemplu, cele mai testate, 6/7, Samsung S23, etc.)\'\npolodarb/Flashlight-Tiramisu</string>
+    <string name="instruction_section_about_title">Ce dracu este această aplicație?</string>
+    <string name="instruction_section_about_desc">Buna intrebare,\n\nÎntotdeauna mi-am dorit să extrag la maximum din dispozitivele mele\'Sunt un utilizator rootat de când am primit primul meu dispozitiv Project Treble. si eu\'Am iubit aplicația Tasker, care este ca zeul atunci când vine vorba de automatizare și de utilizarea tuturor API-urilor posibile și a funcțiilor interne ale Android.\n\nAșa că nu sunt unrooted și revin la experiența Android beta stoc și am vrut să profit la maximum de ceea ce este posibil cu privilegiile date. Ar putea la fel de bine să le împărtășească. Așa că, cu cunoștințele mele pentru începători în Kotlin Jetpack și cu sprijinul multor instrumente de cercetare și asistență și, de asemenea, a unei comunități grozave, am creat o aplicație all-in-one care conține tot ce mi-am dorit să fiu în Android-ul meu cu permisiunile date. Și iată-l.\n\nSolicitările de funcții sunt binevenite, voi lua în considerare și voi vedea dacă sunt realizabile cu permisiunile disponibile și cu abilitățile mele. În zilele noastre, ceea ce nu este posibil. :)\n\nDe ce nu pe Play Store?\neu nu\'Nu vreau să risc să îmi fie interzis contul de dezvoltator din cauza permisiunilor interne și extrem de sensibile și a API-urilor utilizate în aplicație. Dar cu felul în care se îndreaptă încărcarea laterală Android, haideți\'să vedem ce avem de făcut. Înțeleg îngrijorarea că aplicațiile cu încărcare laterală sunt rău intenționate.\nÎn timp ce suntem la subiect, verificați cealaltă aplicație a mea AirSync dacă sunteți un utilizator Mac + Android. *priza nerusinata*\n\nBucură-te, continuă să construiești! (っ◕‿◕)っ</string>
+    <!-- Bug Reporting -->
+    <string name="toast_bug_report_copied">Raportul de eroare a fost copiat în clipboard</string>
+    <string name="bug_report_title">Raport de eroare</string>
+    <string name="bug_report_option_share_logs">Partajați jurnalele</string>
+    <string name="bug_report_option_share_logs_desc">Includeți jurnalele și detaliile</string>
+    <string name="bug_report_device_info">Informații despre dispozitiv</string>
+    <string name="bug_report_raw_json">Raport brut</string>
+    <string name="action_report_github">Deschideți problema GitHub</string>
+    <string name="action_report_email">Raport prin e-mail</string>
+    <string name="action_copy_clipboard">Copiați în Clipboard</string>
+    <string name="bug_report_email_subject">Raport de eroare Essentials</string>
+    <string name="bug_report_send_via">Trimite prin</string>
+    <!-- Location Reached -->
+    <string name="feat_location_reached_title">Suntem încă acolo?</string>
+    <string name="feat_location_reached_desc">Alerte despre destinație din apropiere</string>
+    <string name="location_reached_how_to">Deschideți Google Maps, alegeți o locație și distribuiți-o în Essentials.</string>
+    <string name="location_reached_radius_title">Raza de alertă: %d m</string>
+    <string name="perm_location_title">Locaţie</string>
+    <string name="perm_location_desc">Folosit pentru a detecta sosirea la destinație.</string>
+    <string name="perm_bg_location_title">Locație de fundal</string>
+    <string name="perm_bg_location_desc">Este necesar să vă monitorizați sosirea în timp ce aplicația este închisă sau ecranul este oprit.</string>
+    <string name="location_reached_notification_title">Destinație Atinsă!</string>
+    <string name="location_reached_notification_desc">Ați ajuns la destinație.</string>
+    <string name="location_reached_processing">Se procesează locația…</string>
+    <string name="location_reached_dist_remaining">DISTANTA RĂMĂSĂ</string>
+    <string name="location_reached_calculating">De calculat…</string>
+    <string name="location_reached_stop_tracking">Opriți urmărirea</string>
+    <string name="location_reached_dest_ready">Destinație gata</string>
+    <string name="location_reached_start_tracking">Începeți urmărirea</string>
+    <string name="location_reached_view_map">Vezi harta</string>
+    <string name="location_reached_clear">Clar</string>
+    <string name="location_reached_no_dest">Fără destinație</string>
+    <string name="location_reached_open_maps">Deschide Maps</string>
+    <string name="location_reached_fsi_title">Permisiune de alarmă pe ecran complet</string>
+    <string name="location_reached_fsi_desc">Este necesar să vă treziți dispozitivul la sosire. Atingeți pentru a acorda.</string>
+    <string name="location_reached_dist_m">%1$d m</string>
+    <string name="location_reached_dist_km">%1$.1f km</string>
+    <string name="location_reached_service_title">Alarma de călătorie activă</string>
+    <string name="location_reached_service_remaining">%1$s rămas (%2$d%%)</string>
+    <string name="location_reached_channel_name">Progresul călătoriei</string>
+    <string name="location_reached_channel_desc">Afișează distanța în timp real până la destinație</string>
+    <string name="location_reached_alarm_title">Destinație în apropiere</string>
+    <string name="location_reached_alarm_subtitle">Pregătește-te să cobori</string>
+    <string name="location_reached_dismiss">Respingeți</string>
+    <string name="location_reached_toast_set">Destinație setată: %1$.4f, %2$.4f</string>
+    <string name="setting_use_root_title">Utilizați Root</string>
+    <string name="setting_use_root_desc">În loc de Shizuku</string>
+    <string name="root_not_available_toast">Accesul root nu este disponibil. Vă rugăm să verificați managerul de rădăcină.</string>
+    <!-- System Keyboard -->
+    <string name="feat_system_keyboard_title">Tastatura</string>
+    <string name="feat_system_keys">Chei</string>
+    <string name="feat_system_keyboard_desc">Personalizați aspectul și comportamentul</string>
+    <string name="search_keyboard_height_title">Înălțimea tastaturii</string>
+    <string name="search_keyboard_height_desc">Reglați dimensiunea verticală totală a tastaturii</string>
+    <string name="search_keyboard_padding_title">Captuseala de jos</string>
+    <string name="search_keyboard_padding_desc">Adăugați spațiu sub tastatură</string>
+    <string name="search_keyboard_haptics_title">Feedback haptic</string>
+    <string name="search_keyboard_haptics_desc">Vibrați la apăsarea tastei</string>
+    <string name="test_keyboard_hint">Testează tastatura</string>
+    <string name="label_keyboard_height">Înălțimea tastaturii</string>
+    <string name="label_keyboard_bottom_padding">Captuseala de jos</string>
+    <string name="label_keyboard_haptics">Feedback haptic</string>
+    <string name="label_keyboard_roundness">Rotunjimea cheii</string>
+    <string name="label_keyboard_functions_bottom">Mutați funcțiile în jos</string>
+    <string name="label_keyboard_functions_padding">Captuseala laterala cu functii</string>
+    <string name="label_keyboard_haptic_strength">Puterea feedback-ului haptic</string>
+    <string name="label_keyboard_shape">Forma tastaturii</string>
+    <string name="shape_round">Rundă</string>
+    <string name="shape_flat">Plat</string>
+    <string name="shape_inverse">Invers</string>
+    <string name="feat_batteries_title">baterii</string>
+    <string name="feat_batteries_desc">Monitorizați nivelul bateriei dispozitivului dvs</string>
+    <string name="batteries_widget_label">Stare baterie</string>
+    <string name="connect_to_airsync">Conectați-vă la AirSync</string>
+    <string name="connect_to_airsync_summary">Afișați bateria de pe dispozitivul dvs. Mac conectat în AirSync</string>
+    <string name="download_airsync">Descărcați aplicația AirSync</string>
+    <string name="download_airsync_summary">Necesar pentru sincronizarea bateriei Mac</string>
+    <string name="feat_battery_notification_title">Notificare baterie</string>
+    <string name="feat_battery_notification_desc">Notificare persistentă privind starea bateriei</string>
+    <string name="battery_notification_hint">This notification displays battery levels for your connected Mac and Bluetooth devices. You can configure which devices to show in the Battery Widget settings.</string>
+    <string name="about_desc_battery_notification">Replicați experiența widgetului bateriei în umbra de notificare. Acesta va afișa nivelul bateriei tuturor dispozitivelor dvs. conectate într-o singură notificare persistentă, actualizată în timp real. Aceasta include Mac-ul dvs. (prin AirSync) și accesoriile Bluetooth.</string>
+    <string name="battery_notification_channel_name">Notificare privind starea bateriei</string>
+    <string name="battery_notification_channel_desc">Notificare persistentă care arată nivelul bateriei dispozitivelor conectate</string>
+    <string name="perm_nearby_devices_title">Dispozitive din apropiere</string>
+    <string name="perm_nearby_devices_desc">Necesar pentru a detecta și a prelua informații despre baterie din accesoriile Bluetooth</string>
+    <!-- GitHub Auth -->
+    <string name="auth_copy_code">Copiați codul</string>
+    <string name="auth_open_login_page">Deschideți pagina de conectare</string>
+    <string name="auth_sign_in_rationale">Conectați-vă pentru a extinde limitele apelurilor API</string>
+    <string name="auth_waiting_for_authorization">Se așteaptă autorizația...</string>
+    <string name="action_sign_in_github">Conectați-vă cu GitHub</string>
+    <string name="action_sign_out">Sign out</string>
+    <string name="action_profile">Profil</string>
+    <!-- App Updates / Repos -->
+    <string name="label_release_notes">Note de lansare</string>
+    <string name="msg_no_repos_tracked">Încă nu au fost urmărite depozite</string>
+    <string name="label_no_app_linked">Nicio aplicație conectată</string>
+    <string name="format_updated_relative">Actualizat %1$s</string>
+    <!-- Relative Time -->
+    <string name="time_just_now">tocmai acum</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="time_min_ago">%1$dm în urmă</string>
+    <string name="time_hour_ago">%1$dh în urmă</string>
+    <string name="time_day_ago">%1$dd acum d</string>
+    <string name="time_days_ago">%1$d days ago</string>
+    <string name="time_weeks_ago">%1$d weeks ago</string>
+    <string name="time_month_ago">%1$dlună în urmă</string>
+    <string name="time_months_ago">%1$d months ago</string>
+    <string name="time_year_ago">%1$dy acum</string>
+    <string name="action_retry">Reîncercați</string>
+    <string name="action_start_sign_in">Începeți conectarea</string>
+    <string name="auth_requesting_code">Se solicită codul dispozitivului...</string>
+    <string name="auth_copy_code_instruction">1. Copiați codul:</string>
+    <string name="auth_paste_code_instruction">2. Lipiți codul pe GitHub:</string>
+    <string name="label_found_apks">APK-uri găsite</string>
+    <string name="label_readme">CITEȘTE-MĂ</string>
+    <string name="action_refresh">Reîmprospăta</string>
+    <!-- Added Missing Group Strings -->
+    <string name="feat_sound_modes_title">Tigla mod sunet</string>
+    <string name="feat_sound_modes_desc">Tigla QS pentru a comuta în modul de sunet</string>
+    <string name="search_sound_mode_show_slider_title">Afișați glisorul</string>
+    <string name="search_sound_mode_show_slider_desc">Afișați glisorul de volum în tigla</string>
+    <string name="search_sound_mode_behavior_title">Comportamentul ciclului</string>
+    <string name="search_sound_mode_behavior_desc">Alegeți moduri de parcurs</string>
+    <string name="feat_sound_haptics_title">Sunet și haptică</string>
+    <string name="feat_sound_haptics_desc">Caracteristici de volum și haptic</string>
+    <string name="feat_security_privacy_title">Securitate și confidențialitate</string>
+    <string name="feat_security_privacy_desc">Protejați-vă și asigurați-vă dispozitivul</string>
+    <string name="feat_notifications_alerts_title">Notificări și alerte</string>
+    <string name="feat_notifications_alerts_desc">Nu ratați niciodată prioritățile dvs</string>
+    <string name="feat_input_actions_title">Intrări și acțiuni</string>
+    <string name="feat_input_actions_desc">Controlați-vă dispozitivul cu ușurință</string>
+    <string name="feat_widgets_title">Widgeturi</string>
+    <string name="feat_widgets_desc">La o privire pe ecranul de pornire</string>
+    <string name="feat_display_visuals_title">Afişa</string>
+    <string name="feat_display_visuals_desc">Imagini vizuale pentru a vă îmbunătăți experiența</string>
+    <string name="feat_watch_title">Ceas</string>
+    <string name="feat_watch_desc">Integrari cu WearOS</string>
+    <string name="watch_no_companion_title">Nu a fost detectat niciun ceas</string>
+    <string name="watch_no_companion_desc">Se pare că nu aveți aplicația însoțitoare Essentials Wear instalată pe ceas.</string>
+    <string name="watch_install_companion_action">Instalați Companion</string>
+    <string name="action_download_from_github">Download from GitHub</string>
+    <string name="watch_help_title">Install on Watch</string>
+    <string name="watch_help_description">To use Watch features, you need to install the Essentials companion app on your Wear OS watch. Click the button below to open the Play Store directly on your watch.</string>
+    <string name="watch_help_open_play_store">Open on Watch</string>
+    <string name="cat_interaction">Interacţiune</string>
+    <string name="cat_interface">Interfață</string>
+    <string name="cat_display">Afişa</string>
+    <string name="cat_protection">Protecţie</string>
+    <string name="cat_accessibility">Accessibility</string>
+    <string name="cat_connectivity">Connectivity</string>
+    <string name="cat_privacy">Privacy</string>
+    <string name="cat_utils">Utilities</string>
+    <string name="label_kbd_abc">ABC</string>
+    <string name="label_kbd_symbols">\?#/</string>
+    <string name="label_kaomoji">Kaomoji</string>
+    <string name="kaomoji_cat_joy">Joy</string>
+    <string name="kaomoji_cat_love">Love</string>
+    <string name="kaomoji_cat_embarassment">Embarassment</string>
+    <string name="kaomoji_cat_sympathy">Sympathy</string>
+    <string name="kaomoji_cat_dissatisfaction">Dissatisfaction</string>
+    <string name="kaomoji_cat_anger">Anger</string>
+    <string name="kaomoji_cat_apologizing">Apologizing</string>
+    <string name="kaomoji_cat_bear">Bear</string>
+    <string name="kaomoji_cat_bird">Bird</string>
+    <string name="kaomoji_cat_cat">Cat</string>
+    <string name="kaomoji_cat_confusion">Confusion</string>
+    <string name="kaomoji_cat_dog">Dog</string>
+    <string name="kaomoji_cat_doubt">Doubt</string>
+    <string name="kaomoji_cat_enemies">Enemies</string>
+    <string name="kaomoji_cat_faces">Faces</string>
+    <string name="kaomoji_cat_fear">Fear</string>
+    <string name="kaomoji_cat_fish">Fish</string>
+    <string name="kaomoji_cat_food">Food</string>
+    <string name="kaomoji_cat_friends">Friends</string>
+    <string name="kaomoji_cat_games">Games</string>
+    <string name="kaomoji_cat_greeting">Greeting</string>
+    <string name="kaomoji_cat_hiding">Hiding</string>
+    <string name="kaomoji_cat_hugging">Hugging</string>
+    <string name="kaomoji_cat_indifference">Indifference</string>
+    <string name="kaomoji_cat_magic">Magic</string>
+    <string name="kaomoji_cat_music">Music</string>
+    <string name="kaomoji_cat_nosebleeding">Nosebleeding</string>
+    <string name="kaomoji_cat_pain">Pain</string>
+    <string name="kaomoji_cat_pig">Pig</string>
+    <string name="kaomoji_cat_rabbit">Rabbit</string>
+    <string name="kaomoji_cat_running">Running</string>
+    <string name="kaomoji_cat_sadness">Sadness</string>
+    <string name="kaomoji_cat_sleeping">Sleeping</string>
+    <string name="kaomoji_cat_special">Special</string>
+    <string name="kaomoji_cat_spider">Spider</string>
+    <string name="kaomoji_cat_surprise">Surprise</string>
+    <string name="kaomoji_cat_weapons">Weapons</string>
+    <string name="kaomoji_cat_winking">Winking</string>
+    <string name="kaomoji_cat_writing">Writing</string>
+    <string name="msg_restrict_own_app_repo">Oi! Puteți verifica actualizările în setările aplicației, nu este nevoie să adăugați aici XD</string>
+    <string name="action_export">Export</string>
+    <string name="action_import">Import</string>
+    <string name="msg_export_success">Arhivele au fost exportate cu succes</string>
+    <string name="msg_export_failed">Nu s-au putut exporta depozitele</string>
+    <string name="msg_import_success">Arhivele au fost importate cu succes</string>
+    <string name="msg_import_failed">Nu s-au putut importa depozitele</string>
+    <string name="label_apps">Aplicații</string>
+    <string name="feat_text_animations_title">Scară și animații</string>
+    <string name="feat_text_animations_desc">Ajustați scara sistemului și animațiile</string>
+    <string name="feat_screen_refresh_rate_title">Screen Refresh Rate</string>
+    <string name="feat_screen_refresh_rate_desc">Set a fixed or ranged screen refresh rate</string>
+    <string name="settings_section_text">Text</string>
+    <string name="label_font_scale">Scara fontului</string>
+    <string name="label_font_weight">Greutatea fontului</string>
+    <string name="label_reset_default">Resetați</string>
+    <string name="settings_section_scale">Scară</string>
+    <string name="label_smallest_width">Cea mai mică lățime</string>
+    <string name="msg_shizuku_permission_required">Este necesară permisiunea Shizuku pentru a ajusta scara</string>
+    <string name="label_grant_permission">Acordați permisiunea</string>
+    <string name="settings_section_animations">Animații</string>
+    <string name="label_animator_duration_scale">Scala de durată a animatorului</string>
+    <string name="label_transition_animation_scale">Scala de animație de tranziție</string>
+    <string name="label_window_animation_scale">Scara de animație a ferestrei</string>
+    <string name="about_desc_text_animations">Reglați scara fonturilor, greutatea și vitezele de animație la nivelul întregului sistem. Rețineți că unele setări pot necesita permisiuni avansate sau o repornire a dispozitivului pentru anumite aplicații pentru a reflecta modificările. \n\nPoate fi necesare permisiuni suplimentare shizuku sau root pentru ajustările de scară</string>
+    <string name="about_desc_screen_refresh_rate">Set a custom screen refresh rate using Shizuku. Fixed mode locks both the minimum and peak refresh rate to one value, while range mode lets you define separate minimum and peak values. Reset clears the custom override and returns the device to its system-managed refresh behavior.</string>
+    <string name="refresh_rate_section_mode">Mode</string>
+    <string name="refresh_rate_section_values">Refresh Rate</string>
+    <string name="refresh_rate_mode_fixed">Fixed</string>
+    <string name="refresh_rate_mode_range">Range</string>
+    <string name="refresh_rate_fixed_title">Fixed refresh rate</string>
+    <string name="refresh_rate_fixed_desc">Set both minimum and peak refresh rate to the same value</string>
+    <string name="refresh_rate_min_title">Minimum refresh rate</string>
+    <string name="refresh_rate_min_desc">Choose the lowest refresh rate the display may use</string>
+    <string name="refresh_rate_peak_title">Peak refresh rate</string>
+    <string name="refresh_rate_peak_desc">Choose the highest refresh rate the display may use</string>
+    <string name="refresh_rate_system_default">System</string>
+    <string name="refresh_rate_reset_desc">Remove the custom override and return to the system default refresh behavior</string>
+    <string name="msg_refresh_rate_permission_required">Shizuku permission required to adjust refresh rate</string>
+    <string name="search_refresh_rate_mode_title">Refresh Rate Mode</string>
+    <string name="search_refresh_rate_mode_desc">Switch between fixed and ranged refresh rate control</string>
+    <string name="search_refresh_rate_fixed_title">Fixed Refresh Rate</string>
+    <string name="search_refresh_rate_fixed_desc">Lock the display to one custom refresh rate</string>
+    <string name="search_refresh_rate_range_title">Refresh Rate Range</string>
+    <string name="search_refresh_rate_range_desc">Configure separate minimum and peak refresh rates</string>
+    <string name="search_refresh_rate_reset_title">Reset Refresh Rate</string>
+    <string name="search_refresh_rate_reset_desc">Clear the custom refresh rate override</string>
+    <string name="feat_aod_force_turn_off_title">Oprire forțată AOD</string>
+    <string name="feat_aod_force_turn_off_desc">Opriți forțat AOD când nu există notificări. Necesită permisiunea de accesibilitate.</string>
+    <string name="feat_auto_accessibility_title">Accesibilitate automată</string>
+    <string name="feat_auto_accessibility_desc">Acordă automat permisiunea de accesibilitate la lansarea aplicației dacă lipsește folosind WRITE_SECURE_SETTINGS.</string>
+    <string name="label_help_guide">Ajutor și Ghiduri</string>
+    <string name="tab_your_android">Android-ul tău</string>
+    <string name="label_device_storage">Depozitare</string>
+    <string name="label_device_ram">Memorie</string>
+    <string name="label_use_blur">Folosiți estompare</string>
+    <string name="desc_use_blur">Activați elementele de estompare progresivă în interfața de utilizare</string>
+    <string name="msg_blur_compatibility_error">Blur este dezactivat pe acest dispozitiv pentru a preveni o eroare de afișare cunoscută pe dispozitivele Samsung cu Android 15 sau mai puțin.</string>
+    <!-- Empty State Actions -->
+    <string name="msg_no_apps_frozen">No apps selected to freeze.</string>
+    <string name="action_get_started">Get Started</string>
+    <string name="action_new_automation">New Automation</string>
+    <string name="action_add_repository">Add Repository</string>
+    <!-- Bug Report Enhancement -->
+    <string name="bug_report_feedback_placeholder">Describe the issue or provide feedback…</string>
+    <string name="bug_report_contact_email_label">Contact email</string>
+    <string name="action_send_feedback">Send Feedback</string>
+    <string name="msg_feedback_sent">Feedback sent successfully! Thanks for helping us improve the app.</string>
+    <string name="label_alternatively">Alternatively</string>
+    <!-- Pixel Diagnostics -->
+    <string name="label_diagnostics">Diagnostics</string>
+    <string name="label_device_check">Device Check</string>
+    <string name="msg_flashbang">Get ready to be flashbanged!</string>
+    <string name="action_abort">Abort</string>
+    <string name="action_continue">Continue</string>
+    <string name="prank_trial_expired_title">Your Essentials trial has expired</string>
+    <string name="prank_trial_expired_desc">Your free trial period of Essentials has ended. Access to advanced features like Button Remap, App Freezing, and DIY Automations with Premium.</string>
+    <string name="prank_button_premium">What\'s in Premium?</string>
+    <string name="prank_reveal_title">April Fools!</string>
+    <string name="prank_reveal_desc">Just kidding, Essentials is and will always be free and open source. Enjoy! (っ◕‿◕)っ</string>
+    <string name="notification_lighting_style_system">System</string>
+    <string name="notification_lighting_system_mode_title">Ripple Animation</string>
+    <string name="notification_lighting_system_mode_charging_ripple">Bottom</string>
+    <string name="notification_lighting_system_mode_auth_ripple">Center</string>
+    <string name="notification_lighting_system_mode_custom_ripple">Custom</string>
+    <string name="msg_shizuku_root_required_system_lighting">Shizuku or Root permission is required for System lighting effects</string>
+    <string name="notification_lighting_system_disclaimer">Made for Google Pixel. Might not be available on other devices.</string>
+    <!-- Live Wallpaper -->
+    <string name="feat_live_wallpaper_title">Live wallpaper</string>
+    <string name="feat_live_wallpaper_desc">Set custom video as live wallpaper</string>
+    <string name="live_wallpaper_label">Live Wallpaper</string>
+    <string name="live_wallpaper_description">A video live wallpaper that plays when unlocked.</string>
+    <string name="live_wallpaper_playback_trigger_title">Play when</string>
+    <string name="live_wallpaper_trigger_unlock">Unlock</string>
+    <string name="live_wallpaper_trigger_screen_on">Screen on</string>
+    <string name="live_wallpaper_video_title">Video</string>
+    <string name="btn_apply">Apply</string>
+    <string name="add_video">Add video</string>
+    <string name="custom_video">Custom video</string>
+    <string name="about_desc_live_wallpaper">Set your favorite video as your home screen wallpaper. Choose between triggering the animation upon unlocking or simply whenever the screen turns on for a dynamic experience.</string>
+    <!-- Shut-Up! Feature -->
+    <string name="feat_shut_up_title">Shut-Up!</string>
+    <string name="feat_shut_up_desc">I know what I\'m doing</string>
+    <string name="shut_up_description">Shut-Up! bypasses app restrictions and checks for developer options, accessibility and debugging by dynamically hiding them when you launch sensitive apps. \n\nUse the custom shortcuts to ensure settings are hidden before the app launches.</string>
+    <string name="shut_up_select_apps_title">Select Apps</string>
+    <string name="shut_up_select_apps_desc">Choose apps to apply Shut-Up! logic</string>
+    <string name="shut_up_settings_title">Shut-Up! Settings</string>
+    <string name="shut_up_per_app_settings">Shut-Up! Features</string>
+    <string name="shut_up_disable_dev_options">Disable Developer Options</string>
+    <string name="shut_up_disable_usb_debugging">Disable USB Debugging</string>
+    <string name="shut_up_disable_wireless_debugging">Disable Wireless Debugging</string>
+    <string name="shut_up_disable_accessibility">Disable Accessibility Services</string>
+    <string name="shut_up_shortcut_created">Shortcut created for %s</string>
+    <string name="feat_disable_rotation_suggestion_title">Disable rotation suggestion</string>
+    <string name="feat_disable_rotation_suggestion_desc">Do not show the rotation button when auto-rotate is off</string>
+    <string name="shut_up_toast_active">App got shut up</string>
+    <string name="shut_up_toast_restored">Shut up features returned</string>
+    <string name="shut_up_auto_archive_notif_title">Auto Freeze</string>
+    <string name="shut_up_auto_archive_notif_text">%1$s will be archived in %2$d seconds</string>
+    <string name="shut_up_auto_archive_action_freeze">Freeze now</string>
+    <string name="shut_up_auto_archive_action_abort">Abort</string>
+    <!-- Lock Screen Clock -->
+    <string name="feat_lock_screen_clock_title">Lock screen clock</string>
+    <string name="feat_lock_screen_clock_desc">Customize lock screen clock on Pixels</string>
+    <string name="about_desc_lock_screen_clock">Change the lock screen clock style on Pixels. Select from the available clock faces provided by the System UI. Some old styles might not be available.</string>
+    <string name="lock_screen_clock_bignum">Big Number</string>
+    <string name="lock_screen_clock_calligraphy">Calligraphy</string>
+    <string name="lock_screen_clock_flex">Flex</string>
+    <string name="lock_screen_clock_growth">Growth</string>
+    <string name="lock_screen_clock_handwritten">Handwritten</string>
+    <string name="lock_screen_clock_inflate">Inflate</string>
+    <string name="lock_screen_clock_metro">Metro</string>
+    <string name="lock_screen_clock_numoverlap">Number Overlap</string>
+    <string name="lock_screen_clock_weather">Weather</string>
+    <string name="lock_screen_clock_select_label">Select Clock Style</string>
+    <string name="lock_screen_clock_current_label">Current</string>
+    <string name="lock_screen_clock_apply_label">Apply</string>
+    <string name="lock_screen_clock_applied_toast">Clock style applied</string>
+    <string name="lock_screen_clock_permission_required">WRITE_SECURE_SETTINGS permission required</string>
+    <string name="lock_screen_clock_default">Default</string>
+    <string name="label_weight">Weight</string>
+    <string name="label_width">Width</string>
+    <string name="label_grade">Grade</string>
+    <string name="label_roundness">Roundness</string>
+    <string name="label_color_tone">Lightness</string>
+    <string name="label_variation">Variation</string>
+    <string name="label_color">Color</string>
+    <string name="label_style_font">Style &amp; Font</string>
+    <string name="about_title">About</string>
+    <string name="color_default">Default</string>
+    <string name="color_red">Red</string>
+    <string name="color_green">Green</string>
+    <string name="color_blue">Blue</string>
+    <string name="color_yellow">Yellow</string>
+    <string name="color_orange">Orange</string>
+    <string name="color_purple">Purple</string>
+    <string name="color_pink">Pink</string>
+    <string name="color_teal">Teal</string>
+    <!-- What's New -->
+    <string name="whats_new_specs_title">Device Specs Retired</string>
+    <string name="whats_new_specs_desc">Inaccurate GSMArena-powered specifications have been removed to keep device insights clean, fast, and completely reliable.</string>
+    <string name="whats_new_apps_title">App Updates Migrated</string>
+    <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
+</resources>
