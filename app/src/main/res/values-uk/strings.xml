@@ -855,6 +855,9 @@
     <string name="label_shizuku_ritaka">Шизуку (Рікка)</string>
     <string name="label_shizuku_tuozi">Шизуку (Туозі)</string>
     <string name="label_search_content_description">Пошук</string>
+    <string name="label_recent_searches">Recent Searches</string>
+    <string name="label_no_recent_searches">No recent searches</string>
+    <string name="label_clear_all">Clear all</string>
     <string name="perm_device_admin_explanation">Необхідно жорстко заблокувати пристрій під час спроби неавторизованої зміни мережі на екрані блокування.</string>
     <string name="biometric_subtitle_access_settings">Щоб отримати доступ до налаштувань, пройдіть автентифікацію</string>
     <string name="biometric_title_settings_format">%1$s Налаштування</string>
