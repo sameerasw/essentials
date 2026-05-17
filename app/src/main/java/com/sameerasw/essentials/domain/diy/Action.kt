@@ -82,8 +82,10 @@ sealed interface Action {
     enum class SoundModeType {
         @SerializedName("SOUND")
         SOUND,
+
         @SerializedName("VIBRATE")
         VIBRATE,
+
         @SerializedName("SILENT")
         SILENT
     }

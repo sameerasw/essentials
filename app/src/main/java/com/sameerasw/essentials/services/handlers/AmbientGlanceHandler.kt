@@ -68,8 +68,8 @@ class AmbientGlanceHandler(
         }
     }
 
-    private var notificationIconsLayout: android.widget.LinearLayout? = null
-    private var clockView: android.widget.TextClock? = null
+    private var notificationIconsLayout: LinearLayout? = null
+    private var clockView: TextClock? = null
     private var centerContainer: FrameLayout? = null
     private var clipContainer: FrameLayout? = null
     private var textContainer: LinearLayout? = null
@@ -247,7 +247,8 @@ class AmbientGlanceHandler(
             isDockedMode = intent.getBooleanExtra("is_docked_mode", false)
             volumePercentage = intent.getIntExtra("volume_percentage", 0)
             volumeKey = intent.getIntExtra("volume_key_code", -1)
-            val newArtHash = if (intent.hasExtra("art_hash")) intent.getLongExtra("art_hash", -1L) else -1L
+            val newArtHash =
+                if (intent.hasExtra("art_hash")) intent.getLongExtra("art_hash", -1L) else -1L
             if (newArtHash != -1L) artHash = newArtHash
 
             if (overlayView != null) {
@@ -409,7 +410,8 @@ class AmbientGlanceHandler(
                 clock.format24Hour = if (isFill) "HH\nmm" else "HH:mm"
                 applyClockFontVariations(clock, isFill)
                 (clock.layoutParams as FrameLayout.LayoutParams).apply {
-                    gravity = if (isFill) Gravity.CENTER else Gravity.TOP or Gravity.CENTER_HORIZONTAL
+                    gravity =
+                        if (isFill) Gravity.CENTER else Gravity.TOP or Gravity.CENTER_HORIZONTAL
                     topMargin = if (isFill) -dpToPx(40f) else dpToPx(100f)
                 }
                 clock.requestLayout()
@@ -418,23 +420,38 @@ class AmbientGlanceHandler(
         }
     }
 
-    private fun applyClockFontVariations(clock: android.widget.TextClock, isFill: Boolean) {
-        val prefs = service.getSharedPreferences(com.sameerasw.essentials.data.repository.SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
-        
+    private fun applyClockFontVariations(clock: TextClock, isFill: Boolean) {
+        val prefs = service.getSharedPreferences(
+            com.sameerasw.essentials.data.repository.SettingsRepository.PREFS_NAME,
+            Context.MODE_PRIVATE
+        )
+
         if (isFill) {
-            val size = prefs.getInt(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_CLOCK_SIZE, 80)
+            val size = prefs.getInt(
+                com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_CLOCK_SIZE,
+                80
+            )
             clock.textSize = size.toFloat()
 
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                val weight = prefs.getInt(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_CLOCK_WEIGHT, 400)
-                val width = prefs.getInt(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_CLOCK_WIDTH, 100)
-                val roundness = prefs.getInt(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_CLOCK_ROUNDNESS, 50)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val weight = prefs.getInt(
+                    com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_CLOCK_WEIGHT,
+                    400
+                )
+                val width = prefs.getInt(
+                    com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_CLOCK_WIDTH,
+                    100
+                )
+                val roundness = prefs.getInt(
+                    com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_CLOCK_ROUNDNESS,
+                    50
+                )
                 clock.fontVariationSettings = "'wght' $weight, 'wdth' $width, 'ROND' $roundness"
             }
         } else {
             // Fixed styling for standard modes
-            clock.textSize = 24f 
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            clock.textSize = 24f
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 clock.fontVariationSettings = "'wght' 500, 'wdth' 100, 'ROND' 50"
             }
         }
@@ -447,7 +464,8 @@ class AmbientGlanceHandler(
                 try {
                     val icon = service.packageManager.getApplicationIcon(pkg)
                     val imageView = ImageView(service).apply {
-                        layoutParams = android.widget.LinearLayout.LayoutParams(dpToPx(28f), dpToPx(28f))
+                        layoutParams =
+                            LinearLayout.LayoutParams(dpToPx(28f), dpToPx(28f))
                         setImageDrawable(icon)
                         alpha = 0.8f
                     }
@@ -464,10 +482,13 @@ class AmbientGlanceHandler(
         if (title == null) return
 
         try {
-            val hashToUse = if (artHash != -1L) artHash else kotlin.math.abs("${title}_${artist}".hashCode().toLong())
-            
+            val hashToUse = if (artHash != -1L) artHash else kotlin.math.abs(
+                "${title}_${artist}".hashCode().toLong()
+            )
+
             // 1. Try Memory Cache first (Instant)
-            val cachedBitmap = com.sameerasw.essentials.services.NotificationListener.getCachedBitmap(hashToUse)
+            val cachedBitmap =
+                NotificationListener.getCachedBitmap(hashToUse)
             if (cachedBitmap != null) {
                 applyBitmaps(cachedBitmap)
                 return
@@ -482,7 +503,8 @@ class AmbientGlanceHandler(
                         if (bitmap != null) {
                             handler.post { applyBitmaps(bitmap) }
                         }
-                    } catch (_: Exception) {}
+                    } catch (_: Exception) {
+                    }
                 }.start()
                 return
             }
@@ -497,7 +519,8 @@ class AmbientGlanceHandler(
                             if (bitmap != null) {
                                 handler.post { applyBitmaps(bitmap) }
                             }
-                        } catch (_: Exception) {}
+                        } catch (_: Exception) {
+                        }
                     }.start()
                 }
             }
@@ -571,9 +594,15 @@ class AmbientGlanceHandler(
             scaleType = ImageView.ScaleType.CENTER_CROP
             alpha = if (mode == "fill") 0.7f else 0f
             if (bitmap != null) setImageBitmap(bitmap)
-            
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-                setRenderEffect(android.graphics.RenderEffect.createBlurEffect(30f, 30f, android.graphics.Shader.TileMode.CLAMP))
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                setRenderEffect(
+                    android.graphics.RenderEffect.createBlurEffect(
+                        30f,
+                        30f,
+                        android.graphics.Shader.TileMode.CLAMP
+                    )
+                )
             }
         }
         backgroundNextImageView = ImageView(context).apply {
@@ -583,9 +612,15 @@ class AmbientGlanceHandler(
             )
             scaleType = ImageView.ScaleType.CENTER_CROP
             alpha = 0f
-            
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-                setRenderEffect(android.graphics.RenderEffect.createBlurEffect(30f, 30f, android.graphics.Shader.TileMode.CLAMP))
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                setRenderEffect(
+                    android.graphics.RenderEffect.createBlurEffect(
+                        30f,
+                        30f,
+                        android.graphics.Shader.TileMode.CLAMP
+                    )
+                )
             }
         }
         backgroundScrim = View(context).apply {
@@ -826,7 +861,8 @@ class AmbientGlanceHandler(
                             val mode = getAlbumArtMode()
                             if (mode == "fill") {
                                 bottomVolumeProgressView?.updatePercentage(perc)
-                                bottomVolumeProgressView?.animate()?.alpha(1f)?.setDuration(300)?.start()
+                                bottomVolumeProgressView?.animate()?.alpha(1f)?.setDuration(300)
+                                    ?.start()
                             } else {
                                 volumeStrokeView?.updatePercentage(perc)
                                 volumeStrokeView?.animate()?.alpha(1f)?.setDuration(300)?.start()
@@ -845,7 +881,7 @@ class AmbientGlanceHandler(
         }
 
         // 4. Notification Icons at bottom
-        notificationIconsLayout = android.widget.LinearLayout(context).apply {
+        notificationIconsLayout = LinearLayout(context).apply {
             layoutParams = FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.WRAP_CONTENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT,
@@ -853,12 +889,12 @@ class AmbientGlanceHandler(
             ).apply {
                 bottomMargin = dpToPx(60f)
             }
-            orientation = android.widget.LinearLayout.HORIZONTAL
+            orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER
             dividerDrawable = android.graphics.drawable.GradientDrawable().apply {
                 setSize(dpToPx(12f), 0)
             }
-            showDividers = android.widget.LinearLayout.SHOW_DIVIDER_MIDDLE
+            showDividers = LinearLayout.SHOW_DIVIDER_MIDDLE
         }
         rootLayout.addView(notificationIconsLayout)
 
@@ -993,7 +1029,7 @@ class AmbientGlanceHandler(
                     service.getSystemService(Context.MEDIA_SESSION_SERVICE) as MediaSessionManager
                 val componentName = android.content.ComponentName(
                     service,
-                    com.sameerasw.essentials.services.NotificationListener::class.java
+                    NotificationListener::class.java
                 )
                 val sessions = mediaSessionManager.getActiveSessions(componentName)
                 val playingSession =
@@ -1052,7 +1088,7 @@ class AmbientGlanceHandler(
         handler.removeCallbacks(burnInProtectionRunnable)
 
         // Clear active unread notifications from the overlay on dismissal
-        com.sameerasw.essentials.services.NotificationListener.clearUnreadNotifications()
+        NotificationListener.clearUnreadNotifications()
 
         if (overlayView != null && windowManager != null) {
             isDetached = true
@@ -1094,14 +1130,26 @@ class AmbientGlanceHandler(
     }
 
     private fun getAlbumArtMode(): String {
-        val prefs = service.getSharedPreferences(com.sameerasw.essentials.data.repository.SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
-        val selectedMode = prefs.getString(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_ALBUM_ART_MODE, "default") ?: "default"
+        val prefs = service.getSharedPreferences(
+            com.sameerasw.essentials.data.repository.SettingsRepository.PREFS_NAME,
+            Context.MODE_PRIVATE
+        )
+        val selectedMode = prefs.getString(
+            com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_ALBUM_ART_MODE,
+            "default"
+        ) ?: "default"
 
-        val forceFillWhileCharging = prefs.getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_FORCE_FILL_WHILE_CHARGING, false)
+        val forceFillWhileCharging = prefs.getBoolean(
+            com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_FORCE_FILL_WHILE_CHARGING,
+            false
+        )
         if (forceFillWhileCharging) {
-            val batteryStatus: Intent? = service.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
-            val status: Int = batteryStatus?.getIntExtra(android.os.BatteryManager.EXTRA_STATUS, -1) ?: -1
-            val isCharging: Boolean = status == android.os.BatteryManager.BATTERY_STATUS_CHARGING || status == android.os.BatteryManager.BATTERY_STATUS_FULL
+            val batteryStatus: Intent? =
+                service.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+            val status: Int =
+                batteryStatus?.getIntExtra(android.os.BatteryManager.EXTRA_STATUS, -1) ?: -1
+            val isCharging: Boolean =
+                status == android.os.BatteryManager.BATTERY_STATUS_CHARGING || status == android.os.BatteryManager.BATTERY_STATUS_FULL
             if (isCharging) return "fill"
         }
 
@@ -1109,8 +1157,14 @@ class AmbientGlanceHandler(
     }
 
     private fun isRandomShapesEnabled(): Boolean {
-        val prefs = service.getSharedPreferences(com.sameerasw.essentials.data.repository.SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
-        return prefs.getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_RANDOM_SHAPES, false)
+        val prefs = service.getSharedPreferences(
+            com.sameerasw.essentials.data.repository.SettingsRepository.PREFS_NAME,
+            Context.MODE_PRIVATE
+        )
+        return prefs.getBoolean(
+            com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_RANDOM_SHAPES,
+            false
+        )
     }
 
     private fun getPrimaryColor(context: Context): Int {
@@ -1217,29 +1271,32 @@ class AmbientGlanceHandler(
         private val trackPath = Path()
 
         init {
-            waveAnimator = android.animation.ValueAnimator.ofFloat(0f, (2 * Math.PI).toFloat()).apply {
-                duration = 1500
-                repeatCount = android.animation.ValueAnimator.INFINITE
-                interpolator = android.view.animation.LinearInterpolator()
-                addUpdateListener {
-                    phaseShift = it.animatedValue as Float
-                    invalidate()
+            waveAnimator =
+                android.animation.ValueAnimator.ofFloat(0f, (2 * Math.PI).toFloat()).apply {
+                    duration = 1500
+                    repeatCount = android.animation.ValueAnimator.INFINITE
+                    interpolator = android.view.animation.LinearInterpolator()
+                    addUpdateListener {
+                        phaseShift = it.animatedValue as Float
+                        invalidate()
+                    }
+                    start()
                 }
-                start()
-            }
         }
 
         fun updatePercentage(newPercentage: Int) {
             animator?.cancel()
-            animator = android.animation.ValueAnimator.ofFloat(currentPercentage, newPercentage.toFloat()).apply {
-                duration = 300
-                interpolator = android.view.animation.DecelerateInterpolator()
-                addUpdateListener {
-                    currentPercentage = it.animatedValue as Float
-                    invalidate()
-                }
-                start()
-            }
+            animator =
+                android.animation.ValueAnimator.ofFloat(currentPercentage, newPercentage.toFloat())
+                    .apply {
+                        duration = 300
+                        interpolator = android.view.animation.DecelerateInterpolator()
+                        addUpdateListener {
+                            currentPercentage = it.animatedValue as Float
+                            invalidate()
+                        }
+                        start()
+                    }
         }
 
         fun cleanup() {
@@ -1272,7 +1329,8 @@ class AmbientGlanceHandler(
                 var x = 0f
                 val step = dpToPx(1f).toFloat()
                 while (x <= progressWidth) {
-                    val y = centerY + amplitude * kotlin.math.sin(frequency * x - phaseShift).toFloat()
+                    val y =
+                        centerY + amplitude * kotlin.math.sin(frequency * x - phaseShift).toFloat()
                     path.lineTo(x, y)
                     x += step
                 }

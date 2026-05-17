@@ -179,8 +179,10 @@ class SettingsRepository(private val context: Context) {
         const val KEY_AMBIENT_MUSIC_GLANCE_CLOCK_WEIGHT = "ambient_music_glance_clock_weight"
         const val KEY_AMBIENT_MUSIC_GLANCE_CLOCK_WIDTH = "ambient_music_glance_clock_width"
         const val KEY_AMBIENT_MUSIC_GLANCE_CLOCK_ROUNDNESS = "ambient_music_glance_clock_roundness"
-        const val KEY_AMBIENT_MUSIC_GLANCE_FORCE_FILL_WHILE_CHARGING = "ambient_music_glance_force_fill_while_charging"
-        const val KEY_AMBIENT_MUSIC_GLANCE_RESPECT_NOTIFICATIONS = "ambient_music_glance_respect_notifications"
+        const val KEY_AMBIENT_MUSIC_GLANCE_FORCE_FILL_WHILE_CHARGING =
+            "ambient_music_glance_force_fill_while_charging"
+        const val KEY_AMBIENT_MUSIC_GLANCE_RESPECT_NOTIFICATIONS =
+            "ambient_music_glance_respect_notifications"
         const val KEY_CALENDAR_SYNC_ENABLED = "calendar_sync_enabled"
         const val KEY_CALENDAR_SYNC_SELECTED_CALENDARS = "calendar_sync_selected_calendars"
         const val KEY_CALENDAR_SYNC_PERIODIC_ENABLED = "calendar_sync_periodic_enabled"
@@ -1163,7 +1165,11 @@ class SettingsRepository(private val context: Context) {
                         shouldRestoreInfinityPeakOnRefreshRateReset()
                     )
                 } else if (mode == com.sameerasw.essentials.utils.RefreshRateUtils.MODE_RANGE && min > 0f && peak > 0f) {
-                    com.sameerasw.essentials.utils.RefreshRateUtils.applyRangeRefreshRate(context, min, peak)
+                    com.sameerasw.essentials.utils.RefreshRateUtils.applyRangeRefreshRate(
+                        context,
+                        min,
+                        peak
+                    )
                 } else if (fixed > 0f || peak > 0f) {
                     com.sameerasw.essentials.utils.RefreshRateUtils.applyFixedRefreshRate(
                         context,
@@ -1243,30 +1249,52 @@ class SettingsRepository(private val context: Context) {
         val json = gson.toJson(presets)
         putString(KEY_PRIVATE_DNS_PRESETS, json)
     }
+
     fun resetPrivateDnsPresets() {
         savePrivateDnsPresets(getDefaultDnsPresets())
     }
 
-    fun getAmbientMusicGlanceAlbumArtMode(): String = prefs.getString(KEY_AMBIENT_MUSIC_GLANCE_ALBUM_ART_MODE, "default") ?: "default"
-    fun setAmbientMusicGlanceAlbumArtMode(mode: String) = prefs.edit().putString(KEY_AMBIENT_MUSIC_GLANCE_ALBUM_ART_MODE, mode).apply()
+    fun getAmbientMusicGlanceAlbumArtMode(): String =
+        prefs.getString(KEY_AMBIENT_MUSIC_GLANCE_ALBUM_ART_MODE, "default") ?: "default"
 
-    fun getAmbientMusicGlanceClockSize(): Int = prefs.getInt(KEY_AMBIENT_MUSIC_GLANCE_CLOCK_SIZE, 80)
-    fun setAmbientMusicGlanceClockSize(size: Int) = prefs.edit().putInt(KEY_AMBIENT_MUSIC_GLANCE_CLOCK_SIZE, size).apply()
+    fun setAmbientMusicGlanceAlbumArtMode(mode: String) =
+        prefs.edit().putString(KEY_AMBIENT_MUSIC_GLANCE_ALBUM_ART_MODE, mode).apply()
 
-    fun getAmbientMusicGlanceClockWeight(): Int = prefs.getInt(KEY_AMBIENT_MUSIC_GLANCE_CLOCK_WEIGHT, 400)
-    fun setAmbientMusicGlanceClockWeight(weight: Int) = prefs.edit().putInt(KEY_AMBIENT_MUSIC_GLANCE_CLOCK_WEIGHT, weight).apply()
+    fun getAmbientMusicGlanceClockSize(): Int =
+        prefs.getInt(KEY_AMBIENT_MUSIC_GLANCE_CLOCK_SIZE, 80)
 
-    fun getAmbientMusicGlanceClockWidth(): Int = prefs.getInt(KEY_AMBIENT_MUSIC_GLANCE_CLOCK_WIDTH, 100)
-    fun setAmbientMusicGlanceClockWidth(width: Int) = prefs.edit().putInt(KEY_AMBIENT_MUSIC_GLANCE_CLOCK_WIDTH, width).apply()
+    fun setAmbientMusicGlanceClockSize(size: Int) =
+        prefs.edit().putInt(KEY_AMBIENT_MUSIC_GLANCE_CLOCK_SIZE, size).apply()
 
-    fun getAmbientMusicGlanceClockRoundness(): Int = prefs.getInt(KEY_AMBIENT_MUSIC_GLANCE_CLOCK_ROUNDNESS, 50)
-    fun setAmbientMusicGlanceClockRoundness(roundness: Int) = prefs.edit().putInt(KEY_AMBIENT_MUSIC_GLANCE_CLOCK_ROUNDNESS, roundness).apply()
+    fun getAmbientMusicGlanceClockWeight(): Int =
+        prefs.getInt(KEY_AMBIENT_MUSIC_GLANCE_CLOCK_WEIGHT, 400)
 
-    fun isAmbientMusicGlanceForceFillWhileChargingEnabled(): Boolean = prefs.getBoolean(KEY_AMBIENT_MUSIC_GLANCE_FORCE_FILL_WHILE_CHARGING, false)
-    fun setAmbientMusicGlanceForceFillWhileChargingEnabled(enabled: Boolean) = prefs.edit().putBoolean(KEY_AMBIENT_MUSIC_GLANCE_FORCE_FILL_WHILE_CHARGING, enabled).apply()
+    fun setAmbientMusicGlanceClockWeight(weight: Int) =
+        prefs.edit().putInt(KEY_AMBIENT_MUSIC_GLANCE_CLOCK_WEIGHT, weight).apply()
 
-    fun isAmbientMusicGlanceRespectNotificationsEnabled(): Boolean = prefs.getBoolean(KEY_AMBIENT_MUSIC_GLANCE_RESPECT_NOTIFICATIONS, true)
-    fun setAmbientMusicGlanceRespectNotificationsEnabled(enabled: Boolean) = prefs.edit().putBoolean(KEY_AMBIENT_MUSIC_GLANCE_RESPECT_NOTIFICATIONS, enabled).apply()
+    fun getAmbientMusicGlanceClockWidth(): Int =
+        prefs.getInt(KEY_AMBIENT_MUSIC_GLANCE_CLOCK_WIDTH, 100)
+
+    fun setAmbientMusicGlanceClockWidth(width: Int) =
+        prefs.edit().putInt(KEY_AMBIENT_MUSIC_GLANCE_CLOCK_WIDTH, width).apply()
+
+    fun getAmbientMusicGlanceClockRoundness(): Int =
+        prefs.getInt(KEY_AMBIENT_MUSIC_GLANCE_CLOCK_ROUNDNESS, 50)
+
+    fun setAmbientMusicGlanceClockRoundness(roundness: Int) =
+        prefs.edit().putInt(KEY_AMBIENT_MUSIC_GLANCE_CLOCK_ROUNDNESS, roundness).apply()
+
+    fun isAmbientMusicGlanceForceFillWhileChargingEnabled(): Boolean =
+        prefs.getBoolean(KEY_AMBIENT_MUSIC_GLANCE_FORCE_FILL_WHILE_CHARGING, false)
+
+    fun setAmbientMusicGlanceForceFillWhileChargingEnabled(enabled: Boolean) =
+        prefs.edit().putBoolean(KEY_AMBIENT_MUSIC_GLANCE_FORCE_FILL_WHILE_CHARGING, enabled).apply()
+
+    fun isAmbientMusicGlanceRespectNotificationsEnabled(): Boolean =
+        prefs.getBoolean(KEY_AMBIENT_MUSIC_GLANCE_RESPECT_NOTIFICATIONS, true)
+
+    fun setAmbientMusicGlanceRespectNotificationsEnabled(enabled: Boolean) =
+        prefs.edit().putBoolean(KEY_AMBIENT_MUSIC_GLANCE_RESPECT_NOTIFICATIONS, enabled).apply()
 
     // Notification Glance Settings
 

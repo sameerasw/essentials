@@ -3,6 +3,9 @@ package com.sameerasw.essentials.services
 import android.app.Notification
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.os.PowerManager
 import android.provider.Settings
@@ -10,10 +13,6 @@ import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.util.Log
 import androidx.annotation.RequiresApi
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
-import android.graphics.drawable.BitmapDrawable
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.MapsState
@@ -74,12 +73,9 @@ class NotificationListener : NotificationListenerService() {
     private fun isMediaNotification(sbn: StatusBarNotification): Boolean {
         val category = sbn.notification.category
         if (category == Notification.CATEGORY_TRANSPORT) return true
-        
+
         val template = sbn.notification.extras.getString(Notification.EXTRA_TEMPLATE)
-        if (template != null && (template.contains("MediaStyle") || template.contains("DecoratedMediaCustomViewStyle"))) {
-            return true
-        }
-        return false
+        return template != null && (template.contains("MediaStyle") || template.contains("DecoratedMediaCustomViewStyle"))
     }
 
     private fun isSilentNotification(sbn: StatusBarNotification): Boolean {
@@ -98,7 +94,10 @@ class NotificationListener : NotificationListenerService() {
         unreadNotifications.clear()
         try {
             activeNotifications?.forEach { sbn ->
-                if (!sbn.isOngoing && sbn.packageName != packageName && !isMediaNotification(sbn) && !isSilentNotification(sbn)) {
+                if (!sbn.isOngoing && sbn.packageName != packageName && !isMediaNotification(sbn) && !isSilentNotification(
+                        sbn
+                    )
+                ) {
                     unreadNotifications[sbn.key] = sbn.packageName
                 }
             }
@@ -112,9 +111,9 @@ class NotificationListener : NotificationListenerService() {
         instance = this
         populateActiveUnreadNotifications()
         try {
-            val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
+            val pm = getSystemService(POWER_SERVICE) as PowerManager
             isScreenLocked = !pm.isInteractive
-            
+
             val filter = android.content.IntentFilter().apply {
                 addAction(ACTION_LIKE_CURRENT_SONG)
                 addAction(ACTION_REQUEST_AMBIENT_GLANCE)
@@ -250,7 +249,10 @@ class NotificationListener : NotificationListenerService() {
         }
     }
 
-    private fun extractBitmap(metadata: android.media.MediaMetadata?, sbn: StatusBarNotification?): Bitmap? {
+    private fun extractBitmap(
+        metadata: android.media.MediaMetadata?,
+        sbn: StatusBarNotification?
+    ): Bitmap? {
         // 1. Try Metadata bitmaps
         var bitmap = metadata?.getBitmap(android.media.MediaMetadata.METADATA_KEY_ALBUM_ART)
         if (bitmap == null) {
@@ -275,7 +277,8 @@ class NotificationListener : NotificationListenerService() {
                         drawable.setBounds(0, 0, canvas.width, canvas.height)
                         drawable.draw(canvas)
                     }
-                } catch (_: Exception) {}
+                } catch (_: Exception) {
+                }
             }
         }
 
@@ -514,7 +517,8 @@ class NotificationListener : NotificationListenerService() {
             }
 
             val playbackState = activeSession.playbackState
-            val isPlaying = playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING
+            val isPlaying =
+                playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING
 
             val metadata = activeSession.metadata
             val title = metadata?.getString(android.media.MediaMetadata.METADATA_KEY_TITLE)
@@ -531,7 +535,10 @@ class NotificationListener : NotificationListenerService() {
                 val artFile = java.io.File(cacheDir, "art_$artHash.png")
 
                 // Extract bitmap from all possible sources
-                val bitmap = extractBitmap(metadata, sbn ?: activeNotifications?.find { it.packageName == activeSession.packageName })
+                val bitmap = extractBitmap(
+                    metadata,
+                    sbn
+                        ?: activeNotifications?.find { it.packageName == activeSession.packageName })
 
                 if (bitmap != null) {
                     latestArtBitmap = bitmap
@@ -555,7 +562,9 @@ class NotificationListener : NotificationListenerService() {
                             tempArtTmp.renameTo(tempArtFile)
 
                             // Cleanup old art files (Keep last 3)
-                            val files = cacheDir.listFiles { _, name -> name.startsWith("art_") && !name.endsWith(".tmp") }
+                            val files = cacheDir.listFiles { _, name ->
+                                name.startsWith("art_") && !name.endsWith(".tmp")
+                            }
                             if (files != null && files.size > 3) {
                                 files.sortByDescending { it.lastModified() }
                                 for (i in 3 until files.size) {
@@ -577,7 +586,8 @@ class NotificationListener : NotificationListenerService() {
 
                 // 2. Trigger Glance only if screen is OFF or Screensaver is Active
                 val powerManager = getSystemService(POWER_SERVICE) as PowerManager
-                val isDreaming = com.sameerasw.essentials.services.dreams.AmbientDreamService.isDreaming
+                val isDreaming =
+                    com.sameerasw.essentials.services.dreams.AmbientDreamService.isDreaming
 
                 if (!powerManager.isInteractive || bypassInteractiveCheck || isDreaming) {
                     val intent = Intent("SHOW_AMBIENT_GLANCE").apply {
@@ -682,15 +692,20 @@ class NotificationListener : NotificationListenerService() {
             return
         }
         handleRespectNotifications(sbn)
-        
-        val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
-        val isReallyLocked = isScreenLocked || !pm.isInteractive || com.sameerasw.essentials.services.dreams.AmbientDreamService.isDreaming
 
-        if (isReallyLocked && !sbn.isOngoing && sbn.packageName != packageName && !isMediaNotification(sbn) && !isSilentNotification(sbn)) {
+        val pm = getSystemService(POWER_SERVICE) as PowerManager
+        val isReallyLocked =
+            isScreenLocked || !pm.isInteractive || com.sameerasw.essentials.services.dreams.AmbientDreamService.isDreaming
+
+        if (isReallyLocked && !sbn.isOngoing && sbn.packageName != packageName && !isMediaNotification(
+                sbn
+            ) && !isSilentNotification(sbn)
+        ) {
             unreadNotifications[sbn.key] = sbn.packageName
             // Trigger refresh if something is playing
             try {
-                val mediaSessionManager = getSystemService(MEDIA_SESSION_SERVICE) as android.media.session.MediaSessionManager
+                val mediaSessionManager =
+                    getSystemService(MEDIA_SESSION_SERVICE) as android.media.session.MediaSessionManager
                 val sessions = getMediaSessions(mediaSessionManager)
                 val activeSession = sessions.firstOrNull {
                     it.playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING
@@ -698,7 +713,8 @@ class NotificationListener : NotificationListenerService() {
                 if (activeSession != null) {
                     triggerAmbientGlance(activeSession, "notification_update")
                 }
-            } catch (_: Exception) {}
+            } catch (_: Exception) {
+            }
         }
 
         val prefs =
@@ -993,10 +1009,11 @@ class NotificationListener : NotificationListenerService() {
 
     override fun onNotificationRemoved(sbn: StatusBarNotification) {
         unreadNotifications.remove(sbn.key)
-        
+
         // Trigger refresh if something is playing
         try {
-            val mediaSessionManager = getSystemService(MEDIA_SESSION_SERVICE) as android.media.session.MediaSessionManager
+            val mediaSessionManager =
+                getSystemService(MEDIA_SESSION_SERVICE) as android.media.session.MediaSessionManager
             val sessions = getMediaSessions(mediaSessionManager)
             val activeSession = sessions.firstOrNull {
                 it.playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING
@@ -1004,7 +1021,8 @@ class NotificationListener : NotificationListenerService() {
             if (activeSession != null) {
                 triggerAmbientGlance(activeSession, "notification_update")
             }
-        } catch (_: Exception) {}
+        } catch (_: Exception) {
+        }
 
         lastCallVibrateTime.remove(sbn.key)
         if (sbn.packageName == "com.google.android.apps.maps") {
@@ -1291,15 +1309,19 @@ class NotificationListener : NotificationListenerService() {
             val extras = notification.extras
             val isMedia = extras.containsKey(Notification.EXTRA_MEDIA_SESSION) ||
                     extras.getString(Notification.EXTRA_TEMPLATE) == "android.app.Notification\$MediaStyle"
-            
+
             // Do not hide for media or calls as they are handled/displayed by EOD already
             if (isMedia || sbn.packageName.contains("telecom") || sbn.packageName.contains("dialer")) return
 
             val prefs = getSharedPreferences(SettingsRepository.PREFS_NAME, MODE_PRIVATE)
-            val respectEnabled = prefs.getBoolean(SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_RESPECT_NOTIFICATIONS, false)
+            val respectEnabled = prefs.getBoolean(
+                SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_RESPECT_NOTIFICATIONS,
+                false
+            )
             if (!respectEnabled) return
 
-            val isDocked = prefs.getBoolean(SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_DOCKED_MODE, false)
+            val isDocked =
+                prefs.getBoolean(SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_DOCKED_MODE, false)
             if (!isDocked) return
 
             // Criteria: Non-silent or Lighting logic

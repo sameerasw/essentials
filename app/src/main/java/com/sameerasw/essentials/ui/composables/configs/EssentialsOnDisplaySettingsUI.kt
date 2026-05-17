@@ -1,13 +1,10 @@
 package com.sameerasw.essentials.ui.composables.configs
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -19,13 +16,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.glance.text.Text
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.pickers.AlbumArtModePicker
-import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.components.sheets.PermissionItem
+import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.viewmodels.MainViewModel
@@ -116,7 +112,11 @@ fun EssentialsOnDisplaySettingsUI(
                     title = stringResource(R.string.essentials_on_display_respect_notifications_title),
                     description = stringResource(R.string.essentials_on_display_respect_notifications_desc),
                     isChecked = viewModel.isAmbientMusicGlanceRespectNotificationsEnabled.value,
-                    onCheckedChange = { viewModel.setAmbientMusicGlanceRespectNotificationsEnabled(it) }
+                    onCheckedChange = {
+                        viewModel.setAmbientMusicGlanceRespectNotificationsEnabled(
+                            it
+                        )
+                    }
                 )
             }
         }
@@ -222,7 +222,11 @@ fun EssentialsOnDisplaySettingsUI(
                         title = stringResource(R.string.essentials_on_display_force_fill_while_charging_title),
                         description = stringResource(R.string.essentials_on_display_force_fill_while_charging_desc),
                         isChecked = viewModel.isAmbientMusicGlanceForceFillWhileChargingEnabled.value,
-                        onCheckedChange = { viewModel.setAmbientMusicGlanceForceFillWhileChargingEnabled(it) }
+                        onCheckedChange = {
+                            viewModel.setAmbientMusicGlanceForceFillWhileChargingEnabled(
+                                it
+                            )
+                        }
                     )
                 }
             }

@@ -29,7 +29,6 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.services.NotificationListener
 import java.io.File
 import java.util.Random
-import kotlin.math.abs
 
 class AmbientDreamService : DreamService() {
 
@@ -195,7 +194,7 @@ class AmbientDreamService : DreamService() {
             val mediaSessionManager = getSystemService(MEDIA_SESSION_SERVICE) as MediaSessionManager
             val componentName = android.content.ComponentName(
                 this,
-                com.sameerasw.essentials.services.NotificationListener::class.java
+                NotificationListener::class.java
             )
             mediaSessionManager.addOnActiveSessionsChangedListener(sessionListener, componentName)
             updateActiveSession(mediaSessionManager.getActiveSessions(componentName))
@@ -242,9 +241,15 @@ class AmbientDreamService : DreamService() {
             scaleType = ImageView.ScaleType.CENTER_CROP
             alpha = if (mode == "fill" && isMusicMode) 0.7f else 0f
             setImageDrawable(ColorDrawable(Color.DKGRAY))
-            
+
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-                setRenderEffect(android.graphics.RenderEffect.createBlurEffect(30f, 30f, android.graphics.Shader.TileMode.CLAMP))
+                setRenderEffect(
+                    android.graphics.RenderEffect.createBlurEffect(
+                        30f,
+                        30f,
+                        android.graphics.Shader.TileMode.CLAMP
+                    )
+                )
             }
         }
         backgroundNextImageView = ImageView(this).apply {
@@ -254,9 +259,15 @@ class AmbientDreamService : DreamService() {
             )
             scaleType = ImageView.ScaleType.CENTER_CROP
             alpha = 0f
-            
+
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-                setRenderEffect(android.graphics.RenderEffect.createBlurEffect(30f, 30f, android.graphics.Shader.TileMode.CLAMP))
+                setRenderEffect(
+                    android.graphics.RenderEffect.createBlurEffect(
+                        30f,
+                        30f,
+                        android.graphics.Shader.TileMode.CLAMP
+                    )
+                )
             }
         }
         backgroundScrim = View(this).apply {
@@ -459,11 +470,13 @@ class AmbientDreamService : DreamService() {
                                 val isFill = getAlbumArtMode() == "fill"
                                 if (isFill) {
                                     bottomVolumeProgressView?.updatePercentage(perc)
-                                    bottomVolumeProgressView?.animate()?.alpha(1f)?.setDuration(300)?.start()
+                                    bottomVolumeProgressView?.animate()?.alpha(1f)?.setDuration(300)
+                                        ?.start()
                                 } else {
                                     volumeStrokeView?.setColor(Color.WHITE)
                                     volumeStrokeView?.updatePercentage(perc)
-                                    volumeStrokeView?.animate()?.alpha(1f)?.setDuration(300)?.start()
+                                    volumeStrokeView?.animate()?.alpha(1f)?.setDuration(300)
+                                        ?.start()
                                 }
 
                                 handler.removeCallbacks(volumeHideRunnable)
@@ -542,7 +555,7 @@ class AmbientDreamService : DreamService() {
         if (volumeReceiver != null) unregisterReceiver(volumeReceiver)
 
         // Clear active unread notifications from the screensaver on dismissal
-        com.sameerasw.essentials.services.NotificationListener.clearUnreadNotifications()
+        NotificationListener.clearUnreadNotifications()
 
         // Unregister Media Session Listener
         try {
@@ -591,7 +604,8 @@ class AmbientDreamService : DreamService() {
             } catch (e: Exception) {
                 emptyList()
             }
-            val anyPlaying = sessions.any { it.playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING }
+            val anyPlaying =
+                sessions.any { it.playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING }
             if (!anyPlaying) {
                 switchToClockMode()
                 return
@@ -673,7 +687,8 @@ class AmbientDreamService : DreamService() {
                 try {
                     val icon = packageManager.getApplicationIcon(pkg)
                     val imageView = ImageView(this).apply {
-                        layoutParams = android.widget.LinearLayout.LayoutParams(dpToPx(28f), dpToPx(28f))
+                        layoutParams =
+                            LinearLayout.LayoutParams(dpToPx(28f), dpToPx(28f))
                         setImageDrawable(icon)
                         alpha = 0.8f
                     }
@@ -712,13 +727,13 @@ class AmbientDreamService : DreamService() {
                     switchToMusicMode()
                 }
                 updateMetadata(artBitmap)
-                updateNotificationIcons(com.sameerasw.essentials.services.NotificationListener.getUnreadPackages())
+                updateNotificationIcons(NotificationListener.getUnreadPackages())
             }
         } else {
             currentController?.unregisterCallback(mediaCallback)
             currentController = null
             switchToClockMode()
-            updateNotificationIcons(com.sameerasw.essentials.services.NotificationListener.getUnreadPackages())
+            updateNotificationIcons(NotificationListener.getUnreadPackages())
         }
     }
 
@@ -737,7 +752,7 @@ class AmbientDreamService : DreamService() {
     private fun getMediaSessions(manager: MediaSessionManager): List<android.media.session.MediaController> {
         val componentName = android.content.ComponentName(
             this,
-            com.sameerasw.essentials.services.NotificationListener::class.java
+            NotificationListener::class.java
         )
         return try {
             manager.getActiveSessions(componentName)
@@ -776,20 +791,22 @@ class AmbientDreamService : DreamService() {
                 clockView?.format24Hour = "HH\nmm"
                 clockView?.setLineSpacing(0f, 0.8f)
                 applyClockFontVariations(clockView!!, true)
-                clockView?.layoutParams = (clockView?.layoutParams as FrameLayout.LayoutParams).apply {
-                    gravity = Gravity.CENTER
-                    topMargin = -dpToPx(40f)
-                }
+                clockView?.layoutParams =
+                    (clockView?.layoutParams as FrameLayout.LayoutParams).apply {
+                        gravity = Gravity.CENTER
+                        topMargin = -dpToPx(40f)
+                    }
             } else {
                 clockView?.textSize = 24f
                 clockView?.format12Hour = "hh:mm"
                 clockView?.format24Hour = "HH:mm"
                 clockView?.setLineSpacing(0f, 1f)
                 applyClockFontVariations(clockView!!, false)
-                clockView?.layoutParams = (clockView?.layoutParams as FrameLayout.LayoutParams).apply {
-                    gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
-                    topMargin = dpToPx(100f)
-                }
+                clockView?.layoutParams =
+                    (clockView?.layoutParams as FrameLayout.LayoutParams).apply {
+                        gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
+                        topMargin = dpToPx(100f)
+                    }
             }
             clockView?.requestLayout()
             clockView?.animate()?.alpha(0.8f)?.setDuration(150)?.start()
@@ -915,7 +932,8 @@ class AmbientDreamService : DreamService() {
                 clock.format24Hour = if (isFill) "HH\nmm" else "HH:mm"
                 applyClockFontVariations(clock, isFill)
                 (clock.layoutParams as FrameLayout.LayoutParams).apply {
-                    gravity = if (isFill) Gravity.CENTER else Gravity.TOP or Gravity.CENTER_HORIZONTAL
+                    gravity =
+                        if (isFill) Gravity.CENTER else Gravity.TOP or Gravity.CENTER_HORIZONTAL
                     topMargin = if (isFill) -dpToPx(40f) else dpToPx(100f)
                 }
                 clock.requestLayout()
@@ -952,7 +970,8 @@ class AmbientDreamService : DreamService() {
             val hashToUse = kotlin.math.abs("${title}_${artist}".hashCode().toLong())
 
             // 1. Try Memory Cache first (Instant)
-            val cachedBitmap = com.sameerasw.essentials.services.NotificationListener.getCachedBitmap(hashToUse)
+            val cachedBitmap =
+                NotificationListener.getCachedBitmap(hashToUse)
             if (cachedBitmap != null) {
                 applyBitmaps(cachedBitmap)
                 return
@@ -1028,7 +1047,8 @@ class AmbientDreamService : DreamService() {
                     val stream = contentResolver.openInputStream(android.net.Uri.parse(artUri))
                     bitmap = BitmapFactory.decodeStream(stream)
                     stream?.close()
-                } catch (_: Exception) {}
+                } catch (_: Exception) {
+                }
             }
         }
         return bitmap
@@ -1099,14 +1119,26 @@ class AmbientDreamService : DreamService() {
     }
 
     private fun getAlbumArtMode(): String {
-        val prefs = getSharedPreferences(com.sameerasw.essentials.data.repository.SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
-        val selectedMode = prefs.getString(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_ALBUM_ART_MODE, "default") ?: "default"
+        val prefs = getSharedPreferences(
+            com.sameerasw.essentials.data.repository.SettingsRepository.PREFS_NAME,
+            MODE_PRIVATE
+        )
+        val selectedMode = prefs.getString(
+            com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_ALBUM_ART_MODE,
+            "default"
+        ) ?: "default"
 
-        val forceFillWhileCharging = prefs.getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_FORCE_FILL_WHILE_CHARGING, false)
+        val forceFillWhileCharging = prefs.getBoolean(
+            com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_FORCE_FILL_WHILE_CHARGING,
+            false
+        )
         if (forceFillWhileCharging) {
-            val batteryStatus: Intent? = registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
-            val status: Int = batteryStatus?.getIntExtra(android.os.BatteryManager.EXTRA_STATUS, -1) ?: -1
-            val isCharging: Boolean = status == android.os.BatteryManager.BATTERY_STATUS_CHARGING || status == android.os.BatteryManager.BATTERY_STATUS_FULL
+            val batteryStatus: Intent? =
+                registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+            val status: Int =
+                batteryStatus?.getIntExtra(android.os.BatteryManager.EXTRA_STATUS, -1) ?: -1
+            val isCharging: Boolean =
+                status == android.os.BatteryManager.BATTERY_STATUS_CHARGING || status == android.os.BatteryManager.BATTERY_STATUS_FULL
             if (isCharging) return "fill"
         }
 
@@ -1114,26 +1146,47 @@ class AmbientDreamService : DreamService() {
     }
 
     private fun isRandomShapesEnabled(): Boolean {
-        val prefs = getSharedPreferences(com.sameerasw.essentials.data.repository.SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
-        return prefs.getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_RANDOM_SHAPES, false)
+        val prefs = getSharedPreferences(
+            com.sameerasw.essentials.data.repository.SettingsRepository.PREFS_NAME,
+            MODE_PRIVATE
+        )
+        return prefs.getBoolean(
+            com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_RANDOM_SHAPES,
+            false
+        )
     }
 
-    private fun applyClockFontVariations(clock: android.widget.TextClock, isFill: Boolean) {
-        val prefs = getSharedPreferences(com.sameerasw.essentials.data.repository.SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
-        
+    private fun applyClockFontVariations(clock: TextClock, isFill: Boolean) {
+        val prefs = getSharedPreferences(
+            com.sameerasw.essentials.data.repository.SettingsRepository.PREFS_NAME,
+            MODE_PRIVATE
+        )
+
         if (isFill) {
-            val size = prefs.getInt(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_CLOCK_SIZE, 80)
+            val size = prefs.getInt(
+                com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_CLOCK_SIZE,
+                80
+            )
             clock.textSize = size.toFloat()
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                val weight = prefs.getInt(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_CLOCK_WEIGHT, 400)
-                val width = prefs.getInt(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_CLOCK_WIDTH, 100)
-                val roundness = prefs.getInt(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_CLOCK_ROUNDNESS, 50)
+                val weight = prefs.getInt(
+                    com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_CLOCK_WEIGHT,
+                    400
+                )
+                val width = prefs.getInt(
+                    com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_CLOCK_WIDTH,
+                    100
+                )
+                val roundness = prefs.getInt(
+                    com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_CLOCK_ROUNDNESS,
+                    50
+                )
                 clock.fontVariationSettings = "'wght' $weight, 'wdth' $width, 'ROND' $roundness"
             }
         } else {
             // Fixed styling for standard modes
-            clock.textSize = 24f 
+            clock.textSize = 24f
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 clock.fontVariationSettings = "'wght' 500, 'wdth' 100, 'ROND' 50"
             }
@@ -1241,29 +1294,32 @@ class AmbientDreamService : DreamService() {
         private val trackPath = Path()
 
         init {
-            waveAnimator = android.animation.ValueAnimator.ofFloat(0f, (2 * Math.PI).toFloat()).apply {
-                duration = 1500
-                repeatCount = android.animation.ValueAnimator.INFINITE
-                interpolator = android.view.animation.LinearInterpolator()
-                addUpdateListener {
-                    phaseShift = it.animatedValue as Float
-                    invalidate()
+            waveAnimator =
+                android.animation.ValueAnimator.ofFloat(0f, (2 * Math.PI).toFloat()).apply {
+                    duration = 1500
+                    repeatCount = android.animation.ValueAnimator.INFINITE
+                    interpolator = android.view.animation.LinearInterpolator()
+                    addUpdateListener {
+                        phaseShift = it.animatedValue as Float
+                        invalidate()
+                    }
+                    start()
                 }
-                start()
-            }
         }
 
         fun updatePercentage(newPercentage: Int) {
             animator?.cancel()
-            animator = android.animation.ValueAnimator.ofFloat(currentPercentage, newPercentage.toFloat()).apply {
-                duration = 300
-                interpolator = android.view.animation.DecelerateInterpolator()
-                addUpdateListener {
-                    currentPercentage = it.animatedValue as Float
-                    invalidate()
-                }
-                start()
-            }
+            animator =
+                android.animation.ValueAnimator.ofFloat(currentPercentage, newPercentage.toFloat())
+                    .apply {
+                        duration = 300
+                        interpolator = android.view.animation.DecelerateInterpolator()
+                        addUpdateListener {
+                            currentPercentage = it.animatedValue as Float
+                            invalidate()
+                        }
+                        start()
+                    }
         }
 
         fun cleanup() {
@@ -1296,7 +1352,8 @@ class AmbientDreamService : DreamService() {
                 var x = 0f
                 val step = dpToPx(1f).toFloat()
                 while (x <= progressWidth) {
-                    val y = centerY + amplitude * kotlin.math.sin(frequency * x - phaseShift).toFloat()
+                    val y =
+                        centerY + amplitude * kotlin.math.sin(frequency * x - phaseShift).toFloat()
                     path.lineTo(x, y)
                     x += step
                 }

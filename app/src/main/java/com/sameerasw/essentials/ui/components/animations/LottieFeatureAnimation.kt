@@ -3,7 +3,6 @@ package com.sameerasw.essentials.ui.components.animations
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -36,7 +35,8 @@ fun LottieFeatureAnimation(
     )
 
     val primaryColor = MaterialTheme.colorScheme.primary
-    val aspect = composition?.let { it.bounds.width().toFloat() / it.bounds.height().toFloat() } ?: 1f
+    val aspect =
+        composition?.let { it.bounds.width().toFloat() / it.bounds.height().toFloat() } ?: 1f
 
     Box(
         modifier = modifier

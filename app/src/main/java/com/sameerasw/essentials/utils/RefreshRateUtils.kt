@@ -86,8 +86,14 @@ object RefreshRateUtils {
 
         val safeMin = normalizeRate(minValue)
         val safePeak = normalizeRate(maxOf(minValue, peakValue))
-        ShellUtils.runCommand(context, "settings put system $KEY_MIN_REFRESH_RATE ${formatRate(safeMin)}")
-        ShellUtils.runCommand(context, "settings put system $KEY_PEAK_REFRESH_RATE ${formatRate(safePeak)}")
+        ShellUtils.runCommand(
+            context,
+            "settings put system $KEY_MIN_REFRESH_RATE ${formatRate(safeMin)}"
+        )
+        ShellUtils.runCommand(
+            context,
+            "settings put system $KEY_PEAK_REFRESH_RATE ${formatRate(safePeak)}"
+        )
         return true
     }
 

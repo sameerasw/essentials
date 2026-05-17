@@ -31,6 +31,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
@@ -44,26 +48,32 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.registry.FeatureRegistry
 import com.sameerasw.essentials.ui.components.EssentialsFloatingToolbar
+import com.sameerasw.essentials.ui.components.animations.LottieFeatureAnimation
 import com.sameerasw.essentials.ui.components.cards.FeatureCard
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.linkActions.LinkPickerScreen
 import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.composables.configs.AlwaysOnDisplaySettingsUI
-import com.sameerasw.essentials.ui.composables.configs.EssentialsOnDisplaySettingsUI
 import com.sameerasw.essentials.ui.composables.configs.AppLockSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.BatteriesSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.BatteryNotificationSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ButtonRemapSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.CaffeinateSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.CalendarSyncSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.DynamicNightLightSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.EssentialsOnDisplaySettingsUI
+import com.sameerasw.essentials.ui.composables.configs.FlashlightPulseSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.FreezeSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.KeyboardSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.LiveWallpaperSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.LocationReachedSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.LockScreenClockSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.MapsPowerSavingSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.NotificationLightingSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.OtherCustomizationsSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.QuickSettingsTilesSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.RefreshRateSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.RemoteLockSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ScreenLockedSecuritySettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ScreenOffWidgetSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ShutUpSettingsUI
@@ -72,26 +82,16 @@ import com.sameerasw.essentials.ui.composables.configs.SoundModeTileSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.StatusBarIconSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.TextAnimationsSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.WatchSettingsUI
-import com.sameerasw.essentials.ui.composables.configs.FreezeSettingsUI
-import com.sameerasw.essentials.ui.composables.configs.CalendarSyncSettingsUI
-import com.sameerasw.essentials.ui.composables.configs.RemoteLockSettingsUI
-import com.sameerasw.essentials.ui.composables.configs.FlashlightPulseSettingsUI
-import com.sameerasw.essentials.ui.composables.configs.LockScreenClockSettingsUI
-import com.sameerasw.essentials.ui.components.animations.LottieFeatureAnimation
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.BiometricSecurityHelper
+import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.CaffeinateViewModel
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import com.sameerasw.essentials.viewmodels.StatusBarIconViewModel
 import com.sameerasw.essentials.viewmodels.WatchViewModel
 import kotlinx.coroutines.delay
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.geometry.Offset
-import com.sameerasw.essentials.utils.HapticUtil
 
 @OptIn(ExperimentalMaterial3Api::class)
 class FeatureSettingsActivity : AppCompatActivity() {
@@ -353,7 +353,10 @@ class FeatureSettingsActivity : AppCompatActivity() {
 
                     val nestedScrollConnection = remember {
                         object : NestedScrollConnection {
-                            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                            override fun onPreScroll(
+                                available: Offset,
+                                source: NestedScrollSource
+                            ): Offset {
                                 val delta = available.y
                                 if (delta < 0 && headerHeight > minHeaderHeight) {
                                     val oldHeight = headerHeight
@@ -377,11 +380,11 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                     headerHeight = with(density) {
                                         (oldHeight.toPx() + delta).toDp()
                                     }.coerceAtMost(maxHeaderHeight)
-                                    
+
                                     if (headerHeight == maxHeaderHeight && oldHeight < maxHeaderHeight) {
                                         HapticUtil.performLightHaptic(view)
                                     }
-                                    
+
                                     val produced = headerHeight - oldHeight
                                     return Offset(0f, with(density) { produced.toPx() })
                                 }
@@ -416,7 +419,11 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                     height = with(LocalDensity.current) { 150.dp.toPx() },
                                     direction = BlurDirection.BOTTOM
                                 )
-                                .then(if (hasScroll) Modifier.nestedScroll(nestedScrollConnection).verticalScroll(rememberScrollState()) else Modifier)
+                                .then(
+                                    if (hasScroll) Modifier
+                                        .nestedScroll(nestedScrollConnection)
+                                        .verticalScroll(rememberScrollState()) else Modifier
+                                )
                         ) {
                             // Top padding for status bar
                             if (featureId != "Quick settings tiles" && featureId != "Location reached") {
