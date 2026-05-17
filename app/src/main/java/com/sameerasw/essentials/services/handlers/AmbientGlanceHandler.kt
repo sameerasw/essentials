@@ -130,8 +130,11 @@ class AmbientGlanceHandler(
                 sessions.any { it.playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING }
 
             if (!anyPlaying) {
-                fadeOutAndRemove()
+                handler.removeCallbacks(pauseDismissRunnable)
+                handler.postDelayed(pauseDismissRunnable, 3000L)
                 return
+            } else {
+                handler.removeCallbacks(pauseDismissRunnable)
             }
 
             handler.postDelayed(this, 1000L)
@@ -171,6 +174,10 @@ class AmbientGlanceHandler(
         fadeOutAndRemove()
     }
 
+    private val pauseDismissRunnable = Runnable {
+        fadeOutAndRemove()
+    }
+
     fun handleIntent(intent: Intent) {
         if (intent.action == "HIDE_AMBIENT_GLANCE_TEMPORARILY") {
             if (overlayView != null && overlayView?.alpha != 0f) {
@@ -188,12 +195,27 @@ class AmbientGlanceHandler(
             }
 
             val isPlaying = intent.getBooleanExtra("is_playing", true)
-            if (!isPlaying) {
-                if (overlayView != null) fadeOutAndRemove()
-                return
+            val isDock = intent.getBooleanExtra("is_docked_mode", false) || isDockedMode
+            val isTrackChange = intent.getStringExtra("event_type") == "track_change"
+            val earlyTitle = intent.getStringExtra("track_title")
+            val titleChanged = earlyTitle != null && earlyTitle != trackTitle
+
+            if (isPlaying || isTrackChange || titleChanged) {
+                handler.removeCallbacks(pauseDismissRunnable)
             }
 
-            if (overlayView == null) {
+            if (!isPlaying) {
+                if (!isTrackChange && !titleChanged) {
+                    if (overlayView != null) {
+                        handler.removeCallbacks(pauseDismissRunnable)
+                        handler.postDelayed(pauseDismissRunnable, 3000L)
+                    } else {
+                        return
+                    }
+                }
+            }
+
+            if (overlayView == null && !isDock) {
                 val mediaSessionManager =
                     service.getSystemService(Context.MEDIA_SESSION_SERVICE) as MediaSessionManager
                 val componentName =
@@ -1024,6 +1046,7 @@ class AmbientGlanceHandler(
 
     fun removeOverlay() {
         handler.removeCallbacks(hideRunnable)
+        handler.removeCallbacks(pauseDismissRunnable)
         handler.removeCallbacks(progressUpdateRunnable)
         handler.removeCallbacks(revertToMusicRunnable)
         handler.removeCallbacks(burnInProtectionRunnable)
