@@ -8,7 +8,7 @@
     <string name="accessibility_service_description"><b>Servicio de accesibilidad Essentials</b>\n\nEste servicio es necesario para las siguientes funciones avanzadas:\n\n<b>• Reasignación de botones físicos:</b>\nDetecta las pulsaciones de los botones de volumen incluso cuando la pantalla está apagada para activar acciones como la linterna.\ n\n<b>• Ajustes por aplicación:</b>\nSupervisa la aplicación activa en ese momento para aplicar perfiles específicos para la luz nocturna dinámica, los colores de iluminación de las notificaciones y el bloqueo de aplicaciones.\n\n<b>• Control de pantalla:</b>\nPermite a la aplicación bloquear la pantalla (por ejemplo, mediante doble toque o widgets) y detectar cambios en el estado de la pantalla.\ n\n<b>• Seguridad:</b>\nEvita cambios no autorizados al detectar el contenido de la ventana cuando el dispositivo está bloqueado.\n\n<small>No se recopila ni transmite ningún texto introducido ni datos confidenciales del usuario.</small></string>
     <string name="freeze_activity_title">Congelación de aplicaciones</string>
     <string name="freeze_activity_subtitle">Desactivar aplicaciones que rara vez se usan</string>
-    <string name="freeze_shortcut_short_label">Frozen Apps</string>
+    <string name="freeze_shortcut_short_label">Congelación de aplicaciones</string>
     <string name="freeze_shortcut_long_label">Abrir aplicación congelada</string>
     <string name="frozen_app_shortcut_label">Aplicación congelada</string>
     <string name="screen_off_widget_label">Widget vacío para apagar la pantalla</string>
