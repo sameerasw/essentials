@@ -8,7 +8,7 @@
     <string name="accessibility_service_description"><b>Essentials 无障碍服务</b>\n\n此服务被应用于以下增强型功能:\n\n<b>• 物理按键映射:</b>\n在屏幕熄灭状态下检测音量键状态以触发如手电筒等功能.\n\n<b>• 独立应用设置:</b>\n检测当前活动的应用以应用动态夜间光效, 通知闪光和应用锁等功能\n\n<b>• 屏幕控制:</b>\n允许应用通过双击或点击小部件以锁定屏幕或检测屏幕状态变化.\n\n<b>• 安全:</b>\n通过在设备锁定时检测窗口内容来避免未经授权的更改.\n\n<small>输入内容和敏感用户数据不会被收集和上传.</small></string>
     <string name="freeze_activity_title">应用冻结</string>
     <string name="freeze_activity_subtitle">禁用不常用的应用</string>
-    <string name="freeze_shortcut_short_label">已冻结的应用</string>
+    <string name="freeze_shortcut_short_label">Frozen Apps</string>
     <string name="freeze_shortcut_long_label">打开冻结的应用</string>
     <string name="frozen_app_shortcut_label">冻结应用</string>
     <string name="screen_off_widget_label">无熄屏小组件</string>
@@ -146,6 +146,8 @@
     <string name="action_import_freeze">导入冻结应用列表</string>
     <string name="freeze_pick_apps_title">选择要冻结的应用</string>
     <string name="freeze_pick_apps_desc">选择哪些应用可以被冻结</string>
+    <string name="freeze_show_in_launcher_title">Show in launcher</string>
+    <string name="freeze_show_in_launcher_desc">Add a launcher shortcut for easier access</string>
     <string name="settings_section_automation">自动化</string>
     <string name="freeze_when_locked_title">锁定时冻结</string>
     <string name="freeze_delay_title">冻结延迟</string>
@@ -1447,4 +1449,9 @@
     <string name="color_purple">Purple</string>
     <string name="color_pink">Pink</string>
     <string name="color_teal">Teal</string>
+    <!-- What's New -->
+    <string name="whats_new_specs_title">Device Specs Retired</string>
+    <string name="whats_new_specs_desc">Inaccurate GSMArena-powered specifications have been removed to keep device insights clean, fast, and completely reliable.</string>
+    <string name="whats_new_apps_title">App Updates Migrated</string>
+    <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
 </resources>

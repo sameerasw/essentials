@@ -8,7 +8,7 @@
     <string name="accessibility_service_description"><b>Essentials アクセシビリティサービス</b>\n\nこのサービスは、以下の高度な機能に必要です。\n\n<b>・物理ボタンの再マッピング：</b>\n画面がオフの場合でも音量ボタンの押下を検出し、懐中電灯などのアクションを実行します。\n\n<b>・アプリごとの設定：</b>\n現在アクティブなアプリを監視し、ダイナミックナイトモード、通知ライトの色、アプリロックの特定のプロファイルを適用します。\n\n<b>・画面制御：</b>\nアプリが画面をロック（ダブルタップやウィジェット経由など）し、画面の状態の変化を検出できるようにします。\n\n<b>・セキュリティ：</b>\nデバイスがロックされているときにウィンドウの内容を検出することで、不正な変更を防ぎます。\n\n<small>入力テキストや機密性の高いユーザーデータは収集または送信されません。</small></string>
     <string name="freeze_activity_title">アプリフリーズ</string>
     <string name="freeze_activity_subtitle">しばらく使用していないアプリを無効にします</string>
-    <string name="freeze_shortcut_short_label">アプリフリーズ</string>
+    <string name="freeze_shortcut_short_label">Frozen Apps</string>
     <string name="freeze_shortcut_long_label">アプリフリーズを開く</string>
     <string name="frozen_app_shortcut_label">アプリフリージング</string>
     <string name="screen_off_widget_label">空白の画面オフ</string>
@@ -146,6 +146,8 @@
     <string name="action_import_freeze">フリーズアプリリストをインポート</string>
     <string name="freeze_pick_apps_title">フリーズさせるアプリを選択</string>
     <string name="freeze_pick_apps_desc">フリーズできるアプリを選択してください</string>
+    <string name="freeze_show_in_launcher_title">Show in launcher</string>
+    <string name="freeze_show_in_launcher_desc">Add a launcher shortcut for easier access</string>
     <string name="settings_section_automation">自動化</string>
     <string name="freeze_when_locked_title">画面ロック時にフリーズ</string>
     <string name="freeze_delay_title">タイミング</string>
@@ -1447,4 +1449,9 @@
     <string name="color_purple">紫</string>
     <string name="color_pink">ピンク</string>
     <string name="color_teal">ティール</string>
+    <!-- What's New -->
+    <string name="whats_new_specs_title">Device Specs Retired</string>
+    <string name="whats_new_specs_desc">Inaccurate GSMArena-powered specifications have been removed to keep device insights clean, fast, and completely reliable.</string>
+    <string name="whats_new_apps_title">App Updates Migrated</string>
+    <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
 </resources>
