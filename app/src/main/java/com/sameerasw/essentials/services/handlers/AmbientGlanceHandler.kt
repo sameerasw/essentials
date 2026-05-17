@@ -1032,7 +1032,8 @@ class AmbientGlanceHandler(
     }
 
     private fun isRandomShapesEnabled(): Boolean {
-        return getAlbumArtMode() == "random"
+        val prefs = service.getSharedPreferences(com.sameerasw.essentials.data.repository.SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
+        return prefs.getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_RANDOM_SHAPES, false)
     }
 
     private fun getPrimaryColor(context: Context): Int {

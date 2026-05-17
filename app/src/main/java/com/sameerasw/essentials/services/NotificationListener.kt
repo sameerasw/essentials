@@ -35,8 +35,25 @@ class NotificationListener : NotificationListenerService() {
         private var latestArtBitmap: Bitmap? = null
         private var latestArtHash: Long = -1L
 
+        var instance: NotificationListener? = null
+
         fun getCachedBitmap(hash: Long): Bitmap? {
             return if (latestArtHash == hash) latestArtBitmap else null
+        }
+
+        fun getUnreadPackages(): List<String> {
+            val inst = instance ?: return emptyList()
+            val list = mutableListOf<String>()
+            try {
+                inst.activeNotifications?.forEach { sbn ->
+                    if (!sbn.isOngoing && sbn.packageName != inst.packageName) {
+                        list.add(sbn.packageName)
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            return list.distinct()
         }
     }
 
@@ -61,6 +78,7 @@ class NotificationListener : NotificationListenerService() {
 
     override fun onListenerConnected() {
         super.onListenerConnected()
+        instance = this
         try {
             val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
             isScreenLocked = !pm.isInteractive
@@ -246,6 +264,7 @@ class NotificationListener : NotificationListenerService() {
 
     override fun onDestroy() {
         super.onDestroy()
+        instance = null
         try {
             unregisterReceiver(likeActionReceiver)
         } catch (_: Exception) {
@@ -538,7 +557,7 @@ class NotificationListener : NotificationListenerService() {
                         putExtra("is_already_liked", isAlreadyLiked)
                         putExtra("is_docked_mode", isDockedMode)
                         putExtra("package_name", activeSession.packageName)
-                        putStringArrayListExtra("unread_packages", ArrayList(unreadNotifications.values.distinct().toList()))
+                        putStringArrayListExtra("unread_packages", ArrayList(getUnreadPackages()))
                         setPackage(packageName)
                     }
                     sendBroadcast(intent)
