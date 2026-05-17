@@ -1,0 +1,1457 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="label_customization">Customization</string>
+    <string name="label_beta">БЕТА</string>
+    <string name="shut_up_attempt_shizuku_restart">Attempt Shizuku restart</string>
+    <string name="shut_up_shizuku_restart_warning_title">Shizuku Restart Warning</string>
+    <string name="shut_up_shizuku_restart_warning_message">Since wireless debugging was toggled, Shizuku services might not have started automatically causing freezing to not function. Consider turning on attempt shizuku restart as well</string>
+    <string name="accessibility_service_description"><b>Essentials Accessibility Service</b>\n\nThis service is required for the following advanced features:\n\n<b>• Physical Button Remapping:</b>\nDetects volume button presses even when the screen is off to trigger actions like the Flashlight.\n\n<b>• Per-App Settings:</b>\nMonitors the currently active app to apply specific profiles for Dynamic Night Light, Notification Lighting Colors, and App Lock.\n\n<b>• Screen Control:</b>\nAllows the app to lock the screen (e.g. via Double Tap or Widgets) and detect screen state changes.\n\n<b>• Security:</b>\nPrevents unauthorized changes by detecting window content when the device is locked.\n\n<small>No input text or sensitive user data is collected or transmitted.</small></string>
+    <string name="freeze_activity_title">Заморожування програми</string>
+    <string name="freeze_activity_subtitle">Вимкніть програми, які рідко використовуються</string>
+    <string name="freeze_shortcut_short_label">Заморожування програми</string>
+    <string name="freeze_shortcut_long_label">Відкрийте App Freezing</string>
+    <string name="frozen_app_shortcut_label">Заморожений додаток</string>
+    <string name="screen_off_widget_label">Порожній екран вимкнено віджет</string>
+    <string name="app_freezing_tile_label">Заморожування програми</string>
+    <string name="flashlight_pulse_tile_label">Імпульсний ліхтарик</string>
+    <string name="check_pre_releases_label">Перевірте попередні випуски</string>
+    <string name="check_pre_releases_desc">Може бути нестабільним</string>
+    <string name="label_default_tab">Default tab</string>
+    <!-- App Lock -->
+    <string name="settings_section_security">Безпека</string>
+    <string name="app_lock_enable_title">Увімкнути блокування програми</string>
+    <string name="app_lock_auth_title">Безпека блокування програми</string>
+    <string name="app_lock_enable_auth_subtitle">Пройдіть автентифікацію, щоб увімкнути блокування програми</string>
+    <string name="app_lock_disable_auth_subtitle">Пройдіть автентифікацію, щоб вимкнути блокування програми</string>
+    <string name="app_lock_select_apps_title">Виберіть заблоковані програми</string>
+    <string name="app_lock_select_apps_desc">Виберіть, для яких програм потрібна автентифікація</string>
+    <string name="app_lock_description">Захистіть свої програми за допомогою біометричної автентифікації. Заблоковані програми вимагатимуть автентифікації під час запуску. Залишаються розблокованими, доки екран не вимкнеться.</string>
+    <string name="app_lock_warning">Майте на увазі, що це не надійне рішення, оскільки це лише стороння програма. Якщо вам потрібна надійна безпека, подумайте про використання Private Space або інших подібних функцій.</string>
+    <string name="app_lock_biometric_note">Ще одна примітка: підказка біометричної автентифікації дозволяє використовувати лише методи безпечного класу STRONG. Методи безпеки фейсконтролю класу WEAK на таких пристроях, як Pixel 7, зможуть використовувати лише доступні інші СИЛЬНІ методи авторизації, як-от відбиток пальця або PIN-код.</string>
+    <string name="setting_use_usage_access_title">Use usage access</string>
+    <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
+    <!-- Button Remap -->
+    <string name="button_remap_enable_title">Увімкнути перепризначення кнопки</string>
+    <string name="button_remap_use_shizuku_title">Використовуйте Shizuku або Root або Root</string>
+    <string name="button_remap_use_shizuku_desc">Працює з вимкненим екраном (рекомендовано)</string>
+    <string name="shizuku_not_running_toast">Шизуку не працює</string>
+    <string name="shizuku_detected_prefix">Виявлено %1$s</string>
+    <string name="shizuku_status_prefix">Статус: %1$s</string>
+    <string name="shizuku_open_button">Відкрити Shizuku</string>
+    <string name="settings_section_flashlight">Ліхтарик</string>
+    <string name="flashlight_options_title">Варіанти ліхтарика</string>
+    <string name="flashlight_options_desc">Налаштуйте згасання та інші параметри</string>
+    <string name="setting_pitch_black_theme_title">Безпросвітна темна тема</string>
+    <string name="setting_pitch_black_theme_desc">Використовуйте чистий чорний фон у темному режимі</string>
+    <string name="settings_section_haptic">Тактильний зворотний зв\'язок</string>
+    <string name="button_remap_section_long_press">Remap Тривале натискання</string>
+    <string name="screen_off">Екран вимкнено</string>
+    <string name="screen_on">Екран увімкнено</string>
+    <string name="volume_up">Збільшення гучності</string>
+    <string name="volume_down">Зменшення гучності</string>
+    <string name="action_toggle_flashlight">Увімкнути ліхтарик</string>
+    <string name="action_media_play_pause">Відтворення/пауза медіа</string>
+    <string name="action_media_next">Медіа далі</string>
+    <string name="action_media_previous">Медіа попередній</string>
+    <string name="action_toggle_vibrate">Увімкнути вібрацію</string>
+    <string name="action_toggle_mute">Вимкнути звук</string>
+    <string name="action_ai_assistant">AI помічник</string>
+    <string name="action_take_screenshot">Зробити скріншот</string>
+    <string name="action_cycle_sound_modes">Перемикайте звукові режими</string>
+    <string name="action_circle_to_search">Circle to Search</string>
+    <string name="action_like_song">Як поточна пісня</string>
+    <string name="like_song_settings_title">Як налаштування пісні</string>
+    <string name="like_song_settings_desc">Ця функція потребує доступу до сповіщень, щоб виявити медіафайли, які зараз відтворюються, і активувати дію «подобається». Увімкніть його нижче.</string>
+    <string name="like_song_toast_enabled">Показати тостове повідомлення</string>
+    <string name="like_song_aod_overlay_title">Показати накладання на AOD</string>
+    <string name="feat_essentials_on_display_title">Essentials On Display</string>
+    <string name="feat_essentials_on_display_desc">Glance at media and info on AOD</string>
+    <string name="essentials_on_display_docked_mode_title">Docked mode</string>
+    <string name="essentials_on_display_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
+    <string name="essentials_on_display_respect_notifications_title">Respect new notifications</string>
+    <string name="essentials_on_display_respect_notifications_desc">Briefly disable for new notifications</string>
+    <string name="essentials_on_display_random_shapes_title">Random shapes</string>
+    <string name="essentials_on_display_random_shapes_desc">Use various Material 3 shapes for the album art</string>
+    <string name="essentials_on_display_album_art_title">Album art</string>
+    <string name="essentials_on_display_clock_title">Clock</string>
+    <string name="essentials_on_display_force_fill_while_charging_title">Always use while charging</string>
+    <string name="essentials_on_display_force_fill_while_charging_desc">Force Fill mode when the device is plugged in regardless of the selected mode</string>
+    <string name="label_size">Size</string>
+    <string name="feat_notification_glance_title">Погляд сповіщень</string>
+    <string name="feat_notification_glance_desc">Увімкніть AOD, поки сповіщення очікують на розгляд</string>
+    <string name="notification_glance_same_as_lighting_title">Ті самі програми, що й підсвічування сповіщень</string>
+    <string name="notification_glance_desc">Ця функція динамічно вмикатиме функцію Always on Display, коли надходить сповіщення з вибраної програми, і вимикатиме її, коли всі відповідні сповіщення будуть відхилені. Виберіть програми або використовуйте той самий вибір, що й підсвічування сповіщень.</string>
+    <string name="grant_notification_access">Надати доступ до сповіщень</string>
+    <string name="action_toggle_media_volume">Увімкнути гучність медіа</string>
+    <string name="button_remap_screen_off_hint">Коли екран вимкнено, утримуйте вибрану кнопку, щоб активувати призначену їй дію. На пристроях Pixel ця дія запускається, лише якщо AOD увімкнено через системні обмеження.</string>
+    <string name="button_remap_screen_on_hint">Коли екран увімкнено, утримуйте вибрану кнопку, щоб активувати призначену їй дію.</string>
+    <string name="flashlight_intensity_title">Інтенсивність ліхтарика</string>
+    <string name="flashlight_fade_title">Зникає та зникає</string>
+    <string name="flashlight_fade_desc">Плавне перемикання ліхтарика</string>
+    <string name="flashlight_global_title">Глобальні засоби контролю</string>
+    <string name="flashlight_global_desc">Ліхтарик із затуханням у всьому світі</string>
+    <string name="flashlight_adjust_intensity_title">Відрегулюйте інтенсивність</string>
+    <string name="flashlight_adjust_intensity_desc">Гучність + - регулює інтенсивність ліхтарика</string>
+    <string name="flashlight_live_update_title">Оновлення в реальному часі</string>
+    <string name="flashlight_live_update_desc">Показати яскравість у рядку стану</string>
+    <string name="settings_section_other">інше</string>
+    <string name="flashlight_always_off_title">Завжди вимикайте ліхтарик</string>
+    <string name="flashlight_always_off_desc">Навіть коли дисплей увімкнено</string>
+    <string name="content_desc_settings">Налаштування</string>
+    <!-- Caffeinate / Permissions -->
+    <string name="permission_show_notification_title">Показати сповіщення</string>
+    <string name="permission_post_notifications_title">Опублікувати сповіщення</string>
+    <string name="permission_post_notifications_desc">Дозволяє програмі показувати сповіщення</string>
+    <string name="permission_grant_action">Надати дозвіл</string>
+    <string name="caffeinate_notification_title">Кофеїнат Актив</string>
+    <string name="caffeinate_active">Активний</string>
+    <string name="caffeinate_notification_desc">Екран не активний</string>
+    <string name="caffeinate_battery_optimization_title">Ігноруйте оптимізацію акумулятора</string>
+    <string name="caffeinate_abort_screen_off_title">Перервати з вимкненим екраном</string>
+    <string name="caffeinate_skip_countdown_title">Пропустити зворотний відлік</string>
+    <string name="caffeinate_skip_countdown_desc">Негайно починайте вживати кофеїн.</string>
+    <string name="caffeinate_timeout_presets_title">Попередні налаштування часу очікування</string>
+    <string name="caffeinate_timeout_presets_desc">Виберіть доступну тривалість для плитки QS</string>
+    <string name="caffeinate_timeout_5m">5м</string>
+    <string name="caffeinate_timeout_10m">10м</string>
+    <string name="caffeinate_timeout_30m">30м</string>
+    <string name="perm_notif_policy_title">Доступ у режимі «Не турбувати».</string>
+    <string name="perm_notif_policy_desc">Потрібен для перемикання між режимами звуку, вібрації та вимкнення звуку</string>
+    <string name="caffeinate_timeout_1h">1 год</string>
+    <string name="caffeinate_timeout_infinity">∞</string>
+    <string name="caffeinate_starting_in">Починаючи з %1$ds…</string>
+    <string name="caffeinate_remaining">%1$s залишилося</string>
+    <string name="caffeinate_live_channel_desc">Постійне сповіщення для Caffeinate</string>
+    <!-- Dynamic Night Light -->
+    <string name="dynamic_night_light_enable_title">Увімкнути динамічний нічник</string>
+    <string name="dynamic_night_light_apps_section">Додатки, які вимикають нічне світло</string>
+    <string name="action_select_apps">Виберіть програми</string>
+    <!-- App Freezing -->
+    <string name="settings_section_app_control">Контроль програми</string>
+    <string name="action_freeze">Заморозити</string>
+    <string name="action_unfreeze">Розморозити</string>
+    <string name="action_remove">Remove</string>
+    <string name="action_create_shortcut">Create shortcut</string>
+    <string name="action_app_info">App info</string>
+    <string name="freeze_mode_description_freeze_title">What is Freeze?</string>
+    <string name="freeze_mode_description_freeze_body">App freezing disables the app\'s launch activity which removes it from the app list and updates. It will prevent the app from starting at all until it\'s unfrozen which saves resources but you will need to unfreeze from here or manually re-enable.</string>
+    <string name="freeze_mode_description_freeze_warning">DO NOT FREEZE COMMUNICATION APPS</string>
+    <string name="freeze_mode_description_suspend_title">What is Suspend?</string>
+    <string name="freeze_mode_description_suspend_body">Suspending an app used to pause the app activity and prevent background executions but with recent Android changes, it only pauses the notifications from appearing and that\'s pretty much it. But does allows you to unpause from the launcher app list as they will be still available as grayscale paused app icons.</string>
+    <string name="freeze_mode_description_suspend_footer">Should work the same as the native app pause/ focus mode features.</string>
+    <string name="content_desc_more_options">Більше варіантів</string>
+    <string name="action_freeze_all">Заморозити всі програми</string>
+    <string name="action_unfreeze_all">Розморозити всі програми</string>
+    <string name="action_export_freeze">Експортувати список заморожених програм</string>
+    <string name="action_import_freeze">Імпорт списку заморожених програм</string>
+    <string name="freeze_pick_apps_title">Виберіть програми для заморозки</string>
+    <string name="freeze_pick_apps_desc">Виберіть, які програми можна заморозити</string>
+    <string name="freeze_show_in_launcher_title">Show in launcher</string>
+    <string name="freeze_show_in_launcher_desc">Add a launcher shortcut for easier access</string>
+    <string name="settings_section_automation">автоматизація</string>
+    <string name="freeze_when_locked_title">Заморозити, коли заблоковано</string>
+    <string name="freeze_delay_title">Затримка заморожування</string>
+    <string name="delay_immediate">негайно</string>
+    <string name="delay_1m">1м</string>
+    <string name="delay_5m">5м</string>
+    <string name="delay_15m">15м</string>
+    <string name="delay_manual">Інструкція</string>
+    <string name="freeze_auto_freeze_section">Автоматичне заморожування програм</string>
+    <string name="freeze_automation_hint">Заморозити вибрані програми, коли пристрій заблоковано. Виберіть затримку, щоб уникнути зависання програм, якщо ви розблокуєте екран незабаром після його вимкнення.</string>
+    <string name="freeze_warning">Заморожування системних програм може бути небезпечним і спричинити неочікувану поведінку.</string>
+    <string name="action_enable_in_settings">Увімкнути в налаштуваннях</string>
+    <string name="freeze_dont_freeze_active_apps_title">Не\'не заморожувати активні програми</string>
+    <string name="perm_usage_stats_title">Статистика використання</string>
+    <string name="perm_usage_stats_desc">Потрібен для виявлення програм, які зараз працюють на передньому плані, щоб уникнути їх зависання</string>
+    <string name="perm_usage_stats_desc_app_lock">Required to detect foreground apps for App Lock features when accessibility is not used.</string>
+    <string name="perm_notif_listener_desc_freeze">Необхідний для виявлення відтворюваних медіафайлів і активних сповіщень, щоб уникнути їх зависання</string>
+    <string name="freeze_mode_title">Freeze mode</string>
+    <string name="freeze_mode_freeze">Freezing</string>
+    <string name="freeze_mode_suspend">App suspension</string>
+    <string name="freeze_mode_warning_desc">Can not switch mode while apps are frozen. Please unfreeze all and try again.</string>
+    <!-- Notification Lighting -->
+    <string name="notification_lighting_screen_off_title">Показувати, лише коли екран вимкнено</string>
+    <string name="notification_lighting_skip_silent_title">Пропустити тихі сповіщення</string>
+    <string name="notification_lighting_skip_persistent_title">Пропустити постійні сповіщення</string>
+    <string name="settings_section_flashlight_pulse">Імпульсний ліхтарик</string>
+    <string name="flashlight_pulse_title">Імпульс ліхтарика</string>
+    <string name="flashlight_pulse_facedown_title">Тільки обличчям вниз</string>
+    <string name="flashlight_pulse_same_as_lighting_title">Ті самі програми, що й підсвічування сповіщень</string>
+    <string name="flashlight_pulse_max_brightness">Max brightness</string>
+    <string name="flashlight_pulse_preview">Preview pulse</string>
+    <string name="settings_section_style">Стиль</string>
+    <string name="notification_lighting_stroke_adjustment_section">Регулювання ходу</string>
+    <string name="notification_lighting_corner_radius_title">Радіус кута</string>
+    <string name="notification_lighting_stroke_thickness_title">Товщина штриха</string>
+    <string name="notification_lighting_glow_adjustment_section">Регулювання світіння</string>
+    <string name="notification_lighting_glow_spread_title">Розповсюджується світіння</string>
+    <string name="notification_lighting_placement_section">Розміщення</string>
+    <string name="notification_lighting_h_pos_title">Горизонтальне положення</string>
+    <string name="notification_lighting_v_pos_title">Вертикальне положення</string>
+    <string name="notification_lighting_indicator_adjustment_section">Регулювання індикатора</string>
+    <string name="notification_lighting_scale_title">масштаб</string>
+    <string name="notification_lighting_duration_title">Тривалість</string>
+    <string name="notification_lighting_style_sweep">Sweep</string>
+    <string name="notification_lighting_sweep_position_title">Position</string>
+    <string name="notification_lighting_sweep_random_shapes_title">Random shapes</string>
+    <string name="notification_lighting_sweep_thickness_title">Stroke thickness</string>
+    <string name="notification_lighting_sweep_pos_left">Left</string>
+    <string name="notification_lighting_sweep_pos_center">Center</string>
+    <string name="notification_lighting_sweep_pos_right">Right</string>
+    <string name="settings_section_animation">Анімація</string>
+    <string name="notification_lighting_pulse_count_title">Підрахунок пульсу</string>
+    <string name="notification_lighting_pulse_duration_title">Тривалість імпульсу</string>
+    <string name="settings_section_color_mode">Кольоровий режим</string>
+    <string name="settings_section_ambient_display">Навколишній дисплей</string>
+    <string name="ambient_display_title">Навколишній дисплей</string>
+    <string name="ambient_display_hint">Підходить, якщо ви не використовуєте AOD.</string>
+    <string name="ambient_display_desc">Розбудити екран і показати освітлення</string>
+    <string name="ambient_show_lock_screen_title">Показати екран блокування</string>
+    <string name="ambient_show_lock_screen_desc">Без чорного накладення</string>
+    <!-- Tiles -->
+    <string name="action_add">додати</string>
+    <string name="action_added">Added</string>
+    <string name="qs_tile_already_added">Вже додано</string>
+    <string name="qs_tile_requires_android_13">Потрібен Android 13+</string>
+    <string name="tile_ui_blur">Розмиття інтерфейсу користувача</string>
+    <string name="tile_bubbles">Бульбашки</string>
+    <string name="tile_sensitive_content">Делікатний вміст</string>
+    <string name="tile_tap_to_wake">Торкніться, щоб розбудити</string>
+    <string name="tile_aod">AOD</string>
+    <string name="tile_caffeinate">Кофеїнат</string>
+    <string name="tile_sound_mode">Режим звуку</string>
+    <string name="tile_notification_lighting">Підсвічування сповіщень</string>
+    <string name="tile_dynamic_night_light">Динамічний нічник</string>
+    <string name="tile_locked_security">Заблокована безпека</string>
+    <string name="tile_app_lock">Блокування програми</string>
+    <string name="tile_mono_audio">Моно аудіо</string>
+    <string name="tile_flashlight">Ліхтарик</string>
+    <string name="tile_app_freezing">Заморожування програми</string>
+    <string name="tile_flashlight_pulse">Імпульсний ліхтарик</string>
+    <string name="tile_stay_awake">Не спати</string>
+    <string name="input_method_label">Клавіатура Essentials</string>
+    <string name="subtype_en_us">англійська (США)</string>
+    <string name="tile_active">Активний</string>
+    <string name="tile_inactive">Неактивний</string>
+    <string name="tile_developer_options">Параметри розробника</string>
+    <string name="about_desc_developer_options">Легко перемикайте параметри розробника системи з плитки QS. Це може скинути деякі налаштування розробника, які ви змінили.</string>
+    <string name="tile_refresh_rate">Refresh Rate</string>
+    <string name="about_desc_refresh_rate_tile">Cycle between the system default and preset refresh rates directly from a Quick Settings tile using Shizuku.</string>
+    <string name="nfc_tile_label">NFC</string>
+    <string name="tile_private_dns">Приватний DNS</string>
+    <string name="tile_private_dns_auto">Авто</string>
+    <string name="tile_private_dns_off">Вимкнено</string>
+    <string name="tile_usb_debugging">Налагодження USB</string>
+    <string name="tile_color_picker">Палітра кольорів</string>
+    <string name="toast_eyedropper_failed">Are you sure you\'re on Androdi 17? (╯°_°）╯</string>
+    <string name="subtitle_eye_dropper">Очна піпетка</string>
+    <string name="on">Увімкнено</string>
+    <string name="off">Вимкнено</string>
+    <string name="private_dns_custom_title">Спеціальний приватний DNS</string>
+    <string name="private_dns_presets_title">Загальні налаштування DNS</string>
+    <string name="dns_preset_add_title">Add DNS Preset</string>
+    <string name="dns_preset_name_label">Preset name</string>
+    <string name="dns_preset_reset_action">Reset</string>
+    <string name="dns_preset_delete_content_description">Delete preset</string>
+    <string name="dns_preset_reset_confirm">Are you sure you want to reset all DNS presets to defaults? This will remove all your custom presets.</string>
+    <string name="private_dns_hostname_label">Ім\'я хоста постачальника</string>
+    <string name="dns_preset_adguard">DNS AdGuard</string>
+    <string name="dns_preset_adguard_hostname">dns.adguard.com</string>
+    <string name="dns_preset_google">Google Public DNS</string>
+    <string name="dns_preset_google_hostname">dns.google</string>
+    <string name="dns_preset_cloudflare">Cloudflare DNS</string>
+    <string name="dns_preset_cloudflare_hostname">1dot1dot1dot1.cloudflare-dns.com</string>
+    <string name="dns_preset_quad9">Quad9 DNS</string>
+    <string name="dns_preset_quad9_hostname">dns.quad9.net</string>
+    <string name="dns_preset_cleanbrowsing">CleanBrowsing</string>
+    <string name="dns_preset_cleanbrowsing_hostname">adult-filter-dns.cleanbrowsing.org</string>
+    <string name="tile_charge_optimization">Зарядка</string>
+    <string name="limit_to_80">Обмеження до 80%</string>
+    <string name="adaptive_charging">Адаптивний</string>
+    <string name="deactivated">Не оптимізовано</string>
+    <string name="permission_missing">Відсутній дозвіл</string>
+    <!-- Screen Locked Security -->
+    <string name="screen_locked_security_title">Безпека з блокуванням екрана</string>
+    <string name="screen_locked_security_dialog_title">Безпека блокування екрана</string>
+    <string name="warning_title">⚠️ УВАГА</string>
+    <string name="screen_locked_security_auth_enable">Пройдіть автентифікацію, щоб увімкнути безпеку блокування екрана</string>
+    <string name="screen_locked_security_auth_disable">Пройдіть автентифікацію, щоб вимкнути безпеку блокування екрана</string>
+    <string name="screen_locked_security_desc">Disable quick setting tiles when the device is locked</string>
+    <string name="search_disable_qs_locked_title">Disable QS Locked</string>
+    <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
+    <!-- Sound Mode -->
+    <string name="sound_mode_reorder_title">Режими зміни порядку</string>
+    <string name="sound_mode_long_press_hint">Тривале натискання для перемикання</string>
+    <string name="content_desc_drag_reorder">Перетягніть, щоб змінити порядок</string>
+    <string name="sound_mode_sound">Звук</string>
+    <string name="sound_mode_vibrate">Вібрувати</string>
+    <string name="sound_mode_silent">Мовчазний</string>
+    <!-- Status Bar Categories -->
+    <string name="status_bar_category_connectivity">Підключення</string>
+    <string name="status_bar_category_phone_network">Телефон і мережа</string>
+    <string name="status_bar_category_audio_media">Аудіо та медіа</string>
+    <string name="status_bar_category_system_status">Статус системи</string>
+    <string name="status_bar_category_oem_specific">Специфічний OEM</string>
+    <!-- Status Bar Icons -->
+    <string name="icon_wifi">WiFi</string>
+    <string name="icon_bluetooth">Bluetooth</string>
+    <string name="icon_nfc">NFC / Felica</string>
+    <string name="icon_vpn">VPN</string>
+    <string name="icon_airplane_mode">Режим польоту</string>
+    <string name="icon_hotspot">Точка доступу</string>
+    <string name="icon_cast">акторський склад</string>
+    <string name="icon_mobile_data">Мобільні дані</string>
+    <string name="icon_phone_signal">Сигнал телефону</string>
+    <string name="icon_volte">VoLTE / VoNR</string>
+    <string name="icon_wifi_calling">Дзвінки по Wi-Fi / VoWiFi</string>
+    <string name="icon_call_status">Статус дзвінка / Синхронізація</string>
+    <string name="icon_tty">TTY</string>
+    <string name="icon_volume">Обсяг</string>
+    <string name="icon_headset">Гарнітура</string>
+    <string name="icon_speakerphone">гучний зв\'язок</string>
+    <string name="icon_dmb">DMB</string>
+    <string name="icon_clock">Годинник</string>
+    <string name="icon_ime">Метод введення (IME)</string>
+    <string name="icon_alarm">сигналізація</string>
+    <string name="icon_battery">Акумулятор</string>
+    <string name="icon_power_saving">Енергозбереження</string>
+    <string name="icon_data_saver">Економія даних</string>
+    <string name="icon_rotation_lock">Блокування обертання</string>
+    <string name="icon_location">Розташування / GPS</string>
+    <string name="icon_sync">Синхронізувати</string>
+    <string name="icon_managed_profile">Керований профіль</string>
+    <string name="icon_dnd">Не турбувати</string>
+    <string name="icon_privacy">Конфіденційність і безпечна папка</string>
+    <string name="icon_security_status">Статус безпеки (SU)</string>
+    <string name="icon_otg">Миша/клавіатура OTG</string>
+    <string name="icon_samsung_smart">Розумні функції Samsung</string>
+    <string name="icon_samsung_services">Послуги Samsung</string>
+    <string name="icon_ethernet">Ethernet</string>
+    <!-- Status Bar Settings -->
+    <string name="stb_clock_seconds">Показувати секунди на годиннику</string>
+    <string name="stb_battery_percentage">Відсоток батареї</string>
+    <string name="stb_battery_percentage_always">Завжди</string>
+    <string name="stb_battery_percentage_charging">Зарядка</string>
+    <string name="stb_battery_percentage_never">Ніколи</string>
+    <string name="stb_privacy_chip">Камера та мікрофон використовують чіпи</string>
+    <string name="smart_data_title">Smart Data</string>
+    <string name="permission_read_phone_state_title">Читайте стан телефону</string>
+    <string name="permission_read_phone_state_desc">Необхідно для визначення типу мережі для функції Smart Data</string>
+    <string name="permission_read_phone_state_desc_call_vibrations">Потрібний для виявлення змін статусу дзвінка для активації тактильного зворотного зв’язку.</string>
+    <string name="settings_section_smart_visibility">Розумна видимість</string>
+    <string name="smart_wifi_title">Smart WiFi</string>
+    <string name="smart_wifi_desc">Приховати мобільні дані, коли Wi-Fi підключено</string>
+    <string name="smart_data_desc">Приховати мобільні дані в певних режимах</string>
+    <string name="action_reset_all_icons">Скинути всі значки</string>
+    <string name="status_bar_section_advanced">Більше налаштувань</string>
+    <string name="stb_advanced_flags_title">Advanced (Requires Shizuku/Root)</string>
+    <string name="hide_all_system_icons_title">Hide all system icons</string>
+    <string name="hide_all_system_icons_desc">Clear all non-notification icons from the status bar</string>
+    <string name="hide_system_icons_locked_only_title">Only hide system icons when locked</string>
+    <string name="hide_system_icons_locked_only_desc">Hides the status bar system icons when the device is locked and restores them upon unlock</string>
+    <string name="hide_clock_title">Hide clock</string>
+    <string name="hide_clock_desc">Completely remove the clock from the status bar</string>
+    <string name="hide_notification_icons_title">Hide notifications</string>
+    <string name="hide_notification_icons_desc">Hide all incoming notification icons</string>
+    <string name="feat_hide_gesture_bar_title">Hide gesture bar</string>
+    <string name="feat_hide_gesture_bar_desc">In gesture navigation</string>
+    <string name="feat_hide_gesture_bar_on_launcher_title">Show on launcher</string>
+    <string name="feat_hide_gesture_bar_on_launcher_desc">Dynamically show the gesture bar only when on the home screen</string>
+    <string name="feat_circle_to_search_gesture_title">Circle to Search gesture</string>
+    <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
+    <string name="feat_circle_to_search_gesture_height_title">Gesture zone height</string>
+    <string name="feat_circle_to_search_gesture_height_desc">Adjust the height of the touch area at the bottom</string>
+    <string name="feat_other_customizations_title">Other customizations</string>
+    <string name="feat_other_customizations_desc">Additional system tweaks and modifications</string>
+    <string name="status_bar_icons_disclaimer">Зауважте, що реалізація цих параметрів може залежати від виробника комплектного обладнання, а деякі можуть взагалі не працювати.</string>
+    <!-- Network Type Picker -->
+    <string name="network_type_other">інше</string>
+    <!-- Search -->
+    <string name="search_clock_seconds_title">Секунди годинника</string>
+    <string name="search_clock_seconds_desc">Показувати секунди в рядку стану годинника</string>
+    <string name="search_battery_percentage_title">Відсоток батареї</string>
+    <string name="search_battery_percentage_desc">Налаштувати видимість відсотка батареї</string>
+    <string name="search_privacy_chip_title">Фішки конфіденційності</string>
+    <string name="search_privacy_chip_desc">Показувати індикатор, коли використовується камера або мікрофон</string>
+    <string name="search_desc_toggle_visibility">Перемкнути видимість для %1$s</string>
+    <string name="action_pin">Закріпити у вибраному</string>
+    <string name="action_unpin">Відкріпити з вибраного</string>
+    <!-- Extraction Batch 1 -->
+    <!-- Categories -->
+    <string name="cat_tools">Інструменти</string>
+    <string name="cat_visuals">Візуальні матеріали</string>
+    <string name="cat_system">система</string>
+    <!-- UI Elements -->
+    <string name="search_placeholder">Search for Tools, Mods and Tweaks</string>
+    <string name="search_no_results">Немає результатів для \"%1$s\"</string>
+    <string name="search_results_title">Результати пошуку</string>
+    <string name="requires_following_permissions">%1$s вимагає наступних дозволів</string>
+    <!-- Features -->
+    <string name="feat_screen_off_widget_title">Віджет вимкнення екрана</string>
+    <string name="feat_screen_off_widget_desc">Невидимий віджет для вимкнення екрана</string>
+    <string name="feat_statusbar_icons_title">Значки на панелі стану</string>
+    <string name="feat_statusbar_icons_desc">Керуйте видимістю піктограм на панелі стану</string>
+    <string name="feat_caffeinate_title">Кофеїнат</string>
+    <string name="feat_caffeinate_desc">Тримайте екран активним</string>
+    <string name="feat_maps_power_saving_title">Режим енергозбереження карт</string>
+    <string name="feat_maps_power_saving_desc">Для будь-якого пристрою Android</string>
+    <string name="feat_notification_lighting_title">Підсвічування сповіщень</string>
+    <string name="feat_notification_lighting_desc">Світиться для сповіщень</string>
+    <string name="feat_flashlight_pulse_desc">Пульсуйте ліхтариком для сповіщень</string>
+    <string name="feat_sound_mode_tile_title">Плитка режиму звуку</string>
+    <string name="feat_call_vibrations_title">Вібрація дзвінка</string>
+    <string name="feat_call_vibrations_desc">Вібрація для викликів</string>
+    <string name="show_bluetooth_devices">Показати пристрої Bluetooth</string>
+    <string name="show_bluetooth_devices_summary">Відображення рівня заряду акумулятора підключених пристроїв Bluetooth</string>
+    <string name="limit_max_devices">Максимальна кількість пристроїв</string>
+    <string name="limit_max_devices_summary">Налаштуйте максимальну кількість пристроїв, видимих ​​у віджеті</string>
+    <string name="widget_background_title">Фон віджета</string>
+    <string name="widget_background_summary">Показати фон віджета</string>
+    <!-- DIY Automation -->
+    <string name="diy_create_trigger_title">Тригерна автоматизація</string>
+    <string name="diy_create_trigger_desc">Заплануйте дію, яка буде активована під час спостереження</string>
+    <string name="diy_create_state_title">Державна автоматизація</string>
+    <string name="diy_create_state_desc">Заплануйте дію для виконання на основі стану входу та виходу умови</string>
+    <string name="diy_editor_new_title">Нова автоматизація</string>
+    <string name="diy_editor_edit_title">Редагувати автоматизацію</string>
+    <string name="feat_link_actions_title">Дії за посиланнями</string>
+    <string name="feat_link_actions_desc">Обробляйте посилання з кількома програмами</string>
+    <string name="feat_snooze_notifications_title">Відкласти системні сповіщення</string>
+    <string name="feat_snooze_notifications_desc">Відкласти постійні сповіщення</string>
+    <string name="feat_qs_tiles_title">Плитки швидкого налаштування</string>
+    <string name="feat_qs_tiles_desc">Переглянути всі</string>
+    <string name="feat_button_remap_title">Перепризначення кнопки</string>
+    <string name="feat_button_remap_desc">Перепризначити дії апаратних кнопок</string>
+    <string name="feat_dynamic_night_light_title">Динамічний нічник</string>
+    <string name="feat_dynamic_night_light_desc">Увімкнути нічник на основі програми</string>
+    <string name="feat_screen_locked_security_title">Безпека з блокуванням екрана</string>
+    <string name="feat_app_lock_title">Блокування програми</string>
+    <string name="feat_app_lock_desc">Захистіть програми з біометрією</string>
+    <string name="app_lock_auto_lock_delay_title">Auto lock delay</string>
+    <string name="app_lock_auto_lock_delay_desc">After leaving the app</string>
+    <string name="app_lock_auto_lock_delay_none">None</string>
+    <string name="app_lock_auto_lock_delay_1min">1 minute</string>
+    <string name="app_lock_auto_lock_delay_5min">5 minutes</string>
+    <string name="app_lock_auto_lock_delay_10min">10 minutes</string>
+    <string name="app_lock_auto_lock_delay_20min">20 minutes</string>
+    <string name="app_lock_auto_lock_delay_30min">30 minutes</string>
+    <string name="feat_freeze_title">Заморозити</string>
+    <string name="feat_freeze_desc">Вимкніть рідко використовувані програми</string>
+    <string name="feat_watermark_title">Водяний знак</string>
+    <string name="feat_watermark_desc">Додайте дані EXIF ​​і логотипи до фотографій</string>
+    <string name="feat_always_on_display_title">Завжди на дисплеї</string>
+    <string name="feat_always_on_display_desc">Показувати час і інформацію, коли екран вимкнено</string>
+    <string name="feat_calendar_sync_title">Синхронізація календаря</string>
+    <string name="feat_calendar_sync_desc">Sync your phone calendar to your watch</string>
+    <string name="feat_lock_from_watch_title">Lock from Watch</string>
+    <string name="feat_lock_from_watch_desc">Lock your phone remotely</string>
+    <string name="remote_lock_mode_title">Lock Mode</string>
+    <string name="remote_lock_mode_screen_off">Screen off</string>
+    <string name="remote_lock_mode_lock">Lock</string>
+    <string name="remote_lock_mode_admin_note">Using device admin lock will disable biometrics</string>
+    <string name="watch_connected_status">Connected</string>
+    <string name="watch_unknown_name">Unknown Watch</string>
+    <string name="watermark_style_overlay">Накладання</string>
+    <string name="watermark_style_frame">рамка</string>
+    <string name="watermark_show_brand">Марка пристрою</string>
+    <string name="watermark_show_exif">Дані EXIF</string>
+    <string name="watermark_pick_image">Виберіть зображення</string>
+    <string name="watermark_save_success">Зображення збережено в галерею</string>
+    <string name="action_share">Поділіться</string>
+    <string name="watermark_exif_settings">Параметри EXIF</string>
+    <string name="watermark_exif_focal_length">Фокусна відстань</string>
+    <string name="watermark_exif_aperture">Діафрагма</string>
+    <string name="watermark_exif_iso">ISO</string>
+    <string name="watermark_exif_shutter_speed">Витримка</string>
+    <string name="watermark_exif_date">Дата й час</string>
+    <string name="watermark_move_to_top">Перейти вгору</string>
+    <string name="watermark_left_align">Вирівняти по лівому краю</string>
+    <string name="watermark_text_size_brand">Розмір бренду</string>
+    <string name="watermark_text_size_data">Розмір даних</string>
+    <string name="watermark_text_size_custom">Розмір тексту</string>
+    <string name="watermark_font_options">Розмір шрифту</string>
+    <string name="watermark_custom_text">Спеціальний текст</string>
+    <string name="watermark_custom_text_hint">Введіть текст...</string>
+    <string name="watermark_spacing">Інтервал</string>
+    <string name="watermark_border_width">Ширина кордону</string>
+    <string name="watermark_border_corners">Круглі кути</string>
+    <string name="watermark_color_section">колір</string>
+    <string name="watermark_logo_section">логотип</string>
+    <string name="watermark_logo_show">Показати логотип</string>
+    <string name="watermark_logo_size">Розмір логотипу</string>
+    <string name="watermark_edit_texts">Редагувати тексти водяних знаків</string>
+    <string name="watermark_device_brand">Марка пристрою</string>
+    <string name="watermark_date_time">Дата й час</string>
+    <string name="watermark_no_date">Немає інформації про дату</string>
+    <string name="watermark_rotate_left">Повернути вліво</string>
+    <string name="watermark_rotate_right">Повернути праворуч</string>
+    <string name="action_next">Далі</string>
+    <string name="action_ok">добре</string>
+    <string name="action_save_changes">Зберегти зміни</string>
+    <string name="calendar_sync_settings_title">Налаштування синхронізації календаря</string>
+    <string name="calendar_sync_select_calendars">Синхронізувати певні календарі</string>
+    <string name="calendar_sync_periodic_title">Періодична синхронізація</string>
+    <string name="calendar_sync_periodic_desc">Синхронізувати кожні 15 хвилин, якщо знайдено зміни</string>
+    <string name="calendar_sync_sync_now">Синхронізувати зараз</string>
+    <string name="calendar_sync_manual_sync_desc">Негайна синхронізація для перегляду</string>
+    <string name="calendar_sync_no_calendars">Немає місцевих календарів</string>
+    <string name="calendar_sync_sync_started">Розпочато синхронізацію календаря</string>
+    <!-- Search Settings -->
+    <string name="search_haptic_title">Віджет Тактильний відгук</string>
+    <string name="search_haptic_desc">Виберіть тактильний відгук для дотиків віджетів</string>
+    <string name="search_smart_wifi_title">Smart WiFi</string>
+    <string name="search_smart_wifi_desc">Приховати мобільні дані, коли Wi-Fi підключено</string>
+    <string name="search_smart_data_title">Smart Data</string>
+    <string name="search_smart_data_desc">Приховати мобільні дані в певних режимах</string>
+    <string name="search_reset_icons_title">Скинути всі значки</string>
+    <string name="search_reset_icons_desc">Скинути видимість значка рядка стану до стандартного</string>
+    <string name="search_caffeinate_abort_screen_off_title">Перервати Caffeinate з вимкненим екраном</string>
+    <string name="search_caffeinate_abort_screen_off_desc">Автоматичне вимикання кофеїну під час ручного блокування пристрою</string>
+    <string name="search_lighting_style_title">Стиль освітлення</string>
+    <string name="search_lighting_style_desc">Вибирайте між «Штрихом», «Сяйвом», «Спінером» тощо</string>
+    <string name="search_corner_radius_title">Радіус кута</string>
+    <string name="search_corner_radius_desc">Відрегулюйте кутовий радіус підсвічування сповіщень</string>
+    <string name="search_skip_silent_title">Пропустити тихі сповіщення</string>
+    <string name="search_skip_silent_desc">Не показувати освітлення для беззвучних сповіщень</string>
+    <string name="search_flashlight_pulse_title">Імпульс ліхтарика</string>
+    <string name="search_flashlight_pulse_desc">Повільно пульсуйте ліхтариком, щоб отримати нові сповіщення</string>
+    <string name="search_only_facing_down_title">Тільки обличчям вниз</string>
+    <string name="search_only_facing_down_desc">Імпульсний ліхтарик лише тоді, коли пристрій лежить екраном вниз</string>
+    <string name="snooze_no_channels_discovered">Системних каналів ще не виявлено. Вони з’являться тут, коли їх буде виявлено.</string>
+    <string name="search_qs_blur_title">Розмиття інтерфейсу користувача</string>
+    <string name="search_qs_blur_desc">Увімкнути розмиття інтерфейсу користувача в системі</string>
+    <string name="search_qs_bubbles_title">Бульбашки</string>
+    <string name="search_qs_bubbles_desc">Увімкнути плаваючі бульбашки вікон</string>
+    <string name="search_qs_sensitive_title">Делікатний вміст</string>
+    <string name="search_qs_sensitive_desc">Приховати деталі сповіщень на екрані блокування</string>
+    <string name="search_qs_wake_title">Торкніться, щоб розбудити</string>
+    <string name="search_qs_wake_desc">Двічі торкніться, щоб активувати керування</string>
+    <string name="search_qs_aod_title">AOD</string>
+    <string name="search_qs_aod_desc">Перемикач «Завжди на дисплеї».</string>
+    <string name="search_qs_caffeinate_title">Кофеїнат</string>
+    <string name="search_qs_caffeinate_desc">Перемикач «Не активний екран».</string>
+    <string name="search_qs_sound_title">Режим звуку</string>
+    <string name="search_qs_sound_desc">Перемикання звукових режимів (дзвінок/вібрація/тихо)</string>
+    <string name="search_qs_lighting_title">Підсвічування сповіщень</string>
+    <string name="search_qs_lighting_desc">Увімкнути службу освітлення сповіщень</string>
+    <string name="search_qs_night_light_title">Динамічний нічник</string>
+    <string name="search_qs_night_light_desc">Перемикач автоматики нічника</string>
+    <string name="search_qs_locked_sec_title">Заблокована безпека</string>
+    <string name="search_qs_locked_sec_desc">Перемикач безпеки мережі на екрані блокування</string>
+    <string name="search_qs_mono_title">Моно аудіо</string>
+    <string name="search_qs_mono_desc">Перемикач примусового монофонічного аудіовиходу</string>
+    <string name="search_qs_flashlight_title">Ліхтарик</string>
+    <string name="search_qs_flashlight_desc">Спеціальний перемикач ліхтарика</string>
+    <string name="search_qs_freeze_title">Заморожування програми</string>
+    <string name="search_qs_freeze_desc">Запустіть сітку заморожування програми</string>
+    <string name="search_qs_pulse_title">Імпульсний ліхтарик</string>
+    <string name="search_qs_pulse_desc">Увімкнути пульс ліхтарика сповіщень</string>
+    <string name="search_qs_stay_awake_desc">Увімкнути опцію неспання розробника</string>
+    <string name="search_qs_private_dns_title">Приватний DNS</string>
+    <string name="search_qs_private_dns_desc">Перемикання режимів приватного DNS (Вимк./Авто/Ім’я хоста)</string>
+    <string name="search_qs_usb_debugging_title">Налагодження USB</string>
+    <string name="search_qs_usb_debugging_desc">Перемкніть параметр розробника USB Debugging</string>
+    <string name="search_qs_refresh_rate_title">Refresh Rate</string>
+    <string name="search_qs_refresh_rate_desc">Cycle between the system default and preset screen refresh rates</string>
+    <string name="search_remap_enable_title">Увімкнути перепризначення кнопки</string>
+    <string name="search_remap_enable_desc">Основний перемикач для зміни призначення кнопки гучності</string>
+    <string name="search_remap_haptic_title">Переналаштування тактильного зворотного зв’язку</string>
+    <string name="search_remap_haptic_desc">Вібросигнал під час натискання переназначеної кнопки</string>
+    <string name="search_remap_flashlight_title">Перемикач ліхтарика</string>
+    <string name="search_remap_flashlight_desc">Перемикання ліхтарика кнопками гучності</string>
+    <string name="search_night_light_enable_title">Увімкнути динамічний нічник</string>
+    <string name="search_night_light_enable_desc">Головний вимикач для динамічного нічника</string>
+    <string name="search_app_lock_enable_title">Увімкнути блокування програми</string>
+    <string name="search_app_lock_enable_desc">Основний перемикач для блокування програми</string>
+    <string name="search_app_lock_pick_title">Виберіть заблоковані програми</string>
+    <string name="search_app_lock_pick_desc">Виберіть, для яких програм потрібна автентифікація</string>
+    <string name="search_freeze_pick_title">Виберіть програми для заморозки</string>
+    <string name="search_freeze_pick_desc">Виберіть, які програми можна заморозити</string>
+    <string name="search_freeze_all_title">Заморозити всі програми</string>
+    <string name="search_freeze_all_desc">Негайно заморозити всі вибрані програми</string>
+    <string name="search_freeze_locked_title">Заморозити, коли заблоковано</string>
+    <string name="search_freeze_locked_desc">Заморозити вибрані програми, коли пристрій заблоковано</string>
+    <string name="search_freeze_delay_title">Затримка заморожування</string>
+    <string name="search_freeze_delay_desc">Затримка перед заморожуванням після блокування</string>
+    <!-- Permissions metadata -->
+    <string name="perm_shizuku_title">Шизуку</string>
+    <string name="perm_shizuku_desc">Необхідний для розширених команд. Встановіть Shizuku з Play Store.</string>
+    <string name="perm_shizuku_install_action">Встановити Shizuku</string>
+    <string name="perm_shizuku_grant_title">Надати дозвіл</string>
+    <string name="perm_shizuku_grant_desc">Потрібний для виконання команд енергозбереження під час навігації карт.</string>
+    <string name="req_shizuku">Потрібен Shizuku або Root</string>
+    <string name="perm_root_title">Кореневий доступ</string>
+    <string name="perm_root_desc">Дозволи, необхідні для дій системи з використанням привілеїв Root.</string>
+    <string name="perm_notif_listener_title">Слухач сповіщень</string>
+    <string name="perm_notif_listener_desc_maps">Потрібен доступ слухача сповіщень, щоб відстежувати стан навігації в Картах Google і вмикати енергозбереження, коли навігація не використовується.</string>
+    <string name="perm_notif_listener_desc_lighting">Потрібен доступ до прослуховування сповіщень, щоб виявляти нові сповіщення та запускати освітлення країв.</string>
+    <string name="perm_notif_listener_desc_snooze">Потрібен доступ слухача сповіщень, щоб відстежувати та відкладати небажані сповіщення системи.</string>
+    <string name="perm_accessibility_title">Служба доступності</string>
+    <string name="perm_accessibility_desc_common">Необхідно для блокування програми, віджета вимкнення екрана та інших функцій для виявлення взаємодії</string>
+    <string name="perm_accessibility_desc_lighting">Потрібний для активації підсвічування сповіщень про нові сповіщення</string>
+    <string name="perm_default_browser_title">Браузер за умовчанням</string>
+    <string name="perm_default_browser_desc">Необхідний для ефективної обробки посилань</string>
+    <string name="perm_accessibility_desc_remap">Необхідний для перехоплення подій апаратних кнопок</string>
+    <string name="perm_accessibility_desc_essentials_on_display">Required to intercept volume key events while the screen is off to trigger the Essentials On Display overlay.</string>
+    <string name="perm_accessibility_desc_night_light">Необхідний для моніторингу активних програм.</string>
+    <string name="perm_write_secure_title">Напишіть налаштування безпеки</string>
+    <string name="perm_write_secure_desc_common">Необхідно для піктограм на панелі стану та безпеки блокування екрана</string>
+    <string name="perm_write_secure_desc_night_light">Потрібно, щоб увімкнути нічник. Надайте через ADB або root.</string>
+    <string name="perm_write_settings_title">Змінити налаштування системи</string>
+    <string name="perm_write_settings_desc">Необхідно для перемикання адаптивної яскравості та інших налаштувань системи</string>
+    <string name="perm_overlay_title">Дозвіл на накладання</string>
+    <string name="perm_overlay_desc">Потрібен для відображення накладеного освітлення сповіщень на екрані</string>
+    <string name="perm_device_admin_title">Адміністратор пристрою</string>
+    <string name="perm_device_admin_desc">Потрібно жорстке блокування пристрою (відключення біометрії) при спробах несанкціонованого доступу</string>
+    <string name="perm_action_grant">Надати дозвіл</string>
+    <string name="perm_action_copy_adb">Скопіюйте ADB</string>
+    <string name="perm_action_check">Перевірте</string>
+    <string name="perm_action_enable">Увімкнути в налаштуваннях</string>
+    <string name="perm_action_how_to">Як надати</string>
+    <string name="perm_action_granted">Granted</string>
+    <string name="perm_battery_optimization_title">Оптимізація батареї</string>
+    <string name="perm_battery_optimization_desc">Переконайтеся, що служба не припиняється системою, щоб заощадити енергію.</string>
+    <!-- Tabs -->
+    <string name="tab_essentials">Основи</string>
+    <string name="tab_freeze">Заморозити</string>
+    <string name="tab_freeze_title">Заморожені</string>
+    <string name="tab_diy">DIY</string>
+    <string name="tab_apps">програми</string>
+    <string name="tab_freeze_subtitle">Відключені програми</string>
+    <string name="tab_diy_subtitle">Зроби це сам</string>
+    <string name="tab_apps_subtitle">Знаходьте програми та керуйте ними</string>
+    <string name="feat_app_updates_title">Оновлення програми</string>
+    <string name="tab_app_updates_title">Оновлення програми</string>
+    <string name="action_add_repo">Додати репозиторій</string>
+    <string name="action_edit_repo">Редагувати сховище</string>
+    <string name="prompt_enter_repo_url">Введіть URL-адресу сховища GitHub або власника/сховища</string>
+    <string name="action_track">Трек</string>
+    <string name="error_no_apk_found">В останньому випуску не знайдено APK</string>
+    <string name="error_repo_not_found">Репозиторій не знайдено</string>
+    <string name="label_latest_release">Останній випуск</string>
+    <string name="action_view_readme">Переглянути README</string>
+    <string name="label_stars">%d Зірки</string>
+    <string name="label_installed_app">Встановлений додаток</string>
+    <string name="label_not_installed">Не встановлено</string>
+    <string name="action_pick_app">Виберіть програму</string>
+    <string name="action_select_app">Виберіть додаток</string>
+    <string name="action_untrack">Скасувати відстеження</string>
+    <string name="label_pending">В очікуванні</string>
+    <string name="label_up_to_date">Актуальний</string>
+    <string name="feat_app_updates_desc">Відстежуйте та завантажуйте останні випуски ваших улюблених програм безпосередньо з GitHub.</string>
+    <string name="error_invalid_repo_format">Недійсний формат. Використовуйте URL-адресу власника/сховища або GitHub</string>
+    <string name="error_generic_search">Під час пошуку сталася помилка</string>
+    <string name="label_auto">Авто</string>
+    <string name="label_options">Опції</string>
+    <string name="option_allow_prereleases">Перевірте попередні випуски</string>
+    <string name="option_notifications">Сповіщення</string>
+    <string name="error_rate_limited">Перевищено ліміт швидкості GitHub. Спробуйте пізніше.</string>
+    <!-- Keyboard Setup -->
+    <string name="label_keyboard_setup">Налаштування клавіатури</string>
+    <string name="btn_enable_keyboard">Увімкнути в налаштуваннях</string>
+    <string name="btn_select_keyboard">Перейдіть на Основи</string>
+    <string name="label_enabled">Увімкнено</string>
+    <string name="label_disabled">Вимкнено</string>
+    <string name="tile_adaptive_brightness">Адаптивна яскравість</string>
+    <string name="tile_maps_power_saving">Карти Енергозбереження</string>
+    <string name="action_search">Пошук</string>
+    <string name="action_stop">СТІЙ</string>
+    <string name="label_search">Пошук</string>
+    <string name="search_frozen_apps_placeholder">Search frozen apps</string>
+    <!-- UI Components General -->
+    <string name="action_back">Назад</string>
+    <string name="content_desc_back">Назад</string>
+    <string name="label_settings">Налаштування</string>
+    <string name="action_report_bug">Повідомити про помилку</string>
+    <!-- Sentry Crash Reporting -->
+    <string name="sentry_report_mode_title">Crash reporting</string>
+    <string name="sentry_mode_off">Off</string>
+    <string name="sentry_mode_auto">Auto</string>
+    <string name="sentry_crash_toast">Essentials crashed, Report sent</string>
+    <string name="simulate_crash">Simulate crash</string>
+    <string name="welcome_title">Welcome to Essentials</string>
+    <string name="welcome_subtitle">A Toolbox for Android Nerds</string>
+    <string name="welcome_developer_attribution">by sameerasw.com</string>
+    <string name="action_lets_begin">Let\'s Begin</string>
+    <string name="acknowledgement_title">Acknowledgement</string>
+    <string name="acknowledgement_desc">This app is a collection of utilities that can interact deeply with your device system. Using some features might modify system settings or behavior in unexpected ways. \n\nYou only need to grant necessary permissions which are required for selected features you are using giving you full control over the app\'s behavior. \n\nFurther more, the app does not track or store any of your personal data, I don\'t need them... Keep to yourself safe. You can refer to the source code for more information. \n\nThis app is fully open source and is and always will be free to use. Do not pay or install from unknown sources.</string>
+    <string name="acknowledgement_warning">WARNING: Proceed with caution. The developer takes no responsibility for any system instability, data loss, or other issues caused by the use of this app. By proceeding, you acknowledge these risks.</string>
+    <string name="acknowledgement_footer">I know you didn\'t even read this carefully but, in case you need any help, feel free to reach out the developer or the community.</string>
+    <string name="action_i_understand">I Understand</string>
+    <string name="feature_intro_desc">Anytime you are clueless on a feature or a Quick Settings Tile on what it does and what permissions may necessary for it, just long press it and pick \'What is this?\' to learn more.</string>
+    <string name="feature_intro_footer">You can report bugs or find helpful guides anytime in the app settings.</string>
+    <string name="action_let_me_in">Let Me in Already</string>
+    <string name="preferences_title">Preferences</string>
+    <string name="preferences_desc">Configure some basic settings to get started.</string>
+    <string name="label_app_settings">App Settings</string>
+    <string name="label_app_language">Language</string>
+    <string name="label_haptic_feedback">Haptic Feedback</string>
+    <string name="label_updates">Updates</string>
+    <string name="label_auto_check_updates">Auto check for updates</string>
+    <string name="desc_auto_check_updates">Check for updates at app launch</string>
+    <string name="action_all_set">All Set</string>
+    <string name="action_check_whats_new">Check What\'s New?</string>
+    <string name="welcome_back_title">Welcome back to Essentials</string>
+    <string name="action_see_whats_new">See what\'s new</string>
+    <string name="label_mode_default">Default</string>
+    <string name="label_mode_glove">Glove mode</string>
+    <string name="tile_scale_animations">Glove Mode</string>
+    <string name="about_desc_scale_animations_tile">Quickly toggle between Default and Glove mode UI profiles</string>
+    <string name="label_increase_touch_sensitivity">Increase touch sensitivity</string>
+    <string name="desc_increase_touch_sensitivity">Improve touch screen responsiveness when using gloves or screen protectors</string>
+    <string name="label_auto_rotate">Auto rotate</string>
+    <string name="desc_auto_rotate">Automatically rotate the screen when the device is turned</string>
+    <string name="label_screen_timeout">Screen timeout</string>
+    <string name="desc_screen_timeout">How long the screen stays on before turning off automatically</string>
+    <string name="unit_seconds">%d seconds</string>
+    <string name="unit_minute">1 minute</string>
+    <string name="unit_minutes">%d minutes</string>
+    <string name="action_restart_systemui">Restart SystemUI</string>
+    <string name="desc_restart_systemui">Kills and restarts SystemUI process to apply some changes immediately</string>
+    <string name="msg_error_load_release_notes">Couldn\'t load the release note</string>
+    <string name="action_view_on_web">View on web</string>
+    <string name="action_done">Готово</string>
+    <string name="action_preview">Попередній перегляд</string>
+    <string name="action_help_guide">Довідковий посібник</string>
+    <string name="action_what_is_this">Що це?</string>
+    <string name="update_available_title">Оновлення доступне</string>
+    <string name="about_desc_your_android">Glance at your device\'s hardware and software specifications in detail. This information is fetched from GSMArena and system properties to provide a comprehensive overview of your Android device.</string>
+    <string name="about_desc_essentials_on_display">Essentials On Display shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
+    <string name="about_desc_notification_lighting">Підсвічування сповіщень додає гарний ефект підсвічування країв, коли ви отримуєте сповіщення.\n\nВи можете налаштувати стиль анімації, кольори та поведінку. Він працює, навіть коли екран вимкнено (залежно від OEM) або поверх вашої поточної програми. Виберіть додатки, пріоритет сповіщень або те, яку поведінку вони мають запускати з наданих елементів керування. Якщо ваш OEM не підтримує накладання вище AOD, подайте позов на опцію Ambient display, яку можна знайти нижче.</string>
+    <string name="about_desc_screen_off_widget">Легко вимкніть екран, торкнувшись прозорого віджета зі змінним розміром, який не додає піктограм чи будь-якого безладу на ваш головний екран.</string>
+    <string name="about_desc_statusbar_icons">Отримайте повний контроль над своїми піктограмами в рядку стану.\n\nПриховайте певні значки, як-от WiFi, Bluetooth або стільникові дані, щоб ваш рядок стану був чистим. Ви також можете налаштувати формат годинника та індикатор батареї за допомогою інтелектуальних елементів керування. Це список доступних елементів керування AOSP, тому ОС вашого пристрою може не поважати всі елементи керування.</string>
+    <string name="about_desc_caffeinate">Кофеїн запобігає автоматичному вимкненню екрана.\n\nНе активний екран протягом певного або невизначеного часу. Корисно під час читання довгих статей або посилання на рецепт.</string>
+    <string name="about_desc_maps_power_saving">Отримайте для серії Pixel 10 ексклюзивний режим енергозбереження Карт Google із мінімально чорним фоном для відображення на екрані блокування на будь-якому пристрої Android. Розпочніть сеанс навігації, вимкніть і знову ввімкніть екран.</string>
+    <string name="about_desc_flashlight_pulse">Пульсуйте ліхтариком, коли отримуєте сповіщення.\n\nЯкщо пристрої мають апаратну підтримку затемнення ліхтарика, пульс буде плавно анімований.</string>
+    <string name="about_desc_snooze_notifications">Відкладайте надокучливі постійні системні сповіщення, які не можна змінити за замовчуванням. \n\nЗачекайте, доки надійде сповіщення, а потім перейдіть до цієї функції, де буде показано його канал сповіщень\'. Виберіть це, щоб відкласти наступного разу.\n\nБудь-яке відкладене сповіщення все одно можна переглянути в історії сповіщень в Android.</string>
+    <string name="about_desc_quick_settings_tiles">Додайте власні плитки на панель швидких налаштувань.\n\nУтримуйте будь-яку з них, щоб дізнатися, що вони роблять.</string>
+    <string name="about_desc_button_remap">Переназначте апаратні кнопки для виконання різних дій і ярликів.\n\nНалаштуйте, що відбувається, коли ви довго натискаєте кнопки гучності за певних умов. \n\nДеякі дії, як-от тригер вимкнення екрана або керування ліхтариком, можуть залежати від OEM і працювати не на всіх пристроях, як очікувалося. Деякі сценарії можна вирішити за допомогою дозволів Shizuku, але вони можуть не дати такого ж досвіду через впровадження.</string>
+    <string name="about_desc_dynamic_night_light">Автоматично перемикайте фільтр синього світла екрана на основі програми на передньому плані.</string>
+    <string name="about_desc_screen_locked_security">Покращте безпеку, коли ваш пристрій заблоковано.\n\nОбмежте доступ до деяких конфіденційних плиток QS, запобігаючи неавторизованим змінам мережі та запобігаючи їх повторним спробам зробити це, збільшуючи швидкість анімації, щоб запобігти сенсорному спаму.\n\nЦя функція ненадійна та може мати недоліки, наприклад деякі плитки які дозволяють перемикати напряму, наприклад, Bluetooth або режим польоту, яким неможливо запобігти.</string>
+    <string name="about_desc_app_lock">Захистіть свої програми за допомогою вторинного рівня автентифікації.\n\nМетод автентифікації екрана блокування вашого пристрою використовуватиметься, якщо він відповідає рівню біометричної безпеки класу 3 за стандартами Android.</string>
+    <string name="about_desc_location_reached">Отримуйте сповіщення, коли наближаєтеся до місця призначення, щоб ніколи не пропустити зупинку.\n\nПерейдіть на Карти Google, натисніть і утримуйте маркер поруч із пунктом призначення та переконайтеся, що на ньому написано «Випущена шпилька» (інакше розрахунок відстані може бути неточним), а потім поділіться місцезнаходженням із програмою Essentials і почніть стежити.</string>
+    <string name="location_reached_add_title">Add Destination</string>
+    <string name="location_reached_edit_title">Edit Destination</string>
+    <string name="location_reached_name_placeholder">Home, Office, etc.</string>
+    <string name="location_reached_name_label">Name</string>
+    <string name="location_reached_save_btn">Save</string>
+    <string name="location_reached_cancel_btn">Cancel</string>
+    <string name="location_reached_resolving">Resolving location…</string>
+    <string name="location_reached_last_trip">Last Trip</string>
+    <string name="location_reached_saved_destinations">Saved Destinations</string>
+    <string name="location_reached_no_saved_dest">No destinations saved yet.</string>
+    <string name="location_reached_delete">Delete Destination</string>
+    <string name="location_reached_tracking_now">Tracking Now</string>
+    <string name="location_reached_restart_btn">Re-Start</string>
+    <string name="location_reached_instructional_desc">Share coordinates (Dropped pin) from Google Maps to Essentials to save as a destination.\n\nThe distance shown is the direct distance to the destination, not the distance along the roads.\n\nTake all calculations of time and distance with a grain of salt as they are not always accurate.</string>
+    <string name="tile_location_reached">Are we there yet?</string>
+    <string name="location_reached_pause">Pause</string>
+    <string name="location_reached_resume">Resume</string>
+    <string name="location_reached_radius_label">Radius: %1$d m</string>
+    <string name="location_reached_distance_label">Distance to target: %1$s</string>
+    <string name="location_reached_last_travelled">Last: %1$s</string>
+    <string name="location_reached_never">Never</string>
+    <string name="location_reached_to_go">To go</string>
+    <string name="location_reached_eta_min">%1$d min</string>
+    <string name="location_reached_eta_hr_min">%1$d hr %2$d min</string>
+    <string name="location_reached_service_remaining_with_eta">%1$s (%2$d%%) • %3$s to go</string>
+    <string name="about_desc_freeze">Заморозьте програми, щоб припинити їх роботу у фоновому режимі.\n\nЗапобігайте розрядженню акумулятора та використанню даних, повністю заморозивши програми, коли ви ними не користуєтеся. Вони будуть миттєво розморожені, коли ви їх запустите. Програми не відображатимуться в панелі програм, а також не відображатимуться для оновлень програм у Play Store, коли вони заморожені.</string>
+    <string name="about_desc_system_keyboard">Спеціальний метод введення, про який ніхто не запитував.\n\nЦе лише експеримент. Кілька мов можуть не підтримуватися, оскільки це дуже складна і трудомістка реалізація.</string>
+    <string name="about_desc_batteries">Відстежуйте рівень заряду батареї всіх своїх підключених пристроїв.\n\nПереглядайте стан батареї своїх Bluetooth-навушників, годинника та інших аксесуарів в одному місці. Підключіться до програми AirSync, щоб також відображати рівень заряду акумулятора Mac.</string>
+    <string name="about_desc_watermark">Додайте власний підпис/водяний знак до своїх фотографій за допомогою даних EXIF ​​і інформації про пристрій.\n\nПоділіться зображенням безпосередньо з іншої програми в Essentials, щоб легко додати водяний знак.</string>
+    <string name="about_desc_calendar_sync">Синхронізуйте весь свій майбутній розклад календаря, незалежно від обмежень щодо облікових записів Google, які не дозволяють додавати вас до пристроїв wearOS через правила роботи чи школи. \n\nПереконайтеся, що встановили супутню програму wearOS Essentials, щоб відображати розклад у програмі, а також на мозаїці чи ускладненні.</string>
+    <string name="about_desc_app_updates">Слідкуйте за оновленнями для встановлених програм.\n\nОтримуйте сповіщення про доступні оновлення, переглядайте журнали змін і легко встановлюйте їх одним дотиком.</string>
+    <string name="about_desc_call_vibrations">Додайте до своїх дзвінків тактильний відгук.\n\nВібрувати, коли виклик з’єднано, роз’єднано або прийнято, надаючи вам тактильне підтвердження, не дивлячись на екран.</string>
+    <string name="about_desc_sound_mode_tile">Швидко перемикайтеся між режимами «Звук», «Вібрація» та «Без звуку».\n\nЗручна плитка для зміни режиму дзвінка без використання кнопок гучності чи налаштувань. Ви можете змінити порядок режимів або вимкнути будь-який, якщо це не потрібно, щоб налаштувати перемикач плитки для циклічної поведінки.</string>
+    <string name="about_desc_ui_blur">Легко перемикайте ефект глибини розмиття системного рівня в ОС.</string>
+    <string name="about_desc_bubbles">Увімкніть або вимкніть плаваючі бульбашки сповіщень.\n\nШвидко перемикайте загальносистемне налаштування для бульбашок розмов.</string>
+    <string name="about_desc_sensitive_content">Приховайте конфіденційний вміст на екрані блокування.\n\nУвімкніть, чи показувати чи приховувати вміст сповіщень, коли ваш пристрій заблоковано.</string>
+    <string name="about_desc_tap_to_wake">Увімкніть функцію пробудження дотиком.\n\nУвімкніть або вимкніть можливість пробудження екрана дотиком.</string>
+    <string name="about_desc_aod">Перемкніть «Завжди увімкнений дисплей».\n\nШвидко ввімкніть або вимкніть постійно увімкнений дисплей, щоб швидко переглянути інформацію.</string>
+    <string name="about_desc_notification_glance">Автоматично керуйте своїм Always On Display на основі сповіщень. Коли з вибраного додатка надходить повідомлення чи сповіщення, AOD залишатиметься ввімкненим, доки ви не закриєте сповіщення, гарантуючи, що ви ніколи не пропустите важливу інформацію, не витрачаючи заряд акумулятора, коли сповіщень немає.</string>
+    <string name="about_desc_mono_audio">Об’єднайте аудіоканали в моно.\n\nКорисно під час використання одного навушника або для забезпечення доступності.</string>
+    <string name="about_desc_flashlight_tile">Увімкніть ліхтарик.\n\nA Тривале натискання відкриває елементи керування для налаштування інтенсивності, для чого може знадобитися апаратне забезпечення, якого може бути не вистачає на деяких пристроях.</string>
+    <string name="about_desc_stay_awake">Тримайте екран активним під час заряджання.\n\nЗапобігає переходу екрана в режим сну, доки пристрій підключено до джерела живлення, яке підходить для розробників під час налагодження.</string>
+    <string name="about_desc_nfc">Увімкніть NFC.\n\nШвидко ввімкніть або вимкніть зв’язок малого радіусу дії для платежів і створення пари.</string>
+    <string name="about_desc_adaptive_brightness">Увімкнути адаптивну яскравість.\n\nУвімкніть або вимкніть автоматичне налаштування яскравості екрана залежно від навколишнього освітлення.</string>
+    <string name="about_desc_private_dns">Увімкніть приватний DNS.\n\nПеремикайтеся між режимами постачальника послуг «Вимкнено», «Автоматично» та «Приватний DNS».</string>
+    <string name="about_desc_usb_debugging">Перемкніть налагодження USB.\n\nУвімкніть або вимкніть доступ до налагодження ADB безпосередньо з швидких налаштувань.</string>
+    <string name="about_desc_color_picker">Запустіть інструмент «Піпетка», щоб вибрати кольори, представлені в Android 17 BETA 2</string>
+    <string name="about_desc_charge_optimization">Оптимізуйте термін служби акумулятора, обмеживши максимальний заряд або використовуючи адаптивне заряджання. Це спеціально розроблено для пристроїв Pixel, щоб забезпечити довговічність і безпечні цикли заряджання.\n\nКредити: TebbeUbben/ChargeQuickTile</string>
+    <string name="action_download">Завантажити</string>
+    <!-- DIY Section -->
+    <string name="diy_trigger_screen_off">Екран вимкнено</string>
+    <string name="diy_trigger_screen_on">Екран увімкнено</string>
+    <string name="diy_trigger_device_unlock">Розблокування пристрою</string>
+    <string name="diy_trigger_charger_connected">Зарядний пристрій підключено</string>
+    <string name="diy_trigger_charger_disconnected">Зарядний пристрій відключено</string>
+    <string name="diy_trigger_schedule">Schedule</string>
+    <string name="diy_state_time_period">Time Period</string>
+    <string name="diy_time_selection_title">Select Time</string>
+    <string name="diy_time_range_selection_title">Select Time Range</string>
+    <string name="diy_start_time_label">Start Time</string>
+    <string name="diy_end_time_label">End Time</string>
+    <string name="diy_repeat_days_label">Repeat on</string>
+    <string name="diy_state_charging">Зарядка</string>
+    <string name="diy_state_screen_on">Екран увімкнено</string>
+    <string name="diy_action_haptic">Вібрувати</string>
+    <string name="diy_action_notification">Показати сповіщення</string>
+    <string name="diy_action_remove_notification">Видалити сповіщення</string>
+    <string name="diy_action_flashlight_on">Увімкніть ліхтарик</string>
+    <string name="diy_action_flashlight_off">Вимкніть ліхтарик</string>
+    <string name="diy_action_flashlight_toggle">Перемкнути ліхтарик</string>
+    <string name="diy_action_low_power_on">Turn On Low Power Mode</string>
+    <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
+    <string name="diy_action_dim_wallpaper">Тьмяні шпалери</string>
+    <string name="diy_dim_wallpaper_desc">Для виконання цієї дії потрібен Shizuku або Root, щоб відрегулювати затемнення шпалер системи.</string>
+    <string name="diy_select_trigger">Виберіть Тригер</string>
+    <string name="diy_create_app_title">додаток</string>
+    <string name="diy_create_app_desc">Автоматизація на основі відкритої програми</string>
+    <string name="diy_select_state">Виберіть державу</string>
+    <string name="diy_select_action">Виберіть Дія</string>
+    <string name="diy_in_action_label">В Дії</string>
+    <string name="diy_out_action_label">Out Action</string>
+    <string name="action_cancel">Скасувати</string>
+    <string name="action_save">зберегти</string>
+    <string name="action_edit">Редагувати</string>
+    <string name="action_delete">Видалити</string>
+    <string name="action_enable">Увімкнути</string>
+    <string name="action_disable">Вимкнути</string>
+    <string name="automation_service_channel_name">Служба автоматизації</string>
+    <string name="automation_service_running_title">Автоматизація активна</string>
+    <string name="automation_service_running_desc">Моніторинг системних подій для вашої автоматизації</string>
+    <string name="app_detection_service_channel_name">App Detection Service</string>
+    <string name="app_detection_service_running_title">App Detection Active</string>
+    <string name="app_detection_service_running_desc">Monitoring app activity</string>
+    <string name="diy_action_device_effects">Ефекти пристрою</string>
+    <string name="diy_device_effects_desc">Керуйте ефектами на рівні системи, як-от відтінки сірого, придушення AOD, затемнення шпалер і нічний режим.</string>
+    <string name="diy_effect_grayscale">Відтінки сірого</string>
+    <string name="diy_effect_suppress_ambient">Вимкнути навколишнє відображення</string>
+    <string name="diy_effect_dim_wallpaper">Тьмяні шпалери</string>
+    <string name="diy_effect_night_mode">Нічний режим</string>
+    <string name="diy_device_effects_android_15_warning">Для роботи цієї функції потрібен Android 15 або новішої версії.</string>
+    <string name="diy_device_effects_enabled">Увімкнено</string>
+    <string name="diy_device_effects_disabled">Вимкнено</string>
+    <string name="diy_action_sound_mode">Режим звуку</string>
+    <string name="diy_sound_mode_desc">Ця дія дозволяє перемикатися між режимами звуку, вібрації та беззвучного режиму на основі тригерів. Для цього потрібен доступ до режиму «Не турбувати».</string>
+    <!-- About Section -->
+    <string name="app_developer_name">Самера Вієратна</string>
+    <string name="app_description">Універсальний інструментарій для ваших Pixel та Android</string>
+    <!-- Edge Lighting -->
+    <string name="color_mode_system">система</string>
+    <string name="color_mode_custom">Custom</string>
+    <string name="color_mode_app_specific">Особливий додаток</string>
+    <!-- Biometric & Security -->
+    <string name="error_auth_failed">Помилка автентифікації</string>
+    <string name="shortcut_creation_hint_toast">Натисніть і утримуйте програму в сітці, щоб додати ярлик</string>
+    <string name="error_app_uninstalled">Додаток не знайдено або видалено</string>
+    <!-- Notifications -->
+    <string name="update_channel_name">Оновлення програми</string>
+    <string name="update_channel_desc">Сповіщення про нові оновлення програми</string>
+    <string name="notification_update_available">Доступне оновлення</string>
+    <string name="battery_notification_no_devices">Немає підключених пристроїв</string>
+    <string name="label_unknown">Невідомий</string>
+    <string name="network_type_5g">5G</string>
+    <string name="network_type_4g">4G</string>
+    <string name="network_type_3g">3G</string>
+    <string name="label_shizuku_ritaka">Шизуку (Рікка)</string>
+    <string name="label_shizuku_tuozi">Шизуку (Туозі)</string>
+    <string name="label_search_content_description">Пошук</string>
+    <string name="label_recent_searches">Recent Searches</string>
+    <string name="label_no_recent_searches">No recent searches</string>
+    <string name="label_clear_all">Clear all</string>
+    <string name="perm_device_admin_explanation">Необхідно жорстко заблокувати пристрій під час спроби неавторизованої зміни мережі на екрані блокування.</string>
+    <string name="biometric_subtitle_access_settings">Щоб отримати доступ до налаштувань, пройдіть автентифікацію</string>
+    <string name="biometric_title_settings_format">%1$s Налаштування</string>
+    <string name="keyword_feature">функція</string>
+    <string name="keyword_settings">налаштування</string>
+    <string name="keyword_hide">приховати</string>
+    <string name="keyword_show">шоу</string>
+    <string name="keyword_visibility">видимість</string>
+    <string name="error_loading_apps">Помилка завантаження програм: %1$s</string>
+    <string-array name="keywords_haptic">
+        <item>вібрація</item>
+        <item>дотик</item>
+        <item>відчувати</item>
+    </string-array>
+    <string-array name="keywords_network_visibility">
+        <item>мережі</item>
+        <item>видимість</item>
+        <item>авто</item>
+        <item>приховати</item>
+    </string-array>
+    <string-array name="keywords_restore_default">
+        <item>відновити</item>
+        <item>за замовчуванням</item>
+        <item>значок</item>
+    </string-array>
+    <string-array name="keywords_keyboard">
+        <item>клавіатура</item>
+        <item>висота</item>
+        <item>оббивка</item>
+        <item>тактильний</item>
+        <item>введення</item>
+    </string-array>
+    <string-array name="keywords_flashlight">
+        <item>світло</item>
+        <item>факел</item>
+    </string-array>
+    <string-array name="keywords_flashlight_pulse">
+        <item>світло</item>
+        <item>факел</item>
+        <item>пульс</item>
+        <item>повідомлення</item>
+    </string-array>
+    <string-array name="keywords_qs_stay_awake">
+        <item>прокинутися</item>
+        <item>розробник</item>
+        <item>потужність</item>
+        <item>заряд</item>
+    </string-array>
+    <string-array name="keywords_notification_lighting">
+        <item>світіння</item>
+        <item>повідомлення</item>
+        <item>вів</item>
+    </string-array>
+    <string-array name="keywords_round_shape">
+        <item>круглий</item>
+        <item>форму</item>
+        <item>краю</item>
+    </string-array>
+    <string-array name="keywords_privacy">
+        <item>безпечний</item>
+        <item>конфіденційність</item>
+        <item>біометричний</item>
+        <item>обличчя</item>
+        <item>відбиток пальця</item>
+    </string-array>
+    <string-array name="keywords_sound_accessibility">
+        <item>звук</item>
+        <item>доступність</item>
+        <item>чути</item>
+    </string-array>
+    <string-array name="keywords_timeout">
+        <item>залишитися</item>
+        <item>на</item>
+        <item>тайм-аут</item>
+    </string-array>
+    <string-array name="keywords_wake_display">
+        <item>дотик</item>
+        <item>розбудити</item>
+        <item>дисплей</item>
+    </string-array>
+    <string-array name="keywords_timer">
+        <item>таймер</item>
+        <item>чекати</item>
+        <item>тайм-аут</item>
+    </string-array>
+    <string name="label_keyboard_always_dark">Завжди темна тема</string>
+    <string name="label_keyboard_pitch_black">Безпросвітна темна тема</string>
+    <string name="label_keyboard_clipboard_enabled">Історія буфера обміну</string>
+    <string name="label_keyboard_long_press_symbols">Long press for symbols</string>
+    <string name="label_keyboard_accented_characters">Accented characters</string>
+    <string-array name="keywords_selection">
+        <item>список</item>
+        <item>збирач</item>
+        <item>вибір</item>
+    </string-array>
+    <string-array name="keywords_visual_style">
+        <item>анімація</item>
+        <item>візуальний</item>
+        <item>подивіться</item>
+    </string-array>
+    <string-array name="keywords_quiet_filter">
+        <item>тихий</item>
+        <item>ігнорувати</item>
+        <item>фільтр</item>
+    </string-array>
+    <string-array name="keywords_automation_lock">
+        <item>автоматизація</item>
+        <item>авто</item>
+        <item>замок</item>
+    </string-array>
+    <string-array name="keywords_adb_debug">
+        <item>присл</item>
+        <item>USB</item>
+        <item>налагоджувати</item>
+    </string-array>
+    <string-array name="keywords_blur_glass">
+        <item>розмиття</item>
+        <item>скло</item>
+        <item>віньєтка</item>
+    </string-array>
+    <string-array name="keywords_float_window">
+        <item>плавати</item>
+        <item>вікно</item>
+        <item>накладання</item>
+    </string-array>
+    <string-array name="keywords_always_display">
+        <item>завжди</item>
+        <item>дисплей</item>
+        <item>годинник</item>
+    </string-array>
+    <string-array name="keywords_audio_mute">
+        <item>аудіо</item>
+        <item>німий</item>
+        <item>обсяг</item>
+    </string-array>
+    <string-array name="keywords_blue_filter">
+        <item>блакитний</item>
+        <item>фільтр</item>
+        <item>авто</item>
+    </string-array>
+    <string-array name="keywords_app_freezing">
+        <item>замерзнути</item>
+        <item>шизуку</item>
+    </string-array>
+    <string-array name="keywords_manual_now">
+        <item>посібник</item>
+        <item>зараз</item>
+        <item>шизуку</item>
+    </string-array>
+    <string-array name="keywords_proximity_sensor">
+        <item>близькість</item>
+        <item>датчик</item>
+        <item>обличчя</item>
+        <item>вниз</item>
+    </string-array>
+    <string-array name="keywords_switch_master">
+        <item>перемикач</item>
+        <item>майстер</item>
+    </string-array>
+    <string-array name="keywords_vibration">
+        <item>вібрація</item>
+        <item>відчувати</item>
+    </string-array>
+    <string-array name="keywords_battery">
+        <item>акумулятор</item>
+        <item>заряд</item>
+        <item>оптимізація</item>
+        <item>піксель</item>
+    </string-array>
+    <!-- App Selection Extra -->
+    <string name="action_invert_selection">Інвертувати виділення</string>
+    <string name="toggle_show_system_apps">Показати системні програми</string>
+    <!-- Updates -->
+    <string name="status_up_to_date">Ви в курсі подій</string>
+    <string name="warning_pre_release">Це попередня версія, яка може бути нестабільною.</string>
+    <string name="release_notes_format">Примітки до випуску %1$s</string>
+    <string name="action_view_on_github">Переглянути на GitHub</string>
+    <string name="action_download_apk">Завантажити APK</string>
+    <!-- Haptic Types -->
+    <string name="haptic_none">Жодного</string>
+    <string name="haptic_subtle">Тонкий</string>
+    <string name="haptic_double">Двомісний</string>
+    <string name="haptic_click">Натисніть</string>
+    <string name="haptic_tick">Галочка</string>
+    <!-- Flashlight Intensity Overlay -->
+    <string name="action_turn_off">Вимкнути</string>
+    <string name="feature_flashlight_brightness_title">Яскравість ліхтарика</string>
+    <!-- QS / Activities -->
+    <!-- About Section -->
+    <string name="developed_by_format">Розроблено %1$s\nз ❤\uFE0F від \uD83C\uDDF1\uD83C\uDDF0</string>
+    <string name="action_website">Веб-сайт</string>
+    <string name="action_contact">контакт</string>
+    <string name="action_telegram">Телеграма</string>
+    <string name="action_support">Підтримка</string>
+    <string name="label_other_apps">Інші програми</string>
+    <string name="app_airsync">AirSync</string>
+    <string name="app_zenzero">ZenZero</string>
+    <string name="app_canvas">Полотно</string>
+    <string name="app_tasks">Завдання</string>
+    <string name="app_zero">Нуль</string>
+    <!-- Help & Guides -->
+    <string name="help_guides_title">Довідка та посібники</string>
+    <string name="need_more_support_reach_out">Потрібна додаткова підтримка? простягни руку,</string>
+    <string name="action_collapse">Згорнути</string>
+    <string name="action_expand">Розгорнути</string>
+    <string name="support_group_label">Група підтримки</string>
+    <string name="email_label">Електронна пошта</string>
+    <string name="send_email_chooser_title">Надіслати електронний лист</string>
+    <string name="error_no_email_app">Немає доступної електронної пошти</string>
+    <string name="instruction_step_image_description">Крок %1$d Зображення</string>
+    <!-- Instructions Content -->
+    <string name="instruction_section_perms_title">Дозволи на доступність, сповіщення та накладання</string>
+    <string name="instruction_step_perms_1">Ви можете отримати це повідомлення про відмову в доступі, якщо спробуєте надати конфіденційні дозволи, такі як доступність, прослуховування сповіщень або дозволи на накладання. Щоб надати його, виконайте наведені нижче дії.</string>
+    <string name="instruction_step_perms_2">1. Перейдіть на сторінку інформації про програму Essentials.</string>
+    <string name="instruction_step_perms_3">2. Відкрийте меню з трьома крапками та виберіть \'Дозволити обмежені налаштування\'. Можливо, вам доведеться автентифікуватися за допомогою біометрії. Після завершення спробуйте знову надати дозвіл.</string>
+    <string name="instruction_section_shizuku_title">Шизуку</string>
+    <string name="instruction_section_shizuku_desc">Shizuku — це потужний інструмент, який дозволяє програмам використовувати системні API безпосередньо з ADB або правами root. Це потрібно для таких функцій, як мінімальний режим Карт, заморожування додатків. Допоможу надати деякі дозволи, як-от WRITE_SECURE_SETTINGS. \n\nАле версія Shizuku для Play Store може бути застарілою та нею можна буде користуватися в останніх версіях Android, тому в такому випадку завантажте останню версію з github або її оновлений форк.</string>
+    <string name="instruction_section_maps_title">Режим енергозбереження карт</string>
+    <string name="instruction_section_maps_desc">Ця функція автоматично запускає режим енергозбереження Карт Google, який наразі є ексклюзивним для серії Pixel 10. Учасник спільноти виявив, що його все ще можна використовувати на будь-якому пристрої Android, запустивши дію minMode карт із привілеями root. \n\nА потім я автоматизував його за допомогою Tasker, щоб він автоматично запускався, коли екран вимикається під час сеансу навігації, а потім зміг досягти того ж самого за допомогою простого виконання Shizuku дозволи. \n\nВін призначений для показу на AOD серії Pixel 10, тож через це ви можете час від часу бачити на дисплеї повідомлення про те, що він не підтримує альбомний режим. Цього не можна уникнути за допомогою програми, і ви можете ігнорувати.</string>
+    <string name="instruction_section_silent_title">Режим тихого звуку</string>
+    <string name="instruction_section_silent_desc">Можливо, ви помітили, що беззвучний режим також активує DND. \n\nЦе пов’язано з тим, як це реалізовано в Android, оскільки навіть якщо ми використовуємо той самий API для перемикання в режим вібрації, він чомусь вмикає DND разом із беззвучним режимом, і цього зараз неможливо уникнути. :(</string>
+    <string name="instruction_section_freeze_title">Що таке заморожування?</string>
+    <string name="instruction_section_freeze_desc">Зупиніться та тримайтеся подалі від додатків, які відволікають увагу, заощаджуючи трохи енергії, запобігаючи роботі програм у фоновому режимі. Підходить для програм, які рідко використовуються. \n\nНе рекомендується для будь-яких комунікаційних служб, оскільки вони не сповіщатимуть вас у надзвичайних ситуаціях, доки ви їх не розморозите. \n\nНастійно не рекомендується зависати системні програми, оскільки це може призвести до нестабільності системи. Будьте обережні, вас попередили. \n\nНатхненний Hail &lt;3</string>
+    <string name="instruction_section_security_title">Чи надійно захищено блокування програм і блокування екрана?</string>
+    <string name="instruction_section_security_desc">Абсолютно ні. \n\nБудь-яка стороння програма не може на 100% перешкоджати звичайній взаємодії пристрою, і навіть блокування програми є лише накладенням над вибраними програмами, щоб запобігти взаємодії з ними. Існують обхідні шляхи, і це не надійно. \n\nТе саме стосується функції безпеки блокування екрана, яка виявляє, що хтось намагається взаємодіяти з плитками мережі, які з певних причин все ще доступні для будь-кого на Pixel. Отже, якщо вони достатньо старатимуться, вони все одно зможуть змінити їх, і особливо якщо у вас додано плитку QS режиму польоту, ця програма не зможе запобігти взаємодії з нею. \n\nЦі функції створено лише як експерименти для невеликого використання, і ніколи не рекомендуватимуться як надійні рішення безпеки та конфіденційності. \n\nБезпечно альтернативи:\n - Блокування програми: приватний простір і папка Secure на Pixels і Samsung\n - Запобігання доступу до мобільних мереж: переконайтеся, що ваш захист від крадіжки та параметри офлайн/вимкнути пристрій увімкнено. Ви також можете розглянути Graphene OS.</string>
+    <string name="instruction_section_statusbar_title">Значки на панелі стану</string>
+    <string name="instruction_section_statusbar_desc">Ви можете помітити, що навіть після скидання значків у рядку стану деякі значки, як-от обертання пристрою, значки дротових навушників, можуть залишатися видимими. Це пов’язано з тим, як чорний список панелі стану реалізовано в Android і як ваш OEM, можливо, налаштував їх. \nМожливо, вам знадобляться додаткові налаштування. \n\nКрім того, не всі параметри видимості піктограм можуть працювати, оскільки вони залежать від впровадження та доступності OEM.</string>
+    <string name="instruction_section_lighting_title">Підсвічування сповіщень не працює</string>
+    <string name="instruction_section_lighting_desc">Це залежить від OEM. Деякі, як-от OneUI, здається, не дозволяють накладання над AOD, запобігаючи показу світлових ефектів. У цьому випадку як обхідний шлях спробуйте відкритий дисплей.</string>
+    <string name="instruction_section_button_title">Перепризначення кнопки не працює, коли дисплей вимкнено</string>
+    <string name="instruction_section_button_desc">Деякі OEM-виробники обмежують звітування служби доступності, коли дисплей фактично вимкнено, але вони все ще можуть працювати, коли AOD увімкнено. \nУ цьому випадку ви можете використовувати перепризначення кнопок із увімкненим AOD, але не з вимкненим. \n\nЯк обхідний шлях, вам потрібно буде використовувати дозволи Shizuku та ввімкнути.  \'Використовувати Shizuku або Root\' перемикач у налаштуваннях перепризначення кнопок, який визначає та прослуховує події апаратного введення.\nЦе не гарантовано працюватиме на всіх пристроях і потребах тестування.\n\nІ навіть якщо він\'увімкнено, метод Шизуку використовуватиметься лише тоді, коли він\'потрібний. В іншому випадку він завжди повертатиметься до доступності, яка також обробляє блокування фактичного введення під час тривалого натискання.</string>
+    <string name="instruction_section_flashlight_title">Яскравість ліхтарика не працює</string>
+    <string name="instruction_section_flashlight_desc">Лише обмежена кількість пристроїв отримала апаратну та програмну підтримку регулювання інтенсивності ліхтарика. \n\n\'Мінімальна версія Android – 13 (SDK33).\nКерування яскравістю ліхтарика підтримує лише HAL версії 3.8 і вище, тому серед підтримуваних пристроїв найновіші (наприклад, Pixel). 6/7, Samsung S23 тощо)\'\npolodarb/Flashlight-Tiramisu</string>
+    <string name="instruction_section_about_title">Що це за додаток?</string>
+    <string name="instruction_section_about_desc">Гарне запитання,\n\nЯ завжди хотів отримати максимум від своїх пристроїв, оскільки я\'був рутованим користувачем відтоді, як отримав свій перший пристрій Project Treble. І я\'ве любить програму Tasker, яка схожа на бога, коли приходить автоматизація та використовує всі можливі API та внутрішні функції Android.\n\nТож я не звільнився від руту і повернувся до стандартної бета-версії Android і хотів отримати максимум від того, що можливо з наданими привілеями. Можна також поділитися ними. Тож завдяки моїм початковим знанням Kotlin Jetpack і підтримці багатьох дослідницьких і допоміжних інструментів, а також великої спільноти я створив універсальну програму, яка містить усе, що я хотів мати у своєму Android із наданими дозволами. І ось воно.\n\nЗапити на функції вітаються, я розгляну та перевірю, чи можна їх реалізувати за наявних дозволів і моїх навичок. У наш час, що не можливо. :)\n\nЧому не в Play Store?\nЯ не\'не хочу ризикувати тим, що мій обліковий запис розробника буде заблоковано через дуже конфіденційні та внутрішні дозволи та API, які використовуються в програмі. Але з огляду на те, як розвивається стороннє завантаження Android, давайте\'подивимося, що нам робити. Я розумію занепокоєння щодо того, що сторонні програми є зловмисними.\nПоки ми в цій темі, перевірте мою іншу програму AirSync, якщо ви користувач mac + Android. *безсоромний плагін*\n\nНасолоджуйтесь, продовжуйте будувати! (っ◕‿◕)っ</string>
+    <!-- Bug Reporting -->
+    <string name="toast_bug_report_copied">Звіт про помилку скопійовано в буфер обміну</string>
+    <string name="bug_report_title">Звіт про помилку</string>
+    <string name="bug_report_option_share_logs">Поділитися журналами</string>
+    <string name="bug_report_option_share_logs_desc">Додайте журнали та деталі</string>
+    <string name="bug_report_device_info">Інформація про пристрій</string>
+    <string name="bug_report_raw_json">Необроблений звіт</string>
+    <string name="action_report_github">Відкрийте проблему GitHub</string>
+    <string name="action_report_email">Звіт електронною поштою</string>
+    <string name="action_copy_clipboard">Копіювати в буфер обміну</string>
+    <string name="bug_report_email_subject">Звіт про помилку Essentials</string>
+    <string name="bug_report_send_via">Надіслати через</string>
+    <!-- Location Reached -->
+    <string name="feat_location_reached_title">Ми вже там?</string>
+    <string name="feat_location_reached_desc">Сповіщення про пункт призначення поблизу</string>
+    <string name="location_reached_how_to">Відкрийте Карти Google, виберіть місце та поділіться ним із Essentials.</string>
+    <string name="location_reached_radius_title">Радіус сповіщення: %d м</string>
+    <string name="perm_location_title">Розташування</string>
+    <string name="perm_location_desc">Використовується для визначення прибуття в пункт призначення.</string>
+    <string name="perm_bg_location_title">Фонове розташування</string>
+    <string name="perm_bg_location_desc">Необхідно відстежувати ваше прибуття, коли додаток закрито або екран вимкнено.</string>
+    <string name="location_reached_notification_title">Пункт призначення досягнуто!</string>
+    <string name="location_reached_notification_desc">Ви прибули до пункту призначення.</string>
+    <string name="location_reached_processing">Обробка місця…</string>
+    <string name="location_reached_dist_remaining">ЗАЛИШИЛАСЯ ВІДСТАНЬ</string>
+    <string name="location_reached_calculating">Обчислення…</string>
+    <string name="location_reached_stop_tracking">Зупинити відстеження</string>
+    <string name="location_reached_dest_ready">Пункт призначення готовий</string>
+    <string name="location_reached_start_tracking">Почати відстеження</string>
+    <string name="location_reached_view_map">Переглянути карту</string>
+    <string name="location_reached_clear">ясно</string>
+    <string name="location_reached_no_dest">Немає пункту призначення</string>
+    <string name="location_reached_open_maps">Відкрийте Карти</string>
+    <string name="location_reached_fsi_title">Дозвіл повноекранного будильника</string>
+    <string name="location_reached_fsi_desc">Потрібно, щоб вивести пристрій із режиму сну після прибуття. Торкніться, щоб надати.</string>
+    <string name="location_reached_dist_m">%1$d м</string>
+    <string name="location_reached_dist_km">%1$.1f км</string>
+    <string name="location_reached_service_title">Будильник подорожі активний</string>
+    <string name="location_reached_service_remaining">%1$s залишилося (%2$d%%)</string>
+    <string name="location_reached_channel_name">Прогрес подорожі</string>
+    <string name="location_reached_channel_desc">Показує відстань до місця призначення в реальному часі</string>
+    <string name="location_reached_alarm_title">Пункт призначення поблизу</string>
+    <string name="location_reached_alarm_subtitle">Підготуйтеся до виходу</string>
+    <string name="location_reached_dismiss">Відхилити</string>
+    <string name="location_reached_toast_set">Набір місць призначення: %1$.4f, %2$.4f</string>
+    <string name="setting_use_root_title">Використовуйте Root</string>
+    <string name="setting_use_root_desc">Замість Шизуку</string>
+    <string name="root_not_available_toast">Root доступ недоступний. Перевірте свій кореневий менеджер.</string>
+    <!-- System Keyboard -->
+    <string name="feat_system_keyboard_title">Клавіатура</string>
+    <string name="feat_system_keys">Ключі</string>
+    <string name="feat_system_keyboard_desc">Налаштуйте макет і поведінку</string>
+    <string name="search_keyboard_height_title">Висота клавіатури</string>
+    <string name="search_keyboard_height_desc">Налаштуйте загальний вертикальний розмір клавіатури</string>
+    <string name="search_keyboard_padding_title">Bottom Padding</string>
+    <string name="search_keyboard_padding_desc">Додайте простір під клавіатурою</string>
+    <string name="search_keyboard_haptics_title">Тактильний зворотний зв\'язок</string>
+    <string name="search_keyboard_haptics_desc">Вібрація при натисканні клавіші</string>
+    <string name="test_keyboard_hint">Перевірте клавіатуру</string>
+    <string name="label_keyboard_height">Висота клавіатури</string>
+    <string name="label_keyboard_bottom_padding">Bottom Padding</string>
+    <string name="label_keyboard_haptics">Тактильний зворотний зв\'язок</string>
+    <string name="label_keyboard_roundness">Ключова округлість</string>
+    <string name="label_keyboard_functions_bottom">Перемістити функції вниз</string>
+    <string name="label_keyboard_functions_padding">Функції бічної оббивки</string>
+    <string name="label_keyboard_haptic_strength">Сила тактильного зворотного зв\'язку</string>
+    <string name="label_keyboard_shape">Форма клавіатури</string>
+    <string name="shape_round">Круглий</string>
+    <string name="shape_flat">Плоский</string>
+    <string name="shape_inverse">Зворотний</string>
+    <string name="feat_batteries_title">Акумулятори</string>
+    <string name="feat_batteries_desc">Слідкуйте за рівнем заряду акумулятора пристрою</string>
+    <string name="batteries_widget_label">Стан батареї</string>
+    <string name="connect_to_airsync">Підключіться до AirSync</string>
+    <string name="connect_to_airsync_summary">Відображати акумулятор підключеного пристрою Mac у AirSync</string>
+    <string name="download_airsync">Завантажте програму AirSync</string>
+    <string name="download_airsync_summary">Необхідно для синхронізації акумулятора Mac</string>
+    <string name="feat_battery_notification_title">Сповіщення про заряд акумулятора</string>
+    <string name="feat_battery_notification_desc">Постійне сповіщення про стан батареї</string>
+    <string name="battery_notification_hint">This notification displays battery levels for your connected Mac and Bluetooth devices. You can configure which devices to show in the Battery Widget settings.</string>
+    <string name="about_desc_battery_notification">Відтворіть віджет акумулятора на панелі сповіщень. Він показуватиме рівень заряду акумулятора всіх підключених пристроїв в одному постійному сповіщенні, яке оновлюється в режимі реального часу. Це включає ваш Mac (через AirSync) і аксесуари Bluetooth.</string>
+    <string name="battery_notification_channel_name">Сповіщення про стан батареї</string>
+    <string name="battery_notification_channel_desc">Постійне сповіщення про рівень заряду акумулятора підключених пристроїв</string>
+    <string name="perm_nearby_devices_title">Пристрої поблизу</string>
+    <string name="perm_nearby_devices_desc">Необхідний для виявлення та отримання інформації про батарею з аксесуарів Bluetooth</string>
+    <!-- GitHub Auth -->
+    <string name="auth_copy_code">Скопіюйте код</string>
+    <string name="auth_open_login_page">Відкрити сторінку входу</string>
+    <string name="auth_sign_in_rationale">Увійдіть, щоб збільшити ліміт викликів API</string>
+    <string name="auth_waiting_for_authorization">Очікування авторизації...</string>
+    <string name="action_sign_in_github">Увійдіть за допомогою GitHub</string>
+    <string name="action_sign_out">Вийти</string>
+    <string name="action_profile">Профіль</string>
+    <!-- App Updates / Repos -->
+    <string name="label_release_notes">Примітки до випуску</string>
+    <string name="msg_no_repos_tracked">Репозиторії ще не відстежуються</string>
+    <string name="label_no_app_linked">Немає пов’язаних програм</string>
+    <string name="format_updated_relative">Оновлено %1$s</string>
+    <!-- Relative Time -->
+    <string name="time_just_now">тільки зараз</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="time_min_ago">%1$dм тому</string>
+    <string name="time_hour_ago">%1$dгод тому</string>
+    <string name="time_day_ago">%1$dd тому</string>
+    <string name="time_days_ago">%1$d days ago</string>
+    <string name="time_weeks_ago">%1$d weeks ago</string>
+    <string name="time_month_ago">%1$dміс тому</string>
+    <string name="time_months_ago">%1$d months ago</string>
+    <string name="time_year_ago">%1$dy тому</string>
+    <string name="action_retry">Повторіть спробу</string>
+    <string name="action_start_sign_in">Розпочати вхід</string>
+    <string name="auth_requesting_code">Запит коду пристрою...</string>
+    <string name="auth_copy_code_instruction">1. Скопіюйте свій код:</string>
+    <string name="auth_paste_code_instruction">2. Вставте код на GitHub:</string>
+    <string name="label_found_apks">Знайдено APK</string>
+    <string name="label_readme">README</string>
+    <string name="action_refresh">Оновити</string>
+    <!-- Added Missing Group Strings -->
+    <string name="feat_sound_modes_title">Плитка режиму звуку</string>
+    <string name="feat_sound_modes_desc">Плитка QS для перемикання звукового режиму</string>
+    <string name="search_sound_mode_show_slider_title">Показати повзунок</string>
+    <string name="search_sound_mode_show_slider_desc">Показати повзунок гучності на плитці</string>
+    <string name="search_sound_mode_behavior_title">Поведінка циклу</string>
+    <string name="search_sound_mode_behavior_desc">Виберіть режими для циклічного перемикання</string>
+    <string name="feat_sound_haptics_title">Звук і тактильні відчуття</string>
+    <string name="feat_sound_haptics_desc">Об’єм і тактильні особливості</string>
+    <string name="feat_security_privacy_title">Безпека та конфіденційність</string>
+    <string name="feat_security_privacy_desc">Захистіть свій пристрій</string>
+    <string name="feat_notifications_alerts_title">Сповіщення та сповіщення</string>
+    <string name="feat_notifications_alerts_desc">Ніколи не пропускайте свої пріоритети</string>
+    <string name="feat_input_actions_title">Введення та дії</string>
+    <string name="feat_input_actions_desc">Керуйте своїм пристроєм з легкістю</string>
+    <string name="feat_widgets_title">Віджети</string>
+    <string name="feat_widgets_desc">Короткий погляд на головному екрані</string>
+    <string name="feat_display_visuals_title">Дисплей</string>
+    <string name="feat_display_visuals_desc">Візуальні елементи для покращення вашого досвіду</string>
+    <string name="feat_watch_title">Дивитися</string>
+    <string name="feat_watch_desc">Інтеграція з WearOS</string>
+    <string name="watch_no_companion_title">Годинник не виявлено</string>
+    <string name="watch_no_companion_desc">Схоже, на вашому годиннику не встановлено супутню програму Essentials Wear.</string>
+    <string name="watch_install_companion_action">Встановити Companion</string>
+    <string name="action_download_from_github">Download from GitHub</string>
+    <string name="watch_help_title">Install on Watch</string>
+    <string name="watch_help_description">To use Watch features, you need to install the Essentials companion app on your Wear OS watch. Click the button below to open the Play Store directly on your watch.</string>
+    <string name="watch_help_open_play_store">Open on Watch</string>
+    <string name="cat_interaction">Взаємодія</string>
+    <string name="cat_interface">Інтерфейс</string>
+    <string name="cat_display">Дисплей</string>
+    <string name="cat_protection">захист</string>
+    <string name="cat_accessibility">Accessibility</string>
+    <string name="cat_connectivity">Connectivity</string>
+    <string name="cat_privacy">Privacy</string>
+    <string name="cat_utils">Utilities</string>
+    <string name="label_kbd_abc">ABC</string>
+    <string name="label_kbd_symbols">\?#/</string>
+    <string name="label_kaomoji">Kaomoji</string>
+    <string name="kaomoji_cat_joy">Joy</string>
+    <string name="kaomoji_cat_love">Love</string>
+    <string name="kaomoji_cat_embarassment">Embarassment</string>
+    <string name="kaomoji_cat_sympathy">Sympathy</string>
+    <string name="kaomoji_cat_dissatisfaction">Dissatisfaction</string>
+    <string name="kaomoji_cat_anger">Anger</string>
+    <string name="kaomoji_cat_apologizing">Apologizing</string>
+    <string name="kaomoji_cat_bear">Bear</string>
+    <string name="kaomoji_cat_bird">Bird</string>
+    <string name="kaomoji_cat_cat">Cat</string>
+    <string name="kaomoji_cat_confusion">Confusion</string>
+    <string name="kaomoji_cat_dog">Dog</string>
+    <string name="kaomoji_cat_doubt">Doubt</string>
+    <string name="kaomoji_cat_enemies">Enemies</string>
+    <string name="kaomoji_cat_faces">Faces</string>
+    <string name="kaomoji_cat_fear">Fear</string>
+    <string name="kaomoji_cat_fish">Fish</string>
+    <string name="kaomoji_cat_food">Food</string>
+    <string name="kaomoji_cat_friends">Friends</string>
+    <string name="kaomoji_cat_games">Games</string>
+    <string name="kaomoji_cat_greeting">Greeting</string>
+    <string name="kaomoji_cat_hiding">Hiding</string>
+    <string name="kaomoji_cat_hugging">Hugging</string>
+    <string name="kaomoji_cat_indifference">Indifference</string>
+    <string name="kaomoji_cat_magic">Magic</string>
+    <string name="kaomoji_cat_music">Music</string>
+    <string name="kaomoji_cat_nosebleeding">Nosebleeding</string>
+    <string name="kaomoji_cat_pain">Pain</string>
+    <string name="kaomoji_cat_pig">Pig</string>
+    <string name="kaomoji_cat_rabbit">Rabbit</string>
+    <string name="kaomoji_cat_running">Running</string>
+    <string name="kaomoji_cat_sadness">Sadness</string>
+    <string name="kaomoji_cat_sleeping">Sleeping</string>
+    <string name="kaomoji_cat_special">Special</string>
+    <string name="kaomoji_cat_spider">Spider</string>
+    <string name="kaomoji_cat_surprise">Surprise</string>
+    <string name="kaomoji_cat_weapons">Weapons</string>
+    <string name="kaomoji_cat_winking">Winking</string>
+    <string name="kaomoji_cat_writing">Writing</string>
+    <string name="msg_restrict_own_app_repo">Ой! Ви можете перевірити оновлення в налаштуваннях програми, не потрібно додавати сюди XD</string>
+    <string name="action_export">Експорт</string>
+    <string name="action_import">Імпорт</string>
+    <string name="msg_export_success">Репозиторії успішно експортовано</string>
+    <string name="msg_export_failed">Не вдалося експортувати сховища</string>
+    <string name="msg_import_success">Репозиторії успішно імпортовано</string>
+    <string name="msg_import_failed">Не вдалося імпортувати сховища</string>
+    <string name="label_apps">програми</string>
+    <string name="feat_text_animations_title">Масштаб і анімація</string>
+    <string name="feat_text_animations_desc">Налаштуйте системний масштаб і анімацію</string>
+    <string name="feat_screen_refresh_rate_title">Screen Refresh Rate</string>
+    <string name="feat_screen_refresh_rate_desc">Set a fixed or ranged screen refresh rate</string>
+    <string name="settings_section_text">текст</string>
+    <string name="label_font_scale">Масштаб шрифту</string>
+    <string name="label_font_weight">Товщина шрифту</string>
+    <string name="label_reset_default">Скинути</string>
+    <string name="settings_section_scale">масштаб</string>
+    <string name="label_smallest_width">Найменша ширина</string>
+    <string name="msg_shizuku_permission_required">Для налаштування масштабу потрібен дозвіл Shizuku</string>
+    <string name="label_grant_permission">Надати дозвіл</string>
+    <string name="settings_section_animations">анімації</string>
+    <string name="label_animator_duration_scale">Шкала тривалості аніматора</string>
+    <string name="label_transition_animation_scale">Шкала анімації переходів</string>
+    <string name="label_window_animation_scale">Масштаб анімації вікна</string>
+    <string name="about_desc_text_animations">Налаштуйте загальносистемний масштаб шрифту, вагу та швидкість анімації. Зауважте, що деякі налаштування можуть потребувати розширених дозволів або перезавантаження пристрою для певних програм, щоб відобразити зміни. \n\nДля коригування масштабу може знадобитися додатковий дозвіл shizuku або root</string>
+    <string name="about_desc_screen_refresh_rate">Set a custom screen refresh rate using Shizuku. Fixed mode locks both the minimum and peak refresh rate to one value, while range mode lets you define separate minimum and peak values. Reset clears the custom override and returns the device to its system-managed refresh behavior.</string>
+    <string name="refresh_rate_section_mode">Mode</string>
+    <string name="refresh_rate_section_values">Refresh Rate</string>
+    <string name="refresh_rate_mode_fixed">Fixed</string>
+    <string name="refresh_rate_mode_range">Range</string>
+    <string name="refresh_rate_fixed_title">Fixed refresh rate</string>
+    <string name="refresh_rate_fixed_desc">Set both minimum and peak refresh rate to the same value</string>
+    <string name="refresh_rate_min_title">Minimum refresh rate</string>
+    <string name="refresh_rate_min_desc">Choose the lowest refresh rate the display may use</string>
+    <string name="refresh_rate_peak_title">Peak refresh rate</string>
+    <string name="refresh_rate_peak_desc">Choose the highest refresh rate the display may use</string>
+    <string name="refresh_rate_system_default">System</string>
+    <string name="refresh_rate_reset_desc">Remove the custom override and return to the system default refresh behavior</string>
+    <string name="msg_refresh_rate_permission_required">Shizuku permission required to adjust refresh rate</string>
+    <string name="search_refresh_rate_mode_title">Refresh Rate Mode</string>
+    <string name="search_refresh_rate_mode_desc">Switch between fixed and ranged refresh rate control</string>
+    <string name="search_refresh_rate_fixed_title">Fixed Refresh Rate</string>
+    <string name="search_refresh_rate_fixed_desc">Lock the display to one custom refresh rate</string>
+    <string name="search_refresh_rate_range_title">Refresh Rate Range</string>
+    <string name="search_refresh_rate_range_desc">Configure separate minimum and peak refresh rates</string>
+    <string name="search_refresh_rate_reset_title">Reset Refresh Rate</string>
+    <string name="search_refresh_rate_reset_desc">Clear the custom refresh rate override</string>
+    <string name="feat_aod_force_turn_off_title">Примусово вимкнути AOD</string>
+    <string name="feat_aod_force_turn_off_desc">Примусово вимикати AOD, коли немає сповіщень. Потрібен дозвіл на доступність.</string>
+    <string name="feat_auto_accessibility_title">Автоматична доступність</string>
+    <string name="feat_auto_accessibility_desc">Автоматично надає дозвіл доступності під час запуску програми, якщо його немає за допомогою WRITE_SECURE_SETTINGS.</string>
+    <string name="label_help_guide">Допомога та посібники</string>
+    <string name="tab_your_android">Ваш Android</string>
+    <string name="label_device_storage">Зберігання</string>
+    <string name="label_device_ram">Пам\'ять</string>
+    <string name="label_use_blur">Використовуйте розмиття</string>
+    <string name="desc_use_blur">Увімкніть елементи прогресивного розмиття в інтерфейсі</string>
+    <string name="msg_blur_compatibility_error">Розмиття вимкнено на цьому пристрої, щоб запобігти відомій помилці відображення на пристроях Samsung з Android 15 або старіших версій.</string>
+    <!-- Empty State Actions -->
+    <string name="msg_no_apps_frozen">No apps selected to freeze.</string>
+    <string name="action_get_started">Get Started</string>
+    <string name="action_new_automation">New Automation</string>
+    <string name="action_add_repository">Add Repository</string>
+    <!-- Bug Report Enhancement -->
+    <string name="bug_report_feedback_placeholder">Describe the issue or provide feedback…</string>
+    <string name="bug_report_contact_email_label">Contact email</string>
+    <string name="action_send_feedback">Send Feedback</string>
+    <string name="msg_feedback_sent">Feedback sent successfully! Thanks for helping us improve the app.</string>
+    <string name="label_alternatively">Alternatively</string>
+    <!-- Pixel Diagnostics -->
+    <string name="label_diagnostics">Diagnostics</string>
+    <string name="label_device_check">Device Check</string>
+    <string name="msg_flashbang">Get ready to be flashbanged!</string>
+    <string name="action_abort">Abort</string>
+    <string name="action_continue">Continue</string>
+    <string name="prank_trial_expired_title">Your Essentials trial has expired</string>
+    <string name="prank_trial_expired_desc">Your free trial period of Essentials has ended. Access to advanced features like Button Remap, App Freezing, and DIY Automations with Premium.</string>
+    <string name="prank_button_premium">What\'s in Premium?</string>
+    <string name="prank_reveal_title">April Fools!</string>
+    <string name="prank_reveal_desc">Just kidding, Essentials is and will always be free and open source. Enjoy! (っ◕‿◕)っ</string>
+    <string name="notification_lighting_style_system">System</string>
+    <string name="notification_lighting_system_mode_title">Ripple Animation</string>
+    <string name="notification_lighting_system_mode_charging_ripple">Bottom</string>
+    <string name="notification_lighting_system_mode_auth_ripple">Center</string>
+    <string name="notification_lighting_system_mode_custom_ripple">Custom</string>
+    <string name="msg_shizuku_root_required_system_lighting">Shizuku or Root permission is required for System lighting effects</string>
+    <string name="notification_lighting_system_disclaimer">Made for Google Pixel. Might not be available on other devices.</string>
+    <!-- Live Wallpaper -->
+    <string name="feat_live_wallpaper_title">Live wallpaper</string>
+    <string name="feat_live_wallpaper_desc">Set custom video as live wallpaper</string>
+    <string name="live_wallpaper_label">Live Wallpaper</string>
+    <string name="live_wallpaper_description">A video live wallpaper that plays when unlocked.</string>
+    <string name="live_wallpaper_playback_trigger_title">Play when</string>
+    <string name="live_wallpaper_trigger_unlock">Unlock</string>
+    <string name="live_wallpaper_trigger_screen_on">Screen on</string>
+    <string name="live_wallpaper_video_title">Video</string>
+    <string name="btn_apply">Apply</string>
+    <string name="add_video">Add video</string>
+    <string name="custom_video">Custom video</string>
+    <string name="about_desc_live_wallpaper">Set your favorite video as your home screen wallpaper. Choose between triggering the animation upon unlocking or simply whenever the screen turns on for a dynamic experience.</string>
+    <!-- Shut-Up! Feature -->
+    <string name="feat_shut_up_title">Shut-Up!</string>
+    <string name="feat_shut_up_desc">I know what I\'m doing</string>
+    <string name="shut_up_description">Shut-Up! bypasses app restrictions and checks for developer options, accessibility and debugging by dynamically hiding them when you launch sensitive apps. \n\nUse the custom shortcuts to ensure settings are hidden before the app launches.</string>
+    <string name="shut_up_select_apps_title">Select Apps</string>
+    <string name="shut_up_select_apps_desc">Choose apps to apply Shut-Up! logic</string>
+    <string name="shut_up_settings_title">Shut-Up! Settings</string>
+    <string name="shut_up_per_app_settings">Shut-Up! Features</string>
+    <string name="shut_up_disable_dev_options">Disable Developer Options</string>
+    <string name="shut_up_disable_usb_debugging">Disable USB Debugging</string>
+    <string name="shut_up_disable_wireless_debugging">Disable Wireless Debugging</string>
+    <string name="shut_up_disable_accessibility">Disable Accessibility Services</string>
+    <string name="shut_up_shortcut_created">Shortcut created for %s</string>
+    <string name="feat_disable_rotation_suggestion_title">Disable rotation suggestion</string>
+    <string name="feat_disable_rotation_suggestion_desc">Do not show the rotation button when auto-rotate is off</string>
+    <string name="shut_up_toast_active">App got shut up</string>
+    <string name="shut_up_toast_restored">Shut up features returned</string>
+    <string name="shut_up_auto_archive_notif_title">Auto Freeze</string>
+    <string name="shut_up_auto_archive_notif_text">%1$s will be archived in %2$d seconds</string>
+    <string name="shut_up_auto_archive_action_freeze">Freeze now</string>
+    <string name="shut_up_auto_archive_action_abort">Abort</string>
+    <!-- Lock Screen Clock -->
+    <string name="feat_lock_screen_clock_title">Lock screen clock</string>
+    <string name="feat_lock_screen_clock_desc">Customize lock screen clock on Pixels</string>
+    <string name="about_desc_lock_screen_clock">Change the lock screen clock style on Pixels. Select from the available clock faces provided by the System UI. Some old styles might not be available.</string>
+    <string name="lock_screen_clock_bignum">Big Number</string>
+    <string name="lock_screen_clock_calligraphy">Calligraphy</string>
+    <string name="lock_screen_clock_flex">Flex</string>
+    <string name="lock_screen_clock_growth">Growth</string>
+    <string name="lock_screen_clock_handwritten">Handwritten</string>
+    <string name="lock_screen_clock_inflate">Inflate</string>
+    <string name="lock_screen_clock_metro">Metro</string>
+    <string name="lock_screen_clock_numoverlap">Number Overlap</string>
+    <string name="lock_screen_clock_weather">Weather</string>
+    <string name="lock_screen_clock_select_label">Select Clock Style</string>
+    <string name="lock_screen_clock_current_label">Current</string>
+    <string name="lock_screen_clock_apply_label">Apply</string>
+    <string name="lock_screen_clock_applied_toast">Clock style applied</string>
+    <string name="lock_screen_clock_permission_required">WRITE_SECURE_SETTINGS permission required</string>
+    <string name="lock_screen_clock_default">Default</string>
+    <string name="label_weight">Weight</string>
+    <string name="label_width">Width</string>
+    <string name="label_grade">Grade</string>
+    <string name="label_roundness">Roundness</string>
+    <string name="label_color_tone">Lightness</string>
+    <string name="label_variation">Variation</string>
+    <string name="label_color">Color</string>
+    <string name="label_style_font">Style &amp; Font</string>
+    <string name="about_title">About</string>
+    <string name="color_default">Default</string>
+    <string name="color_red">Red</string>
+    <string name="color_green">Green</string>
+    <string name="color_blue">Blue</string>
+    <string name="color_yellow">Yellow</string>
+    <string name="color_orange">Orange</string>
+    <string name="color_purple">Purple</string>
+    <string name="color_pink">Pink</string>
+    <string name="color_teal">Teal</string>
+    <!-- What's New -->
+    <string name="whats_new_specs_title">Device Specs Retired</string>
+    <string name="whats_new_specs_desc">Inaccurate GSMArena-powered specifications have been removed to keep device insights clean, fast, and completely reliable.</string>
+    <string name="whats_new_apps_title">App Updates Migrated</string>
+    <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
+</resources>
