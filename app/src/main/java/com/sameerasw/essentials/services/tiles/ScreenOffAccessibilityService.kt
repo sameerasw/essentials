@@ -10,16 +10,16 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.media.session.MediaSessionManager
 import android.os.Handler
 import android.os.Looper
 import android.os.Vibrator
 import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
-import android.media.session.MediaSessionManager
-import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.services.InputEventListenerService
+import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.services.handlers.AmbientGlanceHandler
 import com.sameerasw.essentials.services.handlers.AodForceTurnOffHandler
 import com.sameerasw.essentials.services.handlers.AppFlowHandler
@@ -283,14 +283,17 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
                 return
             }
 
-            val mediaSessionManager = getSystemService(Context.MEDIA_SESSION_SERVICE) as MediaSessionManager
-            val componentName = android.content.ComponentName(this, NotificationListener::class.java)
+            val mediaSessionManager =
+                getSystemService(MEDIA_SESSION_SERVICE) as MediaSessionManager
+            val componentName =
+                android.content.ComponentName(this, NotificationListener::class.java)
             val sessions = try {
                 mediaSessionManager.getActiveSessions(componentName)
             } catch (e: Exception) {
                 emptyList()
             }
-            val isPlaying = sessions.any { it.playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING }
+            val isPlaying =
+                sessions.any { it.playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING }
             if (!isPlaying) {
                 return
             }

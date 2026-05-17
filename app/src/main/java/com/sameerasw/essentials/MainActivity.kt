@@ -23,26 +23,12 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularWavyProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingToolbarDefaults
 import androidx.compose.material3.FloatingToolbarExitDirection.Companion.Bottom
@@ -50,8 +36,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -61,9 +45,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
@@ -73,16 +55,11 @@ import androidx.compose.ui.zIndex
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
-import coil.compose.AsyncImage
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.DIYTabs
 import com.sameerasw.essentials.domain.registry.initPermissionRegistry
 import com.sameerasw.essentials.ui.components.EssentialsFloatingToolbar
 import com.sameerasw.essentials.ui.components.ToolbarItem
-import com.sameerasw.essentials.ui.components.cards.TrackedRepoCard
-import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
-import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
-import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.components.sheets.AddRepoBottomSheet
 import com.sameerasw.essentials.ui.components.sheets.GitHubAuthSheet
 import com.sameerasw.essentials.ui.components.sheets.InstructionsBottomSheet
@@ -101,9 +78,6 @@ import com.sameerasw.essentials.viewmodels.GitHubAuthViewModel
 import com.sameerasw.essentials.viewmodels.LocationReachedViewModel
 import com.sameerasw.essentials.viewmodels.MainViewModel
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
     val viewModel: MainViewModel by viewModels()
@@ -254,7 +228,6 @@ class MainActivity : AppCompatActivity() {
 
                     var showGitHubAuthSheet by remember { mutableStateOf(false) }
                     var showNewAutomationSheet by remember { mutableStateOf(false) }
-                    var showFabProfileMenu by remember { mutableStateOf(false) }
                     val gitHubToken by viewModel.gitHubToken
                     val gitHubUser by gitHubAuthViewModel.currentUser
                     val isOnboardingCompleted by viewModel.isOnboardingCompleted
@@ -368,19 +341,13 @@ class MainActivity : AppCompatActivity() {
                         )
                     }
 
-                    val refreshingRepoIds by updatesViewModel.refreshingRepoIds
                     val updateProgress by updatesViewModel.updateProgress
-                    val animatedProgress by animateFloatAsState(
-                        targetValue = if (updateProgress > 0) updateProgress else 0f,
-                        animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec,
-                        label = "Progress"
-                    )
 
                     var showAddRepoSheet by remember { mutableStateOf(false) }
                     var repoToShowReleaseNotesFullName by remember { mutableStateOf<String?>(null) }
                     val trackedRepos by updatesViewModel.trackedRepos
 
-                    val exportLauncher = rememberLauncherForActivityResult(
+                    rememberLauncherForActivityResult(
                         contract = ActivityResultContracts.CreateDocument("application/json")
                     ) { uri ->
                         uri?.let {
@@ -395,7 +362,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
 
-                    val importLauncher = rememberLauncherForActivityResult(
+                    rememberLauncherForActivityResult(
                         contract = ActivityResultContracts.OpenDocument()
                     ) { uri ->
                         uri?.let {

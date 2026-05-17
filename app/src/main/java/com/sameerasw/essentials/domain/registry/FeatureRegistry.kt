@@ -741,7 +741,8 @@ object FeatureRegistry {
         ) {
             override val permissionKeys: List<String>
                 get() = if (com.sameerasw.essentials.data.repository.SettingsRepository(
-                        EssentialsApp.context)
+                        EssentialsApp.context
+                    )
                         .getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_USE_USAGE_ACCESS)
                 )
                     listOf("USAGE_STATS", "WRITE_SECURE_SETTINGS") else listOf(
@@ -840,7 +841,8 @@ object FeatureRegistry {
         ) {
             override val permissionKeys: List<String>
                 get() = if (com.sameerasw.essentials.data.repository.SettingsRepository(
-                        EssentialsApp.context)
+                        EssentialsApp.context
+                    )
                         .getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_USE_USAGE_ACCESS)
                 )
                     listOf("USAGE_STATS") else listOf("ACCESSIBILITY")
@@ -1032,7 +1034,6 @@ object FeatureRegistry {
             override fun isEnabled(viewModel: MainViewModel) = true
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
         },
-
 
 
         object : Feature(

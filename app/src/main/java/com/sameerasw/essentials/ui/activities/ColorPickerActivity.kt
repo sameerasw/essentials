@@ -1,6 +1,5 @@
 package com.sameerasw.essentials.ui.activities
 
-import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build

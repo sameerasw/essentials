@@ -19,8 +19,10 @@ data class Automation(
     enum class Type {
         @SerializedName("TRIGGER")
         TRIGGER,
+
         @SerializedName("STATE")
         STATE,
+
         @SerializedName("APP")
         APP
     }

@@ -288,9 +288,11 @@ fun ThumbnailItem(
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
                 )
-            } ?: Box(modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black))
+            } ?: Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black)
+            )
 
             if (isSelected) {
                 Box(

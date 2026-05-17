@@ -20,10 +20,6 @@ import android.provider.Settings
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -65,6 +61,7 @@ import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.utils.ShizukuUtils
 import com.sameerasw.essentials.utils.UpdateNotificationHelper
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -407,7 +404,8 @@ class MainViewModel : ViewModel() {
                         val enabled = settingsRepository.getBoolean(key, true)
                         isFreezeShowInLauncherEnabled.value = enabled
                         appContext?.let { ctx ->
-                            val componentName = ComponentName(ctx, "com.sameerasw.essentials.AppFreezingLauncher")
+                            val componentName =
+                                ComponentName(ctx, "com.sameerasw.essentials.AppFreezingLauncher")
                             try {
                                 ctx.packageManager.setComponentEnabledSetting(
                                     componentName,
@@ -1245,13 +1243,14 @@ class MainViewModel : ViewModel() {
         freezeAutoExcludedApps.value = settingsRepository.getFreezeAutoExcludedApps()
         isFreezeShowInLauncherEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_FREEZE_SHOW_IN_LAUNCHER, true)
-        
+
         // Sync PackageManager component enabled state on startup
         val showLauncher = isFreezeShowInLauncherEnabled.value
         val componentName = ComponentName(context, "com.sameerasw.essentials.AppFreezingLauncher")
         try {
             val currentState = context.packageManager.getComponentEnabledSetting(componentName)
-            val targetState = if (showLauncher) PackageManager.COMPONENT_ENABLED_STATE_ENABLED else PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+            val targetState =
+                if (showLauncher) PackageManager.COMPONENT_ENABLED_STATE_ENABLED else PackageManager.COMPONENT_ENABLED_STATE_DISABLED
             if (currentState != targetState) {
                 context.packageManager.setComponentEnabledSetting(
                     componentName,
@@ -1290,13 +1289,18 @@ class MainViewModel : ViewModel() {
             SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_RANDOM_SHAPES,
             false
         )
-        ambientMusicGlanceAlbumArtMode.value = settingsRepository.getAmbientMusicGlanceAlbumArtMode()
+        ambientMusicGlanceAlbumArtMode.value =
+            settingsRepository.getAmbientMusicGlanceAlbumArtMode()
         ambientMusicGlanceClockSize.intValue = settingsRepository.getAmbientMusicGlanceClockSize()
-        ambientMusicGlanceClockWeight.intValue = settingsRepository.getAmbientMusicGlanceClockWeight()
+        ambientMusicGlanceClockWeight.intValue =
+            settingsRepository.getAmbientMusicGlanceClockWeight()
         ambientMusicGlanceClockWidth.intValue = settingsRepository.getAmbientMusicGlanceClockWidth()
-        ambientMusicGlanceClockRoundness.intValue = settingsRepository.getAmbientMusicGlanceClockRoundness()
-        isAmbientMusicGlanceForceFillWhileChargingEnabled.value = settingsRepository.isAmbientMusicGlanceForceFillWhileChargingEnabled()
-        isAmbientMusicGlanceRespectNotificationsEnabled.value = settingsRepository.isAmbientMusicGlanceRespectNotificationsEnabled()
+        ambientMusicGlanceClockRoundness.intValue =
+            settingsRepository.getAmbientMusicGlanceClockRoundness()
+        isAmbientMusicGlanceForceFillWhileChargingEnabled.value =
+            settingsRepository.isAmbientMusicGlanceForceFillWhileChargingEnabled()
+        isAmbientMusicGlanceRespectNotificationsEnabled.value =
+            settingsRepository.isAmbientMusicGlanceRespectNotificationsEnabled()
         isCalendarSyncEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_CALENDAR_SYNC_ENABLED, false)
         isCalendarSyncPeriodicEnabled.value = settingsRepository.isCalendarSyncPeriodicEnabled()
@@ -2488,7 +2492,7 @@ class MainViewModel : ViewModel() {
     fun setFreezeShowInLauncherEnabled(enabled: Boolean, context: Context) {
         isFreezeShowInLauncherEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_FREEZE_SHOW_IN_LAUNCHER, enabled)
-        
+
         // Dynamically enable or disable the AppFreezingLauncher activity-alias component
         val componentName = ComponentName(context, "com.sameerasw.essentials.AppFreezingLauncher")
         try {

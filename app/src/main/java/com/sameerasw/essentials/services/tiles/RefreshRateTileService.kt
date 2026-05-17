@@ -10,7 +10,6 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.utils.RefreshRateUtils
 import com.sameerasw.essentials.utils.ShellUtils
-import com.sameerasw.essentials.utils.ShizukuUtils
 
 @RequiresApi(Build.VERSION_CODES.N)
 class RefreshRateTileService : BaseTileService() {

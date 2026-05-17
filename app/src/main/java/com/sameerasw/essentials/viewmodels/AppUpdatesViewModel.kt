@@ -214,7 +214,7 @@ class AppUpdatesViewModel : ViewModel() {
         _searchQuery.value = repo.fullName
         _isSearching.value = false
         _errorMessage.value = null
-        
+
         // Build local fallback repo info from cache so it displays instantly
         val localOwner = GitHubOwner(
             login = repo.owner,
@@ -233,14 +233,15 @@ class AppUpdatesViewModel : ViewModel() {
         val localAssets = if (repo.downloadUrl != null) {
             listOf(
                 GitHubAsset(
-                    name = repo.selectedApkName.takeIf { it != "Auto" } ?: repo.downloadUrl.substringAfterLast("/"),
+                    name = repo.selectedApkName.takeIf { it != "Auto" }
+                        ?: repo.downloadUrl.substringAfterLast("/"),
                     downloadUrl = repo.downloadUrl
                 )
             )
         } else {
             emptyList()
         }
-        
+
         _latestRelease.value = GitHubRelease(
             tagName = repo.latestTagName,
             name = repo.latestReleaseName,
@@ -250,7 +251,7 @@ class AppUpdatesViewModel : ViewModel() {
             prerelease = repo.allowPreReleases,
             assets = localAssets
         )
-        
+
         _readmeContent.value = null
         _allowPreReleases.value = repo.allowPreReleases
         _notificationsEnabled.value = repo.notificationsEnabled
@@ -259,15 +260,16 @@ class AppUpdatesViewModel : ViewModel() {
         _selectedApp.value = null
         viewModelScope.launch {
             if (repo.mappedPackageName != null) {
-                val installedApps = AppUtil.getAppsByPackageNames(context, listOf(repo.mappedPackageName))
+                val installedApps =
+                    AppUtil.getAppsByPackageNames(context, listOf(repo.mappedPackageName))
                 _selectedApp.value = installedApps.firstOrNull()
             }
-            
+
             try {
                 val token = SettingsRepository(context).getGitHubToken()
                 val repoInfo = gitHubRepository.getRepoInfo(repo.owner, repo.name, token)
                 val release = gitHubRepository.getLatestRelease(repo.owner, repo.name, token)
-                
+
                 if (repoInfo != null) {
                     _searchResult.value = repoInfo
                 }

@@ -1,11 +1,13 @@
 package com.sameerasw.essentials.ui.activities
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.core.EaseOut
 import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -14,19 +16,28 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,60 +45,40 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.compose.ui.input.pointer.pointerInput
+import coil.compose.AsyncImage
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.ui.components.AppsActionButtons
 import com.sameerasw.essentials.ui.components.DeviceHeroCard
 import com.sameerasw.essentials.ui.components.EssentialsFloatingToolbar
+import com.sameerasw.essentials.ui.components.ImportExportButtons
+import com.sameerasw.essentials.ui.components.cards.TrackedRepoCard
+import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
+import com.sameerasw.essentials.ui.components.sheets.AddRepoBottomSheet
+import com.sameerasw.essentials.ui.components.sheets.GitHubAuthSheet
+import com.sameerasw.essentials.ui.components.sheets.UpdateBottomSheet
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
+import com.sameerasw.essentials.utils.DeviceInfo
 import com.sameerasw.essentials.utils.DeviceUtils
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalView
 import com.sameerasw.essentials.utils.HapticUtil
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import com.sameerasw.essentials.viewmodels.AppUpdatesViewModel
 import com.sameerasw.essentials.viewmodels.GitHubAuthViewModel
-import com.sameerasw.essentials.ui.components.sheets.GitHubAuthSheet
-import com.sameerasw.essentials.ui.components.sheets.UpdateBottomSheet
-import com.sameerasw.essentials.ui.components.sheets.AddRepoBottomSheet
-import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
-import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
-import com.sameerasw.essentials.ui.components.cards.TrackedRepoCard
-import com.sameerasw.essentials.ui.components.AppsActionButtons
-import com.sameerasw.essentials.ui.components.ImportExportButtons
-import android.widget.Toast
-import androidx.compose.animation.core.EaseInOutBounce
-import androidx.compose.animation.core.EaseOut
-import androidx.compose.foundation.layout.fillMaxWidth
-import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
-import com.sameerasw.essentials.utils.DeviceInfo
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class YourAndroidViewModel : ViewModel() {
@@ -111,8 +102,10 @@ class YourAndroidActivity : ComponentActivity() {
             val isBlurEnabled by mainViewModel.isBlurEnabled
 
             val viewModel: YourAndroidViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
-            val updatesViewModel: AppUpdatesViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
-            val gitHubAuthViewModel: GitHubAuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+            val updatesViewModel: AppUpdatesViewModel =
+                androidx.lifecycle.viewmodel.compose.viewModel()
+            val gitHubAuthViewModel: GitHubAuthViewModel =
+                androidx.lifecycle.viewmodel.compose.viewModel()
 
             val context = androidx.compose.ui.platform.LocalContext.current
             val deviceInfo = remember { DeviceUtils.getDeviceInfo(context) }
@@ -173,7 +166,7 @@ class YourAndroidActivity : ComponentActivity() {
                 }
             }
 
-            val yourAndroidFeature = remember {
+            remember {
                 object : com.sameerasw.essentials.domain.model.Feature(
                     id = "Your Android",
                     title = R.string.tab_your_android,
@@ -227,7 +220,7 @@ class YourAndroidActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxSize()
                     )
 
-                    val localView = androidx.compose.ui.platform.LocalView.current
+                    val localView = LocalView.current
                     EssentialsFloatingToolbar(
                         title = stringResource(R.string.tab_your_android),
                         onBackClick = {
@@ -248,7 +241,12 @@ class YourAndroidActivity : ComponentActivity() {
                                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                                     contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                                     shape = MaterialTheme.shapes.large,
-                                    elevation = FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp)
+                                    elevation = FloatingActionButtonDefaults.elevation(
+                                        0.dp,
+                                        0.dp,
+                                        0.dp,
+                                        0.dp
+                                    )
                                 ) {
                                     if (gitHubUser != null) {
                                         AsyncImage(
@@ -275,7 +273,11 @@ class YourAndroidActivity : ComponentActivity() {
                                         onDismissRequest = { showFabProfileMenu = false }
                                     ) {
                                         SegmentedDropdownMenuItem(
-                                            text = { Text(gitHubUser!!.name ?: gitHubUser!!.login) },
+                                            text = {
+                                                Text(
+                                                    gitHubUser!!.name ?: gitHubUser!!.login
+                                                )
+                                            },
                                             onClick = { showFabProfileMenu = false },
                                             leadingIcon = {
                                                 Icon(
@@ -329,7 +331,8 @@ class YourAndroidActivity : ComponentActivity() {
 
                     if (repoToShowReleaseNotesFullName != null) {
                         val trackedRepos by updatesViewModel.trackedRepos
-                        val repo = trackedRepos.find { it.fullName == repoToShowReleaseNotesFullName }
+                        val repo =
+                            trackedRepos.find { it.fullName == repoToShowReleaseNotesFullName }
                         if (repo != null) {
                             val isNotesLoading = repo.latestReleaseBody.isNullOrBlank()
                             UpdateBottomSheet(
@@ -432,7 +435,7 @@ fun YourAndroidContent(
     val mainViewModel: com.sameerasw.essentials.viewmodels.MainViewModel =
         androidx.lifecycle.viewmodel.compose.viewModel()
     val configuration = LocalConfiguration.current
-    val screenHeight = configuration.screenHeightDp.dp
+    configuration.screenHeightDp.dp
     val isBlurEnabled by mainViewModel.isBlurEnabled
 
 
@@ -584,7 +587,7 @@ fun YourAndroidContent(
                         },
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                com.sameerasw.essentials.ui.components.containers.RoundedCardContainer(
+                RoundedCardContainer(
                     modifier = Modifier.graphicsLayer {
                         alpha = contentAlphaState.value
                         translationY = contentOffsetState.value.toPx()
@@ -616,7 +619,7 @@ fun YourAndroidContent(
                         },
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                com.sameerasw.essentials.ui.components.containers.RoundedCardContainer(
+                RoundedCardContainer(
                     modifier = Modifier.graphicsLayer {
                         alpha = contentAlphaState.value
                         translationY = contentOffsetState.value.toPx()
@@ -648,7 +651,7 @@ fun YourAndroidContent(
                         },
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                com.sameerasw.essentials.ui.components.containers.RoundedCardContainer(
+                RoundedCardContainer(
                     modifier = Modifier.graphicsLayer {
                         alpha = contentAlphaState.value
                         translationY = contentOffsetState.value.toPx()

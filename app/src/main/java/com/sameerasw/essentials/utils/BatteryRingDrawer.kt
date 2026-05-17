@@ -76,7 +76,8 @@ object BatteryRingDrawer {
         val topPadding = if (!hasStatusIcon) segmentGapDegrees / 2f else 0f
         val visualStart = startAngle + topPadding
         val progressSweepRaw = (clampedLevel / 100f) * totalAvailableSweep
-        val visualEnd = (startAngle + progressSweepRaw - (segmentGapDegrees / 2)).coerceAtLeast(visualStart)
+        val visualEnd =
+            (startAngle + progressSweepRaw - (segmentGapDegrees / 2)).coerceAtLeast(visualStart)
 
         val visualSpan = visualEnd - visualStart
         if (visualSpan > (capAngleDegrees * 2)) {
@@ -128,7 +129,7 @@ object BatteryRingDrawer {
 
         val visualStart = (startAngle + progressSweepRaw + (segmentGapDegrees / 2))
             .coerceAtMost(startAngle + totalAvailableSweep)
-        
+
         val topPadding = if (!hasStatusIcon) segmentGapDegrees / 2f else 0f
         val visualEnd = startAngle + totalAvailableSweep - topPadding
 
