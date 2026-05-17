@@ -8,7 +8,7 @@
     <string name="accessibility_service_description"><b>Servizio di Accessibilità Essentials</b>\n\nQuesto servizio è richiesto per le seguenti funzioni avanzate:\n\n<b>• Rimappatura dei tasti fisici:</b>\nRileva la pressione dei tasti del volume anche quando lo schermo è spento per attivare azioni come la Torcia.\n\n<b>• Impostazioni per singola app:</b>\nMonitora l\'app attualmente attiva per applicare profili specifici per la Luce notturna dinamica, i colori dell\'illuminazione delle notifiche e il Blocco app.\n\n<b>• Controllo dello schermo:</b>\nConsente all\'app di bloccare lo schermo (ad es. tramite Doppio tocco o Widget) e di rilevare i cambiamenti di stato dello schermo.\n\n<b>• Sicurezza:</b>\nImpedisce modifiche non autorizzate rilevando il contenuto delle finestre quando il dispositivo è bloccato.\n\n<small>Nessun testo inserito o dato sensibile dell\'utente viene raccolto o trasmesso.</small></string>
     <string name="freeze_activity_title">Blocco App</string>
     <string name="freeze_activity_subtitle">Disattiva le app utilizzate raramente</string>
-    <string name="freeze_shortcut_short_label">Blocco dell\'app</string>
+    <string name="freeze_shortcut_short_label">Frozen Apps</string>
     <string name="freeze_shortcut_long_label">Apri Blocco app</string>
     <string name="frozen_app_shortcut_label">App bloccate</string>
     <string name="screen_off_widget_label">Widget Spegni-scherno</string>
@@ -146,6 +146,8 @@
     <string name="action_import_freeze">Importa l\'elenco delle app congelate</string>
     <string name="freeze_pick_apps_title">Scegli le app da congelare</string>
     <string name="freeze_pick_apps_desc">Scegli quali app possono essere congelate</string>
+    <string name="freeze_show_in_launcher_title">Show in launcher</string>
+    <string name="freeze_show_in_launcher_desc">Add a launcher shortcut for easier access</string>
     <string name="settings_section_automation">Automazione</string>
     <string name="freeze_when_locked_title">Congelare quando bloccato</string>
     <string name="freeze_delay_title">Ritardo congelamento</string>
@@ -1447,4 +1449,9 @@
     <string name="color_purple">Purple</string>
     <string name="color_pink">Pink</string>
     <string name="color_teal">Teal</string>
+    <!-- What's New -->
+    <string name="whats_new_specs_title">Device Specs Retired</string>
+    <string name="whats_new_specs_desc">Inaccurate GSMArena-powered specifications have been removed to keep device insights clean, fast, and completely reliable.</string>
+    <string name="whats_new_apps_title">App Updates Migrated</string>
+    <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
 </resources>
