@@ -1,0 +1,1457 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="label_customization">Customization</string>
+    <string name="label_beta">BETA</string>
+    <string name="shut_up_attempt_shizuku_restart">Attempt Shizuku restart</string>
+    <string name="shut_up_shizuku_restart_warning_title">Shizuku Restart Warning</string>
+    <string name="shut_up_shizuku_restart_warning_message">Since wireless debugging was toggled, Shizuku services might not have started automatically causing freezing to not function. Consider turning on attempt shizuku restart as well</string>
+    <string name="accessibility_service_description"><b>Toegankelijkheidsservice van Essentials</b>\n\nDeze service is vereist voor de volgende geavanceerde functies:\n\n<b>• Opnieuw toewijzen van fysieke knoppen:</b>\nDetecteert het klikken van de volumeknoppen, zelfs wanneer het scherm uit is, om acties te starten zoals de zaklamp.\n\n<b>• Instellingen per app:</b>\nBekijkt de momenteel actieve app om specifieke profielen toe te passen voor Dynamisch nachtlicht, Meldingsbelichtingskleuren en Appvergrendeling.\n\n<b>• Schermbesturing:</b>\nLaat de app het scherm vergrendelen (bijv. met dubbelklikken of met widgets) en veranderingen van schermstaat detecteren.\n\n<b>• Beveiliging:</b>\nVoorkomt ongeautoriseerde wijzigingen door vensterinhoud te detecteren wanneer het apparaat vergrendeld is.\n\n<small>Geen invoertekst of gevoelige gebruikersdata wordt verzameld of overgezet.</small></string>
+    <string name="freeze_activity_title">Apps bevriezen</string>
+    <string name="freeze_activity_subtitle">Schakel apps uit die weinig worden gebruikt</string>
+    <string name="freeze_shortcut_short_label">Apps bevriezen</string>
+    <string name="freeze_shortcut_long_label">Open apps bevriezen</string>
+    <string name="frozen_app_shortcut_label">Bevroren app</string>
+    <string name="screen_off_widget_label">Lege schermuitzetwidget</string>
+    <string name="app_freezing_tile_label">Apps bevriezen</string>
+    <string name="flashlight_pulse_tile_label">Zaklamppuls</string>
+    <string name="check_pre_releases_label">Checken voor vooruitgaven</string>
+    <string name="check_pre_releases_desc">Kunnen instabiel zijn</string>
+    <string name="label_default_tab">Standaard tabblad</string>
+    <!-- App Lock -->
+    <string name="settings_section_security">Beveiliging</string>
+    <string name="app_lock_enable_title">Appvergrendeling inschakelen</string>
+    <string name="app_lock_auth_title">Appvergrendelingsbeveiliging</string>
+    <string name="app_lock_enable_auth_subtitle">Authenticeren om appvergrendeling in te schakelen</string>
+    <string name="app_lock_disable_auth_subtitle">Authenticeren om appvergrendeling uit te schakelen</string>
+    <string name="app_lock_select_apps_title">Selecteer vergrendelde apps</string>
+    <string name="app_lock_select_apps_desc">Kies welke apps authenticatie vereisen</string>
+    <string name="app_lock_description">Beveilig je apps met biometrische authenticatie. Vergrendelde apps zullen authenticatie vereisen bij openen, blijft ontgrendeld totdat het scherm word uitgezet.</string>
+    <string name="app_lock_warning">Wees er van bewust dat dit niet een robuuste oplossing is, omdat dit alleen maar een app van een derde partij is. Als je sterke beveiliging nodig hebt, probeer dan Privéruimte of andere dergelijke functies.</string>
+    <string name="app_lock_biometric_note">Nog een opmerking: De biometrische authenticatie laat je alleen STERKE beveiligingsmethoden gebruiken. Gezichtsherkenning wordt als ZWAK gezien bij apparaten zoals de Pixel 7. Zulke apparaten zullen andere STERKE beveiligingsmethoden gebruiken zoals vingerafdruk of pincode.</string>
+    <string name="setting_use_usage_access_title">Use usage access</string>
+    <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
+    <!-- Button Remap -->
+    <string name="button_remap_enable_title">Opnieuw toewijzen van fysieke knoppen inschakelen</string>
+    <string name="button_remap_use_shizuku_title">Use Shizuku</string>
+    <string name="button_remap_use_shizuku_desc">Werkt met uitgeschakeld scherm (Aanbevolen)</string>
+    <string name="shizuku_not_running_toast">Shizuku loopt niet</string>
+    <string name="shizuku_detected_prefix">Gedetecteerd %1$s</string>
+    <string name="shizuku_status_prefix">Status: %1$s</string>
+    <string name="shizuku_open_button">Open Shizuku</string>
+    <string name="settings_section_flashlight">Zaklamp</string>
+    <string name="flashlight_options_title">Zaklampopties</string>
+    <string name="flashlight_options_desc">Pas uitvagen en andere instellingen aan</string>
+    <string name="setting_pitch_black_theme_title">Pikzwart thema</string>
+    <string name="setting_pitch_black_theme_desc">Gebruik een pikzwarte achtergrond bij de donkere modus</string>
+    <string name="settings_section_haptic">Haptische feedback</string>
+    <string name="button_remap_section_long_press">Lang indrukken opnieuw toewijzen</string>
+    <string name="screen_off">Scherm uit</string>
+    <string name="screen_on">Scherm aan</string>
+    <string name="volume_up">Volume omhoog</string>
+    <string name="volume_down">Volume omlaag</string>
+    <string name="action_toggle_flashlight">Zaklamp in-/uitschakelen</string>
+    <string name="action_media_play_pause">Media afspelen/pauzeren</string>
+    <string name="action_media_next">Volgende media</string>
+    <string name="action_media_previous">Vorige media</string>
+    <string name="action_toggle_vibrate">Trillen in-/uitschakelen</string>
+    <string name="action_toggle_mute">Stille modus in-/uitschakelen</string>
+    <string name="action_ai_assistant">AI-assistent</string>
+    <string name="action_take_screenshot">Schermafbeelding nemen</string>
+    <string name="action_cycle_sound_modes">Door geluidsmodi schakelen</string>
+    <string name="action_circle_to_search">Circle to Search</string>
+    <string name="action_like_song">Huidig liedje liken</string>
+    <string name="like_song_settings_title">Instellingen van liedje liken</string>
+    <string name="like_song_settings_desc">Deze functie vereist meldingstoegang om de momenteel afspelende media te detecteren en de like-actie uit te voeren. Schakel het hieronder in.</string>
+    <string name="like_song_toast_enabled">Toastbericht tonen</string>
+    <string name="like_song_aod_overlay_title">Overlay tonen op de Always-On Display</string>
+    <string name="feat_essentials_on_display_title">Essentials On Display</string>
+    <string name="feat_essentials_on_display_desc">Glance at media and info on AOD</string>
+    <string name="essentials_on_display_docked_mode_title">Docked mode</string>
+    <string name="essentials_on_display_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
+    <string name="essentials_on_display_respect_notifications_title">Respect new notifications</string>
+    <string name="essentials_on_display_respect_notifications_desc">Briefly disable for new notifications</string>
+    <string name="essentials_on_display_random_shapes_title">Random shapes</string>
+    <string name="essentials_on_display_random_shapes_desc">Use various Material 3 shapes for the album art</string>
+    <string name="essentials_on_display_album_art_title">Album art</string>
+    <string name="essentials_on_display_clock_title">Clock</string>
+    <string name="essentials_on_display_force_fill_while_charging_title">Always use while charging</string>
+    <string name="essentials_on_display_force_fill_while_charging_desc">Force Fill mode when the device is plugged in regardless of the selected mode</string>
+    <string name="label_size">Size</string>
+    <string name="feat_notification_glance_title">Meldingen in één blik</string>
+    <string name="feat_notification_glance_desc">Houd het Always-On Display terwijl er meldingen zijn</string>
+    <string name="notification_glance_same_as_lighting_title">Dezelfde apps als de meldingsverlichting</string>
+    <string name="notification_glance_desc">Deze functie zal dynamisch het Always-On Display inschakelen wanneer je een melding krijgt van een geselecteerde app en het uitschakelen wanneer alle overeenkomende meldingen zijn gesloten. Kies de apps of gebruik dezelfde als bij de meldingsverlichting.</string>
+    <string name="grant_notification_access">Meldingstoegang geven</string>
+    <string name="action_toggle_media_volume">Mediavolume in-/uitschakelen</string>
+    <string name="button_remap_screen_off_hint">Wanneer het scherm uit is, kan door de geselecteerde knop lang in te drukken de bijbehorende actie uitgevoerd worden. Op Pixel-apparaten kan dankzij systeembeperkingen deze actie alleen uitgevoerd worden als de Always-On Display aan is.</string>
+    <string name="button_remap_screen_on_hint">Wanneer het scherm aan is, kan door de geselecteerde knop lang in te drukken de bijbehorende actie uitgevoerd worden.</string>
+    <string name="flashlight_intensity_title">Zaklampintensiteit</string>
+    <string name="flashlight_fade_title">In- en uitfaden</string>
+    <string name="flashlight_fade_desc">Vloeiend de zaklamp in-/uitschakelen</string>
+    <string name="flashlight_global_title">Globale bedieningselementen</string>
+    <string name="flashlight_global_desc">Zaklamp globaal infaden</string>
+    <string name="flashlight_adjust_intensity_title">Intensiteit aanpassen</string>
+    <string name="flashlight_adjust_intensity_desc">Volume + - past de zaklampintensiteit aan</string>
+    <string name="flashlight_live_update_title">Live update</string>
+    <string name="flashlight_live_update_desc">Laat de helderheid zien in de statusbalk</string>
+    <string name="settings_section_other">Andere</string>
+    <string name="flashlight_always_off_title">Altijd de zaklamp uitzetten</string>
+    <string name="flashlight_always_off_desc">Zelfs als het scherm aan is</string>
+    <string name="content_desc_settings">Instellingen</string>
+    <!-- Caffeinate / Permissions -->
+    <string name="permission_show_notification_title">Melding tonen</string>
+    <string name="permission_post_notifications_title">Meldingen sturen</string>
+    <string name="permission_post_notifications_desc">Staat de app toe om meldingen te laten zien</string>
+    <string name="permission_grant_action">Toestemming geven</string>
+    <string name="caffeinate_notification_title">Cafeïne actief</string>
+    <string name="caffeinate_active">Actief</string>
+    <string name="caffeinate_notification_desc">Scherm wordt wakker gehouden</string>
+    <string name="caffeinate_battery_optimization_title">Negeer batterijoptimalisatie</string>
+    <string name="caffeinate_abort_screen_off_title">Afbreken bij uitzetten scherm</string>
+    <string name="caffeinate_skip_countdown_title">Aftellen overslaan</string>
+    <string name="caffeinate_skip_countdown_desc">Start Cafeïne meteen.</string>
+    <string name="caffeinate_timeout_presets_title">Time-out-voorinstellingen</string>
+    <string name="caffeinate_timeout_presets_desc">Selecteer beschikbare tijden voor de tegel in de Snelle instellingen</string>
+    <string name="caffeinate_timeout_5m">5 min</string>
+    <string name="caffeinate_timeout_10m">10 min</string>
+    <string name="caffeinate_timeout_30m">30 min</string>
+    <string name="perm_notif_policy_title">Toegang tot Niet storen</string>
+    <string name="perm_notif_policy_desc">Vereist om te schakelen tussen geluid, trillen, en de stille modus</string>
+    <string name="caffeinate_timeout_1h">1 uur</string>
+    <string name="caffeinate_timeout_infinity">∞</string>
+    <string name="caffeinate_starting_in">Start in %1$ds…</string>
+    <string name="caffeinate_remaining">%1$s resterend</string>
+    <string name="caffeinate_live_channel_desc">Blijvende melding voor Cafeïne</string>
+    <!-- Dynamic Night Light -->
+    <string name="dynamic_night_light_enable_title">Dynamisch nachtlicht inschakelen</string>
+    <string name="dynamic_night_light_apps_section">Apps die nachtlicht uitschakelen</string>
+    <string name="action_select_apps">Selecteer apps</string>
+    <!-- App Freezing -->
+    <string name="settings_section_app_control">Appbesturing</string>
+    <string name="action_freeze">Bevriezen</string>
+    <string name="action_unfreeze">Ontdooien</string>
+    <string name="action_remove">Verwijderen</string>
+    <string name="action_create_shortcut">Snelkoppeling aanmaken</string>
+    <string name="action_app_info">App-info</string>
+    <string name="freeze_mode_description_freeze_title">Wat is bevriezen?</string>
+    <string name="freeze_mode_description_freeze_body">Het bevriezen van apps schakelt de startactiviteit van de app uit, wat ervoor zorgt dat het wordt verwijderd uit de lijst van apps en updates. Het zal voorkomen dat de app überhaupt geopend kan worden totdat het ontdooit wordt om bronnen te besparen, maar je moet het wel hier weer inschakelen.</string>
+    <string name="freeze_mode_description_freeze_warning">BEVRIES NIET COMMUNICATIEAPPS</string>
+    <string name="freeze_mode_description_suspend_title">Wat is apps stoppen?</string>
+    <string name="freeze_mode_description_suspend_body">Het stoppen van een app zorgt ervoor dat de appactiviteit wordt gepauzeerd en dat uitvoeren in de achtergrond wordt voorkomen, maar met recente Android-versies, pauzeert het alleen de melding en voor de rest niet echt iets. Ze zullen nog wel beschikbaar zijn op het startscherm als grijze gepauzeerde iconen.</string>
+    <string name="freeze_mode_description_suspend_footer">Zou hetzelfde werken als het ingebouwde apps pauzeren.</string>
+    <string name="content_desc_more_options">Meer opties</string>
+    <string name="action_freeze_all">Bevries alle apps</string>
+    <string name="action_unfreeze_all">Ontdooi alle apps</string>
+    <string name="action_export_freeze">Exporteer de lijst met bevroren apps</string>
+    <string name="action_import_freeze">Exporteer de lijst met bevroren apps</string>
+    <string name="freeze_pick_apps_title">Kies apps om te bevriezen</string>
+    <string name="freeze_pick_apps_desc">Kies welke apps bevroren kunnen worden</string>
+    <string name="freeze_show_in_launcher_title">Show in launcher</string>
+    <string name="freeze_show_in_launcher_desc">Add a launcher shortcut for easier access</string>
+    <string name="settings_section_automation">Automatisatie</string>
+    <string name="freeze_when_locked_title">Bevriezen bij vergrendeling</string>
+    <string name="freeze_delay_title">Vertraging bij bevriezen</string>
+    <string name="delay_immediate">Meteen</string>
+    <string name="delay_1m">1 min</string>
+    <string name="delay_5m">5 min</string>
+    <string name="delay_15m">15 min</string>
+    <string name="delay_manual">Manueel</string>
+    <string name="freeze_auto_freeze_section">Automatisch apps bevriezen</string>
+    <string name="freeze_automation_hint">Bevries geselecteerde apps wanneer het apparaat vergrendeld. Kies een vertraging om te voorkomen dat apps bevroren worden als je het scherm kort na uitschakelen weer aanzet.</string>
+    <string name="freeze_warning">Het bevriezen van systeemapps kan gevaarlijk zijn en kan voor onverwachts gedrag zorgen.</string>
+    <string name="action_enable_in_settings">In de instellingen inschakelen</string>
+    <string name="freeze_dont_freeze_active_apps_title">Niet actieve apps bevriezen</string>
+    <string name="perm_usage_stats_title">Gebruiksstatistieken</string>
+    <string name="perm_usage_stats_desc">Vereist om te detecteren welke apps momenteel in gebruik zijn om te voorkomen dat ze worden bevroren.</string>
+    <string name="perm_usage_stats_desc_app_lock">Required to detect foreground apps for App Lock features when accessibility is not used.</string>
+    <string name="perm_notif_listener_desc_freeze">Vereist om afspelende media en actieve meldingen te detecteren om te voorkomen dat ze worden bevroren.</string>
+    <string name="freeze_mode_title">Vriesmodus</string>
+    <string name="freeze_mode_freeze">Bevriezen</string>
+    <string name="freeze_mode_suspend">Apps stoppen</string>
+    <string name="freeze_mode_warning_desc">Je kan niet tussen de modi schakelen terwijl je apps bevroren zijn. Ontdooi ze en probeer het opnieuw.</string>
+    <!-- Notification Lighting -->
+    <string name="notification_lighting_screen_off_title">Alleen laten zien als het scherm uit is</string>
+    <string name="notification_lighting_skip_silent_title">Stille meldingen overslaan</string>
+    <string name="notification_lighting_skip_persistent_title">Blijvende meldingen overslaan</string>
+    <string name="settings_section_flashlight_pulse">Zaklamppuls</string>
+    <string name="flashlight_pulse_title">Zaklamppuls</string>
+    <string name="flashlight_pulse_facedown_title">Alleen als het apparaat met het scherm naar beneden ligt</string>
+    <string name="flashlight_pulse_same_as_lighting_title">Dezelfde apps als de meldingsverlichting</string>
+    <string name="flashlight_pulse_max_brightness">Max brightness</string>
+    <string name="flashlight_pulse_preview">Preview pulse</string>
+    <string name="settings_section_style">Stijl</string>
+    <string name="notification_lighting_stroke_adjustment_section">Lijn aanpassen</string>
+    <string name="notification_lighting_corner_radius_title">Hoekradius</string>
+    <string name="notification_lighting_stroke_thickness_title">Dikte</string>
+    <string name="notification_lighting_glow_adjustment_section">Gloei aanpassen</string>
+    <string name="notification_lighting_glow_spread_title">Spreiding</string>
+    <string name="notification_lighting_placement_section">Plaatsing</string>
+    <string name="notification_lighting_h_pos_title">Horizontale positie</string>
+    <string name="notification_lighting_v_pos_title">Verticale positie</string>
+    <string name="notification_lighting_indicator_adjustment_section">Indicator aanpassen</string>
+    <string name="notification_lighting_scale_title">Grootte</string>
+    <string name="notification_lighting_duration_title">Duur</string>
+    <string name="notification_lighting_style_sweep">Sweep</string>
+    <string name="notification_lighting_sweep_position_title">Position</string>
+    <string name="notification_lighting_sweep_random_shapes_title">Random shapes</string>
+    <string name="notification_lighting_sweep_thickness_title">Stroke thickness</string>
+    <string name="notification_lighting_sweep_pos_left">Left</string>
+    <string name="notification_lighting_sweep_pos_center">Center</string>
+    <string name="notification_lighting_sweep_pos_right">Right</string>
+    <string name="settings_section_animation">Animatie</string>
+    <string name="notification_lighting_pulse_count_title">Pulshoeveelheid</string>
+    <string name="notification_lighting_pulse_duration_title">Pulsduur</string>
+    <string name="settings_section_color_mode">Kleurmodus</string>
+    <string name="settings_section_ambient_display">Ambient display</string>
+    <string name="ambient_display_title">Ambient display</string>
+    <string name="ambient_display_hint">Handig als je niet het Always-On Display gebruikt.</string>
+    <string name="ambient_display_desc">Scherm aanzetten en verlichting laten zien</string>
+    <string name="ambient_show_lock_screen_title">Vergrendelscherm laten zien</string>
+    <string name="ambient_show_lock_screen_desc">Geen zwarte overlay</string>
+    <!-- Tiles -->
+    <string name="action_add">Toevoegen</string>
+    <string name="action_added">Added</string>
+    <string name="qs_tile_already_added">Al toegevoegd</string>
+    <string name="qs_tile_requires_android_13">Vereist Android 13+</string>
+    <string name="tile_ui_blur">UI-vervaging</string>
+    <string name="tile_bubbles">Bubbels</string>
+    <string name="tile_sensitive_content">Gevoelige inhoud</string>
+    <string name="tile_tap_to_wake">Tikken om te wekken</string>
+    <string name="tile_aod">Always-On Display</string>
+    <string name="tile_caffeinate">Cafeïne</string>
+    <string name="tile_sound_mode">Geluidsmodus</string>
+    <string name="tile_notification_lighting">Meldingsverlichting</string>
+    <string name="tile_dynamic_night_light">Dynamisch nachtlicht</string>
+    <string name="tile_locked_security">Beveiliging bij vergrendeling</string>
+    <string name="tile_app_lock">Appvergrendeling</string>
+    <string name="tile_mono_audio">Mono audio</string>
+    <string name="tile_flashlight">Zaklamp</string>
+    <string name="tile_app_freezing">Apps bevriezen</string>
+    <string name="tile_flashlight_pulse">Zaklamppuls</string>
+    <string name="tile_stay_awake">Wakker blijven</string>
+    <string name="input_method_label">Essentials-toetsenbord</string>
+    <string name="subtype_en_us">Engels (US)</string>
+    <string name="tile_active">Actief</string>
+    <string name="tile_inactive">Inactief</string>
+    <string name="tile_developer_options">Ontwikkelaarsopties</string>
+    <string name="about_desc_developer_options">Makkelijk de ontwikkelaarsopties in-/uitschakelen via een tegel in de Snelle instellingen. Dit kan sommige ontwikkelaarsinstellingen resetten die je hebt aangepast.</string>
+    <string name="tile_refresh_rate">Refresh Rate</string>
+    <string name="about_desc_refresh_rate_tile">Cycle between the system default and preset refresh rates directly from a Quick Settings tile using Shizuku.</string>
+    <string name="nfc_tile_label">NFC</string>
+    <string name="tile_private_dns">Privé-DNS</string>
+    <string name="tile_private_dns_auto">Automatisch</string>
+    <string name="tile_private_dns_off">Uit</string>
+    <string name="tile_usb_debugging">USB-foutopsporing</string>
+    <string name="tile_color_picker">Kleurenkiezer</string>
+    <string name="toast_eyedropper_failed">Are you sure you\'re on Androdi 17? (╯°_°）╯</string>
+    <string name="subtitle_eye_dropper">Pipet</string>
+    <string name="on">Aan</string>
+    <string name="off">Uit</string>
+    <string name="private_dns_custom_title">Aangepaste Privé-DNS</string>
+    <string name="private_dns_presets_title">Aangepaste DNS-voorinstellingen</string>
+    <string name="dns_preset_add_title">DNS-voorinstelling toevoegen</string>
+    <string name="dns_preset_name_label">Naam van voorinstelling</string>
+    <string name="dns_preset_reset_action">Resetten</string>
+    <string name="dns_preset_delete_content_description">Voorinstelling verwijderen</string>
+    <string name="dns_preset_reset_confirm">Weet je zeker dat je alle DNS-voorinstellingen wilt resetten naar de standaardinstellingen? Dit zal je aangepaste voorinstellingen verwijderen.</string>
+    <string name="private_dns_hostname_label">Hostnaam van provider</string>
+    <string name="dns_preset_adguard">AdGuard DNS</string>
+    <string name="dns_preset_adguard_hostname">dns.adguard.com</string>
+    <string name="dns_preset_google">Google Public DNS</string>
+    <string name="dns_preset_google_hostname">dns.google</string>
+    <string name="dns_preset_cloudflare">Cloudflare DNS</string>
+    <string name="dns_preset_cloudflare_hostname">1dot1dot1dot1.cloudflare-dns.com</string>
+    <string name="dns_preset_quad9">Quad9 DNS</string>
+    <string name="dns_preset_quad9_hostname">dns.quad9.net</string>
+    <string name="dns_preset_cleanbrowsing">CleanBrowsing</string>
+    <string name="dns_preset_cleanbrowsing_hostname">adult-filter-dns.cleanbrowsing.org</string>
+    <string name="tile_charge_optimization">Opladen</string>
+    <string name="limit_to_80">Begrenzen tot 80%</string>
+    <string name="adaptive_charging">Aanpasbaar</string>
+    <string name="deactivated">Niet geoptimaliseerd</string>
+    <string name="permission_missing">Missende toestemming</string>
+    <!-- Screen Locked Security -->
+    <string name="screen_locked_security_title">Beveiliging bij vergrendeling</string>
+    <string name="screen_locked_security_dialog_title">Beveiliging bij vergrendeling</string>
+    <string name="warning_title">⚠️ WAARSCHUWING</string>
+    <string name="screen_locked_security_auth_enable">Authenticeer je om beveiliging bij vergrendeling in te schakelen</string>
+    <string name="screen_locked_security_auth_disable">Authenticeer je om beveiliging bij vergrendeling uit te schakelen</string>
+    <string name="screen_locked_security_desc">Disable quick setting tiles when the device is locked</string>
+    <string name="search_disable_qs_locked_title">Disable QS Locked</string>
+    <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
+    <!-- Sound Mode -->
+    <string name="sound_mode_reorder_title">Modi hersorteren</string>
+    <string name="sound_mode_long_press_hint">Lang indrukken om te schakelen</string>
+    <string name="content_desc_drag_reorder">Slepen om te hersorteren</string>
+    <string name="sound_mode_sound">Geluid</string>
+    <string name="sound_mode_vibrate">Trillen</string>
+    <string name="sound_mode_silent">Stil</string>
+    <!-- Status Bar Categories -->
+    <string name="status_bar_category_connectivity">Verbindingen</string>
+    <string name="status_bar_category_phone_network">Telefoon &amp; Netwerk</string>
+    <string name="status_bar_category_audio_media">Audio &amp; Media</string>
+    <string name="status_bar_category_system_status">Systeemstatus</string>
+    <string name="status_bar_category_oem_specific">OEM-specifiek</string>
+    <!-- Status Bar Icons -->
+    <string name="icon_wifi">Wi-Fi</string>
+    <string name="icon_bluetooth">Bluetooth</string>
+    <string name="icon_nfc">NFC / Felica</string>
+    <string name="icon_vpn">VPN</string>
+    <string name="icon_airplane_mode">Vliegtuigmodus</string>
+    <string name="icon_hotspot">Hotspot</string>
+    <string name="icon_cast">Casten</string>
+    <string name="icon_mobile_data">Mobiele data</string>
+    <string name="icon_phone_signal">Telefoonsignaal</string>
+    <string name="icon_volte">VoLTE / VoNR</string>
+    <string name="icon_wifi_calling">Bellen via Wi-Fi / VoWiFi</string>
+    <string name="icon_call_status">Belstatus / Synchronisatie</string>
+    <string name="icon_tty">TTY</string>
+    <string name="icon_volume">Volume</string>
+    <string name="icon_headset">Koptelefoon</string>
+    <string name="icon_speakerphone">Luidsprekermodus</string>
+    <string name="icon_dmb">DMB</string>
+    <string name="icon_clock">Klok</string>
+    <string name="icon_ime">Invoermodus (IME)</string>
+    <string name="icon_alarm">Alarm</string>
+    <string name="icon_battery">Batterij</string>
+    <string name="icon_power_saving">Energiebesparing</string>
+    <string name="icon_data_saver">Databesparing</string>
+    <string name="icon_rotation_lock">Draaivergrendeling</string>
+    <string name="icon_location">Locatie / GPS</string>
+    <string name="icon_sync">Synchronisatie</string>
+    <string name="icon_managed_profile">Beheerd profiel</string>
+    <string name="icon_dnd">Niet storen</string>
+    <string name="icon_privacy">Privacy &amp; Beveiligde map</string>
+    <string name="icon_security_status">Beveiligingsstatus (SU)</string>
+    <string name="icon_otg">OTG Muis / Toetsenbord</string>
+    <string name="icon_samsung_smart">Samsung Smart Features</string>
+    <string name="icon_samsung_services">Samsung Services</string>
+    <string name="icon_ethernet">Ethernet</string>
+    <!-- Status Bar Settings -->
+    <string name="stb_clock_seconds">Seconden laten zien in de klok</string>
+    <string name="stb_battery_percentage">Batterijpercentage</string>
+    <string name="stb_battery_percentage_always">Altijd</string>
+    <string name="stb_battery_percentage_charging">Opladen</string>
+    <string name="stb_battery_percentage_never">Nooit</string>
+    <string name="stb_privacy_chip">Indicatie van camera- en microfoongebruik</string>
+    <string name="smart_data_title">Slimme data</string>
+    <string name="permission_read_phone_state_title">Telefoonstatus lezen</string>
+    <string name="permission_read_phone_state_desc">Vereist voor het detecteren van het netwerktype voor Slimme data</string>
+    <string name="permission_read_phone_state_desc_call_vibrations">Vereist om veranderingen van oproepstatus te detecteren voor haptische feedback.</string>
+    <string name="settings_section_smart_visibility">Slimme zichtbaarheid</string>
+    <string name="smart_wifi_title">Slimme Wi-Fi</string>
+    <string name="smart_wifi_desc">Verberg mobiele data wanneer Wi-Fi is verbonden</string>
+    <string name="smart_data_desc">Verberg mobiele data in specifieke modi</string>
+    <string name="action_reset_all_icons">Reset alle iconen</string>
+    <string name="status_bar_section_advanced">Meer instellingen</string>
+    <string name="stb_advanced_flags_title">Advanced (Requires Shizuku/Root)</string>
+    <string name="hide_all_system_icons_title">Hide all system icons</string>
+    <string name="hide_all_system_icons_desc">Clear all non-notification icons from the status bar</string>
+    <string name="hide_system_icons_locked_only_title">Only hide system icons when locked</string>
+    <string name="hide_system_icons_locked_only_desc">Hides the status bar system icons when the device is locked and restores them upon unlock</string>
+    <string name="hide_clock_title">Hide clock</string>
+    <string name="hide_clock_desc">Completely remove the clock from the status bar</string>
+    <string name="hide_notification_icons_title">Hide notifications</string>
+    <string name="hide_notification_icons_desc">Hide all incoming notification icons</string>
+    <string name="feat_hide_gesture_bar_title">Hide gesture bar</string>
+    <string name="feat_hide_gesture_bar_desc">In gesture navigation</string>
+    <string name="feat_hide_gesture_bar_on_launcher_title">Show on launcher</string>
+    <string name="feat_hide_gesture_bar_on_launcher_desc">Dynamically show the gesture bar only when on the home screen</string>
+    <string name="feat_circle_to_search_gesture_title">Circle to Search gesture</string>
+    <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
+    <string name="feat_circle_to_search_gesture_height_title">Gesture zone height</string>
+    <string name="feat_circle_to_search_gesture_height_desc">Adjust the height of the touch area at the bottom</string>
+    <string name="feat_other_customizations_title">Other customizations</string>
+    <string name="feat_other_customizations_desc">Additional system tweaks and modifications</string>
+    <string name="status_bar_icons_disclaimer">Wees ervan bewust dat de implementatie van deze opties kan verschillen per OEM en sommige mogelijk niet werken.</string>
+    <!-- Network Type Picker -->
+    <string name="network_type_other">Andere</string>
+    <!-- Search -->
+    <string name="search_clock_seconds_title">Seconden van klok</string>
+    <string name="search_clock_seconds_desc">Seconden laten zien in de klok van de statusbalk</string>
+    <string name="search_battery_percentage_title">Batterijpercentage</string>
+    <string name="search_battery_percentage_desc">Stel de zichtbaarheid van het batterijpercentage in</string>
+    <string name="search_privacy_chip_title">Privacy-indicatoren</string>
+    <string name="search_privacy_chip_desc">Laat een indicator zien wanneer de camera of microfoon in gebruik is</string>
+    <string name="search_desc_toggle_visibility">Schakel zichtbaarheid voor %1$s in/uit</string>
+    <string name="action_pin">Vastmaken aan favorieten</string>
+    <string name="action_unpin">Verwijderen van favorieten</string>
+    <!-- Extraction Batch 1 -->
+    <!-- Categories -->
+    <string name="cat_tools">Hulpmiddelen</string>
+    <string name="cat_visuals">Beelden</string>
+    <string name="cat_system">Systeem</string>
+    <!-- UI Elements -->
+    <string name="search_placeholder">Zoeken naar hulpmiddelen, modificaties en aanpassingen</string>
+    <string name="search_no_results">Geen resultaten voor \"%1$s\"</string>
+    <string name="search_results_title">Zoekresultaten</string>
+    <string name="requires_following_permissions">%1$s vereist de volgende machtiging:</string>
+    <!-- Features -->
+    <string name="feat_screen_off_widget_title">Schermuitzetwidget</string>
+    <string name="feat_screen_off_widget_desc">Onzichtbare widget om het scherm uit te zetten</string>
+    <string name="feat_statusbar_icons_title">Iconen van de statusbalk</string>
+    <string name="feat_statusbar_icons_desc">Past de zichtbaarheid van iconen in de statusbalk aan</string>
+    <string name="feat_caffeinate_title">Cafeïne</string>
+    <string name="feat_caffeinate_desc">Houd het scherm wakker</string>
+    <string name="feat_maps_power_saving_title">Maps-energiebesparingsmodus</string>
+    <string name="feat_maps_power_saving_desc">Voor elk Android-apparaat</string>
+    <string name="feat_notification_lighting_title">Meldingsverlichting</string>
+    <string name="feat_notification_lighting_desc">Verlichting bij meldingen</string>
+    <string name="feat_flashlight_pulse_desc">Pulseer de zaklamp bij meldingen</string>
+    <string name="feat_sound_mode_tile_title">Geluidsmodustegel</string>
+    <string name="feat_call_vibrations_title">Trillen bij bellen</string>
+    <string name="feat_call_vibrations_desc">Trillen bij belacties</string>
+    <string name="show_bluetooth_devices">Laat Bluetooth-apparaten zien</string>
+    <string name="show_bluetooth_devices_summary">Laat batterijniveau van verbonden Bluetooth-apparaten zien</string>
+    <string name="limit_max_devices">Maximaal aantal apparaten limiteren</string>
+    <string name="limit_max_devices_summary">Maximaal aantal zichtbare apparaten aanpassen in de widget</string>
+    <string name="widget_background_title">Widgetachtergrond</string>
+    <string name="widget_background_summary">Laat widgetachtergrond zien</string>
+    <!-- DIY Automation -->
+    <string name="diy_create_trigger_title">Automatie uitvoeren</string>
+    <string name="diy_create_trigger_desc">Een actie plannen om uit te voeren bij een observatie</string>
+    <string name="diy_create_state_title">Toestandautomatie</string>
+    <string name="diy_create_state_desc">Een actie plannen om uit te voeren op basis van de staat van een toestand</string>
+    <string name="diy_editor_new_title">Nieuwe automatie</string>
+    <string name="diy_editor_edit_title">Bewerk automatie</string>
+    <string name="feat_link_actions_title">Linkacties</string>
+    <string name="feat_link_actions_desc">Links met meerdere apps beheren</string>
+    <string name="feat_snooze_notifications_title">Systeemmeldingen dempen</string>
+    <string name="feat_snooze_notifications_desc">Blijvende meldingen dempen</string>
+    <string name="feat_qs_tiles_title">Snelle instellingen tegels</string>
+    <string name="feat_qs_tiles_desc">Alle bekijken</string>
+    <string name="feat_button_remap_title">Knoppen opnieuw toewijzen</string>
+    <string name="feat_button_remap_desc">Acties van fysieke knoppen opnieuw toewijzen</string>
+    <string name="feat_dynamic_night_light_title">Dynamisch nachtlicht</string>
+    <string name="feat_dynamic_night_light_desc">Nachtlicht op basis van de app in-/uitschakelen</string>
+    <string name="feat_screen_locked_security_title">Beveiliging bij vergrendeling</string>
+    <string name="feat_app_lock_title">Appvergrendeling</string>
+    <string name="feat_app_lock_desc">Apps beveiligen met biometrie</string>
+    <string name="app_lock_auto_lock_delay_title">Auto lock delay</string>
+    <string name="app_lock_auto_lock_delay_desc">After leaving the app</string>
+    <string name="app_lock_auto_lock_delay_none">None</string>
+    <string name="app_lock_auto_lock_delay_1min">1 minute</string>
+    <string name="app_lock_auto_lock_delay_5min">5 minutes</string>
+    <string name="app_lock_auto_lock_delay_10min">10 minutes</string>
+    <string name="app_lock_auto_lock_delay_20min">20 minutes</string>
+    <string name="app_lock_auto_lock_delay_30min">30 minutes</string>
+    <string name="feat_freeze_title">Bevriezen</string>
+    <string name="feat_freeze_desc">Schakel weinig gebruikte apps uit</string>
+    <string name="feat_watermark_title">Watermerk</string>
+    <string name="feat_watermark_desc">EXIF-data en logo\'s toevoegen aan foto\'s</string>
+    <string name="feat_always_on_display_title">Always-On Display</string>
+    <string name="feat_always_on_display_desc">Laat tijd en informatie zien wanneer het scherm uit is</string>
+    <string name="feat_calendar_sync_title">Kalenders synchroniseren</string>
+    <string name="feat_calendar_sync_desc">Sync your phone calendar to your watch</string>
+    <string name="feat_lock_from_watch_title">Lock from Watch</string>
+    <string name="feat_lock_from_watch_desc">Lock your phone remotely</string>
+    <string name="remote_lock_mode_title">Lock Mode</string>
+    <string name="remote_lock_mode_screen_off">Screen off</string>
+    <string name="remote_lock_mode_lock">Lock</string>
+    <string name="remote_lock_mode_admin_note">Using device admin lock will disable biometrics</string>
+    <string name="watch_connected_status">Connected</string>
+    <string name="watch_unknown_name">Unknown Watch</string>
+    <string name="watermark_style_overlay">Overlay</string>
+    <string name="watermark_style_frame">Kader</string>
+    <string name="watermark_show_brand">Apparatenmerk</string>
+    <string name="watermark_show_exif">EXIF-data</string>
+    <string name="watermark_pick_image">Kies een afbeelding</string>
+    <string name="watermark_save_success">Afbeelding opgeslagen naar galerij</string>
+    <string name="action_share">Delen</string>
+    <string name="watermark_exif_settings">EXIF-instellingen</string>
+    <string name="watermark_exif_focal_length">Brandpuntsafstand</string>
+    <string name="watermark_exif_aperture">Opening</string>
+    <string name="watermark_exif_iso">ISO</string>
+    <string name="watermark_exif_shutter_speed">Sluitertijd</string>
+    <string name="watermark_exif_date">Datum &amp; tijd</string>
+    <string name="watermark_move_to_top">Verplaatsen naar de top</string>
+    <string name="watermark_left_align">Link uitlijnen</string>
+    <string name="watermark_text_size_brand">Merkgrootte</string>
+    <string name="watermark_text_size_data">Datagrootte</string>
+    <string name="watermark_text_size_custom">Tekstgrootte</string>
+    <string name="watermark_font_options">Lettertypegrootte</string>
+    <string name="watermark_custom_text">Aangepaste tekst</string>
+    <string name="watermark_custom_text_hint">Voer je tekst in...</string>
+    <string name="watermark_spacing">Afstand</string>
+    <string name="watermark_border_width">Randbreedte</string>
+    <string name="watermark_border_corners">Ronde hoeken</string>
+    <string name="watermark_color_section">Kleur</string>
+    <string name="watermark_logo_section">Logo</string>
+    <string name="watermark_logo_show">Logo laten zien</string>
+    <string name="watermark_logo_size">Logogrootte</string>
+    <string name="watermark_edit_texts">Watermerkteksten bewerken</string>
+    <string name="watermark_device_brand">Apparatenmerk</string>
+    <string name="watermark_date_time">Datum &amp; tijd</string>
+    <string name="watermark_no_date">Geen datuminformatie</string>
+    <string name="watermark_rotate_left">Naar links draaien</string>
+    <string name="watermark_rotate_right">Naar rechts draaien</string>
+    <string name="action_next">Volgende</string>
+    <string name="action_ok">OK</string>
+    <string name="action_save_changes">Wijzigingen opslaan</string>
+    <string name="calendar_sync_settings_title">Instellingen van kalender synchroniseren</string>
+    <string name="calendar_sync_select_calendars">Specifieke kalenders synchroniseren</string>
+    <string name="calendar_sync_periodic_title">Periodiek synchroniseren</string>
+    <string name="calendar_sync_periodic_desc">Elke 15 minuten synchroniseren bij wijzigen</string>
+    <string name="calendar_sync_sync_now">Nu synchroniseren</string>
+    <string name="calendar_sync_manual_sync_desc">Nu meteen naar je horloge synchroniseren</string>
+    <string name="calendar_sync_no_calendars">Geen lokale kalenders gevonden</string>
+    <string name="calendar_sync_sync_started">Kalendersynchronisatie gestart</string>
+    <!-- Search Settings -->
+    <string name="search_haptic_title">Haptische feedback bij widgets</string>
+    <string name="search_haptic_desc">Kies haptische feedback voor klikken van widgets</string>
+    <string name="search_smart_wifi_title">Slimme Wi-Fi</string>
+    <string name="search_smart_wifi_desc">Verberg mobiele data wanneer Wi-Fi is verbonden</string>
+    <string name="search_smart_data_title">Slimme data</string>
+    <string name="search_smart_data_desc">Verberg mobiele data in specifieke modi</string>
+    <string name="search_reset_icons_title">Reset alle iconen</string>
+    <string name="search_reset_icons_desc">Zichtbaarheid van statusbalkiconen resetten naar standaardinstellingen</string>
+    <string name="search_caffeinate_abort_screen_off_title">Cafeïne afbreken bij uitzetten scherm</string>
+    <string name="search_caffeinate_abort_screen_off_desc">Cafeïne automatisch uitzetten bij manueel vergrendelen van apparaat</string>
+    <string name="search_lighting_style_title">Lichtstijl</string>
+    <string name="search_lighting_style_desc">Kies tussen streepeffect, gloei-effect, draai-effect en meer</string>
+    <string name="search_corner_radius_title">Hoekradius</string>
+    <string name="search_corner_radius_desc">Pas de hoekradius van de meldingsverlichting aan</string>
+    <string name="search_skip_silent_title">Stille meldingen overslaan</string>
+    <string name="search_skip_silent_desc">Geen verlichting laten zien voor stille meldingen</string>
+    <string name="search_flashlight_pulse_title">Zaklamppuls</string>
+    <string name="search_flashlight_pulse_desc">Langzaam de zaklamp pulseren bij nieuwe meldingen</string>
+    <string name="search_only_facing_down_title">Alleen als het apparaat met het scherm naar beneden ligt</string>
+    <string name="search_only_facing_down_desc">Alleen de zaklamp pulseren als het apparaat met het scherm naar beneden ligt</string>
+    <string name="snooze_no_channels_discovered">Nog geen systeemkanalen ontdekt. Ze zullen verschijnen wanneer ze gedetecteerd worden.</string>
+    <string name="search_qs_blur_title">UI-vervaging</string>
+    <string name="search_qs_blur_desc">Systeemwijde UI-vervaging in-/uitschakelen</string>
+    <string name="search_qs_bubbles_title">Bubbels</string>
+    <string name="search_qs_bubbles_desc">Zwevende vensterbubbels inschakelen</string>
+    <string name="search_qs_sensitive_title">Gevoelige inhoud</string>
+    <string name="search_qs_sensitive_desc">Meldingsdetails verbergen op het vergrendelscherm</string>
+    <string name="search_qs_wake_title">Tikken om te wekken</string>
+    <string name="search_qs_wake_desc">Dubbelklikken om scherm aan te zetten</string>
+    <string name="search_qs_aod_title">Always-On Display</string>
+    <string name="search_qs_aod_desc">Always-On Display in-/uitschakelen</string>
+    <string name="search_qs_caffeinate_title">Cafeïne</string>
+    <string name="search_qs_caffeinate_desc">Beeldscherm aan houden in-/uitschakelen</string>
+    <string name="search_qs_sound_title">Geluidsmodus</string>
+    <string name="search_qs_sound_desc">Door geluidsmodi schakelen (Geluid/Trillen/Stil)</string>
+    <string name="search_qs_lighting_title">Meldingsverlichting</string>
+    <string name="search_qs_lighting_desc">Meldingsverlichting in-/uitschakelen</string>
+    <string name="search_qs_night_light_title">Dynamisch nachtlicht</string>
+    <string name="search_qs_night_light_desc">Dynamisch nachtlicht in-/uitschakelen</string>
+    <string name="search_qs_locked_sec_title">Beveiliging bij vergrendeling</string>
+    <string name="search_qs_locked_sec_desc">Netwerkbeveiliging bij vergrendelscherm in-/uitschakelen</string>
+    <string name="search_qs_mono_title">Mono audio</string>
+    <string name="search_qs_mono_desc">Forceren van mono audio in-/uitschakelen</string>
+    <string name="search_qs_flashlight_title">Zaklamp</string>
+    <string name="search_qs_flashlight_desc">Speciale zaklampknop</string>
+    <string name="search_qs_freeze_title">Apps bevriezen</string>
+    <string name="search_qs_freeze_desc">Apps bevriezen openen</string>
+    <string name="search_qs_pulse_title">Zaklamppuls</string>
+    <string name="search_qs_pulse_desc">Zaklamppuls bij meldingen in-/uitschakelen</string>
+    <string name="search_qs_stay_awake_desc">\"Wakker blijven\" ontwikkelaarsopties in-/uitschakelen</string>
+    <string name="search_qs_private_dns_title">Privé-DNS</string>
+    <string name="search_qs_private_dns_desc">Door privé-DNS-modi schakelen (Uit/Automatisch/Hostnaam)</string>
+    <string name="search_qs_usb_debugging_title">USB-foutopsporing</string>
+    <string name="search_qs_usb_debugging_desc">De USB-foutopsporing ontwikkelaarsoptie in-/uitschakelen</string>
+    <string name="search_qs_refresh_rate_title">Refresh Rate</string>
+    <string name="search_qs_refresh_rate_desc">Cycle between the system default and preset screen refresh rates</string>
+    <string name="search_remap_enable_title">Opnieuw toewijzen van fysieke knoppen inschakelen</string>
+    <string name="search_remap_enable_desc">Hoofdschakelaar voor opnieuw toewijzen van volumeknoppen</string>
+    <string name="search_remap_haptic_title">Haptische feedback opnieuw toewijzen</string>
+    <string name="search_remap_haptic_desc">Trillen wanneer de opnieuw toegewezen knop ingedrukt wordt</string>
+    <string name="search_remap_flashlight_title">Zaklamp in-/uitschakelen</string>
+    <string name="search_remap_flashlight_desc">Zaklamp in-/uitschakelen met volumeknoppen</string>
+    <string name="search_night_light_enable_title">Dynamisch nachtlicht inschakelen</string>
+    <string name="search_night_light_enable_desc">Hoofdschakelaar voor dynamisch nachtlicht</string>
+    <string name="search_app_lock_enable_title">Appvergrendeling inschakelen</string>
+    <string name="search_app_lock_enable_desc">Hoofdschakelaar voor appvergrendeling</string>
+    <string name="search_app_lock_pick_title">Selecteer vergrendelde apps</string>
+    <string name="search_app_lock_pick_desc">Kies welke apps authenticatie vereisen</string>
+    <string name="search_freeze_pick_title">Kies apps om te bevriezen</string>
+    <string name="search_freeze_pick_desc">Kies welke apps bevroren kunnen worden</string>
+    <string name="search_freeze_all_title">Bevries alle apps</string>
+    <string name="search_freeze_all_desc">Bevries meteen alle gekozen apps</string>
+    <string name="search_freeze_locked_title">Bevriezen bij vergrendeling</string>
+    <string name="search_freeze_locked_desc">Bevries gekozen apps bij vergrendeling van apparaat</string>
+    <string name="search_freeze_delay_title">Vertraging bij bevriezen</string>
+    <string name="search_freeze_delay_desc">Vertraging voor vriezen na vergrendelen</string>
+    <!-- Permissions metadata -->
+    <string name="perm_shizuku_title">Shizuku</string>
+    <string name="perm_shizuku_desc">Vereist voor geavanceerde functies. Installeer Shizuku uit de Play Store.</string>
+    <string name="perm_shizuku_install_action">Installeer Shizuku</string>
+    <string name="perm_shizuku_grant_title">Shizuku permission</string>
+    <string name="perm_shizuku_grant_desc">Vereist om energiebesparing te gebruiken tijdens navigeren.</string>
+    <string name="req_shizuku">Vereist Shizuku of Root.</string>
+    <string name="perm_root_title">Roottoegang</string>
+    <string name="perm_root_desc">Machtigingen vereist voor systeemacties die rootprivileges gebruiken.</string>
+    <string name="perm_notif_listener_title">Meldingsluisteraar</string>
+    <string name="perm_notif_listener_desc_maps">Vereist om te detecteren wanneer Maps navigeert.</string>
+    <string name="perm_notif_listener_desc_lighting">Vereist om nieuwe meldingen te detecteren</string>
+    <string name="perm_notif_listener_desc_snooze">Vereist om meldingen te detecteren en te dempen</string>
+    <string name="perm_accessibility_title">Toegankelijkheidsservice</string>
+    <string name="perm_accessibility_desc_common">Vereist voor Appvergrendeling, Schermuitzetwidget en andere functies om interacties te detecteren</string>
+    <string name="perm_accessibility_desc_lighting">Vereist om meldingsverlichting te starten bij nieuwe meldingen</string>
+    <string name="perm_default_browser_title">Standaardbrowser</string>
+    <string name="perm_default_browser_desc">Vereist om effectief met links om te gaan</string>
+    <string name="perm_accessibility_desc_remap">Vereist om indrukken van knoppen te onderscheppen</string>
+    <string name="perm_accessibility_desc_essentials_on_display">Required to intercept volume key events while the screen is off to trigger the Essentials On Display overlay.</string>
+    <string name="perm_accessibility_desc_night_light">Vereist om voorgrondapplicaties in de gaten te houden.</string>
+    <string name="perm_write_secure_title">Beveiligde instellingen schrijven</string>
+    <string name="perm_write_secure_desc_common">Vereist voor Statusbalkiconen en Beveiliging bij vergrendeling</string>
+    <string name="perm_write_secure_desc_night_light">Vereist om het nachtlicht in/uit te schakelen. Geef toegang via ADB of root.</string>
+    <string name="perm_write_settings_title">Systeeminstellingen wijzigen</string>
+    <string name="perm_write_settings_desc">Vereist om aanpasbare helderheid en andere systeeminstellingen in/uit te schakelen</string>
+    <string name="perm_overlay_title">Overlay-machtiging</string>
+    <string name="perm_overlay_desc">Vereist om de meldingsverlichting te laten zien op het scherm</string>
+    <string name="perm_device_admin_title">Apparaatbeheerder</string>
+    <string name="perm_device_admin_desc">Vereist om het apparaat compleet te vergrendelen (biometrie uitschakelen) bij onbevoegde toegangspogingen</string>
+    <string name="perm_action_grant">Toestemming geven</string>
+    <string name="perm_action_copy_adb">ADB-commando kopiëren</string>
+    <string name="perm_action_check">Checken</string>
+    <string name="perm_action_enable">In de instellingen inschakelen</string>
+    <string name="perm_action_how_to">Hoe je toestemming geeft</string>
+    <string name="perm_action_granted">Granted</string>
+    <string name="perm_battery_optimization_title">Batterijoptimalisatie</string>
+    <string name="perm_battery_optimization_desc">Zorgt ervoor dat de service niet gestopt wordt door het systeem om stroom te besparen.</string>
+    <!-- Tabs -->
+    <string name="tab_essentials">Essentials</string>
+    <string name="tab_freeze">Bevriezen</string>
+    <string name="tab_freeze_title">Bevroren</string>
+    <string name="tab_diy">DIY</string>
+    <string name="tab_apps">Apps</string>
+    <string name="tab_freeze_subtitle">Uitgeschakelde apps</string>
+    <string name="tab_diy_subtitle">Doe-het-zelf</string>
+    <string name="tab_apps_subtitle">Vind en beheer apps</string>
+    <string name="feat_app_updates_title">Appupdates</string>
+    <string name="tab_app_updates_title">Appupdates</string>
+    <string name="action_add_repo">Repository toevoegen</string>
+    <string name="action_edit_repo">Repository bewerken</string>
+    <string name="prompt_enter_repo_url">Voer de URL van de GitHub-repository of eigenaar/repository</string>
+    <string name="action_track">Volgen</string>
+    <string name="error_no_apk_found">Geen APK gevonden in de laatste versie</string>
+    <string name="error_repo_not_found">Repository niet gevonden</string>
+    <string name="label_latest_release">Laatste versie</string>
+    <string name="action_view_readme">README bekijken</string>
+    <string name="label_stars">%d sterren</string>
+    <string name="label_installed_app">Geïnstalleerde app</string>
+    <string name="label_not_installed">Niet geïnstalleerd</string>
+    <string name="action_pick_app">Kies app</string>
+    <string name="action_select_app">Selecteer app</string>
+    <string name="action_untrack">Niet meer volgen</string>
+    <string name="label_pending">In behandeling</string>
+    <string name="label_up_to_date">Actuele versie</string>
+    <string name="feat_app_updates_desc">Volg en download de laatste versies van je favoriete apps direct vanaf GitHub.</string>
+    <string name="error_invalid_repo_format">Incorrect formaat. Gebruik eigenaar/repository of de GitHub-URL</string>
+    <string name="error_generic_search">Er was een fout tijdens het zoeken</string>
+    <string name="label_auto">Automatisch</string>
+    <string name="label_options">Opties</string>
+    <string name="option_allow_prereleases">Checken voor vooruitgaven</string>
+    <string name="option_notifications">Meldingen</string>
+    <string name="error_rate_limited">De limiet voor aanvragen van GitHub is bereikt. Probeer het later opnieuw.</string>
+    <!-- Keyboard Setup -->
+    <string name="label_keyboard_setup">Toetsenbord instellen</string>
+    <string name="btn_enable_keyboard">In de instellingen inschakelen</string>
+    <string name="btn_select_keyboard">Wisselen naar Essentials</string>
+    <string name="label_enabled">Ingeschakeld</string>
+    <string name="label_disabled">Uitgeschakeld</string>
+    <string name="tile_adaptive_brightness">Aangepaste helderheid</string>
+    <string name="tile_maps_power_saving">Maps-energiebesparing</string>
+    <string name="action_search">Zoeken</string>
+    <string name="action_stop">Stoppen</string>
+    <string name="label_search">Zoeken</string>
+    <string name="search_frozen_apps_placeholder">Bevroren apps zoeken</string>
+    <!-- UI Components General -->
+    <string name="action_back">Terug</string>
+    <string name="content_desc_back">Terug</string>
+    <string name="label_settings">Instellingen</string>
+    <string name="action_report_bug">Rapporteer een bug</string>
+    <!-- Sentry Crash Reporting -->
+    <string name="sentry_report_mode_title">Rapporteren van crashes</string>
+    <string name="sentry_mode_off">Uit</string>
+    <string name="sentry_mode_auto">Automatisch</string>
+    <string name="sentry_crash_toast">Essentials is gecrasht, rapport verstuurd</string>
+    <string name="simulate_crash">Crash simuleren</string>
+    <string name="welcome_title">Welkom bij Essentials</string>
+    <string name="welcome_subtitle">Een gereedschapskist voor Android-nerds</string>
+    <string name="welcome_developer_attribution">door sameerasw.com</string>
+    <string name="action_lets_begin">Laten we beginnen</string>
+    <string name="acknowledgement_title">Erkenning</string>
+    <string name="acknowledgement_desc">Deze app is een collectie van hulpmiddelen die diep met je systeem bezig gaan. Het gebruik van sommige functies kan de systeeminstellingen of het gedrag aanpassen op onverwachte manieren. \n\nJe hoeft alleen maar machtigingen te geven die nodig zijn voor de functies die je gebruikt, wat je  volledige controle geeft over het gedrag van de app. \n\nDaarnaast verzamelt en volgt deze app niet je persoonlijke gegevens, ik heb ze niet nodig... Om jezelf veilig te houden, kun je kijken naar de broncode voor meer informatie. \n\nDeze app is volledig open-source en is en zal altijd gratis te gebruiken zijn. Betaal en installeer niet vanuit onbekende bronnen.</string>
+    <string name="acknowledgement_warning">WAARSCHUWING: Ga voorzichtig verder. De ontwikkelaar neemt geen verantwoordelijkheid voor systeeminstabiliteit, gegevensverlies of andere problemen veroorzaakt door het gebruik van deze app. Door verder te gaan, erken je dat je van deze risico\'s bewust bent.</string>
+    <string name="acknowledgement_footer">Ik weet dat je dit niet grondig hebt gelezen, maar in het geval dat je hulp nodig hebt, voel je vrij om contact op te nemen met de ontwikkelaar of de gemeenschap.</string>
+    <string name="action_i_understand">Ik begrijp het</string>
+    <string name="feature_intro_desc">Elke keer dat je geen idee hebt wat een functie of tegel in de Snelle instellingen doet en welke machtigingen ervoor nodig zijn, kun je gewoon lang indrukken en drukken op \"Wat is dit?\" om meer te weten te komen.</string>
+    <string name="feature_intro_footer">Je kan op elk moment fouten rapporteren en hulpvolle handleidingen vinden in de instellingen.</string>
+    <string name="action_let_me_in">Laat me er eindelijk in</string>
+    <string name="preferences_title">Voorkeuren</string>
+    <string name="preferences_desc">Stel wat simpele instellingen in om te starten.</string>
+    <string name="label_app_settings">App-instellingen</string>
+    <string name="label_app_language">Taal</string>
+    <string name="label_haptic_feedback">Haptische feedback</string>
+    <string name="label_updates">Updates</string>
+    <string name="label_auto_check_updates">Automatisch checken voor updates</string>
+    <string name="desc_auto_check_updates">Checken voor updates bij het starten van de app</string>
+    <string name="action_all_set">Alles klaar</string>
+    <string name="action_check_whats_new">Wat is er nieuw?</string>
+    <string name="welcome_back_title">Welcome back to Essentials</string>
+    <string name="action_see_whats_new">See what\'s new</string>
+    <string name="label_mode_default">Default</string>
+    <string name="label_mode_glove">Glove mode</string>
+    <string name="tile_scale_animations">Glove Mode</string>
+    <string name="about_desc_scale_animations_tile">Quickly toggle between Default and Glove mode UI profiles</string>
+    <string name="label_increase_touch_sensitivity">Increase touch sensitivity</string>
+    <string name="desc_increase_touch_sensitivity">Improve touch screen responsiveness when using gloves or screen protectors</string>
+    <string name="label_auto_rotate">Auto rotate</string>
+    <string name="desc_auto_rotate">Automatically rotate the screen when the device is turned</string>
+    <string name="label_screen_timeout">Screen timeout</string>
+    <string name="desc_screen_timeout">How long the screen stays on before turning off automatically</string>
+    <string name="unit_seconds">%d seconds</string>
+    <string name="unit_minute">1 minute</string>
+    <string name="unit_minutes">%d minutes</string>
+    <string name="action_restart_systemui">Restart SystemUI</string>
+    <string name="desc_restart_systemui">Kills and restarts SystemUI process to apply some changes immediately</string>
+    <string name="msg_error_load_release_notes">Couldn\'t load the release note</string>
+    <string name="action_view_on_web">View on web</string>
+    <string name="action_done">Klaar</string>
+    <string name="action_preview">Voorbeeld</string>
+    <string name="action_help_guide">Hulpgids</string>
+    <string name="action_what_is_this">Wat is dit?</string>
+    <string name="update_available_title">Update beschikbaar</string>
+    <string name="about_desc_your_android">Bekijk de hardware- en softwarespecificaties van je apparaat in detail. Deze informatie wordt opgehaald van GSMArena en de systeemeigenschappen om een begrijpelijk overzicht van je Android-apparaat te geven.</string>
+    <string name="about_desc_essentials_on_display">Essentials On Display shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
+    <string name="about_desc_notification_lighting">Meldingsverlichting voegt mooie randverlichting toe wanneer je een melding krijgt.\n\nJe kan de animatiestijl, kleuren en het gedrag ervan aanpassen. Het werkt zelfs als het scherm uit is (verschilt per OEM) of boven op je huidige app. Kies apps, meldingsprioriteit en welk gedrag het zou moeten veroorzaken bij gegeven opties. Als je apparaat geen overlays ondersteunt, gebruik dan de Ambient display optie hieronder.</string>
+    <string name="about_desc_screen_off_widget">Makkelijk het scherm uitzetten door te klikken op een transparante verkleinbare widget die geen iconen of rommel toevoegt aan het startscherm.</string>
+    <string name="about_desc_statusbar_icons">Neem volledige controle over je statusbalkiconen.\n\nVerberg specifieke iconen zoals Wi-Fi, Bluetooth of mobiele data om je statusbalk schoon te houden. Je kan ook klokformaat en de batterij-indicator aanpassen ook met een paar slimme opties. Dit is de lijst met AOSP-tegels, mogelijk respecteert je apparaat niet alle tegels.</string>
+    <string name="about_desc_caffeinate">Cafeïne voorkomt dat je apparaat automatisch uitschakelt.\n\nHoud je scherm wakker voor een bepaalde tijd of totdat je het uitschakelt. Handig bij het lezen van lange artikelen of recepten.</string>
+    <string name="about_desc_maps_power_saving">Krijg de exclusieve energiebesparingsmodus van Google Maps van de Pixel 10 op alle Android-apparaten met de minimalistische pikzwarte achtergrond boven op je vergrendelscherm. Start door te navigeren en zet het scherm uit en weer aan.</string>
+    <string name="about_desc_flashlight_pulse">Pulseer de zaklamp wanneer je een melding krijgt. \n\nBij apparaten met hardwareondersteuning voor het dimmen van de zaklamp zal de puls vloeiend animeren.</string>
+    <string name="about_desc_snooze_notifications">Demp vervelende blijvende systeemmeldingen die standaard niet veranderd kunnen worden. \n\nWacht totdat je de melding ontvangt en ga daarna naar deze functie waarbij het meldingskanaal zal worden weergegeven. Selecteer dat om de melding de volgende keer te dempen.\n\nGedempte meldingen zijn nog steeds zichtbaar in de meldingsgeschiedenis van Android.</string>
+    <string name="about_desc_quick_settings_tiles">Voeg aangepaste tegels toe aan de Snelle instellingen.\n\nLang erop indrukken om te leren wat ze doen.</string>
+    <string name="about_desc_button_remap">Fysieke knoppen opnieuw toewijzen om andere acties te doen.\n\nPas aan wat er gebeurt wanneer je de volumeknoppen lang indrukt bij bepaalde voorwaarden. \n\nSommig gedrag zoals scherm uitzetten of zaklampbediening verschilt per OEM en werkt mogelijk niet op alle apparaten zoals verwacht. In sommige gevallen kan dit omzeilt worden met Shizuku, maar mogelijk niet de zelfde ervaring dankzij de implementaties.</string>
+    <string name="about_desc_dynamic_night_light">Automatisch de blauwe lichtfilter van scherm aanpassen op basis van de app op de voorgrond.</string>
+    <string name="about_desc_screen_locked_security">Verbeter je beveiliging als je apparaat vergrendeld is.\n\nBeperk toegang tot gevoelige tegels in de Snelle instellingen zoals netwerkwijzigingen. Ook wordt de animatiesnelheid verlaagd om aanraak spammen te voorkomen.\n\nDeze functie is niet robuust en heeft mogelijk problemen zoals dat sommige tegels die direct aanpasbaar zijn zoals Bluetooth of de vliegtuigstand niet te voorkomen zijn.</string>
+    <string name="about_desc_app_lock">Beveilig je apps met een tweede beveiligingslaag. \n\nJe vergrendelingsmethode zal gebruikt worden als het maar aan de klasse 3 biometrische beveiligingsstandaarden voldoet.</string>
+    <string name="about_desc_location_reached">Krijg een melding wanneer je dicht bij een bestemming komt zodat je nooit een stop mist. \n\nGa naar Google Maps, druk een speld lang in dicht bij je bestemming en zorg ervoor dat het \"Geplaatste speld\" zegt (anders is de afstandsberekening mogelijk niet accuraat), deel daarna de locatie met de Essentials-app en start met volgen.</string>
+    <string name="location_reached_add_title">Bestemming toevoegen</string>
+    <string name="location_reached_edit_title">Bestemming bewerken</string>
+    <string name="location_reached_name_placeholder">Thuis, kantoor, etc.</string>
+    <string name="location_reached_name_label">Naam</string>
+    <string name="location_reached_save_btn">Opslaan</string>
+    <string name="location_reached_cancel_btn">Annuleren</string>
+    <string name="location_reached_resolving">Locatie ophalen…</string>
+    <string name="location_reached_last_trip">Laatste reis</string>
+    <string name="location_reached_saved_destinations">Opgeslagen bestemmingen</string>
+    <string name="location_reached_no_saved_dest">Nog geen bestemmingen opgeslagen.</string>
+    <string name="location_reached_delete">Bestemming verwijderen</string>
+    <string name="location_reached_tracking_now">Nu aan het volgen</string>
+    <string name="location_reached_restart_btn">Herstarten</string>
+    <string name="location_reached_instructional_desc">Deel de coördinaten (Geplaatste speld) van Google Maps naar Essentials om het als een bestemming op te slaan.\n\nDe afstand die wordt weergeven is de directe afstand naar de bestemming, niet langs de wegen.\n\nNeem alle berekeningen met een korreltje zout omdat ze niet altijd kloppen.</string>
+    <string name="tile_location_reached">Zijn we er al?</string>
+    <string name="location_reached_pause">Pause</string>
+    <string name="location_reached_resume">Resume</string>
+    <string name="location_reached_radius_label">Radius: %1$d m</string>
+    <string name="location_reached_distance_label">Afstand tot bestemming: %1$s</string>
+    <string name="location_reached_last_travelled">Laatste: %1$s</string>
+    <string name="location_reached_never">Nooit</string>
+    <string name="location_reached_to_go">Te gaan</string>
+    <string name="location_reached_eta_min">%1$d min</string>
+    <string name="location_reached_eta_hr_min">%1$d u %2$d min</string>
+    <string name="location_reached_service_remaining_with_eta">%1$s (%2$d%%) • %3$s te gaan</string>
+    <string name="about_desc_freeze">Bevriezen van apps voorkomt dat ze in de achtergrond uitvoeren. \n\nVoorkomt dat de batterij leeg gaat en dataverbruik door apps helemaal te bevriezen als je ze niet gebruikt. Ze worden meteen ontdooit als je ze opent. De apps zullen niet zichtbaar zijn in de app-lade en als updates in de Play Store als ze bevroren zijn.</string>
+    <string name="about_desc_system_keyboard">Een aangepaste invoermethode waar niemand om vroeg.\n\nHet is gewoon een experiment. Meerdere talen krijgen mogelijk geen ondersteuning omdat het een complexe en tijdrovende implementatie is.</string>
+    <string name="about_desc_batteries">Hou het batterijniveau van alle verbonden apparaten in de gaten. \n\n Bekijk de batterijstatus van je Bluetooth koptelefoon, horloge en andere accessoires op één plek. Verbind met AirSync om ook het batterijniveau van je Mac te bekijken.</string>
+    <string name="about_desc_watermark">Voeg een aangepast onderschrift/watermerk toe aan je foto\'s met EXIF-data en apparaatinformatie.\n\nDeel een afbeelding direct vanuit een andere app naar Essentials om makkelijk een watermerk toe te voegen.</string>
+    <string name="about_desc_calendar_sync">Synchroniseer al je opkomende kalendergebeurtenissen zelfs met de beperkingen op werk of school Google-accounts die dat niet toestaan op wearOS apparaten. \n\nZorg ervoor dat je de wearOS Essentials app ook installeert om het rooster in de app en in een tegel te laten zien.</string>
+    <string name="about_desc_app_updates">Volg updates voor je geïnstalleerde apps.\n\nKrijg een melding over beschikbare updates, bekijk het Wijzigingslogboek en installeer ze met de klik van een knop.</string>
+    <string name="about_desc_call_vibrations">Voeg haptische feedback toe aan je oproepen.\n\nTrillen wanneer een oproep is verbonden, niet meer verbonden of geaccepteerd is, wat een bevestiging geeft zonder naar je scherm te hoeven kijken.</string>
+    <string name="about_desc_sound_mode_tile">Snel schakelen tussen Geluid, Trillen en Stil modi.\n\nEen handige tegel om schakelen tussen je geluidsmodi zonder de volumetoetsen of de instellingen. Je kan de modi hersorteren of uitschakelen als je ze niet nodig hebt bij het schakelen.</string>
+    <string name="about_desc_ui_blur">Makkelijk de systeemwijde vervaging in-/uitschakelen</string>
+    <string name="about_desc_bubbles">Zwevende meldingsballonnen in-/uitschakelen.\n\nSnel de systeemwijde instelling voor gespreksballonnen in-/uitschakelen.</string>
+    <string name="about_desc_sensitive_content">Verberg gevoelige inhoud op het vergrendelscherm.\n\nHet weergeven van meldingsinhoud op het vergrendelscherm in-/uitschakelen.</string>
+    <string name="about_desc_tap_to_wake">Tikken om te wekken in-/uitschakelen.\n\nDe mogelijkheid om je scherm te wekken met één klik in-/uitschakelen.</string>
+    <string name="about_desc_aod">Always-On Display in-/uitschakelen\n\nSnel de Always-On Display in-/uitscakelen</string>
+    <string name="about_desc_notification_glance">Automatisch je Always-On Display besturen op basis van je meldingen. Wanneer je een melding of waarschuwing krijgt van een geselecteerde app zal het Always-On Display aan blijven totdat je de meldingen hebt gesloten, wat ervoor zorgt dat je nooit belangrijke informatie mist zonder je batterij te verspillen wanneer er geen waarschuwingen zijn.</string>
+    <string name="about_desc_mono_audio">Audiokanalen combineren naar mono.\n\nHandig bij gebruik van één oortje of voor toegankelijkheid.</string>
+    <string name="about_desc_flashlight_tile">De zaklamp in-/uitschakelen\n\nLang indrukken opent de instellingen voor de aanpassing van intensiteit op ondersteunde apparaten.</string>
+    <string name="about_desc_stay_awake">Houd het scherm aan tijdens het opladen.\n\nVoorkomt dat het scherm uitvalt wanneer het apparaat verbonden is met een stroombron, wat handig kan zijn voor ontwikkelaars tijdens het debuggen.</string>
+    <string name="about_desc_nfc">NFC in-/uitschakelen.\n\nSnel NFC in-/uitschakelen voor betalingen en koppelen.</string>
+    <string name="about_desc_adaptive_brightness">Aanpasbare helderheid in-/uitschakelen\n\nHet automatisch aanpassen van de schermhelderheid op basis van de lichtcondities in-/uitschakelen.</string>
+    <string name="about_desc_private_dns">Privé-DNS in-/uitschakelen.\n\nDoor de Uit/Automatisch/Hostnaam privé-DNS-modi schakelen.</string>
+    <string name="about_desc_usb_debugging">USB-foutopsporing in-/uitschakelen.\n\nToegang tot foutopsporing via USB in-/uitschakelen via de snelle instellingen.</string>
+    <string name="about_desc_color_picker">Open het pipethulpmiddel om kleuren te kiezen, geïntroduceerd in Android 17 Bèta 2</string>
+    <string name="about_desc_charge_optimization">Optimaliseer je batterijleven door het maximum oplaadniveau te begrenzen of aanpasbaar opladen te gebruiken. Dit is speciaal ontworpen voor Pixel-apparaten om een ​​lange levensduur en gezonde laadcyclussen te garanderen.\n\nCredits: TebbeUbben/ChargeQuickTile</string>
+    <string name="action_download">Downloaden</string>
+    <!-- DIY Section -->
+    <string name="diy_trigger_screen_off">Scherm uit</string>
+    <string name="diy_trigger_screen_on">Scherm aan</string>
+    <string name="diy_trigger_device_unlock">Apparaat ontgrendelen</string>
+    <string name="diy_trigger_charger_connected">Lader verbonden</string>
+    <string name="diy_trigger_charger_disconnected">Lader losgekoppeld</string>
+    <string name="diy_trigger_schedule">Rooster</string>
+    <string name="diy_state_time_period">Tijdsperiode</string>
+    <string name="diy_time_selection_title">Selecteer tijd</string>
+    <string name="diy_time_range_selection_title">Selecteer tijdspanne</string>
+    <string name="diy_start_time_label">Starttijd</string>
+    <string name="diy_end_time_label">Eindtijd</string>
+    <string name="diy_repeat_days_label">Herhalen aanzetten</string>
+    <string name="diy_state_charging">Opladen</string>
+    <string name="diy_state_screen_on">Scherm aan</string>
+    <string name="diy_action_haptic">Trillen</string>
+    <string name="diy_action_notification">Melding tonen</string>
+    <string name="diy_action_remove_notification">Melding verwijderen</string>
+    <string name="diy_action_flashlight_on">Zaklamp aanzetten</string>
+    <string name="diy_action_flashlight_off">Zaklamp uitzetten</string>
+    <string name="diy_action_flashlight_toggle">Zaklamp in-/uitschakelen</string>
+    <string name="diy_action_low_power_on">Energiebesparingsmodus inschakelen</string>
+    <string name="diy_action_low_power_off">Energiebesparingsmodus uitschakelen</string>
+    <string name="diy_action_dim_wallpaper">Achtergrond dimmen</string>
+    <string name="diy_dim_wallpaper_desc">Deze actie vereist Shizuku of Root om de achtergrond te dimmen.</string>
+    <string name="diy_select_trigger">Selecteer trigger</string>
+    <string name="diy_create_app_title">App</string>
+    <string name="diy_create_app_desc">Automatiseren op basis van geopende app</string>
+    <string name="diy_select_state">Staat selecteren</string>
+    <string name="diy_select_action">Actie selecteren</string>
+    <string name="diy_in_action_label">Invoer</string>
+    <string name="diy_out_action_label">Uitvoer</string>
+    <string name="action_cancel">Annuleren</string>
+    <string name="action_save">Opslaan</string>
+    <string name="action_edit">Bewerken</string>
+    <string name="action_delete">Verwijderen</string>
+    <string name="action_enable">Inschakelen</string>
+    <string name="action_disable">Uitschakelen</string>
+    <string name="automation_service_channel_name">Automatiseringsdienst</string>
+    <string name="automation_service_running_title">Automatiseringen actief</string>
+    <string name="automation_service_running_desc">Systeemgebeurtenissen in de gaten houden voor je automatiseringen</string>
+    <string name="app_detection_service_channel_name">Appdetectieservice</string>
+    <string name="app_detection_service_running_title">Appdetectie actief</string>
+    <string name="app_detection_service_running_desc">Appactiviteit volgen</string>
+    <string name="diy_action_device_effects">Apparaateffecten</string>
+    <string name="diy_device_effects_desc">Bestuur systeemwijde effecten zoals grijstinten, onderdrukking van Always-On Display en nachtmodus.</string>
+    <string name="diy_effect_grayscale">Grijstinten</string>
+    <string name="diy_effect_suppress_ambient">Ambient Display onderdrukken</string>
+    <string name="diy_effect_dim_wallpaper">Achtergrond dimmen</string>
+    <string name="diy_effect_night_mode">Nachtmodus</string>
+    <string name="diy_device_effects_android_15_warning">Deze functie vereist Android 15 of hoger.</string>
+    <string name="diy_device_effects_enabled">Ingeschakeld</string>
+    <string name="diy_device_effects_disabled">Uitgeschakeld</string>
+    <string name="diy_action_sound_mode">Geluidsmodus</string>
+    <string name="diy_sound_mode_desc">Deze actie laat je switchen tussen Geluid, Trillen en de Stille modi op basis van triggers. Het vereist hiervoor toegang tot Niet Storen.</string>
+    <!-- About Section -->
+    <string name="app_developer_name">Sameera Wijerathna</string>
+    <string name="app_description">De alles omvattende gereedschapskist voor je Pixel en Android-apparaten</string>
+    <!-- Edge Lighting -->
+    <string name="color_mode_system">Systeem</string>
+    <string name="color_mode_custom">Aangepast</string>
+    <string name="color_mode_app_specific">Appspecifiek</string>
+    <!-- Biometric & Security -->
+    <string name="error_auth_failed">Authenticatie mislukt</string>
+    <string name="shortcut_creation_hint_toast">Druk een app lang in bij het raster om een sneltoets toe te voegen</string>
+    <string name="error_app_uninstalled">App niet gevonden of geïnstalleerd</string>
+    <!-- Notifications -->
+    <string name="update_channel_name">Appupdates</string>
+    <string name="update_channel_desc">Meldingen voor nieuwe appupdates</string>
+    <string name="notification_update_available">Update beschikbaar</string>
+    <string name="battery_notification_no_devices">Geen apparaten verbonden</string>
+    <string name="label_unknown">Onbekend</string>
+    <string name="network_type_5g">5G</string>
+    <string name="network_type_4g">4G</string>
+    <string name="network_type_3g">3G</string>
+    <string name="label_shizuku_ritaka">Shizuku (Rikka)</string>
+    <string name="label_shizuku_tuozi">Shizuku (TuoZi)</string>
+    <string name="label_search_content_description">Zoeken</string>
+    <string name="label_recent_searches">Recent Searches</string>
+    <string name="label_no_recent_searches">No recent searches</string>
+    <string name="label_clear_all">Clear all</string>
+    <string name="perm_device_admin_explanation">Vereist om het apparaat compleet te vergrendelen bij onbevoegde netwerkwijzigingen op het vergrendelscherm.</string>
+    <string name="biometric_subtitle_access_settings">Authenticeren om toegang te krijgen tot de instellingen</string>
+    <string name="biometric_title_settings_format">%1$s Instellingen</string>
+    <string name="keyword_feature">functie</string>
+    <string name="keyword_settings">instellingen</string>
+    <string name="keyword_hide">verbergen</string>
+    <string name="keyword_show">tonen</string>
+    <string name="keyword_visibility">zichtbaarheid</string>
+    <string name="error_loading_apps">Fout bij laden van apps: %1$s</string>
+    <string-array name="keywords_haptic">
+        <item>trillen</item>
+        <item>aanraken</item>
+        <item>gevoel</item>
+    </string-array>
+    <string-array name="keywords_network_visibility">
+        <item>netwerk</item>
+        <item>zichtbaarheid</item>
+        <item>automatisch</item>
+        <item>verbergen</item>
+    </string-array>
+    <string-array name="keywords_restore_default">
+        <item>herstellen</item>
+        <item>standaard</item>
+        <item>icoon</item>
+    </string-array>
+    <string-array name="keywords_keyboard">
+        <item>toetsenbord</item>
+        <item>hoogte</item>
+        <item>afstand</item>
+        <item>haptisch</item>
+        <item>invoer</item>
+    </string-array>
+    <string-array name="keywords_flashlight">
+        <item>licht</item>
+        <item>lamp</item>
+    </string-array>
+    <string-array name="keywords_flashlight_pulse">
+        <item>licht</item>
+        <item>lamp</item>
+        <item>puls</item>
+        <item>melding</item>
+    </string-array>
+    <string-array name="keywords_qs_stay_awake">
+        <item>wakker</item>
+        <item>ontwikkelaar</item>
+        <item>energie</item>
+        <item>laden</item>
+    </string-array>
+    <string-array name="keywords_notification_lighting">
+        <item>gloei</item>
+        <item>melding</item>
+        <item>led</item>
+    </string-array>
+    <string-array name="keywords_round_shape">
+        <item>rond</item>
+        <item>vorm</item>
+        <item>rand</item>
+    </string-array>
+    <string-array name="keywords_privacy">
+        <item>beveiligd</item>
+        <item>privacy</item>
+        <item>biometrie</item>
+        <item>gezicht</item>
+        <item>vinger</item>
+    </string-array>
+    <string-array name="keywords_sound_accessibility">
+        <item>geluid</item>
+        <item>toegankelijkheid</item>
+        <item>horen</item>
+    </string-array>
+    <string-array name="keywords_timeout">
+        <item>blijven</item>
+        <item>aan</item>
+        <item>time-out</item>
+    </string-array>
+    <string-array name="keywords_wake_display">
+        <item>aanraken</item>
+        <item>wekken</item>
+        <item>scherm</item>
+    </string-array>
+    <string-array name="keywords_timer">
+        <item>timer</item>
+        <item>wachten</item>
+        <item>time-out</item>
+    </string-array>
+    <string name="label_keyboard_always_dark">Altijd donker thema</string>
+    <string name="label_keyboard_pitch_black">Pikzwart thema</string>
+    <string name="label_keyboard_clipboard_enabled">Klembordgeschiedenis</string>
+    <string name="label_keyboard_long_press_symbols">Lang indrukken voor symbolen</string>
+    <string name="label_keyboard_accented_characters">Karakters met accent</string>
+    <string-array name="keywords_selection">
+        <item>lijst</item>
+        <item>kiezer</item>
+        <item>selectie</item>
+    </string-array>
+    <string-array name="keywords_visual_style">
+        <item>animatie</item>
+        <item>visueel</item>
+        <item>uiterlijk</item>
+    </string-array>
+    <string-array name="keywords_quiet_filter">
+        <item>stil</item>
+        <item>negeren</item>
+        <item>filter</item>
+    </string-array>
+    <string-array name="keywords_automation_lock">
+        <item>automatisatie</item>
+        <item>automatisch</item>
+        <item>vergrendelen</item>
+    </string-array>
+    <string-array name="keywords_adb_debug">
+        <item>adb</item>
+        <item>usb</item>
+        <item>debug</item>
+    </string-array>
+    <string-array name="keywords_blur_glass">
+        <item>vervaging</item>
+        <item>glas</item>
+        <item>vignet</item>
+    </string-array>
+    <string-array name="keywords_float_window">
+        <item>zweven</item>
+        <item>venster</item>
+        <item>overlay</item>
+    </string-array>
+    <string-array name="keywords_always_display">
+        <item>altijd</item>
+        <item>scherm</item>
+        <item>klok</item>
+    </string-array>
+    <string-array name="keywords_audio_mute">
+        <item>audio</item>
+        <item>dempen</item>
+        <item>volume</item>
+    </string-array>
+    <string-array name="keywords_blue_filter">
+        <item>blauw</item>
+        <item>filter</item>
+        <item>automatisch</item>
+    </string-array>
+    <string-array name="keywords_app_freezing">
+        <item>bevriezen</item>
+        <item>shizuku</item>
+    </string-array>
+    <string-array name="keywords_manual_now">
+        <item>manueel</item>
+        <item>nu</item>
+        <item>shizuku</item>
+    </string-array>
+    <string-array name="keywords_proximity_sensor">
+        <item>nabijheid</item>
+        <item>sensor</item>
+        <item>gezicht</item>
+        <item>beneden</item>
+    </string-array>
+    <string-array name="keywords_switch_master">
+        <item>schakelaar</item>
+        <item>hoofd</item>
+    </string-array>
+    <string-array name="keywords_vibration">
+        <item>trillen</item>
+        <item>gevoel</item>
+    </string-array>
+    <string-array name="keywords_battery">
+        <item>batterij</item>
+        <item>laden</item>
+        <item>optimalisatie</item>
+        <item>pixel</item>
+    </string-array>
+    <!-- App Selection Extra -->
+    <string name="action_invert_selection">Selectie omdraaien</string>
+    <string name="toggle_show_system_apps">Systeemapps tonen</string>
+    <!-- Updates -->
+    <string name="status_up_to_date">Je bent actueel</string>
+    <string name="warning_pre_release">Dit is een vooruitgave en kan mogelijk instabiel zijn.</string>
+    <string name="release_notes_format">Versieopmerkingen v%1$s</string>
+    <string name="action_view_on_github">Bekijken op GitHub</string>
+    <string name="action_download_apk">APK downloaden</string>
+    <!-- Haptic Types -->
+    <string name="haptic_none">Geen</string>
+    <string name="haptic_subtle">Subtiel</string>
+    <string name="haptic_double">Dubbel</string>
+    <string name="haptic_click">Klik</string>
+    <string name="haptic_tick">Tik</string>
+    <!-- Flashlight Intensity Overlay -->
+    <string name="action_turn_off">Uitzetten</string>
+    <string name="feature_flashlight_brightness_title">Helderheid van zaklamp</string>
+    <!-- QS / Activities -->
+    <!-- About Section -->
+    <string name="developed_by_format">Ontwikkelt door %1$s\nmet ❤\uFE0F uit \uD83C\uDDF1\uD83C\uDDF0</string>
+    <string name="action_website">Website</string>
+    <string name="action_contact">Contact</string>
+    <string name="action_telegram">Telegram</string>
+    <string name="action_support">Steunen</string>
+    <string name="label_other_apps">Andere apps</string>
+    <string name="app_airsync">AirSync</string>
+    <string name="app_zenzero">ZenZero</string>
+    <string name="app_canvas">Canvas</string>
+    <string name="app_tasks">Tasks</string>
+    <string name="app_zero">Zero</string>
+    <!-- Help & Guides -->
+    <string name="help_guides_title">Hulp &amp; instructies</string>
+    <string name="need_more_support_reach_out">Meer ondersteuning nodig? Neem contact op,</string>
+    <string name="action_collapse">Inklappen</string>
+    <string name="action_expand">Uitklappen</string>
+    <string name="support_group_label">Ondersteuningsgroep</string>
+    <string name="email_label">E-mail</string>
+    <string name="send_email_chooser_title">Stuur een e-mail</string>
+    <string name="error_no_email_app">Geen e-mailapp beschikbaar</string>
+    <string name="instruction_step_image_description">Stap %1$d Afbeelding</string>
+    <!-- Instructions Content -->
+    <string name="instruction_section_perms_title">Machtigingen voor toegankelijkheid, meldingen en overlays</string>
+    <string name="instruction_step_perms_1">Dit toegangsweigeringsbericht kun je krijgen als je probeert gevoelige machtigingen te geven, zoals toegankelijkheid, meldingsluisteraar of overlaymachtigingen. Volg de onderstaande stappen om deze machtigingen te geven.</string>
+    <string name="instruction_step_perms_2">1. Ga naar de app-info van Essentials.</string>
+    <string name="instruction_step_perms_3">2. Open het met de drie puntjes en selecteer \"Beperkte instellingen toestaan\". Mogelijk moet je authenticeren met biometrie. Als je klaar bent, probeer de machtigingen opnieuw te geven.</string>
+    <string name="instruction_section_shizuku_title">Shizuku</string>
+    <string name="instruction_section_shizuku_desc">Shizuku is een krachtig hulpmiddel die apps direct toestaat om systeem-API\'s te gebruiken met ADB of root. Het is vereist voor functies zoals Maps-energiebesparingsmodus en Apps bevriezen. En zal helpen met het toestaan van sommige machtigingen zoals WRITE_SECUSRE_SETTINGS. \n\nDe Play Store-versie van Shizuku is mogelijk verouderd en onbruikbaar bij recente Android-versies. In dat geval kun je gebruik maken van de nieuwste versie op GitHub of een geüpdate fork.</string>
+    <string name="instruction_section_maps_title">Maps-energiebesparingsmodus</string>
+    <string name="instruction_section_maps_desc">Deze functie zal automatisch energiebesparingsmodus van Google Maps activeren die momenteel exclusief beschikbaar is op de Pixel 10. Een lid van de gemeenschap heeft ontdekt dat het nog steeds bruikbaar is op andere Android-apparaten door de minMode-activiteit uit te voeren met root.\n\nToen heb ik het met Tasker geautomatiseerd om te activeren als het scherm uit wordt gezet tijdens de navigatie en was het mij gelukt om het met Shizuku-machtigingen te doen. \n\nHet is bedoeld om op het Always-On Display van de Pixel 10 weergegeven te worden. Hierdoor zie je mogelijk een bericht dat het geen landschapsmodus ondersteunt. Dit is niet vermijdbaar en is veilig te negeren.</string>
+    <string name="instruction_section_silent_title">Stille geluidsmodus</string>
+    <string name="instruction_section_silent_desc">Je hebt misschien door gehad dat de stille modus ook Niet storen aanzet. \n\nDit komt door hoe Android het heeft geïmplementeerd dat zelfs als we dezelfde API als voor schakelen naar trillen, het om een of andere reden Niet storen aanzet naast de stille modus. Dit is momenteel niet te voorkomen. :(</string>
+    <string name="instruction_section_freeze_title">Wat is bevriezen?</string>
+    <string name="instruction_section_freeze_desc">Pauzeer en blijf weg van afleidingen van apps terwijl je ook een beetje stroom bespaart door apps in de achtergrond te voorkomen. Bruikbaar bij zelden gebruikte apps. \n\nNiet aanbevolen voor communicatieservices omdat ze je niet een melding zullen sturen als je ze niet ontdooit. \n\nHet is ook niet aanbevolen om systeemapps te bevriezen omdat ze voor systeeminstabiliteit kunnen zorgen. Ga voorzichtig verder, je was gewaarschuwd. \n\nGeïnspireerd door Hail &lt;3</string>
+    <string name="instruction_section_security_title">Zijn appvergrendeling en beveiliging bij vergrendeling echt veilig?</string>
+    <string name="instruction_section_security_desc">Absoluut niet. \n\nElke app van een derde partij kan niet 100% normale apparaatinteracties onderbreken en zelfs de appvergrendeling is alleen een overlay boven geselecteerde apps om interactie met ze te voorkomen. Er zijn manieren om het te omzeilen en het is niet onfeilbaar. \n\nHetzelfde geldt voor Beveiliging bij vergrendeling, wat detecteert wanneer iemand probeert de netwerktegels te gebruiken, wat nog steeds om een of andere reden toegankelijk is op Pixels. Dus als ze het goed genoeg proberen, kunnen ze de tegels nog steeds gebruiken en zeker als je de tegel van de vliegtuigstand aan de snelle instellingen hebt toegevoegd, kan deze app daarmee geen aanrakingen voorkomen. \n\nDeze functies zijn alleen experimenten voor licht gebruik en zijn niet aanbevolen als sterke beveiligingsmethoden. \n\nVeilige alternatieven:\n - Appvergrendeling: Privéruimte en Veilige map op Pixels en Samsung\n - Voorkomen van toegang tot mobiele netwerken: Zorg ervoor dat je de Diefstalbeveiliging en Vind-plek apparaatinstellingen aan hebt staan. Je kan ook eens naar Graphene OS kijken.</string>
+    <string name="instruction_section_statusbar_title">Iconen van de statusbalk</string>
+    <string name="instruction_section_statusbar_desc">Je hebt misschien door dat zelfs na het resetten van de iconen van de statusbalk, sommige iconen zoals de draaiing van het apparaat en het icoon bij bedrade koptelefoons kunnen nog zichtbaar zijn. Dit komt door hoe de zwarte lijst van de statusbalk is geïmplementeerd in Android en hoe je OEM het heeft aangepast. \n\nOok werken alle opties mogelijk niet omdat ze afhankelijk zijn van de OEM-implementaties.</string>
+    <string name="instruction_section_lighting_title">De meldingsverlichting werkt niet</string>
+    <string name="instruction_section_lighting_desc">Het hangt af van de OEM. Sommige zoals OneUI lijken niet overlays toe te staan boven het Always-On Display wat voorkomt dat lichteffecten worden weergegeven. In dat geval, probeer dan de Ambient Display als een omweg.</string>
+    <string name="instruction_section_button_title">Het opnieuw toewijzen van knoppen werkt niet terwijl het scherm uit is</string>
+    <string name="instruction_section_button_desc">Some OEMs limit the accessibility service reporting once the display is actually off but they may still work while the AOD is on. \nIn this case, you may able to use button remaps with AOD on but not with off. \n\nAs a workaround, you will need to use Shizuku permissions and turn on the \'Use Shizuku\' toggle in button remap settings which identifies and listen to hardware input events.\nThis is not guaranteed to work on all devices and needs testing.\n\nAnd even if it\'s on, Shizuku method only will be used when it\'s needed. Otherwise it will always fallback to Accessibility which also handles the blocking of the actual input during long press.</string>
+    <string name="instruction_section_flashlight_title">De helderheid van de zaklamp werkt niet</string>
+    <string name="instruction_section_flashlight_desc">Alleen een kleine hoeveelheid aan apparaten heeft hardware- en softwareondersteuning voor het veranderen van zaklampintensiteit. \n\nDe minimumversie is Android 13 (SDK33).\nHet veranderen van de zaklamphelderheid ondersteunt alleen HAL-versie 3.8 of hoger, bij de ondersteunde apparaten horen de nieuwste modellen bijvoorbeeld de Pixel 6/7, Galaxy S23, etc.)\'\npolodarb/Flashlight-Tiramisu</string>
+    <string name="instruction_section_about_title">Wat in hemelsnaam is dit voor een app?</string>
+    <string name="instruction_section_about_desc">Goede vraag,\n\nIk wilde altijd al het beste uit mijn apparaten halen omdat ik al een hele tijd een root gebruiker ben geweest sinds ik mijn eerste Project Treble-apparaat heb gekregen. En ik hou erg van de Tasker-app, wat automatisatie en het gebruik van elke mogelijke API en interne functie van Android mogelijk maakt.\n\nDus ik ben niet unrooted en terug op de standaard Android-beta-ervaring en wilde het meeste krijgen van wat mogelijk is met de gegeven privileges. Dat kan ik net zo goed delen. Dus met mijn beginnerskennis in Kotlin Jetpack en met de steun van vele onderzoek- en assisteertools en een geweldige gemeenschap, bouwde ik een alles-in-één app die alles bevat wat ik wilde bij mijn Android met gegeven machtigingen. En hier is het dan.\n\nFunctieaanvragen zijn welkom, ik zal ze overwegen en kijken of ze mogelijk zijn met de beschikbare machtigingen en mijn vaardigheden. Wat is vandaag de dag niet mogelijk? :)\n\nWaarom niet op de Play Store?\nIk wil niet mijn ontwikkelaarsaccount riskeren door gebruik van heel gevoelige en interne machtigingen en API\'s die gebruikt worden door deze app. Maar op de manier waar het sideloaden van apps heen gaat, zien we wel wat we moeten doen. Ik begrijp de zorgen dat gesideloade apps kwaadaardig kunnen zijn.\nTerwijl we al bij dit onderwerp zijn: Probeer eens mijn andere app AirSync als je een Mac- en Android-gebruiker bent. *schaamteloze reclame*\n\nGeniet ervan en veel plezier met bouwen! (っ◕‿◕)っ</string>
+    <!-- Bug Reporting -->
+    <string name="toast_bug_report_copied">Foutrapport gekopieerd naar het klembord</string>
+    <string name="bug_report_title">Foutrapport</string>
+    <string name="bug_report_option_share_logs">Deel logboeken</string>
+    <string name="bug_report_option_share_logs_desc">Logboeken en details bijvoegen</string>
+    <string name="bug_report_device_info">Apparaatinfo</string>
+    <string name="bug_report_raw_json">Rauw rapport</string>
+    <string name="action_report_github">Issue openen op GitHub</string>
+    <string name="action_report_email">Per email verzenden</string>
+    <string name="action_copy_clipboard">Naar het klembord kopiëren</string>
+    <string name="bug_report_email_subject">Essentials foutrapport</string>
+    <string name="bug_report_send_via">Sturen via</string>
+    <!-- Location Reached -->
+    <string name="feat_location_reached_title">Are We There Yet?</string>
+    <string name="feat_location_reached_desc">Prepare for your destination.</string>
+    <string name="location_reached_how_to">Open your map app, pick a location, and share it to Essentials.</string>
+    <string name="location_reached_radius_title">Radius: %d m</string>
+    <string name="perm_location_title">Locatie</string>
+    <string name="perm_location_desc">Gebruikt bij het detecteren van de aankomst bij je locatie</string>
+    <string name="perm_bg_location_title">Achtergrondlocatie</string>
+    <string name="perm_bg_location_desc">Vereist voor het in de gaten houden van je aankomst wanneer de app gesloten is of het scherm uit is.</string>
+    <string name="location_reached_notification_title">Bestemming bereikt!</string>
+    <string name="location_reached_notification_desc">Je bent gearriveerd bij je bestemming.</string>
+    <string name="location_reached_processing">Locatie verwerken…</string>
+    <string name="location_reached_dist_remaining">RESTERENDE AFSTAND</string>
+    <string name="location_reached_calculating">Berekenen…</string>
+    <string name="location_reached_stop_tracking">Stoppen met volgen</string>
+    <string name="location_reached_dest_ready">Bestemming gereed</string>
+    <string name="location_reached_start_tracking">Starten met volgen</string>
+    <string name="location_reached_view_map">Kaart bekijken</string>
+    <string name="location_reached_clear">Wissen</string>
+    <string name="location_reached_no_dest">Geen bestemming</string>
+    <string name="location_reached_open_maps">Open Maps</string>
+    <string name="location_reached_fsi_title">Machtiging voor volledig scherm alarm</string>
+    <string name="location_reached_fsi_desc">Vereist voor het wekken van je apparaat bij aankomst. Klikken om toestemmingen te geven.</string>
+    <string name="location_reached_dist_m">%1$d m</string>
+    <string name="location_reached_dist_km">%1$.1f km</string>
+    <string name="location_reached_service_title">Travel Alarm active</string>
+    <string name="location_reached_service_remaining">%1$s resterend (%2$d%%)</string>
+    <string name="location_reached_channel_name">Reisvoortgang</string>
+    <string name="location_reached_channel_desc">Laat de realtime afstand tot de bestemming zien</string>
+    <string name="location_reached_alarm_title">Bestemming dichtbij</string>
+    <string name="location_reached_alarm_subtitle">Maak je klaar om uit te stappen</string>
+    <string name="location_reached_dismiss">Negeren</string>
+    <string name="location_reached_toast_set">Bestemming ingesteld: %1$.4f, %2$.4f</string>
+    <string name="setting_use_root_title">Gebruik Root</string>
+    <string name="setting_use_root_desc">In plaats van Shizuku</string>
+    <string name="root_not_available_toast">Roottoegang niet beschikbaar. Check alsjeblieft je rootmanager.</string>
+    <!-- System Keyboard -->
+    <string name="feat_system_keyboard_title">Toetsenbord</string>
+    <string name="feat_system_keys">Toetsen</string>
+    <string name="feat_system_keyboard_desc">Pas lay-out en gedrag aan</string>
+    <string name="search_keyboard_height_title">Toetsenbordhoogte</string>
+    <string name="search_keyboard_height_desc">Past de verticale totaalgrootte van het toetsenbord aan</string>
+    <string name="search_keyboard_padding_title">Bodemafstand</string>
+    <string name="search_keyboard_padding_desc">Voeg ruimte onder het toetsenbord toe</string>
+    <string name="search_keyboard_haptics_title">Haptische feedback</string>
+    <string name="search_keyboard_haptics_desc">Bij drukken van toetsen trillen</string>
+    <string name="test_keyboard_hint">Test het toetsenbord</string>
+    <string name="label_keyboard_height">Toetsenbordhoogte</string>
+    <string name="label_keyboard_bottom_padding">Bodemafstand</string>
+    <string name="label_keyboard_haptics">Haptische feedback</string>
+    <string name="label_keyboard_roundness">Afronding van toetsen</string>
+    <string name="label_keyboard_functions_bottom">Functies naar onderen verschuiven</string>
+    <string name="label_keyboard_functions_padding">Zijafstand van functies</string>
+    <string name="label_keyboard_haptic_strength">Sterkte van haptische feedback</string>
+    <string name="label_keyboard_shape">Toetsenbordvorm</string>
+    <string name="shape_round">Rond</string>
+    <string name="shape_flat">Plat</string>
+    <string name="shape_inverse">Inverse</string>
+    <string name="feat_batteries_title">Batterijen</string>
+    <string name="feat_batteries_desc">Houd je batterijniveaus in de gaten</string>
+    <string name="batteries_widget_label">Batterijstatus</string>
+    <string name="connect_to_airsync">Met AirSync verbinden</string>
+    <string name="connect_to_airsync_summary">Laat het batterijniveau van je verbonden Mac-apparaat in AirSync zien</string>
+    <string name="download_airsync">Download de AirSync-app</string>
+    <string name="download_airsync_summary">Vereist voor de Mac-batterijsynchronisatie</string>
+    <string name="feat_battery_notification_title">Batterijmelding</string>
+    <string name="feat_battery_notification_desc">Blijvende melding met de batterijstatus</string>
+    <string name="battery_notification_hint">Deze melding laat je batterijniveaus zien van je verbonden Mac en Bluetooth-apparaten. Je kan instellen welke apparaten worden weergeven in de instellingen van de Batterijwidget.</string>
+    <string name="about_desc_battery_notification">Maakt de ervaring van de batterijwidget na in je meldingenscherm. Het zal de batterijniveaus van al je verbonden apparaten laten zien in één blijvende melding, die meteen wordt bijgewerkt. Dit omvat je Mac (via AirSync) en Bluetooth-accessoires.</string>
+    <string name="battery_notification_channel_name">Melding van de batterijstatus</string>
+    <string name="battery_notification_channel_desc">Blijvende melding die het batterijniveau van je verbonden apparaten laat zien</string>
+    <string name="perm_nearby_devices_title">Apparaten in de buurt</string>
+    <string name="perm_nearby_devices_desc">Vereist om Bluetooth-accessoires te detecteren en de batterijinformatie op te halen</string>
+    <!-- GitHub Auth -->
+    <string name="auth_copy_code">Code kopiëren</string>
+    <string name="auth_open_login_page">Open de inlogpagina</string>
+    <string name="auth_sign_in_rationale">Log in om opvraaglimieten van de API te verhogen</string>
+    <string name="auth_waiting_for_authorization">Wachten voor aanmelden...</string>
+    <string name="action_sign_in_github">Inloggen met GitHub</string>
+    <string name="action_sign_out">Uitloggen</string>
+    <string name="action_profile">Profiel</string>
+    <!-- App Updates / Repos -->
+    <string name="label_release_notes">Versieopmerkingen</string>
+    <string name="msg_no_repos_tracked">Er worden nog geen repositories gevolgd</string>
+    <string name="label_no_app_linked">Nog geen app gekoppeld</string>
+    <string name="format_updated_relative">Bijgewerkt %1$s</string>
+    <!-- Relative Time -->
+    <string name="time_just_now">zojuist</string>
+    <string name="today">Vandaag</string>
+    <string name="yesterday">Gisteren</string>
+    <string name="time_min_ago">%1$dm geleden</string>
+    <string name="time_hour_ago">%1$du geleden</string>
+    <string name="time_day_ago">%1$d dag(en) geleden</string>
+    <string name="time_days_ago">%1$d dagen geleden</string>
+    <string name="time_weeks_ago">%1$d weken geleden</string>
+    <string name="time_month_ago">%1$d maand(en) geleden</string>
+    <string name="time_months_ago">%1$d maanden geleden</string>
+    <string name="time_year_ago">%1$djr geleden</string>
+    <string name="action_retry">Opnieuw proberen</string>
+    <string name="action_start_sign_in">Starten met inloggen</string>
+    <string name="auth_requesting_code">Apparaatcode aanvragen...</string>
+    <string name="auth_copy_code_instruction">1. Kopieer je code:</string>
+    <string name="auth_paste_code_instruction">2. Plak de code op GitHub:</string>
+    <string name="label_found_apks">Gevonden APK\'s</string>
+    <string name="label_readme">README</string>
+    <string name="action_refresh">Herladen</string>
+    <!-- Added Missing Group Strings -->
+    <string name="feat_sound_modes_title">Geluidsmodustegel</string>
+    <string name="feat_sound_modes_desc">Tegel in de Snelle instellingen om de geluidsmodus te veranderen</string>
+    <string name="search_sound_mode_show_slider_title">Schuifregelaar laten zien</string>
+    <string name="search_sound_mode_show_slider_desc">Laat de volumeregelaar in de tegel zien</string>
+    <string name="search_sound_mode_behavior_title">Schakelgedrag</string>
+    <string name="search_sound_mode_behavior_desc">Kies modi om doorheen te schakelen</string>
+    <string name="feat_sound_haptics_title">Geluid en haptiek</string>
+    <string name="feat_sound_haptics_desc">Volume en haptische functies</string>
+    <string name="feat_security_privacy_title">Beveiliging en privacy</string>
+    <string name="feat_security_privacy_desc">Bescherm en beveilig je apparaat</string>
+    <string name="feat_notifications_alerts_title">Meldingen en waarschuwingen</string>
+    <string name="feat_notifications_alerts_desc">Mis nooit je prioriteiten</string>
+    <string name="feat_input_actions_title">Invoer en acties</string>
+    <string name="feat_input_actions_desc">Stuur je apparaten met gemak</string>
+    <string name="feat_widgets_title">Widgets</string>
+    <string name="feat_widgets_desc">In één oogopslag op je startscherm</string>
+    <string name="feat_display_visuals_title">Scherm</string>
+    <string name="feat_display_visuals_desc">Visualiseringen om je ervaring te verbeteren</string>
+    <string name="feat_watch_title">Horloge</string>
+    <string name="feat_watch_desc">Integraties met WearOS</string>
+    <string name="watch_no_companion_title">Geen horloge gedetecteerd</string>
+    <string name="watch_no_companion_desc">Het lijkt erop dat je niet de bijbehorende Essentials Wear-app hebt geïnstalleerd op je horloge.</string>
+    <string name="watch_install_companion_action">Bijbehorende app installeren</string>
+    <string name="action_download_from_github">Download from GitHub</string>
+    <string name="watch_help_title">Install on Watch</string>
+    <string name="watch_help_description">To use Watch features, you need to install the Essentials companion app on your Wear OS watch. Click the button below to open the Play Store directly on your watch.</string>
+    <string name="watch_help_open_play_store">Open on Watch</string>
+    <string name="cat_interaction">Interacties</string>
+    <string name="cat_interface">Interface</string>
+    <string name="cat_display">Scherm</string>
+    <string name="cat_protection">Bescherming</string>
+    <string name="cat_accessibility">Toegankelijkheid</string>
+    <string name="cat_connectivity">Verbindingen</string>
+    <string name="cat_privacy">Privacy</string>
+    <string name="cat_utils">Hulpmiddelen</string>
+    <string name="label_kbd_abc">ABC</string>
+    <string name="label_kbd_symbols">\?#/</string>
+    <string name="label_kaomoji">Kaomoji</string>
+    <string name="kaomoji_cat_joy">Blijdschap</string>
+    <string name="kaomoji_cat_love">Liefde</string>
+    <string name="kaomoji_cat_embarassment">Verlegenheid</string>
+    <string name="kaomoji_cat_sympathy">Sympathie</string>
+    <string name="kaomoji_cat_dissatisfaction">Ontevredenheid</string>
+    <string name="kaomoji_cat_anger">Boosheid</string>
+    <string name="kaomoji_cat_apologizing">Verontschuldigen</string>
+    <string name="kaomoji_cat_bear">Beer</string>
+    <string name="kaomoji_cat_bird">Vogel</string>
+    <string name="kaomoji_cat_cat">Kat</string>
+    <string name="kaomoji_cat_confusion">Verwarring</string>
+    <string name="kaomoji_cat_dog">Hond</string>
+    <string name="kaomoji_cat_doubt">Twijfel</string>
+    <string name="kaomoji_cat_enemies">Vijanden</string>
+    <string name="kaomoji_cat_faces">Gezichten</string>
+    <string name="kaomoji_cat_fear">Angst</string>
+    <string name="kaomoji_cat_fish">Vis</string>
+    <string name="kaomoji_cat_food">Voedsel</string>
+    <string name="kaomoji_cat_friends">Vrienden</string>
+    <string name="kaomoji_cat_games">Spellen</string>
+    <string name="kaomoji_cat_greeting">Begroeten</string>
+    <string name="kaomoji_cat_hiding">Verstoppen</string>
+    <string name="kaomoji_cat_hugging">Knuffelen</string>
+    <string name="kaomoji_cat_indifference">Onverschilligheid</string>
+    <string name="kaomoji_cat_magic">Magie</string>
+    <string name="kaomoji_cat_music">Muziek</string>
+    <string name="kaomoji_cat_nosebleeding">Bloedneus</string>
+    <string name="kaomoji_cat_pain">Pijn</string>
+    <string name="kaomoji_cat_pig">Big</string>
+    <string name="kaomoji_cat_rabbit">Konijn</string>
+    <string name="kaomoji_cat_running">Rennen</string>
+    <string name="kaomoji_cat_sadness">Verdriet</string>
+    <string name="kaomoji_cat_sleeping">Slapen</string>
+    <string name="kaomoji_cat_special">Speciaal</string>
+    <string name="kaomoji_cat_spider">Spin</string>
+    <string name="kaomoji_cat_surprise">Verrassing</string>
+    <string name="kaomoji_cat_weapons">Wapens</string>
+    <string name="kaomoji_cat_winking">Knipogen</string>
+    <string name="kaomoji_cat_writing">Schrijven</string>
+    <string name="msg_restrict_own_app_repo">Hé! Je kan voor updates checken in de instellingen,  er is geen reden om het hier toe te voegen XD</string>
+    <string name="action_export">Exporteren</string>
+    <string name="action_import">Importeren</string>
+    <string name="msg_export_success">Repositories succesvol geëxporteerd</string>
+    <string name="msg_export_failed">Exporteren van repositories mislukt</string>
+    <string name="msg_import_success">Repositories succesvol geïmporteerd</string>
+    <string name="msg_import_failed">Importeren van repositories mislukt</string>
+    <string name="label_apps">Apps</string>
+    <string name="feat_text_animations_title">Schaal en animaties</string>
+    <string name="feat_text_animations_desc">Pas de systeemgrootte en animaties aan</string>
+    <string name="feat_screen_refresh_rate_title">Screen Refresh Rate</string>
+    <string name="feat_screen_refresh_rate_desc">Set a fixed or ranged screen refresh rate</string>
+    <string name="settings_section_text">Tekst</string>
+    <string name="label_font_scale">Lettertypegrootte</string>
+    <string name="label_font_weight">Lettertypegewicht</string>
+    <string name="label_reset_default">Resetten</string>
+    <string name="settings_section_scale">Schaal</string>
+    <string name="label_smallest_width">Kleinste breedte</string>
+    <string name="msg_shizuku_permission_required">De Shizuku-machtiging is vereist voor het aanpassen van de schaal</string>
+    <string name="label_grant_permission">Toestemming geven</string>
+    <string name="settings_section_animations">Animaties</string>
+    <string name="label_animator_duration_scale">Duur van animatieschaal</string>
+    <string name="label_transition_animation_scale">Overgangsanimatieschaal</string>
+    <string name="label_window_animation_scale">Vensteranimatieschaal</string>
+    <string name="about_desc_text_animations">Pas de systeemwijde lettertypegrootte, gewicht en animatiesnelheden aan. Let erop dat sommige instellingen mogelijk geavanceerde machtigingen vereisen of het herstarten van het apparaat voordat sommige apps wijzigingen weergeven. \n\nToegevoegde Shizuku- of rootmachtigingen kunnen mogelijk nodig zijn voor het wijzigen van de schaal</string>
+    <string name="about_desc_screen_refresh_rate">Set a custom screen refresh rate using Shizuku. Fixed mode locks both the minimum and peak refresh rate to one value, while range mode lets you define separate minimum and peak values. Reset clears the custom override and returns the device to its system-managed refresh behavior.</string>
+    <string name="refresh_rate_section_mode">Mode</string>
+    <string name="refresh_rate_section_values">Refresh Rate</string>
+    <string name="refresh_rate_mode_fixed">Fixed</string>
+    <string name="refresh_rate_mode_range">Range</string>
+    <string name="refresh_rate_fixed_title">Fixed refresh rate</string>
+    <string name="refresh_rate_fixed_desc">Set both minimum and peak refresh rate to the same value</string>
+    <string name="refresh_rate_min_title">Minimum refresh rate</string>
+    <string name="refresh_rate_min_desc">Choose the lowest refresh rate the display may use</string>
+    <string name="refresh_rate_peak_title">Peak refresh rate</string>
+    <string name="refresh_rate_peak_desc">Choose the highest refresh rate the display may use</string>
+    <string name="refresh_rate_system_default">System</string>
+    <string name="refresh_rate_reset_desc">Remove the custom override and return to the system default refresh behavior</string>
+    <string name="msg_refresh_rate_permission_required">Shizuku permission required to adjust refresh rate</string>
+    <string name="search_refresh_rate_mode_title">Refresh Rate Mode</string>
+    <string name="search_refresh_rate_mode_desc">Switch between fixed and ranged refresh rate control</string>
+    <string name="search_refresh_rate_fixed_title">Fixed Refresh Rate</string>
+    <string name="search_refresh_rate_fixed_desc">Lock the display to one custom refresh rate</string>
+    <string name="search_refresh_rate_range_title">Refresh Rate Range</string>
+    <string name="search_refresh_rate_range_desc">Configure separate minimum and peak refresh rates</string>
+    <string name="search_refresh_rate_reset_title">Reset Refresh Rate</string>
+    <string name="search_refresh_rate_reset_desc">Clear the custom refresh rate override</string>
+    <string name="feat_aod_force_turn_off_title">Always-On Display geforceerd uitschakelen</string>
+    <string name="feat_aod_force_turn_off_desc">Always-On Display geforceerd uitschakelen als er geen meldingen zijn. Vereist de toegankelijkheidsmachtiging.</string>
+    <string name="feat_auto_accessibility_title">Automatische toegankelijkheid</string>
+    <string name="feat_auto_accessibility_desc">Automatisch de toegankelijkheidsmachtiging geven bij het starten van de app wanneer missend door middel van WRITE_SECURE_SETTINGS.</string>
+    <string name="label_help_guide">Hulp en handleidingen</string>
+    <string name="tab_your_android">Jouw Android</string>
+    <string name="label_device_storage">Opslag</string>
+    <string name="label_device_ram">Geheugen</string>
+    <string name="label_use_blur">Vervaging gebruiken</string>
+    <string name="desc_use_blur">Progressieve vervagingselementen gebruiken bij de hele interface</string>
+    <string name="msg_blur_compatibility_error">Vervaging is uitgeschakeld op dit apparaat om een bekende bug op Samsung-apparaten op Android 15  of lager te voorkomen.</string>
+    <!-- Empty State Actions -->
+    <string name="msg_no_apps_frozen">Geen apps geselecteerd om te bevriezen.</string>
+    <string name="action_get_started">Aan de slag</string>
+    <string name="action_new_automation">Nieuwe automatie</string>
+    <string name="action_add_repository">Repository toevoegen</string>
+    <!-- Bug Report Enhancement -->
+    <string name="bug_report_feedback_placeholder">Beschrijf het probleem of geef feedback…</string>
+    <string name="bug_report_contact_email_label">E-mail voor contact opnemen</string>
+    <string name="action_send_feedback">Stuur feedback</string>
+    <string name="msg_feedback_sent">Feedback succesvol gestuurd! Bedankt voor het helpen met het verbeteren van de app.</string>
+    <string name="label_alternatively">Als alternatief</string>
+    <!-- Pixel Diagnostics -->
+    <string name="label_diagnostics">Diagnostiek</string>
+    <string name="label_device_check">Apparaat checken</string>
+    <string name="msg_flashbang">Wees gereed om geflashbangd te worden!</string>
+    <string name="action_abort">Annuleren</string>
+    <string name="action_continue">Doorgaan</string>
+    <string name="prank_trial_expired_title">Je Essentials-proefperiode is verlopen</string>
+    <string name="prank_trial_expired_desc">Je gratis proefperiode van Essentials is geëindigd. Krijg toegang tot geavanceerde functies zoals Knoppen opnieuw toewijzen, Apps bevriezen en DIY-automaties met Premium.</string>
+    <string name="prank_button_premium">Wat zit er bij Premium?</string>
+    <string name="prank_reveal_title">1 april!</string>
+    <string name="prank_reveal_desc">Grapje, Essentials is en zal altijd gratis en open-source blijven. Geniet ervan! (っ◕‿◕)っ</string>
+    <string name="notification_lighting_style_system">System</string>
+    <string name="notification_lighting_system_mode_title">Ripple Animation</string>
+    <string name="notification_lighting_system_mode_charging_ripple">Bottom</string>
+    <string name="notification_lighting_system_mode_auth_ripple">Center</string>
+    <string name="notification_lighting_system_mode_custom_ripple">Custom</string>
+    <string name="msg_shizuku_root_required_system_lighting">Shizuku or Root permission is required for System lighting effects</string>
+    <string name="notification_lighting_system_disclaimer">Made for Google Pixel. Might not be available on other devices.</string>
+    <!-- Live Wallpaper -->
+    <string name="feat_live_wallpaper_title">Live wallpaper</string>
+    <string name="feat_live_wallpaper_desc">Set custom video as live wallpaper</string>
+    <string name="live_wallpaper_label">Live Wallpaper</string>
+    <string name="live_wallpaper_description">A video live wallpaper that plays when unlocked.</string>
+    <string name="live_wallpaper_playback_trigger_title">Play when</string>
+    <string name="live_wallpaper_trigger_unlock">Unlock</string>
+    <string name="live_wallpaper_trigger_screen_on">Screen on</string>
+    <string name="live_wallpaper_video_title">Video</string>
+    <string name="btn_apply">Apply</string>
+    <string name="add_video">Add video</string>
+    <string name="custom_video">Custom video</string>
+    <string name="about_desc_live_wallpaper">Set your favorite video as your home screen wallpaper. Choose between triggering the animation upon unlocking or simply whenever the screen turns on for a dynamic experience.</string>
+    <!-- Shut-Up! Feature -->
+    <string name="feat_shut_up_title">Shut-Up!</string>
+    <string name="feat_shut_up_desc">I know what I\'m doing</string>
+    <string name="shut_up_description">Shut-Up! bypasses app restrictions and checks for developer options, accessibility and debugging by dynamically hiding them when you launch sensitive apps. \n\nUse the custom shortcuts to ensure settings are hidden before the app launches.</string>
+    <string name="shut_up_select_apps_title">Select Apps</string>
+    <string name="shut_up_select_apps_desc">Choose apps to apply Shut-Up! logic</string>
+    <string name="shut_up_settings_title">Shut-Up! Settings</string>
+    <string name="shut_up_per_app_settings">Shut-Up! Features</string>
+    <string name="shut_up_disable_dev_options">Disable Developer Options</string>
+    <string name="shut_up_disable_usb_debugging">Disable USB Debugging</string>
+    <string name="shut_up_disable_wireless_debugging">Disable Wireless Debugging</string>
+    <string name="shut_up_disable_accessibility">Disable Accessibility Services</string>
+    <string name="shut_up_shortcut_created">Shortcut created for %s</string>
+    <string name="feat_disable_rotation_suggestion_title">Disable rotation suggestion</string>
+    <string name="feat_disable_rotation_suggestion_desc">Do not show the rotation button when auto-rotate is off</string>
+    <string name="shut_up_toast_active">App got shut up</string>
+    <string name="shut_up_toast_restored">Shut up features returned</string>
+    <string name="shut_up_auto_archive_notif_title">Auto Freeze</string>
+    <string name="shut_up_auto_archive_notif_text">%1$s will be archived in %2$d seconds</string>
+    <string name="shut_up_auto_archive_action_freeze">Freeze now</string>
+    <string name="shut_up_auto_archive_action_abort">Abort</string>
+    <!-- Lock Screen Clock -->
+    <string name="feat_lock_screen_clock_title">Lock screen clock</string>
+    <string name="feat_lock_screen_clock_desc">Customize lock screen clock on Pixels</string>
+    <string name="about_desc_lock_screen_clock">Change the lock screen clock style on Pixels. Select from the available clock faces provided by the System UI. Some old styles might not be available.</string>
+    <string name="lock_screen_clock_bignum">Big Number</string>
+    <string name="lock_screen_clock_calligraphy">Calligraphy</string>
+    <string name="lock_screen_clock_flex">Flex</string>
+    <string name="lock_screen_clock_growth">Growth</string>
+    <string name="lock_screen_clock_handwritten">Handwritten</string>
+    <string name="lock_screen_clock_inflate">Inflate</string>
+    <string name="lock_screen_clock_metro">Metro</string>
+    <string name="lock_screen_clock_numoverlap">Number Overlap</string>
+    <string name="lock_screen_clock_weather">Weather</string>
+    <string name="lock_screen_clock_select_label">Select Clock Style</string>
+    <string name="lock_screen_clock_current_label">Current</string>
+    <string name="lock_screen_clock_apply_label">Apply</string>
+    <string name="lock_screen_clock_applied_toast">Clock style applied</string>
+    <string name="lock_screen_clock_permission_required">WRITE_SECURE_SETTINGS permission required</string>
+    <string name="lock_screen_clock_default">Default</string>
+    <string name="label_weight">Weight</string>
+    <string name="label_width">Width</string>
+    <string name="label_grade">Grade</string>
+    <string name="label_roundness">Roundness</string>
+    <string name="label_color_tone">Lightness</string>
+    <string name="label_variation">Variation</string>
+    <string name="label_color">Color</string>
+    <string name="label_style_font">Style &amp; Font</string>
+    <string name="about_title">About</string>
+    <string name="color_default">Default</string>
+    <string name="color_red">Red</string>
+    <string name="color_green">Green</string>
+    <string name="color_blue">Blue</string>
+    <string name="color_yellow">Yellow</string>
+    <string name="color_orange">Orange</string>
+    <string name="color_purple">Purple</string>
+    <string name="color_pink">Pink</string>
+    <string name="color_teal">Teal</string>
+    <!-- What's New -->
+    <string name="whats_new_specs_title">Device Specs Retired</string>
+    <string name="whats_new_specs_desc">Inaccurate GSMArena-powered specifications have been removed to keep device insights clean, fast, and completely reliable.</string>
+    <string name="whats_new_apps_title">App Updates Migrated</string>
+    <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
+</resources>
