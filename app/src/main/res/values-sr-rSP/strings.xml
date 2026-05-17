@@ -1,0 +1,1457 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="label_customization">Customization</string>
+    <string name="label_beta">БЕТА</string>
+    <string name="shut_up_attempt_shizuku_restart">Attempt Shizuku restart</string>
+    <string name="shut_up_shizuku_restart_warning_title">Shizuku Restart Warning</string>
+    <string name="shut_up_shizuku_restart_warning_message">Since wireless debugging was toggled, Shizuku services might not have started automatically causing freezing to not function. Consider turning on attempt shizuku restart as well</string>
+    <string name="accessibility_service_description"><b>Essentials Accessibility Service</b>\n\nThis service is required for the following advanced features:\n\n<b>• Physical Button Remapping:</b>\nDetects volume button presses even when the screen is off to trigger actions like the Flashlight.\n\n<b>• Per-App Settings:</b>\nMonitors the currently active app to apply specific profiles for Dynamic Night Light, Notification Lighting Colors, and App Lock.\n\n<b>• Screen Control:</b>\nAllows the app to lock the screen (e.g. via Double Tap or Widgets) and detect screen state changes.\n\n<b>• Security:</b>\nPrevents unauthorized changes by detecting window content when the device is locked.\n\n<small>No input text or sensitive user data is collected or transmitted.</small></string>
+    <string name="freeze_activity_title">Апп Фреезинг</string>
+    <string name="freeze_activity_subtitle">Онемогућите апликације које се ретко користе</string>
+    <string name="freeze_shortcut_short_label">Апп Фреезинг</string>
+    <string name="freeze_shortcut_long_label">Отворите Замрзавање апликације</string>
+    <string name="frozen_app_shortcut_label">Фрозен Апп</string>
+    <string name="screen_off_widget_label">Празан екран искључен виџет</string>
+    <string name="app_freezing_tile_label">Апп Фреезинг</string>
+    <string name="flashlight_pulse_tile_label">Пулс лампе</string>
+    <string name="check_pre_releases_label">Проверите да ли постоје претходна издања</string>
+    <string name="check_pre_releases_desc">Можда је нестабилан</string>
+    <string name="label_default_tab">Default tab</string>
+    <!-- App Lock -->
+    <string name="settings_section_security">Безбедност</string>
+    <string name="app_lock_enable_title">Омогућите закључавање апликације</string>
+    <string name="app_lock_auth_title">Сигурност закључавања апликација</string>
+    <string name="app_lock_enable_auth_subtitle">Потврдите идентитет да бисте омогућили закључавање апликације</string>
+    <string name="app_lock_disable_auth_subtitle">Потврдите идентитет да бисте онемогућили закључавање апликације</string>
+    <string name="app_lock_select_apps_title">Изаберите закључане апликације</string>
+    <string name="app_lock_select_apps_desc">Одаберите које апликације захтевају аутентификацију</string>
+    <string name="app_lock_description">Осигурајте своје апликације биометријском аутентификацијом. Закључане апликације ће захтевати аутентификацију приликом покретања, остају откључане док се екран не искључи.</string>
+    <string name="app_lock_warning">Имајте на уму да ово није робусно решење јер је ово само апликација треће стране. Ако вам је потребна јака сигурност, размислите о коришћењу приватног простора или других сличних функција.</string>
+    <string name="app_lock_biometric_note">Још једна напомена, промпт за биометријску аутентификацију вам омогућава да користите само методе ЈАКО безбедне класе. Безбедносне методе откључавања лицем у класи ВЕАК на уређајима као што је Пикел 7 моћи ће да користе само доступне друге ЈАКЕ методе аутентификације као што су отисак прста или пин.</string>
+    <string name="setting_use_usage_access_title">Use usage access</string>
+    <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
+    <!-- Button Remap -->
+    <string name="button_remap_enable_title">Омогући пресликавање дугмета</string>
+    <string name="button_remap_use_shizuku_title">Користите Схизуку или Роот или Роот</string>
+    <string name="button_remap_use_shizuku_desc">Ради са искљученим екраном (препоручено)</string>
+    <string name="shizuku_not_running_toast">Шизуку не трчи</string>
+    <string name="shizuku_detected_prefix">Детецтед %1$s</string>
+    <string name="shizuku_status_prefix">Статус: %1$s</string>
+    <string name="shizuku_open_button">Отвори Шизуку</string>
+    <string name="settings_section_flashlight">Лампица</string>
+    <string name="flashlight_options_title">Опције лампе</string>
+    <string name="flashlight_options_desc">Подесите бледење и друга подешавања</string>
+    <string name="setting_pitch_black_theme_title">Питцх блацк тема</string>
+    <string name="setting_pitch_black_theme_desc">Користите чисту црну позадину у тамном режиму</string>
+    <string name="settings_section_haptic">Хаптиц Феедбацк</string>
+    <string name="button_remap_section_long_press">Ремап Лонг Пресс</string>
+    <string name="screen_off">Сцреен Офф</string>
+    <string name="screen_on">Сцреен Он</string>
+    <string name="volume_up">Волуме Уп</string>
+    <string name="volume_down">Утишавање звука</string>
+    <string name="action_toggle_flashlight">Укључите батеријску лампу</string>
+    <string name="action_media_play_pause">Репродукција/пауза медија</string>
+    <string name="action_media_next">Следећи медији</string>
+    <string name="action_media_previous">Медији претходни</string>
+    <string name="action_toggle_vibrate">Укључите вибрацију</string>
+    <string name="action_toggle_mute">Искључи звук</string>
+    <string name="action_ai_assistant">АИ асистент</string>
+    <string name="action_take_screenshot">Направите снимак екрана</string>
+    <string name="action_cycle_sound_modes">Циклусите режиме звука</string>
+    <string name="action_circle_to_search">Circle to Search</string>
+    <string name="action_like_song">Као актуелна песма</string>
+    <string name="like_song_settings_title">Као подешавања песме</string>
+    <string name="like_song_settings_desc">Ова функција захтева приступ обавештењу да би открила медије који се тренутно репродукују и покренула сличну акцију. Омогућите га испод.</string>
+    <string name="like_song_toast_enabled">Прикажи тост поруку</string>
+    <string name="like_song_aod_overlay_title">Прикажи преклапање на АОД-у</string>
+    <string name="feat_essentials_on_display_title">Essentials On Display</string>
+    <string name="feat_essentials_on_display_desc">Glance at media and info on AOD</string>
+    <string name="essentials_on_display_docked_mode_title">Docked mode</string>
+    <string name="essentials_on_display_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
+    <string name="essentials_on_display_respect_notifications_title">Respect new notifications</string>
+    <string name="essentials_on_display_respect_notifications_desc">Briefly disable for new notifications</string>
+    <string name="essentials_on_display_random_shapes_title">Random shapes</string>
+    <string name="essentials_on_display_random_shapes_desc">Use various Material 3 shapes for the album art</string>
+    <string name="essentials_on_display_album_art_title">Album art</string>
+    <string name="essentials_on_display_clock_title">Clock</string>
+    <string name="essentials_on_display_force_fill_while_charging_title">Always use while charging</string>
+    <string name="essentials_on_display_force_fill_while_charging_desc">Force Fill mode when the device is plugged in regardless of the selected mode</string>
+    <string name="label_size">Size</string>
+    <string name="feat_notification_glance_title">Поглед обавештења</string>
+    <string name="feat_notification_glance_desc">Нека АОД буде укључен док су обавештења на чекању</string>
+    <string name="notification_glance_same_as_lighting_title">Исте апликације као осветљење обавештења</string>
+    <string name="notification_glance_desc">Ова функција ће динамички омогућити Увек на екрану када стигне обавештење из изабране апликације и онемогућити је када се сва одговарајућа обавештења одбаце. Изаберите апликације или користите исти избор као осветљење обавештења.</string>
+    <string name="grant_notification_access">Одобрите приступ обавештењима</string>
+    <string name="action_toggle_media_volume">Укључите јачину медија</string>
+    <string name="button_remap_screen_off_hint">Када је екран искључен, дуго притисните изабрано дугме да бисте покренули додељену радњу. На Пикел уређајима, ова радња се покреће само ако је АОД укључен због системских ограничења.</string>
+    <string name="button_remap_screen_on_hint">Када је екран укључен, дуго притисните изабрано дугме да бисте покренули додељену радњу.</string>
+    <string name="flashlight_intensity_title">Интензитет лампе</string>
+    <string name="flashlight_fade_title">Фаде ин анд оут</string>
+    <string name="flashlight_fade_desc">Лагано пребаците батеријску лампу</string>
+    <string name="flashlight_global_title">Глобалне контроле</string>
+    <string name="flashlight_global_desc">Фаде-ин батеријска лампа на глобалном нивоу</string>
+    <string name="flashlight_adjust_intensity_title">Подесите интензитет</string>
+    <string name="flashlight_adjust_intensity_desc">Јачина звука + - подешава интензитет лампе</string>
+    <string name="flashlight_live_update_title">Ажурирање уживо</string>
+    <string name="flashlight_live_update_desc">Прикажи осветљеност у статусној траци</string>
+    <string name="settings_section_other">Остало</string>
+    <string name="flashlight_always_off_title">Увек искључите батеријску лампу</string>
+    <string name="flashlight_always_off_desc">Чак и док је екран укључен</string>
+    <string name="content_desc_settings">Подешавања</string>
+    <!-- Caffeinate / Permissions -->
+    <string name="permission_show_notification_title">Прикажи обавештење</string>
+    <string name="permission_post_notifications_title">Обавештења о објављивању</string>
+    <string name="permission_post_notifications_desc">Дозвољава апликацији да приказује обавештења</string>
+    <string name="permission_grant_action">Дајте дозволу</string>
+    <string name="caffeinate_notification_title">Цаффеинате Ацтиве</string>
+    <string name="caffeinate_active">Ацтиве</string>
+    <string name="caffeinate_notification_desc">Екран се држи будним</string>
+    <string name="caffeinate_battery_optimization_title">Занемарите оптимизацију батерије</string>
+    <string name="caffeinate_abort_screen_off_title">Прекини са искљученим екраном</string>
+    <string name="caffeinate_skip_countdown_title">Прескочи одбројавање</string>
+    <string name="caffeinate_skip_countdown_desc">Одмах почните са кофеином.</string>
+    <string name="caffeinate_timeout_presets_title">Унапред подешена времена</string>
+    <string name="caffeinate_timeout_presets_desc">Изаберите доступна трајања за КС плочицу</string>
+    <string name="caffeinate_timeout_5m">5м</string>
+    <string name="caffeinate_timeout_10m">10м</string>
+    <string name="caffeinate_timeout_30m">30м</string>
+    <string name="perm_notif_policy_title">Приступ Не узнемиравај</string>
+    <string name="perm_notif_policy_desc">Неопходан за прелазак између режима звука, вибрације и искључивања звука</string>
+    <string name="caffeinate_timeout_1h">1х</string>
+    <string name="caffeinate_timeout_infinity">∞</string>
+    <string name="caffeinate_starting_in">Почевши у %1$dс…</string>
+    <string name="caffeinate_remaining">%1$s преостали</string>
+    <string name="caffeinate_live_channel_desc">Трајно обавештење за кофеин</string>
+    <!-- Dynamic Night Light -->
+    <string name="dynamic_night_light_enable_title">Омогућите динамичко ноћно светло</string>
+    <string name="dynamic_night_light_apps_section">Апликације које искључују ноћно светло</string>
+    <string name="action_select_apps">Изаберите апликације</string>
+    <!-- App Freezing -->
+    <string name="settings_section_app_control">Контрола апликација</string>
+    <string name="action_freeze">Фреезе</string>
+    <string name="action_unfreeze">Одмрзните</string>
+    <string name="action_remove">Remove</string>
+    <string name="action_create_shortcut">Create shortcut</string>
+    <string name="action_app_info">App info</string>
+    <string name="freeze_mode_description_freeze_title">What is Freeze?</string>
+    <string name="freeze_mode_description_freeze_body">App freezing disables the app\'s launch activity which removes it from the app list and updates. It will prevent the app from starting at all until it\'s unfrozen which saves resources but you will need to unfreeze from here or manually re-enable.</string>
+    <string name="freeze_mode_description_freeze_warning">DO NOT FREEZE COMMUNICATION APPS</string>
+    <string name="freeze_mode_description_suspend_title">What is Suspend?</string>
+    <string name="freeze_mode_description_suspend_body">Suspending an app used to pause the app activity and prevent background executions but with recent Android changes, it only pauses the notifications from appearing and that\'s pretty much it. But does allows you to unpause from the launcher app list as they will be still available as grayscale paused app icons.</string>
+    <string name="freeze_mode_description_suspend_footer">Should work the same as the native app pause/ focus mode features.</string>
+    <string name="content_desc_more_options">Више опција</string>
+    <string name="action_freeze_all">Замрзните све апликације</string>
+    <string name="action_unfreeze_all">Одмрзните све апликације</string>
+    <string name="action_export_freeze">Извезите листу замрзнутих апликација</string>
+    <string name="action_import_freeze">Увезите листу замрзнутих апликација</string>
+    <string name="freeze_pick_apps_title">Изаберите апликације за замрзавање</string>
+    <string name="freeze_pick_apps_desc">Одаберите које апликације могу да се замрзну</string>
+    <string name="freeze_show_in_launcher_title">Show in launcher</string>
+    <string name="freeze_show_in_launcher_desc">Add a launcher shortcut for easier access</string>
+    <string name="settings_section_automation">Аутоматизација</string>
+    <string name="freeze_when_locked_title">Замрзните када је закључан</string>
+    <string name="freeze_delay_title">Одлагање замрзавања</string>
+    <string name="delay_immediate">Одмах</string>
+    <string name="delay_1m">1м</string>
+    <string name="delay_5m">5м</string>
+    <string name="delay_15m">15м</string>
+    <string name="delay_manual">Мануал</string>
+    <string name="freeze_auto_freeze_section">Аутоматско замрзавање апликација</string>
+    <string name="freeze_automation_hint">Замрзните изабране апликације када се уређај закључа. Одаберите одлагање да бисте избегли замрзавање апликација ако откључате екран убрзо након што га искључите.</string>
+    <string name="freeze_warning">Замрзавање системских апликација може бити опасно и може изазвати неочекивано понашање.</string>
+    <string name="action_enable_in_settings">Омогућите у подешавањима</string>
+    <string name="freeze_dont_freeze_active_apps_title">Дон\'т замрзавање активних апликација</string>
+    <string name="perm_usage_stats_title">Усаге Статс</string>
+    <string name="perm_usage_stats_desc">Потребно је да открије које су апликације тренутно у првом плану како би се избегло њихово замрзавање</string>
+    <string name="perm_usage_stats_desc_app_lock">Required to detect foreground apps for App Lock features when accessibility is not used.</string>
+    <string name="perm_notif_listener_desc_freeze">Потребно за откривање медија који се репродукују и активних обавештења како би се избегло њихово замрзавање</string>
+    <string name="freeze_mode_title">Freeze mode</string>
+    <string name="freeze_mode_freeze">Freezing</string>
+    <string name="freeze_mode_suspend">App suspension</string>
+    <string name="freeze_mode_warning_desc">Can not switch mode while apps are frozen. Please unfreeze all and try again.</string>
+    <!-- Notification Lighting -->
+    <string name="notification_lighting_screen_off_title">Прикажи само када је екран искључен</string>
+    <string name="notification_lighting_skip_silent_title">Прескочи тиха обавештења</string>
+    <string name="notification_lighting_skip_persistent_title">Прескочи стална обавештења</string>
+    <string name="settings_section_flashlight_pulse">Пулс лампе</string>
+    <string name="flashlight_pulse_title">Пулс лампе</string>
+    <string name="flashlight_pulse_facedown_title">Само док је лицем надоле</string>
+    <string name="flashlight_pulse_same_as_lighting_title">Исте апликације као осветљење обавештења</string>
+    <string name="flashlight_pulse_max_brightness">Max brightness</string>
+    <string name="flashlight_pulse_preview">Preview pulse</string>
+    <string name="settings_section_style">Стиле</string>
+    <string name="notification_lighting_stroke_adjustment_section">Подешавање хода</string>
+    <string name="notification_lighting_corner_radius_title">Угаони радијус</string>
+    <string name="notification_lighting_stroke_thickness_title">Дебљина потеза</string>
+    <string name="notification_lighting_glow_adjustment_section">Подешавање сјаја</string>
+    <string name="notification_lighting_glow_spread_title">Ширење сјаја</string>
+    <string name="notification_lighting_placement_section">Пласман</string>
+    <string name="notification_lighting_h_pos_title">Хоризонтална позиција</string>
+    <string name="notification_lighting_v_pos_title">Вертикални положај</string>
+    <string name="notification_lighting_indicator_adjustment_section">Подешавање индикатора</string>
+    <string name="notification_lighting_scale_title">Сцале</string>
+    <string name="notification_lighting_duration_title">Трајање</string>
+    <string name="notification_lighting_style_sweep">Sweep</string>
+    <string name="notification_lighting_sweep_position_title">Position</string>
+    <string name="notification_lighting_sweep_random_shapes_title">Random shapes</string>
+    <string name="notification_lighting_sweep_thickness_title">Stroke thickness</string>
+    <string name="notification_lighting_sweep_pos_left">Left</string>
+    <string name="notification_lighting_sweep_pos_center">Center</string>
+    <string name="notification_lighting_sweep_pos_right">Right</string>
+    <string name="settings_section_animation">Анимација</string>
+    <string name="notification_lighting_pulse_count_title">Број пулса</string>
+    <string name="notification_lighting_pulse_duration_title">Трајање пулса</string>
+    <string name="settings_section_color_mode">Цолор Моде</string>
+    <string name="settings_section_ambient_display">Амбијентални приказ</string>
+    <string name="ambient_display_title">Амбијентални приказ</string>
+    <string name="ambient_display_hint">Погодно ако не користите АОД.</string>
+    <string name="ambient_display_desc">Пробудите екран и прикажите осветљење</string>
+    <string name="ambient_show_lock_screen_title">Прикажи закључани екран</string>
+    <string name="ambient_show_lock_screen_desc">Нема црног преклапања</string>
+    <!-- Tiles -->
+    <string name="action_add">Додај</string>
+    <string name="action_added">Added</string>
+    <string name="qs_tile_already_added">Већ додато</string>
+    <string name="qs_tile_requires_android_13">Захтева Андроид 13+</string>
+    <string name="tile_ui_blur">УИ Блур</string>
+    <string name="tile_bubbles">Бубблес</string>
+    <string name="tile_sensitive_content">Сенситиве Цонтент</string>
+    <string name="tile_tap_to_wake">Додирните да бисте се пробудили</string>
+    <string name="tile_aod">АОД</string>
+    <string name="tile_caffeinate">Кофеин</string>
+    <string name="tile_sound_mode">Режим звука</string>
+    <string name="tile_notification_lighting">Осветљење обавештења</string>
+    <string name="tile_dynamic_night_light">Динамиц Нигхт Лигхт</string>
+    <string name="tile_locked_security">Лоцкед Сецурити</string>
+    <string name="tile_app_lock">Закључавање апликације</string>
+    <string name="tile_mono_audio">Моно Аудио</string>
+    <string name="tile_flashlight">Лампица</string>
+    <string name="tile_app_freezing">Апп Фреезинг</string>
+    <string name="tile_flashlight_pulse">Пулс лампе</string>
+    <string name="tile_stay_awake">Остани будан</string>
+    <string name="input_method_label">Ессентиалс Кеибоард</string>
+    <string name="subtype_en_us">енглески (САД)</string>
+    <string name="tile_active">Ацтиве</string>
+    <string name="tile_inactive">Неактиван</string>
+    <string name="tile_developer_options">Опције за програмере</string>
+    <string name="about_desc_developer_options">Лако пребаците опције системског програмера са КС плочице. Ово може да ресетује нека подешавања програмера која сте изменили.</string>
+    <string name="tile_refresh_rate">Refresh Rate</string>
+    <string name="about_desc_refresh_rate_tile">Cycle between the system default and preset refresh rates directly from a Quick Settings tile using Shizuku.</string>
+    <string name="nfc_tile_label">НФЦ</string>
+    <string name="tile_private_dns">Приватни ДНС</string>
+    <string name="tile_private_dns_auto">Ауто</string>
+    <string name="tile_private_dns_off">Офф</string>
+    <string name="tile_usb_debugging">УСБ отклањање грешака</string>
+    <string name="tile_color_picker">Бирач боја</string>
+    <string name="toast_eyedropper_failed">Are you sure you\'re on Androdi 17? (╯°_°）╯</string>
+    <string name="subtitle_eye_dropper">Еие Дроппер</string>
+    <string name="on">Он</string>
+    <string name="off">Офф</string>
+    <string name="private_dns_custom_title">Прилагођени приватни ДНС</string>
+    <string name="private_dns_presets_title">Уобичајена ДНС унапред подешена подешавања</string>
+    <string name="dns_preset_add_title">Add DNS Preset</string>
+    <string name="dns_preset_name_label">Preset name</string>
+    <string name="dns_preset_reset_action">Reset</string>
+    <string name="dns_preset_delete_content_description">Delete preset</string>
+    <string name="dns_preset_reset_confirm">Are you sure you want to reset all DNS presets to defaults? This will remove all your custom presets.</string>
+    <string name="private_dns_hostname_label">Име хоста добављача</string>
+    <string name="dns_preset_adguard">АдГуард ДНС</string>
+    <string name="dns_preset_adguard_hostname">днс.адгуард.цом</string>
+    <string name="dns_preset_google">Гоогле јавни ДНС</string>
+    <string name="dns_preset_google_hostname">днс.гоогле</string>
+    <string name="dns_preset_cloudflare">Цлоудфларе ДНС</string>
+    <string name="dns_preset_cloudflare_hostname">1дот1дот1дот1.цлоудфларе-днс.цом</string>
+    <string name="dns_preset_quad9">Куад9 ДНС</string>
+    <string name="dns_preset_quad9_hostname">днс.куад9.нет</string>
+    <string name="dns_preset_cleanbrowsing">ЦлеанБровсинг</string>
+    <string name="dns_preset_cleanbrowsing_hostname">адулт-филтер-днс.цлеанбровсинг.орг</string>
+    <string name="tile_charge_optimization">Пуњење</string>
+    <string name="limit_to_80">Ограничење на 80%</string>
+    <string name="adaptive_charging">Адаптиве</string>
+    <string name="deactivated">Није оптимизовано</string>
+    <string name="permission_missing">Недостаје дозвола</string>
+    <!-- Screen Locked Security -->
+    <string name="screen_locked_security_title">Сигурност закључаног екрана</string>
+    <string name="screen_locked_security_dialog_title">Сцреен Лоцкед Сецурити</string>
+    <string name="warning_title">⚠ УПОЗОРЕЊЕ</string>
+    <string name="screen_locked_security_auth_enable">Аутентификујте да бисте омогућили безбедност закључаног екрана</string>
+    <string name="screen_locked_security_auth_disable">Потврдите идентитет да бисте онемогућили безбедност закључаног екрана</string>
+    <string name="screen_locked_security_desc">Disable quick setting tiles when the device is locked</string>
+    <string name="search_disable_qs_locked_title">Disable QS Locked</string>
+    <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
+    <!-- Sound Mode -->
+    <string name="sound_mode_reorder_title">Ре-ордер модес</string>
+    <string name="sound_mode_long_press_hint">Дуго притисните за пребацивање</string>
+    <string name="content_desc_drag_reorder">Превуците да бисте променили редослед</string>
+    <string name="sound_mode_sound">Звук</string>
+    <string name="sound_mode_vibrate">Вибрирај</string>
+    <string name="sound_mode_silent">Тихо</string>
+    <!-- Status Bar Categories -->
+    <string name="status_bar_category_connectivity">Повезивање</string>
+    <string name="status_bar_category_phone_network">Телефон и мрежа</string>
+    <string name="status_bar_category_audio_media">Аудио и медији</string>
+    <string name="status_bar_category_system_status">Статус система</string>
+    <string name="status_bar_category_oem_specific">ОЕМ Специфиц</string>
+    <!-- Status Bar Icons -->
+    <string name="icon_wifi">ВиФи</string>
+    <string name="icon_bluetooth">Блуетоотх</string>
+    <string name="icon_nfc">НФЦ / Фелица</string>
+    <string name="icon_vpn">ВПН</string>
+    <string name="icon_airplane_mode">Аирплане Моде</string>
+    <string name="icon_hotspot">Хотспот</string>
+    <string name="icon_cast">Цаст</string>
+    <string name="icon_mobile_data">Мобилни подаци</string>
+    <string name="icon_phone_signal">Телефонски сигнал</string>
+    <string name="icon_volte">ВоЛТЕ / ВоНР</string>
+    <string name="icon_wifi_calling">ВиФи позивање / ВоВиФи</string>
+    <string name="icon_call_status">Статус позива / Синхронизација</string>
+    <string name="icon_tty">ТТИ</string>
+    <string name="icon_volume">Волуме</string>
+    <string name="icon_headset">Слушалице</string>
+    <string name="icon_speakerphone">Спеакерпхоне</string>
+    <string name="icon_dmb">ДМБ</string>
+    <string name="icon_clock">Сат</string>
+    <string name="icon_ime">Метод уноса (ИМЕ)</string>
+    <string name="icon_alarm">Аларм</string>
+    <string name="icon_battery">Батерија</string>
+    <string name="icon_power_saving">Уштеда енергије</string>
+    <string name="icon_data_saver">Дата Савер</string>
+    <string name="icon_rotation_lock">Ротатион Лоцк</string>
+    <string name="icon_location">Локација / ГПС</string>
+    <string name="icon_sync">Синц</string>
+    <string name="icon_managed_profile">Манагед Профиле</string>
+    <string name="icon_dnd">Не узнемиравај</string>
+    <string name="icon_privacy">Приватност и безбедна фасцикла</string>
+    <string name="icon_security_status">Безбедносни статус (СУ)</string>
+    <string name="icon_otg">ОТГ миш / тастатура</string>
+    <string name="icon_samsung_smart">Самсунг паметне функције</string>
+    <string name="icon_samsung_services">Самсунг услуге</string>
+    <string name="icon_ethernet">Етхернет</string>
+    <!-- Status Bar Settings -->
+    <string name="stb_clock_seconds">Прикажи секунде у сату</string>
+    <string name="stb_battery_percentage">Проценат батерије</string>
+    <string name="stb_battery_percentage_always">Увек</string>
+    <string name="stb_battery_percentage_charging">Пуњење</string>
+    <string name="stb_battery_percentage_never">Никада</string>
+    <string name="stb_privacy_chip">Камера и микрофон користе чипове</string>
+    <string name="smart_data_title">Смарт Дата</string>
+    <string name="permission_read_phone_state_title">Прочитајте стање телефона</string>
+    <string name="permission_read_phone_state_desc">Потребно за откривање типа мреже за функцију Смарт Дата</string>
+    <string name="permission_read_phone_state_desc_call_vibrations">Потребно за откривање промена статуса позива да би се покренула повратна информација.</string>
+    <string name="settings_section_smart_visibility">Смарт Висибилити</string>
+    <string name="smart_wifi_title">Смарт ВиФи</string>
+    <string name="smart_wifi_desc">Сакријте мобилне податке када је ВиФи повезан</string>
+    <string name="smart_data_desc">Сакријте мобилне податке у одређеним режимима</string>
+    <string name="action_reset_all_icons">Ресетуј све иконе</string>
+    <string name="status_bar_section_advanced">Још подешавања</string>
+    <string name="stb_advanced_flags_title">Advanced (Requires Shizuku/Root)</string>
+    <string name="hide_all_system_icons_title">Hide all system icons</string>
+    <string name="hide_all_system_icons_desc">Clear all non-notification icons from the status bar</string>
+    <string name="hide_system_icons_locked_only_title">Only hide system icons when locked</string>
+    <string name="hide_system_icons_locked_only_desc">Hides the status bar system icons when the device is locked and restores them upon unlock</string>
+    <string name="hide_clock_title">Hide clock</string>
+    <string name="hide_clock_desc">Completely remove the clock from the status bar</string>
+    <string name="hide_notification_icons_title">Hide notifications</string>
+    <string name="hide_notification_icons_desc">Hide all incoming notification icons</string>
+    <string name="feat_hide_gesture_bar_title">Hide gesture bar</string>
+    <string name="feat_hide_gesture_bar_desc">In gesture navigation</string>
+    <string name="feat_hide_gesture_bar_on_launcher_title">Show on launcher</string>
+    <string name="feat_hide_gesture_bar_on_launcher_desc">Dynamically show the gesture bar only when on the home screen</string>
+    <string name="feat_circle_to_search_gesture_title">Circle to Search gesture</string>
+    <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
+    <string name="feat_circle_to_search_gesture_height_title">Gesture zone height</string>
+    <string name="feat_circle_to_search_gesture_height_desc">Adjust the height of the touch area at the bottom</string>
+    <string name="feat_other_customizations_title">Other customizations</string>
+    <string name="feat_other_customizations_desc">Additional system tweaks and modifications</string>
+    <string name="status_bar_icons_disclaimer">Имајте на уму да имплементација ових опција може зависити од ОЕМ-а, а неке можда уопште неће бити функционалне.</string>
+    <!-- Network Type Picker -->
+    <string name="network_type_other">Остало</string>
+    <!-- Search -->
+    <string name="search_clock_seconds_title">Цлоцк Сецондс</string>
+    <string name="search_clock_seconds_desc">Прикажи секунде у сату статусне траке</string>
+    <string name="search_battery_percentage_title">Проценат батерије</string>
+    <string name="search_battery_percentage_desc">Конфигуришите видљивост процента батерије</string>
+    <string name="search_privacy_chip_title">Чипови приватности</string>
+    <string name="search_privacy_chip_desc">Прикажи индикатор када се користи камера или микрофон</string>
+    <string name="search_desc_toggle_visibility">Укључи/искључи видљивост за %1$s</string>
+    <string name="action_pin">Закачите у фаворите</string>
+    <string name="action_unpin">Откачите са Омиљених</string>
+    <!-- Extraction Batch 1 -->
+    <!-- Categories -->
+    <string name="cat_tools">Алати</string>
+    <string name="cat_visuals">Висуалс</string>
+    <string name="cat_system">Систем</string>
+    <!-- UI Elements -->
+    <string name="search_placeholder">Search for Tools, Mods and Tweaks</string>
+    <string name="search_no_results">Нема резултата за \"%1$s\"</string>
+    <string name="search_results_title">Сеарцх Ресултс</string>
+    <string name="requires_following_permissions">%1$s захтева следеће дозволе</string>
+    <!-- Features -->
+    <string name="feat_screen_off_widget_title">Виџет искључен екран</string>
+    <string name="feat_screen_off_widget_desc">Невидљиви виџет за искључивање екрана</string>
+    <string name="feat_statusbar_icons_title">Иконе статусне траке</string>
+    <string name="feat_statusbar_icons_desc">Контролишите видљивост икона статусне траке</string>
+    <string name="feat_caffeinate_title">Кофеин</string>
+    <string name="feat_caffeinate_desc">Држите екран будним</string>
+    <string name="feat_maps_power_saving_title">Режим уштеде енергије на мапи</string>
+    <string name="feat_maps_power_saving_desc">За било који Андроид уређај</string>
+    <string name="feat_notification_lighting_title">Осветљење обавештења</string>
+    <string name="feat_notification_lighting_desc">Упали за обавештења</string>
+    <string name="feat_flashlight_pulse_desc">Пулсирајте батеријску лампу за обавештења</string>
+    <string name="feat_sound_mode_tile_title">Плочица режима звука</string>
+    <string name="feat_call_vibrations_title">Вибрације позива</string>
+    <string name="feat_call_vibrations_desc">Вибрирајте за радње позива</string>
+    <string name="show_bluetooth_devices">Прикажи Блуетоотх уређаје</string>
+    <string name="show_bluetooth_devices_summary">Приказ нивоа батерије повезаних Блуетоотх уређаја</string>
+    <string name="limit_max_devices">Ограничите максимални број уређаја</string>
+    <string name="limit_max_devices_summary">Подесите максималан број уређаја видљивих у виџету</string>
+    <string name="widget_background_title">Позадина виџета</string>
+    <string name="widget_background_summary">Прикажи позадину виџета</string>
+    <!-- DIY Automation -->
+    <string name="diy_create_trigger_title">Триггер Аутоматион</string>
+    <string name="diy_create_trigger_desc">Закажите акцију која ће се покренути на посматрању</string>
+    <string name="diy_create_state_title">Стате Аутоматион</string>
+    <string name="diy_create_state_desc">Закажите акцију за извршење на основу стања уласка и излаза услова</string>
+    <string name="diy_editor_new_title">Нова аутоматизација</string>
+    <string name="diy_editor_edit_title">Уреди аутоматизацију</string>
+    <string name="feat_link_actions_title">Радње веза</string>
+    <string name="feat_link_actions_desc">Управљајте везама са више апликација</string>
+    <string name="feat_snooze_notifications_title">Одложите системска обавештења</string>
+    <string name="feat_snooze_notifications_desc">Одложите стална обавештења</string>
+    <string name="feat_qs_tiles_title">Плочице за брза подешавања</string>
+    <string name="feat_qs_tiles_desc">Прикажи све</string>
+    <string name="feat_button_remap_title">Пресликавање дугмета</string>
+    <string name="feat_button_remap_desc">Поново мапирајте радње хардверског дугмета</string>
+    <string name="feat_dynamic_night_light_title">Динамично ноћно светло</string>
+    <string name="feat_dynamic_night_light_desc">Укључите ноћно светло на основу апликације</string>
+    <string name="feat_screen_locked_security_title">Сигурност закључаног екрана</string>
+    <string name="feat_app_lock_title">Закључавање апликације</string>
+    <string name="feat_app_lock_desc">Сигурне апликације са биометријом</string>
+    <string name="app_lock_auto_lock_delay_title">Auto lock delay</string>
+    <string name="app_lock_auto_lock_delay_desc">After leaving the app</string>
+    <string name="app_lock_auto_lock_delay_none">None</string>
+    <string name="app_lock_auto_lock_delay_1min">1 minute</string>
+    <string name="app_lock_auto_lock_delay_5min">5 minutes</string>
+    <string name="app_lock_auto_lock_delay_10min">10 minutes</string>
+    <string name="app_lock_auto_lock_delay_20min">20 minutes</string>
+    <string name="app_lock_auto_lock_delay_30min">30 minutes</string>
+    <string name="feat_freeze_title">Фреезе</string>
+    <string name="feat_freeze_desc">Онемогућите апликације које се ретко користе</string>
+    <string name="feat_watermark_title">Ватермарк</string>
+    <string name="feat_watermark_desc">Додајте ЕКСИФ податке и логотипе фотографијама</string>
+    <string name="feat_always_on_display_title">Увек на екрану</string>
+    <string name="feat_always_on_display_desc">Прикажи време и информације док је екран искључен</string>
+    <string name="feat_calendar_sync_title">Цалендар Синц</string>
+    <string name="feat_calendar_sync_desc">Sync your phone calendar to your watch</string>
+    <string name="feat_lock_from_watch_title">Lock from Watch</string>
+    <string name="feat_lock_from_watch_desc">Lock your phone remotely</string>
+    <string name="remote_lock_mode_title">Lock Mode</string>
+    <string name="remote_lock_mode_screen_off">Screen off</string>
+    <string name="remote_lock_mode_lock">Lock</string>
+    <string name="remote_lock_mode_admin_note">Using device admin lock will disable biometrics</string>
+    <string name="watch_connected_status">Connected</string>
+    <string name="watch_unknown_name">Unknown Watch</string>
+    <string name="watermark_style_overlay">Оверлаи</string>
+    <string name="watermark_style_frame">Фраме</string>
+    <string name="watermark_show_brand">Марка уређаја</string>
+    <string name="watermark_show_exif">ЕКСИФ подаци</string>
+    <string name="watermark_pick_image">Изаберите слику</string>
+    <string name="watermark_save_success">Слика је сачувана у галерији</string>
+    <string name="action_share">Схаре</string>
+    <string name="watermark_exif_settings">ЕКСИФ подешавања</string>
+    <string name="watermark_exif_focal_length">Фоцал Ленгтх</string>
+    <string name="watermark_exif_aperture">Отвор бленде</string>
+    <string name="watermark_exif_iso">ИСО</string>
+    <string name="watermark_exif_shutter_speed">Брзина затварача</string>
+    <string name="watermark_exif_date">Датум и време</string>
+    <string name="watermark_move_to_top">Премести на врх</string>
+    <string name="watermark_left_align">Поравнај лево</string>
+    <string name="watermark_text_size_brand">Бренд Сизе</string>
+    <string name="watermark_text_size_data">Величина података</string>
+    <string name="watermark_text_size_custom">Величина текста</string>
+    <string name="watermark_font_options">Величина фонта</string>
+    <string name="watermark_custom_text">Прилагођени текст</string>
+    <string name="watermark_custom_text_hint">Унесите свој текст...</string>
+    <string name="watermark_spacing">Размак</string>
+    <string name="watermark_border_width">Бордер Видтх</string>
+    <string name="watermark_border_corners">Роунд Цорнерс</string>
+    <string name="watermark_color_section">Боја</string>
+    <string name="watermark_logo_section">Лого</string>
+    <string name="watermark_logo_show">Прикажи логотип</string>
+    <string name="watermark_logo_size">Величина логотипа</string>
+    <string name="watermark_edit_texts">Уредите текстове водених жигова</string>
+    <string name="watermark_device_brand">Марка уређаја</string>
+    <string name="watermark_date_time">Датум и време</string>
+    <string name="watermark_no_date">Нема информација о датуму</string>
+    <string name="watermark_rotate_left">Ротирајте лево</string>
+    <string name="watermark_rotate_right">Ротирај десно</string>
+    <string name="action_next">Следеће</string>
+    <string name="action_ok">ОК</string>
+    <string name="action_save_changes">Сачувај промене</string>
+    <string name="calendar_sync_settings_title">Подешавања синхронизације календара</string>
+    <string name="calendar_sync_select_calendars">Синхронизујте одређене календаре</string>
+    <string name="calendar_sync_periodic_title">Периодична синхронизација</string>
+    <string name="calendar_sync_periodic_desc">Синхронизујте сваких 15 минута ако се пронађу промене</string>
+    <string name="calendar_sync_sync_now">Синц Нов</string>
+    <string name="calendar_sync_manual_sync_desc">Активирајте тренутну синхронизацију за гледање</string>
+    <string name="calendar_sync_no_calendars">Није пронађен ниједан локални календар</string>
+    <string name="calendar_sync_sync_started">Синхронизација календара је почела</string>
+    <!-- Search Settings -->
+    <string name="search_haptic_title">Видгет Хаптиц феедбацк</string>
+    <string name="search_haptic_desc">Изаберите додирне повратне информације за додиривање виџета</string>
+    <string name="search_smart_wifi_title">Смарт ВиФи</string>
+    <string name="search_smart_wifi_desc">Сакријте мобилне податке када је ВиФи повезан</string>
+    <string name="search_smart_data_title">Смарт Дата</string>
+    <string name="search_smart_data_desc">Сакријте мобилне податке у одређеним режимима</string>
+    <string name="search_reset_icons_title">Ресетуј све иконе</string>
+    <string name="search_reset_icons_desc">Вратите видљивост иконе статусне траке на подразумевану вредност</string>
+    <string name="search_caffeinate_abort_screen_off_title">Прекините унос кофеина са искљученим екраном</string>
+    <string name="search_caffeinate_abort_screen_off_desc">Аутоматски искључите кофеин када ручно закључате уређај</string>
+    <string name="search_lighting_style_title">Лигхтинг Стиле</string>
+    <string name="search_lighting_style_desc">Бирајте између потеза, сјаја, спинера и још много тога</string>
+    <string name="search_corner_radius_title">Угаони радијус</string>
+    <string name="search_corner_radius_desc">Подесите радијус угла осветљења обавештења</string>
+    <string name="search_skip_silent_title">Прескочи тиха обавештења</string>
+    <string name="search_skip_silent_desc">Не приказуј осветљење за тиха обавештења</string>
+    <string name="search_flashlight_pulse_title">Пулс лампе</string>
+    <string name="search_flashlight_pulse_desc">Полако пулсирајте лампом за нова обавештења</string>
+    <string name="search_only_facing_down_title">Само док је лицем надоле</string>
+    <string name="search_only_facing_down_desc">Пулсна лампа само када је уређај окренут надоле</string>
+    <string name="snooze_no_channels_discovered">Још увек нису откривени системски канали. Они ће се појавити овде када буду откривени.</string>
+    <string name="search_qs_blur_title">УИ Блур</string>
+    <string name="search_qs_blur_desc">Укључите замућење корисничког интерфејса у целом систему</string>
+    <string name="search_qs_bubbles_title">Бубблес</string>
+    <string name="search_qs_bubbles_desc">Омогући плутајуће мехуриће прозора</string>
+    <string name="search_qs_sensitive_title">Сенситиве Цонтент</string>
+    <string name="search_qs_sensitive_desc">Сакриј детаље обавештења на закључаном екрану</string>
+    <string name="search_qs_wake_title">Додирните да бисте се пробудили</string>
+    <string name="search_qs_wake_desc">Двапут додирните да бисте активирали контролу</string>
+    <string name="search_qs_aod_title">АОД</string>
+    <string name="search_qs_aod_desc">Увек укључен екран</string>
+    <string name="search_qs_caffeinate_title">Кофеин</string>
+    <string name="search_qs_caffeinate_desc">Одржавање екрана будним</string>
+    <string name="search_qs_sound_title">Режим звука</string>
+    <string name="search_qs_sound_desc">Промени режиме звука (звоно/вибрација/нечујно)</string>
+    <string name="search_qs_lighting_title">Осветљење обавештења</string>
+    <string name="search_qs_lighting_desc">Укључите услугу осветљења обавештења</string>
+    <string name="search_qs_night_light_title">Динамиц Нигхт Лигхт</string>
+    <string name="search_qs_night_light_desc">Аутоматизација ноћног светла</string>
+    <string name="search_qs_locked_sec_title">Лоцкед Сецурити</string>
+    <string name="search_qs_locked_sec_desc">Мрежна безбедност на закључаном екрану</string>
+    <string name="search_qs_mono_title">Моно Аудио</string>
+    <string name="search_qs_mono_desc">Присилно укључите моно аудио излаз</string>
+    <string name="search_qs_flashlight_title">Лампица</string>
+    <string name="search_qs_flashlight_desc">Наменски прекидач за батеријску лампу</string>
+    <string name="search_qs_freeze_title">Апп Фреезинг</string>
+    <string name="search_qs_freeze_desc">Покрените мрежу за замрзавање апликације</string>
+    <string name="search_qs_pulse_title">Пулс лампе</string>
+    <string name="search_qs_pulse_desc">Укључите пулс лампе за обавештења</string>
+    <string name="search_qs_stay_awake_desc">Укључите опцију Остани будан програмера</string>
+    <string name="search_qs_private_dns_title">Приватни ДНС</string>
+    <string name="search_qs_private_dns_desc">Покрени приватне ДНС режиме (Искључено/Ауто/Назив хоста)</string>
+    <string name="search_qs_usb_debugging_title">УСБ отклањање грешака</string>
+    <string name="search_qs_usb_debugging_desc">Укључите опцију програмера за отклањање грешака УСБ-а</string>
+    <string name="search_qs_refresh_rate_title">Refresh Rate</string>
+    <string name="search_qs_refresh_rate_desc">Cycle between the system default and preset screen refresh rates</string>
+    <string name="search_remap_enable_title">Омогући пресликавање дугмета</string>
+    <string name="search_remap_enable_desc">Главни прекидач за поновно мапирање тастера за јачину звука</string>
+    <string name="search_remap_haptic_title">Ремап Хаптиц Феедбацк</string>
+    <string name="search_remap_haptic_desc">Повратна информација вибрацијом када се притисне поново мапирано дугме</string>
+    <string name="search_remap_flashlight_title">Пребацивање лампе</string>
+    <string name="search_remap_flashlight_desc">Укључите батеријску лампу помоћу дугмади за јачину звука</string>
+    <string name="search_night_light_enable_title">Омогућите динамичко ноћно светло</string>
+    <string name="search_night_light_enable_desc">Главни прекидач за динамичко ноћно светло</string>
+    <string name="search_app_lock_enable_title">Омогућите закључавање апликације</string>
+    <string name="search_app_lock_enable_desc">Главни прекидач за закључавање апликације</string>
+    <string name="search_app_lock_pick_title">Изаберите закључане апликације</string>
+    <string name="search_app_lock_pick_desc">Одаберите које апликације захтевају аутентификацију</string>
+    <string name="search_freeze_pick_title">Изаберите апликације за замрзавање</string>
+    <string name="search_freeze_pick_desc">Одаберите које апликације могу да се замрзну</string>
+    <string name="search_freeze_all_title">Замрзните све апликације</string>
+    <string name="search_freeze_all_desc">Одмах замрзните све одабране апликације</string>
+    <string name="search_freeze_locked_title">Замрзните када је закључан</string>
+    <string name="search_freeze_locked_desc">Замрзните изабране апликације када се уређај закључа</string>
+    <string name="search_freeze_delay_title">Одлагање замрзавања</string>
+    <string name="search_freeze_delay_desc">Одлагање пре замрзавања након закључавања</string>
+    <!-- Permissions metadata -->
+    <string name="perm_shizuku_title">Схизуку</string>
+    <string name="perm_shizuku_desc">Обавезно за напредне команде. Инсталирајте Схизуку из Плаи продавнице.</string>
+    <string name="perm_shizuku_install_action">Инсталирајте Схизуку</string>
+    <string name="perm_shizuku_grant_title">Дајте дозволу</string>
+    <string name="perm_shizuku_grant_desc">Потребно за покретање команди за уштеду енергије док се мапе крећу.</string>
+    <string name="req_shizuku">Захтева Схизуку или Роот</string>
+    <string name="perm_root_title">Роот приступ</string>
+    <string name="perm_root_desc">Дозволе потребне за радње система користећи Роот привилегије.</string>
+    <string name="perm_notif_listener_title">Слушалац обавештења</string>
+    <string name="perm_notif_listener_desc_maps">Захтева приступ слушаоцу обавештења да би надгледао статус навигације у Гоогле мапама и омогућио уштеду енергије када се не навигира.</string>
+    <string name="perm_notif_listener_desc_lighting">Захтева приступ слушаоцу обавештења да би открио нова обавештења и покренуо осветљење ивица.</string>
+    <string name="perm_notif_listener_desc_snooze">Захтева приступ слушаоцу обавештења за праћење и одлагање нежељених системских обавештења.</string>
+    <string name="perm_accessibility_title">Услуга приступачности</string>
+    <string name="perm_accessibility_desc_common">Обавезно за закључавање апликације, виџет за искључење екрана и друге функције за откривање интеракција</string>
+    <string name="perm_accessibility_desc_lighting">Неопходно да се активира осветљење обавештења о новим обавештењима</string>
+    <string name="perm_default_browser_title">Подразумевани претраживач</string>
+    <string name="perm_default_browser_desc">Потребан за ефикасно руковање везама</string>
+    <string name="perm_accessibility_desc_remap">Потребно за пресретање догађаја хардверског дугмета</string>
+    <string name="perm_accessibility_desc_essentials_on_display">Required to intercept volume key events while the screen is off to trigger the Essentials On Display overlay.</string>
+    <string name="perm_accessibility_desc_night_light">Потребно за праћење апликација у првом плану.</string>
+    <string name="perm_write_secure_title">Напишите безбедна подешавања</string>
+    <string name="perm_write_secure_desc_common">Обавезно за иконе статусне траке и безбедност закључаног екрана</string>
+    <string name="perm_write_secure_desc_night_light">Потребно за укључивање ноћног светла. Грант преко АДБ-а или роот-а.</string>
+    <string name="perm_write_settings_title">Измените системске поставке</string>
+    <string name="perm_write_settings_desc">Неопходно да бисте укључили прилагодљиву осветљеност и друга подешавања система</string>
+    <string name="perm_overlay_title">Дозвола за прекривање</string>
+    <string name="perm_overlay_desc">Потребно за приказ преклапања осветљења обавештења на екрану</string>
+    <string name="perm_device_admin_title">Администратор уређаја</string>
+    <string name="perm_device_admin_desc">Неопходно је за чврсто закључавање уређаја (онемогућавање биометрије) при покушајима неовлашћеног приступа</string>
+    <string name="perm_action_grant">Дајте дозволу</string>
+    <string name="perm_action_copy_adb">Цопи АДБ</string>
+    <string name="perm_action_check">Провери</string>
+    <string name="perm_action_enable">Омогућите у подешавањима</string>
+    <string name="perm_action_how_to">Како одобрити</string>
+    <string name="perm_action_granted">Granted</string>
+    <string name="perm_battery_optimization_title">Оптимизација батерије</string>
+    <string name="perm_battery_optimization_desc">Уверите се да систем не уништи услугу да бисте уштедели енергију.</string>
+    <!-- Tabs -->
+    <string name="tab_essentials">Ессентиалс</string>
+    <string name="tab_freeze">Фреезе</string>
+    <string name="tab_freeze_title">Фрозен</string>
+    <string name="tab_diy">ДИИ</string>
+    <string name="tab_apps">Аппс</string>
+    <string name="tab_freeze_subtitle">Онемогућене апликације</string>
+    <string name="tab_diy_subtitle">Уради то сам</string>
+    <string name="tab_apps_subtitle">Пронађите апликације и управљајте њима</string>
+    <string name="feat_app_updates_title">Ажурирања апликација</string>
+    <string name="tab_app_updates_title">Ажурирања апликација</string>
+    <string name="action_add_repo">Додај спремиште</string>
+    <string name="action_edit_repo">Уреди спремиште</string>
+    <string name="prompt_enter_repo_url">Унесите УРЛ ГитХуб спремишта или власника/репо</string>
+    <string name="action_track">Трацк</string>
+    <string name="error_no_apk_found">Ниједан АПК није пронађен у најновијем издању</string>
+    <string name="error_repo_not_found">Репозиторијум није пронађен</string>
+    <string name="label_latest_release">Најновије издање</string>
+    <string name="action_view_readme">Погледај РЕАДМЕ</string>
+    <string name="label_stars">%d Звезде</string>
+    <string name="label_installed_app">Инсталирана апликација</string>
+    <string name="label_not_installed">Није инсталирано</string>
+    <string name="action_pick_app">Изаберите апликацију</string>
+    <string name="action_select_app">Изаберите апликацију</string>
+    <string name="action_untrack">Унтрацк</string>
+    <string name="label_pending">На чекању</string>
+    <string name="label_up_to_date">Ажурно</string>
+    <string name="feat_app_updates_desc">Пратите и преузмите најновија издања за своје омиљене апликације директно са ГитХуб-а.</string>
+    <string name="error_invalid_repo_format">Неважећи формат. Користите УРЛ власника/репо или ГитХуб УРЛ</string>
+    <string name="error_generic_search">Дошло је до грешке током претраге</string>
+    <string name="label_auto">Ауто</string>
+    <string name="label_options">Опције</string>
+    <string name="option_allow_prereleases">Проверите да ли постоје претходна издања</string>
+    <string name="option_notifications">Обавештења</string>
+    <string name="error_rate_limited">Прекорачено је ограничење брзине за ГитХуб. Покушајте поново касније.</string>
+    <!-- Keyboard Setup -->
+    <string name="label_keyboard_setup">Подешавање тастатуре</string>
+    <string name="btn_enable_keyboard">Омогућите у подешавањима</string>
+    <string name="btn_select_keyboard">Пребаците се на Ессентиалс</string>
+    <string name="label_enabled">Омогућено</string>
+    <string name="label_disabled">Онемогућено</string>
+    <string name="tile_adaptive_brightness">Адаптиве Бригхтнесс</string>
+    <string name="tile_maps_power_saving">Мапс Повер Савинг</string>
+    <string name="action_search">Тражи</string>
+    <string name="action_stop">Стани</string>
+    <string name="label_search">Тражи</string>
+    <string name="search_frozen_apps_placeholder">Search frozen apps</string>
+    <!-- UI Components General -->
+    <string name="action_back">Назад</string>
+    <string name="content_desc_back">Назад</string>
+    <string name="label_settings">Подешавања</string>
+    <string name="action_report_bug">Пријавите грешку</string>
+    <!-- Sentry Crash Reporting -->
+    <string name="sentry_report_mode_title">Crash reporting</string>
+    <string name="sentry_mode_off">Off</string>
+    <string name="sentry_mode_auto">Auto</string>
+    <string name="sentry_crash_toast">Essentials crashed, Report sent</string>
+    <string name="simulate_crash">Simulate crash</string>
+    <string name="welcome_title">Welcome to Essentials</string>
+    <string name="welcome_subtitle">A Toolbox for Android Nerds</string>
+    <string name="welcome_developer_attribution">by sameerasw.com</string>
+    <string name="action_lets_begin">Let\'s Begin</string>
+    <string name="acknowledgement_title">Acknowledgement</string>
+    <string name="acknowledgement_desc">This app is a collection of utilities that can interact deeply with your device system. Using some features might modify system settings or behavior in unexpected ways. \n\nYou only need to grant necessary permissions which are required for selected features you are using giving you full control over the app\'s behavior. \n\nFurther more, the app does not track or store any of your personal data, I don\'t need them... Keep to yourself safe. You can refer to the source code for more information. \n\nThis app is fully open source and is and always will be free to use. Do not pay or install from unknown sources.</string>
+    <string name="acknowledgement_warning">WARNING: Proceed with caution. The developer takes no responsibility for any system instability, data loss, or other issues caused by the use of this app. By proceeding, you acknowledge these risks.</string>
+    <string name="acknowledgement_footer">I know you didn\'t even read this carefully but, in case you need any help, feel free to reach out the developer or the community.</string>
+    <string name="action_i_understand">I Understand</string>
+    <string name="feature_intro_desc">Anytime you are clueless on a feature or a Quick Settings Tile on what it does and what permissions may necessary for it, just long press it and pick \'What is this?\' to learn more.</string>
+    <string name="feature_intro_footer">You can report bugs or find helpful guides anytime in the app settings.</string>
+    <string name="action_let_me_in">Let Me in Already</string>
+    <string name="preferences_title">Preferences</string>
+    <string name="preferences_desc">Configure some basic settings to get started.</string>
+    <string name="label_app_settings">App Settings</string>
+    <string name="label_app_language">Language</string>
+    <string name="label_haptic_feedback">Haptic Feedback</string>
+    <string name="label_updates">Updates</string>
+    <string name="label_auto_check_updates">Auto check for updates</string>
+    <string name="desc_auto_check_updates">Check for updates at app launch</string>
+    <string name="action_all_set">All Set</string>
+    <string name="action_check_whats_new">Check What\'s New?</string>
+    <string name="welcome_back_title">Welcome back to Essentials</string>
+    <string name="action_see_whats_new">See what\'s new</string>
+    <string name="label_mode_default">Default</string>
+    <string name="label_mode_glove">Glove mode</string>
+    <string name="tile_scale_animations">Glove Mode</string>
+    <string name="about_desc_scale_animations_tile">Quickly toggle between Default and Glove mode UI profiles</string>
+    <string name="label_increase_touch_sensitivity">Increase touch sensitivity</string>
+    <string name="desc_increase_touch_sensitivity">Improve touch screen responsiveness when using gloves or screen protectors</string>
+    <string name="label_auto_rotate">Auto rotate</string>
+    <string name="desc_auto_rotate">Automatically rotate the screen when the device is turned</string>
+    <string name="label_screen_timeout">Screen timeout</string>
+    <string name="desc_screen_timeout">How long the screen stays on before turning off automatically</string>
+    <string name="unit_seconds">%d seconds</string>
+    <string name="unit_minute">1 minute</string>
+    <string name="unit_minutes">%d minutes</string>
+    <string name="action_restart_systemui">Restart SystemUI</string>
+    <string name="desc_restart_systemui">Kills and restarts SystemUI process to apply some changes immediately</string>
+    <string name="msg_error_load_release_notes">Couldn\'t load the release note</string>
+    <string name="action_view_on_web">View on web</string>
+    <string name="action_done">Готово</string>
+    <string name="action_preview">Преглед</string>
+    <string name="action_help_guide">Водич за помоћ</string>
+    <string name="action_what_is_this">шта је ово?</string>
+    <string name="update_available_title">Ажурирање је доступно</string>
+    <string name="about_desc_your_android">Glance at your device\'s hardware and software specifications in detail. This information is fetched from GSMArena and system properties to provide a comprehensive overview of your Android device.</string>
+    <string name="about_desc_essentials_on_display">Essentials On Display shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
+    <string name="about_desc_notification_lighting">Осветљење обавештења додаје прелеп ефекат ивичног осветљења када примате обавештења.\n\nМожете прилагодити стил анимације, боје и понашање. Ради чак и када је екран искључен (зависно од ОЕМ-а) или на врху ваше тренутне апликације. Изаберите апликације, приоритет обавештења или понашање које треба да се покрене из датих контрола. Ако ваш ОЕМ не подржава преклапања изнад АОД-а, тужите опцију амбијенталног приказа која се налази испод.</string>
+    <string name="about_desc_screen_off_widget">Лако искључите екран тако што ћете додирнути провидни виџет са променом величине који не додаје иконе или неред на ваш почетни екран.</string>
+    <string name="about_desc_statusbar_icons">Преузмите потпуну контролу над иконама статусне траке.\n\nСакријте одређене иконе као што су ВиФи, Блуетоотх или мобилни подаци да би статусна трака била чиста. Такође можете прилагодити формат сата и индикатор батерије помоћу неких паметних контрола. Ово је листа доступних АОСП контрола тако да ОС вашег уређаја можда неће поштовати све контроле.</string>
+    <string name="about_desc_caffeinate">Кофеин спречава да се екран аутоматски искључи.\n\nОдржавајте екран будним одређено време или неограничено. Корисно када читате дугачке чланке или упућујете на рецепт.</string>
+    <string name="about_desc_maps_power_saving">Набавите ексклузивни режим уштеде енергије за Гоогле мапе серије Пикел 10 са минималном црном позадином за приказ преко закључаног екрана на било ком Андроид уређају. Започните сесију навигације, искључите и поново укључите екран.</string>
+    <string name="about_desc_flashlight_pulse">Пулсирајте батеријску лампу када примите обавештење.\n\nСа уређајима који имају хардверску подршку за затамњивање лампе, пулс ће бити глатко анимиран.</string>
+    <string name="about_desc_snooze_notifications">Одложите досадна стална системска обавештења која се подразумевано не могу мењати. \n\nСачекајте док не стигне обавештење, а затим идите у ову функцију где је\'канал за обавештења ће бити наведен. Изаберите то да бисте одложили следећи пут.\n\nСваком одложеном обавештењу се и даље може приступити из историје обавештења на Андроид-у.</string>
+    <string name="about_desc_quick_settings_tiles">Додајте прилагођене плочице на панел брзих подешавања.\n\nДуго притисните било који од њих да бисте сазнали шта раде.</string>
+    <string name="about_desc_button_remap">Поново мапирајте хардверска дугмад да бисте извршили различите радње и пречице.\n\nПрилагодите шта се дешава када дуго притиснете дугмад за јачину звука под одређеним условима. \n\nНека понашања, као што су окидач за искључен екран или контроле лампе, могу зависити од ОЕМ-а њихове примене и можда неће радити на свим уређајима како се очекује. Неки сценарији се могу заобићи коришћењем Схизуку дозвола, али можда неће дати исто искуство због имплементација.</string>
+    <string name="about_desc_dynamic_night_light">Аутоматски укључите филтер плавог светла на екрану на основу апликације у првом плану.</string>
+    <string name="about_desc_screen_locked_security">Побољшајте безбедност када је ваш уређај закључан.\n\nОграничите приступ неким осетљивим КС плочицама чиме се спречавају неовлашћене модификације мреже и даље спречавају поновни покушаји да то ураде повећањем брзине анимације да бисте спречили нежељену пошту на додир.\n\nОва функција није робусна и може имати недостатке као што су неке плочице које омогућавају директно пребацивање, као што је блуетоотх или режим лета који се не може спречити.</string>
+    <string name="about_desc_app_lock">Осигурајте своје апликације секундарним слојем за потврду идентитета.\n\nМетод потврде аутентичности закључаног екрана вашег уређаја ће се користити све док испуњава биометријски ниво безбедности класе 3 према Андроид стандардима.</string>
+    <string name="about_desc_location_reached">Добијајте обавештење када се приближите свом одредишту како бисте били сигурни да никада нећете пропустити станицу.\n\nИдите на Гоогле мапе, дуго притисните чиоду у близини вашег одредишта и уверите се да пише „Испуштена игла“ (у супротном израчунавање удаљености можда неће бити тачно), а затим поделите локацију са апликацијом Ессентиалс и почните да пратите.</string>
+    <string name="location_reached_add_title">Add Destination</string>
+    <string name="location_reached_edit_title">Edit Destination</string>
+    <string name="location_reached_name_placeholder">Home, Office, etc.</string>
+    <string name="location_reached_name_label">Name</string>
+    <string name="location_reached_save_btn">Save</string>
+    <string name="location_reached_cancel_btn">Cancel</string>
+    <string name="location_reached_resolving">Resolving location…</string>
+    <string name="location_reached_last_trip">Last Trip</string>
+    <string name="location_reached_saved_destinations">Saved Destinations</string>
+    <string name="location_reached_no_saved_dest">No destinations saved yet.</string>
+    <string name="location_reached_delete">Delete Destination</string>
+    <string name="location_reached_tracking_now">Tracking Now</string>
+    <string name="location_reached_restart_btn">Re-Start</string>
+    <string name="location_reached_instructional_desc">Share coordinates (Dropped pin) from Google Maps to Essentials to save as a destination.\n\nThe distance shown is the direct distance to the destination, not the distance along the roads.\n\nTake all calculations of time and distance with a grain of salt as they are not always accurate.</string>
+    <string name="tile_location_reached">Are we there yet?</string>
+    <string name="location_reached_pause">Pause</string>
+    <string name="location_reached_resume">Resume</string>
+    <string name="location_reached_radius_label">Radius: %1$d m</string>
+    <string name="location_reached_distance_label">Distance to target: %1$s</string>
+    <string name="location_reached_last_travelled">Last: %1$s</string>
+    <string name="location_reached_never">Never</string>
+    <string name="location_reached_to_go">To go</string>
+    <string name="location_reached_eta_min">%1$d min</string>
+    <string name="location_reached_eta_hr_min">%1$d hr %2$d min</string>
+    <string name="location_reached_service_remaining_with_eta">%1$s (%2$d%%) • %3$s to go</string>
+    <string name="about_desc_freeze">Замрзните апликације да бисте спречили њихово покретање у позадини.\n\nСпречите пражњење батерије и коришћење података тако што ћете потпуно замрзнути апликације када их не користите. Они ће се одмах одмрзнути када их покренете. Апликације се неће појавити у фиоци апликација, а такође се неће појавити за ажурирања апликација у Плаи продавници док су замрзнуте.</string>
+    <string name="about_desc_system_keyboard">Прилагођени метод уноса који нико није тражио.\n\nТо је само експеримент. Више језика можда неће добити подршку јер је имплементација веома сложена и дуготрајна.</string>
+    <string name="about_desc_batteries">Пратите нивое батерије на свим повезаним уређајима.\n\nПогледајте статус батерије својих Блуетоотх слушалица, сата и друге додатне опреме на једном месту. Повежите се са апликацијом АирСинц да бисте приказали и ниво батерије вашег Мац рачунара.</string>
+    <string name="about_desc_watermark">Додајте прилагођени натпис/водени жиг својим фотографијама са ЕКСИФ подацима и информацијама о уређају.\n\nДелите слику директно из друге апликације у Ессентиалс да бисте лако додали водени жиг.</string>
+    <string name="about_desc_calendar_sync">Синхронизујте сав свој предстојећи распоред календара без обзира на ограничења на Гоогле налозима који не дозвољавају додавање на веарОС уређаје због смерница за посао или школу. \n\nОбавезно инсталирајте пратећу апликацију веарОС Ессентиалс да бисте приказали распоред у апликацији, као и у плочици или у компликацији.</string>
+    <string name="about_desc_app_updates">Keep track of updates for your installed apps.\n\nGet notified about available updates, view changelogs and install them easily with a tap.</string>
+    <string name="about_desc_call_vibrations">Add haptic feedback to your calls.\n\nVibrate when a call is connected, disconnected, or accepted, giving you tactile confirmation without looking at the screen.</string>
+    <string name="about_desc_sound_mode_tile">Quickly toggle between Sound, Vibrate, and Silent modes.\n\nA convenient tile to change your ringer mode without using the volume buttons or settings. You can re-order the modes or disable any if not needed to customize the tile toggle to cycle behavior.</string>
+    <string name="about_desc_ui_blur">Easily toggle the system level blur depth effect across the OS.</string>
+    <string name="about_desc_bubbles">Enable or disable floating notification bubbles.\n\nQuickly toggle the system-wide setting for conversation bubbles.</string>
+    <string name="about_desc_sensitive_content">Сакријте осетљив садржај на закључаном екрану.\n\nУкључите да ли се садржај обавештења приказује или сакрива када је ваш уређај закључан.</string>
+    <string name="about_desc_tap_to_wake">Пребаците додиром да бисте активирали функцију.\n\nОмогућите или онемогућите могућност буђења екрана једним додиром.</string>
+    <string name="about_desc_aod">Укључите Увек на екрану.\n\nБрзо омогућите или онемогућите увек укључени екран да бисте видели информације на први поглед.</string>
+    <string name="about_desc_notification_glance">Аутоматски контролишите свој Алваис Он Дисплаи на основу ваших обавештења. Када порука или упозорење стигне из изабране апликације, АОД ће остати укључен све док не одбаците обавештење, осигуравајући да никада не пропустите важне информације без трошења батерије када нема упозорења.</string>
+    <string name="about_desc_mono_audio">Комбинујте аудио канале у моно.\n\nКорисно када користите једну слушалицу или у сврхе приступачности.</string>
+    <string name="about_desc_flashlight_tile">Укључите батеријску лампу.\n\nДуг притисак отвара контроле за подешавање интензитета за које је можда потребна хардверска имплементација која неким уређајима можда недостаје.</string>
+    <string name="about_desc_stay_awake">Држите екран будним током пуњења.\n\nСпречава да екран спава све док је уређај повезан на извор напајања који је погодан за програмере током отклањања грешака.</string>
+    <string name="about_desc_nfc">Укључите НФЦ.\n\nБрзо омогућите или онемогућите Неар Фиелд Цоммуницатион за плаћања и упаривање.</string>
+    <string name="about_desc_adaptive_brightness">Укључите прилагодљиву осветљеност.\n\nОмогућите или онемогућите аутоматско подешавање осветљености екрана на основу амбијенталног светла.</string>
+    <string name="about_desc_private_dns">Укључите приватни ДНС.\n\nПређите кроз режиме Искључено, Аутоматски и Приватни ДНС провајдер.</string>
+    <string name="about_desc_usb_debugging">Укључите УСБ отклањање грешака.\n\nОмогућите или онемогућите приступ АДБ отклањању грешака директно из брзих подешавања.</string>
+    <string name="about_desc_color_picker">Покрените алатку за капаљку за очи да бисте изабрали боје представљене у Андроиду 17 БЕТА 2</string>
+    <string name="about_desc_charge_optimization">Оптимизујте век трајања батерије ограничавањем максималног пуњења или коришћењем адаптивног пуњења. Ово је специјално дизајнирано за Пикел уређаје како би се обезбедио дуговечност и здрави циклуси пуњења.\n\nЗаслуге: ТеббеУббен/ЦхаргеКуицкТиле</string>
+    <string name="action_download">Преузми</string>
+    <!-- DIY Section -->
+    <string name="diy_trigger_screen_off">Сцреен Офф</string>
+    <string name="diy_trigger_screen_on">Сцреен Он</string>
+    <string name="diy_trigger_device_unlock">Откључавање уређаја</string>
+    <string name="diy_trigger_charger_connected">Пуњач повезан</string>
+    <string name="diy_trigger_charger_disconnected">Пуњач је искључен</string>
+    <string name="diy_trigger_schedule">Schedule</string>
+    <string name="diy_state_time_period">Time Period</string>
+    <string name="diy_time_selection_title">Select Time</string>
+    <string name="diy_time_range_selection_title">Select Time Range</string>
+    <string name="diy_start_time_label">Start Time</string>
+    <string name="diy_end_time_label">End Time</string>
+    <string name="diy_repeat_days_label">Repeat on</string>
+    <string name="diy_state_charging">Пуњење</string>
+    <string name="diy_state_screen_on">Сцреен Он</string>
+    <string name="diy_action_haptic">Вибрирај</string>
+    <string name="diy_action_notification">Прикажи обавештење</string>
+    <string name="diy_action_remove_notification">Уклони обавештење</string>
+    <string name="diy_action_flashlight_on">Укључите лампу</string>
+    <string name="diy_action_flashlight_off">Искључите лампу</string>
+    <string name="diy_action_flashlight_toggle">Укључи батеријску лампу</string>
+    <string name="diy_action_low_power_on">Turn On Low Power Mode</string>
+    <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
+    <string name="diy_action_dim_wallpaper">Дим Валлпапер</string>
+    <string name="diy_dim_wallpaper_desc">Ова радња захтева Шизуку или Роот да подесе затамњење системске позадине.</string>
+    <string name="diy_select_trigger">Изаберите Триггер</string>
+    <string name="diy_create_app_title">Апп</string>
+    <string name="diy_create_app_desc">Аутоматизујте на основу отворене апликације</string>
+    <string name="diy_select_state">Изаберите Држава</string>
+    <string name="diy_select_action">Изаберите Акција</string>
+    <string name="diy_in_action_label">У акцији</string>
+    <string name="diy_out_action_label">Оут Ацтион</string>
+    <string name="action_cancel">Откажи</string>
+    <string name="action_save">Сачувај</string>
+    <string name="action_edit">Уреди</string>
+    <string name="action_delete">Избриши</string>
+    <string name="action_enable">Омогући</string>
+    <string name="action_disable">Онемогући</string>
+    <string name="automation_service_channel_name">Аутоматион Сервице</string>
+    <string name="automation_service_running_title">Аутоматионс Ацтиве</string>
+    <string name="automation_service_running_desc">Надгледање системских догађаја за ваше аутоматизације</string>
+    <string name="app_detection_service_channel_name">App Detection Service</string>
+    <string name="app_detection_service_running_title">App Detection Active</string>
+    <string name="app_detection_service_running_desc">Monitoring app activity</string>
+    <string name="diy_action_device_effects">Девице Еффецтс</string>
+    <string name="diy_device_effects_desc">Контролишите ефекте на нивоу система попут сивих тонова, потискивања АОД-а, затамњивања позадине и ноћног режима.</string>
+    <string name="diy_effect_grayscale">Граисцале</string>
+    <string name="diy_effect_suppress_ambient">Суппресс Амбиент Дисплаи</string>
+    <string name="diy_effect_dim_wallpaper">Дим Валлпапер</string>
+    <string name="diy_effect_night_mode">Ноћни режим</string>
+    <string name="diy_device_effects_android_15_warning">Ова функција захтева Андроид 15 или новији.</string>
+    <string name="diy_device_effects_enabled">Омогућено</string>
+    <string name="diy_device_effects_disabled">Онемогућено</string>
+    <string name="diy_action_sound_mode">Режим звука</string>
+    <string name="diy_sound_mode_desc">Ова радња омогућава пребацивање између режима звука, вибрације и тихог на основу окидача. Захтева приступ Не узнемиравај.</string>
+    <!-- About Section -->
+    <string name="app_developer_name">Самеера Вијератхна</string>
+    <string name="app_description">Све-у-једном кутија са алаткама за ваш Пикел и Андроид</string>
+    <!-- Edge Lighting -->
+    <string name="color_mode_system">Систем</string>
+    <string name="color_mode_custom">Цустом</string>
+    <string name="color_mode_app_specific">Специфична апликација</string>
+    <!-- Biometric & Security -->
+    <string name="error_auth_failed">Аутентификација није успела</string>
+    <string name="shortcut_creation_hint_toast">Дуго притисните апликацију у мрежи да бисте додали пречицу</string>
+    <string name="error_app_uninstalled">Апликација није пронађена или деинсталирана</string>
+    <!-- Notifications -->
+    <string name="update_channel_name">Ажурирања апликација</string>
+    <string name="update_channel_desc">Обавештења о новим ажурирањима апликације</string>
+    <string name="notification_update_available">Доступно је ажурирање</string>
+    <string name="battery_notification_no_devices">Ниједан уређај није повезан</string>
+    <string name="label_unknown">Непознато</string>
+    <string name="network_type_5g">5Г</string>
+    <string name="network_type_4g">4Г</string>
+    <string name="network_type_3g">3Г</string>
+    <string name="label_shizuku_ritaka">Шизуку (Рика)</string>
+    <string name="label_shizuku_tuozi">Шизуку (ТуоЗи)</string>
+    <string name="label_search_content_description">Тражи</string>
+    <string name="label_recent_searches">Recent Searches</string>
+    <string name="label_no_recent_searches">No recent searches</string>
+    <string name="label_clear_all">Clear all</string>
+    <string name="perm_device_admin_explanation">Неопходно је за чврсто закључавање уређаја када се покушају неовлашћене промене мреже на закључаном екрану.</string>
+    <string name="biometric_subtitle_access_settings">Потврдите аутентичност да бисте приступили подешавањима</string>
+    <string name="biometric_title_settings_format">%1$s Подешавања</string>
+    <string name="keyword_feature">карактеристика</string>
+    <string name="keyword_settings">подешавања</string>
+    <string name="keyword_hide">сакрити</string>
+    <string name="keyword_show">схов</string>
+    <string name="keyword_visibility">видљивост</string>
+    <string name="error_loading_apps">Грешка при учитавању апликација: %1$s</string>
+    <string-array name="keywords_haptic">
+        <item>вибрација</item>
+        <item>додирнути</item>
+        <item>осетити</item>
+    </string-array>
+    <string-array name="keywords_network_visibility">
+        <item>мреже</item>
+        <item>видљивост</item>
+        <item>ауто</item>
+        <item>сакрити</item>
+    </string-array>
+    <string-array name="keywords_restore_default">
+        <item>обновити</item>
+        <item>подразумевано</item>
+        <item>икона</item>
+    </string-array>
+    <string-array name="keywords_keyboard">
+        <item>тастатура</item>
+        <item>висина</item>
+        <item>паддинг</item>
+        <item>хаптички</item>
+        <item>унос</item>
+    </string-array>
+    <string-array name="keywords_flashlight">
+        <item>светлости</item>
+        <item>бакља</item>
+    </string-array>
+    <string-array name="keywords_flashlight_pulse">
+        <item>светлости</item>
+        <item>бакља</item>
+        <item>пулс</item>
+        <item>обавештење</item>
+    </string-array>
+    <string-array name="keywords_qs_stay_awake">
+        <item>будан</item>
+        <item>програмер</item>
+        <item>моћ</item>
+        <item>наплатити</item>
+    </string-array>
+    <string-array name="keywords_notification_lighting">
+        <item>сјај</item>
+        <item>обавештење</item>
+        <item>водио</item>
+    </string-array>
+    <string-array name="keywords_round_shape">
+        <item>округли</item>
+        <item>облик</item>
+        <item>ивица</item>
+    </string-array>
+    <string-array name="keywords_privacy">
+        <item>сигуран</item>
+        <item>приватност</item>
+        <item>биометријски</item>
+        <item>лице</item>
+        <item>отисак прста</item>
+    </string-array>
+    <string-array name="keywords_sound_accessibility">
+        <item>звук</item>
+        <item>приступачност</item>
+        <item>чуј</item>
+    </string-array>
+    <string-array name="keywords_timeout">
+        <item>остати</item>
+        <item>на</item>
+        <item>тимеоут</item>
+    </string-array>
+    <string-array name="keywords_wake_display">
+        <item>додирнути</item>
+        <item>буди се</item>
+        <item>дисплеј</item>
+    </string-array>
+    <string-array name="keywords_timer">
+        <item>тајмер</item>
+        <item>чекај</item>
+        <item>тимеоут</item>
+    </string-array>
+    <string name="label_keyboard_always_dark">Увек мрачна тема</string>
+    <string name="label_keyboard_pitch_black">Питцх блацк тема</string>
+    <string name="label_keyboard_clipboard_enabled">Цлипбоард Хистори</string>
+    <string name="label_keyboard_long_press_symbols">Long press for symbols</string>
+    <string name="label_keyboard_accented_characters">Accented characters</string>
+    <string-array name="keywords_selection">
+        <item>листа</item>
+        <item>берач</item>
+        <item>селекција</item>
+    </string-array>
+    <string-array name="keywords_visual_style">
+        <item>анимација</item>
+        <item>визуелни</item>
+        <item>погледај</item>
+    </string-array>
+    <string-array name="keywords_quiet_filter">
+        <item>тихо</item>
+        <item>игнорисати</item>
+        <item>филтер</item>
+    </string-array>
+    <string-array name="keywords_automation_lock">
+        <item>аутоматизација</item>
+        <item>ауто</item>
+        <item>закључати</item>
+    </string-array>
+    <string-array name="keywords_adb_debug">
+        <item>адб</item>
+        <item>усб</item>
+        <item>дебуг</item>
+    </string-array>
+    <string-array name="keywords_blur_glass">
+        <item>замућење</item>
+        <item>стакло</item>
+        <item>вињета</item>
+    </string-array>
+    <string-array name="keywords_float_window">
+        <item>плутати</item>
+        <item>прозор</item>
+        <item>преклапање</item>
+    </string-array>
+    <string-array name="keywords_always_display">
+        <item>увек</item>
+        <item>дисплеј</item>
+        <item>сат</item>
+    </string-array>
+    <string-array name="keywords_audio_mute">
+        <item>аудио</item>
+        <item>немо</item>
+        <item>обим</item>
+    </string-array>
+    <string-array name="keywords_blue_filter">
+        <item>плава</item>
+        <item>филтер</item>
+        <item>ауто</item>
+    </string-array>
+    <string-array name="keywords_app_freezing">
+        <item>замрзнути</item>
+        <item>схизуку</item>
+    </string-array>
+    <string-array name="keywords_manual_now">
+        <item>приручник</item>
+        <item>сада</item>
+        <item>схизуку</item>
+    </string-array>
+    <string-array name="keywords_proximity_sensor">
+        <item>близина</item>
+        <item>сензор</item>
+        <item>лице</item>
+        <item>доле</item>
+    </string-array>
+    <string-array name="keywords_switch_master">
+        <item>прекидач</item>
+        <item>мајстор</item>
+    </string-array>
+    <string-array name="keywords_vibration">
+        <item>вибрација</item>
+        <item>осетити</item>
+    </string-array>
+    <string-array name="keywords_battery">
+        <item>батерија</item>
+        <item>наплатити</item>
+        <item>оптимизација</item>
+        <item>пикел</item>
+    </string-array>
+    <!-- App Selection Extra -->
+    <string name="action_invert_selection">Обрни избор</string>
+    <string name="toggle_show_system_apps">Прикажи системске апликације</string>
+    <!-- Updates -->
+    <string name="status_up_to_date">Ви сте у току</string>
+    <string name="warning_pre_release">Ово је верзија пре издања и можда је нестабилна.</string>
+    <string name="release_notes_format">Белешке о издању %1$s</string>
+    <string name="action_view_on_github">Погледајте на ГитХуб-у</string>
+    <string name="action_download_apk">Преузмите АПК</string>
+    <!-- Haptic Types -->
+    <string name="haptic_none">Ниједан</string>
+    <string name="haptic_subtle">Суптилно</string>
+    <string name="haptic_double">Двоструко</string>
+    <string name="haptic_click">Кликните</string>
+    <string name="haptic_tick">Тицк</string>
+    <!-- Flashlight Intensity Overlay -->
+    <string name="action_turn_off">Искључи</string>
+    <string name="feature_flashlight_brightness_title">Осветљеност лампе</string>
+    <!-- QS / Activities -->
+    <!-- About Section -->
+    <string name="developed_by_format">Девелопед би %1$s\nса ❤\uFE0F из \uD83C\uDDF1\uD83C\uDDF0</string>
+    <string name="action_website">Вебсите</string>
+    <string name="action_contact">Контакт</string>
+    <string name="action_telegram">Телеграм</string>
+    <string name="action_support">Подршка</string>
+    <string name="label_other_apps">Друге апликације</string>
+    <string name="app_airsync">АирСинц</string>
+    <string name="app_zenzero">ЗенЗеро</string>
+    <string name="app_canvas">Цанвас</string>
+    <string name="app_tasks">Задаци</string>
+    <string name="app_zero">Зеро</string>
+    <!-- Help & Guides -->
+    <string name="help_guides_title">Помоћ и водичи</string>
+    <string name="need_more_support_reach_out">Треба вам више подршке? пружи руку,</string>
+    <string name="action_collapse">Колапс</string>
+    <string name="action_expand">Прошири</string>
+    <string name="support_group_label">Група за подршку</string>
+    <string name="email_label">Емаил</string>
+    <string name="send_email_chooser_title">Пошаљи е-пошту</string>
+    <string name="error_no_email_app">Није доступна апликација за е-пошту</string>
+    <string name="instruction_step_image_description">Корак %1$d Слика</string>
+    <!-- Instructions Content -->
+    <string name="instruction_section_perms_title">Дозволе за приступачност, обавештења и преклапање</string>
+    <string name="instruction_step_perms_1">Ову поруку одбијеног приступа можете добити ако покушате да доделите осетљиве дозволе као што су приступачност, дозволе слушаоца обавештења или преклапања. Да бисте то одобрили, проверите кораке у наставку.</string>
+    <string name="instruction_step_perms_2">1. Идите на страницу са информацијама о апликацији Ессентиалс.</string>
+    <string name="instruction_step_perms_3">2. Отворите мени са 3 тачке и изаберите \'Дозволи ограничена подешавања\'. Можда ћете морати да се аутентификујете биометријом. Када завршите, покушајте поново да дате дозволу.</string>
+    <string name="instruction_section_shizuku_title">Схизуку</string>
+    <string name="instruction_section_shizuku_desc">Схизуку је моћан алат који омогућава апликацијама да користе системске АПИ-је директно са АДБ или роот дозволама. Потребан је за функције као што су минимални режим мапа, замрзивач апликација. И помоћи ће да се дају неке дозволе као што је ВРИТЕ_СЕЦУРЕ_СЕТТИНГС. \n\nАли верзија Схизуку-а у Плаи продавници је можда застарела и вероватно ће бити неупотребљива на недавним верзијама Андроид-а, тако да у том случају, преузмите најновију верзију са гитхуб-а или са ажурираном форк-ом.</string>
+    <string name="instruction_section_maps_title">Режим уштеде енергије на мапи</string>
+    <string name="instruction_section_maps_desc">Ова функција аутоматски покреће режим уштеде енергије Гоогле мапа који је тренутно ексклузиван за серију Пикел 10. Члан заједнице је открио да је још увек употребљив на било ком Андроид уређају покретањем активности минМоде мапа са привилегијама роот. \n\nА онда сам га аутоматизовао са Таскер-ом да се аутоматски активира када се екран искључи током сесије навигације, а затим сам успео да постигнем исто само са дозволама за Схизуку током извршавања. \n\nПредвиђено је да се приказује преко АОД-а серије Пикел 10, тако да ћете због тога можда видети да се на екрану повремено појављује порука да не подржава пејзажни режим. Апликација то не може избећи и можете игнорисати.</string>
+    <string name="instruction_section_silent_title">Режим тихог звука</string>
+    <string name="instruction_section_silent_desc">Можда сте приметили да тихи режим такође покреће ДНД. \n\nТо је због начина на који га је Андроид имплементирао јер чак и ако користимо исти АПИ за прелазак на режим вибрације, он из неког разлога укључује ДНД заједно са тихим режимом и то се у овом тренутку не може избећи. :(</string>
+    <string name="instruction_section_freeze_title">Шта је замрзавање?</string>
+    <string name="instruction_section_freeze_desc">Паузирајте и држите се даље од ометања апликација док уштедите мало енергије спречавајући да апликације раде у позадини. Погодно за апликације које се ретко користе. \n\nНе препоручује се за било које комуникационе услуге јер вас неће обавестити у хитним случајевима осим ако их не одмрзнете. \n\nПрепоручује се да не замрзавате системске апликације јер могу довести до нестабилности система. Будите опрезни, упозорени сте. \n\nИнспиред би Хаил &lt;3</string>
+    <string name="instruction_section_security_title">Да ли су закључавање апликација и закључавање екрана заиста безбедни?</string>
+    <string name="instruction_section_security_desc">Апсолутно не. \n\nБило која апликација треће стране не може 100% да омета редовне интеракције уређаја, па чак и закључавање апликације је само слој изнад одабраних апликација како би се спречила интеракција са њима. Постоје заобилазна решења и није сигурно. \n\nИсто важи и за безбедносну функцију закључаног екрана која открива да неко покушава да ступи у интеракцију са мрежним плочицама које су из неког разлога и даље доступне свима на Пикелс-у. Дакле, ако се довољно труде, можда ће и даље моћи да их промене, а посебно ако имате додану КС плочицу режима летења, ова апликација не може спречити интеракције са њом. \n\nОве функције су направљене само као експерименти за лагану употребу и никада их не би препоручили као јака решења за безбедност и приватност. \n\nСигурне алтернативе:\n - Закључавање апликације: Приватни простор и Сецуре фолдер на Пикелс и Самсунг\n - Спречавање приступа мобилним мрежама: Уверите се да су ваша заштита од крађе и ван мреже/искључивање и пронађите поставке мог уређаја укључене. Можете погледати и Грапхене ОС.</string>
+    <string name="instruction_section_statusbar_title">Иконе статусне траке</string>
+    <string name="instruction_section_statusbar_desc">Можда ћете приметити да чак и након ресетовања икона статусне траке, неке иконе као што су ротација уређаја, иконе жичаних слушалица могу остати видљиве. Ово је због начина на који је црна листа статубара имплементирана у Андроид-у и како их је ваш ОЕМ можда прилагодио. \nМожда ће вам требати додатна подешавања. \n\nТакође не могу све опције видљивости икона да раде јер зависе од ОЕМ имплементација и доступности.</string>
+    <string name="instruction_section_lighting_title">Осветљење обавештења не ради</string>
+    <string name="instruction_section_lighting_desc">Зависи од ОЕМ-а. Чини се да неки попут ОнеУИ-а не дозвољавају преклапање изнад АОД-а који спречава приказивање светлосних ефеката. У овом случају, покушајте са амбијенталним екраном као решењем.</string>
+    <string name="instruction_section_button_title">Пресликавање дугмета не ради док је екран искључен</string>
+    <string name="instruction_section_button_desc">Неки произвођачи оригиналне опреме ограничавају извештавање о услугама приступачности када је екран заиста искључен, али и даље могу да раде док је АОД укључен. \nУ овом случају, можда ћете моћи да користите пресликавање дугмади са укљученим АОД-ом, али не и са искљученим. \n\nКао решење, мораћете да користите Схизуку дозволе и укључите \'Користите Схизуку или Роот\' укључите подешавања пресликавања дугмета која идентификује и слуша догађаје хардверског уноса.\nНије гарантовано да ће ово радити на свим уређајима и потребно је тестирање.\n\nПа чак и ако је\'с укључено, Схизуку метода ће се користити само када је\'с потребно. У супротном, увек ће се вратити на Приступачност која такође рукује блокирањем стварног уноса током дугог притиска.</string>
+    <string name="instruction_section_flashlight_title">Осветљеност лампе не ради</string>
+    <string name="instruction_section_flashlight_desc">Само ограничен број уређаја има хардверску и софтверску подршку за подешавање интензитета лампе. \n\n\'Минимална верзија Андроид-а је 13 (СДК33).\nКонтрола осветљења лампе подржава само ХАЛ верзију 3.8 и новију, тако да међу подржаним уређајима, најновији (на пример, Пикел 6/7, Самсунг С23, итд.)\'\nполодарб/Фласхлигхт-Тирамису</string>
+    <string name="instruction_section_about_title">Шта је дођавола ова апликација?</string>
+    <string name="instruction_section_about_desc">добро питање,\n\nУвек сам желео да извучем максимум из својих уређаја\'био сам роот корисник откако сам добио свој први Пројецт Требле уређај. И ја\'Волим апликацију Таскер која је као Бог када дође аутоматизација и коришћење свих могућих АПИ-ја и интерних функција Андроид-а.\n\nДакле, нисам без роот-а и вратио сам се на стандардно Андроид бета искуство и желео сам да извучем максимум из онога што је могуће са датим привилегијама. Могао би да их поделим. Тако сам са својим почетним знањем о Котлин Јетпацк-у и уз подршку многих истраживачких и помоћних алата, као и сјајне заједнице, направио све-у-једном апликацију која садржи све што сам желео да буде у свом Андроид-у са датим дозволама. И ево га.\n\nЗахтеви за функције су добродошли, размотрићу и видети да ли су оствариви са доступним дозволама и мојим вештинама. У данашње време оно што није могуће. :)\n\nЗашто не у Плаи продавници?\nја не\'Желим да ризикујем да мој налог програмера буде забрањен због веома осетљивих и интерних дозвола и АПИ-ја који се користе у апликацији. Али са начином на који иде Андроид сиделоадинг, нека\'да видимо шта морамо да урадимо. Разумем забринутост да су бочно учитане апликације злонамерне.\nДок смо на теми, проверите моју другу апликацију АирСинц ако сте корисник Мац + Андроид. *бесрамни прикључак*\n\nУживајте, наставите да градите! (っ◕‿◕)っ</string>
+    <!-- Bug Reporting -->
+    <string name="toast_bug_report_copied">Извештај о грешци је копиран у међуспремник</string>
+    <string name="bug_report_title">Извештај о грешци</string>
+    <string name="bug_report_option_share_logs">Делите дневнике</string>
+    <string name="bug_report_option_share_logs_desc">Укључите евиденције и детаље</string>
+    <string name="bug_report_device_info">Информације о уређају</string>
+    <string name="bug_report_raw_json">Рав Репорт</string>
+    <string name="action_report_github">Отворите ГитХуб проблем</string>
+    <string name="action_report_email">Извештај е-поштом</string>
+    <string name="action_copy_clipboard">Копирај у међуспремник</string>
+    <string name="bug_report_email_subject">Извештај о грешкама Ессентиалс</string>
+    <string name="bug_report_send_via">Пошаљи преко</string>
+    <!-- Location Reached -->
+    <string name="feat_location_reached_title">Јесмо ли стигли?</string>
+    <string name="feat_location_reached_desc">Обавештења о одредиштима у близини</string>
+    <string name="location_reached_how_to">Отворите Гоогле мапе, изаберите локацију и поделите је са Ессентиалс-ом.</string>
+    <string name="location_reached_radius_title">Радијус упозорења: %d м</string>
+    <string name="perm_location_title">Локација</string>
+    <string name="perm_location_desc">Користи се за откривање доласка на одредиште.</string>
+    <string name="perm_bg_location_title">Локација у позадини</string>
+    <string name="perm_bg_location_desc">Потребан за праћење вашег доласка док је апликација затворена или је екран искључен.</string>
+    <string name="location_reached_notification_title">Достигнуто одредиште!</string>
+    <string name="location_reached_notification_desc">Стигли сте на одредиште.</string>
+    <string name="location_reached_processing">Локација се обрађује…</string>
+    <string name="location_reached_dist_remaining">ДИСТАНЦЕ РЕМАИНИНГ</string>
+    <string name="location_reached_calculating">Израчунавање…</string>
+    <string name="location_reached_stop_tracking">Стоп Трацкинг</string>
+    <string name="location_reached_dest_ready">Одредиште спремно</string>
+    <string name="location_reached_start_tracking">Започни праћење</string>
+    <string name="location_reached_view_map">Виев Мап</string>
+    <string name="location_reached_clear">Јасно</string>
+    <string name="location_reached_no_dest">Нема одредишта</string>
+    <string name="location_reached_open_maps">Отворите Мапе</string>
+    <string name="location_reached_fsi_title">Дозвола за аларм преко целог екрана</string>
+    <string name="location_reached_fsi_desc">Неопходно је да пробудите уређај по доласку. Додирните да бисте одобрили.</string>
+    <string name="location_reached_dist_m">%1$d м</string>
+    <string name="location_reached_dist_km">%1$.1ф км</string>
+    <string name="location_reached_service_title">Путни аларм активан</string>
+    <string name="location_reached_service_remaining">%1$s преостали (%2$d%%)</string>
+    <string name="location_reached_channel_name">Травел Прогресс</string>
+    <string name="location_reached_channel_desc">Приказује удаљеност до одредишта у реалном времену</string>
+    <string name="location_reached_alarm_title">Одредиште у близини</string>
+    <string name="location_reached_alarm_subtitle">Припремите се за силазак</string>
+    <string name="location_reached_dismiss">Одбаци</string>
+    <string name="location_reached_toast_set">Постављено одредиште: %1$.4ф, %2$.4ф</string>
+    <string name="setting_use_root_title">Користите Роот</string>
+    <string name="setting_use_root_desc">Уместо Шизукуа</string>
+    <string name="root_not_available_toast">Роот приступ није доступан. Проверите свог роот менаџера.</string>
+    <!-- System Keyboard -->
+    <string name="feat_system_keyboard_title">Тастатура</string>
+    <string name="feat_system_keys">Кључеви</string>
+    <string name="feat_system_keyboard_desc">Прилагодите изглед и понашање</string>
+    <string name="search_keyboard_height_title">Висина тастатуре</string>
+    <string name="search_keyboard_height_desc">Подесите укупну вертикалну величину тастатуре</string>
+    <string name="search_keyboard_padding_title">Боттом Паддинг</string>
+    <string name="search_keyboard_padding_desc">Додајте простор испод тастатуре</string>
+    <string name="search_keyboard_haptics_title">Хаптиц Феедбацк</string>
+    <string name="search_keyboard_haptics_desc">Вибрација при притиску на тастер</string>
+    <string name="test_keyboard_hint">Тестирајте тастатуру</string>
+    <string name="label_keyboard_height">Висина тастатуре</string>
+    <string name="label_keyboard_bottom_padding">Боттом Паддинг</string>
+    <string name="label_keyboard_haptics">Хаптиц Феедбацк</string>
+    <string name="label_keyboard_roundness">Кеи Роунднесс</string>
+    <string name="label_keyboard_functions_bottom">Померите функције на дно</string>
+    <string name="label_keyboard_functions_padding">Функције сиде паддинг</string>
+    <string name="label_keyboard_haptic_strength">Снага хаптичке повратне информације</string>
+    <string name="label_keyboard_shape">Облик тастатуре</string>
+    <string name="shape_round">Роунд</string>
+    <string name="shape_flat">Стан</string>
+    <string name="shape_inverse">Инверзно</string>
+    <string name="feat_batteries_title">Батерије</string>
+    <string name="feat_batteries_desc">Пратите нивое батерије уређаја</string>
+    <string name="batteries_widget_label">Статус батерије</string>
+    <string name="connect_to_airsync">Повежите се на АирСинц</string>
+    <string name="connect_to_airsync_summary">Прикажите батерију са повезаног Мац уређаја у АирСинц-у</string>
+    <string name="download_airsync">Преузмите апликацију АирСинц</string>
+    <string name="download_airsync_summary">Потребно за синхронизацију батерије за Мац</string>
+    <string name="feat_battery_notification_title">Обавештење о батерији</string>
+    <string name="feat_battery_notification_desc">Трајно обавештење о статусу батерије</string>
+    <string name="battery_notification_hint">This notification displays battery levels for your connected Mac and Bluetooth devices. You can configure which devices to show in the Battery Widget settings.</string>
+    <string name="about_desc_battery_notification">Поновите искуство виџета батерије у вашој сенци обавештења. Приказаће нивое батерије свих ваших повезаних уређаја у једном трајном обавештењу, ажурираном у реалном времену. Ово укључује ваш Мац (преко АирСинц) и Блуетоотх додатке.</string>
+    <string name="battery_notification_channel_name">Обавештење о статусу батерије</string>
+    <string name="battery_notification_channel_desc">Стално обавештење које приказује нивое батерије повезаних уређаја</string>
+    <string name="perm_nearby_devices_title">Уређаји у близини</string>
+    <string name="perm_nearby_devices_desc">Потребно за откривање и преузимање информација о батерији из Блуетоотх прибора</string>
+    <!-- GitHub Auth -->
+    <string name="auth_copy_code">Копирај код</string>
+    <string name="auth_open_login_page">Отворите страницу за пријаву</string>
+    <string name="auth_sign_in_rationale">Пријавите се да бисте проширили ограничења АПИ позива</string>
+    <string name="auth_waiting_for_authorization">Чека се овлашћење...</string>
+    <string name="action_sign_in_github">Пријавите се са ГитХуб-ом</string>
+    <string name="action_sign_out">Одјави се</string>
+    <string name="action_profile">Профил</string>
+    <!-- App Updates / Repos -->
+    <string name="label_release_notes">Белешке о издању</string>
+    <string name="msg_no_repos_tracked">Још увек нема праћених спремишта</string>
+    <string name="label_no_app_linked">Ниједна апликација није повезана</string>
+    <string name="format_updated_relative">Ажурирано %1$s</string>
+    <!-- Relative Time -->
+    <string name="time_just_now">управо сада</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="time_min_ago">%1$dпре м</string>
+    <string name="time_hour_ago">%1$dх пре</string>
+    <string name="time_day_ago">%1$dд пре</string>
+    <string name="time_days_ago">%1$d days ago</string>
+    <string name="time_weeks_ago">%1$d weeks ago</string>
+    <string name="time_month_ago">%1$dмо аго</string>
+    <string name="time_months_ago">%1$d months ago</string>
+    <string name="time_year_ago">%1$dи аго</string>
+    <string name="action_retry">Покушајте поново</string>
+    <string name="action_start_sign_in">Почни пријаву</string>
+    <string name="auth_requesting_code">Захтева се код уређаја...</string>
+    <string name="auth_copy_code_instruction">1. Копирајте свој код:</string>
+    <string name="auth_paste_code_instruction">2. Налепите код на ГитХуб:</string>
+    <string name="label_found_apks">Пронађени АПК-ови</string>
+    <string name="label_readme">РЕАДМЕ</string>
+    <string name="action_refresh">Освежи</string>
+    <!-- Added Missing Group Strings -->
+    <string name="feat_sound_modes_title">Плочица режима звука</string>
+    <string name="feat_sound_modes_desc">КС плочица за пребацивање режима звука</string>
+    <string name="search_sound_mode_show_slider_title">Прикажи клизач</string>
+    <string name="search_sound_mode_show_slider_desc">Прикажи клизач за јачину звука у плочици</string>
+    <string name="search_sound_mode_behavior_title">Цицле Бехавиор</string>
+    <string name="search_sound_mode_behavior_desc">Изаберите режиме за циклус</string>
+    <string name="feat_sound_haptics_title">Звук и хаптика</string>
+    <string name="feat_sound_haptics_desc">Обим и хаптичке карактеристике</string>
+    <string name="feat_security_privacy_title">Безбедност и приватност</string>
+    <string name="feat_security_privacy_desc">Заштитите и осигурајте свој уређај</string>
+    <string name="feat_notifications_alerts_title">Обавештења и упозорења</string>
+    <string name="feat_notifications_alerts_desc">Никада не пропустите своје приоритете</string>
+    <string name="feat_input_actions_title">Унос и акције</string>
+    <string name="feat_input_actions_desc">Контролишите свој уређај са лакоћом</string>
+    <string name="feat_widgets_title">Видгетс</string>
+    <string name="feat_widgets_desc">Брзи поглед на почетни екран</string>
+    <string name="feat_display_visuals_title">Дисплаи</string>
+    <string name="feat_display_visuals_desc">Визуелни елементи за побољшање вашег искуства</string>
+    <string name="feat_watch_title">Гледај</string>
+    <string name="feat_watch_desc">Интеграције са ВеарОС-ом</string>
+    <string name="watch_no_companion_title">Није откривен сат</string>
+    <string name="watch_no_companion_desc">Изгледа да на сату немате инсталирану пратећу апликацију Ессентиалс Веар.</string>
+    <string name="watch_install_companion_action">Инсталирајте Цомпанион</string>
+    <string name="action_download_from_github">Download from GitHub</string>
+    <string name="watch_help_title">Install on Watch</string>
+    <string name="watch_help_description">To use Watch features, you need to install the Essentials companion app on your Wear OS watch. Click the button below to open the Play Store directly on your watch.</string>
+    <string name="watch_help_open_play_store">Open on Watch</string>
+    <string name="cat_interaction">Интеракција</string>
+    <string name="cat_interface">Интерфејс</string>
+    <string name="cat_display">Дисплаи</string>
+    <string name="cat_protection">Заштита</string>
+    <string name="cat_accessibility">Accessibility</string>
+    <string name="cat_connectivity">Connectivity</string>
+    <string name="cat_privacy">Privacy</string>
+    <string name="cat_utils">Utilities</string>
+    <string name="label_kbd_abc">АБЦ</string>
+    <string name="label_kbd_symbols">\?#/</string>
+    <string name="label_kaomoji">Kaomoji</string>
+    <string name="kaomoji_cat_joy">Joy</string>
+    <string name="kaomoji_cat_love">Love</string>
+    <string name="kaomoji_cat_embarassment">Embarassment</string>
+    <string name="kaomoji_cat_sympathy">Sympathy</string>
+    <string name="kaomoji_cat_dissatisfaction">Dissatisfaction</string>
+    <string name="kaomoji_cat_anger">Anger</string>
+    <string name="kaomoji_cat_apologizing">Apologizing</string>
+    <string name="kaomoji_cat_bear">Bear</string>
+    <string name="kaomoji_cat_bird">Bird</string>
+    <string name="kaomoji_cat_cat">Cat</string>
+    <string name="kaomoji_cat_confusion">Confusion</string>
+    <string name="kaomoji_cat_dog">Dog</string>
+    <string name="kaomoji_cat_doubt">Doubt</string>
+    <string name="kaomoji_cat_enemies">Enemies</string>
+    <string name="kaomoji_cat_faces">Faces</string>
+    <string name="kaomoji_cat_fear">Fear</string>
+    <string name="kaomoji_cat_fish">Fish</string>
+    <string name="kaomoji_cat_food">Food</string>
+    <string name="kaomoji_cat_friends">Friends</string>
+    <string name="kaomoji_cat_games">Games</string>
+    <string name="kaomoji_cat_greeting">Greeting</string>
+    <string name="kaomoji_cat_hiding">Hiding</string>
+    <string name="kaomoji_cat_hugging">Hugging</string>
+    <string name="kaomoji_cat_indifference">Indifference</string>
+    <string name="kaomoji_cat_magic">Magic</string>
+    <string name="kaomoji_cat_music">Music</string>
+    <string name="kaomoji_cat_nosebleeding">Nosebleeding</string>
+    <string name="kaomoji_cat_pain">Pain</string>
+    <string name="kaomoji_cat_pig">Pig</string>
+    <string name="kaomoji_cat_rabbit">Rabbit</string>
+    <string name="kaomoji_cat_running">Running</string>
+    <string name="kaomoji_cat_sadness">Sadness</string>
+    <string name="kaomoji_cat_sleeping">Sleeping</string>
+    <string name="kaomoji_cat_special">Special</string>
+    <string name="kaomoji_cat_spider">Spider</string>
+    <string name="kaomoji_cat_surprise">Surprise</string>
+    <string name="kaomoji_cat_weapons">Weapons</string>
+    <string name="kaomoji_cat_winking">Winking</string>
+    <string name="kaomoji_cat_writing">Writing</string>
+    <string name="msg_restrict_own_app_repo">Ои! Можете да проверите ажурирања у подешавањима апликације, нема потребе да додајете овде КСД</string>
+    <string name="action_export">Извоз</string>
+    <string name="action_import">Увоз</string>
+    <string name="msg_export_success">Спремишта су успешно извезена</string>
+    <string name="msg_export_failed">Извоз спремишта није успео</string>
+    <string name="msg_import_success">Спремишта су успешно увезена</string>
+    <string name="msg_import_failed">Увоз спремишта није успео</string>
+    <string name="label_apps">Аппс</string>
+    <string name="feat_text_animations_title">Скала и анимације</string>
+    <string name="feat_text_animations_desc">Подесите системску скалу и анимације</string>
+    <string name="feat_screen_refresh_rate_title">Screen Refresh Rate</string>
+    <string name="feat_screen_refresh_rate_desc">Set a fixed or ranged screen refresh rate</string>
+    <string name="settings_section_text">Текст</string>
+    <string name="label_font_scale">Фонт Сцале</string>
+    <string name="label_font_weight">Тежина фонта</string>
+    <string name="label_reset_default">Ресетуј</string>
+    <string name="settings_section_scale">Сцале</string>
+    <string name="label_smallest_width">Најмања ширина</string>
+    <string name="msg_shizuku_permission_required">Шизуку дозвола је потребна за подешавање размере</string>
+    <string name="label_grant_permission">Дајте дозволу</string>
+    <string name="settings_section_animations">Анимације</string>
+    <string name="label_animator_duration_scale">Скала трајања аниматора</string>
+    <string name="label_transition_animation_scale">Скала анимације прелаза</string>
+    <string name="label_window_animation_scale">Скала анимације прозора</string>
+    <string name="about_desc_text_animations">Подесите скалу фонта, тежину и брзину анимације за читав систем. Имајте на уму да нека подешавања могу захтевати напредне дозволе или поновно покретање уређаја да би одређене апликације одражавале промене. \n\nДодатна схизуку или роот дозвола може бити неопходна за прилагођавање размера</string>
+    <string name="about_desc_screen_refresh_rate">Set a custom screen refresh rate using Shizuku. Fixed mode locks both the minimum and peak refresh rate to one value, while range mode lets you define separate minimum and peak values. Reset clears the custom override and returns the device to its system-managed refresh behavior.</string>
+    <string name="refresh_rate_section_mode">Mode</string>
+    <string name="refresh_rate_section_values">Refresh Rate</string>
+    <string name="refresh_rate_mode_fixed">Fixed</string>
+    <string name="refresh_rate_mode_range">Range</string>
+    <string name="refresh_rate_fixed_title">Fixed refresh rate</string>
+    <string name="refresh_rate_fixed_desc">Set both minimum and peak refresh rate to the same value</string>
+    <string name="refresh_rate_min_title">Minimum refresh rate</string>
+    <string name="refresh_rate_min_desc">Choose the lowest refresh rate the display may use</string>
+    <string name="refresh_rate_peak_title">Peak refresh rate</string>
+    <string name="refresh_rate_peak_desc">Choose the highest refresh rate the display may use</string>
+    <string name="refresh_rate_system_default">System</string>
+    <string name="refresh_rate_reset_desc">Remove the custom override and return to the system default refresh behavior</string>
+    <string name="msg_refresh_rate_permission_required">Shizuku permission required to adjust refresh rate</string>
+    <string name="search_refresh_rate_mode_title">Refresh Rate Mode</string>
+    <string name="search_refresh_rate_mode_desc">Switch between fixed and ranged refresh rate control</string>
+    <string name="search_refresh_rate_fixed_title">Fixed Refresh Rate</string>
+    <string name="search_refresh_rate_fixed_desc">Lock the display to one custom refresh rate</string>
+    <string name="search_refresh_rate_range_title">Refresh Rate Range</string>
+    <string name="search_refresh_rate_range_desc">Configure separate minimum and peak refresh rates</string>
+    <string name="search_refresh_rate_reset_title">Reset Refresh Rate</string>
+    <string name="search_refresh_rate_reset_desc">Clear the custom refresh rate override</string>
+    <string name="feat_aod_force_turn_off_title">Присилно искључите АОД</string>
+    <string name="feat_aod_force_turn_off_desc">Присилно искључите АОД када нема обавештења. Захтева дозволу приступачности.</string>
+    <string name="feat_auto_accessibility_title">Аутоматска приступачност</string>
+    <string name="feat_auto_accessibility_desc">Аутоматски додељује дозволу за приступачност при покретању апликације ако недостаје помоћу ВРИТЕ_СЕЦУРЕ_СЕТТИНГС.</string>
+    <string name="label_help_guide">Помоћ и водичи</string>
+    <string name="tab_your_android">Ваш Андроид</string>
+    <string name="label_device_storage">Складиштење</string>
+    <string name="label_device_ram">Меморија</string>
+    <string name="label_use_blur">Користите замућење</string>
+    <string name="desc_use_blur">Омогућите елементе прогресивног замућења широм корисничког интерфејса</string>
+    <string name="msg_blur_compatibility_error">Замућење је онемогућено на овом уређају да би се спречила позната грешка на екрану на Самсунг уређајима са Андроидом 15 или старијим.</string>
+    <!-- Empty State Actions -->
+    <string name="msg_no_apps_frozen">Није изабрана ниједна апликација за замрзавање.</string>
+    <string name="action_get_started">Започните</string>
+    <string name="action_new_automation">Нова аутоматизација</string>
+    <string name="action_add_repository">Додај спремиште</string>
+    <!-- Bug Report Enhancement -->
+    <string name="bug_report_feedback_placeholder">Describe the issue or provide feedback…</string>
+    <string name="bug_report_contact_email_label">Contact email</string>
+    <string name="action_send_feedback">Send Feedback</string>
+    <string name="msg_feedback_sent">Feedback sent successfully! Thanks for helping us improve the app.</string>
+    <string name="label_alternatively">Alternatively</string>
+    <!-- Pixel Diagnostics -->
+    <string name="label_diagnostics">Diagnostics</string>
+    <string name="label_device_check">Device Check</string>
+    <string name="msg_flashbang">Get ready to be flashbanged!</string>
+    <string name="action_abort">Abort</string>
+    <string name="action_continue">Continue</string>
+    <string name="prank_trial_expired_title">Your Essentials trial has expired</string>
+    <string name="prank_trial_expired_desc">Your free trial period of Essentials has ended. Access to advanced features like Button Remap, App Freezing, and DIY Automations with Premium.</string>
+    <string name="prank_button_premium">What\'s in Premium?</string>
+    <string name="prank_reveal_title">April Fools!</string>
+    <string name="prank_reveal_desc">Just kidding, Essentials is and will always be free and open source. Enjoy! (っ◕‿◕)っ</string>
+    <string name="notification_lighting_style_system">System</string>
+    <string name="notification_lighting_system_mode_title">Ripple Animation</string>
+    <string name="notification_lighting_system_mode_charging_ripple">Bottom</string>
+    <string name="notification_lighting_system_mode_auth_ripple">Center</string>
+    <string name="notification_lighting_system_mode_custom_ripple">Custom</string>
+    <string name="msg_shizuku_root_required_system_lighting">Shizuku or Root permission is required for System lighting effects</string>
+    <string name="notification_lighting_system_disclaimer">Made for Google Pixel. Might not be available on other devices.</string>
+    <!-- Live Wallpaper -->
+    <string name="feat_live_wallpaper_title">Live wallpaper</string>
+    <string name="feat_live_wallpaper_desc">Set custom video as live wallpaper</string>
+    <string name="live_wallpaper_label">Live Wallpaper</string>
+    <string name="live_wallpaper_description">A video live wallpaper that plays when unlocked.</string>
+    <string name="live_wallpaper_playback_trigger_title">Play when</string>
+    <string name="live_wallpaper_trigger_unlock">Unlock</string>
+    <string name="live_wallpaper_trigger_screen_on">Screen on</string>
+    <string name="live_wallpaper_video_title">Video</string>
+    <string name="btn_apply">Apply</string>
+    <string name="add_video">Add video</string>
+    <string name="custom_video">Custom video</string>
+    <string name="about_desc_live_wallpaper">Set your favorite video as your home screen wallpaper. Choose between triggering the animation upon unlocking or simply whenever the screen turns on for a dynamic experience.</string>
+    <!-- Shut-Up! Feature -->
+    <string name="feat_shut_up_title">Shut-Up!</string>
+    <string name="feat_shut_up_desc">I know what I\'m doing</string>
+    <string name="shut_up_description">Shut-Up! bypasses app restrictions and checks for developer options, accessibility and debugging by dynamically hiding them when you launch sensitive apps. \n\nUse the custom shortcuts to ensure settings are hidden before the app launches.</string>
+    <string name="shut_up_select_apps_title">Select Apps</string>
+    <string name="shut_up_select_apps_desc">Choose apps to apply Shut-Up! logic</string>
+    <string name="shut_up_settings_title">Shut-Up! Settings</string>
+    <string name="shut_up_per_app_settings">Shut-Up! Features</string>
+    <string name="shut_up_disable_dev_options">Disable Developer Options</string>
+    <string name="shut_up_disable_usb_debugging">Disable USB Debugging</string>
+    <string name="shut_up_disable_wireless_debugging">Disable Wireless Debugging</string>
+    <string name="shut_up_disable_accessibility">Disable Accessibility Services</string>
+    <string name="shut_up_shortcut_created">Shortcut created for %s</string>
+    <string name="feat_disable_rotation_suggestion_title">Disable rotation suggestion</string>
+    <string name="feat_disable_rotation_suggestion_desc">Do not show the rotation button when auto-rotate is off</string>
+    <string name="shut_up_toast_active">App got shut up</string>
+    <string name="shut_up_toast_restored">Shut up features returned</string>
+    <string name="shut_up_auto_archive_notif_title">Auto Freeze</string>
+    <string name="shut_up_auto_archive_notif_text">%1$s will be archived in %2$d seconds</string>
+    <string name="shut_up_auto_archive_action_freeze">Freeze now</string>
+    <string name="shut_up_auto_archive_action_abort">Abort</string>
+    <!-- Lock Screen Clock -->
+    <string name="feat_lock_screen_clock_title">Lock screen clock</string>
+    <string name="feat_lock_screen_clock_desc">Customize lock screen clock on Pixels</string>
+    <string name="about_desc_lock_screen_clock">Change the lock screen clock style on Pixels. Select from the available clock faces provided by the System UI. Some old styles might not be available.</string>
+    <string name="lock_screen_clock_bignum">Big Number</string>
+    <string name="lock_screen_clock_calligraphy">Calligraphy</string>
+    <string name="lock_screen_clock_flex">Flex</string>
+    <string name="lock_screen_clock_growth">Growth</string>
+    <string name="lock_screen_clock_handwritten">Handwritten</string>
+    <string name="lock_screen_clock_inflate">Inflate</string>
+    <string name="lock_screen_clock_metro">Metro</string>
+    <string name="lock_screen_clock_numoverlap">Number Overlap</string>
+    <string name="lock_screen_clock_weather">Weather</string>
+    <string name="lock_screen_clock_select_label">Select Clock Style</string>
+    <string name="lock_screen_clock_current_label">Current</string>
+    <string name="lock_screen_clock_apply_label">Apply</string>
+    <string name="lock_screen_clock_applied_toast">Clock style applied</string>
+    <string name="lock_screen_clock_permission_required">WRITE_SECURE_SETTINGS permission required</string>
+    <string name="lock_screen_clock_default">Default</string>
+    <string name="label_weight">Weight</string>
+    <string name="label_width">Width</string>
+    <string name="label_grade">Grade</string>
+    <string name="label_roundness">Roundness</string>
+    <string name="label_color_tone">Lightness</string>
+    <string name="label_variation">Variation</string>
+    <string name="label_color">Color</string>
+    <string name="label_style_font">Style &amp; Font</string>
+    <string name="about_title">About</string>
+    <string name="color_default">Default</string>
+    <string name="color_red">Red</string>
+    <string name="color_green">Green</string>
+    <string name="color_blue">Blue</string>
+    <string name="color_yellow">Yellow</string>
+    <string name="color_orange">Orange</string>
+    <string name="color_purple">Purple</string>
+    <string name="color_pink">Pink</string>
+    <string name="color_teal">Teal</string>
+    <!-- What's New -->
+    <string name="whats_new_specs_title">Device Specs Retired</string>
+    <string name="whats_new_specs_desc">Inaccurate GSMArena-powered specifications have been removed to keep device insights clean, fast, and completely reliable.</string>
+    <string name="whats_new_apps_title">App Updates Migrated</string>
+    <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
+</resources>
