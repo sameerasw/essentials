@@ -13,6 +13,8 @@ import com.sameerasw.essentials.data.repository.GitHubRepository
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.model.NotificationApp
 import com.sameerasw.essentials.domain.model.TrackedRepo
+import com.sameerasw.essentials.domain.model.github.GitHubAsset
+import com.sameerasw.essentials.domain.model.github.GitHubOwner
 import com.sameerasw.essentials.domain.model.github.GitHubRelease
 import com.sameerasw.essentials.domain.model.github.GitHubRepo
 import com.sameerasw.essentials.utils.AppUtil
@@ -72,6 +74,13 @@ class AppUpdatesViewModel : ViewModel() {
 
     private val _notificationsEnabled = mutableStateOf(true)
     val notificationsEnabled: State<Boolean> = _notificationsEnabled
+
+    private val _selectedApkName = mutableStateOf("Auto")
+    val selectedApkName: State<String> = _selectedApkName
+
+    fun setSelectedApkName(name: String) {
+        _selectedApkName.value = name
+    }
 
     private val _installingRepoId = mutableStateOf<String?>(null)
     val installingRepoId: State<String?> = _installingRepoId
@@ -203,39 +212,73 @@ class AppUpdatesViewModel : ViewModel() {
 
     fun prepareEdit(context: Context, repo: TrackedRepo) {
         _searchQuery.value = repo.fullName
-        _isSearching.value = true
+        _isSearching.value = false
         _errorMessage.value = null
-        _searchResult.value = null
-        _latestRelease.value = null
+        
+        // Build local fallback repo info from cache so it displays instantly
+        val localOwner = GitHubOwner(
+            login = repo.owner,
+            avatarUrl = repo.avatarUrl
+        )
+        _searchResult.value = GitHubRepo(
+            id = 0L,
+            name = repo.name,
+            fullName = repo.fullName,
+            description = repo.description,
+            stars = repo.stars,
+            owner = localOwner
+        )
+
+        // Build local fallback release info from cache
+        val localAssets = if (repo.downloadUrl != null) {
+            listOf(
+                GitHubAsset(
+                    name = repo.selectedApkName.takeIf { it != "Auto" } ?: repo.downloadUrl.substringAfterLast("/"),
+                    downloadUrl = repo.downloadUrl
+                )
+            )
+        } else {
+            emptyList()
+        }
+        
+        _latestRelease.value = GitHubRelease(
+            tagName = repo.latestTagName,
+            name = repo.latestReleaseName,
+            body = repo.latestReleaseBody,
+            publishedAt = repo.publishedAt,
+            htmlUrl = repo.latestReleaseUrl ?: "",
+            prerelease = repo.allowPreReleases,
+            assets = localAssets
+        )
+        
         _readmeContent.value = null
-        _selectedApp.value = null
         _allowPreReleases.value = repo.allowPreReleases
         _notificationsEnabled.value = repo.notificationsEnabled
+        _selectedApkName.value = repo.selectedApkName
 
+        _selectedApp.value = null
         viewModelScope.launch {
+            if (repo.mappedPackageName != null) {
+                val installedApps = AppUtil.getAppsByPackageNames(context, listOf(repo.mappedPackageName))
+                _selectedApp.value = installedApps.firstOrNull()
+            }
+            
             try {
                 val token = SettingsRepository(context).getGitHubToken()
                 val repoInfo = gitHubRepository.getRepoInfo(repo.owner, repo.name, token)
                 val release = gitHubRepository.getLatestRelease(repo.owner, repo.name, token)
-                _searchResult.value = repoInfo
-                _latestRelease.value = release
-                _readmeContent.value = gitHubRepository.getReadme(repo.owner, repo.name, token)
-
-                // Set mapped app
-                if (repo.mappedPackageName != null) {
-                    val installedApps = AppUtil.getInstalledApps(context)
-                    _selectedApp.value =
-                        installedApps.find { it.packageName == repo.mappedPackageName }
+                
+                if (repoInfo != null) {
+                    _searchResult.value = repoInfo
                 }
+                if (release != null) {
+                    _latestRelease.value = release
+                }
+                _readmeContent.value = gitHubRepository.getReadme(repo.owner, repo.name, token)
             } catch (e: Exception) {
                 if (e.message == "RATE_LIMIT") {
-                    _errorMessage.value =
-                        context.getString(R.string.error_rate_limited)
+                    _errorMessage.value = context.getString(R.string.error_rate_limited)
                 }
-                // Fallback to offline data? User said it should open but didn't specify offline support.
-                // For now just clear searching
-            } finally {
-                _isSearching.value = false
             }
         }
     }
@@ -282,6 +325,7 @@ class AppUpdatesViewModel : ViewModel() {
         _readmeContent.value = null
         _allowPreReleases.value = false
         _notificationsEnabled.value = true
+        _selectedApkName.value = "Auto"
     }
 
     fun clearError() {

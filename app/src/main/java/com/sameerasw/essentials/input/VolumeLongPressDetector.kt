@@ -18,6 +18,8 @@ class VolumeLongPressDetector(
     val events = _events.asSharedFlow()
 
     private val isRunning = AtomicBoolean(false)
+    val isListening: Boolean
+        get() = isRunning.get()
     private var detectionJob: Job? = null
     private val reader = InputEventReader(volumeDevicePath)
 

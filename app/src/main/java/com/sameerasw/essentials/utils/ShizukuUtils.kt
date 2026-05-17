@@ -12,9 +12,6 @@ object ShizukuUtils {
 
     private val binderReceivedListener = Shizuku.OnBinderReceivedListener {
         binder = Shizuku.getBinder()
-        if (Shizuku.checkSelfPermission() != PackageManager.PERMISSION_GRANTED) {
-            Shizuku.requestPermission(1003)
-        }
     }
 
     private val binderDeadListener = Shizuku.OnBinderDeadListener {
@@ -22,7 +19,19 @@ object ShizukuUtils {
     }
 
     private val isBinderAlive: Boolean
-        get() = binder?.isBinderAlive == true
+        get() {
+            if (binder?.isBinderAlive == true) return true
+            return try {
+                if (Shizuku.pingBinder()) {
+                    binder = Shizuku.getBinder()
+                    binder?.isBinderAlive == true
+                } else {
+                    false
+                }
+            } catch (@Suppress("UNUSED_PARAMETER") e: Exception) {
+                false
+            }
+        }
 
     fun initialize() {
         Shizuku.addBinderReceivedListener(binderReceivedListener)

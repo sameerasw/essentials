@@ -82,11 +82,23 @@ class NotificationListener : NotificationListenerService() {
         return false
     }
 
+    private fun isSilentNotification(sbn: StatusBarNotification): Boolean {
+        try {
+            val rankingMap = currentRanking ?: return false
+            val ranking = Ranking()
+            if (rankingMap.getRanking(sbn.key, ranking)) {
+                return ranking.importance < android.app.NotificationManager.IMPORTANCE_DEFAULT
+            }
+        } catch (_: Exception) {
+        }
+        return false
+    }
+
     private fun populateActiveUnreadNotifications() {
         unreadNotifications.clear()
         try {
             activeNotifications?.forEach { sbn ->
-                if (!sbn.isOngoing && sbn.packageName != packageName && !isMediaNotification(sbn)) {
+                if (!sbn.isOngoing && sbn.packageName != packageName && !isMediaNotification(sbn) && !isSilentNotification(sbn)) {
                     unreadNotifications[sbn.key] = sbn.packageName
                 }
             }
@@ -674,7 +686,7 @@ class NotificationListener : NotificationListenerService() {
         val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
         val isReallyLocked = isScreenLocked || !pm.isInteractive || com.sameerasw.essentials.services.dreams.AmbientDreamService.isDreaming
 
-        if (isReallyLocked && !sbn.isOngoing && sbn.packageName != packageName && !isMediaNotification(sbn)) {
+        if (isReallyLocked && !sbn.isOngoing && sbn.packageName != packageName && !isMediaNotification(sbn) && !isSilentNotification(sbn)) {
             unreadNotifications[sbn.key] = sbn.packageName
             // Trigger refresh if something is playing
             try {

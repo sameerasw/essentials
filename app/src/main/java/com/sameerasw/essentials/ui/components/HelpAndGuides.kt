@@ -82,8 +82,7 @@ fun HelpAndGuidesContent() {
             iconRes = R.drawable.rounded_adb_24,
             description = stringResource(R.string.instruction_section_shizuku_desc),
             links = listOf(
-                stringResource(R.string.label_shizuku_ritaka) to "https://github.com/RikkaApps/Shizuku",
-                stringResource(R.string.label_shizuku_tuozi) to "https://github.com/yangFenTuoZi/Shizuku"
+                stringResource(R.string.perm_shizuku_title) to "https://github.com/thedjchi/Shizuku"
             )
         ),
         InstructionSection(

@@ -10,11 +10,13 @@ import com.sameerasw.essentials.input.InputDeviceScanner
 import com.sameerasw.essentials.input.VolumeLongPressDetector
 import com.sameerasw.essentials.input.VolumePressEvent
 import com.sameerasw.essentials.shizuku.ShizukuPermissionHelper
+import rikka.shizuku.Shizuku
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -30,6 +32,16 @@ class InputEventListenerService : Service() {
     private var detector: VolumeLongPressDetector? = null
     private lateinit var shizukuHelper: ShizukuPermissionHelper
     private var isTorchOn = false
+
+    private val binderReceivedListener = Shizuku.OnBinderReceivedListener {
+        Log.d("InputEventListener", "Shizuku binder received, attempting to start listening")
+        startListening()
+    }
+
+    private val binderDeadListener = Shizuku.OnBinderDeadListener {
+        Log.w("InputEventListener", "Shizuku binder died, stopping listener")
+        stopListening()
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -73,6 +85,9 @@ class InputEventListenerService : Service() {
             startForeground(NOTIFICATION_ID, notification)
         }
 
+        Shizuku.addBinderReceivedListener(binderReceivedListener)
+        Shizuku.addBinderDeadListener(binderDeadListener)
+
         scope?.launch {
             delay(500)
             startListening()
@@ -81,37 +96,35 @@ class InputEventListenerService : Service() {
 
     private fun startListening() {
         scope?.launch {
+            stopListening()
+
             if (!com.sameerasw.essentials.utils.ShellUtils.hasPermission(this@InputEventListenerService)) {
                 Log.e("InputEventListener", "Shell permission not granted")
                 return@launch
             }
 
             val devices = withContext(Dispatchers.IO) {
-                // find device
                 InputDeviceScanner().scanForVolumeDevices()
             }
 
             if (devices.isEmpty()) {
                 Log.e("InputEventListener", "No devices found")
-                // Clear prefs if no device found
                 getSharedPreferences("essentials_prefs", MODE_PRIVATE)
                     .edit().remove("shizuku_detected_device_path").apply()
                 return@launch
             }
 
-            // picked first item
-            // IMPROVEMENT: Iterate and try to find the one that actually emits keys
             val devicePath = devices.first().path
             Log.d("InputEventListener", "Listening on device: $devicePath")
 
-            // Save detected device to prefs for UI
             getSharedPreferences("essentials_prefs", MODE_PRIVATE)
                 .edit().putString("shizuku_detected_device_path", devicePath).apply()
 
-            detector = VolumeLongPressDetector(devicePath, 500)
+            val activeDetector = VolumeLongPressDetector(devicePath, 500)
+            detector = activeDetector
 
             launch {
-                detector?.events?.collect { event ->
+                activeDetector.events.collect { event ->
                     val powerManager =
                         getSystemService(POWER_SERVICE) as android.os.PowerManager
                     val isScreenInteractive = try {
@@ -121,7 +134,6 @@ class InputEventListenerService : Service() {
                     }
                     val isAod = isAodShowing()
 
-                    // Only process volume events if screen is fully off (not interactive AND not AOD)
                     if (isScreenInteractive || isAod) {
                         return@collect
                     }
@@ -144,7 +156,6 @@ class InputEventListenerService : Service() {
                             val isGlobalEnabled =
                                 prefs.getBoolean("flashlight_global_enabled", false)
 
-                            // Only if adjustment is enabled
                             if (isAdjustEnabled || isGlobalEnabled) {
                                 val action =
                                     if (event.direction == com.sameerasw.essentials.input.VolumeDirection.UP)
@@ -207,8 +218,13 @@ class InputEventListenerService : Service() {
                 }
             }
 
-            detector?.startListening(this)
+            activeDetector.startListening(this)
         }
+    }
+
+    private fun stopListening() {
+        detector?.stopListening()
+        detector = null
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -231,7 +247,9 @@ class InputEventListenerService : Service() {
     }
 
     override fun onDestroy() {
-        detector?.stopListening()
+        Shizuku.removeBinderReceivedListener(binderReceivedListener)
+        Shizuku.removeBinderDeadListener(binderDeadListener)
+        stopListening()
         scope?.cancel()
         super.onDestroy()
     }
