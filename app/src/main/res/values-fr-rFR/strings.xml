@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="label_customization">Customization</string>
+    <string name="label_customization">Personnalisation</string>
     <string name="label_beta">BÊTA</string>
-    <string name="shut_up_attempt_shizuku_restart">Attempt Shizuku restart</string>
-    <string name="shut_up_shizuku_restart_warning_title">Shizuku Restart Warning</string>
-    <string name="shut_up_shizuku_restart_warning_message">Since wireless debugging was toggled, Shizuku services might not have started automatically causing freezing to not function. Consider turning on attempt shizuku restart as well</string>
+    <string name="shut_up_attempt_shizuku_restart">Essayer de redémarrer de Shizuku</string>
+    <string name="shut_up_shizuku_restart_warning_title">Avertissement du redémarrage de Shizuku</string>
+    <string name="shut_up_shizuku_restart_warning_message">Comme le débogage sans fil a été activé, les services Shizuku n\'ont peut-être pas démarré automatiquement ce qui empêche la fonctionnalité de gel de fonctionner. Envisagez d\'activer la tentative de redémarrage de Shizuku également</string>
     <string name="accessibility_service_description"><b>Service d\'accessibilité Essentials</b>\n\nCe service est requis pour les fonctionnalités suivantes :\n\n<b>• Réattribution d\'un bouton physique :</b>\nDétecte les appuis sur le bouton volume même si l\'écran est éteint pour déclencher des actions comme allumer la lampe-torche.\n\n<b>• Réglage par appli :</b>\nSurveille les applications actives pour appliquer des profils spécifiques pour le mode éclairage nocturne dynamique, le réglage de couleurs des notifications lumineuses et le verrouillage d\'applis.\n\n<b>• Contrôler l\'écran :</b>\nAutorise l\'application à verrouiller l\'écran (par exemple en utilisant le Double Tap ou les Widgets) et détecter le changement d\'état de l\'écran.\n\n<b>• Sécurité :</b>\nPrévenir les changements non autorisé en détectant le contenu des fenêtres lorsque l\'appareil est verrouillé.\n\n<small>Aucun texte saisi ou de données utilisateur sensibles sont collectées ou transmises.</small></string>
     <string name="freeze_activity_title">Gel d\'applis</string>
     <string name="freeze_activity_subtitle">Désactiver les applis rarement utilisées</string>
@@ -65,18 +65,18 @@
     <string name="like_song_toast_enabled">Afficher un message toast</string>
     <string name="like_song_aod_overlay_title">Afficher en superposition sur le mode Always-on</string>
     <string name="feat_essentials_on_display_title">Essentials On Display</string>
-    <string name="feat_essentials_on_display_desc">Glance at media and info on AOD</string>
-    <string name="essentials_on_display_docked_mode_title">Docked mode</string>
+    <string name="feat_essentials_on_display_desc">Aperçu du média joué et informations sur l\'écran Always-On</string>
+    <string name="essentials_on_display_docked_mode_title">Mode docké</string>
     <string name="essentials_on_display_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
-    <string name="essentials_on_display_respect_notifications_title">Respect new notifications</string>
-    <string name="essentials_on_display_respect_notifications_desc">Briefly disable for new notifications</string>
-    <string name="essentials_on_display_random_shapes_title">Random shapes</string>
+    <string name="essentials_on_display_respect_notifications_title">Respecter les nouvelles notifications</string>
+    <string name="essentials_on_display_respect_notifications_desc">Désactiver brièvement pour les nouvelles notifications</string>
+    <string name="essentials_on_display_random_shapes_title">Formes aléatoires</string>
     <string name="essentials_on_display_random_shapes_desc">Use various Material 3 shapes for the album art</string>
-    <string name="essentials_on_display_album_art_title">Album art</string>
-    <string name="essentials_on_display_clock_title">Clock</string>
-    <string name="essentials_on_display_force_fill_while_charging_title">Always use while charging</string>
-    <string name="essentials_on_display_force_fill_while_charging_desc">Force Fill mode when the device is plugged in regardless of the selected mode</string>
-    <string name="label_size">Size</string>
+    <string name="essentials_on_display_album_art_title">Couverture d\'album</string>
+    <string name="essentials_on_display_clock_title">Horloge</string>
+    <string name="essentials_on_display_force_fill_while_charging_title">Toujours utiliser pendant la recharge</string>
+    <string name="essentials_on_display_force_fill_while_charging_desc">Forcer le mode remplissage quand l\'appareil est branché indépendamment du mode sélectionné</string>
+    <string name="label_size">Taille</string>
     <string name="feat_notification_glance_title">Aperçu des notifications</string>
     <string name="feat_notification_glance_desc">Garder le mode Always-on tant qu\'il y a des notifications</string>
     <string name="notification_glance_same_as_lighting_title">Mêmes applis que les notifications lumineuses</string>
@@ -146,8 +146,8 @@
     <string name="action_import_freeze">Importer la liste d\'applis gelées</string>
     <string name="freeze_pick_apps_title">Choisir les applis à geler</string>
     <string name="freeze_pick_apps_desc">Choisir quelles applis peuvent être gelées</string>
-    <string name="freeze_show_in_launcher_title">Show in launcher</string>
-    <string name="freeze_show_in_launcher_desc">Add a launcher shortcut for easier access</string>
+    <string name="freeze_show_in_launcher_title">Afficher dans le lanceur</string>
+    <string name="freeze_show_in_launcher_desc">Ajouter un raccourci sur le lanceur pour un accès plus facile</string>
     <string name="settings_section_automation">Automatisation</string>
     <string name="freeze_when_locked_title">Geler au verrouillage</string>
     <string name="freeze_delay_title">Délai avant de geler</string>
@@ -235,8 +235,8 @@
     <string name="tile_inactive">Inactif</string>
     <string name="tile_developer_options">Options pour les développeurs </string>
     <string name="about_desc_developer_options">Activez/désactivez facilement les Options pour les développeurs depuis un bloc dans les Réglages rapides. Cela peut réinitialiser certains paramètres développeurs que vous avez modifiés.</string>
-    <string name="tile_refresh_rate">Refresh Rate</string>
-    <string name="about_desc_refresh_rate_tile">Cycle between the system default and preset refresh rates directly from a Quick Settings tile using Shizuku.</string>
+    <string name="tile_refresh_rate">Fréquence de rafraîchissement</string>
+    <string name="about_desc_refresh_rate_tile">Intervertir entre les paramètres par défaut du système et des fréquences de rafraîchissement prédéfinies directement depuis un bloc de réglages rapides en utilisant Shizuku.</string>
     <string name="nfc_tile_label">NFC</string>
     <string name="tile_private_dns">DNS Privé</string>
     <string name="tile_private_dns_auto">Auto</string>
@@ -429,7 +429,7 @@
     <string name="feat_app_lock_desc">Protégez les applis avec la biométrie</string>
     <string name="app_lock_auto_lock_delay_title">Auto lock delay</string>
     <string name="app_lock_auto_lock_delay_desc">After leaving the app</string>
-    <string name="app_lock_auto_lock_delay_none">None</string>
+    <string name="app_lock_auto_lock_delay_none">Aucun</string>
     <string name="app_lock_auto_lock_delay_1min">1 minute</string>
     <string name="app_lock_auto_lock_delay_5min">5 minutes</string>
     <string name="app_lock_auto_lock_delay_10min">10 minutes</string>
