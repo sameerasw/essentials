@@ -39,12 +39,14 @@ class AmbientGlanceHandler(
     private var overlayView: View? = null
     private var volumeStrokeView: VolumeStrokeView? = null
     private var volumeIconView: ImageView? = null
+    private var bottomVolumeProgressView: BottomVolumeProgressView? = null
     private var likeStatusView: ImageView? = null
     private var volumeReceiver: BroadcastReceiver? = null
     private val handler = Handler(Looper.getMainLooper())
 
     private val volumeHideRunnable = Runnable {
         volumeStrokeView?.animate()?.alpha(0f)?.setDuration(500)?.start()
+        bottomVolumeProgressView?.animate()?.alpha(0f)?.setDuration(500)?.start()
     }
 
     private val temporaryHideRunnable = Runnable {
@@ -247,13 +249,16 @@ class AmbientGlanceHandler(
 
                 // Volume key icon update helper
                 if (eventType == EVENT_VOLUME) {
-                    if (volumeKey == 24) volumeIconView?.setImageResource(R.drawable.rounded_volume_up_24)
-                    else if (volumeKey == 25) volumeIconView?.setImageResource(R.drawable.rounded_volume_down_24)
-                    volumeIconView?.animate()?.alpha(1f)?.setDuration(200)?.start()
-                    volumeStrokeView?.setColor(Color.WHITE)
-
-                    // Show and schedule hide
-                    volumeStrokeView?.animate()?.alpha(1f)?.setDuration(300)?.start()
+                    val isFill = getAlbumArtMode() == "fill"
+                    if (isFill) {
+                        bottomVolumeProgressView?.animate()?.alpha(1f)?.setDuration(300)?.start()
+                    } else {
+                        if (volumeKey == 24) volumeIconView?.setImageResource(R.drawable.rounded_volume_up_24)
+                        else if (volumeKey == 25) volumeIconView?.setImageResource(R.drawable.rounded_volume_down_24)
+                        volumeIconView?.animate()?.alpha(1f)?.setDuration(200)?.start()
+                        volumeStrokeView?.setColor(Color.WHITE)
+                        volumeStrokeView?.animate()?.alpha(1f)?.setDuration(300)?.start()
+                    }
                     handler.removeCallbacks(volumeHideRunnable)
                     handler.postDelayed(volumeHideRunnable, 3000)
                 }
@@ -275,7 +280,13 @@ class AmbientGlanceHandler(
                 if (eventType == EVENT_VOLUME) {
                     handler.removeCallbacks(progressUpdateRunnable)
                     handler.removeCallbacks(revertToMusicRunnable)
-                    volumeStrokeView?.updatePercentage(volumePercentage)
+
+                    val isFill = getAlbumArtMode() == "fill"
+                    if (isFill) {
+                        bottomVolumeProgressView?.updatePercentage(volumePercentage)
+                    } else {
+                        volumeStrokeView?.updatePercentage(volumePercentage)
+                    }
 
                     if (isDockedMode) {
                         handler.postDelayed(revertToMusicRunnable, DISPLAY_DURATION)
@@ -789,10 +800,16 @@ class AmbientGlanceHandler(
                                 it.getStreamVolume(android.media.AudioManager.STREAM_MUSIC)
                             val max = it.getStreamMaxVolume(android.media.AudioManager.STREAM_MUSIC)
                             val perc = (current.toFloat() / max.toFloat() * 100).toInt()
-                            volumeStrokeView?.updatePercentage(perc)
 
-                            // Show and schedule hide
-                            volumeStrokeView?.animate()?.alpha(1f)?.setDuration(300)?.start()
+                            val mode = getAlbumArtMode()
+                            if (mode == "fill") {
+                                bottomVolumeProgressView?.updatePercentage(perc)
+                                bottomVolumeProgressView?.animate()?.alpha(1f)?.setDuration(300)?.start()
+                            } else {
+                                volumeStrokeView?.updatePercentage(perc)
+                                volumeStrokeView?.animate()?.alpha(1f)?.setDuration(300)?.start()
+                            }
+
                             handler.removeCallbacks(volumeHideRunnable)
                             handler.postDelayed(volumeHideRunnable, 3000)
                         }
@@ -804,7 +821,6 @@ class AmbientGlanceHandler(
                 IntentFilter("android.media.VOLUME_CHANGED_ACTION")
             )
         }
-
 
         // 4. Notification Icons at bottom
         notificationIconsLayout = android.widget.LinearLayout(context).apply {
@@ -823,6 +839,20 @@ class AmbientGlanceHandler(
             showDividers = android.widget.LinearLayout.SHOW_DIVIDER_MIDDLE
         }
         rootLayout.addView(notificationIconsLayout)
+
+        val isFill = getAlbumArtMode() == "fill"
+        bottomVolumeProgressView = BottomVolumeProgressView(context).apply {
+            layoutParams = FrameLayout.LayoutParams(
+                dpToPx(240f),
+                dpToPx(20f),
+                Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
+            ).apply {
+                bottomMargin = dpToPx(30f)
+            }
+            updatePercentage(initialPerc)
+            alpha = if (eventType == EVENT_VOLUME && isFill) 1f else 0f
+        }
+        rootLayout.addView(bottomVolumeProgressView)
 
         overlayView = rootLayout
         overlayView?.alpha = 0f
@@ -1015,9 +1045,11 @@ class AmbientGlanceHandler(
             centerContainer?.animate()?.cancel()
             textContainer?.animate()?.cancel()
             volumeStrokeView?.cleanup()
+            bottomVolumeProgressView?.cleanup()
 
             overlayView = null
             volumeStrokeView = null
+            bottomVolumeProgressView = null
             volumeIconView = null
             likeStatusView = null
             notificationIconsLayout = null
@@ -1136,6 +1168,93 @@ class AmbientGlanceHandler(
             canvas.translate(offset, offset)
             canvas.drawPath(progressPath, paint)
             canvas.restore()
+        }
+    }
+
+    private inner class BottomVolumeProgressView(context: Context) : View(context) {
+        private var currentPercentage: Float = 0f
+        private var animator: android.animation.ValueAnimator? = null
+        private var waveAnimator: android.animation.ValueAnimator? = null
+        private var phaseShift = 0f
+
+        private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.WHITE
+            style = Paint.Style.STROKE
+            strokeWidth = dpToPx(3f).toFloat()
+            strokeCap = Paint.Cap.ROUND
+        }
+        private val trackPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = 0x33FFFFFF
+            style = Paint.Style.STROKE
+            strokeWidth = dpToPx(3f).toFloat()
+            strokeCap = Paint.Cap.ROUND
+        }
+
+        private val path = Path()
+        private val trackPath = Path()
+
+        init {
+            waveAnimator = android.animation.ValueAnimator.ofFloat(0f, (2 * Math.PI).toFloat()).apply {
+                duration = 1500
+                repeatCount = android.animation.ValueAnimator.INFINITE
+                interpolator = android.view.animation.LinearInterpolator()
+                addUpdateListener {
+                    phaseShift = it.animatedValue as Float
+                    invalidate()
+                }
+                start()
+            }
+        }
+
+        fun updatePercentage(newPercentage: Int) {
+            animator?.cancel()
+            animator = android.animation.ValueAnimator.ofFloat(currentPercentage, newPercentage.toFloat()).apply {
+                duration = 300
+                interpolator = android.view.animation.DecelerateInterpolator()
+                addUpdateListener {
+                    currentPercentage = it.animatedValue as Float
+                    invalidate()
+                }
+                start()
+            }
+        }
+
+        fun cleanup() {
+            animator?.cancel()
+            waveAnimator?.cancel()
+        }
+
+        override fun onDraw(canvas: Canvas) {
+            super.onDraw(canvas)
+            val w = width.toFloat()
+            val h = height.toFloat()
+            val centerY = h / 2f
+
+            // Track (straight line)
+            trackPath.reset()
+            trackPath.moveTo(0f, centerY)
+            trackPath.lineTo(w, centerY)
+            canvas.drawPath(trackPath, trackPaint)
+
+            // Progress Wavy Line
+            val progressWidth = w * (currentPercentage / 100f)
+            if (progressWidth > 0f) {
+                path.reset()
+                path.moveTo(0f, centerY)
+
+                val waveLength = dpToPx(24f).toFloat()
+                val amplitude = dpToPx(3f).toFloat()
+                val frequency = (2 * Math.PI) / waveLength
+
+                var x = 0f
+                val step = dpToPx(1f).toFloat()
+                while (x <= progressWidth) {
+                    val y = centerY + amplitude * kotlin.math.sin(frequency * x - phaseShift).toFloat()
+                    path.lineTo(x, y)
+                    x += step
+                }
+                canvas.drawPath(path, paint)
+            }
         }
     }
 }
