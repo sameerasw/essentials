@@ -8,7 +8,7 @@
     <string name="accessibility_service_description"><b>Essentials 접근성 서비스</b>\n\n이 서비스는 다음 고급기능을 사용하기 위해 필요합니다:\n\n<b>• 물리 버튼 매핑:</b>\n화면이 꺼져있을 때도 음량 버튼 입력을 감지하여 손전등 실행 등의 동작을 실행합니다.\n\n<b>• 앱별 개별 설정:</b>\n현재 실행중인 앱을 감지하여 다이나믹 야간모드, 알림 조명 색상, 앱 잠금 등의 전용 프로필을 적용합니다.\n\n<b>• 화면 제어:</b>\n화면을 두 번 두드리거나 위젯을 통한 화면 잠금을 지원하고, 화면 상태의 변화를 감지합니다.\n\n<b>• 보안:</b>\n기기가 잠겨 있을 때 화면 컨텐츠를 감지하여 승인되지 않은 변경을 방지합니다.\n\n<small>입력 텍스트나 민감한 사용자 데이터는 수집하거나 전송하지 않습니다.</small></string>
     <string name="freeze_activity_title">앱 정지하기</string>
     <string name="freeze_activity_subtitle">사용하지 않는 앱 비활성화</string>
-    <string name="freeze_shortcut_short_label">Frozen Apps</string>
+    <string name="freeze_shortcut_short_label">앱 정지하기</string>
     <string name="freeze_shortcut_long_label">앱 정지 열기</string>
     <string name="frozen_app_shortcut_label">정지된 앱</string>
     <string name="screen_off_widget_label">빈 화면 꺼짐 위젯</string>
