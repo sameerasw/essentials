@@ -80,8 +80,7 @@ fun AddRepoBottomSheet(
     var showAppPicker by remember { mutableStateOf(false) }
 
     // APK selection state
-    // APK selection state
-    var selectedApkName by remember { mutableStateOf("Auto") }
+    val selectedApkName by viewModel.selectedApkName
 
     // Search haptic feedback
     LaunchedEffect(isSearching) {
@@ -397,7 +396,7 @@ fun AddRepoBottomSheet(
                                     Surface(
                                         onClick = {
                                             HapticUtil.performUIHaptic(view)
-                                            selectedApkName = option
+                                            viewModel.setSelectedApkName(option)
                                         },
                                         color = MaterialTheme.colorScheme.surfaceContainer
                                     ) {
@@ -418,7 +417,7 @@ fun AddRepoBottomSheet(
                                                 selected = (selectedApkName == option),
                                                 onClick = {
                                                     HapticUtil.performUIHaptic(view)
-                                                    selectedApkName = option
+                                                    viewModel.setSelectedApkName(option)
                                                 }
                                             )
                                         }

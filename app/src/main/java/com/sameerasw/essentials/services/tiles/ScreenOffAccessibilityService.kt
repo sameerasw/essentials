@@ -15,6 +15,8 @@ import android.os.Looper
 import android.os.Vibrator
 import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
+import android.media.session.MediaSessionManager
+import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.services.InputEventListenerService
@@ -280,6 +282,19 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
             if (com.sameerasw.essentials.utils.AppUtil.isAndroidAutoRunning(this)) {
                 return
             }
+
+            val mediaSessionManager = getSystemService(Context.MEDIA_SESSION_SERVICE) as MediaSessionManager
+            val componentName = android.content.ComponentName(this, NotificationListener::class.java)
+            val sessions = try {
+                mediaSessionManager.getActiveSessions(componentName)
+            } catch (e: Exception) {
+                emptyList()
+            }
+            val isPlaying = sessions.any { it.playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING }
+            if (!isPlaying) {
+                return
+            }
+
             val title = prefs.getString("current_media_title", null)
             val artist = prefs.getString("current_media_artist", null)
 

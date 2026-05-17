@@ -1159,12 +1159,14 @@ class SettingsRepository(private val context: Context) {
 
                 if (fixed <= 0f && min <= 0f && peak <= 0f) {
                     com.sameerasw.essentials.utils.RefreshRateUtils.resetRefreshRate(
+                        context,
                         shouldRestoreInfinityPeakOnRefreshRateReset()
                     )
                 } else if (mode == com.sameerasw.essentials.utils.RefreshRateUtils.MODE_RANGE && min > 0f && peak > 0f) {
-                    com.sameerasw.essentials.utils.RefreshRateUtils.applyRangeRefreshRate(min, peak)
+                    com.sameerasw.essentials.utils.RefreshRateUtils.applyRangeRefreshRate(context, min, peak)
                 } else if (fixed > 0f || peak > 0f) {
                     com.sameerasw.essentials.utils.RefreshRateUtils.applyFixedRefreshRate(
+                        context,
                         if (fixed > 0f) fixed else peak
                     )
                 }

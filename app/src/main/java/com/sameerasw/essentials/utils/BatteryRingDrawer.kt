@@ -63,17 +63,20 @@ object BatteryRingDrawer {
 
         val topGapDegrees = if (hasStatusIcon) 60f else 0f
         val capAngleDegrees = ((strokeWidth / 2f) / radius) * (180f / PI.toFloat())
+
+        if (clampedLevel >= 100 && !hasStatusIcon) {
+            canvas.drawArc(rect, -90f, 360f, false, paint)
+            return bitmap
+        }
+
+        val segmentGapDegrees = 8f
         val startAngle = -90f + (topGapDegrees / 2)
         val totalAvailableSweep = 360f - topGapDegrees
-        val progressSweepRaw = (clampedLevel / 100f) * totalAvailableSweep
-        val segmentGapDegrees = 8f
 
-        val visualStart = startAngle
-        val visualEnd = if (clampedLevel >= 100) {
-            startAngle + totalAvailableSweep
-        } else {
-            (startAngle + progressSweepRaw - (segmentGapDegrees / 2)).coerceAtLeast(startAngle)
-        }
+        val topPadding = if (!hasStatusIcon) segmentGapDegrees / 2f else 0f
+        val visualStart = startAngle + topPadding
+        val progressSweepRaw = (clampedLevel / 100f) * totalAvailableSweep
+        val visualEnd = (startAngle + progressSweepRaw - (segmentGapDegrees / 2)).coerceAtLeast(visualStart)
 
         val visualSpan = visualEnd - visualStart
         if (visualSpan > (capAngleDegrees * 2)) {
@@ -125,7 +128,9 @@ object BatteryRingDrawer {
 
         val visualStart = (startAngle + progressSweepRaw + (segmentGapDegrees / 2))
             .coerceAtMost(startAngle + totalAvailableSweep)
-        val visualEnd = startAngle + totalAvailableSweep
+        
+        val topPadding = if (!hasStatusIcon) segmentGapDegrees / 2f else 0f
+        val visualEnd = startAngle + totalAvailableSweep - topPadding
 
         val visualSpan = visualEnd - visualStart
         if (visualSpan > (trackCapAngleDegrees * 2)) {
