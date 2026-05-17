@@ -35,8 +35,18 @@ class NotificationListener : NotificationListenerService() {
         private var latestArtBitmap: Bitmap? = null
         private var latestArtHash: Long = -1L
 
+        var instance: NotificationListener? = null
+
         fun getCachedBitmap(hash: Long): Bitmap? {
             return if (latestArtHash == hash) latestArtBitmap else null
+        }
+
+        fun getUnreadPackages(): List<String> {
+            return instance?.unreadNotifications?.values?.distinct()?.toList() ?: emptyList()
+        }
+
+        fun clearUnreadNotifications() {
+            instance?.unreadNotifications?.clear()
         }
     }
 
@@ -49,9 +59,11 @@ class NotificationListener : NotificationListenerService() {
             if (intent?.action == ACTION_LIKE_CURRENT_SONG) {
                 handleLikeSongAction()
             } else if (intent?.action == ACTION_REQUEST_AMBIENT_GLANCE) {
+                populateActiveUnreadNotifications()
                 handleRequestAmbientGlance()
             } else if (intent?.action == Intent.ACTION_SCREEN_OFF) {
                 isScreenLocked = true
+                populateActiveUnreadNotifications()
             } else if (intent?.action == Intent.ACTION_USER_PRESENT) {
                 isScreenLocked = false
                 unreadNotifications.clear()
@@ -59,8 +71,34 @@ class NotificationListener : NotificationListenerService() {
         }
     }
 
+    private fun isMediaNotification(sbn: StatusBarNotification): Boolean {
+        val category = sbn.notification.category
+        if (category == Notification.CATEGORY_TRANSPORT) return true
+        
+        val template = sbn.notification.extras.getString(Notification.EXTRA_TEMPLATE)
+        if (template != null && (template.contains("MediaStyle") || template.contains("DecoratedMediaCustomViewStyle"))) {
+            return true
+        }
+        return false
+    }
+
+    private fun populateActiveUnreadNotifications() {
+        unreadNotifications.clear()
+        try {
+            activeNotifications?.forEach { sbn ->
+                if (!sbn.isOngoing && sbn.packageName != packageName && !isMediaNotification(sbn)) {
+                    unreadNotifications[sbn.key] = sbn.packageName
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     override fun onListenerConnected() {
         super.onListenerConnected()
+        instance = this
+        populateActiveUnreadNotifications()
         try {
             val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
             isScreenLocked = !pm.isInteractive
@@ -246,6 +284,7 @@ class NotificationListener : NotificationListenerService() {
 
     override fun onDestroy() {
         super.onDestroy()
+        instance = null
         try {
             unregisterReceiver(likeActionReceiver)
         } catch (_: Exception) {
@@ -538,7 +577,7 @@ class NotificationListener : NotificationListenerService() {
                         putExtra("is_already_liked", isAlreadyLiked)
                         putExtra("is_docked_mode", isDockedMode)
                         putExtra("package_name", activeSession.packageName)
-                        putStringArrayListExtra("unread_packages", ArrayList(unreadNotifications.values.distinct().toList()))
+                        putStringArrayListExtra("unread_packages", ArrayList(getUnreadPackages()))
                         setPackage(packageName)
                     }
                     sendBroadcast(intent)
@@ -633,9 +672,9 @@ class NotificationListener : NotificationListenerService() {
         handleRespectNotifications(sbn)
         
         val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
-        val isReallyLocked = isScreenLocked || !pm.isInteractive
+        val isReallyLocked = isScreenLocked || !pm.isInteractive || com.sameerasw.essentials.services.dreams.AmbientDreamService.isDreaming
 
-        if (isReallyLocked && !sbn.isOngoing && sbn.packageName != packageName) {
+        if (isReallyLocked && !sbn.isOngoing && sbn.packageName != packageName && !isMediaNotification(sbn)) {
             unreadNotifications[sbn.key] = sbn.packageName
             // Trigger refresh if something is playing
             try {

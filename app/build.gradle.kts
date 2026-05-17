@@ -13,7 +13,10 @@ kotlin {
         optIn.addAll(
             "androidx.compose.material3.ExperimentalMaterial3Api",
             "androidx.compose.material3.ExperimentalMaterial3ExpressiveApi",
-            "androidx.compose.foundation.ExperimentalFoundationApi"
+            "androidx.compose.foundation.ExperimentalFoundationApi",
+            "androidx.compose.ui.text.ExperimentalTextApi",
+            "androidx.compose.foundation.ExperimentalFoundationApi",
+            "androidx.compose.foundation.layout.ExperimentalLayoutApi"
         )
     }
 }

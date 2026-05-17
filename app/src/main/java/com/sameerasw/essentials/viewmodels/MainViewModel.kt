@@ -20,6 +20,10 @@ import android.provider.Settings
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -206,6 +210,8 @@ class MainViewModel : ViewModel() {
     val searchQuery = mutableStateOf("")
     val searchResults = mutableStateOf<List<SearchableItem>>(emptyList())
     val isSearching = mutableStateOf(false)
+    val recentSearches = mutableStateOf<List<SearchableItem>>(emptyList())
+    private var searchJob: Job? = null
 
     // Update state
     val updateInfo = mutableStateOf<UpdateInfo?>(null)
@@ -760,6 +766,7 @@ class MainViewModel : ViewModel() {
             settingsRepository.getLockScreenClockSelectedColorId()
         lockScreenClockSeedColor.intValue = settingsRepository.getLockScreenClockSeedColor()
         loadShutUpConfigs()
+        recentSearches.value = settingsRepository.getRecentSearches()
 
         if (isHideGestureBarEnabled.value) {
             applyHideGestureBar(context, true)
@@ -1295,6 +1302,8 @@ class MainViewModel : ViewModel() {
 
     fun onSearchQueryChanged(query: String, context: Context) {
         searchQuery.value = query
+        searchJob?.cancel()
+
         if (query.isBlank()) {
             searchResults.value = emptyList()
             isSearching.value = false
@@ -1302,8 +1311,30 @@ class MainViewModel : ViewModel() {
         }
 
         isSearching.value = true
-        searchResults.value = SearchRegistry.search(context, query)
-        isSearching.value = false
+        searchJob = viewModelScope.launch(Dispatchers.Default) {
+            delay(300)
+            val results = SearchRegistry.search(context, query)
+            withContext(Dispatchers.Main) {
+                searchResults.value = results
+                isSearching.value = false
+            }
+        }
+    }
+
+    fun addRecentSearch(item: SearchableItem) {
+        val current = recentSearches.value.toMutableList()
+        // Remove existing to move to top
+        current.removeAll { it.title == item.title && it.featureKey == item.featureKey && it.targetSettingHighlightKey == item.targetSettingHighlightKey }
+        current.add(0, item)
+        // Limit to 10
+        val limited = current.take(10)
+        recentSearches.value = limited
+        settingsRepository.saveRecentSearches(limited)
+    }
+
+    fun clearRecentSearches() {
+        recentSearches.value = emptyList()
+        settingsRepository.saveRecentSearches(emptyList())
     }
 
     fun togglePinFeature(featureId: String) {
