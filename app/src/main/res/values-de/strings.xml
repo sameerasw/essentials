@@ -855,6 +855,9 @@
     <string name="label_shizuku_ritaka">Shizuku (Rikka)</string>
     <string name="label_shizuku_tuozi">Shizuku (TuoZi)</string>
     <string name="label_search_content_description">Suche</string>
+    <string name="label_recent_searches">Recent Searches</string>
+    <string name="label_no_recent_searches">No recent searches</string>
+    <string name="label_clear_all">Clear all</string>
     <string name="perm_device_admin_explanation">Benötigt, um das Gerät bei unbefugten Netzwerkänderungen auf dem Sperrbildschirm zu sperren.</string>
     <string name="biometric_subtitle_access_settings">Authentifiziere dich, um auf die Einstellungen zuzugreifen</string>
     <string name="biometric_title_settings_format">%1$s Einstellungen</string>

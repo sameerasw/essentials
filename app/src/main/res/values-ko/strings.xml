@@ -855,6 +855,9 @@
     <string name="label_shizuku_ritaka">시즈쿠(릿카)</string>
     <string name="label_shizuku_tuozi">시즈쿠(TuoZi)</string>
     <string name="label_search_content_description">찾다</string>
+    <string name="label_recent_searches">Recent Searches</string>
+    <string name="label_no_recent_searches">No recent searches</string>
+    <string name="label_clear_all">Clear all</string>
     <string name="perm_device_admin_explanation">잠금 화면에서 승인되지 않은 네트워크 변경을 시도하는 경우 장치를 강제 잠금하는 데 필요합니다.</string>
     <string name="biometric_subtitle_access_settings">설정에 액세스하려면 인증하세요.</string>
     <string name="biometric_title_settings_format">%1$s 설정</string>

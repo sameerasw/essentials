@@ -855,6 +855,9 @@
     <string name="label_shizuku_ritaka">Shizuku (Rikka)</string>
     <string name="label_shizuku_tuozi">Shizuku (TuoZi)</string>
     <string name="label_search_content_description">検索</string>
+    <string name="label_recent_searches">Recent Searches</string>
+    <string name="label_no_recent_searches">No recent searches</string>
+    <string name="label_clear_all">Clear all</string>
     <string name="perm_device_admin_explanation">ロック画面で不正なネットワーク変更が試みられた場合、デバイスをハードロックする必要があります。</string>
     <string name="biometric_subtitle_access_settings">設定にアクセスするための認証</string>
     <string name="biometric_title_settings_format">%1$s設定</string>
