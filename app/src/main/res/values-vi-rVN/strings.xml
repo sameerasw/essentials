@@ -1,0 +1,1457 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="label_customization">Customization</string>
+    <string name="label_beta">THỬ NGHIỆM</string>
+    <string name="shut_up_attempt_shizuku_restart">Attempt Shizuku restart</string>
+    <string name="shut_up_shizuku_restart_warning_title">Shizuku Restart Warning</string>
+    <string name="shut_up_shizuku_restart_warning_message">Since wireless debugging was toggled, Shizuku services might not have started automatically causing freezing to not function. Consider turning on attempt shizuku restart as well</string>
+    <string name="accessibility_service_description"><b>Essentials Accessibility Service</b>\n\nThis service is required for the following advanced features:\n\n<b>• Physical Button Remapping:</b>\nDetects volume button presses even when the screen is off to trigger actions like the Flashlight.\n\n<b>• Per-App Settings:</b>\nMonitors the currently active app to apply specific profiles for Dynamic Night Light, Notification Lighting Colors, and App Lock.\n\n<b>• Screen Control:</b>\nAllows the app to lock the screen (e.g. via Double Tap or Widgets) and detect screen state changes.\n\n<b>• Security:</b>\nPrevents unauthorized changes by detecting window content when the device is locked.\n\n<small>No input text or sensitive user data is collected or transmitted.</small></string>
+    <string name="freeze_activity_title">Đóng băng ứng dụng</string>
+    <string name="freeze_activity_subtitle">Tắt các ứng dụng ít sử dụng</string>
+    <string name="freeze_shortcut_short_label">Đóng băng ứng dụng</string>
+    <string name="freeze_shortcut_long_label">Mở ứng dụng đóng băng</string>
+    <string name="frozen_app_shortcut_label">Ứng dụng đông lạnh</string>
+    <string name="screen_off_widget_label">Tiện ích tắt màn hình trống</string>
+    <string name="app_freezing_tile_label">Đóng băng ứng dụng</string>
+    <string name="flashlight_pulse_tile_label">Xung đèn pin</string>
+    <string name="check_pre_releases_label">Kiểm tra các bản phát hành trước</string>
+    <string name="check_pre_releases_desc">Có thể không ổn định</string>
+    <string name="label_default_tab">Default tab</string>
+    <!-- App Lock -->
+    <string name="settings_section_security">Bảo vệ</string>
+    <string name="app_lock_enable_title">Bật khóa ứng dụng</string>
+    <string name="app_lock_auth_title">Bảo mật khóa ứng dụng</string>
+    <string name="app_lock_enable_auth_subtitle">Xác thực để bật khóa ứng dụng</string>
+    <string name="app_lock_disable_auth_subtitle">Xác thực để tắt khóa ứng dụng</string>
+    <string name="app_lock_select_apps_title">Chọn ứng dụng bị khóa</string>
+    <string name="app_lock_select_apps_desc">Chọn ứng dụng nào yêu cầu xác thực</string>
+    <string name="app_lock_description">Bảo mật ứng dụng của bạn bằng xác thực sinh trắc học. Các ứng dụng bị khóa sẽ yêu cầu xác thực khi khởi chạy, Luôn mở khóa cho đến khi màn hình tắt.</string>
+    <string name="app_lock_warning">Xin lưu ý rằng đây không phải là giải pháp mạnh mẽ vì đây chỉ là ứng dụng của bên thứ 3. Nếu bạn cần bảo mật mạnh mẽ, hãy cân nhắc sử dụng Không gian riêng tư hoặc các tính năng tương tự khác.</string>
+    <string name="app_lock_biometric_note">Một lưu ý khác, lời nhắc xác thực sinh trắc học chỉ cho phép bạn sử dụng các phương thức lớp bảo mật MẠNH. Các phương thức bảo mật mở khóa bằng khuôn mặt ở lớp YẾU trong các thiết bị như Pixel 7 sẽ chỉ có thể sử dụng các phương thức xác thực MẠNH khác có sẵn khác như dấu vân tay hoặc mã pin.</string>
+    <string name="setting_use_usage_access_title">Use usage access</string>
+    <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
+    <!-- Button Remap -->
+    <string name="button_remap_enable_title">Bật bản đồ lại nút</string>
+    <string name="button_remap_use_shizuku_title">Sử dụng Shizuku hoặc Root hoặc Root</string>
+    <string name="button_remap_use_shizuku_desc">Hoạt động khi tắt màn hình (Được khuyến nghị)</string>
+    <string name="shizuku_not_running_toast">Shizuku không chạy</string>
+    <string name="shizuku_detected_prefix">Đã phát hiện %1$s</string>
+    <string name="shizuku_status_prefix">Trạng thái: %1$s</string>
+    <string name="shizuku_open_button">Mở Shizuku</string>
+    <string name="settings_section_flashlight">Đèn pin</string>
+    <string name="flashlight_options_title">Tùy chọn đèn pin</string>
+    <string name="flashlight_options_desc">Điều chỉnh độ mờ và các cài đặt khác</string>
+    <string name="setting_pitch_black_theme_title">Chủ đề đen tuyền</string>
+    <string name="setting_pitch_black_theme_desc">Sử dụng nền đen thuần túy ở chế độ tối</string>
+    <string name="settings_section_haptic">Phản hồi xúc giác</string>
+    <string name="button_remap_section_long_press">Nhấn giữ lại bản đồ</string>
+    <string name="screen_off">Tắt màn hình</string>
+    <string name="screen_on">Bật màn hình</string>
+    <string name="volume_up">Tăng âm lượng</string>
+    <string name="volume_down">Giảm âm lượng</string>
+    <string name="action_toggle_flashlight">Bật tắt đèn pin</string>
+    <string name="action_media_play_pause">Phát/tạm dừng phương tiện</string>
+    <string name="action_media_next">Phương tiện tiếp theo</string>
+    <string name="action_media_previous">Phương tiện trước đó</string>
+    <string name="action_toggle_vibrate">Chuyển đổi chế độ rung</string>
+    <string name="action_toggle_mute">Chuyển đổi tắt tiếng</string>
+    <string name="action_ai_assistant">Trợ lý AI</string>
+    <string name="action_take_screenshot">Chụp ảnh màn hình</string>
+    <string name="action_cycle_sound_modes">Chế độ âm thanh chu kỳ</string>
+    <string name="action_circle_to_search">Circle to Search</string>
+    <string name="action_like_song">Giống như bài hát hiện tại</string>
+    <string name="like_song_settings_title">Thích cài đặt bài hát</string>
+    <string name="like_song_settings_desc">Tính năng này yêu cầu quyền truy cập thông báo để phát hiện phương tiện hiện đang phát và kích hoạt hành động tương tự. Vui lòng kích hoạt nó bên dưới.</string>
+    <string name="like_song_toast_enabled">Hiển thị tin nhắn bánh mì nướng</string>
+    <string name="like_song_aod_overlay_title">Hiển thị lớp phủ trên AOD</string>
+    <string name="feat_essentials_on_display_title">Essentials On Display</string>
+    <string name="feat_essentials_on_display_desc">Glance at media and info on AOD</string>
+    <string name="essentials_on_display_docked_mode_title">Docked mode</string>
+    <string name="essentials_on_display_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
+    <string name="essentials_on_display_respect_notifications_title">Respect new notifications</string>
+    <string name="essentials_on_display_respect_notifications_desc">Briefly disable for new notifications</string>
+    <string name="essentials_on_display_random_shapes_title">Random shapes</string>
+    <string name="essentials_on_display_random_shapes_desc">Use various Material 3 shapes for the album art</string>
+    <string name="essentials_on_display_album_art_title">Album art</string>
+    <string name="essentials_on_display_clock_title">Clock</string>
+    <string name="essentials_on_display_force_fill_while_charging_title">Always use while charging</string>
+    <string name="essentials_on_display_force_fill_while_charging_desc">Force Fill mode when the device is plugged in regardless of the selected mode</string>
+    <string name="label_size">Size</string>
+    <string name="feat_notification_glance_title">Thông báo lướt qua</string>
+    <string name="feat_notification_glance_desc">Luôn bật AOD trong khi thông báo đang chờ xử lý</string>
+    <string name="notification_glance_same_as_lighting_title">Ứng dụng tương tự như đèn thông báo</string>
+    <string name="notification_glance_desc">Tính năng này sẽ tự động bật Luôn hiển thị khi có thông báo đến từ ứng dụng đã chọn và tắt tính năng này sau khi tất cả thông báo trùng khớp bị loại bỏ. Chọn ứng dụng hoặc sử dụng lựa chọn tương tự như đèn thông báo.</string>
+    <string name="grant_notification_access">Cấp quyền truy cập thông báo</string>
+    <string name="action_toggle_media_volume">Chuyển đổi âm lượng phương tiện</string>
+    <string name="button_remap_screen_off_hint">Khi màn hình tắt, nhấn và giữ nút đã chọn để kích hoạt hành động được chỉ định. Trên thiết bị Pixel, hành động này chỉ được kích hoạt nếu AOD được bật do giới hạn hệ thống.</string>
+    <string name="button_remap_screen_on_hint">Khi màn hình bật, nhấn và giữ nút đã chọn để kích hoạt hành động được chỉ định.</string>
+    <string name="flashlight_intensity_title">Cường độ đèn pin</string>
+    <string name="flashlight_fade_title">Dần dần trong và ngoài</string>
+    <string name="flashlight_fade_desc">Chuyển đổi đèn pin một cách mượt mà</string>
+    <string name="flashlight_global_title">Kiểm soát toàn cầu</string>
+    <string name="flashlight_global_desc">Đèn pin mờ dần trên toàn cầu</string>
+    <string name="flashlight_adjust_intensity_title">Điều chỉnh cường độ</string>
+    <string name="flashlight_adjust_intensity_desc">Âm lượng + - điều chỉnh cường độ đèn pin</string>
+    <string name="flashlight_live_update_title">Cập nhật trực tiếp</string>
+    <string name="flashlight_live_update_desc">Hiển thị độ sáng trên thanh trạng thái</string>
+    <string name="settings_section_other">Khác</string>
+    <string name="flashlight_always_off_title">Luôn tắt đèn pin</string>
+    <string name="flashlight_always_off_desc">Ngay cả khi màn hình đang bật</string>
+    <string name="content_desc_settings">Cài đặt</string>
+    <!-- Caffeinate / Permissions -->
+    <string name="permission_show_notification_title">Hiển thị thông báo</string>
+    <string name="permission_post_notifications_title">Đăng thông báo</string>
+    <string name="permission_post_notifications_desc">Cho phép ứng dụng hiển thị thông báo</string>
+    <string name="permission_grant_action">Cấp quyền</string>
+    <string name="caffeinate_notification_title">Caffein hoạt tính</string>
+    <string name="caffeinate_active">Tích cực</string>
+    <string name="caffeinate_notification_desc">Màn hình đang được giữ ở trạng thái tỉnh táo</string>
+    <string name="caffeinate_battery_optimization_title">Bỏ qua tối ưu hóa pin</string>
+    <string name="caffeinate_abort_screen_off_title">Hủy bỏ khi tắt màn hình</string>
+    <string name="caffeinate_skip_countdown_title">Bỏ qua đếm ngược</string>
+    <string name="caffeinate_skip_countdown_desc">Bắt đầu sử dụng Caffeine ngay lập tức.</string>
+    <string name="caffeinate_timeout_presets_title">Cài đặt trước thời gian chờ</string>
+    <string name="caffeinate_timeout_presets_desc">Chọn thời lượng có sẵn cho ô QS</string>
+    <string name="caffeinate_timeout_5m">5m</string>
+    <string name="caffeinate_timeout_10m">10m</string>
+    <string name="caffeinate_timeout_30m">30m</string>
+    <string name="perm_notif_policy_title">Quyền truy cập Không làm phiền</string>
+    <string name="perm_notif_policy_desc">Cần thiết để chuyển đổi giữa các chế độ âm thanh, rung và tắt tiếng</string>
+    <string name="caffeinate_timeout_1h">1 giờ</string>
+    <string name="caffeinate_timeout_infinity">∞</string>
+    <string name="caffeinate_starting_in">Bắt đầu từ %1$ds…</string>
+    <string name="caffeinate_remaining">%1$s còn lại</string>
+    <string name="caffeinate_live_channel_desc">Thông báo liên tục cho Caffeineate</string>
+    <!-- Dynamic Night Light -->
+    <string name="dynamic_night_light_enable_title">Bật đèn ngủ động</string>
+    <string name="dynamic_night_light_apps_section">Ứng dụng tắt đèn ngủ</string>
+    <string name="action_select_apps">Chọn ứng dụng</string>
+    <!-- App Freezing -->
+    <string name="settings_section_app_control">Kiểm soát ứng dụng</string>
+    <string name="action_freeze">Đông cứng</string>
+    <string name="action_unfreeze">giải phóng</string>
+    <string name="action_remove">Remove</string>
+    <string name="action_create_shortcut">Create shortcut</string>
+    <string name="action_app_info">App info</string>
+    <string name="freeze_mode_description_freeze_title">What is Freeze?</string>
+    <string name="freeze_mode_description_freeze_body">App freezing disables the app\'s launch activity which removes it from the app list and updates. It will prevent the app from starting at all until it\'s unfrozen which saves resources but you will need to unfreeze from here or manually re-enable.</string>
+    <string name="freeze_mode_description_freeze_warning">DO NOT FREEZE COMMUNICATION APPS</string>
+    <string name="freeze_mode_description_suspend_title">What is Suspend?</string>
+    <string name="freeze_mode_description_suspend_body">Suspending an app used to pause the app activity and prevent background executions but with recent Android changes, it only pauses the notifications from appearing and that\'s pretty much it. But does allows you to unpause from the launcher app list as they will be still available as grayscale paused app icons.</string>
+    <string name="freeze_mode_description_suspend_footer">Should work the same as the native app pause/ focus mode features.</string>
+    <string name="content_desc_more_options">Nhiều lựa chọn hơn</string>
+    <string name="action_freeze_all">Đóng băng tất cả ứng dụng</string>
+    <string name="action_unfreeze_all">Giải phóng tất cả ứng dụng</string>
+    <string name="action_export_freeze">Xuất danh sách ứng dụng bị đóng băng</string>
+    <string name="action_import_freeze">Nhập danh sách ứng dụng bị đóng băng</string>
+    <string name="freeze_pick_apps_title">Chọn ứng dụng để đóng băng</string>
+    <string name="freeze_pick_apps_desc">Chọn ứng dụng nào có thể bị đóng băng</string>
+    <string name="freeze_show_in_launcher_title">Show in launcher</string>
+    <string name="freeze_show_in_launcher_desc">Add a launcher shortcut for easier access</string>
+    <string name="settings_section_automation">Tự động hóa</string>
+    <string name="freeze_when_locked_title">Đóng băng khi bị khóa</string>
+    <string name="freeze_delay_title">Độ trễ đóng băng</string>
+    <string name="delay_immediate">ngay lập tức</string>
+    <string name="delay_1m">1m</string>
+    <string name="delay_5m">5m</string>
+    <string name="delay_15m">15m</string>
+    <string name="delay_manual">Thủ công</string>
+    <string name="freeze_auto_freeze_section">Tự động đóng băng ứng dụng</string>
+    <string name="freeze_automation_hint">Đóng băng các ứng dụng đã chọn khi thiết bị khóa. Chọn độ trễ để tránh ứng dụng bị treo nếu bạn mở khóa màn hình ngay sau khi tắt.</string>
+    <string name="freeze_warning">Việc đóng băng các ứng dụng hệ thống có thể nguy hiểm và có thể gây ra hành vi không mong muốn.</string>
+    <string name="action_enable_in_settings">Bật trong Cài đặt</string>
+    <string name="freeze_dont_freeze_active_apps_title">Không\'không đóng băng các ứng dụng đang hoạt động</string>
+    <string name="perm_usage_stats_title">Thống kê sử dụng</string>
+    <string name="perm_usage_stats_desc">Cần thiết để phát hiện ứng dụng nào hiện đang ở nền trước để tránh đóng băng chúng</string>
+    <string name="perm_usage_stats_desc_app_lock">Required to detect foreground apps for App Lock features when accessibility is not used.</string>
+    <string name="perm_notif_listener_desc_freeze">Cần thiết để phát hiện phương tiện đang phát và thông báo đang hoạt động để tránh đóng băng chúng</string>
+    <string name="freeze_mode_title">Freeze mode</string>
+    <string name="freeze_mode_freeze">Freezing</string>
+    <string name="freeze_mode_suspend">App suspension</string>
+    <string name="freeze_mode_warning_desc">Can not switch mode while apps are frozen. Please unfreeze all and try again.</string>
+    <!-- Notification Lighting -->
+    <string name="notification_lighting_screen_off_title">Chỉ hiển thị khi tắt màn hình</string>
+    <string name="notification_lighting_skip_silent_title">Bỏ qua thông báo im lặng</string>
+    <string name="notification_lighting_skip_persistent_title">Bỏ qua thông báo liên tục</string>
+    <string name="settings_section_flashlight_pulse">Xung đèn pin</string>
+    <string name="flashlight_pulse_title">Xung đèn pin</string>
+    <string name="flashlight_pulse_facedown_title">Chỉ khi úp mặt xuống</string>
+    <string name="flashlight_pulse_same_as_lighting_title">Ứng dụng tương tự như đèn thông báo</string>
+    <string name="flashlight_pulse_max_brightness">Max brightness</string>
+    <string name="flashlight_pulse_preview">Preview pulse</string>
+    <string name="settings_section_style">Phong cách</string>
+    <string name="notification_lighting_stroke_adjustment_section">Điều chỉnh hành trình</string>
+    <string name="notification_lighting_corner_radius_title">Bán kính góc</string>
+    <string name="notification_lighting_stroke_thickness_title">Độ dày nét</string>
+    <string name="notification_lighting_glow_adjustment_section">Điều chỉnh ánh sáng</string>
+    <string name="notification_lighting_glow_spread_title">Ánh sáng lan tỏa</string>
+    <string name="notification_lighting_placement_section">Vị trí</string>
+    <string name="notification_lighting_h_pos_title">Vị trí nằm ngang</string>
+    <string name="notification_lighting_v_pos_title">Vị trí dọc</string>
+    <string name="notification_lighting_indicator_adjustment_section">Điều chỉnh chỉ báo</string>
+    <string name="notification_lighting_scale_title">Tỉ lệ</string>
+    <string name="notification_lighting_duration_title">Khoảng thời gian</string>
+    <string name="notification_lighting_style_sweep">Sweep</string>
+    <string name="notification_lighting_sweep_position_title">Position</string>
+    <string name="notification_lighting_sweep_random_shapes_title">Random shapes</string>
+    <string name="notification_lighting_sweep_thickness_title">Stroke thickness</string>
+    <string name="notification_lighting_sweep_pos_left">Left</string>
+    <string name="notification_lighting_sweep_pos_center">Center</string>
+    <string name="notification_lighting_sweep_pos_right">Right</string>
+    <string name="settings_section_animation">Hoạt hình</string>
+    <string name="notification_lighting_pulse_count_title">Số xung</string>
+    <string name="notification_lighting_pulse_duration_title">Thời lượng xung</string>
+    <string name="settings_section_color_mode">Chế độ màu</string>
+    <string name="settings_section_ambient_display">Hiển thị xung quanh</string>
+    <string name="ambient_display_title">Hiển thị xung quanh</string>
+    <string name="ambient_display_hint">Thích hợp nếu bạn không sử dụng AOD.</string>
+    <string name="ambient_display_desc">Đánh thức màn hình và hiển thị ánh sáng</string>
+    <string name="ambient_show_lock_screen_title">Hiển thị màn hình khóa</string>
+    <string name="ambient_show_lock_screen_desc">Không có lớp phủ màu đen</string>
+    <!-- Tiles -->
+    <string name="action_add">Thêm vào</string>
+    <string name="action_added">Added</string>
+    <string name="qs_tile_already_added">Đã thêm</string>
+    <string name="qs_tile_requires_android_13">Yêu cầu Android 13+</string>
+    <string name="tile_ui_blur">Làm mờ giao diện người dùng</string>
+    <string name="tile_bubbles">bong bóng</string>
+    <string name="tile_sensitive_content">Nội dung nhạy cảm</string>
+    <string name="tile_tap_to_wake">Nhấn để đánh thức</string>
+    <string name="tile_aod">AOD</string>
+    <string name="tile_caffeinate">caffein</string>
+    <string name="tile_sound_mode">Chế độ âm thanh</string>
+    <string name="tile_notification_lighting">Chiếu sáng thông báo</string>
+    <string name="tile_dynamic_night_light">Đèn ngủ năng động</string>
+    <string name="tile_locked_security">Bảo mật bị khóa</string>
+    <string name="tile_app_lock">Khóa ứng dụng</string>
+    <string name="tile_mono_audio">Âm thanh đơn sắc</string>
+    <string name="tile_flashlight">Đèn pin</string>
+    <string name="tile_app_freezing">Đóng băng ứng dụng</string>
+    <string name="tile_flashlight_pulse">Xung đèn pin</string>
+    <string name="tile_stay_awake">Hãy tỉnh táo</string>
+    <string name="input_method_label">Bàn phím cơ bản</string>
+    <string name="subtype_en_us">Tiếng Anh (Mỹ)</string>
+    <string name="tile_active">Tích cực</string>
+    <string name="tile_inactive">Không hoạt động</string>
+    <string name="tile_developer_options">Tùy chọn nhà phát triển</string>
+    <string name="about_desc_developer_options">Chuyển đổi tùy chọn nhà phát triển hệ thống từ ô QS một cách dễ dàng. Điều này có thể đặt lại một số cài đặt dành cho nhà phát triển mà bạn đã sửa đổi.</string>
+    <string name="tile_refresh_rate">Refresh Rate</string>
+    <string name="about_desc_refresh_rate_tile">Cycle between the system default and preset refresh rates directly from a Quick Settings tile using Shizuku.</string>
+    <string name="nfc_tile_label">NFC</string>
+    <string name="tile_private_dns">DNS riêng</string>
+    <string name="tile_private_dns_auto">Tự động</string>
+    <string name="tile_private_dns_off">Tắt</string>
+    <string name="tile_usb_debugging">Gỡ lỗi USB</string>
+    <string name="tile_color_picker">Bộ chọn màu</string>
+    <string name="toast_eyedropper_failed">Are you sure you\'re on Androdi 17? (╯°_°）╯</string>
+    <string name="subtitle_eye_dropper">Thuốc nhỏ mắt</string>
+    <string name="on">TRÊN</string>
+    <string name="off">Tắt</string>
+    <string name="private_dns_custom_title">DNS riêng tùy chỉnh</string>
+    <string name="private_dns_presets_title">Cài đặt trước DNS phổ biến</string>
+    <string name="dns_preset_add_title">Add DNS Preset</string>
+    <string name="dns_preset_name_label">Preset name</string>
+    <string name="dns_preset_reset_action">Reset</string>
+    <string name="dns_preset_delete_content_description">Delete preset</string>
+    <string name="dns_preset_reset_confirm">Are you sure you want to reset all DNS presets to defaults? This will remove all your custom presets.</string>
+    <string name="private_dns_hostname_label">Tên máy chủ của nhà cung cấp</string>
+    <string name="dns_preset_adguard">DNS AdGuard</string>
+    <string name="dns_preset_adguard_hostname">dns.adguard.com</string>
+    <string name="dns_preset_google">DNS công cộng của Google</string>
+    <string name="dns_preset_google_hostname">dns.google</string>
+    <string name="dns_preset_cloudflare">DNS đám mây</string>
+    <string name="dns_preset_cloudflare_hostname">1dot1dot1dot1.cloudflare-dns.com</string>
+    <string name="dns_preset_quad9">DNS Quad9</string>
+    <string name="dns_preset_quad9_hostname">dns.quad9.net</string>
+    <string name="dns_preset_cleanbrowsing">Duyệt web sạch</string>
+    <string name="dns_preset_cleanbrowsing_hostname">dành cho người lớn-filter-dns.cleanbrowsing.org</string>
+    <string name="tile_charge_optimization">Sạc</string>
+    <string name="limit_to_80">Giới hạn ở mức 80%</string>
+    <string name="adaptive_charging">Thích ứng</string>
+    <string name="deactivated">Không được tối ưu hóa</string>
+    <string name="permission_missing">Thiếu quyền</string>
+    <!-- Screen Locked Security -->
+    <string name="screen_locked_security_title">Bảo mật khóa màn hình</string>
+    <string name="screen_locked_security_dialog_title">Bảo mật khóa màn hình</string>
+    <string name="warning_title">⚠️ CẢNH BÁO</string>
+    <string name="screen_locked_security_auth_enable">Xác thực để bật bảo mật khóa màn hình</string>
+    <string name="screen_locked_security_auth_disable">Xác thực để tắt bảo mật khóa màn hình</string>
+    <string name="screen_locked_security_desc">Disable quick setting tiles when the device is locked</string>
+    <string name="search_disable_qs_locked_title">Disable QS Locked</string>
+    <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
+    <!-- Sound Mode -->
+    <string name="sound_mode_reorder_title">Chế độ đặt hàng lại</string>
+    <string name="sound_mode_long_press_hint">Nhấn và giữ để chuyển đổi</string>
+    <string name="content_desc_drag_reorder">Kéo để sắp xếp lại</string>
+    <string name="sound_mode_sound">Âm thanh</string>
+    <string name="sound_mode_vibrate">Rung</string>
+    <string name="sound_mode_silent">Im lặng</string>
+    <!-- Status Bar Categories -->
+    <string name="status_bar_category_connectivity">Kết nối</string>
+    <string name="status_bar_category_phone_network">Điện thoại &amp; Mạng</string>
+    <string name="status_bar_category_audio_media">Âm thanh &amp; Truyền thông</string>
+    <string name="status_bar_category_system_status">Trạng thái hệ thống</string>
+    <string name="status_bar_category_oem_specific">OEM cụ thể</string>
+    <!-- Status Bar Icons -->
+    <string name="icon_wifi">Wi-Fi</string>
+    <string name="icon_bluetooth">Bluetooth</string>
+    <string name="icon_nfc">NFC / Felica</string>
+    <string name="icon_vpn">VPN</string>
+    <string name="icon_airplane_mode">Chế độ trên máy bay</string>
+    <string name="icon_hotspot">Điểm phát sóng</string>
+    <string name="icon_cast">Dàn diễn viên</string>
+    <string name="icon_mobile_data">Dữ liệu di động</string>
+    <string name="icon_phone_signal">Tín hiệu điện thoại</string>
+    <string name="icon_volte">VoLTE / VoNR</string>
+    <string name="icon_wifi_calling">Gọi WiFi / VoWiFi</string>
+    <string name="icon_call_status">Trạng thái cuộc gọi / Đồng bộ hóa</string>
+    <string name="icon_tty">TTY</string>
+    <string name="icon_volume">Âm lượng</string>
+    <string name="icon_headset">Tai nghe</string>
+    <string name="icon_speakerphone">Loa ngoài</string>
+    <string name="icon_dmb">DMB</string>
+    <string name="icon_clock">Cái đồng hồ</string>
+    <string name="icon_ime">Phương thức nhập (IME)</string>
+    <string name="icon_alarm">Báo thức</string>
+    <string name="icon_battery">Ắc quy</string>
+    <string name="icon_power_saving">Tiết kiệm điện</string>
+    <string name="icon_data_saver">Trình tiết kiệm dữ liệu</string>
+    <string name="icon_rotation_lock">Khóa xoay</string>
+    <string name="icon_location">Vị trí / GPS</string>
+    <string name="icon_sync">Đồng bộ hóa</string>
+    <string name="icon_managed_profile">Hồ sơ được quản lý</string>
+    <string name="icon_dnd">Đừng làm phiền</string>
+    <string name="icon_privacy">Thư mục riêng tư và bảo mật</string>
+    <string name="icon_security_status">Trạng thái bảo mật (SU)</string>
+    <string name="icon_otg">Chuột/Bàn phím OOT</string>
+    <string name="icon_samsung_smart">Tính năng thông minh của Samsung</string>
+    <string name="icon_samsung_services">Dịch vụ của Samsung</string>
+    <string name="icon_ethernet">Ethernet</string>
+    <!-- Status Bar Settings -->
+    <string name="stb_clock_seconds">Hiển thị giây trong đồng hồ</string>
+    <string name="stb_battery_percentage">Phần trăm pin</string>
+    <string name="stb_battery_percentage_always">Luôn luôn</string>
+    <string name="stb_battery_percentage_charging">Sạc</string>
+    <string name="stb_battery_percentage_never">Không bao giờ</string>
+    <string name="stb_privacy_chip">Camera và Microphone sử dụng chip</string>
+    <string name="smart_data_title">Dữ liệu thông minh</string>
+    <string name="permission_read_phone_state_title">Đọc trạng thái điện thoại</string>
+    <string name="permission_read_phone_state_desc">Cần thiết để phát hiện loại mạng cho tính năng Dữ liệu thông minh</string>
+    <string name="permission_read_phone_state_desc_call_vibrations">Cần thiết để phát hiện các thay đổi trạng thái cuộc gọi nhằm kích hoạt phản hồi xúc giác.</string>
+    <string name="settings_section_smart_visibility">Khả năng hiển thị thông minh</string>
+    <string name="smart_wifi_title">WiFi thông minh</string>
+    <string name="smart_wifi_desc">Ẩn dữ liệu di động khi kết nối WiFi</string>
+    <string name="smart_data_desc">Ẩn dữ liệu di động ở một số chế độ nhất định</string>
+    <string name="action_reset_all_icons">Đặt lại tất cả các biểu tượng</string>
+    <string name="status_bar_section_advanced">Thêm cài đặt</string>
+    <string name="stb_advanced_flags_title">Advanced (Requires Shizuku/Root)</string>
+    <string name="hide_all_system_icons_title">Hide all system icons</string>
+    <string name="hide_all_system_icons_desc">Clear all non-notification icons from the status bar</string>
+    <string name="hide_system_icons_locked_only_title">Only hide system icons when locked</string>
+    <string name="hide_system_icons_locked_only_desc">Hides the status bar system icons when the device is locked and restores them upon unlock</string>
+    <string name="hide_clock_title">Hide clock</string>
+    <string name="hide_clock_desc">Completely remove the clock from the status bar</string>
+    <string name="hide_notification_icons_title">Hide notifications</string>
+    <string name="hide_notification_icons_desc">Hide all incoming notification icons</string>
+    <string name="feat_hide_gesture_bar_title">Hide gesture bar</string>
+    <string name="feat_hide_gesture_bar_desc">In gesture navigation</string>
+    <string name="feat_hide_gesture_bar_on_launcher_title">Show on launcher</string>
+    <string name="feat_hide_gesture_bar_on_launcher_desc">Dynamically show the gesture bar only when on the home screen</string>
+    <string name="feat_circle_to_search_gesture_title">Circle to Search gesture</string>
+    <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
+    <string name="feat_circle_to_search_gesture_height_title">Gesture zone height</string>
+    <string name="feat_circle_to_search_gesture_height_desc">Adjust the height of the touch area at the bottom</string>
+    <string name="feat_other_customizations_title">Other customizations</string>
+    <string name="feat_other_customizations_desc">Additional system tweaks and modifications</string>
+    <string name="status_bar_icons_disclaimer">Xin lưu ý rằng việc triển khai các tùy chọn này có thể phụ thuộc vào OEM và một số tùy chọn có thể không hoạt động.</string>
+    <!-- Network Type Picker -->
+    <string name="network_type_other">Khác</string>
+    <!-- Search -->
+    <string name="search_clock_seconds_title">Đồng hồ giây</string>
+    <string name="search_clock_seconds_desc">Hiển thị giây trên đồng hồ trên thanh trạng thái</string>
+    <string name="search_battery_percentage_title">Phần trăm pin</string>
+    <string name="search_battery_percentage_desc">Định cấu hình khả năng hiển thị phần trăm pin</string>
+    <string name="search_privacy_chip_title">Chip riêng tư</string>
+    <string name="search_privacy_chip_desc">Hiển thị chỉ báo khi máy ảnh hoặc micrô đang được sử dụng</string>
+    <string name="search_desc_toggle_visibility">Chuyển đổi chế độ hiển thị cho %1$s</string>
+    <string name="action_pin">Ghim vào mục yêu thích</string>
+    <string name="action_unpin">Bỏ ghim khỏi Mục ưa thích</string>
+    <!-- Extraction Batch 1 -->
+    <!-- Categories -->
+    <string name="cat_tools">Công cụ</string>
+    <string name="cat_visuals">Hình ảnh</string>
+    <string name="cat_system">Hệ thống</string>
+    <!-- UI Elements -->
+    <string name="search_placeholder">Search for Tools, Mods and Tweaks</string>
+    <string name="search_no_results">Không có kết quả cho \"%1$s\"</string>
+    <string name="search_results_title">Kết quả tìm kiếm</string>
+    <string name="requires_following_permissions">%1$s yêu cầu các quyền sau</string>
+    <!-- Features -->
+    <string name="feat_screen_off_widget_title">Tiện ích tắt màn hình</string>
+    <string name="feat_screen_off_widget_desc">Tiện ích vô hình để tắt màn hình</string>
+    <string name="feat_statusbar_icons_title">Biểu tượng thanh trạng thái</string>
+    <string name="feat_statusbar_icons_desc">Kiểm soát khả năng hiển thị biểu tượng trên thanh trạng thái</string>
+    <string name="feat_caffeinate_title">caffein</string>
+    <string name="feat_caffeinate_desc">Giữ màn hình luôn sáng</string>
+    <string name="feat_maps_power_saving_title">Chế độ tiết kiệm năng lượng của bản đồ</string>
+    <string name="feat_maps_power_saving_desc">Dành cho mọi thiết bị Android</string>
+    <string name="feat_notification_lighting_title">Chiếu sáng thông báo</string>
+    <string name="feat_notification_lighting_desc">Sáng lên để nhận thông báo</string>
+    <string name="feat_flashlight_pulse_desc">Xung đèn pin để thông báo</string>
+    <string name="feat_sound_mode_tile_title">Ô chế độ âm thanh</string>
+    <string name="feat_call_vibrations_title">Rung cuộc gọi</string>
+    <string name="feat_call_vibrations_desc">Rung khi thực hiện cuộc gọi</string>
+    <string name="show_bluetooth_devices">Hiển thị thiết bị Bluetooth</string>
+    <string name="show_bluetooth_devices_summary">Hiển thị mức pin của thiết bị Bluetooth được kết nối</string>
+    <string name="limit_max_devices">Giới hạn số lượng thiết bị tối đa</string>
+    <string name="limit_max_devices_summary">Điều chỉnh số lượng thiết bị hiển thị tối đa trong widget</string>
+    <string name="widget_background_title">Nền tiện ích</string>
+    <string name="widget_background_summary">Hiển thị nền tiện ích</string>
+    <!-- DIY Automation -->
+    <string name="diy_create_trigger_title">Tự động kích hoạt</string>
+    <string name="diy_create_trigger_desc">Lên lịch một hành động để kích hoạt trên một quan sát</string>
+    <string name="diy_create_state_title">Tự động hóa trạng thái</string>
+    <string name="diy_create_state_desc">Lên lịch một hành động để thực hiện dựa trên trạng thái của một điều kiện vào và ra</string>
+    <string name="diy_editor_new_title">Tự động hóa mới</string>
+    <string name="diy_editor_edit_title">Chỉnh sửa tự động hóa</string>
+    <string name="feat_link_actions_title">Liên kết hành động</string>
+    <string name="feat_link_actions_desc">Xử lý liên kết với nhiều ứng dụng</string>
+    <string name="feat_snooze_notifications_title">Báo lại thông báo hệ thống</string>
+    <string name="feat_snooze_notifications_desc">Tạm ẩn thông báo liên tục</string>
+    <string name="feat_qs_tiles_title">Ô cài đặt nhanh</string>
+    <string name="feat_qs_tiles_desc">Xem tất cả</string>
+    <string name="feat_button_remap_title">Ánh xạ lại nút</string>
+    <string name="feat_button_remap_desc">Ánh xạ lại các hành động của nút phần cứng</string>
+    <string name="feat_dynamic_night_light_title">Đèn ngủ năng động</string>
+    <string name="feat_dynamic_night_light_desc">Chuyển đổi ánh sáng ban đêm dựa trên ứng dụng</string>
+    <string name="feat_screen_locked_security_title">Bảo mật khóa màn hình</string>
+    <string name="feat_app_lock_title">Khóa ứng dụng</string>
+    <string name="feat_app_lock_desc">Bảo mật ứng dụng bằng sinh trắc học</string>
+    <string name="app_lock_auto_lock_delay_title">Auto lock delay</string>
+    <string name="app_lock_auto_lock_delay_desc">After leaving the app</string>
+    <string name="app_lock_auto_lock_delay_none">None</string>
+    <string name="app_lock_auto_lock_delay_1min">1 minute</string>
+    <string name="app_lock_auto_lock_delay_5min">5 minutes</string>
+    <string name="app_lock_auto_lock_delay_10min">10 minutes</string>
+    <string name="app_lock_auto_lock_delay_20min">20 minutes</string>
+    <string name="app_lock_auto_lock_delay_30min">30 minutes</string>
+    <string name="feat_freeze_title">Đông cứng</string>
+    <string name="feat_freeze_desc">Vô hiệu hóa các ứng dụng ít sử dụng</string>
+    <string name="feat_watermark_title">Hình mờ</string>
+    <string name="feat_watermark_desc">Thêm dữ liệu EXIF ​​​​và logo vào ảnh</string>
+    <string name="feat_always_on_display_title">Luôn hiển thị</string>
+    <string name="feat_always_on_display_desc">Hiển thị thời gian và thông tin khi màn hình tắt</string>
+    <string name="feat_calendar_sync_title">Đồng bộ hóa lịch</string>
+    <string name="feat_calendar_sync_desc">Sync your phone calendar to your watch</string>
+    <string name="feat_lock_from_watch_title">Lock from Watch</string>
+    <string name="feat_lock_from_watch_desc">Lock your phone remotely</string>
+    <string name="remote_lock_mode_title">Lock Mode</string>
+    <string name="remote_lock_mode_screen_off">Screen off</string>
+    <string name="remote_lock_mode_lock">Lock</string>
+    <string name="remote_lock_mode_admin_note">Using device admin lock will disable biometrics</string>
+    <string name="watch_connected_status">Connected</string>
+    <string name="watch_unknown_name">Unknown Watch</string>
+    <string name="watermark_style_overlay">Lớp phủ</string>
+    <string name="watermark_style_frame">Khung</string>
+    <string name="watermark_show_brand">Thương hiệu thiết bị</string>
+    <string name="watermark_show_exif">Dữ liệu EXIF</string>
+    <string name="watermark_pick_image">Chọn hình ảnh</string>
+    <string name="watermark_save_success">Đã lưu hình ảnh vào thư viện</string>
+    <string name="action_share">Chia sẻ</string>
+    <string name="watermark_exif_settings">Cài đặt EXIF</string>
+    <string name="watermark_exif_focal_length">Tiêu cự</string>
+    <string name="watermark_exif_aperture">Khẩu độ</string>
+    <string name="watermark_exif_iso">ISO</string>
+    <string name="watermark_exif_shutter_speed">Tốc độ màn trập</string>
+    <string name="watermark_exif_date">Ngày &amp; Giờ</string>
+    <string name="watermark_move_to_top">Di chuyển lên trên cùng</string>
+    <string name="watermark_left_align">Căn trái</string>
+    <string name="watermark_text_size_brand">Kích thước thương hiệu</string>
+    <string name="watermark_text_size_data">Kích thước dữ liệu</string>
+    <string name="watermark_text_size_custom">Kích thước văn bản</string>
+    <string name="watermark_font_options">Cỡ chữ</string>
+    <string name="watermark_custom_text">Văn bản tùy chỉnh</string>
+    <string name="watermark_custom_text_hint">Nhập văn bản của bạn...</string>
+    <string name="watermark_spacing">Khoảng cách</string>
+    <string name="watermark_border_width">Chiều rộng đường viền</string>
+    <string name="watermark_border_corners">Góc tròn</string>
+    <string name="watermark_color_section">Màu sắc</string>
+    <string name="watermark_logo_section">biểu tượng</string>
+    <string name="watermark_logo_show">Hiển thị biểu trưng</string>
+    <string name="watermark_logo_size">Kích thước biểu tượng</string>
+    <string name="watermark_edit_texts">Chỉnh sửa văn bản hình mờ</string>
+    <string name="watermark_device_brand">Thương hiệu thiết bị</string>
+    <string name="watermark_date_time">Ngày &amp; Giờ</string>
+    <string name="watermark_no_date">Không có thông tin ngày tháng</string>
+    <string name="watermark_rotate_left">Xoay trái</string>
+    <string name="watermark_rotate_right">Xoay phải</string>
+    <string name="action_next">Kế tiếp</string>
+    <string name="action_ok">ĐƯỢC RỒI</string>
+    <string name="action_save_changes">Lưu thay đổi</string>
+    <string name="calendar_sync_settings_title">Cài đặt đồng bộ hóa lịch</string>
+    <string name="calendar_sync_select_calendars">Đồng bộ hóa lịch cụ thể</string>
+    <string name="calendar_sync_periodic_title">Đồng bộ hóa định kỳ</string>
+    <string name="calendar_sync_periodic_desc">Đồng bộ hóa 15 phút một lần nếu tìm thấy thay đổi</string>
+    <string name="calendar_sync_sync_now">Đồng bộ hóa ngay bây giờ</string>
+    <string name="calendar_sync_manual_sync_desc">Kích hoạt đồng bộ hóa ngay lập tức để xem</string>
+    <string name="calendar_sync_no_calendars">Không tìm thấy lịch địa phương</string>
+    <string name="calendar_sync_sync_started">Đã bắt đầu đồng bộ hóa lịch</string>
+    <!-- Search Settings -->
+    <string name="search_haptic_title">Widget Phản hồi xúc giác</string>
+    <string name="search_haptic_desc">Chọn phản hồi xúc giác cho các lần nhấn vào tiện ích</string>
+    <string name="search_smart_wifi_title">WiFi thông minh</string>
+    <string name="search_smart_wifi_desc">Ẩn dữ liệu di động khi kết nối WiFi</string>
+    <string name="search_smart_data_title">Dữ liệu thông minh</string>
+    <string name="search_smart_data_desc">Ẩn dữ liệu di động ở một số chế độ nhất định</string>
+    <string name="search_reset_icons_title">Đặt lại tất cả các biểu tượng</string>
+    <string name="search_reset_icons_desc">Đặt lại khả năng hiển thị biểu tượng trên thanh trạng thái về mặc định</string>
+    <string name="search_caffeinate_abort_screen_off_title">Hủy bỏ Caffeine bằng cách tắt màn hình</string>
+    <string name="search_caffeinate_abort_screen_off_desc">Tự động tắt Caffeine khi khóa máy thủ công</string>
+    <string name="search_lighting_style_title">Phong cách chiếu sáng</string>
+    <string name="search_lighting_style_desc">Chọn giữa Stroke, Glow, Spinner, v.v.</string>
+    <string name="search_corner_radius_title">Bán kính góc</string>
+    <string name="search_corner_radius_desc">Điều chỉnh bán kính góc của ánh sáng thông báo</string>
+    <string name="search_skip_silent_title">Bỏ qua thông báo im lặng</string>
+    <string name="search_skip_silent_desc">Không hiển thị ánh sáng cho thông báo im lặng</string>
+    <string name="search_flashlight_pulse_title">Xung đèn pin</string>
+    <string name="search_flashlight_pulse_desc">Đèn pin xung chậm để nhận thông báo mới</string>
+    <string name="search_only_facing_down_title">Chỉ khi úp mặt xuống</string>
+    <string name="search_only_facing_down_desc">Chỉ nháy đèn pin khi thiết bị úp xuống</string>
+    <string name="snooze_no_channels_discovered">Chưa có kênh hệ thống nào được phát hiện. Chúng sẽ xuất hiện ở đây sau khi được phát hiện.</string>
+    <string name="search_qs_blur_title">Làm mờ giao diện người dùng</string>
+    <string name="search_qs_blur_desc">Chuyển đổi làm mờ giao diện người dùng trên toàn hệ thống</string>
+    <string name="search_qs_bubbles_title">bong bóng</string>
+    <string name="search_qs_bubbles_desc">Bật bong bóng cửa sổ nổi</string>
+    <string name="search_qs_sensitive_title">Nội dung nhạy cảm</string>
+    <string name="search_qs_sensitive_desc">Ẩn chi tiết thông báo trên màn hình khóa</string>
+    <string name="search_qs_wake_title">Nhấn để đánh thức</string>
+    <string name="search_qs_wake_desc">Nhấn đúp để đánh thức điều khiển</string>
+    <string name="search_qs_aod_title">AOD</string>
+    <string name="search_qs_aod_desc">Chuyển đổi Luôn hiển thị</string>
+    <string name="search_qs_caffeinate_title">caffein</string>
+    <string name="search_qs_caffeinate_desc">Giữ màn hình ở chế độ bật tắt</string>
+    <string name="search_qs_sound_title">Chế độ âm thanh</string>
+    <string name="search_qs_sound_desc">Chế độ âm thanh tuần hoàn (Chuông/Rung/Im lặng)</string>
+    <string name="search_qs_lighting_title">Chiếu sáng thông báo</string>
+    <string name="search_qs_lighting_desc">Chuyển đổi dịch vụ chiếu sáng thông báo</string>
+    <string name="search_qs_night_light_title">Đèn ngủ năng động</string>
+    <string name="search_qs_night_light_desc">Chuyển đổi tự động hóa ánh sáng ban đêm</string>
+    <string name="search_qs_locked_sec_title">Bảo mật bị khóa</string>
+    <string name="search_qs_locked_sec_desc">Bảo mật mạng khi chuyển đổi màn hình khóa</string>
+    <string name="search_qs_mono_title">Âm thanh đơn sắc</string>
+    <string name="search_qs_mono_desc">Buộc chuyển đổi đầu ra âm thanh đơn âm</string>
+    <string name="search_qs_flashlight_title">Đèn pin</string>
+    <string name="search_qs_flashlight_desc">Chuyển đổi đèn pin chuyên dụng</string>
+    <string name="search_qs_freeze_title">Đóng băng ứng dụng</string>
+    <string name="search_qs_freeze_desc">Khởi chạy lưới đóng băng ứng dụng</string>
+    <string name="search_qs_pulse_title">Xung đèn pin</string>
+    <string name="search_qs_pulse_desc">Chuyển đổi xung đèn pin thông báo</string>
+    <string name="search_qs_stay_awake_desc">Chuyển đổi tùy chọn nhà phát triển luôn tỉnh táo</string>
+    <string name="search_qs_private_dns_title">DNS riêng</string>
+    <string name="search_qs_private_dns_desc">Chu kỳ các chế độ DNS riêng (Tắt/Tự động/Tên máy chủ)</string>
+    <string name="search_qs_usb_debugging_title">Gỡ lỗi USB</string>
+    <string name="search_qs_usb_debugging_desc">Chuyển đổi tùy chọn nhà phát triển Gỡ lỗi USB</string>
+    <string name="search_qs_refresh_rate_title">Refresh Rate</string>
+    <string name="search_qs_refresh_rate_desc">Cycle between the system default and preset screen refresh rates</string>
+    <string name="search_remap_enable_title">Bật bản đồ lại nút</string>
+    <string name="search_remap_enable_desc">Chuyển đổi chính để ánh xạ lại nút âm lượng</string>
+    <string name="search_remap_haptic_title">Bản đồ lại phản hồi xúc giác</string>
+    <string name="search_remap_haptic_desc">Phản hồi rung khi nhấn nút ánh xạ lại</string>
+    <string name="search_remap_flashlight_title">Chuyển đổi đèn pin</string>
+    <string name="search_remap_flashlight_desc">Chuyển đổi đèn pin bằng nút âm lượng</string>
+    <string name="search_night_light_enable_title">Bật đèn ngủ động</string>
+    <string name="search_night_light_enable_desc">Công tắc chính cho đèn ngủ năng động</string>
+    <string name="search_app_lock_enable_title">Bật khóa ứng dụng</string>
+    <string name="search_app_lock_enable_desc">Chuyển đổi chính để khóa ứng dụng</string>
+    <string name="search_app_lock_pick_title">Chọn ứng dụng bị khóa</string>
+    <string name="search_app_lock_pick_desc">Chọn ứng dụng nào yêu cầu xác thực</string>
+    <string name="search_freeze_pick_title">Chọn ứng dụng để đóng băng</string>
+    <string name="search_freeze_pick_desc">Chọn ứng dụng nào có thể bị đóng băng</string>
+    <string name="search_freeze_all_title">Đóng băng tất cả ứng dụng</string>
+    <string name="search_freeze_all_desc">Đóng băng ngay lập tức tất cả các ứng dụng đã chọn</string>
+    <string name="search_freeze_locked_title">Đóng băng khi bị khóa</string>
+    <string name="search_freeze_locked_desc">Đóng băng các ứng dụng đã chọn khi khóa thiết bị</string>
+    <string name="search_freeze_delay_title">Độ trễ đóng băng</string>
+    <string name="search_freeze_delay_desc">Trì hoãn trước khi đóng băng sau khi khóa</string>
+    <!-- Permissions metadata -->
+    <string name="perm_shizuku_title">Shizuku</string>
+    <string name="perm_shizuku_desc">Cần thiết cho các lệnh nâng cao. Cài đặt Shizuku từ Cửa hàng Play.</string>
+    <string name="perm_shizuku_install_action">Cài đặt Shizuku</string>
+    <string name="perm_shizuku_grant_title">Cấp quyền</string>
+    <string name="perm_shizuku_grant_desc">Cần thiết để chạy các lệnh tiết kiệm năng lượng trong khi bản đồ đang điều hướng.</string>
+    <string name="req_shizuku">Yêu cầu Shizuku hoặc Root</string>
+    <string name="perm_root_title">Quyền truy cập gốc</string>
+    <string name="perm_root_desc">Quyền cần thiết cho các hành động của hệ thống bằng quyền Root.</string>
+    <string name="perm_notif_listener_title">Trình nghe thông báo</string>
+    <string name="perm_notif_listener_desc_maps">Yêu cầu quyền truy cập của người nghe thông báo để theo dõi trạng thái điều hướng của Google Maps và bật tính năng tiết kiệm năng lượng khi không điều hướng.</string>
+    <string name="perm_notif_listener_desc_lighting">Yêu cầu quyền truy cập của người nghe thông báo để phát hiện thông báo mới và kích hoạt tính năng chiếu sáng cạnh.</string>
+    <string name="perm_notif_listener_desc_snooze">Yêu cầu quyền truy cập của người nghe thông báo để theo dõi và tạm ẩn các thông báo hệ thống không mong muốn.</string>
+    <string name="perm_accessibility_title">Dịch vụ trợ năng</string>
+    <string name="perm_accessibility_desc_common">Cần thiết cho Khóa ứng dụng, Tiện ích tắt màn hình và các tính năng khác để phát hiện các tương tác</string>
+    <string name="perm_accessibility_desc_lighting">Cần thiết để kích hoạt đèn thông báo trên các thông báo mới</string>
+    <string name="perm_default_browser_title">Trình duyệt mặc định</string>
+    <string name="perm_default_browser_desc">Cần thiết để xử lý các liên kết hiệu quả</string>
+    <string name="perm_accessibility_desc_remap">Cần thiết để chặn các sự kiện nút phần cứng</string>
+    <string name="perm_accessibility_desc_essentials_on_display">Required to intercept volume key events while the screen is off to trigger the Essentials On Display overlay.</string>
+    <string name="perm_accessibility_desc_night_light">Cần thiết để giám sát các ứng dụng nền trước.</string>
+    <string name="perm_write_secure_title">Viết cài đặt bảo mật</string>
+    <string name="perm_write_secure_desc_common">Cần thiết cho các biểu tượng Thanh trạng thái và Bảo mật khóa màn hình</string>
+    <string name="perm_write_secure_desc_night_light">Cần chuyển đổi chế độ Ánh sáng ban đêm. Cấp qua ADB hoặc root.</string>
+    <string name="perm_write_settings_title">Sửa đổi cài đặt hệ thống</string>
+    <string name="perm_write_settings_desc">Cần thiết để chuyển đổi Độ sáng thích ứng và các cài đặt hệ thống khác</string>
+    <string name="perm_overlay_title">Quyền lớp phủ</string>
+    <string name="perm_overlay_desc">Bắt buộc phải hiển thị lớp phủ ánh sáng thông báo trên màn hình</string>
+    <string name="perm_device_admin_title">Quản trị viên thiết bị</string>
+    <string name="perm_device_admin_desc">Cần phải khóa cứng thiết bị (vô hiệu hóa sinh trắc học) khi cố gắng truy cập trái phép</string>
+    <string name="perm_action_grant">Cấp quyền</string>
+    <string name="perm_action_copy_adb">Sao chép ADB</string>
+    <string name="perm_action_check">Kiểm tra</string>
+    <string name="perm_action_enable">Bật trong Cài đặt</string>
+    <string name="perm_action_how_to">Làm thế nào để cấp</string>
+    <string name="perm_action_granted">Granted</string>
+    <string name="perm_battery_optimization_title">Tối ưu hóa pin</string>
+    <string name="perm_battery_optimization_desc">Đảm bảo dịch vụ không bị hệ thống tắt để tiết kiệm điện năng.</string>
+    <!-- Tabs -->
+    <string name="tab_essentials">Yếu tố cần thiết</string>
+    <string name="tab_freeze">Đông cứng</string>
+    <string name="tab_freeze_title">đông lạnh</string>
+    <string name="tab_diy">tự làm lấy</string>
+    <string name="tab_apps">Ứng dụng</string>
+    <string name="tab_freeze_subtitle">Ứng dụng bị vô hiệu hóa</string>
+    <string name="tab_diy_subtitle">Tự làm</string>
+    <string name="tab_apps_subtitle">Tìm và quản lý ứng dụng</string>
+    <string name="feat_app_updates_title">Cập nhật ứng dụng</string>
+    <string name="tab_app_updates_title">Cập nhật ứng dụng</string>
+    <string name="action_add_repo">Thêm kho lưu trữ</string>
+    <string name="action_edit_repo">Chỉnh sửa kho lưu trữ</string>
+    <string name="prompt_enter_repo_url">Nhập URL kho lưu trữ GitHub hoặc chủ sở hữu/repo</string>
+    <string name="action_track">Theo dõi</string>
+    <string name="error_no_apk_found">Không tìm thấy APK nào trong bản phát hành mới nhất</string>
+    <string name="error_repo_not_found">Không tìm thấy kho lưu trữ</string>
+    <string name="label_latest_release">Bản phát hành mới nhất</string>
+    <string name="action_view_readme">Xem README</string>
+    <string name="label_stars">%d Ngôi sao</string>
+    <string name="label_installed_app">Ứng dụng đã cài đặt</string>
+    <string name="label_not_installed">Chưa được cài đặt</string>
+    <string name="action_pick_app">Chọn ứng dụng</string>
+    <string name="action_select_app">Chọn ứng dụng</string>
+    <string name="action_untrack">Bỏ theo dõi</string>
+    <string name="label_pending">Chưa giải quyết</string>
+    <string name="label_up_to_date">Cập nhật</string>
+    <string name="feat_app_updates_desc">Theo dõi và tải xuống các bản phát hành mới nhất cho ứng dụng yêu thích của bạn trực tiếp từ GitHub.</string>
+    <string name="error_invalid_repo_format">Định dạng không hợp lệ. Sử dụng URL chủ sở hữu/repo hoặc GitHub</string>
+    <string name="error_generic_search">Đã xảy ra lỗi trong quá trình tìm kiếm</string>
+    <string name="label_auto">Tự động</string>
+    <string name="label_options">Tùy chọn</string>
+    <string name="option_allow_prereleases">Kiểm tra các bản phát hành trước</string>
+    <string name="option_notifications">Thông báo</string>
+    <string name="error_rate_limited">Đã vượt quá giới hạn tốc độ GitHub. Vui lòng thử lại sau.</string>
+    <!-- Keyboard Setup -->
+    <string name="label_keyboard_setup">Cài đặt bàn phím</string>
+    <string name="btn_enable_keyboard">Bật trong cài đặt</string>
+    <string name="btn_select_keyboard">Chuyển sang thiết yếu</string>
+    <string name="label_enabled">Đã bật</string>
+    <string name="label_disabled">Tàn tật</string>
+    <string name="tile_adaptive_brightness">Độ sáng thích ứng</string>
+    <string name="tile_maps_power_saving">Tiết kiệm năng lượng của bản đồ</string>
+    <string name="action_search">Tìm kiếm</string>
+    <string name="action_stop">Dừng lại</string>
+    <string name="label_search">Tìm kiếm</string>
+    <string name="search_frozen_apps_placeholder">Search frozen apps</string>
+    <!-- UI Components General -->
+    <string name="action_back">Mặt sau</string>
+    <string name="content_desc_back">Mặt sau</string>
+    <string name="label_settings">Cài đặt</string>
+    <string name="action_report_bug">Báo cáo lỗi</string>
+    <!-- Sentry Crash Reporting -->
+    <string name="sentry_report_mode_title">Crash reporting</string>
+    <string name="sentry_mode_off">Off</string>
+    <string name="sentry_mode_auto">Auto</string>
+    <string name="sentry_crash_toast">Essentials crashed, Report sent</string>
+    <string name="simulate_crash">Simulate crash</string>
+    <string name="welcome_title">Welcome to Essentials</string>
+    <string name="welcome_subtitle">A Toolbox for Android Nerds</string>
+    <string name="welcome_developer_attribution">by sameerasw.com</string>
+    <string name="action_lets_begin">Let\'s Begin</string>
+    <string name="acknowledgement_title">Acknowledgement</string>
+    <string name="acknowledgement_desc">This app is a collection of utilities that can interact deeply with your device system. Using some features might modify system settings or behavior in unexpected ways. \n\nYou only need to grant necessary permissions which are required for selected features you are using giving you full control over the app\'s behavior. \n\nFurther more, the app does not track or store any of your personal data, I don\'t need them... Keep to yourself safe. You can refer to the source code for more information. \n\nThis app is fully open source and is and always will be free to use. Do not pay or install from unknown sources.</string>
+    <string name="acknowledgement_warning">WARNING: Proceed with caution. The developer takes no responsibility for any system instability, data loss, or other issues caused by the use of this app. By proceeding, you acknowledge these risks.</string>
+    <string name="acknowledgement_footer">I know you didn\'t even read this carefully but, in case you need any help, feel free to reach out the developer or the community.</string>
+    <string name="action_i_understand">I Understand</string>
+    <string name="feature_intro_desc">Anytime you are clueless on a feature or a Quick Settings Tile on what it does and what permissions may necessary for it, just long press it and pick \'What is this?\' to learn more.</string>
+    <string name="feature_intro_footer">You can report bugs or find helpful guides anytime in the app settings.</string>
+    <string name="action_let_me_in">Let Me in Already</string>
+    <string name="preferences_title">Preferences</string>
+    <string name="preferences_desc">Configure some basic settings to get started.</string>
+    <string name="label_app_settings">App Settings</string>
+    <string name="label_app_language">Language</string>
+    <string name="label_haptic_feedback">Haptic Feedback</string>
+    <string name="label_updates">Updates</string>
+    <string name="label_auto_check_updates">Auto check for updates</string>
+    <string name="desc_auto_check_updates">Check for updates at app launch</string>
+    <string name="action_all_set">All Set</string>
+    <string name="action_check_whats_new">Check What\'s New?</string>
+    <string name="welcome_back_title">Welcome back to Essentials</string>
+    <string name="action_see_whats_new">See what\'s new</string>
+    <string name="label_mode_default">Default</string>
+    <string name="label_mode_glove">Glove mode</string>
+    <string name="tile_scale_animations">Glove Mode</string>
+    <string name="about_desc_scale_animations_tile">Quickly toggle between Default and Glove mode UI profiles</string>
+    <string name="label_increase_touch_sensitivity">Increase touch sensitivity</string>
+    <string name="desc_increase_touch_sensitivity">Improve touch screen responsiveness when using gloves or screen protectors</string>
+    <string name="label_auto_rotate">Auto rotate</string>
+    <string name="desc_auto_rotate">Automatically rotate the screen when the device is turned</string>
+    <string name="label_screen_timeout">Screen timeout</string>
+    <string name="desc_screen_timeout">How long the screen stays on before turning off automatically</string>
+    <string name="unit_seconds">%d seconds</string>
+    <string name="unit_minute">1 minute</string>
+    <string name="unit_minutes">%d minutes</string>
+    <string name="action_restart_systemui">Restart SystemUI</string>
+    <string name="desc_restart_systemui">Kills and restarts SystemUI process to apply some changes immediately</string>
+    <string name="msg_error_load_release_notes">Couldn\'t load the release note</string>
+    <string name="action_view_on_web">View on web</string>
+    <string name="action_done">Xong</string>
+    <string name="action_preview">Xem trước</string>
+    <string name="action_help_guide">Hướng dẫn trợ giúp</string>
+    <string name="action_what_is_this">Đây là cái gì?</string>
+    <string name="update_available_title">Cập nhật có sẵn</string>
+    <string name="about_desc_your_android">Glance at your device\'s hardware and software specifications in detail. This information is fetched from GSMArena and system properties to provide a comprehensive overview of your Android device.</string>
+    <string name="about_desc_essentials_on_display">Essentials On Display shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
+    <string name="about_desc_notification_lighting">Ánh sáng thông báo thêm hiệu ứng ánh sáng cạnh đẹp mắt khi bạn nhận được thông báo.\n\nBạn có thể tùy chỉnh kiểu hoạt ảnh, màu sắc và hành vi. Nó hoạt động ngay cả khi màn hình tắt (phụ thuộc OEM) hoặc ở trên ứng dụng hiện tại của bạn. Chọn ứng dụng, mức độ ưu tiên của thông báo hoặc hành vi nào sẽ được kích hoạt từ các điều khiển nhất định. Nếu OEM của bạn không hỗ trợ lớp phủ trên AOD, hãy kiện tùy chọn Hiển thị xung quanh được tìm thấy bên dưới.</string>
+    <string name="about_desc_screen_off_widget">Dễ dàng tắt màn hình bằng một cú chạm vào tiện ích trong suốt có thể thay đổi kích thước, không thêm biểu tượng hoặc bất kỳ sự lộn xộn nào vào màn hình chính của bạn.</string>
+    <string name="about_desc_statusbar_icons">Kiểm soát hoàn toàn các biểu tượng trên thanh trạng thái của bạn.\n\nẨn các biểu tượng cụ thể như WiFi, Bluetooth hoặc dữ liệu di động để giữ cho thanh trạng thái của bạn luôn sạch sẽ. Bạn cũng có thể tùy chỉnh định dạng đồng hồ và chỉ báo pin bằng một số điều khiển thông minh. Đây là danh sách các điều khiển AOSP có sẵn nên hệ điều hành trên thiết bị của bạn có thể không tôn trọng tất cả các điều khiển.</string>
+    <string name="about_desc_caffeinate">Caffeine ngăn màn hình của bạn tự động tắt.\n\nGiữ cho màn hình của bạn luôn ở trạng thái bật trong một khoảng thời gian cụ thể hoặc vô thời hạn. Hữu ích khi đọc những bài viết dài hoặc tham khảo một công thức nấu ăn.</string>
+    <string name="about_desc_maps_power_saving">Nhận chế độ Tiết kiệm năng lượng Google Maps độc quyền của dòng Pixel 10 với nền đen tuyền tối thiểu để hiển thị trên màn hình khóa của bạn trên bất kỳ thiết bị Android nào. Bắt đầu phiên điều hướng, tắt màn hình và bật lại.</string>
+    <string name="about_desc_flashlight_pulse">Xung đèn pin khi bạn nhận được thông báo.\n\nVới các thiết bị có hỗ trợ phần cứng để làm mờ đèn pin, xung sẽ hoạt động mượt mà.</string>
+    <string name="about_desc_snooze_notifications">Báo lại các thông báo hệ thống liên tục khó chịu mà không thể sửa đổi theo mặc định. \n\nVui lòng đợi cho đến khi thông báo đến rồi truy cập tính năng này, nơi kênh thông báo của nó\' sẽ được liệt kê. Chọn mục đó để tạm ẩn cho lần tiếp theo.\n\nMọi thông báo đã tạm ẩn vẫn có thể được truy cập từ lịch sử thông báo của bạn trong Android.</string>
+    <string name="about_desc_quick_settings_tiles">Thêm các ô tùy chỉnh vào bảng Cài đặt nhanh của bạn.\n\nNhấn và giữ bất kỳ ô nào trong số chúng để tìm hiểu chức năng của chúng.</string>
+    <string name="about_desc_button_remap">Sắp xếp lại các nút phần cứng của bạn để thực hiện các hành động và phím tắt khác nhau.\n\nTùy chỉnh điều xảy ra khi bạn nhấn và giữ các nút âm lượng với một số điều kiện nhất định. \n\nMột số hành vi như kích hoạt tắt màn hình hoặc điều khiển đèn pin có thể do OEM phụ thuộc vào việc triển khai chúng và có thể không hoạt động trên tất cả các thiết bị như mong đợi. Một số tình huống có thể được giải quyết bằng cách sử dụng quyền Shizuku nhưng có thể không mang lại trải nghiệm tương tự do quá trình triển khai.</string>
+    <string name="about_desc_dynamic_night_light">Tự động chuyển đổi bộ lọc ánh sáng xanh trên màn hình của bạn dựa trên ứng dụng nền trước.</string>
+    <string name="about_desc_screen_locked_security">Tăng cường bảo mật khi thiết bị của bạn bị khóa.\n\nHạn chế quyền truy cập vào một số ô QS nhạy cảm ngăn chặn sửa đổi mạng trái phép và ngăn chặn chúng cố gắng làm như vậy lại bằng cách tăng tốc độ hoạt ảnh để ngăn chặn spam cảm ứng.\n\nTính năng này không mạnh mẽ và có thể có sai sót, chẳng hạn như một số ô cho phép chuyển đổi trực tiếp như bluetooth hoặc chế độ máy bay không thể ngăn chặn được.</string>
+    <string name="about_desc_app_lock">Bảo mật ứng dụng của bạn bằng lớp xác thực phụ.\n\nPhương thức xác thực màn hình khóa thiết bị của bạn sẽ được sử dụng miễn là nó đáp ứng mức bảo mật sinh trắc học cấp 3 theo tiêu chuẩn Android.</string>
+    <string name="about_desc_location_reached">Nhận thông báo khi bạn đến gần điểm đến hơn để đảm bảo bạn không bao giờ bỏ lỡ điểm dừng.\n\nTruy cập Google Maps, nhấn và giữ một ghim ở gần điểm đến của bạn và đảm bảo rằng ghim đó có nội dung \"Đã đánh dấu ghim\" (Nếu không, tính toán khoảng cách có thể không chính xác), sau đó chia sẻ vị trí với ứng dụng Essentials và bắt đầu theo dõi.</string>
+    <string name="location_reached_add_title">Add Destination</string>
+    <string name="location_reached_edit_title">Edit Destination</string>
+    <string name="location_reached_name_placeholder">Home, Office, etc.</string>
+    <string name="location_reached_name_label">Name</string>
+    <string name="location_reached_save_btn">Save</string>
+    <string name="location_reached_cancel_btn">Cancel</string>
+    <string name="location_reached_resolving">Resolving location…</string>
+    <string name="location_reached_last_trip">Last Trip</string>
+    <string name="location_reached_saved_destinations">Saved Destinations</string>
+    <string name="location_reached_no_saved_dest">No destinations saved yet.</string>
+    <string name="location_reached_delete">Delete Destination</string>
+    <string name="location_reached_tracking_now">Tracking Now</string>
+    <string name="location_reached_restart_btn">Re-Start</string>
+    <string name="location_reached_instructional_desc">Share coordinates (Dropped pin) from Google Maps to Essentials to save as a destination.\n\nThe distance shown is the direct distance to the destination, not the distance along the roads.\n\nTake all calculations of time and distance with a grain of salt as they are not always accurate.</string>
+    <string name="tile_location_reached">Are we there yet?</string>
+    <string name="location_reached_pause">Pause</string>
+    <string name="location_reached_resume">Resume</string>
+    <string name="location_reached_radius_label">Radius: %1$d m</string>
+    <string name="location_reached_distance_label">Distance to target: %1$s</string>
+    <string name="location_reached_last_travelled">Last: %1$s</string>
+    <string name="location_reached_never">Never</string>
+    <string name="location_reached_to_go">To go</string>
+    <string name="location_reached_eta_min">%1$d min</string>
+    <string name="location_reached_eta_hr_min">%1$d hr %2$d min</string>
+    <string name="location_reached_service_remaining_with_eta">%1$s (%2$d%%) • %3$s to go</string>
+    <string name="about_desc_freeze">Đóng băng các ứng dụng để ngăn chúng chạy ẩn.\n\nNgăn chặn tình trạng hao pin và sử dụng dữ liệu bằng cách đóng băng hoàn toàn các ứng dụng khi bạn không sử dụng chúng. Chúng sẽ được rã đông ngay lập tức khi bạn khởi chạy chúng. Các ứng dụng sẽ không hiển thị trong ngăn ứng dụng và cũng sẽ không hiển thị để cập nhật ứng dụng trong Cửa hàng Play khi bị treo.</string>
+    <string name="about_desc_system_keyboard">Phương thức nhập tùy chỉnh không ai yêu cầu.\n\nĐây chỉ là một thử nghiệm. Nhiều ngôn ngữ có thể không nhận được hỗ trợ vì đây là việc triển khai rất phức tạp và tốn thời gian.</string>
+    <string name="about_desc_batteries">Theo dõi mức pin của tất cả các thiết bị được kết nối của bạn.\n\nXem trạng thái pin của tai nghe, đồng hồ Bluetooth và các phụ kiện khác ở cùng một nơi. Kết nối với ứng dụng AirSync để hiển thị mức pin máy Mac của bạn.</string>
+    <string name="about_desc_watermark">Thêm chú thích/hình mờ tùy chỉnh vào ảnh của bạn bằng dữ liệu EXIF ​​​​và thông tin thiết bị.\n\nChia sẻ hình ảnh trực tiếp từ ứng dụng khác lên Essentials để dễ dàng thêm hình mờ.</string>
+    <string name="about_desc_calendar_sync">Đồng bộ hóa tất cả lịch sắp tới của bạn bất kể các hạn chế đối với tài khoản Google không cho phép thêm vào thiết bị wearOS do chính sách của cơ quan hoặc trường học. \n\nĐảm bảo cài đặt ứng dụng đồng hành wearOS Essentials để hiển thị lịch trong ứng dụng cũng như trong một ô hoặc một chức năng.</string>
+    <string name="about_desc_app_updates">Theo dõi các bản cập nhật cho các ứng dụng đã cài đặt của bạn.\n\nNhận thông báo về các bản cập nhật có sẵn, xem nhật ký thay đổi và cài đặt chúng dễ dàng chỉ bằng một cú chạm.</string>
+    <string name="about_desc_call_vibrations">Thêm phản hồi xúc giác cho cuộc gọi của bạn.\n\nRung khi cuộc gọi được kết nối, ngắt kết nối hoặc được chấp nhận, giúp bạn xác nhận bằng xúc giác mà không cần nhìn vào màn hình.</string>
+    <string name="about_desc_sound_mode_tile">Chuyển đổi nhanh chóng giữa các chế độ Âm thanh, Rung và Im lặng.\n\nMột ô tiện lợi để thay đổi chế độ chuông của bạn mà không cần sử dụng các nút âm lượng hoặc cài đặt. Bạn có thể sắp xếp lại các chế độ hoặc tắt bất kỳ chế độ nào nếu không cần thiết để tùy chỉnh ô chuyển đổi theo hành vi chu kỳ.</string>
+    <string name="about_desc_ui_blur">Dễ dàng chuyển đổi hiệu ứng độ sâu làm mờ cấp hệ thống trên toàn hệ điều hành.</string>
+    <string name="about_desc_bubbles">Bật hoặc tắt bong bóng thông báo nổi.\n\nNhanh chóng chuyển đổi cài đặt toàn hệ thống cho bong bóng hội thoại.</string>
+    <string name="about_desc_sensitive_content">Ẩn nội dung nhạy cảm trên màn hình khóa.\n\nChuyển đổi xem nội dung thông báo được hiển thị hay ẩn khi thiết bị của bạn bị khóa.</string>
+    <string name="about_desc_tap_to_wake">Chuyển đổi chức năng nhấn để đánh thức.\n\nBật hoặc tắt khả năng đánh thức màn hình của bạn bằng một lần nhấn.</string>
+    <string name="about_desc_aod">Chuyển đổi Luôn hiển thị.\n\nBật hoặc tắt nhanh màn hình luôn bật để xem nhanh thông tin.</string>
+    <string name="about_desc_notification_glance">Tự động kiểm soát Màn hình luôn bật dựa trên thông báo của bạn. Khi có tin nhắn hoặc cảnh báo đến từ một ứng dụng đã chọn, AOD sẽ tiếp tục hoạt động cho đến khi bạn loại bỏ thông báo, đảm bảo bạn không bao giờ bỏ lỡ thông tin quan trọng mà không gây lãng phí pin khi không có cảnh báo nào.</string>
+    <string name="about_desc_mono_audio">Kết hợp các kênh âm thanh thành mono.\n\nHữu ích khi sử dụng một chiếc tai nghe duy nhất hoặc cho mục đích hỗ trợ tiếp cận.</string>
+    <string name="about_desc_flashlight_tile">Chuyển đổi đèn pin.\n\nNhấn lâu sẽ mở ra các điều khiển để điều chỉnh cường độ, điều này có thể cần triển khai phần cứng mà một số thiết bị có thể thiếu.</string>
+    <string name="about_desc_stay_awake">Giữ màn hình luôn bật trong khi sạc.\n\nNgăn màn hình ngủ miễn là thiết bị được kết nối với nguồn điện phù hợp với nhà phát triển trong quá trình gỡ lỗi.</string>
+    <string name="about_desc_nfc">Chuyển đổi NFC.\n\nNhanh chóng bật hoặc tắt Giao tiếp trường gần để thanh toán và ghép nối.</string>
+    <string name="about_desc_adaptive_brightness">Chuyển đổi độ sáng thích ứng.\n\nBật hoặc tắt điều chỉnh độ sáng màn hình tự động dựa trên ánh sáng xung quanh.</string>
+    <string name="about_desc_private_dns">Chuyển đổi DNS riêng.\n\nChuyển qua các chế độ Tắt, Tự động và Nhà cung cấp DNS riêng tư.</string>
+    <string name="about_desc_usb_debugging">Chuyển đổi gỡ lỗi USB.\n\nBật hoặc tắt quyền truy cập gỡ lỗi ADB trực tiếp từ cài đặt nhanh.</string>
+    <string name="about_desc_color_picker">Khởi chạy công cụ Eye Dropper để chọn màu được giới thiệu trong Android 17 BETA 2</string>
+    <string name="about_desc_charge_optimization">Tối ưu hóa tuổi thọ pin của bạn bằng cách giới hạn mức sạc tối đa hoặc sử dụng tính năng sạc thích ứng. Tính năng này được thiết kế đặc biệt cho các thiết bị Pixel để đảm bảo tuổi thọ và chu kỳ sạc tốt.\n\nCredits: TebbeUbben/ChargeQuickTile</string>
+    <string name="action_download">Tải xuống</string>
+    <!-- DIY Section -->
+    <string name="diy_trigger_screen_off">Tắt màn hình</string>
+    <string name="diy_trigger_screen_on">Bật màn hình</string>
+    <string name="diy_trigger_device_unlock">Mở khóa thiết bị</string>
+    <string name="diy_trigger_charger_connected">Đã kết nối bộ sạc</string>
+    <string name="diy_trigger_charger_disconnected">Đã ngắt kết nối bộ sạc</string>
+    <string name="diy_trigger_schedule">Schedule</string>
+    <string name="diy_state_time_period">Time Period</string>
+    <string name="diy_time_selection_title">Select Time</string>
+    <string name="diy_time_range_selection_title">Select Time Range</string>
+    <string name="diy_start_time_label">Start Time</string>
+    <string name="diy_end_time_label">End Time</string>
+    <string name="diy_repeat_days_label">Repeat on</string>
+    <string name="diy_state_charging">Sạc</string>
+    <string name="diy_state_screen_on">Bật màn hình</string>
+    <string name="diy_action_haptic">Rung</string>
+    <string name="diy_action_notification">Hiển thị thông báo</string>
+    <string name="diy_action_remove_notification">Xóa thông báo</string>
+    <string name="diy_action_flashlight_on">Bật đèn pin</string>
+    <string name="diy_action_flashlight_off">Tắt đèn pin</string>
+    <string name="diy_action_flashlight_toggle">Chuyển đổi đèn pin</string>
+    <string name="diy_action_low_power_on">Turn On Low Power Mode</string>
+    <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
+    <string name="diy_action_dim_wallpaper">Hình nền mờ</string>
+    <string name="diy_dim_wallpaper_desc">Hành động này yêu cầu Shizuku hoặc Root điều chỉnh độ mờ của hình nền hệ thống.</string>
+    <string name="diy_select_trigger">Chọn kích hoạt</string>
+    <string name="diy_create_app_title">Ứng dụng</string>
+    <string name="diy_create_app_desc">Tự động hóa dựa trên ứng dụng đang mở</string>
+    <string name="diy_select_state">Chọn tiểu bang</string>
+    <string name="diy_select_action">Chọn hành động</string>
+    <string name="diy_in_action_label">Đang hoạt động</string>
+    <string name="diy_out_action_label">Ra hành động</string>
+    <string name="action_cancel">Hủy bỏ</string>
+    <string name="action_save">Cứu</string>
+    <string name="action_edit">Biên tập</string>
+    <string name="action_delete">Xóa bỏ</string>
+    <string name="action_enable">Cho phép</string>
+    <string name="action_disable">Vô hiệu hóa</string>
+    <string name="automation_service_channel_name">Dịch vụ tự động hóa</string>
+    <string name="automation_service_running_title">Tự động hóa đang hoạt động</string>
+    <string name="automation_service_running_desc">Giám sát các sự kiện hệ thống cho quá trình tự động hóa của bạn</string>
+    <string name="app_detection_service_channel_name">App Detection Service</string>
+    <string name="app_detection_service_running_title">App Detection Active</string>
+    <string name="app_detection_service_running_desc">Monitoring app activity</string>
+    <string name="diy_action_device_effects">Hiệu ứng thiết bị</string>
+    <string name="diy_device_effects_desc">Kiểm soát các hiệu ứng cấp hệ thống như thang độ xám, triệt tiêu AOD, làm mờ hình nền và chế độ ban đêm.</string>
+    <string name="diy_effect_grayscale">Thang độ xám</string>
+    <string name="diy_effect_suppress_ambient">Ngăn chặn hiển thị xung quanh</string>
+    <string name="diy_effect_dim_wallpaper">Hình nền mờ</string>
+    <string name="diy_effect_night_mode">Chế độ ban đêm</string>
+    <string name="diy_device_effects_android_15_warning">Tính năng này yêu cầu Android 15 trở lên.</string>
+    <string name="diy_device_effects_enabled">Đã bật</string>
+    <string name="diy_device_effects_disabled">Tàn tật</string>
+    <string name="diy_action_sound_mode">Chế độ âm thanh</string>
+    <string name="diy_sound_mode_desc">Hành động này cho phép chuyển đổi giữa các chế độ Âm thanh, Rung và Im lặng dựa trên trình kích hoạt. Nó yêu cầu quyền truy cập Không làm phiền.</string>
+    <!-- About Section -->
+    <string name="app_developer_name">Sameera Wijerathna</string>
+    <string name="app_description">Hộp công cụ tất cả trong một dành cho Pixel và Android của bạn</string>
+    <!-- Edge Lighting -->
+    <string name="color_mode_system">Hệ thống</string>
+    <string name="color_mode_custom">Phong tục</string>
+    <string name="color_mode_app_specific">Ứng dụng cụ thể</string>
+    <!-- Biometric & Security -->
+    <string name="error_auth_failed">Xác thực không thành công</string>
+    <string name="shortcut_creation_hint_toast">Nhấn và giữ một ứng dụng trong lưới để thêm phím tắt</string>
+    <string name="error_app_uninstalled">Không tìm thấy hoặc gỡ cài đặt ứng dụng</string>
+    <!-- Notifications -->
+    <string name="update_channel_name">Cập nhật ứng dụng</string>
+    <string name="update_channel_desc">Thông báo cập nhật ứng dụng mới</string>
+    <string name="notification_update_available">Đã có bản cập nhật</string>
+    <string name="battery_notification_no_devices">Không có thiết bị nào được kết nối</string>
+    <string name="label_unknown">Không xác định</string>
+    <string name="network_type_5g">5G</string>
+    <string name="network_type_4g">4G</string>
+    <string name="network_type_3g">3G</string>
+    <string name="label_shizuku_ritaka">Shizuku (Rikka)</string>
+    <string name="label_shizuku_tuozi">Shizuku (TuoZi)</string>
+    <string name="label_search_content_description">Tìm kiếm</string>
+    <string name="label_recent_searches">Recent Searches</string>
+    <string name="label_no_recent_searches">No recent searches</string>
+    <string name="label_clear_all">Clear all</string>
+    <string name="perm_device_admin_explanation">Cần phải khóa cứng thiết bị khi cố gắng thay đổi mạng trái phép trên màn hình khóa.</string>
+    <string name="biometric_subtitle_access_settings">Xác thực để truy cập cài đặt</string>
+    <string name="biometric_title_settings_format">%1$s Cài đặt</string>
+    <string name="keyword_feature">tính năng</string>
+    <string name="keyword_settings">cài đặt</string>
+    <string name="keyword_hide">trốn</string>
+    <string name="keyword_show">trình diễn</string>
+    <string name="keyword_visibility">khả năng hiển thị</string>
+    <string name="error_loading_apps">Lỗi tải ứng dụng: %1$s</string>
+    <string-array name="keywords_haptic">
+        <item>rung động</item>
+        <item>chạm</item>
+        <item>cảm thấy</item>
+    </string-array>
+    <string-array name="keywords_network_visibility">
+        <item>mạng</item>
+        <item>khả năng hiển thị</item>
+        <item>tự động</item>
+        <item>trốn</item>
+    </string-array>
+    <string-array name="keywords_restore_default">
+        <item>khôi phục</item>
+        <item>mặc định</item>
+        <item>biểu tượng</item>
+    </string-array>
+    <string-array name="keywords_keyboard">
+        <item>bàn phím</item>
+        <item>chiều cao</item>
+        <item>phần đệm</item>
+        <item>xúc giác</item>
+        <item>đầu vào</item>
+    </string-array>
+    <string-array name="keywords_flashlight">
+        <item>ánh sáng</item>
+        <item>ngọn đuốc</item>
+    </string-array>
+    <string-array name="keywords_flashlight_pulse">
+        <item>ánh sáng</item>
+        <item>ngọn đuốc</item>
+        <item>xung</item>
+        <item>thông báo</item>
+    </string-array>
+    <string-array name="keywords_qs_stay_awake">
+        <item>thức giấc</item>
+        <item>nhà phát triển</item>
+        <item>quyền lực</item>
+        <item>thù lao</item>
+    </string-array>
+    <string-array name="keywords_notification_lighting">
+        <item>ánh sáng</item>
+        <item>thông báo</item>
+        <item>dẫn đến</item>
+    </string-array>
+    <string-array name="keywords_round_shape">
+        <item>tròn</item>
+        <item>hình dạng</item>
+        <item>bờ rìa</item>
+    </string-array>
+    <string-array name="keywords_privacy">
+        <item>chắc chắn</item>
+        <item>sự riêng tư</item>
+        <item>sinh trắc học</item>
+        <item>khuôn mặt</item>
+        <item>dấu vân tay</item>
+    </string-array>
+    <string-array name="keywords_sound_accessibility">
+        <item>âm thanh</item>
+        <item>khả năng tiếp cận</item>
+        <item>nghe</item>
+    </string-array>
+    <string-array name="keywords_timeout">
+        <item>ở lại</item>
+        <item>TRÊN</item>
+        <item>hết thời gian</item>
+    </string-array>
+    <string-array name="keywords_wake_display">
+        <item>chạm</item>
+        <item>thức dậy</item>
+        <item>trưng bày</item>
+    </string-array>
+    <string-array name="keywords_timer">
+        <item>hẹn giờ</item>
+        <item>Chờ đợi</item>
+        <item>hết thời gian</item>
+    </string-array>
+    <string name="label_keyboard_always_dark">Chủ đề luôn tối</string>
+    <string name="label_keyboard_pitch_black">Chủ đề đen tuyền</string>
+    <string name="label_keyboard_clipboard_enabled">Lịch sử bảng nhớ tạm</string>
+    <string name="label_keyboard_long_press_symbols">Long press for symbols</string>
+    <string name="label_keyboard_accented_characters">Accented characters</string>
+    <string-array name="keywords_selection">
+        <item>danh sách</item>
+        <item>người nhặt đồ</item>
+        <item>lựa chọn</item>
+    </string-array>
+    <string-array name="keywords_visual_style">
+        <item>hoạt hình</item>
+        <item>thị giác</item>
+        <item>Nhìn</item>
+    </string-array>
+    <string-array name="keywords_quiet_filter">
+        <item>im lặng</item>
+        <item>phớt lờ</item>
+        <item>lọc</item>
+    </string-array>
+    <string-array name="keywords_automation_lock">
+        <item>tự động hóa</item>
+        <item>tự động</item>
+        <item>khóa</item>
+    </string-array>
+    <string-array name="keywords_adb_debug">
+        <item>adb</item>
+        <item>usb</item>
+        <item>gỡ lỗi</item>
+    </string-array>
+    <string-array name="keywords_blur_glass">
+        <item>lờ mờ</item>
+        <item>thủy tinh</item>
+        <item>họa tiết</item>
+    </string-array>
+    <string-array name="keywords_float_window">
+        <item>trôi nổi</item>
+        <item>cửa sổ</item>
+        <item>lớp phủ</item>
+    </string-array>
+    <string-array name="keywords_always_display">
+        <item>luôn luôn</item>
+        <item>trưng bày</item>
+        <item>cái đồng hồ</item>
+    </string-array>
+    <string-array name="keywords_audio_mute">
+        <item>âm thanh</item>
+        <item>tắt tiếng</item>
+        <item>âm lượng</item>
+    </string-array>
+    <string-array name="keywords_blue_filter">
+        <item>màu xanh da trời</item>
+        <item>lọc</item>
+        <item>tự động</item>
+    </string-array>
+    <string-array name="keywords_app_freezing">
+        <item>đông cứng</item>
+        <item>shizuku</item>
+    </string-array>
+    <string-array name="keywords_manual_now">
+        <item>thủ công</item>
+        <item>Hiện nay</item>
+        <item>shizuku</item>
+    </string-array>
+    <string-array name="keywords_proximity_sensor">
+        <item>sự gần gũi</item>
+        <item>cảm biến</item>
+        <item>khuôn mặt</item>
+        <item>xuống</item>
+    </string-array>
+    <string-array name="keywords_switch_master">
+        <item>công tắc</item>
+        <item>bậc thầy</item>
+    </string-array>
+    <string-array name="keywords_vibration">
+        <item>rung động</item>
+        <item>cảm thấy</item>
+    </string-array>
+    <string-array name="keywords_battery">
+        <item>ắc quy</item>
+        <item>thù lao</item>
+        <item>tối ưu hóa</item>
+        <item>điểm ảnh</item>
+    </string-array>
+    <!-- App Selection Extra -->
+    <string name="action_invert_selection">Đảo ngược lựa chọn</string>
+    <string name="toggle_show_system_apps">Hiển thị ứng dụng hệ thống</string>
+    <!-- Updates -->
+    <string name="status_up_to_date">Bạn đã cập nhật</string>
+    <string name="warning_pre_release">Đây là phiên bản tiền phát hành và có thể không ổn định.</string>
+    <string name="release_notes_format">Ghi chú phát hành %1$s</string>
+    <string name="action_view_on_github">Xem trên GitHub</string>
+    <string name="action_download_apk">Tải xuống APK</string>
+    <!-- Haptic Types -->
+    <string name="haptic_none">Không có</string>
+    <string name="haptic_subtle">tinh tế</string>
+    <string name="haptic_double">Gấp đôi</string>
+    <string name="haptic_click">nhấp chuột</string>
+    <string name="haptic_tick">đánh dấu</string>
+    <!-- Flashlight Intensity Overlay -->
+    <string name="action_turn_off">Tắt</string>
+    <string name="feature_flashlight_brightness_title">Độ sáng của đèn pin</string>
+    <!-- QS / Activities -->
+    <!-- About Section -->
+    <string name="developed_by_format">Được phát triển bởi %1$s\nvới ❤\uFE0F từ \uD83C\uDDF1\uD83C\uDDF0</string>
+    <string name="action_website">Trang web</string>
+    <string name="action_contact">Liên hệ</string>
+    <string name="action_telegram">điện tín</string>
+    <string name="action_support">Ủng hộ</string>
+    <string name="label_other_apps">Ứng dụng khác</string>
+    <string name="app_airsync">AirSync</string>
+    <string name="app_zenzero">ZenZero</string>
+    <string name="app_canvas">Vải bạt</string>
+    <string name="app_tasks">Nhiệm vụ</string>
+    <string name="app_zero">số không</string>
+    <!-- Help & Guides -->
+    <string name="help_guides_title">Trợ giúp &amp; Hướng dẫn</string>
+    <string name="need_more_support_reach_out">Cần hỗ trợ thêm? Hãy vươn tay ra,</string>
+    <string name="action_collapse">Sụp đổ</string>
+    <string name="action_expand">Mở rộng</string>
+    <string name="support_group_label">Nhóm hỗ trợ</string>
+    <string name="email_label">E-mail</string>
+    <string name="send_email_chooser_title">Gửi email</string>
+    <string name="error_no_email_app">Không có ứng dụng email nào</string>
+    <string name="instruction_step_image_description">Bước chân %1$d Hình ảnh</string>
+    <!-- Instructions Content -->
+    <string name="instruction_section_perms_title">Quyền truy cập, thông báo và lớp phủ</string>
+    <string name="instruction_step_perms_1">Bạn có thể nhận được thông báo từ chối quyền truy cập này nếu cố gắng cấp các quyền nhạy cảm như quyền truy cập, trình nghe thông báo hoặc quyền lớp phủ. Để cấp nó, hãy kiểm tra các bước dưới đây.</string>
+    <string name="instruction_step_perms_2">1. Vào trang thông tin ứng dụng của Essentials.</string>
+    <string name="instruction_step_perms_3">2. Mở menu 3 chấm và chọn \'Cho phép cài đặt hạn chế\'. Bạn có thể phải xác thực bằng sinh trắc học. Sau khi hoàn tất, hãy thử cấp lại quyền.</string>
+    <string name="instruction_section_shizuku_title">Shizuku</string>
+    <string name="instruction_section_shizuku_desc">Shizuku là một công cụ mạnh mẽ cho phép các ứng dụng sử dụng API hệ thống trực tiếp với quyền ADB hoặc quyền root. Nó được yêu cầu cho các tính năng như chế độ tối thiểu của Maps, App Freezer. Và sẽ không cấp một số quyền như WRITE_SECURE_SETTINGS. \n\nNhưng phiên bản Cửa hàng Play của Shizuku có thể đã lỗi thời và có thể sẽ không sử dụng được trên các phiên bản Android gần đây, vì vậy trong trường hợp đó, vui lòng tải phiên bản mới nhất từ ​​github hoặc một nhánh cập nhật của nó.</string>
+    <string name="instruction_section_maps_title">Chế độ tiết kiệm năng lượng của bản đồ</string>
+    <string name="instruction_section_maps_desc">Tính năng này tự động kích hoạt chế độ tiết kiệm năng lượng của Google Maps hiện chỉ dành riêng cho dòng Pixel 10. Một thành viên cộng đồng đã phát hiện ra rằng nó vẫn có thể sử dụng được trên mọi thiết bị Android bằng cách khởi chạy hoạt động minMode của bản đồ với quyền root. \n\nVà sau đó, tôi đã tự động hóa nó bằng Tasker để tự động kích hoạt khi màn hình tắt trong phiên điều hướng và sau đó có thể đạt được điều tương tự chỉ với quyền Shizuku khi chạy. \n\nNó dự định được hiển thị trên AOD của Pixel 10, do đó, đôi khi bạn có thể thấy thông báo bật lên trên màn hình rằng nó không hỗ trợ chế độ ngang. Ứng dụng không thể tránh được điều đó và bạn có thể bỏ qua.</string>
+    <string name="instruction_section_silent_title">Chế độ âm thanh im lặng</string>
+    <string name="instruction_section_silent_desc">Bạn có thể nhận thấy rằng chế độ im lặng cũng kích hoạt DND. \n\nĐiều này là do cách Android triển khai nó vì ngay cả khi chúng tôi sử dụng cùng một API để chuyển sang chế độ rung, vì lý do nào đó, nó sẽ bật DND cùng với chế độ im lặng và điều này là không thể tránh khỏi tại thời điểm này. :(</string>
+    <string name="instruction_section_freeze_title">Đóng băng là gì?</string>
+    <string name="instruction_section_freeze_desc">Tạm dừng và tránh xa các ứng dụng gây phiền nhiễu đồng thời tiết kiệm một chút năng lượng để ngăn các ứng dụng chạy ẩn. Thích hợp cho các ứng dụng hiếm khi được sử dụng. \n\nKhông nên dùng cho bất kỳ dịch vụ liên lạc nào vì chúng sẽ không thông báo cho bạn trong trường hợp khẩn cấp trừ khi bạn giải phóng chúng. \n\nKhông nên đóng băng các ứng dụng hệ thống vì chúng có thể dẫn đến mất ổn định hệ thống. Hãy thận trọng, Bạn đã được cảnh báo. \n\nLấy cảm hứng từ Mưa đá &lt;3</string>
+    <string name="instruction_section_security_title">Bảo mật khóa ứng dụng và khóa màn hình có thực sự an toàn không?</string>
+    <string name="instruction_section_security_desc">Hoàn toàn không. \n\nBất kỳ ứng dụng bên thứ 3 nào cũng không thể can thiệp 100% vào các tương tác thông thường của thiết bị và thậm chí khóa ứng dụng cũng chỉ là lớp phủ phía trên các ứng dụng đã chọn để ngăn tương tác với chúng. Có nhiều cách giải quyết và nó không phải là dễ dàng. \n\nĐiều tương tự cũng xảy ra với tính năng bảo mật bị khóa màn hình, tính năng này phát hiện ai đó đang cố gắng tương tác với các ô mạng mà vì lý do nào đó mà bất kỳ ai trên Pixels vẫn có thể truy cập được. Vì vậy, nếu họ cố gắng hết sức, họ vẫn có thể thay đổi chúng và đặc biệt nếu bạn đã thêm ô QS của chế độ máy bay, ứng dụng này không thể ngăn tương tác với nó. \n\nCác tính năng này được tạo ra giống như thử nghiệm về mức sử dụng nhẹ và sẽ không bao giờ được đề xuất là giải pháp bảo mật và quyền riêng tư mạnh mẽ. \n\nSecure các lựa chọn thay thế:\n - Khóa ứng dụng: Không gian riêng tư và thư mục Bảo mật trên Pixels và Samsung\n - Ngăn chặn truy cập mạng di động: Đảm bảo bật tính năng chống trộm và ngoại tuyến/tắt nguồn tìm thiết bị của tôi. Bạn cũng có thể xem xét hệ điều hành Graphene.</string>
+    <string name="instruction_section_statusbar_title">Biểu tượng thanh trạng thái</string>
+    <string name="instruction_section_statusbar_desc">Bạn có thể nhận thấy rằng ngay cả sau khi đặt lại các biểu tượng trên thanh trạng thái, một số biểu tượng như xoay thiết bị, biểu tượng tai nghe có dây vẫn có thể hiển thị. Điều này là do cách triển khai danh sách đen statubar trong Android và cách OEM của bạn có thể đã tùy chỉnh chúng. \nBạn có thể cần điều chỉnh thêm. \n\nNgoài ra, không phải tất cả các tùy chọn hiển thị biểu tượng đều có thể hoạt động vì chúng phụ thuộc vào việc triển khai và tính khả dụng của OEM.</string>
+    <string name="instruction_section_lighting_title">Đèn thông báo không hoạt động</string>
+    <string name="instruction_section_lighting_desc">Nó phụ thuộc vào OEM. Một số như OneUI dường như không cho phép lớp phủ phía trên AOD ngăn hiệu ứng ánh sáng được hiển thị. Trong trường hợp này, hãy thử hiển thị xung quanh như một giải pháp thay thế.</string>
+    <string name="instruction_section_button_title">Bản đồ lại nút không hoạt động khi màn hình tắt</string>
+    <string name="instruction_section_button_desc">Một số OEM giới hạn báo cáo dịch vụ trợ năng khi màn hình thực sự tắt nhưng chúng vẫn có thể hoạt động khi AOD bật. \nTrong trường hợp này, bạn có thể sử dụng tính năng ánh xạ lại nút khi bật AOD nhưng không tắt. \n\nĐể giải quyết vấn đề này, bạn sẽ cần sử dụng quyền Shizuku và bật the \'Sử dụng Shizuku hoặc Root\' chuyển đổi trong cài đặt ánh xạ lại nút để xác định và lắng nghe các sự kiện đầu vào phần cứng.\nĐiều này không đảm bảo hoạt động trên tất cả các thiết bị và nhu cầu đang thử nghiệm.\n\nVà ngay cả khi nó\' được bật, phương pháp Shizuku sẽ chỉ được sử dụng khi cần đến nó\'. Nếu không, nó sẽ luôn chuyển sang Hỗ trợ tiếp cận, tính năng này cũng xử lý việc chặn đầu vào thực tế khi nhấn và giữ.</string>
+    <string name="instruction_section_flashlight_title">Độ sáng của đèn pin không hoạt động</string>
+    <string name="instruction_section_flashlight_desc">Chỉ một số thiết bị hạn chế được hỗ trợ phần cứng và phần mềm điều chỉnh cường độ đèn pin. \n\n\'Phiên bản tối thiểu của Android là 13 (SDK33).\nĐiều khiển độ sáng đèn pin chỉ hỗ trợ HAL phiên bản 3.8 trở lên, vì vậy trong số các thiết bị được hỗ trợ, những thiết bị mới nhất (Ví dụ: Pixel 6/7, Samsung S23, v.v.)\'\npolodarb/Đèn pin-Tiramisu</string>
+    <string name="instruction_section_about_title">Ứng dụng này là cái quái gì vậy?</string>
+    <string name="instruction_section_about_desc">Câu hỏi hay,\n\nTôi luôn muốn tận dụng tối đa các thiết bị của mình vì tôi\'đã là người dùng đã root kể từ khi tôi có thiết bị Project Treble đầu tiên. Và I\'rất yêu thích ứng dụng Tasker, ứng dụng giống như thần thánh khi tự động hóa và sử dụng mọi API có thể cũng như các tính năng nội bộ của Android.\n\nVì vậy, tôi không hủy đăng ký và quay lại trải nghiệm Android beta gốc và muốn tận dụng tối đa những gì có thể với các đặc quyền nhất định. Cũng có thể chia sẻ chúng. Vì vậy, với kiến ​​thức mới bắt đầu về Kotlin Jetpack và sự hỗ trợ của nhiều công cụ nghiên cứu và hỗ trợ cũng như cộng đồng tuyệt vời, tôi đã xây dựng một ứng dụng tất cả trong một chứa mọi thứ tôi muốn có trong Android của mình với các quyền được cấp. Và đây là.\n\nCác yêu cầu tính năng đều được hoan nghênh, tôi sẽ xem xét và xem liệu chúng có thể đạt được với các quyền hiện có và kỹ năng của tôi hay không. Ngày nay điều gì là không thể. :)\n\nTại sao không có trên Play Store?\nTôi không\'không muốn có nguy cơ bị cấm tài khoản Nhà phát triển của mình do các quyền và API nội bộ và rất nhạy cảm đang được sử dụng trong ứng dụng. Nhưng với cách thức tải bên ngoài của Android đang hướng tới, hãy cùng\' xem chúng ta phải làm gì. Tôi hiểu mối lo ngại về việc các ứng dụng được tải sẵn là độc hại.\nTrong khi chúng ta đang thảo luận về chủ đề này, hãy kiểm tra ứng dụng AirSync khác của tôi nếu bạn là người dùng mac + Android. *phích cắm vô liêm sỉ*\n\nHãy tận hưởng, Tiếp tục xây dựng! (っ◕‿◕)っ</string>
+    <!-- Bug Reporting -->
+    <string name="toast_bug_report_copied">Đã sao chép báo cáo lỗi vào bảng nhớ tạm</string>
+    <string name="bug_report_title">Báo cáo lỗi</string>
+    <string name="bug_report_option_share_logs">Chia sẻ nhật ký</string>
+    <string name="bug_report_option_share_logs_desc">Bao gồm nhật ký và chi tiết</string>
+    <string name="bug_report_device_info">Thông tin thiết bị</string>
+    <string name="bug_report_raw_json">Báo cáo thô</string>
+    <string name="action_report_github">Vấn đề mở GitHub</string>
+    <string name="action_report_email">Báo cáo qua email</string>
+    <string name="action_copy_clipboard">Sao chép vào Clipboard</string>
+    <string name="bug_report_email_subject">Báo cáo lỗi thiết yếu</string>
+    <string name="bug_report_send_via">Gửi qua</string>
+    <!-- Location Reached -->
+    <string name="feat_location_reached_title">Chúng ta đến đó chưa?</string>
+    <string name="feat_location_reached_desc">Cảnh báo điểm đến lân cận</string>
+    <string name="location_reached_how_to">Mở Google Maps, chọn một vị trí và chia sẻ vị trí đó với Essentials.</string>
+    <string name="location_reached_radius_title">Bán kính cảnh báo: %d m</string>
+    <string name="perm_location_title">Vị trí</string>
+    <string name="perm_location_desc">Được sử dụng để phát hiện việc đến đích của bạn.</string>
+    <string name="perm_bg_location_title">Vị trí nền</string>
+    <string name="perm_bg_location_desc">Cần thiết để theo dõi việc bạn đến trong khi ứng dụng đóng hoặc màn hình tắt.</string>
+    <string name="location_reached_notification_title">Đã đến đích!</string>
+    <string name="location_reached_notification_desc">Bạn đã đến đích.</string>
+    <string name="location_reached_processing">Đang xử lý vị trí…</string>
+    <string name="location_reached_dist_remaining">KHOẢNG CÁCH CÒN LẠI</string>
+    <string name="location_reached_calculating">Đang tính…</string>
+    <string name="location_reached_stop_tracking">Dừng theo dõi</string>
+    <string name="location_reached_dest_ready">Điểm đến đã sẵn sàng</string>
+    <string name="location_reached_start_tracking">Bắt đầu theo dõi</string>
+    <string name="location_reached_view_map">Xem bản đồ</string>
+    <string name="location_reached_clear">Thông thoáng</string>
+    <string name="location_reached_no_dest">Không có điểm đến</string>
+    <string name="location_reached_open_maps">Mở Bản đồ</string>
+    <string name="location_reached_fsi_title">Quyền báo động toàn màn hình</string>
+    <string name="location_reached_fsi_desc">Cần thiết để đánh thức thiết bị của bạn khi đến nơi. Nhấn để cấp.</string>
+    <string name="location_reached_dist_m">%1$d tôi</string>
+    <string name="location_reached_dist_km">%1$.1f km</string>
+    <string name="location_reached_service_title">Cảnh báo hành trình đang hoạt động</string>
+    <string name="location_reached_service_remaining">%1$s còn lại (%2$d%%)</string>
+    <string name="location_reached_channel_name">Tiến độ du lịch</string>
+    <string name="location_reached_channel_desc">Shows real-time distance to destination</string>
+    <string name="location_reached_alarm_title">Destination Nearby</string>
+    <string name="location_reached_alarm_subtitle">Prepare to get off</string>
+    <string name="location_reached_dismiss">Dismiss</string>
+    <string name="location_reached_toast_set">Destination set: %1$.4f, %2$.4f</string>
+    <string name="setting_use_root_title">Use Root</string>
+    <string name="setting_use_root_desc">Thay vì Shizuku</string>
+    <string name="root_not_available_toast">Quyền truy cập root không có sẵn. Vui lòng kiểm tra trình quản lý gốc của bạn.</string>
+    <!-- System Keyboard -->
+    <string name="feat_system_keyboard_title">Bàn phím</string>
+    <string name="feat_system_keys">Phím</string>
+    <string name="feat_system_keyboard_desc">Tùy chỉnh bố cục và hành vi</string>
+    <string name="search_keyboard_height_title">Chiều cao bàn phím</string>
+    <string name="search_keyboard_height_desc">Điều chỉnh tổng kích thước dọc của bàn phím</string>
+    <string name="search_keyboard_padding_title">Phần đệm dưới cùng</string>
+    <string name="search_keyboard_padding_desc">Thêm khoảng trống bên dưới bàn phím</string>
+    <string name="search_keyboard_haptics_title">Phản hồi xúc giác</string>
+    <string name="search_keyboard_haptics_desc">Rung khi nhấn phím</string>
+    <string name="test_keyboard_hint">Kiểm tra bàn phím</string>
+    <string name="label_keyboard_height">Chiều cao bàn phím</string>
+    <string name="label_keyboard_bottom_padding">Phần đệm dưới cùng</string>
+    <string name="label_keyboard_haptics">Phản hồi xúc giác</string>
+    <string name="label_keyboard_roundness">Độ tròn của phím</string>
+    <string name="label_keyboard_functions_bottom">Di chuyển chức năng xuống dưới cùng</string>
+    <string name="label_keyboard_functions_padding">Chức năng đệm bên</string>
+    <string name="label_keyboard_haptic_strength">Cường độ phản hồi xúc giác</string>
+    <string name="label_keyboard_shape">Hình dạng bàn phím</string>
+    <string name="shape_round">Tròn</string>
+    <string name="shape_flat">Phẳng</string>
+    <string name="shape_inverse">nghịch đảo</string>
+    <string name="feat_batteries_title">Pin</string>
+    <string name="feat_batteries_desc">Theo dõi mức pin thiết bị của bạn</string>
+    <string name="batteries_widget_label">Trạng thái pin</string>
+    <string name="connect_to_airsync">Kết nối với AirSync</string>
+    <string name="connect_to_airsync_summary">Hiển thị pin từ thiết bị mac được kết nối của bạn trong AirSync</string>
+    <string name="download_airsync">Tải xuống ứng dụng AirSync</string>
+    <string name="download_airsync_summary">Cần thiết để đồng bộ hóa pin Mac</string>
+    <string name="feat_battery_notification_title">Thông báo pin</string>
+    <string name="feat_battery_notification_desc">Thông báo trạng thái pin liên tục</string>
+    <string name="battery_notification_hint">This notification displays battery levels for your connected Mac and Bluetooth devices. You can configure which devices to show in the Battery Widget settings.</string>
+    <string name="about_desc_battery_notification">Tái tạo trải nghiệm tiện ích pin trong bóng thông báo của bạn. Nó sẽ hiển thị mức pin của tất cả các thiết bị được kết nối của bạn trong một thông báo liên tục, được cập nhật theo thời gian thực. Điều này bao gồm máy Mac của bạn (thông qua AirSync) và các phụ kiện Bluetooth.</string>
+    <string name="battery_notification_channel_name">Thông báo trạng thái pin</string>
+    <string name="battery_notification_channel_desc">Thông báo liên tục hiển thị mức pin của thiết bị được kết nối</string>
+    <string name="perm_nearby_devices_title">Thiết bị lân cận</string>
+    <string name="perm_nearby_devices_desc">Cần thiết để phát hiện và truy xuất thông tin pin từ phụ kiện Bluetooth</string>
+    <!-- GitHub Auth -->
+    <string name="auth_copy_code">Sao chép mã</string>
+    <string name="auth_open_login_page">Mở trang đăng nhập</string>
+    <string name="auth_sign_in_rationale">Đăng nhập để mở rộng giới hạn lệnh gọi API</string>
+    <string name="auth_waiting_for_authorization">Đang chờ cấp phép...</string>
+    <string name="action_sign_in_github">Đăng nhập bằng GitHub</string>
+    <string name="action_sign_out">Đăng xuất</string>
+    <string name="action_profile">Hồ sơ</string>
+    <!-- App Updates / Repos -->
+    <string name="label_release_notes">Ghi chú phát hành</string>
+    <string name="msg_no_repos_tracked">Chưa có kho lưu trữ nào được theo dõi</string>
+    <string name="label_no_app_linked">Không có ứng dụng nào được liên kết</string>
+    <string name="format_updated_relative">Đã cập nhật %1$s</string>
+    <!-- Relative Time -->
+    <string name="time_just_now">ngay bây giờ</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="time_min_ago">%1$dcách đây vài phút</string>
+    <string name="time_hour_ago">%1$dgiờ trước</string>
+    <string name="time_day_ago">%1$dngày trước</string>
+    <string name="time_days_ago">%1$d days ago</string>
+    <string name="time_weeks_ago">%1$d weeks ago</string>
+    <string name="time_month_ago">%1$dcách đây vài tháng</string>
+    <string name="time_months_ago">%1$d months ago</string>
+    <string name="time_year_ago">%1$dnăm trước</string>
+    <string name="action_retry">Thử lại</string>
+    <string name="action_start_sign_in">Bắt đầu Đăng nhập</string>
+    <string name="auth_requesting_code">Đang yêu cầu mã thiết bị...</string>
+    <string name="auth_copy_code_instruction">1. Sao chép mã của bạn:</string>
+    <string name="auth_paste_code_instruction">2. Dán mã trên GitHub:</string>
+    <string name="label_found_apks">APK đã tìm thấy</string>
+    <string name="label_readme">ĐỌC TÔI</string>
+    <string name="action_refresh">Làm cho khỏe lại</string>
+    <!-- Added Missing Group Strings -->
+    <string name="feat_sound_modes_title">Ô chế độ âm thanh</string>
+    <string name="feat_sound_modes_desc">Ô QS để chuyển đổi chế độ âm thanh</string>
+    <string name="search_sound_mode_show_slider_title">Hiển thị thanh trượt</string>
+    <string name="search_sound_mode_show_slider_desc">Hiển thị thanh trượt âm lượng trong ô</string>
+    <string name="search_sound_mode_behavior_title">Hành vi chu kỳ</string>
+    <string name="search_sound_mode_behavior_desc">Chọn các chế độ để chuyển qua</string>
+    <string name="feat_sound_haptics_title">Âm thanh và xúc giác</string>
+    <string name="feat_sound_haptics_desc">Tính năng âm lượng và xúc giác</string>
+    <string name="feat_security_privacy_title">Bảo mật và quyền riêng tư</string>
+    <string name="feat_security_privacy_desc">Bảo vệ và bảo mật thiết bị của bạn</string>
+    <string name="feat_notifications_alerts_title">Thông báo và cảnh báo</string>
+    <string name="feat_notifications_alerts_desc">Không bao giờ bỏ lỡ các ưu tiên của bạn</string>
+    <string name="feat_input_actions_title">Đầu vào và hành động</string>
+    <string name="feat_input_actions_desc">Điều khiển thiết bị của bạn một cách dễ dàng</string>
+    <string name="feat_widgets_title">Widget</string>
+    <string name="feat_widgets_desc">Nhìn thoáng qua trên màn hình chính của bạn</string>
+    <string name="feat_display_visuals_title">Trưng bày</string>
+    <string name="feat_display_visuals_desc">Hình ảnh để nâng cao trải nghiệm của bạn</string>
+    <string name="feat_watch_title">Đồng hồ</string>
+    <string name="feat_watch_desc">Tích hợp với WearOS</string>
+    <string name="watch_no_companion_title">Không phát hiện Đồng hồ</string>
+    <string name="watch_no_companion_desc">Có vẻ như bạn chưa cài đặt ứng dụng đồng hành Essentials Wear trên đồng hồ của mình.</string>
+    <string name="watch_install_companion_action">Cài đặt đồng hành</string>
+    <string name="action_download_from_github">Download from GitHub</string>
+    <string name="watch_help_title">Install on Watch</string>
+    <string name="watch_help_description">To use Watch features, you need to install the Essentials companion app on your Wear OS watch. Click the button below to open the Play Store directly on your watch.</string>
+    <string name="watch_help_open_play_store">Open on Watch</string>
+    <string name="cat_interaction">Sự tương tác</string>
+    <string name="cat_interface">Giao diện</string>
+    <string name="cat_display">Trưng bày</string>
+    <string name="cat_protection">Sự bảo vệ</string>
+    <string name="cat_accessibility">Accessibility</string>
+    <string name="cat_connectivity">Connectivity</string>
+    <string name="cat_privacy">Privacy</string>
+    <string name="cat_utils">Utilities</string>
+    <string name="label_kbd_abc">ABC</string>
+    <string name="label_kbd_symbols">\?#/</string>
+    <string name="label_kaomoji">Kaomoji</string>
+    <string name="kaomoji_cat_joy">Joy</string>
+    <string name="kaomoji_cat_love">Love</string>
+    <string name="kaomoji_cat_embarassment">Embarassment</string>
+    <string name="kaomoji_cat_sympathy">Sympathy</string>
+    <string name="kaomoji_cat_dissatisfaction">Dissatisfaction</string>
+    <string name="kaomoji_cat_anger">Anger</string>
+    <string name="kaomoji_cat_apologizing">Apologizing</string>
+    <string name="kaomoji_cat_bear">Bear</string>
+    <string name="kaomoji_cat_bird">Bird</string>
+    <string name="kaomoji_cat_cat">Cat</string>
+    <string name="kaomoji_cat_confusion">Confusion</string>
+    <string name="kaomoji_cat_dog">Dog</string>
+    <string name="kaomoji_cat_doubt">Doubt</string>
+    <string name="kaomoji_cat_enemies">Enemies</string>
+    <string name="kaomoji_cat_faces">Faces</string>
+    <string name="kaomoji_cat_fear">Fear</string>
+    <string name="kaomoji_cat_fish">Fish</string>
+    <string name="kaomoji_cat_food">Food</string>
+    <string name="kaomoji_cat_friends">Friends</string>
+    <string name="kaomoji_cat_games">Games</string>
+    <string name="kaomoji_cat_greeting">Greeting</string>
+    <string name="kaomoji_cat_hiding">Hiding</string>
+    <string name="kaomoji_cat_hugging">Hugging</string>
+    <string name="kaomoji_cat_indifference">Indifference</string>
+    <string name="kaomoji_cat_magic">Magic</string>
+    <string name="kaomoji_cat_music">Music</string>
+    <string name="kaomoji_cat_nosebleeding">Nosebleeding</string>
+    <string name="kaomoji_cat_pain">Pain</string>
+    <string name="kaomoji_cat_pig">Pig</string>
+    <string name="kaomoji_cat_rabbit">Rabbit</string>
+    <string name="kaomoji_cat_running">Running</string>
+    <string name="kaomoji_cat_sadness">Sadness</string>
+    <string name="kaomoji_cat_sleeping">Sleeping</string>
+    <string name="kaomoji_cat_special">Special</string>
+    <string name="kaomoji_cat_spider">Spider</string>
+    <string name="kaomoji_cat_surprise">Surprise</string>
+    <string name="kaomoji_cat_weapons">Weapons</string>
+    <string name="kaomoji_cat_winking">Winking</string>
+    <string name="kaomoji_cat_writing">Writing</string>
+    <string name="msg_restrict_own_app_repo">Ôi! Bạn có thể kiểm tra cập nhật trong cài đặt ứng dụng, Không cần thêm vào đây XD</string>
+    <string name="action_export">Xuất khẩu</string>
+    <string name="action_import">Nhập khẩu</string>
+    <string name="msg_export_success">Kho lưu trữ được xuất thành công</string>
+    <string name="msg_export_failed">Không thể xuất kho lưu trữ</string>
+    <string name="msg_import_success">Kho được nhập thành công</string>
+    <string name="msg_import_failed">Không thể nhập kho lưu trữ</string>
+    <string name="label_apps">Ứng dụng</string>
+    <string name="feat_text_animations_title">Quy mô và hình ảnh động</string>
+    <string name="feat_text_animations_desc">Điều chỉnh quy mô hệ thống và hình ảnh động</string>
+    <string name="feat_screen_refresh_rate_title">Screen Refresh Rate</string>
+    <string name="feat_screen_refresh_rate_desc">Set a fixed or ranged screen refresh rate</string>
+    <string name="settings_section_text">Chữ</string>
+    <string name="label_font_scale">Tỷ lệ phông chữ</string>
+    <string name="label_font_weight">Trọng lượng phông chữ</string>
+    <string name="label_reset_default">Cài lại</string>
+    <string name="settings_section_scale">Tỉ lệ</string>
+    <string name="label_smallest_width">Chiều rộng nhỏ nhất</string>
+    <string name="msg_shizuku_permission_required">Cần có sự cho phép của Shizuku để điều chỉnh tỷ lệ</string>
+    <string name="label_grant_permission">Cấp quyền</string>
+    <string name="settings_section_animations">Hoạt hình</string>
+    <string name="label_animator_duration_scale">Thang thời lượng hoạt hình</string>
+    <string name="label_transition_animation_scale">Quy mô hoạt ảnh chuyển tiếp</string>
+    <string name="label_window_animation_scale">Tỷ lệ hoạt ảnh cửa sổ</string>
+    <string name="about_desc_text_animations">Điều chỉnh tỷ lệ phông chữ, trọng lượng và tốc độ hoạt ảnh trên toàn hệ thống. Lưu ý rằng một số cài đặt có thể yêu cầu quyền nâng cao hoặc khởi động lại thiết bị đối với một số ứng dụng nhất định để phản ánh các thay đổi. \n\nCó thể cần thêm quyền shizuku hoặc quyền root để điều chỉnh tỷ lệ</string>
+    <string name="about_desc_screen_refresh_rate">Set a custom screen refresh rate using Shizuku. Fixed mode locks both the minimum and peak refresh rate to one value, while range mode lets you define separate minimum and peak values. Reset clears the custom override and returns the device to its system-managed refresh behavior.</string>
+    <string name="refresh_rate_section_mode">Mode</string>
+    <string name="refresh_rate_section_values">Refresh Rate</string>
+    <string name="refresh_rate_mode_fixed">Fixed</string>
+    <string name="refresh_rate_mode_range">Range</string>
+    <string name="refresh_rate_fixed_title">Fixed refresh rate</string>
+    <string name="refresh_rate_fixed_desc">Set both minimum and peak refresh rate to the same value</string>
+    <string name="refresh_rate_min_title">Minimum refresh rate</string>
+    <string name="refresh_rate_min_desc">Choose the lowest refresh rate the display may use</string>
+    <string name="refresh_rate_peak_title">Peak refresh rate</string>
+    <string name="refresh_rate_peak_desc">Choose the highest refresh rate the display may use</string>
+    <string name="refresh_rate_system_default">System</string>
+    <string name="refresh_rate_reset_desc">Remove the custom override and return to the system default refresh behavior</string>
+    <string name="msg_refresh_rate_permission_required">Shizuku permission required to adjust refresh rate</string>
+    <string name="search_refresh_rate_mode_title">Refresh Rate Mode</string>
+    <string name="search_refresh_rate_mode_desc">Switch between fixed and ranged refresh rate control</string>
+    <string name="search_refresh_rate_fixed_title">Fixed Refresh Rate</string>
+    <string name="search_refresh_rate_fixed_desc">Lock the display to one custom refresh rate</string>
+    <string name="search_refresh_rate_range_title">Refresh Rate Range</string>
+    <string name="search_refresh_rate_range_desc">Configure separate minimum and peak refresh rates</string>
+    <string name="search_refresh_rate_reset_title">Reset Refresh Rate</string>
+    <string name="search_refresh_rate_reset_desc">Clear the custom refresh rate override</string>
+    <string name="feat_aod_force_turn_off_title">Buộc tắt AOD</string>
+    <string name="feat_aod_force_turn_off_desc">Buộc tắt AOD khi không có thông báo. Yêu cầu quyền truy cập.</string>
+    <string name="feat_auto_accessibility_title">Tự động truy cập</string>
+    <string name="feat_auto_accessibility_desc">Tự động cấp quyền truy cập khi khởi chạy ứng dụng nếu bị thiếu bằng cách sử dụng WRITE_SECURE_SETTINGS.</string>
+    <string name="label_help_guide">Trợ giúp và hướng dẫn</string>
+    <string name="tab_your_android">Android của bạn</string>
+    <string name="label_device_storage">Kho</string>
+    <string name="label_device_ram">Ký ức</string>
+    <string name="label_use_blur">Sử dụng làm mờ</string>
+    <string name="desc_use_blur">Bật các phần tử làm mờ lũy tiến trên giao diện người dùng</string>
+    <string name="msg_blur_compatibility_error">Tính năng Làm mờ bị tắt trên thiết bị này để ngăn lỗi hiển thị đã biết trên các thiết bị Samsung chạy Android 15 trở xuống.</string>
+    <!-- Empty State Actions -->
+    <string name="msg_no_apps_frozen">Không có ứng dụng nào được chọn để đóng băng.</string>
+    <string name="action_get_started">Bắt đầu</string>
+    <string name="action_new_automation">Tự động hóa mới</string>
+    <string name="action_add_repository">Thêm kho lưu trữ</string>
+    <!-- Bug Report Enhancement -->
+    <string name="bug_report_feedback_placeholder">Describe the issue or provide feedback…</string>
+    <string name="bug_report_contact_email_label">Contact email</string>
+    <string name="action_send_feedback">Send Feedback</string>
+    <string name="msg_feedback_sent">Feedback sent successfully! Thanks for helping us improve the app.</string>
+    <string name="label_alternatively">Alternatively</string>
+    <!-- Pixel Diagnostics -->
+    <string name="label_diagnostics">Diagnostics</string>
+    <string name="label_device_check">Device Check</string>
+    <string name="msg_flashbang">Get ready to be flashbanged!</string>
+    <string name="action_abort">Abort</string>
+    <string name="action_continue">Continue</string>
+    <string name="prank_trial_expired_title">Your Essentials trial has expired</string>
+    <string name="prank_trial_expired_desc">Your free trial period of Essentials has ended. Access to advanced features like Button Remap, App Freezing, and DIY Automations with Premium.</string>
+    <string name="prank_button_premium">What\'s in Premium?</string>
+    <string name="prank_reveal_title">April Fools!</string>
+    <string name="prank_reveal_desc">Just kidding, Essentials is and will always be free and open source. Enjoy! (っ◕‿◕)っ</string>
+    <string name="notification_lighting_style_system">System</string>
+    <string name="notification_lighting_system_mode_title">Ripple Animation</string>
+    <string name="notification_lighting_system_mode_charging_ripple">Bottom</string>
+    <string name="notification_lighting_system_mode_auth_ripple">Center</string>
+    <string name="notification_lighting_system_mode_custom_ripple">Custom</string>
+    <string name="msg_shizuku_root_required_system_lighting">Shizuku or Root permission is required for System lighting effects</string>
+    <string name="notification_lighting_system_disclaimer">Made for Google Pixel. Might not be available on other devices.</string>
+    <!-- Live Wallpaper -->
+    <string name="feat_live_wallpaper_title">Live wallpaper</string>
+    <string name="feat_live_wallpaper_desc">Set custom video as live wallpaper</string>
+    <string name="live_wallpaper_label">Live Wallpaper</string>
+    <string name="live_wallpaper_description">A video live wallpaper that plays when unlocked.</string>
+    <string name="live_wallpaper_playback_trigger_title">Play when</string>
+    <string name="live_wallpaper_trigger_unlock">Unlock</string>
+    <string name="live_wallpaper_trigger_screen_on">Screen on</string>
+    <string name="live_wallpaper_video_title">Video</string>
+    <string name="btn_apply">Apply</string>
+    <string name="add_video">Add video</string>
+    <string name="custom_video">Custom video</string>
+    <string name="about_desc_live_wallpaper">Set your favorite video as your home screen wallpaper. Choose between triggering the animation upon unlocking or simply whenever the screen turns on for a dynamic experience.</string>
+    <!-- Shut-Up! Feature -->
+    <string name="feat_shut_up_title">Shut-Up!</string>
+    <string name="feat_shut_up_desc">I know what I\'m doing</string>
+    <string name="shut_up_description">Shut-Up! bypasses app restrictions and checks for developer options, accessibility and debugging by dynamically hiding them when you launch sensitive apps. \n\nUse the custom shortcuts to ensure settings are hidden before the app launches.</string>
+    <string name="shut_up_select_apps_title">Select Apps</string>
+    <string name="shut_up_select_apps_desc">Choose apps to apply Shut-Up! logic</string>
+    <string name="shut_up_settings_title">Shut-Up! Settings</string>
+    <string name="shut_up_per_app_settings">Shut-Up! Features</string>
+    <string name="shut_up_disable_dev_options">Disable Developer Options</string>
+    <string name="shut_up_disable_usb_debugging">Disable USB Debugging</string>
+    <string name="shut_up_disable_wireless_debugging">Disable Wireless Debugging</string>
+    <string name="shut_up_disable_accessibility">Disable Accessibility Services</string>
+    <string name="shut_up_shortcut_created">Shortcut created for %s</string>
+    <string name="feat_disable_rotation_suggestion_title">Disable rotation suggestion</string>
+    <string name="feat_disable_rotation_suggestion_desc">Do not show the rotation button when auto-rotate is off</string>
+    <string name="shut_up_toast_active">App got shut up</string>
+    <string name="shut_up_toast_restored">Shut up features returned</string>
+    <string name="shut_up_auto_archive_notif_title">Auto Freeze</string>
+    <string name="shut_up_auto_archive_notif_text">%1$s will be archived in %2$d seconds</string>
+    <string name="shut_up_auto_archive_action_freeze">Freeze now</string>
+    <string name="shut_up_auto_archive_action_abort">Abort</string>
+    <!-- Lock Screen Clock -->
+    <string name="feat_lock_screen_clock_title">Lock screen clock</string>
+    <string name="feat_lock_screen_clock_desc">Customize lock screen clock on Pixels</string>
+    <string name="about_desc_lock_screen_clock">Change the lock screen clock style on Pixels. Select from the available clock faces provided by the System UI. Some old styles might not be available.</string>
+    <string name="lock_screen_clock_bignum">Big Number</string>
+    <string name="lock_screen_clock_calligraphy">Calligraphy</string>
+    <string name="lock_screen_clock_flex">Flex</string>
+    <string name="lock_screen_clock_growth">Growth</string>
+    <string name="lock_screen_clock_handwritten">Handwritten</string>
+    <string name="lock_screen_clock_inflate">Inflate</string>
+    <string name="lock_screen_clock_metro">Metro</string>
+    <string name="lock_screen_clock_numoverlap">Number Overlap</string>
+    <string name="lock_screen_clock_weather">Weather</string>
+    <string name="lock_screen_clock_select_label">Select Clock Style</string>
+    <string name="lock_screen_clock_current_label">Current</string>
+    <string name="lock_screen_clock_apply_label">Apply</string>
+    <string name="lock_screen_clock_applied_toast">Clock style applied</string>
+    <string name="lock_screen_clock_permission_required">WRITE_SECURE_SETTINGS permission required</string>
+    <string name="lock_screen_clock_default">Default</string>
+    <string name="label_weight">Weight</string>
+    <string name="label_width">Width</string>
+    <string name="label_grade">Grade</string>
+    <string name="label_roundness">Roundness</string>
+    <string name="label_color_tone">Lightness</string>
+    <string name="label_variation">Variation</string>
+    <string name="label_color">Color</string>
+    <string name="label_style_font">Style &amp; Font</string>
+    <string name="about_title">About</string>
+    <string name="color_default">Default</string>
+    <string name="color_red">Red</string>
+    <string name="color_green">Green</string>
+    <string name="color_blue">Blue</string>
+    <string name="color_yellow">Yellow</string>
+    <string name="color_orange">Orange</string>
+    <string name="color_purple">Purple</string>
+    <string name="color_pink">Pink</string>
+    <string name="color_teal">Teal</string>
+    <!-- What's New -->
+    <string name="whats_new_specs_title">Device Specs Retired</string>
+    <string name="whats_new_specs_desc">Inaccurate GSMArena-powered specifications have been removed to keep device insights clean, fast, and completely reliable.</string>
+    <string name="whats_new_apps_title">App Updates Migrated</string>
+    <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
+</resources>
