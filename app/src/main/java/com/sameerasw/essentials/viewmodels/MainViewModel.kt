@@ -740,7 +740,14 @@ class MainViewModel : ViewModel() {
         // Sync with system per-app language settings
         val currentLocales = AppCompatDelegate.getApplicationLocales()
         if (!currentLocales.isEmpty) {
-            appLanguage.value = currentLocales.get(0)?.language ?: "en"
+            val locale = currentLocales.get(0)
+            val langTag = locale?.toLanguageTag() ?: "en"
+            appLanguage.value = when {
+                langTag.startsWith("pt-BR") -> "pt-BR"
+                langTag.startsWith("pt-PT") -> "pt-PT"
+                langTag.startsWith("pt") -> "pt-BR" // Fallback to Brazilian Portuguese as primary translated option
+                else -> locale?.language ?: "en"
+            }
         } else {
             appLanguage.value = "en"
         }
