@@ -29,10 +29,10 @@ android {
         applicationId = "com.sameerasw.essentials"
         minSdk = 26
         targetSdk = 37
-        versionCode = 43
-        versionName = "14.0"
+        versionCode = 44
+        versionName = "15.0"
 
-        val whatsNewCounter = 1
+        val whatsNewCounter = 2
         buildConfigField("int", "WHATS_NEW_COUNTER", whatsNewCounter.toString())
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

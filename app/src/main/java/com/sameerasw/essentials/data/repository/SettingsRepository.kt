@@ -133,6 +133,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_FREEZE_SELECTED_APPS = "freeze_selected_apps"
         const val KEY_FREEZE_DONT_FREEZE_ACTIVE_APPS = "freeze_dont_freeze_active_apps"
         const val KEY_FREEZE_MODE = "freeze_mode"
+        const val KEY_FREEZE_SHOW_IN_LAUNCHER = "freeze_show_in_launcher"
 
         const val KEY_DEVELOPER_MODE_ENABLED = "developer_mode_enabled"
         const val KEY_HAPTIC_FEEDBACK_TYPE = "haptic_feedback_type"

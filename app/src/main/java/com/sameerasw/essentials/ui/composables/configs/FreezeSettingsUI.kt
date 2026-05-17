@@ -297,6 +297,17 @@ fun FreezeSettingsUI(
                 onClick = { isAppSelectionSheetOpen = true },
                 modifier = Modifier.highlight(highlightKey == "freeze_selected_apps")
             )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_mode_cool_24,
+                title = stringResource(R.string.freeze_show_in_launcher_title),
+                subtitle = stringResource(R.string.freeze_show_in_launcher_desc),
+                isChecked = viewModel.isFreezeShowInLauncherEnabled.value,
+                onCheckedChange = { enabled ->
+                    viewModel.setFreezeShowInLauncherEnabled(enabled, context)
+                },
+                enabled = true
+            )
         }
 
         Text(

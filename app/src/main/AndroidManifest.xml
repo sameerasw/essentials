@@ -146,9 +146,24 @@
         <activity
             android:name=".ui.activities.AppFreezingActivity"
             android:exported="true"
-            android:label="@string/freeze_activity_title"
-            android:theme="@style/Theme.Essentials">
-        </activity>
+            android:icon="@drawable/rounded_mode_cool_24"
+            android:label="@string/freeze_shortcut_short_label"
+            android:launchMode="singleTask"
+            android:taskAffinity="com.sameerasw.essentials.freezing"
+            android:theme="@style/Theme.Essentials" />
+
+        <activity-alias
+            android:name=".AppFreezingLauncher"
+            android:targetActivity=".ui.activities.AppFreezingActivity"
+            android:exported="true"
+            android:icon="@drawable/rounded_mode_cool_24"
+            android:label="@string/freeze_shortcut_short_label"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
 
         <activity
             android:name=".LinkPickerActivity"
