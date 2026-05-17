@@ -8,7 +8,7 @@
     <string name="accessibility_service_description"><b>Service d\'accessibilité Essentials</b>\n\nCe service est requis pour les fonctionnalités suivantes :\n\n<b>• Réattribution d\'un bouton physique :</b>\nDétecte les appuis sur le bouton volume même si l\'écran est éteint pour déclencher des actions comme allumer la lampe-torche.\n\n<b>• Réglage par appli :</b>\nSurveille les applications actives pour appliquer des profils spécifiques pour le mode éclairage nocturne dynamique, le réglage de couleurs des notifications lumineuses et le verrouillage d\'applis.\n\n<b>• Contrôler l\'écran :</b>\nAutorise l\'application à verrouiller l\'écran (par exemple en utilisant le Double Tap ou les Widgets) et détecter le changement d\'état de l\'écran.\n\n<b>• Sécurité :</b>\nPrévenir les changements non autorisé en détectant le contenu des fenêtres lorsque l\'appareil est verrouillé.\n\n<small>Aucun texte saisi ou de données utilisateur sensibles sont collectées ou transmises.</small></string>
     <string name="freeze_activity_title">Gel d\'applis</string>
     <string name="freeze_activity_subtitle">Désactiver les applis rarement utilisées</string>
-    <string name="freeze_shortcut_short_label">Gel d\'applis</string>
+    <string name="freeze_shortcut_short_label">Frozen Apps</string>
     <string name="freeze_shortcut_long_label">Ouvrir le gel d\'applis</string>
     <string name="frozen_app_shortcut_label">Application gelée</string>
     <string name="screen_off_widget_label">Widget de verrouillage invisible </string>
@@ -146,6 +146,8 @@
     <string name="action_import_freeze">Importer la liste d\'applis gelées</string>
     <string name="freeze_pick_apps_title">Choisir les applis à geler</string>
     <string name="freeze_pick_apps_desc">Choisir quelles applis peuvent être gelées</string>
+    <string name="freeze_show_in_launcher_title">Show in launcher</string>
+    <string name="freeze_show_in_launcher_desc">Add a launcher shortcut for easier access</string>
     <string name="settings_section_automation">Automatisation</string>
     <string name="freeze_when_locked_title">Geler au verrouillage</string>
     <string name="freeze_delay_title">Délai avant de geler</string>
@@ -1447,4 +1449,9 @@
     <string name="color_purple">Purple</string>
     <string name="color_pink">Pink</string>
     <string name="color_teal">Teal</string>
+    <!-- What's New -->
+    <string name="whats_new_specs_title">Device Specs Retired</string>
+    <string name="whats_new_specs_desc">Inaccurate GSMArena-powered specifications have been removed to keep device insights clean, fast, and completely reliable.</string>
+    <string name="whats_new_apps_title">App Updates Migrated</string>
+    <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
 </resources>
