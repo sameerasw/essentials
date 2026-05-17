@@ -8,7 +8,7 @@
     <string name="accessibility_service_description"><b>Essentials Erişilebilirlik Servisi</b>\n\nBu servis bazı gelişmiş özellikler için gereklidir:\n\n<b>Fiziksel Tuş Atama:</b>\nEkran kapalıyken bile ses tuşlarını algılayıp Fener gibi özellikleri aktif etmeyi sağlar.\n\n<b>Uygulama Başına Ayarlar:</b>\nDinamik Gece Işığı, Bildirim Aydınlatma Renkleri ve Uygulama Kilitleme gibi özelliklere spesifik profiller ayarlamak için şu anda kullanılan uygulamayı gözetler.\n\n<b>Ekran Kontrolu:</b>\nUygulamaların ekranı kapatmasına ve ekran durumunu değiştirmesine olanak sağlar (Ekrana Çift Tıklama veya bir Widget gibi)\n\n<b>Güvenlik:</b>\nEkran kapalıyken açık olan uygulamayı tespit ederek izin verilmeyen değişiklikleri engeller.\n\n<small>Yazılı olan bilgiler veya kullanıcı bilgileri toplanmaz veya aktarılmaz.</small></string>
     <string name="freeze_activity_title">Uygulama Dondurma</string>
     <string name="freeze_activity_subtitle">Nadiren kullanılan uygulamaları devre dışı bırakın</string>
-    <string name="freeze_shortcut_short_label">Frozen Apps</string>
+    <string name="freeze_shortcut_short_label">Uygulama Dondurma</string>
     <string name="freeze_shortcut_long_label">Uygulama Dondurmayı Aç</string>
     <string name="frozen_app_shortcut_label">Dondurulmuş Uygulama</string>
     <string name="screen_off_widget_label">Boş ekran kapatma widget\'ı</string>
@@ -64,18 +64,18 @@
     <string name="like_song_settings_desc">Bu özellik, o anda oynatılan medyayı algılamak ve benzer eylemi tetiklemek için bildirim erişimi gerektirir. Lütfen aşağıdan etkinleştirin.</string>
     <string name="like_song_toast_enabled">Tost mesajını göster</string>
     <string name="like_song_aod_overlay_title">AOD\'de kaplamayı göster</string>
-    <string name="feat_essentials_on_display_title">Sergilenen Essentials</string>
+    <string name="feat_essentials_on_display_title">Essentials On Display</string>
     <string name="feat_essentials_on_display_desc">AOD ile ilgili medya ve bilgilere göz atın</string>
-    <string name="essentials_on_display_docked_mode_title">Docked mode</string>
+    <string name="essentials_on_display_docked_mode_title">Yerleşik mod</string>
     <string name="essentials_on_display_docked_mode_desc">Zaman aşımı yok</string>
-    <string name="essentials_on_display_respect_notifications_title">Respect new notifications</string>
+    <string name="essentials_on_display_respect_notifications_title">Yeni bildirimleri göster</string>
     <string name="essentials_on_display_respect_notifications_desc">Yeni bildirimler için geçici olarak devre dışı bırakın</string>
     <string name="essentials_on_display_random_shapes_title">Rastgele şekiller</string>
     <string name="essentials_on_display_random_shapes_desc">Rastgele Material You şekilleri kullan</string>
     <string name="essentials_on_display_album_art_title">Albüm kapağı</string>
     <string name="essentials_on_display_clock_title">Saat</string>
-    <string name="essentials_on_display_force_fill_while_charging_title">Always use while charging</string>
-    <string name="essentials_on_display_force_fill_while_charging_desc">Force Fill mode when the device is plugged in regardless of the selected mode</string>
+    <string name="essentials_on_display_force_fill_while_charging_title">Şarjdayken her zaman kullan</string>
+    <string name="essentials_on_display_force_fill_while_charging_desc">Seçilen moddan bağımsız olarak, cihaz prize takılıyken Dolum modunu zorlar</string>
     <string name="label_size">Boyut</string>
     <string name="feat_notification_glance_title">Bildirim bakışı</string>
     <string name="feat_notification_glance_desc">Bildirimler beklemedeyken AOD\'yi açık tutun</string>
@@ -146,8 +146,8 @@
     <string name="action_import_freeze">Dondurulmuş uygulamalar listesini içe aktar</string>
     <string name="freeze_pick_apps_title">Dondurulacak uygulamaları seçin</string>
     <string name="freeze_pick_apps_desc">Hangi uygulamaların dondurulabileceğini seçin</string>
-    <string name="freeze_show_in_launcher_title">Show in launcher</string>
-    <string name="freeze_show_in_launcher_desc">Add a launcher shortcut for easier access</string>
+    <string name="freeze_show_in_launcher_title">Launcher\'da göster</string>
+    <string name="freeze_show_in_launcher_desc">Daha kolay erişim için launcher kısayolu ekleyin</string>
     <string name="settings_section_automation">Otomasyon</string>
     <string name="freeze_when_locked_title">Kilitlendiğinde don</string>
     <string name="freeze_delay_title">Donma gecikmesi</string>
@@ -592,7 +592,7 @@
     <string name="perm_default_browser_title">Varsayılan Tarayıcı</string>
     <string name="perm_default_browser_desc">Bağlantıları verimli bir şekilde yönetmek için gereklidir</string>
     <string name="perm_accessibility_desc_remap">Donanım düğmesi olaylarını engellemek için gereklidir</string>
-    <string name="perm_accessibility_desc_essentials_on_display">Required to intercept volume key events while the screen is off to trigger the Essentials On Display overlay.</string>
+    <string name="perm_accessibility_desc_essentials_on_display">Ekran kapalıyken ses seviyesi tuş olaylarını yakalayarak Essentials On Display katmanını tetiklemek için gereklidir.</string>
     <string name="perm_accessibility_desc_night_light">Ön plan uygulamalarını izlemek için gereklidir.</string>
     <string name="perm_write_secure_title">Güvenli Ayarları Yaz</string>
     <string name="perm_write_secure_desc_common">Durum Çubuğu simgeleri ve Ekran Kilitli Güvenlik için gereklidir</string>
@@ -716,7 +716,7 @@
     <string name="action_what_is_this">Bu nedir?</string>
     <string name="update_available_title">Güncelleme Mevcut</string>
     <string name="about_desc_your_android">Cihazınızın donanım ve yazılım özelliklerine ayrıntılı olarak göz atın. Bu bilgiler, Android cihazınız hakkında kapsamlı bir genel bakış sağlamak için GSMArena ve sistem özelliklerinden alınır.</string>
-    <string name="about_desc_essentials_on_display">Essentials On Display shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
+    <string name="about_desc_essentials_on_display">Essentials On Display müzik çalarken ve oynatma değiştiğinde kilit ekranınızda Şimdi Çalıyor katmanını gösterir. \n\nCihazınız AOD katmanında gösterme özelliğini desteklemiyorsa, şarj sırasında alternatif olarak Android ayarlarınızda eklenen Ortam ekran koruyucusunu kullanabilirsiniz.</string>
     <string name="about_desc_notification_lighting">Bildirim Aydınlatması, bildirim aldığınızda güzel bir kenar aydınlatma efekti ekler.\n\nAnimasyon stilini, renklerini ve davranışını özelleştirebilirsiniz. Ekran kapalıyken (OEM\'e bağlı) veya mevcut uygulamanızın üstündeyken bile çalışır. Verilen kontrollerden uygulamaları, bildirim önceliğini veya hangi davranışı tetiklemesi gerektiğini seçin. Eğer OEM\'iniz AOD üzerindeki yer alan kaplamaları desteklemiyorsa, aşağıda bulunan Ortam ekranı seçeneğini kullanın.</string>
     <string name="about_desc_screen_off_widget">Ana ekranınıza simge veya herhangi bir karışıklık eklemeyen, şeffaf, yeniden boyutlandırılabilir bir widget\'a dokunarak ekranı kolayca kapatın.</string>
     <string name="about_desc_statusbar_icons">Durum çubuğu simgeleriniz üzerinde tam kontrole sahip olun.\n\nDurum çubuğunuzu temiz tutmak için WiFi, Bluetooth veya hücresel veri gibi belirli simgeleri gizleyin. Ayrıca bazı akıllı kontrollerle saat formatını ve pil göstergesini de özelleştirebilirsiniz. Bunlar mevcut AOSP kontrollerinin listesidir; dolayısıyla cihazınızın işletim sistemi tüm kontrollere uymayabilir.</string>
@@ -857,9 +857,9 @@
     <string name="label_shizuku_ritaka">Shizuku (Rikka)</string>
     <string name="label_shizuku_tuozi">Shizuku (TuoZi)</string>
     <string name="label_search_content_description">Aramak</string>
-    <string name="label_recent_searches">Recent Searches</string>
-    <string name="label_no_recent_searches">No recent searches</string>
-    <string name="label_clear_all">Clear all</string>
+    <string name="label_recent_searches">Son Aramalar</string>
+    <string name="label_no_recent_searches">Son arama yok</string>
+    <string name="label_clear_all">Hepsini temizle</string>
     <string name="perm_device_admin_explanation">Kilit ekranında yetkisiz ağ değişiklikleri yapılmaya çalışıldığında cihazın sabit olarak kilitlenmesi gerekir.</string>
     <string name="biometric_subtitle_access_settings">Ayarlara erişmek için kimlik doğrulaması yapın</string>
     <string name="biometric_title_settings_format">%1$s Ayarlar</string>
@@ -1240,7 +1240,7 @@
     <string name="watch_install_companion_action">Tamamlayıcıyı Yükle</string>
     <string name="action_download_from_github">GitHub\'tan indir</string>
     <string name="watch_help_title">Saate yükle</string>
-    <string name="watch_help_description">To use Watch features, you need to install the Essentials companion app on your Wear OS watch. Click the button below to open the Play Store directly on your watch.</string>
+    <string name="watch_help_description">Saat özelliklerini kullanmak için Wear OS saatinize Essentials yardımcı uygulamasını yüklemeniz gerekir. Play Store\'u doğrudan saatinizde açmak için aşağıdaki düğmeye tıklayın.</string>
     <string name="watch_help_open_play_store">Saatte Aç</string>
     <string name="cat_interaction">Etkileşim</string>
     <string name="cat_interface">Arayüz</string>
@@ -1405,8 +1405,8 @@
     <string name="shut_up_disable_wireless_debugging">Kablosuz Hata Ayıklamayı Devre Dışı Bırak</string>
     <string name="shut_up_disable_accessibility">Erişilebilirlik Hizmetlerini Devre Dışı Bırak</string>
     <string name="shut_up_shortcut_created">%s için kısayol oluşturuldu</string>
-    <string name="feat_disable_rotation_suggestion_title">Disable rotation suggestion</string>
-    <string name="feat_disable_rotation_suggestion_desc">Do not show the rotation button when auto-rotate is off</string>
+    <string name="feat_disable_rotation_suggestion_title">Döndürme önerisini devre dışı bırak</string>
+    <string name="feat_disable_rotation_suggestion_desc">Otomatik döndürme kapalıyken döndürme düğmesini göstermeyin</string>
     <string name="shut_up_toast_active">Uygulama susturuldu</string>
     <string name="shut_up_toast_restored">Susturma özellikleri geri döndü</string>
     <string name="shut_up_auto_archive_notif_title">Otomatik Dondurma</string>
@@ -1416,7 +1416,7 @@
     <!-- Lock Screen Clock -->
     <string name="feat_lock_screen_clock_title">Kilit ekranı saati</string>
     <string name="feat_lock_screen_clock_desc">Pixel telefonlarda kilit ekranı saatini özelleştirin</string>
-    <string name="about_desc_lock_screen_clock">Change the lock screen clock style on Pixels. Select from the available clock faces provided by the System UI. Some old styles might not be available.</string>
+    <string name="about_desc_lock_screen_clock">Pixel telefonlarda kilit ekranı saat stilini değiştirin. Sistem arayüzü tarafından sağlanan mevcut saat kadranlarından birini seçin. Bazı eski stiller kullanılamayabilir.</string>
     <string name="lock_screen_clock_bignum">Büyük Sayı</string>
     <string name="lock_screen_clock_calligraphy">Kaligrafi</string>
     <string name="lock_screen_clock_flex">Esnek</string>
@@ -1436,7 +1436,7 @@
     <string name="label_width">Genişlik</string>
     <string name="label_grade">Sınıf</string>
     <string name="label_roundness">Yuvarlaklık</string>
-    <string name="label_color_tone">Lightness</string>
+    <string name="label_color_tone">Ton açıklığı</string>
     <string name="label_variation">Varyasyon</string>
     <string name="label_color">Renk</string>
     <string name="label_style_font">Stil &amp; Yazı Tipi</string>
@@ -1451,8 +1451,8 @@
     <string name="color_pink">Pembe</string>
     <string name="color_teal">Turkuaz</string>
     <!-- What's New -->
-    <string name="whats_new_specs_title">Device Specs Retired</string>
-    <string name="whats_new_specs_desc">Inaccurate GSMArena-powered specifications have been removed to keep device insights clean, fast, and completely reliable.</string>
-    <string name="whats_new_apps_title">App Updates Migrated</string>
-    <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
+    <string name="whats_new_specs_title">Cihaz Özellikleri Kullanımdan Kaldırıldı</string>
+    <string name="whats_new_specs_desc">GSMArena tarafından sağlanan hatalı teknik özellikler; cihaz analizlerinin temiz, hızlı ve tamamen güvenilir kalması için kaldırılmıştır.</string>
+    <string name="whats_new_apps_title">Uygulama Güncellemeleri Taşındı</string>
+    <string name="whats_new_apps_desc">Uygulamalar sekmesi artık Android Cihazınız özelliğine tamamen entegre edildi ve bu sayede tüm uygulama güncellemelerinizi tek bir bütünleşik merkezden yönetmek daha kolay hale geldi.</string>
 </resources>
