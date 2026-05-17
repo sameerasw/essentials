@@ -513,6 +513,9 @@ class AmbientDreamService : DreamService() {
         unregisterReceiver(receiver)
         if (volumeReceiver != null) unregisterReceiver(volumeReceiver)
 
+        // Clear active unread notifications from the screensaver on dismissal
+        com.sameerasw.essentials.services.NotificationListener.clearUnreadNotifications()
+
         // Unregister Media Session Listener
         try {
             val mediaSessionManager = getSystemService(MEDIA_SESSION_SERVICE) as MediaSessionManager

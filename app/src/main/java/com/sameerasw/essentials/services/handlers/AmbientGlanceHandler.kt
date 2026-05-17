@@ -979,6 +979,10 @@ class AmbientGlanceHandler(
         handler.removeCallbacks(progressUpdateRunnable)
         handler.removeCallbacks(revertToMusicRunnable)
         handler.removeCallbacks(burnInProtectionRunnable)
+
+        // Clear active unread notifications from the overlay on dismissal
+        com.sameerasw.essentials.services.NotificationListener.clearUnreadNotifications()
+
         if (overlayView != null && windowManager != null) {
             isDetached = true
             try {
