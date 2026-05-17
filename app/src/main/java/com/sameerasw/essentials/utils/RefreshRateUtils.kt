@@ -67,36 +67,40 @@ object RefreshRateUtils {
         }
     }
 
-    fun applyFixedRefreshRate(value: Float): Boolean {
-        if (!ShizukuUtils.hasPermission()) return false
+    fun hasPermission(context: Context): Boolean {
+        return ShellUtils.hasPermission(context)
+    }
+
+    fun applyFixedRefreshRate(context: Context, value: Float): Boolean {
+        if (!ShellUtils.hasPermission(context)) return false
 
         val clamped = normalizeRate(value)
         val formatted = formatRate(clamped)
-        ShizukuUtils.runCommand("settings put system $KEY_PEAK_REFRESH_RATE $formatted")
-        ShizukuUtils.runCommand("settings put system $KEY_MIN_REFRESH_RATE $formatted")
+        ShellUtils.runCommand(context, "settings put system $KEY_PEAK_REFRESH_RATE $formatted")
+        ShellUtils.runCommand(context, "settings put system $KEY_MIN_REFRESH_RATE $formatted")
         return true
     }
 
-    fun applyRangeRefreshRate(minValue: Float, peakValue: Float): Boolean {
-        if (!ShizukuUtils.hasPermission()) return false
+    fun applyRangeRefreshRate(context: Context, minValue: Float, peakValue: Float): Boolean {
+        if (!ShellUtils.hasPermission(context)) return false
 
         val safeMin = normalizeRate(minValue)
         val safePeak = normalizeRate(maxOf(minValue, peakValue))
-        ShizukuUtils.runCommand("settings put system $KEY_MIN_REFRESH_RATE ${formatRate(safeMin)}")
-        ShizukuUtils.runCommand("settings put system $KEY_PEAK_REFRESH_RATE ${formatRate(safePeak)}")
+        ShellUtils.runCommand(context, "settings put system $KEY_MIN_REFRESH_RATE ${formatRate(safeMin)}")
+        ShellUtils.runCommand(context, "settings put system $KEY_PEAK_REFRESH_RATE ${formatRate(safePeak)}")
         return true
     }
 
-    fun resetRefreshRate(restoreInfinityPeak: Boolean = false): Boolean {
-        if (!ShizukuUtils.hasPermission()) return false
+    fun resetRefreshRate(context: Context, restoreInfinityPeak: Boolean = false): Boolean {
+        if (!ShellUtils.hasPermission(context)) return false
 
         // Clear both namespaces first, then restore the original system-managed peak behavior.
-        ShizukuUtils.runCommand("settings delete system $KEY_MIN_REFRESH_RATE")
-        ShizukuUtils.runCommand("settings delete system $KEY_PEAK_REFRESH_RATE")
-        ShizukuUtils.runCommand("settings delete global $KEY_PEAK_REFRESH_RATE")
-        ShizukuUtils.runCommand("settings delete global $KEY_MIN_REFRESH_RATE")
+        ShellUtils.runCommand(context, "settings delete system $KEY_MIN_REFRESH_RATE")
+        ShellUtils.runCommand(context, "settings delete system $KEY_PEAK_REFRESH_RATE")
+        ShellUtils.runCommand(context, "settings delete global $KEY_PEAK_REFRESH_RATE")
+        ShellUtils.runCommand(context, "settings delete global $KEY_MIN_REFRESH_RATE")
         if (restoreInfinityPeak) {
-            ShizukuUtils.runCommand("settings put system $KEY_PEAK_REFRESH_RATE Infinity")
+            ShellUtils.runCommand(context, "settings put system $KEY_PEAK_REFRESH_RATE Infinity")
         }
         return true
     }

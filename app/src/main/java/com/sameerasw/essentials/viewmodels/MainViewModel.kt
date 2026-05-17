@@ -2140,7 +2140,7 @@ class MainViewModel : ViewModel() {
             return
         }
 
-        if (RefreshRateUtils.applyFixedRefreshRate(value)) {
+        if (RefreshRateUtils.applyFixedRefreshRate(context, value)) {
             val normalized = RefreshRateUtils.normalizeRate(value)
             fixedRefreshRate.floatValue = normalized
             minRefreshRate.floatValue = normalized
@@ -2170,7 +2170,7 @@ class MainViewModel : ViewModel() {
             return
         }
 
-        if (RefreshRateUtils.applyRangeRefreshRate(minValue, peakValue)) {
+        if (RefreshRateUtils.applyRangeRefreshRate(context, minValue, peakValue)) {
             val normalizedMin = RefreshRateUtils.normalizeRate(minValue)
             val normalizedPeak = RefreshRateUtils.normalizeRate(maxOf(minValue, peakValue))
             minRefreshRate.floatValue = normalizedMin
@@ -2190,7 +2190,7 @@ class MainViewModel : ViewModel() {
 
     fun resetRefreshRate(context: Context) {
         val restoreInfinityPeak = settingsRepository.shouldRestoreInfinityPeakOnRefreshRateReset()
-        if (RefreshRateUtils.resetRefreshRate(restoreInfinityPeak)) {
+        if (RefreshRateUtils.resetRefreshRate(context, restoreInfinityPeak)) {
             fixedRefreshRate.floatValue = 0f
             minRefreshRate.floatValue = 0f
             peakRefreshRate.floatValue = 0f

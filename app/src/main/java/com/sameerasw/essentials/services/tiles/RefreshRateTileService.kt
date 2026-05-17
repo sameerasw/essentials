@@ -9,6 +9,7 @@ import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.utils.RefreshRateUtils
+import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.utils.ShizukuUtils
 
 @RequiresApi(Build.VERSION_CODES.N)
@@ -42,10 +43,11 @@ class RefreshRateTileService : BaseTileService() {
         if (nextPreset <= 0) {
             val settingsRepository = SettingsRepository(this)
             RefreshRateUtils.resetRefreshRate(
+                this,
                 settingsRepository.shouldRestoreInfinityPeakOnRefreshRateReset()
             )
         } else {
-            RefreshRateUtils.applyFixedRefreshRate(nextPreset.toFloat())
+            RefreshRateUtils.applyFixedRefreshRate(this, nextPreset.toFloat())
         }
     }
 
@@ -53,7 +55,7 @@ class RefreshRateTileService : BaseTileService() {
 
     override fun getTileSubtitle(): String = RefreshRateUtils.getDisplaySubtitle(this)
 
-    override fun hasFeaturePermission(): Boolean = ShizukuUtils.hasPermission()
+    override fun hasFeaturePermission(): Boolean = ShellUtils.hasPermission(this)
 
     override fun getTileIcon(): Icon {
         return Icon.createWithResource(this, R.drawable.rounded_shutter_speed_24)
