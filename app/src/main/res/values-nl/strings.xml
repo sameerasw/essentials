@@ -8,7 +8,7 @@
     <string name="accessibility_service_description"><b>Toegankelijkheidsservice van Essentials</b>\n\nDeze service is vereist voor de volgende geavanceerde functies:\n\n<b>• Opnieuw toewijzen van fysieke knoppen:</b>\nDetecteert het klikken van de volumeknoppen, zelfs wanneer het scherm uit is, om acties te starten zoals de zaklamp.\n\n<b>• Instellingen per app:</b>\nBekijkt de momenteel actieve app om specifieke profielen toe te passen voor Dynamisch nachtlicht, Meldingsbelichtingskleuren en Appvergrendeling.\n\n<b>• Schermbesturing:</b>\nLaat de app het scherm vergrendelen (bijv. met dubbelklikken of met widgets) en veranderingen van schermstaat detecteren.\n\n<b>• Beveiliging:</b>\nVoorkomt ongeautoriseerde wijzigingen door vensterinhoud te detecteren wanneer het apparaat vergrendeld is.\n\n<small>Geen invoertekst of gevoelige gebruikersdata wordt verzameld of overgezet.</small></string>
     <string name="freeze_activity_title">Apps bevriezen</string>
     <string name="freeze_activity_subtitle">Schakel apps uit die weinig worden gebruikt</string>
-    <string name="freeze_shortcut_short_label">Apps bevriezen</string>
+    <string name="freeze_shortcut_short_label">Frozen Apps</string>
     <string name="freeze_shortcut_long_label">Open apps bevriezen</string>
     <string name="frozen_app_shortcut_label">Bevroren app</string>
     <string name="screen_off_widget_label">Lege schermuitzetwidget</string>
@@ -146,6 +146,8 @@
     <string name="action_import_freeze">Exporteer de lijst met bevroren apps</string>
     <string name="freeze_pick_apps_title">Kies apps om te bevriezen</string>
     <string name="freeze_pick_apps_desc">Kies welke apps bevroren kunnen worden</string>
+    <string name="freeze_show_in_launcher_title">Show in launcher</string>
+    <string name="freeze_show_in_launcher_desc">Add a launcher shortcut for easier access</string>
     <string name="settings_section_automation">Automatisatie</string>
     <string name="freeze_when_locked_title">Bevriezen bij vergrendeling</string>
     <string name="freeze_delay_title">Vertraging bij bevriezen</string>
@@ -1447,4 +1449,9 @@
     <string name="color_purple">Purple</string>
     <string name="color_pink">Pink</string>
     <string name="color_teal">Teal</string>
+    <!-- What's New -->
+    <string name="whats_new_specs_title">Device Specs Retired</string>
+    <string name="whats_new_specs_desc">Inaccurate GSMArena-powered specifications have been removed to keep device insights clean, fast, and completely reliable.</string>
+    <string name="whats_new_apps_title">App Updates Migrated</string>
+    <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
 </resources>

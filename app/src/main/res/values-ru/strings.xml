@@ -8,7 +8,7 @@
     <string name="accessibility_service_description"><b>Служба специальных возможностей Essentials</b>\n\nЭта служба необходима для следующих функций:\n\n<b>• Переназначение физических кнопок:</b>\nОбнаруживает нажатие кнопок громкости, даже если экран выключен, чтобы вызывать такие действия, как фонарик.\n\n<b>• Индивидуальные настройки приложений:</b>\nОтслеживает текущее активное приложение для применения конкретных профилей для Динамической ночной подсветки, Цвета подсветки уведомлений и блокировку приложений.\n\n<b>• Контроль экрана:</b>\nПозволяет приложению блокировать экран (например, через двойное нажатие или виджет) и обнаруживать изменения состояния экрана.\n\n<b>• Безопасность:</b>\nПредотвращает несанкционированные изменения, обнаруживая содержимое окна, когда устройство заблокировано.\n\n<small>Никакой вводимый текст или конфиденциальные данные не собираются и не передаются.</small></string>
     <string name="freeze_activity_title">Заморозка приложений</string>
     <string name="freeze_activity_subtitle">Отключить редко используемые приложения</string>
-    <string name="freeze_shortcut_short_label">Заморозка приложений</string>
+    <string name="freeze_shortcut_short_label">Frozen Apps</string>
     <string name="freeze_shortcut_long_label">Открыть заморозку приложений</string>
     <string name="frozen_app_shortcut_label">Замороженные приложения</string>
     <string name="screen_off_widget_label">Пустой виджет для отключения экрана</string>
@@ -146,6 +146,8 @@
     <string name="action_import_freeze">Импортировать список замороженных приложений</string>
     <string name="freeze_pick_apps_title">Выбор приложений для заморозки</string>
     <string name="freeze_pick_apps_desc">Выберите, какие приложения будут заморожены</string>
+    <string name="freeze_show_in_launcher_title">Show in launcher</string>
+    <string name="freeze_show_in_launcher_desc">Add a launcher shortcut for easier access</string>
     <string name="settings_section_automation">Автоматизация</string>
     <string name="freeze_when_locked_title">Заморозить при блокировке</string>
     <string name="freeze_delay_title">Задержка заморозки</string>
@@ -1447,4 +1449,9 @@
     <string name="color_purple">Purple</string>
     <string name="color_pink">Pink</string>
     <string name="color_teal">Teal</string>
+    <!-- What's New -->
+    <string name="whats_new_specs_title">Device Specs Retired</string>
+    <string name="whats_new_specs_desc">Inaccurate GSMArena-powered specifications have been removed to keep device insights clean, fast, and completely reliable.</string>
+    <string name="whats_new_apps_title">App Updates Migrated</string>
+    <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
 </resources>

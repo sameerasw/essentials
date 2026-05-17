@@ -8,7 +8,7 @@
     <string name="accessibility_service_description"><b>Essentials Accessibility Service</b>\n\nThis service is required for the following advanced features:\n\n<b>• Physical Button Remapping:</b>\nDetects volume button presses even when the screen is off to trigger actions like the Flashlight.\n\n<b>• Per-App Settings:</b>\nMonitors the currently active app to apply specific profiles for Dynamic Night Light, Notification Lighting Colors, and App Lock.\n\n<b>• Screen Control:</b>\nAllows the app to lock the screen (e.g. via Double Tap or Widgets) and detect screen state changes.\n\n<b>• Security:</b>\nPrevents unauthorized changes by detecting window content when the device is locked.\n\n<small>No input text or sensitive user data is collected or transmitted.</small></string>
     <string name="freeze_activity_title">App fryser</string>
     <string name="freeze_activity_subtitle">Deaktiver apper som sjelden brukes</string>
-    <string name="freeze_shortcut_short_label">App fryser</string>
+    <string name="freeze_shortcut_short_label">Frozen Apps</string>
     <string name="freeze_shortcut_long_label">Åpne appfrysing</string>
     <string name="frozen_app_shortcut_label">Frossen app</string>
     <string name="screen_off_widget_label">Tøm skjerm av widget</string>
@@ -146,6 +146,8 @@
     <string name="action_import_freeze">Importer en liste over frosne apper</string>
     <string name="freeze_pick_apps_title">Velg apper som skal fryses</string>
     <string name="freeze_pick_apps_desc">Velg hvilke apper som kan fryses</string>
+    <string name="freeze_show_in_launcher_title">Show in launcher</string>
+    <string name="freeze_show_in_launcher_desc">Add a launcher shortcut for easier access</string>
     <string name="settings_section_automation">Automasjon</string>
     <string name="freeze_when_locked_title">Frys når den er låst</string>
     <string name="freeze_delay_title">Frysforsinkelse</string>
@@ -1447,4 +1449,9 @@
     <string name="color_purple">Purple</string>
     <string name="color_pink">Pink</string>
     <string name="color_teal">Teal</string>
+    <!-- What's New -->
+    <string name="whats_new_specs_title">Device Specs Retired</string>
+    <string name="whats_new_specs_desc">Inaccurate GSMArena-powered specifications have been removed to keep device insights clean, fast, and completely reliable.</string>
+    <string name="whats_new_apps_title">App Updates Migrated</string>
+    <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
 </resources>
