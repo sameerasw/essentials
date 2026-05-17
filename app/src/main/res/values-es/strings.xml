@@ -147,8 +147,8 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="action_import_freeze">Importar lista de aplicaciones congeladas</string>
     <string name="freeze_pick_apps_title">Seleccionar aplicaciones para congelar</string>
     <string name="freeze_pick_apps_desc">Elige qué aplicaciones se pueden congelar</string>
-    <string name="freeze_show_in_launcher_title">Show in launcher</string>
-    <string name="freeze_show_in_launcher_desc">Add a launcher shortcut for easier access</string>
+    <string name="freeze_show_in_launcher_title">Mostrar en el lanzador</string>
+    <string name="freeze_show_in_launcher_desc">Añadir un acceso directo en el lanzador para un acceso más fácil</string>
     <string name="settings_section_automation">Automatización</string>
     <string name="freeze_when_locked_title">Congelar al bloquear</string>
     <string name="freeze_delay_title">Retraso de congelación</string>
@@ -1452,8 +1452,8 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="color_pink">Rosa</string>
     <string name="color_teal">Verde azulado</string>
     <!-- What's New -->
-    <string name="whats_new_specs_title">Device Specs Retired</string>
-    <string name="whats_new_specs_desc">Inaccurate GSMArena-powered specifications have been removed to keep device insights clean, fast, and completely reliable.</string>
-    <string name="whats_new_apps_title">App Updates Migrated</string>
-    <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
+    <string name="whats_new_specs_title">Especificaciones del dispositivo retiradas</string>
+    <string name="whats_new_specs_desc">Se han eliminado las especificaciones inexactas basadas en GSMArena para mantener la información del dispositivo limpia, rápida y completamente fiable.</string>
+    <string name="whats_new_apps_title">Actualizaciones de la aplicación migradas</string>
+    <string name="whats_new_apps_desc">La pestaña Aplicaciones ahora está completamente integrada en la función Tu Android, lo que facilita gestionar todas tus actualizaciones de aplicaciones desde un único y coherente centro unificado.</string>
 </resources>
