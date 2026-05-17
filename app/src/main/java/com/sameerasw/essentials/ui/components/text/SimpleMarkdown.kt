@@ -449,27 +449,26 @@ private fun parseMarkdown(text: String): AnnotatedString {
             }
 
             when {
-                matchValue.startsWith("**") && matchValue.endsWith("**") -> {
+                matchValue.startsWith("**") && matchValue.endsWith("**") && matchValue.length >= 4 -> {
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
                         append(matchValue.substring(2, matchValue.length - 2))
                     }
                 }
 
-                (matchValue.startsWith("*") && matchValue.endsWith("*") && !matchValue.startsWith("**")) || (matchValue.startsWith(
-                    "_"
-                ) && matchValue.endsWith("_")) -> {
+                ((matchValue.startsWith("*") && matchValue.endsWith("*") && !matchValue.startsWith("**")) || 
+                        (matchValue.startsWith("_") && matchValue.endsWith("_"))) && matchValue.length >= 2 -> {
                     withStyle(style = SpanStyle(fontStyle = FontStyle.Italic)) {
                         append(matchValue.substring(1, matchValue.length - 1))
                     }
                 }
 
-                matchValue.startsWith("<u>") && matchValue.endsWith("</u>") -> {
+                matchValue.startsWith("<u>") && matchValue.endsWith("</u>") && matchValue.length >= 7 -> {
                     withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline)) {
                         append(matchValue.substring(3, matchValue.length - 4))
                     }
                 }
 
-                matchValue.startsWith("`") && matchValue.endsWith("`") -> {
+                matchValue.startsWith("`") && matchValue.endsWith("`") && matchValue.length >= 2 -> {
                     withStyle(
                         style = SpanStyle(
                             fontFamily = FontFamily.Monospace,
@@ -481,7 +480,7 @@ private fun parseMarkdown(text: String): AnnotatedString {
                     }
                 }
 
-                matchValue.startsWith("[") && matchValue.contains("](") -> {
+                matchValue.startsWith("[") && matchValue.contains("](") && matchValue.endsWith(")") -> {
                     val title = matchValue.substringAfter("[").substringBefore("](")
                     val url = matchValue.substringAfter("](").substringBefore(")")
                     withLink(
