@@ -30,6 +30,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,138 +42,56 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.compose.ui.input.pointer.pointerInput
 import com.sameerasw.essentials.R
-import com.sameerasw.essentials.data.model.DeviceSpecs
 import com.sameerasw.essentials.ui.components.DeviceHeroCard
-import com.sameerasw.essentials.ui.components.DeviceSpecsCard
 import com.sameerasw.essentials.ui.components.EssentialsFloatingToolbar
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
-import com.sameerasw.essentials.utils.DeviceInfo
 import com.sameerasw.essentials.utils.DeviceUtils
-import kotlinx.coroutines.Dispatchers
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalView
+import com.sameerasw.essentials.utils.HapticUtil
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import com.sameerasw.essentials.viewmodels.AppUpdatesViewModel
+import com.sameerasw.essentials.viewmodels.GitHubAuthViewModel
+import com.sameerasw.essentials.ui.components.sheets.GitHubAuthSheet
+import com.sameerasw.essentials.ui.components.sheets.UpdateBottomSheet
+import com.sameerasw.essentials.ui.components.sheets.AddRepoBottomSheet
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
+import com.sameerasw.essentials.ui.components.cards.TrackedRepoCard
+import com.sameerasw.essentials.ui.components.AppsActionButtons
+import com.sameerasw.essentials.ui.components.ImportExportButtons
+import android.widget.Toast
+import androidx.compose.animation.core.EaseInOutBounce
+import androidx.compose.animation.core.EaseOut
+import androidx.compose.foundation.layout.fillMaxWidth
+import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
+import com.sameerasw.essentials.utils.DeviceInfo
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class YourAndroidViewModel : ViewModel() {
-    private val _deviceSpecs = MutableStateFlow<DeviceSpecs?>(null)
-    val deviceSpecs = _deviceSpecs.asStateFlow()
-
-    private val _isSpecsLoading = MutableStateFlow(true)
-    val isSpecsLoading = _isSpecsLoading.asStateFlow()
-
-    private val _isRefreshing = MutableStateFlow(false)
-    val isRefreshing = _isRefreshing.asStateFlow()
-
     var hasRunStartupAnimation = false
-
-    fun loadDeviceSpecs(
-        context: android.content.Context,
-        deviceInfo: DeviceInfo,
-        forceRefresh: Boolean = false
-    ) {
-        if (!forceRefresh && _deviceSpecs.value != null) {
-            _isSpecsLoading.value = false
-            return
-        }
-
-        viewModelScope.launch {
-            try {
-                if (forceRefresh) {
-                    _isRefreshing.value = true
-                } else {
-                    _isSpecsLoading.value = true
-
-                    // Try to load from cache first
-                    val cached = withContext(Dispatchers.IO) {
-                        com.sameerasw.essentials.utils.DeviceSpecsCache.getCachedSpecs(context)
-                    }
-
-                    if (cached != null) {
-                        _deviceSpecs.value = cached
-                        _isSpecsLoading.value = false
-                        return@launch
-                    }
-                }
-
-                val fetchedSpecs = withContext(Dispatchers.IO) {
-                    val manufacturer = deviceInfo.manufacturer
-                    val model = deviceInfo.model
-                    val deviceName = deviceInfo.deviceName
-                    val deviceCodename = deviceInfo.device
-
-                    // Generate a prioritized list of search queries
-                    val queries = mutableListOf<String>()
-
-                    // 1. Marketing name (Manufacturer + Model)
-                    if (model.contains(manufacturer, ignoreCase = true)) {
-                        queries.add(model)
-                    } else {
-                        queries.add("$manufacturer $model")
-                    }
-
-                    // 2. User-defined device name (often it's the marketing name like "Galaxy S21 FE 5G")
-                    if (deviceName.isNotBlank() && !queries.contains(deviceName)) {
-                        queries.add(deviceName)
-                    }
-
-                    // 3. Handle model numbers by stripping common prefixes (SM-, Redmi, Mi, POCO, etc.)
-                    val prefixes = listOf("SM-", "Redmi ", "Mi ", "POCO ")
-                    for (prefix in prefixes) {
-                        if (model.startsWith(prefix, ignoreCase = true)) {
-                            val stripped = model.substring(prefix.length).trim()
-                            if (stripped.isNotBlank() && !queries.contains(stripped)) {
-                                queries.add(stripped)
-                                queries.add("$manufacturer $stripped")
-                            }
-                        }
-                    }
-
-                    // 4. Model number directly if it's different from marketing name
-                    if (!queries.contains(model)) {
-                        queries.add(model)
-                    }
-
-                    // 5. Device codename (e.g., "shiba", "a51", "r9q")
-                    if (deviceCodename.isNotBlank() && !queries.contains(deviceCodename)) {
-                        queries.add(deviceCodename)
-                    }
-
-                    com.sameerasw.essentials.utils.GSMArenaService.fetchSpecs(
-                        preferredName = manufacturer,
-                        preferredModel = model,
-                        queries = queries.toTypedArray()
-                    )
-                }
-
-                if (fetchedSpecs != null) {
-                    // Download and cache images
-                    val specsWithImages =
-                        com.sameerasw.essentials.utils.DeviceSpecsCache.downloadImages(
-                            context,
-                            fetchedSpecs
-                        )
-                    _deviceSpecs.value = specsWithImages
-                }
-
-                _isSpecsLoading.value = false
-                _isRefreshing.value = false
-            } catch (e: Exception) {
-                // If anything goes wrong (corrupted cache, etc.), clear cache and force refresh once
-                com.sameerasw.essentials.utils.DeviceSpecsCache.clearCache(context)
-                if (!forceRefresh) {
-                    loadDeviceSpecs(context, deviceInfo, forceRefresh = true)
-                } else {
-                    _isSpecsLoading.value = false
-                    _isRefreshing.value = false
-                }
-            }
-        }
-    }
 }
 
 class YourAndroidActivity : ComponentActivity() {
@@ -192,13 +111,67 @@ class YourAndroidActivity : ComponentActivity() {
             val isBlurEnabled by mainViewModel.isBlurEnabled
 
             val viewModel: YourAndroidViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
-            val deviceSpecs by viewModel.deviceSpecs.collectAsState()
-            val isSpecsLoading by viewModel.isSpecsLoading.collectAsState()
-            val isRefreshing by viewModel.isRefreshing.collectAsState()
+            val updatesViewModel: AppUpdatesViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+            val gitHubAuthViewModel: GitHubAuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 
             val context = androidx.compose.ui.platform.LocalContext.current
             val deviceInfo = remember { DeviceUtils.getDeviceInfo(context) }
-            var showHelpSheet by remember { mutableStateOf(false) }
+            var showGitHubAuthSheet by remember { mutableStateOf(false) }
+            var showAddRepoSheet by remember { mutableStateOf(false) }
+            var repoToShowReleaseNotesFullName by remember { mutableStateOf<String?>(null) }
+            var showFabProfileMenu by remember { mutableStateOf(false) }
+
+            val gitHubToken by mainViewModel.gitHubToken
+            val gitHubUser by gitHubAuthViewModel.currentUser
+
+            LaunchedEffect(Unit) {
+                gitHubAuthViewModel.loadCachedUser(context)
+                updatesViewModel.loadTrackedRepos(context)
+            }
+
+            LaunchedEffect(gitHubToken) {
+                if (gitHubToken != null && gitHubUser == null) {
+                    gitHubAuthViewModel.loadUser(gitHubToken!!, context)
+                }
+            }
+
+            val exportLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
+                contract = ActivityResultContracts.CreateDocument("application/json")
+            ) { uri ->
+                uri?.let {
+                    contentResolver.openOutputStream(it)?.use { outputStream ->
+                        updatesViewModel.exportTrackedRepos(context, outputStream)
+                        Toast.makeText(
+                            context,
+                            getString(R.string.msg_export_success),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+
+            val importLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
+                contract = ActivityResultContracts.OpenDocument()
+            ) { uri ->
+                uri?.let {
+                    contentResolver.openInputStream(it)?.use { inputStream ->
+                        if (updatesViewModel.importTrackedRepos(context, inputStream)) {
+                            updatesViewModel.loadTrackedRepos(context)
+                            Toast.makeText(
+                                context,
+                                getString(R.string.msg_import_success),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            Toast.makeText(
+                                context,
+                                getString(R.string.msg_import_failed),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+            }
 
             val yourAndroidFeature = remember {
                 object : com.sameerasw.essentials.domain.model.Feature(
@@ -225,7 +198,6 @@ class YourAndroidActivity : ComponentActivity() {
 
             LaunchedEffect(Unit) {
                 mainViewModel.check(context)
-                viewModel.loadDeviceSpecs(context, deviceInfo)
             }
 
             EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
@@ -243,59 +215,215 @@ class YourAndroidActivity : ComponentActivity() {
                             direction = BlurDirection.TOP
                         )
                 ) {
-                    androidx.compose.material3.pulltorefresh.PullToRefreshBox(
-                        isRefreshing = isRefreshing,
-                        onRefresh = {
-                            viewModel.loadDeviceSpecs(context, deviceInfo, forceRefresh = true)
-                        },
+                    YourAndroidContent(
+                        deviceInfo = deviceInfo,
+                        updatesViewModel = updatesViewModel,
+                        hasRunStartupAnimation = viewModel.hasRunStartupAnimation,
+                        onAnimationRun = { viewModel.hasRunStartupAnimation = true },
+                        exportLauncher = exportLauncher,
+                        importLauncher = importLauncher,
+                        onAddRepoClick = { showAddRepoSheet = true },
+                        onShowReleaseNotes = { repoToShowReleaseNotesFullName = it },
                         modifier = Modifier.fillMaxSize()
-                    ) {
-                        YourAndroidContent(
-                            deviceInfo = deviceInfo,
-                            deviceSpecs = deviceSpecs,
-                            isSpecsLoading = isSpecsLoading,
-                            hasRunStartupAnimation = viewModel.hasRunStartupAnimation,
-                            onAnimationRun = { viewModel.hasRunStartupAnimation = true },
-                            modifier = Modifier.fillMaxSize()
-                        )
-                    }
+                    )
 
+                    val localView = androidx.compose.ui.platform.LocalView.current
                     EssentialsFloatingToolbar(
                         title = stringResource(R.string.tab_your_android),
-                        onBackClick = { finish() },
-                        onHelpClick = { showHelpSheet = true },
+                        onBackClick = {
+                            finish()
+                            overridePendingTransition(R.anim.anim_stay, R.anim.anim_slide_out_top)
+                        },
+                        floatingActionButton = {
+                            Box {
+                                FloatingActionButton(
+                                    onClick = {
+                                        HapticUtil.performVirtualKeyHaptic(localView)
+                                        if (gitHubUser != null) {
+                                            showFabProfileMenu = true
+                                        } else {
+                                            showGitHubAuthSheet = true
+                                        }
+                                    },
+                                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    shape = MaterialTheme.shapes.large,
+                                    elevation = FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp)
+                                ) {
+                                    if (gitHubUser != null) {
+                                        AsyncImage(
+                                            model = gitHubUser!!.avatarUrl,
+                                            contentDescription = stringResource(R.string.action_profile),
+                                            contentScale = ContentScale.Crop,
+                                            modifier = Modifier
+                                                .size(24.dp)
+                                                .clip(CircleShape),
+                                            placeholder = painterResource(id = R.drawable.brand_github),
+                                            error = painterResource(id = R.drawable.brand_github)
+                                        )
+                                    } else {
+                                        Icon(
+                                            painter = painterResource(id = R.drawable.brand_github),
+                                            contentDescription = stringResource(R.string.action_sign_in_github)
+                                        )
+                                    }
+                                }
+
+                                if (gitHubUser != null) {
+                                    SegmentedDropdownMenu(
+                                        expanded = showFabProfileMenu,
+                                        onDismissRequest = { showFabProfileMenu = false }
+                                    ) {
+                                        SegmentedDropdownMenuItem(
+                                            text = { Text(gitHubUser!!.name ?: gitHubUser!!.login) },
+                                            onClick = { showFabProfileMenu = false },
+                                            leadingIcon = {
+                                                Icon(
+                                                    painter = painterResource(id = R.drawable.brand_github),
+                                                    contentDescription = null
+                                                )
+                                            }
+                                        )
+                                        SegmentedDropdownMenuItem(
+                                            text = { Text(stringResource(R.string.action_sign_out)) },
+                                            onClick = {
+                                                gitHubAuthViewModel.signOut(context)
+                                                showFabProfileMenu = false
+                                            },
+                                            leadingIcon = {
+                                                Icon(
+                                                    painter = painterResource(id = R.drawable.rounded_logout_24),
+                                                    contentDescription = null
+                                                )
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+                        },
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
                             .zIndex(1f)
                     )
 
-                    if (showHelpSheet) {
-                        com.sameerasw.essentials.ui.components.sheets.FeatureHelpBottomSheet(
-                            onDismissRequest = { showHelpSheet = false },
-                            feature = yourAndroidFeature
+                    if (showGitHubAuthSheet) {
+                        GitHubAuthSheet(
+                            viewModel = gitHubAuthViewModel,
+                            onDismissRequest = { showGitHubAuthSheet = false }
                         )
+                    }
+
+                    if (showAddRepoSheet) {
+                        AddRepoBottomSheet(
+                            viewModel = updatesViewModel,
+                            onDismissRequest = {
+                                showAddRepoSheet = false
+                                updatesViewModel.clearSearch()
+                            },
+                            onTrackClick = {
+                                showAddRepoSheet = false
+                                updatesViewModel.clearSearch()
+                            }
+                        )
+                    }
+
+                    if (repoToShowReleaseNotesFullName != null) {
+                        val trackedRepos by updatesViewModel.trackedRepos
+                        val repo = trackedRepos.find { it.fullName == repoToShowReleaseNotesFullName }
+                        if (repo != null) {
+                            val isNotesLoading = repo.latestReleaseBody.isNullOrBlank()
+                            UpdateBottomSheet(
+                                updateInfo = com.sameerasw.essentials.domain.model.UpdateInfo(
+                                    versionName = repo.latestTagName,
+                                    releaseNotes = repo.latestReleaseBody ?: "",
+                                    downloadUrl = repo.downloadUrl ?: "",
+                                    releaseUrl = repo.latestReleaseUrl ?: "",
+                                    isUpdateAvailable = repo.isUpdateAvailable
+                                ),
+                                isChecking = isNotesLoading,
+                                onDismissRequest = { repoToShowReleaseNotesFullName = null }
+                            )
+                        } else {
+                            repoToShowReleaseNotesFullName = null
+                        }
                     }
                 }
             }
         }
+    }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.anim_stay, R.anim.anim_slide_out_top)
     }
 }
 
 @Composable
 fun YourAndroidContent(
     deviceInfo: DeviceInfo,
-    deviceSpecs: DeviceSpecs?,
-    isSpecsLoading: Boolean,
+    updatesViewModel: AppUpdatesViewModel,
     hasRunStartupAnimation: Boolean,
     onAnimationRun: () -> Unit,
+    exportLauncher: androidx.activity.result.ActivityResultLauncher<String>,
+    importLauncher: androidx.activity.result.ActivityResultLauncher<Array<String>>,
+    onAddRepoClick: () -> Unit,
+    onShowReleaseNotes: (String) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
+    val scrollState = rememberScrollState()
+    val overscrollOffset = remember { androidx.compose.animation.core.Animatable(0f) }
+    val scope = rememberCoroutineScope()
+    val view = LocalView.current
+
+    val nestedScrollConnection = remember {
+        object : androidx.compose.ui.input.nestedscroll.NestedScrollConnection {
+            override fun onPreScroll(
+                available: androidx.compose.ui.geometry.Offset,
+                source: androidx.compose.ui.input.nestedscroll.NestedScrollSource
+            ): androidx.compose.ui.geometry.Offset {
+                if (available.y < 0 && overscrollOffset.value > 0) {
+                    val toConsume =
+                        if (overscrollOffset.value + available.y >= 0) available.y else -overscrollOffset.value
+                    scope.launch {
+                        overscrollOffset.snapTo(overscrollOffset.value + toConsume)
+                    }
+                    return androidx.compose.ui.geometry.Offset(0f, toConsume)
+                }
+                return androidx.compose.ui.geometry.Offset.Zero
+            }
+
+            override fun onPostScroll(
+                consumed: androidx.compose.ui.geometry.Offset,
+                available: androidx.compose.ui.geometry.Offset,
+                source: androidx.compose.ui.input.nestedscroll.NestedScrollSource
+            ): androidx.compose.ui.geometry.Offset {
+                if (available.y > 0 && scrollState.value == 0) {
+                    val prevValue = overscrollOffset.value
+                    if (prevValue >= 350f) return androidx.compose.ui.geometry.Offset.Zero
+
+                    val newValue = (prevValue + available.y * 0.5f).coerceAtMost(350f)
+                    scope.launch {
+                        overscrollOffset.snapTo(newValue)
+                    }
+
+                    // Haptic feedback when stretched significantly
+                    if (prevValue < 300f && newValue >= 300f) {
+                        HapticUtil.performUIHaptic(view)
+                    }
+
+                    return androidx.compose.ui.geometry.Offset(0f, available.y)
+                }
+                return super.onPostScroll(consumed, available, source)
+            }
+        }
+    }
+
+
     var isStartupAnimationRunning by remember { mutableStateOf(hasRunStartupAnimation) }
 
     LaunchedEffect(hasRunStartupAnimation) {
         if (!hasRunStartupAnimation) {
-            delay(100)
             isStartupAnimationRunning = true
             onAnimationRun()
         }
@@ -305,26 +433,20 @@ fun YourAndroidContent(
         androidx.lifecycle.viewmodel.compose.viewModel()
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
-    val initialImageOffset = (screenHeight / 2) - 240.dp - 64.dp
     val isBlurEnabled by mainViewModel.isBlurEnabled
 
-    val imageOffsetState = animateDpAsState(
-        targetValue = if (isStartupAnimationRunning) 0.dp else initialImageOffset,
-        animationSpec = tween(durationMillis = 850, easing = FastOutSlowInEasing),
-        label = "imageOffset"
-    )
 
     val contentAlphaState = animateFloatAsState(
         targetValue = if (isStartupAnimationRunning) 1f else 0f,
-        animationSpec = tween(durationMillis = 750, delayMillis = 350, easing = LinearEasing),
+        animationSpec = tween(durationMillis = 400, delayMillis = 0, easing = EaseOut),
         label = "contentAlpha"
     )
 
     val contentOffsetState = animateDpAsState(
         targetValue = if (isStartupAnimationRunning) 0.dp else 40.dp,
         animationSpec = tween(
-            durationMillis = 750,
-            delayMillis = 350,
+            durationMillis = 400,
+            delayMillis = 0,
             easing = FastOutSlowInEasing
         ),
         label = "contentOffset"
@@ -338,7 +460,23 @@ fun YourAndroidContent(
                 height = with(LocalDensity.current) { 150.dp.toPx() },
                 direction = BlurDirection.BOTTOM
             )
-            .verticalScroll(rememberScrollState())
+            .nestedScroll(nestedScrollConnection)
+            .pointerInput(Unit) {
+                awaitPointerEventScope {
+                    while (true) {
+                        val event = awaitPointerEvent()
+                        if (event.type == androidx.compose.ui.input.pointer.PointerEventType.Release && overscrollOffset.value > 0) {
+                            scope.launch {
+                                overscrollOffset.animateTo(
+                                    0f,
+                                    androidx.compose.animation.core.spring(stiffness = androidx.compose.animation.core.Spring.StiffnessMediumLow)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+            .verticalScroll(scrollState)
             .padding(
                 top = contentPadding.calculateTopPadding() + WindowInsets.statusBars.asPaddingValues()
                     .calculateTopPadding(),
@@ -350,19 +488,231 @@ fun YourAndroidContent(
     ) {
         DeviceHeroCard(
             deviceInfo = deviceInfo,
-            deviceSpecs = deviceSpecs,
-            imageOffset = { imageOffsetState.value },
             contentAlpha = { contentAlphaState.value },
-            contentOffset = { contentOffsetState.value }
+            contentOffset = { contentOffsetState.value },
+            overscrollOffset = overscrollOffset.value
         )
 
-        DeviceSpecsCard(
-            deviceSpecs = deviceSpecs,
-            isLoading = isSpecsLoading,
-            modifier = Modifier.graphicsLayer {
-                alpha = contentAlphaState.value
-                translationY = contentOffsetState.value.toPx()
-            }
+        // Apps Section
+        val trackedRepos by updatesViewModel.trackedRepos
+        val isLoading by updatesViewModel.isLoading
+        val refreshingRepoIds by updatesViewModel.refreshingRepoIds
+        val context = androidx.compose.ui.platform.LocalContext.current
+
+        Text(
+            text = stringResource(R.string.label_apps),
+            modifier = Modifier
+                .padding(start = 8.dp, top = 16.dp, bottom = 4.dp)
+                .graphicsLayer {
+                    alpha = contentAlphaState.value
+                    translationY = contentOffsetState.value.toPx()
+                },
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+
+        val pending = trackedRepos.filter { it.isUpdateAvailable && it.mappedPackageName != null }
+            .sortedByDescending { it.publishedAt }
+        val upToDate = trackedRepos.filter { !it.isUpdateAvailable && it.mappedPackageName != null }
+            .sortedByDescending { it.publishedAt }
+        val notInstalled = trackedRepos.filter { it.mappedPackageName == null }
+
+        if (isLoading && trackedRepos.isEmpty()) {
+            androidx.compose.material3.LoadingIndicator(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(32.dp)
+            )
+        } else if (trackedRepos.isEmpty()) {
+            androidx.compose.material3.OutlinedCard(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .graphicsLayer {
+                        alpha = contentAlphaState.value
+                        translationY = contentOffsetState.value.toPx()
+                    },
+                shape = MaterialTheme.shapes.extraSmall
+            ) {
+                Column(
+                    modifier = Modifier.padding(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = stringResource(R.string.msg_no_repos_tracked),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(onClick = onAddRepoClick) {
+                        Text(stringResource(R.string.action_add_repository))
+                    }
+                    Spacer(modifier = Modifier.height(24.dp))
+                    ImportExportButtons(
+                        view = view,
+                        exportLauncher = exportLauncher,
+                        importLauncher = importLauncher,
+                        showExport = false
+                    )
+                }
+            }
+        } else {
+            RoundedCardContainer(
+                modifier = Modifier.graphicsLayer {
+                    alpha = contentAlphaState.value
+                    translationY = contentOffsetState.value.toPx()
+                }
+            ) {
+                AppsActionButtons(
+                    onAddClick = onAddRepoClick,
+                    onRefreshAllClick = { updatesViewModel.checkForUpdates(context) },
+                    isRefreshing = refreshingRepoIds.isNotEmpty(),
+                    progress = { updatesViewModel.updateProgress.value }
+                )
+            }
+
+            // Pending Section
+            if (pending.isNotEmpty()) {
+                Text(
+                    text = "${stringResource(R.string.label_pending)} (${pending.size})",
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier
+                        .padding(start = 8.dp, top = 8.dp, bottom = 4.dp)
+                        .graphicsLayer {
+                            alpha = contentAlphaState.value
+                            translationY = contentOffsetState.value.toPx()
+                        },
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                com.sameerasw.essentials.ui.components.containers.RoundedCardContainer(
+                    modifier = Modifier.graphicsLayer {
+                        alpha = contentAlphaState.value
+                        translationY = contentOffsetState.value.toPx()
+                    }
+                ) {
+                    pending.forEach { repo ->
+                        RepoItem(
+                            repo = repo,
+                            updatesViewModel = updatesViewModel,
+                            refreshingRepoIds = refreshingRepoIds,
+                            context = context,
+                            onAddRepoClick = onAddRepoClick,
+                            onShowReleaseNotes = onShowReleaseNotes
+                        )
+                    }
+                }
+            }
+
+            // Up-to-date Section
+            if (upToDate.isNotEmpty()) {
+                Text(
+                    text = "${stringResource(R.string.label_up_to_date)} (${upToDate.size})",
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier
+                        .padding(start = 8.dp, top = 8.dp, bottom = 4.dp)
+                        .graphicsLayer {
+                            alpha = contentAlphaState.value
+                            translationY = contentOffsetState.value.toPx()
+                        },
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                com.sameerasw.essentials.ui.components.containers.RoundedCardContainer(
+                    modifier = Modifier.graphicsLayer {
+                        alpha = contentAlphaState.value
+                        translationY = contentOffsetState.value.toPx()
+                    }
+                ) {
+                    upToDate.forEach { repo ->
+                        RepoItem(
+                            repo = repo,
+                            updatesViewModel = updatesViewModel,
+                            refreshingRepoIds = refreshingRepoIds,
+                            context = context,
+                            onAddRepoClick = onAddRepoClick,
+                            onShowReleaseNotes = onShowReleaseNotes
+                        )
+                    }
+                }
+            }
+
+            // Not Installed Section
+            if (notInstalled.isNotEmpty()) {
+                Text(
+                    text = "${stringResource(R.string.label_not_installed)} (${notInstalled.size})",
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier
+                        .padding(start = 8.dp, top = 8.dp, bottom = 4.dp)
+                        .graphicsLayer {
+                            alpha = contentAlphaState.value
+                            translationY = contentOffsetState.value.toPx()
+                        },
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                com.sameerasw.essentials.ui.components.containers.RoundedCardContainer(
+                    modifier = Modifier.graphicsLayer {
+                        alpha = contentAlphaState.value
+                        translationY = contentOffsetState.value.toPx()
+                    }
+                ) {
+                    notInstalled.forEach { repo ->
+                        RepoItem(
+                            repo = repo,
+                            updatesViewModel = updatesViewModel,
+                            refreshingRepoIds = refreshingRepoIds,
+                            context = context,
+                            onAddRepoClick = onAddRepoClick,
+                            onShowReleaseNotes = onShowReleaseNotes
+                        )
+                    }
+                }
+            }
+
+            ImportExportButtons(
+                view = view,
+                exportLauncher = exportLauncher,
+                importLauncher = importLauncher,
+                modifier = Modifier.graphicsLayer {
+                    alpha = contentAlphaState.value
+                    translationY = contentOffsetState.value.toPx()
+                }
+            )
+        }
     }
+}
+
+@Composable
+private fun RepoItem(
+    repo: com.sameerasw.essentials.domain.model.TrackedRepo,
+    updatesViewModel: AppUpdatesViewModel,
+    refreshingRepoIds: Set<String>,
+    context: android.content.Context,
+    onAddRepoClick: () -> Unit,
+    onShowReleaseNotes: (String) -> Unit
+) {
+    val isInstallingThis = updatesViewModel.installingRepoId.value == repo.fullName
+    TrackedRepoCard(
+        repo = repo,
+        isLoading = refreshingRepoIds.contains(repo.fullName),
+        installStatus = if (isInstallingThis) updatesViewModel.installStatus.value else null,
+        downloadProgress = if (isInstallingThis) updatesViewModel.updateProgress.value else 0f,
+        onClick = {
+            updatesViewModel.prepareEdit(context, repo)
+            onAddRepoClick()
+        },
+        onActionClick = {
+            if (repo.isUpdateAvailable) {
+                updatesViewModel.downloadAndInstall(context, repo)
+            } else {
+                onShowReleaseNotes(repo.fullName)
+                updatesViewModel.fetchReleaseNotesIfNeeded(context, repo)
+            }
+        },
+        onDeleteClick = {
+            updatesViewModel.untrackRepo(context, repo.fullName)
+        },
+        onShowReleaseNotes = {
+            onShowReleaseNotes(repo.fullName)
+            updatesViewModel.fetchReleaseNotesIfNeeded(context, repo)
+        }
+    )
 }

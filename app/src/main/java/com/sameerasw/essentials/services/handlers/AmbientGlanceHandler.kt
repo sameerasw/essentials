@@ -979,6 +979,10 @@ class AmbientGlanceHandler(
         handler.removeCallbacks(progressUpdateRunnable)
         handler.removeCallbacks(revertToMusicRunnable)
         handler.removeCallbacks(burnInProtectionRunnable)
+
+        // Clear active unread notifications from the overlay on dismissal
+        com.sameerasw.essentials.services.NotificationListener.clearUnreadNotifications()
+
         if (overlayView != null && windowManager != null) {
             isDetached = true
             try {
@@ -1032,7 +1036,8 @@ class AmbientGlanceHandler(
     }
 
     private fun isRandomShapesEnabled(): Boolean {
-        return getAlbumArtMode() == "random"
+        val prefs = service.getSharedPreferences(com.sameerasw.essentials.data.repository.SettingsRepository.PREFS_NAME, Context.MODE_PRIVATE)
+        return prefs.getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_AMBIENT_MUSIC_GLANCE_RANDOM_SHAPES, false)
     }
 
     private fun getPrimaryColor(context: Context): Int {
