@@ -1,0 +1,1457 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="label_customization">Customization</string>
+    <string name="label_beta">BEETA</string>
+    <string name="shut_up_attempt_shizuku_restart">Attempt Shizuku restart</string>
+    <string name="shut_up_shizuku_restart_warning_title">Shizuku Restart Warning</string>
+    <string name="shut_up_shizuku_restart_warning_message">Since wireless debugging was toggled, Shizuku services might not have started automatically causing freezing to not function. Consider turning on attempt shizuku restart as well</string>
+    <string name="accessibility_service_description"><b>Essentials Accessibility Service</b>\n\nThis service is required for the following advanced features:\n\n<b>• Physical Button Remapping:</b>\nDetects volume button presses even when the screen is off to trigger actions like the Flashlight.\n\n<b>• Per-App Settings:</b>\nMonitors the currently active app to apply specific profiles for Dynamic Night Light, Notification Lighting Colors, and App Lock.\n\n<b>• Screen Control:</b>\nAllows the app to lock the screen (e.g. via Double Tap or Widgets) and detect screen state changes.\n\n<b>• Security:</b>\nPrevents unauthorized changes by detecting window content when the device is locked.\n\n<small>No input text or sensitive user data is collected or transmitted.</small></string>
+    <string name="freeze_activity_title">Sovelluksen jäätyminen</string>
+    <string name="freeze_activity_subtitle">Poista käytöstä harvoin käytetyt sovellukset</string>
+    <string name="freeze_shortcut_short_label">Sovelluksen jäätyminen</string>
+    <string name="freeze_shortcut_long_label">Avaa App Freezing</string>
+    <string name="frozen_app_shortcut_label">Jäädytetty sovellus</string>
+    <string name="screen_off_widget_label">Tyhjennä näyttö pois -widget</string>
+    <string name="app_freezing_tile_label">Sovelluksen jäätyminen</string>
+    <string name="flashlight_pulse_tile_label">Taskulamppu pulssi</string>
+    <string name="check_pre_releases_label">Tarkista ennakkojulkaisut</string>
+    <string name="check_pre_releases_desc">Saattaa olla epävakaa</string>
+    <string name="label_default_tab">Default tab</string>
+    <!-- App Lock -->
+    <string name="settings_section_security">Turvallisuus</string>
+    <string name="app_lock_enable_title">Ota sovellusten lukitus käyttöön</string>
+    <string name="app_lock_auth_title">Sovelluksen lukituksen suojaus</string>
+    <string name="app_lock_enable_auth_subtitle">Todennus ottaaksesi sovelluksen lukituksen käyttöön</string>
+    <string name="app_lock_disable_auth_subtitle">Todennus poistaaksesi sovellusten lukituksen käytöstä</string>
+    <string name="app_lock_select_apps_title">Valitse lukitut sovellukset</string>
+    <string name="app_lock_select_apps_desc">Valitse, mitkä sovellukset vaativat todennuksen</string>
+    <string name="app_lock_description">Suojaa sovelluksesi biometrisellä todennuksella. Lukitut sovellukset vaativat todennuksen käynnistettäessä, pysyy lukitsemattomana, kunnes näyttö sammuu.</string>
+    <string name="app_lock_warning">Varo, että tämä ei ole vankka ratkaisu, koska tämä on vain kolmannen osapuolen sovellus. Jos tarvitset vahvaa suojausta, harkitse Private Spacen tai muiden vastaavien ominaisuuksien käyttöä.</string>
+    <string name="app_lock_biometric_note">Toinen huomautus, biometrinen todennuskehote antaa sinun käyttää vain VAHVAN suojatun luokan menetelmiä. Face Unlock -suojausmenetelmät WEAK-luokassa Pixel 7:n kaltaisissa laitteissa voivat hyödyntää vain saatavilla olevia muita STRONG-todennusmenetelmiä, kuten sormenjälkeä tai PIN-koodia.</string>
+    <string name="setting_use_usage_access_title">Use usage access</string>
+    <string name="setting_use_usage_access_desc">Instead of accessibility (Freeze, App Lock, Dynamic Night Light)</string>
+    <!-- Button Remap -->
+    <string name="button_remap_enable_title">Ota Button Remap käyttöön</string>
+    <string name="button_remap_use_shizuku_title">Käytä Shizukua tai Rootia tai Rootia</string>
+    <string name="button_remap_use_shizuku_desc">Toimii näytön ollessa pois päältä (suositus)</string>
+    <string name="shizuku_not_running_toast">Shizuku ei juokse</string>
+    <string name="shizuku_detected_prefix">Havaittu %1$s</string>
+    <string name="shizuku_status_prefix">Status: %1$s</string>
+    <string name="shizuku_open_button">Avaa Shizuku</string>
+    <string name="settings_section_flashlight">Taskulamppu</string>
+    <string name="flashlight_options_title">Taskulamppuvaihtoehdot</string>
+    <string name="flashlight_options_desc">Säädä häivytystä ja muita asetuksia</string>
+    <string name="setting_pitch_black_theme_title">Pisimusta teema</string>
+    <string name="setting_pitch_black_theme_desc">Käytä puhdasta mustaa taustaa pimeässä tilassa</string>
+    <string name="settings_section_haptic">Haptinen palaute</string>
+    <string name="button_remap_section_long_press">Remap Pitkä painallus</string>
+    <string name="screen_off">Näyttö pois päältä</string>
+    <string name="screen_on">Näyttö päällä</string>
+    <string name="volume_up">Äänenvoimakkuuden lisääminen</string>
+    <string name="volume_down">Äänenvoimakkuuden vähentäminen</string>
+    <string name="action_toggle_flashlight">Taskulamppu päälle/pois</string>
+    <string name="action_media_play_pause">Median toisto/tauko</string>
+    <string name="action_media_next">Media seuraavaksi</string>
+    <string name="action_media_previous">Media edellinen</string>
+    <string name="action_toggle_vibrate">Vaihda värinä</string>
+    <string name="action_toggle_mute">Kytke mykistys päälle</string>
+    <string name="action_ai_assistant">AI-avustaja</string>
+    <string name="action_take_screenshot">Ota kuvakaappaus</string>
+    <string name="action_cycle_sound_modes">Vaihda äänitilat</string>
+    <string name="action_circle_to_search">Circle to Search</string>
+    <string name="action_like_song">Kuten nykyinen kappale</string>
+    <string name="like_song_settings_title">Kuten kappaleasetukset</string>
+    <string name="like_song_settings_desc">Tämä ominaisuus vaatii pääsyn ilmoituksiin, jotta se havaitsee parhaillaan toistettavan median ja käynnistää vastaavan toiminnon. Ota se käyttöön alla.</string>
+    <string name="like_song_toast_enabled">Näytä paahtoleipäviesti</string>
+    <string name="like_song_aod_overlay_title">Näytä peittokuva AOD:ssa</string>
+    <string name="feat_essentials_on_display_title">Essentials On Display</string>
+    <string name="feat_essentials_on_display_desc">Glance at media and info on AOD</string>
+    <string name="essentials_on_display_docked_mode_title">Docked mode</string>
+    <string name="essentials_on_display_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
+    <string name="essentials_on_display_respect_notifications_title">Respect new notifications</string>
+    <string name="essentials_on_display_respect_notifications_desc">Briefly disable for new notifications</string>
+    <string name="essentials_on_display_random_shapes_title">Random shapes</string>
+    <string name="essentials_on_display_random_shapes_desc">Use various Material 3 shapes for the album art</string>
+    <string name="essentials_on_display_album_art_title">Album art</string>
+    <string name="essentials_on_display_clock_title">Clock</string>
+    <string name="essentials_on_display_force_fill_while_charging_title">Always use while charging</string>
+    <string name="essentials_on_display_force_fill_while_charging_desc">Force Fill mode when the device is plugged in regardless of the selected mode</string>
+    <string name="label_size">Size</string>
+    <string name="feat_notification_glance_title">Ilmoitus vilkaisu</string>
+    <string name="feat_notification_glance_desc">Pidä AOD päällä, kun ilmoitukset odottavat</string>
+    <string name="notification_glance_same_as_lighting_title">Samat sovellukset kuin ilmoitusvalo</string>
+    <string name="notification_glance_desc">Tämä ominaisuus ottaa Aina näytössä -toiminnon käyttöön dynaamisesti, kun valitusta sovelluksesta tulee ilmoitus, ja poistaa sen käytöstä, kun kaikki vastaavat ilmoitukset on hylätty. Valitse sovelluksia tai käytä samaa valintaa kuin ilmoitusvalo.</string>
+    <string name="grant_notification_access">Myönnä ilmoitusten käyttöoikeus</string>
+    <string name="action_toggle_media_volume">Vaihda median äänenvoimakkuutta</string>
+    <string name="button_remap_screen_off_hint">Kun näyttö on pois päältä, paina valittua painiketta pitkään käynnistääksesi sille määritetyn toiminnon. Pixel-laitteissa tämä toiminto käynnistyy vain, jos AOD on käytössä järjestelmärajoitusten vuoksi.</string>
+    <string name="button_remap_screen_on_hint">Kun näyttö on päällä, paina valittua painiketta pitkään käynnistääksesi sille määritetyn toiminnon.</string>
+    <string name="flashlight_intensity_title">Taskulamppujen voimakkuus</string>
+    <string name="flashlight_fade_title">Häivytä sisään ja ulos</string>
+    <string name="flashlight_fade_desc">Taskulamppu vaihtuu tasaisesti</string>
+    <string name="flashlight_global_title">Globaalit kontrollit</string>
+    <string name="flashlight_global_desc">Häivyttävä taskulamppu maailmanlaajuisesti</string>
+    <string name="flashlight_adjust_intensity_title">Säädä intensiteettiä</string>
+    <string name="flashlight_adjust_intensity_desc">Volume + - säätää taskulampun voimakkuutta</string>
+    <string name="flashlight_live_update_title">Live päivitys</string>
+    <string name="flashlight_live_update_desc">Näytä kirkkaus tilapalkissa</string>
+    <string name="settings_section_other">muu</string>
+    <string name="flashlight_always_off_title">Sammuta aina taskulamppu</string>
+    <string name="flashlight_always_off_desc">Vaikka näyttö on päällä</string>
+    <string name="content_desc_settings">Asetukset</string>
+    <!-- Caffeinate / Permissions -->
+    <string name="permission_show_notification_title">Näytä ilmoitus</string>
+    <string name="permission_post_notifications_title">Lähetä ilmoitukset</string>
+    <string name="permission_post_notifications_desc">Antaa sovelluksen näyttää ilmoituksia</string>
+    <string name="permission_grant_action">Myönnä lupa</string>
+    <string name="caffeinate_notification_title">Aktiivinen kofeinaatti</string>
+    <string name="caffeinate_active">Aktiivinen</string>
+    <string name="caffeinate_notification_desc">Näyttöä pidetään hereillä</string>
+    <string name="caffeinate_battery_optimization_title">Ohita akun optimointi</string>
+    <string name="caffeinate_abort_screen_off_title">Keskeytä näyttö pois päältä</string>
+    <string name="caffeinate_skip_countdown_title">Ohita lähtölaskenta</string>
+    <string name="caffeinate_skip_countdown_desc">Aloita Caffeinate välittömästi.</string>
+    <string name="caffeinate_timeout_presets_title">Aikakatkaisun esiasetukset</string>
+    <string name="caffeinate_timeout_presets_desc">Valitse QS-ruudun käytettävissä olevat kestoajat</string>
+    <string name="caffeinate_timeout_5m">5 m</string>
+    <string name="caffeinate_timeout_10m">10 m</string>
+    <string name="caffeinate_timeout_30m">30 m</string>
+    <string name="perm_notif_policy_title">Älä häiritse -käyttö</string>
+    <string name="perm_notif_policy_desc">Vaaditaan siirtymiseen ääni-, värinä- ja mykistystilojen välillä</string>
+    <string name="caffeinate_timeout_1h">1h</string>
+    <string name="caffeinate_timeout_infinity">∞</string>
+    <string name="caffeinate_starting_in">Alkaen %1$ds…</string>
+    <string name="caffeinate_remaining">%1$s jäljellä</string>
+    <string name="caffeinate_live_channel_desc">Jatkuva ilmoitus kofeiinista</string>
+    <!-- Dynamic Night Light -->
+    <string name="dynamic_night_light_enable_title">Ota dynaaminen yövalo käyttöön</string>
+    <string name="dynamic_night_light_apps_section">Sovellukset, jotka sammuttavat yövalon</string>
+    <string name="action_select_apps">Valitse sovellukset</string>
+    <!-- App Freezing -->
+    <string name="settings_section_app_control">Sovelluksen hallinta</string>
+    <string name="action_freeze">Jäädyttää</string>
+    <string name="action_unfreeze">Vapauttaa</string>
+    <string name="action_remove">Remove</string>
+    <string name="action_create_shortcut">Create shortcut</string>
+    <string name="action_app_info">App info</string>
+    <string name="freeze_mode_description_freeze_title">What is Freeze?</string>
+    <string name="freeze_mode_description_freeze_body">App freezing disables the app\'s launch activity which removes it from the app list and updates. It will prevent the app from starting at all until it\'s unfrozen which saves resources but you will need to unfreeze from here or manually re-enable.</string>
+    <string name="freeze_mode_description_freeze_warning">DO NOT FREEZE COMMUNICATION APPS</string>
+    <string name="freeze_mode_description_suspend_title">What is Suspend?</string>
+    <string name="freeze_mode_description_suspend_body">Suspending an app used to pause the app activity and prevent background executions but with recent Android changes, it only pauses the notifications from appearing and that\'s pretty much it. But does allows you to unpause from the launcher app list as they will be still available as grayscale paused app icons.</string>
+    <string name="freeze_mode_description_suspend_footer">Should work the same as the native app pause/ focus mode features.</string>
+    <string name="content_desc_more_options">Lisää vaihtoehtoja</string>
+    <string name="action_freeze_all">Jäädyttää kaikki sovellukset</string>
+    <string name="action_unfreeze_all">Vapauta kaikki sovellukset</string>
+    <string name="action_export_freeze">Vie jäädytettyjen sovellusten luettelo</string>
+    <string name="action_import_freeze">Tuo jäädytettyjen sovellusten luettelo</string>
+    <string name="freeze_pick_apps_title">Valitse jäädytettävät sovellukset</string>
+    <string name="freeze_pick_apps_desc">Valitse, mitkä sovellukset voidaan jäädyttää</string>
+    <string name="freeze_show_in_launcher_title">Show in launcher</string>
+    <string name="freeze_show_in_launcher_desc">Add a launcher shortcut for easier access</string>
+    <string name="settings_section_automation">Automaatio</string>
+    <string name="freeze_when_locked_title">Jäähdytä lukittuna</string>
+    <string name="freeze_delay_title">Jäätymisen viive</string>
+    <string name="delay_immediate">Välitön</string>
+    <string name="delay_1m">1 m</string>
+    <string name="delay_5m">5 m</string>
+    <string name="delay_15m">15 m</string>
+    <string name="delay_manual">Manuaalinen</string>
+    <string name="freeze_auto_freeze_section">Jäädyttää sovellukset automaattisesti</string>
+    <string name="freeze_automation_hint">Pysäytä valitut sovellukset, kun laite lukittuu. Valitse viive, jotta sovellukset eivät jäädy, jos avaat näytön lukituksen pian sen sammuttamisen jälkeen.</string>
+    <string name="freeze_warning">Järjestelmäsovellusten jäädyttäminen voi olla vaarallista ja voi aiheuttaa odottamatonta toimintaa.</string>
+    <string name="action_enable_in_settings">Ota käyttöön asetuksissa</string>
+    <string name="freeze_dont_freeze_active_apps_title">Don\'t jäädyttää aktiiviset sovellukset</string>
+    <string name="perm_usage_stats_title">Käyttötilastot</string>
+    <string name="perm_usage_stats_desc">Pakollinen tunnistamaan, mitkä sovellukset ovat tällä hetkellä etualalla, jotta ne eivät jäädy</string>
+    <string name="perm_usage_stats_desc_app_lock">Required to detect foreground apps for App Lock features when accessibility is not used.</string>
+    <string name="perm_notif_listener_desc_freeze">Vaaditaan toistavan median ja aktiivisten ilmoitusten havaitsemiseksi niiden jäätymisen välttämiseksi</string>
+    <string name="freeze_mode_title">Freeze mode</string>
+    <string name="freeze_mode_freeze">Freezing</string>
+    <string name="freeze_mode_suspend">App suspension</string>
+    <string name="freeze_mode_warning_desc">Can not switch mode while apps are frozen. Please unfreeze all and try again.</string>
+    <!-- Notification Lighting -->
+    <string name="notification_lighting_screen_off_title">Näytä vain näytön ollessa pois päältä</string>
+    <string name="notification_lighting_skip_silent_title">Ohita äänettömät ilmoitukset</string>
+    <string name="notification_lighting_skip_persistent_title">Ohita jatkuvat ilmoitukset</string>
+    <string name="settings_section_flashlight_pulse">Taskulamppu pulssi</string>
+    <string name="flashlight_pulse_title">Taskulamppu pulssi</string>
+    <string name="flashlight_pulse_facedown_title">Vain kasvot alaspäin</string>
+    <string name="flashlight_pulse_same_as_lighting_title">Samat sovellukset kuin ilmoitusvalo</string>
+    <string name="flashlight_pulse_max_brightness">Max brightness</string>
+    <string name="flashlight_pulse_preview">Preview pulse</string>
+    <string name="settings_section_style">Tyyli</string>
+    <string name="notification_lighting_stroke_adjustment_section">Iskun säätö</string>
+    <string name="notification_lighting_corner_radius_title">Kulman säde</string>
+    <string name="notification_lighting_stroke_thickness_title">Iskun paksuus</string>
+    <string name="notification_lighting_glow_adjustment_section">Hehkun säätö</string>
+    <string name="notification_lighting_glow_spread_title">Hehku leviää</string>
+    <string name="notification_lighting_placement_section">Sijoitus</string>
+    <string name="notification_lighting_h_pos_title">Vaaka-asento</string>
+    <string name="notification_lighting_v_pos_title">Pystysuora asento</string>
+    <string name="notification_lighting_indicator_adjustment_section">Ilmaisimen säätö</string>
+    <string name="notification_lighting_scale_title">Mittakaava</string>
+    <string name="notification_lighting_duration_title">Kesto</string>
+    <string name="notification_lighting_style_sweep">Sweep</string>
+    <string name="notification_lighting_sweep_position_title">Position</string>
+    <string name="notification_lighting_sweep_random_shapes_title">Random shapes</string>
+    <string name="notification_lighting_sweep_thickness_title">Stroke thickness</string>
+    <string name="notification_lighting_sweep_pos_left">Left</string>
+    <string name="notification_lighting_sweep_pos_center">Center</string>
+    <string name="notification_lighting_sweep_pos_right">Right</string>
+    <string name="settings_section_animation">Animaatio</string>
+    <string name="notification_lighting_pulse_count_title">Pulssin määrä</string>
+    <string name="notification_lighting_pulse_duration_title">Pulssin kesto</string>
+    <string name="settings_section_color_mode">Väritila</string>
+    <string name="settings_section_ambient_display">Ambient-näyttö</string>
+    <string name="ambient_display_title">Ambient-näyttö</string>
+    <string name="ambient_display_hint">Sopii, jos et käytä AOD:ta.</string>
+    <string name="ambient_display_desc">Herätä näyttö ja näytä valaistus</string>
+    <string name="ambient_show_lock_screen_title">Näytä lukitusnäyttö</string>
+    <string name="ambient_show_lock_screen_desc">Ei mustaa peittoa</string>
+    <!-- Tiles -->
+    <string name="action_add">Lisätä</string>
+    <string name="action_added">Added</string>
+    <string name="qs_tile_already_added">Jo lisätty</string>
+    <string name="qs_tile_requires_android_13">Vaatii Android 13+</string>
+    <string name="tile_ui_blur">Käyttöliittymän sumennus</string>
+    <string name="tile_bubbles">Kuplat</string>
+    <string name="tile_sensitive_content">Arkaluonteinen sisältö</string>
+    <string name="tile_tap_to_wake">Herätä napauttamalla</string>
+    <string name="tile_aod">AOD</string>
+    <string name="tile_caffeinate">Kofeinaatti</string>
+    <string name="tile_sound_mode">Äänitila</string>
+    <string name="tile_notification_lighting">Ilmoitusvalo</string>
+    <string name="tile_dynamic_night_light">Dynaaminen yövalo</string>
+    <string name="tile_locked_security">Lukittu turvallisuus</string>
+    <string name="tile_app_lock">Sovelluksen lukitus</string>
+    <string name="tile_mono_audio">Mono Audio</string>
+    <string name="tile_flashlight">Taskulamppu</string>
+    <string name="tile_app_freezing">Sovelluksen jäätyminen</string>
+    <string name="tile_flashlight_pulse">Taskulamppu pulssi</string>
+    <string name="tile_stay_awake">Pysy hereillä</string>
+    <string name="input_method_label">Essentials-näppäimistö</string>
+    <string name="subtype_en_us">englanti (USA)</string>
+    <string name="tile_active">Aktiivinen</string>
+    <string name="tile_inactive">Ei-aktiivinen</string>
+    <string name="tile_developer_options">Kehittäjäasetukset</string>
+    <string name="about_desc_developer_options">Vaihda järjestelmän kehittäjäasetukset QS-ruudusta helposti. Tämä saattaa nollata joitain muokkaamiasi kehittäjäasetuksia.</string>
+    <string name="tile_refresh_rate">Refresh Rate</string>
+    <string name="about_desc_refresh_rate_tile">Cycle between the system default and preset refresh rates directly from a Quick Settings tile using Shizuku.</string>
+    <string name="nfc_tile_label">NFC</string>
+    <string name="tile_private_dns">Yksityinen DNS</string>
+    <string name="tile_private_dns_auto">Auto</string>
+    <string name="tile_private_dns_off">Pois</string>
+    <string name="tile_usb_debugging">USB-virheenkorjaus</string>
+    <string name="tile_color_picker">Värinvalitsin</string>
+    <string name="toast_eyedropper_failed">Are you sure you\'re on Androdi 17? (╯°_°）╯</string>
+    <string name="subtitle_eye_dropper">Silmäpipat</string>
+    <string name="on">Päällä</string>
+    <string name="off">Pois</string>
+    <string name="private_dns_custom_title">Mukautettu yksityinen DNS</string>
+    <string name="private_dns_presets_title">Yleiset DNS-esiasetukset</string>
+    <string name="dns_preset_add_title">Add DNS Preset</string>
+    <string name="dns_preset_name_label">Preset name</string>
+    <string name="dns_preset_reset_action">Reset</string>
+    <string name="dns_preset_delete_content_description">Delete preset</string>
+    <string name="dns_preset_reset_confirm">Are you sure you want to reset all DNS presets to defaults? This will remove all your custom presets.</string>
+    <string name="private_dns_hostname_label">Palveluntarjoajan isäntänimi</string>
+    <string name="dns_preset_adguard">AdGuard DNS</string>
+    <string name="dns_preset_adguard_hostname">dns.adguard.com</string>
+    <string name="dns_preset_google">Googlen julkinen DNS</string>
+    <string name="dns_preset_google_hostname">dns.google</string>
+    <string name="dns_preset_cloudflare">Cloudflare DNS</string>
+    <string name="dns_preset_cloudflare_hostname">1piste1piste1piste1.cloudflare-dns.com</string>
+    <string name="dns_preset_quad9">Quad9 DNS</string>
+    <string name="dns_preset_quad9_hostname">dns.quad9.net</string>
+    <string name="dns_preset_cleanbrowsing">CleanBrowsing</string>
+    <string name="dns_preset_cleanbrowsing_hostname">adult-filter-dns.cleanbrowsing.org</string>
+    <string name="tile_charge_optimization">Lataus</string>
+    <string name="limit_to_80">raja 80 %</string>
+    <string name="adaptive_charging">Mukautuva</string>
+    <string name="deactivated">Ei optimoitu</string>
+    <string name="permission_missing">Lupa puuttuu</string>
+    <!-- Screen Locked Security -->
+    <string name="screen_locked_security_title">Näyttö lukittu suojaus</string>
+    <string name="screen_locked_security_dialog_title">Näytön lukittu suojaus</string>
+    <string name="warning_title">⚠️ VAROITUS</string>
+    <string name="screen_locked_security_auth_enable">Todennus ottaaksesi näytön lukitun suojauksen käyttöön</string>
+    <string name="screen_locked_security_auth_disable">Todennus poistaaksesi näytön lukitun suojauksen käytöstä</string>
+    <string name="screen_locked_security_desc">Disable quick setting tiles when the device is locked</string>
+    <string name="search_disable_qs_locked_title">Disable QS Locked</string>
+    <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
+    <!-- Sound Mode -->
+    <string name="sound_mode_reorder_title">Tilaa tilat uudelleen</string>
+    <string name="sound_mode_long_press_hint">Paina pitkään vaihtaaksesi</string>
+    <string name="content_desc_drag_reorder">Järjestä uudelleen vetämällä</string>
+    <string name="sound_mode_sound">Ääni</string>
+    <string name="sound_mode_vibrate">Värinä</string>
+    <string name="sound_mode_silent">Hiljainen</string>
+    <!-- Status Bar Categories -->
+    <string name="status_bar_category_connectivity">Yhteydet</string>
+    <string name="status_bar_category_phone_network">Puhelin ja verkko</string>
+    <string name="status_bar_category_audio_media">Audio &amp; Media</string>
+    <string name="status_bar_category_system_status">Järjestelmän tila</string>
+    <string name="status_bar_category_oem_specific">OEM-kohtainen</string>
+    <!-- Status Bar Icons -->
+    <string name="icon_wifi">WiFi</string>
+    <string name="icon_bluetooth">Bluetooth</string>
+    <string name="icon_nfc">NFC / Felica</string>
+    <string name="icon_vpn">VPN</string>
+    <string name="icon_airplane_mode">Lentokonetila</string>
+    <string name="icon_hotspot">Hotspot</string>
+    <string name="icon_cast">Heittää</string>
+    <string name="icon_mobile_data">Mobiilidata</string>
+    <string name="icon_phone_signal">Puhelimen signaali</string>
+    <string name="icon_volte">VoLTE / VoNR</string>
+    <string name="icon_wifi_calling">WiFi-puhelut / VoWiFi</string>
+    <string name="icon_call_status">Puhelun tila / synkronointi</string>
+    <string name="icon_tty">TTY</string>
+    <string name="icon_volume">Äänenvoimakkuus</string>
+    <string name="icon_headset">Kuulokkeet</string>
+    <string name="icon_speakerphone">Kaiutinpuhelin</string>
+    <string name="icon_dmb">DMB</string>
+    <string name="icon_clock">Kello</string>
+    <string name="icon_ime">Syöttötapa (IME)</string>
+    <string name="icon_alarm">Hälytys</string>
+    <string name="icon_battery">Akku</string>
+    <string name="icon_power_saving">Virransäästö</string>
+    <string name="icon_data_saver">Data Saver</string>
+    <string name="icon_rotation_lock">Pyörimislukko</string>
+    <string name="icon_location">Sijainti / GPS</string>
+    <string name="icon_sync">Synkronoi</string>
+    <string name="icon_managed_profile">Hallittu profiili</string>
+    <string name="icon_dnd">Ei saa häiritä</string>
+    <string name="icon_privacy">Yksityisyys ja suojattu kansio</string>
+    <string name="icon_security_status">Suojaustila (SU)</string>
+    <string name="icon_otg">OTG hiiri/näppäimistö</string>
+    <string name="icon_samsung_smart">Samsungin älykkäät ominaisuudet</string>
+    <string name="icon_samsung_services">Samsungin palvelut</string>
+    <string name="icon_ethernet">Ethernet</string>
+    <!-- Status Bar Settings -->
+    <string name="stb_clock_seconds">Näytä sekunnit kellossa</string>
+    <string name="stb_battery_percentage">Akun prosenttiosuus</string>
+    <string name="stb_battery_percentage_always">Aina</string>
+    <string name="stb_battery_percentage_charging">Lataus</string>
+    <string name="stb_battery_percentage_never">Ei koskaan</string>
+    <string name="stb_privacy_chip">Kamera ja mikrofoni käyttävät siruja</string>
+    <string name="smart_data_title">Älykäs data</string>
+    <string name="permission_read_phone_state_title">Lue puhelimen tila</string>
+    <string name="permission_read_phone_state_desc">Pakollinen verkkotyypin tunnistamiseen Smart Data -ominaisuutta varten</string>
+    <string name="permission_read_phone_state_desc_call_vibrations">Vaaditaan puhelun tilan muutosten havaitsemiseksi haptisen palautteen laukaisemiseksi.</string>
+    <string name="settings_section_smart_visibility">Älykäs näkyvyys</string>
+    <string name="smart_wifi_title">Älykäs WiFi</string>
+    <string name="smart_wifi_desc">Piilota mobiilidata, kun WiFi on yhdistetty</string>
+    <string name="smart_data_desc">Piilota mobiilidata tietyissä tiloissa</string>
+    <string name="action_reset_all_icons">Nollaa kaikki kuvakkeet</string>
+    <string name="status_bar_section_advanced">Lisää asetuksia</string>
+    <string name="stb_advanced_flags_title">Advanced (Requires Shizuku/Root)</string>
+    <string name="hide_all_system_icons_title">Hide all system icons</string>
+    <string name="hide_all_system_icons_desc">Clear all non-notification icons from the status bar</string>
+    <string name="hide_system_icons_locked_only_title">Only hide system icons when locked</string>
+    <string name="hide_system_icons_locked_only_desc">Hides the status bar system icons when the device is locked and restores them upon unlock</string>
+    <string name="hide_clock_title">Hide clock</string>
+    <string name="hide_clock_desc">Completely remove the clock from the status bar</string>
+    <string name="hide_notification_icons_title">Hide notifications</string>
+    <string name="hide_notification_icons_desc">Hide all incoming notification icons</string>
+    <string name="feat_hide_gesture_bar_title">Hide gesture bar</string>
+    <string name="feat_hide_gesture_bar_desc">In gesture navigation</string>
+    <string name="feat_hide_gesture_bar_on_launcher_title">Show on launcher</string>
+    <string name="feat_hide_gesture_bar_on_launcher_desc">Dynamically show the gesture bar only when on the home screen</string>
+    <string name="feat_circle_to_search_gesture_title">Circle to Search gesture</string>
+    <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
+    <string name="feat_circle_to_search_gesture_height_title">Gesture zone height</string>
+    <string name="feat_circle_to_search_gesture_height_desc">Adjust the height of the touch area at the bottom</string>
+    <string name="feat_other_customizations_title">Other customizations</string>
+    <string name="feat_other_customizations_desc">Additional system tweaks and modifications</string>
+    <string name="status_bar_icons_disclaimer">Huomaa, että näiden vaihtoehtojen toteutus saattaa riippua OEM-valmistajista ja jotkut eivät välttämättä toimi ollenkaan.</string>
+    <!-- Network Type Picker -->
+    <string name="network_type_other">muu</string>
+    <!-- Search -->
+    <string name="search_clock_seconds_title">Kellon sekuntia</string>
+    <string name="search_clock_seconds_desc">Näytä sekunnit tilapalkin kellossa</string>
+    <string name="search_battery_percentage_title">Akun prosenttiosuus</string>
+    <string name="search_battery_percentage_desc">Määritä akun prosenttiosuuden näkyvyys</string>
+    <string name="search_privacy_chip_title">Yksityisyyssirut</string>
+    <string name="search_privacy_chip_desc">Näytä ilmaisin, kun kamera tai mikrofoni on käytössä</string>
+    <string name="search_desc_toggle_visibility">Näkyvyys päälle/pois %1$s</string>
+    <string name="action_pin">Kiinnitä suosikkeihin</string>
+    <string name="action_unpin">Irrota kiinnitys suosikeista</string>
+    <!-- Extraction Batch 1 -->
+    <!-- Categories -->
+    <string name="cat_tools">Työkalut</string>
+    <string name="cat_visuals">Visuaalisuus</string>
+    <string name="cat_system">Järjestelmä</string>
+    <!-- UI Elements -->
+    <string name="search_placeholder">Search for Tools, Mods and Tweaks</string>
+    <string name="search_no_results">Ei tuloksia haulle \"%1$s\"</string>
+    <string name="search_results_title">Hakutulokset</string>
+    <string name="requires_following_permissions">%1$s vaatii seuraavat luvat</string>
+    <!-- Features -->
+    <string name="feat_screen_off_widget_title">Näyttö pois -widget</string>
+    <string name="feat_screen_off_widget_desc">Näkymätön widget näytön sammuttamiseksi</string>
+    <string name="feat_statusbar_icons_title">Tilapalkin kuvakkeet</string>
+    <string name="feat_statusbar_icons_desc">Hallitse tilapalkin kuvakkeiden näkyvyyttä</string>
+    <string name="feat_caffeinate_title">Kofeinaatti</string>
+    <string name="feat_caffeinate_desc">Pidä näyttö hereillä</string>
+    <string name="feat_maps_power_saving_title">Karttojen virransäästötila</string>
+    <string name="feat_maps_power_saving_desc">Kaikille Android-laitteille</string>
+    <string name="feat_notification_lighting_title">Ilmoitusvalo</string>
+    <string name="feat_notification_lighting_desc">Sytytä ilmoituksia varten</string>
+    <string name="feat_flashlight_pulse_desc">Paina taskulamppua ilmoituksia varten</string>
+    <string name="feat_sound_mode_tile_title">Äänitilan laatta</string>
+    <string name="feat_call_vibrations_title">Puheluvärinä</string>
+    <string name="feat_call_vibrations_desc">Värinä kutsutoimintoja varten</string>
+    <string name="show_bluetooth_devices">Näytä Bluetooth-laitteet</string>
+    <string name="show_bluetooth_devices_summary">Näytä yhdistettyjen Bluetooth-laitteiden akun varaustaso</string>
+    <string name="limit_max_devices">Rajoita laitteiden enimmäismäärää</string>
+    <string name="limit_max_devices_summary">Säädä widgetissä näkyvien laitteiden enimmäismäärää</string>
+    <string name="widget_background_title">Widgetin tausta</string>
+    <string name="widget_background_summary">Näytä widgetin tausta</string>
+    <!-- DIY Automation -->
+    <string name="diy_create_trigger_title">Laukaisuautomaatio</string>
+    <string name="diy_create_trigger_desc">Ajoita toiminto, joka laukaisee havainnon</string>
+    <string name="diy_create_state_title">Valtion automaatio</string>
+    <string name="diy_create_state_desc">Ajoita toiminto suoritettavaksi tilan sisään- ja ulostulon perusteella</string>
+    <string name="diy_editor_new_title">Uusi automaatio</string>
+    <string name="diy_editor_edit_title">Muokkaa automaatiota</string>
+    <string name="feat_link_actions_title">Linkkitoiminnot</string>
+    <string name="feat_link_actions_desc">Käsittele linkkejä useilla sovelluksilla</string>
+    <string name="feat_snooze_notifications_title">Torkkujärjestelmän ilmoitukset</string>
+    <string name="feat_snooze_notifications_desc">Torkku jatkuvat ilmoitukset</string>
+    <string name="feat_qs_tiles_title">Pika-asetukset laatat</string>
+    <string name="feat_qs_tiles_desc">Näytä kaikki</string>
+    <string name="feat_button_remap_title">Painikkeiden uudelleenkartoitus</string>
+    <string name="feat_button_remap_desc">Yhdistä laitteistopainikkeiden toiminnot</string>
+    <string name="feat_dynamic_night_light_title">Dynaaminen yövalo</string>
+    <string name="feat_dynamic_night_light_desc">Kytke yövalo päälle sovelluksen mukaan</string>
+    <string name="feat_screen_locked_security_title">Näyttö lukittu suojaus</string>
+    <string name="feat_app_lock_title">Sovelluksen lukitus</string>
+    <string name="feat_app_lock_desc">Suojaa sovellukset biometrisilla tiedoilla</string>
+    <string name="app_lock_auto_lock_delay_title">Auto lock delay</string>
+    <string name="app_lock_auto_lock_delay_desc">After leaving the app</string>
+    <string name="app_lock_auto_lock_delay_none">None</string>
+    <string name="app_lock_auto_lock_delay_1min">1 minute</string>
+    <string name="app_lock_auto_lock_delay_5min">5 minutes</string>
+    <string name="app_lock_auto_lock_delay_10min">10 minutes</string>
+    <string name="app_lock_auto_lock_delay_20min">20 minutes</string>
+    <string name="app_lock_auto_lock_delay_30min">30 minutes</string>
+    <string name="feat_freeze_title">Jäädyttää</string>
+    <string name="feat_freeze_desc">Poista harvoin käytetyt sovellukset käytöstä</string>
+    <string name="feat_watermark_title">Vesileima</string>
+    <string name="feat_watermark_desc">Lisää EXIF-tietoja ja logoja valokuviin</string>
+    <string name="feat_always_on_display_title">Aina näytössä</string>
+    <string name="feat_always_on_display_desc">Näytä aika ja tiedot näytön ollessa pois päältä</string>
+    <string name="feat_calendar_sync_title">Kalenterin synkronointi</string>
+    <string name="feat_calendar_sync_desc">Sync your phone calendar to your watch</string>
+    <string name="feat_lock_from_watch_title">Lock from Watch</string>
+    <string name="feat_lock_from_watch_desc">Lock your phone remotely</string>
+    <string name="remote_lock_mode_title">Lock Mode</string>
+    <string name="remote_lock_mode_screen_off">Screen off</string>
+    <string name="remote_lock_mode_lock">Lock</string>
+    <string name="remote_lock_mode_admin_note">Using device admin lock will disable biometrics</string>
+    <string name="watch_connected_status">Connected</string>
+    <string name="watch_unknown_name">Unknown Watch</string>
+    <string name="watermark_style_overlay">Peittokuva</string>
+    <string name="watermark_style_frame">Kehys</string>
+    <string name="watermark_show_brand">Laitteen merkki</string>
+    <string name="watermark_show_exif">EXIF-tiedot</string>
+    <string name="watermark_pick_image">Valitse kuva</string>
+    <string name="watermark_save_success">Kuva tallennettu galleriaan</string>
+    <string name="action_share">Jakaa</string>
+    <string name="watermark_exif_settings">EXIF-asetukset</string>
+    <string name="watermark_exif_focal_length">Polttoväli</string>
+    <string name="watermark_exif_aperture">Aukko</string>
+    <string name="watermark_exif_iso">ISO</string>
+    <string name="watermark_exif_shutter_speed">Suljinnopeus</string>
+    <string name="watermark_exif_date">Päivämäärä ja aika</string>
+    <string name="watermark_move_to_top">Siirrä alkuun</string>
+    <string name="watermark_left_align">Tasaa vasemmalle</string>
+    <string name="watermark_text_size_brand">Tuotemerkin koko</string>
+    <string name="watermark_text_size_data">Tietojen koko</string>
+    <string name="watermark_text_size_custom">Tekstin koko</string>
+    <string name="watermark_font_options">Fonttikoko</string>
+    <string name="watermark_custom_text">Mukautettu teksti</string>
+    <string name="watermark_custom_text_hint">Kirjoita tekstisi...</string>
+    <string name="watermark_spacing">Välit</string>
+    <string name="watermark_border_width">Reunan leveys</string>
+    <string name="watermark_border_corners">Pyöreät kulmat</string>
+    <string name="watermark_color_section">Väri</string>
+    <string name="watermark_logo_section">Logo</string>
+    <string name="watermark_logo_show">Näytä logo</string>
+    <string name="watermark_logo_size">Logon koko</string>
+    <string name="watermark_edit_texts">Muokkaa vesileimatekstejä</string>
+    <string name="watermark_device_brand">Laitteen merkki</string>
+    <string name="watermark_date_time">Päivämäärä ja aika</string>
+    <string name="watermark_no_date">Ei päivämäärätietoja</string>
+    <string name="watermark_rotate_left">Kierrä vasemmalle</string>
+    <string name="watermark_rotate_right">Kierrä oikealle</string>
+    <string name="action_next">Seuraavaksi</string>
+    <string name="action_ok">OK</string>
+    <string name="action_save_changes">Tallenna muutokset</string>
+    <string name="calendar_sync_settings_title">Kalenterin synkronointiasetukset</string>
+    <string name="calendar_sync_select_calendars">Synkronoi tietyt kalenterit</string>
+    <string name="calendar_sync_periodic_title">Säännöllinen synkronointi</string>
+    <string name="calendar_sync_periodic_desc">Synkronoi 15 minuutin välein, jos muutoksia löytyy</string>
+    <string name="calendar_sync_sync_now">Synkronoi nyt</string>
+    <string name="calendar_sync_manual_sync_desc">Käynnistä välitön synkronointi katsoaksesi</string>
+    <string name="calendar_sync_no_calendars">Paikallisia kalentereita ei löytynyt</string>
+    <string name="calendar_sync_sync_started">Kalenterin synkronointi aloitettu</string>
+    <!-- Search Settings -->
+    <string name="search_haptic_title">Widget Haptic palaute</string>
+    <string name="search_haptic_desc">Valitse haptinen palaute widgetien napautuksille</string>
+    <string name="search_smart_wifi_title">Älykäs WiFi</string>
+    <string name="search_smart_wifi_desc">Piilota mobiilidata, kun WiFi on yhdistetty</string>
+    <string name="search_smart_data_title">Älykäs data</string>
+    <string name="search_smart_data_desc">Piilota mobiilidata tietyissä tiloissa</string>
+    <string name="search_reset_icons_title">Nollaa kaikki kuvakkeet</string>
+    <string name="search_reset_icons_desc">Palauta tilapalkin kuvakkeen näkyvyys oletusarvoon</string>
+    <string name="search_caffeinate_abort_screen_off_title">Keskeytä kofeinaatti näytön ollessa pois päältä</string>
+    <string name="search_caffeinate_abort_screen_off_desc">Sammuta kofeiini automaattisesti, kun lukitat laitteen manuaalisesti</string>
+    <string name="search_lighting_style_title">Valaistustyyli</string>
+    <string name="search_lighting_style_desc">Valitse Stroke, Glow, Spinner ja paljon muuta</string>
+    <string name="search_corner_radius_title">Kulman säde</string>
+    <string name="search_corner_radius_desc">Säädä ilmoitusvalon kulman sädettä</string>
+    <string name="search_skip_silent_title">Ohita äänettömät ilmoitukset</string>
+    <string name="search_skip_silent_desc">Älä näytä valoa hiljaisten ilmoitusten yhteydessä</string>
+    <string name="search_flashlight_pulse_title">Taskulamppu pulssi</string>
+    <string name="search_flashlight_pulse_desc">Pulsoi hitaasti taskulamppua saadaksesi uusia ilmoituksia</string>
+    <string name="search_only_facing_down_title">Vain kasvot alaspäin</string>
+    <string name="search_only_facing_down_desc">Pulssi taskulamppua vain, kun laite on alaspäin</string>
+    <string name="snooze_no_channels_discovered">Järjestelmäkanavia ei ole vielä löydetty. Ne näkyvät täällä, kun ne havaitaan.</string>
+    <string name="search_qs_blur_title">Käyttöliittymän sumennus</string>
+    <string name="search_qs_blur_desc">Ota käyttöön järjestelmän laajuinen käyttöliittymän sumennus</string>
+    <string name="search_qs_bubbles_title">Kuplat</string>
+    <string name="search_qs_bubbles_desc">Ota kelluvat ikkunakuplat käyttöön</string>
+    <string name="search_qs_sensitive_title">Arkaluonteinen sisältö</string>
+    <string name="search_qs_sensitive_desc">Piilota ilmoitusten tiedot lukitusnäytöltä</string>
+    <string name="search_qs_wake_title">Herätä napauttamalla</string>
+    <string name="search_qs_wake_desc">Herätä ohjaus kaksoisnapauttamalla</string>
+    <string name="search_qs_aod_title">AOD</string>
+    <string name="search_qs_aod_desc">Aina näytössä -kytkin</string>
+    <string name="search_qs_caffeinate_title">Kofeinaatti</string>
+    <string name="search_qs_caffeinate_desc">Pidä näyttö hereillä -kytkin</string>
+    <string name="search_qs_sound_title">Äänitila</string>
+    <string name="search_qs_sound_desc">Vaihda äänitilat (soitto/värinä/hiljaisuus)</string>
+    <string name="search_qs_lighting_title">Ilmoitusvalo</string>
+    <string name="search_qs_lighting_desc">Ilmoitusvalopalvelu päälle/pois</string>
+    <string name="search_qs_night_light_title">Dynaaminen yövalo</string>
+    <string name="search_qs_night_light_desc">Yövalon automaation kytkin</string>
+    <string name="search_qs_locked_sec_title">Lukittu turvallisuus</string>
+    <string name="search_qs_locked_sec_desc">Verkkosuojaus lukitusnäytössä</string>
+    <string name="search_qs_mono_title">Mono Audio</string>
+    <string name="search_qs_mono_desc">Pakota monoäänilähdön vaihto</string>
+    <string name="search_qs_flashlight_title">Taskulamppu</string>
+    <string name="search_qs_flashlight_desc">Erillinen taskulampun kytkin</string>
+    <string name="search_qs_freeze_title">Sovelluksen jäätyminen</string>
+    <string name="search_qs_freeze_desc">Käynnistä sovelluksen jäädytysverkko</string>
+    <string name="search_qs_pulse_title">Taskulamppu pulssi</string>
+    <string name="search_qs_pulse_desc">Ota taskulampun ilmoituspulssi päälle/pois</string>
+    <string name="search_qs_stay_awake_desc">Pysy hereillä -kehittäjävaihtoehto päälle/pois</string>
+    <string name="search_qs_private_dns_title">Yksityinen DNS</string>
+    <string name="search_qs_private_dns_desc">Kierrä yksityiset DNS-tilat (Pois/Auto/Isäntänimi)</string>
+    <string name="search_qs_usb_debugging_title">USB-virheenkorjaus</string>
+    <string name="search_qs_usb_debugging_desc">Vaihda USB-virheenkorjauksen kehittäjävaihtoehto</string>
+    <string name="search_qs_refresh_rate_title">Refresh Rate</string>
+    <string name="search_qs_refresh_rate_desc">Cycle between the system default and preset screen refresh rates</string>
+    <string name="search_remap_enable_title">Ota Button Remap käyttöön</string>
+    <string name="search_remap_enable_desc">Pääkytkin äänenvoimakkuuspainikkeen uudelleenmäärittämistä varten</string>
+    <string name="search_remap_haptic_title">Reap Haptic Feedback</string>
+    <string name="search_remap_haptic_desc">Tärinäpalaute, kun uudelleenkartoituspainiketta painetaan</string>
+    <string name="search_remap_flashlight_title">Taskulamppujen kytkin</string>
+    <string name="search_remap_flashlight_desc">Vaihda taskulamppua äänenvoimakkuuspainikkeilla</string>
+    <string name="search_night_light_enable_title">Ota dynaaminen yövalo käyttöön</string>
+    <string name="search_night_light_enable_desc">Pääkytkin dynaamiseen yövaloon</string>
+    <string name="search_app_lock_enable_title">Ota sovellusten lukitus käyttöön</string>
+    <string name="search_app_lock_enable_desc">Pääkytkin sovellusten lukitsemiseen</string>
+    <string name="search_app_lock_pick_title">Valitse lukitut sovellukset</string>
+    <string name="search_app_lock_pick_desc">Valitse, mitkä sovellukset vaativat todennuksen</string>
+    <string name="search_freeze_pick_title">Valitse jäädytettävät sovellukset</string>
+    <string name="search_freeze_pick_desc">Valitse, mitkä sovellukset voidaan jäädyttää</string>
+    <string name="search_freeze_all_title">Jäädyttää kaikki sovellukset</string>
+    <string name="search_freeze_all_desc">Jäädytä välittömästi kaikki valitut sovellukset</string>
+    <string name="search_freeze_locked_title">Jäähdytä lukittuna</string>
+    <string name="search_freeze_locked_desc">Pysäytä valitut sovellukset, kun laite lukittuu</string>
+    <string name="search_freeze_delay_title">Jäätymisen viive</string>
+    <string name="search_freeze_delay_desc">Viive ennen jäätymistä lukituksen jälkeen</string>
+    <!-- Permissions metadata -->
+    <string name="perm_shizuku_title">Shizuku</string>
+    <string name="perm_shizuku_desc">Vaaditaan edistyneille komentoille. Asenna Shizuku Play Kaupasta.</string>
+    <string name="perm_shizuku_install_action">Asenna Shizuku</string>
+    <string name="perm_shizuku_grant_title">Myönnä lupa</string>
+    <string name="perm_shizuku_grant_desc">Tarvitaan virransäästökomentojen suorittamiseen Mapsin navigoinnin aikana.</string>
+    <string name="req_shizuku">Vaatii Shizukun tai Rootin</string>
+    <string name="perm_root_title">Root Access</string>
+    <string name="perm_root_desc">Oikeudet tarvitaan järjestelmätoimintoihin, joissa käytetään pääkäyttäjän oikeuksia.</string>
+    <string name="perm_notif_listener_title">Ilmoitusten kuuntelija</string>
+    <string name="perm_notif_listener_desc_maps">Vaatii ilmoitusten kuuntelijan pääsyn Google Mapsin navigoinnin tilan seuraamiseen ja virransäästön mahdollistamiseen, kun navigointi ei ole käynnissä.</string>
+    <string name="perm_notif_listener_desc_lighting">Vaatii ilmoituskuuntelijan pääsyn uusien ilmoitusten havaitsemiseen ja reunavalaistuksen laukaisemiseen.</string>
+    <string name="perm_notif_listener_desc_snooze">Vaatii ilmoituskuuntelijan pääsyn ei-toivottujen järjestelmäilmoitusten valvontaan ja torkkumiseen.</string>
+    <string name="perm_accessibility_title">Esteettömyyspalvelu</string>
+    <string name="perm_accessibility_desc_common">Vaaditaan App Lockille, Screen off -widgetille ja muille vuorovaikutuksen havaitsemisominaisuuksille</string>
+    <string name="perm_accessibility_desc_lighting">Vaaditaan ilmoitusvalon laukaisemiseksi uusissa ilmoituksissa</string>
+    <string name="perm_default_browser_title">Oletusselain</string>
+    <string name="perm_default_browser_desc">Tarvitaan linkkien tehokkaaseen käsittelyyn</string>
+    <string name="perm_accessibility_desc_remap">Vaaditaan laitteistopainiketapahtumien sieppaamiseen</string>
+    <string name="perm_accessibility_desc_essentials_on_display">Required to intercept volume key events while the screen is off to trigger the Essentials On Display overlay.</string>
+    <string name="perm_accessibility_desc_night_light">Tarvitaan etualan sovellusten valvontaan.</string>
+    <string name="perm_write_secure_title">Kirjoita suojatut asetukset</string>
+    <string name="perm_write_secure_desc_common">Pakollinen tilapalkin kuvakkeille ja Screen Locked Securitylle</string>
+    <string name="perm_write_secure_desc_night_light">Tarvitaan yövalon vaihtamiseen. Myönnä ADB:n tai rootin kautta.</string>
+    <string name="perm_write_settings_title">Muokkaa järjestelmäasetuksia</string>
+    <string name="perm_write_settings_desc">Tarvitaan mukautuvan kirkkauden ja muiden järjestelmäasetusten vaihtamiseen</string>
+    <string name="perm_overlay_title">Peittokuvan lupa</string>
+    <string name="perm_overlay_desc">Vaaditaan ilmoitusvalon peittokuvan näyttämiseksi näytöllä</string>
+    <string name="perm_device_admin_title">Laitteen järjestelmänvalvoja</string>
+    <string name="perm_device_admin_desc">Vaaditaan laitteen lukitsemiseen (biometristen tietojen poistaminen käytöstä) luvattomissa käyttöyrityksissä</string>
+    <string name="perm_action_grant">Myönnä lupa</string>
+    <string name="perm_action_copy_adb">Kopioi ADB</string>
+    <string name="perm_action_check">Tarkista</string>
+    <string name="perm_action_enable">Ota käyttöön asetuksissa</string>
+    <string name="perm_action_how_to">Kuinka myöntää</string>
+    <string name="perm_action_granted">Granted</string>
+    <string name="perm_battery_optimization_title">Akun optimointi</string>
+    <string name="perm_battery_optimization_desc">Varmista, että järjestelmä ei lopeta palvelua virran säästämiseksi.</string>
+    <!-- Tabs -->
+    <string name="tab_essentials">Essentials</string>
+    <string name="tab_freeze">Jäädyttää</string>
+    <string name="tab_freeze_title">Jäätynyt</string>
+    <string name="tab_diy">DIY</string>
+    <string name="tab_apps">Sovellukset</string>
+    <string name="tab_freeze_subtitle">Poistetut sovellukset</string>
+    <string name="tab_diy_subtitle">Tee se itse</string>
+    <string name="tab_apps_subtitle">Etsi ja hallinnoi sovelluksia</string>
+    <string name="feat_app_updates_title">Sovelluspäivitykset</string>
+    <string name="tab_app_updates_title">Sovelluspäivitykset</string>
+    <string name="action_add_repo">Lisää arkisto</string>
+    <string name="action_edit_repo">Muokkaa arkistoa</string>
+    <string name="prompt_enter_repo_url">Anna GitHub-arkiston URL-osoite tai omistaja/varasto</string>
+    <string name="action_track">Seurata</string>
+    <string name="error_no_apk_found">Uusimmasta julkaisusta ei löytynyt APK:ta</string>
+    <string name="error_repo_not_found">Arkistoa ei löydy</string>
+    <string name="label_latest_release">Viimeisin julkaisu</string>
+    <string name="action_view_readme">Näytä README</string>
+    <string name="label_stars">%d Tähdet</string>
+    <string name="label_installed_app">Asennettu sovellus</string>
+    <string name="label_not_installed">Ei asennettu</string>
+    <string name="action_pick_app">Valitse sovellus</string>
+    <string name="action_select_app">Valitse sovellus</string>
+    <string name="action_untrack">Poista seuranta</string>
+    <string name="label_pending">Odottaa</string>
+    <string name="label_up_to_date">Ajankohtaista</string>
+    <string name="feat_app_updates_desc">Seuraa ja lataa suosikkisovellustesi uusimmat julkaisut suoraan GitHubista.</string>
+    <string name="error_invalid_repo_format">Virheellinen muoto. Käytä omistajan/repo- tai GitHubin URL-osoitetta</string>
+    <string name="error_generic_search">Haun aikana tapahtui virhe</string>
+    <string name="label_auto">Auto</string>
+    <string name="label_options">Vaihtoehdot</string>
+    <string name="option_allow_prereleases">Tarkista ennakkojulkaisut</string>
+    <string name="option_notifications">Ilmoitukset</string>
+    <string name="error_rate_limited">GitHubin nopeusrajoitus ylitetty. Yritä myöhemmin uudelleen.</string>
+    <!-- Keyboard Setup -->
+    <string name="label_keyboard_setup">Näppäimistön asetukset</string>
+    <string name="btn_enable_keyboard">Ota käyttöön asetuksissa</string>
+    <string name="btn_select_keyboard">Vaihda Essentialsiin</string>
+    <string name="label_enabled">Käytössä</string>
+    <string name="label_disabled">Ei käytössä</string>
+    <string name="tile_adaptive_brightness">Mukautuva kirkkaus</string>
+    <string name="tile_maps_power_saving">Kartat Virransäästö</string>
+    <string name="action_search">Haku</string>
+    <string name="action_stop">Stop</string>
+    <string name="label_search">Haku</string>
+    <string name="search_frozen_apps_placeholder">Search frozen apps</string>
+    <!-- UI Components General -->
+    <string name="action_back">Takaisin</string>
+    <string name="content_desc_back">Takaisin</string>
+    <string name="label_settings">Asetukset</string>
+    <string name="action_report_bug">Ilmoita virheestä</string>
+    <!-- Sentry Crash Reporting -->
+    <string name="sentry_report_mode_title">Crash reporting</string>
+    <string name="sentry_mode_off">Off</string>
+    <string name="sentry_mode_auto">Auto</string>
+    <string name="sentry_crash_toast">Essentials crashed, Report sent</string>
+    <string name="simulate_crash">Simulate crash</string>
+    <string name="welcome_title">Welcome to Essentials</string>
+    <string name="welcome_subtitle">A Toolbox for Android Nerds</string>
+    <string name="welcome_developer_attribution">by sameerasw.com</string>
+    <string name="action_lets_begin">Let\'s Begin</string>
+    <string name="acknowledgement_title">Acknowledgement</string>
+    <string name="acknowledgement_desc">This app is a collection of utilities that can interact deeply with your device system. Using some features might modify system settings or behavior in unexpected ways. \n\nYou only need to grant necessary permissions which are required for selected features you are using giving you full control over the app\'s behavior. \n\nFurther more, the app does not track or store any of your personal data, I don\'t need them... Keep to yourself safe. You can refer to the source code for more information. \n\nThis app is fully open source and is and always will be free to use. Do not pay or install from unknown sources.</string>
+    <string name="acknowledgement_warning">WARNING: Proceed with caution. The developer takes no responsibility for any system instability, data loss, or other issues caused by the use of this app. By proceeding, you acknowledge these risks.</string>
+    <string name="acknowledgement_footer">I know you didn\'t even read this carefully but, in case you need any help, feel free to reach out the developer or the community.</string>
+    <string name="action_i_understand">I Understand</string>
+    <string name="feature_intro_desc">Anytime you are clueless on a feature or a Quick Settings Tile on what it does and what permissions may necessary for it, just long press it and pick \'What is this?\' to learn more.</string>
+    <string name="feature_intro_footer">You can report bugs or find helpful guides anytime in the app settings.</string>
+    <string name="action_let_me_in">Let Me in Already</string>
+    <string name="preferences_title">Preferences</string>
+    <string name="preferences_desc">Configure some basic settings to get started.</string>
+    <string name="label_app_settings">App Settings</string>
+    <string name="label_app_language">Language</string>
+    <string name="label_haptic_feedback">Haptic Feedback</string>
+    <string name="label_updates">Updates</string>
+    <string name="label_auto_check_updates">Auto check for updates</string>
+    <string name="desc_auto_check_updates">Check for updates at app launch</string>
+    <string name="action_all_set">All Set</string>
+    <string name="action_check_whats_new">Check What\'s New?</string>
+    <string name="welcome_back_title">Welcome back to Essentials</string>
+    <string name="action_see_whats_new">See what\'s new</string>
+    <string name="label_mode_default">Default</string>
+    <string name="label_mode_glove">Glove mode</string>
+    <string name="tile_scale_animations">Glove Mode</string>
+    <string name="about_desc_scale_animations_tile">Quickly toggle between Default and Glove mode UI profiles</string>
+    <string name="label_increase_touch_sensitivity">Increase touch sensitivity</string>
+    <string name="desc_increase_touch_sensitivity">Improve touch screen responsiveness when using gloves or screen protectors</string>
+    <string name="label_auto_rotate">Auto rotate</string>
+    <string name="desc_auto_rotate">Automatically rotate the screen when the device is turned</string>
+    <string name="label_screen_timeout">Screen timeout</string>
+    <string name="desc_screen_timeout">How long the screen stays on before turning off automatically</string>
+    <string name="unit_seconds">%d seconds</string>
+    <string name="unit_minute">1 minute</string>
+    <string name="unit_minutes">%d minutes</string>
+    <string name="action_restart_systemui">Restart SystemUI</string>
+    <string name="desc_restart_systemui">Kills and restarts SystemUI process to apply some changes immediately</string>
+    <string name="msg_error_load_release_notes">Couldn\'t load the release note</string>
+    <string name="action_view_on_web">View on web</string>
+    <string name="action_done">Tehty</string>
+    <string name="action_preview">Esikatselu</string>
+    <string name="action_help_guide">Ohje-opas</string>
+    <string name="action_what_is_this">Mikä tämä on?</string>
+    <string name="update_available_title">Päivitys saatavilla</string>
+    <string name="about_desc_your_android">Glance at your device\'s hardware and software specifications in detail. This information is fetched from GSMArena and system properties to provide a comprehensive overview of your Android device.</string>
+    <string name="about_desc_essentials_on_display">Essentials On Display shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
+    <string name="about_desc_notification_lighting">Ilmoitusvalo lisää kauniin reunavalaistuksen, kun saat ilmoituksia.\n\nVoit mukauttaa animaation tyyliä, värejä ja käyttäytymistä. Se toimii myös silloin, kun näyttö on pois päältä (OEM-riippuvainen) tai nykyisen sovelluksesi päällä. Valitse tietyistä säätimistä sovellukset, ilmoitusten prioriteetti tai toimintatapa, jonka sen pitäisi käynnistää. Jos OEM-valmistajasi ei tue peittokuvia AOD:n yläpuolella, haasta alla oleva ympäristönäyttövaihtoehto oikeuteen.</string>
+    <string name="about_desc_screen_off_widget">Sammuta näyttö helposti napauttamalla läpinäkyvää, kokoa muutettavaa widgetiä, joka ei lisää kuvakkeita tai sotkua aloitusnäyttöön.</string>
+    <string name="about_desc_statusbar_icons">Hallitse tilapalkin kuvakkeita täysin.\n\nPiilota tietyt kuvakkeet, kuten WiFi, Bluetooth tai mobiilidata, pitääksesi tilapalkin puhtaana. Voit myös mukauttaa kellon muotoa ja akun osoitinta joillakin älykkäillä säätimillä. Nämä ovat luettelo käytettävissä olevista AOSP-ohjaimista, joten laitteesi käyttöjärjestelmä ei välttämättä noudata kaikkia ohjaimia.</string>
+    <string name="about_desc_caffeinate">Kofeinaatti estää näyttöäsi sammumasta automaattisesti.\n\nPidä näyttö hereillä tietyn ajan tai toistaiseksi. Hyödyllinen luettaessa pitkiä artikkeleita tai viitattaessa reseptiin.</string>
+    <string name="about_desc_maps_power_saving">Hanki Pixel 10 -sarjan ainutlaatuinen Google Maps -virransäästötila, jossa on minimaalinen pilkkomusta tausta, joka näkyy lukitusnäytön päällä missä tahansa Android-laitteella. Aloita navigointiistunto, sammuta näyttö ja käynnistä se uudelleen.</string>
+    <string name="about_desc_flashlight_pulse">Pulskaa taskulamppua, kun saat ilmoituksen.\n\nJos laitteissa on laitteistotuki taskulampun himmentymiselle, pulssi animoituu tasaisesti.</string>
+    <string name="about_desc_snooze_notifications">Torkku ärsyttävät jatkuvat järjestelmäilmoitukset, joita ei voi muokata oletuksena. \n\nOdota, kunnes ilmoitus saapuu, ja siirry sitten tähän ominaisuuteen, jossa sen\'SPLIT⟐⟐⟐ilmoituskanava luetellaan. Valitse tämä, jos haluat torkkua seuraavan kerran.\n\nKaikki torkkuilmoitukset ovat edelleen käytettävissä Android-ilmoitushistoriastasi.</string>
+    <string name="about_desc_quick_settings_tiles">Lisää mukautettuja laattoja Pika-asetukset-paneeliisi.\n\nPaina mitä tahansa niistä pitkään oppiaksesi, mitä ne tekevät.</string>
+    <string name="about_desc_button_remap">Suunnittele laitteiston painikkeet uudelleen suorittamaan erilaisia ​​toimintoja ja pikanäppäimiä.\n\nMuokkaa, mitä tapahtuu, kun painat pitkään äänenvoimakkuuspainikkeita tietyissä olosuhteissa. \n\nJotkin toiminnot, kuten näytön sammutusliipaisin tai taskulamppu, eivät välttämättä toimi kaikissa laitteissa, eivätkä ne välttämättä toimi OEM-laitteiden mukaan. Jotkut skenaariot voitaisiin kiertää Shizukun käyttöoikeuksilla, mutta ne eivät välttämättä tarjoa samaa kokemusta toteutuksista johtuen.</string>
+    <string name="about_desc_dynamic_night_light">Vaihda näytön sinisen valon suodatin automaattisesti etualan sovelluksen perusteella.</string>
+    <string name="about_desc_screen_locked_security">Paranna turvallisuutta, kun laitteesi on lukittu.\n\nRajoita pääsyä joihinkin herkkiin QS-ruutuihin estääksesi luvattomat verkkomuokkaukset ja estä niitä edelleen yrittämästä tehdä niin lisäämällä animaationopeutta kosketusroskapostin estämiseksi.\n\nTämä ominaisuus ei ole kestävä, ja siinä voi olla puutteita, kuten jotkin ruudut, jotka mahdollistavat vaihtamisen suoraan, kuten Bluetooth- tai lentotilaa ei voida estää.</string>
+    <string name="about_desc_app_lock">Suojaa sovelluksesi toissijaisella todennuskerroksella.\n\nLaitteesi lukitusnäytön todennusmenetelmää käytetään, kunhan se täyttää Android-standardien luokan 3 biometrisen suojaustason.</string>
+    <string name="about_desc_location_reached">Saat ilmoituksen, kun tulet lähemmäksi määränpäätäsi, jotta et koskaan menetä pysäkkiä.\n\nSiirry Google Mapsiin, paina pitkään kohteen lähellä olevaa nastaa ja varmista, että siinä lukee \"Pudotettu merkki\" (Muuten etäisyyslaskenta ei ehkä ole tarkka), ja jaa sitten sijainti Essentials-sovellukselle ja aloita seuranta.</string>
+    <string name="location_reached_add_title">Add Destination</string>
+    <string name="location_reached_edit_title">Edit Destination</string>
+    <string name="location_reached_name_placeholder">Home, Office, etc.</string>
+    <string name="location_reached_name_label">Name</string>
+    <string name="location_reached_save_btn">Save</string>
+    <string name="location_reached_cancel_btn">Cancel</string>
+    <string name="location_reached_resolving">Resolving location…</string>
+    <string name="location_reached_last_trip">Last Trip</string>
+    <string name="location_reached_saved_destinations">Saved Destinations</string>
+    <string name="location_reached_no_saved_dest">No destinations saved yet.</string>
+    <string name="location_reached_delete">Delete Destination</string>
+    <string name="location_reached_tracking_now">Tracking Now</string>
+    <string name="location_reached_restart_btn">Re-Start</string>
+    <string name="location_reached_instructional_desc">Share coordinates (Dropped pin) from Google Maps to Essentials to save as a destination.\n\nThe distance shown is the direct distance to the destination, not the distance along the roads.\n\nTake all calculations of time and distance with a grain of salt as they are not always accurate.</string>
+    <string name="tile_location_reached">Are we there yet?</string>
+    <string name="location_reached_pause">Pause</string>
+    <string name="location_reached_resume">Resume</string>
+    <string name="location_reached_radius_label">Radius: %1$d m</string>
+    <string name="location_reached_distance_label">Distance to target: %1$s</string>
+    <string name="location_reached_last_travelled">Last: %1$s</string>
+    <string name="location_reached_never">Never</string>
+    <string name="location_reached_to_go">To go</string>
+    <string name="location_reached_eta_min">%1$d min</string>
+    <string name="location_reached_eta_hr_min">%1$d hr %2$d min</string>
+    <string name="location_reached_service_remaining_with_eta">%1$s (%2$d%%) • %3$s to go</string>
+    <string name="about_desc_freeze">Pysäytä sovellukset, jotta ne eivät toimi taustalla.\n\nEstä akun tyhjeneminen ja tiedonsiirto jäädyttämällä sovellukset kokonaan, kun et käytä niitä. Ne vapautuvat heti, kun käynnistät ne. Sovellukset eivät näy sovelluslaatikossa eivätkä myöskään näy sovelluspäivityksissä Play Kaupassa, kun ne ovat jäätyneet.</string>
+    <string name="about_desc_system_keyboard">Muokattu syöttötapa, jota kukaan ei ole pyytänyt.\n\nSe on vain kokeilu. Useat kielet eivät välttämättä saa tukea, koska se on erittäin monimutkainen ja aikaa vievä toteutus.</string>
+    <string name="about_desc_batteries">Tarkkaile kaikkien yhdistettyjen laitteiden akun tasoa.\n\nKatso Bluetooth-kuulokkeiden, kellosi ja muiden lisävarusteiden akun tila yhdestä paikasta. Yhdistä AirSync-sovellukseen näyttääksesi myös Macin akun varaustason.</string>
+    <string name="about_desc_watermark">Lisää kuviisi mukautettu kuvateksti/vesileima EXIF-tiedoilla ja laitetiedoilla.\n\nJaa kuva suoraan toisesta sovelluksesta Essentialsiin lisätäksesi vesileiman helposti.</string>
+    <string name="about_desc_calendar_sync">Synkronoi kaikki tuleva kalenteriaikataulusi riippumatta Google-tilien rajoituksista, jotka eivät salli niiden lisäämistä wearOS-laitteisiin työ- tai koulukäytäntöjen vuoksi. \n\nVarmista, että asennat wearOS Essentials -kumppanisovelluksen näyttääksesi aikataulun sovelluksessa sekä ruudussa tai komplikaatiossa.</string>
+    <string name="about_desc_app_updates">Seuraa asennettujen sovelluksiesi päivityksiä.\n\nSaat ilmoituksia saatavilla olevista päivityksistä, katso muutoslokit ja asenna ne helposti napauttamalla.</string>
+    <string name="about_desc_call_vibrations">Lisää haptista palautetta puheluihisi.\n\nVärise, kun puhelu yhdistetään, katkaistaan ​​tai vastaanotetaan, jolloin saat kosketusvahvistuksen näyttöön katsomatta.</string>
+    <string name="about_desc_sound_mode_tile">Vaihda nopeasti Ääni-, Värinä- ja Äänetön-tilojen välillä.\n\nKätevä ruutu vaihtaaksesi soittotilaa ilman äänenvoimakkuuspainikkeita tai asetuksia. Voit järjestää tilat uudelleen tai poistaa ne käytöstä, jos niitä ei tarvita, jotta voit mukauttaa ruutujen vaihtoa syklin käyttäytymiseen.</string>
+    <string name="about_desc_ui_blur">Vaihda helposti järjestelmätason epäterävyyden tehostetta käyttöjärjestelmässä.</string>
+    <string name="about_desc_bubbles">Ota kelluvat ilmoituskuplat käyttöön tai poista ne käytöstä.\n\nVaihda nopeasti koko järjestelmän laajuista keskustelukuplien asetusta.</string>
+    <string name="about_desc_sensitive_content">Piilota arkaluontoinen sisältö lukitusnäytöltä.\n\nValitse, näkyykö ilmoitussisältö vai piilotetaanko laite, kun laite on lukittu.</string>
+    <string name="about_desc_tap_to_wake">Ota käyttöön tai poista käytöstä mahdollisuus herättää näyttö napauttamalla.\n\n.</string>
+    <string name="about_desc_aod">Ota Always On Display käyttöön.\n\nOta aina päällä oleva näyttö nopeasti käyttöön tai poista se käytöstä nähdäksesi tiedot yhdellä silmäyksellä.</string>
+    <string name="about_desc_notification_glance">Ohjaa Always On Display -laitetta automaattisesti ilmoitustesi perusteella. Kun viesti tai hälytys saapuu valitusta sovelluksesta, AOD pysyy päällä, kunnes hylkäät ilmoituksen, mikä varmistaa, että et koskaan menetä tärkeitä tietoja tuhlaamatta akkua, kun hälytyksiä ei ole.</string>
+    <string name="about_desc_mono_audio">Yhdistä äänikanavat monoiksi.\n\nHyödyllinen käytettäessä yhtä nappikuuloketta tai esteettömyystarkoituksiin.</string>
+    <string name="about_desc_flashlight_tile">Vaihda taskulamppua.\n\nA Pitkä painallus avaa säätimet voimakkuuden säätöä varten, mikä saattaa edellyttää laitteistototeutusta, joka saattaa puuttua joistakin laitteista.</string>
+    <string name="about_desc_stay_awake">Pidä näyttö hereillä latauksen aikana.\n\nEstää näyttöä nukkumasta niin kauan kuin laite on kytketty virtalähteeseen, joka sopii kehittäjille virheenkorjauksen aikana.</string>
+    <string name="about_desc_nfc">Ota NFC käyttöön tai poista se.\n\nOta Near Field Communication nopeasti käyttöön tai poista se käytöstä maksuja ja pariliitosta varten.</string>
+    <string name="about_desc_adaptive_brightness">Vaihda mukautuvaa kirkkautta.\n\nOta käyttöön tai poista käytöstä automaattinen näytön kirkkauden säätö ympäristön valon perusteella.</string>
+    <string name="about_desc_private_dns">Vaihda yksityinen DNS.\n\nKierrä Off-, Automatic- ja Private DNS-palveluntarjoajan tilojen välillä.</string>
+    <string name="about_desc_usb_debugging">Vaihda USB-virheenkorjaus.\n\nOta käyttöön tai poista käytöstä ADB-virheenkorjaus suoraan pika-asetuksista.</string>
+    <string name="about_desc_color_picker">Käynnistä silmätippaustyökalu, jolla voit valita Android 17 BETA 2:n värejä</string>
+    <string name="about_desc_charge_optimization">Optimoi akun käyttöikä rajoittamalla enimmäislatausta tai käyttämällä mukautuvaa latausta. Tämä on suunniteltu erityisesti Pixel-laitteille pitkän käyttöiän ja terveiden latausjaksojen varmistamiseksi.\n\nKirjaukset: TebbeUbben/ChargeQuickTile</string>
+    <string name="action_download">Lataa</string>
+    <!-- DIY Section -->
+    <string name="diy_trigger_screen_off">Näyttö pois päältä</string>
+    <string name="diy_trigger_screen_on">Näyttö päällä</string>
+    <string name="diy_trigger_device_unlock">Laitteen lukituksen avaus</string>
+    <string name="diy_trigger_charger_connected">Laturi kytketty</string>
+    <string name="diy_trigger_charger_disconnected">Laturi irrotettu</string>
+    <string name="diy_trigger_schedule">Schedule</string>
+    <string name="diy_state_time_period">Time Period</string>
+    <string name="diy_time_selection_title">Select Time</string>
+    <string name="diy_time_range_selection_title">Select Time Range</string>
+    <string name="diy_start_time_label">Start Time</string>
+    <string name="diy_end_time_label">End Time</string>
+    <string name="diy_repeat_days_label">Repeat on</string>
+    <string name="diy_state_charging">Lataus</string>
+    <string name="diy_state_screen_on">Näyttö päällä</string>
+    <string name="diy_action_haptic">Värinä</string>
+    <string name="diy_action_notification">Näytä ilmoitus</string>
+    <string name="diy_action_remove_notification">Poista ilmoitus</string>
+    <string name="diy_action_flashlight_on">Laita taskulamppu päälle</string>
+    <string name="diy_action_flashlight_off">Sammuta taskulamppu</string>
+    <string name="diy_action_flashlight_toggle">Taskulamppu päälle/pois</string>
+    <string name="diy_action_low_power_on">Turn On Low Power Mode</string>
+    <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
+    <string name="diy_action_dim_wallpaper">Himmeä taustakuva</string>
+    <string name="diy_dim_wallpaper_desc">Tämä toiminto vaatii Shizukun tai Rootin säätämään järjestelmän taustakuvan himmennystä.</string>
+    <string name="diy_select_trigger">Valitse Trigger</string>
+    <string name="diy_create_app_title">Sovellus</string>
+    <string name="diy_create_app_desc">Automatisoi avoimen sovelluksen perusteella</string>
+    <string name="diy_select_state">Valitse Osavaltio</string>
+    <string name="diy_select_action">Valitse Toiminto</string>
+    <string name="diy_in_action_label">Toiminnassa</string>
+    <string name="diy_out_action_label">Out Action</string>
+    <string name="action_cancel">Peruuttaa</string>
+    <string name="action_save">Tallentaa</string>
+    <string name="action_edit">Muokata</string>
+    <string name="action_delete">Poistaa</string>
+    <string name="action_enable">Ota käyttöön</string>
+    <string name="action_disable">Poista käytöstä</string>
+    <string name="automation_service_channel_name">Automaatiopalvelu</string>
+    <string name="automation_service_running_title">Automaatiot käytössä</string>
+    <string name="automation_service_running_desc">Järjestelmätapahtumien valvonta automaatioillesi</string>
+    <string name="app_detection_service_channel_name">App Detection Service</string>
+    <string name="app_detection_service_running_title">App Detection Active</string>
+    <string name="app_detection_service_running_desc">Monitoring app activity</string>
+    <string name="diy_action_device_effects">Laitteen tehosteet</string>
+    <string name="diy_device_effects_desc">Hallitse järjestelmätason tehosteita, kuten harmaasävyjä, AOD:n estoa, taustakuvan himmennystä ja yötilaa.</string>
+    <string name="diy_effect_grayscale">Harmaasävy</string>
+    <string name="diy_effect_suppress_ambient">Tukahduttaa Ambient Display</string>
+    <string name="diy_effect_dim_wallpaper">Himmeä taustakuva</string>
+    <string name="diy_effect_night_mode">Yötila</string>
+    <string name="diy_device_effects_android_15_warning">Tämä ominaisuus vaatii Android 15:n tai uudemman.</string>
+    <string name="diy_device_effects_enabled">Käytössä</string>
+    <string name="diy_device_effects_disabled">Ei käytössä</string>
+    <string name="diy_action_sound_mode">Äänitila</string>
+    <string name="diy_sound_mode_desc">Tämä toiminto mahdollistaa vaihtamisen Ääni-, Värinä- ja Äänetön-tilojen välillä liipaisujen perusteella. Se vaatii Älä häiritse -tilan.</string>
+    <!-- About Section -->
+    <string name="app_developer_name">Sameera Wijerathna</string>
+    <string name="app_description">All-in-one-työkalupakki Pixel- ja Android-laitteille</string>
+    <!-- Edge Lighting -->
+    <string name="color_mode_system">Järjestelmä</string>
+    <string name="color_mode_custom">Mukautettu</string>
+    <string name="color_mode_app_specific">Sovelluskohtainen</string>
+    <!-- Biometric & Security -->
+    <string name="error_auth_failed">Todennus epäonnistui</string>
+    <string name="shortcut_creation_hint_toast">Paina pitkään sovellusta ruudukossa lisätäksesi pikakuvakkeen</string>
+    <string name="error_app_uninstalled">Sovellusta ei löydy tai sitä on poistettu</string>
+    <!-- Notifications -->
+    <string name="update_channel_name">Sovelluspäivitykset</string>
+    <string name="update_channel_desc">Ilmoitukset uusista sovelluspäivityksistä</string>
+    <string name="notification_update_available">Päivitys saatavilla</string>
+    <string name="battery_notification_no_devices">Ei kytkettyjä laitteita</string>
+    <string name="label_unknown">Tuntematon</string>
+    <string name="network_type_5g">5G</string>
+    <string name="network_type_4g">4G</string>
+    <string name="network_type_3g">3G</string>
+    <string name="label_shizuku_ritaka">Shizuku (Rikka)</string>
+    <string name="label_shizuku_tuozi">Shizuku (TuoZi)</string>
+    <string name="label_search_content_description">Haku</string>
+    <string name="label_recent_searches">Recent Searches</string>
+    <string name="label_no_recent_searches">No recent searches</string>
+    <string name="label_clear_all">Clear all</string>
+    <string name="perm_device_admin_explanation">Vaaditaan laitteen lukitsemiseen, kun luvatonta verkkomuutosta yritetään lukitusnäytöllä.</string>
+    <string name="biometric_subtitle_access_settings">Todennus päästäksesi asetuksiin</string>
+    <string name="biometric_title_settings_format">%1$s Asetukset</string>
+    <string name="keyword_feature">ominaisuus</string>
+    <string name="keyword_settings">asetukset</string>
+    <string name="keyword_hide">piilottaa</string>
+    <string name="keyword_show">show</string>
+    <string name="keyword_visibility">näkyvyys</string>
+    <string name="error_loading_apps">Virhe ladattaessa sovelluksia: %1$s</string>
+    <string-array name="keywords_haptic">
+        <item>tärinää</item>
+        <item>kosketa</item>
+        <item>tuntea</item>
+    </string-array>
+    <string-array name="keywords_network_visibility">
+        <item>verkkoon</item>
+        <item>näkyvyys</item>
+        <item>auto</item>
+        <item>piilottaa</item>
+    </string-array>
+    <string-array name="keywords_restore_default">
+        <item>palauttaa</item>
+        <item>oletuksena</item>
+        <item>kuvake</item>
+    </string-array>
+    <string-array name="keywords_keyboard">
+        <item>näppäimistö</item>
+        <item>korkeus</item>
+        <item>pehmuste</item>
+        <item>haptinen</item>
+        <item>syöttö</item>
+    </string-array>
+    <string-array name="keywords_flashlight">
+        <item>valoa</item>
+        <item>taskulamppu</item>
+    </string-array>
+    <string-array name="keywords_flashlight_pulse">
+        <item>valoa</item>
+        <item>taskulamppu</item>
+        <item>pulssi</item>
+        <item>ilmoitus</item>
+    </string-array>
+    <string-array name="keywords_qs_stay_awake">
+        <item>hereillä</item>
+        <item>kehittäjä</item>
+        <item>tehoa</item>
+        <item>veloittaa</item>
+    </string-array>
+    <string-array name="keywords_notification_lighting">
+        <item>hehku</item>
+        <item>ilmoitus</item>
+        <item>johti</item>
+    </string-array>
+    <string-array name="keywords_round_shape">
+        <item>pyöristää</item>
+        <item>muoto</item>
+        <item>reuna</item>
+    </string-array>
+    <string-array name="keywords_privacy">
+        <item>turvallinen</item>
+        <item>yksityisyyttä</item>
+        <item>biometrinen</item>
+        <item>kasvot</item>
+        <item>sormenjälki</item>
+    </string-array>
+    <string-array name="keywords_sound_accessibility">
+        <item>ääni</item>
+        <item>saavutettavuus</item>
+        <item>kuulla</item>
+    </string-array>
+    <string-array name="keywords_timeout">
+        <item>pysyä</item>
+        <item>päällä</item>
+        <item>aikakatkaisu</item>
+    </string-array>
+    <string-array name="keywords_wake_display">
+        <item>kosketa</item>
+        <item>herätä</item>
+        <item>näyttö</item>
+    </string-array>
+    <string-array name="keywords_timer">
+        <item>ajastin</item>
+        <item>Odota</item>
+        <item>aikakatkaisu</item>
+    </string-array>
+    <string name="label_keyboard_always_dark">Aina tumma teema</string>
+    <string name="label_keyboard_pitch_black">Pisimusta teema</string>
+    <string name="label_keyboard_clipboard_enabled">Leikepöydän historia</string>
+    <string name="label_keyboard_long_press_symbols">Long press for symbols</string>
+    <string name="label_keyboard_accented_characters">Accented characters</string>
+    <string-array name="keywords_selection">
+        <item>lista</item>
+        <item>poimija</item>
+        <item>valinta</item>
+    </string-array>
+    <string-array name="keywords_visual_style">
+        <item>animaatio</item>
+        <item>visuaalinen</item>
+        <item>Katso</item>
+    </string-array>
+    <string-array name="keywords_quiet_filter">
+        <item>hiljainen</item>
+        <item>sivuuttaa</item>
+        <item>suodattaa</item>
+    </string-array>
+    <string-array name="keywords_automation_lock">
+        <item>automaatio</item>
+        <item>auto</item>
+        <item>lukko</item>
+    </string-array>
+    <string-array name="keywords_adb_debug">
+        <item>adb</item>
+        <item>usb</item>
+        <item>debug</item>
+    </string-array>
+    <string-array name="keywords_blur_glass">
+        <item>sumeus</item>
+        <item>lasi</item>
+        <item>vinjetti</item>
+    </string-array>
+    <string-array name="keywords_float_window">
+        <item>kellua</item>
+        <item>ikkuna</item>
+        <item>peittokuva</item>
+    </string-array>
+    <string-array name="keywords_always_display">
+        <item>aina</item>
+        <item>näyttö</item>
+        <item>kello</item>
+    </string-array>
+    <string-array name="keywords_audio_mute">
+        <item>audio</item>
+        <item>mykistää</item>
+        <item>äänenvoimakkuutta</item>
+    </string-array>
+    <string-array name="keywords_blue_filter">
+        <item>sininen</item>
+        <item>suodattaa</item>
+        <item>auto</item>
+    </string-array>
+    <string-array name="keywords_app_freezing">
+        <item>jäädyttää</item>
+        <item>shizuku</item>
+    </string-array>
+    <string-array name="keywords_manual_now">
+        <item>manuaalinen</item>
+        <item>nyt</item>
+        <item>shizuku</item>
+    </string-array>
+    <string-array name="keywords_proximity_sensor">
+        <item>läheisyys</item>
+        <item>anturi</item>
+        <item>kasvot</item>
+        <item>alas</item>
+    </string-array>
+    <string-array name="keywords_switch_master">
+        <item>kytkin</item>
+        <item>hallita</item>
+    </string-array>
+    <string-array name="keywords_vibration">
+        <item>tärinää</item>
+        <item>tuntea</item>
+    </string-array>
+    <string-array name="keywords_battery">
+        <item>akku</item>
+        <item>veloittaa</item>
+        <item>optimointi</item>
+        <item>pikseli</item>
+    </string-array>
+    <!-- App Selection Extra -->
+    <string name="action_invert_selection">Käänteinen valinta</string>
+    <string name="toggle_show_system_apps">Näytä järjestelmäsovellukset</string>
+    <!-- Updates -->
+    <string name="status_up_to_date">Olet ajan tasalla</string>
+    <string name="warning_pre_release">Tämä on julkaisua edeltävä versio ja saattaa olla epävakaa.</string>
+    <string name="release_notes_format">Julkaisutiedot %1$s</string>
+    <string name="action_view_on_github">Katso GitHubissa</string>
+    <string name="action_download_apk">Lataa APK</string>
+    <!-- Haptic Types -->
+    <string name="haptic_none">Ei mitään</string>
+    <string name="haptic_subtle">Hienovarainen</string>
+    <string name="haptic_double">Kaksinkertainen</string>
+    <string name="haptic_click">Napsauta</string>
+    <string name="haptic_tick">Rasti</string>
+    <!-- Flashlight Intensity Overlay -->
+    <string name="action_turn_off">Sammuta</string>
+    <string name="feature_flashlight_brightness_title">Taskulamppujen kirkkaus</string>
+    <!-- QS / Activities -->
+    <!-- About Section -->
+    <string name="developed_by_format">Kehittäjä %1$s\nyhdessä ❤\uFE0F  alkaen \uD83C\uDDF1\uD83C\uDDF0</string>
+    <string name="action_website">Verkkosivusto</string>
+    <string name="action_contact">Ota yhteyttä</string>
+    <string name="action_telegram">Telegram</string>
+    <string name="action_support">Tukea</string>
+    <string name="label_other_apps">Muut sovellukset</string>
+    <string name="app_airsync">AirSync</string>
+    <string name="app_zenzero">ZenZero</string>
+    <string name="app_canvas">Kangas</string>
+    <string name="app_tasks">Tehtävät</string>
+    <string name="app_zero">Nolla</string>
+    <!-- Help & Guides -->
+    <string name="help_guides_title">Ohjeet ja oppaat</string>
+    <string name="need_more_support_reach_out">Tarvitsetko lisää tukea? Ojenna kätesi,</string>
+    <string name="action_collapse">Romahdus</string>
+    <string name="action_expand">Laajentaa</string>
+    <string name="support_group_label">Tukiryhmä</string>
+    <string name="email_label">Sähköposti</string>
+    <string name="send_email_chooser_title">Lähetä sähköpostia</string>
+    <string name="error_no_email_app">Sähköpostisovellusta ei ole saatavilla</string>
+    <string name="instruction_step_image_description">Vaihe %1$d Kuva</string>
+    <!-- Instructions Content -->
+    <string name="instruction_section_perms_title">Esteettömyys-, ilmoitus- ja peittokuvausoikeudet</string>
+    <string name="instruction_step_perms_1">Saatat saada tämän käyttökieltoviestin, jos yrität myöntää arkaluontoisia käyttöoikeuksia, kuten esteettömyys-, ilmoitusten kuuntelu- tai peittokuvan käyttöoikeuksia. Voit myöntää sen tarkistamalla alla olevat vaiheet.</string>
+    <string name="instruction_step_perms_2">1. Siirry Essentialsin sovelluksen tietosivulle.</string>
+    <string name="instruction_step_perms_3">2. Avaa kolmen pisteen valikko ja valitse \'Salli rajoitetut asetukset\'. You may have to authenticate with biometrics. Kun olet valmis, yritä myöntää lupa uudelleen.</string>
+    <string name="instruction_section_shizuku_title">Shizuku</string>
+    <string name="instruction_section_shizuku_desc">Shizuku on tehokas työkalu, jonka avulla sovellukset voivat käyttää järjestelmän sovellusliittymiä suoraan ADB- tai pääkäyttäjän oikeuksin. Sitä tarvitaan ominaisuuksille, kuten Mapsin min tila, App Freezer. Ja Willa auttaa myöntämään joitain käyttöoikeuksia, kuten WRITE_SECURE_SETTINGS. \n\nMutta Shizukun Play Kaupan versio saattaa olla vanhentunut ja todennäköisesti käyttökelvoton uusimmissa Android-versioissa, joten siinä tapauksessa hanki uusin versio githubista tai sen päivitys.</string>
+    <string name="instruction_section_maps_title">Karttojen virransäästötila</string>
+    <string name="instruction_section_maps_desc">Tämä ominaisuus käynnistää automaattisesti Google Mapsin virransäästötilan, joka on tällä hetkellä vain Pixel 10 -sarjassa. Yhteisön jäsen huomasi, että se on edelleen käytettävissä kaikilla Android-laitteilla käynnistämällä maps minMode -toiminnon pääkäyttäjän oikeuksin. \n\nJa sitten automatisoin sen Taskerin kanssa käynnistämään automaattisesti, kun näyttö sammuu navigointiistunnon aikana, ja sitten pystyin saavuttamaan saman vain ajonaikaisella Shizukulla. käyttöoikeudet. \n\nSe on tarkoitettu näytettäväksi Pixel 10 -sarjan AOD:n päällä, joten sen vuoksi saatat nähdä näytölle satunnaisen viestin, että se ei tue vaakasuuntaista tilaa. Sovellus ei voi välttää sitä, ja voit jättää huomiotta.</string>
+    <string name="instruction_section_silent_title">Hiljainen äänitila</string>
+    <string name="instruction_section_silent_desc">Olet ehkä huomannut, että hiljainen tila laukaisee myös DND:n. \n\nTämä johtuu siitä, miten Android toteutti sen, sillä vaikka käytämme samaa APIa värinätilaan siirtymiseen, se jostain syystä kytkee DND:n päälle äänettömän tilan mukana, eikä tämä ole tällä hetkellä vältettävissä. :(</string>
+    <string name="instruction_section_freeze_title">Mikä on jäädytys?</string>
+    <string name="instruction_section_freeze_desc">Pysäytä ja pysy kaukana sovellusten häiriötekijöistä ja säästä samalla vähän virtaa, mikä estää sovelluksia toimimasta taustalla. Sopii harvoin käytetyille sovelluksille. \n\nEi suositella millekään viestintäpalvelulle, koska ne eivät ilmoita sinulle hätätilanteessa, ellet vapauta niitä. \n\nSuosittelemme olemaan jäädyttämättä järjestelmän sovelluksia, koska ne voivat johtaa järjestelmän epävakauteen. Jatka varovasti, sinua varoitettiin. \n\nInnoittamana Hail &lt;3</string>
+    <string name="instruction_section_security_title">Ovatko sovelluksen lukituksen ja näytön lukituksen suojaus todella turvallisia?</string>
+    <string name="instruction_section_security_desc">Ei todellakaan. \n\nMikään kolmannen osapuolen sovellus ei voi 100-prosenttisesti häiritä laitteen säännöllistä vuorovaikutusta, ja jopa sovelluksen lukitus on vain peittokuva valittujen sovellusten yläpuolella estääkseen vuorovaikutuksen niiden kanssa. On olemassa kiertotapoja, eikä se ole idioottivarma. \n\nSama koskee näytön lukitusta suojausominaisuutta, joka havaitsee jonkun yrittävän olla vuorovaikutuksessa verkkolaattojen kanssa, jotka ovat jostain syystä edelleen kaikkien Pixels-käyttäjien käytettävissä. Joten jos he yrittävät tarpeeksi, he saattavat silti pystyä vaihtamaan niitä, ja varsinkin jos olet lisännyt lentotilan QS-ruudun, tämä sovellus ei voi estää vuorovaikutusta sen kanssa. \n\nNämä ominaisuudet on tehty vain kokeiluina kevyeen käyttöön, eikä niitä koskaan suositella vahvoiksi tietoturva- ja yksityisyysratkaisuiksi. \n\nTurvalliset vaihtoehdot:\n - Sovelluksen lukitus: Yksityinen tila ja suojattu kansio Pixelsissä ja Samsungissa\n - Mobiiliverkkoihin pääsyn estäminen: Varmista, että varkaussuojaus ja offline-/virrankatkaisu Etsi laitteeni -asetukset ovat käytössä. Voit myös tutkia Graphene OS:ää.</string>
+    <string name="instruction_section_statusbar_title">Tilapalkin kuvakkeet</string>
+    <string name="instruction_section_statusbar_desc">Saatat huomata, että jopa tilapalkin kuvakkeiden nollauksen jälkeen Jotkin kuvakkeet, kuten laitteen kierto, langallisten kuulokkeiden kuvakkeet voivat jäädä näkyviin. Tämä johtuu siitä, miten statubar musta lista on toteutettu Androidissa ja siitä, miten OEM on saattanut mukauttaa niitä. \nSaatat tarvita lisäsäätöjä. \n\nKaikki kuvakkeiden näkyvyysasetukset eivät myöskään välttämättä toimi, koska ne riippuvat OEM-toteutuksista ja saatavuudesta.</string>
+    <string name="instruction_section_lighting_title">Ilmoitusvalo ei toimi</string>
+    <string name="instruction_section_lighting_desc">Se riippuu OEM:stä. Jotkut, kuten OneUI, eivät näytä sallivan peittokuvia AOD:n yläpuolella, mikä estää valotehosteiden näyttämisen. Kokeile tässä tapauksessa ympäristönäyttöä kiertotapana.</string>
+    <string name="instruction_section_button_title">Painikkeiden uudelleenkartoitus ei toimi, kun näyttö on pois päältä</string>
+    <string name="instruction_section_button_desc">Jotkut OEM-valmistajat rajoittavat esteettömyyspalvelun raportointia, kun näyttö on todella pois päältä, mutta ne voivat silti toimia, kun AOD on päällä. \nTässä tapauksessa voit ehkä käyttää painikkeiden uudelleenkartoituksia, kun AOD on päällä, mutta et pois päältä. \n\nKiertotavana sinun on käytettävä Shizuku-oikeuksia ja otettava käyttöön \'Käytä Shizukua tai Rootia\' ota käyttöön painikkeiden uudelleenkartoitusasetukset, jotka tunnistavat ja kuuntelevat laitteiston tulotapahtumat.\nTämän ei taata toimivan kaikilla laitteilla, ja se vaatii testauksen.\n\nJa vaikka se\'s päällä, Shizuku-menetelmää käytetään vain, kun se\'tarvitaan. Muuten se palaa aina Accessibility-toimintoon, joka myös käsittelee varsinaisen syötteen eston pitkän painalluksen aikana.</string>
+    <string name="instruction_section_flashlight_title">Taskulamppujen kirkkaus ei toimi</string>
+    <string name="instruction_section_flashlight_desc">Vain rajoitetulla määrällä laitteita oli laitteisto- ja ohjelmistotuki taskulampun voimakkuuden säätämiseen. \n\n\'Androidin vähimmäisversio on 13 (SDK33).\nTaskulamppujen kirkkauden säätö tukee vain HAL-versiota 3.8:n ja sitä uudempien laitteiden joukossa. 6/7, Samsung S23 jne.)\'\npolodarb/Taskulamppu-Tiramisu</string>
+    <string name="instruction_section_about_title">Mikä helvetti tämä sovellus on?</string>
+    <string name="instruction_section_about_desc">Hyvä kysymys,\n\nOlen aina halunnut saada kaiken irti laitteistani\'Olen ollut juurtunut käyttäjä aina siitä lähtien, kun sain ensimmäisen Project Treble -laitteeni. Ja minä\'Olen rakastanut Tasker-sovellusta, joka on kuin jumala, kun tulee automaatio ja hyödyntää kaikkia mahdollisia sovellusliittymiä ja Androidin sisäisiä ominaisuuksia.\n\nJoten en ole juurtunut ja palannut Android-beta-kokemukseen ja halusin saada kaiken irti siitä, mikä on mahdollista annetuilla oikeuksilla. Voisi yhtä hyvin jakaa ne. Joten Kotlin Jetpackin aloittelijatiedollani ja monien tutkimus- ja aputyökalujen sekä suuren yhteisön tuella rakensin all-in-one-sovelluksen, joka sisältää kaiken, mitä halusin Androidillani annetuilla luvilla. Ja tässä se on.\n\nOminaisuuspyynnöt ovat tervetulleita, harkitsen ja katson, ovatko ne saavutettavissa käytettävissä olevilla luvilla ja taidoillani. Mikä nykyään ei ole mahdollista. :)\n\nMiksei Play Kaupassa?\nEn\'En halua, että kehittäjätilini estetään sovelluksessa käytettyjen erittäin arkaluonteisten ja sisäisten käyttöoikeuksien ja API:iden vuoksi. Mutta miten Androidin sivulataus on menossa, olkoon\'katsotaan mitä meidän pitää tehdä. Ymmärrän huolen siitä, että sivulta ladatut sovellukset ovat haitallisia.\nKun käsittelemme aihetta, tarkista toinen sovellusni AirSync, jos olet mac + Android -käyttäjä. *häpeämätön pistoke*\n\nNauti, jatka rakentamista! (っ◕‿◕)っ</string>
+    <!-- Bug Reporting -->
+    <string name="toast_bug_report_copied">Virheraportti kopioitu leikepöydälle</string>
+    <string name="bug_report_title">Virheraportti</string>
+    <string name="bug_report_option_share_logs">Jaa lokit</string>
+    <string name="bug_report_option_share_logs_desc">Sisällytä lokit ja tiedot</string>
+    <string name="bug_report_device_info">Laitteen tiedot</string>
+    <string name="bug_report_raw_json">Raakaraportti</string>
+    <string name="action_report_github">Avaa GitHub-ongelma</string>
+    <string name="action_report_email">Sähköpostiraportti</string>
+    <string name="action_copy_clipboard">Kopioi leikepöydälle</string>
+    <string name="bug_report_email_subject">Essentials Bug Report</string>
+    <string name="bug_report_send_via">Lähetä kautta</string>
+    <!-- Location Reached -->
+    <string name="feat_location_reached_title">Olemmeko jo perillä?</string>
+    <string name="feat_location_reached_desc">Läheisen määränpään hälytykset</string>
+    <string name="location_reached_how_to">Avaa Google Maps, valitse sijainti ja jaa se Essentialsille.</string>
+    <string name="location_reached_radius_title">Hälytyksen säde: %d m</string>
+    <string name="perm_location_title">Sijainti</string>
+    <string name="perm_location_desc">Käytetään saapumisen havaitsemiseen määränpäähäsi.</string>
+    <string name="perm_bg_location_title">Tausta sijainti</string>
+    <string name="perm_bg_location_desc">Vaaditaan saapumistasi valvomaan, kun sovellus on suljettu tai näyttö on pois päältä.</string>
+    <string name="location_reached_notification_title">Kohde saavutettu!</string>
+    <string name="location_reached_notification_desc">Olet saapunut määränpäähäsi.</string>
+    <string name="location_reached_processing">Käsitellään sijaintia…</string>
+    <string name="location_reached_dist_remaining">ETÄISYYS JÄLJELLÄ</string>
+    <string name="location_reached_calculating">Lasketaan…</string>
+    <string name="location_reached_stop_tracking">Lopeta seuranta</string>
+    <string name="location_reached_dest_ready">Kohde valmis</string>
+    <string name="location_reached_start_tracking">Aloita seuranta</string>
+    <string name="location_reached_view_map">Näytä kartta</string>
+    <string name="location_reached_clear">Selkeä</string>
+    <string name="location_reached_no_dest">Ei määränpäätä</string>
+    <string name="location_reached_open_maps">Avaa Maps</string>
+    <string name="location_reached_fsi_title">Koko näytön hälytyslupa</string>
+    <string name="location_reached_fsi_desc">Pakollinen herättämään laitteesi saavuttaessa. Myönnä napauttamalla.</string>
+    <string name="location_reached_dist_m">%1$d m</string>
+    <string name="location_reached_dist_km">%1$.1f km</string>
+    <string name="location_reached_service_title">Matkahälytys aktiivinen</string>
+    <string name="location_reached_service_remaining">%1$s jäljellä (%2$d%%)</string>
+    <string name="location_reached_channel_name">Matkan edistyminen</string>
+    <string name="location_reached_channel_desc">Näyttää reaaliaikaisen etäisyyden määränpäähän</string>
+    <string name="location_reached_alarm_title">Kohde lähistöllä</string>
+    <string name="location_reached_alarm_subtitle">Valmistaudu poistumaan</string>
+    <string name="location_reached_dismiss">Hylkää</string>
+    <string name="location_reached_toast_set">Kohdejoukko: %1$.4f, %2$.4f</string>
+    <string name="setting_use_root_title">Käytä Rootia</string>
+    <string name="setting_use_root_desc">Shizukun sijaan</string>
+    <string name="root_not_available_toast">Root-käyttöoikeus ei ole käytettävissä. Tarkista pääkäyttäjäsi.</string>
+    <!-- System Keyboard -->
+    <string name="feat_system_keyboard_title">Näppäimistö</string>
+    <string name="feat_system_keys">Avaimet</string>
+    <string name="feat_system_keyboard_desc">Mukauta asettelua ja käyttäytymistä</string>
+    <string name="search_keyboard_height_title">Näppäimistön korkeus</string>
+    <string name="search_keyboard_height_desc">Säädä näppäimistön pystysuoraa kokonaiskokoa</string>
+    <string name="search_keyboard_padding_title">Pohjan pehmuste</string>
+    <string name="search_keyboard_padding_desc">Lisää tilaa näppäimistön alle</string>
+    <string name="search_keyboard_haptics_title">Haptinen palaute</string>
+    <string name="search_keyboard_haptics_desc">Värinä näppäintä painettaessa</string>
+    <string name="test_keyboard_hint">Testaa näppäimistöä</string>
+    <string name="label_keyboard_height">Näppäimistön korkeus</string>
+    <string name="label_keyboard_bottom_padding">Pohjan pehmuste</string>
+    <string name="label_keyboard_haptics">Haptinen palaute</string>
+    <string name="label_keyboard_roundness">Avaimen pyöreys</string>
+    <string name="label_keyboard_functions_bottom">Siirrä toiminnot alas</string>
+    <string name="label_keyboard_functions_padding">Toimii sivupehmuste</string>
+    <string name="label_keyboard_haptic_strength">Haptisen palautteen voimakkuus</string>
+    <string name="label_keyboard_shape">Näppäimistön muoto</string>
+    <string name="shape_round">Pyöristää</string>
+    <string name="shape_flat">Tasainen</string>
+    <string name="shape_inverse">Käänteinen</string>
+    <string name="feat_batteries_title">Paristot</string>
+    <string name="feat_batteries_desc">Tarkkaile laitteesi akun varaustasoa</string>
+    <string name="batteries_widget_label">Akun tila</string>
+    <string name="connect_to_airsync">Yhdistä AirSynciin</string>
+    <string name="connect_to_airsync_summary">Näytä liitetyn mac-laitteen akku AirSyncissä</string>
+    <string name="download_airsync">Lataa AirSync-sovellus</string>
+    <string name="download_airsync_summary">Pakollinen Macin akun synkronointiin</string>
+    <string name="feat_battery_notification_title">Akun ilmoitus</string>
+    <string name="feat_battery_notification_desc">Jatkuva akun tilailmoitus</string>
+    <string name="battery_notification_hint">This notification displays battery levels for your connected Mac and Bluetooth devices. You can configure which devices to show in the Battery Widget settings.</string>
+    <string name="about_desc_battery_notification">Toista akku-widget-kokemus ilmoitusalueellasi. Se näyttää kaikkien yhdistettyjen laitteiden akun varaustason yhdessä jatkuvassa ilmoituksessa, joka päivitetään reaaliajassa. Tämä sisältää Macin (AirSyncin kautta) ja Bluetooth-lisävarusteet.</string>
+    <string name="battery_notification_channel_name">Akun tilailmoitus</string>
+    <string name="battery_notification_channel_desc">Jatkuva ilmoitus, joka näyttää yhdistettyjen laitteiden akun varaustason</string>
+    <string name="perm_nearby_devices_title">Läheiset laitteet</string>
+    <string name="perm_nearby_devices_desc">Tarvitaan akkutietojen tunnistamiseen ja hakemiseen Bluetooth-lisävarusteista</string>
+    <!-- GitHub Auth -->
+    <string name="auth_copy_code">Kopioi koodi</string>
+    <string name="auth_open_login_page">Avaa kirjautumissivu</string>
+    <string name="auth_sign_in_rationale">Kirjaudu sisään laajentaaksesi API-puhelurajoja</string>
+    <string name="auth_waiting_for_authorization">Odotetaan valtuutusta...</string>
+    <string name="action_sign_in_github">Kirjaudu sisään GitHubilla</string>
+    <string name="action_sign_out">Kirjaudu ulos</string>
+    <string name="action_profile">Profiili</string>
+    <!-- App Updates / Repos -->
+    <string name="label_release_notes">Julkaisutiedot</string>
+    <string name="msg_no_repos_tracked">Arkistoja ei ole vielä seurattu</string>
+    <string name="label_no_app_linked">Sovellusta ei ole linkitetty</string>
+    <string name="format_updated_relative">Päivitetty %1$s</string>
+    <!-- Relative Time -->
+    <string name="time_just_now">juuri nyt</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="time_min_ago">%1$dm sitten</string>
+    <string name="time_hour_ago">%1$dh sitten</string>
+    <string name="time_day_ago">%1$dd sitten</string>
+    <string name="time_days_ago">%1$d days ago</string>
+    <string name="time_weeks_ago">%1$d weeks ago</string>
+    <string name="time_month_ago">%1$dmo sitten</string>
+    <string name="time_months_ago">%1$d months ago</string>
+    <string name="time_year_ago">%1$dv sitten</string>
+    <string name="action_retry">Yritä uudelleen</string>
+    <string name="action_start_sign_in">Aloita kirjautuminen</string>
+    <string name="auth_requesting_code">Pyydetään laitekoodia...</string>
+    <string name="auth_copy_code_instruction">1. Kopioi koodisi:</string>
+    <string name="auth_paste_code_instruction">2. Liitä koodi GitHubiin:</string>
+    <string name="label_found_apks">Löytyi APK:ita</string>
+    <string name="label_readme">README</string>
+    <string name="action_refresh">Päivitä</string>
+    <!-- Added Missing Group Strings -->
+    <string name="feat_sound_modes_title">Äänitilan laatta</string>
+    <string name="feat_sound_modes_desc">QS-laatta vaihtaa äänitilaa</string>
+    <string name="search_sound_mode_show_slider_title">Näytä liukusäädin</string>
+    <string name="search_sound_mode_show_slider_desc">Näytä äänenvoimakkuuden liukusäädin ruudussa</string>
+    <string name="search_sound_mode_behavior_title">Pyöräilykäyttäytyminen</string>
+    <string name="search_sound_mode_behavior_desc">Valitse selattavat tilat</string>
+    <string name="feat_sound_haptics_title">Ääni ja haptiikka</string>
+    <string name="feat_sound_haptics_desc">Äänenvoimakkuus ja haptiset ominaisuudet</string>
+    <string name="feat_security_privacy_title">Turvallisuus ja yksityisyys</string>
+    <string name="feat_security_privacy_desc">Suojaa ja suojaa laitettasi</string>
+    <string name="feat_notifications_alerts_title">Ilmoitukset ja hälytykset</string>
+    <string name="feat_notifications_alerts_desc">Älä koskaan unohda prioriteettejasi</string>
+    <string name="feat_input_actions_title">Syöte ja toimet</string>
+    <string name="feat_input_actions_desc">Ohjaa laitettasi helposti</string>
+    <string name="feat_widgets_title">Widgetit</string>
+    <string name="feat_widgets_desc">Yhdellä vilkaisulla aloitusnäytölläsi</string>
+    <string name="feat_display_visuals_title">Näyttö</string>
+    <string name="feat_display_visuals_desc">Visuaaleja parantaaksesi kokemustasi</string>
+    <string name="feat_watch_title">Katsella</string>
+    <string name="feat_watch_desc">Integraatiot WearOS:n kanssa</string>
+    <string name="watch_no_companion_title">Kelloa ei havaittu</string>
+    <string name="watch_no_companion_desc">Näyttää siltä, ​​että kelloosi ei ole asennettu Essentials Wear -kumppanisovellusta.</string>
+    <string name="watch_install_companion_action">Asenna Companion</string>
+    <string name="action_download_from_github">Download from GitHub</string>
+    <string name="watch_help_title">Install on Watch</string>
+    <string name="watch_help_description">To use Watch features, you need to install the Essentials companion app on your Wear OS watch. Click the button below to open the Play Store directly on your watch.</string>
+    <string name="watch_help_open_play_store">Open on Watch</string>
+    <string name="cat_interaction">Vuorovaikutus</string>
+    <string name="cat_interface">Käyttöliittymä</string>
+    <string name="cat_display">Näyttö</string>
+    <string name="cat_protection">Suojaus</string>
+    <string name="cat_accessibility">Accessibility</string>
+    <string name="cat_connectivity">Connectivity</string>
+    <string name="cat_privacy">Privacy</string>
+    <string name="cat_utils">Utilities</string>
+    <string name="label_kbd_abc">ABC</string>
+    <string name="label_kbd_symbols">\?#/</string>
+    <string name="label_kaomoji">Kaomoji</string>
+    <string name="kaomoji_cat_joy">Joy</string>
+    <string name="kaomoji_cat_love">Love</string>
+    <string name="kaomoji_cat_embarassment">Embarassment</string>
+    <string name="kaomoji_cat_sympathy">Sympathy</string>
+    <string name="kaomoji_cat_dissatisfaction">Dissatisfaction</string>
+    <string name="kaomoji_cat_anger">Anger</string>
+    <string name="kaomoji_cat_apologizing">Apologizing</string>
+    <string name="kaomoji_cat_bear">Bear</string>
+    <string name="kaomoji_cat_bird">Bird</string>
+    <string name="kaomoji_cat_cat">Cat</string>
+    <string name="kaomoji_cat_confusion">Confusion</string>
+    <string name="kaomoji_cat_dog">Dog</string>
+    <string name="kaomoji_cat_doubt">Doubt</string>
+    <string name="kaomoji_cat_enemies">Enemies</string>
+    <string name="kaomoji_cat_faces">Faces</string>
+    <string name="kaomoji_cat_fear">Fear</string>
+    <string name="kaomoji_cat_fish">Fish</string>
+    <string name="kaomoji_cat_food">Food</string>
+    <string name="kaomoji_cat_friends">Friends</string>
+    <string name="kaomoji_cat_games">Games</string>
+    <string name="kaomoji_cat_greeting">Greeting</string>
+    <string name="kaomoji_cat_hiding">Hiding</string>
+    <string name="kaomoji_cat_hugging">Hugging</string>
+    <string name="kaomoji_cat_indifference">Indifference</string>
+    <string name="kaomoji_cat_magic">Magic</string>
+    <string name="kaomoji_cat_music">Music</string>
+    <string name="kaomoji_cat_nosebleeding">Nosebleeding</string>
+    <string name="kaomoji_cat_pain">Pain</string>
+    <string name="kaomoji_cat_pig">Pig</string>
+    <string name="kaomoji_cat_rabbit">Rabbit</string>
+    <string name="kaomoji_cat_running">Running</string>
+    <string name="kaomoji_cat_sadness">Sadness</string>
+    <string name="kaomoji_cat_sleeping">Sleeping</string>
+    <string name="kaomoji_cat_special">Special</string>
+    <string name="kaomoji_cat_spider">Spider</string>
+    <string name="kaomoji_cat_surprise">Surprise</string>
+    <string name="kaomoji_cat_weapons">Weapons</string>
+    <string name="kaomoji_cat_winking">Winking</string>
+    <string name="kaomoji_cat_writing">Writing</string>
+    <string name="msg_restrict_own_app_repo">Oi! Voit tarkistaa päivitykset sovelluksen asetuksista, ei tarvitse lisätä tähän XD</string>
+    <string name="action_export">Viedä</string>
+    <string name="action_import">Tuoda</string>
+    <string name="msg_export_success">Tietovarastot vietiin onnistuneesti</string>
+    <string name="msg_export_failed">Tietovarastojen vienti epäonnistui</string>
+    <string name="msg_import_success">Tietovarastot on tuotu onnistuneesti</string>
+    <string name="msg_import_failed">Tietovarastojen tuonti epäonnistui</string>
+    <string name="label_apps">Sovellukset</string>
+    <string name="feat_text_animations_title">Mittakaava ja animaatiot</string>
+    <string name="feat_text_animations_desc">Säädä järjestelmän mittakaavaa ja animaatioita</string>
+    <string name="feat_screen_refresh_rate_title">Screen Refresh Rate</string>
+    <string name="feat_screen_refresh_rate_desc">Set a fixed or ranged screen refresh rate</string>
+    <string name="settings_section_text">Teksti</string>
+    <string name="label_font_scale">Fonttimittakaava</string>
+    <string name="label_font_weight">Fontin paino</string>
+    <string name="label_reset_default">Nollaa</string>
+    <string name="settings_section_scale">Mittakaava</string>
+    <string name="label_smallest_width">Pienin leveys</string>
+    <string name="msg_shizuku_permission_required">Shizukun lupa vaaditaan asteikon säätämiseen</string>
+    <string name="label_grant_permission">Myönnä lupa</string>
+    <string name="settings_section_animations">Animaatiot</string>
+    <string name="label_animator_duration_scale">Animaattorin kestoasteikko</string>
+    <string name="label_transition_animation_scale">Siirtymäanimaatiomittakaava</string>
+    <string name="label_window_animation_scale">Ikkunaanimaatiomittakaava</string>
+    <string name="about_desc_text_animations">Säädä koko järjestelmän fonttikokoa, painoa ja animaationopeuksia. Huomaa, että jotkin asetukset saattavat vaatia lisäoikeuksia tai laitteen uudelleenkäynnistyksen tietyille sovelluksille muutosten huomioon ottamiseksi. \n\nLisä shizuku- tai pääkäyttäjän lupa saattaa tarvita mittakaavan säätöä varten.</string>
+    <string name="about_desc_screen_refresh_rate">Set a custom screen refresh rate using Shizuku. Fixed mode locks both the minimum and peak refresh rate to one value, while range mode lets you define separate minimum and peak values. Reset clears the custom override and returns the device to its system-managed refresh behavior.</string>
+    <string name="refresh_rate_section_mode">Mode</string>
+    <string name="refresh_rate_section_values">Refresh Rate</string>
+    <string name="refresh_rate_mode_fixed">Fixed</string>
+    <string name="refresh_rate_mode_range">Range</string>
+    <string name="refresh_rate_fixed_title">Fixed refresh rate</string>
+    <string name="refresh_rate_fixed_desc">Set both minimum and peak refresh rate to the same value</string>
+    <string name="refresh_rate_min_title">Minimum refresh rate</string>
+    <string name="refresh_rate_min_desc">Choose the lowest refresh rate the display may use</string>
+    <string name="refresh_rate_peak_title">Peak refresh rate</string>
+    <string name="refresh_rate_peak_desc">Choose the highest refresh rate the display may use</string>
+    <string name="refresh_rate_system_default">System</string>
+    <string name="refresh_rate_reset_desc">Remove the custom override and return to the system default refresh behavior</string>
+    <string name="msg_refresh_rate_permission_required">Shizuku permission required to adjust refresh rate</string>
+    <string name="search_refresh_rate_mode_title">Refresh Rate Mode</string>
+    <string name="search_refresh_rate_mode_desc">Switch between fixed and ranged refresh rate control</string>
+    <string name="search_refresh_rate_fixed_title">Fixed Refresh Rate</string>
+    <string name="search_refresh_rate_fixed_desc">Lock the display to one custom refresh rate</string>
+    <string name="search_refresh_rate_range_title">Refresh Rate Range</string>
+    <string name="search_refresh_rate_range_desc">Configure separate minimum and peak refresh rates</string>
+    <string name="search_refresh_rate_reset_title">Reset Refresh Rate</string>
+    <string name="search_refresh_rate_reset_desc">Clear the custom refresh rate override</string>
+    <string name="feat_aod_force_turn_off_title">Pakota AOD pois päältä</string>
+    <string name="feat_aod_force_turn_off_desc">Pakota AOD pois päältä, kun ei ilmoituksia. Vaatii esteettömyysluvan.</string>
+    <string name="feat_auto_accessibility_title">Automaattinen saavutettavuus</string>
+    <string name="feat_auto_accessibility_desc">Myöntää automaattisesti esteettömyysluvan sovelluksen käynnistyksen yhteydessä, jos se puuttuu käyttämällä WRITE_SECURE_SETTINGS-asetuksia.</string>
+    <string name="label_help_guide">Ohjeet ja oppaat</string>
+    <string name="tab_your_android">Androidisi</string>
+    <string name="label_device_storage">Varastointi</string>
+    <string name="label_device_ram">Muisti</string>
+    <string name="label_use_blur">Käytä sumennusta</string>
+    <string name="desc_use_blur">Ota progressiiviset sumennuselementit käyttöön käyttöliittymässä</string>
+    <string name="msg_blur_compatibility_error">Sumennus on poistettu käytöstä tässä laitteessa tunnetun näyttövirheen estämiseksi Samsung-laitteissa, joissa on Android 15 tai vanhempi.</string>
+    <!-- Empty State Actions -->
+    <string name="msg_no_apps_frozen">No apps selected to freeze.</string>
+    <string name="action_get_started">Get Started</string>
+    <string name="action_new_automation">New Automation</string>
+    <string name="action_add_repository">Add Repository</string>
+    <!-- Bug Report Enhancement -->
+    <string name="bug_report_feedback_placeholder">Describe the issue or provide feedback…</string>
+    <string name="bug_report_contact_email_label">Contact email</string>
+    <string name="action_send_feedback">Send Feedback</string>
+    <string name="msg_feedback_sent">Feedback sent successfully! Thanks for helping us improve the app.</string>
+    <string name="label_alternatively">Alternatively</string>
+    <!-- Pixel Diagnostics -->
+    <string name="label_diagnostics">Diagnostics</string>
+    <string name="label_device_check">Device Check</string>
+    <string name="msg_flashbang">Get ready to be flashbanged!</string>
+    <string name="action_abort">Abort</string>
+    <string name="action_continue">Continue</string>
+    <string name="prank_trial_expired_title">Your Essentials trial has expired</string>
+    <string name="prank_trial_expired_desc">Your free trial period of Essentials has ended. Access to advanced features like Button Remap, App Freezing, and DIY Automations with Premium.</string>
+    <string name="prank_button_premium">What\'s in Premium?</string>
+    <string name="prank_reveal_title">April Fools!</string>
+    <string name="prank_reveal_desc">Just kidding, Essentials is and will always be free and open source. Enjoy! (っ◕‿◕)っ</string>
+    <string name="notification_lighting_style_system">System</string>
+    <string name="notification_lighting_system_mode_title">Ripple Animation</string>
+    <string name="notification_lighting_system_mode_charging_ripple">Bottom</string>
+    <string name="notification_lighting_system_mode_auth_ripple">Center</string>
+    <string name="notification_lighting_system_mode_custom_ripple">Custom</string>
+    <string name="msg_shizuku_root_required_system_lighting">Shizuku or Root permission is required for System lighting effects</string>
+    <string name="notification_lighting_system_disclaimer">Made for Google Pixel. Might not be available on other devices.</string>
+    <!-- Live Wallpaper -->
+    <string name="feat_live_wallpaper_title">Live wallpaper</string>
+    <string name="feat_live_wallpaper_desc">Set custom video as live wallpaper</string>
+    <string name="live_wallpaper_label">Live Wallpaper</string>
+    <string name="live_wallpaper_description">A video live wallpaper that plays when unlocked.</string>
+    <string name="live_wallpaper_playback_trigger_title">Play when</string>
+    <string name="live_wallpaper_trigger_unlock">Unlock</string>
+    <string name="live_wallpaper_trigger_screen_on">Screen on</string>
+    <string name="live_wallpaper_video_title">Video</string>
+    <string name="btn_apply">Apply</string>
+    <string name="add_video">Add video</string>
+    <string name="custom_video">Custom video</string>
+    <string name="about_desc_live_wallpaper">Set your favorite video as your home screen wallpaper. Choose between triggering the animation upon unlocking or simply whenever the screen turns on for a dynamic experience.</string>
+    <!-- Shut-Up! Feature -->
+    <string name="feat_shut_up_title">Shut-Up!</string>
+    <string name="feat_shut_up_desc">I know what I\'m doing</string>
+    <string name="shut_up_description">Shut-Up! bypasses app restrictions and checks for developer options, accessibility and debugging by dynamically hiding them when you launch sensitive apps. \n\nUse the custom shortcuts to ensure settings are hidden before the app launches.</string>
+    <string name="shut_up_select_apps_title">Select Apps</string>
+    <string name="shut_up_select_apps_desc">Choose apps to apply Shut-Up! logic</string>
+    <string name="shut_up_settings_title">Shut-Up! Settings</string>
+    <string name="shut_up_per_app_settings">Shut-Up! Features</string>
+    <string name="shut_up_disable_dev_options">Disable Developer Options</string>
+    <string name="shut_up_disable_usb_debugging">Disable USB Debugging</string>
+    <string name="shut_up_disable_wireless_debugging">Disable Wireless Debugging</string>
+    <string name="shut_up_disable_accessibility">Disable Accessibility Services</string>
+    <string name="shut_up_shortcut_created">Shortcut created for %s</string>
+    <string name="feat_disable_rotation_suggestion_title">Disable rotation suggestion</string>
+    <string name="feat_disable_rotation_suggestion_desc">Do not show the rotation button when auto-rotate is off</string>
+    <string name="shut_up_toast_active">App got shut up</string>
+    <string name="shut_up_toast_restored">Shut up features returned</string>
+    <string name="shut_up_auto_archive_notif_title">Auto Freeze</string>
+    <string name="shut_up_auto_archive_notif_text">%1$s will be archived in %2$d seconds</string>
+    <string name="shut_up_auto_archive_action_freeze">Freeze now</string>
+    <string name="shut_up_auto_archive_action_abort">Abort</string>
+    <!-- Lock Screen Clock -->
+    <string name="feat_lock_screen_clock_title">Lock screen clock</string>
+    <string name="feat_lock_screen_clock_desc">Customize lock screen clock on Pixels</string>
+    <string name="about_desc_lock_screen_clock">Change the lock screen clock style on Pixels. Select from the available clock faces provided by the System UI. Some old styles might not be available.</string>
+    <string name="lock_screen_clock_bignum">Big Number</string>
+    <string name="lock_screen_clock_calligraphy">Calligraphy</string>
+    <string name="lock_screen_clock_flex">Flex</string>
+    <string name="lock_screen_clock_growth">Growth</string>
+    <string name="lock_screen_clock_handwritten">Handwritten</string>
+    <string name="lock_screen_clock_inflate">Inflate</string>
+    <string name="lock_screen_clock_metro">Metro</string>
+    <string name="lock_screen_clock_numoverlap">Number Overlap</string>
+    <string name="lock_screen_clock_weather">Weather</string>
+    <string name="lock_screen_clock_select_label">Select Clock Style</string>
+    <string name="lock_screen_clock_current_label">Current</string>
+    <string name="lock_screen_clock_apply_label">Apply</string>
+    <string name="lock_screen_clock_applied_toast">Clock style applied</string>
+    <string name="lock_screen_clock_permission_required">WRITE_SECURE_SETTINGS permission required</string>
+    <string name="lock_screen_clock_default">Default</string>
+    <string name="label_weight">Weight</string>
+    <string name="label_width">Width</string>
+    <string name="label_grade">Grade</string>
+    <string name="label_roundness">Roundness</string>
+    <string name="label_color_tone">Lightness</string>
+    <string name="label_variation">Variation</string>
+    <string name="label_color">Color</string>
+    <string name="label_style_font">Style &amp; Font</string>
+    <string name="about_title">About</string>
+    <string name="color_default">Default</string>
+    <string name="color_red">Red</string>
+    <string name="color_green">Green</string>
+    <string name="color_blue">Blue</string>
+    <string name="color_yellow">Yellow</string>
+    <string name="color_orange">Orange</string>
+    <string name="color_purple">Purple</string>
+    <string name="color_pink">Pink</string>
+    <string name="color_teal">Teal</string>
+    <!-- What's New -->
+    <string name="whats_new_specs_title">Device Specs Retired</string>
+    <string name="whats_new_specs_desc">Inaccurate GSMArena-powered specifications have been removed to keep device insights clean, fast, and completely reliable.</string>
+    <string name="whats_new_apps_title">App Updates Migrated</string>
+    <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
+</resources>
