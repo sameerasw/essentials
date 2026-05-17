@@ -27,6 +27,7 @@ import android.widget.TextClock
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import java.io.File
 import java.util.Random
@@ -188,6 +189,23 @@ class AmbientGlanceHandler(
             if (!isPlaying) {
                 if (overlayView != null) fadeOutAndRemove()
                 return
+            }
+
+            if (overlayView == null) {
+                val mediaSessionManager =
+                    service.getSystemService(Context.MEDIA_SESSION_SERVICE) as MediaSessionManager
+                val componentName =
+                    android.content.ComponentName(service, NotificationListener::class.java)
+                val sessions = try {
+                    mediaSessionManager.getActiveSessions(componentName)
+                } catch (e: Exception) {
+                    emptyList()
+                }
+                val anyPlaying =
+                    sessions.any { it.playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING }
+                if (!anyPlaying) {
+                    return
+                }
             }
             eventType = intent.getStringExtra("event_type")
             val newTitle = intent.getStringExtra("track_title")

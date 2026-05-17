@@ -26,6 +26,7 @@ import android.widget.TextClock
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.services.NotificationListener
 import java.io.File
 import java.util.Random
 import kotlin.math.abs
@@ -548,6 +549,24 @@ class AmbientDreamService : DreamService() {
         if (!isPlaying) {
             switchToClockMode()
             return
+        }
+
+        if (!isMusicMode) {
+            val mediaSessionManager = getSystemService(MEDIA_SESSION_SERVICE) as MediaSessionManager
+            val componentName = android.content.ComponentName(
+                this,
+                NotificationListener::class.java
+            )
+            val sessions = try {
+                mediaSessionManager.getActiveSessions(componentName)
+            } catch (e: Exception) {
+                emptyList()
+            }
+            val anyPlaying = sessions.any { it.playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING }
+            if (!anyPlaying) {
+                switchToClockMode()
+                return
+            }
         }
 
         eventType = intent.getStringExtra("event_type")
