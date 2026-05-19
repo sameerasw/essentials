@@ -75,7 +75,7 @@
     <string name="essentials_on_display_album_art_title">アルバムアート</string>
     <string name="essentials_on_display_clock_title">時計</string>
     <string name="essentials_on_display_force_fill_while_charging_title">充電中は必ず使用</string>
-    <string name="essentials_on_display_force_fill_while_charging_desc">Force Fill mode when the device is plugged in regardless of the selected mode</string>
+    <string name="essentials_on_display_force_fill_while_charging_desc">デバイスが充電されると、選択されたモードに関係なく強制的にフィルモードになります</string>
     <string name="label_size">サイズ</string>
     <string name="feat_notification_glance_title">通知を表示</string>
     <string name="feat_notification_glance_desc">Keep AOD on while notifications are pending</string>
@@ -716,7 +716,7 @@
     <string name="action_what_is_this">これは何？</string>
     <string name="update_available_title">アップデートがあります</string>
     <string name="about_desc_your_android">お使いのデバイスのハードウェアおよびソフトウェア仕様を詳細に確認することができます。この情報はGSMArenaおよびシステムプロパティから取得され、Androidデバイスの包括的な概要を提供します。</string>
-    <string name="about_desc_essentials_on_display">Essentials On Display shows a Now Playing overlay on your lock screen when music is playing and playback changes. \n\nIf your device does not support overlays over AOD, you can opt for the Ambience screensaver added in your Android settings as an alternative while charging.</string>
+    <string name="about_desc_essentials_on_display">Essentials on Displayは、音楽の再生中や再生内容が変更されたときに、ロック画面に再生中のオーバーレイを表示します。\n\nデバイスがAOD経由のオーバーレイをサポートしていない場合は、充電中に Android 設定で追加されたアンビエンス スクリーンセーバーを代替手段として選択できます。</string>
     <string name="about_desc_notification_lighting">通知ライトは、通知を受け取った際に美しいエッジライティング効果を追加します。\n\nアニメーションのスタイル、色、動作をカスタマイズできます。画面がオフの場合でも、または現在使用しているアプリの画面上に表示されている場合でも機能します(OEMによって異なります)。アプリ、通知の優先度、またはトリガーする動作を、指定されたコントロールから選択してください。お使いのOEMがAOD上のオーバーレイをサポートしていない場合は、下記のアンビエントディスプレイオプションをご利用ください。</string>
     <string name="about_desc_screen_off_widget">ホーム画面にアイコンや雑然としたものを追加しない、透明でサイズ変更可能なウィジェットをタップするだけで、簡単に画面をオフにできます。</string>
     <string name="about_desc_statusbar_icons">ステータスバーのアイコンを自由にコントロールできます。\n\nWi-Fi、Bluetooth、モバイルデータ通信など、特定のアイコンを非表示にして、ステータスバーをすっきりと保ちます。また、スマートコントロールを使って時計の表示形式やバッテリーインジケーターをカスタマイズすることもできます。これらは利用可能なAOSPコントロールのリストであるため、お使いのデバイスのOSによっては、すべてのコントロールが反映されない場合があります。</string>
@@ -1450,8 +1450,8 @@
     <string name="color_pink">ピンク</string>
     <string name="color_teal">ティール</string>
     <!-- What's New -->
-    <string name="whats_new_specs_title">Device Specs Retired</string>
-    <string name="whats_new_specs_desc">Inaccurate GSMArena-powered specifications have been removed to keep device insights clean, fast, and completely reliable.</string>
-    <string name="whats_new_apps_title">App Updates Migrated</string>
-    <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
+    <string name="whats_new_specs_title">デバイス仕様は廃止されました</string>
+    <string name="whats_new_specs_desc">GSMArenaによって提供された不正確な仕様を削除することで、デバイスに関する分析結果をより正確で高速かつ完全に信頼できるものにしました。</string>
+    <string name="whats_new_apps_title">アプリのアップデートが移行されました</string>
+    <string name="whats_new_apps_desc">アプリタブが「Android端末情報」機能に完全に統合され、すべてのアプリのアップデートを一つのまとまった場所で簡単に管理できるようになりました。</string>
 </resources>
