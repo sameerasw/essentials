@@ -389,6 +389,12 @@
     <!-- Features -->
     <string name="feat_screen_off_widget_title">Képernyő kikapcsolása widget</string>
     <string name="feat_screen_off_widget_desc">Láthatatlan widget a képernyő kikapcsolásához</string>
+    <string name="screen_off_method_title">Screen Off Method</string>
+    <string name="screen_off_method_accessibility">Accessibility</string>
+    <string name="screen_off_method_input">Input</string>
+    <string name="screen_off_widget_input_permission_id">Screen off widget - Input</string>
+    <string name="require_double_tap_title">Require double tap</string>
+    <string name="require_double_tap_desc">To screen off</string>
     <string name="feat_statusbar_icons_title">Állapotsor ikonok</string>
     <string name="feat_statusbar_icons_desc">Az állapotsor ikonjainak láthatóságának szabályozása</string>
     <string name="feat_caffeinate_title">Koffeinát</string>
