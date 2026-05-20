@@ -560,7 +560,9 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                             vibrator = vibrator,
                                             prefs = prefs,
                                             modifier = Modifier.padding(top = 16.dp),
-                                            highlightSetting = highlightSetting
+                                            highlightSetting = highlightSetting,
+                                            onShowPermissionSheet = { showPermissionSheet = it },
+                                            onSetChildFeatureForPermissions = { childFeatureForPermissions = it }
                                         )
                                     }
 
