@@ -390,12 +390,12 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <!-- Features -->
     <string name="feat_screen_off_widget_title">Widget de pantalla apagada</string>
     <string name="feat_screen_off_widget_desc">Widget invisible para apagar la pantalla</string>
-    <string name="screen_off_method_title">Screen Off Method</string>
-    <string name="screen_off_method_accessibility">Accessibility</string>
-    <string name="screen_off_method_input">Input</string>
-    <string name="screen_off_widget_input_permission_id">Screen off widget - Input</string>
-    <string name="require_double_tap_title">Require double tap</string>
-    <string name="require_double_tap_desc">To screen off</string>
+    <string name="screen_off_method_title">Método de apagado de pantalla</string>
+    <string name="screen_off_method_accessibility">Accesibilidad</string>
+    <string name="screen_off_method_input">Entrada</string>
+    <string name="screen_off_widget_input_permission_id">Widget de apagado de pantalla - Entrada</string>
+    <string name="require_double_tap_title">Requiere doble toque</string>
+    <string name="require_double_tap_desc">Para apagar la pantalla</string>
     <string name="feat_statusbar_icons_title">Iconos de la barra de estado</string>
     <string name="feat_statusbar_icons_desc">Controlar la visibilidad de los iconos de la barra de estado</string>
     <string name="feat_caffeinate_title">Cafeína</string>
