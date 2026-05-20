@@ -389,6 +389,12 @@
     <!-- Features -->
     <string name="feat_screen_off_widget_title">Gin ma ki lwongo ni screen off widget</string>
     <string name="feat_screen_off_widget_desc">Gin ma pe nen me juku gin ma ki neno ni</string>
+    <string name="screen_off_method_title">Screen Off Method</string>
+    <string name="screen_off_method_accessibility">Accessibility</string>
+    <string name="screen_off_method_input">Input</string>
+    <string name="screen_off_widget_input_permission_id">Screen off widget - Input</string>
+    <string name="require_double_tap_title">Require double tap</string>
+    <string name="require_double_tap_desc">To screen off</string>
     <string name="feat_statusbar_icons_title">cal me Statusbar</string>
     <string name="feat_statusbar_icons_desc">Gwoko kit ma lanyut me statusbar nen kwede</string>
     <string name="feat_caffeinate_title">Caffeinete</string>
