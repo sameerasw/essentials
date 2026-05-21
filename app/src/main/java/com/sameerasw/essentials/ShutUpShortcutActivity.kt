@@ -226,9 +226,6 @@ class ShutUpShortcutActivity : ComponentActivity() {
     } catch (e: SecurityException) {
         Log.w("ShutUpShortcut", "Skipping unreadable setting $table:$key", e)
         null
-    } catch (e: Exception) {
-        Log.w("ShutUpShortcut", "Failed to read setting $table:$key", e)
-        null
     }
 
     private fun launchApp(packageName: String) {
