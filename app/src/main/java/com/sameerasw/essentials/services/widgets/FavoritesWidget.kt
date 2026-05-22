@@ -35,7 +35,10 @@ import androidx.glance.layout.height
 import androidx.glance.layout.padding
 import androidx.glance.layout.size
 import androidx.glance.layout.width
+import androidx.glance.text.FontFamily
+import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
+import androidx.glance.text.TextAlign
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import com.sameerasw.essentials.FeatureSettingsActivity
@@ -81,7 +84,9 @@ class FavoritesWidget : GlanceAppWidget() {
                                 style = TextStyle(
                                     color = GlanceTheme.colors.onSurfaceVariant,
                                     fontSize = 13.sp,
-                                    textAlign = androidx.glance.text.TextAlign.Center
+                                    fontWeight = FontWeight.Normal,
+                                    fontFamily = FontFamily("google-sans-flex"),
+                                    textAlign = TextAlign.Center
                                 ),
                                 modifier = GlanceModifier.fillMaxWidth()
                             )
@@ -176,10 +181,10 @@ class FavoritesWidget : GlanceAppWidget() {
                                                                         style = TextStyle(
                                                                             color = GlanceTheme.colors.onSurface,
                                                                             fontSize = fontSize,
-                                                                            fontWeight = androidx.glance.text.FontWeight.Medium,
-                                                                            textAlign = androidx.glance.text.TextAlign.Center
-                                                                        ),
-                                                                        modifier = GlanceModifier.fillMaxWidth()
+                                                                            fontWeight = FontWeight.Normal,
+                                                                            fontFamily = FontFamily("google-sans-flex"),
+                                                                            textAlign = TextAlign.Center
+                                                                        )
                                                                     )
                                                                 }
                                                             } else {
@@ -210,8 +215,9 @@ class FavoritesWidget : GlanceAppWidget() {
                                                                         style = TextStyle(
                                                                             color = GlanceTheme.colors.onSurface,
                                                                             fontSize = fontSize,
-                                                                            fontWeight = androidx.glance.text.FontWeight.Medium,
-                                                                            textAlign = androidx.glance.text.TextAlign.Start
+                                                                            fontWeight = FontWeight.Normal,
+                                                                            fontFamily = FontFamily("google-sans-flex"),
+                                                                            textAlign = TextAlign.Start
                                                                         ),
                                                                         modifier = GlanceModifier.defaultWeight()
                                                                     )
