@@ -1462,7 +1462,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="whats_new_specs_desc">Se han eliminado las especificaciones inexactas basadas en GSMArena para mantener la información del dispositivo limpia, rápida y completamente fiable.</string>
     <string name="whats_new_apps_title">Actualizaciones de la aplicación migradas</string>
     <string name="whats_new_apps_desc">La pestaña Aplicaciones ahora está completamente integrada en la función Tu Android, lo que facilita gestionar todas tus actualizaciones de aplicaciones desde un único y coherente centro unificado.</string>
-    <string name="favorites_widget_name">Favorite Features</string>
-    <string name="favorites_widget_description">View and launch your favorite features at a glance.</string>
-    <string name="favorites_widget_empty_state">No favorite features pinned yet. Open the app to pin some!</string>
+    <string name="favorites_widget_name">Funciones favoritas</string>
+    <string name="favorites_widget_description">Visualiza y lanza tus funciones favoritas de un vistazo.</string>
+    <string name="favorites_widget_empty_state">Aún no hay funciones favoritas fijadas. ¡Abre la aplicación para añadir algunas!</string>
 </resources>
