@@ -1305,11 +1305,11 @@
     <string name="msg_import_success">Repositories imported successfully</string>
     <string name="msg_import_failed">Failed to import repositories</string>
     <string name="label_apps">Apps</string>
-    <string name="feat_text_animations_title">Scale and Animations</string>
-    <string name="feat_text_animations_desc">Adjust system scale and animations</string>
-    <string name="feat_screen_refresh_rate_title">Screen Refresh Rate</string>
+    <string name="feat_text_animations_title">Skala dan animasi</string>
+    <string name="feat_text_animations_desc">Atur skala sistem dan animasi</string>
+    <string name="feat_screen_refresh_rate_title">Rasio penyegaran layar</string>
     <string name="feat_screen_refresh_rate_desc">Set a fixed or ranged screen refresh rate</string>
-    <string name="settings_section_text">Text</string>
+    <string name="settings_section_text">Teks</string>
     <string name="label_font_scale">Font Scale</string>
     <string name="label_font_weight">Font Weight</string>
     <string name="label_reset_default">Reset</string>
@@ -1352,7 +1352,7 @@
     <string name="tab_your_android">Your Android</string>
     <string name="label_device_storage">Storage</string>
     <string name="label_device_ram">Memory</string>
-    <string name="label_use_blur">Use blur</string>
+    <string name="label_use_blur">Gunakan blur</string>
     <string name="desc_use_blur">Enable progressive blur elements across the UI</string>
     <string name="msg_blur_compatibility_error">Blur is disabled on this device to prevent a known display bug on Samsung devices with Android 15 or below.</string>
     <!-- Empty State Actions -->
@@ -1383,23 +1383,23 @@
     <string name="notification_lighting_system_mode_auth_ripple">Center</string>
     <string name="notification_lighting_system_mode_custom_ripple">Custom</string>
     <string name="msg_shizuku_root_required_system_lighting">Shizuku or Root permission is required for System lighting effects</string>
-    <string name="notification_lighting_system_disclaimer">Made for Google Pixel. Might not be available on other devices.</string>
+    <string name="notification_lighting_system_disclaimer">Dibuat untuk Google Pixel. Mungkin tidak tersedia di perangkat lain.</string>
     <!-- Live Wallpaper -->
     <string name="feat_live_wallpaper_title">Live wallpaper</string>
     <string name="feat_live_wallpaper_desc">Set custom video as live wallpaper</string>
     <string name="live_wallpaper_label">Live Wallpaper</string>
     <string name="live_wallpaper_description">A video live wallpaper that plays when unlocked.</string>
     <string name="live_wallpaper_playback_trigger_title">Play when</string>
-    <string name="live_wallpaper_trigger_unlock">Unlock</string>
-    <string name="live_wallpaper_trigger_screen_on">Screen on</string>
+    <string name="live_wallpaper_trigger_unlock">Kunci dibuka</string>
+    <string name="live_wallpaper_trigger_screen_on">Layar hidup</string>
     <string name="live_wallpaper_video_title">Video</string>
-    <string name="btn_apply">Apply</string>
-    <string name="add_video">Add video</string>
+    <string name="btn_apply">Terapkan</string>
+    <string name="add_video">Tambah video</string>
     <string name="custom_video">Custom video</string>
     <string name="about_desc_live_wallpaper">Set your favorite video as your home screen wallpaper. Choose between triggering the animation upon unlocking or simply whenever the screen turns on for a dynamic experience.</string>
     <!-- Shut-Up! Feature -->
     <string name="feat_shut_up_title">Shut-Up!</string>
-    <string name="feat_shut_up_desc">I know what I\'m doing</string>
+    <string name="feat_shut_up_desc">Aku tau apa yang kulakukan</string>
     <string name="shut_up_description">Shut-Up! bypasses app restrictions and checks for developer options, accessibility and debugging by dynamically hiding them when you launch sensitive apps. \n\nUse the custom shortcuts to ensure settings are hidden before the app launches.</string>
     <string name="shut_up_select_apps_title">Select Apps</string>
     <string name="shut_up_select_apps_desc">Choose apps to apply Shut-Up! logic</string>
