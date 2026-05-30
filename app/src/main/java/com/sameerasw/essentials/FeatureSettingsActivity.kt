@@ -75,6 +75,7 @@ import com.sameerasw.essentials.ui.composables.configs.OtherCustomizationsSettin
 import com.sameerasw.essentials.ui.composables.configs.PocketModeSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.QuickSettingsTilesSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.RefreshRateSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.PerAppRefreshRateSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.RemoteLockSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ScreenLockedSecuritySettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ScreenOffWidgetSettingsUI
@@ -305,6 +306,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                             "Location reached" -> !viewModel.isLocationPermissionGranted.value || !viewModel.isBackgroundLocationPermissionGranted.value
                             "Quick settings tiles" -> !viewModel.isWriteSettingsEnabled.value
                             "Screen refresh rate" -> !viewModel.isShizukuPermissionGranted.value
+                            "Per app refresh rate" -> (if (viewModel.isUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else !isAccessibilityEnabled) || !isShizukuPermissionGranted
                             // Top level checks for other features (rarely hit if they are children, but safe to add)
                             "Essentials On Display" -> !isAccessibilityEnabled || !isNotificationListenerEnabled
                             "Call vibrations" -> !isReadPhoneStateEnabled || !isNotificationListenerEnabled
@@ -541,6 +543,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                 "Lock screen clock" -> !isWriteSecureSettingsEnabled
                                                 "Screen refresh rate" -> !viewModel.isShizukuPermissionGranted.value
                                                 "Shut-Up!" -> !isWriteSecureSettingsEnabled || !viewModel.isUsageStatsPermissionGranted.value
+                                                "Per app refresh rate" -> (if (viewModel.isUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else !isAccessibilityEnabled) || !viewModel.isShizukuPermissionGranted.value
                                                 else -> false
                                             }
 
@@ -816,6 +819,13 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                         )
                                     }
 
+                                    "Per app refresh rate" -> {
+                                        PerAppRefreshRateSettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting
+                                        )
+                                    }
                                     "Always on Display" -> {
                                         AlwaysOnDisplaySettingsUI(
                                             viewModel = viewModel,

@@ -713,6 +713,13 @@ class NotificationListener : NotificationListenerService() {
                 if (eventType != null) {
                     triggerAmbientGlance(controller, eventType, isLiked, sbn = sbn)
                 }
+
+                val playStateIntent = Intent("com.sameerasw.essentials.MEDIA_PLAYBACK_CHANGED").apply {
+                    putExtra("package_name", sbn.packageName)
+                    putExtra("is_playing", isPlaying)
+                    setPackage(packageName)
+                }
+                sendBroadcast(playStateIntent)
             }
         } catch (e: Exception) {
             e.printStackTrace()
