@@ -37,6 +37,7 @@ import com.sameerasw.essentials.data.repository.UpdateRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.MapsState
 import com.sameerasw.essentials.domain.model.AppSelection
+import com.sameerasw.essentials.domain.model.AppRefreshRateConfig
 import com.sameerasw.essentials.domain.model.DnsPreset
 import com.sameerasw.essentials.domain.model.NotificationApp
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
@@ -159,6 +160,9 @@ class MainViewModel : ViewModel() {
         mutableStateOf<List<com.sameerasw.essentials.domain.model.ShutUpAppConfig>>(emptyList())
     val isShutUpLoading = mutableStateOf(false)
     val isShutUpAttemptShizukuRestart = mutableStateOf(true)
+
+    val isPerAppRefreshRateEnabled = mutableStateOf(false)
+    val perAppRefreshRateConfigs = mutableStateOf<List<AppRefreshRateConfig>>(emptyList())
 
 
     data class CalendarAccount(
@@ -612,6 +616,15 @@ class MainViewModel : ViewModel() {
                         appContext?.let { updateAppDetectionService(it) }
                     }
 
+                    SettingsRepository.KEY_PER_APP_REFRESH_RATE_ENABLED -> {
+                        isPerAppRefreshRateEnabled.value = settingsRepository.getBoolean(key)
+                        appContext?.let { updateAppDetectionService(it) }
+                    }
+
+                    SettingsRepository.KEY_PER_APP_REFRESH_RATE_CONFIGS -> {
+                        loadPerAppRefreshRateConfigs()
+                    }
+
                     SettingsRepository.KEY_LIVE_WALLPAPER_SELECTED_VIDEO -> {
                         liveWallpaperSelectedVideo.value =
                             settingsRepository.getLiveWallpaperSelectedVideo()
@@ -659,6 +672,28 @@ class MainViewModel : ViewModel() {
 
     fun loadShutUpConfigs() {
         shutUpConfigs.value = settingsRepository.loadShutUpConfigs()
+    }
+
+    fun loadPerAppRefreshRateConfigs() {
+        perAppRefreshRateConfigs.value = settingsRepository.loadPerAppRefreshRateConfigs()
+    }
+
+    fun updatePerAppRefreshRateConfig(config: AppRefreshRateConfig) {
+        settingsRepository.updatePerAppRefreshRateConfig(config)
+        loadPerAppRefreshRateConfigs()
+    }
+
+    fun removePerAppRefreshRateConfig(packageName: String) {
+        val current = perAppRefreshRateConfigs.value.toMutableList()
+        current.removeAll { it.packageName == packageName }
+        settingsRepository.savePerAppRefreshRateConfigs(current)
+        loadPerAppRefreshRateConfigs()
+    }
+
+    fun setPerAppRefreshRateEnabled(enabled: Boolean, context: Context) {
+        isPerAppRefreshRateEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_PER_APP_REFRESH_RATE_ENABLED, enabled)
+        updateAppDetectionService(context)
     }
 
     fun updateShutUpConfig(config: com.sameerasw.essentials.domain.model.ShutUpAppConfig) {
@@ -789,6 +824,9 @@ class MainViewModel : ViewModel() {
             settingsRepository.getLockScreenClockSelectedColorId()
         lockScreenClockSeedColor.intValue = settingsRepository.getLockScreenClockSeedColor()
         loadShutUpConfigs()
+        isPerAppRefreshRateEnabled.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_PER_APP_REFRESH_RATE_ENABLED, false)
+        loadPerAppRefreshRateConfigs()
         recentSearches.value = settingsRepository.getRecentSearches()
 
         if (isHideGestureBarEnabled.value) {
