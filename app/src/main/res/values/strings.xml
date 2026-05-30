@@ -856,6 +856,12 @@
     <string name="diy_action_flashlight_toggle">Toggle Flashlight</string>
     <string name="diy_action_low_power_on">Turn On Low Power Mode</string>
     <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
+    <string name="diy_action_wifi_on">Turn On WiFi</string>
+    <string name="diy_action_wifi_off">Turn Off WiFi</string>
+    <string name="diy_action_cellular_on">Turn On Cellular Data</string>
+    <string name="diy_action_cellular_off">Turn Off Cellular Data</string>
+    <string name="diy_action_auto_brightness_on">Turn On Auto Brightness</string>
+    <string name="diy_action_auto_brightness_off">Turn Off Auto Brightness</string>
     <string name="diy_action_dim_wallpaper">Dim Wallpaper</string>
     <string name="diy_action_screen_off">Screen Off</string>
     <string name="diy_action_media_play_pause">Media Play/Pause</string>
