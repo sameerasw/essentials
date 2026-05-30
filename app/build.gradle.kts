@@ -146,8 +146,8 @@ dependencies {
     // SymSpell for word suggestions
     implementation("com.darkrockstudios:symspellkt:3.4.0")
 
-    implementation("androidx.glance:glance-appwidget:1.1.0")
-    implementation("androidx.glance:glance-material3:1.1.0")
+    implementation("androidx.glance:glance-appwidget:1.3.0-alpha01")
+    implementation("androidx.glance:glance-material3:1.3.0-alpha01")
 
     // Watermark dependencies
     implementation("androidx.exifinterface:exifinterface:1.3.7")

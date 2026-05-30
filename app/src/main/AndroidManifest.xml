@@ -362,6 +362,20 @@
                 android:resource="@xml/batteries_widget_info" />
         </receiver>
 
+        <receiver
+            android:name=".services.widgets.FavoritesWidgetReceiver"
+            android:label="@string/favorites_widget_name"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.intent.action.CONFIGURATION_CHANGED" />
+                <action android:name="com.sameerasw.essentials.action.FAVORITES_WIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/favorites_widget_info" />
+        </receiver>
+
         <service
             android:name=".services.tiles.CaffeinateTileService"
             android:exported="true"

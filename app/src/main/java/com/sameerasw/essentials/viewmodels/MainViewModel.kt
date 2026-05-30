@@ -48,6 +48,7 @@ import com.sameerasw.essentials.domain.model.SearchableItem
 import com.sameerasw.essentials.domain.model.UpdateInfo
 import com.sameerasw.essentials.domain.registry.SearchRegistry
 import com.sameerasw.essentials.services.CaffeinateWakeLockService
+import com.sameerasw.essentials.services.widgets.FavoritesWidgetReceiver
 import com.sameerasw.essentials.services.NotificationLightingService
 import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
 import com.sameerasw.essentials.services.receivers.SecurityDeviceAdminReceiver
@@ -1395,6 +1396,13 @@ class MainViewModel : ViewModel() {
         }
         pinnedFeatureKeys.value = current
         settingsRepository.savePinnedFeatures(current)
+
+        appContext?.let { context ->
+            val intent = Intent("com.sameerasw.essentials.action.FAVORITES_WIDGET_UPDATE").apply {
+                setPackage(context.packageName)
+            }
+            context.sendBroadcast(intent)
+        }
     }
 
     fun setAutoUpdateEnabled(enabled: Boolean, context: Context) {
