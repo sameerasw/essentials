@@ -475,6 +475,13 @@ object CombinedActionExecutor {
                         ).show()
                     }
                 }
+
+                is Action.TurnOnWifi -> setWifiEnabled(context, true)
+                is Action.TurnOffWifi -> setWifiEnabled(context, false)
+                is Action.TurnOnCellularData -> setCellularDataEnabled(context, true)
+                is Action.TurnOffCellularData -> setCellularDataEnabled(context, false)
+                is Action.TurnOnAutoBrightness -> setAutoBrightnessEnabled(context, true)
+                is Action.TurnOffAutoBrightness -> setAutoBrightnessEnabled(context, false)
             }
         }
     }
@@ -495,6 +502,32 @@ object CombinedActionExecutor {
             android.provider.Settings.Global.putInt(context.contentResolver, "low_power", value)
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    private fun setWifiEnabled(context: Context, enabled: Boolean) {
+        val state = if (enabled) "enable" else "disable"
+        com.sameerasw.essentials.utils.ShellUtils.runCommand(context, "svc wifi $state")
+    }
+
+    private fun setCellularDataEnabled(context: Context, enabled: Boolean) {
+        val state = if (enabled) "enable" else "disable"
+        com.sameerasw.essentials.utils.ShellUtils.runCommand(context, "svc data $state")
+    }
+
+    private fun setAutoBrightnessEnabled(context: Context, enabled: Boolean) {
+        val value = if (enabled) 1 else 0
+        try {
+            android.provider.Settings.System.putInt(
+                context.contentResolver,
+                android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE,
+                value
+            )
+        } catch (e: Exception) {
+            com.sameerasw.essentials.utils.ShellUtils.runCommand(
+                context,
+                "settings put system screen_brightness_mode $value"
+            )
         }
     }
 }
