@@ -30,6 +30,8 @@ object ServiceUtils {
             settingsRepository.getBoolean(SettingsRepository.KEY_HIDE_GESTURE_BAR_ON_LAUNCHER_ENABLED)
         val isUseUsageAccess =
             settingsRepository.getBoolean(SettingsRepository.KEY_USE_USAGE_ACCESS)
+        val isPerAppRefreshRateEnabled =
+            settingsRepository.getBoolean(SettingsRepository.KEY_PER_APP_REFRESH_RATE_ENABLED)
 
         val hasAppAutomations = DIYRepository.automations.value.any {
             it.isEnabled && it.type == Automation.Type.APP
@@ -39,7 +41,7 @@ object ServiceUtils {
         val hasShutUpApps = shutUpConfigs.any { it.isEnabled }
 
         val shouldRun =
-            (isUseUsageAccess && (isAppLockEnabled || isDynamicNightLightEnabled || isHideGestureBarOnLauncherEnabled || hasAppAutomations)) || hasShutUpApps
+            isUseUsageAccess && (isAppLockEnabled || isDynamicNightLightEnabled || isHideGestureBarOnLauncherEnabled || hasAppAutomations || hasShutUpApps || isPerAppRefreshRateEnabled)
 
         val intent = Intent(context, AppDetectionService::class.java)
         if (shouldRun) {

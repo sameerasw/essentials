@@ -11,6 +11,7 @@ import com.sameerasw.essentials.domain.model.NotificationLightingSide
 import com.sameerasw.essentials.domain.model.NotificationLightingStyle
 import com.sameerasw.essentials.domain.model.NotificationLightingSweepPosition
 import com.sameerasw.essentials.domain.model.ScaleAnimationsProfile
+import com.sameerasw.essentials.domain.model.AppRefreshRateConfig
 import com.sameerasw.essentials.domain.model.TrackedRepo
 import com.sameerasw.essentials.domain.model.github.GitHubUser
 import com.sameerasw.essentials.utils.RootUtils
@@ -239,6 +240,9 @@ class SettingsRepository(private val context: Context) {
         const val KEY_SHUT_UP_RESTORE_DELAY = "shut_up_restore_delay"
         const val KEY_EDGE_LIGHTING_SWEEP_SELECTED_SHAPES = "edge_lighting_sweep_selected_shapes"
         const val KEY_DISABLE_ROTATION_SUGGESTION = "disable_rotation_suggestion"
+
+        const val KEY_PER_APP_REFRESH_RATE_ENABLED = "per_app_refresh_rate_enabled"
+        const val KEY_PER_APP_REFRESH_RATE_CONFIGS = "per_app_refresh_rate_configs"
 
         const val KEY_LOCK_SCREEN_CLOCK_WEIGHT = "lock_screen_clock_weight"
         const val KEY_LOCK_SCREEN_CLOCK_WIDTH = "lock_screen_clock_width"
@@ -552,6 +556,38 @@ class SettingsRepository(private val context: Context) {
         } catch (e: Exception) {
             emptyMap()
         }
+    }
+
+    fun loadPerAppRefreshRateConfigs(): List<AppRefreshRateConfig> {
+        val json = prefs.getString(KEY_PER_APP_REFRESH_RATE_CONFIGS, null)
+        return if (json != null) {
+            try {
+                gson.fromJson(
+                    json,
+                    Array<AppRefreshRateConfig>::class.java
+                ).toList()
+            } catch (e: Exception) {
+                emptyList()
+            }
+        } else {
+            emptyList()
+        }
+    }
+
+    fun savePerAppRefreshRateConfigs(configs: List<AppRefreshRateConfig>) {
+        val json = gson.toJson(configs)
+        putString(KEY_PER_APP_REFRESH_RATE_CONFIGS, json)
+    }
+
+    fun updatePerAppRefreshRateConfig(config: AppRefreshRateConfig) {
+        val current = loadPerAppRefreshRateConfigs().toMutableList()
+        val index = current.indexOfFirst { it.packageName == config.packageName }
+        if (index != -1) {
+            current[index] = config
+        } else {
+            current.add(config)
+        }
+        savePerAppRefreshRateConfigs(current)
     }
 
     private fun updateAppSelection(key: String, packageName: String, enabled: Boolean) {
