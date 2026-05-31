@@ -405,7 +405,18 @@ object CombinedActionExecutor {
                 is Action.TurnOffCellularData -> setCellularDataEnabled(context, false)
                 is Action.TurnOnAutoBrightness -> setAutoBrightnessEnabled(context, true)
                 is Action.TurnOffAutoBrightness -> setAutoBrightnessEnabled(context, false)
+                is Action.FreezeApps -> {
+                    action.packageNames.forEach { pkg ->
+                        com.sameerasw.essentials.utils.FreezeManager.freezeApp(context, pkg)
+                    }
+                }
+                is Action.UnfreezeApps -> {
+                    action.packageNames.forEach { pkg ->
+                        com.sameerasw.essentials.utils.FreezeManager.unfreezeApp(context, pkg)
+                    }
+                }
             }
+
         }
     }
 
