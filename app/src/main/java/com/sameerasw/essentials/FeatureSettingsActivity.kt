@@ -73,10 +73,10 @@ import com.sameerasw.essentials.ui.composables.configs.NotificationLightingSetti
 import com.sameerasw.essentials.ui.composables.configs.OtherCustomizationsSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.QuickSettingsTilesSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.RefreshRateSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.ShutUpSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.RemoteLockSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ScreenLockedSecuritySettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ScreenOffWidgetSettingsUI
-import com.sameerasw.essentials.ui.composables.configs.ShutUpSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.SnoozeNotificationsSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.SoundModeTileSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.StatusBarIconSettingsUI
@@ -215,6 +215,9 @@ class FeatureSettingsActivity : AppCompatActivity() {
                     val isNotificationListenerEnabled by viewModel.isNotificationListenerEnabled
                     val isReadPhoneStateEnabled by viewModel.isReadPhoneStateEnabled
                     val isShizukuPermissionGranted by viewModel.isShizukuPermissionGranted
+                    val isWriteSettingsEnabled by viewModel.isWriteSettingsEnabled
+                    val isUsageStatsPermissionGranted by viewModel.isUsageStatsPermissionGranted
+                    val isPostNotificationsEnabled by viewModel.isPostNotificationsEnabled
 
                     // FAB State for Notification Lighting
                     var fabExpanded by remember { mutableStateOf(true) }
@@ -246,7 +249,10 @@ class FeatureSettingsActivity : AppCompatActivity() {
                         isNotificationLightingAccessibilityEnabled,
                         isNotificationListenerEnabled,
                         isReadPhoneStateEnabled,
-                        isShizukuPermissionGranted
+                        isShizukuPermissionGranted,
+                        isWriteSettingsEnabled,
+                        isUsageStatsPermissionGranted,
+                        isPostNotificationsEnabled
                     ) {
                         val hasMissingPermissions = when (featureId) {
                             "Screen off widget" -> !isAccessibilityEnabled
@@ -264,6 +270,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                             "Location reached" -> !viewModel.isLocationPermissionGranted.value || !viewModel.isBackgroundLocationPermissionGranted.value
                             "Quick settings tiles" -> !viewModel.isWriteSettingsEnabled.value
                             "Screen refresh rate" -> !viewModel.isShizukuPermissionGranted.value
+                            "Shut-Up!" -> !isWriteSecureSettingsEnabled || !isWriteSettingsEnabled || !isUsageStatsPermissionGranted || !isPostNotificationsEnabled
                             // Top level checks for other features (rarely hit if they are children, but safe to add)
                             "Essentials On Display" -> !isAccessibilityEnabled || !isNotificationListenerEnabled
                             "Call vibrations" -> !isReadPhoneStateEnabled || !isNotificationListenerEnabled
@@ -280,7 +287,6 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                 context
                             )
 
-                            "Shut-Up!" -> !isWriteSecureSettingsEnabled || !viewModel.isUsageStatsPermissionGranted.value
                             else -> false
                         }
                         if (hasMissingPermissions) {
@@ -497,7 +503,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                 "Text and animations" -> !viewModel.isWriteSettingsEnabled.value || !isWriteSecureSettingsEnabled
                                                 "Lock screen clock" -> !isWriteSecureSettingsEnabled
                                                 "Screen refresh rate" -> !viewModel.isShizukuPermissionGranted.value
-                                                "Shut-Up!" -> !isWriteSecureSettingsEnabled || !viewModel.isUsageStatsPermissionGranted.value
+                                                "Shut-Up!" -> !isWriteSecureSettingsEnabled || !isWriteSettingsEnabled || !isUsageStatsPermissionGranted || !isPostNotificationsEnabled
                                                 else -> false
                                             }
 
@@ -743,6 +749,14 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                         )
                                     }
 
+                                    "Shut-Up!" -> {
+                                        ShutUpSettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting
+                                        )
+                                    }
+
                                     "Always on Display" -> {
                                         AlwaysOnDisplaySettingsUI(
                                             viewModel = viewModel,
@@ -772,14 +786,6 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightSetting = highlightSetting
-                                        )
-                                    }
-
-                                    "Shut-Up!" -> {
-                                        ShutUpSettingsUI(
-                                            viewModel = viewModel,
-                                            modifier = Modifier.padding(top = 16.dp),
-                                            highlightKey = highlightSetting
                                         )
                                     }
                                 }
