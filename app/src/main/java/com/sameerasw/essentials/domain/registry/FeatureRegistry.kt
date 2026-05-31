@@ -919,22 +919,35 @@ object FeatureRegistry {
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
                 viewModel.setAppLockEnabled(enabled, context)
         },
+
         object : Feature(
             id = "Shut-Up!",
             title = R.string.feat_shut_up_title,
-            iconRes = R.drawable.rounded_domino_mask_24,
-            category = R.string.cat_system,
+            iconRes = R.drawable.rounded_shield_lock_24,
+            category = R.string.cat_protection,
             description = R.string.feat_shut_up_desc,
             aboutDescription = R.string.shut_up_description,
-            permissionKeys = listOf("WRITE_SECURE_SETTINGS", "USAGE_STATS"),
+            permissionKeys = listOf("WRITE_SECURE_SETTINGS", "WRITE_SETTINGS", "USAGE_STATS", "POST_NOTIFICATIONS"),
             showToggle = false,
             hasMoreSettings = true,
             parentFeatureId = "Security",
             animationRes = R.raw.shutup_animation
         ) {
-            override fun isEnabled(viewModel: MainViewModel) = true
-            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+            override val requiresAuth: Boolean = false
+
+            override fun isEnabled(viewModel: MainViewModel) =
+                viewModel.isShutUpServiceEnabled.value
+
+            override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
+                viewModel.isWriteSecureSettingsEnabled.value &&
+                        viewModel.isWriteSettingsEnabled.value &&
+                        viewModel.isUsageStatsPermissionGranted.value &&
+                        viewModel.isPostNotificationsEnabled.value
+
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
+                viewModel.setShutUpServiceEnabled(enabled, context)
         },
+
 
         object : Feature(
             id = "Location reached",

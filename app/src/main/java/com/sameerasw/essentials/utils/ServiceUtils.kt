@@ -16,6 +16,7 @@ object ServiceUtils {
 
         startAppDetectionServiceIfNeeded(context, settingsRepository)
         startBatteryNotificationServiceIfNeeded(context, settingsRepository)
+        startShutUpServiceIfNeeded(context, settingsRepository)
     }
 
     private fun startAppDetectionServiceIfNeeded(
@@ -37,11 +38,8 @@ object ServiceUtils {
             it.isEnabled && it.type == Automation.Type.APP
         }
 
-        val shutUpConfigs = settingsRepository.loadShutUpConfigs()
-        val hasShutUpApps = shutUpConfigs.any { it.isEnabled }
-
         val shouldRun =
-            (isUseUsageAccess && (isAppLockEnabled || isDynamicNightLightEnabled || isHideGestureBarOnLauncherEnabled || hasAppAutomations || isPerAppRefreshRateEnabled)) || hasShutUpApps
+            isUseUsageAccess && (isAppLockEnabled || isDynamicNightLightEnabled || isHideGestureBarOnLauncherEnabled || hasAppAutomations || isPerAppRefreshRateEnabled)
 
         val intent = Intent(context, AppDetectionService::class.java)
         if (shouldRun) {
@@ -67,6 +65,25 @@ object ServiceUtils {
 
         val intent = Intent(context, BatteryNotificationService::class.java)
         if (isBatteryNotificationEnabled) {
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    context.startForegroundService(intent)
+                } else {
+                    context.startService(intent)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun startShutUpServiceIfNeeded(
+        context: Context,
+        settingsRepository: SettingsRepository
+    ) {
+        val isShutUpEnabled = settingsRepository.isShutUpServiceEnabled()
+        val intent = Intent(context, com.sameerasw.essentials.services.ShutUpForegroundService::class.java)
+        if (isShutUpEnabled) {
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     context.startForegroundService(intent)

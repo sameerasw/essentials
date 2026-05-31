@@ -30,6 +30,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.ShutUpAppConfig
+import com.sameerasw.essentials.domain.model.disableDevOptions
+import com.sameerasw.essentials.domain.model.disableUsbDebugging
+import com.sameerasw.essentials.domain.model.disableWirelessDebugging
+import com.sameerasw.essentials.domain.model.disableAccessibility
+import com.sameerasw.essentials.domain.model.copy
 import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.viewmodels.MainViewModel
@@ -49,7 +54,7 @@ fun ShutUpPerAppSettingsSheet(
     var currentConfig by remember(config) { mutableStateOf(config) }
     var showShizukuRestartWarning by remember { mutableStateOf(false) }
 
-    val isAttemptShizukuRestart by viewModel.isShutUpAttemptShizukuRestart
+    val isAttemptShizukuRestart = currentConfig.attemptShizukuRestart
 
     if (showShizukuRestartWarning) {
         AlertDialog(
@@ -59,7 +64,7 @@ fun ShutUpPerAppSettingsSheet(
             confirmButton = {
                 TextButton(onClick = {
                     showShizukuRestartWarning = false
-                    val newConfig = currentConfig.copy(autoArchive = true)
+                    val newConfig = currentConfig.copy(autoArchive = true, attemptShizukuRestart = true)
                     currentConfig = newConfig
                     onConfigChanged(newConfig)
                 }) {
@@ -133,14 +138,9 @@ fun ShutUpPerAppSettingsSheet(
                         title = stringResource(R.string.shut_up_attempt_shizuku_restart),
                         isChecked = isAttemptShizukuRestart,
                         onCheckedChange = {
-                            viewModel.setShutUpAttemptShizukuRestartEnabled(it)
-                            if (it && viewModel.shizukuAuthToken.value.isEmpty()) {
-                                android.widget.Toast.makeText(
-                                    context,
-                                    "Please enter the Shizuku auth token in Essentials settings",
-                                    android.widget.Toast.LENGTH_LONG
-                                ).show()
-                            }
+                            val newConfig = currentConfig.copy(attemptShizukuRestart = it)
+                            currentConfig = newConfig
+                            onConfigChanged(newConfig)
                         }
                     )
                 }

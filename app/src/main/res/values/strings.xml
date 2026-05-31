@@ -1574,6 +1574,11 @@
     <string name="shut_up_auto_archive_notif_text">%1$s will be archived in %2$d seconds</string>
     <string name="shut_up_auto_archive_action_freeze">Freeze now</string>
     <string name="shut_up_auto_archive_action_abort">Abort</string>
+    <string name="shut_up_service_name">Shut-Up! Service</string>
+    <string name="shut_up_service_desc">Monitors launched apps to disable developer settings</string>
+    <string name="shut_up_service_notification_title">Shut-Up! is active</string>
+    <string name="shut_up_service_notification_desc">Monitoring app launch and exit</string>
+    
     <!-- Lock Screen Clock -->
     <string name="feat_lock_screen_clock_title">Lock screen clock</string>
     <string name="feat_lock_screen_clock_desc">Customize lock screen clock on Pixels</string>

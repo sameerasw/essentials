@@ -322,14 +322,6 @@
         </activity>
 
         <activity
-            android:name=".ShutUpShortcutActivity"
-            android:exported="true"
-            android:excludeFromRecents="true"
-            android:noHistory="true"
-            android:taskAffinity=""
-            android:theme="@style/Theme.Essentials.Translucent" />
-
-        <activity
             android:name=".ui.activities.FlashlightIntensityActivity"
             android:exported="true"
             android:excludeFromRecents="true"
@@ -1035,6 +1027,27 @@
                 <action android:name="com.sameerasw.essentials.action.EXTERNAL_CONTROL" />
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name=".ShutUpShortcutActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:theme="@style/Theme.Essentials.Translucent">
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".services.ShutUpForegroundService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property android:name="android.app.property.FOREGROUND_SERVICE_TYPE_SPECIAL_USE_DESCRIPTION"
+                      android:value="Shut-Up! background monitoring service" />
+        </service>
 
     </application>
 
