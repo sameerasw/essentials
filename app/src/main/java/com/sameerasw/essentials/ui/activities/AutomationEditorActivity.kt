@@ -73,8 +73,10 @@ import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.components.pickers.SegmentedPicker
+import com.sameerasw.essentials.ui.components.sheets.AppSelectionSheet
 import com.sameerasw.essentials.ui.components.sheets.DimWallpaperSettingsSheet
 import com.sameerasw.essentials.ui.components.sheets.SoundModeSettingsSheet
+
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.HapticUtil
@@ -226,8 +228,11 @@ class AutomationEditorActivity : ComponentActivity() {
                 var showDimSettings by remember { mutableStateOf(false) }
                 var showDeviceEffectsSettings by remember { mutableStateOf(false) }
                 var showSoundModeSettings by remember { mutableStateOf(false) }
+                var showFreezeAppsSettings by remember { mutableStateOf(false) }
+                var temporarySelectedAppsForAction by remember { mutableStateOf<List<String>>(emptyList()) }
                 var showTimeSettings by remember { mutableStateOf(false) }
                 var configAction by remember { mutableStateOf<Action?>(null) } // Generic config action
+
 
                 var showPermissionSheet by remember { mutableStateOf(false) }
                 var permissionKeysToShow by remember { mutableStateOf<List<String>>(emptyList()) }
@@ -585,7 +590,9 @@ class AutomationEditorActivity : ComponentActivity() {
                                                 Action.TurnOnCellularData,
                                                 Action.TurnOffCellularData,
                                                 Action.TurnOnAutoBrightness,
-                                                Action.TurnOffAutoBrightness
+                                                Action.TurnOffAutoBrightness,
+                                                Action.FreezeApps(),
+                                                Action.UnfreezeApps()
                                             )
                                             // Only show Device Effects on Android 15+ 
                                             actions.add(Action.DeviceEffects())
@@ -626,26 +633,26 @@ class AutomationEditorActivity : ComponentActivity() {
                                                     iconRes = resolvedAction.icon,
                                                     isSelected = currentSelection != null && currentSelection::class == resolvedAction::class,
                                                     isConfigurable = resolvedAction.isConfigurable,
-                                                     onClick = {
-                                                         when (automationType) {
-                                                             Automation.Type.TRIGGER -> selectedAction =
-                                                                 resolvedAction
- 
-                                                             Automation.Type.STATE, Automation.Type.APP -> {
-                                                                 if (selectedActionTab == 0) selectedInAction =
-                                                                     resolvedAction
-                                                                 else selectedOutAction =
-                                                                     resolvedAction
-                                                             }
-                                                         }
-                                                         // Check permissions immediately on selection
-                                                         val missing = getMissingPermissions(context, resolvedAction, viewModel)
-                                                         if (missing.isNotEmpty()) {
-                                                             permissionKeysToShow = missing
-                                                             permissionFeatureTitle = resolvedAction.title
-                                                             showPermissionSheet = true
-                                                         }
-                                                     },
+                                                    onClick = {
+                                                        when (automationType) {
+                                                            Automation.Type.TRIGGER -> selectedAction =
+                                                                resolvedAction
+
+                                                            Automation.Type.STATE, Automation.Type.APP -> {
+                                                                if (selectedActionTab == 0) selectedInAction =
+                                                                    resolvedAction
+                                                                else selectedOutAction =
+                                                                    resolvedAction
+                                                            }
+                                                        }
+                                                        // Check permissions immediately on selection
+                                                        val missing = getMissingPermissions(context, resolvedAction, viewModel)
+                                                        if (missing.isNotEmpty()) {
+                                                            permissionKeysToShow = missing
+                                                            permissionFeatureTitle = resolvedAction.title
+                                                            showPermissionSheet = true
+                                                        }
+                                                    },
                                                     onSettingsClick = {
                                                         configAction = resolvedAction
                                                         if (resolvedAction is Action.DimWallpaper) {
@@ -654,6 +661,12 @@ class AutomationEditorActivity : ComponentActivity() {
                                                             showDeviceEffectsSettings = true
                                                         } else if (resolvedAction is Action.SoundMode) {
                                                             showSoundModeSettings = true
+                                                        } else if (resolvedAction is Action.FreezeApps) {
+                                                            temporarySelectedAppsForAction = resolvedAction.packageNames
+                                                            showFreezeAppsSettings = true
+                                                        } else if (resolvedAction is Action.UnfreezeApps) {
+                                                            temporarySelectedAppsForAction = resolvedAction.packageNames
+                                                            showFreezeAppsSettings = true
                                                         }
                                                     }
                                                 )
@@ -734,6 +747,38 @@ class AutomationEditorActivity : ComponentActivity() {
                                 }
                             )
                         }
+
+                        if (showFreezeAppsSettings && (configAction is Action.FreezeApps || configAction is Action.UnfreezeApps)) {
+                            AppSelectionSheet(
+                                onDismissRequest = {
+                                    val finalAction = when (val action = configAction) {
+                                        is Action.FreezeApps -> action.copy(packageNames = temporarySelectedAppsForAction)
+                                        is Action.UnfreezeApps -> action.copy(packageNames = temporarySelectedAppsForAction)
+                                        else -> configAction
+                                    }
+                                    if (finalAction != null) {
+                                        when (automationType) {
+                                            Automation.Type.TRIGGER -> selectedAction = finalAction
+                                            Automation.Type.STATE, Automation.Type.APP -> {
+                                                if (selectedActionTab == 0) selectedInAction = finalAction
+                                                else selectedOutAction = finalAction
+                                            }
+                                        }
+                                    }
+                                    showFreezeAppsSettings = false
+                                    configAction = null
+                                },
+                                onLoadApps = {
+                                    temporarySelectedAppsForAction.map { AppSelection(it, true) }
+                                },
+                                onSaveApps = { _, selections ->
+                                    temporarySelectedAppsForAction = selections.filter { it.isEnabled }.map { it.packageName }
+                                },
+                                excludePackages = if (automationType == Automation.Type.APP) selectedApps else emptyList()
+                            )
+                        }
+
+
  
                          if (showPermissionSheet) {
                              val permissionItems = com.sameerasw.essentials.utils.PermissionUIHelper.getPermissionItems(
