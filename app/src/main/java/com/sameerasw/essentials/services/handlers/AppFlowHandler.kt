@@ -93,7 +93,6 @@ class AppFlowHandler(
             checkAppAutomations(packageName)
             checkGestureBarAutomation(packageName)
             checkPerAppRefreshRate(packageName)
-            checkShutUpRestore(oldPackage, packageName)
         }
 
     }
@@ -461,67 +460,7 @@ class AppFlowHandler(
 
 
 
-    private fun checkShutUpRestore(oldPackage: String?, newPackage: String?) {
-        if (oldPackage == null || oldPackage == newPackage) return
 
-        val settingsRepository = com.sameerasw.essentials.data.repository.SettingsRepository(context)
-        val shutUpConfigs = settingsRepository.loadShutUpConfigs()
-
-        val wasShutUpApp = shutUpConfigs.any { it.packageName == oldPackage && it.isEnabled }
-        val isShutUpApp = shutUpConfigs.any { it.packageName == newPackage && it.isEnabled }
-
-        if (wasShutUpApp && !isShutUpApp) {
-            restoreShutUpSettings(settingsRepository)
-        }
-    }
-
-    private fun restoreShutUpSettings(repository: com.sameerasw.essentials.data.repository.SettingsRepository) {
-        val originalSettings = repository.getShutUpOriginalSettings()
-        if (originalSettings.isEmpty()) return
-
-        scope.launch {
-            // Delay to ensure the app has fully settled before restoring system settings
-            delay(2000)
-            
-            val canWriteSecure = com.sameerasw.essentials.utils.PermissionUtils.canWriteSecureSettings(context)
-            val canWriteSystem = Settings.System.canWrite(context)
-
-            originalSettings.forEach { (prefixedKey, value) ->
-                try {
-                    val parts = prefixedKey.split(":", limit = 2)
-                    if (parts.size < 2) return@forEach
-                    
-                    val table = parts[0]
-                    val key = parts[1]
-
-                    when (table) {
-                        "global" -> {
-                            if (canWriteSecure) {
-                                Settings.Global.putString(context.contentResolver, key, value)
-                            }
-                        }
-                        "secure" -> {
-                            if (canWriteSecure) {
-                                Settings.Secure.putString(context.contentResolver, key, value)
-                            }
-                        }
-                        "system" -> {
-                            if (canWriteSystem) {
-                                Settings.System.putString(context.contentResolver, key, value)
-                            }
-                        }
-                    }
-                } catch (e: Exception) {
-                    Log.e("AppFlowHandler", "Failed to restore setting $prefixedKey", e)
-                }
-            }
-
-            // Clear original settings after restoration
-            repository.saveShutUpOriginalSettings(emptyMap())
-
-            android.widget.Toast.makeText(context, context.getString(com.sameerasw.essentials.R.string.shut_up_toast_restored), android.widget.Toast.LENGTH_SHORT).show()
-        }
-    }
 
     companion object {
         const val ACTION_FREEZE_NOW = "com.sameerasw.essentials.ACTION_FREEZE_NOW"
