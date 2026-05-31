@@ -1,9 +1,7 @@
 <resources>
     <string name="label_customization">Customization</string>
     <string name="label_beta">BETA</string>
-    <string name="shut_up_attempt_shizuku_restart">Attempt Shizuku restart</string>
-    <string name="shut_up_shizuku_restart_warning_title">Shizuku Restart Warning</string>
-    <string name="shut_up_shizuku_restart_warning_message">Since wireless debugging was toggled, Shizuku services might not have started automatically causing freezing to not function. Consider turning on attempt shizuku restart as well</string>
+
     <string name="accessibility_service_description"><b>Essentials Accessibility Service</b>\n\nThis service is required for the following advanced features:\n\n<b>• Physical Button Remapping:</b>\nDetects volume button presses even when the screen is off to trigger actions like the Flashlight.\n\n<b>• Per-App Settings:</b>\nMonitors the currently active app to apply specific profiles for Dynamic Night Light, Notification Lighting Colors, and App Lock.\n\n<b>• Screen Control:</b>\nAllows the app to lock the screen (e.g. via Double Tap or Widgets) and detect screen state changes.\n\n<b>• Security:</b>\nPrevents unauthorized changes by detecting window content when the device is locked.\n\n<small>No input text or sensitive user data is collected or transmitted.</small></string>
     <string name="freeze_activity_title">App Freezing</string>
     <string name="freeze_activity_subtitle">Disable apps that are rarely used</string>
@@ -451,6 +449,29 @@
     <string name="feat_screen_locked_security_title">Screen locked security</string>
     <string name="feat_app_lock_title">App lock</string>
     <string name="feat_app_lock_desc">Secure apps with biometrics</string>
+    <string name="feat_shut_up_title">Shut-Up!</string>
+    <string name="feat_shut_up_desc">Disable Developer Options and debugger tools on app launch</string>
+    <string name="shut_up_description">Shut-Up! temporarily disables developer options, USB debugging, wireless debugging, and accessibility services when selected apps are launched, and restores them when the apps are closed. This helps bypass detection by apps (like banking or secure apps) that refuse to run when these options are enabled.</string>
+    <string name="shut_up_auto_archive_notif_title">Auto-Freeze countdown</string>
+    <string name="shut_up_auto_archive_notif_text">App %1$s will be frozen in %2$d seconds</string>
+    <string name="shut_up_auto_archive_action_freeze">Freeze now</string>
+    <string name="shut_up_auto_archive_action_abort">Abort</string>
+    <string name="shut_up_service_name">Shut-Up! Service</string>
+    <string name="shut_up_service_desc">Monitors launched apps to disable developer settings</string>
+    <string name="shut_up_service_notification_title">Shut-Up! is active</string>
+    <string name="shut_up_service_notification_desc">Monitoring app launch and exit</string>
+    <string name="shut_up_per_app_settings">Configure Shut-Up!</string>
+    <string name="shut_up_disable_dev_options">Hide Developer Options</string>
+    <string name="shut_up_disable_usb_debugging">Hide USB Debugging</string>
+    <string name="shut_up_disable_wireless_debugging">Hide Wireless Debugging</string>
+    <string name="shut_up_attempt_shizuku_restart">Attempt Shizuku restart</string>
+    <string name="shut_up_disable_accessibility">Hide Accessibility Services</string>
+    <string name="shut_up_shizuku_restart_warning_title">Shizuku Restart Recommended</string>
+    <string name="shut_up_shizuku_restart_warning_message">When Wireless Debugging is disabled, Shizuku might stop running. It is highly recommended to enable \"Attempt Shizuku restart\" to restart Shizuku automatically on exit.</string>
+    <string name="shut_up_select_apps_title">Select Apps</string>
+    <string name="shut_up_select_apps_desc">Choose apps to apply Shut-Up! logic</string>
+    <string name="shut_up_toast_active">App got shut up</string>
+    <string name="shut_up_toast_restored">Shut up features returned</string>
     <string name="app_lock_auto_lock_delay_title">Auto lock delay</string>
     <string name="app_lock_auto_lock_delay_desc">After leaving the app</string>
     <string name="app_lock_auto_lock_delay_none">None</string>
@@ -1509,27 +1530,10 @@
     <string name="custom_video">Custom video</string>
     <string name="about_desc_live_wallpaper">Set your favorite video as your home screen wallpaper. Choose between triggering the animation upon unlocking or simply whenever the screen turns on for a dynamic experience.</string>
 
-    <!-- Shut-Up! Feature -->
-    <string name="feat_shut_up_title">Shut-Up!</string>
-    <string name="feat_shut_up_desc">I know what I\'m doing</string>
-    <string name="shut_up_description">Shut-Up! bypasses app restrictions and checks for developer options, accessibility and debugging by dynamically hiding them when you launch sensitive apps. \n\nUse the custom shortcuts to ensure settings are hidden before the app launches.</string>
-    <string name="shut_up_select_apps_title">Select Apps</string>
-    <string name="shut_up_select_apps_desc">Choose apps to apply Shut-Up! logic</string>
-    <string name="shut_up_settings_title">Shut-Up! Settings</string>
-    <string name="shut_up_per_app_settings">Shut-Up! Features</string>
-    <string name="shut_up_disable_dev_options">Disable Developer Options</string>
-    <string name="shut_up_disable_usb_debugging">Disable USB Debugging</string>
-    <string name="shut_up_disable_wireless_debugging">Disable Wireless Debugging</string>
-    <string name="shut_up_disable_accessibility">Disable Accessibility Services</string>
-    <string name="shut_up_shortcut_created">Shortcut created for %s</string>
+
     <string name="feat_disable_rotation_suggestion_title">Disable rotation suggestion</string>
     <string name="feat_disable_rotation_suggestion_desc">Do not show the rotation button when auto-rotate is off</string>
-    <string name="shut_up_toast_active">App got shut up</string>
-    <string name="shut_up_toast_restored">Shut up features returned</string>
-    <string name="shut_up_auto_archive_notif_title">Auto Freeze</string>
-    <string name="shut_up_auto_archive_notif_text">%1$s will be archived in %2$d seconds</string>
-    <string name="shut_up_auto_archive_action_freeze">Freeze now</string>
-    <string name="shut_up_auto_archive_action_abort">Abort</string>
+
     <!-- Lock Screen Clock -->
     <string name="feat_lock_screen_clock_title">Lock screen clock</string>
     <string name="feat_lock_screen_clock_desc">Customize lock screen clock on Pixels</string>

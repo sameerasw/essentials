@@ -1403,13 +1403,11 @@
     <string name="shut_up_description">\"Tais-toi !\" contourne les restrictions d\'applis et les vérifications pour les options développeurs, l\'accessibilité et le débogage en les cachant dynamiquement quand vous lancez des applis sensibles. \n\nUtilisez des raccourcis personnalisés pour être sûr que les réglages sont cachés avant que l\'appli ne se lance.</string>
     <string name="shut_up_select_apps_title">Sélectionner des applis</string>
     <string name="shut_up_select_apps_desc">Choisissez les applis auxquelles appliquer la logique \"Tais-toi !\"</string>
-    <string name="shut_up_settings_title">Paramètres de \"Tais-toi !\"</string>
     <string name="shut_up_per_app_settings">Fonctionnalités de \"Tais-toi !\"</string>
     <string name="shut_up_disable_dev_options">Désactionner les options pour les développeurs</string>
     <string name="shut_up_disable_usb_debugging">Désactiver le débogage USB</string>
     <string name="shut_up_disable_wireless_debugging">Désactiver le débogage sans fil</string>
     <string name="shut_up_disable_accessibility">Désactiver les services d\'accessibilité</string>
-    <string name="shut_up_shortcut_created">Raccourci créé pour %s</string>
     <string name="feat_disable_rotation_suggestion_title">Désactiver la suggestion de rotation</string>
     <string name="feat_disable_rotation_suggestion_desc">Ne pas afficher de bouton de rotation quand la rotation automatique est désactivée</string>
     <string name="shut_up_toast_active">L\'appli s\'est faîte taire</string>

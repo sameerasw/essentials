@@ -1398,13 +1398,11 @@
     <string name="shut_up_description">Kapa Çeneni! hassas uygulamaları başlattığınızda geliştirici seçeneklerini, erişilebilirliği ve hata ayıklama ayarlarını dinamik olarak gizleyerek uygulama kısıtlamalarını ve kontrollerini atlar. \n\nUygulama başlatılmadan önce ayarların gizlenmesini sağlamak için özel kısayolları kullanın.</string>
     <string name="shut_up_select_apps_title">Uygulamaları seç</string>
     <string name="shut_up_select_apps_desc">Kapa Çeneni! mantığı uygulanacak uygulamaları seçin</string>
-    <string name="shut_up_settings_title">Kapa Çeneni! Ayarları</string>
     <string name="shut_up_per_app_settings">Kapa Çeneni! Özellikleri</string>
     <string name="shut_up_disable_dev_options">Geliştirici Seçeneklerini Devre Dışı Bırak</string>
     <string name="shut_up_disable_usb_debugging">USB Hata Ayıklamayı Devre Dışı Bırak</string>
     <string name="shut_up_disable_wireless_debugging">Kablosuz Hata Ayıklamayı Devre Dışı Bırak</string>
     <string name="shut_up_disable_accessibility">Erişilebilirlik Hizmetlerini Devre Dışı Bırak</string>
-    <string name="shut_up_shortcut_created">%s için kısayol oluşturuldu</string>
     <string name="feat_disable_rotation_suggestion_title">Döndürme önerisini devre dışı bırak</string>
     <string name="feat_disable_rotation_suggestion_desc">Otomatik döndürme kapalıyken döndürme düğmesini göstermeyin</string>
     <string name="shut_up_toast_active">Uygulama susturuldu</string>

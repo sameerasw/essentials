@@ -36,43 +36,11 @@ class AppFlowHandler(
     private val service: AccessibilityService? = null
 ) {
     private val handler = Handler(Looper.getMainLooper())
-    private val scope = CoroutineScope(Dispatchers.Main)
+    private val scope = CoroutineScope(Dispatchers.Main.immediate)
 
     private val authenticatedPackages = mutableSetOf<String>()
     private val lastLeaveTimes = mutableMapOf<String, Long>()
-    private val activeCountdowns = mutableMapOf<String, Job>()
 
-    private val shutUpReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            val packageName = intent?.getStringExtra(EXTRA_PACKAGE_NAME) ?: return
-            when (intent.action) {
-                ACTION_FREEZE_NOW -> {
-                    activeCountdowns[packageName]?.cancel()
-                    activeCountdowns.remove(packageName)
-                    context?.let { FreezeManager.freezeApp(it, packageName) }
-                    cancelNotification(packageName)
-                }
-
-                ACTION_ABORT_FREEZE -> {
-                    activeCountdowns[packageName]?.cancel()
-                    activeCountdowns.remove(packageName)
-                    cancelNotification(packageName)
-                }
-            }
-        }
-    }
-
-    init {
-        val filter = IntentFilter().apply {
-            addAction(ACTION_FREEZE_NOW)
-            addAction(ACTION_ABORT_FREEZE)
-        }
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-            context.registerReceiver(shutUpReceiver, filter, Context.RECEIVER_EXPORTED)
-        } else {
-            context.registerReceiver(shutUpReceiver, filter)
-        }
-    }
 
     // App Lock State
     private var lockingPackage: String? = null
@@ -105,6 +73,8 @@ class AppFlowHandler(
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
         val useUsageAccess = prefs.getBoolean("use_usage_access", false)
 
+        Log.d("AppFlowHandler", "onPackageChanged: packageName=$packageName, isFromUsageStats=$isFromUsageStats, useUsageAccess=$useUsageAccess, currentPackage=$currentPackage")
+
         val oldPackage = currentPackage
         currentPackage = packageName
 
@@ -117,12 +87,13 @@ class AppFlowHandler(
         }
 
         if (isFromUsageStats == useUsageAccess) {
+            Log.d("AppFlowHandler", "onPackageChanged: Processing package change because isFromUsageStats matches useUsageAccess")
             checkAppLock(packageName)
             checkHighlightNightLight(packageName)
             checkAppAutomations(packageName)
             checkGestureBarAutomation(packageName)
-            checkShutUpRestore(oldPackage, packageName)
             checkPerAppRefreshRate(packageName)
+            checkShutUpRestore(oldPackage, packageName)
         }
 
     }
@@ -372,219 +343,11 @@ class AppFlowHandler(
         return launchers.any { it.activityInfo.packageName == packageName }
     }
 
-    private fun checkShutUpRestore(oldPackage: String?, newPackage: String?) {
-        Log.d("AppFlowHandler", "checkShutUpRestore: old=$oldPackage, new=$newPackage")
-        if (oldPackage == null || oldPackage == newPackage) return
-
-        val settingsRepository =
-            com.sameerasw.essentials.data.repository.SettingsRepository(context)
-        val shutUpConfigs = settingsRepository.loadShutUpConfigs()
-
-        val wasShutUpConfig = shutUpConfigs.find { it.packageName == oldPackage && it.isEnabled }
-
-        // Check if it was already frozen to avoid duplicate triggers (e.g. on screen off)
-        val isAlreadyFrozen = oldPackage.let { FreezeManager.isAppFrozen(context, it) }
-
-        // We consider the new app a Shut-Up app if it's in the list OR if it's the shortcut activity
-        val isNewAppShutUp = shutUpConfigs.any { it.packageName == newPackage && it.isEnabled } ||
-                newPackage == "com.sameerasw.essentials.ShutUpShortcutActivity"
-
-        Log.d(
-            "AppFlowHandler",
-            "checkShutUpRestore: wasShutUpConfig=${wasShutUpConfig != null}, isNewAppShutUp=$isNewAppShutUp, isAlreadyFrozen=$isAlreadyFrozen"
-        )
-
-        // If it's already frozen, we've already handled it
-        if (isAlreadyFrozen) return
-
-        // If we are entering a Shut-Up app, cancel ANY pending countdowns for other apps
-        if (isNewAppShutUp) {
-            if (activeCountdowns.isNotEmpty()) {
-                Log.d(
-                    "AppFlowHandler",
-                    "checkShutUpRestore: Entering Shut-Up app, cancelling all pending countdowns"
-                )
-                activeCountdowns.values.forEach { it.cancel() }
-                activeCountdowns.keys.forEach { cancelNotification(it) }
-                activeCountdowns.clear()
-            }
-        }
-
-        if (wasShutUpConfig != null && !isNewAppShutUp) {
-            Log.d("AppFlowHandler", "checkShutUpRestore: Triggering restoration for $oldPackage")
-            restoreShutUpSettings(
-                settingsRepository,
-                if (wasShutUpConfig.autoArchive) wasShutUpConfig.packageName else null
-            )
-        }
-    }
-
-    private fun startAutoArchiveCountdown(packageName: String) {
-        Log.d("AppFlowHandler", "startAutoArchiveCountdown: $packageName")
-        // Cancel existing countdown for this app if any
-        activeCountdowns[packageName]?.cancel()
-
-        val appName = try {
-            val appInfo = context.packageManager.getApplicationInfo(packageName, 0)
-            context.packageManager.getApplicationLabel(appInfo).toString()
-        } catch (e: Exception) {
-            Log.e("AppFlowHandler", "Failed to get app name for $packageName", e)
-            packageName
-        }
-
-        val job = scope.launch {
-            Log.d("AppFlowHandler", "Countdown job started for $packageName")
-            for (i in 10 downTo 1) {
-                Log.d("AppFlowHandler", "Countdown for $packageName: $i")
-                showCountdownNotification(packageName, appName, i)
-                delay(1000)
-            }
-            // countdown finished
-            Log.d("AppFlowHandler", "Countdown finished for $packageName, freezing...")
-            val success = withContext(Dispatchers.IO) {
-                FreezeManager.freezeApp(context, packageName)
-            }
-            Log.d("AppFlowHandler", "Freeze result for $packageName: $success")
-            cancelNotification(packageName)
-            activeCountdowns.remove(packageName)
-        }
-        activeCountdowns[packageName] = job
-    }
-
-    private fun showCountdownNotification(packageName: String, appName: String, secondsLeft: Int) {
-        createNotificationChannel()
-        val notificationManager =
-            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        val freezeIntent = Intent(ACTION_FREEZE_NOW).apply {
-            `package` = context.packageName
-            putExtra(EXTRA_PACKAGE_NAME, packageName)
-        }
-        val freezePendingIntent = PendingIntent.getBroadcast(
-            context,
-            packageName.hashCode() + 1,
-            freezeIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-
-        val abortIntent = Intent(ACTION_ABORT_FREEZE).apply {
-            `package` = context.packageName
-            putExtra(EXTRA_PACKAGE_NAME, packageName)
-        }
-        val abortPendingIntent = PendingIntent.getBroadcast(
-            context,
-            packageName.hashCode() + 2,
-            abortIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-
-        val title =
-            context.getString(com.sameerasw.essentials.R.string.shut_up_auto_archive_notif_title)
-        val text = context.getString(
-            com.sameerasw.essentials.R.string.shut_up_auto_archive_notif_text,
-            appName,
-            secondsLeft
-        )
-        val criticalText = secondsLeft.toString()
-
-        val notification =
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                val builder = android.app.Notification.Builder(context, "shutup_alerts_channel")
-                    .setSmallIcon(com.sameerasw.essentials.R.drawable.rounded_snowflake_24)
-                    .setContentTitle(title)
-                    .setContentText(text)
-                    .setOngoing(true)
-                    .setOnlyAlertOnce(true)
-                    .setCategory(android.app.Notification.CATEGORY_SERVICE)
-                    .setShowWhen(false)
-                    .setGroup("shutup_auto_archive")
-                    .setColorized(false)
-
-                if (android.os.Build.VERSION.SDK_INT >= 31) {
-                    builder.setForegroundServiceBehavior(android.app.Notification.FOREGROUND_SERVICE_IMMEDIATE)
-                }
-
-                builder.addAction(
-                    android.app.Notification.Action.Builder(
-                        android.graphics.drawable.Icon.createWithResource(
-                            context,
-                            com.sameerasw.essentials.R.drawable.rounded_snowflake_24
-                        ),
-                        context.getString(com.sameerasw.essentials.R.string.shut_up_auto_archive_action_freeze),
-                        freezePendingIntent
-                    ).build()
-                )
-                builder.addAction(
-                    android.app.Notification.Action.Builder(
-                        android.graphics.drawable.Icon.createWithResource(
-                            context,
-                            com.sameerasw.essentials.R.drawable.rounded_close_24
-                        ),
-                        context.getString(com.sameerasw.essentials.R.string.shut_up_auto_archive_action_abort),
-                        abortPendingIntent
-                    ).build()
-                )
-
-                // Live Update Status Chip
-                try {
-                    val setRequestPromotedOngoing = builder.javaClass.getMethod(
-                        "setRequestPromotedOngoing",
-                        Boolean::class.javaPrimitiveType
-                    )
-                    setRequestPromotedOngoing.invoke(builder, true)
-
-                    val setShortCriticalText = builder.javaClass.getMethod(
-                        "setShortCriticalText",
-                        CharSequence::class.java
-                    )
-                    setShortCriticalText.invoke(builder, criticalText)
-                } catch (_: Throwable) {
-                }
-
-                val extras = android.os.Bundle()
-                extras.putBoolean("android.requestPromotedOngoing", true)
-                extras.putString("android.shortCriticalText", criticalText)
-                builder.addExtras(extras)
-
-                builder.setProgress(10, secondsLeft, false)
-
-                builder.build()
-            } else {
-                NotificationCompat.Builder(context, "shutup_alerts_channel")
-                    .setSmallIcon(com.sameerasw.essentials.R.drawable.rounded_snowflake_24)
-                    .setContentTitle(title)
-                    .setContentText(text)
-                    .setPriority(NotificationCompat.PRIORITY_MAX)
-                    .setCategory(NotificationCompat.CATEGORY_SERVICE)
-                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                    .setOnlyAlertOnce(true)
-                    .setOngoing(true)
-                    .setProgress(10, secondsLeft, false)
-                    .addAction(
-                        com.sameerasw.essentials.R.drawable.rounded_snowflake_24,
-                        context.getString(com.sameerasw.essentials.R.string.shut_up_auto_archive_action_freeze),
-                        freezePendingIntent
-                    )
-                    .addAction(
-                        com.sameerasw.essentials.R.drawable.rounded_close_24,
-                        context.getString(com.sameerasw.essentials.R.string.shut_up_auto_archive_action_abort),
-                        abortPendingIntent
-                    )
-                    .addExtras(android.os.Bundle().apply {
-                        putBoolean("android.requestPromotedOngoing", true)
-                        putString("android.shortCriticalText", criticalText)
-                    })
-                    .build()
-            }
-
-        Log.d("AppFlowHandler", "Showing notification for $packageName, secondsLeft=$secondsLeft")
-        notificationManager.notify(packageName.hashCode(), notification)
-    }
-
-    private fun cancelNotification(packageName: String) {
-        val notificationManager =
-            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.cancel(packageName.hashCode())
+    private fun isIgnoredPackage(packageName: String?): Boolean {
+        if (packageName == null) return true
+        if (ignoredSystemPackages.contains(packageName)) return true
+        if (packageName.lowercase().contains("inputmethod") || packageName.lowercase().contains("keyboard")) return true
+        return false
     }
 
     private fun createNotificationChannel() {
@@ -600,90 +363,6 @@ class AppFlowHandler(
                 description = "Channel for app detection alerts"
             }
             notificationManager.createNotificationChannel(channel)
-
-            val alertChannel = android.app.NotificationChannel(
-                "shutup_alerts_channel",
-                "Shut-Up! Alerts",
-                NotificationManager.IMPORTANCE_MAX
-            ).apply {
-                description = "Live update notifications for auto archiving"
-                enableVibration(false)
-                setSound(null, null)
-                lockscreenVisibility = android.app.Notification.VISIBILITY_PUBLIC
-            }
-            notificationManager.createNotificationChannel(alertChannel)
-        }
-    }
-
-    private fun restoreShutUpSettings(
-        repository: com.sameerasw.essentials.data.repository.SettingsRepository,
-        autoArchivePackage: String? = null
-    ) {
-        val originalSettings = repository.getShutUpOriginalSettings()
-        if (originalSettings.isEmpty()) {
-            if (autoArchivePackage != null) {
-                startAutoArchiveCountdown(autoArchivePackage)
-            }
-            return
-        }
-
-        scope.launch {
-            // Delay to ensure the app has fully settled before restoring system settings
-            delay(2000)
-
-            val canWriteSecure =
-                com.sameerasw.essentials.utils.PermissionUtils.canWriteSecureSettings(context)
-            val canWriteSystem = Settings.System.canWrite(context)
-
-            originalSettings.forEach { (prefixedKey, value) ->
-                try {
-                    val parts = prefixedKey.split(":", limit = 2)
-                    if (parts.size < 2) return@forEach
-
-                    val table = parts[0]
-                    val key = parts[1]
-
-                    when (table) {
-                        "global" -> {
-                            if (canWriteSecure) {
-                                Settings.Global.putString(context.contentResolver, key, value)
-                            }
-                        }
-
-                        "secure" -> {
-                            if (canWriteSecure) {
-                                Settings.Secure.putString(context.contentResolver, key, value)
-                            }
-                        }
-
-                        "system" -> {
-                            if (canWriteSystem) {
-                                Settings.System.putString(context.contentResolver, key, value)
-                            }
-                        }
-                    }
-                } catch (e: Exception) {
-                    Log.e("AppFlowHandler", "Failed to restore setting $prefixedKey", e)
-                }
-            }
-
-            // Clear original settings after restoration
-            repository.saveShutUpOriginalSettings(emptyMap())
-
-            // Wait a bit and Restart Shizuku as ADB might have been toggled back on
-            delay(1000)
-            restartShizuku()
-
-            android.widget.Toast.makeText(
-                context,
-                context.getString(com.sameerasw.essentials.R.string.shut_up_toast_restored),
-                android.widget.Toast.LENGTH_SHORT
-            ).show()
-
-            // Start auto-archive countdown AFTER everything is restored and Shizuku is starting
-            if (autoArchivePackage != null) {
-                startAutoArchiveCountdown(autoArchivePackage)
-            }
         }
     }
 
@@ -780,16 +459,67 @@ class AppFlowHandler(
         }
     }
 
-    private fun restartShizuku() {
-        try {
-            val intent = Intent("moe.shizuku.privileged.api.START").apply {
-                `package` = "moe.shizuku.privileged.api"
-                putExtra("auth", "y95fuaRb9USHiIg724tvTHIs")
-                addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+
+
+    private fun checkShutUpRestore(oldPackage: String?, newPackage: String?) {
+        if (oldPackage == null || oldPackage == newPackage) return
+
+        val settingsRepository = com.sameerasw.essentials.data.repository.SettingsRepository(context)
+        val shutUpConfigs = settingsRepository.loadShutUpConfigs()
+
+        val wasShutUpApp = shutUpConfigs.any { it.packageName == oldPackage && it.isEnabled }
+        val isShutUpApp = shutUpConfigs.any { it.packageName == newPackage && it.isEnabled }
+
+        if (wasShutUpApp && !isShutUpApp) {
+            restoreShutUpSettings(settingsRepository)
+        }
+    }
+
+    private fun restoreShutUpSettings(repository: com.sameerasw.essentials.data.repository.SettingsRepository) {
+        val originalSettings = repository.getShutUpOriginalSettings()
+        if (originalSettings.isEmpty()) return
+
+        scope.launch {
+            // Delay to ensure the app has fully settled before restoring system settings
+            delay(2000)
+            
+            val canWriteSecure = com.sameerasw.essentials.utils.PermissionUtils.canWriteSecureSettings(context)
+            val canWriteSystem = Settings.System.canWrite(context)
+
+            originalSettings.forEach { (prefixedKey, value) ->
+                try {
+                    val parts = prefixedKey.split(":", limit = 2)
+                    if (parts.size < 2) return@forEach
+                    
+                    val table = parts[0]
+                    val key = parts[1]
+
+                    when (table) {
+                        "global" -> {
+                            if (canWriteSecure) {
+                                Settings.Global.putString(context.contentResolver, key, value)
+                            }
+                        }
+                        "secure" -> {
+                            if (canWriteSecure) {
+                                Settings.Secure.putString(context.contentResolver, key, value)
+                            }
+                        }
+                        "system" -> {
+                            if (canWriteSystem) {
+                                Settings.System.putString(context.contentResolver, key, value)
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.e("AppFlowHandler", "Failed to restore setting $prefixedKey", e)
+                }
             }
-            context.sendBroadcast(intent)
-        } catch (e: Exception) {
-            Log.e("AppFlowHandler", "Failed to restart Shizuku", e)
+
+            // Clear original settings after restoration
+            repository.saveShutUpOriginalSettings(emptyMap())
+
+            android.widget.Toast.makeText(context, context.getString(com.sameerasw.essentials.R.string.shut_up_toast_restored), android.widget.Toast.LENGTH_SHORT).show()
         }
     }
 

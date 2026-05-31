@@ -1403,13 +1403,11 @@
     <string name="shut_up_description">静かに！は、アプリの制限を回避し、機密性の高いアプリを起動する際に「開発者向けオプション」「アクセシビリティ」「デバッグ」を動的に非表示にすることで、これらの設定を確認します。\n\nカスタムショートカットを使用すれば、アプリが起動する前に設定が確実に非表示になります。</string>
     <string name="shut_up_select_apps_title">アプリを選択</string>
     <string name="shut_up_select_apps_desc">静かに！ロジックを適用するアプリを選択</string>
-    <string name="shut_up_settings_title">静かに！設定</string>
     <string name="shut_up_per_app_settings">静かに！機能</string>
     <string name="shut_up_disable_dev_options">開発者向けオプションを無効化</string>
     <string name="shut_up_disable_usb_debugging">USBデバッグを無効化</string>
     <string name="shut_up_disable_wireless_debugging">ワイヤレスデバッグを無効化</string>
     <string name="shut_up_disable_accessibility">アクセシビリティサービスを無効化</string>
-    <string name="shut_up_shortcut_created">%s のショートカットが作成されました</string>
     <string name="feat_disable_rotation_suggestion_title">画面回転提案を無効化</string>
     <string name="feat_disable_rotation_suggestion_desc">自動回転がオフのときは、回転ボタンを表示しない</string>
     <string name="shut_up_toast_active">App got shut up</string>

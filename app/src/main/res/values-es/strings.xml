@@ -1399,13 +1399,11 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="shut_up_description">¡Cállate! evita las restricciones de las aplicaciones y comprueba las opciones de desarrollador, accesibilidad y depuración ocultándolas dinámicamente cuando inicias apps sensibles. \n\nUsa los accesos directos personalizados para asegurarte de que los ajustes estén ocultos antes de que la aplicación se inicie.</string>
     <string name="shut_up_select_apps_title">Seleccionar aplicaciones</string>
     <string name="shut_up_select_apps_desc">Elige las aplicaciones a las que aplicar la lógica de ¡Cállate!</string>
-    <string name="shut_up_settings_title">Ajustes de ¡Cállate!</string>
     <string name="shut_up_per_app_settings">Funciones de ¡Cállate!</string>
     <string name="shut_up_disable_dev_options">Desactivar las opciones de desarrollador</string>
     <string name="shut_up_disable_usb_debugging">Desactivar la depuración USB</string>
     <string name="shut_up_disable_wireless_debugging">Desactivar la depuración inalámbrica</string>
     <string name="shut_up_disable_accessibility">Desactivar los servicios de accesibilidad</string>
-    <string name="shut_up_shortcut_created">Acceso directo creado para %s</string>
     <string name="feat_disable_rotation_suggestion_title">Desactivar sugerencia de rotación</string>
     <string name="feat_disable_rotation_suggestion_desc">No mostrar el botón de rotación cuando la rotación automática esté desactivada</string>
     <string name="shut_up_toast_active">La aplicación fue silenciada</string>

@@ -20,6 +20,10 @@ import androidx.compose.ui.draw.scale
 import androidx.lifecycle.lifecycleScope
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.model.ShutUpAppConfig
+import com.sameerasw.essentials.domain.model.disableDevOptions
+import com.sameerasw.essentials.domain.model.disableUsbDebugging
+import com.sameerasw.essentials.domain.model.disableWirelessDebugging
+import com.sameerasw.essentials.domain.model.disableAccessibility
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.PermissionUtils
 import kotlinx.coroutines.Dispatchers
