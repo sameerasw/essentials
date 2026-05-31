@@ -229,4 +229,25 @@ sealed interface Action {
         override val icon: Int = R.drawable.rounded_brightness_auto_24
         override val permissions: List<String> = listOf("WRITE_SETTINGS")
     }
+
+    @Keep
+    data class FreezeApps(
+        @SerializedName("packageNames") val packageNames: List<String> = emptyList()
+    ) : Action {
+        override val title: Int get() = R.string.diy_action_freeze_apps
+        override val icon: Int get() = R.drawable.rounded_mode_cool_24
+        override val permissions: List<String> = listOf("SHIZUKU", "ROOT")
+        override val isConfigurable: Boolean = true
+    }
+
+    @Keep
+    data class UnfreezeApps(
+        @SerializedName("packageNames") val packageNames: List<String> = emptyList()
+    ) : Action {
+        override val title: Int get() = R.string.diy_action_unfreeze_apps
+        override val icon: Int get() = R.drawable.rounded_mode_cool_off_24
+        override val permissions: List<String> = listOf("SHIZUKU", "ROOT")
+        override val isConfigurable: Boolean = true
+    }
 }
+
