@@ -14,6 +14,7 @@ import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import android.view.inputmethod.InputMethodManager
 import com.google.gson.Gson
 import com.sameerasw.essentials.domain.diy.Automation
 import com.sameerasw.essentials.domain.diy.DIYRepository
@@ -69,11 +70,30 @@ class AppFlowHandler(
         "com.google.android.inputmethod.latin"
     )
 
+    private fun isSystemOrIme(packageName: String): Boolean {
+        if (ignoredSystemPackages.contains(packageName)) return true
+        return try {
+            val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            val ims = imm?.enabledInputMethodList
+            ims?.any { it.packageName == packageName } == true
+        } catch (_: Exception) {
+            false
+        }
+    }
+
     fun onPackageChanged(packageName: String, isFromUsageStats: Boolean = false) {
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
         val useUsageAccess = prefs.getBoolean("use_usage_access", false)
 
         Log.d("AppFlowHandler", "onPackageChanged: packageName=$packageName, isFromUsageStats=$isFromUsageStats, useUsageAccess=$useUsageAccess, currentPackage=$currentPackage")
+
+        // If the new foreground window belongs to a system overlay (status bar, quick settings,
+        // notifications) or a keyboard (IME), completely ignore it. We do NOT update currentPackage
+        // so that state-dependent features (app lock timing, automation tracking) remain stable.
+        if (isSystemOrIme(packageName)) {
+            Log.d("AppFlowHandler", "onPackageChanged: Ignoring system/IME package $packageName")
+            return
+        }
 
         val oldPackage = currentPackage
         currentPackage = packageName
@@ -183,7 +203,7 @@ class AppFlowHandler(
 
         pendingNLRunnable?.let { handler.removeCallbacks(it) }
 
-        if (ignoredSystemPackages.contains(packageName)) {
+        if (isSystemOrIme(packageName)) {
             Log.d("NightLight", "Ignoring system package $packageName")
             return
         }
@@ -255,6 +275,10 @@ class AppFlowHandler(
     }
 
     private fun checkAppAutomations(packageName: String) {
+        if (isSystemOrIme(packageName)) {
+            Log.d("AppFlowHandler", "checkAppAutomations: Ignoring system/IME package $packageName")
+            return
+        }
         scope.launch {
             val automations = DIYRepository.automations.value
             val appAutomations =
@@ -366,7 +390,7 @@ class AppFlowHandler(
     }
 
     private fun checkPerAppRefreshRate(packageName: String) {
-        if (ignoredSystemPackages.contains(packageName)) {
+        if (isSystemOrIme(packageName)) {
             return
         }
 
