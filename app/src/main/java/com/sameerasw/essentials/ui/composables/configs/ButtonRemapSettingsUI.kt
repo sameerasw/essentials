@@ -465,6 +465,7 @@ fun ButtonRemapSettingsUI(
                         isChecked = viewModel.isFlashlightAlwaysTurnOffEnabled.value,
                         onCheckedChange = { viewModel.setFlashlightAlwaysTurnOffEnabled(it, context) }
                     )
+
                 }
 
                 Button(

@@ -36,9 +36,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 
-class ScreenOffAccessibilityService : AccessibilityService() {
+class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListener {
 
     private val serviceScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+
+    private val sensorManager by lazy { getSystemService(SENSOR_SERVICE) as SensorManager }
+    private var proximitySensor: Sensor? = null
 
     // Handlers
     private lateinit var flashlightHandler: FlashlightHandler
@@ -57,6 +60,54 @@ class ScreenOffAccessibilityService : AccessibilityService() {
     private val freezeHandler = Handler(Looper.getMainLooper())
     private val freezeRunnable = Runnable {
         FreezeManager.freezeAll(this)
+    }
+
+    // Pocket Detection
+    private val pocketFlashlightHandler = Handler(Looper.getMainLooper())
+    private val pocketFlashlightRunnable = Runnable {
+        val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+        val pocketTurnOffEnabled = prefs.getBoolean("flashlight_pocket_turn_off_enabled", false)
+        // Re-check at fire time — guards against external torch-off between scheduling and firing
+        if (pocketTurnOffEnabled && flashlightHandler.isProximityBlocked && flashlightHandler.isTorchOn) {
+            flashlightHandler.toggleFlashlight()
+        }
+    }
+
+    private fun schedulePocketFlashlightTurnOff() {
+        pocketFlashlightHandler.removeCallbacks(pocketFlashlightRunnable)
+        pocketFlashlightHandler.postDelayed(pocketFlashlightRunnable, 1500L)
+    }
+
+    private fun cancelPocketFlashlightTurnOff() {
+        pocketFlashlightHandler.removeCallbacks(pocketFlashlightRunnable)
+    }
+
+    private var isProximityRegisteredForFlashlight = false
+
+    fun updateFlashlightProximityRegistration(register: Boolean) {
+        val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+        val pocketTurnOffEnabled = prefs.getBoolean("flashlight_pocket_turn_off_enabled", false)
+
+        if (pocketTurnOffEnabled && register) {
+            if (!isProximityRegisteredForFlashlight) {
+                if (proximitySensor == null) {
+                    proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)
+                }
+                proximitySensor?.let {
+                    sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
+                    isProximityRegisteredForFlashlight = true
+                    android.util.Log.d("ScreenOffService", "Registered proximity sensor for flashlight pocket check")
+                }
+            }
+        } else {
+            if (isProximityRegisteredForFlashlight) {
+                proximitySensor?.let {
+                    sensorManager.unregisterListener(this, it)
+                }
+                isProximityRegisteredForFlashlight = false
+                android.util.Log.d("ScreenOffService", "Unregistered proximity sensor for flashlight pocket check")
+            }
+        }
     }
 
     private val preferenceChangeListener =
@@ -213,6 +264,12 @@ class ScreenOffAccessibilityService : AccessibilityService() {
         statusBarIconHandler.unregister()
         stopInputEventListener()
         appFlowHandler.destroy()
+        cancelPocketFlashlightTurnOff()
+        if (isProximityRegisteredForFlashlight) {
+            proximitySensor?.let {
+                sensorManager.unregisterListener(this, it)
+            }
+        }
         serviceScope.cancel()
         getSharedPreferences("essentials_prefs", MODE_PRIVATE)
             .unregisterOnSharedPreferenceChangeListener(preferenceChangeListener)
@@ -231,7 +288,26 @@ class ScreenOffAccessibilityService : AccessibilityService() {
 
     override fun onInterrupt() {}
 
+    override fun onSensorChanged(event: SensorEvent?) {
+        if (event?.sensor?.type == Sensor.TYPE_PROXIMITY) {
+            val distance = event.values[0]
+            val maxRange = event.sensor.maximumRange
+            val isBlocked = distance < maxRange && distance < 5f
 
+            flashlightHandler.isProximityBlocked = isBlocked
+
+            val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+            val pocketTurnOffEnabled = prefs.getBoolean("flashlight_pocket_turn_off_enabled", false)
+
+            if (pocketTurnOffEnabled && isBlocked && flashlightHandler.isTorchOn) {
+                schedulePocketFlashlightTurnOff()
+            } else {
+                cancelPocketFlashlightTurnOff()
+            }
+        }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 
     override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
         super.onConfigurationChanged(newConfig)

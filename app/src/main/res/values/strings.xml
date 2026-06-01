@@ -102,6 +102,8 @@
     <string name="settings_section_other">Other</string>
     <string name="flashlight_always_off_title">Always turn off flashlight</string>
     <string name="flashlight_always_off_desc">Even while display is on</string>
+    <string name="flashlight_pocket_title">Pocket detection</string>
+    <string name="flashlight_pocket_desc">Turn off flashlight when phone is in your pocket</string>
     <string name="content_desc_settings">Settings</string>
 
     <!-- Caffeinate / Permissions -->
@@ -598,6 +600,8 @@
     <string name="search_remap_haptic_desc">Vibration feedback when remapped button is pressed</string>
     <string name="search_remap_flashlight_title">Flashlight toggle</string>
     <string name="search_remap_flashlight_desc">Toggle flashlight with volume buttons</string>
+    <string name="search_flashlight_pocket_title">Flashlight pocket detection</string>
+    <string name="search_flashlight_pocket_desc">Auto-turn off flashlight when placed in pocket</string>
     <string name="search_night_light_enable_title">Enable Dynamic Night Light</string>
     <string name="search_night_light_enable_desc">Master switch for dynamic night light</string>
     <string name="search_app_lock_enable_title">Enable app lock</string>
@@ -1004,6 +1008,13 @@
         <item>torch</item>
         <item>pulse</item>
         <item>notification</item>
+    </string-array>
+    <string-array name="keywords_pocket_detection">
+        <item>pocket</item>
+        <item>proximity</item>
+        <item>sensor</item>
+        <item>torch</item>
+        <item>auto</item>
     </string-array>
     <string-array name="keywords_qs_stay_awake">
         <item>awake</item>

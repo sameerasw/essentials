@@ -44,6 +44,8 @@ class FlashlightHandler(
     var isTorchOn = false
         private set
 
+    var isProximityBlocked = false
+
     private var primaryCameraId: String? = null
     private var currentIntensityLevel: Int = 1
     private var flashlightJob: Job? = null
@@ -63,6 +65,9 @@ class FlashlightHandler(
 
             super.onTorchModeChanged(cameraId, enabled)
             isTorchOn = enabled
+
+            val screenOffService = service as? com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
+            screenOffService?.updateFlashlightProximityRegistration(enabled)
 
             val prefs = service.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
             val isGlobalEnabled = prefs.getBoolean("flashlight_global_enabled", false)

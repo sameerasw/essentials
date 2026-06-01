@@ -769,6 +769,12 @@ object FeatureRegistry {
                     R.string.search_remap_flashlight_desc,
                     "flashlight_toggle",
                     R.array.keywords_flashlight
+                ),
+                SearchSetting(
+                    R.string.search_flashlight_pocket_title,
+                    R.string.search_flashlight_pocket_desc,
+                    "flashlight_options",
+                    R.array.keywords_pocket_detection
                 )
             ),
             parentFeatureId = "Input",
