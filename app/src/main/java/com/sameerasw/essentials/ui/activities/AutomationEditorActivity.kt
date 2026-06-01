@@ -839,6 +839,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                     if (finalAction != null) {
                                         when (automationType) {
                                             Automation.Type.TRIGGER -> selectedAction = finalAction
+                                             Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR -> selectedAction = finalAction
                                             Automation.Type.STATE, Automation.Type.APP -> {
                                                 if (selectedActionTab == 0) selectedInAction = finalAction
                                                 else selectedOutAction = finalAction
@@ -911,8 +912,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                     HapticUtil.performVirtualKeyHaptic(view)
                                     // Check for missing permissions before saving
                                     val actionsToCheck = when (automationType) {
-                                        Automation.Type.TRIGGER -> listOfNotNull(selectedAction)
-                                        Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR -> listOfNotNull(selectedAction)
+                                        Automation.Type.TRIGGER, Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR -> listOfNotNull(selectedAction)
                                         else -> listOfNotNull(selectedInAction, selectedOutAction)
                                     }
                                     val allMissingPermissions = actionsToCheck.flatMap { getMissingPermissions(context, it, viewModel) }.distinct()
@@ -922,7 +922,6 @@ class AutomationEditorActivity : ComponentActivity() {
                                         showPermissionSheet = true
                                         return@Button
                                     }
-                                    // Save logic
                                     if (automationType == Automation.Type.TRIGGER) {
                                         val newAutomation = Automation(
                                             id = if (isEditMode) existingAutomation.id else java.util.UUID.randomUUID()
