@@ -527,6 +527,16 @@ fun ButtonRemapSettingsUI(
                             )
                         }
                     )
+
+                    IconToggleItem(
+                        iconRes = R.drawable.rounded_front_hand_24,
+                        title = stringResource(R.string.flashlight_pocket_title),
+                        description = stringResource(R.string.flashlight_pocket_desc),
+                        isChecked = viewModel.isFlashlightPocketTurnOffEnabled.value,
+                        onCheckedChange = {
+                            viewModel.setFlashlightPocketTurnOffEnabled(it, context)
+                        }
+                    )
                 }
 
                 Button(
