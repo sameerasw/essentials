@@ -14,6 +14,7 @@ import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import android.view.inputmethod.InputMethodManager
 import com.google.gson.Gson
 import com.sameerasw.essentials.domain.diy.Automation
 import com.sameerasw.essentials.domain.diy.DIYRepository
@@ -100,6 +101,17 @@ class AppFlowHandler(
         "com.android.systemui",
         "com.google.android.inputmethod.latin"
     )
+
+    private fun isSystemOrIme(packageName: String): Boolean {
+        if (ignoredSystemPackages.contains(packageName)) return true
+        return try {
+            val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            val ims = imm?.enabledInputMethodList
+            ims?.any { it.packageName == packageName } == true
+        } catch (_: Exception) {
+            false
+        }
+    }
 
     fun onPackageChanged(packageName: String, isFromUsageStats: Boolean = false) {
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
@@ -213,8 +225,7 @@ class AppFlowHandler(
 
         pendingNLRunnable?.let { handler.removeCallbacks(it) }
 
-        if (ignoredSystemPackages.contains(packageName)) {
-            Log.d("NightLight", "Ignoring system package $packageName")
+        if (ignoredSystemPackages.contains(packageName)) {            Log.d("NightLight", "Ignoring system package $packageName")
             return
         }
 
@@ -688,7 +699,7 @@ class AppFlowHandler(
     }
 
     private fun checkPerAppRefreshRate(packageName: String) {
-        if (ignoredSystemPackages.contains(packageName)) {
+        if (isSystemOrIme(packageName)) {
             return
         }
 
