@@ -62,6 +62,26 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         FreezeManager.freezeAll(this)
     }
 
+    // Pocket Detection
+    private val pocketFlashlightHandler = Handler(Looper.getMainLooper())
+    private val pocketFlashlightRunnable = Runnable {
+        val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+        val pocketTurnOffEnabled = prefs.getBoolean("flashlight_pocket_turn_off_enabled", false)
+        // Re-check at fire time — guards against external torch-off between scheduling and firing
+        if (pocketTurnOffEnabled && flashlightHandler.isProximityBlocked && flashlightHandler.isTorchOn) {
+            flashlightHandler.toggleFlashlight()
+        }
+    }
+
+    private fun schedulePocketFlashlightTurnOff() {
+        pocketFlashlightHandler.removeCallbacks(pocketFlashlightRunnable)
+        pocketFlashlightHandler.postDelayed(pocketFlashlightRunnable, 1500L)
+    }
+
+    private fun cancelPocketFlashlightTurnOff() {
+        pocketFlashlightHandler.removeCallbacks(pocketFlashlightRunnable)
+    }
+
     private val preferenceChangeListener =
         android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
             if (key == "circle_to_search_gesture_enabled" ||
@@ -220,6 +240,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         omniGestureOverlayHandler.removeOverlay()
         statusBarIconHandler.unregister()
         stopInputEventListener()
+        cancelPocketFlashlightTurnOff()
         serviceScope.cancel()
         getSharedPreferences("essentials_prefs", MODE_PRIVATE)
             .unregisterOnSharedPreferenceChangeListener(preferenceChangeListener)
@@ -244,6 +265,15 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
             val isBlocked = distance < maxRange && distance < 5f
 
             flashlightHandler.isProximityBlocked = isBlocked
+
+            val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+            val pocketTurnOffEnabled = prefs.getBoolean("flashlight_pocket_turn_off_enabled", false)
+
+            if (pocketTurnOffEnabled && isBlocked && flashlightHandler.isTorchOn) {
+                schedulePocketFlashlightTurnOff()
+            } else {
+                cancelPocketFlashlightTurnOff()
+            }
         }
     }
 
