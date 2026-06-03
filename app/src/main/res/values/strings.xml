@@ -1666,4 +1666,17 @@
     <string name="pixel_searchbar_style_music">Music</string>
     <string name="action_restart_shizuku">Restart Shizuku</string>
     <string name="toast_enter_shizuku_token">Please enter Shizuku auth token in settings first</string>
+    <!-- Pocket Mode -->
+    <string name="feat_pocket_mode_title">Pocket mode</string>
+    <string name="feat_pocket_mode_desc">Prevent accidental touches while in pocket</string>
+    <string name="pocket_mode_use_light_title">Use light sensor</string>
+    <string name="pocket_mode_use_light_desc">Use ambient light level in addition to proximity for better accuracy</string>
+    <string name="pocket_mode_active">Pocket mode active</string>
+    <string name="pocket_mode_dismiss_hint">Press any volume key to dismiss</string>
+    <string name="pocket_mode_warning">Warning: On some devices with missing sensors, enabling Pocket Mode may break deep sleep and cause higher battery drain</string>
+    <string name="pocket_mode_exclude_apps_title">Exclude apps</string>
+    <string name="pocket_mode_exclude_apps_desc">Choose apps where Pocket Mode should not trigger. Pocket mode will not work when streaming or gaming by default</string>
+    <string name="pocket_mode_trigger_delay_title">Trigger delay</string>
+    <string name="pocket_mode_lock_screen_only_title">Lock screen only</string>
+    <string name="pocket_mode_lock_screen_only_desc">Only trigger pocket mode when the device is locked</string>
 </resources>

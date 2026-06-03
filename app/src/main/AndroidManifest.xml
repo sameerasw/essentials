@@ -873,6 +873,19 @@
                 android:value="android.service.quicksettings.CATEGORY_DISPLAY" />
         </service>
 
+        <service
+            android:name=".services.tiles.PocketModeTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_pocket_mode"
+            android:label="@string/feat_pocket_mode_title"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+            <meta-data android:name="android.service.quicksettings.TILE_CATEGORY"
+                android:value="android.service.quicksettings.CATEGORY_DISPLAY" />
+        </service>
+
         <receiver
             android:name=".services.receivers.SecurityDeviceAdminReceiver"
             android:permission="android.permission.BIND_DEVICE_ADMIN"

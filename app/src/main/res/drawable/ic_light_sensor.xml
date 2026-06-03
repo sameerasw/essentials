@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Uploaded to: SVG Repo, www.svgrepo.com, Transformed by: SVG Repo Mixer Tools
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="15.998"
+    android:viewportHeight="15.998"
+    android:tint="?android:attr/colorControlNormal">
+    <group
+        android:translateX="22.002"
+        android:translateY="-0.002">
+        <path
+            android:fillColor="#FF000000"
+            android:pathData="M-10.217,1.343A6.039,6.039,0,0,0-15.284.134a5.979,5.979,0,0,0-4.6,4.673A5.967,5.967,0,0,0-18,10.472V10.5a2.488,2.488,0,0,0,1,1.989l0,.011v1A1.5,1.5,0,0,0-15.5,15h.355A1.168,1.168,0,0,0-14,16a1.168,1.168,0,0,0,1.145-1h.355A1.5,1.5,0,0,0-11,13.5v-1l0-.011A2.488,2.488,0,0,0-10,10.5v-.028A5.982,5.982,0,0,0-8,6,5.979,5.979,0,0,0-10.217,1.343ZM-12,13v.5a.5.5,0,0,1-.5.5h-3a.5.5,0,0,1-.5-.5V13h4Zm1.182-3.143a.5.5,0,0,0-.182.386V10.5A1.5,1.5,0,0,1-12.5,12h-3A1.5,1.5,0,0,1-17,10.5v-.257a.5.5,0,0,0-.182-.386A4.981,4.981,0,0,1-18.9,5a4.968,4.968,0,0,1,3.821-3.884A5.267,5.267,0,0,1-14.012,1a5,5,0,0,1,3.164,1.117A4.983,4.983,0,0,1-9,6,4.988,4.988,0,0,1-10.818,9.857ZM-13.5,3.5A.5.5,0,0,1-14,4a2,2,0,0,0-2,2,.5.5,0,0,1-.5.5A.5.5,0,0,1-17,6a3,3,0,0,1,3-3A.5.5,0,0,1-13.5,3.5Z" />
+    </group>
+</vector>

@@ -954,6 +954,23 @@ object FeatureRegistry {
                 viewModel.setShutUpServiceEnabled(enabled, context)
         },
 
+        object : Feature(
+            id = "Pocket mode",
+            title = R.string.feat_pocket_mode_title,
+            iconRes = R.drawable.ic_pocket_mode,
+            category = R.string.cat_display,
+            description = R.string.feat_pocket_mode_desc,
+            permissionKeys = listOf("ACCESSIBILITY"),
+            aboutDescription = R.string.feat_pocket_mode_desc,
+            parentFeatureId = "Display",
+            hasMoreSettings = true,
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = viewModel.isPocketModeEnabled.value
+
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
+                viewModel.setPocketModeEnabled(enabled)
+        },
+
 
         object : Feature(
             id = "Location reached",

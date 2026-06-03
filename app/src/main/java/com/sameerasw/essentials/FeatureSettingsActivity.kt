@@ -77,6 +77,7 @@ import com.sameerasw.essentials.ui.composables.configs.RefreshRateSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.PerAppRefreshRateSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ShutUpSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.RemoteLockSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.PocketModeSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ScreenLockedSecuritySettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ScreenOffWidgetSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.SnoozeNotificationsSettingsUI
@@ -292,6 +293,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                             "Statusbar icons" -> !isWriteSecureSettingsEnabled
                             "Notification lighting" -> !isOverlayPermissionGranted || !isNotificationLightingAccessibilityEnabled || !isNotificationListenerEnabled
                             "Button remap" -> !isAccessibilityEnabled
+                            "Pocket mode" -> !isAccessibilityEnabled
                             "Dynamic night light" -> (if (viewModel.isUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else !isAccessibilityEnabled) || !isWriteSecureSettingsEnabled
                             "Snooze system notifications" -> !isNotificationListenerEnabled
                             "Screen locked security" -> !isAccessibilityEnabled || !isWriteSecureSettingsEnabled || !viewModel.isDeviceAdminEnabled.value
@@ -677,6 +679,14 @@ class FeatureSettingsActivity : AppCompatActivity() {
 
                                     "Screen locked security" -> {
                                         ScreenLockedSecuritySettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting
+                                        )
+                                    }
+
+                                    "Pocket mode" -> {
+                                        PocketModeSettingsUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightSetting = highlightSetting

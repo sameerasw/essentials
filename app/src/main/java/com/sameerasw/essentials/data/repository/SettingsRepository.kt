@@ -277,6 +277,12 @@ class SettingsRepository(private val context: Context) {
         const val KEY_RECENT_SEARCHES = "recent_searches"
 
         const val KEY_SHUT_UP_SERVICE_ENABLED = "shutup_service_enabled"
+
+        const val KEY_POCKET_MODE_ENABLED = "pocket_mode_enabled"
+        const val KEY_POCKET_MODE_USE_LIGHT_SENSOR = "pocket_mode_use_light_sensor"
+        const val KEY_POCKET_MODE_EXCLUDED_APPS = "pocket_mode_excluded_apps"
+        const val KEY_POCKET_MODE_TRIGGER_DELAY = "pocket_mode_trigger_delay"
+        const val KEY_POCKET_MODE_LOCK_SCREEN_ONLY = "pocket_mode_lock_screen_only"
     }
 
     // Observe changes
@@ -535,6 +541,12 @@ class SettingsRepository(private val context: Context) {
 
     fun updateNotificationGlanceAppSelection(packageName: String, enabled: Boolean) =
         updateAppSelection(KEY_NOTIFICATION_GLANCE_SELECTED_APPS, packageName, enabled)
+
+    fun loadPocketModeExcludedApps() = loadAppSelection(KEY_POCKET_MODE_EXCLUDED_APPS)
+    fun savePocketModeExcludedApps(apps: List<AppSelection>) =
+        saveAppSelection(KEY_POCKET_MODE_EXCLUDED_APPS, apps)
+    fun updatePocketModeExcludedAppSelection(packageName: String, enabled: Boolean) =
+        updateAppSelection(KEY_POCKET_MODE_EXCLUDED_APPS, packageName, enabled)
 
 
 

@@ -136,6 +136,10 @@ class MainViewModel : ViewModel() {
     val isAodEnabled = mutableStateOf(false)
     val isNotificationGlanceEnabled = mutableStateOf(false)
     val isAodForceTurnOffEnabled = mutableStateOf(false)
+    val isPocketModeEnabled = mutableStateOf(false)
+    val isPocketModeUseLightSensor = mutableStateOf(false)
+    val pocketModeTriggerDelay = mutableFloatStateOf(3f) // seconds
+    val isPocketModeLockScreenOnly = mutableStateOf(false)
     val isAutoAccessibilityEnabled = mutableStateOf(false)
     val isNotificationGlanceSameAsLightingEnabled = mutableStateOf(true)
     val isOnboardingCompleted =
@@ -598,6 +602,15 @@ class MainViewModel : ViewModel() {
                         settingsRepository.getBoolean(key)
 
                     SettingsRepository.KEY_AOD_FORCE_TURN_OFF_ENABLED -> isAodForceTurnOffEnabled.value =
+                        settingsRepository.getBoolean(key)
+
+                    SettingsRepository.KEY_POCKET_MODE_ENABLED -> isPocketModeEnabled.value =
+                        settingsRepository.getBoolean(key)
+
+                    SettingsRepository.KEY_POCKET_MODE_USE_LIGHT_SENSOR -> isPocketModeUseLightSensor.value =
+                        settingsRepository.getBoolean(key)
+
+                    SettingsRepository.KEY_POCKET_MODE_LOCK_SCREEN_ONLY -> isPocketModeLockScreenOnly.value =
                         settingsRepository.getBoolean(key)
 
                     SettingsRepository.KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING -> isNotificationGlanceSameAsLightingEnabled.value =
@@ -1472,6 +1485,14 @@ class MainViewModel : ViewModel() {
             settingsRepository.getBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_ENABLED)
         isAodForceTurnOffEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_AOD_FORCE_TURN_OFF_ENABLED)
+        isPocketModeEnabled.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_POCKET_MODE_ENABLED)
+        isPocketModeUseLightSensor.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_POCKET_MODE_USE_LIGHT_SENSOR)
+        pocketModeTriggerDelay.floatValue =
+            settingsRepository.getFloat(SettingsRepository.KEY_POCKET_MODE_TRIGGER_DELAY, 3f)
+        isPocketModeLockScreenOnly.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_POCKET_MODE_LOCK_SCREEN_ONLY)
         isNotificationGlanceSameAsLightingEnabled.value = settingsRepository.getBoolean(
             SettingsRepository.KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING,
             true
@@ -3878,6 +3899,26 @@ class MainViewModel : ViewModel() {
         isAodForceTurnOffEnabled.value = enabled
     }
 
+    fun setPocketModeEnabled(enabled: Boolean) {
+        settingsRepository.putBoolean(SettingsRepository.KEY_POCKET_MODE_ENABLED, enabled)
+        isPocketModeEnabled.value = enabled
+    }
+
+    fun setPocketModeUseLightSensor(enabled: Boolean) {
+        settingsRepository.putBoolean(SettingsRepository.KEY_POCKET_MODE_USE_LIGHT_SENSOR, enabled)
+        isPocketModeUseLightSensor.value = enabled
+    }
+
+    fun setPocketModeTriggerDelay(seconds: Float) {
+        pocketModeTriggerDelay.floatValue = seconds
+        settingsRepository.putFloat(SettingsRepository.KEY_POCKET_MODE_TRIGGER_DELAY, seconds)
+    }
+
+    fun setPocketModeLockScreenOnly(enabled: Boolean) {
+        settingsRepository.putBoolean(SettingsRepository.KEY_POCKET_MODE_LOCK_SCREEN_ONLY, enabled)
+        isPocketModeLockScreenOnly.value = enabled
+    }
+
     fun setNotificationGlanceSameAsLightingEnabled(enabled: Boolean) {
         isNotificationGlanceSameAsLightingEnabled.value = enabled
         settingsRepository.putBoolean(
@@ -3900,6 +3941,22 @@ class MainViewModel : ViewModel() {
         enabled: Boolean
     ) {
         settingsRepository.updateNotificationGlanceAppSelection(packageName, enabled)
+    }
+
+    fun loadPocketModeExcludedApps(context: Context): List<AppSelection> {
+        return settingsRepository.loadPocketModeExcludedApps()
+    }
+
+    fun savePocketModeExcludedApps(context: Context, apps: List<AppSelection>) {
+        settingsRepository.savePocketModeExcludedApps(apps)
+    }
+
+    fun updatePocketModeExcludedAppEnabled(
+        context: Context,
+        packageName: String,
+        enabled: Boolean
+    ) {
+        settingsRepository.updatePocketModeExcludedAppSelection(packageName, enabled)
     }
 
     override fun onCleared() {
