@@ -1460,7 +1460,7 @@
     <string name="whats_new_specs_desc">Les spécifications inexactes utilisant GSMArena ont été retirées pour garder les informations de l\'appareil propres, rapides et entièrement fiables.</string>
     <string name="whats_new_apps_title">Mises à jour d\'applis migrées</string>
     <string name="whats_new_apps_desc">Le menu Applications est maintenant entièrement intégré dans la fonctionnalité \"Votre Android\", rendant plus facile la gestion de toutes les mises à jour de vos applis dans un centre cohérent.</string>
-    <string name="favorites_widget_name">Favorite Features</string>
-    <string name="favorites_widget_description">View and launch your favorite features at a glance.</string>
-    <string name="favorites_widget_empty_state">No favorite features pinned yet. Open the app to pin some!</string>
+    <string name="favorites_widget_name">Fonctionnalités préférées</string>
+    <string name="favorites_widget_description">Regardez et lancez vos fonctionnalités préférées en un coup d\'œil.</string>
+    <string name="favorites_widget_empty_state">Pas encore de fonctionnalité préférée épinglée. Ouvrez l\'application pour en épingler !</string>
 </resources>

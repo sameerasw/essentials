@@ -26,6 +26,13 @@ import com.sameerasw.essentials.utils.performHapticFeedback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withTimeoutOrNull
+import kotlin.coroutines.resume
 
 class FlashlightHandler(
     private val service: AccessibilityService,
@@ -328,24 +335,35 @@ class FlashlightHandler(
         return null
     }
 
-    fun pulseFlashlightForNotification() {
-        if (isTorchOn) return
+    private suspend fun getProximityStatus(context: Context): Boolean {
+        val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as? SensorManager ?: return false
+        val proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY) ?: return false
 
-        val prefs = service.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
-        val pulseEnabled = prefs.getBoolean("flashlight_pulse_enabled", false)
-        if (!pulseEnabled) return
+        return withTimeoutOrNull(250L) {
+            suspendCancellableCoroutine<Boolean> { continuation ->
+                val listener = object : SensorEventListener {
+                    override fun onSensorChanged(event: SensorEvent?) {
+                        if (event?.sensor?.type == Sensor.TYPE_PROXIMITY) {
+                            val distance = event.values[0]
+                            val maxRange = event.sensor.maximumRange
+                            val isBlocked = distance < maxRange && distance < 5f
+                            sensorManager.unregisterListener(this)
+                            if (continuation.isActive) {
+                                continuation.resume(isBlocked)
+                            }
+                        }
+                    }
 
-        // Face down check usually happens outside, but if we need it here we need proximity state.
-        // For separation of concerns, Proximity check should happen in Service or passed in.
-        // But current implementation checks isProximityBlocked inside pulseFlashlightForNotification.
-        // Refactoring opportunity: make this method blocking status agnostic or pass it in.
-        // I will assume for now we can skip the facedown check OR I should add a way to set proximity status.
-        // Let's pass 'isProximityBlocked' to this method or main service sets it. 
-        // For cleaner API, I'll add a property `isProximityBlocked` to the handler or pass it to this method.
-        // Let's add a public var isProximityBlocked to the handler.
+                    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+                }
+
+                sensorManager.registerListener(listener, proximitySensor, SensorManager.SENSOR_DELAY_FASTEST)
+                continuation.invokeOnCancellation {
+                    sensorManager.unregisterListener(listener)
+                }
+            }
+        } ?: false
     }
-
-    var isProximityBlocked = false
 
     fun pulseFlashlightForNotificationWithCheck(ignoreChecks: Boolean = false) {
         if (isTorchOn) return
@@ -354,19 +372,23 @@ class FlashlightHandler(
         if (!ignoreChecks) {
             val pulseEnabled = prefs.getBoolean("flashlight_pulse_enabled", false)
             if (!pulseEnabled) return
-
-            val faceDownOnly = prefs.getBoolean("flashlight_pulse_facedown_only", true)
-            if (faceDownOnly && !isProximityBlocked) return
         }
 
         val cameraId = getCameraId() ?: return
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-            FlashlightUtil.isIntensitySupported(service, cameraId)
-        ) {
+        flashlightJob?.cancel()
+        flashlightJob = scope.launch {
+            if (!ignoreChecks) {
+                val faceDownOnly = prefs.getBoolean("flashlight_pulse_facedown_only", true)
+                if (faceDownOnly) {
+                    val isBlocked = getProximityStatus(service)
+                    if (!isBlocked) return@launch
+                }
+            }
 
-            flashlightJob?.cancel()
-            flashlightJob = scope.launch {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                FlashlightUtil.isIntensitySupported(service, cameraId)
+            ) {
                 val maxLevel = FlashlightUtil.getMaxLevel(service, cameraId)
                 val pulseIntensity = prefs.getFloat("flashlight_pulse_max_intensity", 0.5f)
                 val targetPulseLevel = (maxLevel * pulseIntensity).toInt().coerceAtLeast(1)
@@ -394,12 +416,9 @@ class FlashlightHandler(
                 )
 
                 isInternalToggle = false
-            }
-        } else {
-            // Fallback for older versions or devices without intensity support
-            Log.d("Flashlight", "Pulse fallback with cameraId: $cameraId")
-            flashlightJob?.cancel()
-            flashlightJob = scope.launch {
+            } else {
+                // Fallback for older versions or devices without intensity support
+                Log.d("Flashlight", "Pulse fallback with cameraId: $cameraId")
                 isInternalToggle = true
                 try {
                     cameraManager.setTorchMode(cameraId, true)

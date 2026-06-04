@@ -36,7 +36,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 
-class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListener {
+class ScreenOffAccessibilityService : AccessibilityService() {
 
     private val serviceScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
@@ -52,9 +52,6 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
 
     private var screenReceiver: BroadcastReceiver? = null
 
-    // Proximity
-    private val sensorManager by lazy { getSystemService(SENSOR_SERVICE) as SensorManager }
-    private var proximitySensor: Sensor? = null
 
     // Freeze Logic
     private val freezeHandler = Handler(Looper.getMainLooper())
@@ -156,11 +153,6 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         }
         registerReceiver(screenReceiver, filter, RECEIVER_EXPORTED)
 
-        // Proximity
-        proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)
-        proximitySensor?.let {
-            sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL)
-        }
 
         getSharedPreferences("essentials_prefs", MODE_PRIVATE)
             .registerOnSharedPreferenceChangeListener(preferenceChangeListener)
@@ -213,7 +205,6 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         } catch (_: Exception) {
         }
         flashlightHandler.unregister()
-        sensorManager.unregisterListener(this)
         notificationLightingHandler.removeOverlay()
         ambientGlanceHandler.removeOverlay()
         aodForceTurnOffHandler.removeOverlay()
@@ -237,17 +228,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
 
     override fun onInterrupt() {}
 
-    override fun onSensorChanged(event: SensorEvent?) {
-        if (event?.sensor?.type == Sensor.TYPE_PROXIMITY) {
-            val distance = event.values[0]
-            val maxRange = event.sensor.maximumRange
-            val isBlocked = distance < maxRange && distance < 5f
 
-            flashlightHandler.isProximityBlocked = isBlocked
-        }
-    }
-
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 
     override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
         super.onConfigurationChanged(newConfig)

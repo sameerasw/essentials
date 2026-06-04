@@ -60,7 +60,7 @@
     <string name="action_cycle_sound_modes">Ses modlarını değiştir</string>
     <string name="action_circle_to_search">Aramak için Daire</string>
     <string name="action_like_song">Şu anki şarkıyı beğen</string>
-    <string name="like_song_settings_title">Şarkıyı beğenme ayarları</string>
+    <string name="like_song_settings_title">Şarkı beğenme ayarları</string>
     <string name="like_song_settings_desc">Bu özellik, o anda oynatılan medyayı algılamak ve benzer eylemi tetiklemek için bildirim erişimi gerektirir. Lütfen aşağıdan etkinleştirin.</string>
     <string name="like_song_toast_enabled">Tost mesajını göster</string>
     <string name="like_song_aod_overlay_title">AOD\'de kaplamayı göster</string>
@@ -357,7 +357,7 @@
     <string name="feat_hide_gesture_bar_desc">Alttaki gezinme çubuğunu gizle</string>
     <string name="feat_hide_gesture_bar_on_launcher_title">Launcher\'da göster</string>
     <string name="feat_hide_gesture_bar_on_launcher_desc">Dinamik olarak hareket çubuğunu yalnızca ana ekranda olduğunuzda gösterir</string>
-    <string name="feat_circle_to_search_gesture_title">Aramak için daire hareketi</string>
+    <string name="feat_circle_to_search_gesture_title">Aramak için Daire hareketi</string>
     <string name="feat_circle_to_search_gesture_desc">Aramak için Daire\'yi başlatmak için alt alana uzun basın</string>
     <string name="feat_circle_to_search_gesture_height_title">Hareket bölgesi yüksekliği</string>
     <string name="feat_circle_to_search_gesture_height_desc">Alt kısımdaki dokunma alanının yüksekliğini ayarlar</string>
@@ -660,9 +660,9 @@
     <string name="label_disabled">Devre dışı</string>
     <string name="tile_adaptive_brightness">Uyarlanabilir Parlaklık</string>
     <string name="tile_maps_power_saving">Haritalar Güç Tasarrufu</string>
-    <string name="action_search">Aramak</string>
+    <string name="action_search">Ara</string>
     <string name="action_stop">Durmak</string>
-    <string name="label_search">Aramak</string>
+    <string name="label_search">Arama</string>
     <string name="search_frozen_apps_placeholder">Dondurulmuş uygulamaları ara</string>
     <!-- UI Components General -->
     <string name="action_back">Geri</string>
@@ -868,7 +868,7 @@
     <string name="label_clear_all">Hepsini temizle</string>
     <string name="perm_device_admin_explanation">Kilit ekranında yetkisiz ağ değişiklikleri yapılmaya çalışıldığında cihazın sabit olarak kilitlenmesi gerekir.</string>
     <string name="biometric_subtitle_access_settings">Ayarlara erişmek için kimlik doğrulaması yapın</string>
-    <string name="biometric_title_settings_format">%1$s Ayarlar</string>
+    <string name="biometric_title_settings_format">%1$s Ayarları</string>
     <string name="keyword_feature">özellik</string>
     <string name="keyword_settings">ayarlar</string>
     <string name="keyword_hide">saklamak</string>
