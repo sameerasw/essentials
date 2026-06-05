@@ -30,23 +30,14 @@ Essential tools, mods and workarounds for Pixels and other Androids
   <a href="https://t.me/tidwib"><img src="https://img.shields.io/badge/Community-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white" alt="Community" /></a>
 </p>
 
+<h3 align="center">
+<strong>Featuring Essentials</strong>
+</h3>
 <p align="center">
-  <a href="https://crowdin.com/project/essentials-android"><img alt="Crowdin" src="https://badges.crowdin.net/essentials-android/localized.svg?style=for-the-badge"> </a>
-</p>
-
-<p align="center">
-<strong>Essentials got featured by Android Authority! 🎉</strong>
-</p>
-<p align="center">
-  <a href="https://www.androidauthority.com/good-lock-for-pixel-essentials-app-hands-on-3670994/"><img width="50%" alt="Frame 6" src="https://github.com/user-attachments/assets/5469b309-6929-4775-93c5-7ee2f0d57ba1" /></a>
-
-
-<p align="center">
-<strong>Essentials got featured by HowToMen! 🎉</strong>
-</p>
-<p align="center">
-  <a href="https://youtu.be/7favc9MDedQ?si=dduc7452R5Yxj7Aa&t=79"><img width="25%" alt="Frame 6" src="https://github.com/user-attachments/assets/8bda579e-3ab6-4255-955e-7755598511f2" /></a>
-  <a href="https://youtu.be/iY3FBMTA15A?si=L2XX4sZQn3iKf2EZ&t=753"><img width="25%" alt="Frame 7" src="https://github.com/user-attachments/assets/abab16b1-3750-4c0e-8a15-4928cb9253d4" /></a>
+  <a href="https://youtu.be/7favc9MDedQ?si=dduc7452R5Yxj7Aa&t=79"><img width="20%" alt="Frame 6" src="https://github.com/user-attachments/assets/8bda579e-3ab6-4255-955e-7755598511f2" /></a>
+  <a href="https://youtu.be/iY3FBMTA15A?si=L2XX4sZQn3iKf2EZ&t=753"><img width="20%" alt="Frame 7" src="https://github.com/user-attachments/assets/abab16b1-3750-4c0e-8a15-4928cb9253d4" /></a>
+  <a href="https://youtu.be/HE0s76z4Afs"><img width="20%" alt="Frame 7" src="https://github.com/user-attachments/assets/02643ad6-e221-4fcc-bd40-e0c100af3d69" /></a>
+  <a href="https://www.androidauthority.com/good-lock-for-pixel-essentials-app-hands-on-3670994/"><img width="20%" alt="Frame 7" src="https://github.com/user-attachments/assets/5469b309-6929-4775-93c5-7ee2f0d57ba1" /></a>
 </p>
 
 ## Navigation
