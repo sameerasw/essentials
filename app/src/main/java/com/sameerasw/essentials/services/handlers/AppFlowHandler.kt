@@ -14,13 +14,17 @@ import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import android.view.inputmethod.InputMethodManager
 import com.google.gson.Gson
 import com.sameerasw.essentials.domain.diy.Automation
 import com.sameerasw.essentials.domain.diy.DIYRepository
 import com.sameerasw.essentials.domain.model.AppSelection
+import com.sameerasw.essentials.domain.model.AppRefreshRateConfig
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
 import com.sameerasw.essentials.utils.FreezeManager
 import com.sameerasw.essentials.utils.StatusBarManager
+import com.sameerasw.essentials.utils.RefreshRateUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -77,6 +81,12 @@ class AppFlowHandler(
     var currentPackage: String? = null
         private set
 
+    // Per-App Refresh Rate State
+    private var perAppRateSnapshot: RefreshRateUtils.RefreshRateState? = null
+    private var perAppCurrentPackage: String? = null
+    private var pendingRateRunnable: Runnable? = null
+    private var pendingRestoreRunnable: Runnable? = null
+
     // App Automation State
     private val activeAppAutomationIds = mutableSetOf<String>()
 
@@ -91,6 +101,17 @@ class AppFlowHandler(
         "com.android.systemui",
         "com.google.android.inputmethod.latin"
     )
+
+    private fun isSystemOrIme(packageName: String): Boolean {
+        if (ignoredSystemPackages.contains(packageName)) return true
+        return try {
+            val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            val ims = imm?.enabledInputMethodList
+            ims?.any { it.packageName == packageName } == true
+        } catch (_: Exception) {
+            false
+        }
+    }
 
     fun onPackageChanged(packageName: String, isFromUsageStats: Boolean = false) {
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
@@ -113,6 +134,7 @@ class AppFlowHandler(
             checkAppAutomations(packageName)
             checkGestureBarAutomation(packageName)
             checkShutUpRestore(oldPackage, packageName)
+            checkPerAppRefreshRate(packageName)
         }
 
     }
@@ -203,8 +225,7 @@ class AppFlowHandler(
 
         pendingNLRunnable?.let { handler.removeCallbacks(it) }
 
-        if (ignoredSystemPackages.contains(packageName)) {
-            Log.d("NightLight", "Ignoring system package $packageName")
+        if (ignoredSystemPackages.contains(packageName)) {            Log.d("NightLight", "Ignoring system package $packageName")
             return
         }
 
@@ -674,6 +695,99 @@ class AppFlowHandler(
             if (autoArchivePackage != null) {
                 startAutoArchiveCountdown(autoArchivePackage)
             }
+        }
+    }
+
+    private fun checkPerAppRefreshRate(packageName: String) {
+        if (isSystemOrIme(packageName)) {
+            return
+        }
+
+        val settingsRepository = SettingsRepository(context)
+        val isEnabled = settingsRepository.getBoolean(SettingsRepository.KEY_PER_APP_REFRESH_RATE_ENABLED, false)
+        if (!isEnabled) {
+            cancelPendingRateRunnable()
+            cancelPendingRestoreRunnable()
+            if (perAppRateSnapshot != null) {
+                restoreFromSnapshot()
+            }
+            return
+        }
+
+        val configs = settingsRepository.loadPerAppRefreshRateConfigs()
+        val config = configs.find { it.packageName == packageName && it.isEnabled }
+
+        if (config != null) {
+            cancelPendingRestoreRunnable()
+            if (perAppRateSnapshot == null) {
+                perAppRateSnapshot = RefreshRateUtils.getCurrentState(context)
+                Log.d("AppFlowHandler", "per-app refresh rate: snapshotted state: $perAppRateSnapshot")
+            }
+            perAppCurrentPackage = packageName
+            Log.d("AppFlowHandler", "per-app refresh rate: applying ${config.refreshRate} Hz (isFixed=${config.isFixed}) for $packageName")
+            if (config.isFixed) {
+                RefreshRateUtils.applyFixedRefreshRate(context, config.refreshRate)
+            } else {
+                RefreshRateUtils.applyDynamicRefreshRate(context, config.refreshRate)
+            }
+
+            // Re-apply after a short delay to beat OEM adaptive display controllers that
+            // fire asynchronously after window transitions (e.g. resuming from recents).
+            cancelPendingRateRunnable()
+            val runnable = Runnable {
+                if (perAppCurrentPackage == packageName) {
+                    Log.d("AppFlowHandler", "per-app refresh rate: delayed re-apply ${config.refreshRate} Hz (isFixed=${config.isFixed}) for $packageName")
+                    if (config.isFixed) {
+                        RefreshRateUtils.applyFixedRefreshRate(context, config.refreshRate)
+                    } else {
+                        RefreshRateUtils.applyDynamicRefreshRate(context, config.refreshRate)
+                    }
+                }
+            }
+            pendingRateRunnable = runnable
+            handler.postDelayed(runnable, 400L)
+        } else {
+            cancelPendingRateRunnable()
+            perAppCurrentPackage = null
+            if (perAppRateSnapshot != null && pendingRestoreRunnable == null) {
+                Log.d("AppFlowHandler", "per-app refresh rate: scheduling delayed restoration (1000ms) for leaving $packageName")
+                val runnable = Runnable {
+                    if (perAppCurrentPackage == null && perAppRateSnapshot != null) {
+                        Log.d("AppFlowHandler", "per-app refresh rate: restoring to global state from snapshot (delayed)")
+                        restoreFromSnapshot()
+                    }
+                    pendingRestoreRunnable = null
+                }
+                pendingRestoreRunnable = runnable
+                handler.postDelayed(runnable, 1000L)
+            }
+        }
+    }
+
+    private fun cancelPendingRateRunnable() {
+        pendingRateRunnable?.let { handler.removeCallbacks(it) }
+        pendingRateRunnable = null
+    }
+
+    private fun cancelPendingRestoreRunnable() {
+        pendingRestoreRunnable?.let { handler.removeCallbacks(it) }
+        pendingRestoreRunnable = null
+    }
+
+    private fun restoreFromSnapshot() {
+        val snapshot = perAppRateSnapshot ?: return
+        try {
+            if (snapshot.isSystemManaged) {
+                RefreshRateUtils.resetRefreshRate(context, snapshot.usesInfinityDefaultPeak)
+            } else if (snapshot.min > 0f && snapshot.peak > 0f && snapshot.min != snapshot.peak) {
+                RefreshRateUtils.applyRangeRefreshRate(context, snapshot.min, snapshot.peak)
+            } else {
+                RefreshRateUtils.applyFixedRefreshRate(context, snapshot.peak.coerceAtLeast(snapshot.min))
+            }
+        } catch (e: Exception) {
+            Log.e("AppFlowHandler", "Failed to restore refresh rate from snapshot", e)
+        } finally {
+            perAppRateSnapshot = null
         }
     }
 
