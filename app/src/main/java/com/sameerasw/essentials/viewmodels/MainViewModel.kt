@@ -37,6 +37,7 @@ import com.sameerasw.essentials.data.repository.UpdateRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.MapsState
 import com.sameerasw.essentials.domain.model.AppSelection
+import com.sameerasw.essentials.domain.model.ShutUpAppConfig
 import com.sameerasw.essentials.domain.model.DnsPreset
 import com.sameerasw.essentials.domain.model.NotificationApp
 import com.sameerasw.essentials.domain.model.NotificationLightingColorMode
@@ -119,6 +120,8 @@ class MainViewModel : ViewModel() {
     val isBluetoothPermissionGranted = mutableStateOf(false)
     val isUsageStatsPermissionGranted = mutableStateOf(false)
     val appLanguage = mutableStateOf("en")
+    val isShutUpServiceEnabled = mutableStateOf(false)
+    val shutUpConfigs = mutableStateOf<List<ShutUpAppConfig>>(emptyList())
 
     val isBluetoothDevicesEnabled = mutableStateOf(false)
     val isCallVibrationsEnabled = mutableStateOf(false)
@@ -156,10 +159,7 @@ class MainViewModel : ViewModel() {
         mutableStateOf(SettingsRepository.LIVE_WALLPAPER_TRIGGER_UNLOCK)
     val liveWallpaperCustomVideos = mutableStateListOf<String>()
 
-    val shutUpConfigs =
-        mutableStateOf<List<com.sameerasw.essentials.domain.model.ShutUpAppConfig>>(emptyList())
-    val isShutUpLoading = mutableStateOf(false)
-    val isShutUpAttemptShizukuRestart = mutableStateOf(true)
+
 
 
     data class CalendarAccount(
@@ -628,10 +628,7 @@ class MainViewModel : ViewModel() {
                         liveWallpaperCustomVideos.addAll(settingsRepository.getLiveWallpaperCustomVideos())
                     }
 
-                    SettingsRepository.KEY_SHUT_UP_ATTEMPT_SHIZUKU_RESTART -> {
-                        isShutUpAttemptShizukuRestart.value =
-                            settingsRepository.isShutUpAttemptShizukuRestartEnabled()
-                    }
+
 
                     SettingsRepository.KEY_DISABLE_ROTATION_SUGGESTION -> {
                         isDisableRotationSuggestionEnabled.value =
@@ -658,12 +655,21 @@ class MainViewModel : ViewModel() {
         AppCompatDelegate.setApplicationLocales(appLocale)
     }
 
+
+
     fun loadShutUpConfigs() {
         shutUpConfigs.value = settingsRepository.loadShutUpConfigs()
     }
 
-    fun updateShutUpConfig(config: com.sameerasw.essentials.domain.model.ShutUpAppConfig) {
-        settingsRepository.updateShutUpConfig(config)
+    fun updateShutUpConfig(config: ShutUpAppConfig) {
+        val current = shutUpConfigs.value.toMutableList()
+        val index = current.indexOfFirst { it.packageName == config.packageName }
+        if (index != -1) {
+            current[index] = config
+        } else {
+            current.add(config)
+        }
+        settingsRepository.saveShutUpConfigs(current)
         loadShutUpConfigs()
     }
 
@@ -674,62 +680,61 @@ class MainViewModel : ViewModel() {
         loadShutUpConfigs()
     }
 
-    fun setShutUpAttemptShizukuRestartEnabled(enabled: Boolean) {
-        isShutUpAttemptShizukuRestart.value = enabled
-        settingsRepository.setShutUpAttemptShizukuRestartEnabled(enabled)
-    }
-
-    fun saveShutUpSelectedApps(context: Context, apps: List<AppSelection>) {
-        val currentConfigs = settingsRepository.loadShutUpConfigs().associateBy { it.packageName }
-        val newConfigs = apps.filter { it.isEnabled }.map {
-            currentConfigs[it.packageName] ?: com.sameerasw.essentials.domain.model.ShutUpAppConfig(
-                it.packageName
-            )
+    fun setShutUpServiceEnabled(enabled: Boolean, context: Context) {
+        isShutUpServiceEnabled.value = enabled
+        settingsRepository.setShutUpServiceEnabled(enabled)
+        val intent = Intent(context, com.sameerasw.essentials.services.ShutUpForegroundService::class.java)
+        if (enabled) {
+            ContextCompat.startForegroundService(context, intent)
+        } else {
+            context.stopService(intent)
         }
-        settingsRepository.saveShutUpConfigs(newConfigs)
-        loadShutUpConfigs()
     }
 
-    fun createShutUpShortcut(
-        context: Context,
-        config: com.sameerasw.essentials.domain.model.ShutUpAppConfig
-    ) {
-        val appName = try {
-            val appInfo = context.packageManager.getApplicationInfo(config.packageName, 0)
-            context.packageManager.getApplicationLabel(appInfo).toString()
+    fun createShutUpShortcut(context: Context, config: ShutUpAppConfig) {
+        if (!androidx.core.content.pm.ShortcutManagerCompat.isRequestPinShortcutSupported(context)) {
+            Toast.makeText(context, "Shortcut pinning not supported by launcher", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val pm = context.packageManager
+        val appLabel = try {
+            val appInfo = pm.getApplicationInfo(config.packageName, 0)
+            pm.getApplicationLabel(appInfo).toString()
         } catch (e: Exception) {
             config.packageName
         }
+        val shortLabel = "Shut-Up $appLabel"
+        val longLabel = "Launch $appLabel with Shut-Up"
 
-        val intent =
-            Intent(context, com.sameerasw.essentials.ShutUpShortcutActivity::class.java).apply {
-                action = Intent.ACTION_MAIN
-                putExtra("package_name", config.packageName)
-                data = Uri.parse("shutup://${config.packageName}")
-            }
-
-        if (androidx.core.content.pm.ShortcutManagerCompat.isRequestPinShortcutSupported(context)) {
-            val appIcon = AppUtil.getShortcutIcon(context, config.packageName)
-
-            val pinShortcutInfo =
-                androidx.core.content.pm.ShortcutInfoCompat.Builder(context, config.packageName)
-                    .setShortLabel(appName)
-                    .setIcon(androidx.core.graphics.drawable.IconCompat.createWithBitmap(appIcon))
-                    .setIntent(intent)
-                    .build()
-
-            androidx.core.content.pm.ShortcutManagerCompat.requestPinShortcut(
-                context,
-                pinShortcutInfo,
-                null
-            )
-            Toast.makeText(
-                context,
-                context.getString(R.string.shut_up_shortcut_created, appName),
-                Toast.LENGTH_SHORT
-            ).show()
+        val iconCompat = try {
+            val bitmap = com.sameerasw.essentials.utils.AppUtil.getShortcutIcon(context, config.packageName)
+            androidx.core.graphics.drawable.IconCompat.createWithBitmap(bitmap)
+        } catch (e: Exception) {
+            null
         }
+
+        val shortcutIntent = Intent(context, com.sameerasw.essentials.ShutUpShortcutActivity::class.java).apply {
+            action = Intent.ACTION_VIEW
+            putExtra("package_name", config.packageName)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+
+        val shortcutInfo = androidx.core.content.pm.ShortcutInfoCompat.Builder(context, "shutup_${config.packageName}")
+            .setShortLabel(shortLabel)
+            .setLongLabel(longLabel)
+            .setIntent(shortcutIntent)
+            .apply {
+                if (iconCompat != null) {
+                    setIcon(iconCompat)
+                }
+            }
+            .build()
+
+        androidx.core.content.pm.ShortcutManagerCompat.requestPinShortcut(context, shortcutInfo, null)
     }
+
+
 
     fun check(context: Context) {
         appContext = context.applicationContext
@@ -776,8 +781,6 @@ class MainViewModel : ViewModel() {
         notificationLightingSystemMode.intValue =
             settingsRepository.getNotificationLightingSystemMode()
 
-        isShutUpAttemptShizukuRestart.value =
-            settingsRepository.isShutUpAttemptShizukuRestartEnabled()
         isDisableRotationSuggestionEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_DISABLE_ROTATION_SUGGESTION, false)
         lockScreenClockId.value = readCurrentLockScreenClockId(context)
@@ -789,6 +792,7 @@ class MainViewModel : ViewModel() {
         lockScreenClockSelectedColorId.value =
             settingsRepository.getLockScreenClockSelectedColorId()
         lockScreenClockSeedColor.intValue = settingsRepository.getLockScreenClockSeedColor()
+        isShutUpServiceEnabled.value = settingsRepository.isShutUpServiceEnabled()
         loadShutUpConfigs()
         recentSearches.value = settingsRepository.getRecentSearches()
 
