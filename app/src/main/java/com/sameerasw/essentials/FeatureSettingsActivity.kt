@@ -292,7 +292,13 @@ class FeatureSettingsActivity : AppCompatActivity() {
                             "Screen off widget" -> !isAccessibilityEnabled
                             "Statusbar icons" -> !isWriteSecureSettingsEnabled
                             "Notification lighting" -> !isOverlayPermissionGranted || !isNotificationLightingAccessibilityEnabled || !isNotificationListenerEnabled
-                            "Button remap" -> !isAccessibilityEnabled
+                            "Button remap" -> {
+                                val needsRecordAudio = viewModel.volumeUpActionOff.value == "Toggle audio recording" ||
+                                        viewModel.volumeDownActionOff.value == "Toggle audio recording" ||
+                                        viewModel.volumeUpActionOn.value == "Toggle audio recording" ||
+                                        viewModel.volumeDownActionOn.value == "Toggle audio recording"
+                                !isAccessibilityEnabled || (needsRecordAudio && !com.sameerasw.essentials.utils.PermissionUtils.hasRecordAudioPermission(context))
+                            }
                             "Pocket mode" -> !isAccessibilityEnabled
                             "Dynamic night light" -> (if (viewModel.isUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else !isAccessibilityEnabled) || !isWriteSecureSettingsEnabled
                             "Snooze system notifications" -> !isNotificationListenerEnabled
@@ -509,7 +515,13 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                 "Screen off widget" -> !isAccessibilityEnabled
                                                 "Statusbar icons" -> !isWriteSecureSettingsEnabled
                                                 "Notification lighting" -> !isOverlayPermissionGranted || !isNotificationLightingAccessibilityEnabled || !isNotificationListenerEnabled
-                                                "Button remap" -> !isAccessibilityEnabled
+                                                "Button remap" -> {
+                                                     val needsRecordAudio = viewModel.volumeUpActionOff.value == "Toggle audio recording" ||
+                                                             viewModel.volumeDownActionOff.value == "Toggle audio recording" ||
+                                                             viewModel.volumeUpActionOn.value == "Toggle audio recording" ||
+                                                             viewModel.volumeDownActionOn.value == "Toggle audio recording"
+                                                     !isAccessibilityEnabled || (needsRecordAudio && !com.sameerasw.essentials.utils.PermissionUtils.hasRecordAudioPermission(context))
+                                                 }
                                                 "Dynamic night light" -> (if (viewModel.isUseUsageAccess.value) !viewModel.isUsageStatsPermissionGranted.value else !isAccessibilityEnabled) || !isWriteSecureSettingsEnabled
                                                 "Snooze system notifications" -> !isNotificationListenerEnabled
                                                 "Screen locked security" -> !isAccessibilityEnabled || !isWriteSecureSettingsEnabled || !viewModel.isDeviceAdminEnabled.value

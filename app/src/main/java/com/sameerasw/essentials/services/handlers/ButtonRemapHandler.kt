@@ -13,6 +13,7 @@ import android.os.VibratorManager
 import android.util.Log
 import android.view.KeyEvent
 import com.sameerasw.essentials.domain.HapticFeedbackType
+import com.sameerasw.essentials.services.AudioRecordService
 import com.sameerasw.essentials.services.InputEventListenerService
 import com.sameerasw.essentials.utils.performHapticFeedback
 
@@ -210,7 +211,21 @@ class ButtonRemapHandler(
                 com.sameerasw.essentials.utils.OmniTriggerUtil.trigger(service)
                 triggerHapticFeedback()
             }
+
+            "Toggle audio recording" -> toggleAudioRecording()
         }
+    }
+
+    private fun toggleAudioRecording() {
+        val intent = Intent(service, AudioRecordService::class.java).apply {
+            action = AudioRecordService.ACTION_TOGGLE_RECORDING
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            service.startForegroundService(intent)
+        } else {
+            service.startService(intent)
+        }
+        triggerHapticFeedback()
     }
 
     private fun cycleSoundModes() {

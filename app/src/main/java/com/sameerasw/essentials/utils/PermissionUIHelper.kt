@@ -230,6 +230,24 @@ object PermissionUIHelper {
                 isGranted = viewModel.isCalendarPermissionGranted.value
             )
 
+            "RECORD_AUDIO" -> PermissionItem(
+                iconRes = R.drawable.rounded_mic_24,
+                title = R.string.permission_record_audio_title,
+                description = R.string.permission_record_audio_desc,
+                dependentFeatures = PermissionRegistry.getFeatures("RECORD_AUDIO"),
+                actionLabel = if (PermissionUtils.hasRecordAudioPermission(context)) R.string.perm_action_granted else R.string.perm_action_grant,
+                action = {
+                    if (activity != null) {
+                        ActivityCompat.requestPermissions(
+                            activity,
+                            arrayOf(android.Manifest.permission.RECORD_AUDIO),
+                            106
+                        )
+                    }
+                },
+                isGranted = PermissionUtils.hasRecordAudioPermission(context)
+            )
+
             "USAGE_STATS" -> PermissionItem(
                 iconRes = R.drawable.rounded_data_usage_24,
                 title = R.string.perm_usage_stats_title,

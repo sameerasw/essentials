@@ -65,6 +65,14 @@
     <string name="action_cycle_sound_modes">Cycle sound modes</string>
     <string name="action_circle_to_search">Circle to Search</string>
     <string name="action_like_song">Like current song</string>
+    <string name="action_toggle_audio_recording">Toggle audio recording</string>
+    <string name="audio_record_notif_channel_name">Audio Recording</string>
+    <string name="audio_record_notif_title">Recording audio…</string>
+    <string name="audio_record_notif_stop">Stop</string>
+    <string name="audio_record_saved_title">Recording saved</string>
+    <string name="audio_record_saved_desc">Tap to open recording</string>
+    <string name="permission_record_audio_title">Record Audio</string>
+    <string name="permission_record_audio_desc">Required to record audio when remapped hardware button is pressed.</string>
     <string name="like_song_settings_title">Like song settings</string>
     <string name="like_song_settings_desc">This feature requires notification access to detect the currently playing media and trigger the like action. Please enable it below.</string>
     <string name="like_song_toast_enabled">Show toast message</string>
