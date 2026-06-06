@@ -61,6 +61,8 @@ fun RefreshRateSettingsUI(
     var editingPackageName by remember { mutableStateOf("") }
     var editingCurrentRate by remember { mutableStateOf(0f) }
     var editingIsFixed by remember { mutableStateOf(false) }
+    var editingLandscapeRate by remember { mutableStateOf<Float?>(null) }
+    var editingOnlyOnMediaPlaying by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier
@@ -319,9 +321,16 @@ fun RefreshRateSettingsUI(
                             }
                         }
 
+                        val suffix = if (config.onlyOnMediaPlaying) " (Media Only)" else ""
+                        val cardDesc = if (config.landscapeRefreshRate != null) {
+                            "${config.refreshRate.toInt()} Hz (${if (config.isFixed) stringResource(R.string.refresh_rate_per_app_mode_fixed) else stringResource(R.string.refresh_rate_per_app_mode_dynamic)}) | ${config.landscapeRefreshRate.toInt()} Hz in landscape$suffix"
+                        } else {
+                            "${config.refreshRate.toInt()} Hz (${if (config.isFixed) stringResource(R.string.refresh_rate_per_app_mode_fixed) else stringResource(R.string.refresh_rate_per_app_mode_dynamic)})"
+                        }
+
                         FeatureCard(
                             title = appName,
-                            description = "${config.refreshRate.toInt()} Hz (${if (config.isFixed) stringResource(R.string.refresh_rate_per_app_mode_fixed) else stringResource(R.string.refresh_rate_per_app_mode_dynamic)})",
+                            description = cardDesc,
                             isEnabled = config.isEnabled,
                             showToggle = true,
                             onToggle = { isChecked ->
@@ -331,6 +340,8 @@ fun RefreshRateSettingsUI(
                                 editingPackageName = config.packageName
                                 editingCurrentRate = config.refreshRate
                                 editingIsFixed = config.isFixed
+                                editingLandscapeRate = config.landscapeRefreshRate
+                                editingOnlyOnMediaPlaying = config.onlyOnMediaPlaying
                                 isEditSheetOpen = true
                             },
                             iconPainter = appIconPainter,
@@ -364,6 +375,8 @@ fun RefreshRateSettingsUI(
                     editingPackageName = app.packageName
                     editingCurrentRate = 0f
                     editingIsFixed = false
+                    editingLandscapeRate = null
+                    editingOnlyOnMediaPlaying = false
                     isEditSheetOpen = true
                 }
             )
@@ -374,12 +387,16 @@ fun RefreshRateSettingsUI(
                 packageName = editingPackageName,
                 currentRate = editingCurrentRate,
                 isFixed = editingIsFixed,
-                onSave = { rate, isFixed ->
+                landscapeRate = editingLandscapeRate,
+                onlyOnMediaPlaying = editingOnlyOnMediaPlaying,
+                onSave = { rate, isFixed, landscapeRate, onlyOnMedia ->
                     viewModel.updatePerAppRefreshRateConfig(
                         AppRefreshRateConfig(
                             packageName = editingPackageName,
                             refreshRate = rate,
                             isFixed = isFixed,
+                            landscapeRefreshRate = landscapeRate,
+                            onlyOnMediaPlaying = onlyOnMedia,
                             isEnabled = true
                         )
                     )

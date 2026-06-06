@@ -150,6 +150,7 @@ class AppDetectionService : Service() {
     override fun onDestroy() {
         isRunning = false
         isPolling = false
+        appFlowHandler.destroy()
         handler.removeCallbacksAndMessages(null)
         try {
             unregisterReceiver(authReceiver)

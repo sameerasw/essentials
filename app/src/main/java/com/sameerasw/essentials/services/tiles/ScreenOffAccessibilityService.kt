@@ -211,6 +211,7 @@ class ScreenOffAccessibilityService : AccessibilityService() {
         omniGestureOverlayHandler.removeOverlay()
         statusBarIconHandler.unregister()
         stopInputEventListener()
+        appFlowHandler.destroy()
         serviceScope.cancel()
         getSharedPreferences("essentials_prefs", MODE_PRIVATE)
             .unregisterOnSharedPreferenceChangeListener(preferenceChangeListener)

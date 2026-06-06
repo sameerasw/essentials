@@ -49,7 +49,9 @@ fun PerAppRefreshRateSettingsSheet(
     packageName: String,
     currentRate: Float,
     isFixed: Boolean,
-    onSave: (Float, Boolean) -> Unit,
+    landscapeRate: Float?,
+    onlyOnMediaPlaying: Boolean,
+    onSave: (Float, Boolean, Float?, Boolean) -> Unit,
     onDelete: () -> Unit,
     onDismissRequest: () -> Unit
 ) {
@@ -61,6 +63,10 @@ fun PerAppRefreshRateSettingsSheet(
     val rates = remember { RefreshRateUtils.getSupportedRefreshRates(context) }
     var selectedRate by remember { mutableStateOf(if (currentRate <= 0f) (rates.lastOrNull() ?: 120f) else currentRate) }
     var selectedIsFixed by remember { mutableStateOf(isFixed) }
+
+    var useLandscapeRate by remember { mutableStateOf(landscapeRate != null) }
+    var selectedLandscapeRate by remember { mutableStateOf(landscapeRate ?: rates.lastOrNull() ?: 120f) }
+    var selectedOnlyOnMediaPlaying by remember { mutableStateOf(onlyOnMediaPlaying) }
 
     LaunchedEffect(packageName) {
         withContext(Dispatchers.IO) {
@@ -118,7 +124,7 @@ fun PerAppRefreshRateSettingsSheet(
                 }
             } ?: Spacer(modifier = Modifier.height(110.dp))
 
-            // Refresh Rate Selection & Fixed Mode option
+            // Refresh Rate Selection, Fixed Mode & Landscape option
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -149,6 +155,46 @@ fun PerAppRefreshRateSettingsSheet(
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
+
+                RoundedCardContainer(
+                    spacing = 0.dp,
+                    cornerRadius = 24.dp
+                ) {
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        IconToggleItem(
+                            iconRes = R.drawable.rounded_mobile_rotate_24,
+                            title = stringResource(R.string.refresh_rate_per_app_landscape_toggle),
+                            description = stringResource(R.string.refresh_rate_per_app_landscape_toggle_desc),
+                            isChecked = useLandscapeRate,
+                            onCheckedChange = { useLandscapeRate = it },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        if (useLandscapeRate) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 8.dp),
+                                verticalArrangement = Arrangement.spacedBy(12.dp)
+                            ) {
+                                SegmentedPicker(
+                                    items = rates,
+                                    selectedItem = selectedLandscapeRate,
+                                    onItemSelected = { selectedLandscapeRate = it },
+                                    labelProvider = { "${it.toInt()} Hz" },
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                                IconToggleItem(
+                                    iconRes = R.drawable.round_play_arrow_24,
+                                    title = stringResource(R.string.refresh_rate_per_app_only_media_toggle),
+                                    description = stringResource(R.string.refresh_rate_per_app_only_media_toggle_desc),
+                                    isChecked = selectedOnlyOnMediaPlaying,
+                                    onCheckedChange = { selectedOnlyOnMediaPlaying = it },
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                            }
+                        }
+                    }
+                }
             }
 
             // Action Buttons
@@ -176,7 +222,12 @@ fun PerAppRefreshRateSettingsSheet(
                 // Save Button
                 Button(
                     onClick = {
-                        onSave(selectedRate, selectedIsFixed)
+                        onSave(
+                            selectedRate,
+                            selectedIsFixed,
+                            if (useLandscapeRate) selectedLandscapeRate else null,
+                            if (useLandscapeRate) selectedOnlyOnMediaPlaying else false
+                        )
                         onDismissRequest()
                     },
                     modifier = Modifier.weight(1.5f),

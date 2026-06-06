@@ -12,6 +12,9 @@ import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
+import android.content.res.Configuration
+import android.content.IntentFilter
+import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.gson.Gson
@@ -22,6 +25,7 @@ import com.sameerasw.essentials.domain.model.AppRefreshRateConfig
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.services.automation.executors.CombinedActionExecutor
 import com.sameerasw.essentials.utils.FreezeManager
+import com.sameerasw.essentials.services.NotificationListener
 import com.sameerasw.essentials.utils.StatusBarManager
 import com.sameerasw.essentials.utils.RefreshRateUtils
 import kotlinx.coroutines.CoroutineScope
@@ -36,7 +40,52 @@ class AppFlowHandler(
     private val service: AccessibilityService? = null
 ) {
     private val handler = Handler(Looper.getMainLooper())
-    private val scope = CoroutineScope(Dispatchers.Main)
+    private var lastOrientation = context.resources.configuration.orientation
+    private val componentCallbacks = object : android.content.ComponentCallbacks2 {
+        override fun onConfigurationChanged(newConfig: Configuration) {
+            val newOrientation = newConfig.orientation
+            if (newOrientation != lastOrientation) {
+                lastOrientation = newOrientation
+                val currentPkg = currentPackage
+                if (currentPkg != null) {
+                    checkPerAppRefreshRate(currentPkg)
+                }
+            }
+        }
+        override fun onLowMemory() {}
+        override fun onTrimMemory(level: Int) {}
+    }
+
+    private val mediaReceiver = object : android.content.BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == "com.sameerasw.essentials.MEDIA_PLAYBACK_CHANGED") {
+                val pkg = intent.getStringExtra("package_name")
+                if (pkg != null && pkg == currentPackage) {
+                    checkPerAppRefreshRate(pkg)
+                }
+            }
+        }
+    }
+
+    init {
+        context.registerComponentCallbacks(componentCallbacks)
+        val filter = IntentFilter("com.sameerasw.essentials.MEDIA_PLAYBACK_CHANGED")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            context.registerReceiver(mediaReceiver, filter, Context.RECEIVER_EXPORTED)
+        } else {
+            context.registerReceiver(mediaReceiver, filter)
+        }
+    }
+
+    fun destroy() {
+        try {
+            context.unregisterComponentCallbacks(componentCallbacks)
+        } catch (_: Exception) {}
+        try {
+            context.unregisterReceiver(mediaReceiver)
+        } catch (_: Exception) {}
+    }
+    private val scope = CoroutineScope(Dispatchers.Main.immediate)
 
     private val authenticatedPackages = mutableSetOf<String>()
     private val lastLeaveTimes = mutableMapOf<String, Long>()
@@ -692,6 +741,34 @@ class AppFlowHandler(
         }
     }
 
+    private fun isMediaPlaying(packageName: String): Boolean {
+        return try {
+            val msm = context.getSystemService(Context.MEDIA_SESSION_SERVICE) as? android.media.session.MediaSessionManager
+            val componentName = android.content.ComponentName(context, NotificationListener::class.java)
+            val sessions = msm?.getActiveSessions(componentName)
+            sessions?.any {
+                it.packageName == packageName &&
+                it.playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING
+            } ?: false
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    private fun getTargetRefreshRateForConfig(config: AppRefreshRateConfig): Float {
+        val landscapeRate = config.landscapeRefreshRate
+        if (landscapeRate != null) {
+            val isLandscape = context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+            if (isLandscape) {
+                if (config.onlyOnMediaPlaying) {
+                    return if (isMediaPlaying(config.packageName)) landscapeRate else config.refreshRate
+                }
+                return landscapeRate
+            }
+        }
+        return config.refreshRate
+    }
+
     private fun checkPerAppRefreshRate(packageName: String) {
         if (ignoredSystemPackages.contains(packageName)) {
             return
@@ -718,11 +795,12 @@ class AppFlowHandler(
                 Log.d("AppFlowHandler", "per-app refresh rate: snapshotted state: $perAppRateSnapshot")
             }
             perAppCurrentPackage = packageName
-            Log.d("AppFlowHandler", "per-app refresh rate: applying ${config.refreshRate} Hz (isFixed=${config.isFixed}) for $packageName")
+            val targetRate = getTargetRefreshRateForConfig(config)
+            Log.d("AppFlowHandler", "per-app refresh rate: applying $targetRate Hz (isFixed=${config.isFixed}) for $packageName")
             if (config.isFixed) {
-                RefreshRateUtils.applyFixedRefreshRate(context, config.refreshRate)
+                RefreshRateUtils.applyFixedRefreshRate(context, targetRate)
             } else {
-                RefreshRateUtils.applyDynamicRefreshRate(context, config.refreshRate)
+                RefreshRateUtils.applyDynamicRefreshRate(context, targetRate)
             }
 
             // Re-apply after a short delay to beat OEM adaptive display controllers that
@@ -730,11 +808,12 @@ class AppFlowHandler(
             cancelPendingRateRunnable()
             val runnable = Runnable {
                 if (perAppCurrentPackage == packageName) {
-                    Log.d("AppFlowHandler", "per-app refresh rate: delayed re-apply ${config.refreshRate} Hz (isFixed=${config.isFixed}) for $packageName")
+                    val delayedRate = getTargetRefreshRateForConfig(config)
+                    Log.d("AppFlowHandler", "per-app refresh rate: delayed re-apply $delayedRate Hz (isFixed=${config.isFixed}) for $packageName")
                     if (config.isFixed) {
-                        RefreshRateUtils.applyFixedRefreshRate(context, config.refreshRate)
+                        RefreshRateUtils.applyFixedRefreshRate(context, delayedRate)
                     } else {
-                        RefreshRateUtils.applyDynamicRefreshRate(context, config.refreshRate)
+                        RefreshRateUtils.applyDynamicRefreshRate(context, delayedRate)
                     }
                 }
             }
