@@ -722,10 +722,6 @@ object FeatureRegistry {
             category = R.string.cat_interaction,
             description = R.string.feat_button_remap_desc,
             aboutDescription = R.string.about_desc_button_remap,
-            permissionKeys = if (ShellUtils.isRootEnabled(EssentialsApp.context)) listOf(
-                "ACCESSIBILITY",
-                "ROOT"
-            ) else listOf("ACCESSIBILITY", "SHIZUKU"),
             showToggle = true,
             searchableSettings = listOf(
                 SearchSetting(
@@ -750,6 +746,20 @@ object FeatureRegistry {
             parentFeatureId = "Input",
             animationRes = R.raw.button_animation
         ) {
+            override val permissionKeys: List<String>
+                get() {
+                    val baseKeys = if (ShellUtils.isRootEnabled(EssentialsApp.context)) listOf(
+                        "ACCESSIBILITY",
+                        "ROOT"
+                    ) else listOf("ACCESSIBILITY", "SHIZUKU")
+                    val repository = com.sameerasw.essentials.data.repository.SettingsRepository(EssentialsApp.context)
+                    val needsRecordAudio = repository.getString("button_remap_vol_up_action_off", "None") == "Toggle audio recording" ||
+                            repository.getString("button_remap_vol_down_action_off", "None") == "Toggle audio recording" ||
+                            repository.getString("button_remap_vol_up_action_on", "None") == "Toggle audio recording" ||
+                            repository.getString("button_remap_vol_down_action_on", "None") == "Toggle audio recording"
+                    return if (needsRecordAudio) baseKeys + "RECORD_AUDIO" else baseKeys
+                }
+
             override fun isEnabled(viewModel: MainViewModel) = viewModel.isButtonRemapEnabled.value
             override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
                 viewModel.isAccessibilityEnabled.value

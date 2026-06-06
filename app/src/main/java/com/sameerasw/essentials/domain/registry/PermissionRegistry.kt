@@ -97,4 +97,5 @@ fun initPermissionRegistry() {
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_shut_up_title)
     PermissionRegistry.register("WRITE_SETTINGS", R.string.feat_shut_up_title)
     PermissionRegistry.register("USAGE_STATS", R.string.feat_shut_up_title)
+    PermissionRegistry.register("RECORD_AUDIO", R.string.feat_button_remap_title)
 }
