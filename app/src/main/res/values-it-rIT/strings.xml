@@ -127,7 +127,7 @@
     <string name="dynamic_night_light_apps_section">App che disattivano la luce notturna</string>
     <string name="action_select_apps">Seleziona app</string>
     <!-- App Freezing -->
-    <string name="settings_section_app_control">Controllo dell\'app</string>
+    <string name="settings_section_app_control">Controllo app</string>
     <string name="action_freeze">Congela</string>
     <string name="action_unfreeze">Sblocca</string>
     <string name="action_remove">Rimuovi</string>
@@ -1427,7 +1427,7 @@
     <string name="lock_screen_clock_flex">Flex</string>
     <string name="lock_screen_clock_growth">Espansione</string>
     <string name="lock_screen_clock_handwritten">Scritto a mano</string>
-    <string name="lock_screen_clock_inflate">Gonfia</string>
+    <string name="lock_screen_clock_inflate">Rigonfiamento</string>
     <string name="lock_screen_clock_metro">Metro</string>
     <string name="lock_screen_clock_numoverlap">Numero sovrapposto</string>
     <string name="lock_screen_clock_weather">Meteo</string>
