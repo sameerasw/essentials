@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -138,7 +139,8 @@ fun PerAppRefreshRateSettingsSheet(
                         selectedItem = selectedRate,
                         onItemSelected = { selectedRate = it },
                         labelProvider = { "${it.toInt()} Hz" },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        cornerShape = CornerSize(24.dp)
                     )
                 }
 
@@ -181,7 +183,8 @@ fun PerAppRefreshRateSettingsSheet(
                                     selectedItem = selectedLandscapeRate,
                                     onItemSelected = { selectedLandscapeRate = it },
                                     labelProvider = { "${it.toInt()} Hz" },
-                                    modifier = Modifier.fillMaxWidth()
+                                    modifier = Modifier.fillMaxWidth(),
+                                    cornerShape = CornerSize(18.dp)
                                 )
                                 IconToggleItem(
                                     iconRes = R.drawable.round_play_arrow_24,
@@ -189,7 +192,9 @@ fun PerAppRefreshRateSettingsSheet(
                                     description = stringResource(R.string.refresh_rate_per_app_only_media_toggle_desc),
                                     isChecked = selectedOnlyOnMediaPlaying,
                                     onCheckedChange = { selectedOnlyOnMediaPlaying = it },
-                                    modifier = Modifier.fillMaxWidth()
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clip(RoundedCornerShape(18.dp))
                                 )
                             }
                         }
