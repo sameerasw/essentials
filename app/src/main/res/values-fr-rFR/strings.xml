@@ -5,6 +5,8 @@
     <string name="shut_up_attempt_shizuku_restart">Essayer de redémarrer de Shizuku</string>
     <string name="shut_up_shizuku_restart_warning_title">Avertissement du redémarrage de Shizuku</string>
     <string name="shut_up_shizuku_restart_warning_message">Comme le débogage sans fil a été activé, les services Shizuku n\'ont peut-être pas démarré automatiquement ce qui empêche la fonctionnalité de gel de fonctionner. Envisagez d\'activer la tentative de redémarrage de Shizuku également</string>
+    <string name="shut_up_restore_delay_title">Restoration Delay</string>
+    <string name="shut_up_restore_delay_desc">Wait time before restoring settings after exiting a Shut-Up! app</string>
     <string name="accessibility_service_description"><b>Service d\'accessibilité Essentials</b>\n\nCe service est requis pour les fonctionnalités suivantes :\n\n<b>• Réattribution d\'un bouton physique :</b>\nDétecte les appuis sur le bouton volume même si l\'écran est éteint pour déclencher des actions comme allumer la lampe-torche.\n\n<b>• Réglage par appli :</b>\nSurveille les applications actives pour appliquer des profils spécifiques pour le mode éclairage nocturne dynamique, le réglage de couleurs des notifications lumineuses et le verrouillage d\'applis.\n\n<b>• Contrôler l\'écran :</b>\nAutorise l\'application à verrouiller l\'écran (par exemple en utilisant le Double Tap ou les Widgets) et détecter le changement d\'état de l\'écran.\n\n<b>• Sécurité :</b>\nPrévenir les changements non autorisé en détectant le contenu des fenêtres lorsque l\'appareil est verrouillé.\n\n<small>Aucun texte saisi ou de données utilisateur sensibles sont collectées ou transmises.</small></string>
     <string name="freeze_activity_title">Gel d\'applis</string>
     <string name="freeze_activity_subtitle">Désactiver les applis rarement utilisées</string>
@@ -198,6 +200,8 @@
     <string name="notification_lighting_sweep_pos_left">Gauche</string>
     <string name="notification_lighting_sweep_pos_center">Centre</string>
     <string name="notification_lighting_sweep_pos_right">Droite</string>
+    <string name="notification_lighting_sweep_select_shapes_title">Select Shapes</string>
+    <string name="notification_lighting_sweep_select_shapes_desc">Choose which shapes are used in the sweep animation</string>
     <string name="settings_section_animation">Animation</string>
     <string name="notification_lighting_pulse_count_title">Nombre de pulsations</string>
     <string name="notification_lighting_pulse_duration_title">Durée de la pulsation</string>
