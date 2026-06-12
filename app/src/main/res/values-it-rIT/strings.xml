@@ -5,7 +5,9 @@
     <string name="shut_up_attempt_shizuku_restart">Tenta riavvio di Shizuku</string>
     <string name="shut_up_shizuku_restart_warning_title">Attenzione: riavvio di Shizuku</string>
     <string name="shut_up_shizuku_restart_warning_message">Poiché il debug wireless è stato disattivato/attivato, i servizi di Shizuku potrebbero non essersi avviati automaticamente, impedendo il corretto funzionamento del congelamento delle app. Valuta di attivare anche l\'opzione \'Tenta riavvio di Shizuku\'</string>
-    <string name="accessibility_service_description"><b>Servizio di Accessibilità Essentials</b>\n\nQuesto servizio è richiesto per le seguenti funzioni avanzate:\n\n<b>• Rimappatura dei tasti fisici:</b>\nRileva la pressione dei tasti del volume anche quando lo schermo è spento per attivare azioni come la Torcia.\n\n<b>• Impostazioni per singola app:</b>\nMonitora l\'app attualmente attiva per applicare profili specifici per la Luce notturna dinamica, i colori dell\'illuminazione delle notifiche e il Blocco app.\n\n<b>• Controllo dello schermo:</b>\nConsente all\'app di bloccare lo schermo (ad es. tramite Doppio tocco o Widget) e di rilevare i cambiamenti di stato dello schermo.\n\n<b>• Sicurezza:</b>\nImpedisce modifiche non autorizzate rilevando il contenuto delle finestre quando il dispositivo è bloccato.\n\n<small>Nessun testo inserito o dato sensibile dell\'utente viene raccolto o trasmesso.</small></string>
+    <string name="shut_up_restore_delay_title">Ritardo ripristino</string>
+    <string name="shut_up_restore_delay_desc">Tempo di attesa prima del ripristino delle impostazioni dopo l\'uscita da un\'app con Taci!</string>
+    <string name="accessibility_service_description"><b>Servizio di Accessibilità Essentials</b>\n\nQuesto servizio è richiesto per le seguenti funzioni avanzate:\n\n<b>• Riassegnazione dei tasti fisici:</b>\nRileva la pressione dei tasti del volume anche quando lo schermo è spento per attivare azioni come la Torcia.\n\n<b>• Impostazioni per singola app:</b>\nMonitora l\'app attualmente attiva per applicare profili specifici per la Luce notturna dinamica, i colori dell\'illuminazione delle notifiche e il Blocco app.\n\n<b>• Controllo dello schermo:</b>\nConsente all\'app di bloccare lo schermo (ad es. tramite Doppio tocco o Widget) e di rilevare i cambiamenti di stato dello schermo.\n\n<b>• Sicurezza:</b>\nImpedisce modifiche non autorizzate rilevando il contenuto delle finestre quando il dispositivo è bloccato.\n\n<small>Nessun testo inserito o dato sensibile dell\'utente viene raccolto o trasmesso.</small></string>
     <string name="freeze_activity_title">Congelamento app</string>
     <string name="freeze_activity_subtitle">Disattiva le app utilizzate raramente</string>
     <string name="freeze_shortcut_short_label">App congelate</string>
@@ -198,6 +200,8 @@
     <string name="notification_lighting_sweep_pos_left">Sinistra</string>
     <string name="notification_lighting_sweep_pos_center">Centro</string>
     <string name="notification_lighting_sweep_pos_right">Destra</string>
+    <string name="notification_lighting_sweep_select_shapes_title">Seleziona forme</string>
+    <string name="notification_lighting_sweep_select_shapes_desc">Scegli quali forme vengono utilizzate nell\'animazione di scorrimento</string>
     <string name="settings_section_animation">Animazioni</string>
     <string name="notification_lighting_pulse_count_title">Numero dei flash</string>
     <string name="notification_lighting_pulse_duration_title">Durata del flash</string>
@@ -549,7 +553,7 @@
     <string name="search_qs_flashlight_title">Torcia</string>
     <string name="search_qs_flashlight_desc">Interruttore torcia dedicata</string>
     <string name="search_qs_freeze_title">Congelamento app</string>
-    <string name="search_qs_freeze_desc">Avvia la griglia di congelamento app</string>
+    <string name="search_qs_freeze_desc">Avvia griglia di congelamento app</string>
     <string name="search_qs_pulse_title">Flash della torcia</string>
     <string name="search_qs_pulse_desc">Attiva/disattiva flash della torcia per le notifiche</string>
     <string name="search_qs_stay_awake_desc">Attiva/disattiva opzione sviluppatore Rimani attivo</string>

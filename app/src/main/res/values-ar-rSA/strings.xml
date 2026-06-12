@@ -5,6 +5,8 @@
     <string name="shut_up_attempt_shizuku_restart">محاولة إعادة تشغيل Shizuku</string>
     <string name="shut_up_shizuku_restart_warning_title">تحذير إعادة تشغيل Shizuku</string>
     <string name="shut_up_shizuku_restart_warning_message">بما أن خاصية تصحيح الأخطاء اللاسلكية كانت مُفعّلة، فقد لا تكون خدمات Shizuku قد بدأت تلقائيًا، مما تسبب في عدم عمل خاصية التجميد. يُرجى أيضًا تفعيل خيار إعادة تشغيل Shizuku</string>
+    <string name="shut_up_restore_delay_title">Restoration Delay</string>
+    <string name="shut_up_restore_delay_desc">Wait time before restoring settings after exiting a Shut-Up! app</string>
     <string name="accessibility_service_description"><b>إمكانية الوصول لـ Essentials</b>\n\nتعد هذه الخدمة ضرورية للميزات المتقدمة التالية:\n\n<b>• إعادة تعيين أزرار الجهاز:</b>\nإكتشاف ضغطات أزرار الصوت حتى عندما تكون الشاشة مطفأة لتفعيل إجرائات مثل الكشاف\n\n<b>• إعدادات لكل تطبيق:</b>\nيراقب التطبيق النشط حالياً لتطبيق ملفات تعريف محددة للإضاءة الليلية الديناميكية وإضاءة الإشعارات الملونة وخاصية قفل التطبيقات\n\n<b>• التحكم في الشاشة:</b>\nيسمح للتطبيق بقفل الشاشة (مثلا عبر النقر المزدوج أو الويدجيت) واكتشاف تغيرات حالة االشاشة.\n\n<b>• الأمان:</b>\nيمنع التغييرات غير المصرح بها عن طريق اكتشاف محتوى النافذة عندما يكون الجهاز مقفلا.\n\n<small>لا يتم جمع أو إرسال أي نص مدخل أو بيانات حساسة الخاصّة بالمستخدم.</small></string>
     <string name="freeze_activity_title">تجميد التطبيق</string>
     <string name="freeze_activity_subtitle">قم بتعطيل التطبيقات التي نادراً ما تستخدمها</string>
@@ -198,6 +200,8 @@
     <string name="notification_lighting_sweep_pos_left">يمين</string>
     <string name="notification_lighting_sweep_pos_center">وَسَط</string>
     <string name="notification_lighting_sweep_pos_right">يسار</string>
+    <string name="notification_lighting_sweep_select_shapes_title">Select Shapes</string>
+    <string name="notification_lighting_sweep_select_shapes_desc">Choose which shapes are used in the sweep animation</string>
     <string name="settings_section_animation">الرسوم المتحركة</string>
     <string name="notification_lighting_pulse_count_title">عدد النبض</string>
     <string name="notification_lighting_pulse_duration_title">مدة النبض</string>

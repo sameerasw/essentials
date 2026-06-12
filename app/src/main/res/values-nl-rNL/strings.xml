@@ -5,6 +5,8 @@
     <string name="shut_up_attempt_shizuku_restart">Shizuku restart poging</string>
     <string name="shut_up_shizuku_restart_warning_title">Shizuku restart waarschuwing</string>
     <string name="shut_up_shizuku_restart_warning_message">Omdat draadloze foutopsporing is ingeschakeld, zijn de Shizuku-services mogelijk niet automatisch gestart, waardoor het bevriezen niet werkt. Overweeg om ook de optie \'Shizuku opnieuw opstarten\' in te schakelen</string>
+    <string name="shut_up_restore_delay_title">Restoration Delay</string>
+    <string name="shut_up_restore_delay_desc">Wait time before restoring settings after exiting a Shut-Up! app</string>
     <string name="accessibility_service_description"><b>Toegankelijkheidsservice van Essentials</b>\n\nDeze service is vereist voor de volgende geavanceerde functies:\n\n<b>• Opnieuw toewijzen van fysieke knoppen:</b>\nDetecteert het klikken van de volumeknoppen, zelfs wanneer het scherm uit is, om acties te starten zoals de zaklamp.\n\n<b>• Instellingen per app:</b>\nBekijkt de momenteel actieve app om specifieke profielen toe te passen voor Dynamisch nachtlicht, Meldingsbelichtingskleuren en Appvergrendeling.\n\n<b>• Schermbesturing:</b>\nLaat de app het scherm vergrendelen (bijv. met dubbelklikken of met widgets) en veranderingen van schermstaat detecteren.\n\n<b>• Beveiliging:</b>\nVoorkomt ongeautoriseerde wijzigingen door vensterinhoud te detecteren wanneer het apparaat vergrendeld is.\n\n<small>Geen invoertekst of gevoelige gebruikersdata wordt verzameld of overgezet.</small></string>
     <string name="freeze_activity_title">Apps bevriezen</string>
     <string name="freeze_activity_subtitle">Schakel apps uit die weinig worden gebruikt</string>
@@ -198,6 +200,8 @@
     <string name="notification_lighting_sweep_pos_left">Links</string>
     <string name="notification_lighting_sweep_pos_center">Midden</string>
     <string name="notification_lighting_sweep_pos_right">Rechts</string>
+    <string name="notification_lighting_sweep_select_shapes_title">Select Shapes</string>
+    <string name="notification_lighting_sweep_select_shapes_desc">Choose which shapes are used in the sweep animation</string>
     <string name="settings_section_animation">Animatie</string>
     <string name="notification_lighting_pulse_count_title">Pulshoeveelheid</string>
     <string name="notification_lighting_pulse_duration_title">Pulsduur</string>
