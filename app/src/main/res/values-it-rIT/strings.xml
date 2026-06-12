@@ -127,7 +127,7 @@
     <string name="dynamic_night_light_apps_section">App che disattivano la luce notturna</string>
     <string name="action_select_apps">Seleziona app</string>
     <!-- App Freezing -->
-    <string name="settings_section_app_control">Controllo dell\'app</string>
+    <string name="settings_section_app_control">Controllo app</string>
     <string name="action_freeze">Congela</string>
     <string name="action_unfreeze">Sblocca</string>
     <string name="action_remove">Rimuovi</string>
@@ -549,7 +549,7 @@
     <string name="search_qs_flashlight_title">Torcia</string>
     <string name="search_qs_flashlight_desc">Interruttore torcia dedicata</string>
     <string name="search_qs_freeze_title">Congelamento app</string>
-    <string name="search_qs_freeze_desc">Avvia griglia di congelamento app</string>
+    <string name="search_qs_freeze_desc">Avvia la griglia di congelamento app</string>
     <string name="search_qs_pulse_title">Flash della torcia</string>
     <string name="search_qs_pulse_desc">Attiva/disattiva flash della torcia per le notifiche</string>
     <string name="search_qs_stay_awake_desc">Attiva/disattiva opzione sviluppatore Rimani attivo</string>
@@ -1398,13 +1398,13 @@
     <string name="custom_video">Video personalizzato</string>
     <string name="about_desc_live_wallpaper">Imposta il tuo video preferito come sfondo della schermata home. Scegli se avviare l\'animazione allo sblocco o semplicemente ogni volta che lo schermo si accende, per un\'esperienza dinamica.</string>
     <!-- Shut-Up! Feature -->
-    <string name="feat_shut_up_title">Shut-Up!</string>
+    <string name="feat_shut_up_title">Taci!</string>
     <string name="feat_shut_up_desc">So quello che faccio</string>
-    <string name="shut_up_description">Shut-Up! aggira le restrizioni delle app e controlla le opzioni sviluppatore, l\'accessibilità e il debug, nascondendoli dinamicamente quando avvii app sensibili.\n\nUsa le scorciatoie personalizzate per assicurarti che le impostazioni siano nascoste prima dell\'avvio dell\'app.</string>
+    <string name="shut_up_description">Taci! aggira le restrizioni e i controlli delle app relativi a opzioni sviluppatore, accessibilità e debug, nascondendoli dinamicamente all\'avvio di applicazioni sensibili.\n\nUsa le scorciatoie personalizzate per assicurarti che queste impostazioni siano nascoste prima dell\'avvio dell\'app.</string>
     <string name="shut_up_select_apps_title">Seleziona app</string>
-    <string name="shut_up_select_apps_desc">Scegli le app a cui applicare la logica di Shut-Up!</string>
-    <string name="shut_up_settings_title">Impostazioni di Shut-Up!</string>
-    <string name="shut_up_per_app_settings">Funzionalità di Shut-Up!</string>
+    <string name="shut_up_select_apps_desc">Scegli le app a cui applicare la logica di Taci!</string>
+    <string name="shut_up_settings_title">Impostazioni di Taci!</string>
+    <string name="shut_up_per_app_settings">Funzionalità di Taci!</string>
     <string name="shut_up_disable_dev_options">Disabilita opzioni sviluppatore</string>
     <string name="shut_up_disable_usb_debugging">Disabilita debug USB</string>
     <string name="shut_up_disable_wireless_debugging">Disabilita debug wireless</string>
@@ -1413,7 +1413,7 @@
     <string name="feat_disable_rotation_suggestion_title">Disabilita suggerimenti di rotazione</string>
     <string name="feat_disable_rotation_suggestion_desc">Non mostrare il pulsante di rotazione quando la rotazione automatica è disattivata</string>
     <string name="shut_up_toast_active">L\'app è stata zittita</string>
-    <string name="shut_up_toast_restored">Le funzioni Shut up sono state ripristinate</string>
+    <string name="shut_up_toast_restored">Funzionalità di Taci! ripristinate</string>
     <string name="shut_up_auto_archive_notif_title">Congelamento automatico</string>
     <string name="shut_up_auto_archive_notif_text">%1$s verrà archiviata tra %2$d secondi</string>
     <string name="shut_up_auto_archive_action_freeze">Congela ora</string>
@@ -1427,7 +1427,7 @@
     <string name="lock_screen_clock_flex">Flex</string>
     <string name="lock_screen_clock_growth">Espansione</string>
     <string name="lock_screen_clock_handwritten">Scritto a mano</string>
-    <string name="lock_screen_clock_inflate">Gonfia</string>
+    <string name="lock_screen_clock_inflate">Rigonfiamento</string>
     <string name="lock_screen_clock_metro">Metro</string>
     <string name="lock_screen_clock_numoverlap">Numero sovrapposto</string>
     <string name="lock_screen_clock_weather">Meteo</string>
