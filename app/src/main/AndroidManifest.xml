@@ -129,6 +129,12 @@
             android:launchMode="singleInstance"
             android:theme="@style/Theme.Essentials.FullScreenAlarm" />
 
+        <activity
+            android:name=".ui.activities.TravelCompassActivity"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.Essentials" />
+
 
         <activity
             android:name=".ui.activities.AutomationEditorActivity"

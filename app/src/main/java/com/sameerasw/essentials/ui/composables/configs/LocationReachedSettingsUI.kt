@@ -1,6 +1,9 @@
 package com.sameerasw.essentials.ui.composables.configs
 
+import android.content.Intent
 import android.os.Build
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -101,6 +105,12 @@ fun LocationReachedSettingsUI(
                     onStart = {
                         HapticUtil.performVirtualKeyHaptic(view)
                         locationViewModel.startTracking(it)
+                    },
+                    onCompassClick = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        context.startActivity(
+                            Intent(context, com.sameerasw.essentials.ui.activities.TravelCompassActivity::class.java)
+                        )
                     }
                 )
             }
@@ -236,14 +246,26 @@ fun TopStatusCard(
     onStop: () -> Unit,
     onPause: () -> Unit,
     onResume: () -> Unit,
-    onStart: (String) -> Unit
+    onStart: (String) -> Unit,
+    onCompassClick: (() -> Unit)? = null
 ) {
     val isTracking = activeAlarm != null
     val isPaused = activeAlarm?.isPaused == true
     val displayAlarm = activeAlarm ?: lastTrip
 
+    val cardModifier = if (isTracking && !isPaused && onCompassClick != null) {
+        Modifier
+            .fillMaxWidth()
+            .clickable(
+                indication = null,
+                interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
+            ) { onCompassClick() }
+    } else {
+        Modifier.fillMaxWidth()
+    }
+
     RoundedCardContainer(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = cardModifier,
         cornerRadius = 32.dp,
         containerColor = MaterialTheme.colorScheme.surfaceBright
     ) {
