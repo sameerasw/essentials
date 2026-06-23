@@ -13,7 +13,6 @@ import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
 import android.content.res.Configuration
-import android.content.IntentFilter
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
