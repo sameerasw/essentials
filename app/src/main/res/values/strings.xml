@@ -860,6 +860,23 @@
     <string name="action_enable">Enable</string>
     <string name="action_disable">Disable</string>
     
+    <string name="refresh_rate_section_per_app">Per-App Refresh Rate</string>
+    <string name="refresh_rate_per_app_enable_title">Per-App Refresh Rate</string>
+    <string name="refresh_rate_per_app_enable_desc">Automatically switch the refresh rate when a configured app is opened</string>
+    <string name="refresh_rate_per_app_add_app">Add App</string>
+    <string name="refresh_rate_per_app_add_app_desc">Select an app to customize its refresh rate</string>
+    <string name="refresh_rate_per_app_select_rate">Select Refresh Rate</string>
+    <string name="refresh_rate_per_app_mode_fixed">Fixed</string>
+    <string name="refresh_rate_per_app_mode_dynamic">Dynamic</string>
+    <string name="refresh_rate_per_app_fixed_toggle">Fixed Mode</string>
+    <string name="refresh_rate_per_app_fixed_toggle_desc">Locks the screen to this refresh rate. Turn off to allow the display to scale down and save battery.</string>
+    <string name="refresh_rate_per_app_accessibility_required">Accessibility service is required for Per-App Refresh Rate to detect active apps.</string>
+    <string name="refresh_rate_per_app_usage_access_required">Usage access permission is required for Per-App Refresh Rate to detect active apps.</string>
+    <string name="refresh_rate_per_app_landscape_toggle">Use different rate in landscape</string>
+    <string name="refresh_rate_per_app_landscape_toggle_desc">Configure a specific refresh rate when the app is rotated to landscape mode</string>
+    <string name="refresh_rate_per_app_only_media_toggle">Only when media is playing</string>
+    <string name="refresh_rate_per_app_only_media_toggle_desc">Only apply landscape rate when video or music is playing. Note: Some OTT apps (Netflix, Prime Video, Hotstar, etc.) do not expose media status so do not use this.</string>
+
     <string name="automation_service_channel_name">Automation Service</string>
     <string name="automation_service_running_title">Automations Active</string>
     <string name="automation_service_running_desc">Monitoring system events for your automations</string>

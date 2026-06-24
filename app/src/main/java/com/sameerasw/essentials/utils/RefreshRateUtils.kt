@@ -78,6 +78,8 @@ object RefreshRateUtils {
         val formatted = formatRate(clamped)
         ShellUtils.runCommand(context, "settings put system $KEY_PEAK_REFRESH_RATE $formatted")
         ShellUtils.runCommand(context, "settings put system $KEY_MIN_REFRESH_RATE $formatted")
+        ShellUtils.runCommand(context, "settings put global $KEY_PEAK_REFRESH_RATE $formatted")
+        ShellUtils.runCommand(context, "settings put global $KEY_MIN_REFRESH_RATE $formatted")
         return true
     }
 
@@ -93,6 +95,14 @@ object RefreshRateUtils {
         ShellUtils.runCommand(
             context,
             "settings put system $KEY_PEAK_REFRESH_RATE ${formatRate(safePeak)}"
+        )
+        ShellUtils.runCommand(
+            context,
+            "settings put global $KEY_MIN_REFRESH_RATE ${formatRate(safeMin)}"
+        )
+        ShellUtils.runCommand(
+            context,
+            "settings put global $KEY_PEAK_REFRESH_RATE ${formatRate(safePeak)}"
         )
         return true
     }
@@ -210,6 +220,34 @@ object RefreshRateUtils {
         } catch (_: Exception) {
             DEFAULT_SYSTEM_REFRESH_RATE
         }
+    }
+
+    fun getSupportedRefreshRates(context: Context): List<Float> {
+        return try {
+            val displayManager = context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
+            val display = displayManager.getDisplay(Display.DEFAULT_DISPLAY)
+            val rates = display?.supportedModes
+                ?.map { it.refreshRate.roundToInt().toFloat() }
+                ?.distinct()
+                ?.sorted()
+                ?.filter { it >= 30f }
+                ?: emptyList()
+            if (rates.isEmpty()) listOf(60f, 120f) else rates
+        } catch (_: Exception) {
+            listOf(60f, 120f)
+        }
+    }
+
+    fun applyDynamicRefreshRate(context: Context, value: Float): Boolean {
+        if (!ShellUtils.hasPermission(context)) return false
+
+        val clamped = normalizeRate(value)
+        val formatted = formatRate(clamped)
+        ShellUtils.runCommand(context, "settings put system $KEY_PEAK_REFRESH_RATE $formatted")
+        ShellUtils.runCommand(context, "settings put system $KEY_MIN_REFRESH_RATE 0")
+        ShellUtils.runCommand(context, "settings put global $KEY_PEAK_REFRESH_RATE $formatted")
+        ShellUtils.runCommand(context, "settings put global $KEY_MIN_REFRESH_RATE 0")
+        return true
     }
 
     private fun formatRate(value: Float): String {
