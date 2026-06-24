@@ -1470,6 +1470,6 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="favorites_widget_description">Visualiza y lanza tus funciones favoritas de un vistazo.</string>
     <string name="favorites_widget_empty_state">Aún no hay funciones favoritas fijadas. ¡Abre la aplicación para añadir algunas!</string>
     <!-- External Control Permission -->
-    <string name="perm_external_control_label">control Essentials features</string>
-    <string name="perm_external_control_desc">read, update and control Essentials features and settings</string>
+    <string name="perm_external_control_label">controlar las funciones de Essentials</string>
+    <string name="perm_external_control_desc">leer, actualizar y controlar las funciones y ajustes de Essentials</string>
 </resources>
