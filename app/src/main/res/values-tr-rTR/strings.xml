@@ -1468,4 +1468,7 @@
     <string name="favorites_widget_name">Favori Özellikler</string>
     <string name="favorites_widget_description">Favori özelliklerinizi bir bakışta görüntüleyin ve başlatın.</string>
     <string name="favorites_widget_empty_state">Henüz favori özellik sabitlemedi. Favori özellikler sabitlemek için uygulamayı açın!</string>
+    <!-- External Control Permission -->
+    <string name="perm_external_control_label">control Essentials features</string>
+    <string name="perm_external_control_desc">read, update and control Essentials features and settings</string>
 </resources>

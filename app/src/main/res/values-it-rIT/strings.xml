@@ -1467,4 +1467,7 @@
     <string name="favorites_widget_name">Funzionalità preferite</string>
     <string name="favorites_widget_description">Visualizza e avvia le tue funzioni preferite in un attimo.</string>
     <string name="favorites_widget_empty_state">Nessuna funzionalità preferita fissata. Apri l\'app per fissarne alcune!</string>
+    <!-- External Control Permission -->
+    <string name="perm_external_control_label">control Essentials features</string>
+    <string name="perm_external_control_desc">read, update and control Essentials features and settings</string>
 </resources>

@@ -1467,4 +1467,7 @@
     <string name="favorites_widget_name">Fitur favorit</string>
     <string name="favorites_widget_description">Lihat dan luncurkan fitur favorit Anda secara sekilas.</string>
     <string name="favorites_widget_empty_state">Belum ada fitur favorit yang disematkan. Buka aplikasi untuk menyematkan beberapa!</string>
+    <!-- External Control Permission -->
+    <string name="perm_external_control_label">control Essentials features</string>
+    <string name="perm_external_control_desc">read, update and control Essentials features and settings</string>
 </resources>
