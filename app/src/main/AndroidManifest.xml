@@ -36,6 +36,10 @@
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <permission android:name="com.sameerasw.permission.ESSENTIALS_AIRSYNC_BRIDGE" android:protectionLevel="signature" />
     <uses-permission android:name="com.sameerasw.permission.ESSENTIALS_AIRSYNC_BRIDGE" />
+    <permission android:name="com.sameerasw.essentials.permission.EXTERNAL_CONTROL"
+        android:protectionLevel="dangerous"
+        android:label="@string/perm_external_control_label"
+        android:description="@string/perm_external_control_desc" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
 
@@ -908,6 +912,21 @@
                 android:name="android.service.quicksettings.TILE_CATEGORY"
                 android:value="android.service.quicksettings.CATEGORY_DISPLAY" />
         </service>
+
+        <provider
+            android:name=".external.ExternalControlProvider"
+            android:authorities="${applicationId}.external"
+            android:exported="true"
+            android:permission="com.sameerasw.essentials.permission.EXTERNAL_CONTROL" />
+
+        <receiver
+            android:name=".external.ExternalActionReceiver"
+            android:exported="true"
+            android:permission="com.sameerasw.essentials.permission.EXTERNAL_CONTROL">
+            <intent-filter>
+                <action android:name="com.sameerasw.essentials.action.EXTERNAL_CONTROL" />
+            </intent-filter>
+        </receiver>
 
     </application>
 
