@@ -9,5 +9,7 @@
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen"
     android:initialLayout="@layout/screen_off_widget"
-    android:previewImage="@drawable/ic_launcher_foreground" />
+    android:previewImage="@drawable/ic_launcher_foreground"
+    android:configure="com.sameerasw.essentials.ui.activities.ScreenOffWidgetConfigureActivity"
+    android:widgetFeatures="reconfigurable" />
 

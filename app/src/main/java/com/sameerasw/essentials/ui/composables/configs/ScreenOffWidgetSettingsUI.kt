@@ -57,10 +57,6 @@ fun ScreenOffWidgetSettingsUI(
         )
     }
 
-    var isDoubleTapRequired by remember {
-        mutableStateOf(prefs.getBoolean("screen_off_double_tap", false))
-    }
-
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -94,27 +90,6 @@ fun ScreenOffWidgetSettingsUI(
                     }
                 },
                 modifier = Modifier.highlight(highlightSetting == "screen_off_method_picker")
-            )
-        }
-
-        // Double Tap Toggle
-        RoundedCardContainer(
-            modifier = Modifier.padding(top = 16.dp),
-            spacing = 8.dp,
-            cornerRadius = 24.dp
-        ) {
-            IconToggleItem(
-                title = stringResource(R.string.require_double_tap_title),
-                description = stringResource(R.string.require_double_tap_desc),
-                iconRes = R.drawable.rounded_touch_app_24,
-                isChecked = isDoubleTapRequired,
-                onCheckedChange = {
-                    isDoubleTapRequired = it
-                    prefs.edit {
-                        putBoolean("screen_off_double_tap", it)
-                    }
-                },
-                showToggle = true
             )
         }
 

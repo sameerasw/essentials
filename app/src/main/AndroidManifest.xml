@@ -359,6 +359,18 @@
                 android:resource="@xml/screen_off_widget_info" />
         </receiver>
 
+        <activity
+            android:name=".ui.activities.ScreenOffWidgetConfigureActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:theme="@style/Theme.Essentials.Translucent">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
         <receiver
             android:name=".services.widgets.BatteriesWidgetReceiver"
             android:label="@string/batteries_widget_label"
