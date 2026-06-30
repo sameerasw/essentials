@@ -428,6 +428,8 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="diy_editor_edit_title">Editar automatización</string>
     <string name="feat_link_actions_title">Vincular acciones</string>
     <string name="feat_link_actions_desc">Gestionar enlaces con múltiples aplicaciones</string>
+    <string name="feat_flashlight_title">Flashlight</string>
+    <string name="feat_flashlight_desc">Improve flashlight behavior</string>
     <string name="feat_snooze_notifications_title">Posponer notificaciones del sistema</string>
     <string name="feat_snooze_notifications_desc">Posponer notificaciones persistentes</string>
     <string name="feat_qs_tiles_title">Mosaicos de ajustes rápidos</string>
