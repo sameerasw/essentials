@@ -429,6 +429,7 @@
     <string name="feat_link_actions_desc">Gestisci i link con più applicazioni</string>
     <string name="feat_flashlight_title">Flashlight</string>
     <string name="feat_flashlight_desc">Improve flashlight behavior</string>
+    <string name="label_restore_mode">Restore mode</string>
     <string name="feat_snooze_notifications_title">Posticipa le notifiche di sistema</string>
     <string name="feat_snooze_notifications_desc">Posticipa le notifiche persistenti</string>
     <string name="feat_qs_tiles_title">Riquadri Impostazioni rapide</string>
