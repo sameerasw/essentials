@@ -180,6 +180,7 @@
     <string name="flashlight_pulse_facedown_title">Nur, wenn das Handy umgedreht ist</string>
     <string name="flashlight_pulse_same_as_lighting_title">Dieselben Apps wie beim Benachrichtigungslicht</string>
     <string name="flashlight_pulse_max_brightness">Maximale Helligkeit</string>
+    <string name="flashlight_pulse_disable_on_dnd_title">Do not trigger on DND</string>
     <string name="flashlight_pulse_preview">Preview pulse</string>
     <string name="settings_section_style">Stil</string>
     <string name="notification_lighting_stroke_adjustment_section">Aufleuchten anpassen</string>
