@@ -830,6 +830,7 @@
     <string name="diy_action_toggle_media_volume">Toggle Media Volume</string>
     <string name="diy_action_like_current_song">Like Current Song</string>
     <string name="diy_action_circle_to_search">Circle to Search</string>
+    <string name="diy_action_pin_app">Pin Foreground App</string>
     <string name="diy_dim_wallpaper_desc">يتطلب هذا الإجراء Shizuku أو Root لضبط تعتيم خلفية النظام.</string>
     <string name="diy_select_trigger">حدد المشغل</string>
     <string name="diy_create_app_title">برنامج</string>
