@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.services.automation.executors
 
+import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.hardware.camera2.CameraManager
@@ -16,6 +17,8 @@ import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.utils.performHapticFeedback
+import rikka.shizuku.ShizukuBinderWrapper
+import rikka.shizuku.SystemServiceHelper
 
 object CombinedActionExecutor {
 
@@ -313,6 +316,87 @@ object CombinedActionExecutor {
 
                 is Action.CircleToSearch -> {
                     com.sameerasw.essentials.utils.OmniTriggerUtil.trigger(context)
+                }
+
+                is Action.PinApp -> {
+                    try {
+                        val useActivityTask = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+                        val serviceName = if (useActivityTask) "activity_task" else Context.ACTIVITY_SERVICE
+                        val stubClassName = if (useActivityTask) "android.app.IActivityTaskManager\$Stub" else "android.app.IActivityManager\$Stub"
+                        val interfaceClassName = if (useActivityTask) "android.app.IActivityTaskManager" else "android.app.IActivityManager"
+
+                        val binder = SystemServiceHelper.getSystemService(serviceName)
+                        val stubClass = Class.forName(stubClassName)
+                        val interfaceClass = Class.forName(interfaceClassName)
+
+                        val serviceInstance = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                            org.lsposed.hiddenapibypass.HiddenApiBypass.invoke(stubClass, null, "asInterface", ShizukuBinderWrapper(binder))
+                        } else {
+                            val asInterfaceMethod = stubClass.getMethod("asInterface", android.os.IBinder::class.java)
+                            asInterfaceMethod.invoke(null, ShizukuBinderWrapper(binder))
+                        }
+
+                        val tasks = if (useActivityTask) {
+                            org.lsposed.hiddenapibypass.HiddenApiBypass.invoke(
+                                interfaceClass,
+                                serviceInstance,
+                                "getTasks",
+                                5,
+                                false,
+                                false,
+                                0
+                            ) as List<*>
+                        } else {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                                org.lsposed.hiddenapibypass.HiddenApiBypass.invoke(
+                                    interfaceClass,
+                                    serviceInstance,
+                                    "getTasks",
+                                    5,
+                                    0
+                                ) as List<*>
+                            } else {
+                                val getTasksMethod = interfaceClass.getMethod("getTasks", Int::class.javaPrimitiveType, Int::class.javaPrimitiveType)
+                                getTasksMethod.invoke(serviceInstance, 5, 0) as List<*>
+                            }
+                        }
+                        
+                        var targetTaskId = -1
+                        for (task in tasks) {
+                            val taskInfo = task as? ActivityManager.RunningTaskInfo ?: continue
+                            val topActivity = taskInfo.topActivity
+                            if (topActivity != null && topActivity.packageName != context.packageName) {
+                                targetTaskId = taskInfo.id
+                                break
+                            }
+                        }
+                        
+                        if (targetTaskId == -1 && tasks.isNotEmpty()) {
+                            val firstTask = tasks.firstOrNull() as? ActivityManager.RunningTaskInfo
+                            if (firstTask != null) {
+                                targetTaskId = firstTask.id
+                            }
+                        }
+
+                        if (targetTaskId != -1) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                                org.lsposed.hiddenapibypass.HiddenApiBypass.invoke(
+                                    interfaceClass,
+                                    serviceInstance,
+                                    "startSystemLockTaskMode",
+                                    targetTaskId
+                                )
+                            } else {
+                                val startLockTaskMethod = interfaceClass.getMethod("startSystemLockTaskMode", Int::class.javaPrimitiveType)
+                                startLockTaskMethod.invoke(serviceInstance, targetTaskId)
+                            }
+                        } else {
+                            Toast.makeText(context, "No active foreground task found", Toast.LENGTH_SHORT).show()
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        Toast.makeText(context, "Failed to pin app: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }

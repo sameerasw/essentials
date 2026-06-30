@@ -180,4 +180,11 @@ sealed interface Action {
         override val icon: Int = R.drawable.rounded_search_24
         override val permissions: List<String> = listOf("shizuku", "root")
     }
+
+    @Keep
+    data object PinApp : Action {
+        override val title: Int = R.string.diy_action_pin_app
+        override val icon: Int = R.drawable.rounded_shield_lock_24
+        override val permissions: List<String> = listOf("shizuku", "root")
+    }
 }

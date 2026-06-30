@@ -862,6 +862,7 @@
     <string name="diy_action_toggle_media_volume">Toggle Media Volume</string>
     <string name="diy_action_like_current_song">Like Current Song</string>
     <string name="diy_action_circle_to_search">Circle to Search</string>
+    <string name="diy_action_pin_app">Pin Foreground App</string>
     <string name="diy_dim_wallpaper_desc">This action requires Shizuku or Root to adjust system wallpaper dimming.</string>
     <string name="diy_select_trigger">Select Trigger</string>
     <string name="diy_create_app_title">App</string>

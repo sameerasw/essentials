@@ -596,7 +596,8 @@ class AutomationEditorActivity : ComponentActivity() {
                                                 Action.TakeScreenshot,
                                                 Action.ToggleMediaVolume,
                                                 Action.LikeCurrentSong,
-                                                Action.CircleToSearch
+                                                Action.CircleToSearch,
+                                                Action.PinApp
                                             )
                                             // Only show Device Effects on Android 15+ 
                                             actions.add(Action.DeviceEffects())
