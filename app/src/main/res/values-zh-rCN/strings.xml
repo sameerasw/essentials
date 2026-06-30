@@ -427,6 +427,8 @@
     <string name="diy_editor_edit_title">Edit Automation</string>
     <string name="feat_link_actions_title">Link actions</string>
     <string name="feat_link_actions_desc">Handle links with multiple apps</string>
+    <string name="feat_flashlight_title">Flashlight</string>
+    <string name="feat_flashlight_desc">Improve flashlight behavior</string>
     <string name="feat_snooze_notifications_title">Snooze system notifications</string>
     <string name="feat_snooze_notifications_desc">Snooze persistent notifications</string>
     <string name="feat_qs_tiles_title">Quick settings tiles</string>
