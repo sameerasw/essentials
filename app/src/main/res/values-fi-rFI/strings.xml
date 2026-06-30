@@ -429,6 +429,7 @@
     <string name="feat_link_actions_desc">Käsittele linkkejä useilla sovelluksilla</string>
     <string name="feat_flashlight_title">Flashlight</string>
     <string name="feat_flashlight_desc">Improve flashlight behavior</string>
+    <string name="label_restore_mode">Restore mode</string>
     <string name="feat_snooze_notifications_title">Torkkujärjestelmän ilmoitukset</string>
     <string name="feat_snooze_notifications_desc">Torkku jatkuvat ilmoitukset</string>
     <string name="feat_qs_tiles_title">Pika-asetukset laatat</string>
