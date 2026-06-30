@@ -12,6 +12,8 @@
     <string name="freeze_activity_subtitle">封存少用的應用程式</string>
     <string name="freeze_shortcut_short_label">已凍結的應用程式</string>
     <string name="freeze_shortcut_long_label">開啟凍結</string>
+    <string name="action_shortcut_short_label">Action</string>
+    <string name="action_shortcut_long_label">Launch action shortcut</string>
     <string name="frozen_app_shortcut_label">凍結應用程式</string>
     <string name="screen_off_widget_label">空白的關閉螢幕小工具</string>
     <string name="app_freezing_tile_label">凍結中的應用程式</string>
@@ -180,6 +182,7 @@
     <string name="flashlight_pulse_facedown_title">只在螢幕朝下時</string>
     <string name="flashlight_pulse_same_as_lighting_title">選擇與通知光效設定相同的應用程式</string>
     <string name="flashlight_pulse_max_brightness">最大亮度</string>
+    <string name="flashlight_pulse_disable_on_dnd_title">Do not trigger on DND</string>
     <string name="flashlight_pulse_preview">閃爍預覽</string>
     <string name="settings_section_style">風格</string>
     <string name="notification_lighting_stroke_adjustment_section">邊框調整</string>
@@ -422,10 +425,15 @@
     <string name="diy_create_trigger_desc">安排一个动作在观察到事件时触发</string>
     <string name="diy_create_state_title">状态自动化</string>
     <string name="diy_create_state_desc">根据条件的进入/退出状态安排动作执行</string>
+    <string name="diy_create_action_shortcut_title">Action Shortcut</string>
+    <string name="diy_create_action_shortcut_desc">Launch shortcut to trigger action</string>
     <string name="diy_editor_new_title">新建自动化</string>
     <string name="diy_editor_edit_title">编辑自动化</string>
     <string name="feat_link_actions_title">链接操作</string>
     <string name="feat_link_actions_desc">使用多个应用处理链接</string>
+    <string name="feat_flashlight_title">Flashlight</string>
+    <string name="feat_flashlight_desc">Improve flashlight behavior</string>
+    <string name="label_restore_mode">Restore mode</string>
     <string name="feat_snooze_notifications_title">延迟系统通知</string>
     <string name="feat_snooze_notifications_desc">暫時關閉常駐通知</string>
     <string name="feat_qs_tiles_title">快速设置磁贴</string>
@@ -813,6 +821,16 @@
     <string name="diy_action_low_power_on">开启低电量模式</string>
     <string name="diy_action_low_power_off">关闭低电量模式</string>
     <string name="diy_action_dim_wallpaper">调暗壁纸</string>
+    <string name="diy_action_screen_off">Screen Off</string>
+    <string name="diy_action_media_play_pause">Media Play/Pause</string>
+    <string name="diy_action_media_next">Media Next</string>
+    <string name="diy_action_media_previous">Media Previous</string>
+    <string name="diy_action_ai_assistant">AI Assistant</string>
+    <string name="diy_action_take_screenshot">Take Screenshot</string>
+    <string name="diy_action_toggle_media_volume">Toggle Media Volume</string>
+    <string name="diy_action_like_current_song">Like Current Song</string>
+    <string name="diy_action_circle_to_search">Circle to Search</string>
+    <string name="diy_action_pin_app">Pin Foreground App</string>
     <string name="diy_dim_wallpaper_desc">此操作需要Shizuku或Root权限来调整系统壁纸调暗。</string>
     <string name="diy_select_trigger">选择触发器</string>
     <string name="diy_create_app_title">应用</string>
@@ -1467,4 +1485,7 @@
     <string name="favorites_widget_name">Favorite Features</string>
     <string name="favorites_widget_description">一目瞭然地查看並啟動您喜愛的功能。</string>
     <string name="favorites_widget_empty_state">No favorite features pinned yet. Open the app to pin some!</string>
+    <!-- External Control Permission -->
+    <string name="perm_external_control_label">control Essentials features</string>
+    <string name="perm_external_control_desc">read, update and control Essentials features and settings</string>
 </resources>

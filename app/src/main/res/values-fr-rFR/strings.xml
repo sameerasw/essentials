@@ -12,6 +12,8 @@
     <string name="freeze_activity_subtitle">Désactiver les applis rarement utilisées</string>
     <string name="freeze_shortcut_short_label">Applis gelées</string>
     <string name="freeze_shortcut_long_label">Ouvrir le gel d\'applis</string>
+    <string name="action_shortcut_short_label">Action</string>
+    <string name="action_shortcut_long_label">Launch action shortcut</string>
     <string name="frozen_app_shortcut_label">Application gelée</string>
     <string name="screen_off_widget_label">Widget de verrouillage invisible </string>
     <string name="app_freezing_tile_label">Gel d\'applis</string>
@@ -180,6 +182,7 @@
     <string name="flashlight_pulse_facedown_title">Seulement quand le téléphone est vers le bas</string>
     <string name="flashlight_pulse_same_as_lighting_title">Mêmes applis que les notifications lumineuses</string>
     <string name="flashlight_pulse_max_brightness">Luminosité maximale</string>
+    <string name="flashlight_pulse_disable_on_dnd_title">Do not trigger on DND</string>
     <string name="flashlight_pulse_preview">Prévisualiser le clignotement</string>
     <string name="settings_section_style">Style</string>
     <string name="notification_lighting_stroke_adjustment_section">Ajustement du trait</string>
@@ -422,10 +425,15 @@
     <string name="diy_create_trigger_desc">Prévoir une action à déclencher lors d\'une observation</string>
     <string name="diy_create_state_title">Automatisation de l\'état</string>
     <string name="diy_create_state_desc">Prévoir une action à exécuter basé sur l\'état d\'une condition</string>
+    <string name="diy_create_action_shortcut_title">Action Shortcut</string>
+    <string name="diy_create_action_shortcut_desc">Launch shortcut to trigger action</string>
     <string name="diy_editor_new_title">Nouvelle automatisation</string>
     <string name="diy_editor_edit_title">Modifier l\'automatisation</string>
     <string name="feat_link_actions_title">Actions de lien</string>
     <string name="feat_link_actions_desc">Gérez les liens avec plusieurs applis</string>
+    <string name="feat_flashlight_title">Flashlight</string>
+    <string name="feat_flashlight_desc">Improve flashlight behavior</string>
+    <string name="label_restore_mode">Restore mode</string>
     <string name="feat_snooze_notifications_title">Mettre en attente les notifications système</string>
     <string name="feat_snooze_notifications_desc">Mettre en attente les notifications persistantes</string>
     <string name="feat_qs_tiles_title">Blocs des Réglages rapides</string>
@@ -813,6 +821,16 @@
     <string name="diy_action_low_power_on">Activer le mode de batterie faible</string>
     <string name="diy_action_low_power_off">Désactiver le mode de batterie faible</string>
     <string name="diy_action_dim_wallpaper">Fond d\'écran assombri</string>
+    <string name="diy_action_screen_off">Screen Off</string>
+    <string name="diy_action_media_play_pause">Media Play/Pause</string>
+    <string name="diy_action_media_next">Media Next</string>
+    <string name="diy_action_media_previous">Media Previous</string>
+    <string name="diy_action_ai_assistant">AI Assistant</string>
+    <string name="diy_action_take_screenshot">Take Screenshot</string>
+    <string name="diy_action_toggle_media_volume">Toggle Media Volume</string>
+    <string name="diy_action_like_current_song">Like Current Song</string>
+    <string name="diy_action_circle_to_search">Circle to Search</string>
+    <string name="diy_action_pin_app">Pin Foreground App</string>
     <string name="diy_dim_wallpaper_desc">Cette action nécessite Shizuku ou un accès racine (root) pour ajuster l\'assombrissement du fond d\'écran.</string>
     <string name="diy_select_trigger">Déclencheur</string>
     <string name="diy_create_app_title">Appli</string>
@@ -1467,4 +1485,7 @@
     <string name="favorites_widget_name">Fonctionnalités préférées</string>
     <string name="favorites_widget_description">Regardez et lancez vos fonctionnalités préférées en un coup d\'œil.</string>
     <string name="favorites_widget_empty_state">Pas encore de fonctionnalité préférée épinglée. Ouvrez l\'application pour en épingler !</string>
+    <!-- External Control Permission -->
+    <string name="perm_external_control_label">control Essentials features</string>
+    <string name="perm_external_control_desc">read, update and control Essentials features and settings</string>
 </resources>

@@ -12,6 +12,8 @@
     <string name="freeze_activity_subtitle">Desactivar aplicaciones que rara vez se usan</string>
     <string name="freeze_shortcut_short_label">Congelación de aplicaciones</string>
     <string name="freeze_shortcut_long_label">Abrir aplicación congelada</string>
+    <string name="action_shortcut_short_label">Acción</string>
+    <string name="action_shortcut_long_label">Lanzar acceso directo de acción</string>
     <string name="frozen_app_shortcut_label">Aplicación congelada</string>
     <string name="screen_off_widget_label">Widget vacío para apagar la pantalla</string>
     <string name="app_freezing_tile_label">Congelación de aplicaciones</string>
@@ -181,6 +183,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="flashlight_pulse_facedown_title">Solo mientras esté boca abajo</string>
     <string name="flashlight_pulse_same_as_lighting_title">Las mismas aplicaciones que la iluminación de notificaciones</string>
     <string name="flashlight_pulse_max_brightness">Brillo máximo</string>
+    <string name="flashlight_pulse_disable_on_dnd_title">No activar cuando esté en modo No molestar</string>
     <string name="flashlight_pulse_preview">Vista previa de los destellos</string>
     <string name="settings_section_style">Estilo</string>
     <string name="notification_lighting_stroke_adjustment_section">Ajuste del contorno</string>
@@ -423,10 +426,15 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="diy_create_trigger_desc">Programar una acción para que se active al producirse una observación</string>
     <string name="diy_create_state_title">Automatización por estado</string>
     <string name="diy_create_state_desc">Programar una acción para ejecutarse según el estado de una condición de entrada y salida</string>
+    <string name="diy_create_action_shortcut_title">Acceso directo de acción</string>
+    <string name="diy_create_action_shortcut_desc">Lanzar el acceso directo para activar la acción</string>
     <string name="diy_editor_new_title">Nueva automatización</string>
     <string name="diy_editor_edit_title">Editar automatización</string>
     <string name="feat_link_actions_title">Vincular acciones</string>
     <string name="feat_link_actions_desc">Gestionar enlaces con múltiples aplicaciones</string>
+    <string name="feat_flashlight_title">Linterna</string>
+    <string name="feat_flashlight_desc">Mejorar el funcionamiento de la linterna</string>
+    <string name="label_restore_mode">Modo de restauración</string>
     <string name="feat_snooze_notifications_title">Posponer notificaciones del sistema</string>
     <string name="feat_snooze_notifications_desc">Posponer notificaciones persistentes</string>
     <string name="feat_qs_tiles_title">Mosaicos de ajustes rápidos</string>
@@ -815,6 +823,16 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="diy_action_low_power_on">Activar el modo de bajo consumo</string>
     <string name="diy_action_low_power_off">Desactivar el modo de bajo consumo</string>
     <string name="diy_action_dim_wallpaper">Atenuar el fondo de pantalla</string>
+    <string name="diy_action_screen_off">Pantalla apagada</string>
+    <string name="diy_action_media_play_pause">Reproducir/Pausar medios</string>
+    <string name="diy_action_media_next">Siguiente pista</string>
+    <string name="diy_action_media_previous">Pista anterior</string>
+    <string name="diy_action_ai_assistant">Asistente de IA</string>
+    <string name="diy_action_take_screenshot">Tomar captura de pantalla</string>
+    <string name="diy_action_toggle_media_volume">Activar/desactivar el volumen multimedia</string>
+    <string name="diy_action_like_current_song">Me gusta la canción actual</string>
+    <string name="diy_action_circle_to_search">Rodea para buscar</string>
+    <string name="diy_action_pin_app">Pin Foreground App</string>
     <string name="diy_dim_wallpaper_desc">Esta acción requiere Shizuku o acceso Root para ajustar el atenuado del fondo de pantalla del sistema.</string>
     <string name="diy_select_trigger">Seleccionar desencadenante</string>
     <string name="diy_create_app_title">Aplicación</string>
@@ -1469,4 +1487,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="favorites_widget_name">Funciones favoritas</string>
     <string name="favorites_widget_description">Visualiza y lanza tus funciones favoritas de un vistazo.</string>
     <string name="favorites_widget_empty_state">Aún no hay funciones favoritas fijadas. ¡Abre la aplicación para añadir algunas!</string>
+    <!-- External Control Permission -->
+    <string name="perm_external_control_label">controlar las funciones de Essentials</string>
+    <string name="perm_external_control_desc">leer, actualizar y controlar las funciones y ajustes de Essentials</string>
 </resources>

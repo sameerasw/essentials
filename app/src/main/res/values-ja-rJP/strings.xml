@@ -12,6 +12,8 @@
     <string name="freeze_activity_subtitle">しばらく使用していないアプリを無効にします</string>
     <string name="freeze_shortcut_short_label">アプリフリーズ</string>
     <string name="freeze_shortcut_long_label">アプリフリーズを開く</string>
+    <string name="action_shortcut_short_label">Action</string>
+    <string name="action_shortcut_long_label">Launch action shortcut</string>
     <string name="frozen_app_shortcut_label">アプリフリージング</string>
     <string name="screen_off_widget_label">空白の画面オフ</string>
     <string name="app_freezing_tile_label">アプリフリーズ</string>
@@ -180,6 +182,7 @@
     <string name="flashlight_pulse_facedown_title">下を向いているときのみ</string>
     <string name="flashlight_pulse_same_as_lighting_title">通知ライトと同じアプリ</string>
     <string name="flashlight_pulse_max_brightness">最大の明るさ</string>
+    <string name="flashlight_pulse_disable_on_dnd_title">Do not trigger on DND</string>
     <string name="flashlight_pulse_preview">点滅をプレビュー</string>
     <string name="settings_section_style">スタイル</string>
     <string name="notification_lighting_stroke_adjustment_section">ストローク調整</string>
@@ -422,10 +425,15 @@
     <string name="diy_create_trigger_desc">トリガーされるアクションをスケジュールする</string>
     <string name="diy_create_state_title">ステータスオートメーション</string>
     <string name="diy_create_state_desc">条件の状態に基づいて実行するアクションをスケジュールする</string>
+    <string name="diy_create_action_shortcut_title">Action Shortcut</string>
+    <string name="diy_create_action_shortcut_desc">Launch shortcut to trigger action</string>
     <string name="diy_editor_new_title">新規作成</string>
     <string name="diy_editor_edit_title">オートメーションの編集</string>
     <string name="feat_link_actions_title">リンクアクション</string>
     <string name="feat_link_actions_desc">リンクの処理を複数のアプリで行う</string>
+    <string name="feat_flashlight_title">Flashlight</string>
+    <string name="feat_flashlight_desc">Improve flashlight behavior</string>
+    <string name="label_restore_mode">Restore mode</string>
     <string name="feat_snooze_notifications_title">システム通知をスヌーズ</string>
     <string name="feat_snooze_notifications_desc">持続的な通知をスヌーズする</string>
     <string name="feat_qs_tiles_title">クイック設定タイル</string>
@@ -813,6 +821,16 @@
     <string name="diy_action_low_power_on">バッテリーセーバーオン</string>
     <string name="diy_action_low_power_off">バッテリーセーバーオフ</string>
     <string name="diy_action_dim_wallpaper">暗い壁紙</string>
+    <string name="diy_action_screen_off">Screen Off</string>
+    <string name="diy_action_media_play_pause">Media Play/Pause</string>
+    <string name="diy_action_media_next">Media Next</string>
+    <string name="diy_action_media_previous">Media Previous</string>
+    <string name="diy_action_ai_assistant">AI Assistant</string>
+    <string name="diy_action_take_screenshot">Take Screenshot</string>
+    <string name="diy_action_toggle_media_volume">Toggle Media Volume</string>
+    <string name="diy_action_like_current_song">Like Current Song</string>
+    <string name="diy_action_circle_to_search">Circle to Search</string>
+    <string name="diy_action_pin_app">Pin Foreground App</string>
     <string name="diy_dim_wallpaper_desc">このアクションでは、壁紙を暗くするために、ShizukuまたはRootが必要です。</string>
     <string name="diy_select_trigger">トリガーを選択</string>
     <string name="diy_create_app_title">アプリ</string>
@@ -1467,4 +1485,7 @@
     <string name="favorites_widget_name">Favorite Features</string>
     <string name="favorites_widget_description">View and launch your favorite features at a glance.</string>
     <string name="favorites_widget_empty_state">No favorite features pinned yet. Open the app to pin some!</string>
+    <!-- External Control Permission -->
+    <string name="perm_external_control_label">control Essentials features</string>
+    <string name="perm_external_control_desc">read, update and control Essentials features and settings</string>
 </resources>

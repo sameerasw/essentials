@@ -12,6 +12,8 @@
     <string name="freeze_activity_subtitle">Gengo jami ma pe kitiyo kwede kare ki kare</string>
     <string name="freeze_shortcut_short_label">App Freezing</string>
     <string name="freeze_shortcut_long_label">Yab App Freezing</string>
+    <string name="action_shortcut_short_label">Action</string>
+    <string name="action_shortcut_long_label">Launch action shortcut</string>
     <string name="frozen_app_shortcut_label">App ma ki juku</string>
     <string name="screen_off_widget_label">Wek gin ma ki lwongo ni screen off widget</string>
     <string name="app_freezing_tile_label">App Freezing</string>
@@ -180,6 +182,7 @@
     <string name="flashlight_pulse_facedown_title">Ka ineno piny keken</string>
     <string name="flashlight_pulse_same_as_lighting_title">App acel ki lok ma nyutu ngec</string>
     <string name="flashlight_pulse_max_brightness">Max brightness</string>
+    <string name="flashlight_pulse_disable_on_dnd_title">Do not trigger on DND</string>
     <string name="flashlight_pulse_preview">Preview pulse</string>
     <string name="settings_section_style">Cital</string>
     <string name="notification_lighting_stroke_adjustment_section">Alokaloka me ngwec</string>
@@ -422,10 +425,15 @@
     <string name="diy_create_trigger_desc">Yub gin mo ma ibi timo me cako neno ne</string>
     <string name="diy_create_state_title">State Automation</string>
     <string name="diy_create_state_desc">Ket kare me timo gin mo ma lubu kit ma gin mo tye kwede i ki woko</string>
+    <string name="diy_create_action_shortcut_title">Action Shortcut</string>
+    <string name="diy_create_action_shortcut_desc">Launch shortcut to trigger action</string>
     <string name="diy_editor_new_title">Tic manyen ma tiyo piire kene</string>
     <string name="diy_editor_edit_title">loko jami ma tiimo piire kene</string>
     <string name="feat_link_actions_title">Tic me kubbe</string>
     <string name="feat_link_actions_desc">Tii ki jami ma ki keto i cim mapol</string>
+    <string name="feat_flashlight_title">Flashlight</string>
+    <string name="feat_flashlight_desc">Improve flashlight behavior</string>
+    <string name="label_restore_mode">Restore mode</string>
     <string name="feat_snooze_notifications_title">Cung ngec ma kimiyo bot jami ma ki tiyo kwede</string>
     <string name="feat_snooze_notifications_desc">Dii ngec ma pe gik</string>
     <string name="feat_qs_tiles_title">Kit me yubu jami oyoto</string>
@@ -813,6 +821,16 @@
     <string name="diy_action_low_power_on">Turn On Low Power Mode</string>
     <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
     <string name="diy_action_dim_wallpaper">Karatac me cel ma nen maber</string>
+    <string name="diy_action_screen_off">Screen Off</string>
+    <string name="diy_action_media_play_pause">Media Play/Pause</string>
+    <string name="diy_action_media_next">Media Next</string>
+    <string name="diy_action_media_previous">Media Previous</string>
+    <string name="diy_action_ai_assistant">AI Assistant</string>
+    <string name="diy_action_take_screenshot">Take Screenshot</string>
+    <string name="diy_action_toggle_media_volume">Toggle Media Volume</string>
+    <string name="diy_action_like_current_song">Like Current Song</string>
+    <string name="diy_action_circle_to_search">Circle to Search</string>
+    <string name="diy_action_pin_app">Pin Foreground App</string>
     <string name="diy_dim_wallpaper_desc">Tic man mito Shizuku onyo Root me loko rangi pa cal ma ki keto i cim.</string>
     <string name="diy_select_trigger">Yer Trigger</string>
     <string name="diy_create_app_title">App</string>
@@ -1467,4 +1485,7 @@
     <string name="favorites_widget_name">Favorite Features</string>
     <string name="favorites_widget_description">View and launch your favorite features at a glance.</string>
     <string name="favorites_widget_empty_state">No favorite features pinned yet. Open the app to pin some!</string>
+    <!-- External Control Permission -->
+    <string name="perm_external_control_label">control Essentials features</string>
+    <string name="perm_external_control_desc">read, update and control Essentials features and settings</string>
 </resources>

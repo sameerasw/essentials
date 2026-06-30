@@ -12,6 +12,8 @@
     <string name="freeze_activity_subtitle">Tiltsa le a ritkán használt alkalmazásokat</string>
     <string name="freeze_shortcut_short_label">Az alkalmazás lefagyása</string>
     <string name="freeze_shortcut_long_label">Nyissa meg az Alkalmazások befagyasztását</string>
+    <string name="action_shortcut_short_label">Action</string>
+    <string name="action_shortcut_long_label">Launch action shortcut</string>
     <string name="frozen_app_shortcut_label">Frozen App</string>
     <string name="screen_off_widget_label">Üres képernyő off widget</string>
     <string name="app_freezing_tile_label">Az alkalmazás lefagyása</string>
@@ -180,6 +182,7 @@
     <string name="flashlight_pulse_facedown_title">Csak lefelé fordítva</string>
     <string name="flashlight_pulse_same_as_lighting_title">Ugyanazok az alkalmazások, mint az értesítési világítás</string>
     <string name="flashlight_pulse_max_brightness">Max brightness</string>
+    <string name="flashlight_pulse_disable_on_dnd_title">Do not trigger on DND</string>
     <string name="flashlight_pulse_preview">Preview pulse</string>
     <string name="settings_section_style">Stílus</string>
     <string name="notification_lighting_stroke_adjustment_section">Löket beállítás</string>
@@ -422,10 +425,15 @@
     <string name="diy_create_trigger_desc">Ütemezzen be egy műveletet a megfigyelés elindításához</string>
     <string name="diy_create_state_title">Állami automatizálás</string>
     <string name="diy_create_state_desc">Ütemezzen egy műveletet végrehajtásra a feltétel be- és kilépési állapota alapján</string>
+    <string name="diy_create_action_shortcut_title">Action Shortcut</string>
+    <string name="diy_create_action_shortcut_desc">Launch shortcut to trigger action</string>
     <string name="diy_editor_new_title">Új automatizálás</string>
     <string name="diy_editor_edit_title">Automatizálás szerkesztése</string>
     <string name="feat_link_actions_title">Linkműveletek</string>
     <string name="feat_link_actions_desc">Kezelje a hivatkozásokat több alkalmazással</string>
+    <string name="feat_flashlight_title">Flashlight</string>
+    <string name="feat_flashlight_desc">Improve flashlight behavior</string>
+    <string name="label_restore_mode">Restore mode</string>
     <string name="feat_snooze_notifications_title">Rendszerértesítések elhalasztása</string>
     <string name="feat_snooze_notifications_desc">Állandó értesítések elhalasztása</string>
     <string name="feat_qs_tiles_title">Gyorsbeállítások csempe</string>
@@ -813,6 +821,16 @@
     <string name="diy_action_low_power_on">Turn On Low Power Mode</string>
     <string name="diy_action_low_power_off">Turn Off Low Power Mode</string>
     <string name="diy_action_dim_wallpaper">Dim Háttérkép</string>
+    <string name="diy_action_screen_off">Screen Off</string>
+    <string name="diy_action_media_play_pause">Media Play/Pause</string>
+    <string name="diy_action_media_next">Media Next</string>
+    <string name="diy_action_media_previous">Media Previous</string>
+    <string name="diy_action_ai_assistant">AI Assistant</string>
+    <string name="diy_action_take_screenshot">Take Screenshot</string>
+    <string name="diy_action_toggle_media_volume">Toggle Media Volume</string>
+    <string name="diy_action_like_current_song">Like Current Song</string>
+    <string name="diy_action_circle_to_search">Circle to Search</string>
+    <string name="diy_action_pin_app">Pin Foreground App</string>
     <string name="diy_dim_wallpaper_desc">Ehhez a művelethez Shizuku vagy Root szükséges a rendszer háttérképének elsötétítésének beállításához.</string>
     <string name="diy_select_trigger">Válassza a Trigger lehetőséget</string>
     <string name="diy_create_app_title">App</string>
@@ -1467,4 +1485,7 @@
     <string name="favorites_widget_name">Favorite Features</string>
     <string name="favorites_widget_description">View and launch your favorite features at a glance.</string>
     <string name="favorites_widget_empty_state">No favorite features pinned yet. Open the app to pin some!</string>
+    <!-- External Control Permission -->
+    <string name="perm_external_control_label">control Essentials features</string>
+    <string name="perm_external_control_desc">read, update and control Essentials features and settings</string>
 </resources>

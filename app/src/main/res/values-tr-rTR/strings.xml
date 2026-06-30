@@ -12,6 +12,8 @@
     <string name="freeze_activity_subtitle">Nadiren kullanılan uygulamaları devre dışı bırakın</string>
     <string name="freeze_shortcut_short_label">Uygulama Dondurma</string>
     <string name="freeze_shortcut_long_label">Uygulama Dondurmayı Aç</string>
+    <string name="action_shortcut_short_label">Action</string>
+    <string name="action_shortcut_long_label">Launch action shortcut</string>
     <string name="frozen_app_shortcut_label">Dondurulmuş Uygulama</string>
     <string name="screen_off_widget_label">Boş ekran kapatma widget\'ı</string>
     <string name="app_freezing_tile_label">Uygulama Dondurma</string>
@@ -180,6 +182,7 @@
     <string name="flashlight_pulse_facedown_title">Sadece aşağıya doğru bakarken</string>
     <string name="flashlight_pulse_same_as_lighting_title">Bildirim aydınlatmasıyla aynı uygulamalar</string>
     <string name="flashlight_pulse_max_brightness">Maksimum parlaklık</string>
+    <string name="flashlight_pulse_disable_on_dnd_title">Do not trigger on DND</string>
     <string name="flashlight_pulse_preview">Nabızı ön izle</string>
     <string name="settings_section_style">Stil</string>
     <string name="notification_lighting_stroke_adjustment_section">Vuruş ayarı</string>
@@ -422,10 +425,15 @@
     <string name="diy_create_trigger_desc">Bir gözlemde tetiklenecek bir eylem planlayın</string>
     <string name="diy_create_state_title">Durum Otomasyonu</string>
     <string name="diy_create_state_desc">Bir koşulun giriş ve çıkış durumuna göre yürütülecek bir eylem zamanlayın</string>
+    <string name="diy_create_action_shortcut_title">Action Shortcut</string>
+    <string name="diy_create_action_shortcut_desc">Launch shortcut to trigger action</string>
     <string name="diy_editor_new_title">Yeni Otomasyon</string>
     <string name="diy_editor_edit_title">Otomasyonu Düzenle</string>
     <string name="feat_link_actions_title">Bağlantı eylemleri</string>
     <string name="feat_link_actions_desc">Birden fazla uygulamayla bağlantıları yönetin</string>
+    <string name="feat_flashlight_title">Flashlight</string>
+    <string name="feat_flashlight_desc">Improve flashlight behavior</string>
+    <string name="label_restore_mode">Restore mode</string>
     <string name="feat_snooze_notifications_title">Sistem bildirimlerini erteleyin</string>
     <string name="feat_snooze_notifications_desc">Kalıcı bildirimleri ertele</string>
     <string name="feat_qs_tiles_title">Hızlı ayar kutucukları</string>
@@ -813,6 +821,16 @@
     <string name="diy_action_low_power_on">Düşük Güç Modunu Aç</string>
     <string name="diy_action_low_power_off">Düşük Güç Modunu Kapat</string>
     <string name="diy_action_dim_wallpaper">Loş Duvar Kağıdı</string>
+    <string name="diy_action_screen_off">Screen Off</string>
+    <string name="diy_action_media_play_pause">Media Play/Pause</string>
+    <string name="diy_action_media_next">Media Next</string>
+    <string name="diy_action_media_previous">Media Previous</string>
+    <string name="diy_action_ai_assistant">AI Assistant</string>
+    <string name="diy_action_take_screenshot">Take Screenshot</string>
+    <string name="diy_action_toggle_media_volume">Toggle Media Volume</string>
+    <string name="diy_action_like_current_song">Like Current Song</string>
+    <string name="diy_action_circle_to_search">Circle to Search</string>
+    <string name="diy_action_pin_app">Pin Foreground App</string>
     <string name="diy_dim_wallpaper_desc">Bu eylem, sistem duvar kağıdı karartmasını ayarlamak için Shizuku veya Root\'u gerektirir.</string>
     <string name="diy_select_trigger">Tetikleyici Seçin</string>
     <string name="diy_create_app_title">Uygulama</string>
@@ -1468,4 +1486,7 @@
     <string name="favorites_widget_name">Favori Özellikler</string>
     <string name="favorites_widget_description">Favori özelliklerinizi bir bakışta görüntüleyin ve başlatın.</string>
     <string name="favorites_widget_empty_state">Henüz favori özellik sabitlemedi. Favori özellikler sabitlemek için uygulamayı açın!</string>
+    <!-- External Control Permission -->
+    <string name="perm_external_control_label">Essentials özelliklerini kontrol et</string>
+    <string name="perm_external_control_desc">Essentials özelliklerini ve ayarlarını okuyun, güncelleyin ve kontrol edin</string>
 </resources>
