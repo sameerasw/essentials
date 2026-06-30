@@ -427,6 +427,8 @@
     <string name="diy_editor_edit_title">Wysig outomatisering</string>
     <string name="feat_link_actions_title">Skakel aksies</string>
     <string name="feat_link_actions_desc">Hanteer skakels met verskeie toepassings</string>
+    <string name="feat_flashlight_title">Flashlight</string>
+    <string name="feat_flashlight_desc">Improve flashlight behavior</string>
     <string name="feat_snooze_notifications_title">Sluimer stelselkennisgewings</string>
     <string name="feat_snooze_notifications_desc">Sluimer aanhoudende kennisgewings</string>
     <string name="feat_qs_tiles_title">Vinnige instellings teëls</string>
