@@ -1501,4 +1501,20 @@
     <string name="label_replace_with">Replace with</string>
     <string name="pixel_searchbar_tap_action_title">Configure tap action</string>
     <string name="pixel_searchbar_tap_action_desc">Set up actions to trigger in DIY automations when tapped</string>
+    <string name="pixel_searchbar_style_widget">Widget</string>
+    <string name="pixel_searchbar_widget_picker_title">Pick a widget</string>
+    <string name="pixel_searchbar_widget_picker_desc">Select a widget to display its content in the searchbar</string>
+    <string name="pixel_searchbar_widget_selected">Widget selected</string>
+    <string name="pixel_searchbar_widget_none">No widget selected</string>
+    <string name="pixel_searchbar_widget_change">Change widget</string>
+    <string name="pixel_searchbar_widget_remove">Remove widget</string>
+    <string name="pixel_searchbar_bind_permission_title">Widget host permission required</string>
+    <string name="pixel_searchbar_bind_permission_desc">Essentials needs permission to host widgets. Tap to grant.</string>
+    <string name="pixel_searchbar_scraped_line1">Scraped title</string>
+    <string name="pixel_searchbar_scraped_line2">Scraped subtitle</string>
+    <string name="pixel_searchbar_widget_padding_h">Horizontal padding</string>
+    <string name="pixel_searchbar_widget_padding_v">Vertical padding</string>
+    <string name="pixel_searchbar_tap_action_enabled">Custom tap action</string>
+    <string name="pixel_searchbar_tap_action_enabled_desc">Use DIY tap action instead of widget\'s own</string>
+    <string name="pixel_searchbar_style_music">Music</string>
 </resources>
