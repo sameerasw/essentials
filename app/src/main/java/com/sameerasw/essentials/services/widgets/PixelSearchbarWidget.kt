@@ -41,7 +41,8 @@ class PixelSearchbarWidget : GlanceAppWidget() {
                         ) {}
                     }
                     else -> { // Default / "date"
-                        val dateStr = SimpleDateFormat("EEEE, MMMM d", Locale.getDefault()).format(Date())
+                        val dateFormat = settingsRepository.getPixelSearchbarDateFormat()
+                        val dateStr = SimpleDateFormat(dateFormat, Locale.getDefault()).format(Date())
                         Box(
                             modifier = GlanceModifier
                                 .fillMaxSize()
@@ -55,6 +56,7 @@ class PixelSearchbarWidget : GlanceAppWidget() {
                                     color = GlanceTheme.colors.onSurface,
                                     fontSize = 20.sp,
                                     fontWeight = FontWeight.Medium,
+                                    fontFamily = androidx.glance.text.FontFamily("google_sans_flex_round"),
                                     textAlign = TextAlign.Center
                                 )
                             )

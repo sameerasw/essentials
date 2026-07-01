@@ -144,6 +144,7 @@ class MainViewModel : ViewModel() {
     val isDisableRotationSuggestionEnabled = mutableStateOf(false)
     val isPixelSearchbarEnabled = mutableStateOf(false)
     val pixelSearchbarType = mutableStateOf("empty")
+    val pixelSearchbarDateFormat = mutableStateOf("EEEE, MMMM d")
     val lockScreenClockId = mutableStateOf<String?>(null)
     val lockScreenClockWeight = mutableIntStateOf(300)
     val lockScreenClockWidth = mutableIntStateOf(116)
@@ -845,6 +846,8 @@ class MainViewModel : ViewModel() {
             settingsRepository.getBoolean(SettingsRepository.KEY_PIXEL_SEARCHBAR, false)
         pixelSearchbarType.value =
             settingsRepository.getPixelSearchbarType()
+        pixelSearchbarDateFormat.value =
+            settingsRepository.getPixelSearchbarDateFormat()
         lockScreenClockId.value = readCurrentLockScreenClockId(context)
         lockScreenClockWeight.intValue = settingsRepository.getLockScreenClockWeight()
         lockScreenClockWidth.intValue = settingsRepository.getLockScreenClockWidth()
@@ -1839,6 +1842,20 @@ class MainViewModel : ViewModel() {
     fun setPixelSearchbarType(type: String, context: Context) {
         pixelSearchbarType.value = type
         settingsRepository.setPixelSearchbarType(type)
+        updatePixelSearchbarWidget(context)
+
+        // Force stop nexus launcher to apply setting
+        val forceStopCommand = "am force-stop com.google.android.apps.nexuslauncher"
+        if (ShizukuUtils.hasPermission()) {
+            ShizukuUtils.runCommand(forceStopCommand)
+        } else if (RootUtils.isRootPermissionGranted()) {
+            RootUtils.runCommand(forceStopCommand)
+        }
+    }
+
+    fun setPixelSearchbarDateFormat(format: String, context: Context) {
+        pixelSearchbarDateFormat.value = format
+        settingsRepository.setPixelSearchbarDateFormat(format)
         updatePixelSearchbarWidget(context)
 
         // Force stop nexus launcher to apply setting

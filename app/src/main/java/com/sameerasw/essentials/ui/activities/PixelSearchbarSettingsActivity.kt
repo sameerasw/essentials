@@ -43,6 +43,11 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.clickable
+import androidx.compose.material3.RadioButton
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sameerasw.essentials.R
@@ -51,6 +56,16 @@ import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import com.sameerasw.essentials.domain.model.Feature
+import com.sameerasw.essentials.ui.components.sheets.FeatureHelpBottomSheet
+import android.content.Context
+import androidx.compose.material3.Scaffold
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.foundation.layout.navigationBars
+import com.sameerasw.essentials.ui.modifiers.BlurDirection
+import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 
 class PixelSearchbarSettingsActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -64,38 +79,95 @@ class PixelSearchbarSettingsActivity : ComponentActivity() {
             remember(context) { viewModel.check(context) }
 
             val isPitchBlackThemeEnabled by viewModel.isPitchBlackThemeEnabled
+            var showHelpSheet by remember { mutableStateOf(false) }
+
+            val pixelSearchbarFeature = remember {
+                object : Feature(
+                    id = "Pixel Searchbar",
+                    title = R.string.pixel_searchbar_settings_title,
+                    iconRes = R.drawable.rounded_search_24,
+                    category = R.string.cat_display,
+                    description = R.string.feat_pixel_searchbar_desc,
+                    aboutDescription = R.string.about_desc_pixel_searchbar,
+                    permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
+                    showToggle = true,
+                    hasMoreSettings = true
+                ) {
+                    override fun isEnabled(viewModel: MainViewModel) = viewModel.isPixelSearchbarEnabled.value
+                    override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {
+                        viewModel.setPixelSearchbarEnabled(enabled, context)
+                    }
+                }
+            }
+
+            val isBlurEnabled by viewModel.isBlurEnabled
 
             EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
-                val statusBarHeight =
-                    WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.surfaceContainer)
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .verticalScroll(rememberScrollState())
-                    ) {
-                        Spacer(modifier = Modifier.height(statusBarHeight))
-
-                        PixelSearchbarSettingsUI(
-                            viewModel = viewModel,
-                            modifier = Modifier.padding(top = 16.dp)
-                        )
-
-                        Spacer(modifier = Modifier.height(150.dp))
+                Scaffold(
+                    contentWindowInsets = WindowInsets(0, 0, 0, 0),
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                ) { innerPadding ->
+                    val density = LocalDensity.current
+                    val statusBarHeightPx = with(density) {
+                        WindowInsets.statusBars.asPaddingValues().calculateTopPadding().toPx()
                     }
 
-                    EssentialsFloatingToolbar(
-                        title = stringResource(R.string.pixel_searchbar_settings_title),
-                        onBackClick = { finish() },
+                    Box(
                         modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .zIndex(1f)
-                    )
+                            .fillMaxSize()
+                            .progressiveBlur(
+                                blurRadius = if (isBlurEnabled) 40f else 0f,
+                                height = statusBarHeightPx * 1.15f,
+                                direction = BlurDirection.TOP
+                            )
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .progressiveBlur(
+                                    blurRadius = if (isBlurEnabled) 40f else 0f,
+                                    height = with(density) { 150.dp.toPx() },
+                                    direction = BlurDirection.BOTTOM
+                                )
+                                .verticalScroll(rememberScrollState())
+                        ) {
+                            Spacer(
+                                modifier = Modifier.height(
+                                    WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+                                )
+                            )
+
+                            PixelSearchbarSettingsUI(
+                                viewModel = viewModel,
+                                modifier = Modifier.padding(top = 16.dp)
+                            )
+
+                            Spacer(
+                                modifier = Modifier.height(
+                                    WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 150.dp
+                                )
+                            )
+                        }
+
+                        EssentialsFloatingToolbar(
+                            title = stringResource(R.string.pixel_searchbar_settings_title),
+                            onBackClick = { finish() },
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .zIndex(1f),
+                            onHelpClick = {
+                                showHelpSheet = true
+                            }
+                        )
+
+                        if (showHelpSheet) {
+                            FeatureHelpBottomSheet(
+                                onDismissRequest = { showHelpSheet = false },
+                                feature = pixelSearchbarFeature,
+                                viewModel = viewModel
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -197,6 +269,81 @@ fun PixelSearchbarSettingsUI(
                                 style = MaterialTheme.typography.labelLarge,
                                 fontWeight = if (isChecked) FontWeight.Bold else FontWeight.Normal,
                                 maxLines = 1
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        AnimatedVisibility(
+            visible = currentType == "date",
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            val currentDateFormat = viewModel.pixelSearchbarDateFormat.value
+            val dateFormats = listOf(
+                "EEEE, MMMM d",
+                "EEEE, MMM d",
+                "EEE, MMM d",
+                "EEEE, d MMMM",
+                "d MMMM",
+                "MMMM d",
+                "EEE, d MMM",
+                "yyyy-MM-dd",
+                "dd/MM/yyyy"
+            )
+            val currentDate = remember { java.util.Date() }
+            val googleSansFlexRound = remember { FontFamily(Font(R.font.google_sans_flex_round)) }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Text(
+                    text = "Date Format",
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                RoundedCardContainer(spacing = 2.dp) {
+                    dateFormats.forEach { format ->
+                        val isSelected = currentDateFormat == format
+                        val formattedDate = remember(format, currentDate) {
+                            try {
+                                java.text.SimpleDateFormat(format, java.util.Locale.getDefault()).format(currentDate)
+                            } catch (e: Exception) {
+                                format
+                            }
+                        }
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(MaterialTheme.colorScheme.surfaceBright)
+                                .clickable {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    viewModel.setPixelSearchbarDateFormat(format, context)
+                                }
+                                .padding(horizontal = 16.dp, vertical = 16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = isSelected,
+                                onClick = {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    viewModel.setPixelSearchbarDateFormat(format, context)
+                                }
+                            )
+                            Text(
+                                text = formattedDate,
+                                style = MaterialTheme.typography.bodyLarge.copy(
+                                    fontFamily = googleSansFlexRound
+                                ),
+                                modifier = Modifier.padding(start = 16.dp),
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                         }
                     }
