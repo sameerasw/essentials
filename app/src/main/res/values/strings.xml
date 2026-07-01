@@ -1605,4 +1605,5 @@
     <string name="pixel_searchbar_widget_padding_v">Vertical padding</string>
     <string name="pixel_searchbar_tap_action_enabled">Custom tap action</string>
     <string name="pixel_searchbar_tap_action_enabled_desc">Use DIY tap action instead of widget\'s own</string>
+    <string name="pixel_searchbar_style_music">Music</string>
 </resources>

@@ -254,6 +254,9 @@ class SettingsRepository(private val context: Context) {
         const val KEY_PIXEL_SEARCHBAR_WIDGET_PADDING_V = "pixel_searchbar_widget_padding_v"
         const val KEY_PIXEL_SEARCHBAR_TAP_ACTION_ENABLED = "pixel_searchbar_tap_action_enabled"
         const val KEY_PIXEL_SEARCHBAR_WIDGET_REVISION = "pixel_searchbar_widget_revision"
+        const val KEY_PIXEL_SEARCHBAR_MUSIC_TITLE = "pixel_searchbar_music_title"
+        const val KEY_PIXEL_SEARCHBAR_MUSIC_ARTIST = "pixel_searchbar_music_artist"
+        const val KEY_PIXEL_SEARCHBAR_MUSIC_PACKAGE = "pixel_searchbar_music_package"
 
         const val KEY_LOCK_SCREEN_CLOCK_WEIGHT = "lock_screen_clock_weight"
         const val KEY_LOCK_SCREEN_CLOCK_WIDTH = "lock_screen_clock_width"
@@ -963,6 +966,24 @@ class SettingsRepository(private val context: Context) {
         val current = getPixelSearchbarWidgetRevision()
         prefs.edit().putInt(KEY_PIXEL_SEARCHBAR_WIDGET_REVISION, current + 1).apply()
     }
+
+    fun getPixelSearchbarMusicTitle(): String =
+        prefs.getString(KEY_PIXEL_SEARCHBAR_MUSIC_TITLE, "") ?: ""
+
+    fun setPixelSearchbarMusicTitle(value: String) =
+        putString(KEY_PIXEL_SEARCHBAR_MUSIC_TITLE, value)
+
+    fun getPixelSearchbarMusicArtist(): String =
+        prefs.getString(KEY_PIXEL_SEARCHBAR_MUSIC_ARTIST, "") ?: ""
+
+    fun setPixelSearchbarMusicArtist(value: String) =
+        putString(KEY_PIXEL_SEARCHBAR_MUSIC_ARTIST, value)
+
+    fun getPixelSearchbarMusicPackage(): String =
+        prefs.getString(KEY_PIXEL_SEARCHBAR_MUSIC_PACKAGE, "") ?: ""
+
+    fun setPixelSearchbarMusicPackage(value: String) =
+        putString(KEY_PIXEL_SEARCHBAR_MUSIC_PACKAGE, value)
 
     fun getEdgeLightingSweepSelectedShapes(): Set<String> {
         val defaultShapes = com.sameerasw.essentials.utils.AmbientMusicShapeHelper.allShapesWithNames.map { it.first }.toSet()

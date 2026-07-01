@@ -191,11 +191,12 @@ fun PixelSearchbarSettingsUI(
     var showPermissionSheet by remember { mutableStateOf(false) }
     val currentType = viewModel.pixelSearchbarType.value
 
-    val options = listOf("empty", "date", "widget")
+    val options = listOf("empty", "date", "widget", "music")
     val labels = mapOf(
         "empty" to stringResource(R.string.pixel_searchbar_style_empty),
         "date" to stringResource(R.string.pixel_searchbar_style_date),
-        "widget" to stringResource(R.string.pixel_searchbar_style_widget)
+        "widget" to stringResource(R.string.pixel_searchbar_style_widget),
+        "music" to stringResource(R.string.pixel_searchbar_style_music)
     )
 
     val awm = remember { AppWidgetManager.getInstance(context) }
@@ -282,7 +283,11 @@ fun PixelSearchbarSettingsUI(
                             HapticUtil.performVirtualKeyHaptic(view)
                             when {
                                 type == "widget" -> openWidgetPicker()
-                                currentType == "widget" -> {
+                                type == "music" -> {
+                                    WidgetScraperService.start(context)
+                                    viewModel.setPixelSearchbarType(type, context)
+                                }
+                                currentType == "widget" || currentType == "music" -> {
                                     WidgetScraperService.stop(context)
                                     viewModel.setPixelSearchbarType(type, context)
                                 }
