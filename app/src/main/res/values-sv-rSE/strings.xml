@@ -427,6 +427,8 @@
     <string name="diy_create_state_desc">Schemalägg en åtgärd att utföras baserat på tillståndet för ett tillstånd in och ut</string>
     <string name="diy_create_action_shortcut_title">Action Shortcut</string>
     <string name="diy_create_action_shortcut_desc">Launch shortcut to trigger action</string>
+    <string name="diy_create_pixel_searchbar_title">Pixel searchbar</string>
+    <string name="diy_create_pixel_searchbar_desc">Tap action for Pixel searchbar replacement</string>
     <string name="diy_editor_new_title">Ny automatisering</string>
     <string name="diy_editor_edit_title">Redigera automatisering</string>
     <string name="feat_link_actions_title">Länkåtgärder</string>
@@ -1434,6 +1436,8 @@
     <string name="shut_up_shortcut_created">Shortcut created for %s</string>
     <string name="feat_disable_rotation_suggestion_title">Disable rotation suggestion</string>
     <string name="feat_disable_rotation_suggestion_desc">Do not show the rotation button when auto-rotate is off</string>
+    <string name="feat_pixel_searchbar_title">Replace searchbar</string>
+    <string name="feat_pixel_searchbar_desc">Replace Pixel Launcher default searchbar.</string>
     <string name="shut_up_toast_active">App got shut up</string>
     <string name="shut_up_toast_restored">Shut up features returned</string>
     <string name="shut_up_auto_archive_notif_title">Auto Freeze</string>
@@ -1488,4 +1492,29 @@
     <!-- External Control Permission -->
     <string name="perm_external_control_label">control Essentials features</string>
     <string name="perm_external_control_desc">read, update and control Essentials features and settings</string>
+    <string name="pixel_searchbar_settings_title">Pixel Searchbar Customization</string>
+    <string name="pixel_searchbar_style_empty">Empty</string>
+    <string name="pixel_searchbar_style_date">Date</string>
+    <string name="pixel_searchbar_background_pill_title">Background pill</string>
+    <string name="pixel_searchbar_background_pill_desc">Show the date inside a container</string>
+    <string name="about_desc_pixel_searchbar">Replace the default Pixel Launcher search bar on your home screen. You can customize the content to show either nothing (Empty) or the current date. \n\nPlease note that enabling this may break Pixel Launcher At a Glance widgets (such as sports and finance widgets). \n\nAnd the setting may need to be applied multiple times to take effect.</string>
+    <string name="label_replace_with">Replace with</string>
+    <string name="pixel_searchbar_tap_action_title">Configure tap action</string>
+    <string name="pixel_searchbar_tap_action_desc">Set up actions to trigger in DIY automations when tapped</string>
+    <string name="pixel_searchbar_style_widget">Widget</string>
+    <string name="pixel_searchbar_widget_picker_title">Pick a widget</string>
+    <string name="pixel_searchbar_widget_picker_desc">Select a widget to display its content in the searchbar</string>
+    <string name="pixel_searchbar_widget_selected">Widget selected</string>
+    <string name="pixel_searchbar_widget_none">No widget selected</string>
+    <string name="pixel_searchbar_widget_change">Change widget</string>
+    <string name="pixel_searchbar_widget_remove">Remove widget</string>
+    <string name="pixel_searchbar_bind_permission_title">Widget host permission required</string>
+    <string name="pixel_searchbar_bind_permission_desc">Essentials needs permission to host widgets. Tap to grant.</string>
+    <string name="pixel_searchbar_scraped_line1">Scraped title</string>
+    <string name="pixel_searchbar_scraped_line2">Scraped subtitle</string>
+    <string name="pixel_searchbar_widget_padding_h">Horizontal padding</string>
+    <string name="pixel_searchbar_widget_padding_v">Vertical padding</string>
+    <string name="pixel_searchbar_tap_action_enabled">Custom tap action</string>
+    <string name="pixel_searchbar_tap_action_enabled_desc">Use DIY tap action instead of widget\'s own</string>
+    <string name="pixel_searchbar_style_music">Music</string>
 </resources>
