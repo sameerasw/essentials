@@ -142,6 +142,8 @@ class MainViewModel : ViewModel() {
     val circleToSearchGestureHeight = mutableFloatStateOf(48f)
     val isCircleToSearchPreviewEnabled = mutableStateOf(false)
     val isDisableRotationSuggestionEnabled = mutableStateOf(false)
+    val isPixelSearchbarEnabled = mutableStateOf(false)
+    val pixelSearchbarType = mutableStateOf("empty")
     val lockScreenClockId = mutableStateOf<String?>(null)
     val lockScreenClockWeight = mutableIntStateOf(300)
     val lockScreenClockWidth = mutableIntStateOf(116)
@@ -668,6 +670,17 @@ class MainViewModel : ViewModel() {
                             )
                         }
                     }
+
+                    SettingsRepository.KEY_PIXEL_SEARCHBAR -> {
+                        isPixelSearchbarEnabled.value =
+                            settingsRepository.getBoolean(key)
+                        appContext?.let {
+                            applyPixelSearchbarSetting(
+                                it,
+                                isPixelSearchbarEnabled.value
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -828,6 +841,10 @@ class MainViewModel : ViewModel() {
             settingsRepository.getEdgeLightingSweepSelectedShapes()
         isDisableRotationSuggestionEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_DISABLE_ROTATION_SUGGESTION, false)
+        isPixelSearchbarEnabled.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_PIXEL_SEARCHBAR, false)
+        pixelSearchbarType.value =
+            settingsRepository.getPixelSearchbarType()
         lockScreenClockId.value = readCurrentLockScreenClockId(context)
         lockScreenClockWeight.intValue = settingsRepository.getLockScreenClockWeight()
         lockScreenClockWidth.intValue = settingsRepository.getLockScreenClockWidth()
@@ -1774,6 +1791,76 @@ class MainViewModel : ViewModel() {
                 ShizukuUtils.runCommand(command)
             } else if (RootUtils.isRootPermissionGranted()) {
                 RootUtils.runCommand(command)
+            }
+        }
+    }
+
+    fun setPixelSearchbarEnabled(enabled: Boolean, context: Context) {
+        isPixelSearchbarEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_PIXEL_SEARCHBAR, enabled)
+        applyPixelSearchbarSetting(context, enabled)
+    }
+
+    private fun applyPixelSearchbarSetting(context: Context, enabled: Boolean) {
+        val value = if (enabled) "com.sameerasw.essentials" else null
+        val key = "selected_search_engine"
+
+        var success = false
+        if (PermissionUtils.canWriteSecureSettings(context)) {
+            try {
+                success = Settings.Secure.putString(context.contentResolver, key, value)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        if (!success) {
+            val command = if (enabled) {
+                "settings put secure $key com.sameerasw.essentials"
+            } else {
+                "settings delete secure $key"
+            }
+            if (ShizukuUtils.hasPermission()) {
+                ShizukuUtils.runCommand(command)
+            } else if (RootUtils.isRootPermissionGranted()) {
+                RootUtils.runCommand(command)
+            }
+        }
+
+        // Force stop nexus launcher to apply setting
+        val forceStopCommand = "am force-stop com.google.android.apps.nexuslauncher"
+        if (ShizukuUtils.hasPermission()) {
+            ShizukuUtils.runCommand(forceStopCommand)
+        } else if (RootUtils.isRootPermissionGranted()) {
+            RootUtils.runCommand(forceStopCommand)
+        }
+    }
+
+    fun setPixelSearchbarType(type: String, context: Context) {
+        pixelSearchbarType.value = type
+        settingsRepository.setPixelSearchbarType(type)
+        updatePixelSearchbarWidget(context)
+
+        // Force stop nexus launcher to apply setting
+        val forceStopCommand = "am force-stop com.google.android.apps.nexuslauncher"
+        if (ShizukuUtils.hasPermission()) {
+            ShizukuUtils.runCommand(forceStopCommand)
+        } else if (RootUtils.isRootPermissionGranted()) {
+            RootUtils.runCommand(forceStopCommand)
+        }
+    }
+
+    fun updatePixelSearchbarWidget(context: Context) {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+            try {
+                val manager = androidx.glance.appwidget.GlanceAppWidgetManager(context)
+                val widget = com.sameerasw.essentials.services.widgets.PixelSearchbarWidget()
+                val glanceIds = manager.getGlanceIds(com.sameerasw.essentials.services.widgets.PixelSearchbarWidget::class.java)
+                for (glanceId in glanceIds) {
+                    widget.update(context, glanceId)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }

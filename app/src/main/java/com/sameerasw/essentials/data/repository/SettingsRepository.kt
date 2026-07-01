@@ -242,6 +242,8 @@ class SettingsRepository(private val context: Context) {
         const val KEY_SHIZUKU_AUTH_TOKEN = "shizuku_auth_token"
         const val KEY_EDGE_LIGHTING_SWEEP_SELECTED_SHAPES = "edge_lighting_sweep_selected_shapes"
         const val KEY_DISABLE_ROTATION_SUGGESTION = "disable_rotation_suggestion"
+        const val KEY_PIXEL_SEARCHBAR = "pixel_searchbar"
+        const val KEY_PIXEL_SEARCHBAR_TYPE = "pixel_searchbar_type"
 
         const val KEY_LOCK_SCREEN_CLOCK_WEIGHT = "lock_screen_clock_weight"
         const val KEY_LOCK_SCREEN_CLOCK_WIDTH = "lock_screen_clock_width"
@@ -882,6 +884,12 @@ class SettingsRepository(private val context: Context) {
 
     fun setShizukuAuthToken(token: String) =
         putString(KEY_SHIZUKU_AUTH_TOKEN, token)
+
+    fun getPixelSearchbarType(): String =
+        prefs.getString(KEY_PIXEL_SEARCHBAR_TYPE, "empty") ?: "empty"
+
+    fun setPixelSearchbarType(type: String) =
+        putString(KEY_PIXEL_SEARCHBAR_TYPE, type)
 
     fun getEdgeLightingSweepSelectedShapes(): Set<String> {
         val defaultShapes = com.sameerasw.essentials.utils.AmbientMusicShapeHelper.allShapesWithNames.map { it.first }.toSet()

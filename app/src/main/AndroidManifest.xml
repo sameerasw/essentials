@@ -101,6 +101,27 @@
         </activity>
 
         <activity
+            android:name=".PixelSearchActivity"
+            android:exported="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:excludeFromRecents="true"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.WEB_SEARCH" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.activities.PixelSearchbarSettingsActivity"
+            android:exported="true"
+            android:label="@string/pixel_searchbar_settings_title" />
+
+        <activity
             android:name=".FeatureSettingsActivity"
             android:exported="false"
             android:label="Feature Settings"
@@ -369,6 +390,19 @@
                 <data android:scheme="wear" android:host="*" android:pathPrefix="/" />
             </intent-filter>
         </service>
+
+        <receiver
+            android:name=".services.widgets.PixelSearchbarWidgetReceiver"
+            android:label="@string/feat_pixel_searchbar_title"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.intent.action.CONFIGURATION_CHANGED" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/pixel_searchbar_widget_info" />
+        </receiver>
 
         <receiver
             android:name=".services.ScreenOffWidgetProvider"

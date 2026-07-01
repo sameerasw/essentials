@@ -30,12 +30,14 @@ import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.viewmodels.MainViewModel
+import com.sameerasw.essentials.ui.activities.PixelSearchbarSettingsActivity
 
 enum class PermissionModule {
     HIDE_GESTURE_BAR,
     SHOW_ON_LAUNCHER,
     CIRCLE_TO_SEARCH,
     DISABLE_ROTATION_SUGGESTION,
+    PIXEL_SEARCHBAR,
     NONE
 }
 
@@ -121,6 +123,7 @@ fun OtherCustomizationsSettingsUI(
 
             PermissionModule.CIRCLE_TO_SEARCH -> listOf(shizukuPermission, accessibilityPermission)
             PermissionModule.DISABLE_ROTATION_SUGGESTION -> listOf(shizukuPermission)
+            PermissionModule.PIXEL_SEARCHBAR -> listOf(shizukuPermission)
             else -> emptyList()
         }
 
@@ -251,6 +254,31 @@ fun OtherCustomizationsSettingsUI(
                 },
                 iconRes = R.drawable.rounded_mobile_rotate_24,
                 modifier = Modifier.highlight(highlightSetting == "disable_rotation_suggestion_toggle")
+            )
+
+            IconToggleItem(
+                title = stringResource(R.string.feat_pixel_searchbar_title),
+                description = stringResource(R.string.feat_pixel_searchbar_desc),
+                isChecked = viewModel.isPixelSearchbarEnabled.value,
+                onCheckedChange = { enabled ->
+                    if (viewModel.isWriteSecureSettingsEnabled.value || viewModel.isShizukuPermissionGranted.value || viewModel.isRootPermissionGranted.value) {
+                        viewModel.setPixelSearchbarEnabled(enabled, context)
+                    } else {
+                        requestingPermissionFor = PermissionModule.PIXEL_SEARCHBAR
+                    }
+                },
+                onClick = {
+                    val intent = Intent(context, PixelSearchbarSettingsActivity::class.java)
+                    context.startActivity(intent)
+                },
+                enabled = true,
+                onDisabledClick = {
+                    if (!viewModel.isWriteSecureSettingsEnabled.value && !viewModel.isShizukuPermissionGranted.value && !viewModel.isRootPermissionGranted.value) {
+                        requestingPermissionFor = PermissionModule.PIXEL_SEARCHBAR
+                    }
+                },
+                iconRes = R.drawable.rounded_search_24,
+                modifier = Modifier.highlight(highlightSetting == "pixel_searchbar_toggle")
             )
 
             AnimatedVisibility(
