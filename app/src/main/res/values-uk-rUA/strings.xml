@@ -1450,8 +1450,8 @@
     <string name="shut_up_shortcut_created">Shortcut created for %s</string>
     <string name="feat_disable_rotation_suggestion_title">Disable rotation suggestion</string>
     <string name="feat_disable_rotation_suggestion_desc">Do not show the rotation button when auto-rotate is off</string>
-    <string name="feat_pixel_searchbar_title">Replace searchbar</string>
-    <string name="feat_pixel_searchbar_desc">Replace Pixel Launcher default searchbar.</string>
+    <string name="feat_pixel_searchbar_title">Pixel searchbar</string>
+    <string name="feat_pixel_searchbar_desc">Set Essentials as the default search provider for the home screen search bar in Pixel Launcher.</string>
     <string name="shut_up_toast_active">App got shut up</string>
     <string name="shut_up_toast_restored">Shut up features returned</string>
     <string name="shut_up_auto_archive_notif_title">Auto Freeze</string>
@@ -1507,7 +1507,7 @@
     <string name="perm_external_control_label">control Essentials features</string>
     <string name="perm_external_control_desc">read, update and control Essentials features and settings</string>
     <string name="pixel_searchbar_settings_title">Pixel Searchbar Customization</string>
-    <string name="pixel_searchbar_style_empty">Empty</string>
+    <string name="pixel_searchbar_style_empty">Empty (Default)</string>
     <string name="pixel_searchbar_style_date">Date</string>
     <string name="pixel_searchbar_background_pill_title">Background pill</string>
     <string name="pixel_searchbar_background_pill_desc">Show the date inside a container</string>
