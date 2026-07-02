@@ -7,7 +7,7 @@
     <string name="shut_up_shizuku_restart_warning_message">由於已開啟無線除錯模式，Shizuku 服務可能未自動啟動，造成凍結無法運作。建議也一併開啟「嘗試重啟 Shizuku」選項</string>
     <string name="shut_up_restore_delay_title">還原倒數時間</string>
     <string name="shut_up_restore_delay_desc">退出被設定成 Shut-Up! 的應用程式後，恢復原本設定所需的等待時間</string>
-    <string name="accessibility_service_description"><b>Essentials 無障礙功能服務</b>\n\n以下的進階功能都需要此服務：\n\n<b>• 實體按鈕重新映射：</b>\n即使螢幕關閉時，也能偵測音量按鈕的按壓，以觸發「手電筒開關」等動作。n\n<b>• 個別應用程式設定：</b>\n監控當前活躍的應用程式，以套用「動態夜燈」、「通知燈光顏色」及「應用程式鎖」的特定設定檔。\n\n<b>• 螢幕控制：</b>\n允許應用程式鎖定螢幕（例如透過雙擊或小工具），並偵測螢幕狀態變更。\ n\n<b>• 安全性：</b>\n裝置鎖定時偵測視窗內容，防止未經授權的變更。\n\n<small>本應用程式不會收集或傳輸任何被輸入的文字或敏感的使用者資料。</small></string>
+    <string name="accessibility_service_description"><b>Essentials 無障礙功能服務</b>\n\n以下的進階功能都需要此服務：\n\n<b>• 實體按鈕重新映射：</b>\n即使螢幕關閉時，也能偵測音量按鈕的按壓，以觸發「手電筒開關」等動作。\n\n<b>• 個別應用程式設定：</b>\n監控當前活躍的應用程式，以套用「動態夜燈」、「通知燈光顏色」及「應用程式鎖」的特定設定檔。\n\n<b>• 螢幕控制：</b>\n允許應用程式鎖定螢幕（例如透過雙擊或小工具），並偵測螢幕狀態變更。\n\n<b>• 安全性：</b>\n裝置鎖定時偵測視窗內容，防止未經授權的變更。\n\n<small>本應用程式不會收集或傳輸任何被輸入的文字或敏感的使用者資料。</small></string>
     <string name="freeze_activity_title">凍結應用程式</string>
     <string name="freeze_activity_subtitle">封存少用的應用程式</string>
     <string name="freeze_shortcut_short_label">已凍結的應用程式</string>
@@ -95,7 +95,7 @@
     <string name="flashlight_global_title">全域控制</string>
     <string name="flashlight_global_desc">全域漸亮手電筒</string>
     <string name="flashlight_adjust_intensity_title">調整亮度</string>
-    <string name="flashlight_adjust_intensity_desc">以音量鍵 + - 來調整手电筒亮度</string>
+    <string name="flashlight_adjust_intensity_desc">以音量鍵 + - 來調整手電筒亮度</string>
     <string name="flashlight_live_update_title">動態更新</string>
     <string name="flashlight_live_update_desc">在狀態欄上顯示亮度</string>
     <string name="settings_section_other">其他</string>
@@ -113,7 +113,7 @@
     <string name="caffeinate_battery_optimization_title">忽略電池優化設定</string>
     <string name="caffeinate_abort_screen_off_title">螢幕關閉後中止</string>
     <string name="caffeinate_skip_countdown_title">跳過倒數</string>
-    <string name="caffeinate_skip_countdown_desc">立刻開啟咖啡因模式</string>
+    <string name="caffeinate_skip_countdown_desc">立刻開啟咖啡因模式。</string>
     <string name="caffeinate_timeout_presets_title">預設倒數時間</string>
     <string name="caffeinate_timeout_presets_desc">選擇快速設定方塊中的可選時長</string>
     <string name="caffeinate_timeout_5m">5 分</string>
@@ -142,7 +142,7 @@
     <string name="freeze_mode_description_freeze_warning">不要凍結通訊應用程式</string>
     <string name="freeze_mode_description_suspend_title">什麼是暫停？</string>
     <string name="freeze_mode_description_suspend_body">暫停應用程式過去用於中斷應用程式的運作並阻止背景執行；但随着近年 Android 的變化，現在暫停只會阻止通知顯示。由於這些應用程式還是會顯示成灰階的暫停圖示，你還是可以從桌面上的應用程式清單中將它們取消暫停。</string>
-    <string name="freeze_mode_description_suspend_footer">運作原理應該跟原生應用的暫停/專注模式一樣</string>
+    <string name="freeze_mode_description_suspend_footer">運作原理應該跟原生應用的暫停/專注模式一樣。</string>
     <string name="content_desc_more_options">更多設定</string>
     <string name="action_freeze_all">凍結所有應用程式</string>
     <string name="action_unfreeze_all">解凍所有應用程式</string>
@@ -211,7 +211,7 @@
     <string name="settings_section_color_mode">顏色模式</string>
     <string name="settings_section_ambient_display">环境显示</string>
     <string name="ambient_display_title">环境显示</string>
-    <string name="ambient_display_hint">適合不想使用螢幕長亮模式的你</string>
+    <string name="ambient_display_hint">適合不想使用螢幕長亮模式的你。</string>
     <string name="ambient_display_desc">唤醒屏幕并显示光效</string>
     <string name="ambient_show_lock_screen_title">显示锁屏</string>
     <string name="ambient_show_lock_screen_desc">无全黑遮盖层</string>
@@ -264,7 +264,7 @@
     <string name="private_dns_hostname_label">供应商主机名</string>
     <string name="dns_preset_adguard">AdGuard DNS</string>
     <string name="dns_preset_adguard_hostname">dns.adguard.com</string>
-    <string name="dns_preset_google">Google Public DNS</string>
+    <string name="dns_preset_google">Google 公共 DNS</string>
     <string name="dns_preset_google_hostname">dns.google</string>
     <string name="dns_preset_cloudflare">Cloudflare DNS</string>
     <string name="dns_preset_cloudflare_hostname">1dot1dot1dot1.cloudflare-dns.com</string>
@@ -283,9 +283,9 @@
     <string name="warning_title">⚠️ 警告</string>
     <string name="screen_locked_security_auth_enable">认证身份以启用锁屏安全</string>
     <string name="screen_locked_security_auth_disable">认证身份以禁用锁屏安全</string>
-    <string name="screen_locked_security_desc">Disable quick setting tiles when the device is locked</string>
-    <string name="search_disable_qs_locked_title">Disable QS Locked</string>
-    <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
+    <string name="screen_locked_security_desc">螢幕鎖定時停用快速設定方塊</string>
+    <string name="search_disable_qs_locked_title">快速設定方塊鎖</string>
+    <string name="search_disable_qs_locked_desc">螢幕鎖定時禁止展開快速設定方塊列表</string>
     <!-- Sound Mode -->
     <string name="sound_mode_reorder_title">重新排序模式</string>
     <string name="sound_mode_long_press_hint">长按切换</string>
@@ -351,11 +351,11 @@
     <string name="smart_data_desc">在某些模式下隐藏移动数据</string>
     <string name="action_reset_all_icons">重置所有图标</string>
     <string name="status_bar_section_advanced">更多设置</string>
-    <string name="stb_advanced_flags_title">Advanced (Requires Shizuku/Root)</string>
-    <string name="hide_all_system_icons_title">Hide all system icons</string>
-    <string name="hide_all_system_icons_desc">Clear all non-notification icons from the status bar</string>
-    <string name="hide_system_icons_locked_only_title">Only hide system icons when locked</string>
-    <string name="hide_system_icons_locked_only_desc">Hides the status bar system icons when the device is locked and restores them upon unlock</string>
+    <string name="stb_advanced_flags_title">詳細設定 (需要 Shizuku/Root)</string>
+    <string name="hide_all_system_icons_title">隱藏所有系統圖示</string>
+    <string name="hide_all_system_icons_desc">清除狀態列的所有非通知圖示</string>
+    <string name="hide_system_icons_locked_only_title">僅在鎖定時隱藏系統圖示</string>
+    <string name="hide_system_icons_locked_only_desc">在裝置鎖定時隱藏狀態列系統圖示，並於解鎖後恢復顯示</string>
     <string name="hide_clock_title">Hide clock</string>
     <string name="hide_clock_desc">Completely remove the clock from the status bar</string>
     <string name="hide_notification_icons_title">Hide notifications</string>
@@ -1450,8 +1450,8 @@
     <string name="shut_up_shortcut_created">Shortcut created for %s</string>
     <string name="feat_disable_rotation_suggestion_title">Disable rotation suggestion</string>
     <string name="feat_disable_rotation_suggestion_desc">Do not show the rotation button when auto-rotate is off</string>
-    <string name="feat_pixel_searchbar_title">Replace searchbar</string>
-    <string name="feat_pixel_searchbar_desc">Replace Pixel Launcher default searchbar.</string>
+    <string name="feat_pixel_searchbar_title">Pixel searchbar</string>
+    <string name="feat_pixel_searchbar_desc">Set Essentials as the default search provider for the home screen search bar in Pixel Launcher.</string>
     <string name="shut_up_toast_active">App got shut up</string>
     <string name="shut_up_toast_restored">Shut up features returned</string>
     <string name="shut_up_auto_archive_notif_title">Auto Freeze</string>
@@ -1507,7 +1507,7 @@
     <string name="perm_external_control_label">control Essentials features</string>
     <string name="perm_external_control_desc">read, update and control Essentials features and settings</string>
     <string name="pixel_searchbar_settings_title">Pixel Searchbar Customization</string>
-    <string name="pixel_searchbar_style_empty">Empty</string>
+    <string name="pixel_searchbar_style_empty">Empty (Default)</string>
     <string name="pixel_searchbar_style_date">Date</string>
     <string name="pixel_searchbar_background_pill_title">Background pill</string>
     <string name="pixel_searchbar_background_pill_desc">Show the date inside a container</string>

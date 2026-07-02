@@ -1451,8 +1451,8 @@
     <string name="shut_up_shortcut_created">%s için kısayol oluşturuldu</string>
     <string name="feat_disable_rotation_suggestion_title">Döndürme önerisini devre dışı bırak</string>
     <string name="feat_disable_rotation_suggestion_desc">Otomatik döndürme kapalıyken döndürme düğmesini göstermeyin</string>
-    <string name="feat_pixel_searchbar_title">Arama çubuğunu değiştir</string>
-    <string name="feat_pixel_searchbar_desc">Pixel Launcher\'ın varsayılan arama çubuğunu değiştirin.</string>
+    <string name="feat_pixel_searchbar_title">Pixel searchbar</string>
+    <string name="feat_pixel_searchbar_desc">Set Essentials as the default search provider for the home screen search bar in Pixel Launcher.</string>
     <string name="shut_up_toast_active">Uygulama susturuldu</string>
     <string name="shut_up_toast_restored">Susturma özellikleri geri döndü</string>
     <string name="shut_up_auto_archive_notif_title">Otomatik Dondurma</string>
@@ -1508,7 +1508,7 @@
     <string name="perm_external_control_label">Essentials özelliklerini kontrol et</string>
     <string name="perm_external_control_desc">Essentials özelliklerini ve ayarlarını okuyun, güncelleyin ve kontrol edin</string>
     <string name="pixel_searchbar_settings_title">Pixel Arama Çubuğu Özelleştirme</string>
-    <string name="pixel_searchbar_style_empty">Boş</string>
+    <string name="pixel_searchbar_style_empty">Empty (Default)</string>
     <string name="pixel_searchbar_style_date">Tarih</string>
     <string name="pixel_searchbar_background_pill_title">Background pill</string>
     <string name="pixel_searchbar_background_pill_desc">Show the date inside a container</string>
