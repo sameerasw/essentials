@@ -629,6 +629,8 @@
     <string name="perm_action_enable">Ayarlar\'da etkinleştir</string>
     <string name="perm_action_how_to">Nasıl verilir</string>
     <string name="perm_action_granted">Verildi</string>
+    <string name="perm_action_grant_shizuku">Grant using Shizuku</string>
+    <string name="perm_write_secure_instructions">This permission can be granted either via a PC using ADB. Copy the ADB command and run on the shell.\n\nOr you can easily grant it using Shizuku from the below button.\n\nThis permission only needs to be granted once.</string>
     <string name="perm_battery_optimization_title">Pil Optimizasyonu</string>
     <string name="perm_battery_optimization_desc">Güç tasarrufu sağlamak için hizmetin sistem tarafından sonlandırılmadığından emin olun.</string>
     <!-- Tabs -->
@@ -1276,6 +1278,12 @@
     <string name="feat_watch_controls_desc">Customize WearOS app controls</string>
     <string name="watch_controls_long_press_hint">Long press to enable or disable buttons</string>
     <string name="watch_controls_reorder_title">Reorder watch controls</string>
+    <string name="feat_watch_wireless_debugging_title">Wireless Debugging</string>
+    <string name="feat_watch_wireless_debugging_desc">Enable remotely</string>
+    <string name="feat_sync_sound_mode_title">Sync sound mode</string>
+    <string name="feat_sync_sound_mode_desc">Automatically sync with watch</string>
+    <string name="perm_watch_write_secure_title">Watch Secure Settings</string>
+    <string name="perm_watch_write_secure_desc">Requires secure settings write permission on your Watch. Grant it using the ADB command below.</string>
     <string name="cat_interaction">Etkileşim</string>
     <string name="cat_interface">Arayüz</string>
     <string name="cat_display">Görüntülemek</string>
@@ -1384,6 +1392,8 @@
     <string name="label_use_blur">Bulanıklaştırma kullan</string>
     <string name="desc_use_blur">Kullanıcı arayüzünde aşamalı bulanıklaştırma öğelerini etkinleştirin</string>
     <string name="msg_blur_compatibility_error">Android 15 veya daha eski sürümlere sahip Samsung cihazlarda bilinen bir ekran hatasını önlemek için bu cihazda bulanıklık devre dışı bırakıldı.</string>
+    <string name="setting_swipe_tabs_title">Swipe between tabs</string>
+    <string name="setting_swipe_tabs_desc">In home screen</string>
     <!-- Empty State Actions -->
     <string name="msg_no_apps_frozen">Dondurulacak uygulama seçilmedi.</string>
     <string name="action_get_started">Başlarken</string>
