@@ -62,6 +62,9 @@ object DeviceInfoSyncManager {
     }
 
     private var currentContext: Context? = null
+    private var prefChangeListener: android.content.SharedPreferences.OnSharedPreferenceChangeListener? = null
+    private var aodContentObserver: android.database.ContentObserver? = null
+    private var tapToWakeContentObserver: android.database.ContentObserver? = null
 
     fun init(context: Context) {
         if (isInitialized) return
@@ -92,13 +95,32 @@ object DeviceInfoSyncManager {
         val cameraManager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
         cameraManager.registerTorchCallback(torchCallback, handler)
 
-        // Get initial flashlight state
-        val id = FlashlightUtil.getCameraId(context)
-        if (id != null) {
-            isIntensitySupported = FlashlightUtil.isIntensitySupported(context, id)
-            maxTorchLevel = FlashlightUtil.getMaxLevel(context, id)
-            torchLevel = FlashlightUtil.getCurrentLevel(context, id)
+        // Sync on AOD change
+        val aodUri = android.provider.Settings.Secure.getUriFor("doze_always_on")
+        aodContentObserver = object : android.database.ContentObserver(handler) {
+            override fun onChange(selfChange: Boolean) {
+                syncDeviceInfo(context)
+            }
         }
+        context.contentResolver.registerContentObserver(aodUri, true, aodContentObserver!!)
+
+        // Sync on Tap to wake change
+        val tapToWakeUri = android.provider.Settings.Secure.getUriFor("doze_tap_gesture")
+        tapToWakeContentObserver = object : android.database.ContentObserver(handler) {
+            override fun onChange(selfChange: Boolean) {
+                syncDeviceInfo(context)
+            }
+        }
+        context.contentResolver.registerContentObserver(tapToWakeUri, true, tapToWakeContentObserver!!)
+
+        // Sync on preference change (flashlight pulse, glance, watch controls)
+        val p = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+        prefChangeListener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+            if (key == "flashlight_pulse_enabled" || key == "notification_glance_enabled" || key == "watch_controls_layout" || key == "watch_sync_sound_mode_enabled") {
+                syncDeviceInfo(context)
+            }
+        }
+        p.registerOnSharedPreferenceChangeListener(prefChangeListener)
     }
 
     private val syncDebouncer = Runnable {
@@ -143,6 +165,28 @@ object DeviceInfoSyncManager {
         )
             ?: android.os.Build.MODEL
 
+        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+        val travelActive = prefs.getBoolean("travel_active", false)
+        val travelName = prefs.getString("travel_name", "") ?: ""
+        val travelProgress = prefs.getFloat("travel_progress", 0f)
+        val travelRemainingTime = prefs.getString("travel_remaining_time", "") ?: ""
+        val travelRemainingDistance = prefs.getString("travel_remaining_distance", "") ?: ""
+        val travelIconName = prefs.getString("travel_icon_name", "") ?: ""
+        val travelIsPaused = prefs.getBoolean("travel_is_paused", false)
+        val travelArrived = prefs.getBoolean("travel_arrived", false)
+
+        val flashlightPulseEnabled = prefs.getBoolean("flashlight_pulse_enabled", false)
+        val aodState = when {
+            prefs.getBoolean("notification_glance_enabled", false) -> 2
+            android.provider.Settings.Secure.getInt(context.contentResolver, "doze_always_on", 0) == 1 -> 1
+            else -> 0
+        }
+
+        val watchControlsLayout = prefs.getString("watch_controls_layout", "LOCK,SOUND,FLASHLIGHT,FLASHLIGHT_PULSE,AOD") ?: "LOCK,SOUND,FLASHLIGHT,FLASHLIGHT_PULSE,AOD"
+
+        val tapToWakeEnabled = android.provider.Settings.Secure.getInt(context.contentResolver, "doze_tap_gesture", 1) == 1
+        val watchSyncSoundModeEnabled = prefs.getBoolean("watch_sync_sound_mode_enabled", false)
+
         val dataMap = putDataMapReq.dataMap
         dataMap.putInt("battery_level", batteryPct)
         dataMap.putBoolean("is_charging", isCharging)
@@ -152,6 +196,21 @@ object DeviceInfoSyncManager {
         dataMap.putBoolean("flashlight_intensity_supported", isIntensitySupported)
         dataMap.putInt("ringer_mode", ringerMode)
         dataMap.putString("device_name", deviceName)
+        dataMap.putBoolean("flashlight_pulse_enabled", flashlightPulseEnabled)
+        dataMap.putInt("aod_state", aodState)
+        dataMap.putBoolean("tap_to_wake_enabled", tapToWakeEnabled)
+        dataMap.putString("watch_controls_layout", watchControlsLayout)
+        dataMap.putBoolean("watch_sync_sound_mode_enabled", watchSyncSoundModeEnabled)
+        
+        dataMap.putBoolean("travel_active", travelActive)
+        dataMap.putString("travel_name", travelName)
+        dataMap.putFloat("travel_progress", travelProgress)
+        dataMap.putString("travel_remaining_time", travelRemainingTime)
+        dataMap.putString("travel_remaining_distance", travelRemainingDistance)
+        dataMap.putString("travel_icon_name", travelIconName)
+        dataMap.putBoolean("travel_is_paused", travelIsPaused)
+        dataMap.putBoolean("travel_arrived", travelArrived)
+
         dataMap.putLong("timestamp", System.currentTimeMillis())
 
         val putDataReq = putDataMapReq.asPutDataRequest()

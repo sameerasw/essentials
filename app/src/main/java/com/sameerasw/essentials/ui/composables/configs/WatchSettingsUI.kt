@@ -1,6 +1,7 @@
 package com.sameerasw.essentials.ui.composables.configs
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,6 +39,7 @@ fun WatchSettingsUI(
 ) {
     val uriHandler = LocalUriHandler.current
     val view = LocalView.current
+    val context = LocalContext.current
     val isWatchDetected = viewModel.isWatchDetected.value
     val connectedWatchName = viewModel.connectedWatchName.value
 
@@ -58,6 +60,12 @@ fun WatchSettingsUI(
                         .fillMaxWidth()
                         .height(280.dp)
                         .background(MaterialTheme.colorScheme.surfaceBright)
+                        .clickable {
+                            HapticUtil.performUIHaptic(view)
+                            android.widget.Toast.makeText(context, "Syncing...", android.widget.Toast.LENGTH_SHORT).show()
+                            com.sameerasw.essentials.services.DeviceInfoSyncManager.forceSync(context)
+                            com.sameerasw.essentials.services.CalendarSyncManager.forceSync(context)
+                        }
                         .padding(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center

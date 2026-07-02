@@ -152,6 +152,7 @@ fun AutomationItem(
                     val icon = when (automation.type) {
                         Automation.Type.TRIGGER -> automation.trigger?.icon
                         Automation.Type.ACTION_SHORTCUT -> R.drawable.rounded_rocket_launch_24
+                        Automation.Type.PIXEL_SEARCHBAR -> R.drawable.rounded_search_24
                         Automation.Type.STATE -> automation.state?.icon
                         Automation.Type.APP -> R.drawable.rounded_apps_24
                     }
@@ -163,6 +164,7 @@ fun AutomationItem(
                             )
                         }
                         Automation.Type.ACTION_SHORTCUT -> stringResource(R.string.diy_create_action_shortcut_title)
+                        Automation.Type.PIXEL_SEARCHBAR -> stringResource(R.string.diy_create_pixel_searchbar_title)
                         Automation.Type.STATE -> automation.state?.title?.let { stringResource(it) }
                         Automation.Type.APP -> stringResource(R.string.diy_create_app_title) + " (${automation.selectedApps.size})"
                     }
@@ -209,7 +211,7 @@ fun AutomationItem(
                 }
 
 
-                if (automation.type == Automation.Type.TRIGGER || automation.type == Automation.Type.ACTION_SHORTCUT) {
+                if (automation.type == Automation.Type.TRIGGER || automation.type == Automation.Type.ACTION_SHORTCUT || automation.type == Automation.Type.PIXEL_SEARCHBAR) {
                     // Separator Icon
                     Box(
                         modifier = Modifier
@@ -273,7 +275,7 @@ fun AutomationItem(
                     modifier = Modifier
                         .weight(1f),
                 ) {
-                    if (automation.type == Automation.Type.TRIGGER || automation.type == Automation.Type.ACTION_SHORTCUT) {
+                    if (automation.type == Automation.Type.TRIGGER || automation.type == Automation.Type.ACTION_SHORTCUT || automation.type == Automation.Type.PIXEL_SEARCHBAR) {
                         automation.actions.forEach { action ->
                             ActionItem(action = action)
                         }

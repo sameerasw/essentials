@@ -32,6 +32,8 @@ import com.sameerasw.essentials.domain.diy.Automation
 import com.sameerasw.essentials.domain.diy.DIYRepository
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.HapticUtil
+import androidx.compose.ui.platform.LocalContext
+import com.sameerasw.essentials.data.repository.SettingsRepository
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,9 +41,20 @@ fun NewAutomationSheet(
     onDismiss: () -> Unit,
     onOptionSelected: (Automation.Type) -> Unit
 ) {
+    val context = LocalContext.current
+    val isPixelSearchbarEnabled = remember(context) {
+        SettingsRepository(context).getBoolean(SettingsRepository.KEY_PIXEL_SEARCHBAR, false)
+    }
+
     val hasActionShortcut = remember {
         DIYRepository.automations.value.any {
             it.type == Automation.Type.ACTION_SHORTCUT
+        }
+    }
+
+    val hasPixelSearchbar = remember {
+        DIYRepository.automations.value.any {
+            it.type == Automation.Type.PIXEL_SEARCHBAR
         }
     }
 
@@ -114,6 +127,17 @@ fun NewAutomationSheet(
                     enabled = !hasActionShortcut,
                     onClick = { onOptionSelected(Automation.Type.ACTION_SHORTCUT) }
                 )
+
+                // Pixel Searchbar Tap Option
+                if (isPixelSearchbarEnabled) {
+                    AutomationTypeOption(
+                        title = stringResource(R.string.diy_create_pixel_searchbar_title),
+                        description = stringResource(R.string.diy_create_pixel_searchbar_desc),
+                        iconRes = R.drawable.rounded_search_24,
+                        enabled = !hasPixelSearchbar,
+                        onClick = { onOptionSelected(Automation.Type.PIXEL_SEARCHBAR) }
+                    )
+                }
             }
         }
     }

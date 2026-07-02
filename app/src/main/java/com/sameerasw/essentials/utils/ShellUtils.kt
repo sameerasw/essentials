@@ -4,6 +4,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.sameerasw.essentials.R
@@ -109,6 +110,16 @@ object ShellUtils {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
+        val restartIntent = Intent(context, com.sameerasw.essentials.services.receivers.ShizukuActionReceiver::class.java).apply {
+            action = "com.sameerasw.essentials.ACTION_RESTART_SHIZUKU"
+        }
+        val restartPendingIntent = PendingIntent.getBroadcast(
+            context,
+            9001,
+            restartIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
         val builder = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(R.drawable.app_logo)
             .setContentTitle(title)
@@ -116,6 +127,11 @@ object ShellUtils {
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
+            .addAction(
+                R.drawable.rounded_power_settings_new_24,
+                context.getString(R.string.action_restart_shizuku),
+                restartPendingIntent
+            )
 
         notificationManager.notify(9001, builder.build())
     }

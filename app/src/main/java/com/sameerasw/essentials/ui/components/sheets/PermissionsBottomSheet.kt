@@ -27,7 +27,11 @@ data class PermissionItem(
     val action: (() -> Unit)? = null,
     val secondaryActionLabel: Any? = null, // Can be Int or String
     val secondaryAction: (() -> Unit)? = null,
-    val isGranted: Boolean = false
+    val isGranted: Boolean = false,
+    val shizukuActionLabel: Any? = null,
+    val shizukuActionEnabled: Boolean = false,
+    val shizukuAction: (() -> Unit)? = null,
+    val instructions: Any? = null
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -78,7 +82,12 @@ fun PermissionsBottomSheet(
                         isGranted = perm.isGranted,
                         onActionClick = { perm.action?.invoke() },
                         secondaryActionLabel = perm.secondaryActionLabel,
-                        onSecondaryActionClick = { perm.secondaryAction?.invoke() }
+                        onSecondaryActionClick = { perm.secondaryAction?.invoke() },
+                        shizukuActionLabel = perm.shizukuActionLabel,
+                        shizukuActionEnabled = perm.shizukuActionEnabled,
+                        onShizukuActionClick = { perm.shizukuAction?.invoke() },
+                        instructions = perm.instructions,
+                        description = perm.description
                     )
                 }
             }

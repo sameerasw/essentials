@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.ui.composables
 
+import androidx.activity.compose.BackHandler
 import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -849,6 +850,14 @@ fun SetupFeatures(
     val focusRequester = remember { FocusRequester() }
     var isFocused by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
+    val searchQuery = viewModel.searchQuery.value
+
+    BackHandler(enabled = isFocused || searchQuery.isNotEmpty()) {
+        focusManager.clearFocus()
+        viewModel.onSearchQueryChanged("", context)
+        isFocused = false
+    }
+
     LocalSoftwareKeyboardController.current
     WindowInsets.isImeVisible
 
@@ -1333,6 +1342,16 @@ private fun RecentSearchesSection(
                         viewModel.addRecentSearch(result)
                         val feature = allFeatures.find { it.id == result.featureKey }
                         if (feature != null) {
+                            val targetFeatureKey = if (!feature.hasMoreSettings && feature.parentFeatureId != null) {
+                                feature.parentFeatureId
+                            } else {
+                                feature.id
+                            }
+                            val highlightKey = if (!feature.hasMoreSettings && feature.parentFeatureId != null) {
+                                feature.id
+                            } else {
+                                result.targetSettingHighlightKey
+                            }
                             BiometricSecurityHelper.runWithAuth(
                                 activity = context as FragmentActivity,
                                 feature = feature,
@@ -1342,8 +1361,8 @@ private fun RecentSearchesSection(
                                             context,
                                             FeatureSettingsActivity::class.java
                                         ).apply {
-                                            putExtra("feature", result.featureKey)
-                                            result.targetSettingHighlightKey?.let {
+                                            putExtra("feature", targetFeatureKey)
+                                            highlightKey?.let {
                                                 putExtra("highlight_setting", it)
                                             }
                                         }
@@ -1395,6 +1414,16 @@ private fun SearchResultsSection(
                         viewModel.addRecentSearch(result)
                         val feature = allFeatures.find { it.id == result.featureKey }
                         if (feature != null) {
+                            val targetFeatureKey = if (!feature.hasMoreSettings && feature.parentFeatureId != null) {
+                                feature.parentFeatureId
+                            } else {
+                                feature.id
+                            }
+                            val highlightKey = if (!feature.hasMoreSettings && feature.parentFeatureId != null) {
+                                feature.id
+                            } else {
+                                result.targetSettingHighlightKey
+                            }
                             BiometricSecurityHelper.runWithAuth(
                                 activity = context as FragmentActivity,
                                 feature = feature,
@@ -1404,8 +1433,8 @@ private fun SearchResultsSection(
                                             context,
                                             FeatureSettingsActivity::class.java
                                         ).apply {
-                                            putExtra("feature", result.featureKey)
-                                            result.targetSettingHighlightKey?.let {
+                                            putExtra("feature", targetFeatureKey)
+                                            highlightKey?.let {
                                                 putExtra("highlight_setting", it)
                                             }
                                         }

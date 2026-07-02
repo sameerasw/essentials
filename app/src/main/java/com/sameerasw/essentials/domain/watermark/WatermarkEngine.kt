@@ -154,12 +154,43 @@ class WatermarkEngine(
         withContext(Dispatchers.Default) {
             val exifData = metadataProvider.extractExif(uri)
 
+            // Extract original gainmap if it exists (API 34+)
+            var currentGainmap: android.graphics.Gainmap? = null
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                if (bitmap.hasGainmap()) {
+                    currentGainmap = bitmap.gainmap
+                }
+            }
+
             // Apply Rotation
             val rotated = if (options.rotation != 0) {
                 val matrix =
                     android.graphics.Matrix().apply { postRotate(options.rotation.toFloat()) }
                 val rb =
                     Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+                
+                // If we have a gainmap, rotate its contents as well to align with the base image
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE && currentGainmap != null) {
+                    try {
+                        val gmContents = currentGainmap.gainmapContents
+                        val rotatedGmContents = Bitmap.createBitmap(gmContents, 0, 0, gmContents.width, gmContents.height, matrix, true)
+                        val newGm = android.graphics.Gainmap(rotatedGmContents)
+                        
+                        newGm.setRatioMin(currentGainmap.ratioMin[0], currentGainmap.ratioMin[1], currentGainmap.ratioMin[2])
+                        newGm.setRatioMax(currentGainmap.ratioMax[0], currentGainmap.ratioMax[1], currentGainmap.ratioMax[2])
+                        newGm.setGamma(currentGainmap.gamma[0], currentGainmap.gamma[1], currentGainmap.gamma[2])
+                        newGm.setEpsilonSdr(currentGainmap.epsilonSdr[0], currentGainmap.epsilonSdr[1], currentGainmap.epsilonSdr[2])
+                        newGm.setEpsilonHdr(currentGainmap.epsilonHdr[0], currentGainmap.epsilonHdr[1], currentGainmap.epsilonHdr[2])
+                        newGm.displayRatioForFullHdr = currentGainmap.displayRatioForFullHdr
+                        newGm.minDisplayRatioForHdrTransition = currentGainmap.minDisplayRatioForHdrTransition
+                        
+                        currentGainmap = newGm
+                        rb.gainmap = newGm
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+                
                 if (rb != bitmap) bitmap.recycle()
                 rb
             } else {
@@ -171,7 +202,106 @@ class WatermarkEngine(
                 WatermarkStyle.FRAME -> drawFrame(rotated, exifData, options)
             }
 
-            applyBorder(result, options)
+            val finalResult = applyBorder(result, options)
+
+            // Re-apply/propagate the processed gainmap to the final output
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE && currentGainmap != null) {
+                try {
+                    val gmContents = currentGainmap.gainmapContents
+                    val scale = gmContents.width.toFloat() / rotated.width.toFloat()
+                    
+                    var xOffset = 0f
+                    var yOffset = 0f
+
+                    // Offset from drawFrame
+                    if (options.style == WatermarkStyle.FRAME) {
+                        val baseFrameHeight = (rotated.height * 0.10f).roundToInt()
+                        val brandScale = 0.5f + (options.brandTextSize / 100f)
+                        val dataScale = 0.5f + (options.dataTextSize / 100f)
+                        
+                        val brandPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                            textSize = (baseFrameHeight * 0.3f) * brandScale
+                        }
+                        val exifPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                            textSize = (baseFrameHeight * 0.2f) * dataScale
+                        }
+                        
+                        val margin = rotated.width * (options.padding / 1000f)
+                        val maxAvailableWidth = if (options.showDeviceBrand) {
+                            (rotated.width - margin * 2) * 0.6f
+                        } else {
+                            (rotated.width - margin * 2)
+                        }
+                        
+                        var totalExifHeight = 0f
+                        if (options.showExif) {
+                            val exifItems = buildExifList(exifData, options)
+                            if (exifItems.isNotEmpty()) {
+                                val exifRows = wrapExifItems(exifItems, exifPaint, maxAvailableWidth)
+                                totalExifHeight = exifRows.size * (exifPaint.textSize * 1.5f)
+                            }
+                        }
+                        
+                        var leftSideHeight = 0f
+                        if (options.showDeviceBrand) leftSideHeight += brandPaint.textSize
+                        if (options.showCustomText && options.customText.isNotEmpty()) {
+                            val customScale = 0.5f + (options.customTextSize / 100f)
+                            val customPaint = Paint(brandPaint).apply {
+                                textSize = brandPaint.textSize * (customScale / (0.5f + (options.brandTextSize / 100f)))
+                            }
+                            if (options.showDeviceBrand) leftSideHeight += (brandPaint.textSize * 0.2f)
+                            leftSideHeight += customPaint.textSize
+                        }
+                        
+                        val minHeight = max(brandPaint.textSize, exifPaint.textSize) * 2f
+                        val strokeSpacer = (rotated.width * (options.borderStroke / 1000f)).toInt()
+                        val calculatedHeight = max(leftSideHeight, totalExifHeight) + (margin * 2) + strokeSpacer
+                        val finalFrameHeight = max(minHeight.roundToInt(), calculatedHeight.roundToInt())
+                        
+                        if (options.moveToTop) {
+                            yOffset += finalFrameHeight
+                        }
+                    }
+
+                    // Offset from applyBorder
+                    if (options.borderStroke > 0) {
+                        val strokeWidth = (rotated.width * (options.borderStroke / 1000f)).toInt()
+                        xOffset += strokeWidth
+                        yOffset += strokeWidth
+                    }
+
+                    val newGmWidth = (finalResult.width * scale).roundToInt()
+                    val newGmHeight = (finalResult.height * scale).roundToInt()
+                    
+                    val newGmContents = Bitmap.createBitmap(newGmWidth, newGmHeight, Bitmap.Config.ARGB_8888)
+                    val gmCanvas = Canvas(newGmContents)
+                    gmCanvas.drawColor(Color.BLACK) // fill with neutral black
+                    
+                    val destRect = RectF(
+                        xOffset * scale,
+                        yOffset * scale,
+                        (xOffset + rotated.width) * scale,
+                        (yOffset + rotated.height) * scale
+                    )
+                    gmCanvas.drawBitmap(gmContents, null, destRect, null)
+                    
+                    val newGm = android.graphics.Gainmap(newGmContents)
+                    newGm.setRatioMin(currentGainmap.ratioMin[0], currentGainmap.ratioMin[1], currentGainmap.ratioMin[2])
+                    newGm.setRatioMax(currentGainmap.ratioMax[0], currentGainmap.ratioMax[1], currentGainmap.ratioMax[2])
+                    newGm.setGamma(currentGainmap.gamma[0], currentGainmap.gamma[1], currentGainmap.gamma[2])
+                    newGm.setEpsilonSdr(currentGainmap.epsilonSdr[0], currentGainmap.epsilonSdr[1], currentGainmap.epsilonSdr[2])
+                    newGm.setEpsilonHdr(currentGainmap.epsilonHdr[0], currentGainmap.epsilonHdr[1], currentGainmap.epsilonHdr[2])
+                    newGm.displayRatioForFullHdr = currentGainmap.displayRatioForFullHdr
+                    newGm.minDisplayRatioForHdrTransition = currentGainmap.minDisplayRatioForHdrTransition
+                    
+                    finalResult.gainmap = newGm
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    finalResult.gainmap = currentGainmap
+                }
+            }
+
+            finalResult
         }
 
     private fun drawOverlay(bitmap: Bitmap, exifData: ExifData, options: WatermarkOptions): Bitmap {

@@ -527,14 +527,17 @@ fun YourAndroidContent(
                     .padding(32.dp)
             )
         } else if (trackedRepos.isEmpty()) {
-            androidx.compose.material3.OutlinedCard(
+            androidx.compose.material3.Card(
                 modifier = Modifier
+                    .background(
+                        MaterialTheme.colorScheme.surfaceBright
+                    )
                     .fillMaxWidth()
                     .graphicsLayer {
                         alpha = contentAlphaState.value
                         translationY = contentOffsetState.value.toPx()
                     },
-                shape = MaterialTheme.shapes.extraSmall
+                shape = MaterialTheme.shapes.large
             ) {
                 Column(
                     modifier = Modifier.padding(24.dp),

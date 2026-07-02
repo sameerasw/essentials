@@ -30,12 +30,14 @@ import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.viewmodels.MainViewModel
+import com.sameerasw.essentials.ui.activities.PixelSearchbarSettingsActivity
 
 enum class PermissionModule {
     HIDE_GESTURE_BAR,
     SHOW_ON_LAUNCHER,
     CIRCLE_TO_SEARCH,
     DISABLE_ROTATION_SUGGESTION,
+    PIXEL_SEARCHBAR,
     NONE
 }
 
@@ -121,6 +123,7 @@ fun OtherCustomizationsSettingsUI(
 
             PermissionModule.CIRCLE_TO_SEARCH -> listOf(shizukuPermission, accessibilityPermission)
             PermissionModule.DISABLE_ROTATION_SUGGESTION -> listOf(shizukuPermission)
+            PermissionModule.PIXEL_SEARCHBAR -> listOf(shizukuPermission)
             else -> emptyList()
         }
 
@@ -252,6 +255,8 @@ fun OtherCustomizationsSettingsUI(
                 iconRes = R.drawable.rounded_mobile_rotate_24,
                 modifier = Modifier.highlight(highlightSetting == "disable_rotation_suggestion_toggle")
             )
+
+
 
             AnimatedVisibility(
                 visible = viewModel.isCircleToSearchGestureEnabled.value,

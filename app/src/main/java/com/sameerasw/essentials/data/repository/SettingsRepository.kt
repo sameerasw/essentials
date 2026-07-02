@@ -211,6 +211,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_AOD_FORCE_TURN_OFF_ENABLED = "aod_force_turn_off_enabled"
         const val KEY_AUTO_ACCESSIBILITY_ENABLED = "auto_accessibility_enabled"
         const val KEY_USE_BLUR = "use_blur"
+        const val KEY_SWIPE_TABS = "swipe_tabs"
         const val KEY_SENTRY_REPORT_MODE = "sentry_report_mode"
         const val KEY_ONBOARDING_COMPLETED = "onboarding_completed"
         const val KEY_PRIVATE_DNS_PRESETS = "private_dns_presets"
@@ -242,6 +243,21 @@ class SettingsRepository(private val context: Context) {
         const val KEY_SHIZUKU_AUTH_TOKEN = "shizuku_auth_token"
         const val KEY_EDGE_LIGHTING_SWEEP_SELECTED_SHAPES = "edge_lighting_sweep_selected_shapes"
         const val KEY_DISABLE_ROTATION_SUGGESTION = "disable_rotation_suggestion"
+        const val KEY_PIXEL_SEARCHBAR = "pixel_searchbar"
+        const val KEY_PIXEL_SEARCHBAR_TYPE = "pixel_searchbar_type"
+        const val KEY_PIXEL_SEARCHBAR_DATE_FORMAT = "pixel_searchbar_date_format"
+        const val KEY_PIXEL_SEARCHBAR_BACKGROUND_PILL = "pixel_searchbar_background_pill"
+        const val KEY_PIXEL_SEARCHBAR_WIDGET_ID = "pixel_searchbar_widget_id"
+        const val KEY_PIXEL_SEARCHBAR_WIDGET_PROVIDER = "pixel_searchbar_widget_provider"
+        const val KEY_PIXEL_SEARCHBAR_SCRAPED_LINE1 = "pixel_searchbar_scraped_line1"
+        const val KEY_PIXEL_SEARCHBAR_SCRAPED_LINE2 = "pixel_searchbar_scraped_line2"
+        const val KEY_PIXEL_SEARCHBAR_WIDGET_PADDING_H = "pixel_searchbar_widget_padding_h"
+        const val KEY_PIXEL_SEARCHBAR_WIDGET_PADDING_V = "pixel_searchbar_widget_padding_v"
+        const val KEY_PIXEL_SEARCHBAR_TAP_ACTION_ENABLED = "pixel_searchbar_tap_action_enabled"
+        const val KEY_PIXEL_SEARCHBAR_WIDGET_REVISION = "pixel_searchbar_widget_revision"
+        const val KEY_PIXEL_SEARCHBAR_MUSIC_TITLE = "pixel_searchbar_music_title"
+        const val KEY_PIXEL_SEARCHBAR_MUSIC_ARTIST = "pixel_searchbar_music_artist"
+        const val KEY_PIXEL_SEARCHBAR_MUSIC_PACKAGE = "pixel_searchbar_music_package"
 
         const val KEY_LOCK_SCREEN_CLOCK_WEIGHT = "lock_screen_clock_weight"
         const val KEY_LOCK_SCREEN_CLOCK_WIDTH = "lock_screen_clock_width"
@@ -882,6 +898,93 @@ class SettingsRepository(private val context: Context) {
 
     fun setShizukuAuthToken(token: String) =
         putString(KEY_SHIZUKU_AUTH_TOKEN, token)
+
+    fun getPixelSearchbarType(): String =
+        prefs.getString(KEY_PIXEL_SEARCHBAR_TYPE, "empty") ?: "empty"
+
+    fun setPixelSearchbarType(type: String) =
+        putString(KEY_PIXEL_SEARCHBAR_TYPE, type)
+
+    fun getPixelSearchbarDateFormat(): String =
+        prefs.getString(KEY_PIXEL_SEARCHBAR_DATE_FORMAT, "EEEE, MMMM d") ?: "EEEE, MMMM d"
+
+    fun setPixelSearchbarDateFormat(format: String) =
+        putString(KEY_PIXEL_SEARCHBAR_DATE_FORMAT, format)
+
+    fun getPixelSearchbarBackgroundPill(): Boolean =
+        prefs.getBoolean(KEY_PIXEL_SEARCHBAR_BACKGROUND_PILL, false)
+
+    fun setPixelSearchbarBackgroundPill(enabled: Boolean) =
+        putBoolean(KEY_PIXEL_SEARCHBAR_BACKGROUND_PILL, enabled)
+
+    fun getPixelSearchbarWidgetId(): Int =
+        prefs.getInt(KEY_PIXEL_SEARCHBAR_WIDGET_ID, android.appwidget.AppWidgetManager.INVALID_APPWIDGET_ID)
+
+    fun setPixelSearchbarWidgetId(id: Int) =
+        prefs.edit().putInt(KEY_PIXEL_SEARCHBAR_WIDGET_ID, id).apply()
+
+    fun getPixelSearchbarWidgetProvider(): String? =
+        prefs.getString(KEY_PIXEL_SEARCHBAR_WIDGET_PROVIDER, null)
+
+    fun setPixelSearchbarWidgetProvider(provider: String?) =
+        if (provider == null) prefs.edit().remove(KEY_PIXEL_SEARCHBAR_WIDGET_PROVIDER).apply()
+        else putString(KEY_PIXEL_SEARCHBAR_WIDGET_PROVIDER, provider)
+
+    fun getPixelSearchbarScrapedLine1(): String =
+        prefs.getString(KEY_PIXEL_SEARCHBAR_SCRAPED_LINE1, "") ?: ""
+
+    fun setPixelSearchbarScrapedLine1(text: String) =
+        putString(KEY_PIXEL_SEARCHBAR_SCRAPED_LINE1, text)
+
+    fun getPixelSearchbarScrapedLine2(): String =
+        prefs.getString(KEY_PIXEL_SEARCHBAR_SCRAPED_LINE2, "") ?: ""
+
+    fun setPixelSearchbarScrapedLine2(text: String) =
+        putString(KEY_PIXEL_SEARCHBAR_SCRAPED_LINE2, text)
+
+    fun getPixelSearchbarWidgetPaddingH(): Int =
+        prefs.getInt(KEY_PIXEL_SEARCHBAR_WIDGET_PADDING_H, 0)
+
+    fun setPixelSearchbarWidgetPaddingH(value: Int) =
+        prefs.edit().putInt(KEY_PIXEL_SEARCHBAR_WIDGET_PADDING_H, value).apply()
+
+    fun getPixelSearchbarWidgetPaddingV(): Int =
+        prefs.getInt(KEY_PIXEL_SEARCHBAR_WIDGET_PADDING_V, 0)
+
+    fun setPixelSearchbarWidgetPaddingV(value: Int) =
+        prefs.edit().putInt(KEY_PIXEL_SEARCHBAR_WIDGET_PADDING_V, value).apply()
+
+    fun getPixelSearchbarTapActionEnabled(): Boolean =
+        prefs.getBoolean(KEY_PIXEL_SEARCHBAR_TAP_ACTION_ENABLED, true)
+
+    fun setPixelSearchbarTapActionEnabled(enabled: Boolean) =
+        putBoolean(KEY_PIXEL_SEARCHBAR_TAP_ACTION_ENABLED, enabled)
+
+    fun getPixelSearchbarWidgetRevision(): Int =
+        prefs.getInt(KEY_PIXEL_SEARCHBAR_WIDGET_REVISION, 0)
+
+    fun incrementPixelSearchbarWidgetRevision() {
+        val current = getPixelSearchbarWidgetRevision()
+        prefs.edit().putInt(KEY_PIXEL_SEARCHBAR_WIDGET_REVISION, current + 1).apply()
+    }
+
+    fun getPixelSearchbarMusicTitle(): String =
+        prefs.getString(KEY_PIXEL_SEARCHBAR_MUSIC_TITLE, "") ?: ""
+
+    fun setPixelSearchbarMusicTitle(value: String) =
+        putString(KEY_PIXEL_SEARCHBAR_MUSIC_TITLE, value)
+
+    fun getPixelSearchbarMusicArtist(): String =
+        prefs.getString(KEY_PIXEL_SEARCHBAR_MUSIC_ARTIST, "") ?: ""
+
+    fun setPixelSearchbarMusicArtist(value: String) =
+        putString(KEY_PIXEL_SEARCHBAR_MUSIC_ARTIST, value)
+
+    fun getPixelSearchbarMusicPackage(): String =
+        prefs.getString(KEY_PIXEL_SEARCHBAR_MUSIC_PACKAGE, "") ?: ""
+
+    fun setPixelSearchbarMusicPackage(value: String) =
+        putString(KEY_PIXEL_SEARCHBAR_MUSIC_PACKAGE, value)
 
     fun getEdgeLightingSweepSelectedShapes(): Set<String> {
         val defaultShapes = com.sameerasw.essentials.utils.AmbientMusicShapeHelper.allShapesWithNames.map { it.first }.toSet()

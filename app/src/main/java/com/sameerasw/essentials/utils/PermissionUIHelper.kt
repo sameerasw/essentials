@@ -54,7 +54,15 @@ object PermissionUIHelper {
                 secondaryAction = {
                     viewModel.check(context)
                 },
-                isGranted = viewModel.isWriteSecureSettingsEnabled.value
+                isGranted = viewModel.isWriteSecureSettingsEnabled.value,
+                shizukuActionLabel = R.string.perm_action_grant_shizuku,
+                shizukuActionEnabled = ShizukuUtils.hasPermission(),
+                shizukuAction = {
+                    if (ShizukuUtils.grantWriteSecureSettingsPermission()) {
+                        viewModel.check(context)
+                    }
+                },
+                instructions = R.string.perm_write_secure_instructions
             )
 
             "NOTIFICATION_LISTENER" -> PermissionItem(

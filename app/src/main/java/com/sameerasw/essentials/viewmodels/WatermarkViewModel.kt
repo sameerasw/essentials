@@ -24,7 +24,7 @@ import java.io.File
 sealed class WatermarkUiState {
     data object Idle : WatermarkUiState()
     data object Processing : WatermarkUiState()
-    data class Success(val file: File) : WatermarkUiState()
+    data class Success(val file: File, val bitmap: android.graphics.Bitmap? = null) : WatermarkUiState()
     data class Error(val message: String) : WatermarkUiState()
 }
 
@@ -248,6 +248,12 @@ class WatermarkViewModel(
                 val workingBitmap =
                     bitmap.copy(bitmap.config ?: android.graphics.Bitmap.Config.ARGB_8888, true)
 
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    if (bitmap.hasGainmap()) {
+                        workingBitmap.gainmap = bitmap.gainmap
+                    }
+                }
+
                 // Merge transient logo settings with base options
                 val currentOptions = _options.value.copy(
                     logoResId = _logoResId.value,
@@ -272,7 +278,7 @@ class WatermarkViewModel(
                     }
                 }
 
-                _previewUiState.value = WatermarkUiState.Success(file)
+                _previewUiState.value = WatermarkUiState.Success(file, result)
             } catch (e: Exception) {
                 e.printStackTrace()
                 _previewUiState.value = WatermarkUiState.Error(e.message ?: "Unknown error")

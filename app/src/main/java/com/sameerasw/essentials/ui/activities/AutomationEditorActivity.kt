@@ -126,6 +126,7 @@ class AutomationEditorActivity : ComponentActivity() {
         val titleRes = when (automationType) {
             Automation.Type.TRIGGER -> if (isEditMode) R.string.diy_editor_edit_title else R.string.diy_editor_new_title
             Automation.Type.ACTION_SHORTCUT -> if (isEditMode) R.string.diy_editor_edit_title else R.string.diy_editor_new_title
+            Automation.Type.PIXEL_SEARCHBAR -> if (isEditMode) R.string.diy_editor_edit_title else R.string.diy_editor_new_title
             Automation.Type.STATE -> if (isEditMode) R.string.diy_editor_edit_title else R.string.diy_editor_new_title
             Automation.Type.APP -> if (isEditMode) R.string.diy_editor_edit_title else R.string.diy_create_app_title
         }
@@ -231,7 +232,7 @@ class AutomationEditorActivity : ComponentActivity() {
 
                 val isValid = when (automationType) {
                     Automation.Type.TRIGGER -> selectedTrigger != null && selectedAction != null
-                    Automation.Type.ACTION_SHORTCUT -> selectedAction != null
+                    Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR -> selectedAction != null
                     Automation.Type.STATE -> selectedState != null && (selectedInAction != null || selectedOutAction != null)
                     Automation.Type.APP -> selectedApps.isNotEmpty() && (selectedInAction != null || selectedOutAction != null)
                 }
@@ -434,7 +435,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                                 }
                                             }
                                         }
-                                    } else if (automationType == Automation.Type.ACTION_SHORTCUT) {
+                                    } else if (automationType == Automation.Type.ACTION_SHORTCUT || automationType == Automation.Type.PIXEL_SEARCHBAR) {
                                         Column(
                                             modifier = Modifier
                                                 .fillMaxSize()
@@ -451,9 +452,19 @@ class AutomationEditorActivity : ComponentActivity() {
                                             )
 
                                             RoundedCardContainer(spacing = 2.dp) {
+                                                val editorTitle = if (automationType == Automation.Type.PIXEL_SEARCHBAR) {
+                                                    stringResource(R.string.diy_create_pixel_searchbar_title)
+                                                } else {
+                                                    stringResource(R.string.diy_create_action_shortcut_title)
+                                                }
+                                                val editorIcon = if (automationType == Automation.Type.PIXEL_SEARCHBAR) {
+                                                    R.drawable.rounded_search_24
+                                                } else {
+                                                    R.drawable.rounded_rocket_launch_24
+                                                }
                                                 EditorActionItem(
-                                                    title = stringResource(R.string.diy_create_action_shortcut_title),
-                                                    iconRes = R.drawable.rounded_rocket_launch_24,
+                                                    title = editorTitle,
+                                                    iconRes = editorIcon,
                                                     isSelected = true,
                                                     isConfigurable = false,
                                                     onClick = {}
@@ -605,7 +616,7 @@ class AutomationEditorActivity : ComponentActivity() {
 
                                             val currentSelection = when (automationType) {
                                                 Automation.Type.TRIGGER -> selectedAction
-                                                Automation.Type.ACTION_SHORTCUT -> selectedAction
+                                                Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR -> selectedAction
                                                 Automation.Type.STATE -> if (selectedActionTab == 0) selectedInAction else selectedOutAction
                                                 Automation.Type.APP -> if (selectedActionTab == 0) selectedInAction else selectedOutAction
                                             }
@@ -619,7 +630,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                                     when (automationType) {
                                                         Automation.Type.TRIGGER -> selectedAction =
                                                             null
-                                                        Automation.Type.ACTION_SHORTCUT -> selectedAction =
+                                                        Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR -> selectedAction =
                                                             null
 
                                                         Automation.Type.STATE, Automation.Type.APP -> {
@@ -645,7 +656,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                                         when (automationType) {
                                                             Automation.Type.TRIGGER -> selectedAction =
                                                                 resolvedAction
-                                                            Automation.Type.ACTION_SHORTCUT -> selectedAction =
+                                                            Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR -> selectedAction =
                                                                 resolvedAction
 
                                                             Automation.Type.STATE, Automation.Type.APP -> {
@@ -712,9 +723,9 @@ class AutomationEditorActivity : ComponentActivity() {
                                 onSave = { newAction ->
                                     showDimSettings = false
                                     // Update the selection with configured action
-                                    when (automationType) {
+                                                                    when (automationType) {
                                         Automation.Type.TRIGGER -> selectedAction = newAction
-                                        Automation.Type.ACTION_SHORTCUT -> selectedAction = newAction
+                                        Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR -> selectedAction = newAction
                                         Automation.Type.STATE, Automation.Type.APP -> {
                                             if (selectedActionTab == 0) selectedInAction = newAction
                                             else selectedOutAction = newAction
@@ -733,7 +744,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                     showScreenOffSettings = false
                                     when (automationType) {
                                         Automation.Type.TRIGGER -> selectedAction = newAction
-                                        Automation.Type.ACTION_SHORTCUT -> selectedAction = newAction
+                                        Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR -> selectedAction = newAction
                                         Automation.Type.STATE, Automation.Type.APP -> {
                                             if (selectedActionTab == 0) selectedInAction = newAction
                                             else selectedOutAction = newAction
@@ -752,7 +763,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                     showDeviceEffectsSettings = false
                                     when (automationType) {
                                         Automation.Type.TRIGGER -> selectedAction = newAction
-                                        Automation.Type.ACTION_SHORTCUT -> selectedAction = newAction
+                                        Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR -> selectedAction = newAction
                                         Automation.Type.STATE, Automation.Type.APP -> {
                                             if (selectedActionTab == 0) selectedInAction = newAction
                                             else selectedOutAction = newAction
@@ -771,7 +782,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                     showSoundModeSettings = false
                                     when (automationType) {
                                         Automation.Type.TRIGGER -> selectedAction = newAction
-                                        Automation.Type.ACTION_SHORTCUT -> selectedAction = newAction
+                                        Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR -> selectedAction = newAction
                                         Automation.Type.STATE, Automation.Type.APP -> {
                                             if (selectedActionTab == 0) selectedInAction = newAction
                                             else selectedOutAction = newAction
@@ -824,11 +835,11 @@ class AutomationEditorActivity : ComponentActivity() {
                                         if (isEditMode) DIYRepository.updateAutomation(newAutomation) else DIYRepository.addAutomation(
                                             newAutomation
                                         )
-                                    } else if (automationType == Automation.Type.ACTION_SHORTCUT) {
+                                    } else if (automationType == Automation.Type.ACTION_SHORTCUT || automationType == Automation.Type.PIXEL_SEARCHBAR) {
                                         val newAutomation = Automation(
                                             id = if (isEditMode) existingAutomation.id else java.util.UUID.randomUUID()
                                                 .toString(),
-                                            type = Automation.Type.ACTION_SHORTCUT,
+                                            type = automationType,
                                             actions = listOfNotNull(selectedAction)
                                         )
                                         if (isEditMode) DIYRepository.updateAutomation(newAutomation) else DIYRepository.addAutomation(

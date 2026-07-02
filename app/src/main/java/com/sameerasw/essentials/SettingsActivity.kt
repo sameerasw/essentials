@@ -428,6 +428,14 @@ fun SettingsContent(
                 onTabSelected = { viewModel.setDefaultTab(it, context) },
                 options = availableTabs
             )
+
+            IconToggleItem(
+                iconRes = R.drawable.rounded_touch_app_24,
+                title = stringResource(R.string.setting_swipe_tabs_title),
+                description = stringResource(R.string.setting_swipe_tabs_desc),
+                isChecked = viewModel.isSwipeTabsEnabled.value,
+                onCheckedChange = { viewModel.setSwipeTabsEnabled(it) }
+            )
         }
 
         Spacer(modifier = Modifier.height(8.dp))

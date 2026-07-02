@@ -3,6 +3,9 @@ package com.sameerasw.essentials.services
 import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.WearableListenerService
 
+import android.content.Context
+import androidx.core.content.edit
+
 class EssentialsWearableListenerService : WearableListenerService() {
     companion object {
         private const val TAG = "EssentialsWearableListener"
@@ -79,6 +82,103 @@ class EssentialsWearableListenerService : WearableListenerService() {
                         action = "LOCK_SCREEN"
                     }
                     startService(intent)
+                }
+            }
+
+            "/toggle_flashlight_pulse" -> {
+                val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+                val enabled = prefs.getBoolean("flashlight_pulse_enabled", false)
+                prefs.edit(commit = true) {
+                    putBoolean("flashlight_pulse_enabled", !enabled)
+                }
+            }
+
+            "/toggle_aod" -> {
+                val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+                val isGlanceEnabled = prefs.getBoolean("notification_glance_enabled", false)
+                val isAodEnabled = android.provider.Settings.Secure.getInt(contentResolver, "doze_always_on", 0) == 1
+
+                when {
+                    isGlanceEnabled -> {
+                        prefs.edit(commit = true) {
+                            putBoolean("notification_glance_enabled", false)
+                        }
+                        try {
+                            android.provider.Settings.Secure.putInt(contentResolver, "doze_always_on", 1)
+                        } catch (_: Exception) {
+                            com.sameerasw.essentials.utils.ShellUtils.runCommand(this, "settings put secure doze_always_on 1")
+                        }
+                    }
+                    isAodEnabled -> {
+                        try {
+                            android.provider.Settings.Secure.putInt(contentResolver, "doze_always_on", 0)
+                        } catch (_: Exception) {
+                            com.sameerasw.essentials.utils.ShellUtils.runCommand(this, "settings put secure doze_always_on 0")
+                        }
+                        prefs.edit(commit = true) {
+                            putBoolean("notification_glance_enabled", false)
+                        }
+                    }
+                    else -> {
+                        prefs.edit(commit = true) {
+                            putBoolean("notification_glance_enabled", true)
+                        }
+                        try {
+                            android.provider.Settings.Secure.putInt(contentResolver, "doze_always_on", 0)
+                        } catch (_: Exception) {
+                            com.sameerasw.essentials.utils.ShellUtils.runCommand(this, "settings put secure doze_always_on 0")
+                        }
+                    }
+                }
+            }
+
+            "/toggle_tap_to_wake" -> {
+                val isEnabled = android.provider.Settings.Secure.getInt(contentResolver, "doze_tap_gesture", 1) == 1
+                val newState = if (isEnabled) 0 else 1
+                try {
+                    android.provider.Settings.Secure.putInt(contentResolver, "doze_tap_gesture", newState)
+                } catch (_: Exception) {
+                    com.sameerasw.essentials.utils.ShellUtils.runCommand(this, "settings put secure doze_tap_gesture $newState")
+                }
+            }
+
+            "/watch_status_update" -> {
+                val data = messageEvent.data
+                if (data != null && data.size >= 2) {
+                    val adbWifiEnabled = data[0].toInt() == 1
+                    val secureSettingsGranted = data[1].toInt() == 1
+                    val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+                    prefs.edit(commit = true) {
+                        putBoolean("watch_adb_wifi_enabled", adbWifiEnabled)
+                        putBoolean("watch_write_secure_settings_granted", secureSettingsGranted)
+                    }
+                }
+            }
+
+            "/set_sync_sound_mode" -> {
+                val data = messageEvent.data
+                if (data != null && data.isNotEmpty()) {
+                    val enabled = data[0].toInt() == 1
+                    val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+                    prefs.edit(commit = true) {
+                        putBoolean("watch_sync_sound_mode_enabled", enabled)
+                    }
+                    // Immediately push device info to let watch know
+                    DeviceInfoSyncManager.forceSync(this)
+                }
+            }
+
+            "/set_phone_ringer_mode" -> {
+                val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+                val isSyncEnabled = prefs.getBoolean("watch_sync_sound_mode_enabled", false)
+                if (isSyncEnabled) {
+                    val ringerMode = messageEvent.data?.firstOrNull()?.toInt() ?: 2
+                    val audioManager = getSystemService(Context.AUDIO_SERVICE) as? android.media.AudioManager
+                    try {
+                        audioManager?.ringerMode = ringerMode
+                    } catch (e: Exception) {
+                        // ignore permission issue
+                    }
                 }
             }
         }

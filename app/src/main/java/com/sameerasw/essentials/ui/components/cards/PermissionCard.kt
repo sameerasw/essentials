@@ -38,7 +38,12 @@ fun PermissionCard(
     onActionClick: () -> Unit,
     modifier: Modifier = Modifier,
     secondaryActionLabel: Any? = null, // Can be Int or String
-    onSecondaryActionClick: (() -> Unit)? = null
+    onSecondaryActionClick: (() -> Unit)? = null,
+    shizukuActionLabel: Any? = null,
+    shizukuActionEnabled: Boolean = false,
+    onShizukuActionClick: (() -> Unit)? = null,
+    instructions: Any? = null,
+    description: Any? = null
 ) {
     val grantedGreen = Color(0xFF4CAF50)
     val view = LocalView.current
@@ -47,6 +52,12 @@ fun PermissionCard(
         is Int -> stringResource(id = title)
         is String -> title
         else -> ""
+    }
+
+    val resolvedDescription = when (description) {
+        is Int -> stringResource(id = description)
+        is String -> description
+        else -> null
     }
 
     val resolvedActionLabel = when (actionLabel) {
@@ -58,6 +69,18 @@ fun PermissionCard(
     val resolvedSecondaryLabel = when (secondaryActionLabel) {
         is Int -> stringResource(id = secondaryActionLabel)
         is String -> secondaryActionLabel
+        else -> null
+    }
+
+    val resolvedShizukuLabel = when (shizukuActionLabel) {
+        is Int -> stringResource(id = shizukuActionLabel)
+        is String -> shizukuActionLabel
+        else -> null
+    }
+
+    val resolvedInstructions = when (instructions) {
+        is Int -> stringResource(id = instructions)
+        is String -> instructions
         else -> null
     }
 
@@ -86,6 +109,14 @@ fun PermissionCard(
                 },
                 supportingContent = {
                     Column {
+                        if (resolvedDescription != null) {
+                            Text(
+                                text = resolvedDescription,
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                        }
                         Text(text = "Required for:", style = MaterialTheme.typography.bodySmall)
                         Spacer(modifier = Modifier.height(4.dp))
                         dependentFeatures.forEach { f ->
@@ -149,37 +180,64 @@ fun PermissionCard(
                         }
                     }
                 } else {
-                    if (resolvedSecondaryLabel != null && onSecondaryActionClick != null) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            OutlinedButton(
-                                onClick = {
-                                    HapticUtil.performVirtualKeyHaptic(view)
-                                    onActionClick()
-                                },
-                                modifier = Modifier.weight(1f)
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        if (resolvedInstructions != null) {
+                            Text(
+                                text = resolvedInstructions,
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.padding(bottom = 4.dp)
+                            )
+                        }
+
+                        if (resolvedSecondaryLabel != null && onSecondaryActionClick != null) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
+                                OutlinedButton(
+                                    onClick = {
+                                        HapticUtil.performVirtualKeyHaptic(view)
+                                        onActionClick()
+                                    },
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Text(resolvedActionLabel)
+                                }
+
+                                Button(
+                                    onClick = {
+                                        HapticUtil.performVirtualKeyHaptic(view)
+                                        onSecondaryActionClick()
+                                    },
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Text(resolvedSecondaryLabel)
+                                }
+                            }
+                        } else {
+                            Button(onClick = {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                onActionClick()
+                            }, modifier = Modifier.fillMaxWidth()) {
                                 Text(resolvedActionLabel)
                             }
+                        }
 
+                        if (resolvedShizukuLabel != null && onShizukuActionClick != null) {
                             Button(
                                 onClick = {
                                     HapticUtil.performVirtualKeyHaptic(view)
-                                    onSecondaryActionClick()
+                                    onShizukuActionClick()
                                 },
-                                modifier = Modifier.weight(1f)
+                                enabled = shizukuActionEnabled,
+                                modifier = Modifier.fillMaxWidth()
                             ) {
-                                Text(resolvedSecondaryLabel)
+                                Text(resolvedShizukuLabel)
                             }
-                        }
-                    } else {
-                        Button(onClick = {
-                            HapticUtil.performVirtualKeyHaptic(view)
-                            onActionClick()
-                        }, modifier = Modifier.fillMaxWidth()) {
-                            Text(resolvedActionLabel)
                         }
                     }
                 }

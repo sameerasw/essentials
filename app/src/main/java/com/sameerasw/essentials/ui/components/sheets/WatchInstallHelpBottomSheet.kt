@@ -1,6 +1,8 @@
 package com.sameerasw.essentials.ui.components.sheets
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -52,7 +54,8 @@ fun WatchInstallHelpBottomSheet(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
-                .padding(bottom = 32.dp),
+                .padding(bottom = 32.dp)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -100,34 +103,6 @@ fun WatchInstallHelpBottomSheet(
                 }
             }
 
-            /*
-            // Action Button
-            Button(
-                onClick = {
-                    viewModel.openPlayStoreOnWatch(context)
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                shape = MaterialTheme.shapes.extraLarge,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
-                )
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.rounded_watch_24),
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = stringResource(R.string.watch_help_open_play_store),
-                    style = MaterialTheme.typography.labelLarge
-                )
-            }
-            */
-
             // GitHub Download Button
             Button(
                 onClick = {
@@ -153,6 +128,95 @@ fun WatchInstallHelpBottomSheet(
                     text = stringResource(R.string.action_download_from_github),
                     style = MaterialTheme.typography.labelLarge
                 )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "Watch ADB Permissions",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.align(Alignment.Start).padding(start = 8.dp)
+            )
+
+            val context = LocalContext.current
+
+            // Secure Settings Command Card
+            AdbCommandCard(
+                title = "Write Secure Settings",
+                description = "Required on the watch to toggle Wireless Debugging remotely.",
+                command = "adb shell pm grant com.sameerasw.essentials android.permission.WRITE_SECURE_SETTINGS",
+                context = context,
+                view = view
+            )
+
+            // DND Access Command Card
+            AdbCommandCard(
+                title = "Do Not Disturb (DND) Access",
+                description = "Required on the watch for DND / Silent sync modes.",
+                command = "adb shell cmd notification allow_dnd com.sameerasw.essentials",
+                context = context,
+                view = view
+            )
+        }
+    }
+}
+
+@Composable
+private fun AdbCommandCard(
+    title: String,
+    description: String,
+    command: String,
+    context: android.content.Context,
+    view: android.view.View
+) {
+    RoundedCardContainer(
+        containerColor = MaterialTheme.colorScheme.surfaceBright
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(text = title, style = MaterialTheme.typography.titleSmall)
+            Text(
+                text = description,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        color = MaterialTheme.colorScheme.surfaceContainer,
+                        shape = MaterialTheme.shapes.small
+                    )
+                    .padding(start = 12.dp, top = 4.dp, bottom = 4.dp, end = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = command,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.weight(1f)
+                )
+
+                androidx.compose.material3.IconButton(
+                    onClick = {
+                        HapticUtil.performUIHaptic(view)
+                        val clipboard = context.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+                        val clip = android.content.ClipData.newPlainText("adb_command", command)
+                        clipboard.setPrimaryClip(clip)
+                        android.widget.Toast.makeText(context, "Command copied", android.widget.Toast.LENGTH_SHORT).show()
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_content_copy_24),
+                        contentDescription = "Copy command",
+                        modifier = Modifier.size(20.dp),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
         }
     }

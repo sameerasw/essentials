@@ -112,8 +112,8 @@ object AutomationManager {
                     // Handled by AppFlowHandler
                 }
 
-                Automation.Type.ACTION_SHORTCUT -> {
-                    // Triggered manually via ActionShortcutActivity
+                Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR -> {
+                    // Triggered manually on tap/click
                 }
             }
         }

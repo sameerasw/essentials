@@ -40,28 +40,31 @@ fun WatermarkPreview(
 
             is WatermarkUiState.Success -> {
                 val targetFile = uiState.file
-                var visibleFile by androidx.compose.runtime.remember {
+                val targetBitmap = uiState.bitmap
+                val targetModel: Any = targetBitmap ?: targetFile
+
+                var visibleModel by androidx.compose.runtime.remember {
                     androidx.compose.runtime.mutableStateOf(
-                        targetFile
+                        targetModel
                     )
                 }
 
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     AsyncImage(
-                        model = visibleFile,
+                        model = visibleModel,
                         contentDescription = null,
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Fit
                     )
 
-                    if (targetFile != visibleFile) {
+                    if (targetModel != visibleModel) {
                         AsyncImage(
-                            model = targetFile,
+                            model = targetModel,
                             contentDescription = "Preview",
                             modifier = Modifier.fillMaxSize(),
                             contentScale = ContentScale.Fit,
                             onSuccess = {
-                                visibleFile = targetFile
+                                visibleModel = targetModel
                             }
                         )
                     }

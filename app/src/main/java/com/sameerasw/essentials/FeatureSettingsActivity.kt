@@ -83,8 +83,10 @@ import com.sameerasw.essentials.ui.composables.configs.SoundModeTileSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.StatusBarIconSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.TextAnimationsSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.WatchSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.WatchControlsSettingsUI
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
+import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.BiometricSecurityHelper
 import com.sameerasw.essentials.utils.HapticUtil
@@ -217,6 +219,26 @@ class FeatureSettingsActivity : AppCompatActivity() {
                     val isReadPhoneStateEnabled by viewModel.isReadPhoneStateEnabled
                     val isShizukuPermissionGranted by viewModel.isShizukuPermissionGranted
 
+                    var watchAdbWifiEnabled by remember {
+                        mutableStateOf(prefs.getBoolean("watch_adb_wifi_enabled", false))
+                    }
+                    var watchSyncSoundModeEnabled by remember {
+                        mutableStateOf(prefs.getBoolean("watch_sync_sound_mode_enabled", false))
+                    }
+                    androidx.compose.runtime.DisposableEffect(prefs) {
+                        val listener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { p, key ->
+                            if (key == "watch_adb_wifi_enabled") {
+                                watchAdbWifiEnabled = p.getBoolean(key, false)
+                            } else if (key == "watch_sync_sound_mode_enabled") {
+                                watchSyncSoundModeEnabled = p.getBoolean(key, false)
+                            }
+                        }
+                        prefs.registerOnSharedPreferenceChangeListener(listener)
+                        onDispose {
+                            prefs.unregisterOnSharedPreferenceChangeListener(listener)
+                        }
+                    }
+
                     // FAB State for Notification Lighting
                     var fabExpanded by remember { mutableStateOf(true) }
                     LaunchedEffect(featureId) {
@@ -224,6 +246,15 @@ class FeatureSettingsActivity : AppCompatActivity() {
                             fabExpanded = true
                             delay(3000)
                             fabExpanded = false
+                        }
+                        if (featureId == "Watch") {
+                            val messageClient = com.google.android.gms.wearable.Wearable.getMessageClient(context)
+                            val nodeClient = com.google.android.gms.wearable.Wearable.getNodeClient(context)
+                            nodeClient.connectedNodes.addOnSuccessListener { nodes ->
+                                for (node in nodes) {
+                                    messageClient.sendMessage(node.id, "/request_watch_status", byteArrayOf())
+                                }
+                            }
                         }
                     }
 
@@ -411,7 +442,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                             )
                     ) {
                         val hasScroll =
-                            featureId != "Sound mode tile" && featureId != "Quick settings tiles" && featureId != "Location reached"
+                            featureId != "Sound mode tile" && featureId != "Quick settings tiles" && featureId != "Location reached" && featureId != "Watch Controls"
                         Column(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -518,10 +549,15 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                         }
 
                                         FeatureCard(
+                                            modifier = Modifier.highlight(highlightSetting == child.id),
                                             title = child.title,
                                             description = child.description,
                                             iconRes = child.iconRes,
-                                            isEnabled = child.isEnabled(viewModel),
+                                            isEnabled = when (child.id) {
+                                                "Watch Wireless Debugging" -> watchAdbWifiEnabled
+                                                "Sync sound mode" -> watchSyncSoundModeEnabled
+                                                else -> child.isEnabled(viewModel)
+                                            },
                                             isToggleEnabled = child.isToggleEnabled(
                                                 viewModel,
                                                 context
@@ -708,6 +744,13 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightKey = highlightSetting
+                                        )
+                                    }
+
+                                    "Watch Controls" -> {
+                                        WatchControlsSettingsUI(
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting
                                         )
                                     }
 

@@ -167,7 +167,7 @@ fun DeviceHeroCard(
         Row(
             modifier = Modifier
                 .background(
-                    MaterialTheme.colorScheme.surfaceContainerHighest,
+                    MaterialTheme.colorScheme.surfaceBright,
                     shape = Shapes.extraSmall
                 )
                 .fillMaxWidth()
@@ -210,7 +210,7 @@ fun DeviceHeroCard(
         Column(
             modifier = Modifier
                 .background(
-                    MaterialTheme.colorScheme.surfaceContainerHighest,
+                    MaterialTheme.colorScheme.surfaceBright,
                     shape = Shapes.extraSmall
                 )
                 .fillMaxWidth()

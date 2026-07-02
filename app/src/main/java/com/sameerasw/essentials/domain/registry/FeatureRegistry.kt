@@ -7,6 +7,7 @@ import com.sameerasw.essentials.R
 import com.sameerasw.essentials.domain.model.Feature
 import com.sameerasw.essentials.domain.model.SearchSetting
 import com.sameerasw.essentials.ui.activities.WatermarkActivity
+import com.sameerasw.essentials.ui.activities.PixelSearchbarSettingsActivity
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
@@ -273,6 +274,30 @@ object FeatureRegistry {
         ) {
             override fun isEnabled(viewModel: MainViewModel) = true
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+        },
+ 
+        object : Feature(
+            id = "Pixel Searchbar",
+            title = R.string.feat_pixel_searchbar_title,
+            iconRes = R.drawable.rounded_search_24,
+            category = R.string.cat_interface,
+            description = R.string.feat_pixel_searchbar_desc,
+            aboutDescription = R.string.about_desc_pixel_searchbar,
+            permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
+            showToggle = true,
+            hasMoreSettings = true,
+            isBeta = true,
+            parentFeatureId = "Widgets"
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = viewModel.isPixelSearchbarEnabled.value
+            override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
+                viewModel.isWriteSecureSettingsEnabled.value || viewModel.isShizukuPermissionGranted.value || viewModel.isRootPermissionGranted.value
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {
+                viewModel.setPixelSearchbarEnabled(enabled, context)
+            }
+            override fun onClick(context: Context, viewModel: MainViewModel) {
+                context.startActivity(Intent(context, PixelSearchbarSettingsActivity::class.java))
+            }
         },
 
         object : Feature(
@@ -880,7 +905,6 @@ object FeatureRegistry {
             permissionKeys = listOf("WRITE_SECURE_SETTINGS", "USAGE_STATS"),
             showToggle = false,
             hasMoreSettings = true,
-            isBeta = true,
             parentFeatureId = "Security",
             animationRes = R.raw.shutup_animation
         ) {
@@ -1046,6 +1070,71 @@ object FeatureRegistry {
         ) {
             override fun isEnabled(viewModel: MainViewModel) = true
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+        },
+        object : Feature(
+            id = "Watch Controls",
+            title = R.string.feat_watch_controls_title,
+            iconRes = R.drawable.rounded_edit_24,
+            category = R.string.cat_tools,
+            description = R.string.feat_watch_controls_desc,
+            aboutDescription = R.string.feat_watch_controls_desc,
+            parentFeatureId = "Watch",
+            hasMoreSettings = true,
+            showToggle = false
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = true
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+        },
+        object : Feature(
+            id = "Watch Wireless Debugging",
+            title = R.string.feat_watch_wireless_debugging_title,
+            iconRes = R.drawable.rounded_adb_24,
+            category = R.string.cat_tools,
+            description = R.string.feat_watch_wireless_debugging_desc,
+            parentFeatureId = "Watch",
+            hasMoreSettings = false,
+            showToggle = true
+        ) {
+            override fun isEnabled(viewModel: MainViewModel): Boolean {
+                val context = EssentialsApp.context
+                val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+                return prefs.getBoolean("watch_adb_wifi_enabled", false)
+            }
+
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {
+                // Send message to watch to toggle ADB Wifi
+                val messageClient = com.google.android.gms.wearable.Wearable.getMessageClient(context)
+                val nodeClient = com.google.android.gms.wearable.Wearable.getNodeClient(context)
+                nodeClient.connectedNodes.addOnSuccessListener { nodes ->
+                    for (node in nodes) {
+                        messageClient.sendMessage(node.id, "/toggle_watch_adb_wifi", byteArrayOf())
+                    }
+                }
+            }
+        },
+
+        object : Feature(
+            id = "Sync sound mode",
+            title = R.string.feat_sync_sound_mode_title,
+            iconRes = R.drawable.rounded_volume_up_24,
+            category = R.string.cat_tools,
+            description = R.string.feat_sync_sound_mode_desc,
+            parentFeatureId = "Watch",
+            hasMoreSettings = false,
+            showToggle = true
+        ) {
+            override fun isEnabled(viewModel: MainViewModel): Boolean {
+                val context = EssentialsApp.context
+                val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+                return prefs.getBoolean("watch_sync_sound_mode_enabled", false)
+            }
+
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {
+                val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+                prefs.edit().putBoolean("watch_sync_sound_mode_enabled", enabled).apply()
+                // Force sync to sync new sound mode status to watch if enabled
+                com.sameerasw.essentials.services.DeviceInfoSyncManager.forceSync(context)
+            }
         },
 
 

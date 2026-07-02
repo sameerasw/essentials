@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<font-family xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <font
+        android:font="@font/google_sans_flex"
+        android:fontStyle="normal"
+        android:fontWeight="400"
+        app:fontVariationSettings="&apos;ROND&apos; 100"
+        android:fontVariationSettings="&apos;ROND&apos; 100" />
+    <font
+        android:font="@font/google_sans_flex"
+        android:fontStyle="normal"
+        android:fontWeight="500"
+        app:fontVariationSettings="&apos;ROND&apos; 100"
+        android:fontVariationSettings="&apos;ROND&apos; 100" />
+    <font
+        android:font="@font/google_sans_flex"
+        android:fontStyle="normal"
+        android:fontWeight="700"
+        app:fontVariationSettings="&apos;ROND&apos; 100"
+        android:fontVariationSettings="&apos;ROND&apos; 100" />
+</font-family>

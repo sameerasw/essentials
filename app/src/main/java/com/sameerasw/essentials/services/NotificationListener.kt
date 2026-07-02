@@ -23,6 +23,11 @@ import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionUtils
+import java.io.File
+import java.io.FileOutputStream
+import com.sameerasw.essentials.services.widgets.PixelSearchbarWidget
+
+import kotlinx.coroutines.launch
 
 class NotificationListener : NotificationListenerService() {
 
@@ -626,10 +631,44 @@ class NotificationListener : NotificationListenerService() {
                 val metadata = controller.metadata
                 val playbackState = controller.playbackState
 
-                val title = metadata?.getString(android.media.MediaMetadata.METADATA_KEY_TITLE)
-                val artist = metadata?.getString(android.media.MediaMetadata.METADATA_KEY_ARTIST)
+                val title = metadata?.getString(android.media.MediaMetadata.METADATA_KEY_TITLE) ?: ""
+                val artist = metadata?.getString(android.media.MediaMetadata.METADATA_KEY_ARTIST) ?: ""
                 val isPlaying =
                     playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING
+
+                // Extract and save album art
+                val artwork = metadata?.getBitmap(android.media.MediaMetadata.METADATA_KEY_ALBUM_ART)
+                    ?: metadata?.getBitmap(android.media.MediaMetadata.METADATA_KEY_ART)
+                    ?: metadata?.getBitmap(android.media.MediaMetadata.METADATA_KEY_DISPLAY_ICON)
+
+                val filesDirFile = File(filesDir, "music_artwork.png")
+                if (artwork != null) {
+                    try {
+                        FileOutputStream(filesDirFile).use { out ->
+                            artwork.compress(Bitmap.CompressFormat.PNG, 100, out)
+                        }
+                    } catch (_: Exception) {}
+                } else {
+                    if (filesDirFile.exists()) filesDirFile.delete()
+                }
+
+                // Update settings and trigger Glance widget
+                val settingsRepo = SettingsRepository(this)
+                settingsRepo.setPixelSearchbarMusicTitle(title)
+                settingsRepo.setPixelSearchbarMusicArtist(artist)
+                settingsRepo.setPixelSearchbarMusicPackage(sbn.packageName)
+                settingsRepo.incrementPixelSearchbarWidgetRevision()
+
+                kotlinx.coroutines.MainScope().launch {
+                    try {
+                        val managerGlance = androidx.glance.appwidget.GlanceAppWidgetManager(this@NotificationListener)
+                        val widgetGlance = PixelSearchbarWidget()
+                        val glanceIds = managerGlance.getGlanceIds(PixelSearchbarWidget::class.java)
+                        for (glanceId in glanceIds) {
+                            widgetGlance.update(this@NotificationListener, glanceId)
+                        }
+                    } catch (_: Exception) {}
+                }
 
                 val lastState = lastMediaStates[sbn.packageName]
 

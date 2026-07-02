@@ -27,6 +27,9 @@ data class Automation(
         APP,
 
         @SerializedName("ACTION_SHORTCUT")
-        ACTION_SHORTCUT
+        ACTION_SHORTCUT,
+
+        @SerializedName("PIXEL_SEARCHBAR")
+        PIXEL_SEARCHBAR
     }
 }

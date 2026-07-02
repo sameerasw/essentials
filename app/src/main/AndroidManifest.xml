@@ -33,6 +33,7 @@
 
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
     <uses-permission android:name="android.permission.POST_PROMOTED_NOTIFICATIONS" tools:ignore="UnusedAttribute" />
+    <uses-permission android:name="android.permission.BIND_APPWIDGET" tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <permission android:name="com.sameerasw.permission.ESSENTIALS_AIRSYNC_BRIDGE" android:protectionLevel="signature" />
     <uses-permission android:name="com.sameerasw.permission.ESSENTIALS_AIRSYNC_BRIDGE" />
@@ -99,6 +100,27 @@
             <meta-data android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity>
+
+        <activity
+            android:name=".PixelSearchActivity"
+            android:exported="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:excludeFromRecents="true"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.WEB_SEARCH" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.activities.PixelSearchbarSettingsActivity"
+            android:exported="true"
+            android:label="@string/pixel_searchbar_settings_title" />
 
         <activity
             android:name=".FeatureSettingsActivity"
@@ -193,6 +215,16 @@
             android:launchMode="singleTask"
             android:excludeFromRecents="true"
             android:taskAffinity="com.sameerasw.essentials.action" />
+
+        <activity
+            android:name=".ui.activities.PixelSearchbarTapActivity"
+            android:exported="true"
+            android:icon="@drawable/rounded_search_24"
+            android:label="@string/feat_pixel_searchbar_title"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:launchMode="singleTask"
+            android:excludeFromRecents="true"
+            android:taskAffinity="com.sameerasw.essentials.pixelsearchbar" />
 
         <activity-alias
             android:name=".ActionShortcutLauncher"
@@ -368,6 +400,29 @@
                 <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
                 <data android:scheme="wear" android:host="*" android:pathPrefix="/" />
             </intent-filter>
+        </service>
+
+        <receiver
+            android:name=".services.widgets.PixelSearchbarWidgetReceiver"
+            android:label="@string/feat_pixel_searchbar_title"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.intent.action.CONFIGURATION_CHANGED" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/pixel_searchbar_widget_info" />
+        </receiver>
+
+        <service
+            android:name=".services.widgets.WidgetScraperService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse"
+            android:permission="android.permission.BIND_APPWIDGET">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="widgetScraper" />
         </service>
 
         <receiver
@@ -742,6 +797,7 @@
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
+                <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />
             </intent-filter>
             <meta-data android:name="android.service.quicksettings.TILE_CATEGORY"
                 android:value="android.service.quicksettings.CATEGORY_UTILITIES" />
@@ -871,6 +927,14 @@
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".services.receivers.ShizukuActionReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.sameerasw.essentials.ACTION_RESTART_SHIZUKU" />
             </intent-filter>
         </receiver>
 

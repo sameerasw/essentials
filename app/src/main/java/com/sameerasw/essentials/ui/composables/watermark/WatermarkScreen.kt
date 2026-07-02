@@ -1,5 +1,7 @@
 package com.sameerasw.essentials.ui.composables.watermark
 
+import android.app.Activity
+import android.content.pm.ActivityInfo
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
@@ -19,6 +21,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -58,6 +61,34 @@ fun WatermarkScreen(
 
     val options by viewModel.options.collectAsState()
     val previewState by viewModel.previewUiState.collectAsState()
+
+    val isShowingHdrContent = remember(previewState) {
+        val successState = previewState as? WatermarkUiState.Success
+        val bitmap = successState?.bitmap
+        android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE && bitmap?.hasGainmap() == true
+    }
+
+    DisposableEffect(isShowingHdrContent) {
+        val activity = context as? Activity
+        if (activity != null && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            activity.window.colorMode = if (isShowingHdrContent) {
+                ActivityInfo.COLOR_MODE_HDR
+            } else {
+                ActivityInfo.COLOR_MODE_DEFAULT
+            }
+            if (android.os.Build.VERSION.SDK_INT >= 35) {
+                activity.window.desiredHdrHeadroom = if (isShowingHdrContent) 5.0f else 1.0f
+            }
+        }
+        onDispose {
+            if (activity != null && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                activity.window.colorMode = ActivityInfo.COLOR_MODE_DEFAULT
+                if (android.os.Build.VERSION.SDK_INT >= 35) {
+                    activity.window.desiredHdrHeadroom = 1.0f
+                }
+            }
+        }
+    }
     val saveState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(initialUri) {
