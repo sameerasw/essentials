@@ -249,6 +249,7 @@ class MainViewModel : ViewModel() {
     val isPitchBlackThemeEnabled = mutableStateOf(false)
     val isBlurEnabled = mutableStateOf(true)
     val isBlurSettingEnabled = mutableStateOf(true)
+    val isSwipeTabsEnabled = mutableStateOf(true)
     val sentryReportMode = mutableStateOf("auto")
     val isPowerSaveModeEnabled = mutableStateOf(false)
     private var powerSaveReceiver: BroadcastReceiver? = null
@@ -1150,6 +1151,7 @@ class MainViewModel : ViewModel() {
         MapsState.isEnabled = isMapsPowerSavingEnabled.value
         hapticFeedbackType.value = settingsRepository.getHapticFeedbackType()
         defaultTab.value = settingsRepository.getDIYTab()
+        isSwipeTabsEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_SWIPE_TABS, true)
         sentryReportMode.value =
             settingsRepository.getString(SettingsRepository.KEY_SENTRY_REPORT_MODE, "auto")
                 ?: "auto"
@@ -1618,6 +1620,11 @@ class MainViewModel : ViewModel() {
     fun setBlurEnabled(enabled: Boolean, context: Context) {
         settingsRepository.putBoolean(SettingsRepository.KEY_USE_BLUR, enabled)
         updateBlurState(context)
+    }
+
+    fun setSwipeTabsEnabled(enabled: Boolean) {
+        settingsRepository.putBoolean(SettingsRepository.KEY_SWIPE_TABS, enabled)
+        isSwipeTabsEnabled.value = enabled
     }
 
     private fun updateBlurState(context: Context) {

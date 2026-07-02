@@ -212,6 +212,7 @@ class MainActivity : AppCompatActivity() {
         setContent {
             val isPitchBlackThemeEnabled by viewModel.isPitchBlackThemeEnabled
             val isBlurEnabled by viewModel.isBlurEnabled
+            val isSwipeTabsEnabled by viewModel.isSwipeTabsEnabled
             EssentialsTheme(pitchBlackTheme = isPitchBlackThemeEnabled) {
                 androidx.compose.runtime.CompositionLocalProvider(
                     com.sameerasw.essentials.ui.state.LocalMenuStateManager provides remember { com.sameerasw.essentials.ui.state.MenuStateManager() }
@@ -566,7 +567,7 @@ class MainActivity : AppCompatActivity() {
                                             height = with(androidx.compose.ui.platform.LocalDensity.current) { 130.dp.toPx() },
                                             direction = BlurDirection.BOTTOM
                                         ),
-                                    userScrollEnabled = true
+                                    userScrollEnabled = isSwipeTabsEnabled
                                 ) { targetPage ->
                                     val statusBarHeight = WindowInsets.statusBars.asPaddingValues()
                                         .calculateTopPadding()
