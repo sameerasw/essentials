@@ -286,6 +286,7 @@ object FeatureRegistry {
             permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
             showToggle = true,
             hasMoreSettings = true,
+            isBeta = true,
             parentFeatureId = "Widgets"
         ) {
             override fun isEnabled(viewModel: MainViewModel) = viewModel.isPixelSearchbarEnabled.value
@@ -904,7 +905,6 @@ object FeatureRegistry {
             permissionKeys = listOf("WRITE_SECURE_SETTINGS", "USAGE_STATS"),
             showToggle = false,
             hasMoreSettings = true,
-            isBeta = true,
             parentFeatureId = "Security",
             animationRes = R.raw.shutup_animation
         ) {
