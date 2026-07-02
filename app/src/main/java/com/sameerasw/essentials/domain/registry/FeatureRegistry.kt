@@ -1085,6 +1085,33 @@ object FeatureRegistry {
             override fun isEnabled(viewModel: MainViewModel) = true
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
         },
+        object : Feature(
+            id = "Watch Wireless Debugging",
+            title = R.string.feat_watch_wireless_debugging_title,
+            iconRes = R.drawable.rounded_adb_24,
+            category = R.string.cat_tools,
+            description = R.string.feat_watch_wireless_debugging_desc,
+            parentFeatureId = "Watch",
+            hasMoreSettings = false,
+            showToggle = true
+        ) {
+            override fun isEnabled(viewModel: MainViewModel): Boolean {
+                val context = EssentialsApp.context
+                val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+                return prefs.getBoolean("watch_adb_wifi_enabled", false)
+            }
+
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {
+                // Send message to watch to toggle ADB Wifi
+                val messageClient = com.google.android.gms.wearable.Wearable.getMessageClient(context)
+                val nodeClient = com.google.android.gms.wearable.Wearable.getNodeClient(context)
+                nodeClient.connectedNodes.addOnSuccessListener { nodes ->
+                    for (node in nodes) {
+                        messageClient.sendMessage(node.id, "/toggle_watch_adb_wifi", byteArrayOf())
+                    }
+                }
+            }
+        },
 
 
         object : Feature(

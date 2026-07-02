@@ -78,7 +78,8 @@ fun PermissionsBottomSheet(
                         isGranted = perm.isGranted,
                         onActionClick = { perm.action?.invoke() },
                         secondaryActionLabel = perm.secondaryActionLabel,
-                        onSecondaryActionClick = { perm.secondaryAction?.invoke() }
+                        onSecondaryActionClick = { perm.secondaryAction?.invoke() },
+                        description = perm.description
                     )
                 }
             }

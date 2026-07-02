@@ -1356,6 +1356,10 @@
     <string name="feat_watch_controls_desc">Customize WearOS app controls</string>
     <string name="watch_controls_long_press_hint">Long press to enable or disable buttons</string>
     <string name="watch_controls_reorder_title">Reorder watch controls</string>
+    <string name="feat_watch_wireless_debugging_title">Wireless Debugging</string>
+    <string name="feat_watch_wireless_debugging_desc">Enable remotely</string>
+    <string name="perm_watch_write_secure_title">Watch Secure Settings</string>
+    <string name="perm_watch_write_secure_desc">Requires secure settings write permission on your Watch. Grant it using the ADB command below.</string>
 
 
     <string name="cat_interaction">Interaction</string>

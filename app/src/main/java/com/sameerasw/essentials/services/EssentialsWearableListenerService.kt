@@ -140,6 +140,19 @@ class EssentialsWearableListenerService : WearableListenerService() {
                     com.sameerasw.essentials.utils.ShellUtils.runCommand(this, "settings put secure doze_tap_gesture $newState")
                 }
             }
+
+            "/watch_status_update" -> {
+                val data = messageEvent.data
+                if (data != null && data.size >= 2) {
+                    val adbWifiEnabled = data[0].toInt() == 1
+                    val secureSettingsGranted = data[1].toInt() == 1
+                    val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
+                    prefs.edit(commit = true) {
+                        putBoolean("watch_adb_wifi_enabled", adbWifiEnabled)
+                        putBoolean("watch_write_secure_settings_granted", secureSettingsGranted)
+                    }
+                }
+            }
         }
     }
 }

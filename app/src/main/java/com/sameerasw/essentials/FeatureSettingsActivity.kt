@@ -218,6 +218,21 @@ class FeatureSettingsActivity : AppCompatActivity() {
                     val isReadPhoneStateEnabled by viewModel.isReadPhoneStateEnabled
                     val isShizukuPermissionGranted by viewModel.isShizukuPermissionGranted
 
+                    var watchAdbWifiEnabled by remember {
+                        mutableStateOf(prefs.getBoolean("watch_adb_wifi_enabled", false))
+                    }
+                    androidx.compose.runtime.DisposableEffect(prefs) {
+                        val listener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { p, key ->
+                            if (key == "watch_adb_wifi_enabled") {
+                                watchAdbWifiEnabled = p.getBoolean(key, false)
+                            }
+                        }
+                        prefs.registerOnSharedPreferenceChangeListener(listener)
+                        onDispose {
+                            prefs.unregisterOnSharedPreferenceChangeListener(listener)
+                        }
+                    }
+
                     // FAB State for Notification Lighting
                     var fabExpanded by remember { mutableStateOf(true) }
                     LaunchedEffect(featureId) {
@@ -522,7 +537,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                             title = child.title,
                                             description = child.description,
                                             iconRes = child.iconRes,
-                                            isEnabled = child.isEnabled(viewModel),
+                                            isEnabled = if (child.id == "Watch Wireless Debugging") watchAdbWifiEnabled else child.isEnabled(viewModel),
                                             isToggleEnabled = child.isToggleEnabled(
                                                 viewModel,
                                                 context

@@ -38,7 +38,8 @@ fun PermissionCard(
     onActionClick: () -> Unit,
     modifier: Modifier = Modifier,
     secondaryActionLabel: Any? = null, // Can be Int or String
-    onSecondaryActionClick: (() -> Unit)? = null
+    onSecondaryActionClick: (() -> Unit)? = null,
+    description: Any? = null
 ) {
     val grantedGreen = Color(0xFF4CAF50)
     val view = LocalView.current
@@ -47,6 +48,12 @@ fun PermissionCard(
         is Int -> stringResource(id = title)
         is String -> title
         else -> ""
+    }
+
+    val resolvedDescription = when (description) {
+        is Int -> stringResource(id = description)
+        is String -> description
+        else -> null
     }
 
     val resolvedActionLabel = when (actionLabel) {
@@ -86,6 +93,14 @@ fun PermissionCard(
                 },
                 supportingContent = {
                     Column {
+                        if (resolvedDescription != null) {
+                            Text(
+                                text = resolvedDescription,
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                        }
                         Text(text = "Required for:", style = MaterialTheme.typography.bodySmall)
                         Spacer(modifier = Modifier.height(4.dp))
                         dependentFeatures.forEach { f ->
