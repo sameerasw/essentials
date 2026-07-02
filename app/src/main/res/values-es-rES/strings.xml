@@ -630,8 +630,8 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="perm_action_enable">Activar en Ajustes</string>
     <string name="perm_action_how_to">Cómo conceder</string>
     <string name="perm_action_granted">Concedido</string>
-    <string name="perm_action_grant_shizuku">Grant using Shizuku</string>
-    <string name="perm_write_secure_instructions">This permission can be granted either via a PC using ADB. Copy the ADB command and run on the shell.\n\nOr you can easily grant it using Shizuku from the below button.\n\nThis permission only needs to be granted once.</string>
+    <string name="perm_action_grant_shizuku">Conceder usando Shizuku</string>
+    <string name="perm_write_secure_instructions">Este permiso puede concederse desde un PC usando ADB. Copia el comando ADB y ejecútalo en la consola.\n\nO puedes concederlo fácilmente usando Shizuku desde el botón de abajo.\n\nEste permiso solo necesita concederse una vez.</string>
     <string name="perm_battery_optimization_title">Optimización de la batería</string>
     <string name="perm_battery_optimization_desc">Asegúrate de que el sistema no finalice el servicio para ahorrar energía.</string>
     <!-- Tabs -->
@@ -1275,16 +1275,16 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="watch_help_title">Instalar en el reloj</string>
     <string name="watch_help_description">Para usar las funciones del reloj, necesitas instalar la aplicación complementaria Essentials en tu reloj Wear OS. Pulsa el botón de abajo para abrir la Play Store directamente en tu reloj.</string>
     <string name="watch_help_open_play_store">Abrir en el reloj</string>
-    <string name="feat_watch_controls_title">Customize</string>
-    <string name="feat_watch_controls_desc">Customize WearOS app controls</string>
-    <string name="watch_controls_long_press_hint">Long press to enable or disable buttons</string>
-    <string name="watch_controls_reorder_title">Reorder watch controls</string>
-    <string name="feat_watch_wireless_debugging_title">Wireless Debugging</string>
-    <string name="feat_watch_wireless_debugging_desc">Enable remotely</string>
-    <string name="feat_sync_sound_mode_title">Sync sound mode</string>
-    <string name="feat_sync_sound_mode_desc">Automatically sync with watch</string>
-    <string name="perm_watch_write_secure_title">Watch Secure Settings</string>
-    <string name="perm_watch_write_secure_desc">Requires secure settings write permission on your Watch. Grant it using the ADB command below.</string>
+    <string name="feat_watch_controls_title">Personalizar</string>
+    <string name="feat_watch_controls_desc">Personalizar controles de la aplicación para Wear OS</string>
+    <string name="watch_controls_long_press_hint">Mantén pulsado para activar o desactivar los botones</string>
+    <string name="watch_controls_reorder_title">Reordenar los controles del reloj</string>
+    <string name="feat_watch_wireless_debugging_title">Depuración inalámbrica</string>
+    <string name="feat_watch_wireless_debugging_desc">Activar de forma remota</string>
+    <string name="feat_sync_sound_mode_title">Sincronizar modo de sonido</string>
+    <string name="feat_sync_sound_mode_desc">Sincronizar automáticamente con el reloj</string>
+    <string name="perm_watch_write_secure_title">Ajustes seguros del reloj</string>
+    <string name="perm_watch_write_secure_desc">Requiere el permiso de escritura de ajustes seguros en tu reloj. Concédelo usando el comando ADB de abajo.</string>
     <string name="cat_interaction">Interacción</string>
     <string name="cat_interface">Interfaz</string>
     <string name="cat_display">Pantalla</string>
@@ -1393,8 +1393,8 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="label_use_blur">Usar desenfoque</string>
     <string name="desc_use_blur">Activar elementos de desenfoque progresivo en toda la interfaz de usuario</string>
     <string name="msg_blur_compatibility_error">El desenfoque está desactivado en este dispositivo para evitar un error de pantalla conocido en dispositivos Samsung con Android 15 o anterior.</string>
-    <string name="setting_swipe_tabs_title">Swipe between tabs</string>
-    <string name="setting_swipe_tabs_desc">In home screen</string>
+    <string name="setting_swipe_tabs_title">Desliza entre pestañas</string>
+    <string name="setting_swipe_tabs_desc">En la pantalla de inicio</string>
     <!-- Empty State Actions -->
     <string name="msg_no_apps_frozen">No hay aplicaciones seleccionadas para congelar.</string>
     <string name="action_get_started">Comenzar</string>
@@ -1533,6 +1533,6 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="pixel_searchbar_tap_action_enabled">Acción personalizada al tocar</string>
     <string name="pixel_searchbar_tap_action_enabled_desc">Usar la acción de tocar DIY en lugar de la propia del widget</string>
     <string name="pixel_searchbar_style_music">Música</string>
-    <string name="action_restart_shizuku">Restart Shizuku</string>
-    <string name="toast_enter_shizuku_token">Please enter Shizuku auth token in settings first</string>
+    <string name="action_restart_shizuku">Reiniciar Shizuku</string>
+    <string name="toast_enter_shizuku_token">Por favor, introduce primero el token de autenticación de Shizuku en los ajustes</string>
 </resources>
