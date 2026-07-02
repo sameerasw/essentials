@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="label_customization">Customization</string>
+    <string name="label_customization">Персонализация</string>
     <string name="label_beta">БЕТА</string>
-    <string name="shut_up_attempt_shizuku_restart">Attempt Shizuku restart</string>
-    <string name="shut_up_shizuku_restart_warning_title">Shizuku Restart Warning</string>
-    <string name="shut_up_shizuku_restart_warning_message">Since wireless debugging was toggled, Shizuku services might not have started automatically causing freezing to not function. Consider turning on attempt shizuku restart as well</string>
+    <string name="shut_up_attempt_shizuku_restart">Попытаться перезапустить Shizuku</string>
+    <string name="shut_up_shizuku_restart_warning_title">Предупреждение о перезапуске Shizuku</string>
+    <string name="shut_up_shizuku_restart_warning_message">После включения беспроводной отладки служба Shizuku могла не запуститься автоматически, из-за чего заморозка не работает. Попробуйте включить функцию \"Попытаться перезапустить Shizuku\"</string>
     <string name="shut_up_restore_delay_title">Restoration Delay</string>
     <string name="shut_up_restore_delay_desc">Wait time before restoring settings after exiting a Shut-Up! app</string>
     <string name="accessibility_service_description"><b>Служба специальных возможностей Essentials</b>\n\nЭта служба необходима для следующих функций:\n\n<b>• Переназначение физических кнопок:</b>\nОбнаруживает нажатие кнопок громкости, даже если экран выключен, чтобы вызывать такие действия, как фонарик.\n\n<b>• Индивидуальные настройки приложений:</b>\nОтслеживает текущее активное приложение для применения конкретных профилей для Динамической ночной подсветки, Цвета подсветки уведомлений и блокировку приложений.\n\n<b>• Контроль экрана:</b>\nПозволяет приложению блокировать экран (например, через двойное нажатие или виджет) и обнаруживать изменения состояния экрана.\n\n<b>• Безопасность:</b>\nПредотвращает несанкционированные изменения, обнаруживая содержимое окна, когда устройство заблокировано.\n\n<small>Никакой вводимый текст или конфиденциальные данные не собираются и не передаются.</small></string>
@@ -12,7 +12,7 @@
     <string name="freeze_activity_subtitle">Отключить редко используемые приложения</string>
     <string name="freeze_shortcut_short_label">Заморозка приложений</string>
     <string name="freeze_shortcut_long_label">Открыть заморозку приложений</string>
-    <string name="action_shortcut_short_label">Action</string>
+    <string name="action_shortcut_short_label">Действие</string>
     <string name="action_shortcut_long_label">Launch action shortcut</string>
     <string name="frozen_app_shortcut_label">Замороженные приложения</string>
     <string name="screen_off_widget_label">Пустой виджет для отключения экрана</string>
@@ -76,11 +76,11 @@
     <string name="essentials_on_display_respect_notifications_desc">Briefly disable for new notifications</string>
     <string name="essentials_on_display_random_shapes_title">Random shapes</string>
     <string name="essentials_on_display_random_shapes_desc">Use various Material 3 shapes for the album art</string>
-    <string name="essentials_on_display_album_art_title">Album art</string>
+    <string name="essentials_on_display_album_art_title">Обложка альбома</string>
     <string name="essentials_on_display_clock_title">Clock</string>
-    <string name="essentials_on_display_force_fill_while_charging_title">Always use while charging</string>
+    <string name="essentials_on_display_force_fill_while_charging_title">Всегда отображать во время зарядки</string>
     <string name="essentials_on_display_force_fill_while_charging_desc">Force Fill mode when the device is plugged in regardless of the selected mode</string>
-    <string name="label_size">Size</string>
+    <string name="label_size">Размер</string>
     <string name="feat_notification_glance_title">Обзор уведомлений</string>
     <string name="feat_notification_glance_desc">Не отключать AOD, пока ожидаются уведомления</string>
     <string name="notification_glance_same_as_lighting_title">Те же приложения, что и подсветка уведомлений</string>
@@ -150,8 +150,8 @@
     <string name="action_import_freeze">Импортировать список замороженных приложений</string>
     <string name="freeze_pick_apps_title">Выбор приложений для заморозки</string>
     <string name="freeze_pick_apps_desc">Выберите, какие приложения будут заморожены</string>
-    <string name="freeze_show_in_launcher_title">Show in launcher</string>
-    <string name="freeze_show_in_launcher_desc">Add a launcher shortcut for easier access</string>
+    <string name="freeze_show_in_launcher_title">Показывать на главном экране</string>
+    <string name="freeze_show_in_launcher_desc">Добавить ярлык быстрого доступа на главный экран</string>
     <string name="settings_section_automation">Автоматизация</string>
     <string name="freeze_when_locked_title">Заморозить при блокировке</string>
     <string name="freeze_delay_title">Задержка заморозки</string>
@@ -182,7 +182,7 @@
     <string name="flashlight_pulse_facedown_title">Только экраном вниз</string>
     <string name="flashlight_pulse_same_as_lighting_title">Те же приложения, что и подсветка уведомлений</string>
     <string name="flashlight_pulse_max_brightness">Максимальная яркость</string>
-    <string name="flashlight_pulse_disable_on_dnd_title">Do not trigger on DND</string>
+    <string name="flashlight_pulse_disable_on_dnd_title">Не активировать в режиме \"Не беспокоить\"</string>
     <string name="flashlight_pulse_preview">Предпросмотр</string>
     <string name="settings_section_style">Стиль</string>
     <string name="notification_lighting_stroke_adjustment_section">Регулировка хода</string>
@@ -203,7 +203,7 @@
     <string name="notification_lighting_sweep_pos_left">Слева</string>
     <string name="notification_lighting_sweep_pos_center">Центр</string>
     <string name="notification_lighting_sweep_pos_right">Справа</string>
-    <string name="notification_lighting_sweep_select_shapes_title">Select Shapes</string>
+    <string name="notification_lighting_sweep_select_shapes_title">Выберите фигуры</string>
     <string name="notification_lighting_sweep_select_shapes_desc">Choose which shapes are used in the sweep animation</string>
     <string name="settings_section_animation">Анимация</string>
     <string name="notification_lighting_pulse_count_title">Количество импульсов</string>
@@ -242,7 +242,7 @@
     <string name="tile_inactive">Неактивный</string>
     <string name="tile_developer_options">Настройки разработчика</string>
     <string name="about_desc_developer_options">Легко переключайте параметры разработчика системы с помощью плитки QS. Это может привести к сбросу некоторых измененных вами настроек разработчика.</string>
-    <string name="tile_refresh_rate">Refresh Rate</string>
+    <string name="tile_refresh_rate">Частота обновления</string>
     <string name="about_desc_refresh_rate_tile">Cycle between the system default and preset refresh rates directly from a Quick Settings tile using Shizuku.</string>
     <string name="nfc_tile_label">NFC</string>
     <string name="tile_private_dns">Частный DNS</string>
@@ -362,11 +362,11 @@
     <string name="hide_notification_icons_desc">Скрыть все значки входящих уведомлений</string>
     <string name="feat_hide_gesture_bar_title">Скрыть панель жестов</string>
     <string name="feat_hide_gesture_bar_desc">При навигации жестами</string>
-    <string name="feat_hide_gesture_bar_on_launcher_title">Show on launcher</string>
-    <string name="feat_hide_gesture_bar_on_launcher_desc">Dynamically show the gesture bar only when on the home screen</string>
-    <string name="feat_circle_to_search_gesture_title">Circle to Search gesture</string>
-    <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
-    <string name="feat_circle_to_search_gesture_height_title">Gesture zone height</string>
+    <string name="feat_hide_gesture_bar_on_launcher_title">Показывать на главном экране</string>
+    <string name="feat_hide_gesture_bar_on_launcher_desc">Показывать панель навигации только на главном экране</string>
+    <string name="feat_circle_to_search_gesture_title">Жест для Circle to Search</string>
+    <string name="feat_circle_to_search_gesture_desc">Нажмите и удерживайте нижнюю часть экрана для активации Circle to Search</string>
+    <string name="feat_circle_to_search_gesture_height_title">Высота зоны жестов</string>
     <string name="feat_circle_to_search_gesture_height_desc">Adjust the height of the touch area at the bottom</string>
     <string name="feat_other_customizations_title">Другие настройки</string>
     <string name="feat_other_customizations_desc">Дополнительные настройки и модификации системы</string>
@@ -397,8 +397,8 @@
     <string name="feat_screen_off_widget_title">Виджет выключения экрана</string>
     <string name="feat_screen_off_widget_desc">Невидимый виджет для выключения экрана</string>
     <string name="screen_off_method_title">Screen Off Method</string>
-    <string name="screen_off_method_accessibility">Accessibility</string>
-    <string name="screen_off_method_input">Input</string>
+    <string name="screen_off_method_accessibility">Доступность</string>
+    <string name="screen_off_method_input">Ввод</string>
     <string name="screen_off_widget_input_permission_id">Screen off widget - Input</string>
     <string name="require_double_tap_title">Require double tap</string>
     <string name="require_double_tap_desc">To screen off</string>
@@ -427,6 +427,8 @@
     <string name="diy_create_state_desc">Запланируйте действие, которое будет запускаться в зависимости от состояния входного и выходного условия</string>
     <string name="diy_create_action_shortcut_title">Action Shortcut</string>
     <string name="diy_create_action_shortcut_desc">Launch shortcut to trigger action</string>
+    <string name="diy_create_pixel_searchbar_title">Pixel searchbar</string>
+    <string name="diy_create_pixel_searchbar_desc">Tap action for Pixel searchbar replacement</string>
     <string name="diy_editor_new_title">Новая автоматизация</string>
     <string name="diy_editor_edit_title">Редактировать автоматизацию</string>
     <string name="feat_link_actions_title">Действия для ссылок</string>
@@ -627,6 +629,8 @@
     <string name="perm_action_enable">Включить в настройках</string>
     <string name="perm_action_how_to">Как предоставить</string>
     <string name="perm_action_granted">Granted</string>
+    <string name="perm_action_grant_shizuku">Grant using Shizuku</string>
+    <string name="perm_write_secure_instructions">This permission can be granted either via a PC using ADB. Copy the ADB command and run on the shell.\n\nOr you can easily grant it using Shizuku from the below button.\n\nThis permission only needs to be granted once.</string>
     <string name="perm_battery_optimization_title">Оптимизация батареи</string>
     <string name="perm_battery_optimization_desc">Убедитесь, что служба не отключена системой для экономии энергии.</string>
     <!-- Tabs -->
@@ -1269,6 +1273,16 @@
     <string name="watch_help_title">Install on Watch</string>
     <string name="watch_help_description">To use Watch features, you need to install the Essentials companion app on your Wear OS watch. Click the button below to open the Play Store directly on your watch.</string>
     <string name="watch_help_open_play_store">Open on Watch</string>
+    <string name="feat_watch_controls_title">Customize</string>
+    <string name="feat_watch_controls_desc">Customize WearOS app controls</string>
+    <string name="watch_controls_long_press_hint">Long press to enable or disable buttons</string>
+    <string name="watch_controls_reorder_title">Reorder watch controls</string>
+    <string name="feat_watch_wireless_debugging_title">Wireless Debugging</string>
+    <string name="feat_watch_wireless_debugging_desc">Enable remotely</string>
+    <string name="feat_sync_sound_mode_title">Sync sound mode</string>
+    <string name="feat_sync_sound_mode_desc">Automatically sync with watch</string>
+    <string name="perm_watch_write_secure_title">Watch Secure Settings</string>
+    <string name="perm_watch_write_secure_desc">Requires secure settings write permission on your Watch. Grant it using the ADB command below.</string>
     <string name="cat_interaction">Взаимодействие</string>
     <string name="cat_interface">Интерфейс</string>
     <string name="cat_display">Отображать</string>
@@ -1377,6 +1391,8 @@
     <string name="label_use_blur">Использовать размытие</string>
     <string name="desc_use_blur">Включите элементы прогрессивного размытия в пользовательском интерфейсе</string>
     <string name="msg_blur_compatibility_error">Размытие отключено на этом устройстве, чтобы предотвратить известную ошибку отображения на устройствах Samsung с Android 15 или более ранней версии.</string>
+    <string name="setting_swipe_tabs_title">Swipe between tabs</string>
+    <string name="setting_swipe_tabs_desc">In home screen</string>
     <!-- Empty State Actions -->
     <string name="msg_no_apps_frozen">Приложения для заморозки не выбраны.</string>
     <string name="action_get_started">Начать</string>
@@ -1434,6 +1450,8 @@
     <string name="shut_up_shortcut_created">Shortcut created for %s</string>
     <string name="feat_disable_rotation_suggestion_title">Disable rotation suggestion</string>
     <string name="feat_disable_rotation_suggestion_desc">Do not show the rotation button when auto-rotate is off</string>
+    <string name="feat_pixel_searchbar_title">Replace searchbar</string>
+    <string name="feat_pixel_searchbar_desc">Replace Pixel Launcher default searchbar.</string>
     <string name="shut_up_toast_active">App got shut up</string>
     <string name="shut_up_toast_restored">Shut up features returned</string>
     <string name="shut_up_auto_archive_notif_title">Auto Freeze</string>
@@ -1488,4 +1506,31 @@
     <!-- External Control Permission -->
     <string name="perm_external_control_label">control Essentials features</string>
     <string name="perm_external_control_desc">read, update and control Essentials features and settings</string>
+    <string name="pixel_searchbar_settings_title">Pixel Searchbar Customization</string>
+    <string name="pixel_searchbar_style_empty">Empty</string>
+    <string name="pixel_searchbar_style_date">Date</string>
+    <string name="pixel_searchbar_background_pill_title">Background pill</string>
+    <string name="pixel_searchbar_background_pill_desc">Show the date inside a container</string>
+    <string name="about_desc_pixel_searchbar">Replace the default Pixel Launcher search bar on your home screen. You can customize the content to show either nothing (Empty) or the current date. \n\nPlease note that enabling this may break Pixel Launcher At a Glance widgets (such as sports and finance widgets). \n\nAnd the setting may need to be applied multiple times to take effect.</string>
+    <string name="label_replace_with">Replace with</string>
+    <string name="pixel_searchbar_tap_action_title">Configure tap action</string>
+    <string name="pixel_searchbar_tap_action_desc">Set up actions to trigger in DIY automations when tapped</string>
+    <string name="pixel_searchbar_style_widget">Widget</string>
+    <string name="pixel_searchbar_widget_picker_title">Pick a widget</string>
+    <string name="pixel_searchbar_widget_picker_desc">Select a widget to display its content in the searchbar</string>
+    <string name="pixel_searchbar_widget_selected">Widget selected</string>
+    <string name="pixel_searchbar_widget_none">No widget selected</string>
+    <string name="pixel_searchbar_widget_change">Change widget</string>
+    <string name="pixel_searchbar_widget_remove">Remove widget</string>
+    <string name="pixel_searchbar_bind_permission_title">Widget host permission required</string>
+    <string name="pixel_searchbar_bind_permission_desc">Essentials needs permission to host widgets. Tap to grant.</string>
+    <string name="pixel_searchbar_scraped_line1">Scraped title</string>
+    <string name="pixel_searchbar_scraped_line2">Scraped subtitle</string>
+    <string name="pixel_searchbar_widget_padding_h">Horizontal padding</string>
+    <string name="pixel_searchbar_widget_padding_v">Vertical padding</string>
+    <string name="pixel_searchbar_tap_action_enabled">Custom tap action</string>
+    <string name="pixel_searchbar_tap_action_enabled_desc">Use DIY tap action instead of widget\'s own</string>
+    <string name="pixel_searchbar_style_music">Music</string>
+    <string name="action_restart_shizuku">Restart Shizuku</string>
+    <string name="toast_enter_shizuku_token">Please enter Shizuku auth token in settings first</string>
 </resources>
