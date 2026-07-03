@@ -269,4 +269,11 @@ object PermissionUtils {
         } catch (e: Exception) {
         }
     }
+
+    fun hasRecordAudioPermission(context: Context): Boolean {
+        return androidx.core.content.ContextCompat.checkSelfPermission(
+            context,
+            android.Manifest.permission.RECORD_AUDIO
+        ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+    }
 }
