@@ -25,7 +25,6 @@ Essential tools, mods and workarounds for Pixels and other Androids
 </a>
   <a href="https://github.com/sameerasw/essentials/issues/new?template=feature_request.md"><img alt="GitHub Issues or Pull Requests by label" src="https://img.shields.io/github/issues/sameerasw/essentials/enhancement?style=for-the-badge&logo=apachespark&logoColor=%23fff&label=Feature%20request&labelColor=%23a26&color=%23a26">
 </a>
-</a>
   <a href="https://sameerasw.com"><img src="https://img.shields.io/badge/My%20website-orange?style=for-the-badge&logo=googlechrome&logoColor=%23000&labelColor=%233AFFB8&color=%233AFFB8" alt="My website" /></a>
   <a href="https://t.me/tidwib"><img src="https://img.shields.io/badge/Community-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white" alt="Community" /></a>
 </p>
@@ -39,8 +38,6 @@ Essential tools, mods and workarounds for Pixels and other Androids
   <a href="https://youtu.be/HE0s76z4Afs"><img width="20%" alt="Frame 7" src="https://github.com/user-attachments/assets/02643ad6-e221-4fcc-bd40-e0c100af3d69" /></a>
   <a href="https://www.androidauthority.com/good-lock-for-pixel-essentials-app-hands-on-3670994/"><img width="20%" alt="Frame 7" src="https://github.com/user-attachments/assets/5469b309-6929-4775-93c5-7ee2f0d57ba1" /></a>
 </p>
-
-> A little bit away from the project prioritizing on AirSync but will be back sooooon (っ◕‿◕)っ
 
 ## Navigation
 
