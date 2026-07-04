@@ -68,6 +68,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
 
 class MainViewModel : ViewModel() {
@@ -317,6 +318,11 @@ class MainViewModel : ViewModel() {
     private var appContext: Context? = null
 
     val gitHubToken = mutableStateOf<String?>(null)
+    val gitHubWorkflowToken = mutableStateOf<String?>(null)
+    val wallpaperTriggerState = mutableStateOf<String?>(null)
+    val workflowAuthState = mutableStateOf<com.sameerasw.essentials.viewmodels.AuthState>(com.sameerasw.essentials.viewmodels.AuthState.Idle)
+    private var workflowPollingJob: kotlinx.coroutines.Job? = null
+    val gitHubUser = mutableStateOf<com.sameerasw.essentials.domain.model.github.GitHubUser?>(null)
 
     private val contentObserver = object : ContentObserver(Handler(Looper.getMainLooper())) {
         override fun onChange(selfChange: Boolean, uri: Uri?) {
@@ -804,6 +810,7 @@ class MainViewModel : ViewModel() {
         appContext = context.applicationContext
         settingsRepository = SettingsRepository(context)
         updateRepository = UpdateRepository()
+        gitHubUser.value = settingsRepository.getGitHubUser()
 
         // Sync with system per-app language settings
         val currentLocales = AppCompatDelegate.getApplicationLocales()
@@ -1067,6 +1074,12 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             settingsRepository.gitHubToken.collect {
                 gitHubToken.value = it
+            }
+        }
+
+        viewModelScope.launch {
+            settingsRepository.gitHubWorkflowToken.collect {
+                gitHubWorkflowToken.value = it
             }
         }
 
@@ -1539,6 +1552,90 @@ class MainViewModel : ViewModel() {
     fun setDeveloperModeEnabled(enabled: Boolean, context: Context) {
         isDeveloperModeEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_DEVELOPER_MODE_ENABLED, enabled)
+    }
+
+    fun startWorkflowAuthFlow(context: Context) {
+        workflowAuthState.value = com.sameerasw.essentials.viewmodels.AuthState.Loading
+        viewModelScope.launch {
+            val authRepo = com.sameerasw.essentials.data.repository.GitHubAuthRepository()
+            val response = authRepo.requestDeviceCodeWithWorkflow()
+            if (response != null) {
+                workflowAuthState.value = com.sameerasw.essentials.viewmodels.AuthState.CodeReceived(
+                    userCode = response.userCode,
+                    verificationUri = response.verificationUri
+                )
+                startWorkflowPolling(response.deviceCode, response.interval, context)
+            } else {
+                workflowAuthState.value = com.sameerasw.essentials.viewmodels.AuthState.Error("Failed to request device code")
+            }
+        }
+    }
+
+    private fun startWorkflowPolling(deviceCode: String, intervalSeconds: Int, context: Context) {
+        workflowPollingJob?.cancel()
+        workflowPollingJob = viewModelScope.launch {
+            val authRepo = com.sameerasw.essentials.data.repository.GitHubAuthRepository()
+            var currentInterval = intervalSeconds * 1000L
+            while (isActive) {
+                kotlinx.coroutines.delay(currentInterval)
+                val tokenResponse = authRepo.pollForToken(deviceCode, intervalSeconds)
+
+                if (tokenResponse != null) {
+                    when {
+                        tokenResponse.accessToken != null -> {
+                            workflowAuthState.value = com.sameerasw.essentials.viewmodels.AuthState.Authenticated(tokenResponse.accessToken)
+                            settingsRepository.saveGitHubWorkflowToken(tokenResponse.accessToken)
+                            workflowPollingJob?.cancel()
+                            return@launch
+                        }
+                        tokenResponse.error == "authorization_pending" -> {
+                            // continue
+                        }
+                        tokenResponse.error == "slow_down" -> {
+                            currentInterval += 5000L
+                        }
+                        tokenResponse.error == "expired_token" -> {
+                            workflowAuthState.value = com.sameerasw.essentials.viewmodels.AuthState.Error("Code expired. Please try again.")
+                            workflowPollingJob?.cancel()
+                            return@launch
+                        }
+                        else -> {
+                            workflowAuthState.value = com.sameerasw.essentials.viewmodels.AuthState.Error("Authentication failed: ${tokenResponse.error}")
+                            workflowPollingJob?.cancel()
+                            return@launch
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun cancelWorkflowAuthFlow() {
+        workflowPollingJob?.cancel()
+        workflowAuthState.value = com.sameerasw.essentials.viewmodels.AuthState.Idle
+    }
+
+    fun triggerWallpaperUpdate(target: String) {
+        val token = settingsRepository.getGitHubWorkflowToken() ?: return
+        wallpaperTriggerState.value = "loading"
+        viewModelScope.launch {
+            val gitHubRepo = com.sameerasw.essentials.data.repository.GitHubRepository()
+            val success = gitHubRepo.triggerWorkflowDispatch(
+                token = token,
+                owner = "sameerasw",
+                repo = "sameerasw.com",
+                workflowFile = "daily-unsplash.yml",
+                ref = "main",
+                inputs = mapOf("target" to target)
+            )
+            if (success) {
+                wallpaperTriggerState.value = "success"
+            } else {
+                wallpaperTriggerState.value = "error"
+            }
+            kotlinx.coroutines.delay(3000)
+            wallpaperTriggerState.value = null
+        }
     }
 
     fun setRootEnabled(enabled: Boolean, context: Context) {

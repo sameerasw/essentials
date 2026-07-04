@@ -49,6 +49,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.TextButton
+import androidx.compose.ui.text.font.FontWeight
+import android.net.Uri
+import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -998,6 +1003,202 @@ fun SettingsContent(
                     isChecked = viewModel.isAutoAccessibilityEnabled.value,
                     onCheckedChange = { viewModel.setAutoAccessibilityEnabled(it, context) }
                 )
+            }
+
+            val gitHubUser = viewModel.gitHubUser.value
+            if (gitHubUser?.login == "sameerasw") {
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = "Wallpaper Update",
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                val workflowToken by remember { mutableStateOf(viewModel.gitHubWorkflowToken) }
+                val hasWorkflowToken = !workflowToken.value.isNullOrEmpty()
+
+                RoundedCardContainer {
+                    if (!hasWorkflowToken) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(color = MaterialTheme.colorScheme.surfaceBright)
+                                .padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Text(
+                                text = "Workflow authorization is required to trigger wallpaper updates remotely.",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+
+                            val workflowAuthState by viewModel.workflowAuthState
+                            
+                            when (workflowAuthState) {
+                                is com.sameerasw.essentials.viewmodels.AuthState.Idle -> {
+                                    Button(
+                                        onClick = {
+                                            viewModel.startWorkflowAuthFlow(context)
+                                        },
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        Text("Grant Workflow Access")
+                                    }
+                                }
+                                is com.sameerasw.essentials.viewmodels.AuthState.Loading -> {
+                                    Box(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                                    }
+                                }
+                                is com.sameerasw.essentials.viewmodels.AuthState.CodeReceived -> {
+                                    val codeData = workflowAuthState as com.sameerasw.essentials.viewmodels.AuthState.CodeReceived
+                                    Column(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        Text(
+                                            text = "Verification Code:",
+                                            style = MaterialTheme.typography.titleSmall
+                                        )
+                                        Text(
+                                            text = codeData.userCode,
+                                            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+                                            color = MaterialTheme.colorScheme.primary
+                                        )
+                                        Text(
+                                            text = "Go to: ${codeData.verificationUri}",
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                        
+                                        Row(
+                                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                        ) {
+                                            Button(
+                                                onClick = {
+                                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(codeData.verificationUri))
+                                                    context.startActivity(intent)
+                                                }
+                                            ) {
+                                                Text("Open Page")
+                                            }
+                                            TextButton(
+                                                onClick = {
+                                                    viewModel.cancelWorkflowAuthFlow()
+                                                }
+                                            ) {
+                                                Text("Cancel")
+                                            }
+                                        }
+                                    }
+                                }
+                                is com.sameerasw.essentials.viewmodels.AuthState.Error -> {
+                                    val err = workflowAuthState as com.sameerasw.essentials.viewmodels.AuthState.Error
+                                    Column(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        Text(
+                                            text = err.message,
+                                            color = MaterialTheme.colorScheme.error,
+                                            style = MaterialTheme.typography.bodyMedium
+                                        )
+                                        Button(
+                                            onClick = {
+                                                viewModel.startWorkflowAuthFlow(context)
+                                            }
+                                        ) {
+                                            Text("Retry")
+                                        }
+                                    }
+                                }
+                                is com.sameerasw.essentials.viewmodels.AuthState.Authenticated -> {
+                                    // Handled by token recomposition
+                                }
+                            }
+                        }
+                    } else {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(color = MaterialTheme.colorScheme.surfaceBright)
+                                .padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            Text(
+                                text = "Trigger unsplash wallpaper update on your website directly:",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                val triggerState by viewModel.wallpaperTriggerState
+                                val isTriggering = triggerState != null
+
+                                Button(
+                                    onClick = {
+                                        HapticUtil.performUIHaptic(view)
+                                        viewModel.triggerWallpaperUpdate("desktop")
+                                    },
+                                    modifier = Modifier.weight(1f),
+                                    enabled = !isTriggering
+                                ) {
+                                    Text("Desktop")
+                                }
+                                Button(
+                                    onClick = {
+                                        HapticUtil.performUIHaptic(view)
+                                        viewModel.triggerWallpaperUpdate("both")
+                                    },
+                                    modifier = Modifier.weight(1f),
+                                    enabled = !isTriggering
+                                ) {
+                                    Text("Both")
+                                }
+                                Button(
+                                    onClick = {
+                                        HapticUtil.performUIHaptic(view)
+                                        viewModel.triggerWallpaperUpdate("mobile")
+                                    },
+                                    modifier = Modifier.weight(1f),
+                                    enabled = !isTriggering
+                                ) {
+                                    Text("Mobile")
+                                }
+                            }
+
+                            val triggerState by viewModel.wallpaperTriggerState
+                            if (triggerState != null) {
+                                Text(
+                                    text = when(triggerState) {
+                                        "loading" -> "Sending trigger request..."
+                                        "success" -> "Trigger sent successfully!"
+                                        "error" -> "Failed to send trigger."
+                                        else -> ""
+                                    },
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = when(triggerState) {
+                                        "success" -> MaterialTheme.colorScheme.primary
+                                        "error" -> MaterialTheme.colorScheme.error
+                                        else -> MaterialTheme.colorScheme.onSurfaceVariant
+                                    },
+                                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                                )
+                            }
+                        }
+                    }
+                }
             }
         }
 

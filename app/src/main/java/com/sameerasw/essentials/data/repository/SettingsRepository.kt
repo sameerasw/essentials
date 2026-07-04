@@ -201,6 +201,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_REMOTE_LOCK_MODE = "remote_lock_mode" // 0: Screen off, 1: Lock
 
         const val KEY_GITHUB_ACCESS_TOKEN = "github_access_token"
+        const val KEY_GITHUB_WORKFLOW_TOKEN = "github_workflow_token"
         const val KEY_GITHUB_USER_PROFILE = "github_user_profile"
 
         const val KEY_FLASHLIGHT_PULSE_SELECTED_APPS = "flashlight_pulse_selected_apps"
@@ -1038,6 +1039,25 @@ class SettingsRepository(private val context: Context) {
             }
         }
         trySend(getString(KEY_GITHUB_ACCESS_TOKEN))
+        prefs.registerOnSharedPreferenceChangeListener(listener)
+        awaitClose { prefs.unregisterOnSharedPreferenceChangeListener(listener) }
+    }
+
+    fun getGitHubWorkflowToken(): String? {
+        return prefs.getString(KEY_GITHUB_WORKFLOW_TOKEN, null)
+    }
+
+    fun saveGitHubWorkflowToken(token: String?) {
+        prefs.edit().putString(KEY_GITHUB_WORKFLOW_TOKEN, token).apply()
+    }
+
+    val gitHubWorkflowToken: Flow<String?> = callbackFlow {
+        val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+            if (key == KEY_GITHUB_WORKFLOW_TOKEN) {
+                trySend(getString(KEY_GITHUB_WORKFLOW_TOKEN))
+            }
+        }
+        trySend(getString(KEY_GITHUB_WORKFLOW_TOKEN))
         prefs.registerOnSharedPreferenceChangeListener(listener)
         awaitClose { prefs.unregisterOnSharedPreferenceChangeListener(listener) }
     }
