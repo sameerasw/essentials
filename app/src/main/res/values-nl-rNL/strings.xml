@@ -460,11 +460,15 @@
     <string name="feat_watermark_title">Watermerk</string>
     <string name="feat_watermark_desc">EXIF-data en logo\'s toevoegen aan foto\'s</string>
     <string name="feat_daily_wallpaper_title">Wallpaper</string>
-    <string name="feat_daily_wallpaper_desc">Daily curated handpicked wallpaper</string>
+    <string name="feat_daily_wallpaper_desc">Daily curated and live wallpaper</string>
     <string name="label_wallpaper_apply">Apply Wallpaper</string>
     <string name="label_wallpaper_by">Photo by</string>
     <string name="label_wallpaper_applied">Wallpaper applied successfully</string>
     <string name="label_wallpaper_apply_failed">Failed to apply wallpaper</string>
+    <string name="label_wallpaper_applying">Applying new wallpaper</string>
+    <string name="label_wallpaper_auto_update">Auto-update</string>
+    <string name="label_wallpaper_auto_update_desc">Checks twice a day for a new wallpaper on a background schedule</string>
+    <string name="label_clear_custom_videos">Clear custom videos</string>
     <string name="feat_always_on_display_title">Always-On Display</string>
     <string name="feat_always_on_display_desc">Laat tijd en informatie zien wanneer het scherm uit is</string>
     <string name="feat_calendar_sync_title">Kalenders synchroniseren</string>
