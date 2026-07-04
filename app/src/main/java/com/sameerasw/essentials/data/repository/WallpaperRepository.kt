@@ -103,7 +103,8 @@ class WallpaperRepository {
 
     suspend fun autoApplyWallpaper(context: Context, urlString: String): Boolean = withContext(Dispatchers.IO) {
         try {
-            val bitmap = downloadBitmap(urlString) ?: return@withContext false
+            val rawBitmap = downloadBitmap(urlString) ?: return@withContext false
+            val bitmap = centerCropToScreen(context, rawBitmap)
             val wallpaperManager = WallpaperManager.getInstance(context)
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                 wallpaperManager.setBitmap(bitmap, null, true, WallpaperManager.FLAG_SYSTEM or WallpaperManager.FLAG_LOCK)
@@ -115,5 +116,36 @@ class WallpaperRepository {
             e.printStackTrace()
             false
         }
+    }
+
+    private fun centerCropToScreen(context: Context, bitmap: Bitmap): Bitmap {
+        val displayMetrics = context.resources.displayMetrics
+        val screenWidth = displayMetrics.widthPixels
+        val screenHeight = displayMetrics.heightPixels
+
+        val bitmapWidth = bitmap.width
+        val bitmapHeight = bitmap.height
+
+        val targetRatio = screenWidth.toFloat() / screenHeight.toFloat()
+        val bitmapRatio = bitmapWidth.toFloat() / bitmapHeight.toFloat()
+
+        val cropWidth: Int
+        val cropHeight: Int
+        val cropX: Int
+        val cropY: Int
+
+        if (bitmapRatio > targetRatio) {
+            cropHeight = bitmapHeight
+            cropWidth = (bitmapHeight * targetRatio).toInt()
+            cropX = (bitmapWidth - cropWidth) / 2
+            cropY = 0
+        } else {
+            cropWidth = bitmapWidth
+            cropHeight = (bitmapWidth / targetRatio).toInt()
+            cropX = 0
+            cropY = (bitmapHeight - cropHeight) / 2
+        }
+
+        return Bitmap.createBitmap(bitmap, cropX, cropY, cropWidth, cropHeight)
     }
 }

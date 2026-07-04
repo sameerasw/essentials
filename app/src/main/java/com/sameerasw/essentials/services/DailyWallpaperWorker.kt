@@ -24,12 +24,13 @@ class DailyWallpaperWorker(
                 return Result.success()
             }
 
+            val force = inputData.getBoolean("force", false)
             val todayWallpaper = wallpaperRepository.fetchTodayWallpaper()
             if (todayWallpaper != null) {
                 val cachedId = settingsRepository.getString(SettingsRepository.KEY_DAILY_WALLPAPER_LAST_ID) ?: ""
                 
-                // If it is a new wallpaper, fetch and apply
-                if (todayWallpaper.id != cachedId) {
+                // If it is a new wallpaper (or forced run), fetch and apply
+                if (force || todayWallpaper.id != cachedId) {
                     val applied = wallpaperRepository.autoApplyWallpaper(context, todayWallpaper.urlMobile)
                     if (applied) {
                         settingsRepository.putString(SettingsRepository.KEY_DAILY_WALLPAPER_LAST_ID, todayWallpaper.id)
@@ -39,7 +40,7 @@ class DailyWallpaperWorker(
                         settingsRepository.putString(SettingsRepository.KEY_DAILY_WALLPAPER_AUTHOR_LINK, todayWallpaper.authorLink)
                         settingsRepository.putString(SettingsRepository.KEY_DAILY_WALLPAPER_PHOTO_LINK, todayWallpaper.photoLink)
                         settingsRepository.putString(SettingsRepository.KEY_DAILY_WALLPAPER_UPDATED_AT, todayWallpaper.updatedAt)
-                        Log.d("DailyWallpaperWorker", "Successfully auto-applied new wallpaper: ${todayWallpaper.id}")
+                        Log.d("DailyWallpaperWorker", "Successfully auto-applied wallpaper (force=$force): ${todayWallpaper.id}")
                     }
                 }
             }

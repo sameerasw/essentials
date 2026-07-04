@@ -3987,9 +3987,20 @@ class MainViewModel : ViewModel() {
         settingsRepository.putBoolean(SettingsRepository.KEY_DAILY_WALLPAPER_AUTO_UPDATE, enabled)
         if (enabled) {
             schedulePeriodicWallpaperCheck(context)
+            triggerInstantWallpaperUpdate(context)
         } else {
             cancelPeriodicWallpaperCheck(context)
         }
+    }
+
+    private fun triggerInstantWallpaperUpdate(context: Context) {
+        val data = androidx.work.Data.Builder()
+            .putBoolean("force", true)
+            .build()
+        val workRequest = androidx.work.OneTimeWorkRequestBuilder<com.sameerasw.essentials.services.DailyWallpaperWorker>()
+            .setInputData(data)
+            .build()
+        androidx.work.WorkManager.getInstance(context).enqueue(workRequest)
     }
 
     private fun schedulePeriodicWallpaperCheck(context: Context) {
