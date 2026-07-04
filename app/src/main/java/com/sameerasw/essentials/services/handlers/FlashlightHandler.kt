@@ -33,6 +33,8 @@ import android.hardware.SensorManager
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.coroutines.resume
+import kotlin.time.Duration.Companion.milliseconds
+import androidx.core.content.edit
 
 class FlashlightHandler(
     private val service: AccessibilityService,
@@ -344,7 +346,7 @@ class FlashlightHandler(
         val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as? SensorManager ?: return false
         val proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY) ?: return false
 
-        return withTimeoutOrNull(250L) {
+        return withTimeoutOrNull(250L.milliseconds) {
             suspendCancellableCoroutine<Boolean> { continuation ->
                 val listener = object : SensorEventListener {
                     override fun onSensorChanged(event: SensorEvent?) {
@@ -411,10 +413,10 @@ class FlashlightHandler(
                     fromLevel = 0,
                     toLevel = targetPulseLevel,
                     durationMs = 600L,
-                    steps = 40
+                    steps = 60
                 )
 
-                kotlinx.coroutines.delay(800L)
+                kotlinx.coroutines.delay(800L.milliseconds)
 
                 FlashlightUtil.fadeFlashlight(
                     service,
@@ -422,7 +424,7 @@ class FlashlightHandler(
                     fromLevel = targetPulseLevel,
                     toLevel = 0,
                     durationMs = 600L,
-                    steps = 40
+                    steps = 60
                 )
 
                 isInternalToggle = false
@@ -432,10 +434,10 @@ class FlashlightHandler(
                 isInternalToggle = true
                 try {
                     cameraManager.setTorchMode(cameraId, true)
-                    kotlinx.coroutines.delay(700L)
+                    kotlinx.coroutines.delay(700L.milliseconds)
                     cameraManager.setTorchMode(cameraId, false)
-                    kotlinx.coroutines.delay(200L)
-                } catch (e: Exception) {
+                    kotlinx.coroutines.delay(200L.milliseconds)
+                } catch (_: Exception) {
                 } finally {
                     isInternalToggle = false
                 }
@@ -476,7 +478,7 @@ class FlashlightHandler(
 
             val prefs = service.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
             if (prefs.getBoolean("flashlight_global_enabled", false)) {
-                prefs.edit().putInt("flashlight_last_intensity", targetLevel).apply()
+                prefs.edit { putInt("flashlight_last_intensity", targetLevel) }
             }
 
             flashlightJob?.cancel()
@@ -575,7 +577,7 @@ class FlashlightHandler(
                     try {
                         cameraManager.setTorchMode(finalCameraId, !isTorchOn)
                         success = true
-                    } catch (e: Exception) {
+                    } catch (_: Exception) {
                         // SILENT: Handle silently as per user request
                     }
 
@@ -625,7 +627,7 @@ class FlashlightHandler(
                     val resolved =
                         HapticFeedbackType.valueOf(hapticName ?: HapticFeedbackType.DOUBLE.name)
                     if (resolved.name == "LONG") HapticFeedbackType.DOUBLE else resolved
-                } catch (e: Exception) {
+                } catch (_: Exception) {
                     HapticFeedbackType.DOUBLE
                 }
 
@@ -645,7 +647,7 @@ class FlashlightHandler(
     private fun isBedtimeModeActive(context: Context): Boolean {
         return try {
             android.provider.Settings.Global.getInt(context.contentResolver, "bedtime_mode", 0) == 1
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             false
         }
     }
