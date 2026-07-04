@@ -395,6 +395,13 @@
     <string name="search_no_results">\"%1$s\" için sonuç yok</string>
     <string name="search_results_title">Arama Sonuçları</string>
     <string name="requires_following_permissions">%1$s aşağıdaki izinleri gerektirir</string>
+    <string name="setting_enable_unsupported_features_title">Enable unsupported features</string>
+    <string name="setting_enable_unsupported_features_desc">Show OEM-specific or redundant features that are hidden by default.</string>
+    <string name="unsupported_features_warning_title">Enable unsupported features?</string>
+    <string name="unsupported_features_warning_desc">These features may not work on every device and could require extra permissions or root access.</string>
+    <string name="unsupported_features_confirm">Enable anyway</string>
+    <string name="unsupported_features_cancel">Cancel</string>
+    <string name="disabled_on_this_device">Disabled on this device</string>
     <!-- Features -->
     <string name="feat_screen_off_widget_title">Ekran kapatma widget\'ı</string>
     <string name="feat_screen_off_widget_desc">Ekranı kapatmak için görünmez widget</string>
@@ -462,7 +469,7 @@
     <string name="feat_watermark_title">Filigran</string>
     <string name="feat_watermark_desc">Fotoğraflara EXIF ​​verileri ve logolar ekleme</string>
     <string name="feat_daily_wallpaper_title">Wallpaper</string>
-    <string name="feat_daily_wallpaper_desc">Daily curated and live wallpaper</string>
+    <string name="feat_daily_wallpaper_desc">Daily curated handpicked wallpaper</string>
     <string name="label_wallpaper_apply">Apply Wallpaper</string>
     <string name="label_wallpaper_by">Photo by</string>
     <string name="label_wallpaper_applied">Wallpaper applied successfully</string>
