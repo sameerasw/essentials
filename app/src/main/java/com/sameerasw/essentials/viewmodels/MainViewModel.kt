@@ -4015,9 +4015,10 @@ class MainViewModel : ViewModel() {
         isAodForceTurnOffEnabled.value = enabled
     }
 
-    fun setPocketModeEnabled(enabled: Boolean) {
+    fun setPocketModeEnabled(enabled: Boolean, context: Context) {
         settingsRepository.putBoolean(SettingsRepository.KEY_POCKET_MODE_ENABLED, enabled)
         isPocketModeEnabled.value = enabled
+        updateAppDetectionService(context)
     }
 
     fun setPocketModeUseLightSensor(enabled: Boolean) {
@@ -4065,6 +4066,7 @@ class MainViewModel : ViewModel() {
 
     fun savePocketModeExcludedApps(context: Context, apps: List<AppSelection>) {
         settingsRepository.savePocketModeExcludedApps(apps)
+        updateAppDetectionService(context)
     }
 
     fun updatePocketModeExcludedAppEnabled(
@@ -4073,6 +4075,7 @@ class MainViewModel : ViewModel() {
         enabled: Boolean
     ) {
         settingsRepository.updatePocketModeExcludedAppSelection(packageName, enabled)
+        updateAppDetectionService(context)
     }
 
     override fun onCleared() {

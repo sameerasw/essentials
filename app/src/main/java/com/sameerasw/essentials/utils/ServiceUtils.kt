@@ -31,6 +31,11 @@ object ServiceUtils {
         val isUseUsageAccess =
             settingsRepository.getBoolean(SettingsRepository.KEY_USE_USAGE_ACCESS)
 
+        val isPocketModeEnabled =
+            settingsRepository.getBoolean(SettingsRepository.KEY_POCKET_MODE_ENABLED)
+        val pocketModeExcludedApps = settingsRepository.loadPocketModeExcludedApps()
+        val hasPocketModeExcludedApps = isPocketModeEnabled && pocketModeExcludedApps.any { it.isEnabled }
+
         val hasAppAutomations = DIYRepository.automations.value.any {
             it.isEnabled && it.type == Automation.Type.APP
         }
@@ -39,7 +44,7 @@ object ServiceUtils {
         val hasShutUpApps = shutUpConfigs.any { it.isEnabled }
 
         val shouldRun =
-            (isUseUsageAccess && (isAppLockEnabled || isDynamicNightLightEnabled || isHideGestureBarOnLauncherEnabled || hasAppAutomations)) || hasShutUpApps
+            (isUseUsageAccess && (isAppLockEnabled || isDynamicNightLightEnabled || isHideGestureBarOnLauncherEnabled || hasAppAutomations || hasPocketModeExcludedApps)) || hasShutUpApps
 
         val intent = Intent(context, AppDetectionService::class.java)
         if (shouldRun) {

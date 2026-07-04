@@ -62,7 +62,7 @@ fun PocketModeSettingsUI(
                 description = stringResource(R.string.feat_pocket_mode_desc),
                 isChecked = viewModel.isPocketModeEnabled.value,
                 onCheckedChange = { isChecked ->
-                    viewModel.setPocketModeEnabled(isChecked)
+                    viewModel.setPocketModeEnabled(isChecked, context)
                 },
                 enabled = true,
                 iconRes = R.drawable.ic_pocket_mode,

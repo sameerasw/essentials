@@ -35,9 +35,6 @@ class AppFlowHandler(
     private val handler = Handler(Looper.getMainLooper())
     private val scope = CoroutineScope(Dispatchers.Main)
 
-    private val authenticatedPackages = mutableSetOf<String>()
-    private val lastLeaveTimes = mutableMapOf<String, Long>()
-    private val activeCountdowns = mutableMapOf<String, Job>()
 
     private val shutUpReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -86,21 +83,11 @@ class AppFlowHandler(
         }
     }
 
-    // App Lock State
-    private var lockingPackage: String? = null
-    private var lastLockRequestTime: Long = 0
-    var currentPackage: String? = null
-        private set
-    private var currentUsageStatsPackage: String? = null
-
-    // App Automation State
-    private val activeAppAutomationIds = mutableSetOf<String>()
-
-    // Night Light State
-    private var wasNightLightOnBeforeAutoToggle = false
-    private var isNightLightAutoToggledOff = false
-    private var pendingNLRunnable: Runnable? = null
     private val nlDebounceDelay = 500L
+
+    val currentPackage: String?
+        get() = Companion.currentPackage
+
 
     private val ignoredSystemPackages = listOf(
         "android",
@@ -114,7 +101,7 @@ class AppFlowHandler(
 
         val oldPackage = currentPackage
         if (isFromUsageStats == useUsageAccess) {
-            currentPackage = packageName
+            Companion.currentPackage = packageName
             if (oldPackage != null && oldPackage != packageName) {
                 lastLeaveTimes[oldPackage] = System.currentTimeMillis()
                 checkShutUpRestore(oldPackage, packageName)
@@ -126,6 +113,12 @@ class AppFlowHandler(
             checkHighlightNightLight(packageName)
             checkAppAutomations(packageName)
             checkGestureBarAutomation(packageName)
+
+            // Dismiss pocket mode if the new foreground package is bypassed/excluded
+            val serviceInstance = com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService.instance
+            if (serviceInstance != null && serviceInstance.isAppBypassedForPocketMode(packageName)) {
+                serviceInstance.dismissPocketMode()
+            }
         }
     }
 
@@ -840,5 +833,19 @@ class AppFlowHandler(
         const val EXTRA_PACKAGE_NAME = "package_name"
         const val EXTRA_AUTO_ARCHIVE_PACKAGE = "auto_archive_package"
         const val NOTIFICATION_ID_SHUTUP_RESTORE = 9999
+
+        // Shared State
+        internal val authenticatedPackages = mutableSetOf<String>()
+        internal val lastLeaveTimes = mutableMapOf<String, Long>()
+        internal val activeCountdowns = mutableMapOf<String, Job>()
+        internal var lockingPackage: String? = null
+        internal var lastLockRequestTime: Long = 0
+        var currentPackage: String? = null
+            internal set
+        internal var currentUsageStatsPackage: String? = null
+        internal val activeAppAutomationIds = mutableSetOf<String>()
+        internal var wasNightLightOnBeforeAutoToggle = false
+        internal var isNightLightAutoToggledOff = false
+        internal var pendingNLRunnable: Runnable? = null
     }
 }

@@ -962,7 +962,7 @@ object FeatureRegistry {
             override fun isEnabled(viewModel: MainViewModel) = viewModel.isPocketModeEnabled.value
 
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
-                viewModel.setPocketModeEnabled(enabled)
+                viewModel.setPocketModeEnabled(enabled, context)
 
             override fun isDeviceSupported(context: Context) = !DeviceUtils.isGoogleDevice()
         },
