@@ -101,6 +101,8 @@
     <string name="settings_section_other">Lainnya</string>
     <string name="flashlight_always_off_title">Selalu matikan senter</string>
     <string name="flashlight_always_off_desc">Hanya ketika layar hidup</string>
+    <string name="flashlight_pocket_title">Pocket detection</string>
+    <string name="flashlight_pocket_desc">Turn off flashlight when phone is in your pocket</string>
     <string name="content_desc_settings">Pengaturan</string>
     <!-- Caffeinate / Permissions -->
     <string name="permission_show_notification_title">Tampilkan notifikasi</string>
@@ -589,6 +591,8 @@
     <string name="search_remap_haptic_desc">Vibration feedback when remapped button is pressed</string>
     <string name="search_remap_flashlight_title">Flashlight toggle</string>
     <string name="search_remap_flashlight_desc">Toggle flashlight with volume buttons</string>
+    <string name="search_flashlight_pocket_title">Flashlight pocket detection</string>
+    <string name="search_flashlight_pocket_desc">Auto-turn off flashlight when placed in pocket</string>
     <string name="search_night_light_enable_title">Enable Dynamic Night Light</string>
     <string name="search_night_light_enable_desc">Master switch for dynamic night light</string>
     <string name="search_app_lock_enable_title">Enable app lock</string>
@@ -943,6 +947,13 @@
         <item>torch</item>
         <item>pulse</item>
         <item>notification</item>
+    </string-array>
+    <string-array name="keywords_pocket_detection">
+        <item>pocket</item>
+        <item>proximity</item>
+        <item>sensor</item>
+        <item>torch</item>
+        <item>auto</item>
     </string-array>
     <string-array name="keywords_qs_stay_awake">
         <item>awake</item>
@@ -1543,4 +1554,17 @@
     <string name="pixel_searchbar_style_music">Music</string>
     <string name="action_restart_shizuku">Restart Shizuku</string>
     <string name="toast_enter_shizuku_token">Please enter Shizuku auth token in settings first</string>
+    <!-- Pocket Mode -->
+    <string name="feat_pocket_mode_title">Pocket mode</string>
+    <string name="feat_pocket_mode_desc">Prevent accidental touches while in pocket</string>
+    <string name="pocket_mode_use_light_title">Use light sensor</string>
+    <string name="pocket_mode_use_light_desc">Use ambient light level in addition to proximity for better accuracy</string>
+    <string name="pocket_mode_active">Pocket mode active</string>
+    <string name="pocket_mode_dismiss_hint">Press any volume key to dismiss</string>
+    <string name="pocket_mode_warning">Warning: On some devices with missing sensors, enabling Pocket Mode may break deep sleep and cause higher battery drain</string>
+    <string name="pocket_mode_exclude_apps_title">Exclude apps</string>
+    <string name="pocket_mode_exclude_apps_desc">Choose apps where Pocket Mode should not trigger. Pocket mode will not work when streaming or gaming by default</string>
+    <string name="pocket_mode_trigger_delay_title">Trigger delay</string>
+    <string name="pocket_mode_lock_screen_only_title">Lock screen only</string>
+    <string name="pocket_mode_lock_screen_only_desc">Only trigger pocket mode when the device is locked</string>
 </resources>
