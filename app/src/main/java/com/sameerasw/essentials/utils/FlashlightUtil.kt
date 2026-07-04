@@ -8,6 +8,9 @@ import android.os.Build
 import android.util.Log
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
+import kotlin.math.abs
+import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 
 object FlashlightUtil {
     private const val TAG = "FlashlightUtil"
@@ -119,23 +122,37 @@ object FlashlightUtil {
             return safeSetTorchMode(cameraManager, cameraId, toLevel > 0)
         }
 
-        val delayPerStep = durationMs / steps
+        val effectiveSteps = maxOf(
+            steps,
+            (durationMs / 16L).toInt().coerceAtLeast(1),
+            abs(toLevel - fromLevel).coerceAtLeast(1) * 8
+        )
+        val delayPerStep = (durationMs.toDouble() / effectiveSteps).coerceAtLeast(1.0)
         try {
-            var success = true
-            for (i in 1..steps) {
-                val level = fromLevel + ((toLevel - fromLevel) * i / steps)
-                success = if (level > 0) {
-                    safeSetTorchStrength(cameraManager, cameraId, level)
-                } else if (i == steps) {
-                    // Final step and target is 0, so turn off
-                    safeSetTorchMode(cameraManager, cameraId, false)
-                } else {
-                    true
+            val minLevel = minOf(fromLevel, toLevel)
+            val maxLevel = maxOf(fromLevel, toLevel)
+            var lastAppliedLevel = Int.MIN_VALUE
+
+            for (i in 1..effectiveSteps) {
+                val progress = i.toDouble() / effectiveSteps
+                val easedProgress = progress * progress * (3.0 - 2.0 * progress)
+                val level = (fromLevel + ((toLevel - fromLevel) * easedProgress)).roundToInt()
+                    .coerceIn(minLevel, maxLevel)
+
+                val success = when {
+                    level <= 0 && i < effectiveSteps -> true
+                    level == lastAppliedLevel -> true
+                    level > 0 -> safeSetTorchStrength(cameraManager, cameraId, level)
+                    else -> safeSetTorchMode(cameraManager, cameraId, false)
                 }
 
                 if (!success) return false
 
-                delay(delayPerStep)
+                if (level != lastAppliedLevel) {
+                    lastAppliedLevel = level
+                }
+
+                delay(delayPerStep.roundToLong())
             }
 
             return if (toLevel > 0) {

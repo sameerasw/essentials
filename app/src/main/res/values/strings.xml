@@ -102,6 +102,8 @@
     <string name="settings_section_other">Other</string>
     <string name="flashlight_always_off_title">Always turn off flashlight</string>
     <string name="flashlight_always_off_desc">Even while display is on</string>
+    <string name="flashlight_pocket_title">Pocket detection</string>
+    <string name="flashlight_pocket_desc">Turn off flashlight when phone is in your pocket</string>
     <string name="content_desc_settings">Settings</string>
 
     <!-- Caffeinate / Permissions -->
@@ -409,6 +411,13 @@
     <string name="search_no_results">No results for \"%1$s\"</string>
     <string name="search_results_title">Search Results</string>
     <string name="requires_following_permissions">%1$s requires following permissions</string>
+    <string name="setting_enable_unsupported_features_title">Enable unsupported features</string>
+    <string name="setting_enable_unsupported_features_desc">Show OEM-specific or redundant features that are hidden by default.</string>
+    <string name="unsupported_features_warning_title">Enable unsupported features?</string>
+    <string name="unsupported_features_warning_desc">These features may not work on every device and could require extra permissions or root access.</string>
+    <string name="unsupported_features_confirm">Enable anyway</string>
+    <string name="unsupported_features_cancel">Cancel</string>
+    <string name="disabled_on_this_device">Disabled on this device</string>
 
     <!-- Features -->
     <string name="feat_screen_off_widget_title">Screen off widget</string>
@@ -477,6 +486,16 @@
     <string name="feat_freeze_desc">Disable rarely used apps</string>
     <string name="feat_watermark_title">Watermark</string>
     <string name="feat_watermark_desc">Add EXIF data and logos to photos</string>
+    <string name="feat_daily_wallpaper_title">Wallpaper</string>
+    <string name="feat_daily_wallpaper_desc">Daily curated and live wallpaper</string>
+    <string name="label_wallpaper_apply">Apply Wallpaper</string>
+    <string name="label_wallpaper_by">Photo by</string>
+    <string name="label_wallpaper_applied">Wallpaper applied successfully</string>
+    <string name="label_wallpaper_apply_failed">Failed to apply wallpaper</string>
+    <string name="label_wallpaper_applying">Applying new wallpaper</string>
+    <string name="label_wallpaper_auto_update">Auto-update</string>
+    <string name="label_wallpaper_auto_update_desc">Checks twice a day for a new wallpaper on a background schedule</string>
+    <string name="label_clear_custom_videos">Clear custom videos</string>
     <string name="feat_always_on_display_title">Always on Display</string>
     <string name="feat_always_on_display_desc">Show time and info while screen off</string>
     <string name="feat_calendar_sync_title">Calendar Sync</string>
@@ -598,6 +617,8 @@
     <string name="search_remap_haptic_desc">Vibration feedback when remapped button is pressed</string>
     <string name="search_remap_flashlight_title">Flashlight toggle</string>
     <string name="search_remap_flashlight_desc">Toggle flashlight with volume buttons</string>
+    <string name="search_flashlight_pocket_title">Flashlight pocket detection</string>
+    <string name="search_flashlight_pocket_desc">Auto-turn off flashlight when placed in pocket</string>
     <string name="search_night_light_enable_title">Enable Dynamic Night Light</string>
     <string name="search_night_light_enable_desc">Master switch for dynamic night light</string>
     <string name="search_app_lock_enable_title">Enable app lock</string>
@@ -772,7 +793,7 @@
     <string name="about_desc_screen_off_widget">Easily turn the screen off with a tap on a transparent resizable widget that does not add icons or any clutter to your home screen.</string>
     <string name="about_desc_statusbar_icons">Take full control over your status bar icons.\n\nHide specific icons like WiFi, Bluetooth, or cellular data to keep your status bar clean. You can also customize the clock format and battery indicator with some smart controls as well. These are the list of available AOSP controls so your device OS might not respect all the controls.</string>
     <string name="about_desc_caffeinate">Caffeinate prevents your screen from turning off automatically.\n\nKeep your screen awake for a specific duration or indefinitely. Useful when reading long articles or referencing a recipe.</string>
-    <string name="about_desc_maps_power_saving">Get the Pixel 10 series exclusive Google Maps Power Saving mode with the minimal pitch black background to display over your lock screen on any Android device. Start a navigation session, turn the screen off and back on. </string>
+    <string name="about_desc_maps_power_saving">Use Google Maps Power Saving mode with a minimal pitch-black background to display over your lock screen on supported Android devices. Start a navigation session, turn the screen off and back on.</string>
     <string name="about_desc_flashlight_pulse">Pulse the flashlight when you receive a notification.\n\nWith devices have hardware support for flashlight dimming, the pulse will be smoothly animated.</string>
     <string name="about_desc_snooze_notifications">Snooze annoying persistent system notifications which can not be modified by default. \n\nPlease wait until the notification arrives and then go into this feature where it\'s notification channel will be listed. Select that to snooze from next time.\n\nAny snoozed notification can still be accessed from your notification history in Android.</string>
     <string name="about_desc_quick_settings_tiles">Add custom tiles to your Quick Settings panel.\n\nLong press any of them to learn what they do.</string>
@@ -977,6 +998,13 @@
         <item>pulse</item>
         <item>notification</item>
     </string-array>
+    <string-array name="keywords_pocket_detection">
+        <item>pocket</item>
+        <item>proximity</item>
+        <item>sensor</item>
+        <item>torch</item>
+        <item>auto</item>
+    </string-array>
     <string-array name="keywords_qs_stay_awake">
         <item>awake</item>
         <item>developer</item>
@@ -1165,7 +1193,7 @@
     <string name="instruction_section_shizuku_desc">Shizuku is a powerful tool that allows apps to use system APIs directly with ADB or root permissions. It is required for features like Maps min mode, App Freezer. And willa ssist granting some permissions such as WRITE_SECURE_SETTINGS. \n\nBut the Play Store version of Shizuku might be outdated and will probably be unusable on recent Android versions so in that case, please get the latest version from the github or an up-to-date fork of it.</string>
 
     <string name="instruction_section_maps_title">Maps power saving mode</string>
-    <string name="instruction_section_maps_desc">This feature automatically triggers Google Maps power saving mode which is currently exclusive to the Pixel 10 series. A community member discovered that it is still usable on any Android device by launching the maps minMode activity with root privileges. \n\nAnd then, I had it automated with Tasker to automatically trigger when the screen turns off during a navigation session and then was able to achieve the same with just runtime Shizuku permissions. \n\nIt is intended to be shown over the AOD of Pixel 10 series so because of that, you may see an occasional message popping up on the display that it does not support landscape mode. That is not avoidable by the app and you can ignore.</string>
+    <string name="instruction_section_maps_desc">This feature automatically triggers Google Maps power saving mode on supported Android devices. A community member discovered that it is still usable by launching the maps minMode activity with root privileges. \n\nAnd then, I had it automated with Tasker to automatically trigger when the screen turns off during a navigation session and then was able to achieve the same with just runtime Shizuku permissions. \n\nIt is intended to overlay the navigation experience, so you may see an occasional message about landscape mode not being supported. That is not avoidable by the app and you can ignore it.</string>
 
     <string name="instruction_section_silent_title">Silent sound mode</string>
     <string name="instruction_section_silent_desc">You may have noticed that the silent mode also triggers DND. \n\nThis is due to how the Android implemented it as even if we use the same API to switch to vibrate mode, it for some reason turns on DND along with the silent mode and this is not avoidable at this moment. :(</string>
@@ -1622,4 +1650,18 @@
     <string name="pixel_searchbar_style_music">Music</string>
     <string name="action_restart_shizuku">Restart Shizuku</string>
     <string name="toast_enter_shizuku_token">Please enter Shizuku auth token in settings first</string>
+
+    <!-- Pocket Mode -->
+    <string name="feat_pocket_mode_title">Pocket mode</string>
+    <string name="feat_pocket_mode_desc">Prevent accidental touches while in pocket</string>
+    <string name="pocket_mode_use_light_title">Use light sensor</string>
+    <string name="pocket_mode_use_light_desc">Use ambient light level in addition to proximity for better accuracy</string>
+    <string name="pocket_mode_active">Pocket mode active</string>
+    <string name="pocket_mode_dismiss_hint">Press any volume key to dismiss</string>
+    <string name="pocket_mode_warning">Warning: On some devices with missing sensors, enabling Pocket Mode may break deep sleep and cause higher battery drain. \This is not necessary for Google Pixel devices as they already got the feature built-in.</string>
+    <string name="pocket_mode_exclude_apps_title">Exclude apps</string>
+    <string name="pocket_mode_exclude_apps_desc">Choose apps where Pocket Mode should not trigger. Pocket mode will not work when streaming or gaming by default</string>
+    <string name="pocket_mode_trigger_delay_title">Trigger delay</string>
+    <string name="pocket_mode_lock_screen_only_title">Lock screen only</string>
+    <string name="pocket_mode_lock_screen_only_desc">Only trigger pocket mode when the device is locked</string>
 </resources>

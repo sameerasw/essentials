@@ -3,6 +3,7 @@ package com.sameerasw.essentials.ui.components.pickers
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CornerSize
@@ -14,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
@@ -32,15 +34,17 @@ fun <T> SegmentedPicker(
     iconProvider: (@Composable (T) -> Unit)? = null,
     modifier: Modifier = Modifier,
     cornerShape: CornerSize = MaterialTheme.shapes.extraSmall.bottomEnd,
+    containerColor: Color = MaterialTheme.colorScheme.surfaceBright,
+    contentPadding: PaddingValues = PaddingValues(10.dp)
 ) {
     val view = androidx.compose.ui.platform.LocalView.current
     Row(
         modifier = modifier
             .background(
-                color = MaterialTheme.colorScheme.surfaceBright,
+                color = containerColor,
                 shape = RoundedCornerShape(cornerShape)
             )
-            .padding(10.dp),
+            .padding(contentPadding),
         horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
     ) {
         val modifiers = List(items.size) { Modifier.weight(1f) }

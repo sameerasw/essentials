@@ -68,6 +68,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
 
 class MainViewModel : ViewModel() {
@@ -117,6 +118,7 @@ class MainViewModel : ViewModel() {
     val isFlashlightPulseUseLightingApps = mutableStateOf(true)
     val flashlightPulseMaxIntensity = mutableFloatStateOf(0.5f)
     val isFlashlightPulseDisableOnDnd = mutableStateOf(true)
+    val isFlashlightPocketTurnOffEnabled = mutableStateOf(false)
     val isLocationPermissionGranted = mutableStateOf(false)
     val isBackgroundLocationPermissionGranted = mutableStateOf(false)
     val isFullScreenIntentPermissionGranted = mutableStateOf(false)
@@ -132,6 +134,10 @@ class MainViewModel : ViewModel() {
     val isAodEnabled = mutableStateOf(false)
     val isNotificationGlanceEnabled = mutableStateOf(false)
     val isAodForceTurnOffEnabled = mutableStateOf(false)
+    val isPocketModeEnabled = mutableStateOf(false)
+    val isPocketModeUseLightSensor = mutableStateOf(false)
+    val pocketModeTriggerDelay = mutableFloatStateOf(3f) // seconds
+    val isPocketModeLockScreenOnly = mutableStateOf(false)
     val isAutoAccessibilityEnabled = mutableStateOf(false)
     val isNotificationGlanceSameAsLightingEnabled = mutableStateOf(true)
     val isOnboardingCompleted =
@@ -247,6 +253,7 @@ class MainViewModel : ViewModel() {
     val hasPendingUpdates = mutableStateOf(false)
 
     val isPitchBlackThemeEnabled = mutableStateOf(false)
+    val isEnableUnsupportedFeatures = mutableStateOf(false)
     val isBlurEnabled = mutableStateOf(true)
     val isBlurSettingEnabled = mutableStateOf(true)
     val isSwipeTabsEnabled = mutableStateOf(true)
@@ -317,6 +324,11 @@ class MainViewModel : ViewModel() {
     private var appContext: Context? = null
 
     val gitHubToken = mutableStateOf<String?>(null)
+    val gitHubWorkflowToken = mutableStateOf<String?>(null)
+    val wallpaperTriggerState = mutableStateOf<String?>(null)
+    val workflowAuthState = mutableStateOf<com.sameerasw.essentials.viewmodels.AuthState>(com.sameerasw.essentials.viewmodels.AuthState.Idle)
+    private var workflowPollingJob: kotlinx.coroutines.Job? = null
+    val gitHubUser = mutableStateOf<com.sameerasw.essentials.domain.model.github.GitHubUser?>(null)
 
     private val contentObserver = object : ContentObserver(Handler(Looper.getMainLooper())) {
         override fun onChange(selfChange: Boolean, uri: Uri?) {
@@ -454,6 +466,13 @@ class MainViewModel : ViewModel() {
 
                     SettingsRepository.KEY_PITCH_BLACK_THEME_ENABLED -> isPitchBlackThemeEnabled.value =
                         settingsRepository.getBoolean(key)
+
+                    SettingsRepository.KEY_ENABLE_UNSUPPORTED_FEATURES -> {
+                        isEnableUnsupportedFeatures.value = settingsRepository.isEnableUnsupportedFeatures()
+                        if (searchQuery.value.isNotBlank()) {
+                            appContext?.let { onSearchQueryChanged(searchQuery.value, it) }
+                        }
+                    }
 
                     SettingsRepository.KEY_KEYBOARD_HEIGHT -> keyboardHeight.floatValue =
                         settingsRepository.getFloat(key, 54f)
@@ -594,6 +613,15 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_AOD_FORCE_TURN_OFF_ENABLED -> isAodForceTurnOffEnabled.value =
                         settingsRepository.getBoolean(key)
 
+                    SettingsRepository.KEY_POCKET_MODE_ENABLED -> isPocketModeEnabled.value =
+                        settingsRepository.getBoolean(key)
+
+                    SettingsRepository.KEY_POCKET_MODE_USE_LIGHT_SENSOR -> isPocketModeUseLightSensor.value =
+                        settingsRepository.getBoolean(key)
+
+                    SettingsRepository.KEY_POCKET_MODE_LOCK_SCREEN_ONLY -> isPocketModeLockScreenOnly.value =
+                        settingsRepository.getBoolean(key)
+
                     SettingsRepository.KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING -> isNotificationGlanceSameAsLightingEnabled.value =
                         settingsRepository.getBoolean(key, true)
 
@@ -616,6 +644,10 @@ class MainViewModel : ViewModel() {
                     SettingsRepository.KEY_FLASHLIGHT_PULSE_MAX_INTENSITY -> {
                         flashlightPulseMaxIntensity.floatValue =
                             settingsRepository.getFloat(key, 0.5f)
+                    }
+
+                    SettingsRepository.KEY_FLASHLIGHT_POCKET_TURN_OFF_ENABLED -> {
+                        isFlashlightPocketTurnOffEnabled.value = settingsRepository.getBoolean(key)
                     }
 
                     SettingsRepository.KEY_CIRCLE_TO_SEARCH_GESTURE_ENABLED -> {
@@ -804,6 +836,7 @@ class MainViewModel : ViewModel() {
         appContext = context.applicationContext
         settingsRepository = SettingsRepository(context)
         updateRepository = UpdateRepository()
+        gitHubUser.value = settingsRepository.getGitHubUser()
 
         // Sync with system per-app language settings
         val currentLocales = AppCompatDelegate.getApplicationLocales()
@@ -896,6 +929,11 @@ class MainViewModel : ViewModel() {
         lockScreenClockSeedColor.intValue = settingsRepository.getLockScreenClockSeedColor()
         loadShutUpConfigs()
         recentSearches.value = settingsRepository.getRecentSearches()
+        loadCachedWallpaper()
+        isDailyWallpaperAutoUpdateEnabled.value = settingsRepository.getBoolean(SettingsRepository.KEY_DAILY_WALLPAPER_AUTO_UPDATE, false)
+        if (isDailyWallpaperAutoUpdateEnabled.value) {
+            schedulePeriodicWallpaperCheck(context)
+        }
 
         if (isHideGestureBarEnabled.value) {
             applyHideGestureBar(context, true)
@@ -1062,6 +1100,12 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             settingsRepository.gitHubToken.collect {
                 gitHubToken.value = it
+            }
+        }
+
+        viewModelScope.launch {
+            settingsRepository.gitHubWorkflowToken.collect {
+                gitHubWorkflowToken.value = it
             }
         }
 
@@ -1262,8 +1306,11 @@ class MainViewModel : ViewModel() {
             SettingsRepository.KEY_FLASHLIGHT_PULSE_DISABLE_ON_DND,
             true
         )
+        isFlashlightPocketTurnOffEnabled.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_POCKET_TURN_OFF_ENABLED)
         isPitchBlackThemeEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_PITCH_BLACK_THEME_ENABLED)
+        isEnableUnsupportedFeatures.value = settingsRepository.isEnableUnsupportedFeatures()
 
         keyboardHeight.floatValue =
             settingsRepository.getFloat(SettingsRepository.KEY_KEYBOARD_HEIGHT, 54f)
@@ -1421,6 +1468,14 @@ class MainViewModel : ViewModel() {
             settingsRepository.getBoolean(SettingsRepository.KEY_NOTIFICATION_GLANCE_ENABLED)
         isAodForceTurnOffEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_AOD_FORCE_TURN_OFF_ENABLED)
+        isPocketModeEnabled.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_POCKET_MODE_ENABLED)
+        isPocketModeUseLightSensor.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_POCKET_MODE_USE_LIGHT_SENSOR)
+        pocketModeTriggerDelay.floatValue =
+            settingsRepository.getFloat(SettingsRepository.KEY_POCKET_MODE_TRIGGER_DELAY, 3f)
+        isPocketModeLockScreenOnly.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_POCKET_MODE_LOCK_SCREEN_ONLY)
         isNotificationGlanceSameAsLightingEnabled.value = settingsRepository.getBoolean(
             SettingsRepository.KEY_NOTIFICATION_GLANCE_SAME_AS_LIGHTING,
             true
@@ -1460,6 +1515,14 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    fun setEnableUnsupportedFeatures(enabled: Boolean, context: Context) {
+        isEnableUnsupportedFeatures.value = enabled
+        settingsRepository.setEnableUnsupportedFeatures(enabled)
+        if (searchQuery.value.isNotBlank()) {
+            onSearchQueryChanged(searchQuery.value, context)
+        }
+    }
+
     fun onSearchQueryChanged(query: String, context: Context) {
         searchQuery.value = query
         searchJob?.cancel()
@@ -1473,7 +1536,11 @@ class MainViewModel : ViewModel() {
         isSearching.value = true
         searchJob = viewModelScope.launch(Dispatchers.Default) {
             delay(300)
-            val results = SearchRegistry.search(context, query)
+            val results = SearchRegistry.search(
+                context,
+                query,
+                isEnableUnsupportedFeatures.value
+            )
             withContext(Dispatchers.Main) {
                 searchResults.value = results
                 isSearching.value = false
@@ -1508,6 +1575,7 @@ class MainViewModel : ViewModel() {
         settingsRepository.savePinnedFeatures(current)
 
         appContext?.let { context ->
+            com.sameerasw.essentials.utils.ShortcutUtil.updateLauncherDynamicShortcuts(context)
             val intent = Intent("com.sameerasw.essentials.action.FAVORITES_WIDGET_UPDATE").apply {
                 setPackage(context.packageName)
             }
@@ -1533,6 +1601,90 @@ class MainViewModel : ViewModel() {
     fun setDeveloperModeEnabled(enabled: Boolean, context: Context) {
         isDeveloperModeEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_DEVELOPER_MODE_ENABLED, enabled)
+    }
+
+    fun startWorkflowAuthFlow(context: Context) {
+        workflowAuthState.value = com.sameerasw.essentials.viewmodels.AuthState.Loading
+        viewModelScope.launch {
+            val authRepo = com.sameerasw.essentials.data.repository.GitHubAuthRepository()
+            val response = authRepo.requestDeviceCodeWithWorkflow()
+            if (response != null) {
+                workflowAuthState.value = com.sameerasw.essentials.viewmodels.AuthState.CodeReceived(
+                    userCode = response.userCode,
+                    verificationUri = response.verificationUri
+                )
+                startWorkflowPolling(response.deviceCode, response.interval, context)
+            } else {
+                workflowAuthState.value = com.sameerasw.essentials.viewmodels.AuthState.Error("Failed to request device code")
+            }
+        }
+    }
+
+    private fun startWorkflowPolling(deviceCode: String, intervalSeconds: Int, context: Context) {
+        workflowPollingJob?.cancel()
+        workflowPollingJob = viewModelScope.launch {
+            val authRepo = com.sameerasw.essentials.data.repository.GitHubAuthRepository()
+            var currentInterval = intervalSeconds * 1000L
+            while (isActive) {
+                kotlinx.coroutines.delay(currentInterval)
+                val tokenResponse = authRepo.pollForToken(deviceCode, intervalSeconds)
+
+                if (tokenResponse != null) {
+                    when {
+                        tokenResponse.accessToken != null -> {
+                            workflowAuthState.value = com.sameerasw.essentials.viewmodels.AuthState.Authenticated(tokenResponse.accessToken)
+                            settingsRepository.saveGitHubWorkflowToken(tokenResponse.accessToken)
+                            workflowPollingJob?.cancel()
+                            return@launch
+                        }
+                        tokenResponse.error == "authorization_pending" -> {
+                            // continue
+                        }
+                        tokenResponse.error == "slow_down" -> {
+                            currentInterval += 5000L
+                        }
+                        tokenResponse.error == "expired_token" -> {
+                            workflowAuthState.value = com.sameerasw.essentials.viewmodels.AuthState.Error("Code expired. Please try again.")
+                            workflowPollingJob?.cancel()
+                            return@launch
+                        }
+                        else -> {
+                            workflowAuthState.value = com.sameerasw.essentials.viewmodels.AuthState.Error("Authentication failed: ${tokenResponse.error}")
+                            workflowPollingJob?.cancel()
+                            return@launch
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun cancelWorkflowAuthFlow() {
+        workflowPollingJob?.cancel()
+        workflowAuthState.value = com.sameerasw.essentials.viewmodels.AuthState.Idle
+    }
+
+    fun triggerWallpaperUpdate(target: String) {
+        val token = settingsRepository.getGitHubWorkflowToken() ?: return
+        wallpaperTriggerState.value = "loading"
+        viewModelScope.launch {
+            val gitHubRepo = com.sameerasw.essentials.data.repository.GitHubRepository()
+            val success = gitHubRepo.triggerWorkflowDispatch(
+                token = token,
+                owner = "sameerasw",
+                repo = "sameerasw.com",
+                workflowFile = "daily-unsplash.yml",
+                ref = "main",
+                inputs = mapOf("target" to target)
+            )
+            if (success) {
+                wallpaperTriggerState.value = "success"
+            } else {
+                wallpaperTriggerState.value = "error"
+            }
+            kotlinx.coroutines.delay(3000)
+            wallpaperTriggerState.value = null
+        }
     }
 
     fun setRootEnabled(enabled: Boolean, context: Context) {
@@ -3638,6 +3790,14 @@ class MainViewModel : ViewModel() {
         )
     }
 
+    fun setFlashlightPocketTurnOffEnabled(enabled: Boolean, context: Context) {
+        isFlashlightPocketTurnOffEnabled.value = enabled
+        settingsRepository.putBoolean(
+            SettingsRepository.KEY_FLASHLIGHT_POCKET_TURN_OFF_ENABLED,
+            enabled
+        )
+    }
+
     fun setFlashlightFadeEnabled(enabled: Boolean, context: Context) {
         isFlashlightFadeEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_FLASHLIGHT_FADE_ENABLED, enabled)
@@ -3819,6 +3979,26 @@ class MainViewModel : ViewModel() {
         isAodForceTurnOffEnabled.value = enabled
     }
 
+    fun setPocketModeEnabled(enabled: Boolean) {
+        settingsRepository.putBoolean(SettingsRepository.KEY_POCKET_MODE_ENABLED, enabled)
+        isPocketModeEnabled.value = enabled
+    }
+
+    fun setPocketModeUseLightSensor(enabled: Boolean) {
+        settingsRepository.putBoolean(SettingsRepository.KEY_POCKET_MODE_USE_LIGHT_SENSOR, enabled)
+        isPocketModeUseLightSensor.value = enabled
+    }
+
+    fun setPocketModeTriggerDelay(seconds: Float) {
+        pocketModeTriggerDelay.floatValue = seconds
+        settingsRepository.putFloat(SettingsRepository.KEY_POCKET_MODE_TRIGGER_DELAY, seconds)
+    }
+
+    fun setPocketModeLockScreenOnly(enabled: Boolean) {
+        settingsRepository.putBoolean(SettingsRepository.KEY_POCKET_MODE_LOCK_SCREEN_ONLY, enabled)
+        isPocketModeLockScreenOnly.value = enabled
+    }
+
     fun setNotificationGlanceSameAsLightingEnabled(enabled: Boolean) {
         isNotificationGlanceSameAsLightingEnabled.value = enabled
         settingsRepository.putBoolean(
@@ -3841,6 +4021,22 @@ class MainViewModel : ViewModel() {
         enabled: Boolean
     ) {
         settingsRepository.updateNotificationGlanceAppSelection(packageName, enabled)
+    }
+
+    fun loadPocketModeExcludedApps(context: Context): List<AppSelection> {
+        return settingsRepository.loadPocketModeExcludedApps()
+    }
+
+    fun savePocketModeExcludedApps(context: Context, apps: List<AppSelection>) {
+        settingsRepository.savePocketModeExcludedApps(apps)
+    }
+
+    fun updatePocketModeExcludedAppEnabled(
+        context: Context,
+        packageName: String,
+        enabled: Boolean
+    ) {
+        settingsRepository.updatePocketModeExcludedAppSelection(packageName, enabled)
     }
 
     override fun onCleared() {
@@ -3917,5 +4113,101 @@ class MainViewModel : ViewModel() {
         }
         addedQSTiles.value =
             tilesString.split(",").map { it.trim() }.filter { it.isNotBlank() }.toSet()
+    }
+
+    // Daily Wallpaper Support
+    val dailyWallpaperInfo = mutableStateOf<com.sameerasw.essentials.domain.model.WallpaperInfo?>(null)
+    val isWallpaperLoading = mutableStateOf(false)
+    private val wallpaperRepository = com.sameerasw.essentials.data.repository.WallpaperRepository()
+
+    fun loadCachedWallpaper() {
+        if (!::settingsRepository.isInitialized) return
+        val id = settingsRepository.getString(SettingsRepository.KEY_DAILY_WALLPAPER_LAST_ID) ?: return
+        val url = settingsRepository.getString(SettingsRepository.KEY_DAILY_WALLPAPER_LAST_URL) ?: ""
+        val urlMobile = settingsRepository.getString(SettingsRepository.KEY_DAILY_WALLPAPER_LAST_URL_MOBILE) ?: ""
+        val urlFull = settingsRepository.getString(SettingsRepository.KEY_DAILY_WALLPAPER_LAST_URL) ?: ""
+        val authorName = settingsRepository.getString(SettingsRepository.KEY_DAILY_WALLPAPER_AUTHOR_NAME) ?: ""
+        val authorLink = settingsRepository.getString(SettingsRepository.KEY_DAILY_WALLPAPER_AUTHOR_LINK) ?: ""
+        val photoLink = settingsRepository.getString(SettingsRepository.KEY_DAILY_WALLPAPER_PHOTO_LINK) ?: ""
+        val updatedAt = settingsRepository.getString(SettingsRepository.KEY_DAILY_WALLPAPER_UPDATED_AT) ?: ""
+
+        dailyWallpaperInfo.value = com.sameerasw.essentials.domain.model.WallpaperInfo(
+            id = id,
+            url = url,
+            urlMobile = urlMobile,
+            urlFull = urlFull,
+            authorName = authorName,
+            authorUsername = "",
+            authorLink = authorLink,
+            photoLink = photoLink,
+            updatedAt = updatedAt
+        )
+    }
+
+    fun fetchTodayWallpaper(context: Context) {
+        viewModelScope.launch {
+            isWallpaperLoading.value = true
+            val info = wallpaperRepository.fetchTodayWallpaper()
+            if (info != null) {
+                dailyWallpaperInfo.value = info
+                settingsRepository.putString(SettingsRepository.KEY_DAILY_WALLPAPER_LAST_ID, info.id)
+                settingsRepository.putString(SettingsRepository.KEY_DAILY_WALLPAPER_LAST_URL, info.url)
+                settingsRepository.putString(SettingsRepository.KEY_DAILY_WALLPAPER_LAST_URL_MOBILE, info.urlMobile)
+                settingsRepository.putString(SettingsRepository.KEY_DAILY_WALLPAPER_AUTHOR_NAME, info.authorName)
+                settingsRepository.putString(SettingsRepository.KEY_DAILY_WALLPAPER_AUTHOR_LINK, info.authorLink)
+                settingsRepository.putString(SettingsRepository.KEY_DAILY_WALLPAPER_PHOTO_LINK, info.photoLink)
+                settingsRepository.putString(SettingsRepository.KEY_DAILY_WALLPAPER_UPDATED_AT, info.updatedAt)
+            }
+            isWallpaperLoading.value = false
+        }
+    }
+
+    fun applyWallpaper(context: Context, url: String, onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            isWallpaperLoading.value = true
+            val success = wallpaperRepository.applyWallpaper(context, url)
+            isWallpaperLoading.value = false
+            onResult(success)
+        }
+    }
+
+    val isDailyWallpaperAutoUpdateEnabled = mutableStateOf(false)
+
+    fun setDailyWallpaperAutoUpdate(enabled: Boolean, context: Context) {
+        isDailyWallpaperAutoUpdateEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_DAILY_WALLPAPER_AUTO_UPDATE, enabled)
+        if (enabled) {
+            schedulePeriodicWallpaperCheck(context)
+            triggerInstantWallpaperUpdate(context)
+        } else {
+            cancelPeriodicWallpaperCheck(context)
+        }
+    }
+
+    private fun triggerInstantWallpaperUpdate(context: Context) {
+        val data = androidx.work.Data.Builder()
+            .putBoolean("force", true)
+            .build()
+        val workRequest = androidx.work.OneTimeWorkRequestBuilder<com.sameerasw.essentials.services.DailyWallpaperWorker>()
+            .setInputData(data)
+            .build()
+        androidx.work.WorkManager.getInstance(context).enqueue(workRequest)
+    }
+
+    private fun schedulePeriodicWallpaperCheck(context: Context) {
+        val workRequest =
+            androidx.work.PeriodicWorkRequestBuilder<com.sameerasw.essentials.services.DailyWallpaperWorker>(
+                12, java.util.concurrent.TimeUnit.HOURS
+            ).build()
+
+        androidx.work.WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+            "daily_wallpaper_check_work",
+            androidx.work.ExistingPeriodicWorkPolicy.UPDATE,
+            workRequest
+        )
+    }
+
+    private fun cancelPeriodicWallpaperCheck(context: Context) {
+        androidx.work.WorkManager.getInstance(context).cancelUniqueWork("daily_wallpaper_check_work")
     }
 }

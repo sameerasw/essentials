@@ -2,19 +2,23 @@ package com.sameerasw.essentials.domain.registry
 
 import android.content.Context
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.StatusBarIconRegistry
 import com.sameerasw.essentials.domain.model.SearchableItem
 
 object SearchRegistry {
 
-    fun search(context: Context, query: String): List<SearchableItem> {
+    fun search(context: Context, query: String): List<SearchableItem> =
+        search(context, query, SettingsRepository(context).isEnableUnsupportedFeatures())
+
+    fun search(context: Context, query: String, includeUnsupportedFeatures: Boolean = false): List<SearchableItem> {
         val q = query.trim().lowercase()
         if (q.isEmpty()) return emptyList()
 
         val allItems = mutableListOf<SearchableItem>()
 
         // --- Index Features and Sub-settings ---
-        FeatureRegistry.ALL_FEATURES.forEach { feature ->
+        FeatureRegistry.getFilteredFeatures(context, includeUnsupportedFeatures).forEach { feature ->
             val featureTitle = context.getString(feature.title)
             val featureCategory = context.getString(feature.category)
 

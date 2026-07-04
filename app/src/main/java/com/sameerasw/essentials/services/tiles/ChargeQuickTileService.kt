@@ -7,10 +7,12 @@ import android.service.quicksettings.Tile
 import androidx.annotation.RequiresApi
 import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.ShellUtils
 
-@RequiresApi(Build.VERSION_CODES.N)
 class ChargeQuickTileService : BaseTileService() {
+
+    override fun isDeviceSupported(): Boolean = DeviceUtils.isGoogleDevice()
 
     companion object {
         private const val ADAPTIVE_CHARGING_SETTING = "adaptive_charging_enabled"
@@ -24,18 +26,13 @@ class ChargeQuickTileService : BaseTileService() {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                 putExtra("feature", "Quick settings tiles")
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                val pendingIntent = android.app.PendingIntent.getActivity(
-                    this,
-                    0,
-                    intent,
-                    android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE
-                )
-                startActivityAndCollapse(pendingIntent)
-            } else {
-                @Suppress("DEPRECATION")
-                startActivityAndCollapse(intent)
-            }
+            val pendingIntent = android.app.PendingIntent.getActivity(
+                this,
+                0,
+                intent,
+                android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE
+            )
+            startActivityAndCollapse(pendingIntent)
             return
         }
         super.onClick()

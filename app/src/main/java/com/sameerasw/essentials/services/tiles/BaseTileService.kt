@@ -8,6 +8,7 @@ import android.service.quicksettings.TileService
 import androidx.annotation.RequiresApi
 import androidx.core.content.edit
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.ShellUtils
 import kotlinx.coroutines.CoroutineScope
@@ -16,7 +17,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-@RequiresApi(Build.VERSION_CODES.N)
 abstract class BaseTileService : TileService() {
 
     private val serviceJob = Job()
@@ -32,6 +32,8 @@ abstract class BaseTileService : TileService() {
     abstract fun getTileSubtitle(): String
 
     abstract fun hasFeaturePermission(): Boolean
+
+    open fun isDeviceSupported(): Boolean = true
 
     open fun getTileIcon(): Icon? = null
 
@@ -68,6 +70,10 @@ abstract class BaseTileService : TileService() {
     override fun onClick() {
         super.onClick()
 
+        if (!isDeviceSupported() && !areUnsupportedFeaturesEnabled()) {
+            return
+        }
+
         // Immediate feedback 1: Haptics
         HapticUtil.performHapticForService(this)
 
@@ -94,26 +100,28 @@ abstract class BaseTileService : TileService() {
         }
     }
 
+    protected fun areUnsupportedFeaturesEnabled(): Boolean =
+        SettingsRepository(this).isEnableUnsupportedFeatures()
+
     protected fun updateTile() {
         val tile = qsTile ?: return
+        val unsupportedDisabled = !isDeviceSupported() && !areUnsupportedFeaturesEnabled()
         val hasPerm = hasFeaturePermission()
         tile.state = when {
-            !hasPerm || isProcessing -> Tile.STATE_UNAVAILABLE
+            unsupportedDisabled || !hasPerm || isProcessing -> Tile.STATE_UNAVAILABLE
             else -> getTileState()
         }
         tile.label = getTileLabel()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             tile.subtitle = when {
+                unsupportedDisabled -> getString(R.string.disabled_on_this_device)
                 !hasPerm -> getString(R.string.permission_missing)
                 isProcessing -> "Working..."
                 else -> getTileSubtitle()
             }
         }
 
-        val icon = getTileIcon()
-        if (icon != null) {
-            tile.icon = icon
-        }
+        getTileIcon()?.let { tile.icon = it }
         tile.updateTile()
     }
 
@@ -123,11 +131,9 @@ abstract class BaseTileService : TileService() {
         secureSettingsCache[key]?.let { return it }
 
         try {
-            val value = Settings.Secure.getInt(contentResolver, key, -1)
-            if (value != -1) {
-                secureSettingsCache[key] = value
-                return value
-            }
+            val value = Settings.Secure.getInt(contentResolver, key)
+            secureSettingsCache[key] = value
+            return value
         } catch (_: SecurityException) {
             // Only fallback to shell on SecurityException
             return try {
@@ -158,11 +164,9 @@ abstract class BaseTileService : TileService() {
         secureSettingsCache[key]?.let { return it }
 
         try {
-            val value = Settings.Global.getInt(contentResolver, key, -1)
-            if (value != -1) {
-                secureSettingsCache[key] = value
-                return value
-            }
+            val value = Settings.Global.getInt(contentResolver, key)
+            secureSettingsCache[key] = value
+            return value
         } catch (_: SecurityException) {
             // Only fallback to shell on SecurityException
             return try {

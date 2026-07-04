@@ -44,6 +44,17 @@ class SettingsRepository(private val context: Context) {
         const val PREFS_NAME = "essentials_prefs"
 
         // Keys
+        const val KEY_DAILY_WALLPAPER_LAST_ID = "daily_wallpaper_last_id"
+        const val KEY_DAILY_WALLPAPER_LAST_URL_MOBILE = "daily_wallpaper_last_url_mobile"
+        const val KEY_DAILY_WALLPAPER_LAST_URL = "daily_wallpaper_last_url"
+        const val KEY_DAILY_WALLPAPER_AUTHOR_NAME = "daily_wallpaper_author_name"
+        const val KEY_DAILY_WALLPAPER_AUTHOR_LINK = "daily_wallpaper_author_link"
+        const val KEY_DAILY_WALLPAPER_PHOTO_LINK = "daily_wallpaper_photo_link"
+        const val KEY_DAILY_WALLPAPER_UPDATED_AT = "daily_wallpaper_updated_at"
+        const val KEY_DAILY_WALLPAPER_AUTO_UPDATE = "daily_wallpaper_auto_update"
+        const val KEY_DAILY_WALLPAPER_APPLY_HOME = "daily_wallpaper_apply_home"
+        const val KEY_DAILY_WALLPAPER_APPLY_LOCK = "daily_wallpaper_apply_lock"
+
         const val KEY_WIDGET_ENABLED = "widget_enabled"
         const val KEY_STATUS_BAR_ICON_CONTROL_ENABLED = "status_bar_icon_control_enabled"
         const val KEY_MAPS_POWER_SAVING_ENABLED = "maps_power_saving_enabled"
@@ -109,6 +120,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_FLASHLIGHT_PULSE_FACEDOWN_ONLY = "flashlight_pulse_facedown_only"
         const val KEY_FLASHLIGHT_PULSE_MAX_INTENSITY = "flashlight_pulse_max_intensity"
         const val KEY_FLASHLIGHT_PULSE_DISABLE_ON_DND = "flashlight_pulse_disable_on_dnd"
+        const val KEY_FLASHLIGHT_POCKET_TURN_OFF_ENABLED = "flashlight_pocket_turn_off_enabled"
 
         const val KEY_SCREEN_LOCKED_SECURITY_ENABLED = "screen_locked_security_enabled"
         const val KEY_HIDE_SYSTEM_ICONS = "hide_system_icons"
@@ -141,6 +153,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_DEFAULT_TAB = "default_tab"
         const val KEY_USE_ROOT = "use_root"
         const val KEY_PITCH_BLACK_THEME_ENABLED = "pitch_black_theme_enabled"
+        const val KEY_ENABLE_UNSUPPORTED_FEATURES = "enable_unsupported_features"
 
         const val KEY_KEYBOARD_HEIGHT = "keyboard_height"
         const val KEY_TRACKED_REPOS = "tracked_repos"
@@ -190,6 +203,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_REMOTE_LOCK_MODE = "remote_lock_mode" // 0: Screen off, 1: Lock
 
         const val KEY_GITHUB_ACCESS_TOKEN = "github_access_token"
+        const val KEY_GITHUB_WORKFLOW_TOKEN = "github_workflow_token"
         const val KEY_GITHUB_USER_PROFILE = "github_user_profile"
 
         const val KEY_FLASHLIGHT_PULSE_SELECTED_APPS = "flashlight_pulse_selected_apps"
@@ -267,6 +281,11 @@ class SettingsRepository(private val context: Context) {
         const val KEY_LOCK_SCREEN_CLOCK_SELECTED_COLOR_ID = "lock_screen_clock_selected_color_id"
         const val KEY_LOCK_SCREEN_CLOCK_SEED_COLOR = "lock_screen_clock_seed_color"
         const val KEY_RECENT_SEARCHES = "recent_searches"
+        const val KEY_POCKET_MODE_ENABLED = "pocket_mode_enabled"
+        const val KEY_POCKET_MODE_USE_LIGHT_SENSOR = "pocket_mode_use_light_sensor"
+        const val KEY_POCKET_MODE_EXCLUDED_APPS = "pocket_mode_excluded_apps"
+        const val KEY_POCKET_MODE_TRIGGER_DELAY = "pocket_mode_trigger_delay"
+        const val KEY_POCKET_MODE_LOCK_SCREEN_ONLY = "pocket_mode_lock_screen_only"
     }
 
     // Observe changes
@@ -525,6 +544,12 @@ class SettingsRepository(private val context: Context) {
 
     fun updateNotificationGlanceAppSelection(packageName: String, enabled: Boolean) =
         updateAppSelection(KEY_NOTIFICATION_GLANCE_SELECTED_APPS, packageName, enabled)
+
+    fun loadPocketModeExcludedApps() = loadAppSelection(KEY_POCKET_MODE_EXCLUDED_APPS)
+    fun savePocketModeExcludedApps(apps: List<AppSelection>) =
+        saveAppSelection(KEY_POCKET_MODE_EXCLUDED_APPS, apps)
+    fun updatePocketModeExcludedAppSelection(packageName: String, enabled: Boolean) =
+        updateAppSelection(KEY_POCKET_MODE_EXCLUDED_APPS, packageName, enabled)
 
     fun loadShutUpConfigs(): List<com.sameerasw.essentials.domain.model.ShutUpAppConfig> {
         val json = prefs.getString(KEY_SHUT_UP_SELECTED_APPS, null)
@@ -1031,6 +1056,25 @@ class SettingsRepository(private val context: Context) {
         awaitClose { prefs.unregisterOnSharedPreferenceChangeListener(listener) }
     }
 
+    fun getGitHubWorkflowToken(): String? {
+        return prefs.getString(KEY_GITHUB_WORKFLOW_TOKEN, null)
+    }
+
+    fun saveGitHubWorkflowToken(token: String?) {
+        prefs.edit().putString(KEY_GITHUB_WORKFLOW_TOKEN, token).apply()
+    }
+
+    val gitHubWorkflowToken: Flow<String?> = callbackFlow {
+        val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+            if (key == KEY_GITHUB_WORKFLOW_TOKEN) {
+                trySend(getString(KEY_GITHUB_WORKFLOW_TOKEN))
+            }
+        }
+        trySend(getString(KEY_GITHUB_WORKFLOW_TOKEN))
+        prefs.registerOnSharedPreferenceChangeListener(listener)
+        awaitClose { prefs.unregisterOnSharedPreferenceChangeListener(listener) }
+    }
+
     fun saveGitHubUser(user: GitHubUser?) {
         if (user == null) {
             prefs.edit().remove(KEY_GITHUB_USER_PROFILE).apply()
@@ -1063,6 +1107,12 @@ class SettingsRepository(private val context: Context) {
     fun setBatteryNotificationEnabled(enabled: Boolean) =
         putBoolean(KEY_BATTERY_NOTIFICATION_ENABLED, enabled)
 
+    fun isEnableUnsupportedFeatures(): Boolean =
+        getBoolean(KEY_ENABLE_UNSUPPORTED_FEATURES, false)
+
+    fun setEnableUnsupportedFeatures(enabled: Boolean) =
+        putBoolean(KEY_ENABLE_UNSUPPORTED_FEATURES, enabled)
+
     // Live Wallpaper Helpers
     private val liveWallpaperPrefs: SharedPreferences by lazy {
         context.getSharedPreferences(LIVE_WALLPAPER_PREFS_NAME, Context.MODE_PRIVATE)
@@ -1088,14 +1138,18 @@ class SettingsRepository(private val context: Context) {
     fun saveLiveWallpaperPlaybackTrigger(trigger: String) =
         liveWallpaperPrefs.edit().putString(KEY_LIVE_WALLPAPER_PLAYBACK_TRIGGER, trigger).apply()
 
-    fun getLiveWallpaperCustomVideos(): List<String> =
-        liveWallpaperPrefs.getString(KEY_LIVE_WALLPAPER_CUSTOM_VIDEOS, "")?.split(",")
-            ?.filter { it.isNotEmpty() }
-            ?: emptyList()
+    fun getLiveWallpaperCustomVideos(): List<String> {
+        val stored = liveWallpaperPrefs.getString(KEY_LIVE_WALLPAPER_CUSTOM_VIDEOS, "") ?: ""
+        val delimiter = if (!stored.contains("\n") && stored.contains(",")) "," else "\n"
+        return stored.split(delimiter)
+            .map { it.trim() }
+            .filter { it.isNotEmpty() }
+            .distinct()
+    }
 
     fun saveLiveWallpaperCustomVideos(videos: List<String>) =
         liveWallpaperPrefs.edit()
-            .putString(KEY_LIVE_WALLPAPER_CUSTOM_VIDEOS, videos.joinToString(",")).apply()
+            .putString(KEY_LIVE_WALLPAPER_CUSTOM_VIDEOS, videos.filter { it.isNotEmpty() }.distinct().joinToString("\n")).apply()
 
     fun addLiveWallpaperCustomVideo(uri: String) {
         val current = getLiveWallpaperCustomVideos().toMutableList()
@@ -1109,17 +1163,18 @@ class SettingsRepository(private val context: Context) {
     fun getLiveWallpaperAvailableVideos(): List<String> {
         val raws = com.sameerasw.essentials.R.raw::class.java.fields.mapNotNull { field ->
             try {
-                if (field.name == "keep") null else field.name
+                if (field.name.startsWith("loop_")) field.name else null
             } catch (e: Exception) {
                 null
             }
         }
-        return raws + getLiveWallpaperCustomVideos()
+        return (raws + getLiveWallpaperCustomVideos()).filter { it.isNotBlank() }.distinct()
     }
 
     fun removeLiveWallpaperCustomVideo(videoUri: String) {
         val current = getLiveWallpaperCustomVideos().toMutableList()
-        if (current.remove(videoUri)) {
+        val removed = current.removeAll { it == videoUri || it.isBlank() }
+        if (removed) {
             saveLiveWallpaperCustomVideos(current)
             // If the removed video was selected, revert to default
             if (getLiveWallpaperSelectedVideo() == videoUri) {
@@ -1127,6 +1182,18 @@ class SettingsRepository(private val context: Context) {
             }
         }
     }
+
+    fun getDailyWallpaperApplyHome(): Boolean =
+        getBoolean(KEY_DAILY_WALLPAPER_APPLY_HOME, true)
+
+    fun setDailyWallpaperApplyHome(value: Boolean) =
+        putBoolean(KEY_DAILY_WALLPAPER_APPLY_HOME, value)
+
+    fun getDailyWallpaperApplyLock(): Boolean =
+        getBoolean(KEY_DAILY_WALLPAPER_APPLY_LOCK, true)
+
+    fun setDailyWallpaperApplyLock(value: Boolean) =
+        putBoolean(KEY_DAILY_WALLPAPER_APPLY_LOCK, value)
 
     fun getFontScale(): Float {
         return try {

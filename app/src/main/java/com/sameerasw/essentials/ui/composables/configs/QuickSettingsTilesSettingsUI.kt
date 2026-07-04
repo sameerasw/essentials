@@ -2,6 +2,7 @@ package com.sameerasw.essentials.ui.composables.configs
 
 import android.app.Activity
 import android.app.StatusBarManager
+import android.content.Context
 import android.content.ComponentName
 import android.graphics.drawable.Icon
 import android.os.Build
@@ -35,6 +36,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -43,7 +45,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sameerasw.essentials.R
@@ -74,6 +75,7 @@ import com.sameerasw.essentials.services.tiles.UiBlurTileService
 import com.sameerasw.essentials.services.tiles.UsbDebuggingTileService
 import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
+import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.utils.PermissionUtils
 import com.sameerasw.essentials.utils.ShellUtils
@@ -85,7 +87,8 @@ data class QSTileInfo(
     val serviceClass: Class<*>,
     val permissionKeys: List<String> = emptyList(),
     val aboutDescription: Int? = null,
-    val categoryRes: Int
+    val categoryRes: Int,
+    val isSupported: (Context) -> Boolean = { true }
 )
 
 @Composable
@@ -95,8 +98,10 @@ fun QuickSettingsTilesSettingsUI(
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     val context = LocalContext.current
+    val resources = context.resources
     LocalView.current
     val viewModel: MainViewModel = viewModel()
+    val includeUnsupportedFeatures by viewModel.isEnableUnsupportedFeatures
 
     var showPermissionSheet by remember { mutableStateOf(false) }
     var selectedTileForPermissions by remember { mutableStateOf<QSTileInfo?>(null) }
@@ -110,7 +115,7 @@ fun QuickSettingsTilesSettingsUI(
 
 
     val isUseUsageStats by viewModel.isUseUsageAccess
-    val tiles = listOf(
+    val allTiles = listOf(
         QSTileInfo(
             R.string.tile_ui_blur,
             R.drawable.rounded_blur_on_24,
@@ -330,9 +335,12 @@ fun QuickSettingsTilesSettingsUI(
             ChargeQuickTileService::class.java,
             if (ShellUtils.isRootEnabled(context)) listOf("ROOT") else listOf("SHIZUKU"),
             R.string.about_desc_charge_optimization,
-            R.string.cat_utils
+            R.string.cat_utils,
+            isSupported = { _ -> DeviceUtils.isGoogleDevice() }
         )
     )
+
+    val tiles = allTiles.filter { tile -> tile.isSupported(context) || includeUnsupportedFeatures }
 
     if (showPermissionSheet && selectedTileForPermissions != null) {
         val permissionItems = PermissionUIHelper.getPermissionItems(
@@ -472,7 +480,7 @@ fun QuickSettingsTilesSettingsUI(
                                 .weight(1f)
                                 .highlight(
                                     highlightSetting.equals(
-                                        context.getString(tile.titleRes),
+                                        resources.getString(tile.titleRes),
                                         ignoreCase = true
                                     )
                                 ),
@@ -491,14 +499,14 @@ fun QuickSettingsTilesSettingsUI(
 
                                         statusBarManager.requestAddTileService(
                                             componentName,
-                                            context.getString(tile.titleRes),
+                                            resources.getString(tile.titleRes),
                                             Icon.createWithResource(context, tile.iconRes),
                                             context.mainExecutor
                                         ) { result ->
                                             if (result == StatusBarManager.TILE_ADD_REQUEST_RESULT_TILE_ALREADY_ADDED) {
                                                 Toast.makeText(
                                                     context,
-                                                    context.getString(R.string.qs_tile_already_added),
+                                                    resources.getString(R.string.qs_tile_already_added),
                                                     Toast.LENGTH_SHORT
                                                 ).show()
                                             }
@@ -506,7 +514,7 @@ fun QuickSettingsTilesSettingsUI(
                                     } else {
                                         Toast.makeText(
                                             context,
-                                            context.getString(R.string.qs_tile_requires_android_13),
+                                            resources.getString(R.string.qs_tile_requires_android_13),
                                             Toast.LENGTH_SHORT
                                         ).show()
                                     }

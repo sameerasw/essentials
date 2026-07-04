@@ -45,6 +45,8 @@ abstract class Feature(
 
     open fun isToggleEnabled(viewModel: MainViewModel, context: Context): Boolean = true
 
+    open fun isDeviceSupported(context: Context): Boolean = true
+
     abstract fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean)
 
     open fun onClick(context: Context, viewModel: MainViewModel) {

@@ -32,6 +32,12 @@ data class DeviceInfo(
 )
 
 object DeviceUtils {
+    fun isGoogleDevice(): Boolean {
+        return Build.MANUFACTURER.equalsIgnoreCase("google") ||
+            Build.BRAND.equalsIgnoreCase("google") ||
+            Build.PRODUCT.contains("pixel", ignoreCase = true)
+    }
+
     fun getDeviceInfo(context: Context): DeviceInfo {
         val deviceName = try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {

@@ -8,10 +8,33 @@ import com.sameerasw.essentials.domain.model.Feature
 import com.sameerasw.essentials.domain.model.SearchSetting
 import com.sameerasw.essentials.ui.activities.WatermarkActivity
 import com.sameerasw.essentials.ui.activities.PixelSearchbarSettingsActivity
+import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.ShellUtils
 import com.sameerasw.essentials.viewmodels.MainViewModel
 
 object FeatureRegistry {
+    fun getFilteredFeatures(context: Context, includeUnsupported: Boolean): List<Feature> {
+        val featureMap = ALL_FEATURES.associateBy { it.id }
+        val supportCache = mutableMapOf<String, Boolean>()
+
+        fun isVisible(feature: Feature): Boolean {
+            supportCache[feature.id]?.let { return it }
+
+            val supported = includeUnsupported || feature.isDeviceSupported(context)
+            val visible = supported && (feature.parentFeatureId?.let { parentId ->
+                featureMap[parentId]?.let { parent -> isVisible(parent) } ?: true
+            } ?: true)
+
+            supportCache[feature.id] = visible
+            return visible
+        }
+
+        return ALL_FEATURES.filter { isVisible(it) }
+    }
+
+    fun getUnsupportedFeatures(context: Context): List<Feature> =
+        ALL_FEATURES.filter { !it.isDeviceSupported(context) }
+
     val ALL_FEATURES = listOf(
         // Sound Group Children
         object : Feature(
@@ -239,6 +262,7 @@ object FeatureRegistry {
         ) {
             override fun isEnabled(viewModel: MainViewModel) = true
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+            override fun isDeviceSupported(context: Context) = DeviceUtils.isGoogleDevice()
         },
         object : Feature(
             id = "Watch",
@@ -298,6 +322,7 @@ object FeatureRegistry {
             override fun onClick(context: Context, viewModel: MainViewModel) {
                 context.startActivity(Intent(context, PixelSearchbarSettingsActivity::class.java))
             }
+            override fun isDeviceSupported(context: Context) = DeviceUtils.isGoogleDevice()
         },
 
         object : Feature(
@@ -745,6 +770,12 @@ object FeatureRegistry {
                     R.string.search_remap_flashlight_desc,
                     "flashlight_toggle",
                     R.array.keywords_flashlight
+                ),
+                SearchSetting(
+                    R.string.search_flashlight_pocket_title,
+                    R.string.search_flashlight_pocket_desc,
+                    "flashlight_options",
+                    R.array.keywords_pocket_detection
                 )
             ),
             parentFeatureId = "Input",
@@ -806,10 +837,10 @@ object FeatureRegistry {
             title = R.string.feat_live_wallpaper_title,
             iconRes = R.drawable.rounded_slow_motion_video_24,
             category = R.string.cat_interface,
-            parentFeatureId = "Display",
             description = R.string.feat_live_wallpaper_desc,
             aboutDescription = R.string.about_desc_live_wallpaper,
-            showToggle = false
+            showToggle = false,
+            isVisibleInMain = false
         ) {
             override fun isEnabled(viewModel: MainViewModel) = true
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
@@ -912,6 +943,23 @@ object FeatureRegistry {
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
         },
 
+        object : Feature(
+            id = "Pocket mode",
+            title = R.string.feat_pocket_mode_title,
+            iconRes = R.drawable.ic_pocket_mode,
+            category = R.string.cat_display,
+            description = R.string.feat_pocket_mode_desc,
+            permissionKeys = listOf("ACCESSIBILITY"),
+            aboutDescription = R.string.feat_pocket_mode_desc,
+            parentFeatureId = "Display",
+            hasMoreSettings = true,
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = viewModel.isPocketModeEnabled.value
+
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
+                viewModel.setPocketModeEnabled(enabled)
+            override fun isDeviceSupported(context: Context) = !DeviceUtils.isGoogleDevice()
+        },
         object : Feature(
             id = "Location reached",
             title = R.string.feat_location_reached_title,
@@ -1039,6 +1087,21 @@ object FeatureRegistry {
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
             override fun onClick(context: Context, viewModel: MainViewModel) {
                 context.startActivity(Intent(context, WatermarkActivity::class.java))
+            }
+        },
+
+        object : Feature(
+            id = "Daily Wallpaper",
+            title = R.string.feat_daily_wallpaper_title,
+            iconRes = R.drawable.rounded_wallpaper_24,
+            category = R.string.cat_tools,
+            description = R.string.feat_daily_wallpaper_desc,
+            showToggle = false
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = true
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+            override fun onClick(context: Context, viewModel: MainViewModel) {
+                context.startActivity(Intent(context, com.sameerasw.essentials.ui.activities.WallpaperActivity::class.java))
             }
         },
 
@@ -1274,6 +1337,7 @@ object FeatureRegistry {
         ) {
             override fun isEnabled(viewModel: MainViewModel) = false
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+            override fun isDeviceSupported(context: Context) = DeviceUtils.isGoogleDevice()
         }
     )
 }

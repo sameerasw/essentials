@@ -792,7 +792,6 @@ class AutomationEditorActivity : ComponentActivity() {
                                 }
                             )
                         }
-
                         // Bottom Actions
                         Row(
                             modifier = Modifier

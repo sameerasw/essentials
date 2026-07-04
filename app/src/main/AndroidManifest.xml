@@ -57,6 +57,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.SET_WALLPAPER" />
 
     <application
         android:name=".EssentialsApp"
@@ -356,6 +357,12 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.activities.WallpaperActivity"
+            android:exported="false"
+            android:label="@string/feat_daily_wallpaper_title"
+            android:theme="@style/Theme.Essentials" />
 
         <service
             android:name=".services.tiles.ScreenOffAccessibilityService"
@@ -876,6 +883,19 @@
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
                 <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />
+            </intent-filter>
+            <meta-data android:name="android.service.quicksettings.TILE_CATEGORY"
+                android:value="android.service.quicksettings.CATEGORY_DISPLAY" />
+        </service>
+
+        <service
+            android:name=".services.tiles.PocketModeTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_pocket_mode"
+            android:label="@string/feat_pocket_mode_title"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
             <meta-data android:name="android.service.quicksettings.TILE_CATEGORY"
                 android:value="android.service.quicksettings.CATEGORY_DISPLAY" />
