@@ -84,6 +84,8 @@ fun WallpaperScreen(
     var availableVideos by remember { mutableStateOf(repository.getLiveWallpaperAvailableVideos()) }
     var selectedVideo by remember { mutableStateOf(repository.getLiveWallpaperSelectedVideo()) }
     var playbackTrigger by remember { mutableStateOf(repository.getLiveWallpaperPlaybackTrigger()) }
+    var applyHome by remember { mutableStateOf(repository.getDailyWallpaperApplyHome()) }
+    var applyLock by remember { mutableStateOf(repository.getDailyWallpaperApplyLock()) }
 
     var showHelpSheet by remember { mutableStateOf(false) }
     var showSettingsCard by remember { mutableStateOf(false) }
@@ -397,25 +399,67 @@ fun WallpaperScreen(
                             .padding(bottom = 12.dp)
                     ) {
                         if (pagerState.currentPage == 0) {
-                            Row(
+                            Column(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(16.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
+                                verticalArrangement = Arrangement.spacedBy(12.dp)
                             ) {
-                                Text(
-                                    text = stringResource(R.string.label_wallpaper_auto_update),
-                                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                                Switch(
-                                    checked = isAutoUpdateEnabled,
-                                    onCheckedChange = { checked ->
-                                        HapticUtil.performUIHaptic(view)
-                                        viewModel.setDailyWallpaperAutoUpdate(checked, context)
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text(
+                                        text = stringResource(R.string.label_wallpaper_auto_update),
+                                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                    Switch(
+                                        checked = isAutoUpdateEnabled,
+                                        onCheckedChange = { checked ->
+                                            HapticUtil.performUIHaptic(view)
+                                            viewModel.setDailyWallpaperAutoUpdate(checked, context)
+                                        }
+                                    )
+                                }
+
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(top = 4.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    ToggleButton(
+                                        checked = applyHome,
+                                        onCheckedChange = {
+                                            if (!applyHome || applyLock) {
+                                                HapticUtil.performUIHaptic(view)
+                                                applyHome = !applyHome
+                                                repository.setDailyWallpaperApplyHome(applyHome)
+                                            }
+                                        },
+                                        shapes = ButtonGroupDefaults.connectedLeadingButtonShapes(),
+                                        modifier = Modifier.weight(1f)
+                                    ) {
+                                        Text("Home Screen")
                                     }
-                                )
+                                    ToggleButton(
+                                        checked = applyLock,
+                                        onCheckedChange = {
+                                            if (!applyLock || applyHome) {
+                                                HapticUtil.performUIHaptic(view)
+                                                applyLock = !applyLock
+                                                repository.setDailyWallpaperApplyLock(applyLock)
+                                            }
+                                        },
+                                        shapes = ButtonGroupDefaults.connectedTrailingButtonShapes(),
+                                        modifier = Modifier.weight(1f)
+                                    ) {
+                                        Text("Lock Screen")
+                                    }
+                                }
                             }
                         } else {
                             Column(

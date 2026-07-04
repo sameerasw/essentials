@@ -483,6 +483,7 @@
     <string name="label_wallpaper_by">Photo by</string>
     <string name="label_wallpaper_applied">Wallpaper applied successfully</string>
     <string name="label_wallpaper_apply_failed">Failed to apply wallpaper</string>
+    <string name="label_wallpaper_applying">Applying new wallpaper</string>
     <string name="label_wallpaper_auto_update">Auto-update</string>
     <string name="label_wallpaper_auto_update_desc">Checks twice a day for a new wallpaper on a background schedule</string>
     <string name="label_clear_custom_videos">Clear custom videos</string>

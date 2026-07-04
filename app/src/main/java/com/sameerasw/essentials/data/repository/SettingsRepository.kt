@@ -52,6 +52,8 @@ class SettingsRepository(private val context: Context) {
         const val KEY_DAILY_WALLPAPER_PHOTO_LINK = "daily_wallpaper_photo_link"
         const val KEY_DAILY_WALLPAPER_UPDATED_AT = "daily_wallpaper_updated_at"
         const val KEY_DAILY_WALLPAPER_AUTO_UPDATE = "daily_wallpaper_auto_update"
+        const val KEY_DAILY_WALLPAPER_APPLY_HOME = "daily_wallpaper_apply_home"
+        const val KEY_DAILY_WALLPAPER_APPLY_LOCK = "daily_wallpaper_apply_lock"
 
         const val KEY_WIDGET_ENABLED = "widget_enabled"
         const val KEY_STATUS_BAR_ICON_CONTROL_ENABLED = "status_bar_icon_control_enabled"
@@ -1141,6 +1143,18 @@ class SettingsRepository(private val context: Context) {
             }
         }
     }
+
+    fun getDailyWallpaperApplyHome(): Boolean =
+        getBoolean(KEY_DAILY_WALLPAPER_APPLY_HOME, true)
+
+    fun setDailyWallpaperApplyHome(value: Boolean) =
+        putBoolean(KEY_DAILY_WALLPAPER_APPLY_HOME, value)
+
+    fun getDailyWallpaperApplyLock(): Boolean =
+        getBoolean(KEY_DAILY_WALLPAPER_APPLY_LOCK, true)
+
+    fun setDailyWallpaperApplyLock(value: Boolean) =
+        putBoolean(KEY_DAILY_WALLPAPER_APPLY_LOCK, value)
 
     fun getFontScale(): Float {
         return try {
