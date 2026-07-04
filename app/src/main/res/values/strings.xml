@@ -1651,7 +1651,7 @@
     <string name="pocket_mode_use_light_desc">Use ambient light level in addition to proximity for better accuracy</string>
     <string name="pocket_mode_active">Pocket mode active</string>
     <string name="pocket_mode_dismiss_hint">Press any volume key to dismiss</string>
-    <string name="pocket_mode_warning">Warning: On some devices with missing sensors, enabling Pocket Mode may break deep sleep and cause higher battery drain</string>
+    <string name="pocket_mode_warning">Warning: On some devices with missing sensors, enabling Pocket Mode may break deep sleep and cause higher battery drain. \This is not necessary for Google Pixel devices as they already got the feature built-in.</string>
     <string name="pocket_mode_exclude_apps_title">Exclude apps</string>
     <string name="pocket_mode_exclude_apps_desc">Choose apps where Pocket Mode should not trigger. Pocket mode will not work when streaming or gaming by default</string>
     <string name="pocket_mode_trigger_delay_title">Trigger delay</string>
