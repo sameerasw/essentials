@@ -101,8 +101,8 @@
     <string name="settings_section_other">Diğer</string>
     <string name="flashlight_always_off_title">El fenerini her zaman kapat</string>
     <string name="flashlight_always_off_desc">Ekran açıkken bile</string>
-    <string name="flashlight_pocket_title">Pocket detection</string>
-    <string name="flashlight_pocket_desc">Turn off flashlight when phone is in your pocket</string>
+    <string name="flashlight_pocket_title">Cep tespiti</string>
+    <string name="flashlight_pocket_desc">Telefon cebinizdeyken el fenerini kapatın</string>
     <string name="content_desc_settings">Ayarlar</string>
     <!-- Caffeinate / Permissions -->
     <string name="permission_show_notification_title">Bildirimi Göster</string>
@@ -395,13 +395,13 @@
     <string name="search_no_results">\"%1$s\" için sonuç yok</string>
     <string name="search_results_title">Arama Sonuçları</string>
     <string name="requires_following_permissions">%1$s aşağıdaki izinleri gerektirir</string>
-    <string name="setting_enable_unsupported_features_title">Enable unsupported features</string>
-    <string name="setting_enable_unsupported_features_desc">Show OEM-specific or redundant features that are hidden by default.</string>
-    <string name="unsupported_features_warning_title">Enable unsupported features?</string>
-    <string name="unsupported_features_warning_desc">These features may not work on every device and could require extra permissions or root access.</string>
-    <string name="unsupported_features_confirm">Enable anyway</string>
-    <string name="unsupported_features_cancel">Cancel</string>
-    <string name="disabled_on_this_device">Disabled on this device</string>
+    <string name="setting_enable_unsupported_features_title">Desteklenmeyen özellikleri etkinleştir</string>
+    <string name="setting_enable_unsupported_features_desc">Varsayılan olarak gizlenmiş olan, üreticiye özgü veya gereksiz özellikleri göster.</string>
+    <string name="unsupported_features_warning_title">Desteklenmeyen özellikler etkinleştirilsin mi?</string>
+    <string name="unsupported_features_warning_desc">Bu özellikler her cihazda çalışmayabilir ve ek izinler veya root erişimi gerektirebilir.</string>
+    <string name="unsupported_features_confirm">Yine de etkinleştir</string>
+    <string name="unsupported_features_cancel">İptal</string>
+    <string name="disabled_on_this_device">Bu cihazda devre dışı bırakıldı</string>
     <!-- Features -->
     <string name="feat_screen_off_widget_title">Ekran kapatma widget\'ı</string>
     <string name="feat_screen_off_widget_desc">Ekranı kapatmak için görünmez widget</string>
@@ -468,16 +468,16 @@
     <string name="feat_freeze_desc">Nadiren kullanılan uygulamaları devre dışı bırakın</string>
     <string name="feat_watermark_title">Filigran</string>
     <string name="feat_watermark_desc">Fotoğraflara EXIF ​​verileri ve logolar ekleme</string>
-    <string name="feat_daily_wallpaper_title">Wallpaper</string>
+    <string name="feat_daily_wallpaper_title">Duvar kağıdı</string>
     <string name="feat_daily_wallpaper_desc">Daily curated handpicked wallpaper</string>
-    <string name="label_wallpaper_apply">Apply Wallpaper</string>
-    <string name="label_wallpaper_by">Photo by</string>
-    <string name="label_wallpaper_applied">Wallpaper applied successfully</string>
-    <string name="label_wallpaper_apply_failed">Failed to apply wallpaper</string>
-    <string name="label_wallpaper_applying">Applying new wallpaper</string>
-    <string name="label_wallpaper_auto_update">Auto-update</string>
-    <string name="label_wallpaper_auto_update_desc">Checks twice a day for a new wallpaper on a background schedule</string>
-    <string name="label_clear_custom_videos">Clear custom videos</string>
+    <string name="label_wallpaper_apply">Duvar kağıdı uygula</string>
+    <string name="label_wallpaper_by">Fotoğrafın sahibi:</string>
+    <string name="label_wallpaper_applied">Duvar kağıdı başarıyla uygulandı</string>
+    <string name="label_wallpaper_apply_failed">Duvar kağıdı uygulanamadı</string>
+    <string name="label_wallpaper_applying">Yeni duvar kağıdı uygulanıyor</string>
+    <string name="label_wallpaper_auto_update">Otomatik güncelleme</string>
+    <string name="label_wallpaper_auto_update_desc">Arka planda yeni bir duvar kağıdı olup olmadığını günde iki kez kontrol eder</string>
+    <string name="label_clear_custom_videos">Özel videoları temizle</string>
     <string name="feat_always_on_display_title">Her Zaman Açık Ekran</string>
     <string name="feat_always_on_display_desc">Ekran kapalıyken saati ve bilgileri göster</string>
     <string name="feat_calendar_sync_title">Takvim Senkronizasyonu</string>
@@ -598,8 +598,8 @@
     <string name="search_remap_haptic_desc">Yeniden eşlenen düğmeye basıldığında titreşim geri bildirimi</string>
     <string name="search_remap_flashlight_title">El feneri geçişi</string>
     <string name="search_remap_flashlight_desc">El fenerini ses düğmeleriyle değiştir</string>
-    <string name="search_flashlight_pocket_title">Flashlight pocket detection</string>
-    <string name="search_flashlight_pocket_desc">Auto-turn off flashlight when placed in pocket</string>
+    <string name="search_flashlight_pocket_title">El feneri cepte algılama</string>
+    <string name="search_flashlight_pocket_desc">Cepteyken el feneri otomatik olarak kapanır</string>
     <string name="search_night_light_enable_title">Dinamik Gece Işığını Etkinleştir</string>
     <string name="search_night_light_enable_desc">Dinamik gece lambası için ana anahtar</string>
     <string name="search_app_lock_enable_title">Uygulama kilidini etkinleştir</string>
@@ -650,8 +650,8 @@
     <string name="perm_action_enable">Ayarlar\'da etkinleştir</string>
     <string name="perm_action_how_to">Nasıl verilir</string>
     <string name="perm_action_granted">Verildi</string>
-    <string name="perm_action_grant_shizuku">Grant using Shizuku</string>
-    <string name="perm_write_secure_instructions">This permission can be granted either via a PC using ADB. Copy the ADB command and run on the shell.\n\nOr you can easily grant it using Shizuku from the below button.\n\nThis permission only needs to be granted once.</string>
+    <string name="perm_action_grant_shizuku">Shizuku kullanarak izin ver</string>
+    <string name="perm_write_secure_instructions">Bu izin, ADB kullanarak bir bilgisayar üzerinden verilebilir. ADB komutunu kopyalayın ve kabukta çalıştırın.\n\nYa da aşağıdaki butonu kullanarak Shizuku kullanarak kolayca izin verebilirsiniz.\n\nBu iznin yalnızca bir kez verilmesi yeterlidir.</string>
     <string name="perm_battery_optimization_title">Pil Optimizasyonu</string>
     <string name="perm_battery_optimization_desc">Güç tasarrufu sağlamak için hizmetin sistem tarafından sonlandırılmadığından emin olun.</string>
     <!-- Tabs -->
@@ -956,11 +956,11 @@
         <item>bildiri</item>
     </string-array>
     <string-array name="keywords_pocket_detection">
-        <item>pocket</item>
-        <item>proximity</item>
-        <item>sensor</item>
-        <item>torch</item>
-        <item>auto</item>
+        <item>cep</item>
+        <item>yakınlık</item>
+        <item>sensör</item>
+        <item>el feneri</item>
+        <item>otomatik</item>
     </string-array>
     <string-array name="keywords_qs_stay_awake">
         <item>uyanmak</item>
@@ -1140,7 +1140,7 @@
     <string name="instruction_section_maps_title">Haritalar güç tasarrufu modu</string>
     <string name="instruction_section_maps_desc">Bu özellik, şu anda Pixel 10 serisine özel olan Google Haritalar güç tasarrufu modunu otomatik olarak tetikler. Bir topluluk üyesi, haritaların minMode etkinliğini kök ayrıcalıklarıyla başlatarak herhangi bir Android cihazda hala kullanılabilir olduğunu keşfetti. \n\nVe ardından, bir gezinme oturumu sırasında ekran kapandığında otomatik olarak tetiklenecek şekilde Tasker ile otomatik hale getirdim ve ardından sadece çalışma zamanı Shizuku izinleriyle aynı şeyi başarabildim. \n\nBu özellik, Pixel 10 serisinin AOD\'sinde gösterilmek üzere tasarlanmıştır; bu nedenle, zaman zaman ekranda yatay modu desteklemediğine dair bir mesaj belirebilir.
  Bu, uygulama tarafından önlenemez ve göz ardı edebilirsiniz.</string>
-    <string name="instruction_section_silent_title">Sessiz ses modu</string>
+    <string name="instruction_section_silent_title">Sessiz mod</string>
     <string name="instruction_section_silent_desc">Sessiz modun aynı zamanda DND\'yi de tetiklediğini fark etmiş olabilirsiniz. \n\nBu, Android\'in bunu uygulama şeklinden kaynaklanmaktadır; titreşim moduna geçmek için aynı API\'yi kullansak bile, nedense sessiz modla birlikte DND\'yi de açar ve bu şu anda önlenebilir değil. :(</string>
     <string name="instruction_section_freeze_title">Dondurmak nedir?</string>
     <string name="instruction_section_freeze_desc">Uygulamaları duraklatın ve dikkatinizi dağıtacak şeylerden uzak durun, aynı zamanda arka planda çalışan uygulamaları önleyerek biraz güç tasarrufu yapın. Nadiren kullanılan uygulamalar için uygundur. \n\nSiz dondurmayı çözmediğiniz sürece acil bir durumda sizi bilgilendirmeyecekleri için herhangi bir iletişim hizmeti için önerilmez. \n\nSistem kararsızlığına yol açabileceğinden sistem uygulamalarını dondurmamanız önemle tavsiye edilir. Dikkatli ilerleyin, Uyarıldınız. \n\nDolu\'dan İlham Alındı ​​&lt;3</string>
@@ -1302,13 +1302,13 @@
     <string name="watch_help_title">Saate yükle</string>
     <string name="watch_help_description">Saat özelliklerini kullanmak için Wear OS saatinize Essentials yardımcı uygulamasını yüklemeniz gerekir. Play Store\'u doğrudan saatinizde açmak için aşağıdaki düğmeye tıklayın.</string>
     <string name="watch_help_open_play_store">Saatte Aç</string>
-    <string name="feat_watch_controls_title">Customize</string>
-    <string name="feat_watch_controls_desc">Customize WearOS app controls</string>
-    <string name="watch_controls_long_press_hint">Long press to enable or disable buttons</string>
-    <string name="watch_controls_reorder_title">Reorder watch controls</string>
-    <string name="feat_watch_wireless_debugging_title">Wireless Debugging</string>
-    <string name="feat_watch_wireless_debugging_desc">Enable remotely</string>
-    <string name="feat_sync_sound_mode_title">Sync sound mode</string>
+    <string name="feat_watch_controls_title">Özelleştirme</string>
+    <string name="feat_watch_controls_desc">WearOS uygulama kontrollerini özelleştirin</string>
+    <string name="watch_controls_long_press_hint">Düğmeleri etkinleştirmek veya devre dışı bırakmak için uzun basın</string>
+    <string name="watch_controls_reorder_title">Saat kontrollerini yeniden sırala</string>
+    <string name="feat_watch_wireless_debugging_title">Kablosuz Hata Ayıklama</string>
+    <string name="feat_watch_wireless_debugging_desc">Uzaktan etkinleştirin</string>
+    <string name="feat_sync_sound_mode_title">Ses modu senkronizasyonu</string>
     <string name="feat_sync_sound_mode_desc">Automatically sync with watch</string>
     <string name="perm_watch_write_secure_title">Watch Secure Settings</string>
     <string name="perm_watch_write_secure_desc">Requires secure settings write permission on your Watch. Grant it using the ADB command below.</string>
