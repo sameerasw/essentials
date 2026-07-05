@@ -1571,7 +1571,7 @@
     <string name="pocket_mode_warning">警告：一部のセンサーを搭載していないデバイスでは、「ポケットモード」を有効にするとディープスリープが阻害され、バッテリーの消費が早まる可能性があります</string>
     <string name="pocket_mode_exclude_apps_title">除外アプリ</string>
     <string name="pocket_mode_exclude_apps_desc">ポケットモードが動作しないようにするアプリを選択してください。デフォルトでは、ストリーミングやゲーム中は起動しないようになっています</string>
-    <string name="pocket_mode_trigger_delay_title">Trigger delay</string>
+    <string name="pocket_mode_trigger_delay_title">トリガー遅延</string>
     <string name="pocket_mode_lock_screen_only_title">ロック画面のみ</string>
     <string name="pocket_mode_lock_screen_only_desc">デバイスがロックされているときのみポケットモードをオンにする</string>
 </resources>
