@@ -16,15 +16,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -527,20 +527,17 @@ fun YourAndroidContent(
                     .padding(32.dp)
             )
         } else if (trackedRepos.isEmpty()) {
-            androidx.compose.material3.Card(
-                modifier = Modifier
-                    .background(
-                        MaterialTheme.colorScheme.surfaceBright
-                    )
-                    .fillMaxWidth()
-                    .graphicsLayer {
-                        alpha = contentAlphaState.value
-                        translationY = contentOffsetState.value.toPx()
-                    },
-                shape = MaterialTheme.shapes.large
+            RoundedCardContainer(
+                modifier = Modifier.graphicsLayer {
+                    alpha = contentAlphaState.value
+                    translationY = contentOffsetState.value.toPx()
+                }
             ) {
                 Column(
-                    modifier = Modifier.padding(24.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.surfaceBright)
+                        .padding(32.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
@@ -549,17 +546,26 @@ fun YourAndroidContent(
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Button(onClick = onAddRepoClick) {
-                        Text(stringResource(R.string.action_add_repository))
-                    }
-                    Spacer(modifier = Modifier.height(24.dp))
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.surfaceBright)
+                        .padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
                     ImportExportButtons(
+                        modifier = Modifier.wrapContentWidth().weight(1f),
                         view = view,
                         exportLauncher = exportLauncher,
                         importLauncher = importLauncher,
                         showExport = false
                     )
+                    Button(onClick = onAddRepoClick, modifier = Modifier.weight(1f)) {
+                        Text(stringResource(R.string.action_add_repository))
+                    }
                 }
             }
         } else {
