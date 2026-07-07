@@ -92,10 +92,12 @@ import com.sameerasw.essentials.ui.components.pickers.DefaultTabPicker
 import com.sameerasw.essentials.ui.components.pickers.LanguagePicker
 import com.sameerasw.essentials.ui.components.sheets.InstructionsBottomSheet
 import com.sameerasw.essentials.ui.components.sheets.UnsupportedFeaturesConfirmationSheet
+import com.sameerasw.essentials.ui.components.sheets.ImportConfigConfirmationSheet
 import com.sameerasw.essentials.ui.components.sheets.UpdateBottomSheet
 import com.sameerasw.essentials.ui.modifiers.BlurDirection
 import com.sameerasw.essentials.ui.modifiers.progressiveBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
+import com.sameerasw.essentials.ui.theme.Shapes
 import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionUtils
@@ -261,6 +263,30 @@ fun SettingsContent(
     var showInstructionsSheet by remember { mutableStateOf(false) }
     var showShizukuHelpBottomSheet by remember { mutableStateOf(false) }
     var showUnsupportedFeaturesSheet by remember { mutableStateOf(false) }
+    var showImportConfirmSheet by remember { mutableStateOf(false) }
+    var selectedImportUri by remember { mutableStateOf<Uri?>(null) }
+
+    val onImportConfig: (Boolean) -> Unit = { keepPrefs ->
+        selectedImportUri?.let { uri ->
+            try {
+                context.contentResolver.openInputStream(uri)?.use { inputStream ->
+                    if (viewModel.importConfigs(context, inputStream, keepPrefs)) {
+                        Toast.makeText(context, "Config imported successfully", Toast.LENGTH_SHORT)
+                            .show()
+                    } else {
+                        Toast.makeText(context, "Failed to import config", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+            } catch (e: Exception) {
+                Toast.makeText(context, "Failed to import config", Toast.LENGTH_SHORT).show()
+                e.printStackTrace()
+            } finally {
+                selectedImportUri = null
+                showImportConfirmSheet = false
+            }
+        }
+    }
 
     val exportLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.CreateDocument("application/json")
@@ -283,20 +309,8 @@ fun SettingsContent(
         contract = ActivityResultContracts.OpenDocument()
     ) { uri ->
         uri?.let {
-            try {
-                context.contentResolver.openInputStream(it)?.use { inputStream ->
-                    if (viewModel.importConfigs(context, inputStream)) {
-                        Toast.makeText(context, "Config imported successfully", Toast.LENGTH_SHORT)
-                            .show()
-                    } else {
-                        Toast.makeText(context, "Failed to import config", Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                }
-            } catch (e: Exception) {
-                Toast.makeText(context, "Failed to import config", Toast.LENGTH_SHORT).show()
-                e.printStackTrace()
-            }
+            selectedImportUri = it
+            showImportConfirmSheet = true
         }
     }
 
@@ -322,6 +336,21 @@ fun SettingsContent(
                 viewModel.setEnableUnsupportedFeatures(true, context)
             },
             featureTitleResIds = FeatureRegistry.getUnsupportedFeatures(context).map { it.title }
+        )
+    }
+
+    if (showImportConfirmSheet) {
+        ImportConfigConfirmationSheet(
+            onDismissRequest = {
+                showImportConfirmSheet = false
+                selectedImportUri = null
+            },
+            onConfirmOverride = {
+                onImportConfig(false)
+            },
+            onConfirmMerge = {
+                onImportConfig(true)
+            }
         )
     }
 
@@ -956,7 +985,8 @@ fun SettingsContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(
-                            color = MaterialTheme.colorScheme.surfaceBright
+                            color = MaterialTheme.colorScheme.surfaceBright,
+                            shape = Shapes.extraSmall
                         )
                         .padding(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -987,7 +1017,8 @@ fun SettingsContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(
-                            color = MaterialTheme.colorScheme.surfaceBright
+                            color = MaterialTheme.colorScheme.surfaceBright,
+                            shape = Shapes.extraSmall
                         )
                         .padding(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -1026,7 +1057,8 @@ fun SettingsContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(
-                            color = MaterialTheme.colorScheme.surfaceBright
+                            color = MaterialTheme.colorScheme.surfaceBright,
+                            shape = Shapes.extraSmall
                         )
                         .padding(start = 12.dp, end = 12.dp, top = 4.dp, bottom = 12.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)

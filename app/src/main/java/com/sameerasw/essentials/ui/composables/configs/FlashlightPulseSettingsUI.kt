@@ -85,9 +85,9 @@ fun FlashlightPulseSettingsUI(
                     title = stringResource(R.string.flashlight_pulse_max_brightness),
                     value = viewModel.flashlightPulseMaxIntensity.floatValue,
                     onValueChange = { viewModel.setFlashlightPulseMaxIntensity(it) },
-                    valueRange = 0.05f..1f,
-                    valueFormatter = { "${(it * 100).toInt()}%" },
-                    increment = 0.05f,
+                    valueRange = 0.01f..1f,
+                    valueFormatter = { "${Math.round(it * 100)}%" },
+                    increment = 0.01f,
                     modifier = Modifier.highlight(highlightSetting == "flashlight_pulse_max_intensity")
                 )
             }

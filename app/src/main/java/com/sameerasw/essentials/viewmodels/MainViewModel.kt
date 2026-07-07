@@ -69,6 +69,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
+import java.time.LocalDateTime
 
 class MainViewModel : ViewModel() {
     val isAccessibilityEnabled = mutableStateOf(false)
@@ -118,6 +119,7 @@ class MainViewModel : ViewModel() {
     val flashlightPulseMaxIntensity = mutableFloatStateOf(0.5f)
     val isFlashlightPulseDisableOnDnd = mutableStateOf(true)
     val isFlashlightPocketTurnOffEnabled = mutableStateOf(false)
+    val isFlashlightOverheatEnabled = mutableStateOf(true)
     val isLocationPermissionGranted = mutableStateOf(false)
     val isBackgroundLocationPermissionGranted = mutableStateOf(false)
     val isFullScreenIntentPermissionGranted = mutableStateOf(false)
@@ -330,6 +332,7 @@ class MainViewModel : ViewModel() {
         mutableStateOf<com.sameerasw.essentials.viewmodels.AuthState>(com.sameerasw.essentials.viewmodels.AuthState.Idle)
     private var workflowPollingJob: kotlinx.coroutines.Job? = null
     val gitHubUser = mutableStateOf<com.sameerasw.essentials.domain.model.github.GitHubUser?>(null)
+
 
     private val contentObserver = object : ContentObserver(Handler(Looper.getMainLooper())) {
         override fun onChange(selfChange: Boolean, uri: Uri?) {
@@ -652,6 +655,10 @@ class MainViewModel : ViewModel() {
                         isFlashlightPocketTurnOffEnabled.value = settingsRepository.getBoolean(key)
                     }
 
+                    SettingsRepository.KEY_FLASHLIGHT_OVERHEAT_PREVENTION_ENABLED -> {
+                        isFlashlightOverheatEnabled.value = settingsRepository.getBoolean(key, true)
+                    }
+
                     SettingsRepository.KEY_CIRCLE_TO_SEARCH_GESTURE_ENABLED -> {
                         isCircleToSearchGestureEnabled.value = settingsRepository.getBoolean(key)
                     }
@@ -937,6 +944,8 @@ class MainViewModel : ViewModel() {
         if (isDailyWallpaperAutoUpdateEnabled.value) {
             schedulePeriodicWallpaperCheck(context)
         }
+        dailyWallpaperAutoUpdateTime.value = settingsRepository.getString(SettingsRepository.KEY_DAILY_WALLPAPER_AUTO_UPDATE_TIME)
+        isDailyWallpaperShowLastTime.value = settingsRepository.getBoolean(SettingsRepository.KEY_DAILY_WALLPAPER_SHOW_LAST_TIME)
 
         if (isHideGestureBarEnabled.value) {
             applyHideGestureBar(context, true)
@@ -1312,6 +1321,8 @@ class MainViewModel : ViewModel() {
         )
         isFlashlightPocketTurnOffEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_POCKET_TURN_OFF_ENABLED)
+        isFlashlightOverheatEnabled.value =
+            settingsRepository.getBoolean(SettingsRepository.KEY_FLASHLIGHT_OVERHEAT_PREVENTION_ENABLED, true)
         isPitchBlackThemeEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_PITCH_BLACK_THEME_ENABLED)
         isEnableUnsupportedFeatures.value = settingsRepository.isEnableUnsupportedFeatures()
@@ -1495,6 +1506,7 @@ class MainViewModel : ViewModel() {
         if (isBatteryNotificationEnabled.value) {
             startBatteryNotificationService(context)
         }
+
     }
 
     private fun startBatteryNotificationService(context: Context) {
@@ -3834,6 +3846,14 @@ class MainViewModel : ViewModel() {
         )
     }
 
+    fun setFlashlightOverheatEnabled(enabled: Boolean, context: Context) {
+        isFlashlightOverheatEnabled.value = enabled
+        settingsRepository.putBoolean(
+            SettingsRepository.KEY_FLASHLIGHT_OVERHEAT_PREVENTION_ENABLED,
+            enabled
+        )
+    }
+
     fun setFlashlightFadeEnabled(enabled: Boolean, context: Context) {
         isFlashlightFadeEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_FLASHLIGHT_FADE_ENABLED, enabled)
@@ -3931,8 +3951,8 @@ class MainViewModel : ViewModel() {
         settingsRepository.exportConfigs(outputStream)
     }
 
-    fun importConfigs(context: Context, inputStream: java.io.InputStream): Boolean {
-        val success = settingsRepository.importConfigs(inputStream)
+    fun importConfigs(context: Context, inputStream: java.io.InputStream, keepPrefs: Boolean): Boolean {
+        val success = settingsRepository.importConfigs(inputStream, keepPrefs)
         if (success) {
             settingsRepository.syncSystemSettingsWithSaved()
             com.sameerasw.essentials.domain.diy.DIYRepository.reloadAutomations()
@@ -4239,10 +4259,19 @@ class MainViewModel : ViewModel() {
     }
 
     val isDailyWallpaperAutoUpdateEnabled = mutableStateOf(false)
+    val dailyWallpaperAutoUpdateTime = mutableStateOf<String?>(null)
+    val isDailyWallpaperShowLastTime = mutableStateOf(false)
+
+    fun setDailyWallpaperShowLastTime() {
+        val status = !isDailyWallpaperShowLastTime.value
+        isDailyWallpaperShowLastTime.value = status
+        settingsRepository.putBoolean(SettingsRepository.KEY_DAILY_WALLPAPER_SHOW_LAST_TIME, status)
+    }
 
     fun setDailyWallpaperAutoUpdate(enabled: Boolean, context: Context) {
         isDailyWallpaperAutoUpdateEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_DAILY_WALLPAPER_AUTO_UPDATE, enabled)
+        updateDailyWallpaperAutoUpdateTime(enabled)
         if (enabled) {
             schedulePeriodicWallpaperCheck(context)
             triggerInstantWallpaperUpdate(context)
@@ -4279,4 +4308,16 @@ class MainViewModel : ViewModel() {
         androidx.work.WorkManager.getInstance(context)
             .cancelUniqueWork("daily_wallpaper_check_work")
     }
+
+    private fun updateDailyWallpaperAutoUpdateTime(enabled: Boolean) {
+        if (enabled){
+            val currentTime = LocalDateTime.now().toString()
+            dailyWallpaperAutoUpdateTime.value = currentTime
+            settingsRepository.putString(SettingsRepository.KEY_DAILY_WALLPAPER_AUTO_UPDATE_TIME, currentTime)
+        } else {
+            dailyWallpaperAutoUpdateTime.value = null
+            settingsRepository.remove(SettingsRepository.KEY_DAILY_WALLPAPER_AUTO_UPDATE_TIME)
+        }
+    }
+
 }

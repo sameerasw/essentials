@@ -304,7 +304,9 @@ class FeatureSettingsActivity : AppCompatActivity() {
 
                             "Location reached" -> !viewModel.isLocationPermissionGranted.value || !viewModel.isBackgroundLocationPermissionGranted.value
                             "Quick settings tiles" -> !viewModel.isWriteSettingsEnabled.value
-                            "Screen refresh rate" -> !viewModel.isShizukuPermissionGranted.value
+                            "Screen refresh rate" -> !com.sameerasw.essentials.utils.ShellUtils.hasPermission(
+                                context
+                            )
                             // Top level checks for other features (rarely hit if they are children, but safe to add)
                             "Essentials On Display" -> !isAccessibilityEnabled || !isNotificationListenerEnabled
                             "Call vibrations" -> !isReadPhoneStateEnabled || !isNotificationListenerEnabled
@@ -539,7 +541,9 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                 "Battery notification" -> !viewModel.isPostNotificationsEnabled.value || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !viewModel.isBluetoothPermissionGranted.value)
                                                 "Text and animations" -> !viewModel.isWriteSettingsEnabled.value || !isWriteSecureSettingsEnabled
                                                 "Lock screen clock" -> !isWriteSecureSettingsEnabled
-                                                "Screen refresh rate" -> !viewModel.isShizukuPermissionGranted.value
+                                                "Screen refresh rate" -> !com.sameerasw.essentials.utils.ShellUtils.hasPermission(
+                                                    context
+                                                )
                                                 "Shut-Up!" -> !isWriteSecureSettingsEnabled || !viewModel.isUsageStatsPermissionGranted.value
                                                 else -> false
                                             }

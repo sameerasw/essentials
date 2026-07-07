@@ -55,11 +55,17 @@ object PermissionUIHelper {
                     viewModel.check(context)
                 },
                 isGranted = viewModel.isWriteSecureSettingsEnabled.value,
-                shizukuActionLabel = R.string.perm_action_grant_shizuku,
-                shizukuActionEnabled = ShizukuUtils.hasPermission(),
+                shizukuActionLabel = if (viewModel.isRootEnabled.value) R.string.perm_action_grant_root else R.string.perm_action_grant_shizuku,
+                shizukuActionEnabled = if (viewModel.isRootEnabled.value) viewModel.isRootAvailable.value else ShizukuUtils.hasPermission(),
                 shizukuAction = {
-                    if (ShizukuUtils.grantWriteSecureSettingsPermission()) {
-                        viewModel.check(context)
+                    if (viewModel.isRootEnabled.value) {
+                        if (RootUtils.runCommand("pm grant ${context.packageName} android.permission.WRITE_SECURE_SETTINGS")) {
+                            viewModel.check(context)
+                        }
+                    } else {
+                        if (ShizukuUtils.grantWriteSecureSettingsPermission()) {
+                            viewModel.check(context)
+                        }
                     }
                 },
                 instructions = R.string.perm_write_secure_instructions
@@ -203,13 +209,23 @@ object PermissionUIHelper {
             )
 
             "SHIZUKU" -> PermissionItem(
-                iconRes = R.drawable.rounded_mode_cool_24,
-                title = R.string.perm_shizuku_title,
-                description = R.string.perm_shizuku_desc,
+                iconRes = if (viewModel.isRootEnabled.value) R.drawable.rounded_numbers_24 else R.drawable.rounded_mode_cool_24,
+                title = if (viewModel.isRootEnabled.value) R.string.perm_root_title else R.string.perm_shizuku_title,
+                description = if (viewModel.isRootEnabled.value) R.string.perm_root_desc else R.string.perm_shizuku_desc,
                 dependentFeatures = PermissionRegistry.getFeatures("SHIZUKU"),
-                actionLabel = if (viewModel.isShizukuPermissionGranted.value) R.string.perm_action_granted else R.string.perm_action_grant,
-                action = { viewModel.requestShizukuPermission() },
-                isGranted = viewModel.isShizukuPermissionGranted.value
+                actionLabel = if (viewModel.isRootEnabled.value) {
+                    if (viewModel.isRootPermissionGranted.value) R.string.perm_action_granted else R.string.perm_action_grant
+                } else {
+                    if (viewModel.isShizukuPermissionGranted.value) R.string.perm_action_granted else R.string.perm_action_grant
+                },
+                action = {
+                    if (viewModel.isRootEnabled.value) {
+                        viewModel.check(context)
+                    } else {
+                        viewModel.requestShizukuPermission()
+                    }
+                },
+                isGranted = if (viewModel.isRootEnabled.value) viewModel.isRootPermissionGranted.value else viewModel.isShizukuPermissionGranted.value
             )
 
             "READ_CALENDAR" -> PermissionItem(

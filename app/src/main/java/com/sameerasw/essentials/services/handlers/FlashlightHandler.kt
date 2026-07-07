@@ -51,6 +51,7 @@ class FlashlightHandler(
     private var primaryCameraId: String? = null
     private var currentIntensityLevel: Int = 1
     private var flashlightJob: Job? = null
+    private var overheatPreventionJob: Job? = null
     private var isInternalToggle = false
 
     private val NOTIFICATION_ID_FLASHLIGHT = 1010
@@ -105,11 +106,13 @@ class FlashlightHandler(
                     currentIntensityLevel = FlashlightUtil.getDefaultLevel(service, cameraId)
                     updateFlashlightNotification(currentIntensityLevel)
                 }
+                startOverheatPrevention(cameraId)
             } else {
                 // Flashlight turned OFF
                 flashlightJob?.cancel() // Stop any ongoing fade-in or fade-out
                 isInternalToggle = false // Reset
                 cancelFlashlightNotification()
+                stopOverheatPrevention()
             }
         }
     }
@@ -121,6 +124,7 @@ class FlashlightHandler(
     fun unregister() {
         torchCallback.let { cameraManager.unregisterTorchCallback(it) }
         primaryCameraId = null
+        stopOverheatPrevention()
     }
 
     fun handleIntent(intent: Intent) {
@@ -656,5 +660,38 @@ class FlashlightHandler(
         } catch (_: Exception) {
             false
         }
+    }
+
+    private fun startOverheatPrevention(cameraId: String) {
+        overheatPreventionJob?.cancel()
+        overheatPreventionJob = scope.launch {
+            while (isTorchOn) {
+                kotlinx.coroutines.delay(120000L)
+                val prefs = service.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+                val isOverheatEnabled = prefs.getBoolean("flashlight_overheat_prevention_enabled", true)
+                if (isOverheatEnabled && FlashlightUtil.isIntensitySupported(service, cameraId)) {
+                    val currentLevel = FlashlightUtil.getCurrentLevel(service, cameraId)
+                    val maxLevel = FlashlightUtil.getMaxLevel(service, cameraId)
+                    val limitLevel = (maxLevel * 0.75f).toInt().coerceAtLeast(1)
+                    if (currentLevel > limitLevel) {
+                        FlashlightUtil.fadeFlashlight(
+                            service,
+                            cameraId,
+                            fromLevel = currentLevel,
+                            toLevel = limitLevel,
+                            durationMs = 1000L,
+                            steps = 15
+                        )
+                        currentIntensityLevel = limitLevel
+                        updateFlashlightNotification(limitLevel)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun stopOverheatPrevention() {
+        overheatPreventionJob?.cancel()
+        overheatPreventionJob = null
     }
 }

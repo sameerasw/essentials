@@ -6,6 +6,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.data.repository.WallpaperRepository
+import java.time.LocalDateTime
 
 class DailyWallpaperWorker(
     appContext: Context,
@@ -77,6 +78,13 @@ class DailyWallpaperWorker(
                                 SettingsRepository.KEY_DAILY_WALLPAPER_UPDATED_AT,
                                 todayWallpaper.updatedAt
                             )
+
+                            val currentTime = LocalDateTime.now().toString()
+                            settingsRepository.putString(
+                                SettingsRepository.KEY_DAILY_WALLPAPER_AUTO_UPDATE_TIME,
+                                currentTime
+                            )
+
                             Log.d(
                                 "DailyWallpaperWorker",
                                 "Successfully auto-applied wallpaper (force=$force, flags=$flags): ${todayWallpaper.id}"

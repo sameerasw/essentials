@@ -38,7 +38,7 @@ fun RefreshRateSettingsUI(
 ) {
     val context = LocalContext.current
     val view = LocalView.current
-    val isEnabled = viewModel.isShizukuPermissionGranted.value
+    val isEnabled = if (viewModel.isRootEnabled.value) viewModel.isRootPermissionGranted.value else viewModel.isShizukuPermissionGranted.value
     val isFixedMode = viewModel.refreshRateMode.value == RefreshRateUtils.MODE_FIXED
     val systemLabel = stringResource(R.string.refresh_rate_system_default)
 
@@ -172,7 +172,10 @@ fun RefreshRateSettingsUI(
                     }
                 } else {
                     Text(
-                        text = stringResource(R.string.msg_refresh_rate_permission_required),
+                        text = stringResource(
+                            if (viewModel.isRootEnabled.value) R.string.msg_refresh_rate_root_permission_required
+                            else R.string.msg_refresh_rate_permission_required
+                        ),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier
@@ -181,7 +184,11 @@ fun RefreshRateSettingsUI(
                     )
                     Button(
                         onClick = {
-                            viewModel.requestShizukuPermission()
+                            if (viewModel.isRootEnabled.value) {
+                                viewModel.check(context)
+                            } else {
+                                viewModel.requestShizukuPermission()
+                            }
                             HapticUtil.performSliderHaptic(view)
                         },
                         colors = ButtonDefaults.filledTonalButtonColors(),

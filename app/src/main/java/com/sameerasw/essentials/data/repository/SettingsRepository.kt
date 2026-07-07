@@ -52,6 +52,8 @@ class SettingsRepository(private val context: Context) {
         const val KEY_DAILY_WALLPAPER_PHOTO_LINK = "daily_wallpaper_photo_link"
         const val KEY_DAILY_WALLPAPER_UPDATED_AT = "daily_wallpaper_updated_at"
         const val KEY_DAILY_WALLPAPER_AUTO_UPDATE = "daily_wallpaper_auto_update"
+        const val KEY_DAILY_WALLPAPER_AUTO_UPDATE_TIME = "daily_wallpaper_auto_update_time"
+        const val KEY_DAILY_WALLPAPER_SHOW_LAST_TIME = "daily_wallpaper_show_last_time"
         const val KEY_DAILY_WALLPAPER_APPLY_HOME = "daily_wallpaper_apply_home"
         const val KEY_DAILY_WALLPAPER_APPLY_LOCK = "daily_wallpaper_apply_lock"
 
@@ -121,6 +123,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_FLASHLIGHT_PULSE_MAX_INTENSITY = "flashlight_pulse_max_intensity"
         const val KEY_FLASHLIGHT_PULSE_DISABLE_ON_DND = "flashlight_pulse_disable_on_dnd"
         const val KEY_FLASHLIGHT_POCKET_TURN_OFF_ENABLED = "flashlight_pocket_turn_off_enabled"
+        const val KEY_FLASHLIGHT_OVERHEAT_PREVENTION_ENABLED = "flashlight_overheat_prevention_enabled"
 
         const val KEY_SCREEN_LOCKED_SECURITY_ENABLED = "screen_locked_security_enabled"
         const val KEY_HIDE_SYSTEM_ICONS = "hide_system_icons"
@@ -286,6 +289,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_POCKET_MODE_EXCLUDED_APPS = "pocket_mode_excluded_apps"
         const val KEY_POCKET_MODE_TRIGGER_DELAY = "pocket_mode_trigger_delay"
         const val KEY_POCKET_MODE_LOCK_SCREEN_ONLY = "pocket_mode_lock_screen_only"
+        const val KEY_KEEP_PREFS = "keep_prefs"
     }
 
     // Observe changes
@@ -767,7 +771,7 @@ class SettingsRepository(private val context: Context) {
         }
     }
 
-    fun importConfigs(inputStream: java.io.InputStream): Boolean {
+    fun importConfigs(inputStream: java.io.InputStream, keepPrefs: Boolean): Boolean {
         return try {
             val json = inputStream.bufferedReader().use { it.readText() }
             val allConfigs: Map<String, Map<String, Map<String, Any>>> =
@@ -795,7 +799,7 @@ class SettingsRepository(private val context: Context) {
                 }
 
                 p.edit().apply {
-                    clear()
+                    if(!keepPrefs) clear()
                     
                     // Restore preserved values
                     preservedValues.forEach { (key, value) ->
