@@ -52,6 +52,8 @@ class SettingsRepository(private val context: Context) {
         const val KEY_DAILY_WALLPAPER_PHOTO_LINK = "daily_wallpaper_photo_link"
         const val KEY_DAILY_WALLPAPER_UPDATED_AT = "daily_wallpaper_updated_at"
         const val KEY_DAILY_WALLPAPER_AUTO_UPDATE = "daily_wallpaper_auto_update"
+        const val KEY_DAILY_WALLPAPER_AUTO_UPDATE_TIME = "daily_wallpaper_auto_update_time"
+        const val KEY_DAILY_WALLPAPER_SHOW_LAST_TIME = "daily_wallpaper_show_last_time"
         const val KEY_DAILY_WALLPAPER_APPLY_HOME = "daily_wallpaper_apply_home"
         const val KEY_DAILY_WALLPAPER_APPLY_LOCK = "daily_wallpaper_apply_lock"
 

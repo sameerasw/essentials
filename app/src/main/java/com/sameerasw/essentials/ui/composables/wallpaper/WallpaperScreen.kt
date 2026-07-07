@@ -70,6 +70,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -107,6 +108,9 @@ import com.sameerasw.essentials.viewmodels.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.Duration
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -124,6 +128,8 @@ fun WallpaperScreen(
     val isLoading by viewModel.isWallpaperLoading
     val isBlurEnabled by viewModel.isBlurEnabled
     val isAutoUpdateEnabled by viewModel.isDailyWallpaperAutoUpdateEnabled
+    val dailyWallpaperAutoUpdateTime by viewModel.dailyWallpaperAutoUpdateTime
+    val isDailyWallpaperShowLastTime by viewModel.isDailyWallpaperShowLastTime
 
     // Live Wallpaper Settings State
     var availableVideos by remember { mutableStateOf(repository.getLiveWallpaperAvailableVideos()) }
@@ -210,6 +216,19 @@ fun WallpaperScreen(
                     HapticUtil.performHeavyHaptic(view)
                 }
             }
+    }
+
+    var dailyWallpaperNextAutoUpdateTime by remember { mutableLongStateOf(0L) }
+    LaunchedEffect(dailyWallpaperAutoUpdateTime) {
+        if (!dailyWallpaperAutoUpdateTime.isNullOrEmpty()){
+            val prevTime = LocalDateTime.parse(dailyWallpaperAutoUpdateTime)
+            val passedTime = Duration.between(
+                prevTime,
+                LocalDateTime.now()
+            ).toHours()
+            val hoursLeft = (12L - passedTime).coerceAtLeast(0)
+            dailyWallpaperNextAutoUpdateTime = hoursLeft
+        }
     }
 
     Box(
@@ -473,24 +492,47 @@ fun WallpaperScreen(
                                     .padding(16.dp),
                                 verticalArrangement = Arrangement.spacedBy(12.dp)
                             ) {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.SpaceBetween
-                                ) {
-                                    Text(
-                                        text = stringResource(R.string.label_wallpaper_auto_update),
-                                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                                        color = MaterialTheme.colorScheme.onSurface
-                                    )
-                                    Switch(
-                                        checked = isAutoUpdateEnabled,
-                                        onCheckedChange = { checked ->
-                                            HapticUtil.performUIHaptic(view)
-                                            viewModel.setDailyWallpaperAutoUpdate(checked, context)
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Column(
+                                            verticalArrangement = Arrangement.spacedBy(2.dp)
+                                        ) {
+                                            Text(
+                                                text = stringResource(R.string.label_wallpaper_auto_update),
+                                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                                                color = MaterialTheme.colorScheme.onSurface
+                                            )
+                                            if (isAutoUpdateEnabled && !dailyWallpaperAutoUpdateTime.isNullOrEmpty()){
+                                                val timeText = if(isDailyWallpaperShowLastTime) {
+                                                    val showTime = LocalDateTime.parse(dailyWallpaperAutoUpdateTime)
+                                                        .format(DateTimeFormatter.ofPattern("hh:mm a"))
+                                                    "Last checked at $showTime"
+                                                } else{
+                                                    val showTime = if(dailyWallpaperNextAutoUpdateTime > 0L) "$dailyWallpaperNextAutoUpdateTime hours" else "a few minutes"
+                                                    "Next check in $showTime"
+                                                }
+                                                Text(
+                                                    text = timeText,
+                                                    style = MaterialTheme.typography.labelSmall,
+                                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                                    modifier = Modifier.clickable(enabled = true, onClick = {
+                                                        HapticUtil.performUIHaptic(view)
+                                                        viewModel.setDailyWallpaperShowLastTime()
+                                                    })
+                                                )
+                                            }
                                         }
-                                    )
-                                }
+                                        Switch(
+                                            checked = isAutoUpdateEnabled,
+                                            onCheckedChange = { checked ->
+                                                HapticUtil.performUIHaptic(view)
+                                                viewModel.setDailyWallpaperAutoUpdate(checked, context)
+                                            }
+                                        )
+                                    }
 
                                 Row(
                                     modifier = Modifier

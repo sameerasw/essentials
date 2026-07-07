@@ -69,6 +69,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
+import java.time.LocalDateTime
 
 class MainViewModel : ViewModel() {
     val isAccessibilityEnabled = mutableStateOf(false)
@@ -937,6 +938,8 @@ class MainViewModel : ViewModel() {
         if (isDailyWallpaperAutoUpdateEnabled.value) {
             schedulePeriodicWallpaperCheck(context)
         }
+        dailyWallpaperAutoUpdateTime.value = settingsRepository.getString(SettingsRepository.KEY_DAILY_WALLPAPER_AUTO_UPDATE_TIME)
+        isDailyWallpaperShowLastTime.value = settingsRepository.getBoolean(SettingsRepository.KEY_DAILY_WALLPAPER_SHOW_LAST_TIME)
 
         if (isHideGestureBarEnabled.value) {
             applyHideGestureBar(context, true)
@@ -4239,10 +4242,19 @@ class MainViewModel : ViewModel() {
     }
 
     val isDailyWallpaperAutoUpdateEnabled = mutableStateOf(false)
+    val dailyWallpaperAutoUpdateTime = mutableStateOf<String?>(null)
+    val isDailyWallpaperShowLastTime = mutableStateOf(false)
+
+    fun setDailyWallpaperShowLastTime() {
+        val status = !isDailyWallpaperShowLastTime.value
+        isDailyWallpaperShowLastTime.value = status
+        settingsRepository.putBoolean(SettingsRepository.KEY_DAILY_WALLPAPER_SHOW_LAST_TIME, status)
+    }
 
     fun setDailyWallpaperAutoUpdate(enabled: Boolean, context: Context) {
         isDailyWallpaperAutoUpdateEnabled.value = enabled
         settingsRepository.putBoolean(SettingsRepository.KEY_DAILY_WALLPAPER_AUTO_UPDATE, enabled)
+        updateDailyWallpaperAutoUpdateTime(enabled)
         if (enabled) {
             schedulePeriodicWallpaperCheck(context)
             triggerInstantWallpaperUpdate(context)
@@ -4278,5 +4290,16 @@ class MainViewModel : ViewModel() {
     private fun cancelPeriodicWallpaperCheck(context: Context) {
         androidx.work.WorkManager.getInstance(context)
             .cancelUniqueWork("daily_wallpaper_check_work")
+    }
+
+    private fun updateDailyWallpaperAutoUpdateTime(enabled: Boolean) {
+        if (enabled){
+            val currentTime = LocalDateTime.now().toString()
+            dailyWallpaperAutoUpdateTime.value = currentTime
+            settingsRepository.putString(SettingsRepository.KEY_DAILY_WALLPAPER_AUTO_UPDATE_TIME, currentTime)
+        } else {
+            dailyWallpaperAutoUpdateTime.value = null
+            settingsRepository.remove(SettingsRepository.KEY_DAILY_WALLPAPER_AUTO_UPDATE_TIME)
+        }
     }
 }
