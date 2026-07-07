@@ -219,15 +219,20 @@ fun WallpaperScreen(
     }
 
     var dailyWallpaperNextAutoUpdateTime by remember { mutableLongStateOf(0L) }
+    var dailyWallpaperLastCheckedFormatted by remember { mutableStateOf("") }
     LaunchedEffect(dailyWallpaperAutoUpdateTime) {
         if (!dailyWallpaperAutoUpdateTime.isNullOrEmpty()){
-            val prevTime = LocalDateTime.parse(dailyWallpaperAutoUpdateTime)
-            val passedTime = Duration.between(
-                prevTime,
-                LocalDateTime.now()
-            ).toHours()
-            val hoursLeft = (12L - passedTime).coerceAtLeast(0)
-            dailyWallpaperNextAutoUpdateTime = hoursLeft
+            val prevTime = runCatching { LocalDateTime.parse(dailyWallpaperAutoUpdateTime) }.getOrNull()
+            if (prevTime != null) {
+                val passedTime = Duration.between(
+                    prevTime,
+                    LocalDateTime.now()
+                ).toHours()
+                dailyWallpaperNextAutoUpdateTime = (12L - passedTime).coerceAtLeast(0)
+                dailyWallpaperLastCheckedFormatted = runCatching {
+                    prevTime.format(DateTimeFormatter.ofPattern("hh:mm a"))
+                }.getOrDefault("")
+            }
         }
     }
 
@@ -507,12 +512,14 @@ fun WallpaperScreen(
                                             )
                                             if (isAutoUpdateEnabled && !dailyWallpaperAutoUpdateTime.isNullOrEmpty()){
                                                 val timeText = if(isDailyWallpaperShowLastTime) {
-                                                    val showTime = LocalDateTime.parse(dailyWallpaperAutoUpdateTime)
-                                                        .format(DateTimeFormatter.ofPattern("hh:mm a"))
-                                                    "Last checked at $showTime"
+                                                    stringResource(R.string.label_wallpaper_last_checked, dailyWallpaperLastCheckedFormatted)
                                                 } else{
-                                                    val showTime = if(dailyWallpaperNextAutoUpdateTime > 0L) "$dailyWallpaperNextAutoUpdateTime hours" else "a few minutes"
-                                                    "Next check in $showTime"
+                                                    val showTime = if(dailyWallpaperNextAutoUpdateTime > 0L) {
+                                                        stringResource(R.string.label_wallpaper_hours, dailyWallpaperNextAutoUpdateTime.toInt())
+                                                    } else {
+                                                        stringResource(R.string.label_wallpaper_a_few_minutes)
+                                                    }
+                                                    stringResource(R.string.label_wallpaper_next_check, showTime)
                                                 }
                                                 Text(
                                                     text = timeText,

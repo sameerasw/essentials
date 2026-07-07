@@ -955,8 +955,8 @@ fun SettingsContent(
             RoundedCardContainer {
                 IconToggleItem(
                     iconRes = R.drawable.rounded_front_hand_24,
-                    title = "Keep new settings",
-                    description = "Don't reset existing settings after import",
+                    title = stringResource(R.string.label_keep_new_settings),
+                    description = stringResource(R.string.desc_keep_new_settings),
                     isChecked = viewModel.isKeepPrefs.value,
                     onCheckedChange = { viewModel.toggleKeepPrefs(it) }
                 )
