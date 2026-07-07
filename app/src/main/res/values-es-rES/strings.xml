@@ -103,8 +103,8 @@
     <string name="flashlight_always_off_desc">Incluso cuando la pantalla está encendida</string>
     <string name="flashlight_pocket_title">Detección de bolsillo</string>
     <string name="flashlight_pocket_desc">Apagar la linterna cuando el teléfono esté en el bolsillo</string>
-    <string name="flashlight_overheat_title">Overheating prevention</string>
-    <string name="flashlight_overheat_desc">Lower brightness on longer period of use</string>
+    <string name="flashlight_overheat_title">Prevención de sobrecalentamiento</string>
+    <string name="flashlight_overheat_desc">Reducir el brillo durante períodos prolongados de uso</string>
     <string name="content_desc_settings">Ajustes</string>
     <!-- Caffeinate / Permissions -->
     <string name="permission_show_notification_title">Mostrar notificación</string>
@@ -654,7 +654,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="perm_action_how_to">Cómo conceder</string>
     <string name="perm_action_granted">Concedido</string>
     <string name="perm_action_grant_shizuku">Conceder usando Shizuku</string>
-    <string name="perm_action_grant_root">Grant using Root</string>
+    <string name="perm_action_grant_root">Conceder usando Root</string>
     <string name="perm_write_secure_instructions">Este permiso puede concederse desde un PC usando ADB. Copia el comando ADB y ejecútalo en la consola.\n\nO puedes concederlo fácilmente usando Shizuku desde el botón de abajo.\n\nEste permiso solo necesita concederse una vez.</string>
     <string name="perm_battery_optimization_title">Optimización de la batería</string>
     <string name="perm_battery_optimization_desc">Asegúrate de que el sistema no finalice el servicio para ahorrar energía.</string>
@@ -1405,7 +1405,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="refresh_rate_system_default">Sistema</string>
     <string name="refresh_rate_reset_desc">Eliminar la anulación personalizada y volver al comportamiento de refresco predeterminado del sistema</string>
     <string name="msg_refresh_rate_permission_required">Se requiere el permiso de Shizuku para ajustar la frecuencia de actualización</string>
-    <string name="msg_refresh_rate_root_permission_required">Root permission required to adjust refresh rate</string>
+    <string name="msg_refresh_rate_root_permission_required">Se requieren permisos de root para ajustar la frecuencia de actualización</string>
     <string name="search_refresh_rate_mode_title">Modo de frecuencia de actualización</string>
     <string name="search_refresh_rate_mode_desc">Cambiar entre control de frecuencia de actualización fija y variable</string>
     <string name="search_refresh_rate_fixed_title">Frecuencia de actualización fija</string>
@@ -1581,13 +1581,13 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="pocket_mode_lock_screen_only_title">Solo en la pantalla de bloqueo</string>
     <string name="pocket_mode_lock_screen_only_desc">Activar el Modo bolsillo solo cuando el dispositivo esté bloqueado</string>
     <!-- Developer Settings & Wallpaper Check -->
-    <string name="import_config_sheet_title">Restore Configuration</string>
-    <string name="import_config_sheet_desc">Choose how you want to restore the configuration.</string>
-    <string name="import_config_merge_warning">Merging might cause data corruption. Please proceed with caution!</string>
-    <string name="action_override">Override</string>
-    <string name="action_merge">Merge</string>
-    <string name="label_wallpaper_last_checked">Last checked at %1$s</string>
-    <string name="label_wallpaper_next_check">Next check in %1$s</string>
-    <string name="label_wallpaper_hours">%1$d hours</string>
-    <string name="label_wallpaper_a_few_minutes">a few minutes</string>
+    <string name="import_config_sheet_title">Restaurar configuración</string>
+    <string name="import_config_sheet_desc">Elige cómo quieres restaurar la configuración.</string>
+    <string name="import_config_merge_warning">La fusión podría causar corrupción de datos. ¡Procede con precaución!</string>
+    <string name="action_override">Sobrescribir</string>
+    <string name="action_merge">Fusionar</string>
+    <string name="label_wallpaper_last_checked">Última comprobación a las %1$s</string>
+    <string name="label_wallpaper_next_check">Próxima comprobación en %1$s</string>
+    <string name="label_wallpaper_hours">%1$d horas</string>
+    <string name="label_wallpaper_a_few_minutes">unos minutos</string>
 </resources>
