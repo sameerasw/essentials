@@ -1574,4 +1574,14 @@
     <string name="pocket_mode_trigger_delay_title">Trigger delay</string>
     <string name="pocket_mode_lock_screen_only_title">Lock screen only</string>
     <string name="pocket_mode_lock_screen_only_desc">Only trigger pocket mode when the device is locked</string>
+    <!-- Developer Settings & Wallpaper Check -->
+    <string name="import_config_sheet_title">Restore Configuration</string>
+    <string name="import_config_sheet_desc">Choose how you want to restore the configuration.</string>
+    <string name="import_config_merge_warning">Merging might cause data corruption. Please proceed with caution!</string>
+    <string name="action_override">Override</string>
+    <string name="action_merge">Merge</string>
+    <string name="label_wallpaper_last_checked">Last checked at %1$s</string>
+    <string name="label_wallpaper_next_check">Next check in %1$s</string>
+    <string name="label_wallpaper_hours">%1$d hours</string>
+    <string name="label_wallpaper_a_few_minutes">a few minutes</string>
 </resources>
