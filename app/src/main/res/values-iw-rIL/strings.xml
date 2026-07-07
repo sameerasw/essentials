@@ -103,6 +103,8 @@
     <string name="flashlight_always_off_desc">Even while display is on</string>
     <string name="flashlight_pocket_title">Pocket detection</string>
     <string name="flashlight_pocket_desc">Turn off flashlight when phone is in your pocket</string>
+    <string name="flashlight_overheat_title">Overheating prevention</string>
+    <string name="flashlight_overheat_desc">Lower brightness on longer period of use</string>
     <string name="content_desc_settings">Settings</string>
     <!-- Caffeinate / Permissions -->
     <string name="permission_show_notification_title">Show Notification</string>
@@ -651,6 +653,7 @@
     <string name="perm_action_how_to">How to grant</string>
     <string name="perm_action_granted">Granted</string>
     <string name="perm_action_grant_shizuku">Grant using Shizuku</string>
+    <string name="perm_action_grant_root">Grant using Root</string>
     <string name="perm_write_secure_instructions">This permission can be granted either via a PC using ADB. Copy the ADB command and run on the shell.\n\nOr you can easily grant it using Shizuku from the below button.\n\nThis permission only needs to be granted once.</string>
     <string name="perm_battery_optimization_title">Battery Optimization</string>
     <string name="perm_battery_optimization_desc">Ensure the service is not killed by the system to save power.</string>
@@ -1400,6 +1403,7 @@
     <string name="refresh_rate_system_default">System</string>
     <string name="refresh_rate_reset_desc">Remove the custom override and return to the system default refresh behavior</string>
     <string name="msg_refresh_rate_permission_required">Shizuku permission required to adjust refresh rate</string>
+    <string name="msg_refresh_rate_root_permission_required">Root permission required to adjust refresh rate</string>
     <string name="search_refresh_rate_mode_title">Refresh Rate Mode</string>
     <string name="search_refresh_rate_mode_desc">Switch between fixed and ranged refresh rate control</string>
     <string name="search_refresh_rate_fixed_title">Fixed Refresh Rate</string>
