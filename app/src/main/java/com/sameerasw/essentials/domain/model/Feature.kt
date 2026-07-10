@@ -39,7 +39,8 @@ abstract class Feature(
     @StringRes val aboutDescription: Int? = null,
     @androidx.annotation.RawRes val animationRes: Int = 0
 ) {
-    val requiresAuth: Boolean = category == com.sameerasw.essentials.R.string.cat_protection
+    open val requiresAuth: Boolean
+        get() = category == com.sameerasw.essentials.R.string.cat_protection
 
     abstract fun isEnabled(viewModel: MainViewModel): Boolean
 
