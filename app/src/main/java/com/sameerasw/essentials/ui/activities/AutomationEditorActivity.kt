@@ -37,7 +37,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.Lifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -70,9 +73,11 @@ import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.components.pickers.SegmentedPicker
+import com.sameerasw.essentials.ui.components.sheets.AppSelectionSheet
 import com.sameerasw.essentials.ui.components.sheets.DimWallpaperSettingsSheet
 import com.sameerasw.essentials.ui.components.sheets.ScreenOffSettingsSheet
 import com.sameerasw.essentials.ui.components.sheets.SoundModeSettingsSheet
+
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.HapticUtil
@@ -227,9 +232,31 @@ class AutomationEditorActivity : ComponentActivity() {
                 var showScreenOffSettings by remember { mutableStateOf(false) }
                 var showDeviceEffectsSettings by remember { mutableStateOf(false) }
                 var showSoundModeSettings by remember { mutableStateOf(false) }
+                var showFreezeAppsSettings by remember { mutableStateOf(false) }
+                var temporarySelectedAppsForAction by remember { mutableStateOf<List<String>>(emptyList()) }
                 var showTimeSettings by remember { mutableStateOf(false) }
                 var configAction by remember { mutableStateOf<Action?>(null) } // Generic config action
 
+
+                var showPermissionSheet by remember { mutableStateOf(false) }
+                var permissionKeysToShow by remember { mutableStateOf<List<String>>(emptyList()) }
+                var permissionFeatureTitle by remember { mutableStateOf<Any>("") }
+
+                // Automatic refresh on resume
+                val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+                DisposableEffect(lifecycleOwner) {
+                    val observer = LifecycleEventObserver { _, event ->
+                        if (event == Lifecycle.Event.ON_RESUME) {
+                            viewModel.check(context)
+                        }
+                    }
+                    lifecycleOwner.lifecycle.addObserver(observer)
+                    onDispose {
+                        lifecycleOwner.lifecycle.removeObserver(observer)
+                    }
+                }
+
+                // Validation
                 val isValid = when (automationType) {
                     Automation.Type.TRIGGER -> selectedTrigger != null && selectedAction != null
                     Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR -> selectedAction != null
@@ -610,7 +637,15 @@ class AutomationEditorActivity : ComponentActivity() {
                                                 Action.ToggleMediaVolume,
                                                 Action.LikeCurrentSong,
                                                 Action.CircleToSearch,
-                                                Action.PinApp
+                                                Action.PinApp,
+                                                Action.TurnOnWifi,
+                                                Action.TurnOffWifi,
+                                                Action.TurnOnCellularData,
+                                                Action.TurnOffCellularData,
+                                                Action.TurnOnAutoBrightness,
+                                                Action.TurnOffAutoBrightness,
+                                                Action.FreezeApps(),
+                                                Action.UnfreezeApps()
                                             )
                                             // Only show Device Effects on Android 15+ 
                                             actions.add(Action.DeviceEffects())
@@ -671,17 +706,11 @@ class AutomationEditorActivity : ComponentActivity() {
                                                             }
                                                         }
                                                         // Check permissions immediately on selection
-                                                        // For Device Effects, we need Notification Policy Access
-                                                        if (resolvedAction is Action.DeviceEffects) {
-                                                            val nm =
-                                                                context.getSystemService(
-                                                                    NOTIFICATION_SERVICE
-                                                                ) as android.app.NotificationManager
-                                                            if (!nm.isNotificationPolicyAccessGranted) {
-                                                                val intent =
-                                                                    Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
-                                                                context.startActivity(intent)
-                                                            }
+                                                        val missing = getMissingPermissions(context, resolvedAction, viewModel)
+                                                        if (missing.isNotEmpty()) {
+                                                            permissionKeysToShow = missing
+                                                            permissionFeatureTitle = resolvedAction.title
+                                                            showPermissionSheet = true
                                                         }
                                                     },
                                                     onSettingsClick = {
@@ -694,6 +723,12 @@ class AutomationEditorActivity : ComponentActivity() {
                                                             showDeviceEffectsSettings = true
                                                         } else if (resolvedAction is Action.SoundMode) {
                                                             showSoundModeSettings = true
+                                                        } else if (resolvedAction is Action.FreezeApps) {
+                                                            temporarySelectedAppsForAction = resolvedAction.packageNames
+                                                            showFreezeAppsSettings = true
+                                                        } else if (resolvedAction is Action.UnfreezeApps) {
+                                                            temporarySelectedAppsForAction = resolvedAction.packageNames
+                                                            showFreezeAppsSettings = true
                                                         }
                                                     }
                                                 )
@@ -804,6 +839,53 @@ class AutomationEditorActivity : ComponentActivity() {
                                 }
                             )
                         }
+                        if (showFreezeAppsSettings && (configAction is Action.FreezeApps || configAction is Action.UnfreezeApps)) {
+                            AppSelectionSheet(
+                                onDismissRequest = {
+                                    val finalAction = when (val action = configAction) {
+                                        is Action.FreezeApps -> action.copy(packageNames = temporarySelectedAppsForAction)
+                                        is Action.UnfreezeApps -> action.copy(packageNames = temporarySelectedAppsForAction)
+                                        else -> configAction
+                                    }
+                                    if (finalAction != null) {
+                                        when (automationType) {
+                                            Automation.Type.TRIGGER, Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR -> selectedAction = finalAction
+                                            Automation.Type.STATE, Automation.Type.APP -> {
+                                                if (selectedActionTab == 0) selectedInAction = finalAction
+                                                else selectedOutAction = finalAction
+                                            }
+                                        }
+                                    }
+                                    showFreezeAppsSettings = false
+                                    configAction = null
+                                },
+                                onLoadApps = {
+                                    temporarySelectedAppsForAction.map { AppSelection(it, true) }
+                                },
+                                onSaveApps = { _, selections ->
+                                    temporarySelectedAppsForAction = selections.filter { it.isEnabled }.map { it.packageName }
+                                },
+                                excludePackages = if (automationType == Automation.Type.APP) selectedApps else emptyList()
+                            )
+                        }
+                         if (showPermissionSheet) {
+                             val permissionItems = com.sameerasw.essentials.utils.PermissionUIHelper.getPermissionItems(
+                                 permissionKeysToShow,
+                                 context,
+                                 viewModel,
+                                 this@AutomationEditorActivity
+                             )
+                             if (permissionItems.isNotEmpty()) {
+                                 com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet(
+                                     onDismissRequest = {
+                                         showPermissionSheet = false
+                                         permissionKeysToShow = emptyList()
+                                     },
+                                     featureTitle = permissionFeatureTitle,
+                                     permissions = permissionItems
+                                 )
+                             }
+                         }
                         // Bottom Actions
                         Row(
                             modifier = Modifier
@@ -834,6 +916,19 @@ class AutomationEditorActivity : ComponentActivity() {
                             Button(
                                 onClick = {
                                     HapticUtil.performVirtualKeyHaptic(view)
+                                    // Check for missing permissions before saving
+                                    val actionsToCheck = when (automationType) {
+                                        Automation.Type.TRIGGER -> listOfNotNull(selectedAction)
+                                        Automation.Type.ACTION_SHORTCUT, Automation.Type.PIXEL_SEARCHBAR -> listOfNotNull(selectedAction)
+                                        else -> listOfNotNull(selectedInAction, selectedOutAction)
+                                    }
+                                    val allMissingPermissions = actionsToCheck.flatMap { getMissingPermissions(context, it, viewModel) }.distinct()
+                                    if (allMissingPermissions.isNotEmpty()) {
+                                        permissionKeysToShow = allMissingPermissions
+                                        permissionFeatureTitle = R.string.tab_diy
+                                        showPermissionSheet = true
+                                        return@Button
+                                    }
                                     // Save logic
                                     if (automationType == Automation.Type.TRIGGER) {
                                         val newAutomation = Automation(
@@ -884,19 +979,45 @@ class AutomationEditorActivity : ComponentActivity() {
                                     finish()
                                 },
                                 modifier = Modifier.weight(1f),
-                                enabled = isValid
-                            ) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.rounded_check_24),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                                Spacer(modifier = Modifier.size(8.dp))
-                                Text(stringResource(R.string.action_save))
-                            }
+                                 enabled = isValid
+                             ) {
+                                 Icon(
+                                     painter = painterResource(id = R.drawable.rounded_check_24),
+                                     contentDescription = null,
+                                     modifier = Modifier.size(20.dp)
+                                 )
+                                 Spacer(modifier = Modifier.size(8.dp))
+                                 Text(stringResource(R.string.action_save))
+                             }
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private fun getMissingPermissions(
+        context: Context,
+        action: Action?,
+        viewModel: com.sameerasw.essentials.viewmodels.MainViewModel
+    ): List<String> {
+        if (action == null) return emptyList()
+        val resolvedPermissions = action.permissions.map { permKey ->
+            if (permKey == "SHIZUKU" || permKey == "ROOT") {
+                if (com.sameerasw.essentials.utils.ShellUtils.isRootEnabled(context)) "ROOT" else "SHIZUKU"
+            } else {
+                permKey
+            }
+        }.distinct()
+
+        return resolvedPermissions.filter { permKey ->
+            when (permKey) {
+                "SHIZUKU" -> !viewModel.isShizukuPermissionGranted.value
+                "ROOT" -> !viewModel.isRootPermissionGranted.value
+                "WRITE_SETTINGS" -> !viewModel.isWriteSettingsEnabled.value
+                "NOTIFICATION_POLICY" -> !viewModel.isNotificationPolicyAccessGranted.value
+                "WRITE_SECURE_SETTINGS" -> !viewModel.isWriteSecureSettingsEnabled.value
+                else -> false
             }
         }
     }

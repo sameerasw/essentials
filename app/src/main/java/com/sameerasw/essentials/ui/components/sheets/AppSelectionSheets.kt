@@ -60,6 +60,7 @@ fun AppSelectionSheet(
     onLoadApps: suspend (Context) -> List<AppSelection>,
     onSaveApps: suspend (Context, List<AppSelection>) -> Unit,
     onAppToggle: ((Context, String, Boolean) -> Unit)? = null,
+    excludePackages: List<String> = emptyList(),
     context: Context = LocalContext.current
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -112,7 +113,8 @@ fun AppSelectionSheet(
             searchQuery.isEmpty() || it.appName.contains(searchQuery, ignoreCase = true)
         val isVisible =
             !it.isSystemApp || showSystemApps || it.isEnabled // Always show if enabled, or if system toggle checks out
-        matchesSearch && isVisible
+        val isExcluded = excludePackages.contains(it.packageName)
+        matchesSearch && isVisible && !isExcluded
     }
         .sortedWith(compareByDescending<NotificationApp> { initialEnabledPackageNames.contains(it.packageName) }.thenBy { it.appName.lowercase() })
 
