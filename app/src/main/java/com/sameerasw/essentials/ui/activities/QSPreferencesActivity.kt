@@ -51,6 +51,17 @@ class QSPreferencesActivity : ComponentActivity() {
                 return
             }
 
+            if (componentName.className == "com.sameerasw.essentials.services.tiles.DataSimTileService" ||
+                componentName.className == "com.sameerasw.essentials.services.tiles.NetworkModeTileService"
+            ) {
+                val intent = Intent(this, NetworkModeSettingsActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                }
+                startActivity(intent)
+                finish()
+                return
+            }
+
             if (componentName.className == "com.sameerasw.essentials.services.tiles.AdaptiveBrightnessTileService") {
                 val displayIntent = Intent(Settings.ACTION_DISPLAY_SETTINGS).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -81,6 +92,8 @@ class QSPreferencesActivity : ComponentActivity() {
                 "com.sameerasw.essentials.services.tiles.FlashlightPulseTileService" -> "Notification lighting"
                 "com.sameerasw.essentials.services.tiles.StayAwakeTileService" -> "Quick settings tiles"
                 "com.sameerasw.essentials.services.tiles.NfcTileService" -> "NFC"
+                "com.sameerasw.essentials.services.tiles.DataSimTileService" -> "Quick settings tiles"
+                "com.sameerasw.essentials.services.tiles.NetworkModeTileService" -> "Quick settings tiles"
                 "com.sameerasw.essentials.services.tiles.AdaptiveBrightnessTileService" -> "Quick settings tiles"
                 "com.sameerasw.essentials.services.tiles.RefreshRateTileService" -> "Screen refresh rate"
                 "com.sameerasw.essentials.services.tiles.MapsPowerSavingTileService" -> "Maps power saving mode"
