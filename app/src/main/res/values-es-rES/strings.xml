@@ -1505,7 +1505,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="lock_screen_clock_metro">Metro</string>
     <string name="lock_screen_clock_numoverlap">Superposición de números</string>
     <string name="lock_screen_clock_weather">El tiempo</string>
-    <string name="lock_screen_clock_select_label">Seleccionar el estilo del reloj</string>
+    <string name="lock_screen_clock_select_label">Seleccionar estilo del reloj</string>
     <string name="lock_screen_clock_current_label">Actual</string>
     <string name="lock_screen_clock_apply_label">Aplicar</string>
     <string name="lock_screen_clock_applied_toast">Estilo del reloj aplicado</string>
