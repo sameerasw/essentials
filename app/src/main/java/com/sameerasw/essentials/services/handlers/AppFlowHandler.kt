@@ -9,10 +9,18 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.media.AudioManager
 import android.os.Handler
 import android.os.Looper
+import android.view.inputmethod.InputMethodManager
 import android.provider.Settings
+import android.content.res.Configuration
+import com.sameerasw.essentials.domain.model.AppRefreshRateConfig
+import com.sameerasw.essentials.utils.RefreshRateUtils
 import android.util.Log
+import android.os.Build
+import com.sameerasw.essentials.services.NotificationListener
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import androidx.core.app.NotificationCompat
 import com.google.gson.Gson
 import com.sameerasw.essentials.domain.diy.Automation
@@ -34,6 +42,33 @@ class AppFlowHandler(
 ) {
     private val handler = Handler(Looper.getMainLooper())
     private val scope = CoroutineScope(Dispatchers.Main)
+
+    private var lastOrientation = context.resources.configuration.orientation
+    private val componentCallbacks = object : android.content.ComponentCallbacks2 {
+        override fun onConfigurationChanged(newConfig: Configuration) {
+            val newOrientation = newConfig.orientation
+            if (newOrientation != lastOrientation) {
+                lastOrientation = newOrientation
+                val currentPkg = currentPackage
+                if (currentPkg != null) {
+                    checkPerAppRefreshRate(currentPkg)
+                }
+            }
+        }
+        override fun onLowMemory() {}
+        override fun onTrimMemory(level: Int) {}
+    }
+
+    private val mediaReceiver = object : android.content.BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == "com.sameerasw.essentials.MEDIA_PLAYBACK_CHANGED") {
+                val pkg = intent.getStringExtra("package_name")
+                if (pkg != null && pkg == currentPackage) {
+                    checkPerAppRefreshRate(pkg)
+                }
+            }
+        }
+    }
 
     private val authenticatedPackages = mutableSetOf<String>()
     private val lastLeaveTimes = mutableMapOf<String, Long>()
@@ -74,6 +109,14 @@ class AppFlowHandler(
     }
 
     init {
+        context.registerComponentCallbacks(componentCallbacks)
+        val mediaFilter = IntentFilter("com.sameerasw.essentials.MEDIA_PLAYBACK_CHANGED")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            context.registerReceiver(mediaReceiver, mediaFilter, Context.RECEIVER_EXPORTED)
+        } else {
+            context.registerReceiver(mediaReceiver, mediaFilter)
+        }
+
         val filter = IntentFilter().apply {
             addAction(ACTION_FREEZE_NOW)
             addAction(ACTION_ABORT_FREEZE)
@@ -84,6 +127,15 @@ class AppFlowHandler(
         } else {
             context.registerReceiver(shutUpReceiver, filter)
         }
+    }
+
+    fun destroy() {
+        try {
+            context.unregisterComponentCallbacks(componentCallbacks)
+        } catch (_: Exception) {}
+        try {
+            context.unregisterReceiver(mediaReceiver)
+        } catch (_: Exception) {}
     }
 
     // App Lock State
@@ -105,12 +157,59 @@ class AppFlowHandler(
     private val ignoredSystemPackages = listOf(
         "android",
         "com.android.systemui",
-        "com.google.android.inputmethod.latin"
+        "com.google.android.inputmethod.latin",
+        "com.google.android.gms"
     )
+
+    private fun isIgnoredPackage(packageName: String): Boolean {
+        if (ignoredSystemPackages.contains(packageName)) return true
+        
+        val lowerPkg = packageName.lowercase()
+        if (lowerPkg.contains("systemui") ||
+            lowerPkg.contains("keyguard") ||
+            lowerPkg.contains("volume") ||
+            lowerPkg.contains("soundassistant") ||
+            lowerPkg.contains("dialer") ||
+            lowerPkg.contains("telecom") ||
+            lowerPkg.contains("phone") ||
+            lowerPkg.contains("incallui") ||
+            lowerPkg.contains("packageinstaller") ||
+            lowerPkg.contains("permissioncontroller")
+        ) {
+            return true
+        }
+
+        // Check active call state via AudioManager mode
+        val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as? AudioManager
+        if (audioManager != null) {
+            val mode = audioManager.mode
+            if (mode == AudioManager.MODE_IN_CALL ||
+                mode == AudioManager.MODE_IN_COMMUNICATION ||
+                mode == AudioManager.MODE_RINGTONE
+            ) {
+                return true
+            }
+        }
+
+        return try {
+            val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            val ims = imm?.enabledInputMethodList
+            ims?.any { it.packageName == packageName } == true
+        } catch (_: Exception) {
+            false
+        }
+    }
 
     fun onPackageChanged(packageName: String, isFromUsageStats: Boolean = false) {
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
         val useUsageAccess = prefs.getBoolean("use_usage_access", false)
+
+        Log.d("AppFlowHandler", "onPackageChanged: packageName=$packageName, isFromUsageStats=$isFromUsageStats, useUsageAccess=$useUsageAccess, currentPackage=$currentPackage")
+
+        if (isIgnoredPackage(packageName)) {
+            Log.d("AppFlowHandler", "onPackageChanged: Ignoring system/IME/volume/call package $packageName")
+            return
+        }
 
         val oldPackage = currentPackage
         if (isFromUsageStats == useUsageAccess) {
@@ -126,6 +225,7 @@ class AppFlowHandler(
             checkHighlightNightLight(packageName)
             checkAppAutomations(packageName)
             checkGestureBarAutomation(packageName)
+            checkPerAppRefreshRate(packageName)
         }
     }
 
@@ -215,7 +315,7 @@ class AppFlowHandler(
 
         pendingNLRunnable?.let { handler.removeCallbacks(it) }
 
-        if (ignoredSystemPackages.contains(packageName)) {
+        if (isIgnoredPackage(packageName)) {
             Log.d("NightLight", "Ignoring system package $packageName")
             return
         }
@@ -287,6 +387,10 @@ class AppFlowHandler(
     }
 
     private fun checkAppAutomations(packageName: String) {
+        if (isIgnoredPackage(packageName)) {
+            Log.d("AppFlowHandler", "checkAppAutomations: Ignoring system/IME package $packageName")
+            return
+        }
         scope.launch {
             val automations = DIYRepository.automations.value
             val appAutomations =
@@ -810,6 +914,186 @@ class AppFlowHandler(
             if (autoArchivePackage != null) {
                 startAutoArchiveCountdown(autoArchivePackage)
             }
+        }
+    }
+
+    // Per-App Refresh Rate State
+    private var perAppRateSnapshot: RefreshRateUtils.RefreshRateState? = null
+    private var perAppCurrentPackage: String? = null
+    private var pendingRateRunnable: Runnable? = null
+    private var pendingRestoreRunnable: Runnable? = null
+
+    private fun isMediaPlaying(packageName: String): Boolean {
+        return try {
+            val msm = context.getSystemService(Context.MEDIA_SESSION_SERVICE) as? android.media.session.MediaSessionManager
+            val componentName = android.content.ComponentName(context, NotificationListener::class.java)
+            val sessions = msm?.getActiveSessions(componentName)
+            sessions?.any {
+                it.packageName == packageName &&
+                it.playbackState?.state == android.media.session.PlaybackState.STATE_PLAYING
+            } ?: false
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    private fun getTargetRefreshRateForConfig(config: AppRefreshRateConfig): Float {
+        val landscapeRate = config.landscapeRefreshRate
+        if (landscapeRate != null) {
+            val isLandscape = context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+            if (isLandscape) {
+                if (config.onlyOnMediaPlaying) {
+                    return if (isMediaPlaying(config.packageName)) landscapeRate else config.refreshRate
+                }
+                return landscapeRate
+            }
+        }
+        return config.refreshRate
+    }
+
+    fun checkPerAppRefreshRate(packageName: String) {
+        if (isIgnoredPackage(packageName)) {
+            return
+        }
+
+        val settingsRepository = SettingsRepository(context)
+        val isEnabled = settingsRepository.getBoolean(SettingsRepository.KEY_PER_APP_REFRESH_RATE_ENABLED, false)
+        if (!isEnabled) {
+            cancelPendingRateRunnable()
+            cancelPendingRestoreRunnable()
+            if (perAppRateSnapshot != null) {
+                restoreFromSnapshot()
+            }
+            return
+        }
+
+        val configs = settingsRepository.loadPerAppRefreshRateConfigs()
+        val config = configs.find { it.packageName == packageName && it.isEnabled }
+
+        if (config != null) {
+            cancelPendingRestoreRunnable()
+            if (perAppRateSnapshot == null) {
+                perAppRateSnapshot = RefreshRateUtils.getCurrentState(context)
+                Log.d("AppFlowHandler", "per-app refresh rate: snapshotted state: $perAppRateSnapshot")
+            }
+            perAppCurrentPackage = packageName
+            val targetRate = getTargetRefreshRateForConfig(config)
+            Log.d("AppFlowHandler", "per-app refresh rate: applying $targetRate Hz (isFixed=${config.isFixed}) for $packageName")
+            if (config.isFixed) {
+                RefreshRateUtils.applyFixedRefreshRate(context, targetRate)
+            } else {
+                RefreshRateUtils.applyDynamicRefreshRate(context, targetRate)
+            }
+
+            // Re-apply after a short delay to beat OEM adaptive display controllers that
+            // fire asynchronously after window transitions (e.g. resuming from recents).
+            cancelPendingRateRunnable()
+            val runnable = Runnable {
+                if (perAppCurrentPackage == packageName) {
+                    val delayedRate = getTargetRefreshRateForConfig(config)
+                    Log.d("AppFlowHandler", "per-app refresh rate: delayed re-apply $delayedRate Hz (isFixed=${config.isFixed}) for $packageName")
+                    if (config.isFixed) {
+                        RefreshRateUtils.applyFixedRefreshRate(context, delayedRate)
+                    } else {
+                        RefreshRateUtils.applyDynamicRefreshRate(context, delayedRate)
+                    }
+                }
+            }
+            pendingRateRunnable = runnable
+            handler.postDelayed(runnable, 400L)
+        } else {
+            cancelPendingRateRunnable()
+            val targetApp = perAppCurrentPackage // Capture it before setting to null
+            perAppCurrentPackage = null
+            if (perAppRateSnapshot != null && pendingRestoreRunnable == null) {
+                Log.d("AppFlowHandler", "per-app refresh rate: scheduling delayed restoration (1000ms) for leaving $packageName")
+                val runnable = Runnable {
+                    val activePkg = getActivePackageName()
+                    if (activePkg == targetApp && targetApp != null) {
+                        Log.d("AppFlowHandler", "per-app refresh rate: aborting restoration because target app $targetApp is in the foreground")
+                        perAppCurrentPackage = targetApp
+                        // Re-apply refresh rate for targetApp just to be safe
+                        val latestConfigs = SettingsRepository(context).loadPerAppRefreshRateConfigs()
+                        val targetConfig = latestConfigs.find { it.packageName == targetApp && it.isEnabled }
+                        if (targetConfig != null) {
+                            val targetRate = getTargetRefreshRateForConfig(targetConfig)
+                            if (targetConfig.isFixed) {
+                                RefreshRateUtils.applyFixedRefreshRate(context, targetRate)
+                            } else {
+                                RefreshRateUtils.applyDynamicRefreshRate(context, targetRate)
+                            }
+                        }
+                    } else {
+                        val latestConfigs = SettingsRepository(context).loadPerAppRefreshRateConfigs()
+                        val activeConfig = latestConfigs.find { it.packageName == activePkg && it.isEnabled }
+                        if (activeConfig == null && perAppRateSnapshot != null) {
+                            Log.d("AppFlowHandler", "per-app refresh rate: restoring to global state from snapshot (delayed)")
+                            restoreFromSnapshot()
+                        } else if (activeConfig != null) {
+                            Log.d("AppFlowHandler", "per-app refresh rate: aborting restoration because active app is $activePkg")
+                            perAppCurrentPackage = activePkg
+                            val targetRate = getTargetRefreshRateForConfig(activeConfig)
+                            if (activeConfig.isFixed) {
+                                RefreshRateUtils.applyFixedRefreshRate(context, targetRate)
+                            } else {
+                                RefreshRateUtils.applyDynamicRefreshRate(context, targetRate)
+                            }
+                        }
+                    }
+                    pendingRestoreRunnable = null
+                }
+                pendingRestoreRunnable = runnable
+                handler.postDelayed(runnable, 1000L)
+            }
+        }
+    }
+
+    private fun getActivePackageName(): String? {
+        val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+        val useUsageAccess = prefs.getBoolean("use_usage_access", false)
+        if (useUsageAccess) {
+            try {
+                val usm = context.getSystemService(Context.USAGE_STATS_SERVICE) as? android.app.usage.UsageStatsManager
+                val time = System.currentTimeMillis()
+                val events = usm?.queryEvents(time - 1000 * 15, time)
+                val event = android.app.usage.UsageEvents.Event()
+                var lastResumed: String? = null
+                while (events?.hasNextEvent() == true) {
+                    events.getNextEvent(event)
+                    if (event.eventType == android.app.usage.UsageEvents.Event.ACTIVITY_RESUMED) {
+                        lastResumed = event.packageName
+                    }
+                }
+                if (lastResumed != null) return lastResumed
+            } catch (_: Exception) {}
+        }
+        return service?.rootInActiveWindow?.packageName?.toString()
+    }
+
+    private fun cancelPendingRateRunnable() {
+        pendingRateRunnable?.let { handler.removeCallbacks(it) }
+        pendingRateRunnable = null
+    }
+
+    private fun cancelPendingRestoreRunnable() {
+        pendingRestoreRunnable?.let { handler.removeCallbacks(it) }
+        pendingRestoreRunnable = null
+    }
+
+    private fun restoreFromSnapshot() {
+        val snapshot = perAppRateSnapshot ?: return
+        try {
+            if (snapshot.isSystemManaged) {
+                RefreshRateUtils.resetRefreshRate(context, snapshot.usesInfinityDefaultPeak)
+            } else if (snapshot.min > 0f && snapshot.peak > 0f && snapshot.min != snapshot.peak) {
+                RefreshRateUtils.applyRangeRefreshRate(context, snapshot.min, snapshot.peak)
+            } else {
+                RefreshRateUtils.applyFixedRefreshRate(context, snapshot.peak.coerceAtLeast(snapshot.min))
+            }
+        } catch (e: Exception) {
+            Log.e("AppFlowHandler", "Failed to restore refresh rate from snapshot", e)
+        } finally {
+            perAppRateSnapshot = null
         }
     }
 

@@ -371,6 +371,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
             }
             isLightSensorRegistered = false
         }
+        appFlowHandler.destroy()
         serviceScope.cancel()
         getSharedPreferences("essentials_prefs", MODE_PRIVATE)
             .unregisterOnSharedPreferenceChangeListener(preferenceChangeListener)
