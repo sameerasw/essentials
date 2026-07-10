@@ -256,6 +256,13 @@
     <string name="tile_refresh_rate">Refresh Rate</string>
     <string name="about_desc_refresh_rate_tile">Cycle between the system default and preset refresh rates directly from a Quick Settings tile using Shizuku.</string>
     <string name="nfc_tile_label">NFC</string>
+    <string name="tile_data_sim">Data SIM</string>
+    <string name="tile_network_mode">Network Mode</string>
+    <string name="network_mode_5g_pref">5G Preferred</string>
+    <string name="network_mode_nr_only">NR Only</string>
+    <string name="network_mode_lte_only">LTE Only</string>
+    <string name="network_mode_3g_only">3G Only</string>
+    <string name="network_mode_2g_only">2G Only</string>
     <string name="tile_private_dns">Private DNS</string>
     <string name="tile_private_dns_auto">Auto</string>
     <string name="tile_private_dns_off">Off</string>
@@ -848,6 +855,8 @@
     <string name="about_desc_flashlight_tile">Toggle the flashlight.\n\nA Long pressing opens the controls for intensity adjustment which might need hardware implementation which some devices may lack.</string>
     <string name="about_desc_stay_awake">Keep the screen awake while charging.\n\nPrevents the screen from sleeping as long as the device is connected to a power source which is suitable for developers during debugging.</string>
     <string name="about_desc_nfc">Toggle NFC.\n\nQuickly enable or disable Near Field Communication for payments and pairing.</string>
+    <string name="about_desc_data_sim">Switch default data SIM.\n\nQuickly toggle the active mobile data SIM subscription on dual-SIM devices using Shizuku or Root.</string>
+    <string name="about_desc_network_mode">Switch preferred network mode.\n\nCycle through 5G, 4G, 3G, and 2G preferred network modes using Shizuku or Root.</string>
     <string name="about_desc_adaptive_brightness">Toggle adaptive brightness.\n\nEnable or disable automatic screen brightness adjustment based on ambient light.</string>
     <string name="about_desc_private_dns">Toggle Private DNS.\n\nCycle through Off, Automatic, and Private DNS provider modes.</string>
     <string name="about_desc_usb_debugging">Toggle USB Debugging.\n\nEnable or disable ADB debugging access directly from the quick settings.</string>

@@ -62,6 +62,8 @@ import com.sameerasw.essentials.services.tiles.FlashlightTileService
 import com.sameerasw.essentials.services.tiles.MapsPowerSavingTileService
 import com.sameerasw.essentials.services.tiles.MonoAudioTileService
 import com.sameerasw.essentials.services.tiles.NfcTileService
+import com.sameerasw.essentials.services.tiles.DataSimTileService
+import com.sameerasw.essentials.services.tiles.NetworkModeTileService
 import com.sameerasw.essentials.services.tiles.NotificationLightingTileService
 import com.sameerasw.essentials.services.tiles.PrivateDnsTileService
 import com.sameerasw.essentials.services.tiles.PrivateNotificationsTileService
@@ -260,6 +262,24 @@ fun QuickSettingsTilesSettingsUI(
             else if (PermissionUtils.canWriteSecureSettings(context)) listOf("WRITE_SECURE_SETTINGS")
             else listOf("SHIZUKU"),
             R.string.about_desc_nfc,
+            R.string.cat_connectivity
+        ),
+        QSTileInfo(
+            R.string.tile_data_sim,
+            R.drawable.rounded_android_cell_dual_4_bar_24,
+            DataSimTileService::class.java,
+            if (ShellUtils.isRootEnabled(context)) listOf("ROOT")
+            else listOf("SHIZUKU"),
+            R.string.about_desc_data_sim,
+            R.string.cat_connectivity
+        ),
+        QSTileInfo(
+            R.string.tile_network_mode,
+            R.drawable.rounded_signal_cellular_alt_24,
+            NetworkModeTileService::class.java,
+            if (ShellUtils.isRootEnabled(context)) listOf("ROOT")
+            else listOf("SHIZUKU"),
+            R.string.about_desc_network_mode,
             R.string.cat_connectivity
         ),
         QSTileInfo(
