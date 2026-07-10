@@ -375,6 +375,14 @@
             android:theme="@style/Theme.Essentials.Translucent" />
 
         <activity
+            android:name=".ui.activities.NetworkModeSettingsActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:theme="@style/Theme.Essentials.Translucent" />
+
+        <activity
             android:name=".ui.activities.WatermarkActivity"
             android:exported="true"
             android:label="@string/feat_watermark_title"
@@ -798,6 +806,34 @@
         </service>
 
         <service
+            android:name=".services.tiles.DataSimTileService"
+            android:exported="true"
+            android:icon="@drawable/rounded_android_cell_dual_4_bar_24"
+            android:label="@string/tile_data_sim"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.quicksettings.TILE_CATEGORY"
+                android:value="android.service.quicksettings.CATEGORY_CONNECTIVITY" />
+        </service>
+
+        <service
+            android:name=".services.tiles.NetworkModeTileService"
+            android:exported="true"
+            android:icon="@drawable/rounded_signal_cellular_alt_24"
+            android:label="@string/tile_network_mode"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.quicksettings.TILE_CATEGORY"
+                android:value="android.service.quicksettings.CATEGORY_CONNECTIVITY" />
+        </service>
+
+        <service
             android:name=".services.tiles.StayAwakeTileService"
             android:exported="true"
             android:icon="@drawable/rounded_battery_charging_60_24"
@@ -905,6 +941,15 @@
                 <action android:name="com.sameerasw.essentials.ACTION_FLASHLIGHT_OFF" />
                 <action android:name="com.sameerasw.essentials.ACTION_FLASHLIGHT_TOGGLE" />
                 <action android:name="com.sameerasw.essentials.ACTION_SET_INTENSITY" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name=".services.receivers.TelephonyActionReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.sameerasw.essentials.SET_DATA_SIM" />
+                <action android:name="com.sameerasw.essentials.SET_NETWORK_MODE" />
             </intent-filter>
         </receiver>
 
