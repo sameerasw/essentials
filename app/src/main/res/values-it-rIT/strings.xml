@@ -101,10 +101,10 @@
     <string name="settings_section_other">Altro</string>
     <string name="flashlight_always_off_title">Spegni sempre la torcia</string>
     <string name="flashlight_always_off_desc">Anche mentre lo schermo è acceso</string>
-    <string name="flashlight_pocket_title">Pocket detection</string>
-    <string name="flashlight_pocket_desc">Turn off flashlight when phone is in your pocket</string>
-    <string name="flashlight_overheat_title">Overheating prevention</string>
-    <string name="flashlight_overheat_desc">Lower brightness on longer period of use</string>
+    <string name="flashlight_pocket_title">Rilevamento tasca</string>
+    <string name="flashlight_pocket_desc">Spegni la torcia quando il telefono è in tasca</string>
+    <string name="flashlight_overheat_title">Prevenzione surriscaldamento</string>
+    <string name="flashlight_overheat_desc">Abbassa la luminosità nei periodi di utilizzo prolungati</string>
     <string name="content_desc_settings">Impostazioni</string>
     <!-- Caffeinate / Permissions -->
     <string name="permission_show_notification_title">Mostra notifiche</string>
@@ -397,13 +397,13 @@
     <string name="search_no_results">Nessun risultato per \"%1$s\"</string>
     <string name="search_results_title">Risultati della ricerca</string>
     <string name="requires_following_permissions">%1$s richiede le seguenti autorizzazioni</string>
-    <string name="setting_enable_unsupported_features_title">Enable unsupported features</string>
-    <string name="setting_enable_unsupported_features_desc">Show OEM-specific or redundant features that are hidden by default.</string>
-    <string name="unsupported_features_warning_title">Enable unsupported features?</string>
-    <string name="unsupported_features_warning_desc">These features may not work on every device and could require extra permissions or root access.</string>
-    <string name="unsupported_features_confirm">Enable anyway</string>
-    <string name="unsupported_features_cancel">Cancel</string>
-    <string name="disabled_on_this_device">Disabled on this device</string>
+    <string name="setting_enable_unsupported_features_title">Abilita funzionalità non supportate</string>
+    <string name="setting_enable_unsupported_features_desc">Mostra funzionalità specifiche per produttore o ridondanti nascoste per impostazione predefinita.</string>
+    <string name="unsupported_features_warning_title">Abilitare funzionalità non supportate?</string>
+    <string name="unsupported_features_warning_desc">Queste funzionalità possono non funzionare in tutti i dispositivi e potrebbero richiedere autorizzazioni aggiuntive o accesso root.</string>
+    <string name="unsupported_features_confirm">Abilita comunque</string>
+    <string name="unsupported_features_cancel">Annulla</string>
+    <string name="disabled_on_this_device">Disabilitato su questo dispositivo</string>
     <!-- Features -->
     <string name="feat_screen_off_widget_title">Widget di spegnimento dello schermo</string>
     <string name="feat_screen_off_widget_desc">Widget invisibile per spegnere lo schermo</string>
@@ -470,16 +470,16 @@
     <string name="feat_freeze_desc">Disattiva le app utilizzate raramente</string>
     <string name="feat_watermark_title">Filigrana</string>
     <string name="feat_watermark_desc">Aggiungi dati EXIF ​​e loghi alle foto</string>
-    <string name="feat_daily_wallpaper_title">Wallpaper</string>
+    <string name="feat_daily_wallpaper_title">Sfondo</string>
     <string name="feat_daily_wallpaper_desc">Daily curated handpicked wallpaper</string>
-    <string name="label_wallpaper_apply">Apply Wallpaper</string>
-    <string name="label_wallpaper_by">Photo by</string>
-    <string name="label_wallpaper_applied">Wallpaper applied successfully</string>
-    <string name="label_wallpaper_apply_failed">Failed to apply wallpaper</string>
-    <string name="label_wallpaper_applying">Applying new wallpaper</string>
-    <string name="label_wallpaper_auto_update">Auto-update</string>
-    <string name="label_wallpaper_auto_update_desc">Checks twice a day for a new wallpaper on a background schedule</string>
-    <string name="label_clear_custom_videos">Clear custom videos</string>
+    <string name="label_wallpaper_apply">Applica sfondo</string>
+    <string name="label_wallpaper_by">Foto di</string>
+    <string name="label_wallpaper_applied">Sfondo applicato correttamente</string>
+    <string name="label_wallpaper_apply_failed">Impossibile applicare lo sfondo</string>
+    <string name="label_wallpaper_applying">Applicazione del nuovo sfondo</string>
+    <string name="label_wallpaper_auto_update">Aggiorna automaticamente</string>
+    <string name="label_wallpaper_auto_update_desc">Controlla due volte al giorno la presenza di un nuovo sfondo in background</string>
+    <string name="label_clear_custom_videos">Cancella video personalizzati</string>
     <string name="feat_always_on_display_title">Display sempre attivo</string>
     <string name="feat_always_on_display_desc">Mostra ora e informazioni mentre lo schermo è spento</string>
     <string name="feat_calendar_sync_title">Sincronizzazione del calendario</string>
@@ -600,8 +600,8 @@
     <string name="search_remap_haptic_desc">Vibrazione alla pressione del pulsante riassegnato</string>
     <string name="search_remap_flashlight_title">Interruttore torcia</string>
     <string name="search_remap_flashlight_desc">Attiva o disattiva la torcia con i pulsanti del volume</string>
-    <string name="search_flashlight_pocket_title">Flashlight pocket detection</string>
-    <string name="search_flashlight_pocket_desc">Auto-turn off flashlight when placed in pocket</string>
+    <string name="search_flashlight_pocket_title">Rilevamento tasca per torcia</string>
+    <string name="search_flashlight_pocket_desc">Spegni automaticamente la torcia quando il dispositivo viene riposto in tasca</string>
     <string name="search_night_light_enable_title">Abilita luce notturna dinamica</string>
     <string name="search_night_light_enable_desc">Interruttore principale per luce notturna dinamica</string>
     <string name="search_app_lock_enable_title">Abilita blocco app</string>
@@ -653,7 +653,7 @@
     <string name="perm_action_how_to">Come concedere</string>
     <string name="perm_action_granted">Concesso</string>
     <string name="perm_action_grant_shizuku">Concedi tramite Shizuku</string>
-    <string name="perm_action_grant_root">Grant using Root</string>
+    <string name="perm_action_grant_root">Concedi tramite root</string>
     <string name="perm_write_secure_instructions">Questo permesso può essere concesso tramite PC utilizzando ADB. Copia il comando ADB ed eseguilo nella shell.\n\nIn alternativa, puoi concederlo facilmente tramite Shizuku usando il pulsante qui sotto.\n\nQuesto permesso deve essere concesso una sola volta.</string>
     <string name="perm_battery_optimization_title">Ottimizzazione della batteria</string>
     <string name="perm_battery_optimization_desc">Evita la chiusura del servizio da parte del sistema per risparmio energetico.</string>
@@ -959,10 +959,10 @@
         <item>notifica</item>
     </string-array>
     <string-array name="keywords_pocket_detection">
-        <item>pocket</item>
-        <item>proximity</item>
-        <item>sensor</item>
-        <item>torch</item>
+        <item>tasca</item>
+        <item>prossimità</item>
+        <item>sensore</item>
+        <item>torcia</item>
         <item>auto</item>
     </string-array>
     <string-array name="keywords_qs_stay_awake">
@@ -1313,7 +1313,7 @@
     <string name="feat_sync_sound_mode_title">Sincronizza modalità audio</string>
     <string name="feat_sync_sound_mode_desc">Sincronizza automaticamente con l\'orologio</string>
     <string name="perm_watch_write_secure_title">Impostazioni sicurezza orologio</string>
-    <string name="perm_watch_write_secure_desc">Requires secure settings write permission on your Watch. Grant it using the ADB command below.</string>
+    <string name="perm_watch_write_secure_desc">Richiede l\'autorizzazione di scrittura delle impostazioni di sicurezza sul tuo orologio. Concedila utilizzando il comando ADB qui sotto.</string>
     <string name="cat_interaction">Interazione</string>
     <string name="cat_interface">Interfaccia</string>
     <string name="cat_display">Schermo</string>
@@ -1403,7 +1403,7 @@
     <string name="refresh_rate_system_default">Sistema</string>
     <string name="refresh_rate_reset_desc">Rimuovi l\'override personalizzato e torna al comportamento di aggiornamento predefinito di sistema</string>
     <string name="msg_refresh_rate_permission_required">È necessaria l\'autorizzazione di Shizuku per regolare la frequenza di aggiornamento</string>
-    <string name="msg_refresh_rate_root_permission_required">Root permission required to adjust refresh rate</string>
+    <string name="msg_refresh_rate_root_permission_required">È necessaria l\'autorizzazione root per regolare la frequenza di aggiornamento</string>
     <string name="search_refresh_rate_mode_title">Modalità frequenza di aggiornamento</string>
     <string name="search_refresh_rate_mode_desc">Passa dal controllo della frequenza di aggiornamento fissa a quella variabile</string>
     <string name="search_refresh_rate_fixed_title">Frequenza di aggiornamento fissa</string>
@@ -1423,8 +1423,8 @@
     <string name="label_use_blur">Usa sfocatura</string>
     <string name="desc_use_blur">Abilita gli elementi con sfocatura progressiva nell\'interfaccia</string>
     <string name="msg_blur_compatibility_error">La sfocatura è disabilitata su questo dispositivo per prevenire un noto bug di visualizzazione sui dispositivi Samsung con Android 15 o versioni precedenti.</string>
-    <string name="setting_swipe_tabs_title">Swipe between tabs</string>
-    <string name="setting_swipe_tabs_desc">In home screen</string>
+    <string name="setting_swipe_tabs_title">Scorri tra le schede</string>
+    <string name="setting_swipe_tabs_desc">Nella schermata home</string>
     <!-- Empty State Actions -->
     <string name="msg_no_apps_frozen">Nessuna app da congelare selezionata.</string>
     <string name="action_get_started">Inziamo</string>
@@ -1536,56 +1536,56 @@
     <string name="favorites_widget_description">Visualizza e avvia le tue funzioni preferite in un attimo.</string>
     <string name="favorites_widget_empty_state">Nessuna funzionalità preferita fissata. Apri l\'app per fissarne alcune!</string>
     <!-- External Control Permission -->
-    <string name="perm_external_control_label">control Essentials features</string>
-    <string name="perm_external_control_desc">read, update and control Essentials features and settings</string>
-    <string name="pixel_searchbar_settings_title">Pixel Searchbar Customization</string>
+    <string name="perm_external_control_label">controllare funzionalità Essentials</string>
+    <string name="perm_external_control_desc">leggere, aggiornare e controllare le funzionalità Essentials e le impostazioni</string>
+    <string name="pixel_searchbar_settings_title">Personalizzazione barra di ricerca Pixel</string>
     <string name="pixel_searchbar_style_empty">Empty (Default)</string>
-    <string name="pixel_searchbar_style_date">Date</string>
-    <string name="pixel_searchbar_background_pill_title">Background pill</string>
-    <string name="pixel_searchbar_background_pill_desc">Show the date inside a container</string>
-    <string name="about_desc_pixel_searchbar">Replace the default Pixel Launcher search bar on your home screen. You can customize the content to show either nothing (Empty) or the current date. \n\nPlease note that enabling this may break Pixel Launcher At a Glance widgets (such as sports and finance widgets). \n\nAnd the setting may need to be applied multiple times to take effect.</string>
-    <string name="label_replace_with">Replace with</string>
-    <string name="pixel_searchbar_tap_action_title">Configure tap action</string>
-    <string name="pixel_searchbar_tap_action_desc">Set up actions to trigger in DIY automations when tapped</string>
+    <string name="pixel_searchbar_style_date">Data</string>
+    <string name="pixel_searchbar_background_pill_title">Sfondo a pillola</string>
+    <string name="pixel_searchbar_background_pill_desc">Mostra la data all\'interno di un contenitore</string>
+    <string name="about_desc_pixel_searchbar">Sostituisci la barra di ricerca predefinita di Pixel Launcher sulla tua schermata iniziale. Puoi personalizzare il contenuto per non mostrare nulla (Vuoto) o la data corrente. \n\nNota: l\'attivazione di questa opzione potrebbe compromettere il funzionamento dei widget Riepilogo del Pixel Launcher (come i widget relativi a sport e finanza). \n\nInoltre, potrebbe essere necessario applicare l\'impostazione più volte affinché diventi effettiva.</string>
+    <string name="label_replace_with">Sostituisci con</string>
+    <string name="pixel_searchbar_tap_action_title">Configura azione al tocco</string>
+    <string name="pixel_searchbar_tap_action_desc">Imposta le azioni da avviare nelle automazioni personalizzate con un tocco</string>
     <string name="pixel_searchbar_style_widget">Widget</string>
-    <string name="pixel_searchbar_widget_picker_title">Pick a widget</string>
-    <string name="pixel_searchbar_widget_picker_desc">Select a widget to display its content in the searchbar</string>
-    <string name="pixel_searchbar_widget_selected">Widget selected</string>
-    <string name="pixel_searchbar_widget_none">No widget selected</string>
-    <string name="pixel_searchbar_widget_change">Change widget</string>
-    <string name="pixel_searchbar_widget_remove">Remove widget</string>
-    <string name="pixel_searchbar_bind_permission_title">Widget host permission required</string>
-    <string name="pixel_searchbar_bind_permission_desc">Essentials needs permission to host widgets. Tap to grant.</string>
-    <string name="pixel_searchbar_scraped_line1">Scraped title</string>
-    <string name="pixel_searchbar_scraped_line2">Scraped subtitle</string>
-    <string name="pixel_searchbar_widget_padding_h">Horizontal padding</string>
-    <string name="pixel_searchbar_widget_padding_v">Vertical padding</string>
-    <string name="pixel_searchbar_tap_action_enabled">Custom tap action</string>
-    <string name="pixel_searchbar_tap_action_enabled_desc">Use DIY tap action instead of widget\'s own</string>
-    <string name="pixel_searchbar_style_music">Music</string>
-    <string name="action_restart_shizuku">Restart Shizuku</string>
-    <string name="toast_enter_shizuku_token">Please enter Shizuku auth token in settings first</string>
+    <string name="pixel_searchbar_widget_picker_title">Scegli un widget</string>
+    <string name="pixel_searchbar_widget_picker_desc">Seleziona un widget per visualizzarne il contenuto nella barra di ricerca</string>
+    <string name="pixel_searchbar_widget_selected">Widget selezionato</string>
+    <string name="pixel_searchbar_widget_none">Nessun widget selezionato</string>
+    <string name="pixel_searchbar_widget_change">Cambia widget</string>
+    <string name="pixel_searchbar_widget_remove">Rimuovi widget</string>
+    <string name="pixel_searchbar_bind_permission_title">Autorizzazione host widget richiesta</string>
+    <string name="pixel_searchbar_bind_permission_desc">Essentials richiede l\'autorizzazione per l\'hosting dei widget. Tocca per concederla.</string>
+    <string name="pixel_searchbar_scraped_line1">Titolo estratto</string>
+    <string name="pixel_searchbar_scraped_line2">Sottotitolo estratto</string>
+    <string name="pixel_searchbar_widget_padding_h">Spaziatura orizzontale</string>
+    <string name="pixel_searchbar_widget_padding_v">Spaziatura verticale</string>
+    <string name="pixel_searchbar_tap_action_enabled">Azione al tocco personalizzata</string>
+    <string name="pixel_searchbar_tap_action_enabled_desc">Usa un\'azione al tocco personalizzata invece di quella del widget</string>
+    <string name="pixel_searchbar_style_music">Musica</string>
+    <string name="action_restart_shizuku">Riavvia Shizuku</string>
+    <string name="toast_enter_shizuku_token">Inserisci prima il token di autenticazione di Shizuku nelle impostazioni</string>
     <!-- Pocket Mode -->
-    <string name="feat_pocket_mode_title">Pocket mode</string>
-    <string name="feat_pocket_mode_desc">Prevent accidental touches while in pocket</string>
-    <string name="pocket_mode_use_light_title">Use light sensor</string>
-    <string name="pocket_mode_use_light_desc">Use ambient light level in addition to proximity for better accuracy</string>
-    <string name="pocket_mode_active">Pocket mode active</string>
-    <string name="pocket_mode_dismiss_hint">Press any volume key to dismiss</string>
-    <string name="pocket_mode_warning">Warning: On some devices with missing sensors, enabling Pocket Mode may break deep sleep and cause higher battery drain</string>
-    <string name="pocket_mode_exclude_apps_title">Exclude apps</string>
-    <string name="pocket_mode_exclude_apps_desc">Choose apps where Pocket Mode should not trigger. Pocket mode will not work when streaming or gaming by default</string>
-    <string name="pocket_mode_trigger_delay_title">Trigger delay</string>
-    <string name="pocket_mode_lock_screen_only_title">Lock screen only</string>
-    <string name="pocket_mode_lock_screen_only_desc">Only trigger pocket mode when the device is locked</string>
+    <string name="feat_pocket_mode_title">Modalità tasca</string>
+    <string name="feat_pocket_mode_desc">Previene i tocchi accidentali quando il dispositivo è in tasca</string>
+    <string name="pocket_mode_use_light_title">Usa il sensore di luminosità</string>
+    <string name="pocket_mode_use_light_desc">Utilizza il livello di luce ambientale in combinazione con la prossimità per una maggiore precisione</string>
+    <string name="pocket_mode_active">Modalità tasca attiva</string>
+    <string name="pocket_mode_dismiss_hint">Premi un tasto del volume per ignorare</string>
+    <string name="pocket_mode_warning">Attenzione: su alcuni dispositivi privi di determinati sensori, l\'attivazione della Modalità tasca potrebbe compromettere il deep sleep e causare un maggiore consumo di batteria</string>
+    <string name="pocket_mode_exclude_apps_title">Escludi app</string>
+    <string name="pocket_mode_exclude_apps_desc">Scegli le app che non devono attivare la Modalità tasca. La Modalità tasca non verrà eseguita durante lo streaming o gioco per impostazione predefinita</string>
+    <string name="pocket_mode_trigger_delay_title">Ritardo di attivazione</string>
+    <string name="pocket_mode_lock_screen_only_title">Solo con schermo bloccato</string>
+    <string name="pocket_mode_lock_screen_only_desc">Attiva la modalità tasca solo quando il dispositivo è bloccato</string>
     <!-- Developer Settings & Wallpaper Check -->
-    <string name="import_config_sheet_title">Restore Configuration</string>
-    <string name="import_config_sheet_desc">Choose how you want to restore the configuration.</string>
-    <string name="import_config_merge_warning">Merging might cause data corruption. Please proceed with caution!</string>
-    <string name="action_override">Override</string>
-    <string name="action_merge">Merge</string>
-    <string name="label_wallpaper_last_checked">Last checked at %1$s</string>
-    <string name="label_wallpaper_next_check">Next check in %1$s</string>
-    <string name="label_wallpaper_hours">%1$d hours</string>
-    <string name="label_wallpaper_a_few_minutes">a few minutes</string>
+    <string name="import_config_sheet_title">Ripristina configurazione</string>
+    <string name="import_config_sheet_desc">Scegli come vuoi ripristinare la configurazione.</string>
+    <string name="import_config_merge_warning">L\'unione potrebbe causare la corruzione dei dati. Procedi con attenzione!</string>
+    <string name="action_override">Sovrascrivi</string>
+    <string name="action_merge">Unisci</string>
+    <string name="label_wallpaper_last_checked">Ultimo controllo il %1$s</string>
+    <string name="label_wallpaper_next_check">Prossimo controllo in %1$s</string>
+    <string name="label_wallpaper_hours">%1$d ore</string>
+    <string name="label_wallpaper_a_few_minutes">alcuni minuti</string>
 </resources>

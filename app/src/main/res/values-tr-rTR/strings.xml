@@ -103,8 +103,8 @@
     <string name="flashlight_always_off_desc">Ekran açıkken bile</string>
     <string name="flashlight_pocket_title">Cep tespiti</string>
     <string name="flashlight_pocket_desc">Telefon cebinizdeyken el fenerini kapatın</string>
-    <string name="flashlight_overheat_title">Overheating prevention</string>
-    <string name="flashlight_overheat_desc">Lower brightness on longer period of use</string>
+    <string name="flashlight_overheat_title">Aşırı ısınma önleme</string>
+    <string name="flashlight_overheat_desc">Uzun süreli kullanımda parlaklığı düşürün</string>
     <string name="content_desc_settings">Ayarlar</string>
     <!-- Caffeinate / Permissions -->
     <string name="permission_show_notification_title">Bildirimi Göster</string>
@@ -653,7 +653,7 @@
     <string name="perm_action_how_to">Nasıl verilir</string>
     <string name="perm_action_granted">Verildi</string>
     <string name="perm_action_grant_shizuku">Shizuku kullanarak izin ver</string>
-    <string name="perm_action_grant_root">Grant using Root</string>
+    <string name="perm_action_grant_root">Root kullanarak izin ver</string>
     <string name="perm_write_secure_instructions">Bu izin, ADB kullanarak bir bilgisayar üzerinden verilebilir. ADB komutunu kopyalayın ve kabukta çalıştırın.\n\nYa da aşağıdaki butonu kullanarak Shizuku kullanarak kolayca izin verebilirsiniz.\n\nBu iznin yalnızca bir kez verilmesi yeterlidir.</string>
     <string name="perm_battery_optimization_title">Pil Optimizasyonu</string>
     <string name="perm_battery_optimization_desc">Güç tasarrufu sağlamak için hizmetin sistem tarafından sonlandırılmadığından emin olun.</string>
@@ -1146,7 +1146,7 @@
     <string name="instruction_section_silent_title">Sessiz mod</string>
     <string name="instruction_section_silent_desc">Sessiz modun aynı zamanda DND\'yi de tetiklediğini fark etmiş olabilirsiniz. \n\nBu, Android\'in bunu uygulama şeklinden kaynaklanmaktadır; titreşim moduna geçmek için aynı API\'ı kullansak bile, nedense sessiz modla birlikte DND\'yi de açar ve bu şu anda önlenebilir değil. :(</string>
     <string name="instruction_section_freeze_title">Dondur nedir?</string>
-    <string name="instruction_section_freeze_desc">Uygulamaları duraklatın ve dikkatinizi dağıtacak şeylerden uzak durun, aynı zamanda arka planda çalışan uygulamaları önleyerek biraz güç tasarrufu yapın. Nadiren kullanılan uygulamalar için uygundur. \n\nSiz dondurmayı çözmediğiniz sürece acil bir durumda sizi bilgilendirmeyecekleri için herhangi bir iletişim hizmeti için önerilmez. \n\nSistem kararsızlığına yol açabileceğinden sistem uygulamalarını dondurmamanız önemle tavsiye edilir. Dikkatli ilerleyin, Uyarıldınız. \n\nDolu\'dan İlham Alındı ​​&lt;3</string>
+    <string name="instruction_section_freeze_desc">Uygulamaların arka planda çalışmasını engelleyerek biraz güç tasarrufu yapın ve uygulama kaynaklı dikkat dağıtıcı unsurlardan uzak durun. Nadiren kullanılan uygulamalar için uygundur. \n\nSiz dondurmayı çözmediğiniz sürece acil bir durumda sizi bilgilendirmeyecekleri için herhangi bir iletişim hizmeti için önerilmez. \n\nSistem kararsızlığına yol açabileceğinden sistem uygulamalarını dondurmamanız önemle tavsiye edilir. Dikkatli ilerleyin, Uyarıldınız. \n\nHail\'dan ilham alındı ​​&lt;3</string>
     <string name="instruction_section_security_title">Uygulama kilidi ve ekran kilitli güvenlik gerçekten güvenli midir?</string>
     <string name="instruction_section_security_desc">Kesinlikle hayır. \n\n3. parti uygulamaların hiçbiri, cihazın normal etkileşimlerine %100 müdahale edemez ve uygulama kilidi bile yalnızca seçili uygulamaların üzerinde yer alan ve onlarla etkileşimi engelleyen bir katmandır. Çözüm yolları mevcuttur ve kusursuz değildir. \n\nAynı durum, her nedense Pixel telefonlardaki herkes için hala erişilebilir olan ağ kutucuklarıyla etkileşime girmeye çalışan birini algılayan ekran kilidi güvenlik özelliği için de geçerlidir. Dolayısıyla, yeterince uğraşırlarsa bunları değiştirebilirler ve özellikle uçak modu QS kutucuğu eklediyseniz, bu uygulama onunla etkileşimi engelleyemez. \n\nBu özellikler sadece hafif kullanım için yapılan deneylerdir ve hiçbir zaman güçlü güvenlik ve gizlilik çözümleri olarak önerilmez. \n\nGüvenli alternatifler:\n - Uygulama kilidi: Pixel ve Samsung\'da Özel Alan ve Güvenli klasör\n - Mobil ağ erişimini engelleme: Hırsızlığa karşı koruma ve çevrimdışı/ kapalıyken cihazımı bul ayarlarınızın açık olduğundan emin olun. Graphene OS\'e de bakabilirsiniz.</string>
     <string name="instruction_section_statusbar_title">Durum çubuğu simgeleri</string>
@@ -1158,7 +1158,7 @@
     <string name="instruction_section_flashlight_title">El feneri parlaklığı çalışmıyor</string>
     <string name="instruction_section_flashlight_desc">Yalnızca sınırlı sayıda cihaz, el feneri yoğunluğunu ayarlayan donanım ve yazılım desteğine sahiptir. \n\nAndroid\'in minimum sürümü 13 (SDK33)\'tür.\nEl feneri parlaklık kontrolü yalnızca HAL sürüm 3.8 ve üzerini destekler, yani desteklenen cihazlar arasında en yeni olanlar (Örneğin, Pixel 6/7, Samsung S23, vb.)\'\npolodarb/Flashlight-Tiramisu</string>
     <string name="instruction_section_about_title">Bu uygulama da neyin nesi?</string>
-    <string name="instruction_section_about_desc">Güzel soru,\n\nHer zaman cihazlarımdan en iyi şekilde yararlanmayı istedim, çünkü ilk Project Treble cihazımı aldığım günden beri rootlu bir kullanıcıyım. Ve otomasyon konusunda tanrı gibi olan ve Android\'in her türlü API\'sini ve dahili özelliğini kullanan Tasker uygulamasını seviyorum.\n\nBu yüzden rootsuz değilim ve stok Android beta deneyimine geri döndüm ve verilen ayrıcalıklarla mümkün olandan en iyi şekilde yararlanmak istedim. Ayrıca paylaşmakta istedim. Böylece, başlangıç ​​seviyesindeki Kotlin Jetpack bilgim ve birçok araştırma ve yardım aracının yanı sıra harika topluluğun desteğiyle, verilen izinlerle Android\'imde olmasını istediğim her şeyi içeren hepsi bir arada bir uygulama geliştirdim. Ve işte burada.\n\nÖzellik istekleri memnuniyetle karşılanır; mevcut izinler ve becerilerim ile bunların gerçekleştirilebilir olup olmadığını değerlendireceğim ve göreceğim. Günümüzde ne mümkün değil. :)\n\nNeden Play Store\'da yok?\nUygulamada kullanılan son derece hassas ve dahili izinler ve API\'ler nedeniyle Geliştirici hesabımın yasaklanması riskini almak istemiyorum. Ancak Android sideloading\'in gidişatına bakılırsa, neler yapmamız gerektiğini görelim. Sideloaded uygulamaların kötü amaçlı olabileceği endişesini anlıyorum.\nKonu gelmişken, mac + Android kullanıcısıysanız diğer uygulamam AirSync\'e göz atın. *utanmaz ilan*\n\nKeyfini çıkarın, İnşa etmeye devam edin! (っ◕‿◕)っ</string>
+    <string name="instruction_section_about_desc">Güzel soru,\n\nHer zaman cihazlarımdan en iyi şekilde yararlanmayı istedim, çünkü ilk Project Treble cihazımı aldığımdan beri rootlu bir kullanıcıyım. Ve otomasyon konusunda tanrı gibi olan ve Android\'in her türlü API\'sini ve dahili özelliğini kullanan Tasker uygulamasını seviyorum.\n\nBu yüzden rootsuz değilim ve stok Android beta deneyimine geri döndüm ve verilen ayrıcalıklarla mümkün olandan en iyi şekilde yararlanmak istedim. Ayrıca paylaşmakta istedim. Böylece, başlangıç ​​seviyesindeki Kotlin Jetpack bilgim ve birçok araştırma ve yardım aracının yanı sıra harika topluluğun desteğiyle, verilen izinlerle Android\'imde olmasını istediğim her şeyi içeren hepsi bir arada bir uygulama geliştirdim. Ve işte burada.\n\nÖzellik istekleri memnuniyetle karşılanır; mevcut izinler ve becerilerim ile bunların gerçekleştirilebilir olup olmadığını değerlendireceğim ve göreceğim. Günümüzde ne mümkün değil. :)\n\nNeden Play Store\'da yok?\nUygulamada kullanılan son derece hassas ve dahili izinler ve API\'ler nedeniyle Geliştirici hesabımın yasaklanması riskini almak istemiyorum. Ancak Android sideloading\'in gidişatına bakılırsa, neler yapmamız gerektiğini görelim. Sideloaded uygulamaların kötü amaçlı olabileceği endişesini anlıyorum.\nKonu gelmişken, mac + Android kullanıcısıysanız diğer uygulamam AirSync\'e göz atın. *utanmaz ilan*\n\nKeyfini çıkarın, İnşa etmeye devam edin! (っ◕‿◕)っ</string>
     <!-- Bug Reporting -->
     <string name="toast_bug_report_copied">Hata raporu panoya kopyalandı</string>
     <string name="bug_report_title">Hata raporu</string>
@@ -1312,9 +1312,9 @@
     <string name="feat_watch_wireless_debugging_title">Kablosuz Hata Ayıklama</string>
     <string name="feat_watch_wireless_debugging_desc">Uzaktan etkinleştirin</string>
     <string name="feat_sync_sound_mode_title">Ses modu senkronizasyonu</string>
-    <string name="feat_sync_sound_mode_desc">Automatically sync with watch</string>
-    <string name="perm_watch_write_secure_title">Watch Secure Settings</string>
-    <string name="perm_watch_write_secure_desc">Requires secure settings write permission on your Watch. Grant it using the ADB command below.</string>
+    <string name="feat_sync_sound_mode_desc">Saatle otomatik olarak senkronize et</string>
+    <string name="perm_watch_write_secure_title">Saat Güvenli Ayarları</string>
+    <string name="perm_watch_write_secure_desc">Saatinizde güvenli ayarlara yazma izni gereklidir. Aşağıdaki ADB komutunu kullanarak bu izni verin.</string>
     <string name="cat_interaction">Etkileşim</string>
     <string name="cat_interface">Arayüz</string>
     <string name="cat_display">Görüntülemek</string>
@@ -1404,7 +1404,7 @@
     <string name="refresh_rate_system_default">Sistem</string>
     <string name="refresh_rate_reset_desc">Özel ayarı kaldırır ve sistemin varsayılan yenileme davranışına geri döner</string>
     <string name="msg_refresh_rate_permission_required">Yenileme hızını ayarlamak için Shizuku izni gereklidir</string>
-    <string name="msg_refresh_rate_root_permission_required">Root permission required to adjust refresh rate</string>
+    <string name="msg_refresh_rate_root_permission_required">Yenileme hızını ayarlamak için Root izni gereklidir</string>
     <string name="search_refresh_rate_mode_title">Yenileme Hızı Modu</string>
     <string name="search_refresh_rate_mode_desc">Sabit ve aralıklı yenileme hızı kontrolü arasında geçiş yapın</string>
     <string name="search_refresh_rate_fixed_title">Sabit Yenileme Hızı</string>
@@ -1424,8 +1424,8 @@
     <string name="label_use_blur">Bulanıklaştırma kullan</string>
     <string name="desc_use_blur">Kullanıcı arayüzünde aşamalı bulanıklaştırma öğelerini etkinleştirin</string>
     <string name="msg_blur_compatibility_error">Android 15 veya daha eski sürümlere sahip Samsung cihazlarda bilinen bir ekran hatasını önlemek için bu cihazda bulanıklık devre dışı bırakıldı.</string>
-    <string name="setting_swipe_tabs_title">Swipe between tabs</string>
-    <string name="setting_swipe_tabs_desc">In home screen</string>
+    <string name="setting_swipe_tabs_title">Sekmeler arasında kaydır</string>
+    <string name="setting_swipe_tabs_desc">Ana ekranda</string>
     <!-- Empty State Actions -->
     <string name="msg_no_apps_frozen">Dondurulacak uygulama seçilmedi.</string>
     <string name="action_get_started">Başlarken</string>
@@ -1567,26 +1567,26 @@
     <string name="action_restart_shizuku">Shizuku\'yu yeniden başlat</string>
     <string name="toast_enter_shizuku_token">Lütfen öncelikle ayarlara Shizuku kimlik doğrulama token\'inizi girin</string>
     <!-- Pocket Mode -->
-    <string name="feat_pocket_mode_title">Pocket mode</string>
-    <string name="feat_pocket_mode_desc">Prevent accidental touches while in pocket</string>
-    <string name="pocket_mode_use_light_title">Use light sensor</string>
-    <string name="pocket_mode_use_light_desc">Use ambient light level in addition to proximity for better accuracy</string>
-    <string name="pocket_mode_active">Pocket mode active</string>
-    <string name="pocket_mode_dismiss_hint">Press any volume key to dismiss</string>
-    <string name="pocket_mode_warning">Warning: On some devices with missing sensors, enabling Pocket Mode may break deep sleep and cause higher battery drain</string>
-    <string name="pocket_mode_exclude_apps_title">Exclude apps</string>
-    <string name="pocket_mode_exclude_apps_desc">Choose apps where Pocket Mode should not trigger. Pocket mode will not work when streaming or gaming by default</string>
-    <string name="pocket_mode_trigger_delay_title">Trigger delay</string>
-    <string name="pocket_mode_lock_screen_only_title">Lock screen only</string>
-    <string name="pocket_mode_lock_screen_only_desc">Only trigger pocket mode when the device is locked</string>
+    <string name="feat_pocket_mode_title">Cep modu</string>
+    <string name="feat_pocket_mode_desc">Cepteyken yanlışlıkla dokunmayı önleyin</string>
+    <string name="pocket_mode_use_light_title">Işık sensörü kullan</string>
+    <string name="pocket_mode_use_light_desc">Daha iyi doğruluk için yakınlığa ek olarak ortam ışığı seviyesini de kullanın</string>
+    <string name="pocket_mode_active">Cep modu aktif</string>
+    <string name="pocket_mode_dismiss_hint">Kapatmak için herhangi bir ses tuşuna basın</string>
+    <string name="pocket_mode_warning">Uyarı: Bazı sensörleri eksik olan cihazlarda Cep Modu\'nu etkinleştirmek derin uyku modunu bozabilir ve pil tüketimini artırabilir</string>
+    <string name="pocket_mode_exclude_apps_title">Hariç tutulan uygulamalar</string>
+    <string name="pocket_mode_exclude_apps_desc">Cep Modu\'nun devreye girmemesi gereken uygulamaları seçin. Cep Modu, varsayılan olarak yayın akışı veya oyun oynarken çalışmaz</string>
+    <string name="pocket_mode_trigger_delay_title">Tetikleme gecikmesi</string>
+    <string name="pocket_mode_lock_screen_only_title">Sadece kilit ekranı</string>
+    <string name="pocket_mode_lock_screen_only_desc">Cep modunu yalnızca cihaz kilitliyken etkinleştirin</string>
     <!-- Developer Settings & Wallpaper Check -->
-    <string name="import_config_sheet_title">Restore Configuration</string>
-    <string name="import_config_sheet_desc">Choose how you want to restore the configuration.</string>
-    <string name="import_config_merge_warning">Merging might cause data corruption. Please proceed with caution!</string>
-    <string name="action_override">Override</string>
-    <string name="action_merge">Merge</string>
-    <string name="label_wallpaper_last_checked">Last checked at %1$s</string>
-    <string name="label_wallpaper_next_check">Next check in %1$s</string>
-    <string name="label_wallpaper_hours">%1$d hours</string>
-    <string name="label_wallpaper_a_few_minutes">a few minutes</string>
+    <string name="import_config_sheet_title">Yapılandırmayı Geri yükle</string>
+    <string name="import_config_sheet_desc">Yapılandırmayı nasıl geri yüklemek istediğinizi seçin.</string>
+    <string name="import_config_merge_warning">Birleştirme işlemi veri bozulmasına neden olabilir. Lütfen dikkatli ilerleyin!</string>
+    <string name="action_override">Değiştir</string>
+    <string name="action_merge">Birleştir</string>
+    <string name="label_wallpaper_last_checked">En son %1$s\'de kontrol edildi</string>
+    <string name="label_wallpaper_next_check">Sonraki kontrol %1$s\'de</string>
+    <string name="label_wallpaper_hours">%1$d saat</string>
+    <string name="label_wallpaper_a_few_minutes">birkaç dakika</string>
 </resources>
