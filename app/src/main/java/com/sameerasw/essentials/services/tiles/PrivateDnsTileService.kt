@@ -76,37 +76,82 @@ class PrivateDnsTileService : BaseTileService() {
 
     override fun onTileClick() {
         val settingsRepository = SettingsRepository(this)
-        val cycleAuto = settingsRepository.getBoolean("private_dns_cycle_auto", true)
+        val isCycleMode = settingsRepository.getBoolean("private_dns_is_cycle_mode", false)
         val currentMode = getPrivateDnsMode()
-        val nextMode = if (cycleAuto) {
-            when (currentMode) {
-                MODE_OFF -> MODE_AUTO
-                MODE_AUTO -> {
-                    if (getPrivateDnsHostname().isNullOrEmpty()) MODE_OFF else MODE_HOSTNAME
-                }
 
-                MODE_HOSTNAME -> MODE_OFF
-                else -> MODE_OFF
+        if (isCycleMode) {
+            val presets = settingsRepository.getPrivateDnsPresets()
+            if (presets.isEmpty()) {
+                // If presets are empty, fallback to toggle custom/off
+                val nextMode = if (currentMode == MODE_OFF) MODE_AUTO else MODE_OFF
+                try {
+                    Settings.Global.putString(contentResolver, PRIVATE_DNS_MODE, nextMode)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+                return
+            }
+
+            val currentHost = getPrivateDnsHostname() ?: ""
+            if (currentMode == MODE_OFF) {
+                // Turn on with the first preset
+                val firstPreset = presets.first()
+                try {
+                    Settings.Global.putString(contentResolver, PRIVATE_DNS_SPECIFIER, firstPreset.hostname)
+                    Settings.Global.putString(contentResolver, PRIVATE_DNS_MODE, MODE_HOSTNAME)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            } else {
+                // Find current preset index
+                val currentIndex = presets.indexOfFirst { it.hostname == currentHost }
+                if (currentIndex == -1 || currentIndex == presets.lastIndex) {
+                    // Turn off
+                    try {
+                        Settings.Global.putString(contentResolver, PRIVATE_DNS_MODE, MODE_OFF)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                } else {
+                    // Next preset
+                    val nextPreset = presets[currentIndex + 1]
+                    try {
+                        Settings.Global.putString(contentResolver, PRIVATE_DNS_SPECIFIER, nextPreset.hostname)
+                        Settings.Global.putString(contentResolver, PRIVATE_DNS_MODE, MODE_HOSTNAME)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
             }
         } else {
-            when (currentMode) {
-                MODE_OFF -> {
-                    if (getPrivateDnsHostname().isNullOrEmpty()) MODE_OFF else MODE_HOSTNAME
+            val cycleAuto = settingsRepository.getBoolean("private_dns_cycle_auto", true)
+            val nextMode = if (cycleAuto) {
+                when (currentMode) {
+                    MODE_OFF -> MODE_AUTO
+                    MODE_AUTO -> {
+                        if (getPrivateDnsHostname().isNullOrEmpty()) MODE_OFF else MODE_HOSTNAME
+                    }
+                    MODE_HOSTNAME -> MODE_OFF
+                    else -> MODE_OFF
                 }
-
-                MODE_AUTO -> {
-                    if (getPrivateDnsHostname().isNullOrEmpty()) MODE_OFF else MODE_HOSTNAME
+            } else {
+                when (currentMode) {
+                    MODE_OFF -> {
+                        if (getPrivateDnsHostname().isNullOrEmpty()) MODE_OFF else MODE_HOSTNAME
+                    }
+                    MODE_AUTO -> {
+                        if (getPrivateDnsHostname().isNullOrEmpty()) MODE_OFF else MODE_HOSTNAME
+                    }
+                    MODE_HOSTNAME -> MODE_OFF
+                    else -> MODE_OFF
                 }
-
-                MODE_HOSTNAME -> MODE_OFF
-                else -> MODE_OFF
             }
-        }
 
-        try {
-            Settings.Global.putString(contentResolver, PRIVATE_DNS_MODE, nextMode)
-        } catch (e: Exception) {
-            // Handle error or permission missing
+            try {
+                Settings.Global.putString(contentResolver, PRIVATE_DNS_MODE, nextMode)
+            } catch (e: Exception) {
+                // Handle error or permission missing
+            }
         }
     }
 

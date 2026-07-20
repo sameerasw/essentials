@@ -88,6 +88,29 @@ object FeatureRegistry {
 
             override fun onClick(context: Context, viewModel: MainViewModel) {}
         },
+
+        object : Feature(
+            id = "Disable safe volume warning",
+            title = R.string.feat_safe_volume_title,
+            iconRes = R.drawable.rounded_sound_detection_loud_sound_24,
+            category = R.string.cat_system,
+            description = R.string.feat_safe_volume_desc,
+            aboutDescription = R.string.about_desc_safe_volume,
+            permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
+            hasMoreSettings = false,
+            parentFeatureId = "Sound"
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) =
+                viewModel.isAudioSafeVolumeDisabled.value
+
+            override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
+                viewModel.isWriteSecureSettingsEnabled.value
+
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
+                viewModel.setAudioSafeVolumeDisabled(context, enabled)
+
+            override fun onClick(context: Context, viewModel: MainViewModel) {}
+        },
         object : Feature(
             id = "Sound",
             title = R.string.feat_sound_haptics_title,
@@ -532,16 +555,48 @@ object FeatureRegistry {
         },
 
         object : Feature(
+            id = "Power and Battery",
+            title = R.string.feat_power_battery_title,
+            iconRes = R.drawable.rounded_battery_charging_60_24,
+            category = R.string.cat_interaction,
+            description = R.string.feat_power_battery_desc,
+            aboutDescription = R.string.about_desc_power_battery,
+            parentFeatureId = "Input",
+            showToggle = false,
+            hasMoreSettings = true,
+            permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
+            animationRes = R.raw.battery_motion
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) = true
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+            override fun onClick(context: Context, viewModel: MainViewModel) {
+                val intent = Intent(context, com.sameerasw.essentials.FeatureSettingsActivity::class.java).apply {
+                    putExtra("feature", "Power and Battery")
+                }
+                context.startActivity(intent)
+            }
+        },
+
+        object : Feature(
             id = "Flashlight",
             title = R.string.feat_flashlight_title,
             iconRes = R.drawable.rounded_flashlight_on_24,
             category = R.string.cat_interaction,
             description = R.string.feat_flashlight_desc,
+            aboutDescription = R.string.about_desc_flashlight_tile,
             parentFeatureId = "Input",
-            showToggle = false
+            showToggle = false,
+            hasMoreSettings = true,
+            animationRes = R.raw.flash_animation
         ) {
             override fun isEnabled(viewModel: MainViewModel) = true
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+            override fun onClick(context: Context, viewModel: MainViewModel) {
+                val intent = Intent(context, com.sameerasw.essentials.FeatureSettingsActivity::class.java).apply {
+                    putExtra("feature", "Flashlight")
+                }
+                context.startActivity(intent)
+            }
         },
 
         object : Feature(
@@ -568,6 +623,36 @@ object FeatureRegistry {
                     context = context
                 )
         },
+        object : Feature(
+            id = "Notification snoozing",
+            title = R.string.feat_notification_snoozing_title,
+            iconRes = R.drawable.rounded_notifications_paused_24,
+            category = R.string.cat_interface,
+            description = R.string.feat_notification_snoozing_desc,
+            aboutDescription = R.string.about_desc_notification_snoozing,
+            permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
+            showToggle = true,
+            hasMoreSettings = true,
+            parentFeatureId = "Notifications",
+            animationRes = R.raw.snooze_motion
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) =
+                viewModel.isShowNotificationSnoozeEnabled.value
+
+            override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
+                viewModel.isWriteSecureSettingsEnabled.value
+
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
+                viewModel.setShowNotificationSnoozeEnabled(context, enabled)
+
+            override fun onClick(context: Context, viewModel: MainViewModel) {
+                val intent = Intent(context, com.sameerasw.essentials.FeatureSettingsActivity::class.java).apply {
+                    putExtra("feature", "Notification snoozing")
+                }
+                context.startActivity(intent)
+            }
+        },
+
         object : Feature(
             id = "Battery notification",
             title = R.string.feat_battery_notification_title,
@@ -919,7 +1004,7 @@ object FeatureRegistry {
                     )
                         .getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_USE_USAGE_ACCESS)
                 )
-                    listOf("USAGE_STATS") else listOf("ACCESSIBILITY")
+                    listOf("USAGE_STATS", "ACCESSIBILITY") else listOf("ACCESSIBILITY")
 
             override fun isEnabled(viewModel: MainViewModel) = viewModel.isAppLockEnabled.value
             override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
@@ -1208,6 +1293,30 @@ object FeatureRegistry {
                 val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
                 prefs.edit().putBoolean("watch_sync_sound_mode_enabled", enabled).apply()
                 // Force sync to sync new sound mode status to watch if enabled
+                com.sameerasw.essentials.services.DeviceInfoSyncManager.forceSync(context)
+            }
+        },
+
+        object : Feature(
+            id = "Sync location reached status",
+            title = R.string.feat_sync_location_reached_title,
+            iconRes = R.drawable.rounded_navigation_24,
+            category = R.string.cat_tools,
+            description = R.string.feat_sync_location_reached_desc,
+            parentFeatureId = "Watch",
+            hasMoreSettings = false,
+            showToggle = true
+        ) {
+            override fun isEnabled(viewModel: MainViewModel): Boolean {
+                val context = EssentialsApp.context
+                val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+                return prefs.getBoolean("watch_sync_location_reached_enabled", true)
+            }
+
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {
+                val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
+                prefs.edit().putBoolean("watch_sync_location_reached_enabled", enabled).apply()
+                // Force sync to update status
                 com.sameerasw.essentials.services.DeviceInfoSyncManager.forceSync(context)
             }
         },

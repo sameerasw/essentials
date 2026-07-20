@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -132,8 +133,24 @@ fun FeatureCard(
                             modifier = Modifier.size(24.dp)
                         )
                     } else if (iconRes != null) {
+                        val context = LocalContext.current
+                        val isValid = remember(iconRes) {
+                            try {
+                                val value = android.util.TypedValue()
+                                context.resources.getValue(iconRes, value, true)
+                                val path = value.string?.toString() ?: ""
+                                !path.endsWith(".gif", ignoreCase = true)
+                            } catch (e: Throwable) {
+                                false
+                            }
+                        }
+                        val painter = if (isValid) {
+                            painterResource(id = iconRes)
+                        } else {
+                            painterResource(id = R.drawable.rounded_settings_accessibility_24)
+                        }
                         Icon(
-                            painter = painterResource(id = iconRes),
+                            painter = painter,
                             contentDescription = resolvedTitle,
                             modifier = Modifier.size(24.dp),
                             tint = ColorUtil.getVibrantColorFor(resolvedTitle)
