@@ -103,4 +103,7 @@ fun initPermissionRegistry() {
 
     // Safe Volume Warning feature
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_safe_volume_title)
+
+    // Notification Snoozing feature
+    PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_notification_snoozing_title)
 }

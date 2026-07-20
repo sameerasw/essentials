@@ -329,6 +329,12 @@ class MainViewModel : ViewModel() {
     // Battery Saver Low Power Trigger Level
     val lowPowerTriggerLevel = mutableIntStateOf(0)
 
+    // Notification Snooze
+    val isShowNotificationSnoozeEnabled = mutableStateOf(false)
+    val notificationSnoozeDefault = mutableIntStateOf(60)
+    val notificationSnoozeOptions = mutableStateOf<List<Int>>(listOf(15, 30, 60, 120))
+
+
 
 
 
@@ -400,6 +406,14 @@ class MainViewModel : ViewModel() {
 
                     Settings.Global.getUriFor("low_power_trigger_level") -> {
                         appContext?.let { syncLowPowerTriggerLevel(it) }
+                    }
+
+                    Settings.Secure.getUriFor("show_notification_snooze") -> {
+                        appContext?.let { syncShowNotificationSnooze(it) }
+                    }
+
+                    Settings.Global.getUriFor("notification_snooze_options") -> {
+                        appContext?.let { loadNotificationSnoozeOptions(it) }
                     }
                 }
             }
@@ -1140,9 +1154,31 @@ class MainViewModel : ViewModel() {
             e.printStackTrace()
         }
 
+        try {
+            context.contentResolver.registerContentObserver(
+                Settings.Secure.getUriFor("show_notification_snooze"),
+                false,
+                contentObserver
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        try {
+            context.contentResolver.registerContentObserver(
+                Settings.Global.getUriFor("notification_snooze_options"),
+                false,
+                contentObserver
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
         loadBatterySaverConstants(context)
         syncAudioSafeVolumeState(context)
         syncLowPowerTriggerLevel(context)
+        syncShowNotificationSnooze(context)
+        loadNotificationSnoozeOptions(context)
 
         isPowerSaveModeEnabled.value = DeviceUtils.isPowerSaveMode(context)
         updateBlurState(context)
@@ -4448,6 +4484,64 @@ class MainViewModel : ViewModel() {
         try {
             Settings.Global.putInt(context.contentResolver, "low_power_trigger_level", level)
             lowPowerTriggerLevel.intValue = level
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun syncShowNotificationSnooze(context: Context) {
+        val enabled = Settings.Secure.getInt(context.contentResolver, "show_notification_snooze", 0) == 1
+        isShowNotificationSnoozeEnabled.value = enabled
+    }
+
+    fun setShowNotificationSnoozeEnabled(context: Context, enabled: Boolean) {
+        try {
+            Settings.Secure.putInt(context.contentResolver, "show_notification_snooze", if (enabled) 1 else 0)
+            isShowNotificationSnoozeEnabled.value = enabled
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun loadNotificationSnoozeOptions(context: Context) {
+        val raw = Settings.Global.getString(context.contentResolver, "notification_snooze_options") ?: ""
+        var def = 60
+        var opts = listOf(15, 30, 60, 120)
+        if (raw.isNotEmpty()) {
+            // Format: default=60,options_array=15:30:60:120
+            raw.split(",").forEach { pair ->
+                val parts = pair.split("=", limit = 2)
+                if (parts.size == 2) {
+                    val key = parts[0].trim()
+                    val value = parts[1].trim()
+                    if (key == "default") {
+                        def = value.toIntOrNull() ?: 60
+                    } else if (key == "options_array") {
+                        opts = value.split(":").mapNotNull { it.trim().toIntOrNull() }
+                    }
+                }
+            }
+        }
+        notificationSnoozeDefault.intValue = def
+        notificationSnoozeOptions.value = opts
+    }
+
+    fun saveNotificationSnoozeOptions(context: Context, def: Int, opts: List<Int>) {
+        val serialized = "default=$def,options_array=${opts.joinToString(":")}"
+        try {
+            Settings.Global.putString(context.contentResolver, "notification_snooze_options", serialized)
+            notificationSnoozeDefault.intValue = def
+            notificationSnoozeOptions.value = opts
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun resetNotificationSnoozeOptions(context: Context) {
+        try {
+            Settings.Global.putString(context.contentResolver, "notification_snooze_options", null)
+            notificationSnoozeDefault.intValue = 60
+            notificationSnoozeOptions.value = listOf(15, 30, 60, 120)
         } catch (e: Exception) {
             e.printStackTrace()
         }

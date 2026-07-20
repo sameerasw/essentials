@@ -82,6 +82,7 @@ import com.sameerasw.essentials.ui.composables.configs.ScreenLockedSecuritySetti
 import com.sameerasw.essentials.ui.composables.configs.ScreenOffWidgetSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.ShutUpSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.SnoozeNotificationsSettingsUI
+import com.sameerasw.essentials.ui.composables.configs.NotificationSnoozingSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.SoundModeTileSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.StatusBarIconSettingsUI
 import com.sameerasw.essentials.ui.composables.configs.TextAnimationsSettingsUI
@@ -555,6 +556,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                 "Shut-Up!" -> !isWriteSecureSettingsEnabled || !viewModel.isUsageStatsPermissionGranted.value
                                                 "Power and Battery" -> !isWriteSecureSettingsEnabled
                                                 "Disable safe volume warning" -> !isWriteSecureSettingsEnabled
+                                                "Notification snoozing" -> !isWriteSecureSettingsEnabled
                                                 else -> false
                                             }
 
@@ -690,6 +692,14 @@ class FeatureSettingsActivity : AppCompatActivity() {
 
                                     "Snooze system notifications" -> {
                                         SnoozeNotificationsSettingsUI(
+                                            viewModel = viewModel,
+                                            modifier = Modifier.padding(top = 16.dp),
+                                            highlightSetting = highlightSetting
+                                        )
+                                    }
+
+                                    "Notification snoozing" -> {
+                                        NotificationSnoozingSettingsUI(
                                             viewModel = viewModel,
                                             modifier = Modifier.padding(top = 16.dp),
                                             highlightSetting = highlightSetting

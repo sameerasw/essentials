@@ -131,6 +131,11 @@ fun HelpAndGuidesContent() {
             description = stringResource(R.string.instruction_section_flashlight_desc)
         ),
         InstructionSection(
+            title = stringResource(R.string.instruction_section_notification_snoozing_title),
+            iconRes = R.drawable.rounded_notifications_paused_24,
+            description = stringResource(R.string.instruction_section_notification_snoozing_desc)
+        ),
+        InstructionSection(
             title = stringResource(R.string.instruction_section_safe_volume_title),
             iconRes = R.drawable.rounded_sound_detection_loud_sound_24,
             description = stringResource(R.string.instruction_section_safe_volume_desc)

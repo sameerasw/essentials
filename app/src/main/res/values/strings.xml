@@ -1485,6 +1485,21 @@
     <string name="instruction_section_safe_volume_title">Why disable safe volume warnings?</string>
     <string name="instruction_section_safe_volume_desc">To protect hearing, EU regulations mandate a popup warning when volume exceeds 85dB. Since this popup triggers once after every boot or after 20 cumulative hours of audio output, it can disrupt media playback. Enabling this bypasses the restriction permanently by writing to the audio_safe_volume_state Global setting.</string>
 
+    <string name="feat_notification_snoozing_title">Notification snoozing</string>
+    <string name="feat_notification_snoozing_desc">Reschedule notifications</string>
+    <string name="about_desc_notification_snoozing">Enable the notification snooze button on the notifications, and configure the custom interval options and default duration to defer notifications for later viewing.</string>
+    <string name="instruction_section_notification_snoozing_title">How to use Notification Snoozing?</string>
+    <string name="instruction_section_notification_snoozing_desc">Once enabled, swipe down or slightly pull a notification to expose the snooze (clock) icon/ or long press or tap the snooze button if already visible. Tap it to reschedule. The available durations and the default snooze time can be customized inside the settings menu. Writes to secure settings and global settings properties.</string>
+    <string name="title_snooze_durations">Snooze Durations</string>
+    <string name="label_snooze_default">Default snooze time</string>
+    <string name="label_snooze_option_1">Option 1</string>
+    <string name="label_snooze_option_2">Option 2</string>
+    <string name="label_snooze_option_3">Option 3</string>
+    <string name="label_snooze_option_4">Option 4</string>
+    <string name="action_reset_snooze">Reset Snooze Options</string>
+    <string name="msg_snooze_reset_success">Notification snooze options reset successfully</string>
+
+
 
     <string name="cat_interaction">Interaction</string>
     <string name="cat_interface">Interface</string>

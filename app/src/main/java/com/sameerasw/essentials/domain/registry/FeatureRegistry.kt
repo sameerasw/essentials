@@ -624,6 +624,36 @@ object FeatureRegistry {
                 )
         },
         object : Feature(
+            id = "Notification snoozing",
+            title = R.string.feat_notification_snoozing_title,
+            iconRes = R.drawable.rounded_notifications_paused_24,
+            category = R.string.cat_interface,
+            description = R.string.feat_notification_snoozing_desc,
+            aboutDescription = R.string.about_desc_notification_snoozing,
+            permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
+            showToggle = true,
+            hasMoreSettings = true,
+            parentFeatureId = "Notifications",
+            animationRes = R.raw.snooze_motion
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) =
+                viewModel.isShowNotificationSnoozeEnabled.value
+
+            override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
+                viewModel.isWriteSecureSettingsEnabled.value
+
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
+                viewModel.setShowNotificationSnoozeEnabled(context, enabled)
+
+            override fun onClick(context: Context, viewModel: MainViewModel) {
+                val intent = Intent(context, com.sameerasw.essentials.FeatureSettingsActivity::class.java).apply {
+                    putExtra("feature", "Notification snoozing")
+                }
+                context.startActivity(intent)
+            }
+        },
+
+        object : Feature(
             id = "Battery notification",
             title = R.string.feat_battery_notification_title,
             iconRes = R.drawable.rounded_battery_charging_60_24,
