@@ -589,13 +589,15 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                             isBeta = child.isBeta,
                                             onToggle = permissionAwareToggle,
                                             onClick = {
-                                                BiometricSecurityHelper.runWithAuth(
-                                                    activity = this@FeatureSettingsActivity,
-                                                    feature = child,
-                                                    action = {
-                                                        child.onClick(context, viewModel)
-                                                    }
-                                                )
+                                                if (child.hasMoreSettings) {
+                                                    BiometricSecurityHelper.runWithAuth(
+                                                        activity = this@FeatureSettingsActivity,
+                                                        feature = child,
+                                                        action = {
+                                                            child.onClick(context, viewModel)
+                                                        }
+                                                    )
+                                                }
                                             },
                                             isPinned = pinnedFeatureKeys.contains(child.id),
                                             onPinToggle = { viewModel.togglePinFeature(child.id) },
