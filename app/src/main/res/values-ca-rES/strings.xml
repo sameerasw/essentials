@@ -1312,6 +1312,8 @@
     <string name="feat_watch_wireless_debugging_desc">Enable remotely</string>
     <string name="feat_sync_sound_mode_title">Sync sound mode</string>
     <string name="feat_sync_sound_mode_desc">Automatically sync with watch</string>
+    <string name="feat_sync_location_reached_title">Sync Are we there yet status</string>
+    <string name="feat_sync_location_reached_desc">To be shown in device tile</string>
     <string name="perm_watch_write_secure_title">Watch Secure Settings</string>
     <string name="perm_watch_write_secure_desc">Requires secure settings write permission on your Watch. Grant it using the ADB command below.</string>
     <string name="cat_interaction">Interacció</string>
