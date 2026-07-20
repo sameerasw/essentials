@@ -250,6 +250,30 @@ object FeatureRegistry {
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
         },
         object : Feature(
+            id = "Per app refresh rate",
+            title = R.string.refresh_rate_per_app_enable_title,
+            iconRes = R.drawable.ic_per_app_refresh_rate,
+            category = R.string.cat_interface,
+            description = R.string.refresh_rate_per_app_enable_desc,
+            aboutDescription = R.string.refresh_rate_per_app_enable_desc,
+            showToggle = false,
+            parentFeatureId = "Display",
+        ) {
+            override val permissionKeys: List<String>
+                get() = (if (com.sameerasw.essentials.data.repository.SettingsRepository(com.sameerasw.essentials.EssentialsApp.context)
+                        .getBoolean(com.sameerasw.essentials.data.repository.SettingsRepository.KEY_USE_USAGE_ACCESS))
+                    listOf("USAGE_STATS") else listOf("ACCESSIBILITY")) + listOf("SHIZUKU")
+
+            override fun isEnabled(viewModel: MainViewModel): Boolean = viewModel.isPerAppRefreshRateEnabled.value
+
+            override fun isToggleEnabled(viewModel: MainViewModel, context: Context): Boolean =
+                (if (viewModel.isUseUsageAccess.value) viewModel.isUsageStatsPermissionGranted.value else viewModel.isAccessibilityEnabled.value) && viewModel.isShizukuPermissionGranted.value
+
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {
+                viewModel.setPerAppRefreshRateEnabled(enabled, context)
+            }
+        },
+        object : Feature(
             id = "Lock screen clock",
             title = R.string.feat_lock_screen_clock_title,
             iconRes = R.drawable.rounded_nest_clock_farsight_analog_24,
