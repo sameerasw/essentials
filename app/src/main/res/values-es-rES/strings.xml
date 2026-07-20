@@ -285,7 +285,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="adaptive_charging">Adaptado</string>
     <string name="deactivated">No optimizado</string>
     <string name="charge_opt_long_press_title">Alternar opciones</string>
-    <string name="charge_opt_long_press_desc">Choose which charging modes to switch between when tapping the Quick Settings tile.</string>
+    <string name="charge_opt_long_press_desc">Elige entre qué modos de carga alternar al pulsar el mosaico de Ajustes rápidos.</string>
     <string name="permission_missing">Falta permiso</string>
     <!-- Screen Locked Security -->
     <string name="screen_locked_security_title">Desactivar los mosaicos de Ajustes rápidos cuando el dispositivo esté bloqueado</string>
@@ -760,9 +760,9 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="unit_minutes">%d minutos</string>
     <string name="action_restart_systemui">Reiniciar SystemUI</string>
     <string name="desc_restart_systemui">Finaliza y reinicia el proceso de SystemUI para aplicar algunos cambios de inmediato</string>
-    <string name="tile_restart_systemui">SystemUI Restart</string>
+    <string name="tile_restart_systemui">Reiniciar SystemUI</string>
     <string name="tile_restart_systemui_subtitle_restart">Ahora</string>
-    <string name="about_desc_restart_systemui_tile">Easily restart SystemUI directly from your Quick Settings panel. Helpful to quickly resolve status bar glitches or apply system UI modifications immediately. Requires root or Shizuku shell access.</string>
+    <string name="about_desc_restart_systemui_tile">Reinicia fácilmente SystemUI directamente desde tu panel de Ajustes rápidos. Útil para solucionar rápidamente fallos en la barra de estado o aplicar modificaciones de la interfaz del sistema de inmediato. Requiere acceso root o permisos de shell mediante Shizuku.</string>
     <string name="msg_error_load_release_notes">No se han podido cargar las notas de la versión</string>
     <string name="action_view_on_web">Ver en la web</string>
     <string name="action_done">Hecho</string>
@@ -1160,7 +1160,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="instruction_section_security_desc">En absoluto. \n\nNinguna aplicación de terceros puede interferir al 100% con las interacciones normales del dispositivo, y el bloqueo de aplicaciones es solo una superposición encima de las apps seleccionadas para impedir interactuar con ellas. Existen métodos para evitarlo y no es infalible. \n\nLo mismo ocurre con la función de seguridad del bloqueo de pantalla, que detecta cuando alguien intenta interactuar con los accesos rápidos de red, los cuales, por alguna razón, siguen siendo accesibles para cualquiera en los Pixel. Así que, si alguien se esfuerza lo suficiente, aún podría cambiarlos, y especialmente si tienes el acceso rápido al modo avión añadido, esta app no puede impedir que interactúen con él. \n\nEstas funciones están hechas solo como experimentos para un uso ligero y nunca las recomendaría como soluciones sólidas de seguridad o privacidad. \n\nAlternativas seguras:\n - Bloqueo de apps: Espacio privado y Carpeta segura en Pixel y Samsung\n - Evitar acceso a redes móviles: Asegúrate de tener activada la protección antirrobo y los ajustes de Localizador de Google sin conexión / al apagar. También puedes considerar GrapheneOS.</string>
     <string name="instruction_section_statusbar_title">Iconos de la barra de estado</string>
     <string name="instruction_section_statusbar_desc">Puede que notes que, incluso después de restablecer los iconos de la barra de estado, algunos iconos como el de rotación del dispositivo o los auriculares con cable pueden seguir visibles. Esto se debe a cómo está implementada la lista negra de la barra de estado en Android y a cómo tu fabricante (OEM) puede haberla personalizado. \nEs posible que necesites ajustes adicionales. \n\nAdemás, no todas las opciones de visibilidad de iconos pueden funcionar, ya que dependen de las implementaciones y disponibilidad del OEM.</string>
-    <string name="instruction_section_battery_saver_title">How does Power and Battery settings work?</string>
+    <string name="instruction_section_battery_saver_title">¿Cómo funcionan los ajustes de energía y batería?</string>
     <string name="instruction_section_battery_saver_desc">These settings directly override Android\'s internal Battery Saver policy constants (specifically the global settings table property: battery_saver_constants).\n\nWhen Android activates battery saver mode, it reads these keys to determine which system features should be restricted (such as lowering screen brightness, disabling AOD, restricting GPS location access, or putting applications to sleep).\n\nIf you modify these values, your custom battery saver policy will take effect the next time Battery Saver is turned on. You can reset to defaults at any time using the button at the bottom of the screen. WRITE_SECURE_SETTINGS permission is required to write these system configurations.</string>
     <string name="about_desc_power_battery">Fine-tune Android\'s internal Battery Saver constants policy. Customize behavior such as brightness limit, location throttling, vibration toggle, background sync deferrals, and sensor states when battery saver is turned on.</string>
     <string name="instruction_section_lighting_title">La iluminación de notificaciones no funciona</string>
