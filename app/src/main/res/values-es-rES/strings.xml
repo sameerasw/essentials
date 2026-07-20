@@ -253,9 +253,9 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="tile_private_dns">DNS privado</string>
     <string name="tile_private_dns_auto">Auto</string>
     <string name="tile_private_dns_off">Apagado</string>
-    <string name="private_dns_mode_label">Mode</string>
-    <string name="private_dns_mode_toggle">Toggle</string>
-    <string name="private_dns_mode_cycle">Cycle</string>
+    <string name="private_dns_mode_label">Modo</string>
+    <string name="private_dns_mode_toggle">Alternar</string>
+    <string name="private_dns_mode_cycle">Ciclo</string>
     <string name="tile_usb_debugging">Depuración USB</string>
     <string name="tile_color_picker">Selector de color</string>
     <string name="toast_eyedropper_failed">¿Estás seguro de que tienes Android 17? (╯°_°）╯</string>
@@ -284,7 +284,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="limit_to_80">Limitar al 80%</string>
     <string name="adaptive_charging">Adaptado</string>
     <string name="deactivated">No optimizado</string>
-    <string name="charge_opt_long_press_title">Toggle Options</string>
+    <string name="charge_opt_long_press_title">Alternar opciones</string>
     <string name="charge_opt_long_press_desc">Choose which charging modes to switch between when tapping the Quick Settings tile.</string>
     <string name="permission_missing">Falta permiso</string>
     <!-- Screen Locked Security -->
@@ -761,7 +761,7 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="action_restart_systemui">Reiniciar SystemUI</string>
     <string name="desc_restart_systemui">Finaliza y reinicia el proceso de SystemUI para aplicar algunos cambios de inmediato</string>
     <string name="tile_restart_systemui">SystemUI Restart</string>
-    <string name="tile_restart_systemui_subtitle_restart">Now</string>
+    <string name="tile_restart_systemui_subtitle_restart">Ahora</string>
     <string name="about_desc_restart_systemui_tile">Easily restart SystemUI directly from your Quick Settings panel. Helpful to quickly resolve status bar glitches or apply system UI modifications immediately. Requires root or Shizuku shell access.</string>
     <string name="msg_error_load_release_notes">No se han podido cargar las notas de la versión</string>
     <string name="action_view_on_web">Ver en la web</string>
@@ -1349,7 +1349,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="desc_enable_night_mode">Force dark theme when battery saver is activated.</string>
     <string name="label_disable_launch_boost">Disable Launch Boost</string>
     <string name="desc_disable_launch_boost">Reduce CPU boosting during app startup to save power.</string>
-    <string name="label_disable_vibration">Disable Vibration</string>
+    <string name="label_disable_vibration">Desactivar vibración</string>
     <string name="desc_disable_vibration">Disable haptic feedback and vibrations globally.</string>
     <string name="label_disable_animation">Disable Animations</string>
     <string name="desc_disable_animation">Turn off window and system animations.</string>
