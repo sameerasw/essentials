@@ -1400,7 +1400,7 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="label_snooze_option_2">Option 2</string>
     <string name="label_snooze_option_3">Option 3</string>
     <string name="label_snooze_option_4">Option 4</string>
-    <string name="action_reset_snooze">Reset Snooze Options</string>
+    <string name="action_reset_snooze">Restablecer opciones de posponer</string>
     <string name="msg_snooze_reset_success">Las opciones de posponer notificaciones se restablecieron correctamente</string>
     <string name="cat_interaction">Interacción</string>
     <string name="cat_interface">Interfaz</string>
