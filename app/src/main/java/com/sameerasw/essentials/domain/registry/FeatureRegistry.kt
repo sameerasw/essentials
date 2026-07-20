@@ -88,6 +88,29 @@ object FeatureRegistry {
 
             override fun onClick(context: Context, viewModel: MainViewModel) {}
         },
+
+        object : Feature(
+            id = "Disable safe volume warning",
+            title = R.string.feat_safe_volume_title,
+            iconRes = R.drawable.rounded_sound_detection_loud_sound_24,
+            category = R.string.cat_system,
+            description = R.string.feat_safe_volume_desc,
+            aboutDescription = R.string.about_desc_safe_volume,
+            permissionKeys = listOf("WRITE_SECURE_SETTINGS"),
+            hasMoreSettings = false,
+            parentFeatureId = "Sound"
+        ) {
+            override fun isEnabled(viewModel: MainViewModel) =
+                viewModel.isAudioSafeVolumeDisabled.value
+
+            override fun isToggleEnabled(viewModel: MainViewModel, context: Context) =
+                viewModel.isWriteSecureSettingsEnabled.value
+
+            override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) =
+                viewModel.setAudioSafeVolumeDisabled(context, enabled)
+
+            override fun onClick(context: Context, viewModel: MainViewModel) {}
+        },
         object : Feature(
             id = "Sound",
             title = R.string.feat_sound_haptics_title,

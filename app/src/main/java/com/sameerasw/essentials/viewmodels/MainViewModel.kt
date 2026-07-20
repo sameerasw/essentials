@@ -323,6 +323,10 @@ class MainViewModel : ViewModel() {
     // Battery Saver Constants
     val batterySaverConstants = mutableStateOf<Map<String, String>>(emptyMap())
 
+    // Audio Safe Volume State
+    val isAudioSafeVolumeDisabled = mutableStateOf(false)
+
+
 
     private var lastUpdateCheckTime: Long = 0
     lateinit var settingsRepository: SettingsRepository
@@ -384,6 +388,10 @@ class MainViewModel : ViewModel() {
 
                     Settings.Global.getUriFor("battery_saver_constants") -> {
                         appContext?.let { loadBatterySaverConstants(it) }
+                    }
+
+                    Settings.Global.getUriFor("audio_safe_volume_state") -> {
+                        appContext?.let { syncAudioSafeVolumeState(it) }
                     }
                 }
             }
@@ -1104,7 +1112,18 @@ class MainViewModel : ViewModel() {
             e.printStackTrace()
         }
 
+        try {
+            context.contentResolver.registerContentObserver(
+                Settings.Global.getUriFor("audio_safe_volume_state"),
+                false,
+                contentObserver
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
         loadBatterySaverConstants(context)
+        syncAudioSafeVolumeState(context)
 
         isPowerSaveModeEnabled.value = DeviceUtils.isPowerSaveMode(context)
         updateBlurState(context)
@@ -4380,6 +4399,22 @@ class MainViewModel : ViewModel() {
         try {
             Settings.Global.putString(context.contentResolver, "battery_saver_constants", constantsStr)
             batterySaverConstants.value = map
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun syncAudioSafeVolumeState(context: Context) {
+        val rawValue = Settings.Global.getInt(context.contentResolver, "audio_safe_volume_state", 3)
+        // 1 = Disable (toggle is on), 3 = Active (toggle is off)
+        isAudioSafeVolumeDisabled.value = (rawValue == 1)
+    }
+
+    fun setAudioSafeVolumeDisabled(context: Context, disabled: Boolean) {
+        val targetValue = if (disabled) 1 else 3
+        try {
+            Settings.Global.putInt(context.contentResolver, "audio_safe_volume_state", targetValue)
+            isAudioSafeVolumeDisabled.value = disabled
         } catch (e: Exception) {
             e.printStackTrace()
         }

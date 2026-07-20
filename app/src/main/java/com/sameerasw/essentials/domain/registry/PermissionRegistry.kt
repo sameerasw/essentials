@@ -100,4 +100,7 @@ fun initPermissionRegistry() {
 
     // Power and Battery feature
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_power_battery_title)
+
+    // Safe Volume Warning feature
+    PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_safe_volume_title)
 }

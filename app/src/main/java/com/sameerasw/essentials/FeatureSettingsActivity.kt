@@ -554,6 +554,7 @@ class FeatureSettingsActivity : AppCompatActivity() {
                                                 )
                                                 "Shut-Up!" -> !isWriteSecureSettingsEnabled || !viewModel.isUsageStatsPermissionGranted.value
                                                 "Power and Battery" -> !isWriteSecureSettingsEnabled
+                                                "Disable safe volume warning" -> !isWriteSecureSettingsEnabled
                                                 else -> false
                                             }
 

@@ -1477,6 +1477,13 @@
     <string name="soundtrigger_mode_restrict">Restrict</string>
     <string name="soundtrigger_mode_critical">Critical Only</string>
 
+    <string name="feat_safe_volume_title">Disable safe volume warning</string>
+    <string name="feat_safe_volume_desc">Suppress loud volume dialog</string>
+    <string name="about_desc_safe_volume">European regulations require smartphones to warn when going above certain volume levels (85dB). This warning must be shown once after every reboot or after 20 hours of continuous music playback. Use this toggle to disable it permanently.</string>
+    <string name="instruction_section_safe_volume_title">Why disable safe volume warnings?</string>
+    <string name="instruction_section_safe_volume_desc">To protect hearing, EU regulations mandate a popup warning when volume exceeds 85dB. Since this popup triggers once after every boot or after 20 cumulative hours of audio output, it can disrupt media playback. Enabling this bypasses the restriction permanently by writing to the audio_safe_volume_state Global setting.</string>
+
+
     <string name="cat_interaction">Interaction</string>
     <string name="cat_interface">Interface</string>
     <string name="cat_display">Display</string>
