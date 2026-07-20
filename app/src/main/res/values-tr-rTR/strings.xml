@@ -1313,6 +1313,8 @@
     <string name="feat_watch_wireless_debugging_desc">Uzaktan etkinleştirin</string>
     <string name="feat_sync_sound_mode_title">Ses modu senkronizasyonu</string>
     <string name="feat_sync_sound_mode_desc">Saatle otomatik olarak senkronize et</string>
+    <string name="feat_sync_location_reached_title">Sync Are we there yet status</string>
+    <string name="feat_sync_location_reached_desc">To be shown in device tile</string>
     <string name="perm_watch_write_secure_title">Saat Güvenli Ayarları</string>
     <string name="perm_watch_write_secure_desc">Saatinizde güvenli ayarlara yazma izni gereklidir. Aşağıdaki ADB komutunu kullanarak bu izni verin.</string>
     <string name="cat_interaction">Etkileşim</string>
