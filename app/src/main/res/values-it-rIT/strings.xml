@@ -1312,6 +1312,8 @@
     <string name="feat_watch_wireless_debugging_desc">Attiva da remoto</string>
     <string name="feat_sync_sound_mode_title">Sincronizza modalità audio</string>
     <string name="feat_sync_sound_mode_desc">Sincronizza automaticamente con l\'orologio</string>
+    <string name="feat_sync_location_reached_title">Sync Are we there yet status</string>
+    <string name="feat_sync_location_reached_desc">To be shown in device tile</string>
     <string name="perm_watch_write_secure_title">Impostazioni sicurezza orologio</string>
     <string name="perm_watch_write_secure_desc">Richiede l\'autorizzazione di scrittura delle impostazioni di sicurezza sul tuo orologio. Concedila utilizzando il comando ADB qui sotto.</string>
     <string name="cat_interaction">Interazione</string>
