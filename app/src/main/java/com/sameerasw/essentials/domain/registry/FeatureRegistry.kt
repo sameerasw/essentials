@@ -560,11 +560,20 @@ object FeatureRegistry {
             iconRes = R.drawable.rounded_flashlight_on_24,
             category = R.string.cat_interaction,
             description = R.string.feat_flashlight_desc,
+            aboutDescription = R.string.about_desc_flashlight_tile,
             parentFeatureId = "Input",
-            showToggle = false
+            showToggle = false,
+            hasMoreSettings = true,
+            animationRes = R.raw.flash_animation
         ) {
             override fun isEnabled(viewModel: MainViewModel) = true
             override fun onToggle(viewModel: MainViewModel, context: Context, enabled: Boolean) {}
+            override fun onClick(context: Context, viewModel: MainViewModel) {
+                val intent = Intent(context, com.sameerasw.essentials.FeatureSettingsActivity::class.java).apply {
+                    putExtra("feature", "Flashlight")
+                }
+                context.startActivity(intent)
+            }
         },
 
         object : Feature(
