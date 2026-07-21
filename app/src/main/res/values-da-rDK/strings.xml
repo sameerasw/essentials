@@ -639,6 +639,11 @@
     <string name="perm_accessibility_desc_lighting">Påkrævet for at udløse notifikationsbelysning på nye notifikationer</string>
     <string name="perm_default_browser_title">Standardbrowser</string>
     <string name="perm_default_browser_desc">Nødvendig for at håndtere links effektivt</string>
+    <string name="perm_install_packages_title">Install Unknown Apps</string>
+    <string name="perm_install_packages_desc">Required to automatically download and install application updates.</string>
+    <string name="action_install_update">Install Update</string>
+    <string name="downloading_update_progress">Downloading update (%1$d%%)</string>
+    <string name="update_download_failed">Download failed</string>
     <string name="perm_accessibility_desc_remap">Nødvendig for at opsnappe hardwareknaphændelser</string>
     <string name="perm_accessibility_desc_essentials_on_display">Required to intercept volume key events while the screen is off to trigger the Essentials On Display overlay.</string>
     <string name="perm_accessibility_desc_night_light">Nødvendig for at overvåge forgrundsapplikationer.</string>
@@ -913,6 +918,9 @@
     <string name="update_channel_name">App-opdateringer</string>
     <string name="update_channel_desc">Notifikationer for nye appopdateringer</string>
     <string name="notification_update_available">Opdatering tilgængelig</string>
+    <string name="notification_update_subtext">Check out what\'s new in Essentials v%1$s</string>
+    <string name="action_update_to_version">Update to Essentials v%1$s</string>
+    <string name="action_check_for_updates">Check for updates</string>
     <string name="battery_notification_no_devices">Ingen enheder tilsluttet</string>
     <string name="label_unknown">Ukendt</string>
     <string name="network_type_5g">5G</string>
