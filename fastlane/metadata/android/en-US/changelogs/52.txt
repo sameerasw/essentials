@@ -1,0 +1,1 @@
+Essentials release v16.0 with updated tools, customization options, and stability improvements.
