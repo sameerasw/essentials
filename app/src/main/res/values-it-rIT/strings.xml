@@ -639,6 +639,11 @@
     <string name="perm_accessibility_desc_lighting">Richiesto per attivare l\'illuminazione delle notifiche sulle nuove notifiche</string>
     <string name="perm_default_browser_title">Browser predefinito</string>
     <string name="perm_default_browser_desc">Richiesto per gestire i collegamenti in modo efficiente</string>
+    <string name="perm_install_packages_title">Install Unknown Apps</string>
+    <string name="perm_install_packages_desc">Required to automatically download and install application updates.</string>
+    <string name="action_install_update">Install Update</string>
+    <string name="downloading_update_progress">Downloading update (%1$d%%)</string>
+    <string name="update_download_failed">Download failed</string>
     <string name="perm_accessibility_desc_remap">Richiesto per intercettare gli eventi dei pulsanti fisici</string>
     <string name="perm_accessibility_desc_essentials_on_display">Richiesto per intercettare la pressione dei tasti del volume a schermo spento per attivare la schermata in sovrimpressione di Essentials On Display.</string>
     <string name="perm_accessibility_desc_night_light">Necessario per monitorare le applicazioni in primo piano.</string>
@@ -913,6 +918,9 @@
     <string name="update_channel_name">Aggiornamenti dell\'app</string>
     <string name="update_channel_desc">Notifiche per nuovi aggiornamenti dell\'app</string>
     <string name="notification_update_available">Aggiornamento disponibile</string>
+    <string name="notification_update_subtext">Check out what\'s new in Essentials v%1$s</string>
+    <string name="action_update_to_version">Update to Essentials v%1$s</string>
+    <string name="action_check_for_updates">Check for updates</string>
     <string name="battery_notification_no_devices">Nessun dispositivo connesso</string>
     <string name="label_unknown">Sconosciuto</string>
     <string name="network_type_5g">5G</string>
