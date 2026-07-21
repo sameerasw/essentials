@@ -146,7 +146,7 @@ Essential tools, mods and workarounds for Pixels and other Androids
 # Requirements
 
 - Android 8.0 or higher (Feature support may vary)
-- App permissions are optional, Grant necessary permissions for each feature
+- App permissions are optional, grant necessary permissions for each feature
 - Targetted for Google Pixel devices extending to other Androids
 - Tested on Google Pixel 7 (Android 17 beta program).
 - > Some features and functionalities might not work as expected on other OEMs. (Especially NothingOS and OneUI)
@@ -167,20 +167,20 @@ Essential tools, mods and workarounds for Pixels and other Androids
 
 # Installation
 
-During the installation, you probably will see a warning similar to this claiming the app blocked during installation with no way to continue at all.
+During the installation, you probably will see a warning similar to this claiming that the app is blocked during installation with no way to continue at all.
 
 <img width="25%" alt="image" src="https://github.com/user-attachments/assets/d36c5a92-6d28-43c2-8431-92a7ffd7ac61" />
 
-This is a new restriction on Android with sideloaded apps that can receive sensitive permissions such as Accessibility or notification listener which both Essentials may utilize.
+This is a new restriction on Android with sideloaded apps that can receive sensitive permissions such as Accessibility or Notification Listener, which Essentials both may utilize.
 
-- You can still proceed avoiding this but you will have to temporarily disable Google Play Protect during the installation.
-- But then again, you may notice the toggle for play protect in play store is enabled and grayed out not allowing to be disabled. This is due to the "Advanced protection" feature in Pixels that entirely blocks sideloading. So you will have to disable "Advanced Protection" as well.
-- Follow belwo steps to avoid it during the installation.
+- You can still proceed avoiding this, but you will have to temporarily disable Google Play Protect during the installation.
+- But then again, you may notice the toggle for Play Protect in the Play Store being enabled and grayed out, not allowing to be disabled. This is due to the "Advanced protection" feature in Pixels that entirely blocks sideloading. So you will have to disable "Advanced Protection" as well.
+- Follow below steps to avoid it during the installation.
 
 ![Screenshot_20260304-184451 Large](https://github.com/user-attachments/assets/1402a374-3881-4afc-aff0-269517d0e28f)
 ![Screenshot_20260304-184409 Large](https://github.com/user-attachments/assets/b7bf634a-6ea4-4b22-8ccf-09593bf7bbed)
 
-> ### IMPORTANT: Yes, this is very annoying but I understand the need of such prevention to avoid users installing potentially harmful apps from unknown sources. Well I hope you trust me to install my app but anyways, You should always verify the trusted source before installing any APK file from the internet. ʅ(°_°)ʃ
+> ### IMPORTANT: Yes, this is very annoying, but I understand the need of such prevention to avoid users installing potentially harmful apps from unknown sources. Well I hope you trust me to install my app but anyways, you should always verify the trusted source before installing any APK file from the internet. ʅ(°_°)ʃ
 
 # Shell Providers (Shizuku & Root)
 
