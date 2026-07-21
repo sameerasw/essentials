@@ -639,6 +639,11 @@
     <string name="perm_accessibility_desc_lighting">새 알림에 대한 알림 조명을 트리거하는 데 필요합니다.</string>
     <string name="perm_default_browser_title">기본 브라우저</string>
     <string name="perm_default_browser_desc">링크를 효율적으로 처리하는 데 필요</string>
+    <string name="perm_install_packages_title">Install Unknown Apps</string>
+    <string name="perm_install_packages_desc">Required to automatically download and install application updates.</string>
+    <string name="action_install_update">Install Update</string>
+    <string name="downloading_update_progress">Downloading update (%1$d%%)</string>
+    <string name="update_download_failed">Download failed</string>
     <string name="perm_accessibility_desc_remap">하드웨어 버튼 이벤트를 가로채는 데 필요합니다.</string>
     <string name="perm_accessibility_desc_essentials_on_display">Required to intercept volume key events while the screen is off to trigger the Essentials On Display overlay.</string>
     <string name="perm_accessibility_desc_night_light">포그라운드 애플리케이션을 모니터링하는 데 필요합니다.</string>
@@ -913,6 +918,9 @@
     <string name="update_channel_name">앱 업데이트</string>
     <string name="update_channel_desc">새로운 앱 업데이트 알림</string>
     <string name="notification_update_available">업데이트 가능</string>
+    <string name="notification_update_subtext">Check out what\'s new in Essentials v%1$s</string>
+    <string name="action_update_to_version">Update to Essentials v%1$s</string>
+    <string name="action_check_for_updates">Check for updates</string>
     <string name="battery_notification_no_devices">연결된 기기 없음</string>
     <string name="label_unknown">알려지지 않은</string>
     <string name="network_type_5g">5G</string>
