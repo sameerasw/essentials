@@ -639,6 +639,11 @@
     <string name="perm_accessibility_desc_lighting">Требуется для включения подсветки уведомлений на новые уведомления</string>
     <string name="perm_default_browser_title">Браузер по умолчанию</string>
     <string name="perm_default_browser_desc">Требуется для эффективной обработки ссылок</string>
+    <string name="perm_install_packages_title">Install Unknown Apps</string>
+    <string name="perm_install_packages_desc">Required to automatically download and install application updates.</string>
+    <string name="action_install_update">Install Update</string>
+    <string name="downloading_update_progress">Downloading update (%1$d%%)</string>
+    <string name="update_download_failed">Download failed</string>
     <string name="perm_accessibility_desc_remap">Требуется для перехвата событий аппаратных кнопок</string>
     <string name="perm_accessibility_desc_essentials_on_display">Required to intercept volume key events while the screen is off to trigger the Essentials On Display overlay.</string>
     <string name="perm_accessibility_desc_night_light">Требуется для мониторинга приоритетных приложений.</string>
@@ -913,6 +918,9 @@
     <string name="update_channel_name">Обновления приложения</string>
     <string name="update_channel_desc">Уведомления о новых обновлениях приложения</string>
     <string name="notification_update_available">Доступно обновление</string>
+    <string name="notification_update_subtext">Check out what\'s new in Essentials v%1$s</string>
+    <string name="action_update_to_version">Update to Essentials v%1$s</string>
+    <string name="action_check_for_updates">Check for updates</string>
     <string name="battery_notification_no_devices">Нет подключенных устройств</string>
     <string name="label_unknown">Неизвестный</string>
     <string name="network_type_5g">5G</string>
