@@ -158,6 +158,9 @@ dependencies {
     implementation(libs.sentry.android)
     implementation(libs.androidx.graphics.shapes)
 
+    // AutoUpdater
+    implementation("com.github.CSAbhiOnline:AutoUpdater:1.0.1")
+
     // Media3 for Live Wallpaper
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.common)

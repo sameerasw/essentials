@@ -254,6 +254,7 @@ fun SettingsContent(
     var isPermissionsExpanded by remember { mutableStateOf(false) }
     var showUpdateSheet by remember { mutableStateOf(false) }
     val updateInfo by viewModel.updateInfo
+    val isUpdateAvailable by viewModel.isUpdateAvailable
     val isAutoUpdateEnabled by viewModel.isAutoUpdateEnabled
     val isUpdateNotificationEnabled by viewModel.isUpdateNotificationEnabled
     val isPreReleaseCheckEnabled by viewModel.isPreReleaseCheckEnabled
@@ -416,6 +417,83 @@ fun SettingsContent(
                     .fillMaxWidth()
                     .height(72.dp)
             )
+        }
+
+        // Updates Section
+        Text(
+            text = "Updates",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        RoundedCardContainer {
+            IconToggleItem(
+                iconRes = R.drawable.rounded_mobile_check_24,
+                title = "Auto check for updates",
+                description = "Check for updates at app launch",
+                isChecked = isAutoUpdateEnabled,
+                onCheckedChange = { viewModel.setAutoUpdateEnabled(it, context) }
+            )
+            IconToggleItem(
+                iconRes = R.drawable.rounded_experiment_24,
+                title = context.getString(R.string.check_pre_releases_label),
+                description = context.getString(R.string.check_pre_releases_desc),
+                isChecked = isPreReleaseCheckEnabled,
+                onCheckedChange = { viewModel.setPreReleaseCheckEnabled(it, context) }
+            )
+            IconToggleItem(
+                iconRes = R.drawable.rounded_notifications_unread_24,
+                title = "Notify for new updates",
+                description = "Show a notification when an update is found",
+                isChecked = isUpdateNotificationEnabled,
+                onCheckedChange = { viewModel.setUpdateNotificationEnabled(it, context) }
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        MaterialTheme.colorScheme.surfaceBright,
+                        shape = MaterialTheme.shapes.extraSmall
+                    )
+                    .padding(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                val buttonText = if (isUpdateAvailable && !updateInfo?.versionName.isNullOrEmpty()) {
+                    stringResource(R.string.action_update_to_version, updateInfo?.versionName ?: "")
+                } else {
+                    stringResource(R.string.action_check_for_updates)
+                }
+
+                val buttonIconRes = R.drawable.rounded_mobile_arrow_down_24
+
+                Button(
+                    onClick = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        viewModel.checkForUpdates(context, manual = true)
+                        showUpdateSheet = true
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(52.dp)
+                        .padding(horizontal = 4.dp),
+                    contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = buttonIconRes),
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = buttonText,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
         }
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -876,75 +954,6 @@ fun SettingsContent(
                         viewModel.requestCalendarPermission(context as ComponentActivity)
                     },
                 )
-            }
-        }
-
-        // Updates Section
-        Text(
-            text = "Updates",
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        RoundedCardContainer {
-            IconToggleItem(
-                iconRes = R.drawable.rounded_mobile_check_24,
-                title = "Auto check for updates",
-                description = "Check for updates at app launch",
-                isChecked = isAutoUpdateEnabled,
-                onCheckedChange = { viewModel.setAutoUpdateEnabled(it, context) }
-            )
-            IconToggleItem(
-                iconRes = R.drawable.rounded_experiment_24,
-                title = context.getString(R.string.check_pre_releases_label),
-                description = context.getString(R.string.check_pre_releases_desc),
-                isChecked = isPreReleaseCheckEnabled,
-                onCheckedChange = { viewModel.setPreReleaseCheckEnabled(it, context) }
-            )
-            IconToggleItem(
-                iconRes = R.drawable.rounded_notifications_unread_24,
-                title = "Notify for new updates",
-                description = "Show a notification when an update is found",
-                isChecked = isUpdateNotificationEnabled,
-                onCheckedChange = { viewModel.setUpdateNotificationEnabled(it, context) }
-            )
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        MaterialTheme.colorScheme.surfaceBright,
-                        shape = MaterialTheme.shapes.extraSmall
-                    )
-                    .padding(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-
-                // Check for updates button
-                Button(
-                    onClick = {
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        viewModel.checkForUpdates(context, manual = true)
-                        showUpdateSheet = true
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(6.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.rounded_mobile_arrow_down_24),
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        "Check for updates",
-                        fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
-                    )
-                }
-
             }
         }
 

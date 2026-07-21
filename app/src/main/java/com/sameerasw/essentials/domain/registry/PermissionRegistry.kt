@@ -106,4 +106,7 @@ fun initPermissionRegistry() {
 
     // Notification Snoozing feature
     PermissionRegistry.register("WRITE_SECURE_SETTINGS", R.string.feat_notification_snoozing_title)
+
+    // Install unknown packages feature
+    PermissionRegistry.register("REQUEST_INSTALL_PACKAGES", R.string.tab_app_updates_title)
 }

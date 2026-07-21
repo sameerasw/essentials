@@ -48,6 +48,7 @@ import com.sameerasw.essentials.domain.model.ScaleAnimationsProfile
 import com.sameerasw.essentials.domain.model.SearchableItem
 import com.sameerasw.essentials.domain.model.UpdateInfo
 import com.sameerasw.essentials.domain.registry.SearchRegistry
+import com.sameerasw.essentials.services.AppUpdateWorker
 import com.sameerasw.essentials.services.CaffeinateWakeLockService
 import com.sameerasw.essentials.services.NotificationLightingService
 import com.sameerasw.essentials.services.receivers.FlashlightActionReceiver
@@ -903,7 +904,10 @@ class MainViewModel : ViewModel() {
         isAccessibilityEnabled.value = PermissionUtils.isAccessibilityServiceEnabled(context)
         isWriteSecureSettingsEnabled.value = PermissionUtils.canWriteSecureSettings(context)
         isShizukuAvailable.value = ShizukuUtils.isShizukuAvailable()
-        isShizukuPermissionGranted.value = ShizukuUtils.hasPermission()
+        if (cachedIsUpdateAvailable) {
+            isUpdateAvailable.value = true
+            updateInfo.value = cachedUpdateInfo
+        }
         isAutoAccessibilityEnabled.value =
             settingsRepository.getBoolean(SettingsRepository.KEY_AUTO_ACCESSIBILITY_ENABLED)
         isHideGestureBarEnabled.value =
@@ -982,6 +986,7 @@ class MainViewModel : ViewModel() {
         if (isDailyWallpaperAutoUpdateEnabled.value) {
             schedulePeriodicWallpaperCheck(context)
         }
+        schedulePeriodicAppUpdateCheck(context)
         dailyWallpaperAutoUpdateTime.value = settingsRepository.getString(SettingsRepository.KEY_DAILY_WALLPAPER_AUTO_UPDATE_TIME)
         isDailyWallpaperShowLastTime.value = settingsRepository.getBoolean(SettingsRepository.KEY_DAILY_WALLPAPER_SHOW_LAST_TIME)
 
@@ -1911,6 +1916,7 @@ class MainViewModel : ViewModel() {
 
     fun checkForUpdates(context: Context, manual: Boolean = false) {
         if (isCheckingUpdate.value) return
+        if (isUpdateAvailable.value && !manual) return
 
         if (!manual) {
             if (!isAutoUpdateEnabled.value) return
@@ -1929,11 +1935,15 @@ class MainViewModel : ViewModel() {
                 } ?: "0.0"
 
                 val updateInfoResult =
-                    updateRepository.checkForUpdates(isPreReleaseCheckEnabled.value, currentVersion)
+                    updateRepository.checkForUpdates(context, isPreReleaseCheckEnabled.value, currentVersion)
 
                 if (updateInfoResult != null) {
                     updateInfo.value = updateInfoResult
                     isUpdateAvailable.value = updateInfoResult.isUpdateAvailable
+                    if (updateInfoResult.isUpdateAvailable) {
+                        cachedIsUpdateAvailable = true
+                        cachedUpdateInfo = updateInfoResult
+                    }
 
                     if (updateInfoResult.isUpdateAvailable && updateInfoResult.downloadUrl.isNotEmpty()) {
                         if (isUpdateNotificationEnabled.value) {
@@ -4398,6 +4408,25 @@ class MainViewModel : ViewModel() {
         )
     }
 
+    private fun schedulePeriodicAppUpdateCheck(context: Context) {
+        val constraints = androidx.work.Constraints.Builder()
+            .setRequiredNetworkType(androidx.work.NetworkType.CONNECTED)
+            .build()
+
+        val workRequest =
+            androidx.work.PeriodicWorkRequestBuilder<AppUpdateWorker>(
+                12, java.util.concurrent.TimeUnit.HOURS
+            )
+            .setConstraints(constraints)
+            .build()
+
+        androidx.work.WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+            "app_update_check_work",
+            androidx.work.ExistingPeriodicWorkPolicy.KEEP,
+            workRequest
+        )
+    }
+
     private fun cancelPeriodicWallpaperCheck(context: Context) {
         androidx.work.WorkManager.getInstance(context)
             .cancelUniqueWork("daily_wallpaper_check_work")
@@ -4547,4 +4576,8 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    companion object {
+        var cachedIsUpdateAvailable: Boolean = false
+        var cachedUpdateInfo: UpdateInfo? = null
+    }
 }

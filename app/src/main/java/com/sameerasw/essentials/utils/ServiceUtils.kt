@@ -9,6 +9,14 @@ import com.sameerasw.essentials.domain.diy.DIYRepository
 import com.sameerasw.essentials.services.AppDetectionService
 import com.sameerasw.essentials.services.BatteryNotificationService
 
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import com.sameerasw.essentials.services.AppUpdateWorker
+import java.util.concurrent.TimeUnit
+
 object ServiceUtils {
 
     fun startRequiredServices(context: Context) {
@@ -16,6 +24,7 @@ object ServiceUtils {
 
         startAppDetectionServiceIfNeeded(context, settingsRepository)
         startBatteryNotificationServiceIfNeeded(context, settingsRepository)
+        schedulePeriodicAppUpdateCheck(context, settingsRepository)
     }
 
     private fun startAppDetectionServiceIfNeeded(
@@ -74,6 +83,31 @@ object ServiceUtils {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+        }
+    }
+
+    fun schedulePeriodicAppUpdateCheck(
+        context: Context,
+        settingsRepository: SettingsRepository
+    ) {
+        val isAutoUpdateEnabled = settingsRepository.getBoolean(
+            SettingsRepository.KEY_AUTO_UPDATE_ENABLED,
+            true
+        )
+        if (isAutoUpdateEnabled) {
+            val constraints = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build()
+
+            val workRequest = PeriodicWorkRequestBuilder<AppUpdateWorker>(
+                12, TimeUnit.HOURS
+            ).setConstraints(constraints).build()
+
+            WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+                "app_update_check_work",
+                ExistingPeriodicWorkPolicy.KEEP,
+                workRequest
+            )
         }
     }
 }

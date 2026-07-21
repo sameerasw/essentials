@@ -1031,6 +1031,14 @@
         </receiver>
 
         <receiver
+            android:name=".services.receivers.DownloadUpdateReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.sameerasw.essentials.ACTION_DOWNLOAD_UPDATE" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
             android:name=".services.automation.receivers.TimeAutomationReceiver"
             android:exported="false">
             <intent-filter>

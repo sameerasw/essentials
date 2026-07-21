@@ -28,6 +28,23 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.BlendMode
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
+import androidx.compose.ui.graphics.toArgb
+import com.airbnb.lottie.LottieProperty
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
+import com.airbnb.lottie.compose.rememberLottieDynamicProperties
+import com.airbnb.lottie.compose.rememberLottieDynamicProperty
+import androidx.compose.material3.Badge
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingToolbarDefaults
 import androidx.compose.material3.FloatingToolbarExitDirection.Companion.Bottom
@@ -226,6 +243,7 @@ class MainActivity : AppCompatActivity() {
                     var showUpdateSheet by remember { mutableStateOf(false) }
                     var showInstructionsSheet by remember { mutableStateOf(false) }
                     val updateInfo by viewModel.updateInfo
+                    val isUpdateAvailable by viewModel.isUpdateAvailable
 
                     var showGitHubAuthSheet by remember { mutableStateOf(false) }
                     var showNewAutomationSheet by remember { mutableStateOf(false) }
@@ -250,7 +268,9 @@ class MainActivity : AppCompatActivity() {
                         if (!viewModel.isPostNotificationsEnabled.value) {
                             viewModel.requestNotificationPermission(this@MainActivity)
                         }
-                        viewModel.checkForUpdates(context)
+                        if (!viewModel.isUpdateAvailable.value) {
+                            viewModel.checkForUpdates(context, manual = true)
+                        }
                         updatesViewModel.loadTrackedRepos(context)
                     }
 
@@ -581,6 +601,42 @@ class MainActivity : AppCompatActivity() {
                                                 }
                                             }
 
+                                            if (isUpdateAvailable && (currentTab == DIYTabs.ESSENTIALS || currentTab == DIYTabs.FREEZE)) {
+                                                Badge(
+                                                    modifier = Modifier
+                                                        .align(Alignment.TopEnd)
+                                                        .offset(x = 6.dp, y = (-6).dp)
+                                                        .size(28.dp),
+                                                    containerColor = MaterialTheme.colorScheme.error,
+                                                    contentColor = MaterialTheme.colorScheme.onError
+                                                ) {
+                                                    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.update_motion))
+                                                    val progress by animateLottieCompositionAsState(
+                                                        composition = composition,
+                                                        iterations = LottieConstants.IterateForever
+                                                    )
+                                                    val onErrorColor = MaterialTheme.colorScheme.onError
+                                                    val dynamicProperties = rememberLottieDynamicProperties(
+                                                        rememberLottieDynamicProperty(
+                                                            property = LottieProperty.COLOR_FILTER,
+                                                            value = PorterDuffColorFilter(
+                                                                onErrorColor.toArgb(),
+                                                                PorterDuff.Mode.SRC_ATOP
+                                                            ),
+                                                            keyPath = arrayOf("**")
+                                                        )
+                                                    )
+
+                                                    LottieAnimation(
+                                                        composition = composition,
+                                                        progress = { progress },
+                                                        dynamicProperties = dynamicProperties,
+                                                        modifier = Modifier
+                                                            .fillMaxSize()
+                                                            .padding(2.dp)
+                                                    )
+                                                }
+                                            }
                                         }
                                     }
                                 )
