@@ -639,6 +639,11 @@
     <string name="perm_accessibility_desc_lighting">නව දැනුම්දීම් මත දැනුම්දීම් ආලෝකය අවුලුවාලීමට අවශ්‍ය වේ</string>
     <string name="perm_default_browser_title">පෙරනිමි බ්‍රව්සරය</string>
     <string name="perm_default_browser_desc">සබැඳි කාර්යක්ෂමව හැසිරවීමට අවශ්‍ය වේ</string>
+    <string name="perm_install_packages_title">Install Unknown Apps</string>
+    <string name="perm_install_packages_desc">Required to automatically download and install application updates.</string>
+    <string name="action_install_update">Install Update</string>
+    <string name="downloading_update_progress">Downloading update (%1$d%%)</string>
+    <string name="update_download_failed">Download failed</string>
     <string name="perm_accessibility_desc_remap">දෘඪාංග බොත්තම් සිදුවීම් වලට බාධා කිරීමට අවශ්‍ය වේ</string>
     <string name="perm_accessibility_desc_essentials_on_display">Required to intercept volume key events while the screen is off to trigger the Essentials On Display overlay.</string>
     <string name="perm_accessibility_desc_night_light">පෙරබිම් යෙදුම් නිරීක්ෂණය කිරීමට අවශ්‍ය වේ.</string>
@@ -913,6 +918,9 @@
     <string name="update_channel_name">යෙදුම් යාවත්කාලීන</string>
     <string name="update_channel_desc">නව යෙදුම් යාවත්කාලීන සඳහා දැනුම්දීම්</string>
     <string name="notification_update_available">යාවත්කාලීන ලබා ගත හැක</string>
+    <string name="notification_update_subtext">Check out what\'s new in Essentials v%1$s</string>
+    <string name="action_update_to_version">Update to Essentials v%1$s</string>
+    <string name="action_check_for_updates">Check for updates</string>
     <string name="battery_notification_no_devices">උපාංග සම්බන්ධ නැත</string>
     <string name="label_unknown">නොදන්නා</string>
     <string name="network_type_5g">5G</string>
