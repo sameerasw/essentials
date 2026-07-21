@@ -640,6 +640,11 @@ Sin embargo, sí te permite reanudarla desde la lista de aplicaciones del lanzad
     <string name="perm_accessibility_desc_lighting">Requerido para activar la iluminación de notificaciones en notificaciones nuevas</string>
     <string name="perm_default_browser_title">Navegador predeterminado</string>
     <string name="perm_default_browser_desc">Requerido para gestionar los enlaces de forma eficiente</string>
+    <string name="perm_install_packages_title">Install Unknown Apps</string>
+    <string name="perm_install_packages_desc">Required to automatically download and install application updates.</string>
+    <string name="action_install_update">Install Update</string>
+    <string name="downloading_update_progress">Downloading update (%1$d%%)</string>
+    <string name="update_download_failed">Download failed</string>
     <string name="perm_accessibility_desc_remap">Requerido para interceptar eventos de botones físicos</string>
     <string name="perm_accessibility_desc_essentials_on_display">Requerido para interceptar los eventos de las teclas de volumen mientras la pantalla está apagada y activar la superposición de Essentials On Display.</string>
     <string name="perm_accessibility_desc_night_light">Necesario para supervisar las aplicaciones en primer plano.</string>
@@ -915,6 +920,9 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="update_channel_name">Actualizaciones de aplicaciones</string>
     <string name="update_channel_desc">Notificaciones de nuevas actualizaciones de aplicaciones</string>
     <string name="notification_update_available">Actualización disponible</string>
+    <string name="notification_update_subtext">Check out what\'s new in Essentials v%1$s</string>
+    <string name="action_update_to_version">Update to Essentials v%1$s</string>
+    <string name="action_check_for_updates">Check for updates</string>
     <string name="battery_notification_no_devices">No hay dispositivos conectados</string>
     <string name="label_unknown">Desconocido</string>
     <string name="network_type_5g">5G</string>
@@ -1362,8 +1370,8 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="label_enable_brightness_adjustment">Activar la reducción de brillo</string>
     <string name="desc_enable_brightness_adjustment">Allow lowering the display brightness limit when saver is active.</string>
     <string name="label_adjust_brightness_factor">Factor de ajuste del brillo</string>
-    <string name="label_force_all_apps_standby">Force Standby</string>
-    <string name="desc_force_all_apps_standby">Put all apps into App Standby bucket when active.</string>
+    <string name="label_force_all_apps_standby">Forzar el modo de espera</string>
+    <string name="desc_force_all_apps_standby">Colocar todas las aplicaciones en el grupo de aplicaciones en espera cuando estén activas.</string>
     <string name="label_force_background_check">Force Background Check</string>
     <string name="desc_force_background_check">Enforce strict background service restrictions.</string>
     <string name="label_disable_optional_sensors">Disable Optional Sensors</string>
