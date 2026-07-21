@@ -639,6 +639,11 @@
     <string name="perm_accessibility_desc_lighting">Vaaditaan ilmoitusvalon laukaisemiseksi uusissa ilmoituksissa</string>
     <string name="perm_default_browser_title">Oletusselain</string>
     <string name="perm_default_browser_desc">Tarvitaan linkkien tehokkaaseen käsittelyyn</string>
+    <string name="perm_install_packages_title">Install Unknown Apps</string>
+    <string name="perm_install_packages_desc">Required to automatically download and install application updates.</string>
+    <string name="action_install_update">Install Update</string>
+    <string name="downloading_update_progress">Downloading update (%1$d%%)</string>
+    <string name="update_download_failed">Download failed</string>
     <string name="perm_accessibility_desc_remap">Vaaditaan laitteistopainiketapahtumien sieppaamiseen</string>
     <string name="perm_accessibility_desc_essentials_on_display">Required to intercept volume key events while the screen is off to trigger the Essentials On Display overlay.</string>
     <string name="perm_accessibility_desc_night_light">Tarvitaan etualan sovellusten valvontaan.</string>
@@ -913,6 +918,9 @@
     <string name="update_channel_name">Sovelluspäivitykset</string>
     <string name="update_channel_desc">Ilmoitukset uusista sovelluspäivityksistä</string>
     <string name="notification_update_available">Päivitys saatavilla</string>
+    <string name="notification_update_subtext">Check out what\'s new in Essentials v%1$s</string>
+    <string name="action_update_to_version">Update to Essentials v%1$s</string>
+    <string name="action_check_for_updates">Check for updates</string>
     <string name="battery_notification_no_devices">Ei kytkettyjä laitteita</string>
     <string name="label_unknown">Tuntematon</string>
     <string name="network_type_5g">5G</string>
