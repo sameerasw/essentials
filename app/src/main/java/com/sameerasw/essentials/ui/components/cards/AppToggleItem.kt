@@ -22,6 +22,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.ui.TranslatableCardContainer
 import com.sameerasw.essentials.utils.HapticUtil
 
 private val GOOGLE_SYSTEM_USER_APPS = setOf(
@@ -58,28 +59,29 @@ private val GOOGLE_SYSTEM_USER_APPS = setOf(
     "com.android.stk",
     "com.google.android.soundpicker",
     "com.google.mainline.telemetry",
-    "com.google.android.apps.accessibility.voiceaccess",
-    "com.google.android.cellbroadcastreceiver"
+    "com.google.android.apps.messaging"
 )
 
-@OptIn(androidx.compose.material3.ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun AppToggleItem(
-    icon: ImageBitmap?,
     title: String,
     modifier: Modifier = Modifier,
     description: String? = null,
-    packageName: String? = null,
-    isSystemApp: Boolean = false,
-    isChecked: Boolean,
-    onCheckedChange: (Boolean) -> Unit,
+    isChecked: Boolean = false,
+    onCheckedChange: (Boolean) -> Unit = {},
     enabled: Boolean = true,
     onDisabledClick: (() -> Unit)? = null,
-    showToggle: Boolean = true
+    showToggle: Boolean = true,
+    onClick: (() -> Unit)? = null,
+    icon: ImageBitmap? = null,
+    packageName: String? = null,
+    isSystemApp: Boolean = false
 ) {
+
     val view = LocalView.current
-    val shouldShowSystemTag = remember(packageName, isSystemApp) {
-        isSystemApp || (packageName != null && GOOGLE_SYSTEM_USER_APPS.contains(packageName))
+
+    val shouldShowSystemTag = remember(packageName) {
+        packageName != null && GOOGLE_SYSTEM_USER_APPS.contains(packageName)
     }
 
     val onClickAction = {
@@ -92,151 +94,156 @@ fun AppToggleItem(
         }
     }
 
-    if (showToggle) {
-        androidx.compose.material3.ListItem(
-            checked = isChecked && enabled,
-            onCheckedChange = { checked ->
-                if (enabled) {
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    onCheckedChange(checked)
-                } else if (onDisabledClick != null) {
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    onDisabledClick()
-                }
-            },
-            enabled = enabled,
-            modifier = modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            leadingContent = {
-                if (icon != null) {
-                    Image(
-                        bitmap = icon,
-                        contentDescription = title,
-                        modifier = Modifier.size(32.dp),
-                        contentScale = ContentScale.Fit
+    TranslatableCardContainer(
+        title = title,
+        description = description
+    ) {
+        if (showToggle) {
+            androidx.compose.material3.ListItem(
+                checked = isChecked && enabled,
+                onCheckedChange = { checked ->
+                    if (enabled) {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        onCheckedChange(checked)
+                    } else if (onDisabledClick != null) {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        onDisabledClick()
+                    }
+                },
+                enabled = enabled,
+                modifier = modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                leadingContent = {
+                    if (icon != null) {
+                        Image(
+                            bitmap = icon,
+                            contentDescription = title,
+                            modifier = Modifier.size(24.dp),
+                            contentScale = ContentScale.Fit
+                        )
+                    } else {
+                        Spacer(modifier = Modifier.size(24.dp))
+                    }
+                },
+                supportingContent = if (description != null) {
+                    {
+                        Text(
+                            text = description,
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                } else null,
+                trailingContent = {
+                    Switch(
+                        checked = if (enabled) isChecked else false,
+                        onCheckedChange = null,
+                        enabled = enabled
                     )
-                } else {
-                    Spacer(modifier = Modifier.size(32.dp))
-                }
-            },
-            supportingContent = if (description != null) {
-                {
-                    Text(
-                        text = description,
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            } else null,
-            trailingContent = {
-                Switch(
-                    checked = if (enabled) isChecked else false,
-                    onCheckedChange = null, // Handled by ListItem
-                    enabled = enabled
-                )
-            },
-            colors = androidx.compose.material3.ListItemDefaults.colors(
-                containerColor = MaterialTheme.colorScheme.surfaceBright
-            ),
-            contentPadding = androidx.compose.foundation.layout.PaddingValues(
-                horizontal = 16.dp,
-                vertical = 16.dp
-            ),
-            content = {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    if (shouldShowSystemTag) {
-                        Box(
-                            modifier = Modifier
-                                .size(18.dp)
-                                .background(
-                                    color = MaterialTheme.colorScheme.primary,
-                                    shape = CircleShape
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            androidx.compose.material3.Icon(
-                                painter = painterResource(id = R.drawable.round_android_24),
-                                contentDescription = null,
-                                modifier = Modifier.size(12.dp),
-                                tint = MaterialTheme.colorScheme.surfaceBright
-                            )
+                },
+                colors = androidx.compose.material3.ListItemDefaults.colors(
+                    containerColor = MaterialTheme.colorScheme.surfaceBright
+                ),
+                contentPadding = androidx.compose.foundation.layout.PaddingValues(
+                    horizontal = 16.dp,
+                    vertical = 16.dp
+                ),
+                content = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Text(
+                            text = title,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        if (shouldShowSystemTag) {
+                            Box(
+                                modifier = Modifier
+                                    .size(18.dp)
+                                    .background(
+                                        color = MaterialTheme.colorScheme.primary,
+                                        shape = CircleShape
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                androidx.compose.material3.Icon(
+                                    painter = painterResource(id = R.drawable.round_android_24),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(12.dp),
+                                    tint = MaterialTheme.colorScheme.surfaceBright
+                                )
+                            }
                         }
                     }
                 }
-            }
-        )
-    } else {
-        androidx.compose.material3.ListItem(
-            onClick = onClickAction,
-            enabled = enabled,
-            modifier = modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            leadingContent = {
-                if (icon != null) {
-                    Image(
-                        bitmap = icon,
-                        contentDescription = title,
-                        modifier = Modifier.size(24.dp),
-                        contentScale = ContentScale.Fit
-                    )
-                } else {
-                    Spacer(modifier = Modifier.size(24.dp))
-                }
-            },
-            supportingContent = if (description != null) {
-                {
-                    Text(
-                        text = description,
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            } else null,
-            colors = androidx.compose.material3.ListItemDefaults.colors(
-                containerColor = MaterialTheme.colorScheme.surfaceBright
-            ),
-            contentPadding = androidx.compose.foundation.layout.PaddingValues(
-                horizontal = 16.dp,
-                vertical = 16.dp
-            ),
-            content = {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    if (shouldShowSystemTag) {
-                        Box(
-                            modifier = Modifier
-                                .size(18.dp)
-                                .background(
-                                    color = MaterialTheme.colorScheme.primary,
-                                    shape = CircleShape
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            androidx.compose.material3.Icon(
-                                painter = painterResource(id = R.drawable.round_android_24),
-                                contentDescription = null,
-                                modifier = Modifier.size(12.dp),
-                                tint = MaterialTheme.colorScheme.surfaceBright
-                            )
+            )
+        } else {
+            androidx.compose.material3.ListItem(
+                onClick = onClickAction,
+                enabled = enabled,
+                modifier = modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                leadingContent = {
+                    if (icon != null) {
+                        Image(
+                            bitmap = icon,
+                            contentDescription = title,
+                            modifier = Modifier.size(24.dp),
+                            contentScale = ContentScale.Fit
+                        )
+                    } else {
+                        Spacer(modifier = Modifier.size(24.dp))
+                    }
+                },
+                supportingContent = if (description != null) {
+                    {
+                        Text(
+                            text = description,
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                } else null,
+                colors = androidx.compose.material3.ListItemDefaults.colors(
+                    containerColor = MaterialTheme.colorScheme.surfaceBright
+                ),
+                contentPadding = androidx.compose.foundation.layout.PaddingValues(
+                    horizontal = 16.dp,
+                    vertical = 16.dp
+                ),
+                content = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Text(
+                            text = title,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        if (shouldShowSystemTag) {
+                            Box(
+                                modifier = Modifier
+                                    .size(18.dp)
+                                    .background(
+                                        color = MaterialTheme.colorScheme.primary,
+                                        shape = CircleShape
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                androidx.compose.material3.Icon(
+                                    painter = painterResource(id = R.drawable.round_android_24),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(12.dp),
+                                    tint = MaterialTheme.colorScheme.surfaceBright
+                                )
+                            }
                         }
                     }
                 }
-            }
-        )
+            )
+        }
     }
 }

@@ -78,8 +78,8 @@ fun FeatureHelpBottomSheet(
                 }
 
                 Column {
-                    Text(
-                        text = stringResource(feature.title),
+                    com.sameerasw.essentials.translation.TranslatableText(
+                        stringResId = feature.title,
                         style = MaterialTheme.typography.titleMedium
                     )
                 }
@@ -90,19 +90,15 @@ fun FeatureHelpBottomSheet(
                 containerColor = MaterialTheme.colorScheme.surfaceBright
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    val description = if (feature.aboutDescription != null) {
-                        stringResource(feature.aboutDescription)
-                    } else {
-                        stringResource(feature.description)
-                    }
+                    val descRes = feature.aboutDescription ?: feature.description
 
-                    Text(
-                        text = description,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurface
+                    com.sameerasw.essentials.translation.TranslatableText(
+                        stringResId = descRes,
+                        style = MaterialTheme.typography.bodyLarge
                     )
                 }
             }
+
 
             // Permissions
             if (feature.permissionKeys.isNotEmpty()) {
