@@ -54,3 +54,10 @@
 # SLF4J logging rules (prevent R8 missing class warnings)
 -dontwarn org.slf4j.**
 -keep class org.slf4j.** { *; }
+
+# Keep R.string class and fields for runtime translation key reflection lookup
+-keep class com.sameerasw.essentials.R$string { *; }
+-keepclassmembers class com.sameerasw.essentials.R$string {
+    public static <fields>;
+}
+

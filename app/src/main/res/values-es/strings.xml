@@ -1456,4 +1456,5 @@ Cuando llegue un mensaje o alerta de una aplicación seleccionada, la Pantalla s
     <string name="whats_new_specs_desc">Se han eliminado las especificaciones inexactas basadas en GSMArena para mantener la información del dispositivo limpia, rápida y completamente fiable.</string>
     <string name="whats_new_apps_title">Actualizaciones de la aplicación migradas</string>
     <string name="whats_new_apps_desc">La pestaña Aplicaciones ahora está completamente integrada en la función Tu Android, lo que facilita gestionar todas tus actualizaciones de aplicaciones desde un único y coherente centro unificado.</string>
+    <string name="feat_safe_volume_title">Deshabilitar advertencia de volumen</string>
 </resources>
