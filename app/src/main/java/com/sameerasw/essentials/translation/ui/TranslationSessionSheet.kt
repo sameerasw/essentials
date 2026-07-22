@@ -1,5 +1,6 @@
 package com.sameerasw.essentials.translation.ui
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -133,26 +134,22 @@ fun TranslationSessionSheet(
                             errorMessage = null
                             scope.launch {
                                 val jsonPayload = TranslationManager.session.toJsonPayload()
-                                val success = gitHubRepository.triggerWorkflowDispatch(
+                                val commentBody = "Automated translation submission from Essentials app.\n\n```json\n$jsonPayload\n```"
+                                Log.d("TranslationSessionSheet", "Posting submission comment for user: ${currentUser.login}")
+                                val success = gitHubRepository.addDiscussionComment(
                                     token = token,
                                     owner = "sameerasw",
                                     repo = "essentials",
-                                    workflowFile = "apply-translations.yml",
-                                    ref = "main",
-                                    inputs = mapOf(
-                                        "translations_json" to jsonPayload,
-                                        "contributor" to currentUser.login,
-                                        "contributor_name" to (currentUser.name ?: currentUser.login),
-                                        "contributor_email" to "${currentUser.id}+${currentUser.login}@users.noreply.github.com",
-
-                                        "user_token" to token
-                                    )
+                                    discussionNumber = 601,
+                                    body = commentBody
                                 )
                                 isSubmitting = false
                                 if (success) {
+                                    Log.d("TranslationSessionSheet", "Discussion comment posted successfully")
                                     successSubmitted = true
                                     TranslationManager.discardSession()
                                 } else {
+                                    Log.e("TranslationSessionSheet", "Posting discussion comment failed")
                                     errorMessage = context.getString(R.string.translation_submit_error)
                                 }
                             }
