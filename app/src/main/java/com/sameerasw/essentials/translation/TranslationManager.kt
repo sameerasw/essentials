@@ -53,23 +53,42 @@ object TranslationManager {
         }
         if (resOrText is String && resOrText.isNotBlank()) {
             val trimmed = resOrText.trim()
+
+            session.edits.firstOrNull { it.newValue.trim() == trimmed || it.originalValue.trim() == trimmed }?.let {
+                return it.key
+            }
+            liveOverrides.entries.firstOrNull { it.value.trim() == trimmed }?.let {
+                return it.key.first
+            }
+
             val all = StringLoader.getAllTranslations(context)
 
-            // 1. Exact match in any locale
             all.entries.firstOrNull { (_, map) ->
                 map.values.any { it == resOrText || it.trim() == trimmed }
             }?.let { return it.key }
 
-            // 2. Case insensitive match
             all.entries.firstOrNull { (_, map) ->
                 map.values.any { it.trim().equals(trimmed, ignoreCase = true) }
             }?.let { return it.key }
 
-            // 3. Match prefix before format specifiers (%s, %d, %1$s, etc.)
             all.entries.firstOrNull { (_, map) ->
                 map.values.any { v ->
-                    val cleanV = v.split("%")[0].trim()
-                    cleanV.length >= 3 && trimmed.startsWith(cleanV, ignoreCase = true)
+                    if (!v.contains("%")) return@any false
+                    val parts = v.split(Regex("%[0-9]*\\$?[a-zA-Z]"))
+                    if (parts.all { it.isEmpty() }) return@any false
+                    val regexPattern = "^" + parts.joinToString(".*?") { Regex.escape(it) } + "$"
+                    try {
+                        Regex(regexPattern, RegexOption.IGNORE_CASE).matches(trimmed)
+                    } catch (e: Exception) {
+                        false
+                    }
+                }
+            }?.let { return it.key }
+
+            all.entries.firstOrNull { (_, map) ->
+                map.values.any { v ->
+                    val cleanV = v.replace(Regex("%[0-9]*\\$?[a-zA-Z]"), "").trim()
+                    cleanV.length >= 3 && (trimmed.contains(cleanV, ignoreCase = true) || cleanV.contains(trimmed, ignoreCase = true))
                 }
             }?.let { return it.key }
         }
