@@ -143,6 +143,8 @@ fun TranslationSessionSheet(
                                         "translations_json" to jsonPayload,
                                         "contributor" to currentUser.login,
                                         "contributor_name" to (currentUser.name ?: currentUser.login),
+                                        "contributor_email" to "${currentUser.id}+${currentUser.login}@users.noreply.github.com",
+
                                         "user_token" to token
                                     )
                                 )
