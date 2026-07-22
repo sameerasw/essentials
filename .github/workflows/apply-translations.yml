@@ -67,7 +67,8 @@ jobs:
           if git ls-remote --exit-code --heads origin "$BRANCH"; then
             git checkout -b "$BRANCH" "origin/$BRANCH"
           else
-            git checkout -b "$BRANCH"
+            # Branch directly off develop instead of main
+            git checkout -b "$BRANCH" origin/develop
           fi
 
           python3 - << 'EOF'
