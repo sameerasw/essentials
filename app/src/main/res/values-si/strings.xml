@@ -706,8 +706,8 @@
     <string name="unit_seconds">%d seconds</string>
     <string name="unit_minute">1 minute</string>
     <string name="unit_minutes">%d minutes</string>
-    <string name="action_restart_systemui">Restart SystemUI</string>
-    <string name="desc_restart_systemui">Kills and restarts SystemUI process to apply some changes immediately</string>
+    <string name="action_restart_systemui">SystemUI නැවත ආරම්භ කරන්න</string>
+    <string name="desc_restart_systemui">සමහර වෙනස්කම් වහාම ක්‍රියාත්මක කිරීම සඳහා SystemUI ක්‍රියාවලිය (process) නවතා නැවත ආරම්භ කරයි.</string>
     <string name="msg_error_load_release_notes">Couldn\'t load the release note</string>
     <string name="action_view_on_web">View on web</string>
     <string name="action_done">කළා</string>
