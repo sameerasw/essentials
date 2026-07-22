@@ -276,7 +276,7 @@
     <string name="warning_title">⚠️ ATTENZIONE</string>
     <string name="screen_locked_security_auth_enable">Autenticarsi per abilitare la sicurezza dello schermo bloccato</string>
     <string name="screen_locked_security_auth_disable">Autenticarsi per disabilitare la sicurezza del blocco dello schermo</string>
-    <string name="screen_locked_security_desc">Disable quick setting tiles when the device is locked</string>
+    <string name="screen_locked_security_desc">Disabilita i pulsanti del pannello rapido quando il dispositivo è bloccato</string>
     <string name="search_disable_qs_locked_title">Disable QS Locked</string>
     <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
@@ -391,7 +391,7 @@
     <string name="feat_screen_off_widget_desc">Widget invisibile per spegnere lo schermo</string>
     <string name="feat_statusbar_icons_title">Icone della barra di stato</string>
     <string name="feat_statusbar_icons_desc">Controlla la visibilità delle icone della barra di stato</string>
-    <string name="feat_caffeinate_title">Caffeinato</string>
+    <string name="feat_caffeinate_title">Caffeina</string>
     <string name="feat_caffeinate_desc">Mantieni lo schermo attivo</string>
     <string name="feat_maps_power_saving_title">Modalità di risparmio energetico della mappa</string>
     <string name="feat_maps_power_saving_desc">Per qualsiasi dispositivo Android</string>
@@ -439,12 +439,12 @@
     <string name="feat_freeze_desc">Disattiva le app utilizzate raramente</string>
     <string name="feat_watermark_title">Filigrana</string>
     <string name="feat_watermark_desc">Aggiungi dati EXIF ​​e loghi alle foto</string>
-    <string name="feat_always_on_display_title">Sempre in mostra</string>
+    <string name="feat_always_on_display_title">Always On Display</string>
     <string name="feat_always_on_display_desc">Mostra ora e informazioni mentre lo schermo è spento</string>
     <string name="feat_calendar_sync_title">Sincronizzazione del calendario</string>
-    <string name="feat_calendar_sync_desc">Sync your phone calendar to your watch</string>
-    <string name="feat_lock_from_watch_title">Lock from Watch</string>
-    <string name="feat_lock_from_watch_desc">Lock your phone remotely</string>
+    <string name="feat_calendar_sync_desc">Sincronizza il calendario del tuo telefono con l\'orologio</string>
+    <string name="feat_lock_from_watch_title">Blocca dall\'Orologio</string>
+    <string name="feat_lock_from_watch_desc">Blocca il tuo telefono da remoto</string>
     <string name="remote_lock_mode_title">Lock Mode</string>
     <string name="remote_lock_mode_screen_off">Screen off</string>
     <string name="remote_lock_mode_lock">Lock</string>
@@ -706,8 +706,8 @@
     <string name="unit_seconds">%d seconds</string>
     <string name="unit_minute">1 minute</string>
     <string name="unit_minutes">%d minutes</string>
-    <string name="action_restart_systemui">Restart SystemUI</string>
-    <string name="desc_restart_systemui">Kills and restarts SystemUI process to apply some changes immediately</string>
+    <string name="action_restart_systemui">Riavvia UI Sistema</string>
+    <string name="desc_restart_systemui">Chiude e riavvia il processo di UI Sistema per applicare immediatamente alcune modifiche</string>
     <string name="msg_error_load_release_notes">Couldn\'t load the release note</string>
     <string name="action_view_on_web">View on web</string>
     <string name="action_done">Fatto</string>
@@ -1301,7 +1301,7 @@
     <string name="label_apps">App</string>
     <string name="feat_text_animations_title">Scala e animazioni</string>
     <string name="feat_text_animations_desc">Regola la scala e le animazioni del sistema</string>
-    <string name="feat_screen_refresh_rate_title">Screen Refresh Rate</string>
+    <string name="feat_screen_refresh_rate_title">Frequenza di Aggiornamento dello Schermo</string>
     <string name="feat_screen_refresh_rate_desc">Set a fixed or ranged screen refresh rate</string>
     <string name="settings_section_text">Testo</string>
     <string name="label_font_scale">Scala dei caratteri</string>
@@ -1392,8 +1392,8 @@
     <string name="custom_video">Custom video</string>
     <string name="about_desc_live_wallpaper">Set your favorite video as your home screen wallpaper. Choose between triggering the animation upon unlocking or simply whenever the screen turns on for a dynamic experience.</string>
     <!-- Shut-Up! Feature -->
-    <string name="feat_shut_up_title">Shut-Up!</string>
-    <string name="feat_shut_up_desc">I know what I\'m doing</string>
+    <string name="feat_shut_up_title">Taci!</string>
+    <string name="feat_shut_up_desc">So cosa sto facendo</string>
     <string name="shut_up_description">Shut-Up! bypasses app restrictions and checks for developer options, accessibility and debugging by dynamically hiding them when you launch sensitive apps. \n\nUse the custom shortcuts to ensure settings are hidden before the app launches.</string>
     <string name="shut_up_select_apps_title">Select Apps</string>
     <string name="shut_up_select_apps_desc">Choose apps to apply Shut-Up! logic</string>
@@ -1454,4 +1454,8 @@
     <string name="whats_new_specs_desc">Inaccurate GSMArena-powered specifications have been removed to keep device insights clean, fast, and completely reliable.</string>
     <string name="whats_new_apps_title">App Updates Migrated</string>
     <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
+    <string name="feat_sync_location_reached_title">Sincronizza lo stato di Siamo Arrivati</string>
+    <string name="feat_sync_location_reached_desc">Da mostrare nel pulsante del dispositivo</string>
+    <string name="feat_daily_wallpaper_desc">Sfondo curato scelto a mano ogni giorno</string>
+    <string name="settings_translated_texts">Tradotto</string>
 </resources>
