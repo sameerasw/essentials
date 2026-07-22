@@ -14,6 +14,7 @@ import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 fun TranslationMenuItems(
     title: Any?,
     description: Any? = null,
+    options: List<Any> = emptyList(),
     onSelectKey: (String) -> Unit
 ) {
     val context = LocalContext.current
@@ -46,7 +47,31 @@ fun TranslationMenuItems(
         )
     }
 
-    if (keyTitle == null && keyDesc == null) {
+    options.forEach { option ->
+        val keyOpt = remember(option) { TranslationManager.resolveKey(context, option) }
+        val labelOpt = remember(option) {
+            when (option) {
+                is Int -> try { context.getString(option) } catch (e: Exception) { option.toString() }
+                is String -> option
+                else -> option.toString()
+            }
+        }
+        if (keyOpt != null && keyOpt != keyTitle && keyOpt != keyDesc) {
+            SegmentedDropdownMenuItem(
+                text = { Text("Translate Option '$labelOpt' ($keyOpt)") },
+                onClick = { onSelectKey(keyOpt) },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_translate_24),
+                        contentDescription = null
+                    )
+                }
+            )
+        }
+    }
+
+    val hasAnyKey = keyTitle != null || keyDesc != null || options.any { TranslationManager.resolveKey(context, it) != null }
+    if (!hasAnyKey) {
         SegmentedDropdownMenuItem(
             text = { Text("No string key found") },
             onClick = {}

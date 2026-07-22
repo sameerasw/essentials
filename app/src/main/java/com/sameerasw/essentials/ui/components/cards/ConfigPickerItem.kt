@@ -44,8 +44,10 @@ fun ConfigPickerItem(
     iconRes: Int? = null,
     isEnabled: Boolean = true,
     onDisabledClick: (() -> Unit)? = null,
+    options: List<Any> = emptyList(),
     content: @Composable ColumnScope.() -> Unit
 ) {
+
     val view = LocalView.current
     val context = LocalContext.current
     val isTranslationModeActive by TranslationManager.isTranslationModeEnabled
@@ -126,12 +128,14 @@ fun ConfigPickerItem(
                         com.sameerasw.essentials.translation.ui.TranslationMenuItems(
                             title = title,
                             description = description,
+                            options = options,
                             onSelectKey = { key ->
                                 isMenuExpanded = false
                                 translationSheetKey = key
                             }
                         )
                     }
+
 
 
                     CompositionLocalProvider(
