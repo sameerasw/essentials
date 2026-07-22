@@ -23,27 +23,53 @@ on:
         description: 'User OAuth token'
         required: false
         type: string
+  discussion_comment:
+    types: [created]
 
 jobs:
   apply-translations:
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'discussion_comment' && github.event.discussion.number == 601)
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
+      discussions: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      - name: Parse Inputs & Prepare JSON
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo '${{ inputs.translations_json }}' > /tmp/edits.json
+            echo "CONTRIBUTOR=${{ inputs.contributor }}" >> $GITHUB_ENV
+            echo "CONTRIBUTOR_NAME=${{ inputs.contributor_name || inputs.contributor }}" >> $GITHUB_ENV
+            echo "CONTRIBUTOR_EMAIL=${{ inputs.contributor_email }}" >> $GITHUB_ENV
+          else
+            # Extract JSON block between ```json and ``` from discussion comment body
+            python3 -c '
+import os, json, re
+body = """${{ github.event.comment.body }}"""
+match = re.search(r"```json\s*(.*?)\s*```", body, re.DOTALL)
+if match:
+    json_str = match.group(1)
+    with open("/tmp/edits.json", "w", encoding="utf-8") as f:
+        f.write(json_str)
+else:
+    raise ValueError("No valid JSON block found in discussion comment body")
+'
+            USER_LOGIN="${{ github.event.comment.user.login }}"
+            USER_ID="${{ github.event.comment.user.id }}"
+            echo "CONTRIBUTOR=$USER_LOGIN" >> $GITHUB_ENV
+            echo "CONTRIBUTOR_NAME=$USER_LOGIN" >> $GITHUB_ENV
+            echo "CONTRIBUTOR_EMAIL=${USER_ID}+${USER_LOGIN}@users.noreply.github.com" >> $GITHUB_ENV
+          fi
+
       - name: Create or checkout contributor branch and apply edits
         run: |
-          echo '${{ inputs.translations_json }}' > /tmp/edits.json
-          BRANCH="translations-${{ inputs.contributor }}"
-
-          if [ -n "${{ inputs.user_token }}" ]; then
-            git remote set-url origin "https://x-access-token:${{ inputs.user_token }}@github.com/${{ github.repository }}.git"
-          fi
+          BRANCH="translations-${CONTRIBUTOR}"
 
           git fetch origin
 
@@ -93,33 +119,46 @@ jobs:
                       sf.write(new_content)
           EOF
 
-          AUTHOR_EMAIL="${{ inputs.contributor_email }}"
+          AUTHOR_EMAIL="$CONTRIBUTOR_EMAIL"
           if [ -z "$AUTHOR_EMAIL" ]; then
-            AUTHOR_EMAIL="${{ inputs.contributor }}@users.noreply.github.com"
+            AUTHOR_EMAIL="${CONTRIBUTOR}@users.noreply.github.com"
           fi
 
           git config user.email "$AUTHOR_EMAIL"
-          git config user.name "${{ inputs.contributor_name || inputs.contributor }}"
+          git config user.name "$CONTRIBUTOR_NAME"
 
           git add app/src/main/res/
-          git commit --author="${{ inputs.contributor_name || inputs.contributor }} <$AUTHOR_EMAIL>" -m "Community translations by @${{ inputs.contributor }}" || echo "No changes to commit"
+          git commit --author="$CONTRIBUTOR_NAME <$AUTHOR_EMAIL>" -m "Community translations by @${CONTRIBUTOR}" || echo "No changes to commit"
           git push origin "$BRANCH"
           echo "BRANCH_NAME=$BRANCH" >> $GITHUB_ENV
 
       - name: Create or update Pull Request
         env:
-          GH_TOKEN: ${{ inputs.user_token || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           EXISTING_PR=$(gh pr list --head "$BRANCH_NAME" --json number -q '.[0].number' 2>/dev/null || true)
           if [ -n "$EXISTING_PR" ]; then
             echo "Pull Request #$EXISTING_PR already exists for $BRANCH_NAME and was automatically updated with the new commits."
           else
             gh pr create \
-              --title "Community translations by @${{ inputs.contributor }}" \
-              --body "Translations contributed by **@${{ inputs.contributor }}** (${{ inputs.contributor_name }}) directly via the Essentials in-app translation mode." \
+              --title "Community translations by @${CONTRIBUTOR}" \
+              --body "Translations contributed by **@${CONTRIBUTOR}** directly via the Essentials in-app translation mode." \
               --label "translations" \
-              --assignee "${{ inputs.contributor }}" \
+              --assignee "${CONTRIBUTOR}" \
               --reviewer "sameerasw" \
               --base develop \
               --head "$BRANCH_NAME"
           fi
+
+      - name: Delete Discussion Comment
+        if: github.event_name == 'discussion_comment'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          COMMENT_NODE_ID="${{ github.event.comment.node_id }}"
+          gh api graphql -f query='
+            mutation($id: ID!) {
+              deleteDiscussionComment(input: {id: $id}) {
+                comment { id }
+              }
+            }' -F id="$COMMENT_NODE_ID"
