@@ -109,6 +109,8 @@ jobs:
               --title "Community translations by @${{ inputs.contributor }}" \
               --body "Translations contributed by **@${{ inputs.contributor }}** (${{ inputs.contributor_name }}) directly via the Essentials in-app translation mode." \
               --label "translations" \
+              --assignee "${{ inputs.contributor }}" \
+              --reviewer "sameerasw" \
               --base main \
               --head "$BRANCH_NAME"
           fi
