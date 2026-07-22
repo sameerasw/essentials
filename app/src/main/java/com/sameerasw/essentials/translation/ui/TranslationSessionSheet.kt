@@ -104,7 +104,8 @@ fun TranslationSessionSheet(
                     )
                 }
 
-                Spacer()
+                Spacer(modifier = Modifier.weight(1f))
+
 
                 Row {
                     OutlinedButton(
