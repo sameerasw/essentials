@@ -30,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -92,8 +93,11 @@ fun TranslationWarningBottomSheet(
                 )
             }
 
-            RoundedCardContainer{
+            RoundedCardContainer {
                 ListItem(
+                    modifier = Modifier
+                        .clip(MaterialTheme.shapes.extraSmall)
+                        .background(MaterialTheme.colorScheme.surfaceBright),
                     leadingContent = {
                         Icon(
                             painter = painterResource(id = R.drawable.rounded_check_24),
@@ -116,10 +120,13 @@ fun TranslationWarningBottomSheet(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     },
-                    modifier = Modifier.background(color = MaterialTheme.colorScheme.surfaceBright, shape = MaterialTheme.shapes.extraSmall)
+
                 )
 
                 ListItem(
+                    modifier = Modifier
+                        .clip(MaterialTheme.shapes.extraSmall)
+                        .background(MaterialTheme.colorScheme.surfaceBright),
                     leadingContent = {
                         Icon(
                             painter = painterResource(id = R.drawable.rounded_edit_24),
@@ -142,10 +149,13 @@ fun TranslationWarningBottomSheet(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     },
-                    modifier = Modifier.background(color = MaterialTheme.colorScheme.surfaceBright, shape = MaterialTheme.shapes.extraSmall)
+
                 )
 
                 ListItem(
+                    modifier = Modifier
+                        .clip(MaterialTheme.shapes.extraSmall)
+                        .background(MaterialTheme.colorScheme.surfaceBright),
                     leadingContent = {
                         Icon(
                             painter = painterResource(id = R.drawable.brand_github),
@@ -168,7 +178,7 @@ fun TranslationWarningBottomSheet(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     },
-                    modifier = Modifier.background(color = MaterialTheme.colorScheme.surfaceBright, shape = MaterialTheme.shapes.extraSmall)
+
                 )
             }
 

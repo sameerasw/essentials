@@ -20,6 +20,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalView
@@ -54,10 +55,8 @@ fun <T> MultiSegmentedPicker(
 
     Row(
         modifier = modifier
-            .background(
-                color = MaterialTheme.colorScheme.surfaceBright,
-                shape = shape
-            )
+            .clip(shape)
+            .background(color = MaterialTheme.colorScheme.surfaceBright)
             .padding(10.dp),
         horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
     ) {

@@ -32,13 +32,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.glance.layout.Spacer
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.GitHubRepository
 import com.sameerasw.essentials.data.repository.SettingsRepository
@@ -105,7 +105,6 @@ fun TranslationSessionSheet(
                 }
 
                 Spacer(modifier = Modifier.weight(1f))
-
 
                 Row {
                     OutlinedButton(
@@ -239,7 +238,10 @@ fun TranslationSessionSheet(
                                         }
                                     }
                                 } else null,
-                                modifier = Modifier.background(color = MaterialTheme.colorScheme.surfaceBright, shape = MaterialTheme.shapes.extraSmall)
+
+                                modifier = Modifier
+                                    .clip(MaterialTheme.shapes.extraSmall)
+                                    .background(color = MaterialTheme.colorScheme.surfaceBright)
                             )
                         }
                     }

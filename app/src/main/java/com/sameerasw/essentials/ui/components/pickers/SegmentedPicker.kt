@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
@@ -65,10 +66,8 @@ fun <T> SegmentedPicker(
 
     Row(
         modifier = modifier
-            .background(
-                color = containerColor,
-                shape = RoundedCornerShape(cornerShape)
-            )
+            .clip(RoundedCornerShape(cornerShape))
+            .background(color = containerColor)
             .padding(contentPadding),
         horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
     ) {
