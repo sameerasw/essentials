@@ -1,5 +1,7 @@
 package com.sameerasw.essentials.translation.model
 
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.google.gson.Gson
 
 data class StringEntry(
@@ -16,7 +18,7 @@ data class TranslationEdit(
 )
 
 data class TranslationSession(
-    val edits: MutableList<TranslationEdit> = mutableListOf()
+    val edits: SnapshotStateList<TranslationEdit> = mutableStateListOf()
 ) {
     fun addOrUpdate(edit: TranslationEdit) {
         val existingIndex = edits.indexOfFirst { it.key == edit.key && it.locale == edit.locale }

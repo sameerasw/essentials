@@ -286,7 +286,9 @@ fun SettingsContent(
 
 
     val isTranslationModeActive by TranslationManager.isTranslationModeEnabled
-    val sessionEditsCount = remember(TranslationManager.session.edits.size) { TranslationManager.session.edits.size }
+    val sessionEditsCount = TranslationManager.session.edits.size
+
+
 
     var openTranslationPRs by remember { mutableStateOf<List<com.sameerasw.essentials.domain.model.github.GitHubPullRequest>>(emptyList()) }
     val gitHubRepo = remember { com.sameerasw.essentials.data.repository.GitHubRepository() }
