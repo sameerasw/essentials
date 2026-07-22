@@ -1,0 +1,76 @@
+name: Apply Community Translations
+
+on:
+  workflow_dispatch:
+    inputs:
+      translations_json:
+        description: 'JSON array of translation edits'
+        required: true
+        type: string
+      contributor:
+        description: 'GitHub username of contributor'
+        required: true
+        type: string
+      contributor_name:
+        description: 'Display name of contributor'
+        required: false
+        type: string
+
+jobs:
+  apply-translations:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install XML & JSON parsing tools
+        run: sudo apt-get update && sudo apt-get install -y xmlstarlet jq
+
+      - name: Create branch and apply string edits
+        run: |
+          echo '${{ inputs.translations_json }}' > /tmp/edits.json
+          BRANCH="translations/${{ inputs.contributor }}-$(date +%s)"
+          git checkout -b "$BRANCH"
+
+          jq -c '.[]' /tmp/edits.json | while read -r edit; do
+            KEY=$(echo "$edit" | jq -r '.key')
+            LOCALE=$(echo "$edit" | jq -r '.locale')
+            VALUE=$(echo "$edit" | jq -r '.value')
+
+            if [ "$LOCALE" = "en" ]; then
+              FILE="app/src/main/res/values/strings.xml"
+            else
+              FILE="app/src/main/res/values-${LOCALE}/strings.xml"
+              if [ ! -f "$FILE" ]; then
+                FILE=$(find app/src/main/res -name "strings.xml" -path "*values-${LOCALE}*" | head -1)
+              fi
+            fi
+
+            if [ -f "$FILE" ]; then
+              xmlstarlet ed -L \
+                -u "//resources/string[@name='$KEY']" \
+                -v "$VALUE" \
+                "$FILE" || true
+            fi
+          done
+
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions [In-App Translator]"
+          git add app/src/main/res/
+          git commit -m "🌍 Community translations by @${{ inputs.contributor }}" || echo "No changes to commit"
+          git push origin "$BRANCH"
+          echo "BRANCH_NAME=$BRANCH" >> $GITHUB_ENV
+
+      - name: Create Pull Request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create \
+            --title "🌍 Community translations by @${{ inputs.contributor }}" \
+            --body "Translations contributed by **@${{ inputs.contributor }}** (${{ inputs.contributor_name }}) directly via the Essentials in-app translation mode." \
+            --label "translations" \
+            --base main \
+            --head "$BRANCH_NAME"
