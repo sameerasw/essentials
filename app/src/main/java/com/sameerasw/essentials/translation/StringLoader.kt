@@ -83,7 +83,12 @@ object StringLoader {
                 java.util.Locale(localeParts[0])
             }
             
-            config.setLocale(locale)
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                config.setLocales(android.os.LocaleList(locale))
+            } else {
+                @Suppress("DEPRECATION")
+                config.setLocale(locale)
+            }
             val localizedContext = context.createConfigurationContext(config)
             val localizedRes = localizedContext.resources
 
