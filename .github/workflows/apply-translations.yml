@@ -15,6 +15,10 @@ on:
         description: 'Display name of contributor'
         required: false
         type: string
+      user_token:
+        description: 'User OAuth token'
+        required: false
+        type: string
 
 jobs:
   apply-translations:
@@ -73,7 +77,12 @@ jobs:
           EOF
 
           git config user.email "actions@github.com"
-          git config user.name "GitHub Actions [In-App Translator]"
+          git config user.name "${{ inputs.contributor_name || inputs.contributor }}"
+
+          if [ -n "${{ inputs.user_token }}" ]; then
+            git remote set-url origin "https://x-access-token:${{ inputs.user_token }}@github.com/${{ github.repository }}.git"
+          fi
+
           git add app/src/main/res/
           git commit -m "🌍 Community translations by @${{ inputs.contributor }}" || echo "No changes to commit"
           git push origin "$BRANCH"
@@ -81,7 +90,7 @@ jobs:
 
       - name: Create Pull Request
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ inputs.user_token || secrets.GITHUB_TOKEN }}
         run: |
           gh pr create \
             --title "🌍 Community translations by @${{ inputs.contributor }}" \
