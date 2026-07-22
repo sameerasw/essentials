@@ -1454,4 +1454,6 @@
     <string name="whats_new_specs_desc">Inaccurate GSMArena-powered specifications have been removed to keep device insights clean, fast, and completely reliable.</string>
     <string name="whats_new_apps_title">App Updates Migrated</string>
     <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
+    <string name="feat_daily_wallpaper_title">Papel de parede</string>
+    <string name="feat_daily_wallpaper_desc">Papel de parede selecionado diariamente</string>
 </resources>
