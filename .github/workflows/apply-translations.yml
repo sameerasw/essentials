@@ -111,6 +111,6 @@ jobs:
               --label "translations" \
               --assignee "${{ inputs.contributor }}" \
               --reviewer "sameerasw" \
-              --base main \
+              --base develop \
               --head "$BRANCH_NAME"
           fi
