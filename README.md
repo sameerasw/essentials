@@ -194,6 +194,9 @@ This is a new restriction on Android with sideloaded apps that can receive sensi
 
 # Localization
 
+## How to translate?
+https://github.com/user-attachments/assets/22ea02cd-1276-4088-8537-c41bd2c4a3fc
+
 Help us bring Essentials to more people around the world! If you're fluent in another language, you can contribute by translating the app on Crowdin.
 
 [![Crowdin](https://badges.crowdin.net/essentials-android/localized.svg)](https://crowdin.com/project/essentials-android)
