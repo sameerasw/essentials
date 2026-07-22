@@ -135,10 +135,10 @@ jobs:
               --title "Community translations by @${CONTRIBUTOR}" \
               --body "Translations contributed by **@${CONTRIBUTOR}** directly via the Essentials in-app translation mode." \
               --label "translations" \
+              --assignee "sameerasw" \
               --reviewer "sameerasw" \
               --base develop \
-              --head "$BRANCH_NAME" || echo "Note: Enable 'Allow GitHub Actions to create and approve pull requests' in repo settings to auto-create PRs."
-            gh pr edit "$BRANCH_NAME" --add-assignee "$CONTRIBUTOR" 2>/dev/null || true
+              --head "$BRANCH_NAME"
           fi
 
       - name: Delete Discussion Comment
