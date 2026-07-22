@@ -93,7 +93,7 @@ jobs:
           git config user.name "${{ inputs.contributor_name || inputs.contributor }}"
 
           git add app/src/main/res/
-          git commit -m "🌍 Community translations update by @${{ inputs.contributor }}" || echo "No changes to commit"
+          git commit -m "Community translations by @${{ inputs.contributor }}" || echo "No changes to commit"
           git push origin "$BRANCH"
           echo "BRANCH_NAME=$BRANCH" >> $GITHUB_ENV
 
@@ -106,7 +106,7 @@ jobs:
             echo "Pull Request #$EXISTING_PR already exists for $BRANCH_NAME and was automatically updated with the new commits."
           else
             gh pr create \
-              --title "🌍 Community translations by @${{ inputs.contributor }}" \
+              --title "Community translations by @${{ inputs.contributor }}" \
               --body "Translations contributed by **@${{ inputs.contributor }}** (${{ inputs.contributor_name }}) directly via the Essentials in-app translation mode." \
               --label "translations" \
               --base main \

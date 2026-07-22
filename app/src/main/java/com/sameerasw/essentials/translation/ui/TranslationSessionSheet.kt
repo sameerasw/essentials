@@ -11,12 +11,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
@@ -42,6 +42,7 @@ import com.sameerasw.essentials.data.repository.GitHubRepository
 import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.translation.TranslationManager
 import com.sameerasw.essentials.translation.model.TranslationEdit
+import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.utils.HapticUtil
 import kotlinx.coroutines.launch
 
@@ -60,7 +61,6 @@ fun TranslationSessionSheet(
     val gitHubRepository = remember { GitHubRepository() }
     val currentUser = remember { settingsRepository.getGitHubUser() }
 
-    // Create a local snapshot list state so LazyColumn doesn't throw IndexOutOfBoundsException when cleared
     val edits = remember { mutableStateListOf<TranslationEdit>().apply { addAll(TranslationManager.session.edits) } }
 
     var isSubmitting by remember { mutableStateOf(false) }
@@ -141,7 +141,6 @@ fun TranslationSessionSheet(
                                         "contributor_name" to (currentUser.name ?: currentUser.login),
                                         "user_token" to token
                                     )
-
                                 )
                                 isSubmitting = false
                                 if (success) {
@@ -184,65 +183,72 @@ fun TranslationSessionSheet(
                 )
             }
 
-            // Edits List
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.padding(bottom = 24.dp)
-            ) {
-                items(
-                    items = edits,
-                    key = { "${it.key}_${it.locale}" }
-                ) { edit ->
-                    Card(
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceContainer
-                        ),
-                        modifier = Modifier.fillMaxWidth()
+            // Edits List wrapped in RoundedCardContainer
+            if (edits.isNotEmpty()) {
+                RoundedCardContainer {
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(2.dp),
+                        modifier = Modifier.padding(bottom = 8.dp)
                     ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = "Key: ${edit.key} (${edit.locale.uppercase()})",
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = MaterialTheme.colorScheme.primary
-                                )
-                                Text(
-                                    text = "Old: ${edit.originalValue}",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                                Text(
-                                    text = "New: ${edit.newValue}",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                            }
-
-                            if (!successSubmitted) {
-                                IconButton(
-                                    onClick = {
-                                        HapticUtil.performUIHaptic(view)
-                                        TranslationManager.removeEdit(edit.key, edit.locale)
-                                        edits.remove(edit)
-                                    }
-                                ) {
-                                    Icon(
-                                        painter = painterResource(R.drawable.rounded_delete_24),
-                                        contentDescription = "Remove edit",
-                                        tint = MaterialTheme.colorScheme.error
+                        items(
+                            items = edits,
+                            key = { "${it.key}_${it.locale}" }
+                        ) { edit ->
+                            ListItem(
+                                headlineContent = {
+                                    Text(
+                                        text = "Key: ${edit.key} (${edit.locale.uppercase()})",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.primary,
+                                        fontWeight = FontWeight.Bold
                                     )
-                                }
-                            }
+                                },
+                                supportingContent = {
+                                    Column {
+                                        Text(
+                                            text = "Original: ${edit.originalValue}",
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                        Text(
+                                            text = "New: ${edit.newValue}",
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            fontWeight = FontWeight.Bold,
+                                            color = MaterialTheme.colorScheme.onSurface
+                                        )
+                                    }
+                                },
+                                trailingContent = if (!successSubmitted) {
+                                    {
+                                        IconButton(
+                                            onClick = {
+                                                HapticUtil.performUIHaptic(view)
+                                                TranslationManager.removeEdit(edit.key, edit.locale)
+                                                edits.remove(edit)
+                                            }
+                                        ) {
+                                            Icon(
+                                                painter = painterResource(R.drawable.rounded_delete_24),
+                                                contentDescription = "Remove edit",
+                                                tint = MaterialTheme.colorScheme.error
+                                            )
+                                        }
+                                    }
+                                } else null,
+                                colors = ListItemDefaults.colors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceBright
+                                )
+                            )
                         }
                     }
                 }
+            } else {
+                Text(
+                    text = "No pending edits",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(bottom = 24.dp)
+                )
             }
         }
     }

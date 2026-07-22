@@ -1,7 +1,5 @@
 package com.sameerasw.essentials.translation.ui
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,14 +8,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
@@ -26,7 +22,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -55,15 +50,20 @@ fun TranslationBottomSheet(
     val view = LocalView.current
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
+    val currentLocale = remember {
+        val appLocale = context.resources.configuration.locales[0].language
+        if (appLocale != "en" && appLocale.isNotBlank()) appLocale else initialTargetLocale ?: "si"
+    }
+
     val translations = remember(stringKey) {
         StringLoader.getTranslationsForKey(context, stringKey)
     }
 
     val sourceEnglish = translations["en"] ?: ""
-    val targetLocales = remember { TranslationManager.selectedLanguages.toList() }
+    val originalTargetVal = translations[currentLocale] ?: ""
+    val currentDisplayVal = TranslationManager.getOverriddenText(stringKey, currentLocale, originalTargetVal)
 
-    var editingLocale by remember { mutableStateOf(initialTargetLocale) }
-    var editInputText by remember { mutableStateOf("") }
+    var inputText by remember { mutableStateOf(currentDisplayVal) }
 
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
@@ -79,121 +79,105 @@ fun TranslationBottomSheet(
             // Header
             Column {
                 Text(
+                    text = "Translate String",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
                     text = "Key: $stringKey",
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = stringResource(R.string.translation_source_label),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Text(
-                    text = sourceEnglish,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    fontWeight = FontWeight.Medium
                 )
             }
 
-            // Language List
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.padding(bottom = 24.dp)
-            ) {
-                items(targetLocales) { locale ->
-                    val originalVal = translations[locale] ?: ""
-                    val currentDisplayVal = TranslationManager.getOverriddenText(stringKey, locale, originalVal)
-                    val isEditingThis = editingLocale == locale
+            // Source & Target Cards wrapped in RoundedCardContainer
+            RoundedCardContainer {
+                ListItem(
+                    headlineContent = {
+                        Text(
+                            text = stringResource(R.string.translation_source_label),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    },
+                    supportingContent = {
+                        Text(
+                            text = sourceEnglish.ifBlank { stringKey },
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    },
+                    colors = ListItemDefaults.colors(
+                        containerColor = MaterialTheme.colorScheme.surfaceBright
+                    )
+                )
 
-                    Card(
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceContainer
-                        ),
-                        shape = MaterialTheme.shapes.large,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            Row(
+                ListItem(
+                    headlineContent = {
+                        Text(
+                            text = "Target Language (${currentLocale.uppercase()})",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                    supportingContent = {
+                        Column(modifier = Modifier.padding(top = 8.dp)) {
+                            OutlinedTextField(
+                                value = inputText,
+                                onValueChange = { inputText = it },
                                 modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = locale.uppercase(),
-                                    style = MaterialTheme.typography.titleSmall,
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.tertiary
-                                )
-
-                                if (!isEditingThis) {
-                                    IconButton(
-                                        onClick = {
-                                            HapticUtil.performUIHaptic(view)
-                                            editingLocale = locale
-                                            editInputText = currentDisplayVal
-                                        }
-                                    ) {
-                                        Icon(
-                                            painter = painterResource(R.drawable.rounded_edit_24),
-                                            contentDescription = "Edit translation",
-                                            tint = MaterialTheme.colorScheme.primary
-                                        )
-                                    }
-                                }
-                            }
-
-                            if (isEditingThis) {
-                                OutlinedTextField(
-                                    value = editInputText,
-                                    onValueChange = { editInputText = it },
-                                    modifier = Modifier.fillMaxWidth(),
-                                    label = { Text("Translation ($locale)") }
-                                )
-
-                                Spacer(modifier = Modifier.height(12.dp))
-
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.End
-                                ) {
-                                    OutlinedButton(
-                                        onClick = {
-                                            HapticUtil.performUIHaptic(view)
-                                            editingLocale = null
-                                        }
-                                    ) {
-                                        Text("Cancel")
-                                    }
-
-                                    Spacer(modifier = Modifier.width(8.dp))
-
-                                    Button(
-                                        onClick = {
-                                            HapticUtil.performUIHaptic(view)
-                                            TranslationManager.addEdit(
-                                                key = stringKey,
-                                                locale = locale,
-                                                originalValue = originalVal,
-                                                newValue = editInputText
-                                            )
-                                            editingLocale = null
-                                        }
-                                    ) {
-                                        Text("Save")
-                                    }
-                                }
-                            } else {
-                                Text(
-                                    text = if (currentDisplayVal.isNotBlank()) currentDisplayVal else "(No translation)",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = if (currentDisplayVal.isNotBlank()) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
-                                )
-                            }
+                                placeholder = { Text("Enter translation in ${currentLocale.uppercase()}…") },
+                                singleLine = false,
+                                maxLines = 4
+                            )
                         }
+                    },
+                    colors = ListItemDefaults.colors(
+                        containerColor = MaterialTheme.colorScheme.surfaceBright
+                    )
+                )
+            }
+
+            // Action Buttons
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 24.dp),
+                horizontalArrangement = Arrangement.End
+            ) {
+                OutlinedButton(
+                    onClick = {
+                        HapticUtil.performUIHaptic(view)
+                        onDismissRequest()
                     }
+                ) {
+                    Text("Cancel")
+                }
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                Button(
+                    onClick = {
+                        HapticUtil.performUIHaptic(view)
+                        TranslationManager.addEdit(
+                            key = stringKey,
+                            locale = currentLocale,
+                            originalValue = originalTargetVal,
+                            newValue = inputText
+                        )
+                        onDismissRequest()
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.rounded_check_24),
+                        contentDescription = null
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text("Save Edit")
                 }
             }
         }

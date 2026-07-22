@@ -89,9 +89,11 @@ import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.dialogs.AboutSection
 import com.sameerasw.essentials.translation.TranslationManager
 import com.sameerasw.essentials.translation.ui.TranslationBottomSheet
-import com.sameerasw.essentials.translation.ui.TranslationLanguagePickerSheet
 import com.sameerasw.essentials.translation.ui.TranslationSessionSheet
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.ui.components.sheets.GitHubAuthSheet
+
+
 import com.sameerasw.essentials.viewmodels.GitHubAuthViewModel
 import com.sameerasw.essentials.ui.components.pickers.CrashReportingPicker
 
@@ -704,58 +706,63 @@ fun SettingsContent(
             )
         }
 
+        val currentAppLocale = LocalContext.current.resources.configuration.locales[0].language
+        val isEnglishApp = currentAppLocale == "en" || currentAppLocale.isBlank()
+
         RoundedCardContainer {
-            // GitHub Account Card
+            // GitHub Account Card (Tap to Sign In when logged out, Long Press to Sign Out when logged in)
             FeatureCard(
                 title = if (currentUser != null) "@${currentUser?.login}" else stringResource(R.string.action_sign_in_github),
-                description = if (currentUser != null) "Logged in as ${currentUser?.name ?: currentUser?.login}" else "Sign in required to enable translation mode",
+                description = if (currentUser != null) "Logged in as ${currentUser?.name ?: currentUser?.login} (Long press to sign out)" else "Sign in required to enable translation mode",
                 isEnabled = true,
                 onToggle = {},
                 onClick = {
-                    HapticUtil.performUIHaptic(view)
                     if (currentUser == null) {
+                        HapticUtil.performUIHaptic(view)
                         showGitHubAuthSheet = true
-                    } else {
-                        gitHubAuthViewModel.signOut(context)
-                        currentUser = null
-                        TranslationManager.isTranslationModeEnabled.value = false
                     }
                 },
                 showToggle = false,
-                iconRes = R.drawable.brand_github
+                iconRes = R.drawable.brand_github,
+                additionalMenuItems = if (currentUser != null) {
+                    @Composable { onDismiss ->
+                        SegmentedDropdownMenuItem(
+                            text = { Text("Sign Out") },
+                            onClick = {
+                                onDismiss()
+                                HapticUtil.performUIHaptic(view)
+                                gitHubAuthViewModel.signOut(context)
+                                currentUser = null
+                                TranslationManager.isTranslationModeEnabled.value = false
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.rounded_logout_24),
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.error
+                                )
+                            }
+                        )
+                    }
+                } else null
+
             )
 
-            // Translation Mode Switch
-            FeatureCard(
-                title = R.string.settings_translate_mode,
-                description = R.string.settings_translate_mode_desc,
-                isEnabled = isTranslationModeActive,
-                onToggle = { enabled ->
+            // Translation Mode Switch (IconToggleItem - clean toggle variant without sub-menu divider)
+            IconToggleItem(
+                iconRes = R.drawable.rounded_translate_24,
+                title = stringResource(R.string.settings_translate_mode),
+                description = if (isEnglishApp) "App language is English. Change app language to translate strings" else stringResource(R.string.settings_translate_mode_desc),
+                isChecked = isTranslationModeActive && !isEnglishApp,
+                enabled = !isEnglishApp,
+                onCheckedChange = { enabled ->
                     if (enabled && currentUser == null) {
                         showGitHubAuthSheet = true
                     } else {
                         TranslationManager.isTranslationModeEnabled.value = enabled
                     }
-                },
-                onClick = {},
-                iconRes = R.drawable.rounded_translate_24
+                }
             )
-
-            // Target Languages Selector
-            if (isTranslationModeActive) {
-                FeatureCard(
-                    title = "Target Languages",
-                    description = "${TranslationManager.selectedLanguages.joinToString(", ") { it.uppercase() }} (Max 5)",
-                    isEnabled = true,
-                    onToggle = {},
-                    onClick = {
-                        HapticUtil.performUIHaptic(view)
-                        showLanguagePickerSheet = true
-                    },
-                    showToggle = false,
-                    iconRes = R.drawable.rounded_globe_24
-                )
-            }
 
             // Pending Edits Summary Card
             if (sessionEditsCount > 0) {
@@ -773,6 +780,7 @@ fun SettingsContent(
                 )
             }
         }
+
 
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -1431,13 +1439,8 @@ fun SettingsContent(
         )
     }
 
-    if (showLanguagePickerSheet) {
-        TranslationLanguagePickerSheet(
-            onDismissRequest = { showLanguagePickerSheet = false }
-        )
-    }
-
     if (showGitHubAuthSheet) {
+
         GitHubAuthSheet(
             viewModel = gitHubAuthViewModel,
             onDismissRequest = {
