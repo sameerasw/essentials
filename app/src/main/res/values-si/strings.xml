@@ -1141,7 +1141,7 @@
     <string name="location_reached_dismiss">අස් කරන්න</string>
     <string name="location_reached_toast_set">ගමනාන්ත කට්ටලය: %1$.4f, %2$.4f</string>
     <string name="setting_use_root_title">Root භාවිතා කරන්න</string>
-    <string name="setting_use_root_desc">ෂිසුකු වෙනුවට</string>
+    <string name="setting_use_root_desc">Shizuku වෙනුවට</string>
     <string name="root_not_available_toast">මූල ප්‍රවේශය නොමැත. කරුණාකර ඔබේ මූල කළමනාකරු පරීක්ෂා කරන්න.</string>
     <!-- System Keyboard -->
     <string name="feat_system_keyboard_title">යතුරු පුවරුව</string>
