@@ -252,9 +252,9 @@
     <string name="tile_private_dns">プライベートDNS</string>
     <string name="tile_private_dns_auto">自動</string>
     <string name="tile_private_dns_off">OFF</string>
-    <string name="private_dns_mode_label">Mode</string>
-    <string name="private_dns_mode_toggle">Toggle</string>
-    <string name="private_dns_mode_cycle">Cycle</string>
+    <string name="private_dns_mode_label">モード</string>
+    <string name="private_dns_mode_toggle">状態</string>
+    <string name="private_dns_mode_cycle">サイクル</string>
     <string name="tile_usb_debugging">USBデバッグ</string>
     <string name="tile_color_picker">カラーピッカー</string>
     <string name="toast_eyedropper_failed">Are you sure you\'re on Androdi 17? (╯°_°）╯</string>
