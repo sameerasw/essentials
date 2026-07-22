@@ -12,8 +12,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -22,8 +24,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -36,7 +40,7 @@ import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.utils.HapticUtil
 
-@OptIn(androidx.compose.material3.ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun PermissionCard(
     iconRes: Int,
@@ -117,7 +121,10 @@ fun PermissionCard(
                         }
                     },
                     modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                    verticalAlignment = Alignment.CenterVertically,
+                    colors = ListItemDefaults.colors(
+                        containerColor = Color.Transparent
+                    ),
                     leadingContent = {
                         Icon(
                             painter = painterResource(id = iconRes),
@@ -165,7 +172,7 @@ fun PermissionCard(
                         expanded = showMenu,
                         onDismissRequest = { showMenu = false }
                     ) {
-                        val context = androidx.compose.ui.platform.LocalContext.current
+                        val context = LocalContext.current
                         val keyTitle = remember(title) { TranslationManager.resolveKey(context, title) }
                         val keyDesc = remember(description) { TranslationManager.resolveKey(context, description) }
                         val keyInst = remember(instructions) { TranslationManager.resolveKey(context, instructions) }
@@ -249,24 +256,78 @@ fun PermissionCard(
                             }
                         }
                     } else {
-                        Button(onClick = {
-                            HapticUtil.performVirtualKeyHaptic(view)
-                            onActionClick()
-                        }, modifier = Modifier.fillMaxWidth()) {
+                        OutlinedButton(
+                            onClick = {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                onActionClick()
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
                             Text(resolvedActionLabel)
                         }
                     }
+                } else {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        if (resolvedInstructions != null) {
+                            Text(
+                                text = resolvedInstructions,
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.padding(bottom = 4.dp)
+                            )
+                        }
 
-                    if (resolvedShizukuLabel != null && onShizukuActionClick != null) {
-                        Button(
-                            onClick = {
-                                HapticUtil.performVirtualKeyHaptic(view)
-                                onShizukuActionClick()
-                            },
-                            enabled = shizukuActionEnabled,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(resolvedShizukuLabel)
+                        if (resolvedSecondaryLabel != null && onSecondaryActionClick != null) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                OutlinedButton(
+                                    onClick = {
+                                        HapticUtil.performVirtualKeyHaptic(view)
+                                        onActionClick()
+                                    },
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Text(resolvedActionLabel)
+                                }
+
+                                Button(
+                                    onClick = {
+                                        HapticUtil.performVirtualKeyHaptic(view)
+                                        onSecondaryActionClick()
+                                    },
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Text(resolvedSecondaryLabel)
+                                }
+                            }
+                        } else {
+                            Button(
+                                onClick = {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    onActionClick()
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(resolvedActionLabel)
+                            }
+                        }
+
+                        if (resolvedShizukuLabel != null && onShizukuActionClick != null) {
+                            Button(
+                                onClick = {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    onShizukuActionClick()
+                                },
+                                enabled = shizukuActionEnabled,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(resolvedShizukuLabel)
+                            }
                         }
                     }
                 }
