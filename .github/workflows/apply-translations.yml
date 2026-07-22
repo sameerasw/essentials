@@ -67,7 +67,8 @@ jobs:
           if git ls-remote --exit-code --heads origin "$BRANCH"; then
             git checkout -b "$BRANCH" "origin/$BRANCH"
           else
-            git checkout -b "$BRANCH"
+            # Branch directly off develop instead of main
+            git checkout -b "$BRANCH" origin/develop
           fi
 
           python3 - << 'EOF'
@@ -124,21 +125,27 @@ jobs:
           echo "BRANCH_NAME=$BRANCH" >> $GITHUB_ENV
 
       - name: Create or update Pull Request
+        id: pr_step
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          EXISTING_PR=$(gh pr list --head "$BRANCH_NAME" --json number -q '.[0].number' 2>/dev/null || true)
-          if [ -n "$EXISTING_PR" ]; then
-            echo "Pull Request #$EXISTING_PR already exists for $BRANCH_NAME and was automatically updated with the new commits."
+          EXISTING_PR_URL=$(gh pr list --head "$BRANCH_NAME" --json url -q '.[0].url' 2>/dev/null || true)
+          
+          if [ -n "$EXISTING_PR_URL" ]; then
+            echo "Pull Request already exists: $EXISTING_PR_URL"
+            echo "pr_url=$EXISTING_PR_URL" >> $GITHUB_OUTPUT
+            echo "is_new=false" >> $GITHUB_OUTPUT
           else
-            gh pr create \
+            NEW_PR_URL=$(gh pr create \
               --title "Community translations by @${CONTRIBUTOR}" \
               --body "Translations contributed by **@${CONTRIBUTOR}** directly via the Essentials in-app translation mode." \
               --label "translations" \
               --assignee "sameerasw" \
               --reviewer "sameerasw" \
               --base develop \
-              --head "$BRANCH_NAME"
+              --head "$BRANCH_NAME")
+            echo "pr_url=$NEW_PR_URL" >> $GITHUB_OUTPUT
+            echo "is_new=true" >> $GITHUB_OUTPUT
           fi
 
       - name: Delete Discussion Comment
@@ -153,3 +160,44 @@ jobs:
                 comment { id }
               }
             }' -F id="$COMMENT_NODE_ID"
+
+      - name: Notify Telegram
+        if: always() && steps.pr_step.outputs.pr_url != ''
+        env:
+          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TOPIC_ID: ${{ secrets.TELEGRAM_TOPIC_ID }}
+          PR_URL: ${{ steps.pr_step.outputs.pr_url }}
+          IS_NEW: ${{ steps.pr_step.outputs.is_new }}
+        run: |
+          CHAT="${CHAT_ID:- -1001653455300}"
+          TOPIC="${TOPIC_ID:-71370}"
+
+          if [ "$IS_NEW" = "true" ]; then
+            STATUS="🌐 NEW COMMUNITY TRANSLATION PR"
+          else
+            STATUS="🔄 UPDATED TRANSLATION PR"
+          fi
+
+          TEXT=$(cat <<EOF
+          <b>$STATUS</b>
+          Repository: <code>$GITHUB_REPOSITORY</code>
+          Contributor: @$CONTRIBUTOR
+
+          <a href="$PR_URL">View Pull Request</a>
+          EOF
+          )
+
+          jq -n \
+            --arg chat_id "$CHAT" \
+            --arg thread_id "$TOPIC" \
+            --arg text "$TEXT" \
+            '{
+              chat_id: $chat_id, 
+              message_thread_id: $thread_id, 
+              text: $text, 
+              parse_mode: "HTML",
+              disable_web_page_preview: false
+            }' > payload.json
+
+          curl --fail-with-body -X POST -H "Content-Type: application/json" -d @payload.json "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage"
