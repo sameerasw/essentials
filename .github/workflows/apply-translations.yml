@@ -29,12 +29,25 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Create branch and apply string edits
+      - name: Create or checkout contributor branch and apply edits
         run: |
           echo '${{ inputs.translations_json }}' > /tmp/edits.json
-          BRANCH="contrib-translation-${{ inputs.contributor }}-$(date +%s)"
-          git checkout -b "$BRANCH"
+          BRANCH="translations-${{ inputs.contributor }}"
+
+          if [ -n "${{ inputs.user_token }}" ]; then
+            git remote set-url origin "https://x-access-token:${{ inputs.user_token }}@github.com/${{ github.repository }}.git"
+          fi
+
+          git fetch origin
+
+          if git ls-remote --exit-code --heads origin "$BRANCH"; then
+            git checkout -b "$BRANCH" "origin/$BRANCH"
+          else
+            git checkout -b "$BRANCH"
+          fi
 
           python3 - << 'EOF'
           import json, os, re, glob
@@ -79,22 +92,23 @@ jobs:
           git config user.email "actions@github.com"
           git config user.name "${{ inputs.contributor_name || inputs.contributor }}"
 
-          if [ -n "${{ inputs.user_token }}" ]; then
-            git remote set-url origin "https://x-access-token:${{ inputs.user_token }}@github.com/${{ github.repository }}.git"
-          fi
-
           git add app/src/main/res/
-          git commit -m "🌍 Community translations by @${{ inputs.contributor }}" || echo "No changes to commit"
+          git commit -m "🌍 Community translations update by @${{ inputs.contributor }}" || echo "No changes to commit"
           git push origin "$BRANCH"
           echo "BRANCH_NAME=$BRANCH" >> $GITHUB_ENV
 
-      - name: Create Pull Request
+      - name: Create or update Pull Request
         env:
           GH_TOKEN: ${{ inputs.user_token || secrets.GITHUB_TOKEN }}
         run: |
-          gh pr create \
-            --title "🌍 Community translations by @${{ inputs.contributor }}" \
-            --body "Translations contributed by **@${{ inputs.contributor }}** (${{ inputs.contributor_name }}) directly via the Essentials in-app translation mode." \
-            --label "translations" \
-            --base main \
-            --head "$BRANCH_NAME"
+          EXISTING_PR=$(gh pr list --head "$BRANCH_NAME" --json number -q '.[0].number' 2>/dev/null || true)
+          if [ -n "$EXISTING_PR" ]; then
+            echo "Pull Request #$EXISTING_PR already exists for $BRANCH_NAME and was automatically updated with the new commits."
+          else
+            gh pr create \
+              --title "🌍 Community translations by @${{ inputs.contributor }}" \
+              --body "Translations contributed by **@${{ inputs.contributor }}** (${{ inputs.contributor_name }}) directly via the Essentials in-app translation mode." \
+              --label "translations" \
+              --base main \
+              --head "$BRANCH_NAME"
+          fi
