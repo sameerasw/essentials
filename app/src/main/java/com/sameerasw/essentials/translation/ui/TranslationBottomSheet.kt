@@ -167,7 +167,13 @@ fun TranslationBottomSheet(
                             originalValue = originalTargetVal,
                             newValue = inputText
                         )
+                        android.widget.Toast.makeText(
+                            context,
+                            context.getString(R.string.translation_saved_toast),
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
                         onDismissRequest()
+
                     }
                 ) {
                     Icon(

@@ -263,42 +263,16 @@ fun FeatureCard(
             ) {
                 val isTranslationModeActive by com.sameerasw.essentials.translation.TranslationManager.isTranslationModeEnabled
                 if (isTranslationModeActive) {
-                    val context = LocalContext.current
-                    val keyTitle = remember(title) { com.sameerasw.essentials.translation.TranslationManager.resolveKey(context, title) }
-                    val keyDesc = remember(description, descriptionOverride) { com.sameerasw.essentials.translation.TranslationManager.resolveKey(context, description ?: descriptionOverride) }
-
-                    if (keyTitle != null) {
-                        SegmentedDropdownMenuItem(
-                            text = { Text("Translate Title ($keyTitle)") },
-                            onClick = {
-                                showMenu = false
-                                translationSheetKey = keyTitle
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.rounded_translate_24),
-                                    contentDescription = null
-                                )
-                            }
-                        )
-                    }
-
-                    if (keyDesc != null) {
-                        SegmentedDropdownMenuItem(
-                            text = { Text("Translate Description ($keyDesc)") },
-                            onClick = {
-                                showMenu = false
-                                translationSheetKey = keyDesc
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.rounded_translate_24),
-                                    contentDescription = null
-                                )
-                            }
-                        )
-                    }
+                    com.sameerasw.essentials.translation.ui.TranslationMenuItems(
+                        title = title,
+                        description = description ?: descriptionOverride,
+                        onSelectKey = { key ->
+                            showMenu = false
+                            translationSheetKey = key
+                        }
+                    )
                 }
+
 
                 if (onPinToggle != null) {
                     SegmentedDropdownMenuItem(

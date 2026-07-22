@@ -1,9 +1,6 @@
 package com.sameerasw.essentials.ui.components.cards
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -35,7 +32,7 @@ import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.utils.HapticUtil
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun IconToggleItem(
     iconRes: Int = 0,
@@ -57,10 +54,10 @@ fun IconToggleItem(
     val finalIconRes = icon ?: iconRes
     val finalDescription = subtitle ?: description
     val finalIsChecked = checked ?: isChecked
+    val isTranslationModeActive by TranslationManager.isTranslationModeEnabled
 
     var showMenu by remember { mutableStateOf(false) }
     var translationSheetKey by remember { mutableStateOf<String?>(null) }
-    val isTranslationModeActive by TranslationManager.isTranslationModeEnabled
 
     val onClickAction = {
         if (enabled) {
@@ -72,147 +69,45 @@ fun IconToggleItem(
         }
     }
 
-    Box(
-        modifier = if (isTranslationModeActive) {
-            modifier.combinedClickable(
-                onClick = {
-                    if (onClick != null) onClick() else onClickAction()
-                },
-                onLongClick = {
-                    HapticUtil.performVirtualKeyHaptic(view)
-                    showMenu = true
+    val onLongClickAction: (() -> Unit)? = if (isTranslationModeActive) {
+        {
+            HapticUtil.performVirtualKeyHaptic(view)
+            showMenu = true
+        }
+    } else null
+
+    val renderMenu: @Composable () -> Unit = {
+        SegmentedDropdownMenu(
+            expanded = showMenu,
+            onDismissRequest = { showMenu = false }
+        ) {
+            com.sameerasw.essentials.translation.ui.TranslationMenuItems(
+                title = title,
+                description = finalDescription,
+                onSelectKey = { key ->
+                    showMenu = false
+                    translationSheetKey = key
                 }
             )
-        } else {
-            modifier
         }
-    ) {
-        if (showToggle) {
-            if (onClick != null) {
-                ListItem(
-                    onClick = {
-                        if (enabled) {
-                            HapticUtil.performVirtualKeyHaptic(view)
-                            onClick()
-                        } else if (onDisabledClick != null) {
-                            HapticUtil.performVirtualKeyHaptic(view)
-                            onDisabledClick()
-                        }
-                    },
-                    enabled = enabled,
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    leadingContent = if (finalIconRes != 0) {
-                        {
-                            Icon(
-                                painter = painterResource(id = finalIconRes),
-                                contentDescription = title,
-                                modifier = Modifier.size(24.dp),
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                    } else null,
-                    supportingContent = if (finalDescription != null) {
-                        {
-                            Text(
-                                text = finalDescription,
-                                style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    } else null,
-                    trailingContent = {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(16.dp)
-                        ) {
-                            VerticalDivider(
-                                modifier = Modifier
-                                    .height(32.dp)
-                                    .width(1.dp),
-                                color = MaterialTheme.colorScheme.outlineVariant
-                            )
-                            Switch(
-                                checked = if (enabled) finalIsChecked else false,
-                                onCheckedChange = { c ->
-                                    if (enabled) {
-                                        HapticUtil.performVirtualKeyHaptic(view)
-                                        onCheckedChange(c)
-                                    }
-                                },
-                                enabled = enabled
-                            )
-                        }
-                    },
-                    colors = ListItemDefaults.colors(
-                        containerColor = MaterialTheme.colorScheme.surfaceBright
-                    ),
-                    content = {
-                        Text(
-                            text = title,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-                )
-            } else {
-                ListItem(
-                    checked = finalIsChecked && enabled,
-                    onCheckedChange = { c ->
-                        if (enabled) {
-                            HapticUtil.performVirtualKeyHaptic(view)
-                            onCheckedChange(c)
-                        } else if (onDisabledClick != null) {
-                            HapticUtil.performVirtualKeyHaptic(view)
-                            onDisabledClick()
-                        }
-                    },
-                    enabled = enabled,
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    leadingContent = if (finalIconRes != 0) {
-                        {
-                            Icon(
-                                painter = painterResource(id = finalIconRes),
-                                contentDescription = title,
-                                modifier = Modifier.size(24.dp),
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                    } else null,
-                    supportingContent = if (finalDescription != null) {
-                        {
-                            Text(
-                                text = finalDescription,
-                                style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    } else null,
-                    trailingContent = {
-                        Switch(
-                            checked = if (enabled) finalIsChecked else false,
-                            onCheckedChange = null,
-                            enabled = enabled
-                        )
-                    },
-                    colors = ListItemDefaults.colors(
-                        containerColor = MaterialTheme.colorScheme.surfaceBright
-                    ),
-                    content = {
-                        Text(
-                            text = title,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-                )
-            }
-        } else {
+    }
+
+
+    if (showToggle) {
+        if (onClick != null) {
             ListItem(
-                onClick = onClickAction,
+                onClick = {
+                    if (enabled) {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        onClick()
+                    } else if (onDisabledClick != null) {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        onDisabledClick()
+                    }
+                },
+                onLongClick = onLongClickAction,
                 enabled = enabled,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 leadingContent = if (finalIconRes != 0) {
                     {
@@ -233,6 +128,29 @@ fun IconToggleItem(
                         )
                     }
                 } else null,
+                trailingContent = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        VerticalDivider(
+                            modifier = Modifier
+                                .height(32.dp)
+                                .width(1.dp),
+                            color = MaterialTheme.colorScheme.outlineVariant
+                        )
+                        Switch(
+                            checked = if (enabled) finalIsChecked else false,
+                            onCheckedChange = { c ->
+                                if (enabled) {
+                                    HapticUtil.performVirtualKeyHaptic(view)
+                                    onCheckedChange(c)
+                                }
+                            },
+                            enabled = enabled
+                        )
+                    }
+                },
                 colors = ListItemDefaults.colors(
                     containerColor = MaterialTheme.colorScheme.surfaceBright
                 ),
@@ -242,51 +160,102 @@ fun IconToggleItem(
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface
                     )
+                    renderMenu()
+                }
+            )
+        } else {
+            ListItem(
+                checked = finalIsChecked && enabled,
+                onCheckedChange = { c ->
+                    if (enabled) {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        onCheckedChange(c)
+                    } else if (onDisabledClick != null) {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        onDisabledClick()
+                    }
+                },
+                onLongClick = onLongClickAction,
+                enabled = enabled,
+                modifier = modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                leadingContent = if (finalIconRes != 0) {
+                    {
+                        Icon(
+                            painter = painterResource(id = finalIconRes),
+                            contentDescription = title,
+                            modifier = Modifier.size(24.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                } else null,
+                supportingContent = if (finalDescription != null) {
+                    {
+                        Text(
+                            text = finalDescription,
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                } else null,
+                trailingContent = {
+                    Switch(
+                        checked = if (enabled) finalIsChecked else false,
+                        onCheckedChange = null,
+                        enabled = enabled
+                    )
+                },
+                colors = ListItemDefaults.colors(
+                    containerColor = MaterialTheme.colorScheme.surfaceBright
+                ),
+                content = {
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    renderMenu()
                 }
             )
         }
-
-        if (isTranslationModeActive) {
-            SegmentedDropdownMenu(
-                expanded = showMenu,
-                onDismissRequest = { showMenu = false }
-            ) {
-                val keyTitle = remember(title) { TranslationManager.resolveKey(context, title) }
-                val keyDesc = remember(finalDescription) { TranslationManager.resolveKey(context, finalDescription) }
-
-                if (keyTitle != null) {
-                    SegmentedDropdownMenuItem(
-                        text = { Text("Translate Title ($keyTitle)") },
-                        onClick = {
-                            showMenu = false
-                            translationSheetKey = keyTitle
-                        },
-                        leadingIcon = {
-                            Icon(
-                                painter = painterResource(id = R.drawable.rounded_translate_24),
-                                contentDescription = null
-                            )
-                        }
+    } else {
+        ListItem(
+            onClick = onClickAction,
+            onLongClick = onLongClickAction,
+            enabled = enabled,
+            modifier = modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            leadingContent = if (finalIconRes != 0) {
+                {
+                    Icon(
+                        painter = painterResource(id = finalIconRes),
+                        contentDescription = title,
+                        modifier = Modifier.size(24.dp),
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
-
-                if (keyDesc != null) {
-                    SegmentedDropdownMenuItem(
-                        text = { Text("Translate Description ($keyDesc)") },
-                        onClick = {
-                            showMenu = false
-                            translationSheetKey = keyDesc
-                        },
-                        leadingIcon = {
-                            Icon(
-                                painter = painterResource(id = R.drawable.rounded_translate_24),
-                                contentDescription = null
-                            )
-                        }
+            } else null,
+            supportingContent = if (finalDescription != null) {
+                {
+                    Text(
+                        text = finalDescription,
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
+            } else null,
+            colors = ListItemDefaults.colors(
+                containerColor = MaterialTheme.colorScheme.surfaceBright
+            ),
+            content = {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                renderMenu()
             }
-        }
+        )
     }
 
     if (translationSheetKey != null) {

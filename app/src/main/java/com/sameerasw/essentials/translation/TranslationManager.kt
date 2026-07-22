@@ -47,10 +47,26 @@ object TranslationManager {
             }
         }
         if (resOrText is String && resOrText.isNotBlank()) {
+            val trimmed = resOrText.trim()
             val all = StringLoader.getAllTranslations(context)
-            return all.entries.firstOrNull { (_, map) ->
-                map["en"] == resOrText || map.values.any { it == resOrText }
-            }?.key
+
+            // 1. Exact match in any locale
+            all.entries.firstOrNull { (_, map) ->
+                map.values.any { it == resOrText || it.trim() == trimmed }
+            }?.let { return it.key }
+
+            // 2. Case insensitive match
+            all.entries.firstOrNull { (_, map) ->
+                map.values.any { it.trim().equals(trimmed, ignoreCase = true) }
+            }?.let { return it.key }
+
+            // 3. Match prefix before format specifiers (%s, %d, %1$s, etc.)
+            all.entries.firstOrNull { (_, map) ->
+                map.values.any { v ->
+                    val cleanV = v.split("%")[0].trim()
+                    cleanV.length >= 3 && trimmed.startsWith(cleanV, ignoreCase = true)
+                }
+            }?.let { return it.key }
         }
         return null
     }

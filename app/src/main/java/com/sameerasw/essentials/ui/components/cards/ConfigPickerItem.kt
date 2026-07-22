@@ -22,11 +22,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslationManager
+import com.sameerasw.essentials.translation.ui.TranslationBottomSheet
 import com.sameerasw.essentials.ui.components.menus.LocalDropdownMenuDismiss
 import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.utils.HapticUtil
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -42,9 +47,18 @@ fun ConfigPickerItem(
     content: @Composable ColumnScope.() -> Unit
 ) {
     val view = LocalView.current
+    val context = LocalContext.current
+    val isTranslationModeActive by TranslationManager.isTranslationModeEnabled
+
     var isMenuExpanded by remember { mutableStateOf(false) }
     var translationSheetKey by remember { mutableStateOf<String?>(null) }
 
+    val onLongClickAction: (() -> Unit)? = if (isTranslationModeActive) {
+        {
+            HapticUtil.performVirtualKeyHaptic(view)
+            isMenuExpanded = true
+        }
+    } else null
 
     ListItem(
         onClick = {
@@ -56,6 +70,7 @@ fun ConfigPickerItem(
                 onDisabledClick()
             }
         },
+        onLongClick = onLongClickAction,
         enabled = isEnabled,
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -107,44 +122,17 @@ fun ConfigPickerItem(
                     expanded = isMenuExpanded,
                     onDismissRequest = { isMenuExpanded = false }
                 ) {
-                    val isTranslationModeActive by com.sameerasw.essentials.translation.TranslationManager.isTranslationModeEnabled
                     if (isTranslationModeActive) {
-                        val context = androidx.compose.ui.platform.LocalContext.current
-                        val keyTitle = remember(title) { com.sameerasw.essentials.translation.TranslationManager.resolveKey(context, title) }
-                        val keyDesc = remember(description) { com.sameerasw.essentials.translation.TranslationManager.resolveKey(context, description) }
-
-                        if (keyTitle != null) {
-                            com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem(
-                                text = { Text("Translate Title ($keyTitle)") },
-                                onClick = {
-                                    isMenuExpanded = false
-                                    translationSheetKey = keyTitle
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        painter = painterResource(id = com.sameerasw.essentials.R.drawable.rounded_translate_24),
-                                        contentDescription = null
-                                    )
-                                }
-                            )
-                        }
-
-                        if (keyDesc != null) {
-                            com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem(
-                                text = { Text("Translate Description ($keyDesc)") },
-                                onClick = {
-                                    isMenuExpanded = false
-                                    translationSheetKey = keyDesc
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        painter = painterResource(id = com.sameerasw.essentials.R.drawable.rounded_translate_24),
-                                        contentDescription = null
-                                    )
-                                }
-                            )
-                        }
+                        com.sameerasw.essentials.translation.ui.TranslationMenuItems(
+                            title = title,
+                            description = description,
+                            onSelectKey = { key ->
+                                isMenuExpanded = false
+                                translationSheetKey = key
+                            }
+                        )
                     }
+
 
                     CompositionLocalProvider(
                         LocalDropdownMenuDismiss provides { isMenuExpanded = false }
@@ -154,7 +142,6 @@ fun ConfigPickerItem(
                 }
             }
         },
-
         colors = ListItemDefaults.colors(
             containerColor = MaterialTheme.colorScheme.surfaceBright
         ),
@@ -168,10 +155,9 @@ fun ConfigPickerItem(
     )
 
     if (translationSheetKey != null) {
-        com.sameerasw.essentials.translation.ui.TranslationBottomSheet(
+        TranslationBottomSheet(
             stringKey = translationSheetKey!!,
             onDismissRequest = { translationSheetKey = null }
         )
     }
 }
-

@@ -1817,5 +1817,7 @@
     <string name="translation_submitted">Submitted! \Thank you (‘∀’●)♡</string>
     <string name="translation_submit_error">Submission failed. Check your connection.</string>
     <string name="translation_key_label">String key</string>
+    <string name="translation_saved_toast">Translation edit saved! Tap Submit to publish</string>
 </resources>
+
 

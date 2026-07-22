@@ -3,10 +3,8 @@ package com.sameerasw.essentials.translation.ui
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -37,10 +35,10 @@ fun TranslationLongPressMenu(
         modifier = modifier,
         offset = offset
     ) {
-        // Disabled Info Header: Full Text Snippet
-        DropdownMenuItem(
+        // Info Header Entry with background matching SegmentedDropdownMenuItem
+        SegmentedDropdownMenuItem(
             text = {
-                Column(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+                Column(modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp)) {
                     Text(
                         text = fullText,
                         style = MaterialTheme.typography.bodySmall,
@@ -59,10 +57,7 @@ fun TranslationLongPressMenu(
                 }
             },
             onClick = {},
-            enabled = false,
-            colors = MenuDefaults.itemColors(
-                disabledTextColor = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            enabled = false
         )
 
         // Action 1: Translate
