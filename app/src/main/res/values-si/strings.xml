@@ -664,9 +664,9 @@
     <string name="label_settings">සැකසීම්</string>
     <string name="action_report_bug">දෝෂයක් වාර්තා කරන්න</string>
     <!-- Sentry Crash Reporting -->
-    <string name="sentry_report_mode_title">Crash reporting</string>
-    <string name="sentry_mode_off">Off</string>
-    <string name="sentry_mode_auto">Auto</string>
+    <string name="sentry_report_mode_title">බිඳ වැටීම් වාර්තාකරණය</string>
+    <string name="sentry_mode_off">අක්‍රියයි</string>
+    <string name="sentry_mode_auto">ස්වයංක්‍රීය</string>
     <string name="sentry_crash_toast">Essentials crashed, Report sent</string>
     <string name="simulate_crash">Simulate crash</string>
     <string name="welcome_title">Welcome to Essentials</string>
