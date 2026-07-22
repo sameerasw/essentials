@@ -4398,7 +4398,7 @@ class MainViewModel : ViewModel() {
     private fun schedulePeriodicWallpaperCheck(context: Context) {
         val workRequest =
             androidx.work.PeriodicWorkRequestBuilder<com.sameerasw.essentials.services.DailyWallpaperWorker>(
-                12, java.util.concurrent.TimeUnit.HOURS
+                24, java.util.concurrent.TimeUnit.HOURS
             ).build()
 
         androidx.work.WorkManager.getInstance(context).enqueueUniquePeriodicWork(
@@ -4430,6 +4430,8 @@ class MainViewModel : ViewModel() {
     private fun cancelPeriodicWallpaperCheck(context: Context) {
         androidx.work.WorkManager.getInstance(context)
             .cancelUniqueWork("daily_wallpaper_check_work")
+        androidx.work.WorkManager.getInstance(context)
+            .cancelUniqueWork("daily_wallpaper_retry_work")
     }
 
     private fun updateDailyWallpaperAutoUpdateTime(enabled: Boolean) {
@@ -4437,11 +4439,14 @@ class MainViewModel : ViewModel() {
             val currentTime = LocalDateTime.now().toString()
             dailyWallpaperAutoUpdateTime.value = currentTime
             settingsRepository.putString(SettingsRepository.KEY_DAILY_WALLPAPER_AUTO_UPDATE_TIME, currentTime)
+            settingsRepository.putInt(SettingsRepository.KEY_DAILY_WALLPAPER_RETRY_COUNT, 0)
         } else {
             dailyWallpaperAutoUpdateTime.value = null
             settingsRepository.remove(SettingsRepository.KEY_DAILY_WALLPAPER_AUTO_UPDATE_TIME)
+            settingsRepository.remove(SettingsRepository.KEY_DAILY_WALLPAPER_RETRY_COUNT)
         }
     }
+
 
     fun loadBatterySaverConstants(context: Context) {
         val constantsStr = Settings.Global.getString(context.contentResolver, "battery_saver_constants") ?: ""

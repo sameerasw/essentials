@@ -228,13 +228,20 @@ fun WallpaperScreen(
                 val prevTime = runCatching { LocalDateTime.parse(dailyWallpaperAutoUpdateTime) }.getOrNull()
                 if (prevTime != null) {
                     val passedMinutes = Duration.between(prevTime, LocalDateTime.now()).toMinutes()
+                    val retryCount = repository.getInt(SettingsRepository.KEY_DAILY_WALLPAPER_RETRY_COUNT, 0)
                     if (passedMinutes >= 0) {
-                        val cycleMinutes = passedMinutes % 720L
-                        val remainingMinutes = if (cycleMinutes == 0L && passedMinutes > 0L) 0L else 720L - cycleMinutes
-                        dailyWallpaperNextAutoUpdateTime = remainingMinutes / 60L
+                        if (retryCount in 1..2) {
+                            val remainingMinutes = (30L - passedMinutes).coerceAtLeast(0L)
+                            dailyWallpaperNextAutoUpdateTime = remainingMinutes / 60L
+                        } else {
+                            val cycleMinutes = passedMinutes % 1440L
+                            val remainingMinutes = if (cycleMinutes == 0L && passedMinutes > 0L) 0L else 1440L - cycleMinutes
+                            dailyWallpaperNextAutoUpdateTime = remainingMinutes / 60L
+                        }
                     } else {
-                        dailyWallpaperNextAutoUpdateTime = 12L
+                        dailyWallpaperNextAutoUpdateTime = 24L
                     }
+
                     dailyWallpaperLastCheckedFormatted = runCatching {
                         prevTime.format(DateTimeFormatter.ofPattern("hh:mm a"))
                     }.getOrDefault("")
@@ -243,6 +250,7 @@ fun WallpaperScreen(
             kotlinx.coroutines.delay(60_000L)
         }
     }
+
 
 
 

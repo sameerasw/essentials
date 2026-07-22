@@ -56,6 +56,8 @@ class SettingsRepository(private val context: Context) {
         const val KEY_DAILY_WALLPAPER_SHOW_LAST_TIME = "daily_wallpaper_show_last_time"
         const val KEY_DAILY_WALLPAPER_APPLY_HOME = "daily_wallpaper_apply_home"
         const val KEY_DAILY_WALLPAPER_APPLY_LOCK = "daily_wallpaper_apply_lock"
+        const val KEY_DAILY_WALLPAPER_RETRY_COUNT = "daily_wallpaper_retry_count"
+
 
         const val KEY_WIDGET_ENABLED = "widget_enabled"
         const val KEY_STATUS_BAR_ICON_CONTROL_ENABLED = "status_bar_icon_control_enabled"
