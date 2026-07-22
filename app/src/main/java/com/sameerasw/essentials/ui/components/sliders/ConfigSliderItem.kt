@@ -1,6 +1,9 @@
 package com.sameerasw.essentials.ui.components.sliders
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,16 +16,26 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.translation.TranslationManager
+import com.sameerasw.essentials.translation.ui.TranslationBottomSheet
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenu
+import com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem
 import com.sameerasw.essentials.utils.HapticUtil
 import java.math.BigDecimal
 import java.math.RoundingMode
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ConfigSliderItem(
     title: String,
@@ -41,8 +54,13 @@ fun ConfigSliderItem(
     subtitle: String? = null
 ) {
     val view = LocalView.current
+    val context = LocalContext.current
     val finalIconRes = icon ?: iconRes
     val finalDescription = subtitle ?: description
+    val isTranslationModeActive by TranslationManager.isTranslationModeEnabled
+
+    var showMenu by remember { mutableStateOf(false) }
+    var translationSheetKey by remember { mutableStateOf<String?>(null) }
 
     Column(
         modifier = modifier
@@ -53,37 +71,67 @@ fun ConfigSliderItem(
             )
             .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 8.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            if (finalIconRes != 0) {
-                Icon(
-                    painter = painterResource(id = finalIconRes),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(end = 12.dp)
-                        .size(24.dp),
-                    tint = MaterialTheme.colorScheme.primary
-                )
-            }
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = "$title: ${valueFormatter(value)}",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant.copy(
-                        alpha = 0.38f
+        Box {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .combinedClickable(
+                        onClick = {},
+                        onLongClick = if (isTranslationModeActive) {
+                            {
+                                HapticUtil.performVirtualKeyHaptic(view)
+                                showMenu = true
+                            }
+                        } else null
+                    ),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (finalIconRes != 0) {
+                    Icon(
+                        painter = painterResource(id = finalIconRes),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(end = 12.dp)
+                            .size(24.dp),
+                        tint = MaterialTheme.colorScheme.primary
                     )
-                )
-                if (finalDescription != null) {
+                }
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = finalDescription,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                        text = "$title: ${valueFormatter(value)}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                            alpha = 0.38f
+                        )
+                    )
+                    if (finalDescription != null) {
+                        Text(
+                            text = finalDescription,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                        )
+                    }
+                }
+            }
+
+            if (showMenu) {
+                SegmentedDropdownMenu(
+                    expanded = showMenu,
+                    onDismissRequest = { showMenu = false }
+                ) {
+                    com.sameerasw.essentials.translation.ui.TranslationMenuItems(
+                        title = title,
+                        description = finalDescription,
+                        onSelectKey = { key ->
+                            showMenu = false
+                            translationSheetKey = key
+                        }
                     )
                 }
             }
+
         }
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
@@ -143,5 +191,12 @@ fun ConfigSliderItem(
                 )
             }
         }
+    }
+
+    if (translationSheetKey != null) {
+        TranslationBottomSheet(
+            stringKey = translationSheetKey!!,
+            onDismissRequest = { translationSheetKey = null }
+        )
     }
 }

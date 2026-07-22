@@ -14,7 +14,7 @@ class DailyWallpaperWorker(
 ) : CoroutineWorker(appContext, workerParams) {
 
     override suspend fun doWork(): Result {
-        Log.d("DailyWallpaperWorker", "Executing periodic wallpaper sync")
+        Log.d("DailyWallpaperWorker", "Executing daily wallpaper sync")
         val context = applicationContext
         val settingsRepository = SettingsRepository(context)
         val wallpaperRepository = WallpaperRepository()
@@ -28,6 +28,7 @@ class DailyWallpaperWorker(
                 return Result.success()
             }
 
+            var newWallpaperApplied = false
             val force = inputData.getBoolean("force", false)
             val todayWallpaper = wallpaperRepository.fetchTodayWallpaper()
             if (todayWallpaper != null) {
@@ -50,6 +51,7 @@ class DailyWallpaperWorker(
                             flags
                         )
                         if (applied) {
+                            newWallpaperApplied = true
                             settingsRepository.putString(
                                 SettingsRepository.KEY_DAILY_WALLPAPER_LAST_ID,
                                 todayWallpaper.id
@@ -84,6 +86,10 @@ class DailyWallpaperWorker(
                                 SettingsRepository.KEY_DAILY_WALLPAPER_AUTO_UPDATE_TIME,
                                 currentTime
                             )
+                            settingsRepository.putInt(
+                                SettingsRepository.KEY_DAILY_WALLPAPER_RETRY_COUNT,
+                                0
+                            )
 
                             Log.d(
                                 "DailyWallpaperWorker",
@@ -93,9 +99,29 @@ class DailyWallpaperWorker(
                     }
                 }
             }
+
+            if (!newWallpaperApplied && !force) {
+                val retryCount = settingsRepository.getInt(SettingsRepository.KEY_DAILY_WALLPAPER_RETRY_COUNT, 0)
+                if (retryCount < 2) {
+                    settingsRepository.putInt(SettingsRepository.KEY_DAILY_WALLPAPER_RETRY_COUNT, retryCount + 1)
+                    val retryWork = androidx.work.OneTimeWorkRequestBuilder<DailyWallpaperWorker>()
+                        .setInitialDelay(30, java.util.concurrent.TimeUnit.MINUTES)
+                        .build()
+                    androidx.work.WorkManager.getInstance(context).enqueueUniqueWork(
+                        "daily_wallpaper_retry_work",
+                        androidx.work.ExistingWorkPolicy.REPLACE,
+                        retryWork
+                    )
+                    Log.d("DailyWallpaperWorker", "No new wallpaper found. Scheduled retry #${retryCount + 1} in 30 mins")
+                } else {
+                    settingsRepository.putInt(SettingsRepository.KEY_DAILY_WALLPAPER_RETRY_COUNT, 0)
+                    Log.d("DailyWallpaperWorker", "Reached max retries (3 total checks). Waiting for next daily cycle.")
+                }
+            }
+
             Result.success()
         } catch (e: Exception) {
-            Log.e("DailyWallpaperWorker", "Error during periodic sync", e)
+            Log.e("DailyWallpaperWorker", "Error during daily sync", e)
             Result.retry()
         }
     }

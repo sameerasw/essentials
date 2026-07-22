@@ -601,7 +601,26 @@ class MainActivity : AppCompatActivity() {
                                                 }
                                             }
 
-                                            if (isUpdateAvailable && (currentTab == DIYTabs.ESSENTIALS || currentTab == DIYTabs.FREEZE)) {
+                                            val isTranslationModeActive by com.sameerasw.essentials.translation.TranslationManager.isTranslationModeEnabled
+
+                                            if (isTranslationModeActive && (currentTab == DIYTabs.ESSENTIALS || currentTab == DIYTabs.FREEZE)) {
+                                                Badge(
+                                                    modifier = Modifier
+                                                        .align(Alignment.TopEnd)
+                                                        .offset(x = 6.dp, y = (-6).dp)
+                                                        .size(28.dp),
+                                                    containerColor = MaterialTheme.colorScheme.tertiary,
+                                                    contentColor = MaterialTheme.colorScheme.onTertiary
+                                                ) {
+                                                    Icon(
+                                                        painter = painterResource(id = R.drawable.rounded_translate_24),
+                                                        contentDescription = "Translation Mode Active",
+                                                        modifier = Modifier
+                                                            .fillMaxSize()
+                                                            .padding(4.dp)
+                                                    )
+                                                }
+                                            } else if (isUpdateAvailable && (currentTab == DIYTabs.ESSENTIALS || currentTab == DIYTabs.FREEZE)) {
                                                 Badge(
                                                     modifier = Modifier
                                                         .align(Alignment.TopEnd)

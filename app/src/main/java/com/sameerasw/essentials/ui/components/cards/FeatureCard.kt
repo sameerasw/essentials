@@ -67,6 +67,8 @@ fun FeatureCard(
 ) {
     val view = LocalView.current
     var showMenu by remember { mutableStateOf(false) }
+    var translationSheetKey by remember { mutableStateOf<String?>(null) }
+
 
     val menuState = com.sameerasw.essentials.ui.state.LocalMenuStateManager.current
     androidx.compose.runtime.DisposableEffect(showMenu) {
@@ -259,6 +261,19 @@ fun FeatureCard(
                 expanded = showMenu,
                 onDismissRequest = { showMenu = false }
             ) {
+                val isTranslationModeActive by com.sameerasw.essentials.translation.TranslationManager.isTranslationModeEnabled
+                if (isTranslationModeActive) {
+                    com.sameerasw.essentials.translation.ui.TranslationMenuItems(
+                        title = title,
+                        description = description ?: descriptionOverride,
+                        onSelectKey = { key ->
+                            showMenu = false
+                            translationSheetKey = key
+                        }
+                    )
+                }
+
+
                 if (onPinToggle != null) {
                     SegmentedDropdownMenuItem(
                         text = {
@@ -305,4 +320,12 @@ fun FeatureCard(
             }
         }
     )
+
+    if (translationSheetKey != null) {
+        com.sameerasw.essentials.translation.ui.TranslationBottomSheet(
+            stringKey = translationSheetKey!!,
+            onDismissRequest = { translationSheetKey = null }
+        )
+    }
 }
+

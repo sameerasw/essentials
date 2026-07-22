@@ -15,6 +15,10 @@ on:
         description: 'Display name of contributor'
         required: false
         type: string
+      contributor_email:
+        description: 'Email address of contributor'
+        required: false
+        type: string
       user_token:
         description: 'User OAuth token'
         required: false
@@ -89,11 +93,16 @@ jobs:
                       sf.write(new_content)
           EOF
 
-          git config user.email "actions@github.com"
+          AUTHOR_EMAIL="${{ inputs.contributor_email }}"
+          if [ -z "$AUTHOR_EMAIL" ]; then
+            AUTHOR_EMAIL="${{ inputs.contributor }}@users.noreply.github.com"
+          fi
+
+          git config user.email "$AUTHOR_EMAIL"
           git config user.name "${{ inputs.contributor_name || inputs.contributor }}"
 
           git add app/src/main/res/
-          git commit -m "🌍 Community translations update by @${{ inputs.contributor }}" || echo "No changes to commit"
+          git commit --author="${{ inputs.contributor_name || inputs.contributor }} <$AUTHOR_EMAIL>" -m "Community translations by @${{ inputs.contributor }}" || echo "No changes to commit"
           git push origin "$BRANCH"
           echo "BRANCH_NAME=$BRANCH" >> $GITHUB_ENV
 
@@ -106,9 +115,11 @@ jobs:
             echo "Pull Request #$EXISTING_PR already exists for $BRANCH_NAME and was automatically updated with the new commits."
           else
             gh pr create \
-              --title "🌍 Community translations by @${{ inputs.contributor }}" \
+              --title "Community translations by @${{ inputs.contributor }}" \
               --body "Translations contributed by **@${{ inputs.contributor }}** (${{ inputs.contributor_name }}) directly via the Essentials in-app translation mode." \
               --label "translations" \
-              --base main \
+              --assignee "${{ inputs.contributor }}" \
+              --reviewer "sameerasw" \
+              --base develop \
               --head "$BRANCH_NAME"
           fi
