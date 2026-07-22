@@ -1799,4 +1799,23 @@
     <string name="label_wallpaper_next_check">Next check in %1$s</string>
     <string name="label_wallpaper_hours">%1$d hours</string>
     <string name="label_wallpaper_a_few_minutes">a few minutes</string>
+
+    <!-- In-App Translation Mode -->
+    <string name="settings_translations_section">Translations</string>
+    <string name="settings_translate_mode">Translation Mode</string>
+    <string name="settings_translate_mode_desc">Long press any text to translate and contribute to the community</string>
+    <string name="settings_translated_texts">Translated Texts</string>
+    <string name="settings_translated_texts_desc">%d edit(s) pending — tap to submit or discard</string>
+    <string name="translation_submit">Submit to GitHub</string>
+    <string name="translation_discard">Discard All</string>
+    <string name="translation_menu_translate">Translate</string>
+    <string name="translation_menu_view">View All</string>
+    <string name="translation_menu_dismiss">Dismiss</string>
+    <string name="translation_source_label">Source (English)</string>
+    <string name="translation_login_required">GitHub login required to submit translations</string>
+    <string name="translation_submitting">Submitting…</string>
+    <string name="translation_submitted">Submitted! A PR has been opened.</string>
+    <string name="translation_submit_error">Submission failed. Check your connection.</string>
+    <string name="translation_key_label">String key</string>
 </resources>
+

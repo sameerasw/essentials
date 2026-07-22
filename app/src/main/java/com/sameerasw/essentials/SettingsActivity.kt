@@ -87,7 +87,14 @@ import com.sameerasw.essentials.ui.components.cards.IconToggleItem
 import com.sameerasw.essentials.ui.components.cards.PermissionCard
 import com.sameerasw.essentials.ui.components.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.components.dialogs.AboutSection
+import com.sameerasw.essentials.translation.TranslationManager
+import com.sameerasw.essentials.translation.ui.TranslationBottomSheet
+import com.sameerasw.essentials.translation.ui.TranslationLanguagePickerSheet
+import com.sameerasw.essentials.translation.ui.TranslationSessionSheet
+import com.sameerasw.essentials.ui.components.sheets.GitHubAuthSheet
+import com.sameerasw.essentials.viewmodels.GitHubAuthViewModel
 import com.sameerasw.essentials.ui.components.pickers.CrashReportingPicker
+
 import com.sameerasw.essentials.ui.components.pickers.DefaultTabPicker
 import com.sameerasw.essentials.ui.components.pickers.LanguagePicker
 import com.sameerasw.essentials.ui.components.sheets.InstructionsBottomSheet
@@ -266,6 +273,18 @@ fun SettingsContent(
     var showUnsupportedFeaturesSheet by remember { mutableStateOf(false) }
     var showImportConfirmSheet by remember { mutableStateOf(false) }
     var selectedImportUri by remember { mutableStateOf<Uri?>(null) }
+
+    var showTranslationSessionSheet by remember { mutableStateOf(false) }
+    var showLanguagePickerSheet by remember { mutableStateOf(false) }
+    var showGitHubAuthSheet by remember { mutableStateOf(false) }
+    val gitHubAuthViewModel: GitHubAuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    val settingsRepo = remember { com.sameerasw.essentials.data.repository.SettingsRepository(context) }
+    var currentUser by remember { mutableStateOf(settingsRepo.getGitHubUser()) }
+
+    val isTranslationModeActive by TranslationManager.isTranslationModeEnabled
+    val sessionEditsCount = remember(TranslationManager.session.edits.size) { TranslationManager.session.edits.size }
+
+
 
     val onImportConfig: (Boolean) -> Unit = { keepPrefs ->
         selectedImportUri?.let { uri ->
@@ -671,6 +690,93 @@ fun SettingsContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Translations Section
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, top = 8.dp, bottom = 8.dp, end = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(R.string.settings_translations_section),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+
+        RoundedCardContainer {
+            // GitHub Account Card
+            FeatureCard(
+                title = if (currentUser != null) "@${currentUser?.login}" else stringResource(R.string.action_sign_in_github),
+                description = if (currentUser != null) "Logged in as ${currentUser?.name ?: currentUser?.login}" else "Sign in required to enable translation mode",
+                isEnabled = true,
+                onToggle = {},
+                onClick = {
+                    HapticUtil.performUIHaptic(view)
+                    if (currentUser == null) {
+                        showGitHubAuthSheet = true
+                    } else {
+                        gitHubAuthViewModel.signOut(context)
+                        currentUser = null
+                        TranslationManager.isTranslationModeEnabled.value = false
+                    }
+                },
+                showToggle = false,
+                iconRes = R.drawable.brand_github
+            )
+
+            // Translation Mode Switch
+            FeatureCard(
+                title = R.string.settings_translate_mode,
+                description = R.string.settings_translate_mode_desc,
+                isEnabled = isTranslationModeActive,
+                onToggle = { enabled ->
+                    if (enabled && currentUser == null) {
+                        showGitHubAuthSheet = true
+                    } else {
+                        TranslationManager.isTranslationModeEnabled.value = enabled
+                    }
+                },
+                onClick = {},
+                iconRes = R.drawable.rounded_translate_24
+            )
+
+            // Target Languages Selector
+            if (isTranslationModeActive) {
+                FeatureCard(
+                    title = "Target Languages",
+                    description = "${TranslationManager.selectedLanguages.joinToString(", ") { it.uppercase() }} (Max 5)",
+                    isEnabled = true,
+                    onToggle = {},
+                    onClick = {
+                        HapticUtil.performUIHaptic(view)
+                        showLanguagePickerSheet = true
+                    },
+                    showToggle = false,
+                    iconRes = R.drawable.rounded_globe_24
+                )
+            }
+
+            // Pending Edits Summary Card
+            if (sessionEditsCount > 0) {
+                FeatureCard(
+                    title = R.string.settings_translated_texts,
+                    description = stringResource(R.string.settings_translated_texts_desc, sessionEditsCount),
+                    isEnabled = true,
+                    onToggle = {},
+                    onClick = {
+                        HapticUtil.performUIHaptic(view)
+                        showTranslationSessionSheet = true
+                    },
+                    showToggle = false,
+                    iconRes = R.drawable.rounded_edit_24
+                )
+            }
+        }
+
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         RoundedCardContainer {
             FeatureCard(
                 title = R.string.action_restart_systemui,
@@ -682,6 +788,7 @@ fun SettingsContent(
                 iconRes = R.drawable.rounded_refresh_24
             )
         }
+
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -1313,4 +1420,31 @@ fun SettingsContent(
 
         Spacer(modifier = Modifier.height(16.dp))
     }
+
+    if (showTranslationSessionSheet) {
+        TranslationSessionSheet(
+            onDismissRequest = { showTranslationSessionSheet = false },
+            onNeedLogin = {
+                showTranslationSessionSheet = false
+                showGitHubAuthSheet = true
+            }
+        )
+    }
+
+    if (showLanguagePickerSheet) {
+        TranslationLanguagePickerSheet(
+            onDismissRequest = { showLanguagePickerSheet = false }
+        )
+    }
+
+    if (showGitHubAuthSheet) {
+        GitHubAuthSheet(
+            viewModel = gitHubAuthViewModel,
+            onDismissRequest = {
+                showGitHubAuthSheet = false
+                currentUser = settingsRepo.getGitHubUser()
+            }
+        )
+    }
 }
+

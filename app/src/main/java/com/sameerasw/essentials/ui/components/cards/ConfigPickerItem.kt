@@ -43,6 +43,8 @@ fun ConfigPickerItem(
 ) {
     val view = LocalView.current
     var isMenuExpanded by remember { mutableStateOf(false) }
+    var translationSheetKey by remember { mutableStateOf<String?>(null) }
+
 
     ListItem(
         onClick = {
@@ -105,6 +107,45 @@ fun ConfigPickerItem(
                     expanded = isMenuExpanded,
                     onDismissRequest = { isMenuExpanded = false }
                 ) {
+                    val isTranslationModeActive by com.sameerasw.essentials.translation.TranslationManager.isTranslationModeEnabled
+                    if (isTranslationModeActive) {
+                        val context = androidx.compose.ui.platform.LocalContext.current
+                        val keyTitle = remember(title) { com.sameerasw.essentials.translation.TranslationManager.resolveKey(context, title) }
+                        val keyDesc = remember(description) { com.sameerasw.essentials.translation.TranslationManager.resolveKey(context, description) }
+
+                        if (keyTitle != null) {
+                            com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem(
+                                text = { Text("Translate Title ($keyTitle)") },
+                                onClick = {
+                                    isMenuExpanded = false
+                                    translationSheetKey = keyTitle
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        painter = painterResource(id = com.sameerasw.essentials.R.drawable.rounded_translate_24),
+                                        contentDescription = null
+                                    )
+                                }
+                            )
+                        }
+
+                        if (keyDesc != null) {
+                            com.sameerasw.essentials.ui.components.menus.SegmentedDropdownMenuItem(
+                                text = { Text("Translate Description ($keyDesc)") },
+                                onClick = {
+                                    isMenuExpanded = false
+                                    translationSheetKey = keyDesc
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        painter = painterResource(id = com.sameerasw.essentials.R.drawable.rounded_translate_24),
+                                        contentDescription = null
+                                    )
+                                }
+                            )
+                        }
+                    }
+
                     CompositionLocalProvider(
                         LocalDropdownMenuDismiss provides { isMenuExpanded = false }
                     ) {
@@ -113,6 +154,7 @@ fun ConfigPickerItem(
                 }
             }
         },
+
         colors = ListItemDefaults.colors(
             containerColor = MaterialTheme.colorScheme.surfaceBright
         ),
@@ -124,4 +166,12 @@ fun ConfigPickerItem(
             )
         }
     )
+
+    if (translationSheetKey != null) {
+        com.sameerasw.essentials.translation.ui.TranslationBottomSheet(
+            stringKey = translationSheetKey!!,
+            onDismissRequest = { translationSheetKey = null }
+        )
+    }
 }
+
