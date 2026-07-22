@@ -161,4 +161,33 @@ class GitHubRepository {
             false
         }
     }
+
+    suspend fun getOpenTranslationPRs(
+        owner: String,
+        repo: String,
+        author: String,
+        token: String? = null
+    ): List<com.sameerasw.essentials.domain.model.github.GitHubPullRequest> = withContext(Dispatchers.IO) {
+        try {
+            val url = URL("https://api.github.com/repos/$owner/$repo/pulls?state=open")
+            val connection = url.openConnection() as HttpURLConnection
+            if (token != null) {
+                connection.setRequestProperty("Authorization", "Bearer $token")
+            }
+            connection.setRequestProperty("Accept", "application/vnd.github+json")
+            if (connection.responseCode == 200) {
+                val data = connection.inputStream.bufferedReader().readText()
+                val allPrs = gson.fromJson(data, Array<com.sameerasw.essentials.domain.model.github.GitHubPullRequest>::class.java).toList()
+                val targetRef = "translations-$author"
+                allPrs.filter { pr ->
+                    pr.user?.login.equals(author, ignoreCase = true) ||
+                            pr.head?.ref?.equals(targetRef, ignoreCase = true) == true
+                }
+            } else emptyList()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emptyList()
+        }
+    }
 }
+

@@ -286,6 +286,26 @@ fun SettingsContent(
     val isTranslationModeActive by TranslationManager.isTranslationModeEnabled
     val sessionEditsCount = remember(TranslationManager.session.edits.size) { TranslationManager.session.edits.size }
 
+    var openTranslationPRs by remember { mutableStateOf<List<com.sameerasw.essentials.domain.model.github.GitHubPullRequest>>(emptyList()) }
+    val gitHubRepo = remember { com.sameerasw.essentials.data.repository.GitHubRepository() }
+
+    androidx.compose.runtime.LaunchedEffect(isTranslationModeActive, currentUser) {
+        val user = currentUser
+        if (isTranslationModeActive && user != null) {
+            val userToken = settingsRepo.getGitHubToken()
+            val prs = gitHubRepo.getOpenTranslationPRs(
+                owner = "sameerasw",
+                repo = "essentials",
+                author = user.login,
+                token = userToken
+            )
+            openTranslationPRs = prs
+        } else {
+            openTranslationPRs = emptyList()
+        }
+    }
+
+
 
 
     val onImportConfig: (Boolean) -> Unit = { keepPrefs ->
@@ -779,7 +799,35 @@ fun SettingsContent(
                     iconRes = R.drawable.rounded_edit_24
                 )
             }
+
+            // Existing Open Translation PRs
+            if (isTranslationModeActive && openTranslationPRs.isNotEmpty()) {
+                openTranslationPRs.forEach { pr ->
+                    val dateFormatted = try {
+                        pr.updatedAt.take(10)
+                    } catch (e: Exception) {
+                        ""
+                    }
+                    val subtitleText = if (dateFormatted.isNotBlank()) "PR #${pr.number} • Updated $dateFormatted" else "PR #${pr.number}"
+
+                    FeatureCard(
+                        title = "View existing PR",
+                        description = subtitleText,
+                        isEnabled = true,
+                        onToggle = {},
+                        onClick = {
+                            HapticUtil.performUIHaptic(view)
+                            val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(pr.htmlUrl))
+
+                            context.startActivity(intent)
+                        },
+                        showToggle = false,
+                        iconRes = R.drawable.brand_github
+                    )
+                }
+            }
         }
+
 
 
 
