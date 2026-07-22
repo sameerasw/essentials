@@ -1457,4 +1457,5 @@
     <string name="feat_daily_wallpaper_title">වොල්පෙපර්ස්</string>
     <string name="feat_daily_wallpaper_desc">දිනපතා තෝරාගත් අලුත් වොල්පෙපර්</string>
     <string name="feat_flashlight_title">පන්දම</string>
+    <string name="feat_power_battery_title">බැටරි </string>
 </resources>
