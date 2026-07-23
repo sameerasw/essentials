@@ -31,6 +31,7 @@ replay_pid*
 *app/release/
 
 Build/
+build/
 
 local.properties
 .agents/
