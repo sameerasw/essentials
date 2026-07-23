@@ -16,7 +16,7 @@
     <string name="flashlight_pulse_tile_label">Pulso de lanterna</string>
     <string name="check_pre_releases_label">Confira os pré-lançamentos</string>
     <string name="check_pre_releases_desc">Pode ser instável</string>
-    <string name="label_default_tab">Default tab</string>
+    <string name="label_default_tab">Aba Padrão </string>
     <!-- App Lock -->
     <string name="settings_section_security">Segurança</string>
     <string name="app_lock_enable_title">Ativar bloqueio de aplicativo</string>
