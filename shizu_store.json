@@ -1,0 +1,31 @@
+{
+  "app_name": "Essentials",
+  "package_name": "com.sameerasw.essentials",
+  "short_description": "Essential tools and mods for Android nerds",
+  "icon_url": "https://sameerasw.com/assets/img/project-logos/essentials-logo.svg",
+  "banner_url": "https://github.com/user-attachments/assets/c0849951-4cf0-4a91-9964-f7c212977af1",
+  "app_website": "https://sameerasw.com/essentials",
+  "repo_url": "https://github.com/sameerasw/essentials",
+  "store_issue_number": 630,
+  "screenshots": [
+    "https://github.com/sameerasw/essentials/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpeg?raw=true",
+    "https://github.com/sameerasw/essentials/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpeg?raw=true",
+    "https://github.com/sameerasw/essentials/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/3.jpeg?raw=true",
+    "https://github.com/sameerasw/essentials/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/4.jpeg?raw=true",
+    "https://github.com/sameerasw/essentials/blob/main/fastlane/metadata/android/en-US/images/phoneScreenshots/5.jpeg?raw=true"
+  ],
+  "developer": {
+    "name": "sameerasw.com",
+    "banner_url": "https://github.com/sameerasw/sameerasw.com/blob/main/public/assets/img/web-preview.png?raw=true",
+    "account_url": "https://github.com/sameerasw",
+    "email": "mail@sameerasw.com",
+    "website": "https://sameerasw.com",
+    "socials": {
+      "github": "sameerasw",
+      "x": "sameeraswdotcom",
+      "telegram": "sameerasw",
+      "youtube": "sameerasw",
+      "instagram": "sameeraswdotcom"
+    }
+  }
+}
