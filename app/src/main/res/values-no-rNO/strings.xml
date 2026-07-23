@@ -639,6 +639,11 @@
     <string name="perm_accessibility_desc_lighting">Nødvendig for å utløse varslingslys på nye varsler</string>
     <string name="perm_default_browser_title">Standard nettleser</string>
     <string name="perm_default_browser_desc">Nødvendig for å håndtere koblinger effektivt</string>
+    <string name="perm_install_packages_title">Install Unknown Apps</string>
+    <string name="perm_install_packages_desc">Required to automatically download and install application updates.</string>
+    <string name="action_install_update">Install Update</string>
+    <string name="downloading_update_progress">Downloading update (%1$d%%)</string>
+    <string name="update_download_failed">Download failed</string>
     <string name="perm_accessibility_desc_remap">Nødvendig for å avskjære maskinvareknapphendelser</string>
     <string name="perm_accessibility_desc_essentials_on_display">Required to intercept volume key events while the screen is off to trigger the Essentials On Display overlay.</string>
     <string name="perm_accessibility_desc_night_light">Nødvendig for å overvåke forgrunnsapplikasjoner.</string>
@@ -913,6 +918,9 @@
     <string name="update_channel_name">Appoppdateringer</string>
     <string name="update_channel_desc">Varsler for nye appoppdateringer</string>
     <string name="notification_update_available">Oppdatering tilgjengelig</string>
+    <string name="notification_update_subtext">Check out what\'s new in Essentials v%1$s</string>
+    <string name="action_update_to_version">Update to Essentials v%1$s</string>
+    <string name="action_check_for_updates">Check for updates</string>
     <string name="battery_notification_no_devices">Ingen enheter tilkoblet</string>
     <string name="label_unknown">Ukjent</string>
     <string name="network_type_5g">5G</string>
@@ -1674,4 +1682,31 @@
     <string name="label_wallpaper_next_check">Next check in %1$s</string>
     <string name="label_wallpaper_hours">%1$d hours</string>
     <string name="label_wallpaper_a_few_minutes">a few minutes</string>
+    <!-- In-App Translation Mode -->
+    <string name="settings_translations_section">Translations</string>
+    <string name="settings_translate_mode">Translation Mode</string>
+    <string name="settings_translate_mode_desc">Long press any text to translate and contribute to the community</string>
+    <string name="settings_translated_texts">Translated</string>
+    <string name="settings_translated_texts_desc">%d edit(s) pending — tap to submit or discard</string>
+    <string name="translation_submit">Submit</string>
+    <string name="translation_discard">Discard</string>
+    <string name="translation_menu_translate">Translate</string>
+    <string name="translation_menu_view">View All</string>
+    <string name="translation_menu_dismiss">Dismiss</string>
+    <string name="translation_source_label">Source (English)</string>
+    <string name="translation_login_required">GitHub login required to submit translations</string>
+    <string name="translation_submitting">Submitting…</string>
+    <string name="translation_submitted">Submitted! \Thank you (‘∀’●)♡</string>
+    <string name="translation_submit_error">Submission failed. Check your connection.</string>
+    <string name="translation_key_label">String key</string>
+    <string name="translation_saved_toast">Translation edit saved! Tap Submit to publish</string>
+    <string name="translation_warning_title">Enable Translation Mode</string>
+    <string name="translation_warning_desc">Please ensure all contributed translations are accurate and responsible. Note that not all submitted changes may be merged due to potential conflicts or review criteria.</string>
+    <string name="translation_warning_point1_title">Accuracy &amp; Responsibility</string>
+    <string name="translation_warning_point1_desc">Ensure all contributed translations are accurate, respectful, and appropriate for all users.</string>
+    <string name="translation_warning_point2_title">Conflicts &amp; Merging</string>
+    <string name="translation_warning_point2_desc">Not all submitted changes are guaranteed to be merged due to potential conflicts or review criteria.</string>
+    <string name="translation_warning_point3_title">GitHub Pull Request</string>
+    <string name="translation_warning_point3_desc">Submissions automatically create or update a dedicated pull request on GitHub under your account.</string>
+    <string name="translation_warning_do_not_show">Do not show again</string>
 </resources>
