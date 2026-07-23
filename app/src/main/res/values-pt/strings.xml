@@ -443,8 +443,8 @@
     <string name="feat_always_on_display_desc">Mostrar hora e informações enquanto a tela está desligada</string>
     <string name="feat_calendar_sync_title">Sincronização de calendário</string>
     <string name="feat_calendar_sync_desc">Sync your phone calendar to your watch</string>
-    <string name="feat_lock_from_watch_title">Lock from Watch</string>
-    <string name="feat_lock_from_watch_desc">Lock your phone remotely</string>
+    <string name="feat_lock_from_watch_title">Bloquear pelo Relógio </string>
+    <string name="feat_lock_from_watch_desc">Bliqueia o seu celular remotamente </string>
     <string name="remote_lock_mode_title">Lock Mode</string>
     <string name="remote_lock_mode_screen_off">Screen off</string>
     <string name="remote_lock_mode_lock">Lock</string>
@@ -706,8 +706,8 @@
     <string name="unit_seconds">%d seconds</string>
     <string name="unit_minute">1 minute</string>
     <string name="unit_minutes">%d minutes</string>
-    <string name="action_restart_systemui">Restart SystemUI</string>
-    <string name="desc_restart_systemui">Kills and restarts SystemUI process to apply some changes immediately</string>
+    <string name="action_restart_systemui">Reiniciar UI do Sistema</string>
+    <string name="desc_restart_systemui">Para e Recomeça a UI do Sistema para aplicar alterações imediatamente </string>
     <string name="msg_error_load_release_notes">Couldn\'t load the release note</string>
     <string name="action_view_on_web">View on web</string>
     <string name="action_done">Feito</string>
@@ -1454,4 +1454,11 @@
     <string name="whats_new_specs_desc">Inaccurate GSMArena-powered specifications have been removed to keep device insights clean, fast, and completely reliable.</string>
     <string name="whats_new_apps_title">App Updates Migrated</string>
     <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
+    <string name="feat_daily_wallpaper_desc">Papel de parede selecionado manualmente </string>
+    <string name="feat_power_battery_title">Bateria e Energia </string>
+    <string name="feat_flashlight_title">Lanterna</string>
+    <string name="feat_flashlight_desc">Melhore o comportamento da lanterna</string>
+    <string name="feat_power_battery_desc">Configura a política da Economia de Bateria</string>
+    <string name="feat_watch_wireless_debugging_desc">Habilite Remotamente </string>
+    <string name="feat_sync_location_reached_title">Sincronizar \"Já chegamos?\"</string>
 </resources>
