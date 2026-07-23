@@ -163,7 +163,7 @@
     <string name="freeze_dont_freeze_active_apps_title">Aktive Apps nicht einfrieren</string>
     <string name="perm_usage_stats_title">Nutzungsstatistiken</string>
     <string name="perm_usage_stats_desc">Benötigt, um zu erkennen, welche Apps derzeit im Vordergrund sind, um deren Einfrieren zu vermeiden</string>
-    <string name="perm_usage_stats_desc_app_lock">Benötigt, um Vordergrund-Apps für die App-Sperre-Funktionen zu erkennen, wenn der Barrierefreiheitsdienst nicht genutzt wird.</string>
+    <string name="perm_usage_stats_desc_app_lock">Erläuterung der App-Sperre zu den permanenten Nutzungsstatistiken</string>
     <string name="perm_notif_listener_desc_freeze">Benötigt, um wiedergegebene Medien und aktive Benachrichtigungen zu erkennen, um deren Einfrieren zu vermeiden</string>
     <string name="freeze_mode_title">Einfrieren-Modus</string>
     <string name="freeze_mode_freeze">Einfrieren</string>
@@ -576,7 +576,7 @@ Kalender mit deinerUhr</string>
     <string name="search_freeze_delay_desc">Verzögerung vor dem Einfrieren nach dem Sperren</string>
     <!-- Permissions metadata -->
     <string name="perm_shizuku_title">Shizuku</string>
-    <string name="perm_shizuku_desc">Benötigt für erweiterte Befehle. Installiere Shizuku aus dem Play Store.</string>
+    <string name="perm_shizuku_desc">Berechtigung Shizuku Beschreibung</string>
     <string name="perm_shizuku_install_action">Installiere Shizuku</string>
     <string name="perm_shizuku_grant_title">Shizuku permission</string>
     <string name="perm_shizuku_grant_desc">Benötigt, um Energiesparbefehle auszuführen, während Maps navigiert.</string>
@@ -587,16 +587,16 @@ Kalender mit deinerUhr</string>
     <string name="perm_notif_listener_desc_maps">Benötigt, um zu erkennen, wann Maps navigiert.</string>
     <string name="perm_notif_listener_desc_lighting">Benötigt, um neue Benachrichtigungen zu erkennen</string>
     <string name="perm_notif_listener_desc_snooze">Benötigt, um Benachrichtigungen zu erkennen und stumm zuschalten</string>
-    <string name="perm_accessibility_title">Barrierefreiheitsdienst</string>
-    <string name="perm_accessibility_desc_common">Benötigt für App-Sperre, Display-aus-Widget und andere Funktionen zur Erkennung von Interaktionen</string>
+    <string name="perm_accessibility_title">Zugriff auf Berechtigungen</string>
+    <string name="perm_accessibility_desc_common">Allgemeine Beschreibung der Berechtigungen für die Zugänglichkeit</string>
     <string name="perm_accessibility_desc_lighting">Benötigt, um das Benachrichtigungslicht bei neuen Benachrichtigungen auszulösen</string>
     <string name="perm_default_browser_title">Standardbrowser</string>
     <string name="perm_default_browser_desc">Benötigt für die effiziente Verwaltung von Links</string>
     <string name="perm_accessibility_desc_remap">Benötigt zum Abfangen von Hardware-Tastenereignissen</string>
     <string name="perm_accessibility_desc_essentials_on_display">Required to intercept volume key events while the screen is off to trigger the Essentials On Display overlay.</string>
     <string name="perm_accessibility_desc_night_light">Benötigt zur Überwachung von Vordergrundanwendungen.</string>
-    <string name="perm_write_secure_title">Geschützte Einstellungen umschreiben</string>
-    <string name="perm_write_secure_desc_common">Benötigt für Statusleisten-Symbole und Sicherheit bei Bildschirmsperre</string>
+    <string name="perm_write_secure_title">Sichere_Schreibberechtigung_Titel</string>
+    <string name="perm_write_secure_desc_common">Beschreibung der allgemeinen, sicheren Schreibberechtigung</string>
     <string name="perm_write_secure_desc_night_light">Benötigt, um das Nachtlicht zu aktivieren. Über ADB oder Root gewähren.</string>
     <string name="perm_write_settings_title">Systemeinstellungen ändern</string>
     <string name="perm_write_settings_desc">Benötigt, zum Umschalten der adaptiven Helligkeit und anderer Systemeinstellungen</string>
@@ -1474,4 +1474,5 @@ Kalender mit deinerUhr</string>
     <string name="feat_notification_snoozing_desc">Benachrichtigungen neu planen</string>
     <string name="feat_safe_volume_title">Warnung vor sicherer Lautstärke deaktivieren</string>
     <string name="feat_safe_volume_desc">Dialog für laute Lautstärke unterdrücken</string>
+    <string name="perm_write_secure_instructions">permanentes sicheres Schreiben_i</string>
 </resources>
