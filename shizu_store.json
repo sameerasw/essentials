@@ -2,7 +2,7 @@
   "app_name": "Essentials",
   "package_name": "com.sameerasw.essentials",
   "short_description": "Essential tools and mods for Android nerds",
-  "icon_url": "https://sameerasw.com/assets/img/project-logos/essentials-logo.svg",
+  "icon_url": "https://github.com/sameerasw/essentials/blob/main/fastlane/metadata/android/en-US/images/icon.png?raw=true",
   "banner_url": "https://github.com/user-attachments/assets/c0849951-4cf0-4a91-9964-f7c212977af1",
   "app_website": "https://sameerasw.com/essentials",
   "repo_url": "https://github.com/sameerasw/essentials",
