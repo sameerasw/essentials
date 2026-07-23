@@ -1454,4 +1454,12 @@
     <string name="whats_new_specs_desc">Inaccurate GSMArena-powered specifications have been removed to keep device insights clean, fast, and completely reliable.</string>
     <string name="whats_new_apps_title">App Updates Migrated</string>
     <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
+    <string name="feat_daily_wallpaper_title">Fond d'écran</string>
+    <string name="feat_daily_wallpaper_desc">Fonds d'écran sélectionnés avec soin chaque jour</string>
+    <string name="feat_power_battery_title">Alimentation et batterie</string>
+    <string name="feat_power_battery_desc">Configurer les règles d'économie d'énergie</string>
+    <string name="feat_flashlight_title">Lampe de poche</string>
+    <string name="feat_flashlight_desc">Améliorer le fonctionnement de la lampe de poche</string>
+    <string name="feat_notification_snoozing_title">Mise en veille des notifications</string>
+    <string name="feat_notification_snoozing_desc">Reprogrammer les notifications</string>
 </resources>

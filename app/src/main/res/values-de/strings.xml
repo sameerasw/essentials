@@ -65,7 +65,7 @@
     <string name="like_song_toast_enabled">Toast-Nachricht anzeigen</string>
     <string name="like_song_aod_overlay_title">Overlay im AOD anzeigen</string>
     <string name="feat_essentials_on_display_title">Essentials On Display</string>
-    <string name="feat_essentials_on_display_desc">Glance at media and info on AOD</string>
+    <string name="feat_essentials_on_display_desc">Medien und Informationen im AOD auf einen Blick</string>
     <string name="essentials_on_display_docked_mode_title">Docked mode</string>
     <string name="essentials_on_display_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
     <string name="essentials_on_display_respect_notifications_title">Respect new notifications</string>
@@ -276,7 +276,7 @@
     <string name="warning_title">⚠️ WARNUNG</string>
     <string name="screen_locked_security_auth_enable">Authentifiziere dich, um Sicherheit bei Bildschirmsperre zu aktivieren</string>
     <string name="screen_locked_security_auth_disable">Authentifiziere dich, um Sicherheit bei Bildschirmsperre zu deaktivieren</string>
-    <string name="screen_locked_security_desc">Blockiere Quick Settings teile, wenn das Gerät gesperrt ist</string>
+    <string name="screen_locked_security_desc">Blockiere Schnelleinstellungsteile, wenn das Gerät gesperrt ist</string>
     <string name="search_disable_qs_locked_title">Deaktiviere gesperrte Schnelleinstellungen</string>
     <string name="search_disable_qs_locked_desc">Verhindert, dass die Schnelleinstellungen angezeigt werden, wenn das Gerät gesperrt ist</string>
     <!-- Sound Mode -->
@@ -361,8 +361,8 @@
     <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
     <string name="feat_circle_to_search_gesture_height_title">Gesture zone height</string>
     <string name="feat_circle_to_search_gesture_height_desc">Adjust the height of the touch area at the bottom</string>
-    <string name="feat_other_customizations_title">Other customizations</string>
-    <string name="feat_other_customizations_desc">Additional system tweaks and modifications</string>
+    <string name="feat_other_customizations_title">Weitere Anpassungen</string>
+    <string name="feat_other_customizations_desc">Zusätzliche Systemoptimierungen und änderungen</string>
     <string name="status_bar_icons_disclaimer">Bitte beachte, dass die Implementierung dieser Optionen vom OEM abhängen kann und einige möglicherweise überhaupt nicht funktionsfähig sind.</string>
     <!-- Network Type Picker -->
     <string name="network_type_other">Weitere</string>
@@ -442,9 +442,10 @@
     <string name="feat_always_on_display_title">Always-on-Display</string>
     <string name="feat_always_on_display_desc">Zeige Uhrzeit und Infos, während der Bildschirm ausgeschaltet ist</string>
     <string name="feat_calendar_sync_title">Kalender-Synchronisierung</string>
-    <string name="feat_calendar_sync_desc">Sync your phone calendar to your watch</string>
-    <string name="feat_lock_from_watch_title">Lock from Watch</string>
-    <string name="feat_lock_from_watch_desc">Lock your phone remotely</string>
+    <string name="feat_calendar_sync_desc">Synchronisiere deinen Telefon
+Kalender mit deinerUhr</string>
+    <string name="feat_lock_from_watch_title">Sperre von der Uhr aus</string>
+    <string name="feat_lock_from_watch_desc">Sperre dein Telefon aus der Ferne</string>
     <string name="remote_lock_mode_title">Lock Mode</string>
     <string name="remote_lock_mode_screen_off">Screen off</string>
     <string name="remote_lock_mode_lock">Lock</string>
@@ -1301,8 +1302,8 @@
     <string name="label_apps">Apps</string>
     <string name="feat_text_animations_title">Skalierung und Animationen</string>
     <string name="feat_text_animations_desc">Systemskalierung und Animationen anpassen</string>
-    <string name="feat_screen_refresh_rate_title">Screen Refresh Rate</string>
-    <string name="feat_screen_refresh_rate_desc">Set a fixed or ranged screen refresh rate</string>
+    <string name="feat_screen_refresh_rate_title">Bildwiederholrate</string>
+    <string name="feat_screen_refresh_rate_desc">Lege eine feste oder variable Bildwiederholrate fest</string>
     <string name="settings_section_text">Text</string>
     <string name="label_font_scale">Schriftskalierung</string>
     <string name="label_font_weight">Schriftstärke</string>
@@ -1392,8 +1393,8 @@
     <string name="custom_video">Custom video</string>
     <string name="about_desc_live_wallpaper">Set your favorite video as your home screen wallpaper. Choose between triggering the animation upon unlocking or simply whenever the screen turns on for a dynamic experience.</string>
     <!-- Shut-Up! Feature -->
-    <string name="feat_shut_up_title">Shut-Up!</string>
-    <string name="feat_shut_up_desc">I know what I\'m doing</string>
+    <string name="feat_shut_up_title">Halt die Klappe!</string>
+    <string name="feat_shut_up_desc">Ich weiß, was ich tue</string>
     <string name="shut_up_description">Shut-Up! bypasses app restrictions and checks for developer options, accessibility and debugging by dynamically hiding them when you launch sensitive apps. \n\nUse the custom shortcuts to ensure settings are hidden before the app launches.</string>
     <string name="shut_up_select_apps_title">Select Apps</string>
     <string name="shut_up_select_apps_desc">Choose apps to apply Shut-Up! logic</string>
@@ -1454,4 +1455,23 @@
     <string name="whats_new_specs_desc">Inaccurate GSMArena-powered specifications have been removed to keep device insights clean, fast, and completely reliable.</string>
     <string name="whats_new_apps_title">App Updates Migrated</string>
     <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
+    <string name="feat_daily_wallpaper_title">Hintergrundbilder</string>
+    <string name="feat_daily_wallpaper_desc">Täglich kuratierte, handverlesene Hintergrundbilder</string>
+    <string name="feat_watch_controls_title">Anpassen</string>
+    <string name="feat_watch_controls_desc">WearOS-App Steuerelemente anpassen</string>
+    <string name="feat_watch_wireless_debugging_title">Drahtloses Debugging</string>
+    <string name="feat_watch_wireless_debugging_desc">Fernaktivierung</string>
+    <string name="feat_sync_sound_mode_title">Tonmodus synchronisieren</string>
+    <string name="feat_sync_sound_mode_desc">Automatische Synchronisierung mit der Uhr</string>
+    <string name="feat_sync_location_reached_desc">Wird auf der Gerätekachel angezeigt</string>
+    <string name="feat_sync_location_reached_title">Synchronisiere \"Sind wir schon da?\" Status</string>
+    <string name="feat_pocket_mode_title">Taschenmodus</string>
+    <string name="feat_pocket_mode_desc">Verhindere versehentliche Berührungen in der Tasche</string>
+    <string name="feat_power_battery_title">Stromversorgung und Akku</string>
+    <string name="feat_power_battery_desc">Energiesparrichtlinien konfigurieren</string>
+    <string name="feat_flashlight_desc">Verbessert das Taschenlampenverhalten</string>
+    <string name="feat_notification_snoozing_title">Benachrichtigung stummschalten</string>
+    <string name="feat_notification_snoozing_desc">Benachrichtigungen neu planen</string>
+    <string name="feat_safe_volume_title">Warnung vor sicherer Lautstärke deaktivieren</string>
+    <string name="feat_safe_volume_desc">Dialog für laute Lautstärke unterdrücken</string>
 </resources>

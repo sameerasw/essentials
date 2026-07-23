@@ -904,6 +904,7 @@ class MainViewModel : ViewModel() {
         isAccessibilityEnabled.value = PermissionUtils.isAccessibilityServiceEnabled(context)
         isWriteSecureSettingsEnabled.value = PermissionUtils.canWriteSecureSettings(context)
         isShizukuAvailable.value = ShizukuUtils.isShizukuAvailable()
+        isShizukuPermissionGranted.value = ShizukuUtils.hasPermission()
         if (cachedIsUpdateAvailable) {
             isUpdateAvailable.value = true
             updateInfo.value = cachedUpdateInfo
@@ -3602,6 +3603,7 @@ class MainViewModel : ViewModel() {
 
     fun requestShizukuPermission() {
         ShizukuUtils.requestPermission()
+        isShizukuPermissionGranted.value = ShizukuUtils.hasPermission()
     }
 
     fun grantWriteSecureSettingsWithShizuku(context: Context): Boolean {
@@ -3609,6 +3611,7 @@ class MainViewModel : ViewModel() {
         if (success) {
             // Refresh the write secure settings check
             isWriteSecureSettingsEnabled.value = canWriteSecureSettings(context)
+            isShizukuPermissionGranted.value = ShizukuUtils.hasPermission()
         }
         return success
     }
