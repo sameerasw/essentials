@@ -64,8 +64,8 @@
     <string name="like_song_settings_desc">Este recurso requer acesso à notificação para detectar a mídia atualmente sendo reproduzida e acionar a ação semelhante. Ative-o abaixo.</string>
     <string name="like_song_toast_enabled">Mostrar mensagem de brinde</string>
     <string name="like_song_aod_overlay_title">Mostrar sobreposição no AOD</string>
-    <string name="feat_essentials_on_display_title">Essentials On Display</string>
-    <string name="feat_essentials_on_display_desc">Glance at media and info on AOD</string>
+    <string name="feat_essentials_on_display_title">Essenciais em Exibição</string>
+    <string name="feat_essentials_on_display_desc">Visualize mídias e informações no Always On Display</string>
     <string name="essentials_on_display_docked_mode_title">Docked mode</string>
     <string name="essentials_on_display_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
     <string name="essentials_on_display_respect_notifications_title">Respect new notifications</string>
@@ -276,7 +276,7 @@
     <string name="warning_title">⚠️ AVISO</string>
     <string name="screen_locked_security_auth_enable">Authenticate to enable screen locked security</string>
     <string name="screen_locked_security_auth_disable">Authenticate to disable screen locked security</string>
-    <string name="screen_locked_security_desc">Disable quick setting tiles when the device is locked</string>
+    <string name="screen_locked_security_desc">Desative os blocos de configurações rápidas quando o dispositivo estiver bloqueado</string>
     <string name="search_disable_qs_locked_title">Disable QS Locked</string>
     <string name="search_disable_qs_locked_desc">Prevent expanding Quick Settings when device is locked</string>
     <!-- Sound Mode -->
@@ -361,8 +361,8 @@
     <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
     <string name="feat_circle_to_search_gesture_height_title">Gesture zone height</string>
     <string name="feat_circle_to_search_gesture_height_desc">Adjust the height of the touch area at the bottom</string>
-    <string name="feat_other_customizations_title">Other customizations</string>
-    <string name="feat_other_customizations_desc">Additional system tweaks and modifications</string>
+    <string name="feat_other_customizations_title">Outras personalizações</string>
+    <string name="feat_other_customizations_desc">Ajustes e modificações adicionais do sistema</string>
     <string name="status_bar_icons_disclaimer">Observe que a implementação dessas opções pode depender do OEM e algumas podem não funcionar.</string>
     <!-- Network Type Picker -->
     <string name="network_type_other">Outro</string>
@@ -442,9 +442,9 @@
     <string name="feat_always_on_display_title">Sempre em exibição</string>
     <string name="feat_always_on_display_desc">Mostrar hora e informações enquanto a tela está desligada</string>
     <string name="feat_calendar_sync_title">Sincronização de calendário</string>
-    <string name="feat_calendar_sync_desc">Sync your phone calendar to your watch</string>
-    <string name="feat_lock_from_watch_title">Bloquear pelo Relógio </string>
-    <string name="feat_lock_from_watch_desc">Bliqueia o seu celular remotamente </string>
+    <string name="feat_calendar_sync_desc">Sincronize o calendário do seu telefone com o seu relógio</string>
+    <string name="feat_lock_from_watch_title">Bloquear pelo relógio</string>
+    <string name="feat_lock_from_watch_desc">Bloqueie seu telefone remotamente</string>
     <string name="remote_lock_mode_title">Lock Mode</string>
     <string name="remote_lock_mode_screen_off">Screen off</string>
     <string name="remote_lock_mode_lock">Lock</string>
@@ -1301,8 +1301,8 @@
     <string name="label_apps">Aplicativos</string>
     <string name="feat_text_animations_title">Escala e animações</string>
     <string name="feat_text_animations_desc">Ajuste a escala e as animações do sistema</string>
-    <string name="feat_screen_refresh_rate_title">Screen Refresh Rate</string>
-    <string name="feat_screen_refresh_rate_desc">Set a fixed or ranged screen refresh rate</string>
+    <string name="feat_screen_refresh_rate_title">Taxa de atualização da tela</string>
+    <string name="feat_screen_refresh_rate_desc">Defina uma taxa de atualização da tela fixa ou em intervalos</string>
     <string name="settings_section_text">Texto</string>
     <string name="label_font_scale">Escala de fonte</string>
     <string name="label_font_weight">Peso da fonte</string>
@@ -1392,8 +1392,8 @@
     <string name="custom_video">Custom video</string>
     <string name="about_desc_live_wallpaper">Set your favorite video as your home screen wallpaper. Choose between triggering the animation upon unlocking or simply whenever the screen turns on for a dynamic experience.</string>
     <!-- Shut-Up! Feature -->
-    <string name="feat_shut_up_title">Shut-Up!</string>
-    <string name="feat_shut_up_desc">I know what I\'m doing</string>
+    <string name="feat_shut_up_title">Cale a boca!</string>
+    <string name="feat_shut_up_desc">Eu sei o que estou fazendo</string>
     <string name="shut_up_description">Shut-Up! bypasses app restrictions and checks for developer options, accessibility and debugging by dynamically hiding them when you launch sensitive apps. \n\nUse the custom shortcuts to ensure settings are hidden before the app launches.</string>
     <string name="shut_up_select_apps_title">Select Apps</string>
     <string name="shut_up_select_apps_desc">Choose apps to apply Shut-Up! logic</string>
@@ -1413,8 +1413,8 @@
     <string name="shut_up_auto_archive_action_freeze">Freeze now</string>
     <string name="shut_up_auto_archive_action_abort">Abort</string>
     <!-- Lock Screen Clock -->
-    <string name="feat_lock_screen_clock_title">Lock screen clock</string>
-    <string name="feat_lock_screen_clock_desc">Customize lock screen clock on Pixels</string>
+    <string name="feat_lock_screen_clock_title">Relógio da tela de bloqueio</string>
+    <string name="feat_lock_screen_clock_desc">Personalize o relógio da tela de bloqueio nos Pixels</string>
     <string name="about_desc_lock_screen_clock">Change the lock screen clock style on Pixels. Select from the available clock faces provided by the System UI. Some old styles might not be available.</string>
     <string name="lock_screen_clock_bignum">Big Number</string>
     <string name="lock_screen_clock_calligraphy">Calligraphy</string>
@@ -1454,11 +1454,26 @@
     <string name="whats_new_specs_desc">Inaccurate GSMArena-powered specifications have been removed to keep device insights clean, fast, and completely reliable.</string>
     <string name="whats_new_apps_title">App Updates Migrated</string>
     <string name="whats_new_apps_desc">The Apps tab is now fully integrated into the Your Android feature, making it easier to manage all your app updates in one cohesive hub.</string>
-    <string name="feat_daily_wallpaper_desc">Papel de parede selecionado manualmente </string>
-    <string name="feat_power_battery_title">Bateria e Energia </string>
+    <string name="feat_daily_wallpaper_title">Papel de parede</string>
+    <string name="feat_daily_wallpaper_desc">Papel de parede selecionado diariamente</string>
+    <string name="feat_watch_controls_title">Personalizar</string>
+    <string name="feat_watch_controls_desc">Personalize os controles do app WearOS</string>
+    <string name="feat_watch_wireless_debugging_title">Depuração sem fio</string>
+    <string name="feat_watch_wireless_debugging_desc">Ativar remotamente</string>
+    <string name="feat_sync_sound_mode_title">Sincronizar modo de som</string>
+    <string name="feat_sync_sound_mode_desc">Sincronizar automaticamente com o relógio</string>
+    <string name="feat_sync_location_reached_title">Sincronizar o status \"Já chegamos?\"</string>
+    <string name="feat_sync_location_reached_desc">Para ser exibido no bloco do dispositivo</string>
+    <string name="feat_pocket_mode_title">Modo bolso</string>
+    <string name="feat_pocket_mode_desc">Evite toques acidentais enquanto estiver no bolso</string>
+    <string name="feat_pixel_searchbar_title">Barra de pesquisa do Pixel</string>
+    <string name="feat_pixel_searchbar_desc">Defina o Essentials como o provedor de pesquisa padrão para a barra de pesquisa da tela inicial no Pixel Launcher.</string>
+    <string name="feat_power_battery_title">Energia e bateria</string>
+    <string name="feat_power_battery_desc">Configurar as políticas de economia de energia</string>
     <string name="feat_flashlight_title">Lanterna</string>
-    <string name="feat_flashlight_desc">Melhore o comportamento da lanterna</string>
-    <string name="feat_power_battery_desc">Configura a política da Economia de Bateria</string>
-    <string name="feat_watch_wireless_debugging_desc">Habilite Remotamente </string>
-    <string name="feat_sync_location_reached_title">Sincronizar \"Já chegamos?\"</string>
+    <string name="feat_flashlight_desc">Melhorar o comportamento da lanterna</string>
+    <string name="feat_notification_snoozing_title">Adiar notificações</string>
+    <string name="feat_notification_snoozing_desc">Remarcar notificações</string>
+    <string name="feat_safe_volume_title">Desativar aviso de volume seguro</string>
+    <string name="feat_safe_volume_desc">Suprimir diálogo de volume alto</string>
 </resources>
