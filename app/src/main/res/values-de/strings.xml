@@ -64,7 +64,7 @@
     <string name="like_song_settings_desc">Diese Funktion erfordert Zugriff auf Benachrichtigungen, um die aktuell wiedergegebenen Medien zu erkennen und die entsprechende Aktion auszulösen. Bitte aktiviere diese Funktion unten.</string>
     <string name="like_song_toast_enabled">Toast-Nachricht anzeigen</string>
     <string name="like_song_aod_overlay_title">Overlay im AOD anzeigen</string>
-    <string name="feat_essentials_on_display_title">Essentials On Display</string>
+    <string name="feat_essentials_on_display_title">Essenzielle_Funktionen_im_Überblick_Titel</string>
     <string name="feat_essentials_on_display_desc">Medien und Informationen im AOD auf einen Blick</string>
     <string name="essentials_on_display_docked_mode_title">Docked mode</string>
     <string name="essentials_on_display_docked_mode_desc">Keep the overlay visible indefinitely while music is playing on AOD</string>
@@ -361,7 +361,7 @@
     <string name="feat_circle_to_search_gesture_desc">Long-press the bottom area to trigger Circle to Search</string>
     <string name="feat_circle_to_search_gesture_height_title">Gesture zone height</string>
     <string name="feat_circle_to_search_gesture_height_desc">Adjust the height of the touch area at the bottom</string>
-    <string name="feat_other_customizations_title">Weitere Anpassungen</string>
+    <string name="feat_other_customizations_title">Übersetze Zeichenfolge</string>
     <string name="feat_other_customizations_desc">Zusätzliche Systemoptimierungen und änderungen</string>
     <string name="status_bar_icons_disclaimer">Bitte beachte, dass die Implementierung dieser Optionen vom OEM abhängen kann und einige möglicherweise überhaupt nicht funktionsfähig sind.</string>
     <!-- Network Type Picker -->
@@ -389,9 +389,9 @@
     <!-- Features -->
     <string name="feat_screen_off_widget_title">Display-aus-Widget</string>
     <string name="feat_screen_off_widget_desc">Unsichtbares Widget um das Display auszuschalten</string>
-    <string name="feat_statusbar_icons_title">Icons der Statusleiste</string>
+    <string name="feat_statusbar_icons_title">Funktion: Symbolleisten-Symbole-Titel</string>
     <string name="feat_statusbar_icons_desc">Passt die Sichtbarkeit der Icons der Statusleiste an</string>
-    <string name="feat_caffeinate_title">Koffein</string>
+    <string name="feat_caffeinate_title">Funktion_Koffein_Titel</string>
     <string name="feat_caffeinate_desc">Hält das Display wach</string>
     <string name="feat_maps_power_saving_title">Maps-Energiesparmodus</string>
     <string name="feat_maps_power_saving_desc">Für jedes Android-Gerät</string>
@@ -399,7 +399,7 @@
     <string name="feat_notification_lighting_desc">Bei Benachrichtigungen aufleuchten</string>
     <string name="feat_flashlight_pulse_desc">Blitze bei Benachrichtigungen mit der Taschenlampe</string>
     <string name="feat_sound_mode_tile_title">Tonmodus-Kachel</string>
-    <string name="feat_call_vibrations_title">Anrufvibrationen</string>
+    <string name="feat_call_vibrations_title">feat anruf vibrationen titel</string>
     <string name="feat_call_vibrations_desc">Vibrieren bei Anrufaktionen</string>
     <string name="show_bluetooth_devices">Bluetooth-Geräte anzeigen</string>
     <string name="show_bluetooth_devices_summary">Zeige den Akkustand von verbundenen Bluetooth-Geräten</string>
@@ -437,13 +437,12 @@
     <string name="app_lock_auto_lock_delay_30min">30 minutes</string>
     <string name="feat_freeze_title">Einfrieren</string>
     <string name="feat_freeze_desc">Selten verwendete Apps deaktivieren</string>
-    <string name="feat_watermark_title">Wasserzeichen</string>
+    <string name="feat_watermark_title">funktion_wasserzeichen_titel</string>
     <string name="feat_watermark_desc">Fotos mit EXIF-Daten und Logos versehen</string>
     <string name="feat_always_on_display_title">Always-on-Display</string>
     <string name="feat_always_on_display_desc">Zeige Uhrzeit und Infos, während der Bildschirm ausgeschaltet ist</string>
-    <string name="feat_calendar_sync_title">Kalender-Synchronisierung</string>
-    <string name="feat_calendar_sync_desc">Synchronisiere deinen Telefon
-Kalender mit deinerUhr</string>
+    <string name="feat_calendar_sync_title">Funktion Kalender-Synchronisierung</string>
+    <string name="feat_calendar_sync_desc">Funktion zum Synchronisieren des Kalenders Beschreibung</string>
     <string name="feat_lock_from_watch_title">Sperre von der Uhr aus</string>
     <string name="feat_lock_from_watch_desc">Sperre dein Telefon aus der Ferne</string>
     <string name="remote_lock_mode_title">Lock Mode</string>
@@ -1216,7 +1215,7 @@ Kalender mit deinerUhr</string>
     <string name="action_refresh">Aktualisieren</string>
     <!-- Added Missing Group Strings -->
     <string name="feat_sound_modes_title">Tonmodus-Kachel</string>
-    <string name="feat_sound_modes_desc">Kachel in den Schnelleinstellungen zum Umschalten des Tonmodus</string>
+    <string name="feat_sound_modes_desc">Funktion Klangmodi Beschreibung</string>
     <string name="search_sound_mode_show_slider_title">Schieberegler anzeigen</string>
     <string name="search_sound_mode_show_slider_desc">Lautstärkeregler in Kachel anzeigen</string>
     <string name="search_sound_mode_behavior_title">Cycle Behavior</string>
@@ -1301,9 +1300,9 @@ Kalender mit deinerUhr</string>
     <string name="msg_import_failed">Import von Repositorys fehlgeschlagen</string>
     <string name="label_apps">Apps</string>
     <string name="feat_text_animations_title">Skalierung und Animationen</string>
-    <string name="feat_text_animations_desc">Systemskalierung und Animationen anpassen</string>
+    <string name="feat_text_animations_desc">Funktionstext-Animationsbeschreibung</string>
     <string name="feat_screen_refresh_rate_title">Bildwiederholrate</string>
-    <string name="feat_screen_refresh_rate_desc">Lege eine feste oder variable Bildwiederholrate fest</string>
+    <string name="feat_screen_refresh_rate_desc">Funktion_Bildschirm_Aktualisierungsrate_Beschreibung</string>
     <string name="settings_section_text">Text</string>
     <string name="label_font_scale">Schriftskalierung</string>
     <string name="label_font_weight">Schriftstärke</string>
@@ -1414,8 +1413,8 @@ Kalender mit deinerUhr</string>
     <string name="shut_up_auto_archive_action_freeze">Freeze now</string>
     <string name="shut_up_auto_archive_action_abort">Abort</string>
     <!-- Lock Screen Clock -->
-    <string name="feat_lock_screen_clock_title">Lock screen clock</string>
-    <string name="feat_lock_screen_clock_desc">Customize lock screen clock on Pixels</string>
+    <string name="feat_lock_screen_clock_title">Funktion: Sperrbildschirmuhr-Titel</string>
+    <string name="feat_lock_screen_clock_desc">Funktion: Sperrbildschirmuhr-Beschreibung</string>
     <string name="about_desc_lock_screen_clock">Change the lock screen clock style on Pixels. Select from the available clock faces provided by the System UI. Some old styles might not be available.</string>
     <string name="lock_screen_clock_bignum">Big Number</string>
     <string name="lock_screen_clock_calligraphy">Calligraphy</string>
@@ -1475,4 +1474,6 @@ Kalender mit deinerUhr</string>
     <string name="feat_safe_volume_title">Warnung vor sicherer Lautstärke deaktivieren</string>
     <string name="feat_safe_volume_desc">Dialog für laute Lautstärke unterdrücken</string>
     <string name="perm_write_secure_instructions">permanentes sicheres Schreiben_i</string>
+    <string name="feat_pixel_searchbar_title">Pixel-Suchleisten-Titel </string>
+    <string name="about_desc_pixel_searchbar">info_beschreibung_pixel_suchleiste</string>
 </resources>
