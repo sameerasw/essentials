@@ -475,7 +475,7 @@
     <string name="feat_freeze_desc">Disable rarely used apps</string>
     <string name="feat_watermark_title">Tanda air</string>
     <string name="feat_watermark_desc">Tambahkan data EXIF dan logo di foto</string>
-    <string name="feat_daily_wallpaper_title">Wallpaper</string>
+    <string name="feat_daily_wallpaper_title">Walpaper</string>
     <string name="feat_daily_wallpaper_desc">Daily curated handpicked wallpaper</string>
     <string name="label_wallpaper_apply">Apply Wallpaper</string>
     <string name="label_wallpaper_by">Photo by</string>
@@ -1190,7 +1190,7 @@
     <string name="bug_report_email_subject">Essentials Bug Report</string>
     <string name="bug_report_send_via">Please enable crash reporting as it will automatically report details that would help resolving issues.</string>
     <!-- Location Reached -->
-    <string name="feat_location_reached_title">Are we there yet?</string>
+    <string name="feat_location_reached_title">Apakah kita sudah sampe? </string>
     <string name="feat_location_reached_desc">Destination nearby alerts</string>
     <string name="location_reached_how_to">Open Google Maps, pick a location, and share it to Essentials.</string>
     <string name="location_reached_radius_title">Alert Radius: %d m</string>
