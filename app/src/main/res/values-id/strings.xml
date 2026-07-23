@@ -2,4 +2,5 @@
 <resources>
     <string name="feat_display_visuals_title">Tampilan</string>
     <string name="feat_display_visuals_desc">Visual untuk meningkatkan pengalaman Anda</string>
+    <string name="feat_widgets_title">Widgets</string>
 </resources>
