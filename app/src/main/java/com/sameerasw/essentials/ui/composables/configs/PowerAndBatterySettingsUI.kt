@@ -61,12 +61,12 @@ fun PowerAndBatterySettingsUI(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         // --- SECTION: GENERAL ---
-        Text(
-            text = stringResource(R.string.title_battery_saver_general),
+        com.sameerasw.essentials.translation.TranslatableText(
+            stringResId = R.string.title_battery_saver_general,
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(start = 16.dp),
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            modifier = Modifier.padding(start = 16.dp)
         )
+
         RoundedCardContainer(spacing = 2.dp) {
             ConfigSliderItem(
                 title = stringResource(R.string.label_low_power_trigger_level),

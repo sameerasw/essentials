@@ -1,0 +1,10 @@
+Essentials is an open-source toolbox bringing essential tools, mods, and workarounds for Pixel and other Android devices.
+
+Features include:
+- Sound and Haptics: Sound mode switcher, Ambient music glance (AOD/screensaver), Call vibrations.
+- Security and Privacy: Disable Quick Settings tiles on lock screen, App Lock.
+- Notifications and Alerts: Notification edge lighting, Flashlight pulse, Snooze notifications, Connected device battery notifications.
+- Input and Actions: Link actions, Physical button remapping (Volume buttons with screen off), Custom keyboard, Circle to Search automations.
+- Display: Customize status bar icons, Dynamic Always-On Display, Caffeinate (keep screen awake), Dynamic Night Light, Gesture bar hide, and animation adjustments.
+- Widgets: Screen off empty widget, Battery status widgets.
+- WearOS Companion support for calendar sync and tiles.

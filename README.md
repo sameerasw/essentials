@@ -146,7 +146,7 @@ Essential tools, mods and workarounds for Pixels and other Androids
 # Requirements
 
 - Android 8.0 or higher (Feature support may vary)
-- App permissions are optional, Grant necessary permissions for each feature
+- App permissions are optional, grant necessary permissions for each feature
 - Targetted for Google Pixel devices extending to other Androids
 - Tested on Google Pixel 7 (Android 17 beta program).
 - > Some features and functionalities might not work as expected on other OEMs. (Especially NothingOS and OneUI)
@@ -154,36 +154,33 @@ Essential tools, mods and workarounds for Pixels and other Androids
 # Screenshots
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/a6a574ac-a1cb-44d5-b8c7-4fbca08647f1" width="19%" />
-  <img src="https://github.com/user-attachments/assets/e2b20eff-a232-420c-be90-b1308363f4f7" width="19%" />
-  <img src="https://github.com/user-attachments/assets/7fb98791-e4b4-43f1-98a8-4ab6aeb1d0f0" width="19%" />
-  <img src="https://github.com/user-attachments/assets/f126681d-ba53-4e45-911c-c9cb69350848" width="19%" />
-  <img src="https://github.com/user-attachments/assets/fc1593ec-ebf4-485a-bef4-7dd8ae6edb2a" width="19%" />
+<img width="45%" alt="1" src="https://github.com/user-attachments/assets/d57ae349-b2f1-45a6-bd37-df17c7fbcbeb" />
 </p>
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/36dfaed1-89b5-4998-987b-40d5203598a7" width="19%" />
-  <img src="https://github.com/user-attachments/assets/22e9deea-6fb8-43bc-9923-f711f5447c70" width="19%" />
-  <img src="https://github.com/user-attachments/assets/d0eb5302-9432-4618-896b-7d9e5b7cf9cd" width="19%" />
-  <img src="https://github.com/user-attachments/assets/50d762a5-5bc6-46e7-a9ce-9ccfc207957f" width="19%" />
-  <img src="https://github.com/user-attachments/assets/d77c91c0-a1b3-45e4-9123-eee0f09a558f" width="19%" />
+<img width="45%" alt="2" src="https://github.com/user-attachments/assets/3352826c-6bac-4f7a-b521-8d93e7f69da3" />
+<img width="45%" alt="3" src="https://github.com/user-attachments/assets/34b9d52b-4c7f-4dc8-9a71-4f167fdf88d2" />
+</p>
+<p align="center">
+<img width="45%" alt="4" src="https://github.com/user-attachments/assets/81895104-0096-4294-b747-0421ca42b8d8" />
+<img width="45%" alt="5" src="https://github.com/user-attachments/assets/f8bbf05a-ff5c-4157-adb3-3990875f9500" />
 </p>
 
 # Installation
 
-During the installation, you probably will see a warning similar to this claiming the app blocked during installation with no way to continue at all.
+During the installation, you probably will see a warning similar to this claiming that the app is blocked during installation with no way to continue at all.
 
 <img width="25%" alt="image" src="https://github.com/user-attachments/assets/d36c5a92-6d28-43c2-8431-92a7ffd7ac61" />
 
-This is a new restriction on Android with sideloaded apps that can receive sensitive permissions such as Accessibility or notification listener which both Essentials may utilize.
+This is a new restriction on Android with sideloaded apps that can receive sensitive permissions such as Accessibility or Notification Listener, which Essentials both may utilize.
 
-- You can still proceed avoiding this but you will have to temporarily disable Google Play Protect during the installation.
-- But then again, you may notice the toggle for play protect in play store is enabled and grayed out not allowing to be disabled. This is due to the "Advanced protection" feature in Pixels that entirely blocks sideloading. So you will have to disable "Advanced Protection" as well.
-- Follow belwo steps to avoid it during the installation.
+- You can still proceed avoiding this, but you will have to temporarily disable Google Play Protect during the installation.
+- But then again, you may notice the toggle for Play Protect in the Play Store being enabled and grayed out, not allowing to be disabled. This is due to the "Advanced protection" feature in Pixels that entirely blocks sideloading. So you will have to disable "Advanced Protection" as well.
+- Follow below steps to avoid it during the installation.
 
 ![Screenshot_20260304-184451 Large](https://github.com/user-attachments/assets/1402a374-3881-4afc-aff0-269517d0e28f)
 ![Screenshot_20260304-184409 Large](https://github.com/user-attachments/assets/b7bf634a-6ea4-4b22-8ccf-09593bf7bbed)
 
-> ### IMPORTANT: Yes, this is very annoying but I understand the need of such prevention to avoid users installing potentially harmful apps from unknown sources. Well I hope you trust me to install my app but anyways, You should always verify the trusted source before installing any APK file from the internet. ʅ(°_°)ʃ
+> ### IMPORTANT: Yes, this is very annoying, but I understand the need of such prevention to avoid users installing potentially harmful apps from unknown sources. Well I hope you trust me to install my app but anyways, you should always verify the trusted source before installing any APK file from the internet. ʅ(°_°)ʃ
 
 # Shell Providers (Shizuku & Root)
 
@@ -196,6 +193,9 @@ This is a new restriction on Android with sideloaded apps that can receive sensi
 <img width="1280" height="696" alt="image" src="https://github.com/user-attachments/assets/685115e7-4caa-4add-9196-d2e1e2c126a6" />
 
 # Localization
+
+## How to translate?
+https://github.com/user-attachments/assets/22ea02cd-1276-4088-8537-c41bd2c4a3fc
 
 Help us bring Essentials to more people around the world! If you're fluent in another language, you can contribute by translating the app on Crowdin.
 
@@ -232,5 +232,5 @@ Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of co
 ---
 
 <p align="center">
-  Last updated: 2026-04-06
+  Last updated: 2026-07-21
 </p>

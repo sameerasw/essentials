@@ -1,0 +1,239 @@
+name: Apply Community Translations
+
+on:
+  workflow_dispatch:
+    inputs:
+      translations_json:
+        description: 'JSON array of translation edits'
+        required: true
+        type: string
+      contributor:
+        description: 'GitHub username of contributor'
+        required: true
+        type: string
+      contributor_name:
+        description: 'Display name of contributor'
+        required: false
+        type: string
+      contributor_email:
+        description: 'Email address of contributor'
+        required: false
+        type: string
+      user_token:
+        description: 'User OAuth token'
+        required: false
+        type: string
+  discussion_comment:
+    types: [created]
+
+jobs:
+  apply-translations:
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'discussion_comment' && github.event.discussion.number == 601)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      discussions: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Parse Inputs & Prepare JSON
+        env:
+          COMMENT_BODY: ${{ github.event.comment.body }}
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo '${{ inputs.translations_json }}' > /tmp/edits.json
+            echo "CONTRIBUTOR=${{ inputs.contributor }}" >> $GITHUB_ENV
+            echo "CONTRIBUTOR_NAME=${{ inputs.contributor_name || inputs.contributor }}" >> $GITHUB_ENV
+            echo "CONTRIBUTOR_EMAIL=${{ inputs.contributor_email }}" >> $GITHUB_ENV
+          else
+            python3 .github/scripts/parse_comment_json.py
+            USER_LOGIN="${{ github.event.comment.user.login }}"
+            USER_ID="${{ github.event.comment.user.id }}"
+            echo "CONTRIBUTOR=$USER_LOGIN" >> $GITHUB_ENV
+            echo "CONTRIBUTOR_NAME=$USER_LOGIN" >> $GITHUB_ENV
+            echo "CONTRIBUTOR_EMAIL=${USER_ID}+${USER_LOGIN}@users.noreply.github.com" >> $GITHUB_ENV
+          fi
+
+      - name: Create or checkout contributor branch and apply edits
+        run: |
+          BRANCH="translations-${CONTRIBUTOR}"
+
+          git fetch origin
+
+          if git ls-remote --exit-code --heads origin "$BRANCH"; then
+            git checkout -b "$BRANCH" "origin/$BRANCH"
+          else
+            # Branch directly off develop instead of main
+            git checkout -b "$BRANCH" origin/develop
+          fi
+
+          python3 - << 'EOF'
+          import json, os, re, glob, xml.sax.saxutils
+
+          if not os.path.exists('/tmp/edits.json'):
+              print("No /tmp/edits.json found")
+              exit(0)
+
+          try:
+              with open('/tmp/edits.json', 'r', encoding='utf-8') as f:
+                  edits = json.load(f)
+          except Exception as e:
+              print(f"Error parsing /tmp/edits.json: {e}")
+              exit(0)
+
+          def escape_xml_val(val):
+              if not isinstance(val, str):
+                  val = str(val)
+              # Escape XML entities
+              val = val.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+              # Escape unescaped single quotes or double quotes if needed
+              val = re.sub(r"(?<!\\)'", r"\'", val)
+              val = re.sub(r'(?<!\\)"', r'\"', val)
+              return val
+
+          for edit in edits:
+              key = edit.get('key')
+              locale = edit.get('locale')
+              raw_val = edit.get('value', '')
+
+              if not key or not locale:
+                  continue
+
+              val = escape_xml_val(raw_val)
+
+              if locale == "en":
+                  file_path = "app/src/main/res/values/strings.xml"
+              else:
+                  file_path = f"app/src/main/res/values-{locale}/strings.xml"
+                  if not os.path.exists(file_path):
+                      matches = glob.glob(f"app/src/main/res/values-{locale}*/strings.xml")
+                      if matches:
+                          file_path = matches[0]
+
+              # If locale directory/file doesn't exist yet, create it
+              if not os.path.exists(file_path):
+                  os.makedirs(os.path.dirname(file_path), exist_ok=True)
+                  with open(file_path, 'w', encoding='utf-8') as sf:
+                      sf.write('<?xml version="1.0" encoding="utf-8"?>\n<resources>\n</resources>')
+
+              with open(file_path, 'r', encoding='utf-8') as sf:
+                  content = sf.read()
+
+              # Regex to update existing string tag content while preserving XML formatting
+              pattern = re.compile(rf'(<string\s+name="{re.escape(key)}"[^>]*>)(.*?)(</string>)', re.DOTALL)
+              if pattern.search(content):
+                  new_content = pattern.sub(rf'\g<1>{val}\g<3>', content)
+              else:
+                  # Insert before ending </resources> tag if key not yet present in that locale
+                  new_entry = f'    <string name="{key}">{val}</string>\n</resources>'
+                  new_content = content.replace('</resources>', new_entry)
+
+              with open(file_path, 'w', encoding='utf-8') as sf:
+                  sf.write(new_content)
+          EOF
+
+          AUTHOR_EMAIL="$CONTRIBUTOR_EMAIL"
+          if [ -z "$AUTHOR_EMAIL" ]; then
+            AUTHOR_EMAIL="${CONTRIBUTOR}@users.noreply.github.com"
+          fi
+
+          git config user.email "$AUTHOR_EMAIL"
+          git config user.name "$CONTRIBUTOR_NAME"
+
+          git add app/src/main/res/
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit --author="$CONTRIBUTOR_NAME <$AUTHOR_EMAIL>" -m "Community translations by @${CONTRIBUTOR}"
+            git push origin "$BRANCH"
+          fi
+          echo "BRANCH_NAME=$BRANCH" >> $GITHUB_ENV
+
+      - name: Create or update Pull Request
+        id: pr_step
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          EXISTING_PR_URL=$(gh pr list --head "$BRANCH_NAME" --json url -q '.[0].url' 2>/dev/null || true)
+          
+          if [ -n "$EXISTING_PR_URL" ]; then
+            echo "Pull Request already exists: $EXISTING_PR_URL"
+            echo "pr_url=$EXISTING_PR_URL" >> $GITHUB_OUTPUT
+            echo "is_new=false" >> $GITHUB_OUTPUT
+          else
+            HAS_COMMITS=$(git log origin/develop.."$BRANCH_NAME" --oneline 2>/dev/null || true)
+            if [ -z "$HAS_COMMITS" ]; then
+              echo "No commits between origin/develop and $BRANCH_NAME. Skipping PR creation."
+              echo "pr_url=" >> $GITHUB_OUTPUT
+              echo "is_new=false" >> $GITHUB_OUTPUT
+            else
+              NEW_PR_URL=$(gh pr create \
+                --title "Community translations by @${CONTRIBUTOR}" \
+                --body "Translations contributed by **@${CONTRIBUTOR}** directly via the Essentials in-app translation mode." \
+                --label "translations" \
+                --assignee "sameerasw" \
+                --reviewer "sameerasw" \
+                --base develop \
+                --head "$BRANCH_NAME")
+              echo "pr_url=$NEW_PR_URL" >> $GITHUB_OUTPUT
+              echo "is_new=true" >> $GITHUB_OUTPUT
+            fi
+          fi
+
+      - name: Delete Discussion Comment
+        if: github.event_name == 'discussion_comment'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          COMMENT_NODE_ID="${{ github.event.comment.node_id }}"
+          gh api graphql -f query='
+            mutation($id: ID!) {
+              deleteDiscussionComment(input: {id: $id}) {
+                comment { id }
+              }
+            }' -F id="$COMMENT_NODE_ID"
+
+      - name: Notify Telegram
+        if: always() && steps.pr_step.outputs.pr_url != ''
+        env:
+          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TOPIC_ID: ${{ secrets.TELEGRAM_TOPIC_ID }}
+          PR_URL: ${{ steps.pr_step.outputs.pr_url }}
+          IS_NEW: ${{ steps.pr_step.outputs.is_new }}
+        run: |
+          CHAT="${CHAT_ID:- -1001653455300}"
+          TOPIC="${TOPIC_ID:-71370}"
+
+          if [ "$IS_NEW" = "true" ]; then
+            STATUS="🌐 NEW COMMUNITY TRANSLATION PR"
+          else
+            STATUS="🔄 UPDATED TRANSLATION PR"
+          fi
+
+          TEXT=$(cat <<EOF
+          <b>$STATUS</b>
+          Repository: <code>$GITHUB_REPOSITORY</code>
+          Contributor: @$CONTRIBUTOR
+
+          <a href="$PR_URL">View Pull Request</a>
+          EOF
+          )
+
+          jq -n \
+            --arg chat_id "$CHAT" \
+            --arg thread_id "$TOPIC" \
+            --arg text "$TEXT" \
+            '{
+              chat_id: $chat_id, 
+              message_thread_id: $thread_id, 
+              text: $text, 
+              parse_mode: "HTML",
+              disable_web_page_preview: false
+            }' > payload.json
+
+          curl --fail-with-body -X POST -H "Content-Type: application/json" -d @payload.json "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage"

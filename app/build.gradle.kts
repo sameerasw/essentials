@@ -29,8 +29,8 @@ android {
         applicationId = "com.sameerasw.essentials"
         minSdk = 26
         targetSdk = 37
-        versionCode = 52
-        versionName = "16.0"
+        versionCode = 55
+        versionName = "16.3"
 
         val whatsNewCounter = 2
         buildConfigField("int", "WHATS_NEW_COUNTER", whatsNewCounter.toString())
@@ -42,16 +42,16 @@ android {
 
 //        optimized dev build
 
-//          debug {
-//             isMinifyEnabled = true
-//             isShrinkResources = true
-//             isDebuggable = false
-//
-//             proguardFiles(
-//                 getDefaultProguardFile("proguard-android-optimize.txt"),
-//                 "proguard-rules.pro"
-//             )
-//          }
+        //   debug {
+        //      isMinifyEnabled = true
+        //      isShrinkResources = true
+        //      isDebuggable = false
+
+        //      proguardFiles(
+        //          getDefaultProguardFile("proguard-android-optimize.txt"),
+        //          "proguard-rules.pro"
+        //      )
+        //   }
 
         // end
 
@@ -157,6 +157,9 @@ dependencies {
     implementation("org.jsoup:jsoup:1.15.3")
     implementation(libs.sentry.android)
     implementation(libs.androidx.graphics.shapes)
+
+    // AutoUpdater
+    implementation("com.github.CSAbhiOnline:AutoUpdater:1.0.1")
 
     // Media3 for Live Wallpaper
     implementation(libs.androidx.media3.exoplayer)

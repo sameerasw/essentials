@@ -302,6 +302,33 @@ object PermissionUIHelper {
                 isGranted = viewModel.isBluetoothPermissionGranted.value
             )
 
+            "REQUEST_INSTALL_PACKAGES" -> {
+                val isGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    context.packageManager.canRequestPackageInstalls()
+                } else {
+                    true
+                }
+                PermissionItem(
+                    iconRes = R.drawable.rounded_mobile_arrow_down_24,
+                    title = R.string.perm_install_packages_title,
+                    description = R.string.perm_install_packages_desc,
+                    dependentFeatures = PermissionRegistry.getFeatures("REQUEST_INSTALL_PACKAGES"),
+                    actionLabel = if (isGranted) R.string.perm_action_granted else R.string.perm_action_grant,
+                    action = {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            val intent = Intent(
+                                Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
+                                android.net.Uri.parse("package:${context.packageName}")
+                            ).apply {
+                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            }
+                            context.startActivity(intent)
+                        }
+                    },
+                    isGranted = isGranted
+                )
+            }
+
             else -> null
         }
     }
