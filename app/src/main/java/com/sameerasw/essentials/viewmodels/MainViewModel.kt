@@ -152,6 +152,7 @@ class MainViewModel : ViewModel() {
     val isCircleToSearchGestureEnabled = mutableStateOf(false)
     val circleToSearchGestureHeight = mutableFloatStateOf(48f)
     val isCircleToSearchPreviewEnabled = mutableStateOf(false)
+    val isHomeDoubleTapSleepEnabled = mutableStateOf(false)
     val isDisableRotationSuggestionEnabled = mutableStateOf(false)
     val isPixelSearchbarEnabled = mutableStateOf(false)
     val pixelSearchbarType = mutableStateOf("empty")
@@ -711,6 +712,10 @@ class MainViewModel : ViewModel() {
                         isCircleToSearchPreviewEnabled.value = settingsRepository.getBoolean(key)
                     }
 
+                    SettingsRepository.KEY_HOME_DOUBLE_TAP_SLEEP_ENABLED -> {
+                        isHomeDoubleTapSleepEnabled.value = settingsRepository.getBoolean(key)
+                    }
+
                     SettingsRepository.KEY_HIDE_GESTURE_BAR_ON_LAUNCHER_ENABLED -> {
                         isHideGestureBarOnLauncherEnabled.value = settingsRepository.getBoolean(key)
                         appContext?.let { updateAppDetectionService(it) }
@@ -921,6 +926,10 @@ class MainViewModel : ViewModel() {
             settingsRepository.getFloat(SettingsRepository.KEY_CIRCLE_TO_SEARCH_GESTURE_HEIGHT, 48f)
         isCircleToSearchPreviewEnabled.value = settingsRepository.getBoolean(
             SettingsRepository.KEY_CIRCLE_TO_SEARCH_PREVIEW_ENABLED,
+            false
+        )
+        isHomeDoubleTapSleepEnabled.value = settingsRepository.getBoolean(
+            SettingsRepository.KEY_HOME_DOUBLE_TAP_SLEEP_ENABLED,
             false
         )
         isHideGestureBarOnLauncherEnabled.value = settingsRepository.getBoolean(
@@ -2077,6 +2086,11 @@ class MainViewModel : ViewModel() {
             SettingsRepository.KEY_CIRCLE_TO_SEARCH_PREVIEW_ENABLED,
             enabled
         )
+    }
+
+    fun setHomeDoubleTapSleepEnabled(enabled: Boolean) {
+        isHomeDoubleTapSleepEnabled.value = enabled
+        settingsRepository.putBoolean(SettingsRepository.KEY_HOME_DOUBLE_TAP_SLEEP_ENABLED, enabled)
     }
 
     fun setHideGestureBarOnLauncherEnabled(enabled: Boolean, context: Context) {

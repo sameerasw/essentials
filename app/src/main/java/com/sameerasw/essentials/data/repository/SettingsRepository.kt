@@ -135,6 +135,7 @@ class SettingsRepository(private val context: Context) {
         const val KEY_CIRCLE_TO_SEARCH_GESTURE_ENABLED = "circle_to_search_gesture_enabled"
         const val KEY_CIRCLE_TO_SEARCH_GESTURE_HEIGHT = "circle_to_search_gesture_height"
         const val KEY_CIRCLE_TO_SEARCH_PREVIEW_ENABLED = "circle_to_search_preview_enabled"
+        const val KEY_HOME_DOUBLE_TAP_SLEEP_ENABLED = "home_double_tap_sleep_enabled"
         const val KEY_AUTO_UPDATE_ENABLED = "auto_update_enabled"
         const val KEY_UPDATE_NOTIFICATION_ENABLED = "update_notification_enabled"
         const val KEY_LAST_UPDATE_CHECK_TIME = "last_update_check_time"

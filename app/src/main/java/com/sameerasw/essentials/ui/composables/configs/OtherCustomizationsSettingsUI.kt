@@ -1,7 +1,10 @@
 package com.sameerasw.essentials.ui.composables.configs
 
+import android.accessibilityservice.AccessibilityServiceInfo
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
+import android.view.accessibility.AccessibilityManager
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -11,9 +14,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -30,11 +35,13 @@ import com.sameerasw.essentials.ui.components.sheets.PermissionsBottomSheet
 import com.sameerasw.essentials.ui.components.sliders.ConfigSliderItem
 import com.sameerasw.essentials.ui.modifiers.highlight
 import com.sameerasw.essentials.viewmodels.MainViewModel
+import com.sameerasw.essentials.services.tiles.ScreenOffAccessibilityService
 
 enum class PermissionModule {
     HIDE_GESTURE_BAR,
     SHOW_ON_LAUNCHER,
     CIRCLE_TO_SEARCH,
+    HOME_DOUBLE_TAP_SLEEP,
     DISABLE_ROTATION_SUGGESTION,
     PIXEL_SEARCHBAR,
     NONE
@@ -48,6 +55,10 @@ fun OtherCustomizationsSettingsUI(
 ) {
     val context = LocalContext.current
     var requestingPermissionFor by remember { mutableStateOf(PermissionModule.NONE) }
+    var pendingHomeDoubleTapEnable by rememberSaveable { mutableStateOf(false) }
+    var hasTouchExplorationConflict by remember {
+        mutableStateOf(hasCompetingTouchExplorationService(context))
+    }
 
     if (requestingPermissionFor != PermissionModule.NONE) {
         val isShizukuAvailable = viewModel.isShizukuAvailable.value
@@ -91,7 +102,8 @@ fun OtherCustomizationsSettingsUI(
             description = R.string.perm_accessibility_desc_common,
             dependentFeatures = listOf(
                 R.string.feat_hide_gesture_bar_on_launcher_title,
-                R.string.feat_circle_to_search_gesture_title
+                R.string.feat_circle_to_search_gesture_title,
+                R.string.feat_home_double_tap_sleep_title
             ),
             actionLabel = if (isAccessibilityEnabled) R.string.label_enabled else R.string.perm_action_enable,
             action = {
@@ -121,13 +133,19 @@ fun OtherCustomizationsSettingsUI(
             }
 
             PermissionModule.CIRCLE_TO_SEARCH -> listOf(shizukuPermission, accessibilityPermission)
+            PermissionModule.HOME_DOUBLE_TAP_SLEEP -> listOf(accessibilityPermission)
             PermissionModule.DISABLE_ROTATION_SUGGESTION -> listOf(shizukuPermission)
             PermissionModule.PIXEL_SEARCHBAR -> listOf(shizukuPermission)
             else -> emptyList()
         }
 
         PermissionsBottomSheet(
-            onDismissRequest = { requestingPermissionFor = PermissionModule.NONE },
+            onDismissRequest = {
+                if (requestingPermissionFor == PermissionModule.HOME_DOUBLE_TAP_SLEEP) {
+                    pendingHomeDoubleTapEnable = false
+                }
+                requestingPermissionFor = PermissionModule.NONE
+            },
             featureTitle = R.string.feat_other_customizations_title,
             permissions = permissionsToShow
         )
@@ -145,9 +163,30 @@ fun OtherCustomizationsSettingsUI(
             viewModel.isRootAvailable.value && viewModel.isRootPermissionGranted.value
         val isShellGranted = isShizukuGranted || isRootGranted
         val isAccessibilityEnabled = viewModel.isAccessibilityEnabled.value
+        val isHomeDoubleTapSupported = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
         val isUsageStatsGranted = viewModel.isUsageStatsPermissionGranted.value
         val isAppDetectionGranted =
             if (viewModel.isUseUsageAccess.value) isUsageStatsGranted else isAccessibilityEnabled
+
+        LaunchedEffect(isAccessibilityEnabled, pendingHomeDoubleTapEnable) {
+            if (isHomeDoubleTapSupported && isAccessibilityEnabled && pendingHomeDoubleTapEnable) {
+                viewModel.setHomeDoubleTapSleepEnabled(true)
+                pendingHomeDoubleTapEnable = false
+                requestingPermissionFor = PermissionModule.NONE
+            }
+        }
+
+        val lifecycleOwner = LocalLifecycleOwner.current
+        DisposableEffect(lifecycleOwner) {
+            val observer = LifecycleEventObserver { _, event ->
+                if (event == Lifecycle.Event.ON_RESUME) {
+                    hasTouchExplorationConflict =
+                        hasCompetingTouchExplorationService(context)
+                }
+            }
+            lifecycleOwner.lifecycle.addObserver(observer)
+            onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+        }
 
         RoundedCardContainer(
             modifier = Modifier,
@@ -155,7 +194,6 @@ fun OtherCustomizationsSettingsUI(
             cornerRadius = 24.dp
         ) {
 
-            val lifecycleOwner = LocalLifecycleOwner.current
             DisposableEffect(lifecycleOwner, viewModel.isCircleToSearchGestureEnabled.value) {
                 val observer = LifecycleEventObserver { _, event ->
                     if (event == Lifecycle.Event.ON_RESUME) {
@@ -235,6 +273,35 @@ fun OtherCustomizationsSettingsUI(
             )
 
             IconToggleItem(
+                title = stringResource(R.string.feat_home_double_tap_sleep_title),
+                description = when {
+                    !isHomeDoubleTapSupported -> stringResource(R.string.qs_tile_requires_android_13)
+                    hasTouchExplorationConflict -> stringResource(
+                        R.string.feat_home_double_tap_sleep_touch_exploration_conflict_desc
+                    )
+                    else -> stringResource(R.string.feat_home_double_tap_sleep_desc)
+                },
+                isChecked = viewModel.isHomeDoubleTapSleepEnabled.value,
+                onCheckedChange = { enabled ->
+                    if (!enabled || isAccessibilityEnabled) {
+                        viewModel.setHomeDoubleTapSleepEnabled(enabled)
+                    } else {
+                        pendingHomeDoubleTapEnable = true
+                        requestingPermissionFor = PermissionModule.HOME_DOUBLE_TAP_SLEEP
+                    }
+                },
+                enabled = isHomeDoubleTapSupported,
+                onDisabledClick = {
+                    if (isHomeDoubleTapSupported && !isAccessibilityEnabled) {
+                        pendingHomeDoubleTapEnable = true
+                        requestingPermissionFor = PermissionModule.HOME_DOUBLE_TAP_SLEEP
+                    }
+                },
+                iconRes = R.drawable.rounded_mobile_off_24,
+                modifier = Modifier.highlight(highlightSetting == "home_double_tap_sleep_toggle")
+            )
+
+            IconToggleItem(
                 title = stringResource(R.string.feat_disable_rotation_suggestion_title),
                 description = stringResource(R.string.feat_disable_rotation_suggestion_desc),
                 isChecked = viewModel.isDisableRotationSuggestionEnabled.value,
@@ -275,4 +342,20 @@ fun OtherCustomizationsSettingsUI(
             }
         }
     }
+}
+
+private fun hasCompetingTouchExplorationService(context: android.content.Context): Boolean {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return false
+
+    val accessibilityManager =
+        context.getSystemService(android.content.Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+    return accessibilityManager
+        .getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_ALL_MASK)
+        .any { info ->
+            val serviceInfo = info.resolveInfo?.serviceInfo ?: return@any false
+            val isEssentialsService = serviceInfo.packageName == context.packageName &&
+                    serviceInfo.name == ScreenOffAccessibilityService::class.java.name
+            !isEssentialsService &&
+                    info.flags and AccessibilityServiceInfo.FLAG_REQUEST_TOUCH_EXPLORATION_MODE != 0
+        }
 }

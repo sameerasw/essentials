@@ -342,6 +342,10 @@ class AppFlowHandler(
         return false
     }
 
+    fun isLauncherPackage(packageName: String): Boolean {
+        return packageName != "com.android.systemui" && isLauncher(packageName)
+    }
+
     private fun checkGestureBarAutomation(packageName: String) {
         val prefs = context.getSharedPreferences("essentials_prefs", Context.MODE_PRIVATE)
         val isEnabled = prefs.getBoolean("hide_gesture_bar_on_launcher_enabled", false)

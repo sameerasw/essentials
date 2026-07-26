@@ -27,6 +27,7 @@ import com.sameerasw.essentials.services.handlers.AodForceTurnOffHandler
 import com.sameerasw.essentials.services.handlers.AppFlowHandler
 import com.sameerasw.essentials.services.handlers.ButtonRemapHandler
 import com.sameerasw.essentials.services.handlers.FlashlightHandler
+import com.sameerasw.essentials.services.handlers.HomeDoubleTapSleepHandler
 import com.sameerasw.essentials.services.handlers.NotificationLightingHandler
 import com.sameerasw.essentials.services.handlers.OmniGestureOverlayHandler
 import com.sameerasw.essentials.services.handlers.PocketModeHandler
@@ -56,6 +57,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
     private lateinit var omniGestureOverlayHandler: OmniGestureOverlayHandler
     private lateinit var statusBarIconHandler: StatusBarIconHandler
     private lateinit var pocketModeHandler: PocketModeHandler
+    private lateinit var homeDoubleTapSleepHandler: HomeDoubleTapSleepHandler
 
     private var lightSensor: Sensor? = null
     private var lightSensorLux: Float = 100f
@@ -191,6 +193,8 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
                 key == "circle_to_search_preview_enabled"
             ) {
                 updateOmniOverlay()
+            } else if (key == SettingsRepository.KEY_HOME_DOUBLE_TAP_SLEEP_ENABLED) {
+                homeDoubleTapSleepHandler.onSettingChanged()
             } else if (key == "smart_wifi_enabled" || key == "smart_data_enabled" || key == "battery_percent_mode" || key?.startsWith(
                     "icon_"
                 ) == true
@@ -217,6 +221,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         omniGestureOverlayHandler = OmniGestureOverlayHandler(this)
         statusBarIconHandler = StatusBarIconHandler(this)
         pocketModeHandler = PocketModeHandler(this)
+        homeDoubleTapSleepHandler = HomeDoubleTapSleepHandler(this)
 
         flashlightHandler.register()
         statusBarIconHandler.register()
@@ -233,6 +238,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
                         freezeHandler.removeCallbacks(freezeRunnable)
                         stopInputEventListener()
                         updateOmniOverlay()
+                        homeDoubleTapSleepHandler.onScreenInteractiveChanged(true)
                         updatePocketModeSensors()
                     }
 
@@ -243,11 +249,13 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
                         startInputEventListenerIfEnabled()
                         ambientGlanceHandler.checkAndShowOnScreenOff()
                         omniGestureOverlayHandler.updateOverlay(false) // Always hide when screen is off
+                        homeDoubleTapSleepHandler.onScreenInteractiveChanged(false)
                         pocketModeHandler.onScreenOff()
                         updatePocketModeSensors()
                     }
 
                     Intent.ACTION_USER_PRESENT -> {
+                        homeDoubleTapSleepHandler.onUserPresent()
                         val prefs = getSharedPreferences("essentials_prefs", MODE_PRIVATE)
                         if (prefs.getBoolean("pocket_mode_lock_screen_only", false)) {
                             pocketModeHandler.onScreenOff() // cancel pending timer + remove overlay
@@ -330,6 +338,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         serviceInfo = serviceInfo.apply {
             flags = flags or AccessibilityServiceInfo.FLAG_REQUEST_FILTER_KEY_EVENTS
         }
+        homeDoubleTapSleepHandler.onServiceConnected()
         updateOmniOverlay()
     }
 
@@ -356,6 +365,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         aodForceTurnOffHandler.removeOverlay()
         pocketModeHandler.removeOverlay()
         omniGestureOverlayHandler.removeOverlay()
+        homeDoubleTapSleepHandler.destroy()
         statusBarIconHandler.unregister()
         stopInputEventListener()
         cancelPocketFlashlightTurnOff()
@@ -382,9 +392,15 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
         if (event == null) return
 
         if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-            val packageName = event.packageName?.toString() ?: return
-            appFlowHandler.onPackageChanged(packageName)
+            event.packageName?.toString()?.let { packageName ->
+                appFlowHandler.onPackageChanged(packageName)
+                homeDoubleTapSleepHandler.onForegroundPackageChanged(
+                    isLauncher = appFlowHandler.isLauncherPackage(packageName),
+                    isLockScreen = packageName == "com.android.systemui" && keyguardManager.isKeyguardLocked
+                )
+            }
         }
+        homeDoubleTapSleepHandler.onAccessibilityEvent(event)
     }
 
     override fun onInterrupt() {}
@@ -495,6 +511,7 @@ class ScreenOffAccessibilityService : AccessibilityService(), SensorEventListene
     override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
         super.onConfigurationChanged(newConfig)
         updateOmniOverlay() // Force refresh overlay on rotation
+        homeDoubleTapSleepHandler.onConfigurationChanged()
     }
 
     override fun onKeyEvent(event: KeyEvent): Boolean {
